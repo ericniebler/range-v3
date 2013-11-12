@@ -58,9 +58,9 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="..\..\..\..\.gitignore" />
+    <None Include="..\..\..\..\LICENSE" />
+    <None Include="..\..\..\..\README.md" />
     <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +75,7 @@
     <ClInclude Include="..\..\..\..\boost\range\v3\detail\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\detail\function_wrapper.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\istream_range.hpp" />
+    <ClInclude Include="..\..\..\..\boost\range\v3\iterator_range.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\range.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\range_fwd.hpp" />
   </ItemGroup>

@@ -98,6 +98,12 @@ namespace boost
                     return !sin_;
                 }
             };
+
+            template<typename T>
+            istream_range<T> istream(std::istream & sin)
+            {
+                return istream_range<T>{sin};
+            }
         }
     }
 }

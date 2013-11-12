@@ -14,6 +14,8 @@
 #ifndef BOOST_RANGE_V3_RANGE_FWD_HPP
 #define BOOST_RANGE_V3_RANGE_FWD_HPP
 
+#include <iosfwd>
+
 namespace boost
 {
     namespace range
@@ -55,8 +57,17 @@ namespace boost
                 struct function_wrapper;
             }
 
-            template< typename T >
+            template<typename T>
             struct istream_range;
+
+            template<typename T>
+            istream_range<T> istream(std::istream & sin);
+
+            template<typename Iter>
+            struct iterator_range;
+
+            struct iterator_range_maker;
+            extern iterator_range_maker const make_iterator_range;
 
             template<typename Rng>
             struct const_range;

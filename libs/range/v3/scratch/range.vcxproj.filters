@@ -21,10 +21,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Makefile" />
+    <None Include="..\..\..\..\.gitignore" />
+    <None Include="..\..\..\..\LICENSE" />
+    <None Include="..\..\..\..\README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="range.cpp">
@@ -60,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\boost\range\v3\range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\iterator_range.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

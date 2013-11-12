@@ -58,7 +58,7 @@ namespace boost
             {
                 // E.g.: rng | const_
                 template<typename Rng>
-                const_range<Rng> operator|(Rng && rng, conster const &) const
+                friend const_range<Rng> operator|(Rng && rng, conster const &)
                 {
                     return const_range<Rng>{std::forward<Rng>()};
                 }
