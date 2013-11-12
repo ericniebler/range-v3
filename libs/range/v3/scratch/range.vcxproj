@@ -78,6 +78,7 @@
     <ClInclude Include="..\..\..\..\boost\range\v3\iterator_range.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\range.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\range_fwd.hpp" />
+    <ClInclude Include="..\..\..\..\boost\range\v3\range_traits.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

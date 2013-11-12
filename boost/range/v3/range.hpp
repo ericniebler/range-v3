@@ -17,5 +17,6 @@
 #include <boost/range/v3/adaptors.hpp>
 #include <boost/range/v3/istream_range.hpp>
 #include <boost/range/v3/iterator_range.hpp>
+#include <boost/range/v3/range_traits.hpp>
 
 #endif
