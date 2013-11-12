@@ -70,6 +70,8 @@
     <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\filter.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\transform.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\detail\adl_begin_end.hpp" />
+    <ClInclude Include="..\..\..\..\boost\range\v3\detail\compressed_pair.hpp" />
+    <ClInclude Include="..\..\..\..\boost\range\v3\detail\function_wrapper.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\istream_range.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

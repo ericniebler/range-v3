@@ -20,6 +20,8 @@
 #include <boost/assert.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range/v3/detail/adl_begin_end.hpp>
+#include <boost/range/v3/detail/function_wrapper.hpp>
+#include <boost/range/v3/detail/compressed_pair.hpp>
 
 namespace boost
 {
@@ -43,8 +45,7 @@ namespace boost
                         decltype(detail::adl_begin(std::declval<Rng const &>()))
                     >::iterator_category;
 
-                Rng rng_;
-                Pred pred_;
+                detail::compressed_pair<Rng, detail::function_wrapper<Pred>> rng_and_pred_;
 
                 // FltRng is either filter_range or filter_range const.
                 template<typename FltRng>
@@ -52,7 +53,7 @@ namespace boost
                   : boost::iterator_facade<
                         basic_iterator<FltRng>
                       , typename std::remove_reference<
-                            decltype(*detail::adl_begin(std::declval<FltRng &>().rng_))
+                            decltype(*detail::adl_begin(std::declval<FltRng &>().rng_and_pred_.first()))
                         >::type
                       , decltype(detail::filter_range_category(base_range_category{}))
                     >
@@ -70,7 +71,7 @@ namespace boost
                 private:
                     friend struct filter_range;
                     friend class boost::iterator_core_access;
-                    using base_range_iterator = decltype(detail::adl_begin(std::declval<FltRng &>().rng_));
+                    using base_range_iterator = decltype(detail::adl_begin(std::declval<FltRng &>().rng_and_pred_.first()));
 
                     FltRng *rng_;
                     base_range_iterator it_;
@@ -82,12 +83,12 @@ namespace boost
                     }
                     void increment()
                     {
-                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_));
+                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_and_pred_.first()));
                         ++it_; satisfy();
                     }
                     void decrement()
                     {
-                        while(!rng_->pred_(*--it_)) {}
+                        while(!rng_->rng_and_pred_.second()(*--it_)) {}
                     }
                     bool equal(basic_iterator const &that) const
                     {
@@ -96,13 +97,13 @@ namespace boost
                     }
                     auto dereference() const -> decltype(*it_)
                     {
-                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_));
+                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_and_pred_.first()));
                         return *it_;
                     }
                     void satisfy()
                     {
-                        auto const e = detail::adl_end(rng_->rng_);
-                        while(it_ != e && !rng_->pred_(*it_))
+                        auto const e = detail::adl_end(rng_->rng_and_pred_.first());
+                        while(it_ != e && !rng_->rng_and_pred_.second()(*it_))
                             ++it_;
                     }
                 };
@@ -111,23 +112,23 @@ namespace boost
                 using const_iterator = basic_iterator<filter_range const>;
 
                 filter_range(Rng && rng, Pred pred)
-                  : rng_(std::forward<Rng>(rng)), pred_(std::move(pred))
+                  : rng_and_pred_{std::forward<Rng>(rng), std::move(pred)}
                 {}
                 iterator begin()
                 {
-                    return {*this, detail::adl_begin(rng_)};
+                    return {*this, detail::adl_begin(rng_and_pred_.first())};
                 }
                 iterator end()
                 {
-                    return {*this, detail::adl_end(rng_)};
+                    return {*this, detail::adl_end(rng_and_pred_.first())};
                 }
                 const_iterator begin() const
                 {
-                    return {*this, detail::adl_begin(rng_)};
+                    return {*this, detail::adl_begin(rng_and_pred_.first())};
                 }
                 const_iterator end() const
                 {
-                    return {*this, detail::adl_end(rng_)};
+                    return {*this, detail::adl_end(rng_and_pred_.first())};
                 }
                 bool operator!() const
                 {
@@ -139,11 +140,11 @@ namespace boost
                 }
                 Rng & base()
                 {
-                    return rng_;
+                    return rng_and_pred_.first();
                 }
                 Rng const & base() const
                 {
-                    return rng_;
+                    return rng_and_pred_.first();
                 }
             };
 

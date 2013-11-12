@@ -20,6 +20,8 @@
 #include <boost/assert.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range/v3/detail/adl_begin_end.hpp>
+#include <boost/range/v3/detail/function_wrapper.hpp>
+#include <boost/range/v3/detail/compressed_pair.hpp>
 
 namespace boost
 {
@@ -31,24 +33,23 @@ namespace boost
             struct transform_range
             {
             private:
-                Rng rng_;
-                Fun fun_;
+                detail::compressed_pair<Rng, detail::function_wrapper<Fun>> rng_and_fun_;
 
                 template<typename TfxRng>
                 struct basic_iterator
                   : boost::iterator_facade<
                         basic_iterator<TfxRng>
                       , typename std::remove_reference<
-                            decltype(std::declval<TfxRng &>().fun_(
-                                *detail::adl_begin(std::declval<TfxRng &>().rng_)))
+                            decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
+                                *detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first())))
                         >::type
                       , typename std::iterator_traits<
-                            decltype(detail::adl_begin(std::declval<TfxRng &>().rng_))
+                            decltype(detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first()))
                         >::iterator_category
-                      , decltype(std::declval<TfxRng &>().fun_(
-                            *detail::adl_begin(std::declval<TfxRng &>().rng_)))
+                      , decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
+                            *detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first())))
                       , typename std::iterator_traits<
-                            decltype(detail::adl_begin(std::declval<TfxRng &>().rng_))
+                            decltype(detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first()))
                         >::difference_type
                     >
                 {
@@ -65,7 +66,7 @@ namespace boost
                 private:
                     friend struct transform_range;
                     friend class boost::iterator_core_access;
-                    using base_range_iterator = decltype(detail::adl_begin(std::declval<TfxRng &>().rng_));
+                    using base_range_iterator = decltype(detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first()));
 
                     TfxRng *rng_;
                     base_range_iterator it_;
@@ -75,12 +76,12 @@ namespace boost
                     {}
                     void increment()
                     {
-                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_));
+                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_and_fun_.first()));
                         ++it_;
                     }
                     void decrement()
                     {
-                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_));
+                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_and_fun_.first()));
                         --it_;
                     }
                     void advance(typename basic_iterator::difference_type n)
@@ -97,10 +98,10 @@ namespace boost
                         BOOST_ASSERT(rng_ == that.rng_);
                         return it_ == that.it_;
                     }
-                    auto dereference() const -> decltype(rng_->fun_(*it_))
+                    auto dereference() const -> decltype(rng_->rng_and_fun_.second()(*it_))
                     {
-                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_));
-                        return rng_->fun_(*it_);
+                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_and_fun_.first()));
+                        return rng_->rng_and_fun_.second()(*it_);
                     }
                 };
 
@@ -109,23 +110,23 @@ namespace boost
                 using const_iterator = basic_iterator<transform_range const>;
 
                 transform_range(Rng && rng, Fun fun)
-                  : rng_(std::forward<Rng>(rng)), fun_(std::move(fun))
+                  : rng_and_fun_{std::forward<Rng>(rng), std::move(fun)}
                 {}
                 iterator begin()
                 {
-                    return {*this, detail::adl_begin(rng_)};
+                    return {*this, detail::adl_begin(rng_and_fun_.first())};
                 }
                 iterator end()
                 {
-                    return {*this, detail::adl_end(rng_)};
+                    return {*this, detail::adl_end(rng_and_fun_.first())};
                 }
                 const_iterator begin() const
                 {
-                    return {*this, detail::adl_begin(rng_)};
+                    return {*this, detail::adl_begin(rng_and_fun_.first())};
                 }
                 const_iterator end() const
                 {
-                    return {*this, detail::adl_end(rng_)};
+                    return {*this, detail::adl_end(rng_and_fun_.first())};
                 }
                 bool operator!() const
                 {
@@ -137,11 +138,11 @@ namespace boost
                 }
                 Rng & base()
                 {
-                    return rng_;
+                    return rng_and_fun_.first();
                 }
                 Rng const & base() const
                 {
-                    return rng_;
+                    return rng_and_fun_.first();
                 }
             };
 
