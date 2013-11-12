@@ -16,6 +16,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <boost/range/v3/range_fwd.hpp>
 
 namespace boost
 {
@@ -28,7 +29,7 @@ namespace boost
                 // BUGBUG add noexcept
                 // BUGBUG && overloads should return by value, not by &&. BUT, then calling first()
                 // twice on an rvalue compressed pair has UB. Hrm.
-                template<typename First, typename Second, typename Enable = void>
+                template<typename First, typename Second, typename Enable /*= void*/>
                 struct compressed_pair
                 {
                 private:

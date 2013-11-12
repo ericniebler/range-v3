@@ -18,6 +18,7 @@
 #include <iterator>
 #include <boost/assert.hpp>
 #include <boost/iterator/iterator_facade.hpp>
+#include <boost/range/v3/range_fwd.hpp>
 
 namespace boost
 {
@@ -25,9 +26,10 @@ namespace boost
     {
         inline namespace v3
         {
-            template< class T >
-            class istream_range
+            template< typename T >
+            struct istream_range
             {
+            private:
                 std::istream & sin_;
                 mutable T obj_;
     

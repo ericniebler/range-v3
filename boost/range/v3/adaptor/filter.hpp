@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <boost/assert.hpp>
 #include <boost/iterator/iterator_facade.hpp>
+#include <boost/range/v3/range_fwd.hpp>
 #include <boost/range/v3/detail/adl_begin_end.hpp>
 #include <boost/range/v3/detail/function_wrapper.hpp>
 #include <boost/range/v3/detail/compressed_pair.hpp>
@@ -66,7 +67,7 @@ namespace boost
                              typename = typename std::enable_if<
                                             !std::is_const<OtherFltRng>::value>::type>
                     basic_iterator(basic_iterator<OtherFltRng> that)
-                      : rng_(that.rng_), it_(std::move(that.it_))
+                      : rng_(that.rng_), it_(std::move(that).it_)
                     {}
                 private:
                     friend struct filter_range;
@@ -162,7 +163,7 @@ namespace boost
                     template<typename Rng>
                     friend filter_range<Rng, Pred> operator|(Rng && rng, filterer1 && pred)
                     {
-                        return {std::forward<Rng>(rng), std::move(pred.pred_)};
+                        return {std::forward<Rng>(rng), std::move(pred).pred_};
                     }
                     template<typename Rng>
                     friend filter_range<Rng, Pred> operator|(Rng && rng, filterer1 const & pred)

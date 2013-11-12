@@ -14,9 +14,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include <boost/range/v3/istream_range.hpp>
-#include <boost/range/v3/adaptor/filter.hpp>
-#include <boost/range/v3/adaptor/transform.hpp>
+#include <boost/range/v3/range.hpp>
 
 template<std::size_t N>
 struct undef;

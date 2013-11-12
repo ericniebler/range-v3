@@ -14,6 +14,9 @@
 #ifndef BOOST_RANGE_V3_DETAIL_FUNCTION_WRAPPER_HPP
 #define BOOST_RANGE_V3_DETAIL_FUNCTION_WRAPPER_HPP
 
+#include <utility>
+#include <boost/range/v3/range_fwd.hpp>
+
 namespace boost
 {
     namespace range

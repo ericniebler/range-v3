@@ -15,6 +15,7 @@
 #define BOOST_RANGE_V3_DETAIL_ADL_BEGIN_END_HPP
 
 #include <iterator>
+#include <boost/range/v3/range_fwd.hpp>
 
 namespace boost
 {
@@ -44,12 +45,24 @@ namespace boost
                         return end(rng);
                     }
                 } adl_end {};
-            }
 
-            namespace detail
-            {
-                using adl_begin_end_detail::adl_begin;
-                using adl_begin_end_detail::adl_end;
+                constexpr struct cbegin_t
+                {
+                    template<typename Rng>
+                    auto operator()(Rng const & rng) const -> decltype(begin(rng))
+                    {
+                        return begin(rng);
+                    }
+                } adl_cbegin {};
+
+                constexpr struct cend_t
+                {
+                    template<typename Rng>
+                    auto operator()(Rng const & rng) const -> decltype(end(rng))
+                    {
+                        return end(rng);
+                    }
+                } adl_cend {};
             }
         }
     }

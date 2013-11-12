@@ -50,5 +50,17 @@
     <ClInclude Include="..\..\..\..\boost\range\v3\detail\compressed_pair.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\const.hpp">
+      <Filter>Header Files\adaptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\adaptors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\range_fwd.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

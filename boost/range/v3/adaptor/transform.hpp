@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <boost/assert.hpp>
 #include <boost/iterator/iterator_facade.hpp>
+#include <boost/range/v3/range_fwd.hpp>
 #include <boost/range/v3/detail/adl_begin_end.hpp>
 #include <boost/range/v3/detail/function_wrapper.hpp>
 #include <boost/range/v3/detail/compressed_pair.hpp>
@@ -61,7 +62,7 @@ namespace boost
                              typename = typename std::enable_if<
                                             !std::is_const<OtherTfxRng>::value>::type>
                     basic_iterator(basic_iterator<OtherTfxRng> that)
-                      : rng_(that.rng_), it_(std::move(that.it_))
+                      : rng_(that.rng_), it_(std::move(that).it_)
                     {}
                 private:
                     friend struct transform_range;
@@ -160,7 +161,7 @@ namespace boost
                     template<typename Rng>
                     friend transform_range<Rng, Fun> operator|(Rng && rng, transformer1 && fun)
                     {
-                        return {std::forward<Rng>(rng), std::move(fun.fun_)};
+                        return {std::forward<Rng>(rng), std::move(fun).fun_};
                     }
                     template<typename Rng>
                     friend transform_range<Rng, Fun> operator|(Rng && rng, transformer1 const & fun)
