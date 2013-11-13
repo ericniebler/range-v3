@@ -16,7 +16,6 @@
 
 #include <utility>
 #include <iterator>
-#include <algorithm>
 #include <boost/range/v3/range_fwd.hpp>
 #include <boost/range/v3/detail/adl_begin_end.hpp>
 

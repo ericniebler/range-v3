@@ -48,4 +48,52 @@ int main()
                     | boost::range::transform(&std::string::length);
     for(std::size_t size : sizes)
         std::cout << "> " << size << '\n';
+
+    std::cout << "\n";
+    //std::istringstream sin2{"this is his face"};
+    auto joined = boost::range::join(std::vector<std::string>{"this","is","his","face"},
+                                     std::vector<std::string>{"another","fine","mess"});
+    for(std::string & s : joined)
+        std::cout << "> " << s << '\n';
+
+    std::cout << '\n';
+    auto begin = joined.begin();
+    std::cout << *(begin+0) << "\n";
+    std::cout << *(begin+1) << "\n";
+    std::cout << *(begin+2) << "\n";
+    std::cout << *(begin+3) << "\n";
+    std::cout << *(begin+4) << "\n";
+    std::cout << *(begin+5) << "\n";
+    std::cout << *(begin+6) << "\n";
+
+    std::cout << '\n';
+    std::cout << *(begin) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+
+    std::cout << '\n';
+    auto end = joined.end();
+    std::cout << *(end-1) << "\n";
+    std::cout << *(end-2) << "\n";
+    std::cout << *(end-3) << "\n";
+    std::cout << *(end-4) << "\n";
+    std::cout << *(end-5) << "\n";
+    std::cout << *(end-6) << "\n";
+    std::cout << *(end-7) << "\n";
+
+    std::cout << '\n';
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+
+    std::cout << '\n';
+    std::cout << (joined.end() - joined.begin()) << std::endl;
 }

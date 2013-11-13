@@ -69,6 +69,12 @@ namespace boost
             struct iterator_range_maker;
             extern iterator_range_maker const make_iterator_range;
 
+            template<typename Rng0, typename Rng1>
+            struct join_range;
+
+            struct joiner;
+            extern joiner const join;
+
             template<typename Rng>
             struct const_range;
 
