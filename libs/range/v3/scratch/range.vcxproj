@@ -70,6 +70,7 @@
     <ClInclude Include="..\..\..\..\boost\range\v3\adaptors.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\const.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\filter.hpp" />
+    <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\reverse.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\transform.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\detail\adl_begin_end.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\detail\compressed_pair.hpp" />

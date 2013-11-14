@@ -20,6 +20,7 @@
 #include <boost/assert.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range/v3/range_fwd.hpp>
+#include <boost/range/v3/range_traits.hpp>
 #include <boost/range/v3/detail/adl_begin_end.hpp>
 #include <boost/range/v3/detail/function_wrapper.hpp>
 #include <boost/range/v3/detail/compressed_pair.hpp>
@@ -41,11 +42,6 @@ namespace boost
             struct filter_range
             {
             private:
-                using base_range_category =
-                    typename std::iterator_traits<
-                        decltype(detail::adl_begin(std::declval<Rng const &>()))
-                    >::iterator_category;
-
                 detail::compressed_pair<Rng, detail::function_wrapper<Pred>> rng_and_pred_;
 
                 // FltRng is either filter_range or filter_range const.
@@ -53,22 +49,11 @@ namespace boost
                 struct basic_iterator
                   : boost::iterator_facade<
                         basic_iterator<FltRng>
-                      , typename std::remove_reference<
-                            decltype(*detail::adl_begin(std::declval<FltRng &>().rng_and_pred_.first()))
-                        >::type
-                      , decltype(detail::filter_range_category(base_range_category{}))
+                      , range_value_t<Rng>
+                      , decltype(detail::filter_range_category(range_category_t<Rng>{}))
+                      , decltype(*detail::adl_begin(std::declval<FltRng &>().rng_and_pred_.first()))
                     >
                 {
-                    basic_iterator()
-                      : rng_{}, it_{}
-                    {}
-                    // For iterator -> const_iterator conversion
-                    template<typename OtherFltRng,
-                             typename = typename std::enable_if<
-                                            !std::is_const<OtherFltRng>::value>::type>
-                    basic_iterator(basic_iterator<OtherFltRng> that)
-                      : rng_(that.rng_), it_(std::move(that).it_)
-                    {}
                 private:
                     friend struct filter_range;
                     friend class boost::iterator_core_access;
@@ -107,6 +92,17 @@ namespace boost
                         while(it_ != e && !rng_->rng_and_pred_.second()(*it_))
                             ++it_;
                     }
+                public:
+                    basic_iterator()
+                      : rng_{}, it_{}
+                    {}
+                    // For iterator -> const_iterator conversion
+                    template<typename OtherFltRng,
+                             typename = typename std::enable_if<
+                                            !std::is_const<OtherFltRng>::value>::type>
+                    basic_iterator(basic_iterator<OtherFltRng> that)
+                      : rng_(that.rng_), it_(std::move(that).it_)
+                    {}
                 };
             public:
                 using iterator       = basic_iterator<filter_range>;

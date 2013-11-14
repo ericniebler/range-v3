@@ -71,5 +71,8 @@
     <ClInclude Include="..\..\..\..\boost\range\v3\join_range.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\reverse.hpp">
+      <Filter>Header Files\adaptor</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

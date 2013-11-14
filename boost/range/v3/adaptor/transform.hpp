@@ -20,6 +20,7 @@
 #include <boost/assert.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range/v3/range_fwd.hpp>
+#include <boost/range/v3/range_traits.hpp>
 #include <boost/range/v3/detail/adl_begin_end.hpp>
 #include <boost/range/v3/detail/function_wrapper.hpp>
 #include <boost/range/v3/detail/compressed_pair.hpp>
@@ -44,26 +45,12 @@ namespace boost
                             decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
                                 *detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first())))
                         >::type
-                      , typename std::iterator_traits<
-                            decltype(detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first()))
-                        >::iterator_category
+                      , range_category_t<Rng>
                       , decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
                             *detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first())))
-                      , typename std::iterator_traits<
-                            decltype(detail::adl_begin(std::declval<TfxRng &>().rng_and_fun_.first()))
-                        >::difference_type
+                      , range_difference_t<Rng>
                     >
                 {
-                    basic_iterator()
-                      : rng_{}, it_{}
-                    {}
-                    // For iterator -> const_iterator conversion
-                    template<typename OtherTfxRng,
-                             typename = typename std::enable_if<
-                                            !std::is_const<OtherTfxRng>::value>::type>
-                    basic_iterator(basic_iterator<OtherTfxRng> that)
-                      : rng_(that.rng_), it_(std::move(that).it_)
-                    {}
                 private:
                     friend struct transform_range;
                     friend class boost::iterator_core_access;
@@ -82,7 +69,7 @@ namespace boost
                     }
                     void decrement()
                     {
-                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_and_fun_.first()));
+                        BOOST_ASSERT(it_ != detail::adl_begin(rng_->rng_and_fun_.first()));
                         --it_;
                     }
                     void advance(typename basic_iterator::difference_type n)
@@ -104,6 +91,17 @@ namespace boost
                         BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_and_fun_.first()));
                         return rng_->rng_and_fun_.second()(*it_);
                     }
+                public:
+                    basic_iterator()
+                      : rng_{}, it_{}
+                    {}
+                    // For iterator -> const_iterator conversion
+                    template<typename OtherTfxRng,
+                             typename = typename std::enable_if<
+                                            !std::is_const<OtherTfxRng>::value>::type>
+                    basic_iterator(basic_iterator<OtherTfxRng> that)
+                      : rng_(that.rng_), it_(std::move(that).it_)
+                    {}
                 };
 
             public:

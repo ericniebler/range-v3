@@ -16,6 +16,7 @@
 
 #include <boost/range/v3/adaptor/const.hpp>
 #include <boost/range/v3/adaptor/filter.hpp>
+#include <boost/range/v3/adaptor/reverse.hpp>
 #include <boost/range/v3/adaptor/transform.hpp>
 
 #endif

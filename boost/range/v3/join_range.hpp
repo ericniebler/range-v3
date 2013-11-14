@@ -35,7 +35,7 @@ namespace boost
                 struct first_range_tag {};
                 struct second_range_tag {};
 
-                enum class which
+                enum class which : unsigned short
                 {
                     neither, first, second
                 };
@@ -116,15 +116,15 @@ namespace boost
                 Rng0 rng0_;
                 Rng1 rng1_;
 
-                // FltRng is either filter_range or filter_range const.
+                // FltRng is either join_range or join_range const.
                 template<typename JoinRng>
                 struct basic_iterator
                   : boost::iterator_facade<
                         basic_iterator<JoinRng>
                       , range_value_t<Rng0>
                       , decltype(true ? range_category_t<Rng0>{} : range_category_t<Rng1>{})
-                      , decltype(true ? *detail::adl_begin(std::declval<JoinRng>().rng0_)
-                                      : *detail::adl_begin(std::declval<JoinRng>().rng1_))
+                      , decltype(true ? *detail::adl_begin(std::declval<JoinRng &>().rng0_)
+                                      : *detail::adl_begin(std::declval<JoinRng &>().rng1_))
                       , decltype(true ? range_difference_t<Rng0>{} : range_difference_t<Rng1>{})
                     >
                 {
@@ -179,7 +179,9 @@ namespace boost
                             --it0_;
                             break;
                         case detail::which::second:
-                            if(it1_ == detail::adl_begin(rng_->rng1_))
+                            if(it1_ != detail::adl_begin(rng_->rng1_))
+                                --it1_;
+                            else
                             {
                                 it1_.~base_range_iterator1();
                                 which_ = detail::which::neither;
@@ -301,7 +303,6 @@ namespace boost
                     void clean()
                         //noexcept(std::is_nothrow_destructible<base_range_iterator0>::value &&
                         //         std::is_nothrow_destructible<base_range_iterator1>::value)
-
                     {
                         switch(which_)
                         {
@@ -338,6 +339,8 @@ namespace boost
                         *this = std::move(that);
                     }
                     ~basic_iterator()
+                        //noexcept(std::is_nothrow_destructible<base_range_iterator0>::value &&
+                        //         std::is_nothrow_destructible<base_range_iterator1>::value)
                     {
                         clean();
                     }

@@ -53,8 +53,11 @@ int main()
     //std::istringstream sin2{"this is his face"};
     auto joined = boost::range::join(std::vector<std::string>{"this","is","his","face"},
                                      std::vector<std::string>{"another","fine","mess"});
-    for(std::string & s : joined)
+    for(std::string & s : joined | boost::range::reverse)
         std::cout << "> " << s << '\n';
+
+    auto revjoin = joined | boost::range::reverse;
+    std::cout << "*** " << (revjoin.end() - revjoin.begin()) << std::endl;
 
     std::cout << '\n';
     auto begin = joined.begin();

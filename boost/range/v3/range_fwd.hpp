@@ -87,6 +87,12 @@ namespace boost
             struct filterer;
             extern filterer const filter;
 
+            template<typename Rng>
+            struct reverse_range;
+
+            struct reverser;
+            extern reverser const reverse;
+
             template<typename Rng, typename Fun>
             struct transform_range;
 
