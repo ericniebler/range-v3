@@ -19,5 +19,6 @@
 #include <boost/range/v3/iterator_range.hpp>
 #include <boost/range/v3/join_range.hpp>
 #include <boost/range/v3/range_traits.hpp>
+#include <boost/range/v3/concepts.hpp>
 
 #endif

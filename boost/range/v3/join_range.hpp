@@ -22,7 +22,7 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range/v3/range_fwd.hpp>
 #include <boost/range/v3/range_traits.hpp>
-#include <boost/range/v3/detail/adl_begin_end.hpp>
+#include <boost/range/v3/begin_end.hpp>
 
 namespace boost
 {
@@ -123,16 +123,16 @@ namespace boost
                         basic_iterator<JoinRng>
                       , range_value_t<Rng0>
                       , decltype(true ? range_category_t<Rng0>{} : range_category_t<Rng1>{})
-                      , decltype(true ? *detail::adl_begin(std::declval<JoinRng &>().rng0_)
-                                      : *detail::adl_begin(std::declval<JoinRng &>().rng1_))
+                      , decltype(true ? *range::begin(std::declval<JoinRng &>().rng0_)
+                                      : *range::begin(std::declval<JoinRng &>().rng1_))
                       , decltype(true ? range_difference_t<Rng0>{} : range_difference_t<Rng1>{})
                     >
                 {
                 private:
                     friend struct join_range;
                     friend class boost::iterator_core_access;
-                    using base_range_iterator0 = decltype(detail::adl_begin(std::declval<JoinRng &>().rng0_));
-                    using base_range_iterator1 = decltype(detail::adl_begin(std::declval<JoinRng &>().rng1_));
+                    using base_range_iterator0 = decltype(range::begin(std::declval<JoinRng &>().rng0_));
+                    using base_range_iterator1 = decltype(range::begin(std::declval<JoinRng &>().rng1_));
 
                     JoinRng * rng_;
                     union
@@ -153,16 +153,16 @@ namespace boost
                         switch(which_)
                         {
                         case detail::which::first:
-                            if(++it0_ == detail::adl_end(rng_->rng0_))
+                            if(++it0_ == range::end(rng_->rng0_))
                             {
                                 it0_.~base_range_iterator0();
                                 which_ = detail::which::neither;
-                                ::new((void*)&it1_) base_range_iterator1(detail::adl_begin(rng_->rng1_));
+                                ::new((void*)&it1_) base_range_iterator1(range::begin(rng_->rng1_));
                                 which_ = detail::which::second;
                             }
                             break;
                         case detail::which::second:
-                            BOOST_ASSERT(it1_ != detail::adl_end(rng_->rng1_));
+                            BOOST_ASSERT(it1_ != range::end(rng_->rng1_));
                             ++it1_;
                             break;
                         default:
@@ -175,17 +175,17 @@ namespace boost
                         switch(which_)
                         {
                         case detail::which::first:
-                            BOOST_ASSERT(it0_ != detail::adl_begin(rng_->rng0_));
+                            BOOST_ASSERT(it0_ != range::begin(rng_->rng0_));
                             --it0_;
                             break;
                         case detail::which::second:
-                            if(it1_ != detail::adl_begin(rng_->rng1_))
+                            if(it1_ != range::begin(rng_->rng1_))
                                 --it1_;
                             else
                             {
                                 it1_.~base_range_iterator1();
                                 which_ = detail::which::neither;
-                                ::new((void*)&it0_) base_range_iterator0(std::prev(detail::adl_end(rng_->rng0_)));
+                                ::new((void*)&it0_) base_range_iterator0(std::prev(range::end(rng_->rng0_)));
                                 which_ = detail::which::first;
                             }
                             break;
@@ -201,12 +201,12 @@ namespace boost
                         case detail::which::first:
                             if(n > 0)
                             {
-                                detail::advance_fwd_bounded(it0_, detail::adl_end(rng_->rng0_), n);
-                                if(it0_ == detail::adl_end(rng_->rng0_))
+                                detail::advance_fwd_bounded(it0_, range::end(rng_->rng0_), n);
+                                if(it0_ == range::end(rng_->rng0_))
                                 {
                                     it0_.~base_range_iterator0();
                                     which_ = detail::which::neither;
-                                    ::new((void*)&it1_) base_range_iterator1(detail::adl_begin(rng_->rng1_));
+                                    ::new((void*)&it1_) base_range_iterator1(range::begin(rng_->rng1_));
                                     which_ = detail::which::second;
                                     std::advance(it1_, n);
                                 }
@@ -217,12 +217,12 @@ namespace boost
                         case detail::which::second:
                             if(n < 0)
                             {
-                                detail::advance_back_bounded(it1_, detail::adl_begin(rng_->rng1_), n);
+                                detail::advance_back_bounded(it1_, range::begin(rng_->rng1_), n);
                                 if(n < 0)
                                 {
                                     it1_.~base_range_iterator1();
                                     which_ = detail::which::neither;
-                                    ::new((void*)&it0_) base_range_iterator0(detail::adl_end(rng_->rng0_));
+                                    ::new((void*)&it0_) base_range_iterator0(range::end(rng_->rng0_));
                                     which_ = detail::which::first;
                                     std::advance(it0_, n);
                                 }
@@ -246,8 +246,8 @@ namespace boost
                             case detail::which::first:
                                 return that.it0_ - it0_;
                             case detail::which::second:
-                                return (detail::adl_end(rng_->rng0_) - it0_) +
-                                       (that.it1_ - detail::adl_begin(rng_->rng1_));
+                                return (range::end(rng_->rng0_) - it0_) +
+                                       (that.it1_ - range::begin(rng_->rng1_));
                             default:
                                 BOOST_ASSERT(!"Attempt to use an invalid join_range iterator");
                                 return 0;
@@ -256,8 +256,8 @@ namespace boost
                             switch(that.which_)
                             {
                             case detail::which::first:
-                                return (detail::adl_begin(rng_->rng1_) - it1_) +
-                                       (that.it0_ - detail::adl_end(rng_->rng0_));
+                                return (range::begin(rng_->rng1_) - it1_) +
+                                       (that.it0_ - range::end(rng_->rng0_));
                                 return 0;
                             case detail::which::second:
                                 return that.it1_ - it1_;
@@ -293,7 +293,7 @@ namespace boost
                         case detail::which::first:
                             return *it0_;
                         case detail::which::second:
-                            BOOST_ASSERT(it1_ != detail::adl_end(rng_->rng1_));
+                            BOOST_ASSERT(it1_ != range::end(rng_->rng1_));
                             return *it1_;
                         default:
                             BOOST_ASSERT(!"Attempt to dereference an invalid join_range iterator");
@@ -425,19 +425,19 @@ namespace boost
                 {}
                 iterator begin()
                 {
-                    return {*this, detail::adl_begin(rng0_), detail::first_range_tag{}};
+                    return {*this, range::begin(rng0_), detail::first_range_tag{}};
                 }
                 iterator end()
                 {
-                    return {*this, detail::adl_end(rng1_), detail::second_range_tag{}};
+                    return {*this, range::end(rng1_), detail::second_range_tag{}};
                 }
                 const_iterator begin() const
                 {
-                    return {*this, detail::adl_begin(rng0_), detail::first_range_tag{}};
+                    return {*this, range::begin(rng0_), detail::first_range_tag{}};
                 }
                 const_iterator end() const
                 {
-                    return {*this, detail::adl_end(rng1_), detail::second_range_tag{}};
+                    return {*this, range::end(rng1_), detail::second_range_tag{}};
                 }
                 bool operator!() const
                 {

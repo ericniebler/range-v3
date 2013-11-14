@@ -32,9 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\boost\range\v3\detail\adl_begin_end.hpp">
-      <Filter>Header Files\detail</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\boost\range\v3\istream_range.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -73,6 +70,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\reverse.hpp">
       <Filter>Header Files\adaptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\begin_end.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\concepts.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

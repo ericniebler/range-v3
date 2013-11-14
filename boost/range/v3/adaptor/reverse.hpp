@@ -21,7 +21,7 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range/v3/range_fwd.hpp>
 #include <boost/range/v3/range_traits.hpp>
-#include <boost/range/v3/detail/adl_begin_end.hpp>
+#include <boost/range/v3/begin_end.hpp>
 
 namespace boost
 {
@@ -41,14 +41,14 @@ namespace boost
                         basic_iterator<RevRng>
                       , range_value_t<Rng>
                       , range_category_t<Rng>
-                      , decltype(*detail::adl_begin(std::declval<RevRng &>().rng_))
+                      , decltype(*range::begin(std::declval<RevRng &>().rng_))
                       , range_difference_t<Rng>
                     >
                 {
                 private:
                     friend struct reverse_range;
                     friend class boost::iterator_core_access;
-                    using base_range_iterator = decltype(detail::adl_begin(std::declval<RevRng &>().rng_));
+                    using base_range_iterator = decltype(range::begin(std::declval<RevRng &>().rng_));
 
                     RevRng *rng_;
                     base_range_iterator it_;
@@ -58,12 +58,12 @@ namespace boost
                     {}
                     void increment()
                     {
-                        BOOST_ASSERT(it_ != detail::adl_begin(rng_->rng_));
+                        BOOST_ASSERT(it_ != range::begin(rng_->rng_));
                         --it_;
                     }
                     void decrement()
                     {
-                        BOOST_ASSERT(it_ != detail::adl_end(rng_->rng_));
+                        BOOST_ASSERT(it_ != range::end(rng_->rng_));
                         ++it_;
                     }
                     void advance(typename basic_iterator::difference_type n)
@@ -82,7 +82,7 @@ namespace boost
                     }
                     auto dereference() const -> decltype(*it_)
                     {
-                        BOOST_ASSERT(it_ != detail::adl_begin(rng_->rng_));
+                        BOOST_ASSERT(it_ != range::begin(rng_->rng_));
                         return *std::prev(it_);
                     }
                 public:
@@ -107,19 +107,19 @@ namespace boost
                 {}
                 iterator begin()
                 {
-                    return {*this, detail::adl_end(rng_)};
+                    return {*this, range::end(rng_)};
                 }
                 iterator end()
                 {
-                    return {*this, detail::adl_begin(rng_)};
+                    return {*this, range::begin(rng_)};
                 }
                 const_iterator begin() const
                 {
-                    return {*this, detail::adl_end(rng_)};
+                    return {*this, range::end(rng_)};
                 }
                 const_iterator end() const
                 {
-                    return {*this, detail::adl_begin(rng_)};
+                    return {*this, range::begin(rng_)};
                 }
                 bool operator!() const
                 {

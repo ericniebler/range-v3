@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef BOOST_RANGE_V3_DETAIL_ADL_BEGIN_END_HPP
-#define BOOST_RANGE_V3_DETAIL_ADL_BEGIN_END_HPP
+#ifndef BOOST_RANGE_V3_BEGIN_END_HPP
+#define BOOST_RANGE_V3_BEGIN_END_HPP
 
 #include <iterator>
 #include <boost/range/v3/range_fwd.hpp>
@@ -28,42 +28,47 @@ namespace boost
                 using std::begin;
                 using std::end;
 
-                constexpr struct begin_t
+                struct begin_t
                 {
                     template<typename Rng>
                     auto operator()(Rng && rng) const -> decltype(begin(rng))
                     {
                         return begin(rng);
                     }
-                } adl_begin {};
+                };
 
-                constexpr struct end_t
+                struct end_t
                 {
                     template<typename Rng>
                     auto operator()(Rng && rng) const -> decltype(end(rng))
                     {
                         return end(rng);
                     }
-                } adl_end {};
+                };
 
-                constexpr struct cbegin_t
+                struct cbegin_t
                 {
                     template<typename Rng>
                     auto operator()(Rng const & rng) const -> decltype(begin(rng))
                     {
                         return begin(rng);
                     }
-                } adl_cbegin {};
+                };
 
-                constexpr struct cend_t
+                struct cend_t
                 {
                     template<typename Rng>
                     auto operator()(Rng const & rng) const -> decltype(end(rng))
                     {
                         return end(rng);
                     }
-                } adl_cend {};
+                };
             }
+
+            constexpr adl_begin_end_detail::begin_t begin {};
+            constexpr adl_begin_end_detail::end_t end {};
+            constexpr adl_begin_end_detail::cbegin_t cbegin {};
+            constexpr adl_begin_end_detail::cend_t cend {};
         }
     }
 }

@@ -17,7 +17,7 @@
 #include <utility>
 #include <iterator>
 #include <boost/range/v3/range_fwd.hpp>
-#include <boost/range/v3/detail/adl_begin_end.hpp>
+#include <boost/range/v3/begin_end.hpp>
 
 namespace boost
 {
@@ -28,7 +28,7 @@ namespace boost
             template<typename Rng>
             struct range_iterator
             {
-                using type = decltype(detail::adl_begin(std::declval<Rng>()));
+                using type = decltype(range::begin(std::declval<Rng>()));
             };
 
             template<typename Rng>

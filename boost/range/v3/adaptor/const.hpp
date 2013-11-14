@@ -16,7 +16,7 @@
 
 #include <utility>
 #include <boost/range/v3/range_fwd.hpp>
-#include <boost/range/v3/detail/adl_begin_end.hpp>
+#include <boost/range/v3/begin_end.hpp>
 
 namespace boost
 {
@@ -30,7 +30,7 @@ namespace boost
             private:
                 Rng rng_;
             public:
-                using const_iterator = decltype(detail::adl_cbegin(std::declval<Rng const &>()));
+                using const_iterator = decltype(range::cbegin(std::declval<Rng const &>()));
                 using iterator = const_iterator;
 
                 explicit const_range(Rng && rng)
@@ -38,11 +38,11 @@ namespace boost
                 {}
                 iterator begin() const
                 {
-                    return detail::adl_cbegin(rng_);
+                    return range::cbegin(rng_);
                 }
                 iterator end() const
                 {
-                    return detail::adl_cend(rng_);
+                    return range::cend(rng_);
                 }
                 bool operator!() const
                 {

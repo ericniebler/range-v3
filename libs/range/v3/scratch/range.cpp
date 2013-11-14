@@ -16,8 +16,39 @@
 #include <iostream>
 #include <boost/range/v3/range.hpp>
 
-template<std::size_t N>
-struct undef;
+struct noncopyable
+{
+    noncopyable(noncopyable const &) = delete;
+};
+
+struct nondefaultconstructible
+{
+    nondefaultconstructible(int) {};
+};
+
+static_assert(boost::range::Assignable<int>(), "");
+static_assert(!boost::range::Assignable<int const>(), "");
+
+static_assert(boost::range::CopyConstructible<int>(), "");
+static_assert(!boost::range::CopyConstructible<noncopyable>(), "");
+
+static_assert(boost::range::DefaultConstructible<int>(), "");
+static_assert(!boost::range::DefaultConstructible<nondefaultconstructible>(), "");
+
+static_assert(boost::range::InputIterator<int*>(), "");
+static_assert(!boost::range::InputIterator<int>(), "");
+
+static_assert(boost::range::ForwardIterator<int*>(), "");
+static_assert(!boost::range::ForwardIterator<int>(), "");
+
+static_assert(boost::range::BidirectionalIterator<int*>(), "");
+static_assert(!boost::range::BidirectionalIterator<int>(), "");
+
+static_assert(boost::range::RandomAccessIterator<int*>(), "");
+static_assert(!boost::range::RandomAccessIterator<int>(), "");
+
+static_assert(boost::range::InputRange<boost::range::istream_range<int>>(), "");
+static_assert(!boost::range::InputRange<int>(), "");
 
 int main()
 {
