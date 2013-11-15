@@ -11,12 +11,12 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef BOOST_RANGE_V3_ADAPTORS_HPP
-#define BOOST_RANGE_V3_ADAPTORS_HPP
+#ifndef RANGE_V3_ADAPTORS_HPP
+#define RANGE_V3_ADAPTORS_HPP
 
-#include <boost/range/v3/adaptor/const.hpp>
-#include <boost/range/v3/adaptor/filter.hpp>
-#include <boost/range/v3/adaptor/reverse.hpp>
-#include <boost/range/v3/adaptor/transform.hpp>
+#include <range/v3/adaptor/const.hpp>
+#include <range/v3/adaptor/filter.hpp>
+#include <range/v3/adaptor/reverse.hpp>
+#include <range/v3/adaptor/transform.hpp>
 
 #endif

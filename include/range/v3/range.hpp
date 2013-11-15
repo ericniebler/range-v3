@@ -11,14 +11,14 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef BOOST_RANGE_V3_RANGE_HPP
-#define BOOST_RANGE_V3_RANGE_HPP
+#ifndef RANGE_V3_RANGE_HPP
+#define RANGE_V3_RANGE_HPP
 
-#include <boost/range/v3/adaptors.hpp>
-#include <boost/range/v3/istream_range.hpp>
-#include <boost/range/v3/iterator_range.hpp>
-#include <boost/range/v3/join_range.hpp>
-#include <boost/range/v3/range_traits.hpp>
-#include <boost/range/v3/concepts.hpp>
+#include <range/v3/adaptors.hpp>
+#include <range/v3/istream_range.hpp>
+#include <range/v3/iterator_range.hpp>
+#include <range/v3/join_range.hpp>
+#include <range/v3/range_traits.hpp>
+#include <range/v3/concepts.hpp>
 
 #endif

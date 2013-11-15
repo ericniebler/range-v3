@@ -14,7 +14,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include <boost/range/v3/range.hpp>
+#include <range/v3/range.hpp>
 
 struct noncopyable
 {
@@ -26,44 +26,44 @@ struct nondefaultconstructible
     nondefaultconstructible(int) {};
 };
 
-static_assert(boost::range::Assignable<int>(), "");
-static_assert(!boost::range::Assignable<int const>(), "");
+static_assert(range::Assignable<int>(), "");
+static_assert(!range::Assignable<int const>(), "");
 
-static_assert(boost::range::CopyConstructible<int>(), "");
-static_assert(!boost::range::CopyConstructible<noncopyable>(), "");
+static_assert(range::CopyConstructible<int>(), "");
+static_assert(!range::CopyConstructible<noncopyable>(), "");
 
-static_assert(boost::range::DefaultConstructible<int>(), "");
-static_assert(!boost::range::DefaultConstructible<nondefaultconstructible>(), "");
+static_assert(range::DefaultConstructible<int>(), "");
+static_assert(!range::DefaultConstructible<nondefaultconstructible>(), "");
 
-static_assert(boost::range::InputIterator<int*>(), "");
-static_assert(!boost::range::InputIterator<int>(), "");
+static_assert(range::InputIterator<int*>(), "");
+static_assert(!range::InputIterator<int>(), "");
 
-static_assert(boost::range::ForwardIterator<int*>(), "");
-static_assert(!boost::range::ForwardIterator<int>(), "");
+static_assert(range::ForwardIterator<int*>(), "");
+static_assert(!range::ForwardIterator<int>(), "");
 
-static_assert(boost::range::BidirectionalIterator<int*>(), "");
-static_assert(!boost::range::BidirectionalIterator<int>(), "");
+static_assert(range::BidirectionalIterator<int*>(), "");
+static_assert(!range::BidirectionalIterator<int>(), "");
 
-static_assert(boost::range::RandomAccessIterator<int*>(), "");
-static_assert(!boost::range::RandomAccessIterator<int>(), "");
+static_assert(range::RandomAccessIterator<int*>(), "");
+static_assert(!range::RandomAccessIterator<int>(), "");
 
-static_assert(boost::range::InputRange<boost::range::istream_range<int>>(), "");
-static_assert(!boost::range::InputRange<int>(), "");
+static_assert(range::InputRange<range::istream_range<int>>(), "");
+static_assert(!range::InputRange<int>(), "");
 
-static_assert(boost::range::RandomAccessRange<std::vector<int> const &>(), "");
-static_assert(!boost::range::RandomAccessRange<boost::range::istream_range<int>>(), "");
+static_assert(range::RandomAccessRange<std::vector<int> const &>(), "");
+static_assert(!range::RandomAccessRange<range::istream_range<int>>(), "");
 
 int main()
 {
     std::istringstream sin{"this is his face"};
-    boost::range::istream_range<std::string> lines{sin};
-    for(auto line : boost::range::filter(lines, [](std::string s){return s.length()>2;}))
+    range::istream_range<std::string> lines{sin};
+    for(auto line : range::filter(lines, [](std::string s){return s.length()>2;}))
         std::cout << "> " << line << '\n';
 
     auto lines2 = std::vector<std::string>{"this","is","his","face"}
-                    | boost::range::filter([](std::string s){return s.length()>2;})
-                    | boost::range::filter([](std::string s){return s.length()<4;})
-                    | boost::range::transform([](std::string s){return s + " or her";})
+                    | range::filter([](std::string s){return s.length()>2;})
+                    | range::filter([](std::string s){return s.length()<4;})
+                    | range::transform([](std::string s){return s + " or her";})
                     ;
     //undef<sizeof(lines2)> t;
     for(std::string const & line : lines2)
@@ -79,18 +79,18 @@ int main()
 
     std::cout << "\n";
     auto sizes = std::vector<std::string>{"this","is","his","face"}
-                    | boost::range::transform(&std::string::length);
+                    | range::transform(&std::string::length);
     for(std::size_t size : sizes)
         std::cout << "> " << size << '\n';
 
     std::cout << "\n";
     //std::istringstream sin2{"this is his face"};
-    auto joined = boost::range::join(std::vector<std::string>{"this","is","his","face"},
+    auto joined = range::join(std::vector<std::string>{"this","is","his","face"},
                                      std::vector<std::string>{"another","fine","mess"});
-    for(std::string & s : joined | boost::range::reverse)
+    for(std::string & s : joined | range::reverse)
         std::cout << "> " << s << '\n';
 
-    auto revjoin = joined | boost::range::reverse;
+    auto revjoin = joined | range::reverse;
     std::cout << "*** " << (revjoin.end() - revjoin.begin()) << std::endl;
 
     std::cout << '\n';

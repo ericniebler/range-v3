@@ -14,10 +14,10 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Header Files\adaptor">
-      <UniqueIdentifier>{fa08252f-9b48-4fad-8f5d-8ddce772dfae}</UniqueIdentifier>
+      <UniqueIdentifier>{f1281d7e-9d65-47eb-aaf1-2ab3e427f9cf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\detail">
-      <UniqueIdentifier>{575be09c-1cc7-4dfa-afd9-306bcf814279}</UniqueIdentifier>
+      <UniqueIdentifier>{34ab9040-46e6-4a05-b798-48978a63cb0d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,52 +32,52 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\boost\range\v3\istream_range.hpp">
+    <ClInclude Include="..\..\..\..\include\range\v3\adaptors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\filter.hpp">
+    <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\concepts.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\join_range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\const.hpp">
       <Filter>Header Files\adaptor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\transform.hpp">
+    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\filter.hpp">
       <Filter>Header Files\adaptor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\detail\function_wrapper.hpp">
+    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\reverse.hpp">
+      <Filter>Header Files\adaptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\transform.hpp">
+      <Filter>Header Files\adaptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\compressed_pair.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\detail\compressed_pair.hpp">
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\function_wrapper.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\const.hpp">
-      <Filter>Header Files\adaptor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\adaptors.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\range_fwd.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\range.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\iterator_range.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\range_traits.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\join_range.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\adaptor\reverse.hpp">
-      <Filter>Header Files\adaptor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\begin_end.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\concepts.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\boost\range\v3\detail\iterator_facade.hpp">
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\iterator_facade.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
   </ItemGroup>
