@@ -76,6 +76,7 @@
     <ClInclude Include="..\..\..\..\boost\range\v3\concepts.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\detail\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\detail\function_wrapper.hpp" />
+    <ClInclude Include="..\..\..\..\boost\range\v3\detail\iterator_facade.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\iterator_range.hpp" />
     <ClInclude Include="..\..\..\..\boost\range\v3\join_range.hpp" />

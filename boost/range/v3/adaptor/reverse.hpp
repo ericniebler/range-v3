@@ -14,11 +14,11 @@
 #ifndef BOOST_RANGE_V3_ADAPTOR_REVERSE_HPP
 #define BOOST_RANGE_V3_ADAPTOR_REVERSE_HPP
 
+#include <cassert>
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <boost/assert.hpp>
-#include <boost/iterator/iterator_facade.hpp>
+#include <boost/range/v3/detail/iterator_facade.hpp>
 #include <boost/range/v3/range_fwd.hpp>
 #include <boost/range/v3/range_traits.hpp>
 #include <boost/range/v3/begin_end.hpp>
@@ -37,7 +37,7 @@ namespace boost
 
                 template<typename RevRng>
                 struct basic_iterator
-                  : boost::iterator_facade<
+                  : range::iterator_facade<
                         basic_iterator<RevRng>
                       , range_value_t<Rng>
                       , range_category_t<Rng>
@@ -47,7 +47,7 @@ namespace boost
                 {
                 private:
                     friend struct reverse_range;
-                    friend class boost::iterator_core_access;
+                    friend class range::iterator_core_access;
                     using base_range_iterator = decltype(range::begin(std::declval<RevRng &>().rng_));
 
                     RevRng *rng_;
@@ -58,12 +58,12 @@ namespace boost
                     {}
                     void increment()
                     {
-                        BOOST_ASSERT(it_ != range::begin(rng_->rng_));
+                        assert(it_ != range::begin(rng_->rng_));
                         --it_;
                     }
                     void decrement()
                     {
-                        BOOST_ASSERT(it_ != range::end(rng_->rng_));
+                        assert(it_ != range::end(rng_->rng_));
                         ++it_;
                     }
                     void advance(typename basic_iterator::difference_type n)
@@ -72,17 +72,17 @@ namespace boost
                     }
                     typename basic_iterator::difference_type distance_to(basic_iterator const &that) const
                     {
-                        BOOST_ASSERT(rng_ == that.rng_);
+                        assert(rng_ == that.rng_);
                         return it_ - that.it_;
                     }
                     bool equal(basic_iterator const &that) const
                     {
-                        BOOST_ASSERT(rng_ == that.rng_);
+                        assert(rng_ == that.rng_);
                         return it_ == that.it_;
                     }
                     auto dereference() const -> decltype(*it_)
                     {
-                        BOOST_ASSERT(it_ != range::begin(rng_->rng_));
+                        assert(it_ != range::begin(rng_->rng_));
                         return *std::prev(it_);
                     }
                 public:

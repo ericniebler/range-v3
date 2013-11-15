@@ -50,6 +50,9 @@ static_assert(!boost::range::RandomAccessIterator<int>(), "");
 static_assert(boost::range::InputRange<boost::range::istream_range<int>>(), "");
 static_assert(!boost::range::InputRange<int>(), "");
 
+static_assert(boost::range::RandomAccessRange<std::vector<int> const &>(), "");
+static_assert(!boost::range::RandomAccessRange<boost::range::istream_range<int>>(), "");
+
 int main()
 {
     std::istringstream sin{"this is his face"};

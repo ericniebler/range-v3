@@ -14,10 +14,10 @@
 #ifndef BOOST_RANGE_V3_ISTREAM_RANGE_HPP
 #define BOOST_RANGE_V3_ISTREAM_RANGE_HPP
 
+#include <cassert>
 #include <istream>
 #include <iterator>
-#include <boost/assert.hpp>
-#include <boost/iterator/iterator_facade.hpp>
+#include <boost/range/v3/detail/iterator_facade.hpp>
 #include <boost/range/v3/range_fwd.hpp>
 
 namespace boost
@@ -40,7 +40,7 @@ namespace boost
             public:
                 // Define const_iterator and iterator together:
                 using const_iterator = struct iterator
-                  : boost::iterator_facade<
+                  : range::iterator_facade<
                         iterator,
                         T const,
                         std::input_iterator_tag
@@ -49,7 +49,7 @@ namespace boost
                     iterator() : rng_{} {}
                 private:
                     friend class istream_range;
-                    friend class boost::iterator_core_access;
+                    friend class range::iterator_core_access;
     
                     explicit iterator(istream_range const & rng)
                       : rng_(rng ? &rng : nullptr)
@@ -57,7 +57,7 @@ namespace boost
                     void increment()
                     {
                         // Don't advance a singular iterator
-                        BOOST_ASSERT(rng_);
+                        assert(rng_);
                         // Fetch the next element, null out the
                         // iterator if it fails
                         if(!rng_->next())
@@ -70,7 +70,7 @@ namespace boost
                     T const & dereference() const
                     {
                         // Don't deref a singular iterator
-                        BOOST_ASSERT(rng_);
+                        assert(rng_);
                         return rng_->obj_;
                     }
                     istream_range const *rng_;

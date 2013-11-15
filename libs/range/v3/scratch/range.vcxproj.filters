@@ -77,5 +77,8 @@
     <ClInclude Include="..\..\..\..\boost\range\v3\concepts.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\boost\range\v3\detail\iterator_facade.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

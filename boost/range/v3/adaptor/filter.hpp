@@ -14,11 +14,11 @@
 #ifndef BOOST_RANGE_V3_ADAPTOR_FILTER_HPP
 #define BOOST_RANGE_V3_ADAPTOR_FILTER_HPP
 
+#include <cassert>
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <boost/assert.hpp>
-#include <boost/iterator/iterator_facade.hpp>
+#include <boost/range/v3/detail/iterator_facade.hpp>
 #include <boost/range/v3/range_fwd.hpp>
 #include <boost/range/v3/range_traits.hpp>
 #include <boost/range/v3/begin_end.hpp>
@@ -47,7 +47,7 @@ namespace boost
                 // FltRng is either filter_range or filter_range const.
                 template<typename FltRng>
                 struct basic_iterator
-                  : boost::iterator_facade<
+                  : range::iterator_facade<
                         basic_iterator<FltRng>
                       , range_value_t<Rng>
                       , decltype(detail::filter_range_category(range_category_t<Rng>{}))
@@ -56,7 +56,7 @@ namespace boost
                 {
                 private:
                     friend struct filter_range;
-                    friend class boost::iterator_core_access;
+                    friend class range::iterator_core_access;
                     using base_range_iterator = decltype(range::begin(std::declval<FltRng &>().rng_and_pred_.first()));
 
                     FltRng *rng_;
@@ -69,7 +69,7 @@ namespace boost
                     }
                     void increment()
                     {
-                        BOOST_ASSERT(it_ != range::end(rng_->rng_and_pred_.first()));
+                        assert(it_ != range::end(rng_->rng_and_pred_.first()));
                         ++it_; satisfy();
                     }
                     void decrement()
@@ -78,12 +78,12 @@ namespace boost
                     }
                     bool equal(basic_iterator const &that) const
                     {
-                        BOOST_ASSERT(rng_ == that.rng_);
+                        assert(rng_ == that.rng_);
                         return it_ == that.it_;
                     }
                     auto dereference() const -> decltype(*it_)
                     {
-                        BOOST_ASSERT(it_ != range::end(rng_->rng_and_pred_.first()));
+                        assert(it_ != range::end(rng_->rng_and_pred_.first()));
                         return *it_;
                     }
                     void satisfy()

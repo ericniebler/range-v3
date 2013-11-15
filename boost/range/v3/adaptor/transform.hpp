@@ -14,11 +14,11 @@
 #ifndef BOOST_RANGE_V3_ADAPTOR_TRANSFORM_HPP
 #define BOOST_RANGE_V3_ADAPTOR_TRANSFORM_HPP
 
+#include <cassert>
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <boost/assert.hpp>
-#include <boost/iterator/iterator_facade.hpp>
+#include <boost/range/v3/detail/iterator_facade.hpp>
 #include <boost/range/v3/range_fwd.hpp>
 #include <boost/range/v3/range_traits.hpp>
 #include <boost/range/v3/begin_end.hpp>
@@ -39,7 +39,7 @@ namespace boost
 
                 template<typename TfxRng>
                 struct basic_iterator
-                  : boost::iterator_facade<
+                  : range::iterator_facade<
                         basic_iterator<TfxRng>
                       , typename std::remove_reference<
                             decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
@@ -53,7 +53,7 @@ namespace boost
                 {
                 private:
                     friend struct transform_range;
-                    friend class boost::iterator_core_access;
+                    friend class range::iterator_core_access;
                     using base_range_iterator = decltype(range::begin(std::declval<TfxRng &>().rng_and_fun_.first()));
 
                     TfxRng *rng_;
@@ -64,12 +64,12 @@ namespace boost
                     {}
                     void increment()
                     {
-                        BOOST_ASSERT(it_ != range::end(rng_->rng_and_fun_.first()));
+                        assert(it_ != range::end(rng_->rng_and_fun_.first()));
                         ++it_;
                     }
                     void decrement()
                     {
-                        BOOST_ASSERT(it_ != range::begin(rng_->rng_and_fun_.first()));
+                        assert(it_ != range::begin(rng_->rng_and_fun_.first()));
                         --it_;
                     }
                     void advance(typename basic_iterator::difference_type n)
@@ -78,17 +78,17 @@ namespace boost
                     }
                     typename basic_iterator::difference_type distance_to(basic_iterator const &that) const
                     {
-                        BOOST_ASSERT(rng_ == that.rng_);
+                        assert(rng_ == that.rng_);
                         return that.it_ - it_;
                     }
                     bool equal(basic_iterator const &that) const
                     {
-                        BOOST_ASSERT(rng_ == that.rng_);
+                        assert(rng_ == that.rng_);
                         return it_ == that.it_;
                     }
                     auto dereference() const -> decltype(rng_->rng_and_fun_.second()(*it_))
                     {
-                        BOOST_ASSERT(it_ != range::end(rng_->rng_and_fun_.first()));
+                        assert(it_ != range::end(rng_->rng_and_fun_.first()));
                         return rng_->rng_and_fun_.second()(*it_);
                     }
                 public:

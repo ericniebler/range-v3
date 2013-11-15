@@ -1,6 +1,5 @@
 // Boost.Range library
 //
-//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008.
 //  Copyright Eric Niebler 2013.
 //
 //  Use, modification and distribution is subject to the
@@ -230,7 +229,13 @@ namespace boost
 
                 struct ForwardIterator
                   : refines<InputIterator>
-                {};
+                {
+                    template<typename T>
+                    auto requires(T && t) -> decltype(
+                        concepts::valid_expr(
+                            concepts::same_type(*t, *t++)
+                        ));
+                };
 
                 struct BidirectionalIterator
                   : refines<ForwardIterator>
