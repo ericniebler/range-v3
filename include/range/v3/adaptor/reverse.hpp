@@ -18,12 +18,13 @@
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <range/v3/detail/iterator_facade.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/utility/bindable.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -35,18 +36,18 @@ namespace range
 
             template<typename RevRng>
             struct basic_iterator
-              : range::iterator_facade<
+              : ranges::iterator_facade<
                     basic_iterator<RevRng>
                   , range_value_t<Rng>
                   , range_category_t<Rng>
-                  , decltype(*range::begin(std::declval<RevRng &>().rng_))
+                  , decltype(*ranges::begin(std::declval<RevRng &>().rng_))
                   , range_difference_t<Rng>
                 >
             {
             private:
                 friend struct reverse_range;
-                friend class range::iterator_core_access;
-                using base_range_iterator = decltype(range::begin(std::declval<RevRng &>().rng_));
+                friend struct ranges::iterator_core_access;
+                using base_range_iterator = decltype(ranges::begin(std::declval<RevRng &>().rng_));
 
                 RevRng *rng_;
                 base_range_iterator it_;
@@ -56,12 +57,12 @@ namespace range
                 {}
                 void increment()
                 {
-                    assert(it_ != range::begin(rng_->rng_));
+                    assert(it_ != ranges::begin(rng_->rng_));
                     --it_;
                 }
                 void decrement()
                 {
-                    assert(it_ != range::end(rng_->rng_));
+                    assert(it_ != ranges::end(rng_->rng_));
                     ++it_;
                 }
                 void advance(typename basic_iterator::difference_type n)
@@ -80,7 +81,7 @@ namespace range
                 }
                 auto dereference() const -> decltype(*it_)
                 {
-                    assert(it_ != range::begin(rng_->rng_));
+                    assert(it_ != ranges::begin(rng_->rng_));
                     return *std::prev(it_);
                 }
             public:
@@ -105,19 +106,19 @@ namespace range
             {}
             iterator begin()
             {
-                return {*this, range::end(rng_)};
+                return {*this, ranges::end(rng_)};
             }
             iterator end()
             {
-                return {*this, range::begin(rng_)};
+                return {*this, ranges::begin(rng_)};
             }
             const_iterator begin() const
             {
-                return {*this, range::end(rng_)};
+                return {*this, ranges::end(rng_)};
             }
             const_iterator end() const
             {
-                return {*this, range::begin(rng_)};
+                return {*this, ranges::begin(rng_)};
             }
             bool operator!() const
             {
@@ -137,7 +138,7 @@ namespace range
             }
         };
 
-        constexpr struct reverser
+        struct reverser
         {
             template<typename Rng>
             reverse_range<Rng> operator()(Rng && rng) const
@@ -149,7 +150,9 @@ namespace range
             {
                 return reverse_range<Rng>{std::forward<Rng>(rng)};
             }
-        } reverse {};
+        };
+        
+        constexpr bindable<reverser> reverse {};
     }
 }
 

@@ -18,8 +18,9 @@
 #include <iterator>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/utility/bindable.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -67,14 +68,16 @@ namespace range
             }
         };
 
-        constexpr struct iterator_range_maker
+        struct ranger
         {
             template<typename Iter>
             constexpr iterator_range<Iter> operator()(Iter begin, Iter end) const
             {
                 return {std::move(begin), std::move(end)};
             }
-        } make_iterator_range {};
+        };
+
+        constexpr bindable<ranger> range {};
     }
 }
 

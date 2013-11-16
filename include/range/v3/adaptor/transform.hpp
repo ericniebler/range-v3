@@ -18,14 +18,15 @@
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <range/v3/detail/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_traits.hpp>
+#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/detail/function_wrapper.hpp>
 #include <range/v3/detail/compressed_pair.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -37,22 +38,23 @@ namespace range
 
             template<typename TfxRng>
             struct basic_iterator
-              : range::iterator_facade<
+              : ranges::iterator_facade<
                     basic_iterator<TfxRng>
                   , typename std::remove_reference<
                         decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
-                            *range::begin(std::declval<TfxRng &>().rng_and_fun_.first())))
+                            *ranges::begin(std::declval<TfxRng &>().rng_and_fun_.first())))
                     >::type
                   , range_category_t<Rng>
                   , decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
-                        *range::begin(std::declval<TfxRng &>().rng_and_fun_.first())))
+                        *ranges::begin(std::declval<TfxRng &>().rng_and_fun_.first())))
                   , range_difference_t<Rng>
                 >
             {
             private:
                 friend struct transform_range;
-                friend class range::iterator_core_access;
-                using base_range_iterator = decltype(range::begin(std::declval<TfxRng &>().rng_and_fun_.first()));
+                friend struct ranges::iterator_core_access;
+                using base_range_iterator =
+                    decltype(ranges::begin(std::declval<TfxRng &>().rng_and_fun_.first()));
 
                 TfxRng *rng_;
                 base_range_iterator it_;
@@ -62,12 +64,12 @@ namespace range
                 {}
                 void increment()
                 {
-                    assert(it_ != range::end(rng_->rng_and_fun_.first()));
+                    assert(it_ != ranges::end(rng_->rng_and_fun_.first()));
                     ++it_;
                 }
                 void decrement()
                 {
-                    assert(it_ != range::begin(rng_->rng_and_fun_.first()));
+                    assert(it_ != ranges::begin(rng_->rng_and_fun_.first()));
                     --it_;
                 }
                 void advance(typename basic_iterator::difference_type n)
@@ -86,7 +88,7 @@ namespace range
                 }
                 auto dereference() const -> decltype(rng_->rng_and_fun_.second()(*it_))
                 {
-                    assert(it_ != range::end(rng_->rng_and_fun_.first()));
+                    assert(it_ != ranges::end(rng_->rng_and_fun_.first()));
                     return rng_->rng_and_fun_.second()(*it_);
                 }
             public:
@@ -111,19 +113,19 @@ namespace range
             {}
             iterator begin()
             {
-                return {*this, range::begin(rng_and_fun_.first())};
+                return {*this, ranges::begin(rng_and_fun_.first())};
             }
             iterator end()
             {
-                return {*this, range::end(rng_and_fun_.first())};
+                return {*this, ranges::end(rng_and_fun_.first())};
             }
             const_iterator begin() const
             {
-                return {*this, range::begin(rng_and_fun_.first())};
+                return {*this, ranges::begin(rng_and_fun_.first())};
             }
             const_iterator end() const
             {
-                return {*this, range::end(rng_and_fun_.first())};
+                return {*this, ranges::end(rng_and_fun_.first())};
             }
             bool operator!() const
             {
@@ -143,7 +145,7 @@ namespace range
             }
         };
 
-        constexpr struct transformer
+        struct transformer
         {
         private:
             template<typename Fun>
@@ -176,7 +178,9 @@ namespace range
             {
                 return fun;
             }
-        } transform {};
+        };
+        
+        constexpr bindable<transformer> transform {};
     }
 }
 

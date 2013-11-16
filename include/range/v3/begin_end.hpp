@@ -16,8 +16,9 @@
 
 #include <iterator>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/bindable.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -63,10 +64,10 @@ namespace range
             };
         }
 
-        constexpr adl_begin_end_detail::begin_t begin {};
-        constexpr adl_begin_end_detail::end_t end {};
-        constexpr adl_begin_end_detail::cbegin_t cbegin {};
-        constexpr adl_begin_end_detail::cend_t cend {};
+        constexpr bindable<adl_begin_end_detail::begin_t> begin {};
+        constexpr bindable<adl_begin_end_detail::end_t> end {};
+        constexpr bindable<adl_begin_end_detail::cbegin_t> cbegin {};
+        constexpr bindable<adl_begin_end_detail::cend_t> cend {};
     }
 }
 

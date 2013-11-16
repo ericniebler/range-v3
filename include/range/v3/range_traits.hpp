@@ -19,14 +19,14 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
         template<typename Rng>
         struct range_iterator
         {
-            using type = decltype(range::begin(std::declval<Rng>()));
+            using type = decltype(ranges::begin(std::declval<Rng>()));
         };
 
         template<typename Rng>

@@ -18,7 +18,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -55,7 +55,8 @@ namespace range
             struct compressed_pair<
                 First
               , Second
-              , typename std::enable_if<std::is_empty<First>::value && !std::is_empty<Second>::value>::type
+              , typename std::enable_if<std::is_empty<First>::value &&
+                                      !std::is_empty<Second>::value>::type
             >
               : private First
             {
@@ -83,7 +84,8 @@ namespace range
             struct compressed_pair<
                 First
               , Second
-              , typename std::enable_if<!std::is_empty<First>::value && std::is_empty<Second>::value>::type
+              , typename std::enable_if<!std::is_empty<First>::value &&
+                                         std::is_empty<Second>::value>::type
             >
               : private Second
             {
@@ -111,7 +113,8 @@ namespace range
             struct compressed_pair<
                 First
               , Second
-              , typename std::enable_if<std::is_empty<First>::value && std::is_empty<Second>::value>::type
+              , typename std::enable_if<std::is_empty<First>::value &&
+                                        std::is_empty<Second>::value>::type
             >
               : private First, private Second
             {
@@ -135,7 +138,8 @@ namespace range
             constexpr struct compressed_pair_maker
             {
                 template<typename First, typename Second>
-                constexpr auto operator()(First && f, Second && s) const -> compressed_pair<First, Second>
+                constexpr auto operator()(First && f, Second && s) const ->
+                    compressed_pair<First, Second>
                 {
                     return {std::forward<First>(f), std::forward<Second>(s)};
                 }

@@ -17,8 +17,9 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/utility/bindable.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -28,7 +29,7 @@ namespace range
         private:
             Rng rng_;
         public:
-            using const_iterator = decltype(range::cbegin(std::declval<Rng const &>()));
+            using const_iterator = decltype(ranges::cbegin(std::declval<Rng const &>()));
             using iterator = const_iterator;
 
             explicit const_range(Rng && rng)
@@ -36,11 +37,11 @@ namespace range
             {}
             iterator begin() const
             {
-                return range::cbegin(rng_);
+                return ranges::cbegin(rng_);
             }
             iterator end() const
             {
-                return range::cend(rng_);
+                return ranges::cend(rng_);
             }
             bool operator!() const
             {
@@ -52,7 +53,7 @@ namespace range
             }
         };
 
-        constexpr struct conster
+        struct conster
         {
             // E.g.: rng | const_
             template<typename Rng>
@@ -66,7 +67,9 @@ namespace range
             {
                 return const_range<Rng>{std::forward<Rng>()};
             }
-        } const_ {};
+        };
+        
+        constexpr bindable<conster> const_ {};
     }
 }
 

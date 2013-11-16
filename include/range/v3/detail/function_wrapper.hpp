@@ -17,7 +17,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {

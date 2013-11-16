@@ -17,10 +17,10 @@
 #include <cassert>
 #include <istream>
 #include <iterator>
-#include <range/v3/detail/iterator_facade.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -38,7 +38,7 @@ namespace range
         public:
             // Define const_iterator and iterator together:
             using const_iterator = struct iterator
-              : range::iterator_facade<
+              : ranges::iterator_facade<
                     iterator,
                     T const,
                     std::input_iterator_tag
@@ -46,8 +46,8 @@ namespace range
             {
                 iterator() : rng_{} {}
             private:
-                friend class istream_range;
-                friend class range::iterator_core_access;
+                friend struct istream_range;
+                friend struct ranges::iterator_core_access;
 
                 explicit iterator(istream_range const & rng)
                   : rng_(rng ? &rng : nullptr)

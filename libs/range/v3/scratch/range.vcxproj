@@ -41,9 +41,9 @@
     <NMakeCleanCommandLine>C:\gnuwin32\bin\make.exe clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>C:\gnuwin32\bin\make.exe -B all</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeIncludeSearchPath>..\..\..\..;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>..\..\..\..\include;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <ExecutablePath>C:\cygwin\bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>..\..\..\..;C:\boost\org\trunk;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\..\..\include;C:\boost\org\trunk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>C:\gnuwin32\bin\make.exe all</NMakeBuildCommandLine>
@@ -51,9 +51,9 @@
     <NMakeCleanCommandLine>C:\gnuwin32\bin\make.exe clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>C:\gnuwin32\bin\make.exe -B all</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeIncludeSearchPath>..\..\..\..;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>..\..\..\..\include;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <ExecutablePath>C:\cygwin\bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>..\..\..\..;C:\boost\org\trunk;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\..\..\include;C:\boost\org\trunk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
@@ -67,22 +67,27 @@
     <ClCompile Include="range.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\boost\range\v3\algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\adaptors.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\adaptor\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\adaptor\filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\adaptor\reverse.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\adaptor\transform.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\function_wrapper.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\iterator_facade.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\join_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\bindable.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_facade.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

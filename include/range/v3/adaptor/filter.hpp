@@ -18,14 +18,15 @@
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <range/v3/detail/iterator_facade.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/detail/function_wrapper.hpp>
 #include <range/v3/detail/compressed_pair.hpp>
+#include <range/v3/utility/bindable.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -45,18 +46,18 @@ namespace range
             // FltRng is either filter_range or filter_range const.
             template<typename FltRng>
             struct basic_iterator
-              : range::iterator_facade<
+              : ranges::iterator_facade<
                     basic_iterator<FltRng>
                   , range_value_t<Rng>
                   , decltype(detail::filter_range_category(range_category_t<Rng>{}))
-                  , decltype(*range::begin(std::declval<FltRng &>().rng_and_pred_.first()))
+                  , decltype(*ranges::begin(std::declval<FltRng &>().rng_and_pred_.first()))
                 >
             {
             private:
                 friend struct filter_range;
-                friend class range::iterator_core_access;
+                friend struct ranges::iterator_core_access;
                 using base_range_iterator =
-                    decltype(range::begin(std::declval<FltRng &>().rng_and_pred_.first()));
+                    decltype(ranges::begin(std::declval<FltRng &>().rng_and_pred_.first()));
 
                 FltRng *rng_;
                 base_range_iterator it_;
@@ -68,7 +69,7 @@ namespace range
                 }
                 void increment()
                 {
-                    assert(it_ != range::end(rng_->rng_and_pred_.first()));
+                    assert(it_ != ranges::end(rng_->rng_and_pred_.first()));
                     ++it_; satisfy();
                 }
                 void decrement()
@@ -82,12 +83,12 @@ namespace range
                 }
                 auto dereference() const -> decltype(*it_)
                 {
-                    assert(it_ != range::end(rng_->rng_and_pred_.first()));
+                    assert(it_ != ranges::end(rng_->rng_and_pred_.first()));
                     return *it_;
                 }
                 void satisfy()
                 {
-                    auto const e = range::end(rng_->rng_and_pred_.first());
+                    auto const e = ranges::end(rng_->rng_and_pred_.first());
                     while(it_ != e && !rng_->rng_and_pred_.second()(*it_))
                         ++it_;
                 }
@@ -112,19 +113,19 @@ namespace range
             {}
             iterator begin()
             {
-                return {*this, range::begin(rng_and_pred_.first())};
+                return {*this, ranges::begin(rng_and_pred_.first())};
             }
             iterator end()
             {
-                return {*this, range::end(rng_and_pred_.first())};
+                return {*this, ranges::end(rng_and_pred_.first())};
             }
             const_iterator begin() const
             {
-                return {*this, range::begin(rng_and_pred_.first())};
+                return {*this, ranges::begin(rng_and_pred_.first())};
             }
             const_iterator end() const
             {
-                return {*this, range::end(rng_and_pred_.first())};
+                return {*this, ranges::end(rng_and_pred_.first())};
             }
             bool operator!() const
             {
@@ -144,7 +145,7 @@ namespace range
             }
         };
 
-        constexpr struct filterer
+        struct filterer
         {
         private:
             template<typename Pred>
@@ -177,7 +178,9 @@ namespace range
             {
                 return pred;
             }
-        } filter {};
+        };
+        
+        constexpr bindable<filterer> filter {};
     }
 }
 

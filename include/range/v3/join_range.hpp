@@ -19,12 +19,13 @@
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <range/v3/detail/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -117,20 +118,20 @@ namespace range
             // FltRng is either join_range or join_range const.
             template<typename JoinRng>
             struct basic_iterator
-              : range::iterator_facade<
+              : ranges::iterator_facade<
                     basic_iterator<JoinRng>
                   , range_value_t<Rng0>
                   , decltype(true ? range_category_t<Rng0>{} : range_category_t<Rng1>{})
-                  , decltype(true ? *range::begin(std::declval<JoinRng &>().rng0_)
-                                  : *range::begin(std::declval<JoinRng &>().rng1_))
+                  , decltype(true ? *ranges::begin(std::declval<JoinRng &>().rng0_)
+                                  : *ranges::begin(std::declval<JoinRng &>().rng1_))
                   , decltype(true ? range_difference_t<Rng0>{} : range_difference_t<Rng1>{})
                 >
             {
             private:
                 friend struct join_range;
-                friend class range::iterator_core_access;
-                using base_range_iterator0 = decltype(range::begin(std::declval<JoinRng &>().rng0_));
-                using base_range_iterator1 = decltype(range::begin(std::declval<JoinRng &>().rng1_));
+                friend struct ranges::iterator_core_access;
+                using base_range_iterator0 = decltype(ranges::begin(std::declval<JoinRng &>().rng0_));
+                using base_range_iterator1 = decltype(ranges::begin(std::declval<JoinRng &>().rng1_));
 
                 JoinRng * rng_;
                 union
@@ -151,16 +152,16 @@ namespace range
                     switch(which_)
                     {
                     case detail::which::first:
-                        if(++it0_ == range::end(rng_->rng0_))
+                        if(++it0_ == ranges::end(rng_->rng0_))
                         {
                             it0_.~base_range_iterator0();
                             which_ = detail::which::neither;
-                            ::new((void*)&it1_) base_range_iterator1(range::begin(rng_->rng1_));
+                            ::new((void*)&it1_) base_range_iterator1(ranges::begin(rng_->rng1_));
                             which_ = detail::which::second;
                         }
                         break;
                     case detail::which::second:
-                        assert(it1_ != range::end(rng_->rng1_));
+                        assert(it1_ != ranges::end(rng_->rng1_));
                         ++it1_;
                         break;
                     default:
@@ -173,17 +174,17 @@ namespace range
                     switch(which_)
                     {
                     case detail::which::first:
-                        assert(it0_ != range::begin(rng_->rng0_));
+                        assert(it0_ != ranges::begin(rng_->rng0_));
                         --it0_;
                         break;
                     case detail::which::second:
-                        if(it1_ != range::begin(rng_->rng1_))
+                        if(it1_ != ranges::begin(rng_->rng1_))
                             --it1_;
                         else
                         {
                             it1_.~base_range_iterator1();
                             which_ = detail::which::neither;
-                            ::new((void*)&it0_) base_range_iterator0(std::prev(range::end(rng_->rng0_)));
+                            ::new((void*)&it0_) base_range_iterator0(std::prev(ranges::end(rng_->rng0_)));
                             which_ = detail::which::first;
                         }
                         break;
@@ -199,12 +200,12 @@ namespace range
                     case detail::which::first:
                         if(n > 0)
                         {
-                            detail::advance_fwd_bounded(it0_, range::end(rng_->rng0_), n);
-                            if(it0_ == range::end(rng_->rng0_))
+                            detail::advance_fwd_bounded(it0_, ranges::end(rng_->rng0_), n);
+                            if(it0_ == ranges::end(rng_->rng0_))
                             {
                                 it0_.~base_range_iterator0();
                                 which_ = detail::which::neither;
-                                ::new((void*)&it1_) base_range_iterator1(range::begin(rng_->rng1_));
+                                ::new((void*)&it1_) base_range_iterator1(ranges::begin(rng_->rng1_));
                                 which_ = detail::which::second;
                                 std::advance(it1_, n);
                             }
@@ -215,12 +216,12 @@ namespace range
                     case detail::which::second:
                         if(n < 0)
                         {
-                            detail::advance_back_bounded(it1_, range::begin(rng_->rng1_), n);
+                            detail::advance_back_bounded(it1_, ranges::begin(rng_->rng1_), n);
                             if(n < 0)
                             {
                                 it1_.~base_range_iterator1();
                                 which_ = detail::which::neither;
-                                ::new((void*)&it0_) base_range_iterator0(range::end(rng_->rng0_));
+                                ::new((void*)&it0_) base_range_iterator0(ranges::end(rng_->rng0_));
                                 which_ = detail::which::first;
                                 std::advance(it0_, n);
                             }
@@ -244,8 +245,8 @@ namespace range
                         case detail::which::first:
                             return that.it0_ - it0_;
                         case detail::which::second:
-                            return (range::end(rng_->rng0_) - it0_) +
-                                   (that.it1_ - range::begin(rng_->rng1_));
+                            return (ranges::end(rng_->rng0_) - it0_) +
+                                   (that.it1_ - ranges::begin(rng_->rng1_));
                         default:
                             assert(!"Attempt to use an invalid join_range iterator");
                             return 0;
@@ -254,8 +255,8 @@ namespace range
                         switch(that.which_)
                         {
                         case detail::which::first:
-                            return (range::begin(rng_->rng1_) - it1_) +
-                                   (that.it0_ - range::end(rng_->rng0_));
+                            return (ranges::begin(rng_->rng1_) - it1_) +
+                                   (that.it0_ - ranges::end(rng_->rng0_));
                             return 0;
                         case detail::which::second:
                             return that.it1_ - it1_;
@@ -291,7 +292,7 @@ namespace range
                     case detail::which::first:
                         return *it0_;
                     case detail::which::second:
-                        assert(it1_ != range::end(rng_->rng1_));
+                        assert(it1_ != ranges::end(rng_->rng1_));
                         return *it1_;
                     default:
                         assert(!"Attempt to dereference an invalid join_range iterator");
@@ -423,19 +424,19 @@ namespace range
             {}
             iterator begin()
             {
-                return {*this, range::begin(rng0_), detail::first_range_tag{}};
+                return {*this, ranges::begin(rng0_), detail::first_range_tag{}};
             }
             iterator end()
             {
-                return {*this, range::end(rng1_), detail::second_range_tag{}};
+                return {*this, ranges::end(rng1_), detail::second_range_tag{}};
             }
             const_iterator begin() const
             {
-                return {*this, range::begin(rng0_), detail::first_range_tag{}};
+                return {*this, ranges::begin(rng0_), detail::first_range_tag{}};
             }
             const_iterator end() const
             {
-                return {*this, range::end(rng1_), detail::second_range_tag{}};
+                return {*this, ranges::end(rng1_), detail::second_range_tag{}};
             }
             bool operator!() const
             {
@@ -463,14 +464,16 @@ namespace range
             }
         };
 
-        constexpr struct joiner
+        struct joiner
         {
             template<typename Rng0, typename Rng1>
             join_range<Rng0, Rng1> operator()(Rng0 && rng0, Rng1 && rng1) const
             {
                 return {std::forward<Rng0>(rng0), std::forward<Rng1>(rng1)};
             }
-        } join {};
+        };
+
+        constexpr bindable<joiner> join {};
     }
 }
 

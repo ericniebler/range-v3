@@ -16,7 +16,7 @@
 
 #include <iosfwd>
 
-namespace range
+namespace ranges
 {
     inline namespace v3
     {
@@ -28,10 +28,16 @@ namespace range
             struct cend_t;
         }
 
-        extern adl_begin_end_detail::begin_t const begin;
-        extern adl_begin_end_detail::end_t const end;
-        extern adl_begin_end_detail::cbegin_t const cbegin;
-        extern adl_begin_end_detail::cend_t const cend;
+        template<typename Fun>
+        struct bindable;
+
+        template<typename ...T>
+        struct is_bind_expression;
+
+        extern bindable<adl_begin_end_detail::begin_t> const begin;
+        extern bindable<adl_begin_end_detail::end_t> const end;
+        extern bindable<adl_begin_end_detail::cbegin_t> const cbegin;
+        extern bindable<adl_begin_end_detail::cend_t> const cend;
 
         namespace detail
         {
@@ -57,38 +63,38 @@ namespace range
         template<typename Iter>
         struct iterator_range;
 
-        struct iterator_range_maker;
-        extern iterator_range_maker const make_iterator_range;
+        struct ranger;
+        extern bindable<ranger> const range;
 
         template<typename Rng0, typename Rng1>
         struct join_range;
 
         struct joiner;
-        extern joiner const join;
+        extern bindable<joiner> const join;
 
         template<typename Rng>
         struct const_range;
 
         struct conster;
-        extern conster const const_;
+        extern bindable<conster> const const_;
 
         template<typename Rng, typename Pred>
         struct filter_range;
 
         struct filterer;
-        extern filterer const filter;
+        extern bindable<filterer> const filter;
 
         template<typename Rng>
         struct reverse_range;
 
         struct reverser;
-        extern reverser const reverse;
+        extern bindable<reverser> const reverse;
 
         template<typename Rng, typename Fun>
         struct transform_range;
 
         struct transformer;
-        extern transformer const transform;
+        extern bindable<transformer> const transform;
 
         template<typename Rng>
         struct range_iterator;
@@ -125,6 +131,9 @@ namespace range
 
         template<typename Rng>
         using range_pointer_t = typename range_pointer<Rng>::type;
+
+        struct adjacent_finder;
+        extern bindable<adjacent_finder> const adjacent_find;
     }
 }
 

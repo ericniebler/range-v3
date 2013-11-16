@@ -14,7 +14,9 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <functional>
 #include <range/v3/range.hpp>
+#include <range/v3/utility/bindable.hpp>
 
 struct noncopyable
 {
@@ -26,46 +28,71 @@ struct nondefaultconstructible
     nondefaultconstructible(int) {};
 };
 
-static_assert(range::Assignable<int>(), "");
-static_assert(!range::Assignable<int const>(), "");
+static_assert(ranges::Assignable<int>(), "");
+static_assert(!ranges::Assignable<int const>(), "");
 
-static_assert(range::CopyConstructible<int>(), "");
-static_assert(!range::CopyConstructible<noncopyable>(), "");
+static_assert(ranges::CopyConstructible<int>(), "");
+static_assert(!ranges::CopyConstructible<noncopyable>(), "");
 
-static_assert(range::DefaultConstructible<int>(), "");
-static_assert(!range::DefaultConstructible<nondefaultconstructible>(), "");
+static_assert(ranges::DefaultConstructible<int>(), "");
+static_assert(!ranges::DefaultConstructible<nondefaultconstructible>(), "");
 
-static_assert(range::InputIterator<int*>(), "");
-static_assert(!range::InputIterator<int>(), "");
+static_assert(ranges::InputIterator<int*>(), "");
+static_assert(!ranges::InputIterator<int>(), "");
 
-static_assert(range::ForwardIterator<int*>(), "");
-static_assert(!range::ForwardIterator<int>(), "");
+static_assert(ranges::ForwardIterator<int*>(), "");
+static_assert(!ranges::ForwardIterator<int>(), "");
 
-static_assert(range::BidirectionalIterator<int*>(), "");
-static_assert(!range::BidirectionalIterator<int>(), "");
+static_assert(ranges::BidirectionalIterator<int*>(), "");
+static_assert(!ranges::BidirectionalIterator<int>(), "");
 
-static_assert(range::RandomAccessIterator<int*>(), "");
-static_assert(!range::RandomAccessIterator<int>(), "");
+static_assert(ranges::RandomAccessIterator<int*>(), "");
+static_assert(!ranges::RandomAccessIterator<int>(), "");
 
-static_assert(range::InputRange<range::istream_range<int>>(), "");
-static_assert(!range::InputRange<int>(), "");
+static_assert(ranges::InputRange<ranges::istream_range<int>>(), "");
+static_assert(!ranges::InputRange<int>(), "");
 
-static_assert(range::RandomAccessRange<std::vector<int> const &>(), "");
-static_assert(!range::RandomAccessRange<range::istream_range<int>>(), "");
+static_assert(ranges::RandomAccessRange<std::vector<int> const &>(), "");
+static_assert(!ranges::RandomAccessRange<ranges::istream_range<int>>(), "");
+
+static_assert(ranges::BinaryPredicate<std::less<int>, int, int>(), "");
+static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
+
+template<std::size_t> struct undef;
+
+struct S
+{
+    int operator()(int i) const
+    {
+        std::cout << i << std::endl;
+        return i + 1;
+    }
+};
+
+constexpr ranges::bindable<S> s {};
 
 int main()
 {
+    using namespace std::placeholders;
+    s(42);
+    s(s(_1))(42);
+
+    // Aw, yeah!
+    std::vector<int> vi{1,2,2,3,4};
+    for( int i : vi | ranges::range(ranges::adjacent_find(_1), ranges::end(_1)))
+        std::cout << "> " << i << '\n';
+
     std::istringstream sin{"this is his face"};
-    range::istream_range<std::string> lines{sin};
-    for(auto line : range::filter(lines, [](std::string s){return s.length()>2;}))
+    ranges::istream_range<std::string> lines{sin};
+    for(auto line : ranges::filter(lines, [](std::string s){return s.length()>2;}))
         std::cout << "> " << line << '\n';
 
     auto lines2 = std::vector<std::string>{"this","is","his","face"}
-                    | range::filter([](std::string s){return s.length()>2;})
-                    | range::filter([](std::string s){return s.length()<4;})
-                    | range::transform([](std::string s){return s + " or her";})
+                    | ranges::filter([](std::string s){return s.length()>2;})
+                    | ranges::filter([](std::string s){return s.length()<4;})
+                    | ranges::transform([](std::string s){return s + " or her";})
                     ;
-    //undef<sizeof(lines2)> t;
+    //undef<sizeof(lines2)> ttt;
     for(std::string const & line : lines2)
     {
         //line += " or her";
@@ -79,18 +106,18 @@ int main()
 
     std::cout << "\n";
     auto sizes = std::vector<std::string>{"this","is","his","face"}
-                    | range::transform(&std::string::length);
+                    | ranges::transform(&std::string::length);
     for(std::size_t size : sizes)
         std::cout << "> " << size << '\n';
 
     std::cout << "\n";
     //std::istringstream sin2{"this is his face"};
-    auto joined = range::join(std::vector<std::string>{"this","is","his","face"},
-                                     std::vector<std::string>{"another","fine","mess"});
-    for(std::string & s : joined | range::reverse)
+    auto joined = ranges::join(std::vector<std::string>{"this","is","his","face"},
+                               std::vector<std::string>{"another","fine","mess"});
+    for(std::string & s : joined | ranges::reverse)
         std::cout << "> " << s << '\n';
 
-    auto revjoin = joined | range::reverse;
+    auto revjoin = joined | ranges::reverse;
     std::cout << "*** " << (revjoin.end() - revjoin.begin()) << std::endl;
 
     std::cout << '\n';
