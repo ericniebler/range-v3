@@ -145,11 +145,6 @@ namespace ranges
             {
                 return reverse_range<Rng>{std::forward<Rng>(rng)};
             }
-            template<typename Rng>
-            friend reverse_range<Rng> operator|(Rng && rng, reverser const &)
-            {
-                return reverse_range<Rng>{std::forward<Rng>(rng)};
-            }
         };
         
         constexpr bindable<reverser> reverse {};

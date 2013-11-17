@@ -157,14 +157,14 @@ namespace ranges
                   : fun_(std::move(fun))
                 {}
                 template<typename Rng>
-                friend transform_range<Rng, Fun> operator|(Rng && rng, transformer1 && fun)
+                transform_range<Rng, Fun> operator()(Rng && rng) &&
                 {
-                    return {std::forward<Rng>(rng), std::move(fun).fun_};
+                    return {std::forward<Rng>(rng), std::move(*this).fun_};
                 }
                 template<typename Rng>
-                friend transform_range<Rng, Fun> operator|(Rng && rng, transformer1 const & fun)
+                transform_range<Rng, Fun> operator()(Rng && rng) const &
                 {
-                    return {std::forward<Rng>(rng), fun.fun_};
+                    return {std::forward<Rng>(rng), fun_};
                 }
             };
         public:
@@ -174,12 +174,12 @@ namespace ranges
                 return {std::forward<Rng>(rng), std::move(fun)};
             }
             template<typename Fun>
-            constexpr transformer1<Fun> operator()(Fun fun) const
+            constexpr bindable<transformer1<Fun>> operator()(Fun fun) const
             {
-                return fun;
+                return bindable<transformer1<Fun>>{transformer1<Fun>{fun}};
             }
         };
-        
+
         constexpr bindable<transformer> transform {};
     }
 }

@@ -60,37 +60,40 @@ static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
 
 template<std::size_t> struct undef;
 
-struct S
-{
-    int operator()(int i) const
-    {
-        std::cout << i << std::endl;
-        return i + 1;
-    }
-};
-
-constexpr ranges::bindable<S> s {};
-
 int main()
 {
+    using namespace ranges;
     using namespace std::placeholders;
-    s(42);
-    s(s(_1))(42);
 
     // Aw, yeah!
     std::vector<int> vi{1,2,2,3,4};
-    for( int i : vi | ranges::range(ranges::adjacent_find(_1), ranges::end(_1)))
+    for( int i : vi | range(adjacent_find(_1), end(_1)))
         std::cout << "> " << i << '\n';
 
+    std::cout << "\n";
+    for( int i : vi | transform(_1, [](int i){return i*2;}))
+        std::cout << "> " << i << '\n';
+
+    std::cout << "\n";
+    for( int i : vi | (_1 | transform([](int i){return -i;})))
+        std::cout << "> " << i << '\n';
+
+    // BUGBUG
+    //std::cout << "\n";
+    //for( int i : vi | (_1 | transform(_1, [](int i){return -i;})))
+    //    std::cout << "> " << i << '\n';
+
+    std::cout << "\n";
     std::istringstream sin{"this is his face"};
-    ranges::istream_range<std::string> lines{sin};
-    for(auto line : ranges::filter(lines, [](std::string s){return s.length()>2;}))
+    istream_range<std::string> lines{sin};
+    for(auto line : filter(lines, [](std::string s){return s.length()>2;}))
         std::cout << "> " << line << '\n';
 
+    std::cout << "\n";
     auto lines2 = std::vector<std::string>{"this","is","his","face"}
-                    | ranges::filter([](std::string s){return s.length()>2;})
-                    | ranges::filter([](std::string s){return s.length()<4;})
-                    | ranges::transform([](std::string s){return s + " or her";})
+                    | filter([](std::string s){return s.length()>2;})
+                    | filter(_1, [](std::string s){return s.length()<4;})
+                    | transform([](std::string s){return s + " or her";})
                     ;
     //undef<sizeof(lines2)> ttt;
     for(std::string const & line : lines2)
@@ -101,23 +104,24 @@ int main()
     auto b = lines2.begin();
     decltype(lines2)::const_iterator bc = b;
 
+    std::cout << "\n";
     for(auto const &line : lines2.base().base())//.base())
         std::cout << "> " << line << '\n';
 
     std::cout << "\n";
     auto sizes = std::vector<std::string>{"this","is","his","face"}
-                    | ranges::transform(&std::string::length);
+                    | transform(&std::string::length);
     for(std::size_t size : sizes)
         std::cout << "> " << size << '\n';
 
     std::cout << "\n";
     //std::istringstream sin2{"this is his face"};
-    auto joined = ranges::join(std::vector<std::string>{"this","is","his","face"},
-                               std::vector<std::string>{"another","fine","mess"});
-    for(std::string & s : joined | ranges::reverse)
+    auto joined = join(std::vector<std::string>{"this","is","his","face"},
+                       std::vector<std::string>{"another","fine","mess"});
+    for(std::string & s : joined | reverse)
         std::cout << "> " << s << '\n';
 
-    auto revjoin = joined | ranges::reverse;
+    auto revjoin = joined | reverse;
     std::cout << "*** " << (revjoin.end() - revjoin.begin()) << std::endl;
 
     std::cout << '\n';

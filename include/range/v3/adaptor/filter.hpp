@@ -157,14 +157,14 @@ namespace ranges
                   : pred_(std::move(pred))
                 {}
                 template<typename Rng>
-                friend filter_range<Rng, Pred> operator|(Rng && rng, filterer1 && pred)
+                filter_range<Rng, Pred> operator()(Rng && rng) &&
                 {
-                    return {std::forward<Rng>(rng), std::move(pred).pred_};
+                    return {std::forward<Rng>(rng), std::move(*this).pred_};
                 }
                 template<typename Rng>
-                friend filter_range<Rng, Pred> operator|(Rng && rng, filterer1 const & pred)
+                filter_range<Rng, Pred> operator()(Rng && rng) const &
                 {
-                    return {std::forward<Rng>(rng), pred.pred_};
+                    return {std::forward<Rng>(rng), pred_};
                 }
             };
         public:
@@ -174,9 +174,9 @@ namespace ranges
                 return {std::forward<Rng>(rng), std::move(pred)};
             }
             template<typename Pred>
-            constexpr filterer1<Pred> operator()(Pred pred) const
+            constexpr bindable<filterer1<Pred>> operator()(Pred pred) const
             {
-                return pred;
+                return bindable<filterer1<Pred>>{filterer1<Pred>{pred}};
             }
         };
         

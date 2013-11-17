@@ -134,9 +134,13 @@ namespace ranges
         struct bindable : Fun
         {
         private:
-            constexpr Fun const & fun() const
+            constexpr Fun const & fun() const &
             {
                 return *this;
+            }
+            constexpr Fun && fun() const &&
+            {
+                return const_cast<bindable &&>(*this);
             }
         public:
             bindable() = default;
@@ -144,35 +148,86 @@ namespace ranges
             bindable(Fun fun)
               : Fun(std::move(fun))
             {}
-
             // This gets called when one or more of the arguments are either a
             // std placeholder, or another bind expression made with bindable
             template<typename ...Args,
                 CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
-            constexpr auto operator()(Args &&... args) const
+            constexpr auto operator()(Args &&... args) const &
                 -> decltype(detail::bind(std::declval<Fun const &>(),
                                          detail::unwrap_bind(std::forward<Args>(args))...))
             {
                 return detail::bind(fun(),
                                     detail::unwrap_bind(std::forward<Args>(args))...);
             }
-
+            // This gets called when one or more of the arguments are either a
+            // std placeholder, or another bind expression made with bindable
+            template<typename ...Args,
+                CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
+            constexpr auto operator()(Args &&... args) const &&
+                -> decltype(detail::bind(std::declval<Fun &&>(),
+                                         detail::unwrap_bind(std::forward<Args>(args))...))
+            {
+                return detail::bind(std::move(*this).fun(),
+                                    detail::unwrap_bind(std::forward<Args>(args))...);
+            }
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.
             template<typename ...Args,
                 CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
-            constexpr auto operator()(Args &&... args) const
+            constexpr auto operator()(Args &&... args) const &
                 -> decltype(std::declval<Fun const &>()(std::forward<Args>(args)...))
             {
                 return fun()(std::forward<Args>(args)...);
             }
+            // This gets called when none of the arguments are std placeholders
+            // or bind expressions.
+            template<typename ...Args,
+                CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
+            constexpr auto operator()(Args &&... args) const &&
+                -> decltype(std::declval<Fun &&>()(std::forward<Args>(args)...))
+            {
+                return std::move(*this).fun()(std::forward<Args>(args)...);
+            }
 
+            // This gets called when one or more of the arguments are either a
+            // std placeholder, or another bind expression made with bindable
+            template<typename Arg,
+                CONCEPT_REQUIRES(True<is_bind_expression<Arg>>())>
+            constexpr friend auto operator|(Arg && arg, bindable const & bind)
+                -> decltype(detail::bind(std::declval<Fun const &>(),
+                                         detail::unwrap_bind(std::forward<Arg>(arg))))
+            {
+                return detail::bind(bind.fun(),
+                                    detail::unwrap_bind(std::forward<Arg>(arg)));
+            }
+            // This gets called when one or more of the arguments are either a
+            // std placeholder, or another bind expression made with bindable
+            template<typename Arg,
+                CONCEPT_REQUIRES(True<is_bind_expression<Arg>>())>
+            constexpr friend auto operator|(Arg && arg, bindable && bind)
+                -> decltype(detail::bind(std::declval<Fun &&>(),
+                                         detail::unwrap_bind(std::forward<Arg>(arg))))
+            {
+                return detail::bind(std::move(bind).fun(),
+                                    detail::unwrap_bind(std::forward<Arg>(arg)));
+            }
+            // This gets called when none of the arguments are std placeholders
+            // or bind expressions.
             template<typename Arg,
                 CONCEPT_REQUIRES(False<is_bind_expression<Arg>>())>
-            friend auto operator|(Arg && arg, bindable const & bind)
+            constexpr friend auto operator|(Arg && arg, bindable const & bind)
                 -> decltype(std::declval<Fun const &>()(std::forward<Arg>(arg)))
             {
                 return bind.fun()(std::forward<Arg>(arg));
+            }
+            // This gets called when none of the arguments are std placeholders
+            // or bind expressions.
+            template<typename Arg,
+                CONCEPT_REQUIRES(False<is_bind_expression<Arg>>())>
+            constexpr friend auto operator|(Arg && arg, bindable && bind)
+                -> decltype(std::declval<Fun &&>()(std::forward<Arg>(arg)))
+            {
+                return std::move(bind).fun()(std::forward<Arg>(arg));
             }
         };
     }

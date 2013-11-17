@@ -55,13 +55,6 @@ namespace ranges
 
         struct conster
         {
-            // E.g.: rng | const_
-            template<typename Rng>
-            friend const_range<Rng> operator|(Rng && rng, conster const &)
-            {
-                return const_range<Rng>{std::forward<Rng>()};
-            }
-            // E.g.: const_(rng)
             template<typename Rng>
             const_range<Rng> operator()(Rng && rng) const
             {
