@@ -58,6 +58,8 @@ static_assert(!ranges::RandomAccessRange<ranges::istream_range<int>>(), "");
 static_assert(ranges::BinaryPredicate<std::less<int>, int, int>(), "");
 static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
 
+//CONCEPT_ASSERT(ranges::BinaryPredicate<std::less<int>, char*, int>());
+
 template<std::size_t> struct undef;
 
 int main()
@@ -65,9 +67,13 @@ int main()
     using namespace ranges;
     using namespace std::placeholders;
 
-    // Aw, yeah!
+    // Pipeable algorithms
     std::vector<int> vi{1,2,2,3,4};
-    for( int i : vi | range(adjacent_find(_1), end(_1)))
+    std::cout << (vi | count(2)) << std::endl;
+
+    // Range bind expressions.
+    std::cout << "\n";
+    for( int i : vi | range(adjacent_find(_1), prev(end(_1))))
         std::cout << "> " << i << '\n';
 
     std::cout << "\n";
@@ -77,11 +83,6 @@ int main()
     std::cout << "\n";
     for( int i : vi | (_1 | transform([](int i){return -i;})))
         std::cout << "> " << i << '\n';
-
-    // BUGBUG
-    //std::cout << "\n";
-    //for( int i : vi | (_1 | transform(_1, [](int i){return -i;})))
-    //    std::cout << "> " << i << '\n';
 
     std::cout << "\n";
     std::istringstream sin{"this is his face"};

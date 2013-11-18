@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_ADAPTOR_CONST_HPP
-#define RANGE_V3_ADAPTOR_CONST_HPP
+#ifndef RANGES_V3_ADAPTOR_CONST_HPP
+#define RANGES_V3_ADAPTOR_CONST_HPP
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>

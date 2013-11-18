@@ -11,10 +11,9 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_ADAPTOR_FILTER_HPP
-#define RANGE_V3_ADAPTOR_FILTER_HPP
+#ifndef RANGES_V3_ADAPTOR_FILTER_HPP
+#define RANGES_V3_ADAPTOR_FILTER_HPP
 
-#include <cassert>
 #include <utility>
 #include <iterator>
 #include <type_traits>
@@ -69,7 +68,7 @@ namespace ranges
                 }
                 void increment()
                 {
-                    assert(it_ != ranges::end(rng_->rng_and_pred_.first()));
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_pred_.first()));
                     ++it_; satisfy();
                 }
                 void decrement()
@@ -78,12 +77,12 @@ namespace ranges
                 }
                 bool equal(basic_iterator const &that) const
                 {
-                    assert(rng_ == that.rng_);
+                    RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
                 auto dereference() const -> decltype(*it_)
                 {
-                    assert(it_ != ranges::end(rng_->rng_and_pred_.first()));
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_pred_.first()));
                     return *it_;
                 }
                 void satisfy()

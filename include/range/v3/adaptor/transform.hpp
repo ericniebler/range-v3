@@ -11,10 +11,9 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_ADAPTOR_TRANSFORM_HPP
-#define RANGE_V3_ADAPTOR_TRANSFORM_HPP
+#ifndef RANGES_V3_ADAPTOR_TRANSFORM_HPP
+#define RANGES_V3_ADAPTOR_TRANSFORM_HPP
 
-#include <cassert>
 #include <utility>
 #include <iterator>
 #include <type_traits>
@@ -64,12 +63,12 @@ namespace ranges
                 {}
                 void increment()
                 {
-                    assert(it_ != ranges::end(rng_->rng_and_fun_.first()));
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_fun_.first()));
                     ++it_;
                 }
                 void decrement()
                 {
-                    assert(it_ != ranges::begin(rng_->rng_and_fun_.first()));
+                    RANGES_ASSERT(it_ != ranges::begin(rng_->rng_and_fun_.first()));
                     --it_;
                 }
                 void advance(typename basic_iterator::difference_type n)
@@ -78,17 +77,17 @@ namespace ranges
                 }
                 typename basic_iterator::difference_type distance_to(basic_iterator const &that) const
                 {
-                    assert(rng_ == that.rng_);
+                    RANGES_ASSERT(rng_ == that.rng_);
                     return that.it_ - it_;
                 }
                 bool equal(basic_iterator const &that) const
                 {
-                    assert(rng_ == that.rng_);
+                    RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
                 auto dereference() const -> decltype(rng_->rng_and_fun_.second()(*it_))
                 {
-                    assert(it_ != ranges::end(rng_->rng_and_fun_.first()));
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_fun_.first()));
                     return rng_->rng_and_fun_.second()(*it_);
                 }
             public:

@@ -11,11 +11,10 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_JOIN_RANGE_HPP
-#define RANGE_V3_JOIN_RANGE_HPP
+#ifndef RANGES_V3_JOIN_RANGE_HPP
+#define RANGES_V3_JOIN_RANGE_HPP
 
 #include <new>
-#include <cassert>
 #include <utility>
 #include <iterator>
 #include <type_traits>
@@ -68,7 +67,7 @@ namespace ranges
             template<typename Iter, typename Diff>
             void advance_fwd_bounded(Iter & it, Iter end, Diff & n)
             {
-                assert(n >= 0);
+                RANGES_ASSERT(n >= 0);
                 advance_fwd_bounded(it, end, n, typename std::iterator_traits<Iter>::iterator_category{});
             }
 
@@ -101,7 +100,7 @@ namespace ranges
             template<typename Iter, typename Diff>
             void advance_back_bounded(Iter & it, Iter begin, Diff & n)
             {
-                assert(n <= 0);
+                RANGES_ASSERT(n <= 0);
                 advance_back_bounded(it, begin, n, typename std::iterator_traits<Iter>::iterator_category{});
             }
         }
@@ -161,11 +160,11 @@ namespace ranges
                         }
                         break;
                     case detail::which::second:
-                        assert(it1_ != ranges::end(rng_->rng1_));
+                        RANGES_ASSERT(it1_ != ranges::end(rng_->rng1_));
                         ++it1_;
                         break;
                     default:
-                        assert(!"Attempt to advance an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to advance an invalid join_range iterator");
                         break;
                     }
                 }
@@ -174,7 +173,7 @@ namespace ranges
                     switch(which_)
                     {
                     case detail::which::first:
-                        assert(it0_ != ranges::begin(rng_->rng0_));
+                        RANGES_ASSERT(it0_ != ranges::begin(rng_->rng0_));
                         --it0_;
                         break;
                     case detail::which::second:
@@ -189,7 +188,7 @@ namespace ranges
                         }
                         break;
                     default:
-                        assert(!"Attempt to decrement an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to decrement an invalid join_range iterator");
                         break;
                     }
                 }
@@ -230,13 +229,13 @@ namespace ranges
                             std::advance(it1_, n);
                         break;
                     default:
-                        assert(!"Attempt to advance an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to advance an invalid join_range iterator");
                         break;
                     }
                 }
                 typename basic_iterator::difference_type distance_to(basic_iterator const &that) const
                 {
-                    assert(rng_ == that.rng_);
+                    RANGES_ASSERT(rng_ == that.rng_);
                     switch(which_)
                     {
                     case detail::which::first:
@@ -248,7 +247,7 @@ namespace ranges
                             return (ranges::end(rng_->rng0_) - it0_) +
                                    (that.it1_ - ranges::begin(rng_->rng1_));
                         default:
-                            assert(!"Attempt to use an invalid join_range iterator");
+                            RANGES_ASSERT(!"Attempt to use an invalid join_range iterator");
                             return 0;
                         }
                     case detail::which::second:
@@ -261,17 +260,17 @@ namespace ranges
                         case detail::which::second:
                             return that.it1_ - it1_;
                         default:
-                            assert(!"Attempt to use an invalid join_range iterator");
+                            RANGES_ASSERT(!"Attempt to use an invalid join_range iterator");
                             return 0;
                         }
                     default:
-                        assert(!"Attempt to use an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to use an invalid join_range iterator");
                         return 0;
                     }
                 }
                 bool equal(basic_iterator const &that) const
                 {
-                    assert(rng_ == that.rng_);
+                    RANGES_ASSERT(rng_ == that.rng_);
                     if(which_ != that.which_)
                         return false;
                     switch(which_)
@@ -281,7 +280,7 @@ namespace ranges
                     case detail::which::second:
                         return it1_ == that.it1_;
                     default:
-                        assert(!"Attempt to compare invalid join_range iterators");
+                        RANGES_ASSERT(!"Attempt to compare invalid join_range iterators");
                         return true;
                     }
                 }
@@ -292,10 +291,10 @@ namespace ranges
                     case detail::which::first:
                         return *it0_;
                     case detail::which::second:
-                        assert(it1_ != ranges::end(rng_->rng1_));
+                        RANGES_ASSERT(it1_ != ranges::end(rng_->rng1_));
                         return *it1_;
                     default:
-                        assert(!"Attempt to dereference an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to dereference an invalid join_range iterator");
                         return *it1_;
                     }
                 }
@@ -358,7 +357,7 @@ namespace ranges
                         which_ = detail::which::second;
                         break;
                     default:
-                        assert(!"Copying invalid join_range iterator");
+                        RANGES_ASSERT(!"Copying invalid join_range iterator");
                         which_ = detail::which::neither;
                         break;
                     }
@@ -383,7 +382,7 @@ namespace ranges
                         which_ = detail::which::second;
                         break;
                     default:
-                        assert(!"Copying invalid join_range iterator");
+                        RANGES_ASSERT(!"Copying invalid join_range iterator");
                         which_ = detail::which::neither;
                         break;
                     }
@@ -409,7 +408,7 @@ namespace ranges
                         which_ = detail::which::second;
                         break;
                     default:
-                        assert(!"Copying invalid join_range iterator");
+                        RANGES_ASSERT(!"Copying invalid join_range iterator");
                         which_ = detail::which::neither;
                         break;
                     }

@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_ITERATOR_RANGE_HPP
-#define RANGE_V3_ITERATOR_RANGE_HPP
+#ifndef RANGES_V3_ITERATOR_RANGE_HPP
+#define RANGES_V3_ITERATOR_RANGE_HPP
 
 #include <utility>
 #include <iterator>
@@ -40,6 +40,9 @@ namespace ranges
             constexpr iterator_range(Iter begin, Iter end)
               : begin_(std::move(begin)), end_(std::move(end))
             {}
+            constexpr iterator_range(std::pair<Iter, Iter> rng)
+              : begin_(std::move(rng.first)), end_(std::move(rng.second))
+            {}
             iterator begin() const
             {
                 return begin_;
@@ -50,11 +53,11 @@ namespace ranges
             }
             bool operator!() const
             {
-                return begin() == end();
+                return begin_ == end_;
             }
             explicit operator bool() const
             {
-                return begin() != end();
+                return begin_ != end_;
             }
             iterator_range & advance_begin(typename std::iterator_traits<Iter>::difference_type n)
             {

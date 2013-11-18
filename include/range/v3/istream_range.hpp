@@ -11,10 +11,9 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_ISTREAM_RANGE_HPP
-#define RANGE_V3_ISTREAM_RANGE_HPP
+#ifndef RANGES_V3_ISTREAM_RANGE_HPP
+#define RANGES_V3_ISTREAM_RANGE_HPP
 
-#include <cassert>
 #include <istream>
 #include <iterator>
 #include <range/v3/utility/iterator_facade.hpp>
@@ -55,7 +54,7 @@ namespace ranges
                 void increment()
                 {
                     // Don't advance a singular iterator
-                    assert(rng_);
+                    RANGES_ASSERT(rng_);
                     // Fetch the next element, null out the
                     // iterator if it fails
                     if(!rng_->next())
@@ -68,7 +67,7 @@ namespace ranges
                 T const & dereference() const
                 {
                     // Don't deref a singular iterator
-                    assert(rng_);
+                    RANGES_ASSERT(rng_);
                     return rng_->obj_;
                 }
                 istream_range const *rng_;

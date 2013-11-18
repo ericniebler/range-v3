@@ -10,8 +10,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_UTILITY_BINDABLE_HPP
-#define RANGE_V3_UTILITY_BINDABLE_HPP
+#ifndef RANGES_V3_UTILITY_BINDABLE_HPP
+#define RANGES_V3_UTILITY_BINDABLE_HPP
 
 #include <utility>
 #include <functional>
@@ -24,54 +24,6 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename T>
-            using uncvref_t =
-                typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-
-            struct unwrap_binder;
-
-            template<typename Bind>
-            struct binder
-            {
-            private:
-                friend struct unwrap_binder;
-                Bind bind_; // not a base class to avoid ADL on std namespace
-            public:
-                explicit binder(Bind bind)
-                  : bind_(std::move(bind))
-                {}
-                template<typename ...Args>
-                auto operator()(Args &&...args) const
-                    -> decltype(bind_(std::forward<Args>(args)...))
-                {
-                    return bind_(std::forward<Args>(args)...);
-                }
-                template<typename Arg,
-                    CONCEPT_REQUIRES(False<is_bind_expression<Arg>>())>
-                friend auto operator|(Arg && arg, binder const & bind)
-                    -> decltype(std::declval<Bind const &>()(std::forward<Arg>(arg)))
-                {
-                    return bind.bind_(std::forward<Arg>(arg));
-                }
-            };
-
-            constexpr struct bind_t
-            {
-            private:
-                template<typename Bind>
-                binder<Bind> impl(Bind bind) const
-                {
-                    return binder<Bind>{std::move(bind)};
-                }
-            public:
-                template<typename ...Args>
-                auto operator()(Args &&... args) const
-                    -> decltype(this->impl(std::bind(std::forward<Args>(args)...)))
-                {
-                    return this->impl(std::bind(std::forward<Args>(args)...));
-                }
-            } bind {};
-
             constexpr bool or_()
             {
                 return false;
@@ -84,13 +36,59 @@ namespace ranges
             }
 
             template<typename T>
+            using uncvref_t =
+                typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+
+            template<typename Bind>
+            struct bind_wrapper
+            {
+            private:
+                friend struct unwrap_binder;
+                Bind bind_; // not a base class to avoid ADL on std namespace
+            public:
+                bind_wrapper(Bind bind)
+                  : bind_(std::move(bind))
+                {}
+                template<typename ...Args,
+                    CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
+                auto operator()(Args &&...args) const
+                    -> decltype(std::declval<Bind const &>()(std::forward<Args>(args)...))
+                {
+                    return bind_(std::forward<Args>(args)...);
+                }
+                template<typename Arg,
+                    CONCEPT_REQUIRES(False<is_bind_expression<Arg>>())>
+                friend auto operator|(Arg && arg, bind_wrapper const & bind)
+                    -> decltype(std::declval<Bind const &>()(std::forward<Arg>(arg)))
+                {
+                    return bind.bind_(std::forward<Arg>(arg));
+                }
+            };
+
+            constexpr struct binder
+            {
+                template<typename ...Args>
+                auto operator()(Args &&... args) const
+                    -> bind_wrapper<decltype(std::bind(std::forward<Args>(args)...))>
+                {
+                    // BUGBUG std::bind doesn't do perfect forwarding. It will store
+                    // a copy of all arguments unless I use reference_wrapper here.
+                    // Write a version of forward<>() that uses reference_wrapper and
+                    // use it!
+                    return {std::bind(std::forward<Args>(args)...)};
+                }
+            } bind {};
+
+            template<typename T>
             std::false_type is_binder_(T const &);
 
             template<typename T>
-            std::true_type is_binder_(binder<T> const &);
+            std::true_type is_binder_(bind_wrapper<T> const &);
 
             template<typename T>
-            using is_binder = decltype(detail::is_binder_(std::declval<T>()));
+            struct is_binder
+              : decltype(detail::is_binder_(std::declval<T>()))
+            {};
 
             template<typename ...T>
             struct is_placeholder
@@ -145,7 +143,7 @@ namespace ranges
         public:
             bindable() = default;
 
-            bindable(Fun fun)
+            explicit bindable(Fun fun)
               : Fun(std::move(fun))
             {}
             // This gets called when one or more of the arguments are either a
@@ -233,4 +231,4 @@ namespace ranges
     }
 }
 
-#endif // RANGE_V3_UTILITY_BINDABLE_HPP
+#endif // RANGES_V3_UTILITY_BINDABLE_HPP

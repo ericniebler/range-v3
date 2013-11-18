@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_BEGIN_END_HPP
-#define RANGE_V3_BEGIN_END_HPP
+#ifndef RANGES_V3_BEGIN_END_HPP
+#define RANGES_V3_BEGIN_END_HPP
 
 #include <iterator>
 #include <range/v3/range_fwd.hpp>
@@ -27,7 +27,7 @@ namespace ranges
             using std::begin;
             using std::end;
 
-            struct begin_t
+            struct beginner
             {
                 template<typename Rng>
                 auto operator()(Rng && rng) const -> decltype(begin(rng))
@@ -36,7 +36,7 @@ namespace ranges
                 }
             };
 
-            struct end_t
+            struct ender
             {
                 template<typename Rng>
                 auto operator()(Rng && rng) const -> decltype(end(rng))
@@ -45,7 +45,7 @@ namespace ranges
                 }
             };
 
-            struct cbegin_t
+            struct cbeginner
             {
                 template<typename Rng>
                 auto operator()(Rng const & rng) const -> decltype(begin(rng))
@@ -54,7 +54,7 @@ namespace ranges
                 }
             };
 
-            struct cend_t
+            struct cender
             {
                 template<typename Rng>
                 auto operator()(Rng const & rng) const -> decltype(end(rng))
@@ -64,10 +64,10 @@ namespace ranges
             };
         }
 
-        constexpr bindable<adl_begin_end_detail::begin_t> begin {};
-        constexpr bindable<adl_begin_end_detail::end_t> end {};
-        constexpr bindable<adl_begin_end_detail::cbegin_t> cbegin {};
-        constexpr bindable<adl_begin_end_detail::cend_t> cend {};
+        constexpr bindable<adl_begin_end_detail::beginner> begin {};
+        constexpr bindable<adl_begin_end_detail::ender> end {};
+        constexpr bindable<adl_begin_end_detail::cbeginner> cbegin {};
+        constexpr bindable<adl_begin_end_detail::cender> cend {};
     }
 }
 

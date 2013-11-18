@@ -10,8 +10,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_UTILITY_CONCEPTS_HPP
-#define RANGE_V3_UTILITY_CONCEPTS_HPP
+#ifndef RANGES_V3_UTILITY_CONCEPTS_HPP
+#define RANGES_V3_UTILITY_CONCEPTS_HPP
 
 #include <utility>
 #include <type_traits>
@@ -238,6 +238,18 @@ namespace ranges
                     ));
             };
 
+            struct Orderable
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<bool>(t < t),
+                        concepts::convertible_to<bool>(t > t),
+                        concepts::convertible_to<bool>(t <= t),
+                        concepts::convertible_to<bool>(t >= t)
+                    ));
+            };
+
             struct Callable
             {
                 template<typename Fun, typename ...Args>
@@ -264,7 +276,7 @@ namespace ranges
                 template<typename Fun, typename Arg>
                 auto requires(Fun && fun, Arg && arg) -> decltype(
                     concepts::valid_expr(
-                            std::forward<Fun>(fun)(std::forward<Arg>(arg))
+                        std::forward<Fun>(fun)(std::forward<Arg>(arg))
                     ));
             };
 
@@ -274,8 +286,8 @@ namespace ranges
                 template<typename Fun, typename Arg0, typename Arg1>
                 auto requires(Fun && fun, Arg0 && arg0, Arg1 && arg1) -> decltype(
                     concepts::valid_expr(
-                            std::forward<Fun>(fun)(std::forward<Arg0>(arg0),
-                                                   std::forward<Arg1>(arg1))
+                        std::forward<Fun>(fun)(std::forward<Arg0>(arg0),
+                                                std::forward<Arg1>(arg1))
                     ));
             };
 
@@ -313,7 +325,7 @@ namespace ranges
             };
 
             struct RandomAccessIterator
-              : refines<BidirectionalIterator>
+              : refines<BidirectionalIterator, Orderable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -324,11 +336,7 @@ namespace ranges
                         t = t - (t-t),
                         t += (t-t),
                         t -= (t-t),
-                        concepts::same_type(*t, t[t-t]),
-                        concepts::convertible_to<bool>(t > t),
-                        concepts::convertible_to<bool>(t < t),
-                        concepts::convertible_to<bool>(t >= t),
-                        concepts::convertible_to<bool>(t <= t)
+                        concepts::same_type(*t, t[t-t])
                     ));
             };
         }
@@ -379,6 +387,12 @@ namespace ranges
         constexpr bool Comparable()
         {
             return concepts::models<concepts::Comparable, T>();
+        }
+
+        template<typename T>
+        constexpr bool Orderable()
+        {
+            return concepts::models<concepts::Orderable, T>();
         }
 
         template<typename Fun, typename ...Args>
@@ -432,5 +446,6 @@ namespace ranges
 }
 
 #define CONCEPT_REQUIRES(...) typename = typename std::enable_if<(__VA_ARGS__)>::type
+#define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed");
 
-#endif // RANGE_V3_UTILITY_CONCEPTS_HPP
+#endif // RANGES_V3_UTILITY_CONCEPTS_HPP

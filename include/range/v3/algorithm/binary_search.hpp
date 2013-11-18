@@ -8,40 +8,39 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_ALGORITHM_ADJACENT_FIND_HPP
-#define RANGES_V3_ALGORITHM_ADJACENT_FIND_HPP
+#ifndef RANGES_V3_ALGORITHM_BINARY_SEARCH_HPP
+#define RANGES_V3_ALGORITHM_BINARY_SEARCH_HPP
 
+#include <utility>
 #include <algorithm>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/concepts.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct adjacent_finder
+        struct binary_searcher
         {
-            /// \brief function template \c adjacent_finder::operator()
+            /// \brief function template \c binary_searcher::operator()
             ///
-            /// range-based version of the \c adjacent_find std algorithm
+            /// range-based version of the \c binary_search std algorithm
             ///
             /// \pre \c ForwardRange is a model of the ForwardRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardRange>
-            range_iterator_t<ForwardRange>
-            operator()(ForwardRange && rng) const
+            template<typename ForwardRange, typename Value>
+            bool operator()(ForwardRange && rng, Value const & val) const
             {
                 static_assert(ranges::ForwardRange<ForwardRange>(),
                     "Expecting model of ForwardRange");
-                return std::adjacent_find(ranges::begin(rng), ranges::end(rng));
+                return std::binary_search(ranges::begin(rng), ranges::end(rng), val);
             }
 
             /// \overload
-            template<typename ForwardRange, typename BinaryPredicate>
-            range_iterator_t<ForwardRange>
-            operator()(ForwardRange && rng, BinaryPredicate pred) const
+            template<typename ForwardRange, typename Value, typename BinaryPredicate>
+            bool operator()(ForwardRange && rng, Value const & val, BinaryPredicate pred) const
             {
                 static_assert(ranges::ForwardRange<ForwardRange>(),
                     "Expecting model of ForwardRange");
@@ -50,12 +49,13 @@ namespace ranges
                                             range_reference_t<ForwardRange>,
                                             range_reference_t<ForwardRange>>(),
                     "Expecting model of BinaryPredicate");
-                return std::adjacent_find(ranges::begin(rng), ranges::end(rng), std::move(pred));
+                return std::binary_search(ranges::begin(rng), ranges::end(rng), val, std::move(pred));
             }
         };
-        
-        constexpr bindable<adjacent_finder> adjacent_find {};
+
+        constexpr bindable<binary_searcher> binary_search {};
+
     } // namespace v3
 } // namespace ranges
 
-#endif // RANGE_ALGORITHM_ADJACENT_FIND_HPP
+#endif // include guard

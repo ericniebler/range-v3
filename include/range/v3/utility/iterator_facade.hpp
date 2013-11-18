@@ -7,8 +7,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef RANGE_V3_UTILITY_ITERATOR_FACADE_HPP
-#define RANGE_V3_UTILITY_ITERATOR_FACADE_HPP
+#ifndef RANGES_V3_UTILITY_ITERATOR_FACADE_HPP
+#define RANGES_V3_UTILITY_ITERATOR_FACADE_HPP
 
 #include <utility>
 #include <type_traits>
@@ -583,7 +583,7 @@ namespace ranges
         // AdaptorB<Iterator> b;
         //
         // // This will result in a no such overload error in full operation
-        // // If enable_if is not supported the static assert used
+        // // If enable_if is not supported the static RANGES_ASSERT used
         // // in the operatorimplementation will fail.
         // // This will accidently work if std::is_convertible is not supported.
         //
@@ -744,4 +744,4 @@ namespace ranges
     }
 }
 
-#endif // RANGE_V3_UTILITY_ITERATOR_FACADE_HPP
+#endif // RANGES_V3_UTILITY_ITERATOR_FACADE_HPP

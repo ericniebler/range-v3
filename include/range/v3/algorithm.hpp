@@ -10,9 +10,25 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_ALGORITHM_HPP
-#define RANGE_V3_ALGORITHM_HPP
+#ifndef RANGES_V3_ALGORITHM_HPP
+#define RANGES_V3_ALGORITHM_HPP
 
 #include <range/v3/algorithm/adjacent_find.hpp>
+#include <range/v3/algorithm/binary_search.hpp>
+#include <range/v3/algorithm/copy.hpp>
+#include <range/v3/algorithm/copy_backward.hpp>
+#include <range/v3/algorithm/count.hpp>
+#include <range/v3/algorithm/count_if.hpp>
+#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/algorithm/equal_range.hpp>
+#include <range/v3/algorithm/fill.hpp>
+#include <range/v3/algorithm/find.hpp>
+#include <range/v3/algorithm/find_end.hpp>
+#include <range/v3/algorithm/find_first_of.hpp>
+#include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/algorithm/generate.hpp>
+#include <range/v3/algorithm/heap_algorithm.hpp>
+#include <range/v3/algorithm/inplace_merge.hpp>
 
 #endif

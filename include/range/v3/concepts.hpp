@@ -10,8 +10,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_CONCEPTS_HPP
-#define RANGE_V3_CONCEPTS_HPP
+#ifndef RANGES_V3_CONCEPTS_HPP
+#define RANGES_V3_CONCEPTS_HPP
 
 #include <utility>
 #include <type_traits>

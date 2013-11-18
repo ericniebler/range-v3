@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_RANGE_HPP
-#define RANGE_V3_RANGE_HPP
+#ifndef RANGES_V3_RANGES_HPP
+#define RANGES_V3_RANGES_HPP
 
 #include <range/v3/adaptors.hpp>
 #include <range/v3/istream_range.hpp>
@@ -21,5 +21,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/concepts.hpp>
 #include <range/v3/algorithm.hpp>
+#include <range/v3/next_prev.hpp>
+#include <range/v3/begin_end.hpp>
 
 #endif

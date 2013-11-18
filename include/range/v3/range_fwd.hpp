@@ -11,10 +11,15 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_RANGE_FWD_HPP
-#define RANGE_V3_RANGE_FWD_HPP
+#ifndef RANGES_V3_RANGE_FWD_HPP
+#define RANGES_V3_RANGE_FWD_HPP
 
 #include <iosfwd>
+
+#ifndef RANGES_ASSERT
+# include <cassert>
+# define RANGES_ASSERT assert
+#endif
 
 namespace ranges
 {
@@ -22,10 +27,10 @@ namespace ranges
     {
         namespace adl_begin_end_detail
         {
-            struct begin_t;
-            struct end_t;
-            struct cbegin_t;
-            struct cend_t;
+            struct beginner;
+            struct ender;
+            struct cbeginner;
+            struct cender;
         }
 
         template<typename Fun>
@@ -34,10 +39,16 @@ namespace ranges
         template<typename ...T>
         struct is_bind_expression;
 
-        extern bindable<adl_begin_end_detail::begin_t> const begin;
-        extern bindable<adl_begin_end_detail::end_t> const end;
-        extern bindable<adl_begin_end_detail::cbegin_t> const cbegin;
-        extern bindable<adl_begin_end_detail::cend_t> const cend;
+        extern bindable<adl_begin_end_detail::beginner> const begin;
+        extern bindable<adl_begin_end_detail::ender> const end;
+        extern bindable<adl_begin_end_detail::cbeginner> const cbegin;
+        extern bindable<adl_begin_end_detail::cender> const cend;
+
+        struct nexter;
+        struct prever;
+
+        extern bindable<nexter> const next;
+        extern bindable<prever> const prev;
 
         namespace detail
         {
@@ -52,6 +63,21 @@ namespace ranges
 
             template<typename Fun>
             struct function_wrapper;
+
+            template<typename ...T>
+            struct is_placeholder;
+
+            template<typename T>
+            struct is_binder;
+
+            struct binder;
+            extern binder const bind;
+
+            template<typename Bind>
+            struct bind_wrapper;
+
+            struct unwrap_binder;
+            extern unwrap_binder const unwrap_bind;
         }
 
         template<typename T>
@@ -134,6 +160,66 @@ namespace ranges
 
         struct adjacent_finder;
         extern bindable<adjacent_finder> const adjacent_find;
+
+        struct binary_searcher;
+        extern bindable<binary_searcher> const binary_search;
+
+        struct copier;
+        extern bindable<copier> const copy;
+
+        struct backward_copier;
+        extern bindable<backward_copier> const copy_backward;
+
+        struct counter;
+        extern bindable<counter> const count;
+
+        struct counter_if;
+        extern bindable<counter_if> const count_if;
+
+        struct equaler;
+        extern bindable<equaler> const equal;
+
+        struct equal_ranger;
+        extern bindable<equal_ranger> const equal_range;
+
+        struct filler;
+        extern bindable<filler> const fill;
+
+        struct filler_n;
+        extern bindable<filler_n> const fill_n;
+
+        struct finder;
+        extern bindable<finder> const find;
+
+        struct end_finder;
+        extern bindable<end_finder> const find_end;
+
+        struct first_of_finder;
+        extern bindable<first_of_finder> const find_first_of;
+
+        struct finder_if;
+        extern bindable<finder_if> const find_if;
+
+        struct for_eacher;
+        extern bindable<for_eacher> const for_each;
+
+        struct generator;
+        extern bindable<generator> const generate;
+
+        struct heap_pusher;
+        extern bindable<heap_pusher> const push_heap;
+
+        struct heap_popper;
+        extern bindable<heap_popper> const pop_heap;
+
+        struct heap_maker;
+        extern bindable<heap_maker> const make_heap;
+
+        struct heap_sorter;
+        extern bindable<heap_sorter> const sort_heap;
+
+        struct inplace_merger;
+        extern bindable<inplace_merger> const inplace_merge;
     }
 }
 

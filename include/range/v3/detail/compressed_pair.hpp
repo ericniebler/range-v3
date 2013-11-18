@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGE_V3_DETAIL_COMPRESSED_PAIR_HPP
-#define RANGE_V3_DETAIL_COMPRESSED_PAIR_HPP
+#ifndef RANGES_V3_DETAIL_COMPRESSED_PAIR_HPP
+#define RANGES_V3_DETAIL_COMPRESSED_PAIR_HPP
 
 #include <utility>
 #include <type_traits>
