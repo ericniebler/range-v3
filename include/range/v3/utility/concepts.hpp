@@ -20,73 +20,52 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            constexpr struct void_tester
+            {
+                template<typename T>
+                friend int operator,(T&&, void_tester);
+            } void_ {};
+
+            constexpr struct is_void_t
+            {
+                int operator()(detail::void_tester) const;
+            } is_void {};
+
+            constexpr struct valid_expr_t
+            {
+                template<typename ...T>
+                std::true_type operator()(T &&...) const;
+            } valid_expr {};
+
+            constexpr struct same_type_t
+            {
+                template<typename T, typename U>
+                auto operator()(T &&, U &&) const ->
+                    typename std::enable_if<std::is_same<T,U>::value, int>::type;
+            } same_type {};
+
+            constexpr struct is_true_t
+            {
+                template<typename Bool>
+                auto operator()(Bool) const ->
+                    typename std::enable_if<Bool::value, int>::type;
+            } is_true {};
+
+            constexpr struct is_false_t
+            {
+                template<typename Bool>
+                auto operator()(Bool) const ->
+                    typename std::enable_if<!Bool::value, int>::type;
+            } is_false {};
+
+            template<typename Concept, typename ...Ts>
+            struct models_impl;
+        }
+
         namespace concepts
         {
-            namespace detail
-            {
-                constexpr struct void_tester
-                {
-                    template<typename T>
-                    friend int operator,(T&&, void_tester);
-                } void_ {};
-
-                constexpr struct is_void_t
-                {
-                    int operator()(detail::void_tester) const;
-                } is_void {};
-
-                constexpr struct valid_expr_t
-                {
-                    template<typename ...T>
-                    std::true_type operator()(T &&...) const;
-                } valid_expr {};
-
-                constexpr struct same_type_t
-                {
-                    template<typename T, typename U>
-                    auto operator()(T &&, U &&) const ->
-                        typename std::enable_if<std::is_same<T,U>::value, int>::type;
-                } same_type {};
-
-                constexpr struct and_t
-                {
-                private:
-                    static constexpr bool impl()
-                    {
-                        return true;
-                    }
-                    template<typename...Tail>
-                    static constexpr bool impl(bool B, Tail...tail)
-                    {
-                        return B && and_t::impl(tail...);
-                    }
-                public:
-                    template<typename ...Bools>
-                    std::integral_constant<bool, and_t::impl(Bools::value...)>
-                    operator()(Bools...) const
-                    {
-                        return {};
-                    }
-                } and_ {};
-
-                constexpr struct is_true_t
-                {
-                    template<typename Bool>
-                    auto operator()(Bool) const ->
-                        typename std::enable_if<Bool::value, int>::type;
-                } is_true {};
-
-                constexpr struct is_false_t
-                {
-                    template<typename Bool>
-                    auto operator()(Bool) const ->
-                        typename std::enable_if<!Bool::value, int>::type;
-                } is_false {};
-
-                template<typename Concept, typename ...Ts>
-                struct models_impl;
-            }
-
             using detail::void_;
             using detail::is_void;
             using detail::valid_expr;
@@ -100,6 +79,10 @@ namespace ranges
             template<typename T, typename U>
             auto convertible_to(U && u) ->
                 decltype(concepts::returns_<int>(static_cast<T>(u)));
+
+            template<typename T, typename U>
+            auto convertible(T && t, U && u) ->
+                decltype(true ? static_cast<T &&>(t) : static_cast<U &&>(u));
 
             template<typename T, typename U>
             auto has_type(U &&) ->
@@ -118,52 +101,56 @@ namespace ranges
 
             template<typename Concept, typename ...Ts>
             auto model_of(Ts &&...) ->
-                typename std::enable_if<concepts::models<Concept, Ts...>(), int>::type;
-
-            namespace detail
+                typename std::enable_if<concepts::models<Concept, Ts...>(), int>::type
             {
-                template<typename Concept, typename ...Ts>
-                struct models_impl
-                {
-                private:
-                    using false_t = std::false_type(*)(Ts &&...);
-                    static std::false_type false_(Ts &&...)
-                    {
-                        return {};
-                    }
-
-                    std::true_type test_refines(void *)
-                    {
-                        return {};
-                    }
-
-                    template<typename ...Bases>
-                    auto test_refines(refines<Bases...> *) -> decltype(
-                        detail::and_(
-                            std::integral_constant<bool, concepts::models<Bases, Ts...>()>{}...
-                        ))
-                    {
-                        return {};
-                    }
-
-                public:
-                    operator false_t () const
-                    {
-                        return &false_;
-                    }
-
-                    template<typename C = Concept>
-                    auto operator()(Ts &&... ts) -> decltype(
-                        detail::and_(
-                            C{}.requires(std::forward<Ts>(ts)...),
-                            models_impl::test_refines((C*)nullptr)
-                        ))
-                    {
-                        return {};
-                    }
-                };
+                return 0;
             }
+        }
 
+        namespace detail
+        {
+            template<typename Concept, typename ...Ts>
+            struct models_impl
+            {
+            private:
+                using false_t = std::false_type(*)(Ts &&...);
+                static std::false_type false_(Ts &&...)
+                {
+                    return {};
+                }
+
+                std::true_type test_refines(void *)
+                {
+                    return {};
+                }
+
+                template<typename ...Bases>
+                auto test_refines(concepts::refines<Bases...> *) ->
+                    detail::and_<concepts::models<Bases, Ts...>()...>
+                {
+                    return {};
+                }
+
+            public:
+                operator false_t () const
+                {
+                    return &false_;
+                }
+
+                template<typename C = Concept>
+                auto operator()(Ts &&... ts) ->
+                    std::integral_constant<bool,
+                        decltype(C{}.requires(std::forward<Ts>(ts)...))::value &&
+                        decltype(models_impl::test_refines((C*)nullptr))::value
+                    >
+                {
+                    return {};
+                }
+            };
+        }
+
+        namespace concepts
+        {
             struct True
             {
                 template<typename T>
@@ -176,9 +163,18 @@ namespace ranges
             struct False
             {
                 template<typename T>
-                auto requires(T &&t ) -> decltype(
+                auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(t)
+                    ));
+            };
+
+            struct SameType
+            {
+                template<typename T, typename U>
+                auto requires(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::same_type(t, u)
                     ));
             };
 
@@ -201,12 +197,21 @@ namespace ranges
                     ));
             };
 
-            struct Assignable
+            struct Destructible
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        t = t
+                        (t.~T(), 42)
+                    ));
+            };
+
+            struct DefaultConstructible
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        T{}
                     ));
             };
 
@@ -219,12 +224,12 @@ namespace ranges
                     ));
             };
 
-            struct DefaultConstructible
+            struct CopyAssignable
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        T{}
+                        t = t
                     ));
             };
 
@@ -255,7 +260,8 @@ namespace ranges
                 template<typename Fun, typename ...Args>
                 auto requires(Fun && fun, Args &&... args) -> decltype(
                     concepts::valid_expr(
-                        (std::forward<Fun>(fun)(std::forward<Args>(args)...), 42)
+                        (static_cast<void>(std::forward<Fun>(fun)(
+                            std::forward<Args>(args)...)), 42)
                     ));
             };
 
@@ -287,19 +293,43 @@ namespace ranges
                 auto requires(Fun && fun, Arg0 && arg0, Arg1 && arg1) -> decltype(
                     concepts::valid_expr(
                         std::forward<Fun>(fun)(std::forward<Arg0>(arg0),
-                                                std::forward<Arg1>(arg1))
+                                               std::forward<Arg1>(arg1))
                     ));
             };
 
-            struct InputIterator
-              : refines<DefaultConstructible, CopyConstructible, Assignable, Comparable>
+            struct Iterator
+              : refines<CopyConstructible, CopyAssignable, Destructible>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         *t,
+                        concepts::has_type<T &>(++t)
+                    ));
+            };
+
+            // BUGBUG Fix multi-argument concepts
+            struct OutputIterator
+              //: refines<Iterator>
+            {
+                template<typename T, typename O>
+                auto requires(T && t, O && o) -> decltype(
+                    concepts::valid_expr(
                         t++,
-                        concepts::has_type<T &>( ++t )
+                        *t = o,
+                        *t++ = o,
+                        concepts::model_of<Iterator>(std::forward<T>(t))
+                    ));
+            };
+
+            struct InputIterator
+              : refines<Iterator, Comparable>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        t++,
+                        concepts::convertible(*t, *t++)
                     ));
             };
 
@@ -353,6 +383,12 @@ namespace ranges
             return concepts::models<concepts::False, T>();
         }
 
+        template<typename T, typename U>
+        constexpr bool SameType()
+        {
+            return concepts::models<concepts::SameType, T, U>();
+        }
+
         template<typename T>
         constexpr bool Integral()
         {
@@ -366,9 +402,9 @@ namespace ranges
         }
 
         template<typename T>
-        constexpr bool Assignable()
+        constexpr bool CopyAssignable()
         {
-            return concepts::models<concepts::Assignable, T>();
+            return concepts::models<concepts::CopyAssignable, T>();
         }
 
         template<typename T>
@@ -381,6 +417,12 @@ namespace ranges
         constexpr bool DefaultConstructible()
         {
             return concepts::models<concepts::DefaultConstructible, T>();
+        }
+
+        template<typename T>
+        constexpr bool Destructible()
+        {
+            return concepts::models<concepts::Destructible, T>();
         }
 
         template<typename T>
@@ -417,6 +459,18 @@ namespace ranges
         constexpr bool BinaryPredicate()
         {
             return concepts::models<concepts::BinaryPredicate, Fun, Arg0, Arg1>();
+        }
+
+        template<typename T>
+        constexpr bool Iterator()
+        {
+            return concepts::models<concepts::Iterator, T>();
+        }
+
+        template<typename T, typename O>
+        constexpr bool OutputIterator()
+        {
+            return concepts::models<concepts::OutputIterator, T, O>();
         }
 
         template<typename T>

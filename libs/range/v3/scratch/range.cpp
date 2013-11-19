@@ -10,6 +10,7 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
+#include <utility>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -28,8 +29,8 @@ struct nondefaultconstructible
     nondefaultconstructible(int) {};
 };
 
-static_assert(ranges::Assignable<int>(), "");
-static_assert(!ranges::Assignable<int const>(), "");
+static_assert(ranges::CopyAssignable<int>(), "");
+static_assert(!ranges::CopyAssignable<int const>(), "");
 
 static_assert(ranges::CopyConstructible<int>(), "");
 static_assert(!ranges::CopyConstructible<noncopyable>(), "");
@@ -58,7 +59,13 @@ static_assert(!ranges::RandomAccessRange<ranges::istream_range<int>>(), "");
 static_assert(ranges::BinaryPredicate<std::less<int>, int, int>(), "");
 static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
 
-//CONCEPT_ASSERT(ranges::BinaryPredicate<std::less<int>, char*, int>());
+struct NotDestructible
+{
+    ~NotDestructible() = delete;
+};
+
+static_assert(ranges::Destructible<int>(), "");
+static_assert(!ranges::Destructible<NotDestructible>(), "");
 
 template<std::size_t> struct undef;
 
@@ -82,6 +89,12 @@ int main()
 
     std::cout << "\n";
     for( int i : vi | (_1 | transform([](int i){return -i;})))
+        std::cout << "> " << i << '\n';
+
+    // Mutate in-place
+    transform(vi, vi.begin(), [](int i){return -i;});
+    std::cout << "\n";
+    for( int i : vi )
         std::cout << "> " << i << '\n';
 
     std::cout << "\n";

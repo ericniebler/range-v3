@@ -1,7 +1,5 @@
-// Boost.Range library
-//
-//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008. 
-//  Copyright Eric Niebler 2013.
+//  Copyright Neil Groves 2009. 
+//  Copyright Eric Niebler 2013
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -10,12 +8,12 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-
-#ifndef RANGES_V3_ADAPTOR_TRANSFORM_HPP
-#define RANGES_V3_ADAPTOR_TRANSFORM_HPP
+#ifndef RANGES_V3_ALGORITHM_TRANSFORM_HPP
+#define RANGES_V3_ALGORITHM_TRANSFORM_HPP
 
 #include <utility>
 #include <iterator>
+#include <algorithm>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -29,6 +27,30 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename InputIterator1,
+                     typename InputIterator2,
+                     typename OutputIterator,
+                     typename BinaryFunction>
+            OutputIterator
+            transform_impl(InputIterator1 first1,
+                           InputIterator1 last1,
+                           InputIterator2 first2,
+                           InputIterator2 last2,
+                           OutputIterator out,
+                           BinaryFunction fun)
+            {
+                for (; first1 != last1; ++first1, ++first2)
+                {
+                    RANGE_ASSERT(first2 != last2);
+                    *out = fun(*first1, *first2);
+                    ++out;
+                }
+                return out;
+            }
+        }
+
         template<typename Rng, typename Fun>
         struct transform_range
         {
@@ -167,20 +189,78 @@ namespace ranges
                 }
             };
         public:
-            template<typename Rng, typename Fun>
-            transform_range<Rng, Fun> operator()(Rng && rng, Fun fun) const
+            /// \brief template function transform
+            ///
+            /// range-based version of the transform std algorithm
+            ///
+            /// \pre InputRange1 is a model of the InputRange concept
+            /// \pre InputRange2 is a model of the InputRange concept
+            /// \pre OutputIterator is a model of the OutputIterator concept
+            /// \pre UnaryOperation is a model of the UnaryFunction concept
+            /// \pre BinaryOperation is a model of the BinaryFunction concept
+            template<typename InputRange1,
+                     typename OutputIterator,
+                     typename UnaryOperation,
+                     CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
+                     typename Value1 = decltype(*ranges::begin(std::declval<InputRange1>())),
+                     CONCEPT_REQUIRES(ranges::Callable<UnaryOperation, Value1>()),
+                     typename Value2 = result_of_t<UnaryOperation(Value1)>,
+                     CONCEPT_REQUIRES(ranges::OutputIterator<OutputIterator, Value2>())
+            >
+            OutputIterator
+            operator()(InputRange1 && rng,
+                       OutputIterator out,
+                       UnaryOperation fun) const
             {
-                return {std::forward<Rng>(rng), std::move(fun)};
+                return std::transform(ranges::begin(rng), ranges::end(rng),
+                                      std::move(out), std::move(fun));
             }
-            template<typename Fun>
-            constexpr bindable<transformer1<Fun>> operator()(Fun fun) const
+
+            /// \overload
+            template<typename InputRange1,
+                     typename InputRange2,
+                     typename OutputIterator,
+                     typename BinaryOperation,
+                     CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
+                     CONCEPT_REQUIRES(ranges::InputRange<InputRange2>()),
+                     typename Value1 = decltype(*ranges::begin(std::declval<InputRange1>())),
+                     typename Value2 = decltype(*ranges::begin(std::declval<InputRange2>())),
+                     CONCEPT_REQUIRES(ranges::Callable<BinaryOperation, Value1, Value2>()),
+                     typename Value3 = result_of_t<BinaryOperation(Value1, Value2)>,
+                     CONCEPT_REQUIRES(ranges::OutputIterator<OutputIterator, Value3>())>
+            OutputIterator
+            operator()(InputRange1 && rng1,
+                       InputRange2 && rng2,
+                       OutputIterator out,
+                       BinaryOperation fun) const
             {
-                return bindable<transformer1<Fun>>{transformer1<Fun>{fun}};
+                return detail::transform_impl(
+                    ranges::begin(rng1), ranges::end(rng1),
+                    ranges::begin(rng2), ranges::end(rng2),
+                    std::move(out), std::move(fun));
+            }
+
+            /// \overload
+            template<typename InputRange1,
+                     CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
+                     typename UnaryOperation>
+            transform_range<InputRange1, UnaryOperation>
+            operator()(InputRange1 && rng, UnaryOperation fun) const
+            {
+                return {std::forward<InputRange1>(rng), std::move(fun)};
+            }
+
+            /// \overload
+            template<typename UnaryOperation>
+            bindable<transformer1<UnaryOperation>> operator()(UnaryOperation fun) const
+            {
+                return bindable<transformer1<UnaryOperation>>{{std::move(fun)}};
             }
         };
 
         constexpr bindable<transformer> transform {};
-    }
-}
+    } // inline namespace v3
 
-#endif
+} // namespace ranges
+
+#endif // include guard

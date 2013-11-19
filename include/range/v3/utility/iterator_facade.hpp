@@ -583,7 +583,7 @@ namespace ranges
         // AdaptorB<Iterator> b;
         //
         // // This will result in a no such overload error in full operation
-        // // If enable_if is not supported the static RANGES_ASSERT used
+        // // If enable_if is not supported the static assert used
         // // in the operatorimplementation will fail.
         // // This will accidently work if std::is_convertible is not supported.
         //

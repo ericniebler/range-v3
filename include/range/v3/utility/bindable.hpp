@@ -24,17 +24,6 @@ namespace ranges
     {
         namespace detail
         {
-            constexpr bool or_()
-            {
-                return false;
-            }
-
-            template<typename ...Tail>
-            constexpr bool or_(bool head, Tail...tail)
-            {
-                return head || detail::or_(tail...);
-            }
-
             template<typename T>
             using uncvref_t =
                 typename std::remove_cv<typename std::remove_reference<T>::type>::type;
@@ -92,10 +81,7 @@ namespace ranges
 
             template<typename ...T>
             struct is_placeholder
-              : std::integral_constant<
-                    bool
-                  , detail::or_(is_placeholder<T>::value...)
-                >
+              : detail::or_<is_placeholder<T>::value...>
             {};
 
             template<typename T>
@@ -122,10 +108,7 @@ namespace ranges
 
         template<typename ...T>
         struct is_bind_expression
-            : std::integral_constant<
-                bool
-              , detail::or_((detail::is_binder<T>::value || detail::is_placeholder<T>::value)...)
-            >
+          : detail::or_<(detail::is_binder<T>::value || detail::is_placeholder<T>::value)...>
         {};
 
         template<typename Fun>

@@ -25,13 +25,13 @@ namespace ranges
         namespace detail
         {
             // An implementation of equality comparison that is optimized for iterator
-            // traversal categories less than RandomAccessTraversal.
-            template<typename InputTraversalIterator1,
-                     typename InputTraversalIterator2>
-            bool equal_impl(InputTraversalIterator1 first1,
-                            InputTraversalIterator1 last1,
-                            InputTraversalIterator2 first2,
-                            InputTraversalIterator2 last2,
+            // traversal categories less than RandomAccess.
+            template<typename InputIterator1,
+                     typename InputIterator2>
+            bool equal_impl(InputIterator1 first1,
+                            InputIterator1 last1,
+                            InputIterator2 first2,
+                            InputIterator2 last2,
                             std::input_iterator_tag,
                             std::input_iterator_tag)
             {
@@ -62,13 +62,13 @@ namespace ranges
                 return false;
             }
 
-            template<typename InputTraversalIterator1,
-                     typename InputTraversalIterator2,
+            template<typename InputIterator1,
+                     typename InputIterator2,
                      typename BinaryPredicate>
-            bool equal_impl(InputTraversalIterator1 first1,
-                            InputTraversalIterator1 last1,
-                            InputTraversalIterator2 first2,
-                            InputTraversalIterator2 last2,
+            bool equal_impl(InputIterator1 first1,
+                            InputIterator1 last1,
+                            InputIterator2 first2,
+                            InputIterator2 last2,
                             BinaryPredicate pred,
                             std::input_iterator_tag,
                             std::input_iterator_tag)
@@ -102,12 +102,12 @@ namespace ranges
 
             // An implementation of equality comparison that is optimized for
             // random access iterators.
-            template<typename RandomAccessTraversalIterator1,
-                     typename RandomAccessTraversalIterator2>
-            bool equal_impl(RandomAccessTraversalIterator1 first1,
-                            RandomAccessTraversalIterator1 last1,
-                            RandomAccessTraversalIterator2 first2,
-                            RandomAccessTraversalIterator2 last2,
+            template<typename RandomAccessIterator1,
+                     typename RandomAccessIterator2>
+            bool equal_impl(RandomAccessIterator1 first1,
+                            RandomAccessIterator1 last1,
+                            RandomAccessIterator2 first2,
+                            RandomAccessIterator2 last2,
                             std::random_access_iterator_tag,
                             std::random_access_iterator_tag)
             {
@@ -115,13 +115,13 @@ namespace ranges
                     && std::equal(std::move(first1), std::move(last1), std::move(first2));
             }
 
-            template<typename RandomAccessTraversalIterator1,
-                     typename RandomAccessTraversalIterator2,
+            template<typename RandomAccessIterator1,
+                     typename RandomAccessIterator2,
                      typename BinaryPredicate>
-            bool equal_impl(RandomAccessTraversalIterator1 first1,
-                            RandomAccessTraversalIterator1 last1,
-                            RandomAccessTraversalIterator2 first2,
-                            RandomAccessTraversalIterator2 last2,
+            bool equal_impl(RandomAccessIterator1 first1,
+                            RandomAccessIterator1 last1,
+                            RandomAccessIterator2 first2,
+                            RandomAccessIterator2 last2,
                             BinaryPredicate pred,
                             std::random_access_iterator_tag,
                             std::random_access_iterator_tag)
@@ -131,15 +131,15 @@ namespace ranges
                                   std::move(first2), std::move(pred));
             }
 
-            template<typename InputTraversalIterator1,
-                     typename InputTraversalIterator2>
-            bool equal(InputTraversalIterator1 first1,
-                       InputTraversalIterator1 last1,
-                       InputTraversalIterator2 first2,
-                       InputTraversalIterator2 last2)
+            template<typename InputIterator1,
+                     typename InputIterator2>
+            bool equal(InputIterator1 first1,
+                       InputIterator1 last1,
+                       InputIterator2 first2,
+                       InputIterator2 last2)
             {
-                typename std::iterator_traits< InputTraversalIterator1 >::iterator_category tag1;
-                typename std::iterator_traits< InputTraversalIterator2 >::iterator_category tag2;
+                typename std::iterator_traits< InputIterator1 >::iterator_category tag1;
+                typename std::iterator_traits< InputIterator2 >::iterator_category tag2;
 
                 return detail::equal_impl(
                     std::move(first1), std::move(last1),
@@ -147,17 +147,17 @@ namespace ranges
                     tag1, tag2);
             }
 
-            template<typename InputTraversalIterator1,
-                     typename InputTraversalIterator2,
+            template<typename InputIterator1,
+                     typename InputIterator2,
                      typename BinaryPredicate>
-            bool equal(InputTraversalIterator1 first1,
-                       InputTraversalIterator1 last1,
-                       InputTraversalIterator2 first2,
-                       InputTraversalIterator2 last2,
+            bool equal(InputIterator1 first1,
+                       InputIterator1 last1,
+                       InputIterator2 first2,
+                       InputIterator2 last2,
                        BinaryPredicate pred)
             {
-                typename std::iterator_traits< InputTraversalIterator1 >::iterator_category tag1;
-                typename std::iterator_traits< InputTraversalIterator2 >::iterator_category tag2;
+                typename std::iterator_traits< InputIterator1 >::iterator_category tag1;
+                typename std::iterator_traits< InputIterator2 >::iterator_category tag2;
 
                 return detail::equal_impl(
                     std::move(first1), std::move(last1),

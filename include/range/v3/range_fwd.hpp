@@ -15,6 +15,8 @@
 #define RANGES_V3_RANGE_FWD_HPP
 
 #include <iosfwd>
+#include <type_traits>
+#include <utility>
 
 #ifndef RANGES_ASSERT
 # include <cassert>
@@ -32,6 +34,9 @@ namespace ranges
             struct cbeginner;
             struct cender;
         }
+
+        template<typename Sig>
+        using result_of_t = typename std::result_of<Sig>::type;
 
         template<typename Fun>
         struct bindable;
@@ -78,6 +83,31 @@ namespace ranges
 
             struct unwrap_binder;
             extern unwrap_binder const unwrap_bind;
+
+            // Thanks to  Louis Dionne for this clever hack for a quick-to-compile
+            // implementation of and_ and or_
+            template<typename ...T>
+            std::true_type and_impl_(T*...);
+
+            template<typename ...T>
+            std::false_type and_impl_(T...);
+
+            template<bool ...Bools>
+            using and_ =
+                decltype(detail::and_impl_(
+                    typename std::conditional<Bools, int*, int>::type{}...));
+
+            template<typename ...T>
+            std::false_type or_impl_(T*...);
+
+            template<typename ...T>
+            std::true_type or_impl_(T...);
+                
+            template<bool ...Bools>
+            using or_ =
+                decltype(detail::or_impl_(
+                    typename std::conditional<Bools, int, int*>::type{}...));
+
         }
 
         template<typename T>
@@ -220,6 +250,12 @@ namespace ranges
 
         struct inplace_merger;
         extern bindable<inplace_merger> const inplace_merge;
+
+        struct lexicographical_comparer;
+        extern bindable<lexicographical_comparer> const lexicographical_compare;
+
+        struct lower_bound_finder;
+        extern bindable<lower_bound_finder> const lower_bound;
     }
 }
 

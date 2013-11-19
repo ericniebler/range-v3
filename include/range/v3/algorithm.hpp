@@ -30,5 +30,9 @@
 #include <range/v3/algorithm/generate.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
+#include <range/v3/algorithm/lexicographical_compare.hpp>
+#include <range/v3/algorithm/lower_bound.hpp>
+
+#include <range/v3/algorithm/transform.hpp>
 
 #endif
