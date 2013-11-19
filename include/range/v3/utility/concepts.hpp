@@ -36,7 +36,7 @@ namespace ranges
             constexpr struct valid_expr_t
             {
                 template<typename ...T>
-                std::true_type operator()(T &&...) const;
+                true_ operator()(T &&...) const;
             } valid_expr {};
 
             constexpr struct same_type_t
@@ -62,6 +62,18 @@ namespace ranges
 
             template<typename Concept, typename ...Ts>
             struct models_impl;
+
+            template<typename Concept>
+            struct base_concept
+            {
+                using type = Concept;
+            };
+
+            template<typename Concept, typename ...Args>
+            struct base_concept<Concept(Args...)>
+            {
+                using type = Concept;
+            };
         }
 
         namespace concepts
@@ -72,6 +84,16 @@ namespace ranges
             using detail::same_type;
             using detail::is_true;
             using detail::is_false;
+
+            using _1 = std::integral_constant<int, 0>;
+            using _2 = std::integral_constant<int, 1>;
+            using _3 = std::integral_constant<int, 2>;
+            using _4 = std::integral_constant<int, 3>;
+            using _5 = std::integral_constant<int, 4>;
+            using _6 = std::integral_constant<int, 5>;
+            using _7 = std::integral_constant<int, 6>;
+            using _8 = std::integral_constant<int, 7>;
+            using _9 = std::integral_constant<int, 8>;
 
             template<typename Ret, typename T>
             Ret returns_(T const &);
@@ -90,56 +112,132 @@ namespace ranges
 
             template<typename ...Concepts>
             struct refines
-              : Concepts...
+              : detail::base_concept<Concepts>::type...
             {};
 
             template<typename Concept, typename ...Ts>
             constexpr bool models()
             {
-                return decltype(detail::models_impl<Concept, Ts...>{}(std::declval<Ts>()...))::value;
+                return
+                    decltype(detail::models_impl<Concept, Ts...>{}(std::declval<Ts>()...))::value;
             };
 
             template<typename Concept, typename ...Ts>
             auto model_of(Ts &&...) ->
-                typename std::enable_if<concepts::models<Concept, Ts...>(), int>::type
-            {
-                return 0;
-            }
+                typename std::enable_if<concepts::models<Concept, Ts...>(), int>::type;
         }
 
         namespace detail
         {
+            ////////////////////////////////////////////////////////////////////////////////////
+            // const_
+            template<typename A, typename B>
+            using const_ = A;
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // list
+            template<typename...>
+            struct list;
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // concat
+            template<typename List0, typename List1>
+            struct concat;
+
+            template<typename ...List1, typename ...List2>
+            struct concat<list<List1...>, list<List2...>>
+            {
+                using type = list<List1..., List2...>;
+            };
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // list_of
+            // Generate lists<_,_,_,..._> with N arguments in O(log N)
+            template<std::size_t N, typename T, typename List = list<>>
+            struct list_of
+              : concat<
+                    typename list_of<N / 2, T, List>::type
+                  , typename list_of<N - N / 2, T, List>::type
+                >
+            {};
+
+            template<typename T, typename List>
+            struct list_of<0, T, List>
+            {
+                using type = List;
+            };
+
+            template<typename T>
+            struct list_of<1, T, list<>>
+            {
+                using type = list<T>;
+            };
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // get_nth_type
+            template<typename Ignored>
+            struct get_nth_impl;
+
+            template<typename ...Ignored>
+            struct get_nth_impl<list<Ignored...>>
+            {
+                template<typename T, typename ...Us>
+                static T eval(const_<void*, Ignored>..., T *, Us *...);
+            };
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // get_nth
+            template<int N, typename ...Ts>
+            using get_nth =
+               typename decltype(
+                    get_nth_impl<typename list_of<N, decltype(nullptr)>::type>::eval(
+                        static_cast<identity<Ts>*>(nullptr)...))::type;
+
+            template<typename Concept, typename ...Ts>
+            struct models_impl_2
+              : models_impl<Concept, Ts...>
+            {};
+
+            template<typename Concept, typename...Args, typename ...Ts>
+            struct models_impl_2<Concept(Args...), Ts...>
+            {
+                auto operator()() ->
+                    decltype(models_impl<Concept, get_nth<Args::value, Ts...>...>{}(
+                        std::declval<get_nth<Args::value, Ts...>>()...
+                    ));
+            };
+
             template<typename Concept, typename ...Ts>
             struct models_impl
             {
             private:
-                using false_t = std::false_type(*)(Ts &&...);
-                static std::false_type false_(Ts &&...)
+                using false_pfn_t = false_(*)(Ts &&...);
+                static false_ false_fun(Ts &&...)
                 {
                     return {};
                 }
 
-                std::true_type test_refines(void *)
+                true_ test_refines(void *)
                 {
                     return {};
                 }
 
                 template<typename ...Bases>
                 auto test_refines(concepts::refines<Bases...> *) ->
-                    detail::and_<concepts::models<Bases, Ts...>()...>
+                    detail::and_<decltype(models_impl_2<Bases, Ts...>{}())::value...>
                 {
                     return {};
                 }
 
             public:
-                operator false_t () const
+                operator false_pfn_t () const
                 {
-                    return &false_;
+                    return &false_fun;
                 }
 
                 template<typename C = Concept>
                 auto operator()(Ts &&... ts) ->
-                    std::integral_constant<bool,
+                    bool_<
                         decltype(C{}.requires(std::forward<Ts>(ts)...))::value &&
                         decltype(models_impl::test_refines((C*)nullptr))::value
                     >
@@ -308,17 +406,15 @@ namespace ranges
                     ));
             };
 
-            // BUGBUG Fix multi-argument concepts
             struct OutputIterator
-              //: refines<Iterator>
+              : refines<Iterator(_1)>
             {
                 template<typename T, typename O>
                 auto requires(T && t, O && o) -> decltype(
                     concepts::valid_expr(
                         t++,
                         *t = o,
-                        *t++ = o,
-                        concepts::model_of<Iterator>(std::forward<T>(t))
+                        *t++ = o
                     ));
             };
 

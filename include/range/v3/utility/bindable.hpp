@@ -69,10 +69,10 @@ namespace ranges
             } bind {};
 
             template<typename T>
-            std::false_type is_binder_(T const &);
+            false_ is_binder_(T const &);
 
             template<typename T>
-            std::true_type is_binder_(bind_wrapper<T> const &);
+            true_ is_binder_(bind_wrapper<T> const &);
 
             template<typename T>
             struct is_binder

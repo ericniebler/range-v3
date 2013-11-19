@@ -17,6 +17,5 @@
 #include <range/v3/adaptor/const.hpp>
 #include <range/v3/adaptor/filter.hpp>
 #include <range/v3/adaptor/reverse.hpp>
-//#include <range/v3/adaptor/transform.hpp>
 
 #endif

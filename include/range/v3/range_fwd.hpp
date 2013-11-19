@@ -84,30 +84,53 @@ namespace ranges
             struct unwrap_binder;
             extern unwrap_binder const unwrap_bind;
 
+            template<bool B>
+            using bool_ = std::integral_constant<bool, B>;
+
+            using true_ = bool_<true>;
+            using false_ = bool_<false>;
+
             // Thanks to  Louis Dionne for this clever hack for a quick-to-compile
             // implementation of and_ and or_
             template<typename ...T>
-            std::true_type and_impl_(T*...);
+            true_ and_impl_(T*...);
 
             template<typename ...T>
-            std::false_type and_impl_(T...);
+            false_ and_impl_(T...);
 
             template<bool ...Bools>
-            using and_ =
-                decltype(detail::and_impl_(
-                    typename std::conditional<Bools, int*, int>::type{}...));
+            struct and_
+              : decltype(detail::and_impl_(
+                    typename std::conditional<Bools, int*, int>::type{}...))
+            {};
+
+            template<>
+            struct and_<>
+              : true_
+            {};
 
             template<typename ...T>
-            std::false_type or_impl_(T*...);
+            false_ or_impl_(T*...);
 
             template<typename ...T>
-            std::true_type or_impl_(T...);
+            true_ or_impl_(T...);
                 
             template<bool ...Bools>
-            using or_ =
-                decltype(detail::or_impl_(
-                    typename std::conditional<Bools, int, int*>::type{}...));
+            struct or_
+              : decltype(detail::or_impl_(
+                    typename std::conditional<Bools, int, int*>::type{}...))
+            {};
 
+            template<>
+            struct or_<>
+              : false_
+            {};
+
+            template<typename T>
+            struct identity
+            {
+                using type = T;
+            };
         }
 
         template<typename T>

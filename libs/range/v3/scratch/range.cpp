@@ -59,6 +59,9 @@ static_assert(!ranges::RandomAccessRange<ranges::istream_range<int>>(), "");
 static_assert(ranges::BinaryPredicate<std::less<int>, int, int>(), "");
 static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
 
+static_assert(ranges::OutputIterator<int *, int>(), "");
+static_assert(!ranges::OutputIterator<int const *, int>(), "");
+
 struct NotDestructible
 {
     ~NotDestructible() = delete;

@@ -12,6 +12,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -28,19 +29,13 @@ namespace ranges
             using lazy_conditional = typename std::conditional<B, U, V>::type;
 
             template<typename T>
-            struct identity
-            {
-                using type = T;
-            };
-
-            template<typename T>
             struct is_reference_to_const
-              : std::false_type
+              : false_
             {};
 
             template<typename T>
             struct is_reference_to_const<T const&>
-              : std::true_type
+              : true_
             {};
 
             //
@@ -50,7 +45,7 @@ namespace ranges
             //
             template<typename ValueParam, typename Reference>
             using iterator_writability_disabled =
-                std::integral_constant<bool,
+                bool_<
                     std::is_const<Reference>::value ||
                     is_reference_to_const<Reference>::value ||
                     std::is_const<ValueParam>::value
