@@ -81,7 +81,7 @@ namespace ranges
                 base_range_iterator it_;
 
                 basic_iterator(TfxRng &rng, base_range_iterator it)
-                  : rng_(&rng), it_(std::move(it))
+                  : rng_(&rng), it_(detail::move(it))
                 {}
                 void increment()
                 {
@@ -121,7 +121,7 @@ namespace ranges
                          typename = typename std::enable_if<
                                         !std::is_const<OtherTfxRng>::value>::type>
                 basic_iterator(basic_iterator<OtherTfxRng> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
+                  : rng_(that.rng_), it_(detail::move(that).it_)
                 {}
             };
 
@@ -130,7 +130,7 @@ namespace ranges
             using const_iterator = basic_iterator<transform_range const>;
 
             transform_range(Rng && rng, Fun fun)
-              : rng_and_fun_{std::forward<Rng>(rng), std::move(fun)}
+              : rng_and_fun_{detail::forward<Rng>(rng), detail::move(fun)}
             {}
             iterator begin()
             {
@@ -175,17 +175,17 @@ namespace ranges
                 Fun fun_;
             public:
                 transformer1(Fun fun)
-                  : fun_(std::move(fun))
+                  : fun_(detail::move(fun))
                 {}
                 template<typename Rng>
                 transform_range<Rng, Fun> operator()(Rng && rng) &&
                 {
-                    return {std::forward<Rng>(rng), std::move(*this).fun_};
+                    return {detail::forward<Rng>(rng), detail::move(*this).fun_};
                 }
                 template<typename Rng>
                 transform_range<Rng, Fun> operator()(Rng && rng) const &
                 {
-                    return {std::forward<Rng>(rng), fun_};
+                    return {detail::forward<Rng>(rng), fun_};
                 }
             };
         public:
@@ -202,10 +202,10 @@ namespace ranges
                      typename OutputIterator,
                      typename UnaryOperation,
                      CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
-                     typename Value1 = decltype(*ranges::begin(std::declval<InputRange1>())),
-                     CONCEPT_REQUIRES(ranges::Callable<UnaryOperation, Value1>()),
-                     typename Value2 = result_of_t<UnaryOperation(Value1)>,
-                     CONCEPT_REQUIRES(ranges::OutputIterator<OutputIterator, Value2>())
+                     typename Ref1 = range_reference_t<InputRange1>,
+                     CONCEPT_REQUIRES(ranges::Callable<UnaryOperation, Ref1>()),
+                     typename Ref2 = result_of_t<UnaryOperation(Ref1)>,
+                     CONCEPT_REQUIRES(ranges::OutputIterator<OutputIterator, Ref2>())
             >
             OutputIterator
             operator()(InputRange1 && rng,
@@ -213,7 +213,7 @@ namespace ranges
                        UnaryOperation fun) const
             {
                 return std::transform(ranges::begin(rng), ranges::end(rng),
-                                      std::move(out), std::move(fun));
+                                      detail::move(out), detail::move(fun));
             }
 
             /// \overload
@@ -223,10 +223,10 @@ namespace ranges
                      typename BinaryOperation,
                      CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
                      CONCEPT_REQUIRES(ranges::InputRange<InputRange2>()),
-                     typename Value1 = decltype(*ranges::begin(std::declval<InputRange1>())),
-                     typename Value2 = decltype(*ranges::begin(std::declval<InputRange2>())),
-                     CONCEPT_REQUIRES(ranges::Callable<BinaryOperation, Value1, Value2>()),
-                     typename Value3 = result_of_t<BinaryOperation(Value1, Value2)>,
+                     typename Ref1 = range_reference_t<InputRange1>,
+                     typename Ref2 = range_reference_t<InputRange2>,
+                     CONCEPT_REQUIRES(ranges::Callable<BinaryOperation, Ref1, Ref2>()),
+                     typename Value3 = result_of_t<BinaryOperation(Ref1, Ref2)>,
                      CONCEPT_REQUIRES(ranges::OutputIterator<OutputIterator, Value3>())>
             OutputIterator
             operator()(InputRange1 && rng1,
@@ -237,24 +237,26 @@ namespace ranges
                 return detail::transform_impl(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),
-                    std::move(out), std::move(fun));
+                    detail::move(out), detail::move(fun));
             }
 
             /// \overload
             template<typename InputRange1,
                      CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
-                     typename UnaryOperation>
+                     typename Ref1 = range_reference_t<InputRange1>,
+                     typename UnaryOperation,
+                     CONCEPT_REQUIRES(ranges::Callable<UnaryOperation, Ref1>())>
             transform_range<InputRange1, UnaryOperation>
             operator()(InputRange1 && rng, UnaryOperation fun) const
             {
-                return {std::forward<InputRange1>(rng), std::move(fun)};
+                return {detail::forward<InputRange1>(rng), detail::move(fun)};
             }
 
             /// \overload
             template<typename UnaryOperation>
             bindable<transformer1<UnaryOperation>> operator()(UnaryOperation fun) const
             {
-                return bindable<transformer1<UnaryOperation>>{{std::move(fun)}};
+                return bindable<transformer1<UnaryOperation>>{{detail::move(fun)}};
             }
         };
 

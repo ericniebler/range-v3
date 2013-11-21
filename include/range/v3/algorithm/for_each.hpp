@@ -35,15 +35,15 @@ namespace ranges
             UnaryFunction operator()(InputRange && rng, UnaryFunction fun) const
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                return std::for_each(ranges::begin(rng), ranges::end(rng), std::move(fun));
+                return std::for_each(ranges::begin(rng), ranges::end(rng), detail::move(fun));
             }
 
             /// \overload
             template<typename UnaryFunction, typename This = for_eacher>
             auto operator()(UnaryFunction fun) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, std::move(fun)))
+                -> decltype(bindable<This>{}(std::placeholders::_1, detail::move(fun)))
             {
-                return bindable<This>{}(std::placeholders::_1, std::move(fun));
+                return bindable<This>{}(std::placeholders::_1, detail::move(fun));
             }
         };
 

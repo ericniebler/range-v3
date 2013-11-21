@@ -38,10 +38,10 @@ namespace ranges
 
             iterator_range() = default;
             constexpr iterator_range(Iter begin, Iter end)
-              : begin_(std::move(begin)), end_(std::move(end))
+              : begin_(detail::move(begin)), end_(detail::move(end))
             {}
             constexpr iterator_range(std::pair<Iter, Iter> rng)
-              : begin_(std::move(rng.first)), end_(std::move(rng.second))
+              : begin_(detail::move(rng.first)), end_(detail::move(rng.second))
             {}
             iterator begin() const
             {
@@ -76,7 +76,7 @@ namespace ranges
             template<typename Iter>
             constexpr iterator_range<Iter> operator()(Iter begin, Iter end) const
             {
-                return {std::move(begin), std::move(end)};
+                return {detail::move(begin), detail::move(end)};
             }
         };
 

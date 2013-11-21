@@ -37,18 +37,18 @@ namespace ranges
                 compressed_pair() = default;
                 template<typename F, typename S>
                 constexpr compressed_pair(F && f, S && s)
-                  : first_(std::forward<F>(f)), second_(std::forward<S>(s))
+                  : first_(detail::forward<F>(f)), second_(detail::forward<S>(s))
                 {}
                 auto first() & -> decltype((first_)) { return first_; }
                 auto second() & -> decltype((second_)) { return second_; }
                 constexpr auto first() const & -> decltype((first_)) { return first_; }
                 constexpr auto second() const & -> decltype((second_)) { return second_; }
                 constexpr auto first() const &&
-                    -> decltype((std::move(const_cast<compressed_pair &&>(*this)).first_))
-                { return std::move(const_cast<compressed_pair &&>(*this)).first_; }
+                    -> decltype((detail::move(const_cast<compressed_pair &&>(*this)).first_))
+                { return detail::move(const_cast<compressed_pair &&>(*this)).first_; }
                 constexpr auto second() const &&
-                    -> decltype((std::move(const_cast<compressed_pair &&>(*this)).second_))
-                { return std::move(const_cast<compressed_pair &&>(*this)).second_; }
+                    -> decltype((detail::move(const_cast<compressed_pair &&>(*this)).second_))
+                { return detail::move(const_cast<compressed_pair &&>(*this)).second_; }
             };
 
             template<typename First, typename Second>
@@ -56,7 +56,7 @@ namespace ranges
                 First
               , Second
               , typename std::enable_if<std::is_empty<First>::value &&
-                                      !std::is_empty<Second>::value>::type
+                                       !std::is_empty<Second>::value>::type
             >
               : private First
             {
@@ -66,7 +66,7 @@ namespace ranges
                 compressed_pair() = default;
                 template<typename F, typename S>
                 constexpr compressed_pair(F && f, S && s)
-                  : First(std::forward<F>(f)), second_(std::forward<S>(s))
+                  : First(detail::forward<F>(f)), second_(detail::forward<S>(s))
                 {}
                 auto first() & -> First & { return *this; }
                 auto second() & -> decltype((second_)) { return second_; }
@@ -74,10 +74,10 @@ namespace ranges
                 constexpr auto second() const & -> decltype((second_)) { return second_; }
                 constexpr auto first() const &&
                     -> First &&
-                { return std::move(const_cast<compressed_pair &&>(*this)); }
+                { return detail::move(const_cast<compressed_pair &&>(*this)); }
                 constexpr auto second() const &&
-                    -> decltype((std::move(const_cast<compressed_pair &&>(*this)).second_))
-                { return std::move(const_cast<compressed_pair &&>(*this)).second_; }
+                    -> decltype((detail::move(const_cast<compressed_pair &&>(*this)).second_))
+                { return detail::move(const_cast<compressed_pair &&>(*this)).second_; }
             };
 
             template<typename First, typename Second>
@@ -95,18 +95,18 @@ namespace ranges
                 compressed_pair() = default;
                 template<typename F, typename S>
                 constexpr compressed_pair(F && f, S && s)
-                  : Second(std::forward<S>(s)), first_(std::forward<F>(f))
+                  : Second(detail::forward<S>(s)), first_(detail::forward<F>(f))
                 {}
                 auto first() & -> decltype((first_)) { return first_; }
                 auto second() & -> Second & { return *this; }
                 constexpr auto first() const & -> decltype((first_)) { return first_; }
                 constexpr auto second() const & -> Second const & { return *this; }
                 constexpr auto first() const &&
-                    -> decltype((std::move(const_cast<compressed_pair &&>(*this)).first_))
-                { return std::move(const_cast<compressed_pair &&>(*this)).first_; }
+                    -> decltype((detail::move(const_cast<compressed_pair &&>(*this)).first_))
+                { return detail::move(const_cast<compressed_pair &&>(*this)).first_; }
                 constexpr auto second() const &&
                     -> Second &&
-                { return std::move(const_cast<compressed_pair &&>(*this)); }
+                { return detail::move(const_cast<compressed_pair &&>(*this)); }
             };
 
             template<typename First, typename Second>
@@ -121,7 +121,7 @@ namespace ranges
                 compressed_pair() = default;
                 template<typename F, typename S>
                 constexpr compressed_pair(F && f, S && s)
-                  : First(std::forward<F>(f)), Second(std::forward<S>(s))
+                  : First(detail::forward<F>(f)), Second(detail::forward<S>(s))
                 {}
                 auto first() & -> First & { return *this; }
                 auto second() & -> Second & { return *this; }
@@ -129,10 +129,10 @@ namespace ranges
                 constexpr auto second() const & -> Second const & { return *this; }
                 constexpr auto first() const &&
                     -> First &&
-                { return std::move(const_cast<compressed_pair &&>(*this)); }
+                { return detail::move(const_cast<compressed_pair &&>(*this)); }
                 constexpr auto second() const &&
                     -> Second &&
-                { return std::move(const_cast<compressed_pair &&>(*this)); }
+                { return detail::move(const_cast<compressed_pair &&>(*this)); }
             };
 
             constexpr struct compressed_pair_maker
@@ -141,7 +141,7 @@ namespace ranges
                 constexpr auto operator()(First && f, Second && s) const ->
                     compressed_pair<First, Second>
                 {
-                    return {std::forward<First>(f), std::forward<Second>(s)};
+                    return {detail::forward<First>(f), detail::forward<Second>(s)};
                 }
             } make_compressed_pair {};
 

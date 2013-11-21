@@ -36,7 +36,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 RANGES_ASSERT(static_cast<Size>(std::distance(ranges::begin(rng), ranges::end(rng))) >= n);
                 std::fill_n(ranges::begin(rng), n, val);
-                return std::forward<ForwardRange>(rng);
+                return detail::forward<ForwardRange>(rng);
             }
 
             /// \overload

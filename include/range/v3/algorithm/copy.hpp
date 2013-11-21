@@ -34,7 +34,7 @@ namespace ranges
             {
                 static_assert(ranges::InputRange<InputRange>(),
                     "Expecting model of InputRange");
-                return std::copy(ranges::begin(rng), ranges::end(rng), std::move(out));
+                return std::copy(ranges::begin(rng), ranges::end(rng), detail::move(out));
             }
         };
 

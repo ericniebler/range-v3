@@ -61,7 +61,7 @@ namespace ranges
             } is_false {};
 
             template<typename Concept, typename ...Ts>
-            struct models_impl;
+            struct models_;
 
             template<typename Concept>
             struct base_concept
@@ -118,8 +118,7 @@ namespace ranges
             template<typename Concept, typename ...Ts>
             constexpr bool models()
             {
-                return
-                    decltype(detail::models_impl<Concept, Ts...>{}(std::declval<Ts>()...))::value;
+                return decltype(detail::models_<Concept, Ts...>{}())::value;
             };
 
             template<typename Concept, typename ...Ts>
@@ -130,9 +129,9 @@ namespace ranges
         namespace detail
         {
             ////////////////////////////////////////////////////////////////////////////////////
-            // const_
+            // always
             template<typename A, typename B>
-            using const_ = A;
+            using always = A;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list
@@ -153,12 +152,10 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////
             // list_of
             // Generate lists<_,_,_,..._> with N arguments in O(log N)
-            template<std::size_t N, typename T, typename List = list<>>
+            template<int N, typename T, typename List = list<>>
             struct list_of
-              : concat<
-                    typename list_of<N / 2, T, List>::type
-                  , typename list_of<N - N / 2, T, List>::type
-                >
+              : concat<typename list_of<N / 2, T, List>::type,
+                       typename list_of<N - N / 2, T, List>::type>
             {};
 
             template<typename T, typename List>
@@ -182,7 +179,7 @@ namespace ranges
             struct get_nth_impl<list<Ignored...>>
             {
                 template<typename T, typename ...Us>
-                static T eval(const_<void*, Ignored>..., T *, Us *...);
+                static T eval(always<void *, Ignored>..., T *, Us *...);
             };
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -193,58 +190,55 @@ namespace ranges
                     get_nth_impl<typename list_of<N, decltype(nullptr)>::type>::eval(
                         static_cast<identity<Ts>*>(nullptr)...))::type;
 
+            ////////////////////////////////////////////////////////////////////////////////////
+            // models_
             template<typename Concept, typename ...Ts>
-            struct models_impl_2
-              : models_impl<Concept, Ts...>
-            {};
-
-            template<typename Concept, typename...Args, typename ...Ts>
-            struct models_impl_2<Concept(Args...), Ts...>
-            {
-                auto operator()() ->
-                    decltype(models_impl<Concept, get_nth<Args::value, Ts...>...>{}(
-                        std::declval<get_nth<Args::value, Ts...>>()...
-                    ));
-            };
-
-            template<typename Concept, typename ...Ts>
-            struct models_impl
+            struct models_
             {
             private:
-                using false_pfn_t = false_(*)(Ts &&...);
-                static false_ false_fun(Ts &&...)
-                {
-                    return {};
-                }
-
-                true_ test_refines(void *)
-                {
-                    return {};
-                }
-
+                true_ test_refines(void *); // No refinements, ok
                 template<typename ...Bases>
                 auto test_refines(concepts::refines<Bases...> *) ->
-                    detail::and_<decltype(models_impl_2<Bases, Ts...>{}())::value...>
-                {
-                    return {};
-                }
-
+                    detail::and_<concepts::models<Bases, Ts...>()...>;
             public:
-                operator false_pfn_t () const
-                {
-                    return &false_fun;
-                }
-
+                false_ operator()() const;
                 template<typename C = Concept>
-                auto operator()(Ts &&... ts) ->
-                    bool_<
-                        decltype(C{}.requires(std::forward<Ts>(ts)...))::value &&
-                        decltype(models_impl::test_refines((C*)nullptr))::value
-                    >
-                {
-                    return {};
-                }
+                auto operator()() ->
+                    bool_<decltype(C{}.requires(std::declval<Ts>()...))::value &&
+                          decltype(models_::test_refines((C *)nullptr))::value>;
             };
+
+            template<typename Concept, typename...Args, typename ...Ts>
+            struct models_<Concept(Args...), Ts...>
+              : models_<Concept, get_nth<Args::value, Ts...>...>
+            {};
+
+            //template<typename Concept, typename ...Ts>
+            //struct most_refined_
+            //{
+            //private:
+            //    void test_refines(void *);
+            //    void test_refines(concepts::refines<> *);
+            //    template<typename Head, typename ...Tail, typename This = most_refined_>
+            //    static auto test_refines(concepts::refines<Head, Tail...> *) ->
+            //        typename std::conditional<
+            //            concepts::models<Head, Ts...>(),
+            //            typename base_concept<Head>::type,
+            //            decltype(This::test_refines((concepts::refines<Tail...> *)nullptr))
+            //        >::type;
+
+            //public:
+            //    using type = typename std::conditional<
+            //        concepts::models<Concept, Ts...>(),
+            //        Concept,
+            //        decltype(most_refined_::test_refines((Concept *)nullptr))
+            //    >::type;
+            //};
+
+            //template<typename Concept, typename ...Args, typename ...Ts>
+            //struct most_refined_<Concept(Args...), Ts...>
+            //  : most_refined_<Concept, Ts...>
+            //{};
         }
 
         namespace concepts
@@ -358,8 +352,8 @@ namespace ranges
                 template<typename Fun, typename ...Args>
                 auto requires(Fun && fun, Args &&... args) -> decltype(
                     concepts::valid_expr(
-                        (static_cast<void>(std::forward<Fun>(fun)(
-                            std::forward<Args>(args)...)), 42)
+                        (static_cast<void>(detail::forward<Fun>(fun)(
+                            detail::forward<Args>(args)...)), 42)
                     ));
             };
 
@@ -370,7 +364,7 @@ namespace ranges
                 auto requires(Fun && fun, Args &&... args) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(
-                            std::forward<Fun>(fun)(std::forward<Args>(args)...))
+                            detail::forward<Fun>(fun)(detail::forward<Args>(args)...))
                     ));
             };
 
@@ -380,7 +374,7 @@ namespace ranges
                 template<typename Fun, typename Arg>
                 auto requires(Fun && fun, Arg && arg) -> decltype(
                     concepts::valid_expr(
-                        std::forward<Fun>(fun)(std::forward<Arg>(arg))
+                        detail::forward<Fun>(fun)(detail::forward<Arg>(arg))
                     ));
             };
 
@@ -390,8 +384,8 @@ namespace ranges
                 template<typename Fun, typename Arg0, typename Arg1>
                 auto requires(Fun && fun, Arg0 && arg0, Arg1 && arg1) -> decltype(
                     concepts::valid_expr(
-                        std::forward<Fun>(fun)(std::forward<Arg0>(arg0),
-                                               std::forward<Arg1>(arg1))
+                        detail::forward<Fun>(fun)(detail::forward<Arg0>(arg0),
+                                               detail::forward<Arg1>(arg1))
                     ));
             };
 
@@ -407,7 +401,7 @@ namespace ranges
             };
 
             struct OutputIterator
-              : refines<Iterator(_1)>
+              : refines<Iterator(_1)> // OutputIterator<T,U> refines Iterator<T>
             {
                 template<typename T, typename O>
                 auto requires(T && t, O && o) -> decltype(

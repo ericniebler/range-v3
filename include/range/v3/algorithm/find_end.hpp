@@ -51,7 +51,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
 
                 return std::find_end(ranges::begin(rng1), ranges::end(rng1),
-                                     ranges::begin(rng2), ranges::end(rng2), std::move(pred));
+                                     ranges::begin(rng2), ranges::end(rng2), detail::move(pred));
             }
         };
 

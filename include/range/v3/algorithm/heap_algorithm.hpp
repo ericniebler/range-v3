@@ -43,7 +43,7 @@ namespace ranges
             RandomAccessRange operator()(RandomAccessRange && rng, Compare comp_pred) const
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::push_heap(ranges::begin(rng), ranges::end(rng), std::move(comp_pred));
+                std::push_heap(ranges::begin(rng), ranges::end(rng), detail::move(comp_pred));
                 return rng;
             }
         };
@@ -71,7 +71,7 @@ namespace ranges
             RandomAccessRange operator()(RandomAccessRange && rng, Compare comp_pred) const
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::pop_heap(ranges::begin(rng), ranges::end(rng), std::move(comp_pred));
+                std::pop_heap(ranges::begin(rng), ranges::end(rng), detail::move(comp_pred));
                 return rng;
             }
         };
@@ -99,7 +99,7 @@ namespace ranges
             RandomAccessRange operator()(RandomAccessRange && rng, Compare comp_pred) const
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::make_heap(ranges::begin(rng), ranges::end(rng), std::move(comp_pred));
+                std::make_heap(ranges::begin(rng), ranges::end(rng), detail::move(comp_pred));
                 return rng;
             }
         };
@@ -127,7 +127,7 @@ namespace ranges
             RandomAccessRange operator()(RandomAccessRange && rng, Compare comp_pred) const
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::sort_heap(ranges::begin(rng), ranges::end(rng), std::move(comp_pred));
+                std::sort_heap(ranges::begin(rng), ranges::end(rng), detail::move(comp_pred));
                 return rng;
             }
         };

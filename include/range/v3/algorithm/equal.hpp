@@ -112,7 +112,7 @@ namespace ranges
                             std::random_access_iterator_tag)
             {
                 return ((last1 - first1) == (last2 - first2))
-                    && std::equal(std::move(first1), std::move(last1), std::move(first2));
+                    && std::equal(detail::move(first1), detail::move(last1), detail::move(first2));
             }
 
             template<typename RandomAccessIterator1,
@@ -127,8 +127,8 @@ namespace ranges
                             std::random_access_iterator_tag)
             {
                 return ((last1 - first1) == (last2 - first2))
-                    && std::equal(std::move(first1), std::move(last1),
-                                  std::move(first2), std::move(pred));
+                    && std::equal(detail::move(first1), detail::move(last1),
+                                  detail::move(first2), detail::move(pred));
             }
 
             template<typename InputIterator1,
@@ -142,8 +142,8 @@ namespace ranges
                 typename std::iterator_traits< InputIterator2 >::iterator_category tag2;
 
                 return detail::equal_impl(
-                    std::move(first1), std::move(last1),
-                    std::move(first2), std::move(last2),
+                    detail::move(first1), detail::move(last1),
+                    detail::move(first2), detail::move(last2),
                     tag1, tag2);
             }
 
@@ -160,9 +160,9 @@ namespace ranges
                 typename std::iterator_traits< InputIterator2 >::iterator_category tag2;
 
                 return detail::equal_impl(
-                    std::move(first1), std::move(last1),
-                    std::move(first2), std::move(last2),
-                    std::move(pred), tag1, tag2);
+                    detail::move(first1), detail::move(last1),
+                    detail::move(first2), detail::move(last2),
+                    detail::move(pred), tag1, tag2);
             }
 
         } // namespace detail
@@ -198,7 +198,7 @@ namespace ranges
                 return ranges::detail::equal(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),
-                    std::move(pred));
+                    detail::move(pred));
             }
         };
 

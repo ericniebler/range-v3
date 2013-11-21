@@ -50,7 +50,7 @@ namespace ranges
                                             range_reference_t<ForwardRange>,
                                             range_reference_t<ForwardRange>>(),
                     "Expecting model of BinaryPredicate");
-                return std::adjacent_find(ranges::begin(rng), ranges::end(rng), std::move(pred));
+                return std::adjacent_find(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
         };
         

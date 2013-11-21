@@ -35,16 +35,16 @@ namespace ranges
             ForwardRange operator()(ForwardRange && rng, Generator gen) const
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                std::generate(ranges::begin(rng), ranges::end(rng), std::move(gen));
-                return std::forward<ForwardRange>(rng);
+                std::generate(ranges::begin(rng), ranges::end(rng), detail::move(gen));
+                return detail::forward<ForwardRange>(rng);
             }
 
             /// \overload
             template<typename Generator, typename This = generator>
             auto operator()(Generator gen) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, std::move(gen)))
+                -> decltype(bindable<This>{}(std::placeholders::_1, detail::move(gen)))
             {
-                return bindable<This>{}(std::placeholders::_1, std::move(gen));
+                return bindable<This>{}(std::placeholders::_1, detail::move(gen));
             }
         };
 

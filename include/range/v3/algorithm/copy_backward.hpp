@@ -36,7 +36,7 @@ namespace ranges
             {
                 static_assert(ranges::BidirectionalRange<BidirectionalRange>(),
                     "Expecting model of BidirectionalRange");
-                return std::copy_backward(ranges::begin(rng), ranges::end(rng), std::move(out));
+                return std::copy_backward(ranges::begin(rng), ranges::end(rng), detail::move(out));
             }
         };
 

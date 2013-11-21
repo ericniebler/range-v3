@@ -31,9 +31,9 @@ namespace ranges
             /// \pre \c UnaryPredicate is a model of the UnaryPredicate concept
             template<typename UnaryPredicate, typename This = counter_if>
             auto operator()(UnaryPredicate pred) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, std::move(pred)))
+                -> decltype(bindable<This>{}(std::placeholders::_1, detail::move(pred)))
             {
-                return bindable<This>{}(std::placeholders::_1, std::move(pred));
+                return bindable<This>{}(std::placeholders::_1, detail::move(pred));
             }
 
             /// \brief template function \c counter_if::operator()
@@ -48,7 +48,7 @@ namespace ranges
             {
                 static_assert(ranges::InputRange<InputRange>(),
                     "Expecting model of InputRange");
-                return std::count_if(ranges::begin(rng), ranges::end(rng), std::move(pred));
+                return std::count_if(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
         };
 

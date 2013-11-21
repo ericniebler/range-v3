@@ -36,7 +36,7 @@ namespace ranges
                 range_iterator_t<BidirectionalRange> middle) const
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
-                std::inplace_merge(ranges::begin(rng), std::move(middle), ranges::end(rng));
+                std::inplace_merge(ranges::begin(rng), detail::move(middle), ranges::end(rng));
                 return rng;
             }
 
@@ -48,8 +48,8 @@ namespace ranges
                 BinaryPredicate pred) const
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
-                std::inplace_merge(ranges::begin(rng), std::move(middle),
-                                   ranges::end(rng), std::move(pred));
+                std::inplace_merge(ranges::begin(rng), detail::move(middle),
+                                   ranges::end(rng), detail::move(pred));
                 return rng;
             }
         };

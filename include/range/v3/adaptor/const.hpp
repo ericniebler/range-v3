@@ -58,7 +58,7 @@ namespace ranges
             template<typename Rng>
             const_range<Rng> operator()(Rng && rng) const
             {
-                return const_range<Rng>{std::forward<Rng>()};
+                return const_range<Rng>{detail::forward<Rng>()};
             }
         };
         

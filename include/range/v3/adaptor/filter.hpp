@@ -62,7 +62,7 @@ namespace ranges
                 base_range_iterator it_;
 
                 basic_iterator(FltRng &rng, base_range_iterator it)
-                  : rng_(&rng), it_(std::move(it))
+                  : rng_(&rng), it_(detail::move(it))
                 {
                     satisfy();
                 }
@@ -100,7 +100,7 @@ namespace ranges
                          typename = typename std::enable_if<
                                         !std::is_const<OtherFltRng>::value>::type>
                 basic_iterator(basic_iterator<OtherFltRng> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
+                  : rng_(that.rng_), it_(detail::move(that).it_)
                 {}
             };
         public:
@@ -108,7 +108,7 @@ namespace ranges
             using const_iterator = basic_iterator<filter_range const>;
 
             filter_range(Rng && rng, Pred pred)
-              : rng_and_pred_{std::forward<Rng>(rng), std::move(pred)}
+              : rng_and_pred_{detail::forward<Rng>(rng), detail::move(pred)}
             {}
             iterator begin()
             {
@@ -153,24 +153,24 @@ namespace ranges
                 Pred pred_;
             public:
                 filterer1(Pred pred)
-                  : pred_(std::move(pred))
+                  : pred_(detail::move(pred))
                 {}
                 template<typename Rng>
                 filter_range<Rng, Pred> operator()(Rng && rng) &&
                 {
-                    return {std::forward<Rng>(rng), std::move(*this).pred_};
+                    return {detail::forward<Rng>(rng), detail::move(*this).pred_};
                 }
                 template<typename Rng>
                 filter_range<Rng, Pred> operator()(Rng && rng) const &
                 {
-                    return {std::forward<Rng>(rng), pred_};
+                    return {detail::forward<Rng>(rng), pred_};
                 }
             };
         public:
             template<typename Rng, typename Pred>
             filter_range<Rng, Pred> operator()(Rng && rng, Pred pred) const
             {
-                return {std::forward<Rng>(rng), std::move(pred)};
+                return {detail::forward<Rng>(rng), detail::move(pred)};
             }
             template<typename Pred>
             constexpr bindable<filterer1<Pred>> operator()(Pred pred) const

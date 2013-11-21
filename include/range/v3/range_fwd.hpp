@@ -131,6 +131,26 @@ namespace ranges
             {
                 using type = T;
             };
+
+            template<typename T>
+            constexpr T && forward(typename std::remove_reference<T>::type& t) noexcept
+            {
+                return static_cast<T&&>(t);
+            }
+
+            template<typename T>
+            constexpr T && forward(typename std::remove_reference<T>::type&& t) noexcept
+            {
+                static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
+                return static_cast<T&&>(t);
+            }
+
+            template<typename T>
+            constexpr typename std::remove_reference<T>::type &&
+            move(T&& t) noexcept
+            {
+                return static_cast<typename std::remove_reference<T>::type&&>(t);
+            }
         }
 
         template<typename T>

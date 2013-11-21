@@ -34,7 +34,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 std::fill(ranges::begin(rng), ranges::end(rng), val);
-                return std::forward<ForwardRange>(rng);
+                return detail::forward<ForwardRange>(rng);
             }
 
             /// \overload

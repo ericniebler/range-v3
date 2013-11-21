@@ -35,12 +35,12 @@ namespace ranges
                 template<typename Obj, typename ...Args2>
                 Ret operator()(Obj && obj, Args2 &&... args) const
                 {
-                    return (std::forward<Obj>(obj).*pmfn_)(std::forward<Args2>(args)...);
+                    return (detail::forward<Obj>(obj).*pmfn_)(detail::forward<Args2>(args)...);
                 }
                 template<typename Obj, typename ...Args2>
                 Ret operator()(Obj * obj, Args2 &&... args) const
                 {
-                    return (obj->*pmfn_)(std::forward<Args2>(args)...);
+                    return (obj->*pmfn_)(detail::forward<Args2>(args)...);
                 }
             };
 
@@ -49,7 +49,7 @@ namespace ranges
               : Fun
             {
                 function_wrapper(Fun fun)
-                  : Fun(std::move(fun))
+                  : Fun(detail::move(fun))
                 {}
             };
 
@@ -65,7 +65,7 @@ namespace ranges
                 template<typename ...Args2>
                 Ret operator()(Args2 &&... args) const
                 {
-                    return (*pfn_)(std::forward<Args>(args)...);
+                    return (*pfn_)(detail::forward<Args>(args)...);
                 }
             };
 
@@ -81,7 +81,7 @@ namespace ranges
                 template<typename ...Args2>
                 Ret operator()(Args2 &&... args) const
                 {
-                    return (*pfn_)(std::forward<Args>(args)...);
+                    return (*pfn_)(detail::forward<Args>(args)...);
                 }
             };
 
@@ -96,9 +96,9 @@ namespace ranges
                 {}
                 template<typename Obj>
                 auto operator()(Obj && obj) const
-                    -> decltype((std::forward<Obj>(obj).*pm_))
+                    -> decltype((detail::forward<Obj>(obj).*pm_))
                 {
-                    return std::forward<Obj>(obj).*pm_;
+                    return detail::forward<Obj>(obj).*pm_;
                 }
                 template<typename Obj>
                 auto operator()(Obj * obj) const

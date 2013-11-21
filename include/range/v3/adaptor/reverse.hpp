@@ -52,7 +52,7 @@ namespace ranges
                 base_range_iterator it_;
 
                 basic_iterator(RevRng &rng, base_range_iterator it)
-                  : rng_(&rng), it_(std::move(it))
+                  : rng_(&rng), it_(detail::move(it))
                 {}
                 void increment()
                 {
@@ -92,7 +92,7 @@ namespace ranges
                          typename = typename std::enable_if<
                                         !std::is_const<OtherRevRng>::value>::type>
                 basic_iterator(basic_iterator<OtherRevRng> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
+                  : rng_(that.rng_), it_(detail::move(that).it_)
                 {}
             };
 
@@ -101,7 +101,7 @@ namespace ranges
             using const_iterator = basic_iterator<reverse_range const>;
 
             explicit reverse_range(Rng && rng)
-              : rng_(std::forward<Rng>(rng))
+              : rng_(detail::forward<Rng>(rng))
             {}
             iterator begin()
             {
@@ -142,7 +142,7 @@ namespace ranges
             template<typename Rng>
             reverse_range<Rng> operator()(Rng && rng) const
             {
-                return reverse_range<Rng>{std::forward<Rng>(rng)};
+                return reverse_range<Rng>{detail::forward<Rng>(rng)};
             }
         };
         

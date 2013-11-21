@@ -35,15 +35,15 @@ namespace ranges
             range_iterator_t<InputRange> operator()(InputRange && rng, UnaryPredicate pred) const
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                return std::find_if(ranges::begin(rng), ranges::end(rng), std::move(pred));
+                return std::find_if(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
 
             /// \overload
             template<typename UnaryPredicate, typename This = finder_if>
             auto operator()(UnaryPredicate pred) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, std::move(pred)))
+                -> decltype(bindable<This>{}(std::placeholders::_1, detail::move(pred)))
             {
-                return bindable<This>{}(std::placeholders::_1, std::move(pred));
+                return bindable<This>{}(std::placeholders::_1, detail::move(pred));
             }
         };
 

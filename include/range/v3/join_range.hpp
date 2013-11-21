@@ -141,10 +141,10 @@ namespace ranges
                 detail::which which_;
 
                 basic_iterator(JoinRng &rng, base_range_iterator0 it, detail::first_range_tag)
-                  : rng_(&rng), it0_(std::move(it)), which_(detail::which::first)
+                  : rng_(&rng), it0_(detail::move(it)), which_(detail::which::first)
                 {}
                 basic_iterator(JoinRng &rng, base_range_iterator1 it, detail::second_range_tag)
-                  : rng_(&rng), it1_(std::move(it)), which_(detail::which::second)
+                  : rng_(&rng), it1_(detail::move(it)), which_(detail::which::second)
                 {}
                 void increment()
                 {
@@ -334,7 +334,7 @@ namespace ranges
                              std::is_nothrow_move_constructible<base_range_iterator1>::value)
                   : basic_iterator{}
                 {
-                    *this = std::move(that);
+                    *this = detail::move(that);
                 }
                 ~basic_iterator()
                     //noexcept(std::is_nothrow_destructible<base_range_iterator0>::value &&
@@ -374,11 +374,11 @@ namespace ranges
                     switch(that.which_)
                     {
                     case detail::which::first:
-                        ::new((void*)&it0_) base_range_iterator0(std::move(that).it0_);
+                        ::new((void*)&it0_) base_range_iterator0(detail::move(that).it0_);
                         which_ = detail::which::first;
                         break;
                     case detail::which::second:
-                        ::new((void*)&it1_) base_range_iterator1(std::move(that).it1_);
+                        ::new((void*)&it1_) base_range_iterator1(detail::move(that).it1_);
                         which_ = detail::which::second;
                         break;
                     default:
@@ -400,11 +400,11 @@ namespace ranges
                     switch(that.which_)
                     {
                     case detail::which::first:
-                        ::new((void*)&it0_) base_range_iterator0(std::move(that).it0_);
+                        ::new((void*)&it0_) base_range_iterator0(detail::move(that).it0_);
                         which_ = detail::which::first;
                         break;
                     case detail::which::second:
-                        ::new((void*)&it1_) base_range_iterator1(std::move(that).it1_);
+                        ::new((void*)&it1_) base_range_iterator1(detail::move(that).it1_);
                         which_ = detail::which::second;
                         break;
                     default:
@@ -468,7 +468,7 @@ namespace ranges
             template<typename Rng0, typename Rng1>
             join_range<Rng0, Rng1> operator()(Rng0 && rng0, Rng1 && rng1) const
             {
-                return {std::forward<Rng0>(rng0), std::forward<Rng1>(rng1)};
+                return {detail::forward<Rng0>(rng0), detail::forward<Rng1>(rng1)};
             }
         };
 
