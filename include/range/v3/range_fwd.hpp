@@ -199,37 +199,19 @@ namespace ranges
         struct range_iterator;
 
         template<typename Rng>
-        using range_iterator_t = typename range_iterator<Rng>::type;
-
-        template<typename Rng>
         struct range_value;
-
-        template<typename Rng>
-        using range_value_t = typename range_value<Rng>::type;
 
         template<typename Rng>
         struct range_reference;
 
         template<typename Rng>
-        using range_reference_t = typename range_reference<Rng>::type;
-
-        template<typename Rng>
         struct range_category;
-
-        template<typename Rng>
-        using range_category_t = typename range_category<Rng>::type;
 
         template<typename Rng>
         struct range_difference;
 
         template<typename Rng>
-        using range_difference_t = typename range_difference<Rng>::type;
-
-        template<typename Rng>
         struct range_pointer;
-
-        template<typename Rng>
-        using range_pointer_t = typename range_pointer<Rng>::type;
 
         struct adjacent_finder;
         extern bindable<adjacent_finder> const adjacent_find;

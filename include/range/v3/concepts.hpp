@@ -25,17 +25,47 @@ namespace ranges
     {
         namespace concepts
         {
-            struct InputRange
-              : refines<CopyConstructible>
+            struct Range
             {
+                // Associated types
+                template<typename T>
+                using iterator_t = decltype(ranges::begin(std::declval<T>()));
+
+                template<typename T>
+                using category_t = Iterator::category_t<iterator_t<T>>;
+
+                template<typename T>
+                using value_t = Iterator::value_t<iterator_t<T>>;
+
+                template<typename T>
+                using difference_t = Iterator::difference_t<iterator_t<T>>;
+
+                template<typename T>
+                using reference_t = Iterator::reference_t<iterator_t<T>>;
+
+                template<typename T>
+                using pointer_t = Iterator::pointer_t<iterator_t<T>>;
+
+                // Valid expressions
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::same_type(ranges::begin(t), ranges::end(t)),
                         concepts::same_type(ranges::cbegin(t), ranges::cend(t)),
-                        concepts::model_of<InputIterator>(ranges::begin(t)),
-                        concepts::model_of<InputIterator>(ranges::cbegin(t)),
+                        concepts::model_of<Iterator>(ranges::begin(t)),
+                        concepts::model_of<Iterator>(ranges::cbegin(t)),
                         concepts::convertible_to<decltype(ranges::cbegin(t))>(ranges::begin(t))
+                    ));
+            };
+
+            struct InputRange
+              : refines<Range, CopyConstructible>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<InputIterator>(ranges::begin(t)),
+                        concepts::model_of<InputIterator>(ranges::cbegin(t))
                     ));
             };
 

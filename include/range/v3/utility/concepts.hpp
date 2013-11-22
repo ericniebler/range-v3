@@ -130,8 +130,48 @@ namespace ranges
         {
             ////////////////////////////////////////////////////////////////////////////////////
             // always
-            template<typename A, typename B>
-            using always = A;
+            template<typename A, typename...Rest>
+            struct always
+            {
+                using type = A;
+            };
+
+            template<typename A, typename...Rest>
+            using always_t = typename always<A, Rest...>::type;
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // always
+            template<typename T, typename Enable = void>
+            struct iterator_traits_impl
+            {};
+
+            template<typename T>
+            struct iterator_traits_impl<
+                T,
+                detail::always_t<
+                    void,
+                    typename T::iterator_category,
+                    typename T::value_type,
+                    typename T::difference_type,
+                    typename T::reference,
+                    typename T::pointer>>
+            {
+                using iterator_category = typename T::iterator_category;
+                using value_type = typename T::value_type;
+                using difference_type = typename T::difference_type;
+                using reference = typename T::reference;
+                using pointer = typename T::pointer;
+            };
+
+            template<typename T>
+            struct iterator_traits_impl<T *>
+            {
+                using iterator_category = std::random_access_iterator_tag;
+                using value_type = typename std::remove_const<T>::type;
+                using difference_type = std::ptrdiff_t;
+                using reference = T &;
+                using pointer = T *;
+            };
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list
@@ -179,7 +219,7 @@ namespace ranges
             struct get_nth_impl<list<Ignored...>>
             {
                 template<typename T, typename ...Us>
-                static T eval(always<void *, Ignored>..., T *, Us *...);
+                static T eval(always_t<void *, Ignored>..., T *, Us *...);
             };
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -350,6 +390,9 @@ namespace ranges
             struct Callable
             {
                 template<typename Fun, typename ...Args>
+                using result_t = decltype(std::declval<Fun>()(std::declval<Args>()...));
+
+                template<typename Fun, typename ...Args>
                 auto requires(Fun && fun, Args &&... args) -> decltype(
                     concepts::valid_expr(
                         (static_cast<void>(detail::forward<Fun>(fun)(
@@ -385,13 +428,36 @@ namespace ranges
                 auto requires(Fun && fun, Arg0 && arg0, Arg1 && arg1) -> decltype(
                     concepts::valid_expr(
                         detail::forward<Fun>(fun)(detail::forward<Arg0>(arg0),
-                                               detail::forward<Arg1>(arg1))
+                                                  detail::forward<Arg1>(arg1))
                     ));
             };
 
             struct Iterator
               : refines<CopyConstructible, CopyAssignable, Destructible>
             {
+                // Users should specialize this to hook the traits mechanism.
+                template<typename T>
+                struct traits
+                  : detail::iterator_traits_impl<T>
+                {};
+
+                // Associated types
+                template<typename T>
+                using category_t = typename traits<T>::iterator_category;
+
+                template<typename T>
+                using value_t = typename traits<T>::value_type;
+
+                template<typename T>
+                using difference_t = typename traits<T>::difference_type;
+
+                template<typename T>
+                using reference_t = typename traits<T>::reference;
+
+                template<typename T>
+                using pointer_t = typename traits<T>::pointer;
+
+                // Valid expressions
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
