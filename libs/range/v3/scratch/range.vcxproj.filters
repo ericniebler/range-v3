@@ -27,10 +27,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Makefile" />
     <None Include="..\..\..\..\.gitignore" />
     <None Include="..\..\..\..\LICENSE" />
     <None Include="..\..\..\..\README.md" />
+    <None Include="..\..\..\..\boost-build.jam" />
+    <None Include="..\..\..\..\Jamfile" />
+    <None Include="..\..\..\..\Jamroot" />
+    <None Include="Jamfile">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Makefile">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="range.cpp">

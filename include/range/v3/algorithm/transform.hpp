@@ -242,9 +242,9 @@ namespace ranges
 
             /// \overload
             template<typename InputRange1,
+                     typename UnaryOperation,
                      CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
                      typename Ref1 = range_reference_t<InputRange1>,
-                     typename UnaryOperation,
                      CONCEPT_REQUIRES(ranges::Callable<UnaryOperation, Ref1>())>
             transform_range<InputRange1, UnaryOperation>
             operator()(InputRange1 && rng, UnaryOperation fun) const

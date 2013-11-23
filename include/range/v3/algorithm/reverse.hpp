@@ -1,7 +1,5 @@
-// Boost.Range library
-//
-//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008. 
-//  Copyright Eric Niebler 2013.
+//  Copyright Neil Groves 2009. 
+//  Copyright Eric Niebler 2013
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -10,18 +8,19 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-
-#ifndef RANGES_V3_ADAPTOR_REVERSE_HPP
-#define RANGES_V3_ADAPTOR_REVERSE_HPP
+#ifndef RANGES_V3_ALGORITHM_REVERSE_HPP
+#define RANGES_V3_ALGORITHM_REVERSE_HPP
 
 #include <utility>
 #include <iterator>
+#include <algorithm>
 #include <type_traits>
-#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/concepts.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
 
 namespace ranges
 {
@@ -139,15 +138,42 @@ namespace ranges
 
         struct reverser
         {
-            template<typename Rng>
-            reverse_range<Rng> operator()(Rng && rng) const
+            /// \brief template function \c reverser::operator()
+            ///
+            /// range-based version of the \c reverse std algorithm
+            ///
+            /// \pre \c BidirectionalRange is a model of the BidirectionalRange concept
+            template<typename BidirectionalRange,
+                CONCEPT_REQUIRES(ranges::BidirectionalRange<BidirectionalRange>())>
+            BidirectionalRange operator()(BidirectionalRange && rng) const
             {
-                return reverse_range<Rng>{detail::forward<Rng>(rng)};
+                std::reverse(ranges::begin(rng), ranges::end(rng));
+                return detail::forward<BidirectionalRange>(rng);
+            }
+
+            template<typename BindExpression,
+                CONCEPT_REQUIRES(True<is_bind_expression<BindExpression>>())>
+            auto operator()(BindExpression && expr) const
+                -> decltype(detail::bind(std::declval<reverser>(),
+                                         detail::unwrap_bind(detail::forward<BindExpression>(expr))))
+            {
+                return detail::bind(reverser{},
+                                    detail::unwrap_bind(detail::forward<BindExpression>(expr)));
+            }
+
+            /// \overload
+            template<typename BidirectionalRange,
+                CONCEPT_REQUIRES(ranges::BidirectionalRange<BidirectionalRange>())>
+            friend reverse_range<BidirectionalRange>
+                operator|(BidirectionalRange && rng, reverser)
+            {
+                return reverse_range<BidirectionalRange>{detail::forward<BidirectionalRange>(rng)};
             }
         };
-        
-        constexpr bindable<reverser> reverse {};
-    }
-}
 
-#endif
+        constexpr reverser reverse {};
+
+    } // inline namespace v3
+} // namespace ranges
+
+#endif // include guard

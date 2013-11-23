@@ -33,6 +33,7 @@
 #include <range/v3/algorithm/lexicographical_compare.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 
+#include <range/v3/algorithm/reverse.hpp>
 #include <range/v3/algorithm/transform.hpp>
 
 #endif

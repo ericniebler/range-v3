@@ -23,6 +23,11 @@
 # define RANGES_ASSERT assert
 #endif
 
+#define RANGES_DECLTYPE_AUTO_RETURN(...)    \
+    -> decltype(__VA_ARGS__)                \
+    { return (__VA_ARGS__); }               \
+    /**/
+
 namespace ranges
 {
     inline namespace v3
@@ -187,7 +192,8 @@ namespace ranges
         struct reverse_range;
 
         struct reverser;
-        extern bindable<reverser> const reverse;
+        //extern bindable<reverser> const reverse;
+        extern reverser const reverse;
 
         template<typename Rng, typename Fun>
         struct transform_range;

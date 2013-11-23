@@ -35,7 +35,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::push_heap(ranges::begin(rng), ranges::end(rng));
-                return rng;
+                return detail::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -44,7 +44,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::push_heap(ranges::begin(rng), ranges::end(rng), detail::move(comp_pred));
-                return rng;
+                return detail::forward<RandomAccessRange>(rng);
             }
         };
 
@@ -63,7 +63,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::pop_heap(ranges::begin(rng), ranges::end(rng));
-                return rng;
+                return detail::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -72,7 +72,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::pop_heap(ranges::begin(rng), ranges::end(rng), detail::move(comp_pred));
-                return rng;
+                return detail::forward<RandomAccessRange>(rng);
             }
         };
 
@@ -91,7 +91,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::make_heap(ranges::begin(rng), ranges::end(rng));
-                return rng;
+                return detail::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -100,7 +100,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::make_heap(ranges::begin(rng), ranges::end(rng), detail::move(comp_pred));
-                return rng;
+                return detail::forward<RandomAccessRange>(rng);
             }
         };
 
@@ -119,7 +119,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::sort_heap(ranges::begin(rng), ranges::end(rng));
-                return rng;
+                return detail::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -128,7 +128,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::sort_heap(ranges::begin(rng), ranges::end(rng), detail::move(comp_pred));
-                return rng;
+                return detail::forward<RandomAccessRange>(rng);
             }
         };
 

@@ -70,7 +70,23 @@ struct NotDestructible
 static_assert(ranges::Destructible<int>(), "");
 static_assert(!ranges::Destructible<NotDestructible>(), "");
 
-template<std::size_t> struct undef;
+static_assert(
+    std::is_same<
+        ranges::range_concept_t<std::vector<int>>,
+        ranges::concepts::RandomAccessRange
+    >::value, "");
+
+static_assert(
+    std::is_same<
+        ranges::range_concept_t<ranges::istream_range<int>>,
+        ranges::concepts::InputRange
+    >::value, "");
+
+template<std::size_t>
+struct undef_i;
+
+template<typename T>
+struct undef_t;
 
 int main()
 {

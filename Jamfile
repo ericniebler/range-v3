@@ -1,0 +1,28 @@
+# Copyright Rene Rivera 2007.
+#
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
+# Usage:
+#
+#   bjam [options | properties | targets]
+#
+# Options:
+#
+#   --boost=<BOOST>         The directotory of a Boost source tree.
+#                           Default; BOOST env var (if found)
+#                           Default; ../boost (if found)
+#
+#   --boost-build=<BOOST_BUILD>
+#                           The directory for the Boost.Build v2 files.
+#                           Default; BOOST_BUILD_PATH env var (if found)
+#                           Default; BOOST_BUILD env var (if found)
+#                           Default; <BOOST>/tools/build/v2 (if found)
+
+#~ If we have the Boost sources we can use the project...
+
+if [ GLOB $(BOOST) : [ modules.peek project : JAMFILE ] ]
+{
+    use-project /boost : $(BOOST) ;
+}

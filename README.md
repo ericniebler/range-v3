@@ -16,4 +16,4 @@ Open Design Questions:
   - Observation: `copy_if` algorithm and `filter` adaptor are really the same.
   - Observation: `reverse_copy` algorithm and `reverse` adaptor are really the same. (Oops, there
     already is a `reverse` algorithm and it does an in-place reverse. Hrm. Maybe call it `inplace_reverse`?)
-* `rng | count(val)` vs `rng | count(_1, val)`. Be consistent about allowing both.
+  - No, probably better to draw a distinction between INVOKE notation (e.g. `reverse(rng)`) and PIPE notation (e.g. `rng | reverse`), the former being eager when an operation supports it, and the latter being lazy. 

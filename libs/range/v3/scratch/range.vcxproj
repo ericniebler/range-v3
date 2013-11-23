@@ -59,8 +59,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
+    <None Include="..\..\..\..\boost-build.jam" />
+    <None Include="..\..\..\..\Jamfile" />
+    <None Include="..\..\..\..\Jamroot" />
     <None Include="..\..\..\..\LICENSE" />
     <None Include="..\..\..\..\README.md" />
+    <None Include="Jamfile" />
     <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>

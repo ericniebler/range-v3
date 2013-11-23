@@ -190,6 +190,40 @@ namespace ranges
             };
 
             ////////////////////////////////////////////////////////////////////////////////////
+            // pop_front
+            template<typename List>
+            struct pop_front;
+
+            template<typename Head, typename ...List>
+            struct pop_front<list<Head, List...>>
+            {
+                using type = list<List...>;
+            };
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // front
+            template<typename List>
+            struct front;
+
+            template<typename Head, typename ...List>
+            struct front<list<Head, List...>>
+            {
+                using type = Head;
+            };
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // is_empty
+            template<typename List>
+            struct is_empty
+              : false_
+            {};
+
+            template<>
+            struct is_empty<list<>>
+              : true_
+            {};
+
+            ////////////////////////////////////////////////////////////////////////////////////
             // list_of
             // Generate lists<_,_,_,..._> with N arguments in O(log N)
             template<int N, typename T, typename List = list<>>
@@ -253,36 +287,47 @@ namespace ranges
               : models_<Concept, get_nth<Args::value, Ts...>...>
             {};
 
-            //template<typename Concept, typename ...Ts>
-            //struct most_refined_
-            //{
-            //private:
-            //    void test_refines(void *);
-            //    void test_refines(concepts::refines<> *);
-            //    template<typename Head, typename ...Tail, typename This = most_refined_>
-            //    static auto test_refines(concepts::refines<Head, Tail...> *) ->
-            //        typename std::conditional<
-            //            concepts::models<Head, Ts...>(),
-            //            typename base_concept<Head>::type,
-            //            decltype(This::test_refines((concepts::refines<Tail...> *)nullptr))
-            //        >::type;
+            list<> base_concepts_impl_(void *);
 
-            //public:
-            //    using type = typename std::conditional<
-            //        concepts::models<Concept, Ts...>(),
-            //        Concept,
-            //        decltype(most_refined_::test_refines((Concept *)nullptr))
-            //    >::type;
-            //};
+            template<typename...BaseConcepts>
+            list<BaseConcepts...> base_concepts_impl_(concepts::refines<BaseConcepts...> *);
 
-            //template<typename Concept, typename ...Args, typename ...Ts>
-            //struct most_refined_<Concept(Args...), Ts...>
-            //  : most_refined_<Concept, Ts...>
-            //{};
+            template<typename Concept>
+            using base_concepts_t = decltype(detail::base_concepts_impl_((Concept *)nullptr));
+
+            struct not_a_concept
+            {};
+
+            template<typename...Ts>
+            struct most_refined_impl_
+            {
+                static not_a_concept invoke(list<> *);
+
+                template<typename Head, typename...Tail, typename Impl = most_refined_impl_>
+                static auto invoke(list<Head, Tail...> *) ->
+                    typename std::conditional<
+                        concepts::models<Head, Ts...>(),
+                        Head,
+                        decltype(Impl::invoke(
+                            (typename concat<list<Tail...>, base_concepts_t<Head>>::type *)nullptr))
+                    >::type;
+            };
         }
 
         namespace concepts
         {
+            using detail::not_a_concept;
+
+            template<typename Concept, typename...Ts>
+            using most_refined_t =
+                decltype(detail::most_refined_impl_<Ts...>::invoke((detail::list<Concept> *)nullptr));
+
+            template<typename Concept, typename...Ts>
+            struct most_refined
+            {
+                using type = most_refined_t<Concept, Ts...>;
+            };
+
             struct True
             {
                 template<typename T>
@@ -511,7 +556,7 @@ namespace ranges
             };
 
             struct RandomAccessIterator
-              : refines<BidirectionalIterator, Orderable>
+              : refines<BidirectionalIterator>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -522,7 +567,8 @@ namespace ranges
                         t = t - (t-t),
                         t += (t-t),
                         t -= (t-t),
-                        concepts::same_type(*t, t[t-t])
+                        concepts::same_type(*t, t[t-t]),
+                        concepts::model_of<Orderable>(t)
                     ));
             };
         }
@@ -652,6 +698,18 @@ namespace ranges
         {
             return concepts::models<concepts::RandomAccessIterator, T>();
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // iterator_concept
+        template<typename T>
+        using iterator_concept_t =
+            concepts::most_refined_t<concepts::RandomAccessIterator, T>;
+
+        template<typename T>
+        struct iterator_concept
+        {
+            using type = iterator_concept_t<T>;
+        };
     }
 }
 

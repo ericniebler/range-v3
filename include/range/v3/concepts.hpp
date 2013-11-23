@@ -26,6 +26,7 @@ namespace ranges
         namespace concepts
         {
             struct Range
+              : refines<CopyConstructible>
             {
                 // Associated types
                 template<typename T>
@@ -59,7 +60,7 @@ namespace ranges
             };
 
             struct InputRange
-              : refines<Range, CopyConstructible>
+              : refines<Range>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -126,6 +127,18 @@ namespace ranges
         {
             return concepts::models<concepts::RandomAccessRange, T>();
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // range_concept
+        template<typename T>
+        using range_concept_t =
+            concepts::most_refined_t<concepts::RandomAccessRange, T>;
+
+        template<typename T>
+        struct range_concept
+        {
+            using type = range_concept_t<T>;
+        };
     }
 }
 
