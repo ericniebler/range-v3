@@ -74,7 +74,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\adaptors.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\adaptor\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\adaptor\filter.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\reverse.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\binary_search.hpp" />

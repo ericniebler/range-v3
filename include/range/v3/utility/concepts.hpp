@@ -700,6 +700,12 @@ namespace ranges
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
+        // requires_t
+        template<bool Requires>
+        using requires_t =
+            typename std::enable_if<Requires>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator_concept
         template<typename T>
         using iterator_concept_t =

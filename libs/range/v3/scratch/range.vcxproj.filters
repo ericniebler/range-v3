@@ -79,9 +79,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\adaptor\filter.hpp">
       <Filter>Header Files\adaptor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\reverse.hpp">
-      <Filter>Header Files\adaptor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\detail\compressed_pair.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
