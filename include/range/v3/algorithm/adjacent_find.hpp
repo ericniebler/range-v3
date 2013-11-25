@@ -50,7 +50,7 @@ namespace ranges
                 return std::adjacent_find(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
         };
-        
+
         constexpr adjacent_finder adjacent_find {};
     } // namespace v3
 } // namespace ranges

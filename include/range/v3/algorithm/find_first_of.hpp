@@ -45,7 +45,7 @@ namespace ranges
             /// \overload
             template<typename InputRange1, typename ForwardRange2, typename BinaryPredicate>
             static range_iterator_t<InputRange1>
-            invoke(InputRange1 && rng1, ForwardRange2 const & rng2, BinaryPredicate pred)
+            invoke(first_of_finder, InputRange1 && rng1, ForwardRange2 const & rng2, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<const ForwardRange2>());

@@ -1,6 +1,6 @@
 // Boost.Range library
 //
-//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008. 
+//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008.
 //  Copyright Eric Niebler 2013.
 //
 //  Use, modification and distribution is subject to the
@@ -122,7 +122,7 @@ namespace ranges
 
             template<typename ...T>
             true_ or_impl_(T...);
-                
+
             template<bool ...Bools>
             struct or_
               : decltype(detail::or_impl_(

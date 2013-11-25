@@ -1,6 +1,6 @@
 // Boost.Range library
 //
-//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008. 
+//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008.
 //  Copyright Eric Niebler 2013.
 //
 //  Use, modification and distribution is subject to the
@@ -61,7 +61,7 @@ namespace ranges
                 return const_range<Rng>{detail::forward<Rng>()};
             }
         };
-        
+
         constexpr conster const_ {};
     }
 }
