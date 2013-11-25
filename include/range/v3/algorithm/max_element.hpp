@@ -8,46 +8,47 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_ALGORITHM_LOWER_BOUND_HPP
-#define RANGES_V3_ALGORITHM_LOWER_BOUND_HPP
+#ifndef RANGES_V3_ALGORITHM_MAX_ELEMENT_HPP
+#define RANGES_V3_ALGORITHM_MAX_ELEMENT_HPP
 
 #include <utility>
 #include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/concepts.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct lower_bound_finder : bindable<lower_bound_finder>
+        struct max_element_finder : bindable<max_element_finder>,
+                                    pipeable<max_element_finder>
         {
-            /// \brief template function \c lower_bound_finder::operator()
+            /// \brief template function max_element
             ///
-            /// range-based version of the \c lower_bound std algorithm
+            /// range-based version of the max_element std algorithm
             ///
-            /// \pre \c ForwardRange is a model of the ForwardRange concept
-            template<typename ForwardRange, typename Value>
+            /// \pre ForwardRange is a model of the ForwardRange concept
+            /// \pre BinaryPredicate is a model of the BinaryPredicate concept
+            template<typename ForwardRange>
             static range_iterator_t<ForwardRange>
-            invoke(lower_bound_finder, ForwardRange && rng, Value const & val)
+            invoke(max_element_finder, ForwardRange && rng)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::lower_bound(ranges::begin(rng), ranges::end(rng), val);
+                return std::max_element(ranges::begin(rng), ranges::end(rng));
             }
 
             /// \overload
-            template<typename ForwardRange, typename Value, typename SortPredicate>
+            template<typename ForwardRange, typename BinaryPredicate>
             static range_iterator_t<ForwardRange>
-            invoke(lower_bound_finder, ForwardRange && rng, Value const & val, SortPredicate pred)
+            invoke(max_element_finder, ForwardRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::lower_bound(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));
+                return std::max_element(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
         };
 
-        constexpr lower_bound_finder lower_bound {};
+        constexpr max_element_finder max_element {};
 
     } // inline namespace v3
 

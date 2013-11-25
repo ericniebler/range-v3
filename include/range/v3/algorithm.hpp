@@ -32,6 +32,14 @@
 #include <range/v3/algorithm/inplace_merge.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
+#include <range/v3/algorithm/max_element.hpp>
+#include <range/v3/algorithm/merge.hpp>
+#include <range/v3/algorithm/min_element.hpp>
+#include <range/v3/algorithm/mismatch.hpp>
+#include <range/v3/algorithm/nth_element.hpp>
+#include <range/v3/algorithm/partial_sort.hpp>
+#include <range/v3/algorithm/partial_sort_copy.hpp>
+#include <range/v3/algorithm/partition.hpp>
 
 #include <range/v3/algorithm/reverse.hpp>
 #include <range/v3/algorithm/transform.hpp>

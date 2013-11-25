@@ -1,4 +1,4 @@
-//  Copyright Neil Groves 2009. 
+//  Copyright Neil Groves 2009.
 //  Copyright Eric Niebler 2013
 //
 //  Use, modification and distribution is subject to the
@@ -36,8 +36,7 @@ namespace ranges
                    BidirectionalRange && rng,
                    BidirectionalIterator out)
             {
-                static_assert(ranges::BidirectionalRange<BidirectionalRange>(),
-                    "Expecting model of BidirectionalRange");
+                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return std::copy_backward(ranges::begin(rng), ranges::end(rng), detail::move(out));
             }
         };

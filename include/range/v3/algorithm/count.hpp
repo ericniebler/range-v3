@@ -1,4 +1,4 @@
-//  Copyright Neil Groves 2009. 
+//  Copyright Neil Groves 2009.
 //  Copyright Eric Niebler 2013
 //
 //  Use, modification and distribution is subject to the
@@ -29,11 +29,12 @@ namespace ranges
             /// range-based version of the \c count std algorithm
             ///
             /// \pre \c InputRange is a model of the InputRange concept
-            template<typename Value>
-            static auto invoke(counter count, Value const & val)
-                -> decltype(count(std::placeholders::_1, val))
+            template<typename InputRange, typename Value>
+            static range_difference_t<InputRange>
+            invoke(counter, InputRange && rng, Value const & val)
             {
-                return count(std::placeholders::_1, val);
+                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                return std::count(ranges::begin(rng), ranges::end(rng), val);
             }
 
             /// \brief template function \c counter::operator()
@@ -41,12 +42,11 @@ namespace ranges
             /// range-based version of the \c count std algorithm
             ///
             /// \pre \c InputRange is a model of the InputRange concept
-            template<typename InputRange, typename Value>
-            static range_difference_t<InputRange>
-            invoke(counter, InputRange && rng, Value const & val)
+            template<typename Value>
+            static auto invoke(counter count, Value const & val)
+                -> decltype(count(std::placeholders::_1, val))
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                return std::count(ranges::begin(rng), ranges::end(rng), val);
+                return count(std::placeholders::_1, val);
             }
         };
 

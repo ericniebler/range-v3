@@ -1,4 +1,4 @@
-//  Copyright Neil Groves 2009. 
+//  Copyright Neil Groves 2009.
 //  Copyright Eric Niebler 2013
 //
 //  Use, modification and distribution is subject to the
@@ -32,8 +32,7 @@ namespace ranges
             template<typename InputRange, typename OutputIterator>
             static OutputIterator invoke(copier, InputRange && rng, OutputIterator out)
             {
-                static_assert(ranges::InputRange<InputRange>(),
-                    "Expecting model of InputRange");
+                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::copy(ranges::begin(rng), ranges::end(rng), detail::move(out));
             }
         };

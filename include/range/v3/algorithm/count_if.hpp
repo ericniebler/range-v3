@@ -1,4 +1,4 @@
-//  Copyright Neil Groves 2009. 
+//  Copyright Neil Groves 2009.
 //  Copyright Eric Niebler 2013
 //
 //  Use, modification and distribution is subject to the
@@ -34,8 +34,7 @@ namespace ranges
             static range_difference_t<InputRange>
             invoke(counter_if, InputRange && rng, UnaryPredicate pred)
             {
-                static_assert(ranges::InputRange<InputRange>(),
-                    "Expecting model of InputRange");
+                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::count_if(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
 

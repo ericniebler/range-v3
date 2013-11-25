@@ -1,4 +1,4 @@
-//  Copyright Neil Groves 2009. 
+//  Copyright Neil Groves 2009.
 //  Copyright Eric Niebler 2013
 //
 //  Use, modification and distribution is subject to the
@@ -33,8 +33,7 @@ namespace ranges
             template<typename ForwardRange, typename Value>
             static bool invoke(binary_searcher, ForwardRange && rng, Value const & val)
             {
-                static_assert(ranges::ForwardRange<ForwardRange>(),
-                    "Expecting model of ForwardRange");
+                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 return std::binary_search(ranges::begin(rng), ranges::end(rng), val);
             }
 
@@ -42,13 +41,11 @@ namespace ranges
             template<typename ForwardRange, typename Value, typename BinaryPredicate>
             static bool invoke(binary_searcher, ForwardRange && rng, Value const & val, BinaryPredicate pred)
             {
-                static_assert(ranges::ForwardRange<ForwardRange>(),
-                    "Expecting model of ForwardRange");
-                static_assert(
+                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(
                     ranges::BinaryPredicate<BinaryPredicate,
                                             range_reference_t<ForwardRange>,
-                                            range_reference_t<ForwardRange>>(),
-                    "Expecting model of BinaryPredicate");
+                                            range_reference_t<ForwardRange>>());
                 return std::binary_search(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));
             }
         };

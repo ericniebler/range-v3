@@ -67,14 +67,14 @@ namespace ranges
             using bind_t = decltype(detail::bind(std::declval<Args>()...));
 
             template<typename T>
-            false_ is_binder_(T const &);
+            false_ is_bind_wrapper_(T const &);
 
             template<typename T>
-            true_ is_binder_(bind_wrapper<T> const &);
+            true_ is_bind_wrapper_(bind_wrapper<T> const &);
 
             template<typename T>
-            struct is_binder
-              : decltype(detail::is_binder_(std::declval<T>()))
+            struct is_bind_wrapper
+              : decltype(detail::is_bind_wrapper_(std::declval<T>()))
             {};
 
             template<typename ...T>
@@ -90,13 +90,13 @@ namespace ranges
             constexpr struct unwrap_binder
             {
                 template<typename T,
-                    CONCEPT_REQUIRES(False<is_binder<T>>())>
+                    CONCEPT_REQUIRES(False<is_bind_wrapper<T>>())>
                 T && operator()(T && t) const
                 {
                     return detail::forward<T>(t);
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES(True<is_binder<T>>())>
+                    CONCEPT_REQUIRES(True<is_bind_wrapper<T>>())>
                 auto operator()(T && t) const -> decltype((detail::forward<T>(t).bind_))
                 {
                     return detail::forward<T>(t).bind_;
@@ -109,7 +109,7 @@ namespace ranges
 
         template<typename ...T>
         struct is_bind_expression
-          : detail::or_<(detail::is_binder<T>::value || detail::is_placeholder<T>::value)...>
+          : detail::or_<(detail::is_bind_wrapper<T>::value || detail::is_placeholder<T>::value)...>
         {};
 
         template<typename Derived>

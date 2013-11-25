@@ -289,6 +289,30 @@ namespace ranges
 
         struct lower_bound_finder;
         extern lower_bound_finder const lower_bound;
+
+        struct max_element_finder;
+        extern max_element_finder const max_element;
+
+        struct merger;
+        extern merger const merge;
+
+        struct min_element_finder;
+        extern min_element_finder const min_element;
+
+        struct mismatcher;
+        extern mismatcher const mismatch;
+
+        struct nth_element_finder;
+        extern nth_element_finder const nth_element;
+
+        struct partial_sorter;
+        extern partial_sorter const partial_sort;
+
+        struct partial_sorter_copier;
+        extern partial_sorter_copier const partial_sort_copy;
+
+        struct partitioner;
+        extern partitioner const partition;
     }
 }
 
