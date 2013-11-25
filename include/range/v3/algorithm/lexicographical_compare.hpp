@@ -22,7 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct lexicographical_comparer
+        struct lexicographical_comparer : bindable<lexicographical_comparer>
         {
             /// \brief template function \s lexicographical_comparer::operator()
             ///
@@ -31,8 +31,9 @@ namespace ranges
             /// \pre \c InputRange1 is a model of the InputRange concept
             /// \pre \c InputRange2 is a model of the InputRange concept
             template<typename InputRange1, typename InputRange2>
-            bool operator()(InputRange1 const & rng1,
-                            InputRange2 const & rng2) const
+            static bool invoke(lexicographical_comparer,
+                               InputRange1 const & rng1,
+                               InputRange2 const & rng2)
             {
                 CONCEPT_ASSERT(ranges::InputRange<const InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<const InputRange2>());
@@ -44,9 +45,10 @@ namespace ranges
             /// \overload
             template<typename InputRange1, typename InputRange2,
                      typename BinaryPredicate>
-            bool operator()(InputRange1 const & rng1,
-                            InputRange2 const & rng2,
-                            BinaryPredicate pred) const
+            static bool invoke(lexicographical_comparer,
+                               InputRange1 const & rng1,
+                               InputRange2 const & rng2,
+                               BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<const InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<const InputRange2>());
@@ -56,7 +58,8 @@ namespace ranges
             }
         };
 
-        constexpr bindable<lexicographical_comparer> lexicographical_compare {};
+        constexpr lexicographical_comparer lexicographical_compare {};
+
     } // inline namespace v3
 
 } // namespace ranges

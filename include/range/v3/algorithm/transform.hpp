@@ -166,26 +166,22 @@ namespace ranges
             }
         };
 
-        struct transformer
+        struct transformer : bindable<transformer>
         {
         private:
             template<typename Fun>
-            class transformer1
+            struct transformer1 : pipeable<transformer1<Fun>>
             {
+            private:
                 Fun fun_;
             public:
                 transformer1(Fun fun)
                   : fun_(detail::move(fun))
                 {}
-                template<typename Rng>
-                transform_range<Rng, Fun> operator()(Rng && rng) &&
+                template<typename Rng, typename This>
+                static transform_range<Rng, Fun> pipe(Rng && rng, This && this_)
                 {
-                    return {detail::forward<Rng>(rng), detail::move(*this).fun_};
-                }
-                template<typename Rng>
-                transform_range<Rng, Fun> operator()(Rng && rng) const &
-                {
-                    return {detail::forward<Rng>(rng), fun_};
+                    return {detail::forward<Rng>(rng), detail::forward<This>(this_).fun_};
                 }
             };
         public:
@@ -207,10 +203,11 @@ namespace ranges
                      typename Ref2 = result_of_t<UnaryOperation(Ref1)>,
                      CONCEPT_REQUIRES(ranges::OutputIterator<OutputIterator, Ref2>())
             >
-            OutputIterator
-            operator()(InputRange1 && rng,
-                       OutputIterator out,
-                       UnaryOperation fun) const
+            static OutputIterator
+            invoke(transformer,
+                   InputRange1 && rng,
+                   OutputIterator out,
+                   UnaryOperation fun)
             {
                 return std::transform(ranges::begin(rng), ranges::end(rng),
                                       detail::move(out), detail::move(fun));
@@ -228,11 +225,12 @@ namespace ranges
                      CONCEPT_REQUIRES(ranges::Callable<BinaryOperation, Ref1, Ref2>()),
                      typename Value3 = result_of_t<BinaryOperation(Ref1, Ref2)>,
                      CONCEPT_REQUIRES(ranges::OutputIterator<OutputIterator, Value3>())>
-            OutputIterator
-            operator()(InputRange1 && rng1,
-                       InputRange2 && rng2,
-                       OutputIterator out,
-                       BinaryOperation fun) const
+            static OutputIterator
+            invoke(transformer,
+                   InputRange1 && rng1,
+                   InputRange2 && rng2,
+                   OutputIterator out,
+                   BinaryOperation fun)
             {
                 return detail::transform_impl(
                     ranges::begin(rng1), ranges::end(rng1),
@@ -246,21 +244,21 @@ namespace ranges
                      CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
                      typename Ref1 = range_reference_t<InputRange1>,
                      CONCEPT_REQUIRES(ranges::Callable<UnaryOperation, Ref1>())>
-            transform_range<InputRange1, UnaryOperation>
-            operator()(InputRange1 && rng, UnaryOperation fun) const
+            static transform_range<InputRange1, UnaryOperation>
+            invoke(transformer, InputRange1 && rng, UnaryOperation fun)
             {
                 return {detail::forward<InputRange1>(rng), detail::move(fun)};
             }
 
             /// \overload
             template<typename UnaryOperation>
-            bindable<transformer1<UnaryOperation>> operator()(UnaryOperation fun) const
+            static transformer1<UnaryOperation> invoke(transformer, UnaryOperation fun)
             {
-                return bindable<transformer1<UnaryOperation>>{{detail::move(fun)}};
+                return {detail::move(fun)};
             }
         };
 
-        constexpr bindable<transformer> transform {};
+        constexpr transformer transform {};
     } // inline namespace v3
 
 } // namespace ranges

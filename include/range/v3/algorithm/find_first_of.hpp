@@ -22,7 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct first_of_finder
+        struct first_of_finder : bindable<first_of_finder>
         {
             /// \brief template function \c first_of_finder::operator()
             ///
@@ -32,8 +32,8 @@ namespace ranges
             /// \pre \c ForwardRange2 is a model of the ForwardRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename InputRange1, typename ForwardRange2>
-            range_iterator_t<InputRange1>
-            operator()(InputRange1 && rng1, ForwardRange2 const & rng2) const
+            static range_iterator_t<InputRange1>
+            invoke(first_of_finder, InputRange1 && rng1, ForwardRange2 const & rng2)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<const ForwardRange2>());
@@ -44,8 +44,8 @@ namespace ranges
 
             /// \overload
             template<typename InputRange1, typename ForwardRange2, typename BinaryPredicate>
-            range_iterator_t<InputRange1>
-            operator()(InputRange1 && rng1, ForwardRange2 const & rng2, BinaryPredicate pred) const
+            static range_iterator_t<InputRange1>
+            invoke(InputRange1 && rng1, ForwardRange2 const & rng2, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<const ForwardRange2>());
@@ -55,7 +55,7 @@ namespace ranges
             }
         };
 
-        constexpr bindable<first_of_finder> find_first_of {};
+        constexpr first_of_finder find_first_of {};
 
     } // inline namespace v3
 

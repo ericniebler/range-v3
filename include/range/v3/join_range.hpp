@@ -463,16 +463,16 @@ namespace ranges
             }
         };
 
-        struct joiner
+        struct joiner : bindable<joiner>
         {
             template<typename Rng0, typename Rng1>
-            join_range<Rng0, Rng1> operator()(Rng0 && rng0, Rng1 && rng1) const
+            static join_range<Rng0, Rng1> invoke(joiner, Rng0 && rng0, Rng1 && rng1)
             {
                 return {detail::forward<Rng0>(rng0), detail::forward<Rng1>(rng1)};
             }
         };
 
-        constexpr bindable<joiner> join {};
+        constexpr joiner join {};
     }
 }
 

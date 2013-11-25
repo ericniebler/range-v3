@@ -23,7 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct equal_ranger
+        struct equal_ranger : bindable<equal_ranger>
         {
             /// \brief template function \c equal_ranger::operator()
             ///
@@ -32,8 +32,8 @@ namespace ranges
             /// \pre \c ForwardRange is a model of the ForwardRange concept
             /// \pre \c SortPredicate is a model of the BinaryPredicate concept
             template<typename ForwardRange, typename Value>
-            iterator_range<range_iterator_t<ForwardRange>>
-            operator()(ForwardRange && rng, Value const & val) const
+            static iterator_range<range_iterator_t<ForwardRange>>
+            invoke(equal_ranger, ForwardRange && rng, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 return std::equal_range(ranges::begin(rng), ranges::end(rng), val);
@@ -41,15 +41,15 @@ namespace ranges
 
             /// \overload
             template<typename ForwardRange, typename Value, typename SortPredicate>
-            iterator_range<range_iterator_t<ForwardRange>>
-            operator()(ForwardRange && rng, Value const & val, SortPredicate pred) const
+            static iterator_range<range_iterator_t<ForwardRange>>
+            invoke(equal_ranger, ForwardRange && rng, Value const & val, SortPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 return std::equal_range(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));
             }
         };
 
-        constexpr bindable<equal_ranger> equal_range {};
+        constexpr equal_ranger equal_range {};
 
     } // inline namespace v3
 

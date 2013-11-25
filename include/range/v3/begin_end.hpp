@@ -27,47 +27,47 @@ namespace ranges
             using std::begin;
             using std::end;
 
-            struct beginner
+            struct beginner : bindable<beginner>
             {
                 template<typename Rng>
-                auto operator()(Rng && rng) const -> decltype(begin(rng))
+                static auto invoke(beginner, Rng && rng) -> decltype(begin(rng))
                 {
                     return begin(rng);
                 }
             };
 
-            struct ender
+            struct ender : bindable<ender>
             {
                 template<typename Rng>
-                auto operator()(Rng && rng) const -> decltype(end(rng))
+                static auto invoke(ender, Rng && rng) -> decltype(end(rng))
                 {
                     return end(rng);
                 }
             };
 
-            struct cbeginner
+            struct cbeginner : bindable<cbeginner>
             {
                 template<typename Rng>
-                auto operator()(Rng const & rng) const -> decltype(begin(rng))
+                static auto invoke(cbeginner, Rng const & rng) -> decltype(begin(rng))
                 {
                     return begin(rng);
                 }
             };
 
-            struct cender
+            struct cender : bindable<cender>
             {
                 template<typename Rng>
-                auto operator()(Rng const & rng) const -> decltype(end(rng))
+                static auto invoke(cender, Rng const & rng) -> decltype(end(rng))
                 {
                     return end(rng);
                 }
             };
         }
 
-        constexpr bindable<adl_begin_end_detail::beginner> begin {};
-        constexpr bindable<adl_begin_end_detail::ender> end {};
-        constexpr bindable<adl_begin_end_detail::cbeginner> cbegin {};
-        constexpr bindable<adl_begin_end_detail::cender> cend {};
+        constexpr adl_begin_end_detail::beginner begin {};
+        constexpr adl_begin_end_detail::ender end {};
+        constexpr adl_begin_end_detail::cbeginner cbegin {};
+        constexpr adl_begin_end_detail::cender cend {};
     }
 }
 

@@ -106,10 +106,6 @@ int main()
     for( int i : vi | transform(_1, [](int i){return i*2;}))
         std::cout << "> " << i << '\n';
 
-    std::cout << "\n";
-    for( int i : vi | (_1 | transform([](int i){return -i;})))
-        std::cout << "> " << i << '\n';
-
     // Mutate in-place
     transform(vi, vi.begin(), [](int i){return -i;});
     std::cout << "\n";

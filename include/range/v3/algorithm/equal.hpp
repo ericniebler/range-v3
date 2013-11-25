@@ -167,7 +167,7 @@ namespace ranges
 
         } // namespace detail
 
-        struct equaler
+        struct equaler : bindable<equaler>
         {
             /// \brief template function \c equaler::operator()
             ///
@@ -177,7 +177,7 @@ namespace ranges
             /// \pre \c InputRange2 is a model of the InputRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename InputRange1, typename InputRange2>
-            bool operator()(InputRange1 && rng1, InputRange2 && rng2) const
+            static bool invoke(equaler, InputRange1 && rng1, InputRange2 && rng2)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
@@ -189,8 +189,8 @@ namespace ranges
 
             /// \overload
             template<typename InputRange1, typename InputRange2, typename BinaryPredicate>
-            bool operator()(InputRange1 && rng1, InputRange2 && rng2,
-                            BinaryPredicate pred) const
+            static bool invoke(equaler, InputRange1 && rng1,
+                                InputRange2 && rng2, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
@@ -202,7 +202,7 @@ namespace ranges
             }
         };
 
-        constexpr bindable<equaler> equal {};
+        constexpr equaler equal {};
 
     } // inline namespace v3
 

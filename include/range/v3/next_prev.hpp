@@ -21,28 +21,28 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct nexter
+        struct nexter : bindable<nexter>
         {
             template<typename Iter>
-            Iter operator()(Iter it) const
+            static Iter invoke(nexter, Iter it)
             {
                 ++it;
                 return it;
             }
         };
 
-        struct prever
+        struct prever : bindable<prever>
         {
             template<typename Iter>
-            Iter operator()(Iter it) const
+            static Iter invoke(prever, Iter it)
             {
                 --it;
                 return it;
             }
         };
 
-        constexpr bindable<nexter> next {};
-        constexpr bindable<prever> prev {};
+        constexpr nexter next {};
+        constexpr prever prev {};
     }
 }
 

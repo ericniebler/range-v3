@@ -22,7 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct binary_searcher
+        struct binary_searcher : bindable<binary_searcher>
         {
             /// \brief function template \c binary_searcher::operator()
             ///
@@ -31,7 +31,7 @@ namespace ranges
             /// \pre \c ForwardRange is a model of the ForwardRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardRange, typename Value>
-            bool operator()(ForwardRange && rng, Value const & val) const
+            static bool invoke(binary_searcher, ForwardRange && rng, Value const & val)
             {
                 static_assert(ranges::ForwardRange<ForwardRange>(),
                     "Expecting model of ForwardRange");
@@ -40,7 +40,7 @@ namespace ranges
 
             /// \overload
             template<typename ForwardRange, typename Value, typename BinaryPredicate>
-            bool operator()(ForwardRange && rng, Value const & val, BinaryPredicate pred) const
+            static bool invoke(binary_searcher, ForwardRange && rng, Value const & val, BinaryPredicate pred)
             {
                 static_assert(ranges::ForwardRange<ForwardRange>(),
                     "Expecting model of ForwardRange");
@@ -53,7 +53,7 @@ namespace ranges
             }
         };
 
-        constexpr bindable<binary_searcher> binary_search {};
+        constexpr binary_searcher binary_search {};
 
     } // namespace v3
 } // namespace ranges

@@ -136,37 +136,25 @@ namespace ranges
             }
         };
 
-        struct reverser
+        struct reverser : bindable<reverser>, pipeable<reverser>
         {
             /// \brief template function \c reverser::operator()
             ///
             /// range-based version of the \c reverse std algorithm
             ///
             /// \pre \c BidirectionalRange is a model of the BidirectionalRange concept
-            template<typename BidirectionalRange,
-                CONCEPT_REQUIRES(ranges::BidirectionalRange<BidirectionalRange>())>
-            BidirectionalRange operator()(BidirectionalRange && rng) const
+            template<typename BidirectionalRange>
+            static BidirectionalRange invoke(reverser, BidirectionalRange && rng)
             {
+                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 std::reverse(ranges::begin(rng), ranges::end(rng));
                 return detail::forward<BidirectionalRange>(rng);
             }
 
-            template<typename BindExpression,
-                CONCEPT_REQUIRES(True<is_bind_expression<BindExpression>>())>
-            auto operator()(BindExpression && expr) const
-                -> decltype(detail::bind(std::declval<reverser>(),
-                                         detail::unwrap_bind(detail::forward<BindExpression>(expr))))
+            template<typename BidirectionalRange>
+            static reverse_range<BidirectionalRange> pipe(BidirectionalRange && rng, reverser)
             {
-                return detail::bind(reverser{},
-                                    detail::unwrap_bind(detail::forward<BindExpression>(expr)));
-            }
-
-            /// \overload
-            template<typename BidirectionalRange,
-                CONCEPT_REQUIRES(ranges::BidirectionalRange<BidirectionalRange>())>
-            friend reverse_range<BidirectionalRange>
-                operator|(BidirectionalRange && rng, reverser)
-            {
+                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return reverse_range<BidirectionalRange>{detail::forward<BidirectionalRange>(rng)};
             }
         };

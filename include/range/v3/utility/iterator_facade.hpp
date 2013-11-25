@@ -13,6 +13,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/concepts.hpp>
 
 namespace ranges
 {
@@ -22,6 +23,84 @@ namespace ranges
         // in iterator_core_access
         template<typename I, typename V, typename TC, typename R, typename D>
         struct iterator_facade;
+
+        //namespace concepts
+        //{
+        //    struct IteratorFacade
+        //    {
+        //        template<typename T>
+        //        auto requires(T && t -> decltype(
+        //            concepts::valid_expr(
+        //                concepts::is_void((t.increment(), concepts::void_)),
+        //                t.dereference()
+        //            ));
+        //    };
+
+        //    struct OutputIteratorFacade
+        //      : refines<IteratorFacade>
+        //    {};
+
+        //    struct InputIteratorFacade
+        //      : refines<IteratorFacade>
+        //    {
+        //        template<typename T>
+        //        auto requires(T && t) -> decltype(
+        //            concepts::valid_expr(
+        //                concepts::convertible_to<bool>(t.equal(t))
+        //            ));
+        //    };
+
+        //    struct BidirectionalIteratorFacade
+        //      : refines<InputIteratorFacade>
+        //    {
+        //        template<typename T>
+        //        auto requires(T && t) -> decltype(
+        //            concepts::valid_expr(
+        //                concepts::is_void((t.decrement(), concepts::void_))
+        //            ));
+        //    };
+
+        //    struct RandomAccessIteratorFacade
+        //      : refines<BidirectionalIteratorFacade>
+        //    {
+        //        template<typename T>
+        //        auto requires(T && t) -> decltype(
+        //            concepts::valid_expr(
+        //                concepts::is_void((t.advance(42), concepts::void_)),
+        //                concepts::model_of<concepts::SignedIntegral>(t.distance_to(42))
+        //            ));
+        //    };
+        //}
+
+        //template<typename T>
+        //constexpr bool IteratorFacade()
+        //{
+        //    return concepts::models<concepts::IteratorFacade, T>();
+        //}
+
+        //template<typename T>
+        //constexpr bool OutputIteratorFacade()
+        //{
+        //    return concepts::models<concepts::OutputIteratorFacade, T>();
+        //}
+
+        //template<typename T>
+        //constexpr bool InputIteratorFacade()
+        //{
+        //    return concepts::models<concepts::InputIteratorFacade, T>();
+        //}
+
+        //template<typename T>
+        //constexpr bool BidirectionalIteratorFacade()
+        //{
+        //    return concepts::models<concepts::BidirectionalIteratorFacade, T>();
+        //}
+
+        //template<typename T>
+        //constexpr bool RandomAccessIteratorFacade()
+        //{
+        //    return concepts::models<concepts::RandomAccessIteratorFacade, T>();
+        //}
 
         namespace detail
         {

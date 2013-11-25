@@ -21,7 +21,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct adjacent_finder
+        struct adjacent_finder : bindable<adjacent_finder>, pipeable<adjacent_finder>
         {
             /// \brief function template \c adjacent_finder::operator()
             ///
@@ -30,31 +30,28 @@ namespace ranges
             /// \pre \c ForwardRange is a model of the ForwardRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardRange>
-            range_iterator_t<ForwardRange>
-            operator()(ForwardRange && rng) const
+            static range_iterator_t<ForwardRange>
+            invoke(adjacent_finder, ForwardRange && rng)
             {
-                static_assert(ranges::ForwardRange<ForwardRange>(),
-                    "Expecting model of ForwardRange");
+                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 return std::adjacent_find(ranges::begin(rng), ranges::end(rng));
             }
 
             /// \overload
             template<typename ForwardRange, typename BinaryPredicate>
-            range_iterator_t<ForwardRange>
-            operator()(ForwardRange && rng, BinaryPredicate pred) const
+            static range_iterator_t<ForwardRange>
+            invoke(adjacent_finder, ForwardRange && rng, BinaryPredicate pred)
             {
-                static_assert(ranges::ForwardRange<ForwardRange>(),
-                    "Expecting model of ForwardRange");
-                static_assert(
-                    ranges::BinaryPredicate<BinaryPredicate,
-                                            range_reference_t<ForwardRange>,
-                                            range_reference_t<ForwardRange>>(),
-                    "Expecting model of BinaryPredicate");
+                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<
+                                   BinaryPredicate,
+                                   range_reference_t<ForwardRange>,
+                                   range_reference_t<ForwardRange>>());
                 return std::adjacent_find(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
         };
         
-        constexpr bindable<adjacent_finder> adjacent_find {};
+        constexpr adjacent_finder adjacent_find {};
     } // namespace v3
 } // namespace ranges
 

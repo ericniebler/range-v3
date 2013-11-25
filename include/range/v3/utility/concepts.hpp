@@ -318,6 +318,8 @@ namespace ranges
         {
             using detail::not_a_concept;
 
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // most_refined_t
             template<typename Concept, typename...Ts>
             using most_refined_t =
                 decltype(detail::most_refined_impl_<Ts...>::invoke((detail::list<Concept> *)nullptr));
@@ -327,6 +329,12 @@ namespace ranges
             {
                 using type = most_refined_t<Concept, Ts...>;
             };
+
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // requires_t
+            template<bool Requires>
+            using requires_t =
+                typename std::enable_if<Requires>::type;
 
             struct True
             {
@@ -700,12 +708,6 @@ namespace ranges
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // requires_t
-        template<bool Requires>
-        using requires_t =
-            typename std::enable_if<Requires>::type;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator_concept
         template<typename T>
         using iterator_concept_t =
@@ -719,7 +721,7 @@ namespace ranges
     }
 }
 
-#define CONCEPT_REQUIRES(...) typename = typename std::enable_if<(__VA_ARGS__)>::type
+#define CONCEPT_REQUIRES(...) typename = ranges::concepts::requires_t<(__VA_ARGS__)>
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed");
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

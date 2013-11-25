@@ -22,7 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct end_finder
+        struct end_finder : bindable<end_finder>
         {
             /// \brief template function \c end_finder::operator()
             ///
@@ -32,8 +32,10 @@ namespace ranges
             /// \pre \c ForwardRange2 is a model of the ForwardRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardRange1, typename ForwardRange2>
-            range_iterator_t<ForwardRange1>
-            operator()(ForwardRange1 && rng1, ForwardRange2 const & rng2) const
+            static range_iterator_t<ForwardRange1>
+            invoke(end_finder,
+                   ForwardRange1 && rng1,
+                   ForwardRange2 const & rng2)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
@@ -44,8 +46,11 @@ namespace ranges
 
             /// \overload
             template<typename ForwardRange1, typename ForwardRange2, typename BinaryPredicate>
-            range_iterator_t<ForwardRange1>
-            operator()(ForwardRange1 && rng1, ForwardRange2 const & rng2, BinaryPredicate pred) const
+            static range_iterator_t<ForwardRange1>
+            invoke(end_finder,
+                   ForwardRange1 && rng1,
+                   ForwardRange2 const & rng2,
+                   BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
@@ -55,7 +60,7 @@ namespace ranges
             }
         };
 
-        constexpr bindable<end_finder> find_end {};
+        constexpr end_finder find_end {};
 
     } // inline namespace v3
 

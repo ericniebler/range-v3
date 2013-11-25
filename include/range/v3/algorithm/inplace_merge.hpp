@@ -22,7 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct inplace_merger
+        struct inplace_merger : bindable<inplace_merger>
         {
             /// \brief template function \c inplace_merger::operator()
             ///
@@ -31,9 +31,10 @@ namespace ranges
             /// \pre \c BidirectionalRange is a model of the BidirectionalRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename BidirectionalRange>
-            BidirectionalRange operator()(
+            static BidirectionalRange invoke(
+                inplace_merger,
                 BidirectionalRange && rng,
-                range_iterator_t<BidirectionalRange> middle) const
+                range_iterator_t<BidirectionalRange> middle)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 std::inplace_merge(ranges::begin(rng), detail::move(middle), ranges::end(rng));
@@ -42,10 +43,11 @@ namespace ranges
 
             /// \overload
             template<typename BidirectionalRange, typename BinaryPredicate>
-            BidirectionalRange operator()(
+            static BidirectionalRange invoke(
+                inplace_merger,
                 BidirectionalRange && rng,
                 range_iterator_t<BidirectionalRange> middle,
-                BinaryPredicate pred) const
+                BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 std::inplace_merge(ranges::begin(rng), detail::move(middle),
@@ -54,7 +56,7 @@ namespace ranges
             }
         };
 
-        constexpr bindable<inplace_merger> inplace_merge {};
+        constexpr inplace_merger inplace_merge {};
 
     } // inline namespace v3
 

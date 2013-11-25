@@ -22,18 +22,18 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct counter
+        struct counter : bindable<counter>
         {
             /// \brief template function \c counter::operator()
             ///
             /// range-based version of the \c count std algorithm
             ///
             /// \pre \c InputRange is a model of the InputRange concept
-            template<typename Value, typename This = counter>
-            auto operator()(Value const & val) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, val))
+            template<typename Value>
+            static auto invoke(counter count, Value const & val)
+                -> decltype(count(std::placeholders::_1, val))
             {
-                return bindable<This>{}(std::placeholders::_1, val);
+                return count(std::placeholders::_1, val);
             }
 
             /// \brief template function \c counter::operator()
@@ -42,16 +42,15 @@ namespace ranges
             ///
             /// \pre \c InputRange is a model of the InputRange concept
             template<typename InputRange, typename Value>
-            range_difference_t<InputRange>
-            operator()(InputRange && rng, Value const & val) const
+            static range_difference_t<InputRange>
+            invoke(counter, InputRange && rng, Value const & val)
             {
-                static_assert(ranges::InputRange<InputRange>(),
-                    "Expecting model of InputRange");
+                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::count(ranges::begin(rng), ranges::end(rng), val);
             }
         };
 
-        constexpr bindable<counter> count {};
+        constexpr counter count {};
     } // inline namespace v3
 
 } // namespace ranges

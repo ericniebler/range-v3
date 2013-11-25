@@ -22,7 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct filler
+        struct filler : bindable<filler>
         {
             /// \brief template function \c filler::operator()
             ///
@@ -30,7 +30,7 @@ namespace ranges
             ///
             /// \pre \c ForwardRange is a model of the ForwardRange concept
             template<typename ForwardRange, typename Value>
-            ForwardRange operator()(ForwardRange && rng, Value const & val) const
+            static ForwardRange invoke(filler, ForwardRange && rng, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 std::fill(ranges::begin(rng), ranges::end(rng), val);
@@ -38,15 +38,15 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Value, typename This = filler>
-            auto operator()(Value const & val) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, val))
+            template<typename Value>
+            static auto invoke(filler fill, Value const & val)
+                -> decltype(fill(std::placeholders::_1, val))
             {
-                return bindable<This>{}(std::placeholders::_1, val);
+                return fill(std::placeholders::_1, val);
             }
         };
 
-        constexpr bindable<filler> fill {};
+        constexpr filler fill {};
 
     } // inline namespace v3
 }

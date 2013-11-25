@@ -23,7 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct for_eacher
+        struct for_eacher : bindable<for_eacher>
         {
             /// \brief template function \c for_eacher::operator()
             ///
@@ -32,22 +32,22 @@ namespace ranges
             /// \pre \c InputRange is a model of the InputRange concept
             /// \pre \c UnaryFunction is a model of the UnaryFunction concept
             template<typename InputRange, typename UnaryFunction>
-            UnaryFunction operator()(InputRange && rng, UnaryFunction fun) const
+            static UnaryFunction invoke(for_eacher, InputRange && rng, UnaryFunction fun)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::for_each(ranges::begin(rng), ranges::end(rng), detail::move(fun));
             }
 
             /// \overload
-            template<typename UnaryFunction, typename This = for_eacher>
-            auto operator()(UnaryFunction fun) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, detail::move(fun)))
+            template<typename UnaryFunction>
+            static auto invoke(for_eacher for_each, UnaryFunction fun)
+                -> decltype(for_each(std::placeholders::_1, detail::move(fun)))
             {
-                return bindable<This>{}(std::placeholders::_1, detail::move(fun));
+                return for_each(std::placeholders::_1, detail::move(fun));
             }
         };
 
-        constexpr bindable<for_eacher> for_each {};
+        constexpr for_eacher for_each {};
 
     } // inline namespace v3
 

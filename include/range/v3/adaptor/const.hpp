@@ -53,16 +53,16 @@ namespace ranges
             }
         };
 
-        struct conster
+        struct conster : bindable<conster>, pipeable<conster>
         {
             template<typename Rng>
-            const_range<Rng> operator()(Rng && rng) const
+            static const_range<Rng> invoke(conster, Rng && rng)
             {
                 return const_range<Rng>{detail::forward<Rng>()};
             }
         };
         
-        constexpr bindable<conster> const_ {};
+        constexpr conster const_ {};
     }
 }
 

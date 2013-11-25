@@ -22,7 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct filler_n
+        struct filler_n : bindable<filler_n>
         {
             /// \brief template function \c filler_n::operator()
             ///
@@ -31,7 +31,7 @@ namespace ranges
             /// \pre \c ForwardRange is a model of the ForwardRange concept
             /// \pre <tt>n \<= std::distance(ranges::begin(rng), ranges::end(rng))</tt>
             template<typename ForwardRange, typename Size, typename Value>
-            ForwardRange operator()(ForwardRange && rng, Size n, Value const & val) const
+            static ForwardRange invoke(filler_n, ForwardRange && rng, Size n, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 RANGES_ASSERT(static_cast<Size>(std::distance(ranges::begin(rng), ranges::end(rng))) >= n);
@@ -42,15 +42,15 @@ namespace ranges
             /// \overload
             // BUGBUG worry about lifetime issue of val here. Should use perfect
             // forwarding. Must fix bindable to do perfect forwarding to std::bind.
-            template<typename Size, typename Value, typename This = filler>
-            auto operator()(Size n, Value const & val) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, n, val))
+            template<typename Size, typename Value>
+            static auto invoke(filler_n fill_n, Size n, Value const & val)
+                -> decltype(fill_n(std::placeholders::_1, n, val))
             {
-                return bindable<This>{}(std::placeholders::_1, n, val);
+                return fill_n(std::placeholders::_1, n, val);
             }
         };
 
-        constexpr binder<filler_n> fill_n {};
+        constexpr filler_n fill_n {};
 
     } // inline namespace v3
 

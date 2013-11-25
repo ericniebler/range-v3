@@ -144,42 +144,38 @@ namespace ranges
             }
         };
 
-        struct filterer
+        struct filterer : bindable<filterer>
         {
         private:
             template<typename Pred>
-            class filterer1
+            struct filterer1 : pipeable<filterer1<Pred>>
             {
+            private:
                 Pred pred_;
             public:
                 filterer1(Pred pred)
                   : pred_(detail::move(pred))
                 {}
-                template<typename Rng>
-                filter_range<Rng, Pred> operator()(Rng && rng) &&
+                template<typename Rng, typename This>
+                static filter_range<Rng, Pred> pipe(Rng && rng, This && this_)
                 {
-                    return {detail::forward<Rng>(rng), detail::move(*this).pred_};
-                }
-                template<typename Rng>
-                filter_range<Rng, Pred> operator()(Rng && rng) const &
-                {
-                    return {detail::forward<Rng>(rng), pred_};
+                    return {detail::forward<Rng>(rng), detail::forward<This>(this_).pred_};
                 }
             };
         public:
             template<typename Rng, typename Pred>
-            filter_range<Rng, Pred> operator()(Rng && rng, Pred pred) const
+            static filter_range<Rng, Pred> invoke(filterer, Rng && rng, Pred pred)
             {
                 return {detail::forward<Rng>(rng), detail::move(pred)};
             }
             template<typename Pred>
-            constexpr bindable<filterer1<Pred>> operator()(Pred pred) const
+            static filterer1<Pred> invoke(filterer, Pred pred)
             {
-                return bindable<filterer1<Pred>>{filterer1<Pred>{pred}};
+                return {detail::move(pred)};
             }
         };
         
-        constexpr bindable<filterer> filter {};
+        constexpr filterer filter {};
     }
 }
 

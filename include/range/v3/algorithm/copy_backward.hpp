@@ -21,7 +21,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct backward_copier
+        struct backward_copier : bindable<backward_copier>
         {
             /// \brief template function \c backward_copier::operator()
             ///
@@ -31,8 +31,10 @@ namespace ranges
             /// \pre \c BidirectionalIterator is a model of the BidirectionalIterator concept
             /// \pre \c BidirectionalIterator is a model of the Iterator concept
             template<typename BidirectionalRange, typename BidirectionalIterator>
-            BidirectionalIterator operator()(BidirectionalRange && rng,
-                                             BidirectionalIterator out) const
+            static BidirectionalIterator
+            invoke(backward_copier,
+                   BidirectionalRange && rng,
+                   BidirectionalIterator out)
             {
                 static_assert(ranges::BidirectionalRange<BidirectionalRange>(),
                     "Expecting model of BidirectionalRange");
@@ -40,7 +42,7 @@ namespace ranges
             }
         };
 
-        constexpr bindable<backward_copier> copy_backward {};
+        constexpr backward_copier copy_backward {};
 
     } // inline namespace v3
 

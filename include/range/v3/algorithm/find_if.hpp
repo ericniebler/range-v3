@@ -23,7 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct finder_if
+        struct finder_if : bindable<finder_if>
         {
             /// \brief template function \c finder_if::operator()
             ///
@@ -32,22 +32,23 @@ namespace ranges
             /// \pre \c InputRange is a model of the InputRange concept
             /// \pre \c UnaryPredicate is a model of the UnaryPredicate concept
             template<typename InputRange, typename UnaryPredicate>
-            range_iterator_t<InputRange> operator()(InputRange && rng, UnaryPredicate pred) const
+            static range_iterator_t<InputRange>
+            invoke(finder_if, InputRange && rng, UnaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::find_if(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
 
             /// \overload
-            template<typename UnaryPredicate, typename This = finder_if>
-            auto operator()(UnaryPredicate pred) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, detail::move(pred)))
+            template<typename UnaryPredicate>
+            static auto invoke(finder_if find_if, UnaryPredicate pred)
+                -> decltype(find_if(std::placeholders::_1, detail::move(pred)))
             {
-                return bindable<This>{}(std::placeholders::_1, detail::move(pred));
+                return find_if(std::placeholders::_1, detail::move(pred));
             }
         };
 
-        constexpr bindable<finder_if> find_if {};
+        constexpr finder_if find_if {};
 
     } // inline namespace v3
 

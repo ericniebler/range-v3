@@ -23,7 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct generator
+        struct generator : bindable<generator>
         {
             /// \brief template function generate
             ///
@@ -32,7 +32,7 @@ namespace ranges
             /// \pre ForwardRange is a model of the ForwardRange concept
             /// \pre Generator is a model of the UnaryFunction concept
             template<typename ForwardRange, typename Generator>
-            ForwardRange operator()(ForwardRange && rng, Generator gen) const
+            static ForwardRange invoke(generator, ForwardRange && rng, Generator gen)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 std::generate(ranges::begin(rng), ranges::end(rng), detail::move(gen));
@@ -40,15 +40,15 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Generator, typename This = generator>
-            auto operator()(Generator gen) const
-                -> decltype(bindable<This>{}(std::placeholders::_1, detail::move(gen)))
+            template<typename Generator>
+            static auto invoke(generator generate, Generator gen)
+                -> decltype(generate(std::placeholders::_1, detail::move(gen)))
             {
-                return bindable<This>{}(std::placeholders::_1, detail::move(gen));
+                return generate(std::placeholders::_1, detail::move(gen));
             }
         };
 
-        constexpr bindable<generator> generate {};
+        constexpr generator generate {};
 
     } // inline namespace v3
 

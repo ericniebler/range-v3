@@ -71,16 +71,16 @@ namespace ranges
             }
         };
 
-        struct ranger
+        struct ranger : bindable<ranger>
         {
             template<typename Iter>
-            constexpr iterator_range<Iter> operator()(Iter begin, Iter end) const
+            static iterator_range<Iter> invoke(ranger, Iter begin, Iter end)
             {
                 return {detail::move(begin), detail::move(end)};
             }
         };
 
-        constexpr bindable<ranger> range {};
+        constexpr ranger range {};
     }
 }
 

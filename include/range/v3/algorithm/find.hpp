@@ -21,7 +21,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct finder
+        struct finder : bindable<finder>
         {
             /// \brief template function \c finder::operator()
             ///
@@ -29,14 +29,15 @@ namespace ranges
             ///
             /// \pre \c InputRange is a model of the InputRange concept
             template<typename InputRange, typename Value>
-            range_iterator_t<InputRange> operator()(InputRange && rng, Value const & val) const
+            static range_iterator_t<InputRange>
+            invoke(finder, InputRange && rng, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::find(ranges::begin(rng), ranges::end(rng), val);
             }
         };
 
-        constexpr bindable<finder> find {};
+        constexpr finder find {};
 
     } // inline namespace v3
 

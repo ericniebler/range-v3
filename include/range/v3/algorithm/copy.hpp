@@ -21,7 +21,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct copier
+        struct copier : bindable<copier>
         {
             /// \brief template function copier::operator()
             ///
@@ -30,7 +30,7 @@ namespace ranges
             /// \pre \c InputRange is a model of the InputRange concept
             /// \pre \c OutputIterator is a model of the OutputIterator concept
             template<typename InputRange, typename OutputIterator>
-            OutputIterator operator()(InputRange && rng, OutputIterator out) const
+            static OutputIterator invoke(copier, InputRange && rng, OutputIterator out)
             {
                 static_assert(ranges::InputRange<InputRange>(),
                     "Expecting model of InputRange");
@@ -38,7 +38,7 @@ namespace ranges
             }
         };
 
-        constexpr bindable<copier> copy {};
+        constexpr copier copy {};
 
     } // inline namespace v3
 

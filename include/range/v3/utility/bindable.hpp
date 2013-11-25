@@ -29,7 +29,7 @@ namespace ranges
                 typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
             template<typename Bind>
-            struct bind_wrapper
+            struct bind_wrapper : pipeable<bind_wrapper<Bind>>
             {
             private:
                 friend struct unwrap_binder;
@@ -38,27 +38,22 @@ namespace ranges
                 bind_wrapper(Bind bind)
                   : bind_(detail::move(bind))
                 {}
-                template<typename ...Args,
-                    CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
+                template<typename ...Args>
                 auto operator()(Args &&...args) const
-                    -> decltype(std::declval<Bind const &>()(detail::forward<Args>(args)...))
+                    -> decltype(std::declval<Bind const &>()(std::declval<Args>()...))
                 {
+                    CONCEPT_ASSERT(False<is_bind_expression<Args...>>());
                     return bind_(detail::forward<Args>(args)...);
                 }
-                template<typename Arg,
-                    CONCEPT_REQUIRES(False<is_bind_expression<Arg>>())>
-                friend auto operator|(Arg && arg, bind_wrapper const & bind)
-                    -> decltype(std::declval<Bind const &>()(detail::forward<Arg>(arg)))
-                {
-                    return bind.bind_(detail::forward<Arg>(arg));
-                }
             };
+
+            template<typename...Args>
+            using std_bind_t = decltype(std::bind(std::declval<Args>()...));
 
             constexpr struct binder
             {
                 template<typename ...Args>
-                auto operator()(Args &&... args) const
-                    -> bind_wrapper<decltype(std::bind(detail::forward<Args>(args)...))>
+                bind_wrapper<std_bind_t<Args...>> operator()(Args &&... args) const
                 {
                     // BUGBUG std::bind doesn't do perfect forwarding. It will store
                     // a copy of all arguments unless I use reference_wrapper here.
@@ -67,6 +62,9 @@ namespace ranges
                     return {std::bind(detail::forward<Args>(args)...)};
                 }
             } bind {};
+
+            template<typename...Args>
+            using bind_t = decltype(detail::bind(std::declval<Args>()...));
 
             template<typename T>
             false_ is_binder_(T const &);
@@ -104,6 +102,9 @@ namespace ranges
                     return detail::forward<T>(t).bind_;
                 }
             } unwrap_bind {};
+
+            template<typename T>
+            using unwrap_bind_t = decltype(detail::unwrap_bind(std::declval<T>()));
         }
 
         template<typename ...T>
@@ -111,104 +112,105 @@ namespace ranges
           : detail::or_<(detail::is_binder<T>::value || detail::is_placeholder<T>::value)...>
         {};
 
-        template<typename Fun>
-        struct bindable : Fun
+        template<typename Derived>
+        struct bindable
         {
         private:
-            constexpr Fun const & fun() const &
+            Derived const & derived() const &
             {
-                return *this;
+                return static_cast<Derived const &>(*this);
             }
-            constexpr Fun && fun() const &&
+            Derived && derived() const &&
             {
-                return const_cast<bindable &&>(*this);
+                return static_cast<Derived &&>(const_cast<bindable &&>(*this));
+            }
+
+        public:
+            ////////////////////////////////////////////////////////////////////////////////////////
+            // operator()
+            ////////////////////////////////////////////////////////////////////////////////////////
+
+            // This gets called when one or more of the arguments are either a
+            // std placeholder, or another bind expression made with bindable
+            template<typename ...Args,
+                CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
+            auto operator()(Args &&... args) const &
+                -> detail::bind_t<Derived const &, detail::unwrap_bind_t<Args>...>
+            {
+                return detail::bind(derived(),
+                                    detail::unwrap_bind(detail::forward<Args>(args))...);
+            }
+            // This gets called when one or more of the arguments are either a
+            // std placeholder, or another bind expression made with bindable
+            template<typename ...Args,
+                CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
+            auto operator()(Args &&... args) const &&
+                -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
+            {
+                return detail::bind(detail::move(*this).derived(),
+                                    detail::unwrap_bind(detail::forward<Args>(args))...);
+            }
+            // This gets called when none of the arguments are std placeholders
+            // or bind expressions.
+            template<typename ...Args, typename D = Derived,
+                CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
+            auto operator()(Args &&... args) const &
+                -> decltype(D::invoke(std::declval<Derived const &>(), std::declval<Args>()...))
+            {
+                return D::invoke(derived(), detail::forward<Args>(args)...);
+            }
+            // This gets called when none of the arguments are std placeholders
+            // or bind expressions.
+            template<typename ...Args, typename D = Derived,
+                CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
+            auto operator()(Args &&... args) const &&
+                -> decltype(D::invoke(std::declval<Derived &&>(), std::declval<Args>()...))
+            {
+                return D::invoke(detail::move(*this).derived(), detail::forward<Args>(args)...);
+            }
+        };
+
+        template<typename Derived>
+        struct pipeable
+        {
+        private:
+            Derived const & derived() const &
+            {
+                return static_cast<Derived const &>(*this);
+            }
+            Derived && derived() const &&
+            {
+                return static_cast<Derived &&>(const_cast<pipeable &&>(*this));
+            }
+
+            // Default Pipe behavior just passes the argument to the pipe's function call
+            // operator
+            template<typename Arg, typename Pipe>
+            static auto pipe(Arg && arg, Pipe && pipe)
+                -> decltype(std::declval<Pipe>()(std::declval<Arg>()))
+            {
+                return detail::forward<Pipe>(pipe)(detail::forward<Arg>(arg));
             }
         public:
-            bindable() = default;
+            ////////////////////////////////////////////////////////////////////////////////////////
+            // operator|
+            ////////////////////////////////////////////////////////////////////////////////////////
 
-            explicit bindable(Fun fun)
-              : Fun(detail::move(fun))
-            {}
-            // This gets called when one or more of the arguments are either a
-            // std placeholder, or another bind expression made with bindable
-            template<typename ...Args,
-                CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
-            constexpr auto operator()(Args &&... args) const &
-                -> decltype(detail::bind(std::declval<Fun const &>(),
-                                         detail::unwrap_bind(detail::forward<Args>(args))...))
+            // This gets called when none of the arguments are std placeholders
+            // or bind expressions.
+            template<typename Arg, typename D = Derived>
+            friend auto operator|(Arg && arg, pipeable const & pipe)
+                -> decltype(D::pipe(std::declval<Arg>(), std::declval<Derived const &>()))
             {
-                return detail::bind(fun(),
-                                    detail::unwrap_bind(detail::forward<Args>(args))...);
-            }
-            // This gets called when one or more of the arguments are either a
-            // std placeholder, or another bind expression made with bindable
-            template<typename ...Args,
-                CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
-            constexpr auto operator()(Args &&... args) const &&
-                -> decltype(detail::bind(std::declval<Fun &&>(),
-                                         detail::unwrap_bind(detail::forward<Args>(args))...))
-            {
-                return detail::bind(detail::move(*this).fun(),
-                                    detail::unwrap_bind(detail::forward<Args>(args))...);
+                return D::pipe(detail::forward<Arg>(arg), pipe.derived());
             }
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.
-            template<typename ...Args,
-                CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
-            constexpr auto operator()(Args &&... args) const &
-                -> decltype(std::declval<Fun const &>()(detail::forward<Args>(args)...))
+            template<typename Arg, typename D = Derived>
+            friend auto operator|(Arg && arg, pipeable && pipe)
+                -> decltype(D::pipe(std::declval<Arg>(), std::declval<Derived &&>()))
             {
-                return fun()(detail::forward<Args>(args)...);
-            }
-            // This gets called when none of the arguments are std placeholders
-            // or bind expressions.
-            template<typename ...Args,
-                CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
-            constexpr auto operator()(Args &&... args) const &&
-                -> decltype(std::declval<Fun &&>()(detail::forward<Args>(args)...))
-            {
-                return detail::move(*this).fun()(detail::forward<Args>(args)...);
-            }
-
-            // This gets called when one or more of the arguments are either a
-            // std placeholder, or another bind expression made with bindable
-            template<typename Arg,
-                CONCEPT_REQUIRES(True<is_bind_expression<Arg>>())>
-            constexpr friend auto operator|(Arg && arg, bindable const & bind)
-                -> decltype(detail::bind(std::declval<Fun const &>(),
-                                         detail::unwrap_bind(detail::forward<Arg>(arg))))
-            {
-                return detail::bind(bind.fun(),
-                                    detail::unwrap_bind(detail::forward<Arg>(arg)));
-            }
-            // This gets called when one or more of the arguments are either a
-            // std placeholder, or another bind expression made with bindable
-            template<typename Arg,
-                CONCEPT_REQUIRES(True<is_bind_expression<Arg>>())>
-            constexpr friend auto operator|(Arg && arg, bindable && bind)
-                -> decltype(detail::bind(std::declval<Fun &&>(),
-                                         detail::unwrap_bind(detail::forward<Arg>(arg))))
-            {
-                return detail::bind(detail::move(bind).fun(),
-                                    detail::unwrap_bind(detail::forward<Arg>(arg)));
-            }
-            // This gets called when none of the arguments are std placeholders
-            // or bind expressions.
-            template<typename Arg,
-                CONCEPT_REQUIRES(False<is_bind_expression<Arg>>())>
-            constexpr friend auto operator|(Arg && arg, bindable const & bind)
-                -> decltype(std::declval<Fun const &>()(detail::forward<Arg>(arg)))
-            {
-                return bind.fun()(detail::forward<Arg>(arg));
-            }
-            // This gets called when none of the arguments are std placeholders
-            // or bind expressions.
-            template<typename Arg,
-                CONCEPT_REQUIRES(False<is_bind_expression<Arg>>())>
-            constexpr friend auto operator|(Arg && arg, bindable && bind)
-                -> decltype(std::declval<Fun &&>()(detail::forward<Arg>(arg)))
-            {
-                return detail::move(bind).fun()(detail::forward<Arg>(arg));
+                return D::pipe(detail::forward<Arg>(arg), detail::move(pipe).derived());
             }
         };
     }
