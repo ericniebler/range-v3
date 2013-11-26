@@ -40,6 +40,12 @@
 #include <range/v3/algorithm/partial_sort.hpp>
 #include <range/v3/algorithm/partial_sort_copy.hpp>
 #include <range/v3/algorithm/partition.hpp>
+#include <range/v3/algorithm/permutation.hpp>
+#include <range/v3/algorithm/random_shuffle.hpp>
+#include <range/v3/algorithm/remove.hpp>
+#include <range/v3/algorithm/remove_copy.hpp>
+#include <range/v3/algorithm/remove_copy_if.hpp>
+#include <range/v3/algorithm/remove_if.hpp>
 
 #include <range/v3/algorithm/reverse.hpp>
 #include <range/v3/algorithm/transform.hpp>

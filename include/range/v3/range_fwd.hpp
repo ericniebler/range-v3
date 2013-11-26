@@ -313,6 +313,27 @@ namespace ranges
 
         struct partitioner;
         extern partitioner const partition;
+
+        struct next_permutation_finder;
+        extern next_permutation_finder const next_permutation;
+
+        struct prev_permutation_finder;
+        extern prev_permutation_finder const prev_permutation;
+
+        struct random_shuffler;
+        extern random_shuffler const random_shuffle;
+
+        struct remover;
+        extern remover const remove;
+
+        struct remover_copier;
+        extern remover_copier const remove_copy;
+
+        struct remover_copier_if;
+        extern remover_copier_if const remove_copy_if;
+
+        struct remover_if;
+        extern remover_if const remove_if;
     }
 }
 

@@ -112,16 +112,12 @@ namespace ranges
             {
                 return static_cast<Derived const &>(*this);
             }
-            Derived && derived() const &&
+            Derived && derived() &&
             {
-                return static_cast<Derived &&>(const_cast<bindable &&>(*this));
+                return static_cast<Derived &&>(*this);
             }
 
         public:
-            ////////////////////////////////////////////////////////////////////////////////////////
-            // operator()
-            ////////////////////////////////////////////////////////////////////////////////////////
-
             // This gets called when one or more of the arguments are either a
             // std placeholder, or another bind expression made with bindable
             template<typename ...Args,
@@ -136,7 +132,7 @@ namespace ranges
             // std placeholder, or another bind expression made with bindable
             template<typename ...Args,
                 CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
-            auto operator()(Args &&... args) const &&
+            auto operator()(Args &&... args) &&
                 -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
             {
                 return detail::bind(detail::move(*this).derived(),
@@ -155,8 +151,8 @@ namespace ranges
             // or bind expressions.
             template<typename ...Args,
                 CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
-            auto operator()(Args &&... args) const &&
-                -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived &&>(), std::declval<Args>()...))
+            auto operator()(Args &&... args) &&
+                -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived>(), std::declval<Args>()...))
             {
                 return Derived::invoke(detail::move(*this).derived(), detail::forward<Args>(args)...);
             }
@@ -170,7 +166,7 @@ namespace ranges
             {
                 return static_cast<Derived const &>(*this);
             }
-            Derived && derived() const &&
+            Derived && derived() &&
             {
                 return static_cast<Derived &&>(const_cast<pipeable &&>(*this));
             }
@@ -184,10 +180,6 @@ namespace ranges
                 return detail::forward<Pipe>(pipe)(detail::forward<Arg>(arg));
             }
         public:
-            ////////////////////////////////////////////////////////////////////////////////////////
-            // operator|
-            ////////////////////////////////////////////////////////////////////////////////////////
-
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.
             template<typename Arg>

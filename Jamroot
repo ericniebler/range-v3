@@ -7,13 +7,8 @@
 
 import modules ;
 
-local boost = [ modules.peek : BOOST ] ;
-
 project range
     : requirements <include>include
     : usage-requirements <include>include
     : build-dir bin
     ;
-
-# This seems to prevent some Boost.Build errors that otherwise occur :-(
-use-project /boost : $(boost) ;

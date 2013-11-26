@@ -105,6 +105,12 @@ namespace ranges
         }
 
         template<typename T>
+        constexpr bool Range()
+        {
+            return concepts::models<concepts::Range, T>();
+        }
+
+        template<typename T>
         constexpr bool InputRange()
         {
             return concepts::models<concepts::InputRange, T>();
