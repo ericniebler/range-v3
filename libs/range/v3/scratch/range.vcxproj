@@ -36,20 +36,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>C:\gnuwin32\bin\make.exe all</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>C:\MinGW\msys\1.0\bin\make.exe all</NMakeBuildCommandLine>
     <NMakeOutput>range.exe</NMakeOutput>
-    <NMakeCleanCommandLine>C:\gnuwin32\bin\make.exe clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>C:\gnuwin32\bin\make.exe -B all</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>C:\MinGW\msys\1.0\bin\make.exe clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>C:\MinGW\msys\1.0\bin\make.exe -B all</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>..\..\..\..\include;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <ExecutablePath>C:\cygwin\bin;$(ExecutablePath)</ExecutablePath>
     <IncludePath>..\..\..\..\include;C:\boost\org\trunk;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeBuildCommandLine>C:\gnuwin32\bin\make.exe all</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>C:\MinGW\msys\1.0\bin\make.exe all</NMakeBuildCommandLine>
     <NMakeOutput>range.exe</NMakeOutput>
-    <NMakeCleanCommandLine>C:\gnuwin32\bin\make.exe clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>C:\gnuwin32\bin\make.exe -B all</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>C:\MinGW\msys\1.0\bin\make.exe clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>C:\MinGW\msys\1.0\bin\make.exe -B all</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>..\..\..\..\include;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <ExecutablePath>C:\cygwin\bin;$(ExecutablePath)</ExecutablePath>

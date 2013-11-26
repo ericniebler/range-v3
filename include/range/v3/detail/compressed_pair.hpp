@@ -39,16 +39,14 @@ namespace ranges
                 constexpr compressed_pair(F && f, S && s)
                   : first_(detail::forward<F>(f)), second_(detail::forward<S>(s))
                 {}
-                auto first() & -> decltype((first_)) { return first_; }
-                auto second() & -> decltype((second_)) { return second_; }
-                constexpr auto first() const & -> decltype((first_)) { return first_; }
-                constexpr auto second() const & -> decltype((second_)) { return second_; }
-                constexpr auto first() const &&
-                    -> decltype((detail::move(const_cast<compressed_pair &&>(*this)).first_))
-                { return detail::move(const_cast<compressed_pair &&>(*this)).first_; }
-                constexpr auto second() const &&
-                    -> decltype((detail::move(const_cast<compressed_pair &&>(*this)).second_))
-                { return detail::move(const_cast<compressed_pair &&>(*this)).second_; }
+                auto first() & -> First & { return first_; }
+                auto second() & -> Second & { return second_; }
+                constexpr auto first() const & -> First const & { return first_; }
+                constexpr auto second() const & -> Second const & { return second_; }
+                constexpr auto first() const && -> First &&
+                    { return detail::move(const_cast<compressed_pair &&>(*this)).first_; }
+                constexpr auto second() const && -> Second &&
+                    { return detail::move(const_cast<compressed_pair &&>(*this)).second_; }
             };
 
             template<typename First, typename Second>
@@ -69,15 +67,13 @@ namespace ranges
                   : First(detail::forward<F>(f)), second_(detail::forward<S>(s))
                 {}
                 auto first() & -> First & { return *this; }
-                auto second() & -> decltype((second_)) { return second_; }
+                auto second() & -> Second & { return second_; }
                 constexpr auto first() const & -> First const & { return *this; }
-                constexpr auto second() const & -> decltype((second_)) { return second_; }
-                constexpr auto first() const &&
-                    -> First &&
-                { return detail::move(const_cast<compressed_pair &&>(*this)); }
-                constexpr auto second() const &&
-                    -> decltype((detail::move(const_cast<compressed_pair &&>(*this)).second_))
-                { return detail::move(const_cast<compressed_pair &&>(*this)).second_; }
+                constexpr auto second() const & -> Second const & { return second_; }
+                constexpr auto first() const && -> First &&
+                    { return detail::move(const_cast<compressed_pair &&>(*this)); }
+                constexpr auto second() const && -> Second &&
+                    { return detail::move(const_cast<compressed_pair &&>(*this)).second_; }
             };
 
             template<typename First, typename Second>
@@ -97,16 +93,14 @@ namespace ranges
                 constexpr compressed_pair(F && f, S && s)
                   : Second(detail::forward<S>(s)), first_(detail::forward<F>(f))
                 {}
-                auto first() & -> decltype((first_)) { return first_; }
+                auto first() & -> First & { return first_; }
                 auto second() & -> Second & { return *this; }
-                constexpr auto first() const & -> decltype((first_)) { return first_; }
+                constexpr auto first() const & -> First const & { return first_; }
                 constexpr auto second() const & -> Second const & { return *this; }
-                constexpr auto first() const &&
-                    -> decltype((detail::move(const_cast<compressed_pair &&>(*this)).first_))
-                { return detail::move(const_cast<compressed_pair &&>(*this)).first_; }
-                constexpr auto second() const &&
-                    -> Second &&
-                { return detail::move(const_cast<compressed_pair &&>(*this)); }
+                constexpr auto first() const && -> First &&
+                    { return detail::move(const_cast<compressed_pair &&>(*this)).first_; }
+                constexpr auto second() const && -> Second &&
+                    { return detail::move(const_cast<compressed_pair &&>(*this)); }
             };
 
             template<typename First, typename Second>
@@ -127,12 +121,10 @@ namespace ranges
                 auto second() & -> Second & { return *this; }
                 constexpr auto first() const & -> First const & { return *this; }
                 constexpr auto second() const & -> Second const & { return *this; }
-                constexpr auto first() const &&
-                    -> First &&
-                { return detail::move(const_cast<compressed_pair &&>(*this)); }
-                constexpr auto second() const &&
-                    -> Second &&
-                { return detail::move(const_cast<compressed_pair &&>(*this)); }
+                constexpr auto first() const && -> First &&
+                    { return detail::move(const_cast<compressed_pair &&>(*this)); }
+                constexpr auto second() const && -> Second &&
+                    { return detail::move(const_cast<compressed_pair &&>(*this)); }
             };
 
             constexpr struct compressed_pair_maker
