@@ -114,7 +114,7 @@ namespace ranges
             Rng0 rng0_;
             Rng1 rng1_;
 
-            // FltRng is either join_range or join_range const.
+            // JoinRng is either join_range or join_range const.
             template<typename JoinRng>
             struct basic_iterator
               : ranges::iterator_facade<

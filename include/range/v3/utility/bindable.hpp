@@ -39,6 +39,37 @@ namespace ranges
                 {}
             };
 
+            // is_bind_wrapper
+            template<typename T>
+            struct is_bind_wrapper : false_
+            {};
+
+            template<typename T>
+            struct is_bind_wrapper<T &> : is_bind_wrapper<T>
+            {};
+
+            template<typename T>
+            struct is_bind_wrapper<T const> : is_bind_wrapper<T>
+            {};
+
+            template<typename T>
+            struct is_bind_wrapper<bind_wrapper<T>> : true_
+            {};
+
+            // is_placeholder_expression
+            template<typename T>
+            struct is_placeholder_expression
+              : bool_<is_bind_wrapper<T>::value || 0 != std::is_placeholder<T>::value>
+            {};
+
+            template<typename T>
+            struct is_placeholder_expression<T &> : is_placeholder_expression<T>
+            {};
+
+            template<typename T>
+            struct is_placeholder_expression<T const> : is_placeholder_expression<T>
+            {};
+
             template<typename...Args>
             using std_bind_t = decltype(std::bind(std::declval<Args>()...));
 
@@ -47,37 +78,12 @@ namespace ranges
                 template<typename ...Args>
                 bind_wrapper<std_bind_t<Args...>> operator()(Args &&... args) const
                 {
-                    // BUGBUG std::bind doesn't do perfect forwarding. It will store
-                    // a copy of all arguments unless I use reference_wrapper here.
-                    // Write a version of forward<>() that uses reference_wrapper and
-                    // use it!
                     return {std::bind(detail::forward<Args>(args)...)};
                 }
             } bind {};
 
             template<typename...Args>
             using bind_t = decltype(detail::bind(std::declval<Args>()...));
-
-            template<typename T>
-            false_ is_bind_wrapper_(T const &);
-
-            template<typename T>
-            true_ is_bind_wrapper_(bind_wrapper<T> const &);
-
-            template<typename T>
-            struct is_bind_wrapper
-              : decltype(detail::is_bind_wrapper_(std::declval<T>()))
-            {};
-
-            template<typename ...T>
-            struct is_placeholder
-              : detail::or_<is_placeholder<T>::value...>
-            {};
-
-            template<typename T>
-            struct is_placeholder<T>
-              : std::is_placeholder<uncvref_t<T>>::type
-            {};
 
             constexpr struct unwrap_binder
             {
@@ -100,9 +106,8 @@ namespace ranges
         }
 
         template<typename ...T>
-        struct is_bind_expression
-          : detail::or_<(detail::is_bind_wrapper<T>::value || detail::is_placeholder<T>::value)...>
-        {};
+        using contains_placeholder_expression =
+            detail::or_<detail::is_placeholder_expression<T>::value...>;
 
         template<typename Derived>
         struct bindable
@@ -121,17 +126,15 @@ namespace ranges
             // This gets called when one or more of the arguments are either a
             // std placeholder, or another bind expression made with bindable
             template<typename ...Args,
-                CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
+                CONCEPT_REQUIRES(True<contains_placeholder_expression<Args...>>())>
             auto operator()(Args &&... args) const &
                 -> detail::bind_t<Derived const &, detail::unwrap_bind_t<Args>...>
             {
                 return detail::bind(derived(),
                                     detail::unwrap_bind(detail::forward<Args>(args))...);
             }
-            // This gets called when one or more of the arguments are either a
-            // std placeholder, or another bind expression made with bindable
             template<typename ...Args,
-                CONCEPT_REQUIRES(True<is_bind_expression<Args...>>())>
+                CONCEPT_REQUIRES(True<contains_placeholder_expression<Args...>>())>
             auto operator()(Args &&... args) &&
                 -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
             {
@@ -141,16 +144,14 @@ namespace ranges
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.
             template<typename ...Args,
-                CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
+                CONCEPT_REQUIRES(False<contains_placeholder_expression<Args...>>())>
             auto operator()(Args &&... args) const &
-            -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived const &>(), std::declval<Args>()...))
+                -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived const &>(), std::declval<Args>()...))
             {
                 return Derived::invoke(derived(), detail::forward<Args>(args)...);
             }
-            // This gets called when none of the arguments are std placeholders
-            // or bind expressions.
             template<typename ...Args,
-                CONCEPT_REQUIRES(False<is_bind_expression<Args...>>())>
+                CONCEPT_REQUIRES(False<contains_placeholder_expression<Args...>>())>
             auto operator()(Args &&... args) &&
                 -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived>(), std::declval<Args>()...))
             {
@@ -180,16 +181,12 @@ namespace ranges
                 return detail::forward<Pipe>(pipe)(detail::forward<Arg>(arg));
             }
         public:
-            // This gets called when none of the arguments are std placeholders
-            // or bind expressions.
             template<typename Arg>
             friend auto operator|(Arg && arg, pipeable const & pipe)
                 -> decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived const &>()))
             {
                 return Derived::pipe(detail::forward<Arg>(arg), pipe.derived());
             }
-            // This gets called when none of the arguments are std placeholders
-            // or bind expressions.
             template<typename Arg>
             friend auto operator|(Arg && arg, pipeable && pipe)
                 -> decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived>()))

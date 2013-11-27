@@ -97,7 +97,7 @@ int main()
     std::vector<int> vi{1,2,2,3,4};
     std::cout << (vi | count(2)) << std::endl;
 
-    // Range bind expressions.
+    // Range placeholder expressions.
     std::cout << "\n";
     for( int i : vi | range(adjacent_find(_1), prev(end(_1))))
         std::cout << "> " << i << '\n';
