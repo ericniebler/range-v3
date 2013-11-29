@@ -45,14 +45,6 @@ namespace ranges
             {};
 
             template<typename T>
-            struct is_bind_wrapper<T &> : is_bind_wrapper<T>
-            {};
-
-            template<typename T>
-            struct is_bind_wrapper<T const> : is_bind_wrapper<T>
-            {};
-
-            template<typename T>
             struct is_bind_wrapper<bind_wrapper<T>> : true_
             {};
 
@@ -60,14 +52,6 @@ namespace ranges
             template<typename T>
             struct is_placeholder_expression
               : bool_<is_bind_wrapper<T>::value || 0 != std::is_placeholder<T>::value>
-            {};
-
-            template<typename T>
-            struct is_placeholder_expression<T &> : is_placeholder_expression<T>
-            {};
-
-            template<typename T>
-            struct is_placeholder_expression<T const> : is_placeholder_expression<T>
             {};
 
             template<typename...Args>
@@ -88,13 +72,13 @@ namespace ranges
             constexpr struct unwrap_binder
             {
                 template<typename T,
-                    CONCEPT_REQUIRES(False<is_bind_wrapper<T>>())>
+                    CONCEPT_REQUIRES(!is_bind_wrapper<uncvref_t<T>>())>
                 T && operator()(T && t) const
                 {
                     return detail::forward<T>(t);
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES(True<is_bind_wrapper<T>>())>
+                    CONCEPT_REQUIRES(is_bind_wrapper<uncvref_t<T>>())>
                 auto operator()(T && t) const -> decltype(std::declval<T>().bind())
                 {
                     return detail::forward<T>(t).bind();
@@ -107,7 +91,7 @@ namespace ranges
 
         template<typename ...T>
         using contains_placeholder_expression =
-            detail::or_<detail::is_placeholder_expression<T>::value...>;
+            detail::or_<detail::is_placeholder_expression<detail::uncvref_t<T>>::value...>;
 
         template<typename Derived>
         struct bindable
@@ -126,7 +110,7 @@ namespace ranges
             // This gets called when one or more of the arguments are either a
             // std placeholder, or another bind expression made with bindable
             template<typename ...Args,
-                CONCEPT_REQUIRES(True<contains_placeholder_expression<Args...>>())>
+                CONCEPT_REQUIRES(contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) const &
                 -> detail::bind_t<Derived const &, detail::unwrap_bind_t<Args>...>
             {
@@ -134,7 +118,7 @@ namespace ranges
                                     detail::unwrap_bind(detail::forward<Args>(args))...);
             }
             template<typename ...Args,
-                CONCEPT_REQUIRES(True<contains_placeholder_expression<Args...>>())>
+                CONCEPT_REQUIRES(contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) &&
                 -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
             {
@@ -144,14 +128,14 @@ namespace ranges
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.
             template<typename ...Args,
-                CONCEPT_REQUIRES(False<contains_placeholder_expression<Args...>>())>
+                CONCEPT_REQUIRES(!contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) const &
                 -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived const &>(), std::declval<Args>()...))
             {
                 return Derived::invoke(derived(), detail::forward<Args>(args)...);
             }
             template<typename ...Args,
-                CONCEPT_REQUIRES(False<contains_placeholder_expression<Args...>>())>
+                CONCEPT_REQUIRES(!contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) &&
                 -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived>(), std::declval<Args>()...))
             {

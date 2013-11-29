@@ -105,34 +105,19 @@ namespace ranges
         }
 
         template<typename T>
-        constexpr bool Range()
-        {
-            return concepts::models<concepts::Range, T>();
-        }
+        using Range = concepts::models<concepts::Range, T>;
 
         template<typename T>
-        constexpr bool InputRange()
-        {
-            return concepts::models<concepts::InputRange, T>();
-        }
+        using InputRange = concepts::models<concepts::InputRange, T>;
 
         template<typename T>
-        constexpr bool ForwardRange()
-        {
-            return concepts::models<concepts::ForwardRange, T>();
-        }
+        using ForwardRange = concepts::models<concepts::ForwardRange, T>;
 
         template<typename T>
-        constexpr bool BidirectionalRange()
-        {
-            return concepts::models<concepts::BidirectionalRange, T>();
-        }
+        using BidirectionalRange = concepts::models<concepts::BidirectionalRange, T>;
 
         template<typename T>
-        constexpr bool RandomAccessRange()
-        {
-            return concepts::models<concepts::RandomAccessRange, T>();
-        }
+        using RandomAccessRange = concepts::models<concepts::RandomAccessRange, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept

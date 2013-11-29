@@ -7,6 +7,9 @@
 //  file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
+// Acknowledgements: Thanks for Paul Fultz for the suggestions that
+//                   concepts can be ordinary Boolean metafunctions.
+//
 // For more information, see http://www.boost.org/libs/range/
 //
 
@@ -116,14 +119,11 @@ namespace ranges
             {};
 
             template<typename Concept, typename ...Ts>
-            constexpr bool models()
-            {
-                return decltype(detail::models_<Concept, Ts...>{}())::value;
-            };
+            using models = decltype(detail::models_<Concept, Ts...>{}());
 
             template<typename Concept, typename ...Ts>
             auto model_of(Ts &&...) ->
-                typename std::enable_if<concepts::models<Concept, Ts...>(), int>::type;
+                typename std::enable_if<(concepts::models<Concept, Ts...>()), int>::type;
         }
 
         namespace detail
@@ -140,7 +140,7 @@ namespace ranges
             using always_t = typename always<A, Rest...>::type;
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // always
+            // iterator_traits_impl
             template<typename T, typename Enable = void>
             struct iterator_traits_impl
             {};
@@ -273,13 +273,13 @@ namespace ranges
                 true_ test_refines(void *); // No refinements, ok
                 template<typename ...Bases>
                 auto test_refines(concepts::refines<Bases...> *) ->
-                    detail::and_<concepts::models<Bases, Ts...>()...>;
+                    detail::and_<(concepts::models<Bases, Ts...>())...>;
             public:
                 false_ operator()() const;
                 template<typename C = Concept>
                 auto operator()() ->
-                    bool_<decltype(C{}.requires(std::declval<Ts>()...))::value &&
-                          decltype(models_::test_refines((C *)nullptr))::value>;
+                    bool_<(decltype(C{}.requires(std::declval<Ts>()...))() &&
+                           decltype(models_::test_refines((C *)nullptr))())>;
             };
 
             template<typename Concept, typename...Args, typename ...Ts>
@@ -306,7 +306,7 @@ namespace ranges
                 template<typename Head, typename...Tail, typename Impl = most_refined_impl_>
                 static auto invoke(list<Head, Tail...> *) ->
                     typename std::conditional<
-                        concepts::models<Head, Ts...>(),
+                        (concepts::models<Head, Ts...>()),
                         Head,
                         decltype(Impl::invoke(
                             (typename concat<list<Tail...>, base_concepts_t<Head>>::type *)nullptr))
@@ -335,24 +335,6 @@ namespace ranges
             template<bool Requires>
             using requires_t =
                 typename std::enable_if<Requires>::type;
-
-            struct True
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(t)
-                    ));
-            };
-
-            struct False
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_false(t)
-                    ));
-            };
 
             struct SameType
             {
@@ -581,131 +563,62 @@ namespace ranges
             };
         }
 
-        template<typename T>
-        constexpr bool True()
-        {
-            return concepts::models<concepts::True, T>();
-        }
-
-        template<typename T>
-        constexpr bool False()
-        {
-            return concepts::models<concepts::False, T>();
-        }
-
         template<typename T, typename U>
-        constexpr bool SameType()
-        {
-            return concepts::models<concepts::SameType, T, U>();
-        }
+        using SameType = concepts::models<concepts::SameType, T, U>;
 
         template<typename T>
-        constexpr bool Integral()
-        {
-            return concepts::models<concepts::Integral, T>();
-        }
+        using Integral = concepts::models<concepts::Integral, T>;
 
         template<typename T>
-        constexpr bool SignedIntegral()
-        {
-            return concepts::models<concepts::SignedIntegral, T>();
-        }
+        using SignedIntegral = concepts::models<concepts::SignedIntegral, T>;
 
         template<typename T>
-        constexpr bool CopyAssignable()
-        {
-            return concepts::models<concepts::CopyAssignable, T>();
-        }
+        using CopyAssignable = concepts::models<concepts::CopyAssignable, T>;
 
         template<typename T>
-        constexpr bool CopyConstructible()
-        {
-            return concepts::models<concepts::CopyConstructible, T>();
-        }
+        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
 
         template<typename T>
-        constexpr bool DefaultConstructible()
-        {
-            return concepts::models<concepts::DefaultConstructible, T>();
-        }
+        using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
 
         template<typename T>
-        constexpr bool Destructible()
-        {
-            return concepts::models<concepts::Destructible, T>();
-        }
+        using Destructible = concepts::models<concepts::Destructible, T>;
 
         template<typename T>
-        constexpr bool Comparable()
-        {
-            return concepts::models<concepts::Comparable, T>();
-        }
+        using Comparable = concepts::models<concepts::Comparable, T>;
 
         template<typename T>
-        constexpr bool Orderable()
-        {
-            return concepts::models<concepts::Orderable, T>();
-        }
+        using Orderable = concepts::models<concepts::Orderable, T>;
 
         template<typename Fun, typename ...Args>
-        constexpr bool Callable()
-        {
-            return concepts::models<concepts::Callable, Fun, Args...>();
-        }
+        using Callable = concepts::models<concepts::Callable, Fun, Args...>;
 
         template<typename Fun, typename ...Args>
-        constexpr bool Predicate()
-        {
-            return concepts::models<concepts::Predicate, Fun, Args...>();
-        }
+        using Predicate = concepts::models<concepts::Predicate, Fun, Args...>;
 
         template<typename Fun, typename Arg>
-        constexpr bool UnaryPredicate()
-        {
-            return concepts::models<concepts::UnaryPredicate, Fun, Arg>();
-        }
+        using UnaryPredicate = concepts::models<concepts::UnaryPredicate, Fun, Arg>;
 
         template<typename Fun, typename Arg0, typename Arg1>
-        constexpr bool BinaryPredicate()
-        {
-            return concepts::models<concepts::BinaryPredicate, Fun, Arg0, Arg1>();
-        }
+        using BinaryPredicate = concepts::models<concepts::BinaryPredicate, Fun, Arg0, Arg1>;
 
         template<typename T>
-        constexpr bool Iterator()
-        {
-            return concepts::models<concepts::Iterator, T>();
-        }
+        using Iterator = concepts::models<concepts::Iterator, T>;
 
         template<typename T, typename O>
-        constexpr bool OutputIterator()
-        {
-            return concepts::models<concepts::OutputIterator, T, O>();
-        }
+        using OutputIterator = concepts::models<concepts::OutputIterator, T, O>;
 
         template<typename T>
-        constexpr bool InputIterator()
-        {
-            return concepts::models<concepts::InputIterator, T>();
-        }
+        using InputIterator = concepts::models<concepts::InputIterator, T>;
 
         template<typename T>
-        constexpr bool ForwardIterator()
-        {
-            return concepts::models<concepts::ForwardIterator, T>();
-        }
+        using ForwardIterator = concepts::models<concepts::ForwardIterator, T>;
 
         template<typename T>
-        constexpr bool BidirectionalIterator()
-        {
-            return concepts::models<concepts::BidirectionalIterator, T>();
-        }
+        using BidirectionalIterator = concepts::models<concepts::BidirectionalIterator, T>;
 
         template<typename T>
-        constexpr bool RandomAccessIterator()
-        {
-            return concepts::models<concepts::RandomAccessIterator, T>();
-        }
+        using RandomAccessIterator = concepts::models<concepts::RandomAccessIterator, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator_concept
