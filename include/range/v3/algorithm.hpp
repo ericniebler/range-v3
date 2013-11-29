@@ -46,8 +46,13 @@
 #include <range/v3/algorithm/remove_copy.hpp>
 #include <range/v3/algorithm/remove_copy_if.hpp>
 #include <range/v3/algorithm/remove_if.hpp>
-
+#include <range/v3/algorithm/replace.hpp>
+#include <range/v3/algorithm/replace_copy.hpp>
+#include <range/v3/algorithm/replace_copy_if.hpp>
+#include <range/v3/algorithm/replace_if.hpp>
 #include <range/v3/algorithm/reverse.hpp>
+#include <range/v3/algorithm/reverse_copy.hpp>
+
 #include <range/v3/algorithm/transform.hpp>
 
 #endif

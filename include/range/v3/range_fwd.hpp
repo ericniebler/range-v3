@@ -194,9 +194,6 @@ namespace ranges
         template<typename Rng>
         struct reverse_range;
 
-        struct reverser;
-        extern reverser const reverse;
-
         template<typename Rng, typename Fun>
         struct transform_range;
 
@@ -334,6 +331,24 @@ namespace ranges
 
         struct remover_if;
         extern remover_if const remove_if;
+
+        struct replacer;
+        extern replacer const replace;
+
+        struct replacer_copier;
+        extern replacer_copier const replace_copy;
+
+        struct replacer_copier_if;
+        extern replacer_copier_if const replace_copy_if;
+
+        struct replacer_if;
+        extern replacer_if const replace_if;
+
+        struct reverser;
+        extern reverser const reverse;
+
+        struct reverser_copier;
+        extern reverser_copier const reverse_copy;
     }
 }
 
