@@ -349,6 +349,33 @@ namespace ranges
 
         struct reverser_copier;
         extern reverser_copier const reverse_copy;
+
+        struct rotater;
+        extern rotater const rotate;
+
+        struct rotater_copier;
+        extern rotater_copier const rotate_copy;
+
+        struct searcher;
+        extern searcher const search;
+
+        struct searcher_n;
+        extern searcher_n const search_n;
+
+        struct includer;
+        extern includer const includes;
+
+        struct set_unioner;
+        extern set_unioner const set_union;
+
+        struct set_intersecter;
+        extern set_intersecter const set_intersection;
+
+        struct set_differencer;
+        extern set_differencer const set_difference;
+
+        struct set_symmetric_differencer;
+        extern set_symmetric_differencer const set_symmetric_difference;
     }
 }
 
