@@ -80,7 +80,7 @@ namespace ranges
             }
         };
 
-        constexpr ranger range {};
+        RANGES_CONSTEXPR ranger range {};
     }
 }
 

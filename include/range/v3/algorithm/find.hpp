@@ -37,7 +37,7 @@ namespace ranges
             }
         };
 
-        constexpr finder find {};
+        RANGES_CONSTEXPR finder find {};
 
     } // inline namespace v3
 

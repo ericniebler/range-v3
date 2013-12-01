@@ -47,7 +47,7 @@ namespace ranges
             }
         };
 
-        constexpr remover remove {};
+        RANGES_CONSTEXPR remover remove {};
 
     } // inline namespace v3
 

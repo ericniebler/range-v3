@@ -60,7 +60,7 @@ namespace ranges
             }
         };
 
-        constexpr merger merge {};
+        RANGES_CONSTEXPR merger merge {};
 
     } // inline namespace v3
 

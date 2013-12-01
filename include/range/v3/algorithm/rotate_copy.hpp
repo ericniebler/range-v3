@@ -40,7 +40,7 @@ namespace ranges
             }
         };
 
-        constexpr rotater_copier rotate_copy{};
+        RANGES_CONSTEXPR rotater_copier rotate_copy{};
 
     } // inline namespace v3
 

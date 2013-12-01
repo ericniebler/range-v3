@@ -472,7 +472,7 @@ namespace ranges
             }
         };
 
-        constexpr joiner join {};
+        RANGES_CONSTEXPR joiner join {};
     }
 }
 

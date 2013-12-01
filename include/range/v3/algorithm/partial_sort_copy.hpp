@@ -53,7 +53,7 @@ namespace ranges
             }
         };
 
-        constexpr partial_sorter_copier partial_sort_copy {};
+        RANGES_CONSTEXPR partial_sorter_copier partial_sort_copy {};
 
     } // inline namespace v3
 

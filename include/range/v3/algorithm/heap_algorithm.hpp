@@ -48,7 +48,7 @@ namespace ranges
             }
         };
 
-        constexpr heap_pusher push_heap {};
+        RANGES_CONSTEXPR heap_pusher push_heap {};
 
         struct heap_popper : bindable<heap_popper>
         {
@@ -76,7 +76,7 @@ namespace ranges
             }
         };
 
-        constexpr heap_popper pop_heap {};
+        RANGES_CONSTEXPR heap_popper pop_heap {};
 
         struct heap_maker : bindable<heap_maker>
         {
@@ -104,7 +104,7 @@ namespace ranges
             }
         };
 
-        constexpr heap_maker make_heap {};
+        RANGES_CONSTEXPR heap_maker make_heap {};
 
         struct heap_sorter : bindable<heap_sorter>
         {
@@ -132,7 +132,7 @@ namespace ranges
             }
         };
 
-        constexpr heap_sorter sort_heap {};
+        RANGES_CONSTEXPR heap_sorter sort_heap {};
 
     } // inline namespace v3
 

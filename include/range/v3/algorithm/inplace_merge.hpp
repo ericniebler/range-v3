@@ -56,7 +56,7 @@ namespace ranges
             }
         };
 
-        constexpr inplace_merger inplace_merge {};
+        RANGES_CONSTEXPR inplace_merger inplace_merge {};
 
     } // inline namespace v3
 

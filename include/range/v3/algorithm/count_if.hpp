@@ -51,7 +51,7 @@ namespace ranges
             }
         };
 
-        constexpr counter_if count_if {};
+        RANGES_CONSTEXPR counter_if count_if {};
 
     } // inline namespace v3
 

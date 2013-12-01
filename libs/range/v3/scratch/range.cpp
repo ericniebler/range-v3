@@ -19,6 +19,12 @@
 #include <range/v3/range.hpp>
 #include <range/v3/utility/bindable.hpp>
 
+template<std::size_t>
+struct undef_i;
+
+template<typename T>
+struct undef_t;
+
 struct noncopyable
 {
     noncopyable(noncopyable const &) = delete;
@@ -81,12 +87,6 @@ static_assert(
         ranges::range_concept_t<ranges::istream_range<int>>,
         ranges::concepts::InputRange
     >::value, "");
-
-template<std::size_t>
-struct undef_i;
-
-template<typename T>
-struct undef_t;
 
 int main()
 {

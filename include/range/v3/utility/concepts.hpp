@@ -189,6 +189,9 @@ namespace ranges
                 using type = list<List1..., List2...>;
             };
 
+            template<typename List0, typename List1>
+            using concat_t = typename concat<List0, List1>::type;
+
             ////////////////////////////////////////////////////////////////////////////////////
             // pop_front
             template<typename List>
@@ -270,10 +273,10 @@ namespace ranges
             struct models_
             {
             private:
-                true_ test_refines(void *); // No refinements, ok
+                static true_ test_refines(void *); // No refinements, ok
                 template<typename ...Bases>
-                auto test_refines(concepts::refines<Bases...> *) ->
-                    detail::and_<(concepts::models<Bases, Ts...>())...>;
+                static auto test_refines(concepts::refines<Bases...> *) ->
+                    detail::and_<static_cast<bool>(concepts::models<Bases, Ts...>())...>;
             public:
                 false_ operator()() const;
                 template<typename C = Concept>
@@ -287,13 +290,13 @@ namespace ranges
               : models_<Concept, get_nth<Args::value, Ts...>...>
             {};
 
-            list<> base_concepts_impl_(void *);
+            list<> base_concepts_of_impl_(void *);
 
             template<typename...BaseConcepts>
-            list<BaseConcepts...> base_concepts_impl_(concepts::refines<BaseConcepts...> *);
+            list<BaseConcepts...> base_concepts_of_impl_(concepts::refines<BaseConcepts...> *);
 
             template<typename Concept>
-            using base_concepts_t = decltype(detail::base_concepts_impl_((Concept *)nullptr));
+            using base_concepts_of_t = decltype(detail::base_concepts_of_impl_((Concept *)nullptr));
 
             struct not_a_concept
             {};
@@ -309,7 +312,7 @@ namespace ranges
                         (concepts::models<Head, Ts...>()),
                         Head,
                         decltype(Impl::invoke(
-                            (typename concat<list<Tail...>, base_concepts_t<Head>>::type *)nullptr))
+                            (concat_t<list<Tail...>, base_concepts_of_t<Head>> *)nullptr))
                     >::type;
             };
         }

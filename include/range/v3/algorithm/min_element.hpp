@@ -48,7 +48,7 @@ namespace ranges
             }
         };
 
-        constexpr min_element_finder min_element {};
+        RANGES_CONSTEXPR min_element_finder min_element {};
 
     } // inline namespace v3
 

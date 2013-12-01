@@ -41,8 +41,8 @@ namespace ranges
             }
         };
 
-        constexpr nexter next {};
-        constexpr prever prev {};
+        RANGES_CONSTEXPR nexter next {};
+        RANGES_CONSTEXPR prever prev {};
     }
 }
 

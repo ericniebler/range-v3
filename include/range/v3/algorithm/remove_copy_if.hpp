@@ -43,7 +43,7 @@ namespace ranges
             }
         };
 
-        constexpr remover_copier_if remove_copy_if {};
+        RANGES_CONSTEXPR remover_copier_if remove_copy_if {};
     }
 }
 

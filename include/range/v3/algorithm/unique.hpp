@@ -8,47 +8,51 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_ALGORITHM_MAX_ELEMENT_HPP
-#define RANGES_V3_ALGORITHM_MAX_ELEMENT_HPP
+#ifndef RANGES_V3_ALGORITHM_UNIQUE_HPP
+#define RANGES_V3_ALGORITHM_UNIQUE_HPP
 
 #include <utility>
 #include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/concepts.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct max_element_finder : bindable<max_element_finder>,
-                                    pipeable<max_element_finder>
+        // TODO: make a unique view, a-la filter
+
+        struct uniquer : bindable<uniquer>
         {
-            /// \brief template function max_element
+            /// \brief template function unique
             ///
-            /// range-based version of the max_element std algorithm
+            /// range-based version of the unique std algorithm
             ///
-            /// \pre ForwardRange is a model of the ForwardRange concept
-            /// \pre BinaryPredicate is a model of the BinaryPredicate concept
+            /// \pre Rng meets the requirements for a Forward range
             template<typename ForwardRange>
             static range_iterator_t<ForwardRange>
-            invoke(max_element_finder, ForwardRange && rng)
+            invoke(uniquer, ForwardRange && rng)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::max_element(ranges::begin(rng), ranges::end(rng));
+                return std::unique(ranges::begin(rng), ranges::end(rng));
             }
 
             /// \overload
             template<typename ForwardRange, typename BinaryPredicate>
             static range_iterator_t<ForwardRange>
-            invoke(max_element_finder, ForwardRange && rng, BinaryPredicate pred)
+            invoke(uniquer, ForwardRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::max_element(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
+                                                       range_reference_t<ForwardRange>,
+                                                       range_reference_t<ForwardRange>>());
+                return std::unique(ranges::begin(rng), ranges::end(rng), detail::move(pred));
             }
         };
 
-        RANGES_CONSTEXPR max_element_finder max_element {};
+        RANGES_CONSTEXPR uniquer unique {};
 
     } // inline namespace v3
 

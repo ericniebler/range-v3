@@ -60,7 +60,7 @@ namespace ranges
             }
         };
 
-        constexpr random_shuffler random_shuffle {};
+        RANGES_CONSTEXPR random_shuffler random_shuffle {};
         
     } // inline namespace v3
 

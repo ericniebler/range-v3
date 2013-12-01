@@ -175,7 +175,7 @@ namespace ranges
             }
         };
 
-        constexpr filterer filter {};
+        RANGES_CONSTEXPR filterer filter {};
     }
 }
 

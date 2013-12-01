@@ -47,7 +47,7 @@ namespace ranges
             }
         };
 
-        constexpr next_permutation_finder next_permutation {};
+        RANGES_CONSTEXPR next_permutation_finder next_permutation {};
 
         struct prev_permutation_finder : bindable<prev_permutation_finder>
         {
@@ -74,7 +74,7 @@ namespace ranges
             }
         };
 
-        constexpr prev_permutation_finder prev_permutation{};
+        RANGES_CONSTEXPR prev_permutation_finder prev_permutation{};
 
     } // inline namespace v3
 

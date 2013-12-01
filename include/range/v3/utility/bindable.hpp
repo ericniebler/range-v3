@@ -57,7 +57,7 @@ namespace ranges
             template<typename...Args>
             using std_bind_t = decltype(std::bind(std::declval<Args>()...));
 
-            constexpr struct binder
+            RANGES_CONSTEXPR struct binder
             {
                 template<typename ...Args>
                 bind_wrapper<std_bind_t<Args...>> operator()(Args &&... args) const
@@ -69,7 +69,7 @@ namespace ranges
             template<typename...Args>
             using bind_t = decltype(detail::bind(std::declval<Args>()...));
 
-            constexpr struct unwrap_binder
+            RANGES_CONSTEXPR struct unwrap_binder
             {
                 template<typename T,
                     CONCEPT_REQUIRES(!is_bind_wrapper<uncvref_t<T>>())>
@@ -105,7 +105,6 @@ namespace ranges
             {
                 return static_cast<Derived &&>(*this);
             }
-
         public:
             // This gets called when one or more of the arguments are either a
             // std placeholder, or another bind expression made with bindable

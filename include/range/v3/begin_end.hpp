@@ -64,10 +64,10 @@ namespace ranges
             };
         }
 
-        constexpr adl_begin_end_detail::beginner begin {};
-        constexpr adl_begin_end_detail::ender end {};
-        constexpr adl_begin_end_detail::cbeginner cbegin {};
-        constexpr adl_begin_end_detail::cender cend {};
+        RANGES_CONSTEXPR adl_begin_end_detail::beginner begin {};
+        RANGES_CONSTEXPR adl_begin_end_detail::ender end {};
+        RANGES_CONSTEXPR adl_begin_end_detail::cbeginner cbegin {};
+        RANGES_CONSTEXPR adl_begin_end_detail::cender cend {};
     }
 }
 

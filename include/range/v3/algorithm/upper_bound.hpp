@@ -8,8 +8,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_ALGORITHM_LOWER_BOUND_HPP
-#define RANGES_V3_ALGORITHM_LOWER_BOUND_HPP
+#ifndef RANGES_V3_ALGORITHM_UPPER_BOUND_HPP
+#define RANGES_V3_ALGORITHM_UPPER_BOUND_HPP
 
 #include <utility>
 #include <algorithm>
@@ -22,32 +22,35 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct lower_bound_finder : bindable<lower_bound_finder>
+        struct upper_bound_finder : bindable<upper_bound_finder>
         {
-            /// \brief template function \c lower_bound_finder::operator()
+            /// \brief template function upper_bound
             ///
-            /// range-based version of the \c lower_bound std algorithm
+            /// range-based version of the upper_bound std algorithm
             ///
-            /// \pre \c ForwardRange is a model of the ForwardRange concept
+            /// \pre ForwardRange is a model of the ForwardRange concept
             template<typename ForwardRange, typename Value>
             static range_iterator_t<ForwardRange>
-            invoke(lower_bound_finder, ForwardRange && rng, Value const & val)
+            invoke(upper_bound_finder, ForwardRange && rng, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::lower_bound(ranges::begin(rng), ranges::end(rng), val);
+                return std::upper_bound(ranges::begin(rng), ranges::end(rng), val);
             }
 
             /// \overload
             template<typename ForwardRange, typename Value, typename SortPredicate>
             static range_iterator_t<ForwardRange>
-            invoke(lower_bound_finder, ForwardRange && rng, Value const & val, SortPredicate pred)
+            invoke(upper_bound_finder, ForwardRange && rng, Value const & val, SortPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::lower_bound(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));
+                CONCEPT_ASSERT(ranges::BinaryPredicate<SortPredicate,
+                                                       Value const &,
+                                                       range_reference_t<ForwardRange>>());
+                return std::upper_bound(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));
             }
         };
 
-        RANGES_CONSTEXPR lower_bound_finder lower_bound {};
+        RANGES_CONSTEXPR upper_bound_finder upper_bound {};
 
     } // inline namespace v3
 

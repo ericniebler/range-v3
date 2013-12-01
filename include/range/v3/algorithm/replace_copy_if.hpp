@@ -60,7 +60,7 @@ namespace ranges
             }
         };
 
-        constexpr replacer_copier_if replacer_copy_if{};
+        RANGES_CONSTEXPR replacer_copier_if replacer_copy_if{};
 
     } // inline namespace v3
 

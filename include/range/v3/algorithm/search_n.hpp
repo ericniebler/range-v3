@@ -53,7 +53,7 @@ namespace ranges
             }
         };
 
-        constexpr searcher_n search_n{};
+        RANGES_CONSTEXPR searcher_n search_n{};
 
     } // inline namespace v3
 

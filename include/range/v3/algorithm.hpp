@@ -57,7 +57,13 @@
 #include <range/v3/algorithm/search.hpp>
 #include <range/v3/algorithm/search_n.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
-
+#include <range/v3/algorithm/sort.hpp>
+#include <range/v3/algorithm/stable_partition.hpp>
+#include <range/v3/algorithm/stable_sort.hpp>
+#include <range/v3/algorithm/swap_ranges.hpp>
 #include <range/v3/algorithm/transform.hpp>
+#include <range/v3/algorithm/unique.hpp>
+#include <range/v3/algorithm/unique_copy.hpp>
+#include <range/v3/algorithm/upper_bound.hpp>
 
 #endif

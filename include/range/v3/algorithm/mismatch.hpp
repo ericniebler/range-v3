@@ -90,7 +90,7 @@ namespace ranges
             }
         };
 
-        constexpr mismatcher mismatch {};
+        RANGES_CONSTEXPR mismatcher mismatch {};
 
     } // inline namespace v3
 

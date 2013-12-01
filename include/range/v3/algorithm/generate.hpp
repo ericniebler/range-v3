@@ -48,7 +48,7 @@ namespace ranges
             }
         };
 
-        constexpr generator generate {};
+        RANGES_CONSTEXPR generator generate {};
 
     } // inline namespace v3
 

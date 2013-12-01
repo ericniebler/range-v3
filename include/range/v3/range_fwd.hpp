@@ -23,6 +23,12 @@
 # define RANGES_ASSERT assert
 #endif
 
+#if __GNUC__ == 4 && __GNUC_MINOR__ < 9
+#define RANGES_CONSTEXPR const
+#else
+#define RANGES_CONSTEXPR constexpr
+#endif
+
 #define RANGES_DECLTYPE_AUTO_RETURN(...)    \
     -> decltype(__VA_ARGS__)                \
     { return (__VA_ARGS__); }               \
@@ -376,6 +382,27 @@ namespace ranges
 
         struct set_symmetric_differencer;
         extern set_symmetric_differencer const set_symmetric_difference;
+
+        struct sorter;
+        extern sorter const sort;
+
+        struct stable_partitioner;
+        extern stable_partitioner const stable_partition;
+
+        struct stable_sorter;
+        extern stable_sorter const stable_sort;
+
+        struct range_swapper;
+        extern range_swapper const swap_ranges;
+
+        struct uniquer;
+        extern uniquer const unique;
+
+        struct uniquer_copier;
+        extern uniquer_copier const unique_copy;
+
+        struct upper_bound_finder;
+        extern upper_bound_finder const upper_bound;
     }
 }
 

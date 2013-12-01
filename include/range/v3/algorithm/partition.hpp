@@ -46,7 +46,7 @@ namespace ranges
             }
         };
 
-        constexpr partitioner partition {};
+        RANGES_CONSTEXPR partitioner partition {};
 
     } // inline namespace v3
 

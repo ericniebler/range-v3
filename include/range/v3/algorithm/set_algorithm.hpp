@@ -52,7 +52,7 @@ namespace ranges
             }
         };
 
-        constexpr includer includes{};
+        RANGES_CONSTEXPR includer includes{};
 
         struct set_unioner : bindable<set_unioner>
         {
@@ -86,7 +86,7 @@ namespace ranges
             }
         };
 
-        constexpr set_unioner set_union{};
+        RANGES_CONSTEXPR set_unioner set_union{};
 
         struct set_intersecter : bindable<set_intersecter>
         {
@@ -120,7 +120,7 @@ namespace ranges
             }
         };
 
-        constexpr set_intersecter set_intersection{};
+        RANGES_CONSTEXPR set_intersecter set_intersection{};
 
         struct set_differencer : bindable<set_differencer>
         {
@@ -154,7 +154,7 @@ namespace ranges
             }
         };
 
-        constexpr set_differencer set_difference{};
+        RANGES_CONSTEXPR set_differencer set_difference{};
 
         struct set_symmetric_differencer : bindable<set_symmetric_differencer>
         {
@@ -188,7 +188,7 @@ namespace ranges
             }
         };
 
-        constexpr set_symmetric_differencer set_symmetric_difference{};
+        RANGES_CONSTEXPR set_symmetric_differencer set_symmetric_difference{};
 
     } // inline namespace v3
 

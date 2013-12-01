@@ -127,7 +127,7 @@ namespace ranges
                     { return detail::move(const_cast<compressed_pair &&>(*this)); }
             };
 
-            constexpr struct compressed_pair_maker
+            RANGES_CONSTEXPR struct compressed_pair_maker
             {
                 template<typename First, typename Second>
                 constexpr auto operator()(First && f, Second && s) const ->
@@ -137,19 +137,19 @@ namespace ranges
                 }
             } make_compressed_pair {};
 
-            namespace
-            {
-                inline void test_compressed_pair()
-                {
-                    constexpr int i = compressed_pair<int, int>{4,5}.first();
-                    compressed_pair<int, int> p{4,5};
-                    int & j = p.first();
-                    compressed_pair<int, int> const pc{4,5};
-                    int const & k = pc.first();
-                    int & l = make_compressed_pair(j, 42).first();
-                    static_assert(std::is_same<decltype(make_compressed_pair(j, 42).second()), int &&>::value, "");
-                }
-            }
+            //namespace
+            //{
+            //    inline void test_compressed_pair()
+            //    {
+            //        constexpr int i = compressed_pair<int, int>{4,5}.first();
+            //        compressed_pair<int, int> p{4,5};
+            //        int & j = p.first();
+            //        compressed_pair<int, int> const pc{4,5};
+            //        int const & k = pc.first();
+            //        int & l = make_compressed_pair(j, 42).first();
+            //        static_assert(std::is_same<decltype(make_compressed_pair(j, 42).second()), int &&>::value, "");
+            //    }
+            //}
         }
     }
 }

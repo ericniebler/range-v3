@@ -50,7 +50,7 @@ namespace ranges
             }
         };
 
-        constexpr binary_searcher binary_search {};
+        RANGES_CONSTEXPR binary_searcher binary_search {};
 
     } // namespace v3
 } // namespace ranges

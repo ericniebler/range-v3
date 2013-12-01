@@ -54,7 +54,7 @@ namespace ranges
             }
         };
 
-        constexpr nth_element_finder nth_element {};
+        RANGES_CONSTEXPR nth_element_finder nth_element {};
 
     } // inline namespace v3
 

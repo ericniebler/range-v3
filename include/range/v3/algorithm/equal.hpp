@@ -202,7 +202,7 @@ namespace ranges
             }
         };
 
-        constexpr equaler equal {};
+        RANGES_CONSTEXPR equaler equal {};
 
     } // inline namespace v3
 

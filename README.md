@@ -17,3 +17,5 @@ Open Design Questions:
   - Observation: `reverse_copy` algorithm and `reverse` adaptor are really the same. (Oops, there
     already is a `reverse` algorithm and it does an in-place reverse. Hrm. Maybe call it `inplace_reverse`?)
   - No, probably better to draw a distinction between INVOKE notation (e.g. `reverse(rng)`) and PIPE notation (e.g. `rng | reverse`), the former being eager when an operation supports it, and the latter being lazy. 
+  - No, probably even better:
+    * For all algorithms that take an output iterator, provide an overload that doesn't, but mutates the input sequence in-place. Return the new range, along with an iterator showing current output position. Lazy adaptors get their own names.

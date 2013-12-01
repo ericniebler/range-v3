@@ -62,7 +62,7 @@ namespace ranges
             }
         };
 
-        constexpr conster const_ {};
+        RANGES_CONSTEXPR conster const_ {};
     }
 }
 

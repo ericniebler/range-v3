@@ -58,7 +58,7 @@ namespace ranges
             }
         };
 
-        constexpr lexicographical_comparer lexicographical_compare {};
+        RANGES_CONSTEXPR lexicographical_comparer lexicographical_compare {};
 
     } // inline namespace v3
 
