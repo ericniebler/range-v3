@@ -34,15 +34,16 @@ namespace ranges
             /// \pre Value is convertible to Predicate's argument type
             /// \pre Value is CopyAssignable
             /// \pre Value is convertible to a type in OutputIterator's set of value types.
-            template<typename ForwardRange, typename OutputIterator, typename Predicate, typename Value>
+            template<typename ForwardRange, typename OutputIterator, typename Predicate,
+                typename Value>
             static OutputIterator
-            invoke(replacer_copier_if, ForwardRange && rng, OutputIterator out_it,
-                Predicate pred, Value const & with_what)
+            invoke(replacer_copier_if, ForwardRange && rng, OutputIterator out, Predicate pred,
+                Value const & with_what)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Value>());
                 return std::replace_copy_if(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out_it), detail::move(pred), with_what);
+                    detail::move(out), detail::move(pred), with_what);
             }
 
             // BUGBUG should "rng | replace_copy_if(out, pred, that)" be lazy? 
@@ -50,13 +51,13 @@ namespace ranges
             /// \overload
             /// for rng | replace_copy_if(out, pred, that)
             template<typename OutputIterator, typename Predicate, typename Value>
-            static auto invoke(replacer_copier_if replace_copy_if, OutputIterator out_it,
-                               Predicate pred, Value with_what)
-                -> decltype(replace_copy_if(std::placeholders::_1, detail::move(out_it),
-                            detail::move(pred), detail::move(with_what)))
+            static auto invoke(replacer_copier_if replace_copy_if, OutputIterator out,
+                               Predicate pred, Value && with_what)
+                -> decltype(replace_copy_if(std::placeholders::_1, detail::move(out),
+                            detail::move(pred), ranges::ref_if_lvalue<Value>(with_what)))
             {
-                return replace_copy_if(std::placeholders::_1, detail::move(out_it),
-                                       detail::move(pred), detail::move(with_what));
+                return replace_copy_if(std::placeholders::_1, detail::move(out),
+                    detail::move(pred), ranges::ref_if_lvalue<Value>(with_what));
             }
         };
 

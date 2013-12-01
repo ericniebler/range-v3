@@ -31,26 +31,30 @@ namespace ranges
             /// \pre ForwardRange is a model of the ForwardRange concept
             template<typename ForwardRange, typename OutputIterator, typename Value>
             static OutputIterator
-            invoke(replacer_copier, ForwardRange && rng, OutputIterator out_it,
+            invoke(replacer_copier, ForwardRange && rng, OutputIterator out,
                    Value const & what, Value const & with_what)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Value>());
                 return std::replace_copy(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out_it), what, with_what);
+                    detail::move(out), what, with_what);
             }
 
             // BUGBUG should "rng | replace_copy(this, that)" be lazy? 
 
             /// \overload
             /// for rng | replace_copy(out, that, that)
-            template<typename OutputIterator, typename Value>
-            static auto invoke(replacer_copier replace_copy, OutputIterator out_it, Value what, Value with_what)
-                -> decltype(replace_copy(std::placeholders::_1, detail::move(out_it),
-                        detail::move(what), detail::move(with_what)))
+            template<typename OutputIterator, typename Value1, typename Value2>
+            static auto invoke(replacer_copier replace_copy, OutputIterator out, Value1 && what,
+                Value2 && with_what)
+                -> decltype(replace_copy(std::placeholders::_1, detail::move(out),
+                        ranges::ref_if_lvalue<Value1>(what),
+                        ranges::ref_if_lvalue<Value2>(with_what)))
             {
-                return replace_copy(std::placeholders::_1, detail::move(out_it),
-                    detail::move(what), detail::move(with_what));
+                CONCEPT_ASSERT(ranges::Iterator<OutputIterator>());
+                return replace_copy(std::placeholders::_1, detail::move(out),
+                    ranges::ref_if_lvalue<Value1>(what),
+                    ranges::ref_if_lvalue<Value2>(with_what));
             }
         };
 

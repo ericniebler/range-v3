@@ -32,12 +32,23 @@ namespace ranges
             /// \pre \c BidirectionalIterator is a model of the Iterator concept
             template<typename BidirectionalRange, typename BidirectionalIterator>
             static BidirectionalIterator
-            invoke(backward_copier,
-                   BidirectionalRange && rng,
-                   BidirectionalIterator out)
+            invoke(backward_copier, BidirectionalRange && rng, BidirectionalIterator out)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
+                CONCEPT_ASSERT(ranges::OutputIterator<BidirectionalIterator,
+                                                      range_reference_t<BidirectionalRange>>());
                 return std::copy_backward(ranges::begin(rng), ranges::end(rng), detail::move(out));
+            }
+
+            /// \overload
+            /// for rng | copy_backward(out)
+            template<typename BidirectionalIterator>
+            static auto invoke(backward_copier copy_backward, BidirectionalIterator out)
+                -> decltype(copy_backward(std::placeholders::_1, detail::move(out)))
+            {
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
+                return copy_backward(std::placeholders::_1, detail::move(out));
             }
         };
 

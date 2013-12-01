@@ -45,10 +45,12 @@ namespace ranges
             /// \overload
             /// for rng | replace_if(pred, that)
             template<typename UnaryPredicate, typename Value>
-            static auto invoke(replacer_if replace_if, UnaryPredicate pred, Value with_what)
-                -> decltype(replace_if(std::placeholders::_1, detail::move(pred), detail::move(with_what)))
+            static auto invoke(replacer_if replace_if, UnaryPredicate pred, Value && with_what)
+                -> decltype(replace_if(std::placeholders::_1, detail::move(pred),
+                        ranges::ref_if_lvalue<Value>(with_what)))
             {
-                return replace_if(std::placeholders::_1, detail::move(pred), detail::move(with_what));
+                return replace_if(std::placeholders::_1, detail::move(pred),
+                    ranges::ref_if_lvalue<Value>(with_what));
             }
         };
 

@@ -30,7 +30,8 @@ namespace ranges
             ///
             /// \pre BidirectionalRange is a model of the BidirectionalRange concept
             template<typename BidirectionalRange, typename OutputIterator>
-            static OutputIterator invoke(reverser_copier, BidirectionalRange && rng, OutputIterator out)
+            static OutputIterator
+            invoke(reverser_copier, BidirectionalRange && rng, OutputIterator out)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return std::reverse_copy(ranges::begin(rng), ranges::end(rng), out);
@@ -39,10 +40,10 @@ namespace ranges
             /// \overload
             /// for rng | reverse_copy(out)
             template<typename OutputIterator>
-            static auto invoke(reverser_copier reverse_copy, OutputIterator out_it)
-                -> decltype(reverse_copy(std::placeholders::_1, detail::move(out_it)))
+            static auto invoke(reverser_copier reverse_copy, OutputIterator out)
+                -> decltype(reverse_copy(std::placeholders::_1, detail::move(out)))
             {
-                return reverse_copy(std::placeholders::_1, detail::move(out_it));
+                return reverse_copy(std::placeholders::_1, detail::move(out));
             }
         };
 

@@ -31,12 +31,12 @@ namespace ranges
             /// \pre rng is a model of the ForwardRange concept
             template<typename ForwardRange, typename OutputIterator>
             static OutputIterator invoke(rotater_copier, ForwardRange && rng,
-                range_iterator_t<ForwardRange> middle, OutputIterator out_it)
+                range_iterator_t<ForwardRange> middle, OutputIterator out)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, range_value_t<ForwardRange>>());
                 return std::rotate_copy(ranges::begin(rng), detail::move(middle),
-                    ranges::end(rng), detail::move(out_it));
+                    ranges::end(rng), detail::move(out));
             }
         };
 

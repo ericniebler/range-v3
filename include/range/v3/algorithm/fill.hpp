@@ -39,10 +39,10 @@ namespace ranges
 
             /// \overload
             template<typename Value>
-            static auto invoke(filler fill, Value const & val)
-                -> decltype(fill(std::placeholders::_1, val))
+            static auto invoke(filler fill, Value && val)
+                -> decltype(fill(std::placeholders::_1, ranges::ref_if_lvalue<Value>(val)))
             {
-                return fill(std::placeholders::_1, val);
+                return fill(std::placeholders::_1, ranges::ref_if_lvalue<Value>(val));
             }
         };
 

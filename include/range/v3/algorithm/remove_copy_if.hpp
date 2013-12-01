@@ -32,14 +32,14 @@ namespace ranges
             /// \pre OutputIterator is a model of the OutputIterator concept
             /// \pre Predicate is a model of the Predicate concept
             /// \pre InputIterator's value type is convertible to Predicate's argument type
-            /// \pre out_it is not an iterator in the range rng
+            /// \pre out is not an iterator in the range rng
             template<typename InputRange, typename OutputIterator, typename Predicate>
             static OutputIterator
-            invoke(remover_copier_if, InputRange && rng, OutputIterator out_it, Predicate pred)
+            invoke(remover_copier_if, InputRange && rng, OutputIterator out, Predicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::remove_copy_if(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out_it), detail::move(pred));
+                    detail::move(out), detail::move(pred));
             }
         };
 

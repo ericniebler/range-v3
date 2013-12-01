@@ -35,11 +35,11 @@ namespace ranges
             /// InputIterator's value type.
             template<typename InputRange, typename OutputIterator, typename Value>
             static OutputIterator
-            invoke(remover_copier, InputRange && rng, OutputIterator out_it, Value const & val)
+            invoke(remover_copier, InputRange && rng, OutputIterator out, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::remove_copy(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out_it), val);
+                    detail::move(out), val);
             }
         };
 

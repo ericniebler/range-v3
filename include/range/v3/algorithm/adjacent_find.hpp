@@ -21,7 +21,8 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct adjacent_finder : bindable<adjacent_finder>, pipeable<adjacent_finder>
+        struct adjacent_finder : bindable<adjacent_finder>,
+                                 pipeable<adjacent_finder>
         {
             /// \brief function template \c adjacent_finder::operator()
             ///
@@ -43,15 +44,16 @@ namespace ranges
             invoke(adjacent_finder, ForwardRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<
-                                   BinaryPredicate,
-                                   range_reference_t<ForwardRange>,
-                                   range_reference_t<ForwardRange>>());
-                return std::adjacent_find(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
+                                                       range_reference_t<ForwardRange>,
+                                                       range_reference_t<ForwardRange>>());
+                return std::adjacent_find(ranges::begin(rng), ranges::end(rng),
+                    detail::move(pred));
             }
         };
 
         RANGES_CONSTEXPR adjacent_finder adjacent_find {};
+
     } // namespace v3
 } // namespace ranges
 

@@ -12,161 +12,16 @@
 #define RANGES_V3_ALGORITHM_EQUAL_HPP
 
 #include <utility>
-#include <iterator>
 #include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/concepts.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            // An implementation of equality comparison that is optimized for iterator
-            // traversal categories less than RandomAccess.
-            template<typename InputIterator1,
-                     typename InputIterator2>
-            bool equal_impl(InputIterator1 first1,
-                            InputIterator1 last1,
-                            InputIterator2 first2,
-                            InputIterator2 last2,
-                            std::input_iterator_tag,
-                            std::input_iterator_tag)
-            {
-                while(true)
-                {
-                    // If we have reached the end of the left range then this is
-                    // the end of the loop. They are equal if and only if we have
-                    // simultaneously reached the end of the right range.
-                    if(first1 == last1)
-                        return first2 == last2;
-
-                    // If we have reached the end of the right range at this line
-                    // it indicates that the right range is shorter than the left
-                    // and hence the result is false.
-                    if(first2 == last2)
-                        return false;
-
-                    // continue looping if and only if the values are equal
-                    if(*first1 != *first2)
-                        break;
-
-                    ++first1;
-                    ++first2;
-                }
-
-                // Reaching this line in the algorithm indicates that a value
-                // inequality has been detected.
-                return false;
-            }
-
-            template<typename InputIterator1,
-                     typename InputIterator2,
-                     typename BinaryPredicate>
-            bool equal_impl(InputIterator1 first1,
-                            InputIterator1 last1,
-                            InputIterator2 first2,
-                            InputIterator2 last2,
-                            BinaryPredicate pred,
-                            std::input_iterator_tag,
-                            std::input_iterator_tag)
-            {
-                while(true)
-                {
-                    // If we have reached the end of the left range then this is
-                    // the end of the loop. They are equal if and only if we have
-                    // simultaneously reached the end of the right range.
-                    if(first1 == last1)
-                        return first2 == last2;
-
-                    // If we have reached the end of the right range at this line
-                    // it indicates that the right range is shorter than the left
-                    // and hence the result is false.
-                    if(first2 == last2)
-                        return false;
-
-                    // continue looping if and only if the values are equal
-                    if(!pred(*first1, *first2))
-                        break;
-
-                    ++first1;
-                    ++first2;
-                }
-
-                // Reaching this line in the algorithm indicates that a value
-                // inequality has been detected.
-                return false;
-            }
-
-            // An implementation of equality comparison that is optimized for
-            // random access iterators.
-            template<typename RandomAccessIterator1,
-                     typename RandomAccessIterator2>
-            bool equal_impl(RandomAccessIterator1 first1,
-                            RandomAccessIterator1 last1,
-                            RandomAccessIterator2 first2,
-                            RandomAccessIterator2 last2,
-                            std::random_access_iterator_tag,
-                            std::random_access_iterator_tag)
-            {
-                return ((last1 - first1) == (last2 - first2))
-                    && std::equal(detail::move(first1), detail::move(last1), detail::move(first2));
-            }
-
-            template<typename RandomAccessIterator1,
-                     typename RandomAccessIterator2,
-                     typename BinaryPredicate>
-            bool equal_impl(RandomAccessIterator1 first1,
-                            RandomAccessIterator1 last1,
-                            RandomAccessIterator2 first2,
-                            RandomAccessIterator2 last2,
-                            BinaryPredicate pred,
-                            std::random_access_iterator_tag,
-                            std::random_access_iterator_tag)
-            {
-                return ((last1 - first1) == (last2 - first2))
-                    && std::equal(detail::move(first1), detail::move(last1),
-                                  detail::move(first2), detail::move(pred));
-            }
-
-            template<typename InputIterator1,
-                     typename InputIterator2>
-            bool equal(InputIterator1 first1,
-                       InputIterator1 last1,
-                       InputIterator2 first2,
-                       InputIterator2 last2)
-            {
-                typename std::iterator_traits< InputIterator1 >::iterator_category tag1;
-                typename std::iterator_traits< InputIterator2 >::iterator_category tag2;
-
-                return detail::equal_impl(
-                    detail::move(first1), detail::move(last1),
-                    detail::move(first2), detail::move(last2),
-                    tag1, tag2);
-            }
-
-            template<typename InputIterator1,
-                     typename InputIterator2,
-                     typename BinaryPredicate>
-            bool equal(InputIterator1 first1,
-                       InputIterator1 last1,
-                       InputIterator2 first2,
-                       InputIterator2 last2,
-                       BinaryPredicate pred)
-            {
-                typename std::iterator_traits< InputIterator1 >::iterator_category tag1;
-                typename std::iterator_traits< InputIterator2 >::iterator_category tag2;
-
-                return detail::equal_impl(
-                    detail::move(first1), detail::move(last1),
-                    detail::move(first2), detail::move(last2),
-                    detail::move(pred), tag1, tag2);
-            }
-
-        } // namespace detail
-
         struct equaler : bindable<equaler>
         {
             /// \brief template function \c equaler::operator()
@@ -181,24 +36,23 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
-
-                return ranges::detail::equal(
-                    ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2));
+                return std::equal(ranges::begin(rng1), ranges::end(rng1),
+                                  ranges::begin(rng2), ranges::end(rng2));
             }
 
             /// \overload
             template<typename InputRange1, typename InputRange2, typename BinaryPredicate>
-            static bool invoke(equaler, InputRange1 && rng1,
-                                InputRange2 && rng2, BinaryPredicate pred)
+            static bool invoke(equaler, InputRange1 && rng1, InputRange2 && rng2,
+                BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
-
-                return ranges::detail::equal(
-                    ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2),
-                    detail::move(pred));
+                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
+                                                       range_reference_t<InputRange1>,
+                                                       range_reference_t<InputRange2>>());
+                return std::equal(ranges::begin(rng1), ranges::end(rng1),
+                                  ranges::begin(rng2), ranges::end(rng2),
+                                  detail::move(pred));
             }
         };
 

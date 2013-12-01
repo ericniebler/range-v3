@@ -40,10 +40,10 @@ namespace ranges
             /// \overload
             /// for rng | remove(val)
             template<typename Value>
-            static auto invoke(remover remove, Value const & val)
-                -> decltype(remove(std::placeholders::_1, val))
+            static auto invoke(remover remove, Value && val)
+                -> decltype(remove(std::placeholders::_1, ranges::ref_if_lvalue<Value>(val)))
             {
-                return remove(std::placeholders::_1, val);
+                return remove(std::placeholders::_1, ranges::ref_if_lvalue<Value>(val));
             }
         };
 

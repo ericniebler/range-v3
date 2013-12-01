@@ -33,7 +33,19 @@ namespace ranges
             static OutputIterator invoke(copier, InputRange && rng, OutputIterator out)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
+                                                      range_reference_t<InputRange>>());
                 return std::copy(ranges::begin(rng), ranges::end(rng), detail::move(out));
+            }
+
+            /// \overload
+            /// for rng | copy(out)
+            template<typename OutputIterator>
+            static auto invoke(copier copy, OutputIterator out)
+                -> decltype(copy(std::placeholders::_1, detail::move(out)))
+            {
+                CONCEPT_ASSERT(ranges::Iterator<OutputIterator>());
+                return copy(std::placeholders::_1, detail::move(out));
             }
         };
 

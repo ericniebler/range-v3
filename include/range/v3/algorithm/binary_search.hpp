@@ -39,20 +39,22 @@ namespace ranges
 
             /// \overload
             template<typename ForwardRange, typename Value, typename BinaryPredicate>
-            static bool invoke(binary_searcher, ForwardRange && rng, Value const & val, BinaryPredicate pred)
+            static bool invoke(binary_searcher, ForwardRange && rng, Value const & val,
+                BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(
-                    ranges::BinaryPredicate<BinaryPredicate,
-                                            range_reference_t<ForwardRange>,
-                                            range_reference_t<ForwardRange>>());
-                return std::binary_search(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));
+                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
+                                                       range_reference_t<ForwardRange>,
+                                                       range_reference_t<ForwardRange>>());
+                return std::binary_search(ranges::begin(rng), ranges::end(rng), val,
+                    detail::move(pred));
             }
         };
 
         RANGES_CONSTEXPR binary_searcher binary_search {};
 
     } // namespace v3
+
 } // namespace ranges
 
 #endif // include guard
