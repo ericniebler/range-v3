@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGES_V3_ADAPTOR_FILTER_HPP
-#define RANGES_V3_ADAPTOR_FILTER_HPP
+#ifndef RANGES_V3_VIEW_FILTER_HPP
+#define RANGES_V3_VIEW_FILTER_HPP
 
 #include <utility>
 #include <iterator>
@@ -37,7 +37,7 @@ namespace ranges
         }
 
         template<typename Rng, typename Pred>
-        struct filter_range
+        struct filter_range_view
         {
         private:
             detail::compressed_pair<Rng, detail::function_wrapper<Pred>> rng_and_pred_;
@@ -53,7 +53,7 @@ namespace ranges
                 >
             {
             private:
-                friend struct filter_range;
+                friend struct filter_range_view;
                 friend struct ranges::iterator_core_access;
                 using base_range_iterator =
                     decltype(ranges::begin(std::declval<FltRng &>().rng_and_pred_.first()));
@@ -104,10 +104,10 @@ namespace ranges
                 {}
             };
         public:
-            using iterator       = basic_iterator<filter_range>;
-            using const_iterator = basic_iterator<filter_range const>;
+            using iterator       = basic_iterator<filter_range_view>;
+            using const_iterator = basic_iterator<filter_range_view const>;
 
-            filter_range(Rng && rng, Pred pred)
+            filter_range_view(Rng && rng, Pred pred)
               : rng_and_pred_{detail::forward<Rng>(rng), detail::move(pred)}
             {}
             iterator begin()
@@ -144,38 +144,41 @@ namespace ranges
             }
         };
 
-        struct filterer : bindable<filterer>
+        namespace view
         {
-        private:
-            template<typename Pred>
-            struct filterer1 : pipeable<filterer1<Pred>>
+            struct filterer : bindable<filterer>
             {
             private:
-                Pred pred_;
-            public:
-                filterer1(Pred pred)
-                  : pred_(detail::move(pred))
-                {}
-                template<typename Rng, typename This>
-                static filter_range<Rng, Pred> pipe(Rng && rng, This && this_)
+                template<typename Pred>
+                struct filterer1 : pipeable<filterer1<Pred>>
                 {
-                    return {detail::forward<Rng>(rng), detail::forward<This>(this_).pred_};
+                private:
+                    Pred pred_;
+                public:
+                    filterer1(Pred pred)
+                      : pred_(detail::move(pred))
+                    {}
+                    template<typename Rng, typename This>
+                    static filter_range_view<Rng, Pred> pipe(Rng && rng, This && this_)
+                    {
+                        return {detail::forward<Rng>(rng), detail::forward<This>(this_).pred_};
+                    }
+                };
+            public:
+                template<typename Rng, typename Pred>
+                static filter_range_view<Rng, Pred> invoke(filterer, Rng && rng, Pred pred)
+                {
+                    return {detail::forward<Rng>(rng), detail::move(pred)};
+                }
+                template<typename Pred>
+                static filterer1<Pred> invoke(filterer, Pred pred)
+                {
+                    return {detail::move(pred)};
                 }
             };
-        public:
-            template<typename Rng, typename Pred>
-            static filter_range<Rng, Pred> invoke(filterer, Rng && rng, Pred pred)
-            {
-                return {detail::forward<Rng>(rng), detail::move(pred)};
-            }
-            template<typename Pred>
-            static filterer1<Pred> invoke(filterer, Pred pred)
-            {
-                return {detail::move(pred)};
-            }
-        };
 
-        RANGES_CONSTEXPR filterer filter {};
+            RANGES_CONSTEXPR filterer filter {};
+        }
     }
 }
 

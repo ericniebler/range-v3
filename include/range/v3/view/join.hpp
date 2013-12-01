@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGES_V3_JOIN_RANGE_HPP
-#define RANGES_V3_JOIN_RANGE_HPP
+#ifndef RANGES_V3_VIEW_JOIN_HPP
+#define RANGES_V3_VIEW_JOIN_HPP
 
 #include <new>
 #include <utility>
@@ -106,7 +106,7 @@ namespace ranges
         }
 
         template<typename Rng0, typename Rng1>
-        struct join_range
+        struct join_range_view
         {
         private:
             static_assert(std::is_same<range_value_t<Rng0>, range_value_t<Rng1>>::value,
@@ -114,7 +114,7 @@ namespace ranges
             Rng0 rng0_;
             Rng1 rng1_;
 
-            // JoinRng is either join_range or join_range const.
+            // JoinRng is either join_range_view or join_range_view const.
             template<typename JoinRng>
             struct basic_iterator
               : ranges::iterator_facade<
@@ -127,7 +127,7 @@ namespace ranges
                 >
             {
             private:
-                friend struct join_range;
+                friend struct join_range_view;
                 friend struct ranges::iterator_core_access;
                 using base_range_iterator0 = decltype(ranges::begin(std::declval<JoinRng &>().rng0_));
                 using base_range_iterator1 = decltype(ranges::begin(std::declval<JoinRng &>().rng1_));
@@ -164,7 +164,7 @@ namespace ranges
                         ++it1_;
                         break;
                     default:
-                        RANGES_ASSERT(!"Attempt to advance an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to advance an invalid join_range_view iterator");
                         break;
                     }
                 }
@@ -188,7 +188,7 @@ namespace ranges
                         }
                         break;
                     default:
-                        RANGES_ASSERT(!"Attempt to decrement an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to decrement an invalid join_range_view iterator");
                         break;
                     }
                 }
@@ -229,7 +229,7 @@ namespace ranges
                             std::advance(it1_, n);
                         break;
                     default:
-                        RANGES_ASSERT(!"Attempt to advance an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to advance an invalid join_range_view iterator");
                         break;
                     }
                 }
@@ -247,7 +247,7 @@ namespace ranges
                             return (ranges::end(rng_->rng0_) - it0_) +
                                    (that.it1_ - ranges::begin(rng_->rng1_));
                         default:
-                            RANGES_ASSERT(!"Attempt to use an invalid join_range iterator");
+                            RANGES_ASSERT(!"Attempt to use an invalid join_range_view iterator");
                             return 0;
                         }
                     case detail::which::second:
@@ -260,11 +260,11 @@ namespace ranges
                         case detail::which::second:
                             return that.it1_ - it1_;
                         default:
-                            RANGES_ASSERT(!"Attempt to use an invalid join_range iterator");
+                            RANGES_ASSERT(!"Attempt to use an invalid join_range_view iterator");
                             return 0;
                         }
                     default:
-                        RANGES_ASSERT(!"Attempt to use an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to use an invalid join_range_view iterator");
                         return 0;
                     }
                 }
@@ -280,7 +280,7 @@ namespace ranges
                     case detail::which::second:
                         return it1_ == that.it1_;
                     default:
-                        RANGES_ASSERT(!"Attempt to compare invalid join_range iterators");
+                        RANGES_ASSERT(!"Attempt to compare invalid join_range_view iterators");
                         return true;
                     }
                 }
@@ -294,7 +294,7 @@ namespace ranges
                         RANGES_ASSERT(it1_ != ranges::end(rng_->rng1_));
                         return *it1_;
                     default:
-                        RANGES_ASSERT(!"Attempt to dereference an invalid join_range iterator");
+                        RANGES_ASSERT(!"Attempt to dereference an invalid join_range_view iterator");
                         return *it1_;
                     }
                 }
@@ -357,7 +357,7 @@ namespace ranges
                         which_ = detail::which::second;
                         break;
                     default:
-                        RANGES_ASSERT(!"Copying invalid join_range iterator");
+                        RANGES_ASSERT(!"Copying invalid join_range_view iterator");
                         which_ = detail::which::neither;
                         break;
                     }
@@ -382,7 +382,7 @@ namespace ranges
                         which_ = detail::which::second;
                         break;
                     default:
-                        RANGES_ASSERT(!"Copying invalid join_range iterator");
+                        RANGES_ASSERT(!"Copying invalid join_range_view iterator");
                         which_ = detail::which::neither;
                         break;
                     }
@@ -408,17 +408,17 @@ namespace ranges
                         which_ = detail::which::second;
                         break;
                     default:
-                        RANGES_ASSERT(!"Copying invalid join_range iterator");
+                        RANGES_ASSERT(!"Copying invalid join_range_view iterator");
                         which_ = detail::which::neither;
                         break;
                     }
                 }
             };
         public:
-            using iterator       = basic_iterator<join_range>;
-            using const_iterator = basic_iterator<join_range const>;
+            using iterator       = basic_iterator<join_range_view>;
+            using const_iterator = basic_iterator<join_range_view const>;
 
-            join_range(Rng0 && rng0, Rng1 && rng1)
+            join_range_view(Rng0 && rng0, Rng1 && rng1)
               : rng0_(rng0), rng1_(rng1)
             {}
             iterator begin()
@@ -463,16 +463,19 @@ namespace ranges
             }
         };
 
-        struct joiner : bindable<joiner>
+        namespace view
         {
-            template<typename Rng0, typename Rng1>
-            static join_range<Rng0, Rng1> invoke(joiner, Rng0 && rng0, Rng1 && rng1)
+            struct joiner : bindable<joiner>
             {
-                return {detail::forward<Rng0>(rng0), detail::forward<Rng1>(rng1)};
-            }
-        };
+                template<typename Rng0, typename Rng1>
+                static join_range_view<Rng0, Rng1> invoke(joiner, Rng0 && rng0, Rng1 && rng1)
+                {
+                    return {detail::forward<Rng0>(rng0), detail::forward<Rng1>(rng1)};
+                }
+            };
 
-        RANGES_CONSTEXPR joiner join {};
+            RANGES_CONSTEXPR joiner join {};
+        }
     }
 }
 

@@ -11,8 +11,8 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGES_V3_ADAPTOR_CONST_HPP
-#define RANGES_V3_ADAPTOR_CONST_HPP
+#ifndef RANGES_V3_VIEW_CONST_HPP
+#define RANGES_V3_VIEW_CONST_HPP
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
@@ -24,15 +24,15 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng>
-        struct const_range
+        struct const_range_view
         {
         private:
             Rng rng_;
         public:
-            using const_iterator = decltype(ranges::cbegin(std::declval<Rng const &>()));
-            using iterator = const_iterator;
+            using iterator = decltype(ranges::cbegin(std::declval<Rng const &>()));
+            using const_iterator = iterator;
 
-            explicit const_range(Rng && rng)
+            explicit const_range_view(Rng && rng)
               : rng_(rng)
             {}
             iterator begin() const
@@ -53,16 +53,19 @@ namespace ranges
             }
         };
 
-        struct conster : bindable<conster>, pipeable<conster>
+        namespace view
         {
-            template<typename Rng>
-            static const_range<Rng> invoke(conster, Rng && rng)
+            struct conster : bindable<conster>, pipeable<conster>
             {
-                return const_range<Rng>{detail::forward<Rng>()};
-            }
-        };
+                template<typename Rng>
+                static const_range_view<Rng> invoke(conster, Rng && rng)
+                {
+                    return const_range_view<Rng>{detail::forward<Rng>()};
+                }
+            };
 
-        RANGES_CONSTEXPR conster const_ {};
+            RANGES_CONSTEXPR conster const_ {};
+        }
     }
 }
 

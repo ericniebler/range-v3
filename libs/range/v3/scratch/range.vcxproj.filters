@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\adaptor">
-      <UniqueIdentifier>{f1281d7e-9d65-47eb-aaf1-2ab3e427f9cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\detail">
       <UniqueIdentifier>{34ab9040-46e6-4a05-b798-48978a63cb0d}</UniqueIdentifier>
     </Filter>
@@ -24,6 +21,9 @@
     </Filter>
     <Filter Include="Header Files\utility">
       <UniqueIdentifier>{a46c63d4-ad02-4b7f-b8a4-caf55c25c2b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\view">
+      <UniqueIdentifier>{1f2a27ab-42a7-4938-911a-25fa526b2316}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,9 +46,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\include\range\v3\adaptors.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -61,9 +58,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\join_range.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -72,12 +66,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\const.hpp">
-      <Filter>Header Files\adaptor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\filter.hpp">
-      <Filter>Header Files\adaptor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\detail\compressed_pair.hpp">
       <Filter>Header Files\detail</Filter>
@@ -258,6 +246,24 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\next_prev.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\filter.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp">
+      <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

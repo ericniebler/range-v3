@@ -14,14 +14,13 @@
 #ifndef RANGES_V3_RANGES_HPP
 #define RANGES_V3_RANGES_HPP
 
-#include <range/v3/adaptors.hpp>
+#include <range/v3/algorithm.hpp>
+#include <range/v3/begin_end.hpp>
+#include <range/v3/concepts.hpp>
 #include <range/v3/istream_range.hpp>
 #include <range/v3/iterator_range.hpp>
-#include <range/v3/join_range.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/concepts.hpp>
-#include <range/v3/algorithm.hpp>
 #include <range/v3/next_prev.hpp>
-#include <range/v3/begin_end.hpp>
+#include <range/v3/range_traits.hpp>
+#include <range/v3/view.hpp>
 
 #endif

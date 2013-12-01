@@ -71,9 +71,6 @@
     <ClCompile Include="range.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\include\range\v3\adaptors.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\const.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\adaptor\filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\binary_search.hpp" />
@@ -134,7 +131,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\detail\function_wrapper.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\join_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\next_prev.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp" />
@@ -142,6 +138,12 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\bindable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_facade.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\filter.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

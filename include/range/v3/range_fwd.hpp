@@ -179,33 +179,6 @@ namespace ranges
         struct ranger;
         extern ranger const range;
 
-        template<typename Rng0, typename Rng1>
-        struct join_range;
-
-        struct joiner;
-        extern joiner const join;
-
-        template<typename Rng>
-        struct const_range;
-
-        struct conster;
-        extern conster const const_;
-
-        template<typename Rng, typename Pred>
-        struct filter_range;
-
-        struct filterer;
-        extern filterer const filter;
-
-        template<typename Rng>
-        struct reverse_range;
-
-        template<typename Rng, typename Fun>
-        struct transform_range;
-
-        struct transformer;
-        extern transformer const transform;
-
         template<typename Rng>
         struct range_iterator;
 
@@ -395,6 +368,9 @@ namespace ranges
         struct range_swapper;
         extern range_swapper const swap_ranges;
 
+        struct transformer;
+        extern transformer const transform;
+
         struct uniquer;
         extern uniquer const unique;
 
@@ -403,6 +379,53 @@ namespace ranges
 
         struct upper_bound_finder;
         extern upper_bound_finder const upper_bound;
+
+        // Views
+        //
+        template<typename Rng>
+        struct const_range_view;
+
+        namespace view
+        {
+            struct conster;
+            extern conster const const_;
+        }
+
+        template<typename Rng, typename Pred>
+        struct filter_range_view;
+
+        namespace view
+        {
+            struct filterer;
+            extern filterer const filter;
+        }
+
+        template<typename Rng0, typename Rng1>
+        struct join_range_view;
+
+        namespace view
+        {
+            struct joiner;
+            extern joiner const join;
+        }
+
+        template<typename Rng>
+        struct reverse_range_view;
+
+        namespace view
+        {
+            struct reverser;
+            extern reverser const reverse;
+        }
+
+        template<typename Rng, typename Fun>
+        struct transform_range_view;
+
+        namespace view
+        {
+            struct transformer;
+            extern transformer const transform;
+        }
     }
 }
 

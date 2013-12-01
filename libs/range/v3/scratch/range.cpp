@@ -103,7 +103,7 @@ int main()
         std::cout << "> " << i << '\n';
 
     std::cout << "\n";
-    for( int i : vi | transform(_1, [](int i){return i*2;}))
+    for( int i : vi | view::transform(_1, [](int i){return i*2;}))
         std::cout << "> " << i << '\n';
 
     // Mutate in-place
@@ -115,14 +115,14 @@ int main()
     std::cout << "\n";
     std::istringstream sin{"this is his face"};
     istream_range<std::string> lines{sin};
-    for(auto line : filter(lines, [](std::string s){return s.length()>2;}))
+    for(auto line : view::filter(lines, [](std::string s){return s.length()>2;}))
         std::cout << "> " << line << '\n';
 
     std::cout << "\n";
     auto lines2 = std::vector<std::string>{"this","is","his","face"}
-                    | filter([](std::string s){return s.length()>2;})
-                    | filter(_1, [](std::string s){return s.length()<4;})
-                    | transform([](std::string s){return s + " or her";})
+                    | view::filter([](std::string s){return s.length()>2;})
+                    | view::filter(_1, [](std::string s){return s.length()<4;})
+                    | view::transform([](std::string s){return s + " or her";})
                     ;
     //undef<sizeof(lines2)> ttt;
     for(std::string const & line : lines2)
@@ -139,18 +139,18 @@ int main()
 
     std::cout << "\n";
     auto sizes = std::vector<std::string>{"this","is","his","face"}
-                    | transform(&std::string::length);
+                    | view::transform(&std::string::length);
     for(std::size_t size : sizes)
         std::cout << "> " << size << '\n';
 
     std::cout << "\n";
     //std::istringstream sin2{"this is his face"};
-    auto joined = join(std::vector<std::string>{"this","is","his","face"},
-                       std::vector<std::string>{"another","fine","mess"});
-    for(std::string & s : joined | reverse)
+    auto joined = view::join(std::vector<std::string>{"this","is","his","face"},
+                             std::vector<std::string>{"another","fine","mess"});
+    for(std::string & s : joined | view::reverse)
         std::cout << "> " << s << '\n';
 
-    auto revjoin = joined | reverse;
+    auto revjoin = joined | view::reverse;
     std::cout << "*** " << (revjoin.end() - revjoin.begin()) << std::endl;
 
     std::cout << '\n';
