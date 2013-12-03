@@ -38,12 +38,12 @@ namespace ranges
             }
 
             /// \overload
-            template<typename ForwardRange, typename Value, typename SortPredicate>
+            template<typename ForwardRange, typename Value, typename BinaryPredicate>
             static range_iterator_t<ForwardRange>
-            invoke(upper_bound_finder, ForwardRange && rng, Value const & val, SortPredicate pred)
+            invoke(upper_bound_finder, ForwardRange && rng, Value const & val, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<SortPredicate,
+                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
                                                        Value const &,
                                                        range_reference_t<ForwardRange>>());
                 return std::upper_bound(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));

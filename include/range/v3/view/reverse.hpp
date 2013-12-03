@@ -21,7 +21,6 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/detail/function_wrapper.hpp>
 #include <range/v3/detail/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
 

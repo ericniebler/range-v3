@@ -80,9 +80,6 @@ namespace ranges
             template<typename Ret, typename PMFN>
             struct member_function_wrapper;
 
-            template<typename Fun>
-            struct function_wrapper;
-
             template<typename ...T>
             struct is_placeholder;
 
@@ -155,6 +152,7 @@ namespace ranges
             template<typename T>
             constexpr T && forward(typename std::remove_reference<T>::type && t) noexcept
             {
+                // This is to catch way sketchy stuff like: forward<int const &>(42)
                 static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
                 return static_cast<T &&>(t);
             }
@@ -166,6 +164,12 @@ namespace ranges
                 return static_cast<typename std::remove_reference<T>::type &&>(t);
             }
         }
+
+        struct invokable_maker;
+        extern invokable_maker const make_invokable;
+
+        template<typename T>
+        using invokable_t = decltype(make_invokable(std::declval<T>()));
 
         template<typename T>
         struct istream_range;

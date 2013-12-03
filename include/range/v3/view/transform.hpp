@@ -21,19 +21,19 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/detail/function_wrapper.hpp>
 #include <range/v3/detail/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        template<typename Rng, typename Fun>
+        template<typename InputRange, typename UnaryFunction>
         struct transform_range_view
         {
         private:
-            detail::compressed_pair<Rng, detail::function_wrapper<Fun>> rng_and_fun_;
+            detail::compressed_pair<InputRange, invokable_t<UnaryFunction>> rng_and_fun_;
 
             template<typename TfxRng>
             struct basic_iterator
@@ -43,10 +43,10 @@ namespace ranges
                         decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
                             *ranges::begin(std::declval<TfxRng &>().rng_and_fun_.first())))
                     >::type
-                  , range_category_t<Rng>
+                  , range_category_t<InputRange>
                   , decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
                         *ranges::begin(std::declval<TfxRng &>().rng_and_fun_.first())))
-                  , range_difference_t<Rng>
+                  , range_difference_t<InputRange>
                 >
             {
             private:
@@ -107,8 +107,8 @@ namespace ranges
             using iterator       = basic_iterator<transform_range_view>;
             using const_iterator = basic_iterator<transform_range_view const>;
 
-            transform_range_view(Rng && rng, Fun fun)
-              : rng_and_fun_{detail::forward<Rng>(rng), detail::move(fun)}
+            transform_range_view(InputRange && rng, UnaryFunction fun)
+              : rng_and_fun_{detail::forward<InputRange>(rng), make_invokable(detail::move(fun))}
             {}
             iterator begin()
             {
@@ -134,11 +134,11 @@ namespace ranges
             {
                 return begin() != end();
             }
-            Rng & base()
+            InputRange & base()
             {
                 return rng_and_fun_.first();
             }
-            Rng const & base() const
+            InputRange const & base() const
             {
                 return rng_and_fun_.first();
             }
@@ -149,37 +149,37 @@ namespace ranges
             struct transformer : bindable<transformer>
             {
             private:
-                template<typename Fun>
-                struct transformer1 : pipeable<transformer1<Fun>>
+                template<typename UnaryFunction>
+                struct transformer1 : pipeable<transformer1<UnaryFunction>>
                 {
                 private:
-                    Fun fun_;
+                    UnaryFunction fun_;
                 public:
-                    transformer1(Fun fun)
+                    transformer1(UnaryFunction fun)
                       : fun_(detail::move(fun))
                     {}
-                    template<typename Rng, typename This>
-                    static transform_range_view<Rng, Fun> pipe(Rng && rng, This && this_)
+                    template<typename InputRange, typename This>
+                    static transform_range_view<InputRange, UnaryFunction> pipe(InputRange && rng, This && this_)
                     {
-                        return {detail::forward<Rng>(rng), detail::forward<This>(this_).fun_};
+                        return {detail::forward<InputRange>(rng), detail::forward<This>(this_).fun_};
                     }
                 };
             public:
                 /// \overload
-                template<typename InputRange1,
-                         typename UnaryOperation,
-                         CONCEPT_REQUIRES(ranges::InputRange<InputRange1>()),
-                         typename Ref1 = range_reference_t<InputRange1>,
-                         CONCEPT_REQUIRES(ranges::Callable<UnaryOperation, Ref1>())>
-                static transform_range_view<InputRange1, UnaryOperation>
-                invoke(transformer, InputRange1 && rng, UnaryOperation fun)
+                template<typename InputRange1, typename UnaryFunction>
+                static transform_range_view<InputRange1, UnaryFunction>
+                invoke(transformer, InputRange1 && rng, UnaryFunction fun)
                 {
+                    CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
+                    using Ref1 = range_reference_t<InputRange1>;
+                    using Fun1 = invokable_t<UnaryFunction>;
+                    CONCEPT_ASSERT(ranges::Callable<Fun1, Ref1>())
                     return {detail::forward<InputRange1>(rng), detail::move(fun)};
                 }
 
                 /// \overload
-                template<typename UnaryOperation>
-                static transformer1<UnaryOperation> invoke(transformer, UnaryOperation fun)
+                template<typename UnaryFunction>
+                static transformer1<UnaryFunction> invoke(transformer, UnaryFunction fun)
                 {
                     return {detail::move(fun)};
                 }

@@ -30,7 +30,7 @@ namespace ranges
             /// range-based version of the \c equal_range std algorithm
             ///
             /// \pre \c ForwardRange is a model of the ForwardRange concept
-            /// \pre \c SortPredicate is a model of the BinaryPredicate concept
+            /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardRange, typename Value>
             static iterator_range<range_iterator_t<ForwardRange>>
             invoke(equal_ranger, ForwardRange && rng, Value const & val)
@@ -40,12 +40,24 @@ namespace ranges
             }
 
             /// \overload
-            template<typename ForwardRange, typename Value, typename SortPredicate>
+            template<typename ForwardRange, typename Value, typename BinaryPredicate>
             static iterator_range<range_iterator_t<ForwardRange>>
-            invoke(equal_ranger, ForwardRange && rng, Value const & val, SortPredicate pred)
+            invoke(equal_ranger, ForwardRange && rng, Value const & val, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
+                                                       range_reference_t<ForwardRange>,
+                                                       Value const &>());
                 return std::equal_range(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));
+            }
+
+            /// \overload
+            /// for rng | equal_range(val)
+            template<typename Value>
+            static auto invoke(equal_ranger equal_range, Value && val)
+                -> decltype(equal_range(std::placeholders::_1, ranges::ref_if_lvalue<Value>(val)))
+            {
+                return equal_range(std::placeholders::_1, ranges::ref_if_lvalue<Value>(val));
             }
         };
 

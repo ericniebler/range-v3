@@ -21,9 +21,9 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/detail/function_wrapper.hpp>
 #include <range/v3/detail/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -36,19 +36,19 @@ namespace ranges
             auto filter_range_category(std::bidirectional_iterator_tag)   -> std::bidirectional_iterator_tag;
         }
 
-        template<typename Rng, typename Pred>
+        template<typename InputRange, typename UnaryPredicate>
         struct filter_range_view
         {
         private:
-            detail::compressed_pair<Rng, detail::function_wrapper<Pred>> rng_and_pred_;
+            detail::compressed_pair<InputRange, invokable_t<UnaryPredicate>> rng_and_pred_;
 
             // FltRng is either filter_range or filter_range const.
             template<typename FltRng>
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<FltRng>
-                  , range_value_t<Rng>
-                  , decltype(detail::filter_range_category(range_category_t<Rng>{}))
+                  , range_value_t<InputRange>
+                  , decltype(detail::filter_range_category(range_category_t<InputRange>{}))
                   , decltype(*ranges::begin(std::declval<FltRng &>().rng_and_pred_.first()))
                 >
             {
@@ -107,8 +107,8 @@ namespace ranges
             using iterator       = basic_iterator<filter_range_view>;
             using const_iterator = basic_iterator<filter_range_view const>;
 
-            filter_range_view(Rng && rng, Pred pred)
-              : rng_and_pred_{detail::forward<Rng>(rng), detail::move(pred)}
+            filter_range_view(InputRange && rng, UnaryPredicate pred)
+              : rng_and_pred_{detail::forward<InputRange>(rng), make_invokable(detail::move(pred))}
             {}
             iterator begin()
             {
@@ -134,11 +134,11 @@ namespace ranges
             {
                 return begin() != end();
             }
-            Rng & base()
+            InputRange & base()
             {
                 return rng_and_pred_.first();
             }
-            Rng const & base() const
+            InputRange const & base() const
             {
                 return rng_and_pred_.first();
             }
@@ -149,29 +149,29 @@ namespace ranges
             struct filterer : bindable<filterer>
             {
             private:
-                template<typename Pred>
-                struct filterer1 : pipeable<filterer1<Pred>>
+                template<typename UnaryPredicate>
+                struct filterer1 : pipeable<filterer1<UnaryPredicate>>
                 {
                 private:
-                    Pred pred_;
+                    UnaryPredicate pred_;
                 public:
-                    filterer1(Pred pred)
+                    filterer1(UnaryPredicate pred)
                       : pred_(detail::move(pred))
                     {}
-                    template<typename Rng, typename This>
-                    static filter_range_view<Rng, Pred> pipe(Rng && rng, This && this_)
+                    template<typename InputRange, typename This>
+                    static filter_range_view<InputRange, UnaryPredicate> pipe(InputRange && rng, This && this_)
                     {
-                        return {detail::forward<Rng>(rng), detail::forward<This>(this_).pred_};
+                        return {detail::forward<InputRange>(rng), detail::forward<This>(this_).pred_};
                     }
                 };
             public:
-                template<typename Rng, typename Pred>
-                static filter_range_view<Rng, Pred> invoke(filterer, Rng && rng, Pred pred)
+                template<typename InputRange, typename UnaryPredicate>
+                static filter_range_view<InputRange, UnaryPredicate> invoke(filterer, InputRange && rng, UnaryPredicate pred)
                 {
-                    return {detail::forward<Rng>(rng), detail::move(pred)};
+                    return {detail::forward<InputRange>(rng), detail::move(pred)};
                 }
-                template<typename Pred>
-                static filterer1<Pred> invoke(filterer, Pred pred)
+                template<typename UnaryPredicate>
+                static filterer1<UnaryPredicate> invoke(filterer, UnaryPredicate pred)
                 {
                     return {detail::move(pred)};
                 }

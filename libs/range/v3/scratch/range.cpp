@@ -88,6 +88,14 @@ static_assert(
         ranges::concepts::InputRange
     >::value, "");
 
+struct move_only
+{
+    move_only() = default;
+    move_only(move_only &&) = default;
+    move_only(move_only const &) = delete;
+    int operator()(std::string const &str) const { return str.length(); }
+};
+
 int main()
 {
     using namespace ranges;
@@ -139,7 +147,9 @@ int main()
 
     std::cout << "\n";
     auto sizes = std::vector<std::string>{"this","is","his","face"}
-                    | view::transform(&std::string::length);
+                    //| view::transform([](std::string const &str){return &str; })
+                    | view::transform(_1, &std::string::length);
+                    //| view::transform(move_only{});
     for(std::size_t size : sizes)
         std::cout << "> " << size << '\n';
 

@@ -55,16 +55,16 @@ namespace ranges
             /// \pre InputRange1 is a model of the InputRange concept
             /// \pre InputRange2 is a model of the InputRange concept
             /// \pre OutputIterator is a model of the OutputIterator concept
-            /// \pre UnaryOperation is a model of the UnaryFunction concept
-            /// \pre BinaryOperation is a model of the BinaryFunction concept
-            template<typename InputRange1, typename OutputIterator, typename UnaryOperation>
+            /// \pre UnaryFunction is a model of the UnaryFunction concept
+            /// \pre BinaryFunction is a model of the BinaryFunction concept
+            template<typename InputRange1, typename OutputIterator, typename UnaryFunction>
             static OutputIterator
-            invoke(transformer, InputRange1 && rng, OutputIterator out, UnaryOperation fun)
+            invoke(transformer, InputRange1 && rng, OutputIterator out, UnaryFunction fun)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 using Ref1 = range_reference_t<InputRange1>;
-                CONCEPT_ASSERT(ranges::Callable<UnaryOperation, Ref1>());
-                using Ref2 = result_of_t<UnaryOperation(Ref1)>;
+                CONCEPT_ASSERT(ranges::Callable<UnaryFunction, Ref1>());
+                using Ref2 = result_of_t<UnaryFunction(Ref1)>;
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Ref2>());
                 return std::transform(ranges::begin(rng), ranges::end(rng),
                                       detail::move(out), detail::move(fun));
@@ -72,17 +72,17 @@ namespace ranges
 
             /// \overload
             template<typename InputRange1, typename InputRange2, typename OutputIterator,
-                     typename BinaryOperation>
+                     typename BinaryFunction>
             static OutputIterator
             invoke(transformer, InputRange1 && rng1, InputRange2 && rng2, OutputIterator out,
-                   BinaryOperation fun)
+                   BinaryFunction fun)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
                 using Ref1 = range_reference_t<InputRange1>;
                 using Ref2 = range_reference_t<InputRange2>;
-                CONCEPT_ASSERT(ranges::Callable<BinaryOperation, Ref1, Ref2>());
-                using Value3 = result_of_t<BinaryOperation(Ref1, Ref2)>;
+                CONCEPT_ASSERT(ranges::Callable<BinaryFunction, Ref1, Ref2>());
+                using Value3 = result_of_t<BinaryFunction(Ref1, Ref2)>;
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Value3>());
                 return detail::transform_impl(
                     ranges::begin(rng1), ranges::end(rng1),

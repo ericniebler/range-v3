@@ -106,7 +106,7 @@ namespace ranges
                 decltype(concepts::returns_<int>(static_cast<T>(u)));
 
             template<typename T, typename U>
-            auto convertible(T && t, U && u) ->
+            auto has_common_type(T && t, U && u) ->
                 decltype(true ? static_cast<T &&>(t) : static_cast<U &&>(u));
 
             template<typename T, typename U>
@@ -523,7 +523,7 @@ namespace ranges
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         t++,
-                        concepts::convertible(*t, *t++)
+                        concepts::has_common_type(*t, *t++)
                     ));
             };
 

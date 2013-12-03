@@ -29,7 +29,7 @@ namespace ranges
             /// range-based version of the next_permutation std algorithm
             ///
             /// \pre BidirectionalRange is a model of the BidirectionalRange concept
-            /// \pre Compare is a model of the BinaryPredicate concept
+            /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename BidirectionalRange>
             static bool invoke(next_permutation_finder, BidirectionalRange && rng)
             {
@@ -38,8 +38,8 @@ namespace ranges
             }
 
             /// \overload
-            template<typename BidirectionalRange, typename Compare>
-            static bool invoke(next_permutation_finder, BidirectionalRange && rng, Compare pred)
+            template<typename BidirectionalRange, typename BinaryPredicate>
+            static bool invoke(next_permutation_finder, BidirectionalRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return std::next_permutation(ranges::begin(rng), ranges::end(rng),
@@ -56,7 +56,7 @@ namespace ranges
             /// range-based version of the prev_permutation std algorithm
             ///
             /// \pre BidirectionalRange is a model of the BidirectionalRange concept
-            /// \pre Compare is a model of the BinaryPredicate concept
+            /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename BidirectionalRange>
             static bool invoke(prev_permutation_finder, BidirectionalRange && rng)
             {
@@ -65,8 +65,8 @@ namespace ranges
             }
 
             /// \overload
-            template<typename BidirectionalRange, typename Compare>
-            static bool invoke(prev_permutation_finder, BidirectionalRange && rng, Compare pred)
+            template<typename BidirectionalRange, typename BinaryPredicate>
+            static bool invoke(prev_permutation_finder, BidirectionalRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return std::prev_permutation(ranges::begin(rng), ranges::end(rng),

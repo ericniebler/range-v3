@@ -70,9 +70,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\detail\compressed_pair.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\function_wrapper.hpp">
-      <Filter>Header Files\detail</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
@@ -264,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp">
       <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
