@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -49,7 +50,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::nth_element(ranges::begin(rng), detail::move(nth), ranges::end(rng),
-                                 detail::move(pred));
+                                 ranges::make_invokable(detail::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
             }
         };

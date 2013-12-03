@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -36,8 +37,7 @@ namespace ranges
             invoke(first_of_finder, InputRange1 && rng1, ForwardRange2 const & rng2)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                CONCEPT_ASSERT(ranges::ForwardRange<const ForwardRange2>());
-
+                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
                 return std::find_first_of(ranges::begin(rng1), ranges::end(rng1),
                                           ranges::begin(rng2), ranges::end(rng2));
             }
@@ -49,10 +49,10 @@ namespace ranges
                    BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                CONCEPT_ASSERT(ranges::ForwardRange<const ForwardRange2>());
-
+                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
                 return std::find_first_of(ranges::begin(rng1), ranges::end(rng1),
-                                          ranges::begin(rng2), ranges::end(rng2), detail::move(pred));
+                                          ranges::begin(rng2), ranges::end(rng2),
+                                          ranges::make_invokable(detail::move(pred)));
             }
         };
 

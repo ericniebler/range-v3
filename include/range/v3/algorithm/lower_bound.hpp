@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -43,7 +44,8 @@ namespace ranges
             invoke(lower_bound_finder, ForwardRange && rng, Value const & val, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::lower_bound(ranges::begin(rng), ranges::end(rng), val, detail::move(pred));
+                return std::lower_bound(ranges::begin(rng), ranges::end(rng), val,
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 

@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -48,7 +49,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1 const>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2 const>());
                 return std::includes(ranges::begin(rng1), ranges::end(rng1),
-                                     ranges::begin(rng2), ranges::end(rng2), detail::move(pred));
+                                     ranges::begin(rng2), ranges::end(rng2),
+                                     ranges::make_invokable(detail::move(pred)));
             }
         };
 
@@ -82,7 +84,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1 const>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2 const>());
                 return std::set_union(ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2), detail::move(out), detail::move(pred));
+                    ranges::begin(rng2), ranges::end(rng2), detail::move(out),
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 
@@ -116,7 +119,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1 const>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2 const>());
                 return std::set_intersection(ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2), detail::move(out), detail::move(pred));
+                    ranges::begin(rng2), ranges::end(rng2), detail::move(out),
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 
@@ -150,7 +154,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1 const>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2 const>());
                 return std::set_difference(ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2), detail::move(out), detail::move(pred));
+                    ranges::begin(rng2), ranges::end(rng2), detail::move(out),
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 
@@ -184,7 +189,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1 const>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2 const>());
                 return std::set_symmetric_difference(ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2), detail::move(out), detail::move(pred));
+                    ranges::begin(rng2), ranges::end(rng2), detail::move(out),
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 

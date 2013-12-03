@@ -17,6 +17,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -43,11 +44,11 @@ namespace ranges
                 BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardRange>,
                                                        range_reference_t<ForwardRange>>());
                 return std::binary_search(ranges::begin(rng), ranges::end(rng), val,
-                    detail::move(pred));
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 

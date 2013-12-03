@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -30,20 +31,20 @@ namespace ranges
             /// range-based version of the replace_copy_if std algorithm
             ///
             /// \pre ForwardRange is a model of the ForwardRange concept
-            /// \pre Predicate is a model of the Predicate concept
-            /// \pre Value is convertible to Predicate's argument type
+            /// \pre UnaryPredicate is a model of the UnaryPredicate concept
+            /// \pre Value is convertible to UnaryPredicate's argument type
             /// \pre Value is CopyAssignable
             /// \pre Value is convertible to a type in OutputIterator's set of value types.
-            template<typename ForwardRange, typename OutputIterator, typename Predicate,
+            template<typename ForwardRange, typename OutputIterator, typename UnaryPredicate,
                 typename Value>
             static OutputIterator
-            invoke(replacer_copier_if, ForwardRange && rng, OutputIterator out, Predicate pred,
+            invoke(replacer_copier_if, ForwardRange && rng, OutputIterator out, UnaryPredicate pred,
                 Value const & with_what)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Value>());
                 return std::replace_copy_if(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out), detail::move(pred), with_what);
+                    detail::move(out), ranges::make_invokable(detail::move(pred)), with_what);
             }
 
             // BUGBUG should "rng | replace_copy_if(out, pred, that)" be lazy? 

@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -42,14 +43,18 @@ namespace ranges
             }
 
             /// \overload
-            template<typename ForwardRange, typename Integer, typename Value, typename BinaryPredicate>
+            template<typename ForwardRange, typename Integer, typename Value,
+                typename BinaryPredicate>
             static range_iterator_t<ForwardRange>
-            invoke(searcher_n, ForwardRange && rng, Integer count, Value const & value, BinaryPredicate pred)
+            invoke(searcher_n, ForwardRange && rng, Integer count, Value const & value,
+                BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate, range_value_t<ForwardRange>, Value>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_value_t<ForwardRange>,
+                                                       Value>());
                 return std::search_n(ranges::begin(rng), ranges::end(rng),
-                    count, value, detail::move(pred));
+                    count, value, ranges::make_invokable(detail::move(pred)));
             }
         };
 

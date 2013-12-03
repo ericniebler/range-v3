@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -45,7 +46,8 @@ namespace ranges
             static RandomAccessRange invoke(sorter, RandomAccessRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::sort(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                std::sort(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
             }
 

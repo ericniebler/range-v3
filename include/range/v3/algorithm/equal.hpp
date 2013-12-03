@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -47,12 +48,12 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<InputRange1>,
                                                        range_reference_t<InputRange2>>());
                 return std::equal(ranges::begin(rng1), ranges::end(rng1),
                                   ranges::begin(rng2), ranges::end(rng2),
-                                  detail::move(pred));
+                                  ranges::make_invokable(detail::move(pred)));
             }
         };
 

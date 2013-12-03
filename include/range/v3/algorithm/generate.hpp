@@ -18,6 +18,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -35,7 +36,8 @@ namespace ranges
             static ForwardRange invoke(generator, ForwardRange && rng, Generator gen)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                std::generate(ranges::begin(rng), ranges::end(rng), detail::move(gen));
+                std::generate(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(gen)));
                 return detail::forward<ForwardRange>(rng);
             }
 
