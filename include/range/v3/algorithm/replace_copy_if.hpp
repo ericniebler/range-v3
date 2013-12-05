@@ -53,12 +53,12 @@ namespace ranges
             /// for rng | replace_copy_if(out, pred, that)
             template<typename OutputIterator, typename Predicate, typename Value>
             static auto invoke(replacer_copier_if replace_copy_if, OutputIterator out,
-                               Predicate pred, Value && with_what)
+                               Predicate pred, Value with_what)
                 -> decltype(replace_copy_if(std::placeholders::_1, detail::move(out),
-                            detail::move(pred), ranges::ref_if_lvalue<Value>(with_what)))
+                            detail::move(pred), detail::move(with_what)))
             {
                 return replace_copy_if(std::placeholders::_1, detail::move(out),
-                    detail::move(pred), ranges::ref_if_lvalue<Value>(with_what));
+                    detail::move(pred), detail::move(with_what));
             }
         };
 

@@ -40,13 +40,11 @@ namespace ranges
             }
 
             /// \overload
-            // BUGBUG worry about lifetime issue of val here. Should use perfect
-            // forwarding. Must fix bindable to do perfect forwarding to std::bind.
             template<typename Size, typename Value>
-            static auto invoke(filler_n fill_n, Size n, Value && val)
-                -> decltype(fill_n(std::placeholders::_1, n, ranges::ref_if_lvalue<Value>(val)))
+            static auto invoke(filler_n fill_n, Size n, Value val)
+                -> decltype(fill_n(std::placeholders::_1, n, detail::move(val)))
             {
-                return fill_n(std::placeholders::_1, n, ranges::ref_if_lvalue<Value>(val));
+                return fill_n(std::placeholders::_1, n, detail::move(val));
             }
         };
 

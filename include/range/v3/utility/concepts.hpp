@@ -413,6 +413,15 @@ namespace ranges
                     ));
             };
 
+            struct LessThanComparable
+            {
+                template<typename T, typename U>
+                auto requires(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<bool>(t < u)
+                    ));
+            };
+
             struct Orderable
             {
                 template<typename T>
@@ -589,6 +598,9 @@ namespace ranges
 
         template<typename T>
         using Comparable = concepts::models<concepts::Comparable, T>;
+
+        template<typename T, typename U = T>
+        using LessThanComparable = concepts::models<concepts::LessThanComparable, T, U>;
 
         template<typename T>
         using Orderable = concepts::models<concepts::Orderable, T>;

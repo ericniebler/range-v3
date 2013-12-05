@@ -32,7 +32,10 @@ namespace ranges
             ///
             /// \pre \c ForwardRange is a model of the ForwardRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardRange, typename Value>
+            template<typename ForwardRange, typename Value,
+                CONCEPT_REQUIRES(ranges::Range<ForwardRange>() &&
+                                 ranges::LessThanComparable<Value const &, range_reference_t<ForwardRange>>() &&
+                                 ranges::LessThanComparable<range_reference_t<ForwardRange>, Value const &>())>
             static iterator_range<range_iterator_t<ForwardRange>>
             invoke(equal_ranger, ForwardRange && rng, Value const & val)
             {
@@ -56,10 +59,22 @@ namespace ranges
             /// \overload
             /// for rng | equal_range(val)
             template<typename Value>
-            static auto invoke(equal_ranger equal_range, Value && val)
-                -> decltype(equal_range(std::placeholders::_1, ranges::ref_if_lvalue<Value>(val)))
+            static auto invoke(equal_ranger equal_range, Value val)
+                -> decltype(equal_range(std::placeholders::_1, detail::move(val)))
             {
-                return equal_range(std::placeholders::_1, ranges::ref_if_lvalue<Value>(val));
+                return equal_range(std::placeholders::_1, detail::move(val));
+            }
+
+            /// \overload
+            /// for rng | equal_range(val, pred)
+            template<typename Value, typename BinaryPredicate,
+                CONCEPT_REQUIRES(!(ranges::Range<Value>() &&
+                                   ranges::LessThanComparable<BinaryPredicate &, range_reference_t<Value>>() &&
+                                   ranges::LessThanComparable<range_reference_t<Value>, BinaryPredicate &>()))>
+            static auto invoke(equal_ranger equal_range, Value val, BinaryPredicate pred)
+                -> decltype(equal_range(std::placeholders::_1, detail::move(val), detail::move(pred)))
+            {
+                return equal_range(std::placeholders::_1, detail::move(val), detail::move(pred));
             }
         };
 

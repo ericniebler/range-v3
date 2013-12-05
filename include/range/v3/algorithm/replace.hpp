@@ -43,12 +43,12 @@ namespace ranges
             /// \overload
             /// for rng | replace(that, that)
             template<typename Value1, typename Value2>
-            static auto invoke(replacer replace, Value1 && what, Value2 && with_what)
-                -> decltype(replace(std::placeholders::_1, ranges::ref_if_lvalue<Value1>(what),
-                        ranges::ref_if_lvalue<Value2>(with_what)))
+            static auto invoke(replacer replace, Value1 what, Value2 with_what)
+                -> decltype(replace(std::placeholders::_1, detail::move(what),
+                        detail::move(with_what)))
             {
-                return replace(std::placeholders::_1, ranges::ref_if_lvalue<Value1>(what),
-                    ranges::ref_if_lvalue<Value2>(with_what));
+                return replace(std::placeholders::_1, detail::move(what),
+                    detail::move(with_what));
             }
         };
 

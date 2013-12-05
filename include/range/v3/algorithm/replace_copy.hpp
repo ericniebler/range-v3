@@ -45,16 +45,16 @@ namespace ranges
             /// \overload
             /// for rng | replace_copy(out, that, that)
             template<typename OutputIterator, typename Value1, typename Value2>
-            static auto invoke(replacer_copier replace_copy, OutputIterator out, Value1 && what,
-                Value2 && with_what)
+            static auto invoke(replacer_copier replace_copy, OutputIterator out, Value1 what,
+                Value2 with_what)
                 -> decltype(replace_copy(std::placeholders::_1, detail::move(out),
-                        ranges::ref_if_lvalue<Value1>(what),
-                        ranges::ref_if_lvalue<Value2>(with_what)))
+                        detail::move(what),
+                        detail::move(with_what)))
             {
                 CONCEPT_ASSERT(ranges::Iterator<OutputIterator>());
                 return replace_copy(std::placeholders::_1, detail::move(out),
-                    ranges::ref_if_lvalue<Value1>(what),
-                    ranges::ref_if_lvalue<Value2>(with_what));
+                    detail::move(what),
+                    detail::move(with_what));
             }
         };
 

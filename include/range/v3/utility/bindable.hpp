@@ -89,27 +89,6 @@ namespace ranges
             using unwrap_bind_t = decltype(detail::unwrap_bind(std::declval<T>()));
         }
 
-        /// \brief Use \c ref_if_lvalue to give bindable objects perfect forwarding
-        ///
-        template<typename T>
-        typename std::conditional<
-            std::is_lvalue_reference<T>::value,
-            std::reference_wrapper<typename std::remove_reference<T>::type>,
-            T &&
-        >::type
-        ref_if_lvalue(typename std::remove_reference<T>::type & t) noexcept
-        {
-            return static_cast<T &&>(t);
-        }
-
-        template<typename T>
-        T &&
-        ref_if_lvalue(typename std::remove_reference<T>::type && t) noexcept
-        {
-            static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
-            return static_cast<T&&>(t);
-        }
-
         template<typename ...T>
         using contains_placeholder_expression =
             detail::or_<detail::is_placeholder_expression<detail::uncvref_t<T>>::value...>;
