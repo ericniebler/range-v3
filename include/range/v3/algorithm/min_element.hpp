@@ -16,6 +16,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -44,7 +45,8 @@ namespace ranges
             invoke(min_element_finder, ForwardRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::min_element(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                return std::min_element(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 

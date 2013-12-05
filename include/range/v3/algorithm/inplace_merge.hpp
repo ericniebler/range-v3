@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -31,9 +32,8 @@ namespace ranges
             /// \pre \c BidirectionalRange is a model of the BidirectionalRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename BidirectionalRange>
-            static BidirectionalRange invoke(
-                inplace_merger,
-                BidirectionalRange && rng,
+            static BidirectionalRange
+            invoke(inplace_merger, BidirectionalRange && rng,
                 range_iterator_t<BidirectionalRange> middle)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
@@ -43,15 +43,13 @@ namespace ranges
 
             /// \overload
             template<typename BidirectionalRange, typename BinaryPredicate>
-            static BidirectionalRange invoke(
-                inplace_merger,
-                BidirectionalRange && rng,
-                range_iterator_t<BidirectionalRange> middle,
-                BinaryPredicate pred)
+            static BidirectionalRange
+            invoke(inplace_merger, BidirectionalRange && rng,
+                range_iterator_t<BidirectionalRange> middle, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 std::inplace_merge(ranges::begin(rng), detail::move(middle),
-                                   ranges::end(rng), detail::move(pred));
+                                   ranges::end(rng), ranges::make_invokable(detail::move(pred)));
                 return detail::forward<BidirectionalRange>(rng);
             }
         };

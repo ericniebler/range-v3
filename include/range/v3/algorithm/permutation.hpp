@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -39,11 +40,12 @@ namespace ranges
 
             /// \overload
             template<typename BidirectionalRange, typename BinaryPredicate>
-            static bool invoke(next_permutation_finder, BidirectionalRange && rng, BinaryPredicate pred)
+            static bool invoke(next_permutation_finder, BidirectionalRange && rng,
+                BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return std::next_permutation(ranges::begin(rng), ranges::end(rng),
-                    detail::move(pred));
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 
@@ -66,11 +68,12 @@ namespace ranges
 
             /// \overload
             template<typename BidirectionalRange, typename BinaryPredicate>
-            static bool invoke(prev_permutation_finder, BidirectionalRange && rng, BinaryPredicate pred)
+            static bool invoke(prev_permutation_finder, BidirectionalRange && rng,
+                BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return std::prev_permutation(ranges::begin(rng), ranges::end(rng),
-                    detail::move(pred));
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 

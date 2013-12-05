@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -31,9 +32,9 @@ namespace ranges
             /// \pre RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename RandomAccessRange>
-            static RandomAccessRange invoke(partial_sorter,
-                                            RandomAccessRange && rng,
-                                            range_iterator_t<RandomAccessRange> middle)
+            static RandomAccessRange
+            invoke(partial_sorter, RandomAccessRange && rng,
+                range_iterator_t<RandomAccessRange> middle)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::partial_sort(ranges::begin(rng), detail::move(middle), ranges::end(rng));
@@ -42,14 +43,13 @@ namespace ranges
 
             /// \overload
             template<typename RandomAccessRange, typename BinaryPredicate>
-            static RandomAccessRange invoke(partial_sorter,
-                                            RandomAccessRange && rng,
-                                            range_iterator_t<RandomAccessRange> middle,
-                                            BinaryPredicate pred)
+            static RandomAccessRange
+            invoke(partial_sorter, RandomAccessRange && rng,
+                range_iterator_t<RandomAccessRange> middle, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::partial_sort(ranges::begin(rng), detail::move(middle), ranges::end(rng),
-                                  detail::move(pred));
+                                  ranges::make_invokable(detail::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
             }
         };

@@ -16,6 +16,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -56,7 +57,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
                 return std::merge(ranges::begin(rng1), ranges::end(rng1),
                                   ranges::begin(rng2), ranges::end(rng2),
-                                  detail::move(out), detail::move(pred));
+                                  detail::move(out),
+                                  ranges::make_invokable(detail::move(pred)));
             }
         };
 

@@ -18,6 +18,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -35,7 +36,8 @@ namespace ranges
             static UnaryFunction invoke(for_eacher, InputRange && rng, UnaryFunction fun)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                return std::for_each(ranges::begin(rng), ranges::end(rng), detail::move(fun));
+                return std::for_each(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(fun)));
             }
 
             /// \overload

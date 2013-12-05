@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -24,17 +25,12 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename InputIterator1,
-                     typename InputIterator2,
-                     typename OutputIterator,
-                     typename BinaryFunction>
+            template<typename InputIterator1, typename InputIterator2,
+                     typename OutputIterator, typename BinaryFunction>
             OutputIterator
-            transform_impl(InputIterator1 first1,
-                           InputIterator1 last1,
-                           InputIterator2 first2,
-                           InputIterator2 last2,
-                           OutputIterator out,
-                           BinaryFunction fun)
+            transform_impl(InputIterator1 first1, InputIterator1 last1,
+                           InputIterator2 first2, InputIterator2 last2,
+                           OutputIterator out, BinaryFunction fun)
             {
                 for (; first1 != last1; ++first1, ++first2)
                 {
@@ -63,11 +59,11 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 using Ref1 = range_reference_t<InputRange1>;
-                CONCEPT_ASSERT(ranges::Callable<UnaryFunction, Ref1>());
-                using Ref2 = result_of_t<UnaryFunction(Ref1)>;
+                CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>, Ref1>());
+                using Ref2 = result_of_t<invokable_t<UnaryFunction>(Ref1)>;
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Ref2>());
                 return std::transform(ranges::begin(rng), ranges::end(rng),
-                                      detail::move(out), detail::move(fun));
+                                      detail::move(out), ranges::make_invokable(detail::move(fun)));
             }
 
             /// \overload
@@ -81,13 +77,13 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
                 using Ref1 = range_reference_t<InputRange1>;
                 using Ref2 = range_reference_t<InputRange2>;
-                CONCEPT_ASSERT(ranges::Callable<BinaryFunction, Ref1, Ref2>());
-                using Value3 = result_of_t<BinaryFunction(Ref1, Ref2)>;
+                CONCEPT_ASSERT(ranges::Callable<invokable_t<BinaryFunction>, Ref1, Ref2>());
+                using Value3 = result_of_t<invokable_t<BinaryFunction>(Ref1, Ref2)>;
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Value3>());
-                return detail::transform_impl(
-                    ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2),
-                    detail::move(out), detail::move(fun));
+                return detail::transform_impl(ranges::begin(rng1), ranges::end(rng1),
+                                              ranges::begin(rng2), ranges::end(rng2),
+                                              detail::move(out),
+                                              ranges::make_invokable(detail::move(fun)));
             }
         };
 

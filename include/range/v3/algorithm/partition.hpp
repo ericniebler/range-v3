@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -34,7 +35,8 @@ namespace ranges
             invoke(partitioner, ForwardRange && rng, UnaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::partition(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                return std::partition(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(pred)));
             }
 
             /// \overload

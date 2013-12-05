@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -31,7 +32,8 @@ namespace ranges
             /// \pre \c RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename RandomAccessRange>
-            static RandomAccessRange invoke(heap_pusher, RandomAccessRange && rng)
+            static RandomAccessRange
+            invoke(heap_pusher, RandomAccessRange && rng)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::push_heap(ranges::begin(rng), ranges::end(rng));
@@ -40,10 +42,12 @@ namespace ranges
 
             /// \overload
             template<typename RandomAccessRange, typename BinaryPredicate>
-            static RandomAccessRange invoke(heap_pusher, RandomAccessRange && rng, BinaryPredicate pred)
+            static RandomAccessRange
+            invoke(heap_pusher, RandomAccessRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::push_heap(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                std::push_heap(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
             }
         };
@@ -59,7 +63,8 @@ namespace ranges
             /// \pre \c RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename RandomAccessRange>
-            static RandomAccessRange invoke(heap_popper, RandomAccessRange && rng)
+            static RandomAccessRange
+            invoke(heap_popper, RandomAccessRange && rng)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::pop_heap(ranges::begin(rng), ranges::end(rng));
@@ -68,10 +73,12 @@ namespace ranges
 
             /// \overload
             template<typename RandomAccessRange, typename BinaryPredicate>
-            static RandomAccessRange invoke(heap_popper, RandomAccessRange && rng, BinaryPredicate pred)
+            static RandomAccessRange
+            invoke(heap_popper, RandomAccessRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::pop_heap(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                std::pop_heap(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
             }
         };
@@ -87,7 +94,8 @@ namespace ranges
             /// \pre \c RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename RandomAccessRange>
-            static RandomAccessRange invoke(heap_maker, RandomAccessRange && rng)
+            static RandomAccessRange
+            invoke(heap_maker, RandomAccessRange && rng)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::make_heap(ranges::begin(rng), ranges::end(rng));
@@ -96,10 +104,12 @@ namespace ranges
 
             /// \overload
             template<typename RandomAccessRange, typename BinaryPredicate>
-            static RandomAccessRange invoke(heap_maker, RandomAccessRange && rng, BinaryPredicate pred)
+            static RandomAccessRange
+            invoke(heap_maker, RandomAccessRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::make_heap(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                std::make_heap(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
             }
         };
@@ -115,7 +125,8 @@ namespace ranges
             /// \pre \c RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename RandomAccessRange>
-            static RandomAccessRange invoke(heap_sorter, RandomAccessRange && rng)
+            static RandomAccessRange
+            invoke(heap_sorter, RandomAccessRange && rng)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::sort_heap(ranges::begin(rng), ranges::end(rng));
@@ -124,10 +135,12 @@ namespace ranges
 
             /// \overload
             template<typename RandomAccessRange, typename BinaryPredicate>
-            static RandomAccessRange invoke(heap_sorter, RandomAccessRange && rng, BinaryPredicate pred)
+            static RandomAccessRange
+            invoke(heap_sorter, RandomAccessRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::sort_heap(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                std::sort_heap(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
             }
         };

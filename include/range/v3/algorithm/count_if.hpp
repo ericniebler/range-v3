@@ -17,6 +17,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -35,7 +36,8 @@ namespace ranges
             invoke(counter_if, InputRange && rng, UnaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                return std::count_if(ranges::begin(rng), ranges::end(rng), detail::move(pred));
+                return std::count_if(ranges::begin(rng), ranges::end(rng),
+                    ranges::make_invokable(detail::move(pred)));
             }
 
             /// \brief template function \c counter::operator()

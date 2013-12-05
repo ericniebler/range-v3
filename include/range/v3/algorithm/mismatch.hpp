@@ -16,6 +16,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -25,10 +26,8 @@ namespace ranges
         {
             template<typename InputIterator1, typename InputIterator2>
             std::pair<InputIterator1, InputIterator2>
-            mismatch_impl(InputIterator1 first1,
-                          InputIterator1 last1,
-                          InputIterator2 first2,
-                          InputIterator2 last2)
+            mismatch_impl(InputIterator1 first1, InputIterator1 last1,
+                          InputIterator2 first2, InputIterator2 last2)
             {
                 while(first1 != last1 && first2 != last2 && *first1 == *first2)
                 {
@@ -40,10 +39,8 @@ namespace ranges
 
             template<typename InputIterator1, typename InputIterator2, typename BinaryPredicate>
             std::pair<InputIterator1, InputIterator2>
-            mismatch_impl(InputIterator1 first1,
-                          InputIterator1 last1,
-                          InputIterator2 first2,
-                          InputIterator2 last2,
+            mismatch_impl(InputIterator1 first1, InputIterator1 last1,
+                          InputIterator2 first2, InputIterator2 last2,
                           BinaryPredicate pred)
             {
                 while(first1 != last1 && first2 != last2 && pred(*first1, *first2))
@@ -70,7 +67,6 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
-
                 return ranges::detail::mismatch_impl(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2));
@@ -83,10 +79,10 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
-
                 return ranges::detail::mismatch_impl(
                     ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2), detail::move(pred));
+                    ranges::begin(rng2), ranges::end(rng2),
+                    ranges::make_invokable(detail::move(pred)));
             }
         };
 

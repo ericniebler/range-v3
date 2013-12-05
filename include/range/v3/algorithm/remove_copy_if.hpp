@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -30,16 +31,16 @@ namespace ranges
             ///
             /// \pre InputRange is a model of the InputRange concept
             /// \pre OutputIterator is a model of the OutputIterator concept
-            /// \pre Predicate is a model of the Predicate concept
+            /// \pre UnaryPredicate is a model of the UnaryPredicate concept
             /// \pre InputIterator's value type is convertible to Predicate's argument type
             /// \pre out is not an iterator in the range rng
-            template<typename InputRange, typename OutputIterator, typename Predicate>
+            template<typename InputRange, typename OutputIterator, typename UnaryPredicate>
             static OutputIterator
-            invoke(remover_copier_if, InputRange && rng, OutputIterator out, Predicate pred)
+            invoke(remover_copier_if, InputRange && rng, OutputIterator out, UnaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::remove_copy_if(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out), detail::move(pred));
+                    detail::move(out), ranges::make_invokable(detail::move(pred)));
             }
         };
 

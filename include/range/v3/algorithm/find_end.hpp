@@ -17,6 +17,7 @@
 #include <range/v3/concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -33,13 +34,10 @@ namespace ranges
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardRange1, typename ForwardRange2>
             static range_iterator_t<ForwardRange1>
-            invoke(end_finder,
-                   ForwardRange1 && rng1,
-                   ForwardRange2 const & rng2)
+            invoke(end_finder, ForwardRange1 && rng1, ForwardRange2 const & rng2)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
-
                 return std::find_end(ranges::begin(rng1), ranges::end(rng1),
                                      ranges::begin(rng2), ranges::end(rng2));
             }
@@ -47,16 +45,14 @@ namespace ranges
             /// \overload
             template<typename ForwardRange1, typename ForwardRange2, typename BinaryPredicate>
             static range_iterator_t<ForwardRange1>
-            invoke(end_finder,
-                   ForwardRange1 && rng1,
-                   ForwardRange2 const & rng2,
+            invoke(end_finder, ForwardRange1 && rng1, ForwardRange2 const & rng2,
                    BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
-
                 return std::find_end(ranges::begin(rng1), ranges::end(rng1),
-                                     ranges::begin(rng2), ranges::end(rng2), detail::move(pred));
+                                     ranges::begin(rng2), ranges::end(rng2),
+                                     ranges::make_invokable(detail::move(pred)));
             }
         };
 
