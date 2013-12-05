@@ -71,9 +71,6 @@ namespace ranges
 
         namespace detail
         {
-            template<typename First, typename Second, typename Enable = void>
-            struct compressed_pair;
-
             struct compressed_pair_maker;
             extern compressed_pair_maker const make_compressed_pair;
 
@@ -164,6 +161,9 @@ namespace ranges
                 return static_cast<typename std::remove_reference<T>::type &&>(t);
             }
         }
+
+        template<typename First, typename Second>
+        struct compressed_pair;
 
         struct invokable_maker;
         extern invokable_maker const make_invokable;

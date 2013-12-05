@@ -21,7 +21,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/detail/compressed_pair.hpp>
+#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 
@@ -33,7 +33,7 @@ namespace ranges
         struct transform_range_view
         {
         private:
-            detail::compressed_pair<InputRange, invokable_t<UnaryFunction>> rng_and_fun_;
+            compressed_pair<InputRange, invokable_t<UnaryFunction>> rng_and_fun_;
 
             template<typename TfxRng>
             struct basic_iterator

@@ -21,7 +21,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/detail/compressed_pair.hpp>
+#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 
@@ -40,7 +40,7 @@ namespace ranges
         struct filter_range_view
         {
         private:
-            detail::compressed_pair<InputRange, invokable_t<UnaryPredicate>> rng_and_pred_;
+            compressed_pair<InputRange, invokable_t<UnaryPredicate>> rng_and_pred_;
 
             // FltRng is either filter_range or filter_range const.
             template<typename FltRng>

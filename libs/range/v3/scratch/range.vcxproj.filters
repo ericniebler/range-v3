@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\detail">
-      <UniqueIdentifier>{34ab9040-46e6-4a05-b798-48978a63cb0d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\algorithm">
       <UniqueIdentifier>{f87f0a13-772c-4135-936f-f98583a5b7f2}</UniqueIdentifier>
     </Filter>
@@ -66,9 +63,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\compressed_pair.hpp">
-      <Filter>Header Files\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
       <Filter>Header Files\algorithm</Filter>
@@ -263,6 +257,9 @@
       <Filter>Header Files\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
