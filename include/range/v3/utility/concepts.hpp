@@ -248,7 +248,7 @@ namespace ranges
             };
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // get_nth_type
+            // get_nth_impl
             template<typename Ignored>
             struct get_nth_impl;
 
@@ -403,7 +403,7 @@ namespace ranges
                     ));
             };
 
-            struct Comparable
+            struct EqualityComparable
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -411,10 +411,23 @@ namespace ranges
                         concepts::convertible_to<bool>(t == t),
                         concepts::convertible_to<bool>(t != t)
                     ));
+
+                template<typename T, typename U>
+                auto requires(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<bool>(t == u),
+                        concepts::convertible_to<bool>(t != u)
+                    ));
             };
 
             struct LessThanComparable
             {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<bool>(t < t)
+                    ));
+
                 template<typename T, typename U>
                 auto requires(T && t, U && u) -> decltype(
                     concepts::valid_expr(
@@ -526,7 +539,7 @@ namespace ranges
             };
 
             struct InputIterator
-              : refines<Iterator, Comparable>
+              : refines<Iterator, EqualityComparable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -596,8 +609,8 @@ namespace ranges
         template<typename T>
         using Destructible = concepts::models<concepts::Destructible, T>;
 
-        template<typename T>
-        using Comparable = concepts::models<concepts::Comparable, T>;
+        template<typename T, typename U = T>
+        using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;
 
         template<typename T, typename U = T>
         using LessThanComparable = concepts::models<concepts::LessThanComparable, T, U>;

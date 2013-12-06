@@ -23,7 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct heap_pusher : bindable<heap_pusher>
+        struct heap_pusher : bindable<heap_pusher>, pipeable<heap_pusher>
         {
             /// \brief template function \c heap_pusher::operator()
             ///
@@ -31,7 +31,8 @@ namespace ranges
             ///
             /// \pre \c RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename RandomAccessRange>
+            template<typename RandomAccessRange,
+                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange
             invoke(heap_pusher, RandomAccessRange && rng)
             {
@@ -50,11 +51,20 @@ namespace ranges
                     ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
             }
+
+            template<typename BinaryPredicate,
+                CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
+            static auto
+            invoke(heap_pusher push_heap, BinaryPredicate pred)
+                -> decltype(push_heap(std::placeholders::_1, detail::move(pred)))
+            {
+                return push_heap(std::placeholders::_1, detail::move(pred));
+            }
         };
 
         RANGES_CONSTEXPR heap_pusher push_heap {};
 
-        struct heap_popper : bindable<heap_popper>
+        struct heap_popper : bindable<heap_popper>, pipeable<heap_popper>
         {
             /// \brief template function \c heap_popper::operator()
             ///
@@ -62,7 +72,8 @@ namespace ranges
             ///
             /// \pre \c RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename RandomAccessRange>
+            template<typename RandomAccessRange,
+                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange
             invoke(heap_popper, RandomAccessRange && rng)
             {
@@ -81,11 +92,21 @@ namespace ranges
                     ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
             }
+
+            /// \overload
+            template<typename BinaryPredicate,
+                CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
+            static auto
+            invoke(heap_popper pop_heap, BinaryPredicate pred)
+                -> decltype(pop_heap(std::placeholders::_1, detail::move(pred)))
+            {
+                return pop_heap(std::placeholders::_1, detail::move(pred));
+            }
         };
 
         RANGES_CONSTEXPR heap_popper pop_heap {};
 
-        struct heap_maker : bindable<heap_maker>
+        struct heap_maker : bindable<heap_maker>, pipeable<heap_maker>
         {
             /// \brief template function \c heap_maker::operator()
             ///
@@ -93,7 +114,8 @@ namespace ranges
             ///
             /// \pre \c RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename RandomAccessRange>
+            template<typename RandomAccessRange,
+                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange
             invoke(heap_maker, RandomAccessRange && rng)
             {
@@ -112,11 +134,21 @@ namespace ranges
                     ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
             }
+
+            /// \overload
+            template<typename BinaryPredicate,
+                CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
+            static auto
+            invoke(heap_maker make_heap, BinaryPredicate pred)
+                -> decltype(make_heap(std::placeholders::_1, detail::move(pred)))
+            {
+                return make_heap(std::placeholders::_1, detail::move(pred));
+            }
         };
 
         RANGES_CONSTEXPR heap_maker make_heap {};
 
-        struct heap_sorter : bindable<heap_sorter>
+        struct heap_sorter : bindable<heap_sorter>, pipeable<heap_sorter>
         {
             /// \brief template function \c heap_sorter::operator()
             ///
@@ -124,7 +156,8 @@ namespace ranges
             ///
             /// \pre \c RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename RandomAccessRange>
+            template<typename RandomAccessRange,
+                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange
             invoke(heap_sorter, RandomAccessRange && rng)
             {
@@ -142,6 +175,16 @@ namespace ranges
                 std::sort_heap(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);
+            }
+
+            /// \overload
+            template<typename BinaryPredicate,
+                CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
+            static auto
+            invoke(heap_sorter sort_heap, BinaryPredicate pred)
+                -> decltype(sort_heap(std::placeholders::_1, detail::move(pred)))
+            {
+                return sort_heap(std::placeholders::_1, detail::move(pred));
             }
         };
 

@@ -42,8 +42,6 @@ namespace ranges
                 return std::forward<ForwardRange>(rng);
             }
 
-            // BUGBUG should "rng | replace_if(pred, that)" be lazy? 
-
             /// \overload
             /// for rng | replace_if(pred, that)
             template<typename UnaryPredicate, typename Value>

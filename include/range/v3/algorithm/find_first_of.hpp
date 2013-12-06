@@ -32,12 +32,16 @@ namespace ranges
             /// \pre \c InputRange1 is a model of the InputRange concept
             /// \pre \c ForwardRange2 is a model of the ForwardRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename InputRange1, typename ForwardRange2>
+            template<typename InputRange1, typename ForwardRange2,
+                CONCEPT_REQUIRES(ranges::Range<InputRange1>() &&
+                                 ranges::Range<ForwardRange2 const>())>
             static range_iterator_t<InputRange1>
             invoke(first_of_finder, InputRange1 && rng1, ForwardRange2 const & rng2)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
+                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputRange1>,
+                                                          range_reference_t<ForwardRange2 const>>());
                 return std::find_first_of(ranges::begin(rng1), ranges::end(rng1),
                                           ranges::begin(rng2), ranges::end(rng2));
             }
@@ -50,9 +54,37 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
+                                                       range_reference_t<InputRange1>,
+                                                       range_reference_t<ForwardRange2 const>>());
                 return std::find_first_of(ranges::begin(rng1), ranges::end(rng1),
                                           ranges::begin(rng2), ranges::end(rng2),
                                           ranges::make_invokable(detail::move(pred)));
+            }
+
+
+            /// \overload
+            /// for rng | find_first_of(rng2)
+            template<typename ForwardRange2>
+            static auto
+            invoke(first_of_finder find_first_of, ForwardRange2 rng2)
+                -> decltype(find_first_of(std::placeholders::_1, detail::move(rng2)))
+            {
+                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2>());
+                return find_first_of(std::placeholders::_1, detail::move(rng2));
+            }
+
+            /// \overload
+            /// for rng | find_first_of(rng2, pred)
+            template<typename ForwardRange2, typename BinaryPredicate,
+                CONCEPT_REQUIRES(ranges::Range<ForwardRange2>() &&
+                                !ranges::Range<BinaryPredicate>())>
+            static auto
+            invoke(first_of_finder find_first_of, ForwardRange2 rng2, BinaryPredicate pred)
+                -> decltype(find_first_of(std::placeholders::_1, detail::move(rng2), detail::move(pred)))
+            {
+                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2>());
+                return find_first_of(std::placeholders::_1, detail::move(rng2), detail::move(pred));
             }
         };
 

@@ -35,6 +35,15 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::find(ranges::begin(rng), ranges::end(rng), val);
             }
+
+            /// \overload
+            /// rng | find(val)
+            template<typename Value>
+            static auto invoke(finder find, Value val)
+                -> decltype(find(std::placeholders::_1, detail::move(val)))
+            {
+                return find(std::placeholders::_1, detail::move(val));
+            }
         };
 
         RANGES_CONSTEXPR finder find {};

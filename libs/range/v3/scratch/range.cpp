@@ -76,6 +76,15 @@ struct NotDestructible
 static_assert(ranges::Destructible<int>(), "");
 static_assert(!ranges::Destructible<NotDestructible>(), "");
 
+struct IntComparable
+{
+    friend bool operator<(int, IntComparable);
+};
+
+static_assert(ranges::LessThanComparable<int>(), "");
+static_assert(ranges::LessThanComparable<int, IntComparable>(), "");
+static_assert(!ranges::LessThanComparable<IntComparable, int>(), "");
+
 static_assert(
     std::is_same<
         ranges::range_concept_t<std::vector<int>>,

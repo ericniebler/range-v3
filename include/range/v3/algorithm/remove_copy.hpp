@@ -30,7 +30,7 @@ namespace ranges
             ///
             /// \pre InputRange is a model of the InputRange concept
             /// \pre OutputIterator is a model of the OutputIterator concept
-            /// \pre Value is a model of the Comparable concept
+            /// \pre Value is a model of the EqualityComparable concept
             /// \pre Objects of type Value can be compared for equality with objects of
             /// InputIterator's value type.
             template<typename InputRange, typename OutputIterator, typename Value>

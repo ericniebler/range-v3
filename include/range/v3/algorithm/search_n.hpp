@@ -31,8 +31,8 @@ namespace ranges
             ///
             /// \pre ForwardRange is a model of the ForwardRange concept
             /// \pre Integer is an integral type
-            /// \pre Value is a model of the Comparable concept
-            /// \pre ForwardRange's value type is a model of the Comparable concept
+            /// \pre Value is a model of the EqualityComparable concept
+            /// \pre ForwardRange's value type is a model of the EqualityComparable concept
             /// \pre Object's of ForwardRange's value type can be compared for equality with Objects of type Value
             template<typename ForwardRange, typename Integer, typename Value>
             static range_iterator_t<ForwardRange>

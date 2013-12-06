@@ -36,16 +36,19 @@ namespace ranges
             static ForwardRange invoke(generator, ForwardRange && rng, Generator gen)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::Callable<Generator>());
                 std::generate(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(detail::move(gen)));
                 return detail::forward<ForwardRange>(rng);
             }
 
             /// \overload
+            /// for rng | generate(gen)
             template<typename Generator>
             static auto invoke(generator generate, Generator gen)
                 -> decltype(generate(std::placeholders::_1, detail::move(gen)))
             {
+                CONCEPT_ASSERT(ranges::Callable<Generator>());
                 return generate(std::placeholders::_1, detail::move(gen));
             }
         };
