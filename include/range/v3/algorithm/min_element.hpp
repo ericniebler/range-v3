@@ -31,11 +31,13 @@ namespace ranges
             ///
             /// \pre ForwardRange is a model of the ForwardRange concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardRange>
+            template<typename ForwardRange,
+                CONCEPT_REQUIRES(ranges::Range<ForwardRange>())>
             static range_iterator_t<ForwardRange>
             invoke(min_element_finder, ForwardRange && rng)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardRange>>());
                 return std::min_element(ranges::begin(rng), ranges::end(rng));
             }
 
@@ -45,8 +47,22 @@ namespace ranges
             invoke(min_element_finder, ForwardRange && rng, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_reference_t<ForwardRange>,
+                                                       range_reference_t<ForwardRange>>());
                 return std::min_element(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(detail::move(pred)));
+            }
+
+            /// \overload
+            /// for rng | max_element(pred)
+            template<typename BinaryPredicate,
+                CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
+            static auto
+            invoke(min_element_finder min_element, BinaryPredicate pred)
+                -> decltype(min_element(std::placeholders::_1, detail::move(pred)))
+            {
+                return min_element(std::placeholders::_1, detail::move(pred));
             }
         };
 

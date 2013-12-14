@@ -97,6 +97,12 @@ static_assert(
         ranges::concepts::InputRange
     >::value, "");
 
+struct Abstract { virtual ~Abstract() = 0; };
+static_assert(std::is_same<ranges::detail::get_nth<0, int, Abstract, float(), int(&&)[]>, int>::value, "");
+static_assert(std::is_same<ranges::detail::get_nth<1, int, Abstract, float(), int(&&)[]>, Abstract>::value, "");
+static_assert(std::is_same<ranges::detail::get_nth<2, int, Abstract, float(), int(&&)[]>, float()>::value, "");
+static_assert(std::is_same<ranges::detail::get_nth<3, int, Abstract, float(), int(&&)[]>, int(&&)[]>::value, "");
+
 struct move_only
 {
     move_only() = default;
@@ -111,13 +117,23 @@ int main()
     using namespace std::placeholders;
 
     // Pipeable algorithms
-    std::vector<int> vi{1,2,2,3,4};
+    std::vector<int> vi{ 1, 2, 2, 3, 4 };
     std::cout << (vi | count(2)) << std::endl;
 
     // Range placeholder expressions.
     std::cout << "\n";
-    for( int i : vi | range(adjacent_find(_1), prev(end(_1))))
+    for (int i : vi | range(adjacent_find(_1), prev(end(_1))))
         std::cout << "> " << i << '\n';
+
+    // A pipeline where some algorithms return iterators into rvalue ranges. It's ok!
+    std::cout << "\n";
+    vi | view::filter([](int) {return true;})
+       | range(adjacent_find(_1), prev(end(_1)))
+       | range(begin(_1), next(end(_1)))
+       | for_each([](int i)
+         {
+             std::cout << "> " << i << '\n';
+         });
 
     std::cout << "\n";
     for( int i : vi | view::transform(_1, [](int i){return i*2;}))

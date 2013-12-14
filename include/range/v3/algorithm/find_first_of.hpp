@@ -62,7 +62,6 @@ namespace ranges
                                           ranges::make_invokable(detail::move(pred)));
             }
 
-
             /// \overload
             /// for rng | find_first_of(rng2)
             template<typename ForwardRange2>

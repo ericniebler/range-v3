@@ -67,6 +67,8 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputRange1>,
+                                                          range_reference_t<InputRange2>> ());
                 return ranges::detail::mismatch_impl(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2));
@@ -79,6 +81,9 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_reference_t<InputRange1>,
+                                                       range_reference_t<InputRange2>>());
                 return ranges::detail::mismatch_impl(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),

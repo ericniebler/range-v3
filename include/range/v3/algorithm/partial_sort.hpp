@@ -31,12 +31,14 @@ namespace ranges
             ///
             /// \pre RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename RandomAccessRange>
+            template<typename RandomAccessRange,
+                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange
             invoke(partial_sorter, RandomAccessRange && rng,
                 range_iterator_t<RandomAccessRange> middle)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
                 std::partial_sort(ranges::begin(rng), detail::move(middle), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
@@ -48,9 +50,36 @@ namespace ranges
                 range_iterator_t<RandomAccessRange> middle, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_reference_t<RandomAccessRange>,
+                                                       range_reference_t<RandomAccessRange>>());
                 std::partial_sort(ranges::begin(rng), detail::move(middle), ranges::end(rng),
                                   ranges::make_invokable(detail::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
+            }
+
+            /// \overload
+            /// for rng | partial_sort(it)
+            template<typename RandomAccessIterator,
+                CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
+            static auto
+            invoke(partial_sorter partial_sort, RandomAccessIterator nth)
+                -> decltype(partial_sort(std::placeholders::_1, detail::move(nth)))
+            {
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
+                return partial_sort(std::placeholders::_1, detail::move(nth));
+            }
+
+            /// \overload
+            /// for rng | partial_sort(it, pred)
+            template<typename RandomAccessIterator, typename BinaryPredicate,
+                CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
+            static auto
+            invoke(partial_sorter partial_sort, RandomAccessIterator nth, BinaryPredicate pred)
+                -> decltype(partial_sort(std::placeholders::_1, detail::move(nth), detail::move(pred)))
+            {
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
+                return partial_sort(std::placeholders::_1, detail::move(nth), detail::move(pred));
             }
         };
 

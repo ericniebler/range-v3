@@ -31,30 +31,30 @@ namespace ranges
             /// \pre InputRange1 is a model of the InputRange concept
             /// \pre InputRange2 is a model of the InputRange concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename InputRange1, typename InputRange2,
-                     typename OutputIterator>
-            static OutputIterator invoke(merger,
-                                         InputRange1 && rng1,
-                                         InputRange2 && rng2,
-                                         OutputIterator out)
+            template<typename InputRange1, typename InputRange2, typename OutputIterator>
+            static OutputIterator
+            invoke(merger, InputRange1 && rng1, InputRange2 && rng2, OutputIterator out)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputRange1>,
+                                                          range_reference_t<InputRange2>> ());
                 return std::merge(ranges::begin(rng1), ranges::end(rng1),
                                   ranges::begin(rng2), ranges::end(rng2), detail::move(out));
             }
 
             /// \overload
-            template<typename InputRange1, typename InputRange2,
-                     typename OutputIterator, typename BinaryPredicate>
-            static OutputIterator invoke(merger,
-                                         InputRange1 && rng1,
-                                         InputRange2 && rng2,
-                                         OutputIterator out,
-                                         BinaryPredicate pred)
+            template<typename InputRange1, typename InputRange2, typename OutputIterator,
+                     typename BinaryPredicate>
+            static OutputIterator
+            invoke(merger, InputRange1 && rng1, InputRange2 && rng2, OutputIterator out,
+                   BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_reference_t<InputRange1>,
+                                                       range_reference_t<InputRange2>>());
                 return std::merge(ranges::begin(rng1), ranges::end(rng1),
                                   ranges::begin(rng2), ranges::end(rng2),
                                   detail::move(out),

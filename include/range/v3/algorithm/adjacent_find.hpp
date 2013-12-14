@@ -36,6 +36,7 @@ namespace ranges
             invoke(adjacent_finder, ForwardRange && rng)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardRange>>());
                 return std::adjacent_find(ranges::begin(rng), ranges::end(rng));
             }
 

@@ -30,11 +30,14 @@ namespace ranges
             /// range-based version of the \c lower_bound std algorithm
             ///
             /// \pre \c ForwardRange is a model of the ForwardRange concept
-            template<typename ForwardRange, typename Value>
+            template<typename ForwardRange, typename Value,
+                CONCEPT_REQUIRES(ranges::Range<ForwardRange>())>
             static range_iterator_t<ForwardRange>
             invoke(lower_bound_finder, ForwardRange && rng, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardRange>,
+                                                          Value const &>());
                 return std::lower_bound(ranges::begin(rng), ranges::end(rng), val);
             }
 
@@ -44,8 +47,32 @@ namespace ranges
             invoke(lower_bound_finder, ForwardRange && rng, Value const & val, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_reference_t<ForwardRange>,
+                                                       Value const &>());
                 return std::lower_bound(ranges::begin(rng), ranges::end(rng), val,
                     ranges::make_invokable(detail::move(pred)));
+            }
+
+            /// \overload
+            /// for rng | lower_bound(val)
+            template<typename Value>
+            static auto
+            invoke(lower_bound_finder lower_bound, Value val)
+                -> decltype(lower_bound(std::placeholders::_1, detail::move(val)))
+            {
+                return lower_bound(std::placeholders::_1, detail::move(val));
+            }
+
+            /// \overload
+            /// for rng | lower_bound(val, pred)
+            template<typename Value, typename BinaryPredicate,
+                CONCEPT_REQUIRES(!ranges::Range<Value>())>
+            static auto
+            invoke(lower_bound_finder lower_bound, Value val, BinaryPredicate pred)
+                -> decltype(lower_bound(std::placeholders::_1, detail::move(val), detail::move(pred)))
+            {
+                return lower_bound(std::placeholders::_1, detail::move(val), detail::move(pred));
             }
         };
 

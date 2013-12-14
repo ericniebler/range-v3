@@ -37,6 +37,8 @@ namespace ranges
             invoke(finder_if, InputRange && rng, UnaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
+                                                      range_reference_t<InputRange>>());
                 return std::find_if(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(detail::move(pred)));
             }

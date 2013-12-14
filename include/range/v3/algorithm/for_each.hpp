@@ -36,6 +36,8 @@ namespace ranges
             static UnaryFunction invoke(for_eacher, InputRange && rng, UnaryFunction fun)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
+                                                range_reference_t<InputRange>>());
                 return std::for_each(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(detail::move(fun)));
             }

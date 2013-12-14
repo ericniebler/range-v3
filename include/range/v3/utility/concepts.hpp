@@ -247,25 +247,28 @@ namespace ranges
                 using type = list<T>;
             };
 
+            template<int N, typename T>
+            using list_of_t = typename list_of<N, T>::type;
+
             ////////////////////////////////////////////////////////////////////////////////////
             // get_nth_impl
-            template<typename Ignored>
+            template<typename VoidPtrs>
             struct get_nth_impl;
 
-            template<typename ...Ignored>
-            struct get_nth_impl<list<Ignored...>>
+            template<typename ...VoidPtrs>
+            struct get_nth_impl<list<VoidPtrs...>>
             {
                 template<typename T, typename ...Us>
-                static T eval(always_t<void *, Ignored>..., T *, Us *...);
+                static T eval(VoidPtrs..., T *, Us *...);
             };
 
             ////////////////////////////////////////////////////////////////////////////////////
             // get_nth
             template<int N, typename ...Ts>
             using get_nth =
-               typename decltype(
-                    get_nth_impl<typename list_of<N, decltype(nullptr)>::type>::eval(
-                        static_cast<identity<Ts>*>(nullptr)...))::type;
+                typename decltype(
+                    get_nth_impl<list_of_t<N, void *>>::eval((identity<Ts> *)nullptr...)
+                )::type;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // models_

@@ -31,27 +31,55 @@ namespace ranges
             ///
             /// \pre RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename RandomAccessRange>
-            static RandomAccessRange invoke(nth_element_finder,
-                                            RandomAccessRange && rng,
-                                            range_iterator_t<RandomAccessRange> nth)
+            template<typename RandomAccessRange,
+                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
+            static RandomAccessRange
+            invoke(nth_element_finder, RandomAccessRange && rng,
+                   range_iterator_t<RandomAccessRange> nth)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
                 std::nth_element(ranges::begin(rng), detail::move(nth), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
             template<typename RandomAccessRange, typename BinaryPredicate>
-            static RandomAccessRange invoke(nth_element_finder,
-                                            RandomAccessRange && rng,
-                                            range_iterator_t<RandomAccessRange> nth,
-                                            BinaryPredicate pred)
+            static RandomAccessRange
+            invoke(nth_element_finder, RandomAccessRange && rng,
+                   range_iterator_t<RandomAccessRange> nth, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_reference_t<RandomAccessRange>,
+                                                       range_reference_t<RandomAccessRange>>());
                 std::nth_element(ranges::begin(rng), detail::move(nth), ranges::end(rng),
                                  ranges::make_invokable(detail::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
+            }
+
+            /// \overload
+            /// for rng | nth_element(it)
+            template<typename RandomAccessIterator,
+                CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
+            static auto
+            invoke(nth_element_finder nth_element, RandomAccessIterator nth)
+                -> decltype(nth_element(std::placeholders::_1, detail::move(nth)))
+            {
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
+                return nth_element(std::placeholders::_1, detail::move(nth));
+            }
+
+            /// \overload
+            /// for rng | nth_element(it, pred)
+            template<typename RandomAccessIterator, typename BinaryPredicate,
+                CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
+            static auto
+            invoke(nth_element_finder nth_element, RandomAccessIterator nth, BinaryPredicate pred)
+            -> decltype(nth_element(std::placeholders::_1, detail::move(nth), detail::move(pred)))
+            {
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
+                return nth_element(std::placeholders::_1, detail::move(nth), detail::move(pred));
             }
         };
 
