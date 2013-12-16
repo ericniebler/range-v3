@@ -14,10 +14,11 @@
 #include <utility>
 #include <algorithm>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/concepts.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
 {
@@ -47,7 +48,7 @@ namespace ranges
                     detail::move(out), ranges::make_invokable(detail::move(pred)), with_what);
             }
 
-            // BUGBUG should "rng | replace_copy_if(out, pred, that)" be lazy? 
+            // BUGBUG should "rng | replace_copy_if(out, pred, that)" be lazy?
 
             /// \overload
             /// for rng | replace_copy_if(out, pred, that)

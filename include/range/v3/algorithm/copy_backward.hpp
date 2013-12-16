@@ -14,8 +14,9 @@
 #include <utility>
 #include <algorithm>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/concepts.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
 {

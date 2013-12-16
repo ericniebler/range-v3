@@ -88,7 +88,7 @@ namespace ranges
             RANGES_CONSTEXPR struct bind_applier
             {
                 template<typename Fn, typename BoundArgs, typename Args, std::size_t...Is>
-                auto operator()(Fn && fn, BoundArgs && bound_args, Args && args, 
+                auto operator()(Fn && fn, BoundArgs && bound_args, Args && args,
                                 integer_sequence<Is...>) const
                     -> decltype(std::declval<Fn>()(
                            detail::mu(std::get<Is>(std::declval<BoundArgs>()),
@@ -171,7 +171,7 @@ namespace ranges
                                                         std::forward<BoundArgs>(args)...};
             }
         };
-        
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // A version of std::bind that does perfect forwarding instead of relying on std::ref
         RANGES_CONSTEXPR bind_maker bind {};

@@ -14,7 +14,7 @@
 #include <utility>
 #include <algorithm>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/concepts.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
@@ -62,7 +62,7 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR random_shuffler random_shuffle {};
-        
+
     } // inline namespace v3
 
 } // namespace ranges

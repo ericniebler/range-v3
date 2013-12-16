@@ -10,13 +10,14 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGES_V3_CONCEPTS_HPP
-#define RANGES_V3_CONCEPTS_HPP
+#ifndef RANGES_V3_RANGE_CONCEPTS_HPP
+#define RANGES_V3_RANGE_CONCEPTS_HPP
 
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/begin_end.hpp>
 
 namespace ranges

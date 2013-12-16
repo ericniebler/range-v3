@@ -14,7 +14,7 @@
 #include <utility>
 #include <algorithm>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/concepts.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 
@@ -38,7 +38,7 @@ namespace ranges
                 return std::forward<ForwardRange>(rng);
             }
 
-            // BUGBUG should "rng | replace(this, that)" be lazy? 
+            // BUGBUG should "rng | replace(this, that)" be lazy?
 
             /// \overload
             /// for rng | replace(that, that)
