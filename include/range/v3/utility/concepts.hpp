@@ -131,26 +131,6 @@ namespace ranges
         namespace detail
         {
             ////////////////////////////////////////////////////////////////////////////////////
-            // get_nth_impl
-            template<typename VoidPtrs>
-            struct get_nth_impl;
-
-            template<typename ...VoidPtrs>
-            struct get_nth_impl<typelist<VoidPtrs...>>
-            {
-                template<typename T, typename ...Us>
-                static T eval(VoidPtrs..., T *, Us *...);
-            };
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // get_nth
-            template<int N, typename ...Ts>
-            using get_nth =
-                typename decltype(
-                    get_nth_impl<make_typelist_t<N, void *>>::eval((identity<Ts> *)nullptr...)
-                )::type;
-
-            ////////////////////////////////////////////////////////////////////////////////////
             // models_
             template<typename Concept, typename ...Ts>
             struct models_
@@ -170,7 +150,7 @@ namespace ranges
 
             template<typename Concept, typename...Args, typename ...Ts>
             struct models_<Concept(Args...), Ts...>
-              : models_<Concept, get_nth<Args::value, Ts...>...>
+              : models_<Concept, typelist_element_t<Args::value, typelist<Ts...>>...>
             {};
 
             typelist<> base_concepts_of_impl_(void *);

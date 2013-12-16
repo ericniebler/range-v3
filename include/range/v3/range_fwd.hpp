@@ -68,6 +68,9 @@ namespace ranges
 
         namespace detail
         {
+            struct empty
+            {};
+
             template<typename T>
             using uncvref_t =
                 typename std::remove_cv<typename std::remove_reference<T>::type>::type;

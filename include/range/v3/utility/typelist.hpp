@@ -47,46 +47,6 @@ namespace ranges
         using typelist_concat_t = typename typelist_concat<List0, List1>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // typelist_pop_front
-        template<typename List>
-        struct typelist_pop_front;
-
-        template<typename Head, typename ...List>
-        struct typelist_pop_front<typelist<Head, List...>>
-        {
-            using type = typelist<List...>;
-        };
-
-        template<typename List>
-        using typelist_pop_front_t = typename typelist_pop_front<List>::type;
-
-        ////////////////////////////////////////////////////////////////////////////////////
-        // typelist_front
-        template<typename List>
-        struct typelist_front;
-
-        template<typename Head, typename ...List>
-        struct typelist_front<typelist<Head, List...>>
-        {
-            using type = Head;
-        };
-
-        template<typename List>
-        using typelist_front_t = typename typelist_front<List>::type;
-
-        ////////////////////////////////////////////////////////////////////////////////////
-        // typelist_is_empty
-        template<typename List>
-        struct typelist_is_empty
-          : std::false_type
-        {};
-
-        template<>
-        struct typelist_is_empty<typelist<>>
-          : std::true_type
-        {};
-
-        ////////////////////////////////////////////////////////////////////////////////////
         // make_typelist
         // Generate lists<_,_,_,..._> with N arguments in O(log N)
         template<std::size_t N, typename T = void>
@@ -110,6 +70,96 @@ namespace ranges
 
         template<std::size_t N, typename T = void>
         using make_typelist_t = typename make_typelist<N, T>::type;
+
+        namespace detail
+        {
+            ////////////////////////////////////////////////////////////////////////////////////
+            // typelist_element_
+            template<typename VoidPtrs>
+            struct typelist_element_;
+
+            template<typename ...VoidPtrs>
+            struct typelist_element_<typelist<VoidPtrs...>>
+            {
+                static empty eval(...);
+
+                template<typename T, typename ...Us>
+                static T eval(VoidPtrs..., T *, Us *...);
+            };
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_element
+        template<std::size_t N, typename List>
+        struct typelist_element;
+
+        template<std::size_t N, typename ...Ts>
+        struct typelist_element<N, typelist<Ts...>>
+          : decltype(detail::typelist_element_<make_typelist_t<N, void *>>
+                ::eval((detail::identity<Ts> *)nullptr...))
+        {};
+
+        template<std::size_t N, typename List>
+        using typelist_element_t = typename typelist_element<N, List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_front
+        template<typename List>
+        struct typelist_front
+        {};
+
+        template<typename Head, typename ...List>
+        struct typelist_front<typelist<Head, List...>>
+        {
+            using type = Head;
+        };
+
+        template<typename List>
+        using typelist_front_t = typename typelist_front<List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_pop_front
+        template<typename List>
+        struct typelist_pop_front
+        {};
+
+        template<typename Head, typename ...List>
+        struct typelist_pop_front<typelist<Head, List...>>
+        {
+            using type = typelist<List...>;
+        };
+
+        template<typename List>
+        using typelist_pop_front_t = typename typelist_pop_front<List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_back
+        template<typename List>
+        struct typelist_back
+        {};
+
+        template<typename Head, typename ...List>
+        struct typelist_back<typelist<Head, List...>>
+          : typelist_element<sizeof...(List), typelist<Head, List...>>
+        {};
+
+        template<typename List>
+        using typelist_back_t = typename typelist_back<List>::type;
+
+        // typelist_pop_back not provided because it cannot be made to meet the complixity
+        // guarantees one would expect.
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_is_empty
+        template<typename List>
+        struct typelist_is_empty
+          : std::false_type
+        {};
+
+        template<>
+        struct typelist_is_empty<typelist<>>
+          : std::true_type
+        {};
     }
 }
 

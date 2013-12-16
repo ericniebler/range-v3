@@ -98,10 +98,12 @@ static_assert(
     >::value, "");
 
 struct Abstract { virtual ~Abstract() = 0; };
-static_assert(std::is_same<ranges::detail::get_nth<0, int, Abstract, float(), int(&&)[]>, int>::value, "");
-static_assert(std::is_same<ranges::detail::get_nth<1, int, Abstract, float(), int(&&)[]>, Abstract>::value, "");
-static_assert(std::is_same<ranges::detail::get_nth<2, int, Abstract, float(), int(&&)[]>, float()>::value, "");
-static_assert(std::is_same<ranges::detail::get_nth<3, int, Abstract, float(), int(&&)[]>, int(&&)[]>::value, "");
+static_assert(std::is_same<ranges::typelist_element_t<0, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int>::value, "");
+static_assert(std::is_same<ranges::typelist_element_t<1, ranges::typelist<int, Abstract, float(), int(&&)[]>>, Abstract>::value, "");
+static_assert(std::is_same<ranges::typelist_element_t<2, ranges::typelist<int, Abstract, float(), int(&&)[]>>, float()>::value, "");
+static_assert(std::is_same<ranges::typelist_element_t<4, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
+
+static_assert(std::is_same<ranges::typelist_back_t<ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
 
 struct move_only
 {
