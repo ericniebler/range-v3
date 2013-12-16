@@ -7,9 +7,6 @@
 //  file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
-// Acknowledgements: Thanks for Paul Fultz for the suggestions that
-//                   concepts can be ordinary Boolean metafunctions.
-//
 // For more information, see http://www.boost.org/libs/range/
 //
 

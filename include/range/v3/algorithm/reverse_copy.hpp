@@ -40,8 +40,8 @@ namespace ranges
             /// \overload
             /// for rng | reverse_copy(out)
             template<typename OutputIterator>
-            static auto invoke(reverser_copier reverse_copy, OutputIterator out)
-                -> decltype(reverse_copy(std::placeholders::_1, detail::move(out)))
+            static auto invoke(reverser_copier reverse_copy, OutputIterator out) -> 
+                decltype(reverse_copy(std::placeholders::_1, detail::move(out)))
             {
                 return reverse_copy(std::placeholders::_1, detail::move(out));
             }

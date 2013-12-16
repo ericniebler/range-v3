@@ -231,6 +231,15 @@ namespace ranges
                     ));
             };
 
+            struct Convertible
+            {
+                template<typename T, typename U>
+                auto requires(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<U>(t)
+                    ));
+            };
+
             struct Integral
             {
                 template<typename T>
@@ -378,6 +387,9 @@ namespace ranges
 
         template<typename T, typename U>
         using SameType = concepts::models<concepts::SameType, T, U>;
+
+        template<typename T, typename U>
+        using Convertible = concepts::models<concepts::Convertible, T, U>;
 
         template<typename T>
         using Integral = concepts::models<concepts::Integral, T>;

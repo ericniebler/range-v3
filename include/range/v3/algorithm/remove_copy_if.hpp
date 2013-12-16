@@ -42,6 +42,18 @@ namespace ranges
                 return std::remove_copy_if(ranges::begin(rng), ranges::end(rng),
                     detail::move(out), ranges::make_invokable(detail::move(pred)));
             }
+
+            /// \overload
+            /// for rng | remove_copy_if(out, pred)
+            template<typename OutputIterator, typename UnaryPredicate>
+            static auto
+            invoke(remover_copier_if remove_copy_if, OutputIterator out, UnaryPredicate pred) ->
+                decltype(remove_copy_if(std::placeholders::_1, detail::move(out),
+                    detail::move(pred)))
+            {
+                return remove_copy_if(std::placeholders::_1, detail::move(out),
+                    detail::move(pred));
+            }
         };
 
         RANGES_CONSTEXPR remover_copier_if remove_copy_if {};

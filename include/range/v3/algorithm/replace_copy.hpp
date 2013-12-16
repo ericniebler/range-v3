@@ -36,7 +36,8 @@ namespace ranges
                    Value const & what, Value const & with_what)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Value>());
+                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
+                                                      range_reference_t<ForwardRange>>());
                 return std::replace_copy(ranges::begin(rng), ranges::end(rng),
                     detail::move(out), what, with_what);
             }
@@ -46,16 +47,14 @@ namespace ranges
             /// \overload
             /// for rng | replace_copy(out, that, that)
             template<typename OutputIterator, typename Value1, typename Value2>
-            static auto invoke(replacer_copier replace_copy, OutputIterator out, Value1 what,
-                Value2 with_what)
-                -> decltype(replace_copy(std::placeholders::_1, detail::move(out),
-                        detail::move(what),
-                        detail::move(with_what)))
+            static auto invoke(replacer_copier replace_copy, OutputIterator out, Value1 && what,
+                Value2 && with_what) ->
+                decltype(replace_copy(std::placeholders::_1, detail::move(out),
+                    detail::forward<Value1>(what), detail::forward<Value2>(with_what)))
             {
                 CONCEPT_ASSERT(ranges::Iterator<OutputIterator>());
                 return replace_copy(std::placeholders::_1, detail::move(out),
-                    detail::move(what),
-                    detail::move(with_what));
+                    detail::forward<Value1>(what), detail::forward<Value2>(with_what));
             }
         };
 

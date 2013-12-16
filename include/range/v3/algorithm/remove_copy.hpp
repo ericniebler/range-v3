@@ -38,8 +38,24 @@ namespace ranges
             invoke(remover_copier, InputRange && rng, OutputIterator out, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
+                                                      range_reference_t<InputRange>>());
+                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputRange>,
+                                                          Value const &>());
                 return std::remove_copy(ranges::begin(rng), ranges::end(rng),
                     detail::move(out), val);
+            }
+
+            /// \overload
+            /// for rng | remove_copy(out, val)
+            template<typename OutputIterator, typename Value>
+            static auto
+            invoke(remover_copier remove_copy, OutputIterator out, Value && val) ->
+                decltype(remove_copy(std::placeholders::_1, detail::move(out),
+                    detail::forward<Value>(val)))
+            {
+                return remove_copy(std::placeholders::_1, detail::move(out),
+                    detail::forward<Value>(val));
             }
         };
 

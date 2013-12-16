@@ -43,7 +43,10 @@ namespace ranges
                 Value const & with_what)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Value>());
+                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
+                                                      range_reference_t<ForwardRange>>());
+                CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
+                                                      range_reference_t<ForwardRange>>());
                 return std::replace_copy_if(ranges::begin(rng), ranges::end(rng),
                     detail::move(out), ranges::make_invokable(detail::move(pred)), with_what);
             }
@@ -52,14 +55,14 @@ namespace ranges
 
             /// \overload
             /// for rng | replace_copy_if(out, pred, that)
-            template<typename OutputIterator, typename Predicate, typename Value>
+            template<typename OutputIterator, typename UnaryPredicate, typename Value>
             static auto invoke(replacer_copier_if replace_copy_if, OutputIterator out,
-                               Predicate pred, Value with_what)
+                               UnaryPredicate pred, Value && with_what)
                 -> decltype(replace_copy_if(std::placeholders::_1, detail::move(out),
-                            detail::move(pred), detail::move(with_what)))
+                            detail::move(pred), detail::forward<Value>(with_what)))
             {
                 return replace_copy_if(std::placeholders::_1, detail::move(out),
-                    detail::move(pred), detail::move(with_what));
+                    detail::move(pred), detail::forward<Value>(with_what));
             }
         };
 

@@ -43,8 +43,8 @@ namespace ranges
             /// \overload
             /// for rng | remove(pred)
             template<typename UnaryPredicate>
-            static auto invoke(remover_if remove_if, UnaryPredicate pred)
-                -> decltype(remove_if(std::placeholders::_1, detail::move(pred)))
+            static auto invoke(remover_if remove_if, UnaryPredicate pred) ->
+                decltype(remove_if(std::placeholders::_1, detail::move(pred)))
             {
                 return remove_if(std::placeholders::_1, detail::move(pred));
             }

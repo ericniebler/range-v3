@@ -34,11 +34,15 @@ namespace ranges
             /// \pre Value is a model of the EqualityComparable concept
             /// \pre ForwardRange's value type is a model of the EqualityComparable concept
             /// \pre Object's of ForwardRange's value type can be compared for equality with Objects of type Value
-            template<typename ForwardRange, typename Integer, typename Value>
+            template<typename ForwardRange, typename Integer, typename Value,
+                CONCEPT_REQUIRES(ranges::Range<ForwardRange>())>
             static range_iterator_t<ForwardRange>
             invoke(searcher_n, ForwardRange && rng, Integer count, Value const & value)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::Integral<Integer>());
+                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardRange>,
+                                                          Value const &>());
                 return std::search_n(ranges::begin(rng), ranges::end(rng), count, value);
             }
 
@@ -50,11 +54,35 @@ namespace ranges
                 BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::Integral<Integer>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_value_t<ForwardRange>,
-                                                       Value>());
+                                                       range_reference_t<ForwardRange>,
+                                                       Value const &>());
                 return std::search_n(ranges::begin(rng), ranges::end(rng),
                     count, value, ranges::make_invokable(detail::move(pred)));
+            }
+
+            /// \overload
+            template<typename Integer, typename Value>
+            static auto
+            invoke(searcher_n search_n, Integer count, Value && value) ->
+                decltype(search_n(std::placeholders::_1, detail::move(count),
+                    detail::forward<Value>(value)))
+            {
+                return search_n(std::placeholders::_1, detail::move(count),
+                    detail::forward<Value>(value));
+            }
+
+            /// \overload
+            template<typename Integer, typename Value, typename BinaryPredicate,
+                CONCEPT_REQUIRES(ranges::Integral<Integer>())>
+            static auto
+            invoke(searcher_n search_n, Integer count, Value && value, BinaryPredicate pred) ->
+                decltype(search_n(std::placeholders::_1, detail::move(count),
+                    detail::forward<Value>(value), detail::move(pred)))
+            {
+                return search_n(std::placeholders::_1, detail::move(count),
+                    detail::forward<Value>(value), detail::move(pred));
             }
         };
 

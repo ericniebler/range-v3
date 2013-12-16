@@ -31,7 +31,7 @@ namespace ranges
             /// range-based version of the random_shuffle std algorithm
             ///
             /// \pre RandomAccessRange is a model of the RandomAccessRange concept
-            /// \pre Generator is a model of the UnaryFunction concept
+            /// \pre RandomNumberGenerator is a model of the UnaryFunction concept
             template<typename RandomAccessRange,
                      CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange invoke(random_shuffler, RandomAccessRange && rng)
@@ -42,22 +42,29 @@ namespace ranges
             }
 
             /// \overload
-            template<typename RandomAccessRange, typename Generator>
-            static RandomAccessRange invoke(random_shuffler, RandomAccessRange && rng, Generator& gen)
+            template<typename RandomAccessRange, typename RandomNumberGenerator>
+            static RandomAccessRange invoke(random_shuffler, RandomAccessRange && rng,
+                RandomNumberGenerator && gen)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                std::random_shuffle(ranges::begin(rng), ranges::end(rng), gen);
+                CONCEPT_ASSERT(ranges::Callable<RandomNumberGenerator>());
+                CONCEPT_ASSERT(ranges::Convertible<result_of_t<RandomNumberGenerator()>,
+                                                   range_difference_t<RandomAccessRange>>());
+                std::random_shuffle(ranges::begin(rng), ranges::end(rng),
+                    detail::forward<RandomNumberGenerator>(gen));
                 return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
             /// for rng | random_shuffle(gen)
-            template<typename Generator,
-                CONCEPT_REQUIRES(!ranges::Range<Generator>())>
-            static auto invoke(random_shuffler random_shuffle, Generator& gen)
-                -> decltype(random_shuffle(std::placeholders::_1, std::ref(gen)))
+            template<typename RandomNumberGenerator,
+                CONCEPT_REQUIRES(!ranges::Range<RandomNumberGenerator>())>
+            static auto invoke(random_shuffler random_shuffle, RandomNumberGenerator && gen)
+                -> decltype(random_shuffle(std::placeholders::_1,
+                    detail::forward<RandomNumberGenerator>(gen)))
             {
-                return random_shuffle(std::placeholders::_1, std::ref(gen));
+                return random_shuffle(std::placeholders::_1,
+                    detail::forward<RandomNumberGenerator>(gen));
             }
         };
 

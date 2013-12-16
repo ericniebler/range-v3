@@ -32,12 +32,16 @@ namespace ranges
             /// \pre ForwardRange1 is a model of the ForwardRange concept
             /// \pre ForwardRange2 is a model of the ForwardRange concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardRange1, typename ForwardRange2>
+            template<typename ForwardRange1, typename ForwardRange2,
+                CONCEPT_REQUIRES(ranges::Range<ForwardRange1>() &&
+                                 ranges::Range<ForwardRange2>())>
             static range_iterator_t<ForwardRange1>
             invoke(searcher, ForwardRange1 && rng1, ForwardRange2 const & rng2)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
+                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardRange1>,
+                                                          range_reference_t<ForwardRange2 const>>());
                 return std::search(ranges::begin(rng1), ranges::end(rng1),
                                    ranges::begin(rng2), ranges::end(rng2));
             }
@@ -49,9 +53,33 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2 const>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_reference_t<ForwardRange1>,
+                                                       range_reference_t<ForwardRange2 const>>());
                 return std::search(ranges::begin(rng1), ranges::end(rng1),
                                    ranges::begin(rng2), ranges::end(rng2),
                                    ranges::make_invokable(detail::move(pred)));
+            }
+
+            template<typename ForwardRange2>
+            static auto
+            invoke(searcher search, ForwardRange2 && rng2) ->
+                decltype(search(std::placeholders::_1, detail::forward<ForwardRange2>(rng2)))
+            {
+                return search(std::placeholders::_1, detail::forward<ForwardRange2>(rng2));
+            }
+
+            /// \overload
+            template<typename ForwardRange2, typename BinaryPredicate,
+                CONCEPT_REQUIRES(ranges::Range<ForwardRange2>() &&
+                                !ranges::Range<BinaryPredicate>())>
+            static auto
+            invoke(searcher search, ForwardRange2 && rng2, BinaryPredicate pred) ->
+                decltype(search(std::placeholders::_1, detail::forward<ForwardRange2>(rng2),
+                    detail::move(pred)))
+            {
+                return search(std::placeholders::_1, detail::forward<ForwardRange2>(rng2),
+                    detail::move(pred));
             }
         };
 

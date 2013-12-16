@@ -17,6 +17,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
 {
@@ -36,6 +37,16 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 std::rotate(ranges::begin(rng), detail::move(middle), ranges::end(rng));
                 return std::forward<ForwardRange>(rng);
+            }
+
+            /// \overload
+            /// for rng | rotate(middle)
+            template<typename ForwardIterator>
+            static auto invoke(rotater rotate, ForwardIterator middle) ->
+                decltype(rotate(std::placeholders::_1, detail::move(middle)))
+            {
+                CONCEPT_ASSERT(ranges::ForwardIterator<ForwardIterator>());
+                return rotate(std::placeholders::_1, detail::move(middle));
             }
         };
 
