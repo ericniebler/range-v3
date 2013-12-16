@@ -16,8 +16,9 @@
 #include <utility>
 #include <functional>
 #include <type_traits>
-#include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/bind.hpp>
+#include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -39,17 +40,18 @@ namespace ranges
 
             // is_bind_wrapper
             template<typename T>
-            struct is_bind_wrapper : false_
+            struct is_bind_wrapper : std::false_type
             {};
 
             template<typename T>
-            struct is_bind_wrapper<binder_wrapper<T>> : true_
+            struct is_bind_wrapper<binder_wrapper<T>> : std::true_type
             {};
 
             // is_placeholder_expression
             template<typename T>
             struct is_placeholder_expression
-              : bool_<is_bind_wrapper<T>::value || 0 != std::is_placeholder<T>::value>
+              : std::integral_constant<bool, is_bind_wrapper<T>::value ||
+                                             0 != std::is_placeholder<T>::value>
             {};
 
             template<typename...Args>
@@ -89,7 +91,7 @@ namespace ranges
 
         template<typename ...T>
         using contains_placeholder_expression =
-            detail::or_<detail::is_placeholder_expression<detail::uncvref_t<T>>::value...>;
+            logical_or<detail::is_placeholder_expression<detail::uncvref_t<T>>::value...>;
 
         template<typename Derived>
         struct bindable

@@ -142,6 +142,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_facade.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\typelist.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />

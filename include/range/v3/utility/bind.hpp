@@ -30,7 +30,7 @@ namespace ranges
             // is_bind_expression
             template<typename T>
             struct is_bind_expression_
-              : false_
+              : std::false_type
             {};
         }
 
@@ -158,7 +158,7 @@ namespace ranges
 
             template<typename Fn, typename...BoundArgs>
             struct is_bind_expression_<binder<Fn, BoundArgs...>>
-              : true_
+              : std::true_type
             {};
         }
 

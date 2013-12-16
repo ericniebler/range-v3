@@ -109,12 +109,12 @@ namespace ranges
 
             template<typename T>
             struct is_reference_to_const
-              : false_
+              : std::false_type
             {};
 
             template<typename T>
             struct is_reference_to_const<T const&>
-              : true_
+              : std::true_type
             {};
 
             //
@@ -124,7 +124,7 @@ namespace ranges
             //
             template<typename ValueParam, typename Reference>
             using iterator_writability_disabled =
-                bool_<
+                std::integral_constant<bool, 
                     std::is_const<Reference>::value ||
                     is_reference_to_const<Reference>::value ||
                     std::is_const<ValueParam>::value

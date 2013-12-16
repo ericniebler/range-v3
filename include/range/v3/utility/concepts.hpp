@@ -19,6 +19,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/utility/typelist.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -40,7 +41,7 @@ namespace ranges
             constexpr struct valid_expr_t
             {
                 template<typename ...T>
-                true_ operator()(T &&...) const;
+                std::true_type operator()(T &&...) const;
             } valid_expr {};
 
             constexpr struct same_type_t
@@ -129,7 +130,6 @@ namespace ranges
 
         namespace detail
         {
-
             ////////////////////////////////////////////////////////////////////////////////////
             // get_nth_impl
             template<typename VoidPtrs>
@@ -156,15 +156,15 @@ namespace ranges
             struct models_
             {
             private:
-                static true_ test_refines(void *); // No refinements, ok
+                static std::true_type test_refines(void *); // No refinements, ok
                 template<typename ...Bases>
                 static auto test_refines(concepts::refines<Bases...> *) ->
-                    detail::and_<static_cast<bool>(concepts::models<Bases, Ts...>())...>;
+                    logical_and<static_cast<bool>(concepts::models<Bases, Ts...>())...>;
             public:
-                false_ operator()() const;
+                std::false_type operator()() const;
                 template<typename C = Concept>
                 auto operator()() ->
-                    bool_<(decltype(C{}.requires(std::declval<Ts>()...))() &&
+                    std::integral_constant<bool, (decltype(C{}.requires(std::declval<Ts>()...))() &&
                            decltype(models_::test_refines((C *)nullptr))())>;
             };
 
