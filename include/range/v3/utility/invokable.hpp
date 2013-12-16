@@ -33,7 +33,7 @@ namespace ranges
 
             template<typename T, typename U = typename std::decay<T>::type>
             auto operator()(T && t) const ->
-                typename std::enable_if<!std::is_member_pointer<U>::value, U>::type
+                typename std::enable_if<!std::is_member_pointer<U>::value, T>::type
             {
                 return detail::forward<T>(t);
             }

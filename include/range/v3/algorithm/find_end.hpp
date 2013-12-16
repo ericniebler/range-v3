@@ -66,11 +66,11 @@ namespace ranges
             /// for rng | find_end(rng2)
             template<typename ForwardRange2>
             static auto
-            invoke(end_finder find_end, ForwardRange2 rng2)
-                -> decltype(find_end(std::placeholders::_1, detail::move(rng2)))
+            invoke(end_finder find_end, ForwardRange2 && rng2)
+                -> decltype(find_end(std::placeholders::_1, detail::forward<ForwardRange2>(rng2)))
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2>());
-                return find_end(std::placeholders::_1, detail::move(rng2));
+                return find_end(std::placeholders::_1, detail::forward<ForwardRange2>(rng2));
             }
 
             /// \overload
@@ -79,11 +79,11 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Range<ForwardRange2>() &&
                                 !ranges::Range<BinaryPredicate>())>
             static auto
-            invoke(end_finder find_end, ForwardRange2 rng2, BinaryPredicate pred)
-                -> decltype(find_end(std::placeholders::_1, detail::move(rng2), detail::move(pred)))
+            invoke(end_finder find_end, ForwardRange2 && rng2, BinaryPredicate pred)
+                -> decltype(find_end(std::placeholders::_1, detail::forward<ForwardRange2>(rng2), detail::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2>());
-                return find_end(std::placeholders::_1, detail::move(rng2), detail::move(pred));
+                return find_end(std::placeholders::_1, detail::forward<ForwardRange2>(rng2), detail::move(pred));
             }
         };
 

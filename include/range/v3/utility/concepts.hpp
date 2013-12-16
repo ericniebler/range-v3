@@ -662,6 +662,54 @@ namespace ranges
         {
             using type = iterator_concept_t<T>;
         };
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // iterator traits
+        template<typename It>
+        using iterator_value_t = concepts::Iterator::value_t<It>;
+
+        template<typename It>
+        using iterator_reference_t = concepts::Iterator::reference_t<It>;
+
+        template<typename It>
+        using iterator_category_t = concepts::Iterator::category_t<It>;
+
+        template<typename It>
+        using iterator_difference_t = concepts::Iterator::difference_t<It>;
+
+        template<typename It>
+        using iterator_pointer_t = concepts::Iterator::pointer_t<It>;
+
+        // Metafunctions
+        template<typename It>
+        struct iterator_category
+        {
+            using type = iterator_category_t<It>;
+        };
+
+        template<typename It>
+        struct iterator_value
+        {
+            using type = iterator_value_t<It>;
+        };
+
+        template<typename It>
+        struct iterator_difference
+        {
+            using type = iterator_difference_t<It>;
+        };
+
+        template<typename It>
+        struct iterator_pointer
+        {
+            using type = iterator_pointer_t<It>;
+        };
+
+        template<typename It>
+        struct iterator_reference
+        {
+            using type = iterator_reference_t<It>;
+        };
     }
 }
 

@@ -159,8 +159,8 @@ namespace ranges
                       : it_(detail::move(i))
                     {}
                     friend struct operator_brackets_const_proxy;
-                    void operator=(result_type&);
                 public:
+                    void operator=(result_type&) = delete;
                     operator Reference() const
                     {
                         return *it_;

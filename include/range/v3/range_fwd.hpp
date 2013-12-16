@@ -55,9 +55,6 @@ namespace ranges
         template<typename Derived>
         struct pipeable;
 
-        template<typename ...T>
-        struct is_bind_expression;
-
         extern adl_begin_end_detail::beginner const begin;
         extern adl_begin_end_detail::ender const end;
         extern adl_begin_end_detail::cbeginner const cbegin;
@@ -71,6 +68,10 @@ namespace ranges
 
         namespace detail
         {
+            template<typename T>
+            using uncvref_t =
+                typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+
             struct compressed_pair_maker;
             extern compressed_pair_maker const make_compressed_pair;
 
@@ -83,8 +84,8 @@ namespace ranges
             template<typename T>
             struct is_binder;
 
-            struct binder;
-            extern binder const bind;
+            struct bind_wrapper_maker;
+            extern bind_wrapper_maker const wrap_bind;
 
             template<typename Bind>
             struct bind_wrapper;
@@ -160,6 +161,9 @@ namespace ranges
             {
                 return static_cast<typename std::remove_reference<T>::type &&>(t);
             }
+
+            template<typename Fn, typename...Args>
+            struct binder;
         }
 
         template<typename First, typename Second>
@@ -167,6 +171,9 @@ namespace ranges
 
         struct invokable_maker;
         extern invokable_maker const make_invokable;
+
+        struct bind_maker;
+        extern bind_maker const bind;
 
         template<typename T>
         using invokable_t = decltype(make_invokable(std::declval<T>()));

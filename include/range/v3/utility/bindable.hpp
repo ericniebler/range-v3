@@ -17,6 +17,7 @@
 #include <functional>
 #include <type_traits>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/bind.hpp>
 
 namespace ranges
 {
@@ -24,17 +25,14 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename T>
-            using uncvref_t =
-                typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-
             template<typename Bind>
-            struct bind_wrapper : Bind, pipeable<bind_wrapper<Bind>>
+            struct binder_wrapper : Bind, pipeable<binder_wrapper<Bind>>
             {
+                Bind & bind() & { return *this; }
                 Bind const & bind() const & { return *this; }
-                Bind && bind() && { return static_cast<Bind &&>(*this); }
+                Bind && bind() && { return std::move(*this); }
 
-                bind_wrapper(Bind bind)
+                binder_wrapper(Bind bind)
                   : Bind(detail::move(bind))
                 {}
             };
@@ -45,7 +43,7 @@ namespace ranges
             {};
 
             template<typename T>
-            struct is_bind_wrapper<bind_wrapper<T>> : true_
+            struct is_bind_wrapper<binder_wrapper<T>> : true_
             {};
 
             // is_placeholder_expression
@@ -55,19 +53,19 @@ namespace ranges
             {};
 
             template<typename...Args>
-            using std_bind_t = decltype(std::bind(std::declval<Args>()...));
+            using ranges_binder_t = decltype(ranges::bind(std::declval<Args>()...));
 
-            RANGES_CONSTEXPR struct binder
+            RANGES_CONSTEXPR struct bind_wrapper_maker
             {
                 template<typename ...Args>
-                bind_wrapper<std_bind_t<Args...>> operator()(Args &&... args) const
+                binder_wrapper<ranges_binder_t<Args...>> operator()(Args &&... args) const
                 {
-                    return {std::bind(detail::forward<Args>(args)...)};
+                    return {ranges::bind(detail::forward<Args>(args)...)};
                 }
-            } bind {};
+            } wrap_bind {};
 
             template<typename...Args>
-            using bind_t = decltype(detail::bind(std::declval<Args>()...));
+            using bind_t = decltype(detail::wrap_bind(std::declval<Args>()...));
 
             RANGES_CONSTEXPR struct unwrap_binder
             {
@@ -113,16 +111,16 @@ namespace ranges
             auto operator()(Args &&... args) const &
                 -> detail::bind_t<Derived const &, detail::unwrap_bind_t<Args>...>
             {
-                return detail::bind(derived(),
-                                    detail::unwrap_bind(detail::forward<Args>(args))...);
+                return detail::wrap_bind(derived(),
+                                         detail::unwrap_bind(detail::forward<Args>(args))...);
             }
             template<typename ...Args,
                 CONCEPT_REQUIRES(contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) &&
                 -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
             {
-                return detail::bind(detail::move(*this).derived(),
-                                    detail::unwrap_bind(detail::forward<Args>(args))...);
+                return detail::wrap_bind(detail::move(*this).derived(),
+                                         detail::unwrap_bind(detail::forward<Args>(args))...);
             }
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.

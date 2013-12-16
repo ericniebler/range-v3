@@ -66,11 +66,11 @@ namespace ranges
             /// for rng | find_first_of(rng2)
             template<typename ForwardRange2>
             static auto
-            invoke(first_of_finder find_first_of, ForwardRange2 rng2)
-                -> decltype(find_first_of(std::placeholders::_1, detail::move(rng2)))
+            invoke(first_of_finder find_first_of, ForwardRange2 && rng2)
+                -> decltype(find_first_of(std::placeholders::_1, detail::forward<ForwardRange2>(rng2)))
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2>());
-                return find_first_of(std::placeholders::_1, detail::move(rng2));
+                return find_first_of(std::placeholders::_1, detail::forward<ForwardRange2>(rng2));
             }
 
             /// \overload
@@ -79,11 +79,11 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Range<ForwardRange2>() &&
                                 !ranges::Range<BinaryPredicate>())>
             static auto
-            invoke(first_of_finder find_first_of, ForwardRange2 rng2, BinaryPredicate pred)
-                -> decltype(find_first_of(std::placeholders::_1, detail::move(rng2), detail::move(pred)))
+            invoke(first_of_finder find_first_of, ForwardRange2 && rng2, BinaryPredicate pred)
+                -> decltype(find_first_of(std::placeholders::_1, detail::forward<ForwardRange2>(rng2), detail::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2>());
-                return find_first_of(std::placeholders::_1, detail::move(rng2), detail::move(pred));
+                return find_first_of(std::placeholders::_1, detail::forward<ForwardRange2>(rng2), detail::move(pred));
             }
         };
 

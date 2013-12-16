@@ -111,13 +111,61 @@ struct move_only
     int operator()(std::string const &str) const { return str.length(); }
 };
 
+struct identity
+{
+    template<typename T>
+    T operator()(T && t) const
+    {
+        return std::forward<T>(t);
+    }
+} ident {};
+
+void test_partial_sort_copy()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
+    std::stringstream sin{str};
+    partial_sort_copy_result<std::vector<int>> x
+        = istream<int>(sin)
+            | partial_sort_copy(std::vector<int>(20,0));
+    for(int i : x)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    std::stringstream sin2{str};
+    std::vector<int> vi(20,0);
+    partial_sort_copy_result<std::vector<int> &> y =
+        istream<int>(sin2)
+            | partial_sort_copy(vi);
+    for(int i : y)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    for(int i : vi)
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+//*
 int main()
 {
     using namespace ranges;
     using namespace std::placeholders;
 
     // Pipeable algorithms
+    std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 ");
+    istream<int>(sinx)
+        | partial_sort_copy(std::vector<int>(20,0))
+        | view::transform([](int i){return -i;})
+        | for_each([](int i)
+          {
+              std::cout << i << ' ';
+          });
+
     std::vector<int> vi{ 1, 2, 2, 3, 4 };
+    std::cout << '\n';
     std::cout << (vi | count(2)) << std::endl;
 
     // Range placeholder expressions.
@@ -157,7 +205,7 @@ int main()
                     | view::filter(_1, [](std::string s){return s.length()<4;})
                     | view::transform([](std::string s){return s + " or her";})
                     ;
-    //undef<sizeof(lines2)> ttt;
+    //undef_i<sizeof(lines2)> ttt;
     for(std::string const & line : lines2)
     {
         //line += " or her";
@@ -229,3 +277,4 @@ int main()
     std::cout << '\n';
     std::cout << (joined.end() - joined.begin()) << std::endl;
 }
+//*/

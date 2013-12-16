@@ -133,9 +133,11 @@
     <ClInclude Include="..\..\..\..\include\range\v3\range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\bind.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\bindable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_facade.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view.hpp" />

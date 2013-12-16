@@ -262,5 +262,11 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\bind.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
