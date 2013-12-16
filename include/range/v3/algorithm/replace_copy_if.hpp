@@ -40,7 +40,7 @@ namespace ranges
                 typename Value>
             static OutputIterator
             invoke(replacer_copier_if, ForwardRange && rng, OutputIterator out, UnaryPredicate pred,
-                Value const & with_what)
+                Value const & new_value)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
@@ -48,7 +48,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
                                                       range_reference_t<ForwardRange>>());
                 return std::replace_copy_if(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out), ranges::make_invokable(detail::move(pred)), with_what);
+                    detail::move(out), ranges::make_invokable(detail::move(pred)), new_value);
             }
 
             // BUGBUG should "rng | replace_copy_if(out, pred, that)" be lazy?
@@ -57,12 +57,12 @@ namespace ranges
             /// for rng | replace_copy_if(out, pred, that)
             template<typename OutputIterator, typename UnaryPredicate, typename Value>
             static auto invoke(replacer_copier_if replace_copy_if, OutputIterator out,
-                               UnaryPredicate pred, Value && with_what)
+                               UnaryPredicate pred, Value && new_value)
                 -> decltype(replace_copy_if(std::placeholders::_1, detail::move(out),
-                            detail::move(pred), detail::forward<Value>(with_what)))
+                            detail::move(pred), detail::forward<Value>(new_value)))
             {
                 return replace_copy_if(std::placeholders::_1, detail::move(out),
-                    detail::move(pred), detail::forward<Value>(with_what));
+                    detail::move(pred), detail::forward<Value>(new_value));
             }
         };
 

@@ -31,24 +31,22 @@ namespace ranges
             /// \pre ForwardRange is a model of the ForwardRange concept
             template<typename ForwardRange, typename Value>
             static ForwardRange
-            invoke(replacer, ForwardRange && rng, Value const & what, Value const & with_what)
+            invoke(replacer, ForwardRange && rng, Value const & old_value, Value const & new_value)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                std::replace(ranges::begin(rng), ranges::end(rng), what, with_what);
+                std::replace(ranges::begin(rng), ranges::end(rng), old_value, new_value);
                 return std::forward<ForwardRange>(rng);
             }
-
-            // BUGBUG should "rng | replace(this, that)" be lazy?
 
             /// \overload
             /// for rng | replace(that, that)
             template<typename Value1, typename Value2>
-            static auto invoke(replacer replace, Value1 && what, Value2 && with_what) ->
-                decltype(replace(std::placeholders::_1, detail::forward<Value1>(what),
-                    detail::forward<Value2>(with_what)))
+            static auto invoke(replacer replace, Value1 && old_value, Value2 && new_value) ->
+                decltype(replace(std::placeholders::_1, detail::forward<Value1>(old_value),
+                    detail::forward<Value2>(new_value)))
             {
-                return replace(std::placeholders::_1, detail::forward<Value1>(what),
-                    detail::forward<Value2>(with_what));
+                return replace(std::placeholders::_1, detail::forward<Value1>(old_value),
+                    detail::forward<Value2>(new_value));
             }
         };
 

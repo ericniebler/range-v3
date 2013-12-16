@@ -159,21 +159,21 @@ namespace ranges
                       : fun_(detail::move(fun))
                     {}
                     template<typename InputRange, typename This>
-                    static transform_range_view<InputRange, UnaryFunction> pipe(InputRange && rng, This && this_)
+                    static transform_range_view<InputRange, UnaryFunction>
+                    pipe(InputRange && rng, This && this_)
                     {
                         return {detail::forward<InputRange>(rng), detail::forward<This>(this_).fun_};
                     }
                 };
             public:
-                /// \overload
+                ///
                 template<typename InputRange1, typename UnaryFunction>
                 static transform_range_view<InputRange1, UnaryFunction>
                 invoke(transformer, InputRange1 && rng, UnaryFunction fun)
                 {
                     CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                    using Ref1 = range_reference_t<InputRange1>;
-                    using Fun1 = invokable_t<UnaryFunction>;
-                    CONCEPT_ASSERT(ranges::Callable<Fun1, Ref1>())
+                    CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
+                                                    range_reference_t<InputRange1>>());
                     return {detail::forward<InputRange1>(rng), detail::move(fun)};
                 }
 

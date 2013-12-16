@@ -280,5 +280,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

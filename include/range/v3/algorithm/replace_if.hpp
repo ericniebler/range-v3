@@ -33,25 +33,25 @@ namespace ranges
             /// \pre UnaryPredicate is a model of the UnaryPredicate concept
             template<typename ForwardRange, typename UnaryPredicate, typename Value>
             static ForwardRange
-            invoke(replacer_if, ForwardRange && rng, UnaryPredicate pred, Value const & with_what)
+            invoke(replacer_if, ForwardRange && rng, UnaryPredicate pred, Value const & new_value)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
                                                       range_reference_t<ForwardRange>>());
                 std::replace_if(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)), with_what);
+                    ranges::make_invokable(detail::move(pred)), new_value);
                 return std::forward<ForwardRange>(rng);
             }
 
             /// \overload
             /// for rng | replace_if(pred, that)
             template<typename UnaryPredicate, typename Value>
-            static auto invoke(replacer_if replace_if, UnaryPredicate pred, Value && with_what)
+            static auto invoke(replacer_if replace_if, UnaryPredicate pred, Value && new_value)
                 -> decltype(replace_if(std::placeholders::_1, detail::move(pred),
-                        detail::forward<Value>(with_what)))
+                        detail::forward<Value>(new_value)))
             {
                 return replace_if(std::placeholders::_1, detail::move(pred),
-                    detail::forward<Value>(with_what));
+                    detail::forward<Value>(new_value));
             }
         };
 

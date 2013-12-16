@@ -120,6 +120,19 @@ struct identity
     }
 } ident {};
 
+void test_view_replace()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
+    std::stringstream sin{str};
+
+    for(auto & i : istream<int>(sin) | view::replace(1, 42))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
 void test_partial_sort_copy()
 {
     using namespace ranges;
