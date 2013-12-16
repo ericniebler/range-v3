@@ -22,6 +22,43 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            ////////////////////////////////////////////////////////////////////////////////////
+            // iterator_traits_impl
+            template<typename T, typename Enable = void>
+            struct iterator_traits_impl
+            {};
+
+            template<typename T>
+            struct iterator_traits_impl<
+                T,
+                detail::always_t<
+                    void,
+                    typename T::iterator_category,
+                    typename T::value_type,
+                    typename T::difference_type,
+                    typename T::reference,
+                    typename T::pointer>>
+            {
+                using iterator_category = typename T::iterator_category;
+                using value_type = typename T::value_type;
+                using difference_type = typename T::difference_type;
+                using reference = typename T::reference;
+                using pointer = typename T::pointer;
+            };
+
+            template<typename T>
+            struct iterator_traits_impl<T *>
+            {
+                using iterator_category = std::random_access_iterator_tag;
+                using value_type = typename std::remove_const<T>::type;
+                using difference_type = std::ptrdiff_t;
+                using reference = T &;
+                using pointer = T *;
+            };
+        }
+
         namespace concepts
         {
             struct Iterator

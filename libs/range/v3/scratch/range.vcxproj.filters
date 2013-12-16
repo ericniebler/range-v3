@@ -274,5 +274,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\typelist.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

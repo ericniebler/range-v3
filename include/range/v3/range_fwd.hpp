@@ -164,6 +164,17 @@ namespace ranges
 
             template<typename Fn, typename...Args>
             struct binder;
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // always
+            template<typename A, typename...Rest>
+            struct always
+            {
+                using type = A;
+            };
+
+            template<typename A, typename...Rest>
+            using always_t = typename always<A, Rest...>::type;
         }
 
         template<typename First, typename Second>

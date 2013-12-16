@@ -18,6 +18,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <range/v3/utility/typelist.hpp>
 
 namespace ranges
 {
@@ -128,127 +129,6 @@ namespace ranges
 
         namespace detail
         {
-            ////////////////////////////////////////////////////////////////////////////////////
-            // always
-            template<typename A, typename...Rest>
-            struct always
-            {
-                using type = A;
-            };
-
-            template<typename A, typename...Rest>
-            using always_t = typename always<A, Rest...>::type;
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // iterator_traits_impl
-            template<typename T, typename Enable = void>
-            struct iterator_traits_impl
-            {};
-
-            template<typename T>
-            struct iterator_traits_impl<
-                T,
-                detail::always_t<
-                    void,
-                    typename T::iterator_category,
-                    typename T::value_type,
-                    typename T::difference_type,
-                    typename T::reference,
-                    typename T::pointer>>
-            {
-                using iterator_category = typename T::iterator_category;
-                using value_type = typename T::value_type;
-                using difference_type = typename T::difference_type;
-                using reference = typename T::reference;
-                using pointer = typename T::pointer;
-            };
-
-            template<typename T>
-            struct iterator_traits_impl<T *>
-            {
-                using iterator_category = std::random_access_iterator_tag;
-                using value_type = typename std::remove_const<T>::type;
-                using difference_type = std::ptrdiff_t;
-                using reference = T &;
-                using pointer = T *;
-            };
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // list
-            template<typename...>
-            struct list;
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // concat
-            template<typename List0, typename List1>
-            struct concat;
-
-            template<typename ...List1, typename ...List2>
-            struct concat<list<List1...>, list<List2...>>
-            {
-                using type = list<List1..., List2...>;
-            };
-
-            template<typename List0, typename List1>
-            using concat_t = typename concat<List0, List1>::type;
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // pop_front
-            template<typename List>
-            struct pop_front;
-
-            template<typename Head, typename ...List>
-            struct pop_front<list<Head, List...>>
-            {
-                using type = list<List...>;
-            };
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // front
-            template<typename List>
-            struct front;
-
-            template<typename Head, typename ...List>
-            struct front<list<Head, List...>>
-            {
-                using type = Head;
-            };
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // is_empty
-            template<typename List>
-            struct is_empty
-              : false_
-            {};
-
-            template<>
-            struct is_empty<list<>>
-              : true_
-            {};
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // list_of
-            // Generate lists<_,_,_,..._> with N arguments in O(log N)
-            template<int N, typename T, typename List = list<>>
-            struct list_of
-              : concat<typename list_of<N / 2, T, List>::type,
-                       typename list_of<N - N / 2, T, List>::type>
-            {};
-
-            template<typename T, typename List>
-            struct list_of<0, T, List>
-            {
-                using type = List;
-            };
-
-            template<typename T>
-            struct list_of<1, T, list<>>
-            {
-                using type = list<T>;
-            };
-
-            template<int N, typename T>
-            using list_of_t = typename list_of<N, T>::type;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // get_nth_impl
@@ -256,7 +136,7 @@ namespace ranges
             struct get_nth_impl;
 
             template<typename ...VoidPtrs>
-            struct get_nth_impl<list<VoidPtrs...>>
+            struct get_nth_impl<typelist<VoidPtrs...>>
             {
                 template<typename T, typename ...Us>
                 static T eval(VoidPtrs..., T *, Us *...);
@@ -267,7 +147,7 @@ namespace ranges
             template<int N, typename ...Ts>
             using get_nth =
                 typename decltype(
-                    get_nth_impl<list_of_t<N, void *>>::eval((identity<Ts> *)nullptr...)
+                    get_nth_impl<make_typelist_t<N, void *>>::eval((identity<Ts> *)nullptr...)
                 )::type;
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -293,10 +173,10 @@ namespace ranges
               : models_<Concept, get_nth<Args::value, Ts...>...>
             {};
 
-            list<> base_concepts_of_impl_(void *);
+            typelist<> base_concepts_of_impl_(void *);
 
             template<typename...BaseConcepts>
-            list<BaseConcepts...> base_concepts_of_impl_(concepts::refines<BaseConcepts...> *);
+            typelist<BaseConcepts...> base_concepts_of_impl_(concepts::refines<BaseConcepts...> *);
 
             template<typename Concept>
             using base_concepts_of_t = decltype(detail::base_concepts_of_impl_((Concept *)nullptr));
@@ -307,15 +187,15 @@ namespace ranges
             template<typename...Ts>
             struct most_refined_impl_
             {
-                static not_a_concept invoke(list<> *);
+                static not_a_concept invoke(typelist<> *);
 
                 template<typename Head, typename...Tail, typename Impl = most_refined_impl_>
-                static auto invoke(list<Head, Tail...> *) ->
+                static auto invoke(typelist<Head, Tail...> *) ->
                     typename std::conditional<
                         (concepts::models<Head, Ts...>()),
                         Head,
                         decltype(Impl::invoke(
-                            (concat_t<list<Tail...>, base_concepts_of_t<Head>> *)nullptr))
+                            (typelist_concat_t<typelist<Tail...>, base_concepts_of_t<Head>> *)nullptr))
                     >::type;
             };
         }
@@ -328,7 +208,7 @@ namespace ranges
             // most_refined_t
             template<typename Concept, typename...Ts>
             using most_refined_t =
-                decltype(detail::most_refined_impl_<Ts...>::invoke((detail::list<Concept> *)nullptr));
+                decltype(detail::most_refined_impl_<Ts...>::invoke((typelist<Concept> *)nullptr));
 
             template<typename Concept, typename...Ts>
             struct most_refined
