@@ -40,7 +40,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
-                std::partial_sort(ranges::begin(rng), detail::move(middle), ranges::end(rng));
+                std::partial_sort(ranges::begin(rng), std::move(middle), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
 
@@ -54,8 +54,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<RandomAccessRange>,
                                                        range_reference_t<RandomAccessRange>>());
-                std::partial_sort(ranges::begin(rng), detail::move(middle), ranges::end(rng),
-                                  ranges::make_invokable(detail::move(pred)));
+                std::partial_sort(ranges::begin(rng), std::move(middle), ranges::end(rng),
+                                  ranges::make_invokable(std::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
             }
 
@@ -65,10 +65,10 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
             invoke(partial_sorter partial_sort, RandomAccessIterator nth)
-                -> decltype(partial_sort(std::placeholders::_1, detail::move(nth)))
+                -> decltype(partial_sort(std::placeholders::_1, std::move(nth)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
-                return partial_sort(std::placeholders::_1, detail::move(nth));
+                return partial_sort(std::placeholders::_1, std::move(nth));
             }
 
             /// \overload
@@ -77,10 +77,10 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
             invoke(partial_sorter partial_sort, RandomAccessIterator nth, BinaryPredicate pred)
-                -> decltype(partial_sort(std::placeholders::_1, detail::move(nth), detail::move(pred)))
+                -> decltype(partial_sort(std::placeholders::_1, std::move(nth), std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
-                return partial_sort(std::placeholders::_1, detail::move(nth), detail::move(pred));
+                return partial_sort(std::placeholders::_1, std::move(nth), std::move(pred));
             }
         };
 

@@ -62,7 +62,7 @@ namespace ranges
                 base_range_iterator it_;
 
                 basic_iterator(FltRng &rng, base_range_iterator it)
-                  : rng_(&rng), it_(detail::move(it))
+                  : rng_(&rng), it_(std::move(it))
                 {
                     satisfy();
                 }
@@ -100,7 +100,7 @@ namespace ranges
                          typename = typename std::enable_if<
                                         !std::is_const<OtherFltRng>::value>::type>
                 basic_iterator(basic_iterator<OtherFltRng> that)
-                  : rng_(that.rng_), it_(detail::move(that).it_)
+                  : rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };
         public:
@@ -108,7 +108,7 @@ namespace ranges
             using const_iterator = basic_iterator<filter_range_view const>;
 
             filter_range_view(InputRange && rng, UnaryPredicate pred)
-              : rng_and_pred_{detail::forward<InputRange>(rng), make_invokable(detail::move(pred))}
+              : rng_and_pred_{std::forward<InputRange>(rng), make_invokable(std::move(pred))}
             {}
             iterator begin()
             {
@@ -156,12 +156,12 @@ namespace ranges
                     UnaryPredicate pred_;
                 public:
                     filterer1(UnaryPredicate pred)
-                      : pred_(detail::move(pred))
+                      : pred_(std::move(pred))
                     {}
                     template<typename InputRange, typename This>
                     static filter_range_view<InputRange, UnaryPredicate> pipe(InputRange && rng, This && this_)
                     {
-                        return {detail::forward<InputRange>(rng), detail::forward<This>(this_).pred_};
+                        return {std::forward<InputRange>(rng), std::forward<This>(this_).pred_};
                     }
                 };
             public:
@@ -169,12 +169,12 @@ namespace ranges
                 static filter_range_view<InputRange, UnaryPredicate>
                 invoke(filterer, InputRange && rng, UnaryPredicate pred)
                 {
-                    return {detail::forward<InputRange>(rng), detail::move(pred)};
+                    return {std::forward<InputRange>(rng), std::move(pred)};
                 }
                 template<typename UnaryPredicate>
                 static filterer1<UnaryPredicate> invoke(filterer, UnaryPredicate pred)
                 {
-                    return {detail::move(pred)};
+                    return {std::move(pred)};
                 }
             };
 

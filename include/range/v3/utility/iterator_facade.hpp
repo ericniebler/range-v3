@@ -156,7 +156,7 @@ namespace ranges
                 private:
                     Iterator const it_;
                     explicit result_type(Iterator i)
-                      : it_(detail::move(i))
+                      : it_(std::move(i))
                     {}
                     friend struct operator_brackets_const_proxy;
                 public:
@@ -168,7 +168,7 @@ namespace ranges
                 };
                 static result_type apply(Iterator i)
                 {
-                    return result_type{detail::move(i)};
+                    return result_type{std::move(i)};
                 }
             };
 
@@ -181,7 +181,7 @@ namespace ranges
                 using value_type = typename std::iterator_traits<Iterator>::value_type;
                     Iterator const it_;
                     explicit result_type(Iterator i)
-                      : it_(detail::move(i))
+                      : it_(std::move(i))
                     {}
                     friend struct operator_brackets_proxy;
                 public:
@@ -197,13 +197,13 @@ namespace ranges
                     }
                     operator_brackets_proxy const & operator=(value_type && x) const
                     {
-                        *it_ = detail::move(x);
+                        *it_ = std::move(x);
                         return *this;
                     }
                 };
                 static result_type apply(Iterator i)
                 {
-                    return result_type{detail::move(i)};
+                    return result_type{std::move(i)};
                 }
             };
 
@@ -293,7 +293,7 @@ namespace ranges
             public:
                 explicit writable_postfix_increment_proxy(Iterator x)
                   : value_(*x)
-                  , it_(detail::move(x))
+                  , it_(std::move(x))
                 {}
                 // Dereferencing must return a proxy so that both *r++ = o and
                 // value_type(*r++) can work.  In this case, *r is the same as
@@ -384,7 +384,7 @@ namespace ranges
                 private:
                     friend struct operator_arrow_dispatch;
                     explicit proxy(Reference x)
-                      : m_ref(detail::move(x))
+                      : m_ref(std::move(x))
                     {}
                     Reference m_ref;
                 };
@@ -392,7 +392,7 @@ namespace ranges
                 using result_type = proxy;
                 static result_type apply(Reference x)
                 {
-                    return result_type{detail::move(x)};
+                    return result_type{std::move(x)};
                 }
             };
 
@@ -585,7 +585,7 @@ namespace ranges
             Derived operator-(difference_type x) &&
             {
                 *this -= x;
-                return detail::move(*this);
+                return std::move(*this);
             }
         };
 

@@ -37,16 +37,16 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 return std::remove_if(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
             /// for rng | remove(pred)
             template<typename UnaryPredicate>
             static auto invoke(remover_if remove_if, UnaryPredicate pred) ->
-                decltype(remove_if(std::placeholders::_1, detail::move(pred)))
+                decltype(remove_if(std::placeholders::_1, std::move(pred)))
             {
-                return remove_if(std::placeholders::_1, detail::move(pred));
+                return remove_if(std::placeholders::_1, std::move(pred));
             }
         };
 

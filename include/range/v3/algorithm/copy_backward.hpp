@@ -39,17 +39,17 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
                 CONCEPT_ASSERT(ranges::OutputIterator<BidirectionalIterator,
                                                       range_reference_t<BidirectionalRange>>());
-                return std::copy_backward(ranges::begin(rng), ranges::end(rng), detail::move(out));
+                return std::copy_backward(ranges::begin(rng), ranges::end(rng), std::move(out));
             }
 
             /// \overload
             /// for rng | copy_backward(out)
             template<typename BidirectionalIterator>
             static auto invoke(backward_copier copy_backward, BidirectionalIterator out)
-                -> decltype(copy_backward(std::placeholders::_1, detail::move(out)))
+                -> decltype(copy_backward(std::placeholders::_1, std::move(out)))
             {
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
-                return copy_backward(std::placeholders::_1, detail::move(out));
+                return copy_backward(std::placeholders::_1, std::move(out));
             }
         };
 

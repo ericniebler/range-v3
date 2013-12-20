@@ -36,15 +36,15 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 RANGES_ASSERT(static_cast<Size>(std::distance(ranges::begin(rng), ranges::end(rng))) >= n);
                 std::fill_n(ranges::begin(rng), n, val);
-                return detail::forward<ForwardRange>(rng);
+                return std::forward<ForwardRange>(rng);
             }
 
             /// \overload
             template<typename Size, typename Value>
             static auto invoke(filler_n fill_n, Size n, Value && val)
-                -> decltype(fill_n(std::placeholders::_1, n, detail::forward<Value>(val)))
+                -> decltype(fill_n(std::placeholders::_1, n, std::forward<Value>(val)))
             {
-                return fill_n(std::placeholders::_1, n, detail::forward<Value>(val));
+                return fill_n(std::placeholders::_1, n, std::forward<Value>(val));
             }
         };
 

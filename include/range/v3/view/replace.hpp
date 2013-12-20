@@ -40,8 +40,8 @@ namespace ranges
 
                     template<typename Value1, typename Value2>
                     replacer_fun(Value1 && old_value, Value2 && new_value)
-                      : old_value_(detail::forward<Value1>(old_value)),
-                        new_value_(detail::forward<Value2>(new_value))
+                      : old_value_(std::forward<Value1>(old_value)),
+                        new_value_(std::forward<Value2>(new_value))
                     {}
 
                 public:
@@ -64,9 +64,9 @@ namespace ranges
                         typename std::decay<Value1>::type const &>());
                     CONCEPT_ASSERT(ranges::Convertible<typename std::decay<Value1>::type const &,
                         range_reference_t<InputRange>>());
-                    return {detail::forward<InputRange>(rng),
-                            {detail::forward<Value1>(old_value),
-                             detail::forward<Value2>(new_value)}};
+                    return {std::forward<InputRange>(rng),
+                            {std::forward<Value1>(old_value),
+                             std::forward<Value2>(new_value)}};
 
                 }
 
@@ -75,11 +75,11 @@ namespace ranges
                     CONCEPT_REQUIRES(ranges::SameType<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
                 static auto invoke(replacer replace, Value1 && old_value, Value2 && new_value) ->
-                    decltype(replace(std::placeholders::_1, detail::forward<Value1>(old_value),
-                        detail::forward<Value2>(new_value)))
+                    decltype(replace(std::placeholders::_1, std::forward<Value1>(old_value),
+                        std::forward<Value2>(new_value)))
                 {
-                    return replace(std::placeholders::_1, detail::forward<Value1>(old_value),
-                        detail::forward<Value2>(new_value));
+                    return replace(std::placeholders::_1, std::forward<Value1>(old_value),
+                        std::forward<Value2>(new_value));
                 }
             };
 

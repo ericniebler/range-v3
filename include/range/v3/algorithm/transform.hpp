@@ -72,8 +72,8 @@ namespace ranges
                     concepts::Callable::result_t<invokable_t<UnaryFunction>,
                                                  range_reference_t<InputRange1>>>());
                 return std::transform(ranges::begin(rng), ranges::end(rng),
-                                      detail::move(out),
-                                      ranges::make_invokable(detail::move(fun)));
+                                      std::move(out),
+                                      ranges::make_invokable(std::move(fun)));
             }
 
             /// \overload
@@ -94,8 +94,8 @@ namespace ranges
                                                  range_reference_t<InputRange2>>>());
                 return detail::transform_impl(ranges::begin(rng1), ranges::end(rng1),
                                               ranges::begin(rng2), ranges::end(rng2),
-                                              detail::move(out),
-                                              ranges::make_invokable(detail::move(fun)));
+                                              std::move(out),
+                                              ranges::make_invokable(std::move(fun)));
             }
 
             /// \overload
@@ -103,9 +103,9 @@ namespace ranges
             template<typename OutputIterator, typename UnaryFunction>
             static auto
             invoke(transformer transform, OutputIterator out, UnaryFunction fun)
-                -> decltype(transform(std::placeholders::_1, detail::move(out), detail::move(fun)))
+                -> decltype(transform(std::placeholders::_1, std::move(out), std::move(fun)))
             {
-                return transform(std::placeholders::_1, detail::move(out), detail::move(fun));
+                return transform(std::placeholders::_1, std::move(out), std::move(fun));
             }
 
             /// \overload
@@ -121,11 +121,11 @@ namespace ranges
             static auto
             invoke(transformer transform, InputRange2 && rng2, OutputIterator out,
                    BinaryFunction fun)
-                   -> decltype(transform(std::placeholders::_1, detail::forward<InputRange2>(rng2),
-                    detail::move(out), detail::move(fun)))
+                   -> decltype(transform(std::placeholders::_1, std::forward<InputRange2>(rng2),
+                    std::move(out), std::move(fun)))
             {
-                return transform(std::placeholders::_1, detail::forward<InputRange2>(rng2),
-                    detail::move(out), detail::move(fun));
+                return transform(std::placeholders::_1, std::forward<InputRange2>(rng2),
+                    std::move(out), std::move(fun));
             }
         };
 

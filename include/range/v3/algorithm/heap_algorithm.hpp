@@ -38,7 +38,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::push_heap(ranges::begin(rng), ranges::end(rng));
-                return detail::forward<RandomAccessRange>(rng);
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -48,17 +48,17 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::push_heap(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
-                return detail::forward<RandomAccessRange>(rng);
+                    ranges::make_invokable(std::move(pred)));
+                return std::forward<RandomAccessRange>(rng);
             }
 
             template<typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(heap_pusher push_heap, BinaryPredicate pred)
-                -> decltype(push_heap(std::placeholders::_1, detail::move(pred)))
+                -> decltype(push_heap(std::placeholders::_1, std::move(pred)))
             {
-                return push_heap(std::placeholders::_1, detail::move(pred));
+                return push_heap(std::placeholders::_1, std::move(pred));
             }
         };
 
@@ -79,7 +79,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::pop_heap(ranges::begin(rng), ranges::end(rng));
-                return detail::forward<RandomAccessRange>(rng);
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -89,8 +89,8 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::pop_heap(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
-                return detail::forward<RandomAccessRange>(rng);
+                    ranges::make_invokable(std::move(pred)));
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -98,9 +98,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(heap_popper pop_heap, BinaryPredicate pred)
-                -> decltype(pop_heap(std::placeholders::_1, detail::move(pred)))
+                -> decltype(pop_heap(std::placeholders::_1, std::move(pred)))
             {
-                return pop_heap(std::placeholders::_1, detail::move(pred));
+                return pop_heap(std::placeholders::_1, std::move(pred));
             }
         };
 
@@ -121,7 +121,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::make_heap(ranges::begin(rng), ranges::end(rng));
-                return detail::forward<RandomAccessRange>(rng);
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -131,8 +131,8 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::make_heap(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
-                return detail::forward<RandomAccessRange>(rng);
+                    ranges::make_invokable(std::move(pred)));
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -140,9 +140,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(heap_maker make_heap, BinaryPredicate pred)
-                -> decltype(make_heap(std::placeholders::_1, detail::move(pred)))
+                -> decltype(make_heap(std::placeholders::_1, std::move(pred)))
             {
-                return make_heap(std::placeholders::_1, detail::move(pred));
+                return make_heap(std::placeholders::_1, std::move(pred));
             }
         };
 
@@ -163,7 +163,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::sort_heap(ranges::begin(rng), ranges::end(rng));
-                return detail::forward<RandomAccessRange>(rng);
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -173,8 +173,8 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 std::sort_heap(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
-                return detail::forward<RandomAccessRange>(rng);
+                    ranges::make_invokable(std::move(pred)));
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -182,9 +182,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(heap_sorter sort_heap, BinaryPredicate pred)
-                -> decltype(sort_heap(std::placeholders::_1, detail::move(pred)))
+                -> decltype(sort_heap(std::placeholders::_1, std::move(pred)))
             {
-                return sort_heap(std::placeholders::_1, detail::move(pred));
+                return sort_heap(std::placeholders::_1, std::move(pred));
             }
         };
 

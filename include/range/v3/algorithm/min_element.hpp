@@ -51,7 +51,7 @@ namespace ranges
                                                        range_reference_t<ForwardRange>,
                                                        range_reference_t<ForwardRange>>());
                 return std::min_element(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
@@ -60,9 +60,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(min_element_finder min_element, BinaryPredicate pred)
-                -> decltype(min_element(std::placeholders::_1, detail::move(pred)))
+                -> decltype(min_element(std::placeholders::_1, std::move(pred)))
             {
-                return min_element(std::placeholders::_1, detail::move(pred));
+                return min_element(std::placeholders::_1, std::move(pred));
             }
         };
 

@@ -34,7 +34,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 std::reverse(ranges::begin(rng), ranges::end(rng));
-                return detail::forward<BidirectionalRange>(rng);
+                return std::forward<BidirectionalRange>(rng);
             }
         };
 

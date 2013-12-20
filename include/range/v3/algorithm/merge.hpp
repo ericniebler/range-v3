@@ -40,7 +40,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputRange1>,
                                                           range_reference_t<InputRange2>> ());
                 return std::merge(ranges::begin(rng1), ranges::end(rng1),
-                                  ranges::begin(rng2), ranges::end(rng2), detail::move(out));
+                                  ranges::begin(rng2), ranges::end(rng2), std::move(out));
             }
 
             /// \overload
@@ -57,8 +57,8 @@ namespace ranges
                                                        range_reference_t<InputRange2>>());
                 return std::merge(ranges::begin(rng1), ranges::end(rng1),
                                   ranges::begin(rng2), ranges::end(rng2),
-                                  detail::move(out),
-                                  ranges::make_invokable(detail::move(pred)));
+                                  std::move(out),
+                                  ranges::make_invokable(std::move(pred)));
             }
         };
 

@@ -48,7 +48,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
                                                       range_reference_t<ForwardRange>>());
                 return std::replace_copy_if(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out), ranges::make_invokable(detail::move(pred)), new_value);
+                    std::move(out), ranges::make_invokable(std::move(pred)), new_value);
             }
 
             // BUGBUG should "rng | replace_copy_if(out, pred, that)" be lazy?
@@ -58,11 +58,11 @@ namespace ranges
             template<typename OutputIterator, typename UnaryPredicate, typename Value>
             static auto invoke(replacer_copier_if replace_copy_if, OutputIterator out,
                                UnaryPredicate pred, Value && new_value)
-                -> decltype(replace_copy_if(std::placeholders::_1, detail::move(out),
-                            detail::move(pred), detail::forward<Value>(new_value)))
+                -> decltype(replace_copy_if(std::placeholders::_1, std::move(out),
+                            std::move(pred), std::forward<Value>(new_value)))
             {
-                return replace_copy_if(std::placeholders::_1, detail::move(out),
-                    detail::move(pred), detail::forward<Value>(new_value));
+                return replace_copy_if(std::placeholders::_1, std::move(out),
+                    std::move(pred), std::forward<Value>(new_value));
             }
         };
 

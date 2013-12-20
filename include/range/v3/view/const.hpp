@@ -60,7 +60,7 @@ namespace ranges
                 template<typename Rng>
                 static const_range_view<Rng> invoke(conster, Rng && rng)
                 {
-                    return const_range_view<Rng>{detail::forward<Rng>(rng)};
+                    return const_range_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 

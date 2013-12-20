@@ -34,15 +34,15 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 std::fill(ranges::begin(rng), ranges::end(rng), val);
-                return detail::forward<ForwardRange>(rng);
+                return std::forward<ForwardRange>(rng);
             }
 
             /// \overload
             template<typename Value>
             static auto invoke(filler fill, Value && val)
-                -> decltype(fill(std::placeholders::_1, detail::forward<Value>(val)))
+                -> decltype(fill(std::placeholders::_1, std::forward<Value>(val)))
             {
-                return fill(std::placeholders::_1, detail::forward<Value>(val));
+                return fill(std::placeholders::_1, std::forward<Value>(val));
             }
         };
 

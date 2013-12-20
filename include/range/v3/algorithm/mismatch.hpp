@@ -87,7 +87,7 @@ namespace ranges
                 return ranges::detail::mismatch_impl(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
         };
 

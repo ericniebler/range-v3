@@ -44,9 +44,9 @@ namespace ranges
             /// \pre \c InputRange is a model of the InputRange concept
             template<typename Value>
             static auto invoke(counter count, Value && val)
-                -> decltype(count(std::placeholders::_1, detail::forward<Value>(val)))
+                -> decltype(count(std::placeholders::_1, std::forward<Value>(val)))
             {
-                return count(std::placeholders::_1, detail::forward<Value>(val));
+                return count(std::placeholders::_1, std::forward<Value>(val));
             }
         };
 

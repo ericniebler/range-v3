@@ -27,7 +27,7 @@ namespace ranges
                 template<typename T>
                 bool operator()(T && t, T && u) const
                 {
-                    return !(detail::forward<T>(t) == detail::forward<T>(u));
+                    return !(std::forward<T>(t) == std::forward<T>(u));
                 }
             };
         }
@@ -40,7 +40,7 @@ namespace ranges
                 static unique_range_view<ForwardRange>
                 invoke(uniquer, ForwardRange && rng)
                 {
-                    return {detail::forward<ForwardRange>(rng), detail::not_equal_to{}};
+                    return {std::forward<ForwardRange>(rng), detail::not_equal_to{}};
                 }
             };
 

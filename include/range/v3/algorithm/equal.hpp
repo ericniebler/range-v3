@@ -53,7 +53,7 @@ namespace ranges
                                                        range_reference_t<InputRange2>>());
                 return std::equal(ranges::begin(rng1), ranges::end(rng1),
                                   ranges::begin(rng2), ranges::end(rng2),
-                                  ranges::make_invokable(detail::move(pred)));
+                                  ranges::make_invokable(std::move(pred)));
             }
         };
 

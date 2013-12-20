@@ -52,7 +52,7 @@ namespace ranges
                                                        range_reference_t<ForwardRange>>());
                 CONCEPT_ASSERT(ranges::MoveAssignable<range_reference_t<ForwardRange>>());
                 return std::unique(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
@@ -61,9 +61,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(uniquer unique, BinaryPredicate pred)
-                -> decltype(unique(std::placeholders::_1, detail::move(pred)))
+                -> decltype(unique(std::placeholders::_1, std::move(pred)))
             {
-                return unique(std::placeholders::_1, detail::move(pred));
+                return unique(std::placeholders::_1, std::move(pred));
             }
         };
 

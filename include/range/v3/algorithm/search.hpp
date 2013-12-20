@@ -58,15 +58,15 @@ namespace ranges
                                                        range_reference_t<ForwardRange2 const>>());
                 return std::search(ranges::begin(rng1), ranges::end(rng1),
                                    ranges::begin(rng2), ranges::end(rng2),
-                                   ranges::make_invokable(detail::move(pred)));
+                                   ranges::make_invokable(std::move(pred)));
             }
 
             template<typename ForwardRange2>
             static auto
             invoke(searcher search, ForwardRange2 && rng2) ->
-                decltype(search(std::placeholders::_1, detail::forward<ForwardRange2>(rng2)))
+                decltype(search(std::placeholders::_1, std::forward<ForwardRange2>(rng2)))
             {
-                return search(std::placeholders::_1, detail::forward<ForwardRange2>(rng2));
+                return search(std::placeholders::_1, std::forward<ForwardRange2>(rng2));
             }
 
             /// \overload
@@ -75,11 +75,11 @@ namespace ranges
                                 !ranges::Range<BinaryPredicate>())>
             static auto
             invoke(searcher search, ForwardRange2 && rng2, BinaryPredicate pred) ->
-                decltype(search(std::placeholders::_1, detail::forward<ForwardRange2>(rng2),
-                    detail::move(pred)))
+                decltype(search(std::placeholders::_1, std::forward<ForwardRange2>(rng2),
+                    std::move(pred)))
             {
-                return search(std::placeholders::_1, detail::forward<ForwardRange2>(rng2),
-                    detail::move(pred));
+                return search(std::placeholders::_1, std::forward<ForwardRange2>(rng2),
+                    std::move(pred));
             }
         };
 

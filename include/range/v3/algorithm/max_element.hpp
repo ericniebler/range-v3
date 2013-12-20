@@ -51,7 +51,7 @@ namespace ranges
                                                        range_reference_t<ForwardRange>,
                                                        range_reference_t<ForwardRange>>());
                 return std::max_element(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
@@ -60,9 +60,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(max_element_finder max_element, BinaryPredicate pred)
-                -> decltype(max_element(std::placeholders::_1, detail::move(pred)))
+                -> decltype(max_element(std::placeholders::_1, std::move(pred)))
             {
-                return max_element(std::placeholders::_1, detail::move(pred));
+                return max_element(std::placeholders::_1, std::move(pred));
             }
         };
 

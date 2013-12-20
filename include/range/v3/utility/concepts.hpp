@@ -362,8 +362,8 @@ namespace ranges
                 template<typename Fun, typename ...Args>
                 auto requires(Fun && fun, Args &&... args) -> decltype(
                     concepts::valid_expr(
-                        (static_cast<void>(detail::forward<Fun>(fun)(
-                            detail::forward<Args>(args)...)), 42)
+                        (static_cast<void>(std::forward<Fun>(fun)(
+                            std::forward<Args>(args)...)), 42)
                     ));
             };
 
@@ -374,7 +374,7 @@ namespace ranges
                 auto requires(Fun && fun, Args &&... args) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(
-                            detail::forward<Fun>(fun)(detail::forward<Args>(args)...))
+                            std::forward<Fun>(fun)(std::forward<Args>(args)...))
                     ));
             };
 
@@ -384,7 +384,7 @@ namespace ranges
                 template<typename Fun, typename Arg>
                 auto requires(Fun && fun, Arg && arg) -> decltype(
                     concepts::valid_expr(
-                        detail::forward<Fun>(fun)(detail::forward<Arg>(arg))
+                        std::forward<Fun>(fun)(std::forward<Arg>(arg))
                     ));
             };
 
@@ -394,8 +394,8 @@ namespace ranges
                 template<typename Fun, typename Arg0, typename Arg1>
                 auto requires(Fun && fun, Arg0 && arg0, Arg1 && arg1) -> decltype(
                     concepts::valid_expr(
-                        detail::forward<Fun>(fun)(detail::forward<Arg0>(arg0),
-                                                  detail::forward<Arg1>(arg1))
+                        std::forward<Fun>(fun)(std::forward<Arg0>(arg0),
+                                                  std::forward<Arg1>(arg1))
                     ));
             };
         }

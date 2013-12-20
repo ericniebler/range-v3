@@ -51,7 +51,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::Convertible<result_of_t<RandomNumberGenerator()>,
                                                    range_difference_t<RandomAccessRange>>());
                 std::random_shuffle(ranges::begin(rng), ranges::end(rng),
-                    detail::forward<RandomNumberGenerator>(gen));
+                    std::forward<RandomNumberGenerator>(gen));
                 return std::forward<RandomAccessRange>(rng);
             }
 
@@ -61,10 +61,10 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<RandomNumberGenerator>())>
             static auto invoke(random_shuffler random_shuffle, RandomNumberGenerator && gen)
                 -> decltype(random_shuffle(std::placeholders::_1,
-                    detail::forward<RandomNumberGenerator>(gen)))
+                    std::forward<RandomNumberGenerator>(gen)))
             {
                 return random_shuffle(std::placeholders::_1,
-                    detail::forward<RandomNumberGenerator>(gen));
+                    std::forward<RandomNumberGenerator>(gen));
             }
         };
 

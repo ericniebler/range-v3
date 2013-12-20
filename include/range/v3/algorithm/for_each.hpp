@@ -39,16 +39,16 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
                                                 range_reference_t<InputRange>>());
                 return std::for_each(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(fun)));
+                    ranges::make_invokable(std::move(fun)));
             }
 
             /// \overload
             /// for rng | for_each(fun)
             template<typename UnaryFunction>
             static auto invoke(for_eacher for_each, UnaryFunction fun)
-                -> decltype(for_each(std::placeholders::_1, detail::move(fun)))
+                -> decltype(for_each(std::placeholders::_1, std::move(fun)))
             {
-                return for_each(std::placeholders::_1, detail::move(fun));
+                return for_each(std::placeholders::_1, std::move(fun));
             }
         };
 

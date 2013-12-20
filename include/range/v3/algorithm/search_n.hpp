@@ -59,18 +59,18 @@ namespace ranges
                                                        range_reference_t<ForwardRange>,
                                                        Value const &>());
                 return std::search_n(ranges::begin(rng), ranges::end(rng),
-                    count, value, ranges::make_invokable(detail::move(pred)));
+                    count, value, ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
             template<typename Integer, typename Value>
             static auto
             invoke(searcher_n search_n, Integer count, Value && value) ->
-                decltype(search_n(std::placeholders::_1, detail::move(count),
-                    detail::forward<Value>(value)))
+                decltype(search_n(std::placeholders::_1, std::move(count),
+                    std::forward<Value>(value)))
             {
-                return search_n(std::placeholders::_1, detail::move(count),
-                    detail::forward<Value>(value));
+                return search_n(std::placeholders::_1, std::move(count),
+                    std::forward<Value>(value));
             }
 
             /// \overload
@@ -78,11 +78,11 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Integral<Integer>())>
             static auto
             invoke(searcher_n search_n, Integer count, Value && value, BinaryPredicate pred) ->
-                decltype(search_n(std::placeholders::_1, detail::move(count),
-                    detail::forward<Value>(value), detail::move(pred)))
+                decltype(search_n(std::placeholders::_1, std::move(count),
+                    std::forward<Value>(value), std::move(pred)))
             {
-                return search_n(std::placeholders::_1, detail::move(count),
-                    detail::forward<Value>(value), detail::move(pred));
+                return search_n(std::placeholders::_1, std::move(count),
+                    std::forward<Value>(value), std::move(pred));
             }
         };
 

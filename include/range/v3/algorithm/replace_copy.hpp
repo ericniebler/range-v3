@@ -39,7 +39,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<ForwardRange>>());
                 return std::replace_copy(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out), old_value, new_value);
+                    std::move(out), old_value, new_value);
             }
 
             // BUGBUG should "rng | replace_copy(this, that)" be lazy?
@@ -49,12 +49,12 @@ namespace ranges
             template<typename OutputIterator, typename Value1, typename Value2>
             static auto invoke(replacer_copier replace_copy, OutputIterator out, Value1 && old_value,
                 Value2 && new_value) ->
-                decltype(replace_copy(std::placeholders::_1, detail::move(out),
-                    detail::forward<Value1>(old_value), detail::forward<Value2>(new_value)))
+                decltype(replace_copy(std::placeholders::_1, std::move(out),
+                    std::forward<Value1>(old_value), std::forward<Value2>(new_value)))
             {
                 CONCEPT_ASSERT(ranges::Iterator<OutputIterator>());
-                return replace_copy(std::placeholders::_1, detail::move(out),
-                    detail::forward<Value1>(old_value), detail::forward<Value2>(new_value));
+                return replace_copy(std::placeholders::_1, std::move(out),
+                    std::forward<Value1>(old_value), std::forward<Value2>(new_value));
             }
         };
 

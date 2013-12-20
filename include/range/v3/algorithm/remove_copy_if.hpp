@@ -40,7 +40,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::remove_copy_if(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out), ranges::make_invokable(detail::move(pred)));
+                    std::move(out), ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
@@ -48,11 +48,11 @@ namespace ranges
             template<typename OutputIterator, typename UnaryPredicate>
             static auto
             invoke(remover_copier_if remove_copy_if, OutputIterator out, UnaryPredicate pred) ->
-                decltype(remove_copy_if(std::placeholders::_1, detail::move(out),
-                    detail::move(pred)))
+                decltype(remove_copy_if(std::placeholders::_1, std::move(out),
+                    std::move(pred)))
             {
-                return remove_copy_if(std::placeholders::_1, detail::move(out),
-                    detail::move(pred));
+                return remove_copy_if(std::placeholders::_1, std::move(out),
+                    std::move(pred));
             }
         };
 

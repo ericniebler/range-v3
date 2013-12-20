@@ -36,15 +36,15 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 return std::partition(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
             template<typename UnaryPredicate>
             static auto invoke(partitioner partition, UnaryPredicate pred)
-                -> decltype(partition(std::placeholders::_1, detail::move(pred)))
+                -> decltype(partition(std::placeholders::_1, std::move(pred)))
             {
-                return partition(std::placeholders::_1, detail::move(pred));
+                return partition(std::placeholders::_1, std::move(pred));
             }
         };
 

@@ -45,7 +45,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return std::next_permutation(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
         };
 
@@ -73,7 +73,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 return std::prev_permutation(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
         };
 

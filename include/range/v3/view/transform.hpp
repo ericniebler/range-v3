@@ -59,7 +59,7 @@ namespace ranges
                 base_range_iterator it_;
 
                 basic_iterator(TfxRng &rng, base_range_iterator it)
-                  : rng_(&rng), it_(detail::move(it))
+                  : rng_(&rng), it_(std::move(it))
                 {}
                 void increment()
                 {
@@ -99,7 +99,7 @@ namespace ranges
                          typename = typename std::enable_if<
                                         !std::is_const<OtherTfxRng>::value>::type>
                 basic_iterator(basic_iterator<OtherTfxRng> that)
-                  : rng_(that.rng_), it_(detail::move(that).it_)
+                  : rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };
 
@@ -108,7 +108,7 @@ namespace ranges
             using const_iterator = basic_iterator<transform_range_view const>;
 
             transform_range_view(InputRange && rng, UnaryFunction fun)
-              : rng_and_fun_{detail::forward<InputRange>(rng), make_invokable(detail::move(fun))}
+              : rng_and_fun_{std::forward<InputRange>(rng), make_invokable(std::move(fun))}
             {}
             iterator begin()
             {
@@ -156,13 +156,13 @@ namespace ranges
                     UnaryFunction fun_;
                 public:
                     transformer1(UnaryFunction fun)
-                      : fun_(detail::move(fun))
+                      : fun_(std::move(fun))
                     {}
                     template<typename InputRange, typename This>
                     static transform_range_view<InputRange, UnaryFunction>
                     pipe(InputRange && rng, This && this_)
                     {
-                        return {detail::forward<InputRange>(rng), detail::forward<This>(this_).fun_};
+                        return {std::forward<InputRange>(rng), std::forward<This>(this_).fun_};
                     }
                 };
             public:
@@ -174,14 +174,14 @@ namespace ranges
                     CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                     CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
                                                     range_reference_t<InputRange1>>());
-                    return {detail::forward<InputRange1>(rng), detail::move(fun)};
+                    return {std::forward<InputRange1>(rng), std::move(fun)};
                 }
 
                 /// \overload
                 template<typename UnaryFunction>
                 static transformer1<UnaryFunction> invoke(transformer, UnaryFunction fun)
                 {
-                    return {detail::move(fun)};
+                    return {std::move(fun)};
                 }
             };
 

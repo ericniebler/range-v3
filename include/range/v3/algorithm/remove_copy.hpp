@@ -43,7 +43,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputRange>,
                                                           Value const &>());
                 return std::remove_copy(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out), val);
+                    std::move(out), val);
             }
 
             /// \overload
@@ -51,11 +51,11 @@ namespace ranges
             template<typename OutputIterator, typename Value>
             static auto
             invoke(remover_copier remove_copy, OutputIterator out, Value && val) ->
-                decltype(remove_copy(std::placeholders::_1, detail::move(out),
-                    detail::forward<Value>(val)))
+                decltype(remove_copy(std::placeholders::_1, std::move(out),
+                    std::forward<Value>(val)))
             {
-                return remove_copy(std::placeholders::_1, detail::move(out),
-                    detail::forward<Value>(val));
+                return remove_copy(std::placeholders::_1, std::move(out),
+                    std::forward<Value>(val));
             }
         };
 

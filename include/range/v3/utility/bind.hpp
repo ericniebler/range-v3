@@ -50,7 +50,7 @@ namespace ranges
                 static auto apply_(T && t, Args && args, integer_sequence<Is...>)
                     -> decltype(std::declval<T>()(std::get<Is>(std::declval<Args>())...))
                 {
-                    return detail::forward<T>(t)(std::get<Is>(detail::forward<Args>(args))...);
+                    return std::forward<T>(t)(std::get<Is>(std::forward<Args>(args))...);
                 }
             public:
                 template<typename T, typename Args,
@@ -59,7 +59,7 @@ namespace ranges
                                             !is_bind_expression<Tt>::value, int>::type = 0>
                 T && operator()(T && t, Args &&) const
                 {
-                    return detail::forward<T>(t);
+                    return std::forward<T>(t);
                 }
 
                 template<typename T, typename Args,
@@ -78,7 +78,7 @@ namespace ranges
                     -> decltype(mu_::apply_(std::declval<T>(), std::declval<Args>(),
                             integer_sequence_t<std::tuple_size<uncvref_t<Args>>::value>{}))
                 {
-                    return mu_::apply_(detail::forward<T>(t), detail::forward<Args>(args),
+                    return mu_::apply_(std::forward<T>(t), std::forward<Args>(args),
                         integer_sequence_t<std::tuple_size<uncvref_t<Args>>::value>{});
                 }
             } mu {};
@@ -94,9 +94,9 @@ namespace ranges
                            detail::mu(std::get<Is>(std::declval<BoundArgs>()),
                                       std::declval<Args>())...))
                 {
-                    return detail::forward<Fn>(fn)(
-                        detail::mu(std::get<Is>(detail::forward<BoundArgs>(bound_args)),
-                                   detail::forward<Args>(args))...);
+                    return std::forward<Fn>(fn)(
+                        detail::mu(std::get<Is>(std::forward<BoundArgs>(bound_args)),
+                                   std::forward<Args>(args))...);
                 }
             } bind_apply {};
 

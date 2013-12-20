@@ -50,7 +50,7 @@ namespace ranges
                                                        range_reference_t<ForwardRange>,
                                                        range_reference_t<ForwardRange>>());
                 return std::adjacent_find(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
         };
 

@@ -37,7 +37,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 return std::count_if(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \brief template function \c counter::operator()
@@ -47,9 +47,9 @@ namespace ranges
             /// \pre \c UnaryPredicate is a model of the UnaryPredicate concept
             template<typename UnaryPredicate>
             static auto invoke(counter_if count_if, UnaryPredicate pred)
-                -> decltype(count_if(std::placeholders::_1, detail::move(pred)))
+                -> decltype(count_if(std::placeholders::_1, std::move(pred)))
             {
-                return count_if(std::placeholders::_1, detail::move(pred));
+                return count_if(std::placeholders::_1, std::move(pred));
             }
         };
 

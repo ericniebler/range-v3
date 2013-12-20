@@ -39,7 +39,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
                 std::sort(ranges::begin(rng), ranges::end(rng));
-                return detail::forward<RandomAccessRange>(rng);
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
@@ -51,17 +51,17 @@ namespace ranges
                                                        range_reference_t<RandomAccessRange>,
                                                        range_reference_t<RandomAccessRange>>());
                 std::sort(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
-                return detail::forward<RandomAccessRange>(rng);
+                    ranges::make_invokable(std::move(pred)));
+                return std::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
             template<typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto invoke(sorter sort, BinaryPredicate pred)
-                -> decltype(sort(std::placeholders::_1, detail::move(pred)))
+                -> decltype(sort(std::placeholders::_1, std::move(pred)))
             {
-                return sort(std::placeholders::_1, detail::move(pred));
+                return sort(std::placeholders::_1, std::move(pred));
             }
         };
 

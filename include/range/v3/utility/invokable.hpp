@@ -35,7 +35,7 @@ namespace ranges
             auto operator()(T && t) const ->
                 typename std::enable_if<!std::is_member_pointer<U>::value, T>::type
             {
-                return detail::forward<T>(t);
+                return std::forward<T>(t);
             }
         } make_invokable{};
     }

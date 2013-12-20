@@ -37,8 +37,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<ForwardRange>>());
-                return std::rotate_copy(ranges::begin(rng), detail::move(middle),
-                    ranges::end(rng), detail::move(out));
+                return std::rotate_copy(ranges::begin(rng), std::move(middle),
+                    ranges::end(rng), std::move(out));
             }
         };
 

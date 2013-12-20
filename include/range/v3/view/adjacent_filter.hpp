@@ -49,7 +49,7 @@ namespace ranges
                 base_range_iterator it_;
 
                 basic_iterator(AdjacentFilterRange &rng, base_range_iterator it)
-                  : rng_(&rng), it_(detail::move(it))
+                  : rng_(&rng), it_(std::move(it))
                 {}
                 void increment()
                 {
@@ -79,7 +79,7 @@ namespace ranges
                          typename = typename std::enable_if<
                                         !std::is_const<Other>::value>::type>
                 basic_iterator(basic_iterator<Other> that)
-                  : rng_(that.rng_), it_(detail::move(that).it_)
+                  : rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };
         public:
@@ -87,8 +87,8 @@ namespace ranges
             using const_iterator = basic_iterator<adjacent_filter_range_view const>;
 
             adjacent_filter_range_view(ForwardRange && rng, BinaryPredicate pred)
-              : rng_and_pred_{detail::forward<ForwardRange>(rng),
-                              make_invokable(detail::move(pred))}
+              : rng_and_pred_{std::forward<ForwardRange>(rng),
+                              make_invokable(std::move(pred))}
             {}
             iterator begin()
             {
@@ -136,13 +136,13 @@ namespace ranges
                     CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                            range_reference_t<ForwardRange>,
                                                            range_reference_t<ForwardRange>>());
-                    return {detail::forward<ForwardRange>(rng), detail::move(pred)};
+                    return {std::forward<ForwardRange>(rng), std::move(pred)};
                 }
                 template<typename BinaryPredicate>
                 static auto invoke(adjacent_filterer adjacent_filter, BinaryPredicate pred)
-                    -> decltype(adjacent_filter(std::placeholders::_1, detail::move(pred)))
+                    -> decltype(adjacent_filter(std::placeholders::_1, std::move(pred)))
                 {
-                    return adjacent_filter(std::placeholders::_1, detail::move(pred));
+                    return adjacent_filter(std::placeholders::_1, std::move(pred));
                 }
             };
 

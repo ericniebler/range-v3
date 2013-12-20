@@ -57,7 +57,7 @@ namespace ranges
                 return std::lexicographical_compare(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
         };
 

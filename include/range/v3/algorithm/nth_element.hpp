@@ -40,7 +40,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
-                std::nth_element(ranges::begin(rng), detail::move(nth), ranges::end(rng));
+                std::nth_element(ranges::begin(rng), std::move(nth), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
 
@@ -54,8 +54,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<RandomAccessRange>,
                                                        range_reference_t<RandomAccessRange>>());
-                std::nth_element(ranges::begin(rng), detail::move(nth), ranges::end(rng),
-                                 ranges::make_invokable(detail::move(pred)));
+                std::nth_element(ranges::begin(rng), std::move(nth), ranges::end(rng),
+                                 ranges::make_invokable(std::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
             }
 
@@ -65,10 +65,10 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
             invoke(nth_element_finder nth_element, RandomAccessIterator nth)
-                -> decltype(nth_element(std::placeholders::_1, detail::move(nth)))
+                -> decltype(nth_element(std::placeholders::_1, std::move(nth)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
-                return nth_element(std::placeholders::_1, detail::move(nth));
+                return nth_element(std::placeholders::_1, std::move(nth));
             }
 
             /// \overload
@@ -77,10 +77,10 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
             invoke(nth_element_finder nth_element, RandomAccessIterator nth, BinaryPredicate pred)
-            -> decltype(nth_element(std::placeholders::_1, detail::move(nth), detail::move(pred)))
+            -> decltype(nth_element(std::placeholders::_1, std::move(nth), std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
-                return nth_element(std::placeholders::_1, detail::move(nth), detail::move(pred));
+                return nth_element(std::placeholders::_1, std::move(nth), std::move(pred));
             }
         };
 

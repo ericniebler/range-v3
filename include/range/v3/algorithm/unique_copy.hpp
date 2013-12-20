@@ -48,7 +48,7 @@ namespace ranges
                     (ranges::CopyConstructible<range_value_t<InputRange>>() &&
                      ranges::CopyAssignable<range_value_t<InputRange>>()));
                 return std::unique_copy(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out));
+                    std::move(out));
             }
 
             /// \overload
@@ -69,7 +69,7 @@ namespace ranges
                     (ranges::CopyConstructible<range_value_t<InputRange>>() &&
                      ranges::CopyAssignable<range_value_t<InputRange>>()));
                 return std::unique_copy(ranges::begin(rng), ranges::end(rng),
-                    detail::move(out), ranges::make_invokable(detail::move(pred)));
+                    std::move(out), ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
@@ -77,9 +77,9 @@ namespace ranges
             template<typename OutputIterator>
             static auto
             invoke(uniquer_copier unique_copy, OutputIterator out)
-                -> decltype(unique_copy(std::placeholders::_1, detail::move(out)))
+                -> decltype(unique_copy(std::placeholders::_1, std::move(out)))
             {
-                return unique_copy(std::placeholders::_1, detail::move(out));
+                return unique_copy(std::placeholders::_1, std::move(out));
             }
 
             /// \overload
@@ -88,9 +88,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<OutputIterator>())>
             static auto
             invoke(uniquer_copier unique_copy, OutputIterator out, BinaryPredicate pred)
-                -> decltype(unique_copy(std::placeholders::_1, detail::move(out), detail::move(pred)))
+                -> decltype(unique_copy(std::placeholders::_1, std::move(out), std::move(pred)))
             {
-                return unique_copy(std::placeholders::_1, detail::move(out), detail::move(pred));
+                return unique_copy(std::placeholders::_1, std::move(out), std::move(pred));
             }
         };
 

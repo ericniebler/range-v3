@@ -48,7 +48,7 @@ namespace ranges
                                                        range_reference_t<ForwardRange>,
                                                        range_reference_t<ForwardRange>>());
                 return std::binary_search(ranges::begin(rng), ranges::end(rng), val,
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
         };
 

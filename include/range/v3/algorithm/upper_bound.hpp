@@ -53,7 +53,7 @@ namespace ranges
                                                        Value const &,
                                                        range_reference_t<ForwardRange>>());
                 return std::upper_bound(ranges::begin(rng), ranges::end(rng), val,
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
@@ -61,9 +61,9 @@ namespace ranges
             template<typename Value>
             static auto
             invoke(upper_bound_finder upper_bound, Value && val)
-                -> decltype(upper_bound(std::placeholders::_1, detail::forward<Value>(val)))
+                -> decltype(upper_bound(std::placeholders::_1, std::forward<Value>(val)))
             {
-                return upper_bound(std::placeholders::_1, detail::forward<Value>(val));
+                return upper_bound(std::placeholders::_1, std::forward<Value>(val));
             }
 
             /// \overload
@@ -73,11 +73,11 @@ namespace ranges
                                                              range_reference_t<Value>>())>
             static auto
             invoke(upper_bound_finder upper_bound, Value && val, BinaryPredicate pred)
-                -> decltype(upper_bound(std::placeholders::_1, detail::forward<Value>(val),
-                    detail::move(pred)))
+                -> decltype(upper_bound(std::placeholders::_1, std::forward<Value>(val),
+                    std::move(pred)))
             {
-                return upper_bound(std::placeholders::_1, detail::forward<Value>(val),
-                    detail::move(pred));
+                return upper_bound(std::placeholders::_1, std::forward<Value>(val),
+                    std::move(pred));
             }
         };
 

@@ -40,15 +40,15 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
                                                       range_reference_t<InputRange>>());
                 return std::find_if(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)));
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
             template<typename UnaryPredicate>
             static auto invoke(finder_if find_if, UnaryPredicate pred)
-                -> decltype(find_if(std::placeholders::_1, detail::move(pred)))
+                -> decltype(find_if(std::placeholders::_1, std::move(pred)))
             {
-                return find_if(std::placeholders::_1, detail::move(pred));
+                return find_if(std::placeholders::_1, std::move(pred));
             }
         };
 

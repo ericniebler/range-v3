@@ -76,7 +76,7 @@ namespace ranges
             template<typename Iter>
             static iterator_range<Iter> invoke(ranger, Iter begin, Iter end)
             {
-                return {detail::move(begin), detail::move(end)};
+                return {std::move(begin), std::move(end)};
             }
         };
 

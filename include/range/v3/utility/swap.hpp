@@ -33,7 +33,7 @@ namespace ranges
                     noexcept(noexcept(swap(std::declval<T>(), std::declval<U>())))
                     -> decltype(swap(std::declval<T>(), std::declval<U>()))
                 {
-                    swap(detail::forward<T>(t), detail::forward<U>(u));
+                    swap(std::forward<T>(t), std::forward<U>(u));
                 }
             };
         }

@@ -34,7 +34,7 @@ namespace ranges
                 Bind && bind() && { return std::move(*this); }
 
                 binder_wrapper(Bind bind)
-                  : Bind(detail::move(bind))
+                  : Bind(std::move(bind))
                 {}
             };
 
@@ -62,7 +62,7 @@ namespace ranges
                 template<typename ...Args>
                 binder_wrapper<ranges_binder_t<Args...>> operator()(Args &&... args) const
                 {
-                    return {ranges::bind(detail::forward<Args>(args)...)};
+                    return {ranges::bind(std::forward<Args>(args)...)};
                 }
             } wrap_bind {};
 
@@ -75,13 +75,13 @@ namespace ranges
                     CONCEPT_REQUIRES(!is_bind_wrapper<uncvref_t<T>>())>
                 T && operator()(T && t) const
                 {
-                    return detail::forward<T>(t);
+                    return std::forward<T>(t);
                 }
                 template<typename T,
                     CONCEPT_REQUIRES(is_bind_wrapper<uncvref_t<T>>())>
                 auto operator()(T && t) const -> decltype(std::declval<T>().bind())
                 {
-                    return detail::forward<T>(t).bind();
+                    return std::forward<T>(t).bind();
                 }
             } unwrap_bind {};
 
@@ -114,15 +114,15 @@ namespace ranges
                 -> detail::bind_t<Derived const &, detail::unwrap_bind_t<Args>...>
             {
                 return detail::wrap_bind(derived(),
-                                         detail::unwrap_bind(detail::forward<Args>(args))...);
+                                         detail::unwrap_bind(std::forward<Args>(args))...);
             }
             template<typename ...Args,
                 CONCEPT_REQUIRES(contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) &&
                 -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
             {
-                return detail::wrap_bind(detail::move(*this).derived(),
-                                         detail::unwrap_bind(detail::forward<Args>(args))...);
+                return detail::wrap_bind(std::move(*this).derived(),
+                                         detail::unwrap_bind(std::forward<Args>(args))...);
             }
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.
@@ -131,14 +131,14 @@ namespace ranges
             auto operator()(Args &&... args) const &
                 -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived const &>(), std::declval<Args>()...))
             {
-                return Derived::invoke(derived(), detail::forward<Args>(args)...);
+                return Derived::invoke(derived(), std::forward<Args>(args)...);
             }
             template<typename ...Args,
                 CONCEPT_REQUIRES(!contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) &&
                 -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived>(), std::declval<Args>()...))
             {
-                return Derived::invoke(detail::move(*this).derived(), detail::forward<Args>(args)...);
+                return Derived::invoke(std::move(*this).derived(), std::forward<Args>(args)...);
             }
         };
 
@@ -161,20 +161,20 @@ namespace ranges
             static auto pipe(Arg && arg, Pipe && pipe)
                 -> decltype(std::declval<Pipe>()(std::declval<Arg>()))
             {
-                return detail::forward<Pipe>(pipe)(detail::forward<Arg>(arg));
+                return std::forward<Pipe>(pipe)(std::forward<Arg>(arg));
             }
         public:
             template<typename Arg>
             friend auto operator|(Arg && arg, pipeable const & pipe)
                 -> decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived const &>()))
             {
-                return Derived::pipe(detail::forward<Arg>(arg), pipe.derived());
+                return Derived::pipe(std::forward<Arg>(arg), pipe.derived());
             }
             template<typename Arg>
             friend auto operator|(Arg && arg, pipeable && pipe)
                 -> decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived>()))
             {
-                return Derived::pipe(detail::forward<Arg>(arg), detail::move(pipe).derived());
+                return Derived::pipe(std::forward<Arg>(arg), std::move(pipe).derived());
             }
         };
     }

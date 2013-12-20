@@ -39,7 +39,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
                                                       range_reference_t<ForwardRange>>());
                 std::replace_if(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(detail::move(pred)), new_value);
+                    ranges::make_invokable(std::move(pred)), new_value);
                 return std::forward<ForwardRange>(rng);
             }
 
@@ -47,11 +47,11 @@ namespace ranges
             /// for rng | replace_if(pred, that)
             template<typename UnaryPredicate, typename Value>
             static auto invoke(replacer_if replace_if, UnaryPredicate pred, Value && new_value)
-                -> decltype(replace_if(std::placeholders::_1, detail::move(pred),
-                        detail::forward<Value>(new_value)))
+                -> decltype(replace_if(std::placeholders::_1, std::move(pred),
+                        std::forward<Value>(new_value)))
             {
-                return replace_if(std::placeholders::_1, detail::move(pred),
-                    detail::forward<Value>(new_value));
+                return replace_if(std::placeholders::_1, std::move(pred),
+                    std::forward<Value>(new_value));
             }
         };
 

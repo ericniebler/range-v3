@@ -49,7 +49,7 @@ namespace ranges
             using const_iterator = range_iterator_t<Range const>;
 
             partial_sort_copy_result(Range && rng, iterator end)
-              : rng_(detail::forward<Range>(rng)), end_(detail::move(end))
+              : rng_(std::forward<Range>(rng)), end_(std::move(end))
             {}
             iterator begin()
             {
@@ -118,7 +118,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputRange>>());
-                return {detail::forward<RandomAccessRange>(rng2),
+                return {std::forward<RandomAccessRange>(rng2),
                         std::partial_sort_copy(ranges::begin(rng1), ranges::end(rng1),
                                                ranges::begin(rng2), ranges::end(rng2))};
             }
@@ -134,21 +134,21 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<InputRange>,
                                                        range_reference_t<InputRange>>());
-                return {detail::forward<RandomAccessRange>(rng2),
+                return {std::forward<RandomAccessRange>(rng2),
                         std::partial_sort_copy(ranges::begin(rng1), ranges::end(rng1),
                                                ranges::begin(rng2), ranges::end(rng2),
-                                               ranges::make_invokable(detail::move(pred)))};
+                                               ranges::make_invokable(std::move(pred)))};
             }
 
             template<typename RandomAccessRange>
             static auto
             invoke(partial_sorter_copier partial_sort_copy, RandomAccessRange && rng2)
                 -> decltype(partial_sort_copy(std::placeholders::_1,
-                                              detail::forward<RandomAccessRange>(rng2)))
+                                              std::forward<RandomAccessRange>(rng2)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 return partial_sort_copy(std::placeholders::_1,
-                                         detail::forward<RandomAccessRange>(rng2));
+                                         std::forward<RandomAccessRange>(rng2));
             }
 
             /// \overload
@@ -159,13 +159,13 @@ namespace ranges
             invoke(partial_sorter_copier partial_sort_copy, RandomAccessRange && rng2,
                    BinaryPredicate pred)
                 -> decltype(partial_sort_copy(std::placeholders::_1,
-                                              detail::forward<RandomAccessRange>(rng2),
-                                              detail::move(pred)))
+                                              std::forward<RandomAccessRange>(rng2),
+                                              std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
                 return partial_sort_copy(std::placeholders::_1,
-                                         detail::forward<RandomAccessRange>(rng2),
-                                         detail::move(pred));
+                                         std::forward<RandomAccessRange>(rng2),
+                                         std::move(pred));
             }
         };
 

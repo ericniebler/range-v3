@@ -35,7 +35,7 @@ namespace ranges
                 range_iterator_t<ForwardRange> middle)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                std::rotate(ranges::begin(rng), detail::move(middle), ranges::end(rng));
+                std::rotate(ranges::begin(rng), std::move(middle), ranges::end(rng));
                 return std::forward<ForwardRange>(rng);
             }
 
@@ -43,10 +43,10 @@ namespace ranges
             /// for rng | rotate(middle)
             template<typename ForwardIterator>
             static auto invoke(rotater rotate, ForwardIterator middle) ->
-                decltype(rotate(std::placeholders::_1, detail::move(middle)))
+                decltype(rotate(std::placeholders::_1, std::move(middle)))
             {
                 CONCEPT_ASSERT(ranges::ForwardIterator<ForwardIterator>());
-                return rotate(std::placeholders::_1, detail::move(middle));
+                return rotate(std::placeholders::_1, std::move(middle));
             }
         };
 
