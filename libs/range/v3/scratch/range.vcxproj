@@ -153,6 +153,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

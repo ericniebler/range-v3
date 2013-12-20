@@ -141,6 +141,28 @@ void test_view_replace()
     std::cout << '\n';
 }
 
+void test_adjacent_filter()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    int rgi[] = {1,1,1,2,3,4,4};
+    rgi | view::adjacent_filter(std::not_equal_to<int>{})
+        | copy(std::ostream_iterator<int>(std::cout, " "));
+    std::cout << '\n';
+}
+
+void test_unique_view()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    int const rgi[] = {1,1,1,2,3,4,4};
+    rgi | view::unique
+        | copy(std::ostream_iterator<int>(std::cout, " "));
+    std::cout << '\n';
+}
+
 void test_partial_sort_copy()
 {
     using namespace ranges;
@@ -174,6 +196,9 @@ int main()
 {
     using namespace ranges;
     using namespace std::placeholders;
+
+    test_adjacent_filter();
+    test_unique_view();
 
     // Pipeable algorithms
     std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 ");

@@ -289,5 +289,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

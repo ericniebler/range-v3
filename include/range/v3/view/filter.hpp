@@ -166,7 +166,8 @@ namespace ranges
                 };
             public:
                 template<typename InputRange, typename UnaryPredicate>
-                static filter_range_view<InputRange, UnaryPredicate> invoke(filterer, InputRange && rng, UnaryPredicate pred)
+                static filter_range_view<InputRange, UnaryPredicate>
+                invoke(filterer, InputRange && rng, UnaryPredicate pred)
                 {
                     return {detail::forward<InputRange>(rng), detail::move(pred)};
                 }

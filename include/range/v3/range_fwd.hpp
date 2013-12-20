@@ -136,6 +136,8 @@ namespace ranges
 
             template<typename A, typename...Rest>
             using always_t = typename always<A, Rest...>::type;
+
+            struct not_equal_to;
         }
 
         template<typename First, typename Second>
@@ -365,6 +367,15 @@ namespace ranges
 
         // Views
         //
+        template<typename ForwardRange, typename BinaryPredicate>
+        struct adjacent_filter_range_view;
+
+        namespace view
+        {
+            struct adjacent_filterer;
+            extern adjacent_filterer const adjacent_filter;
+        }
+
         template<typename Rng>
         struct const_range_view;
 
@@ -408,6 +419,15 @@ namespace ranges
         {
             struct transformer;
             extern transformer const transform;
+        }
+
+        template<typename ForwardRange>
+        using unique_range_view = adjacent_filter_range_view<ForwardRange, detail::not_equal_to>;
+
+        namespace view
+        {
+            struct uniquer;
+            extern uniquer const unique;
         }
     }
 }

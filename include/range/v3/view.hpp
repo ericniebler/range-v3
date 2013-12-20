@@ -14,11 +14,13 @@
 #ifndef RANGES_V3_VIEW_HPP
 #define RANGES_V3_VIEW_HPP
 
+#include <range/v3/view/adjacent_filter.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/replace.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/unique.hpp>
 
 #endif
