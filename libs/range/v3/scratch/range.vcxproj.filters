@@ -283,5 +283,11 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

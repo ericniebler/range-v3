@@ -37,15 +37,20 @@ namespace ranges
             static RandomAccessRange invoke(stable_sorter, RandomAccessRange && rng)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
                 std::stable_sort(ranges::begin(rng), ranges::end(rng));
                 return detail::forward<RandomAccessRange>(rng);
             }
 
             /// \overload
             template<typename RandomAccessRange, typename BinaryPredicate>
-            static RandomAccessRange invoke(stable_sorter, RandomAccessRange && rng, BinaryPredicate pred)
+            static RandomAccessRange invoke(stable_sorter, RandomAccessRange && rng,
+                BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
+                                                       range_reference_t<RandomAccessRange>,
+                                                       range_reference_t<RandomAccessRange>>());
                 std::stable_sort(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(detail::move(pred)));
                 return detail::forward<RandomAccessRange>(rng);

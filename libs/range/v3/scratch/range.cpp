@@ -101,9 +101,15 @@ struct Abstract { virtual ~Abstract() = 0; };
 static_assert(std::is_same<ranges::typelist_element_t<0, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int>::value, "");
 static_assert(std::is_same<ranges::typelist_element_t<1, ranges::typelist<int, Abstract, float(), int(&&)[]>>, Abstract>::value, "");
 static_assert(std::is_same<ranges::typelist_element_t<2, ranges::typelist<int, Abstract, float(), int(&&)[]>>, float()>::value, "");
-static_assert(std::is_same<ranges::typelist_element_t<4, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
+static_assert(std::is_same<ranges::typelist_element_t<3, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
 
 static_assert(std::is_same<ranges::typelist_back_t<ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
+
+static_assert(std::is_same<ranges::typelist_drop_t<0, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<int, Abstract, float(), int(&&)[]>>::value, "");
+static_assert(std::is_same<ranges::typelist_drop_t<1, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<Abstract, float(), int(&&)[]>>::value, "");
+static_assert(std::is_same<ranges::typelist_drop_t<2, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<float(), int(&&)[]>>::value, "");
+static_assert(std::is_same<ranges::typelist_drop_t<3, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<int(&&)[]>>::value, "");
+static_assert(std::is_same<ranges::typelist_drop_t<4, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<>>::value, "");
 
 struct move_only
 {

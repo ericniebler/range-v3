@@ -18,6 +18,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/logical_ops.hpp>
 
@@ -266,12 +267,30 @@ namespace ranges
                     ));
             };
 
+            struct MoveConstructible
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        T(std::move(t))
+                    ));
+            };
+
             struct CopyAssignable
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         t = t
+                    ));
+            };
+
+            struct MoveAssignable
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        t = std::move(t)
                     ));
             };
 
@@ -316,6 +335,22 @@ namespace ranges
                         concepts::convertible_to<bool>(t > t),
                         concepts::convertible_to<bool>(t <= t),
                         concepts::convertible_to<bool>(t >= t)
+                    ));
+            };
+
+            struct Swappable
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        ranges::swap((T&&)t, (T&&)t)
+                    ));
+
+                template<typename T, typename U>
+                auto requires(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        ranges::swap((T&&)t, (U&&)u),
+                        ranges::swap((U&&)u, (T&&)t)
                     ));
             };
 
@@ -378,16 +413,22 @@ namespace ranges
         using SignedIntegral = concepts::models<concepts::SignedIntegral, T>;
 
         template<typename T>
-        using CopyAssignable = concepts::models<concepts::CopyAssignable, T>;
+        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
 
         template<typename T>
-        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
+        using MoveConstructible = concepts::models<concepts::MoveConstructible, T>;
 
         template<typename T>
         using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
 
         template<typename T>
         using Destructible = concepts::models<concepts::Destructible, T>;
+
+        template<typename T>
+        using CopyAssignable = concepts::models<concepts::CopyAssignable, T>;
+
+        template<typename T>
+        using MoveAssignable = concepts::models<concepts::MoveAssignable, T>;
 
         template<typename T, typename U = T>
         using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;
@@ -397,6 +438,9 @@ namespace ranges
 
         template<typename T>
         using Orderable = concepts::models<concepts::Orderable, T>;
+
+        template<typename T, typename U = T>
+        using Swappable = concepts::models<concepts::Swappable, T, U>;
 
         template<typename Fun, typename ...Args>
         using Callable = concepts::models<concepts::Callable, Fun, Args...>;

@@ -23,20 +23,21 @@ namespace ranges
 {
     inline namespace v3
     {
-        // TODO: make a unique view, a-la filter
-
-        struct uniquer : bindable<uniquer>
+        struct uniquer : bindable<uniquer>, pipeable<uniquer>
         {
             /// \brief template function unique
             ///
             /// range-based version of the unique std algorithm
             ///
             /// \pre Rng meets the requirements for a Forward range
-            template<typename ForwardRange>
+            template<typename ForwardRange,
+                CONCEPT_REQUIRES(ranges::Range<ForwardRange>())>
             static range_iterator_t<ForwardRange>
             invoke(uniquer, ForwardRange && rng)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardRange>>());
+                CONCEPT_ASSERT(ranges::MoveAssignable<range_reference_t<ForwardRange>>());
                 return std::unique(ranges::begin(rng), ranges::end(rng));
             }
 
@@ -49,8 +50,20 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardRange>,
                                                        range_reference_t<ForwardRange>>());
+                CONCEPT_ASSERT(ranges::MoveAssignable<range_reference_t<ForwardRange>>());
                 return std::unique(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(detail::move(pred)));
+            }
+
+            /// \overload
+            /// for rng | unique(pred)
+            template<typename BinaryPredicate,
+                CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
+            static auto
+            invoke(uniquer unique, BinaryPredicate pred)
+                -> decltype(unique(std::placeholders::_1, detail::move(pred)))
+            {
+                return unique(std::placeholders::_1, detail::move(pred));
             }
         };
 

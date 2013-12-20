@@ -102,6 +102,37 @@ namespace ranges
         template<std::size_t N, typename List>
         using typelist_element_t = typename typelist_element<N, List>::type;
 
+        namespace detail
+        {
+            ////////////////////////////////////////////////////////////////////////////////////
+            // typelist_drop_
+            template<typename VoidPtrs>
+            struct typelist_drop_;
+
+            template<typename ...VoidPtrs>
+            struct typelist_drop_<typelist<VoidPtrs...>>
+            {
+                static empty eval(...);
+
+                template<typename...Ts>
+                static typelist<Ts...> eval(VoidPtrs..., identity<Ts> *...);
+            };
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_drop
+        template<std::size_t N, typename List>
+        struct typelist_drop;
+
+        template<std::size_t N, typename ...Ts>
+        struct typelist_drop<N, typelist<Ts...>>
+          : decltype(detail::typelist_drop_<make_typelist_t<N, void *>>
+                ::eval((detail::identity<Ts> *)nullptr...))
+        {};
+
+        template<std::size_t N, typename List>
+        using typelist_drop_t = typename typelist_drop<N, List>::type;
+
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_front
         template<typename List>

@@ -31,6 +31,8 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange1>());
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2>());
+                CONCEPT_ASSERT(ranges::Swappable<range_reference_t<ForwardRange1>,
+                                                 range_reference_t<ForwardRange2>>());
                 return std::swap_ranges(ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2));
             }

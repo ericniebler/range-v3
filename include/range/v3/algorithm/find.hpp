@@ -39,10 +39,10 @@ namespace ranges
             /// \overload
             /// rng | find(val)
             template<typename Value>
-            static auto invoke(finder find, Value val)
-                -> decltype(find(std::placeholders::_1, detail::move(val)))
+            static auto invoke(finder find, Value && val)
+                -> decltype(find(std::placeholders::_1, detail::forward<Value>(val)))
             {
-                return find(std::placeholders::_1, detail::move(val));
+                return find(std::placeholders::_1, detail::forward<Value>(val));
             }
         };
 

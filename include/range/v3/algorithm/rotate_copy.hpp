@@ -35,7 +35,8 @@ namespace ranges
                 range_iterator_t<ForwardRange> middle, OutputIterator out)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, range_value_t<ForwardRange>>());
+                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
+                                                      range_reference_t<ForwardRange>>());
                 return std::rotate_copy(ranges::begin(rng), detail::move(middle),
                     ranges::end(rng), detail::move(out));
             }

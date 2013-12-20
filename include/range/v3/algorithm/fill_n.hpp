@@ -41,10 +41,10 @@ namespace ranges
 
             /// \overload
             template<typename Size, typename Value>
-            static auto invoke(filler_n fill_n, Size n, Value val)
-                -> decltype(fill_n(std::placeholders::_1, n, detail::move(val)))
+            static auto invoke(filler_n fill_n, Size n, Value && val)
+                -> decltype(fill_n(std::placeholders::_1, n, detail::forward<Value>(val)))
             {
-                return fill_n(std::placeholders::_1, n, detail::move(val));
+                return fill_n(std::placeholders::_1, n, detail::forward<Value>(val));
             }
         };
 

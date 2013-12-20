@@ -54,17 +54,26 @@ namespace ranges
             /// \pre OutputIterator is a model of the OutputIterator concept
             /// \pre UnaryFunction is a model of the UnaryFunction concept
             /// \pre BinaryFunction is a model of the BinaryFunction concept
-            template<typename InputRange1, typename OutputIterator, typename UnaryFunction>
+            template<typename InputRange1, typename OutputIterator, typename UnaryFunction,
+                CONCEPT_REQUIRES(
+                    ranges::InputRange<InputRange1>() &&
+                    ranges::Callable<invokable_t<UnaryFunction>,
+                                                 range_reference_t<InputRange1>>() &&
+                    ranges::OutputIterator<OutputIterator,
+                        concepts::Callable::result_t<invokable_t<UnaryFunction>,
+                                                     range_reference_t<InputRange1>>>())>
             static OutputIterator
             invoke(transformer, InputRange1 && rng, OutputIterator out, UnaryFunction fun)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                using Ref1 = range_reference_t<InputRange1>;
-                CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>, Ref1>());
-                using Ref2 = result_of_t<invokable_t<UnaryFunction>(Ref1)>;
-                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Ref2>());
+                CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
+                                                range_reference_t<InputRange1>>());
+                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
+                    concepts::Callable::result_t<invokable_t<UnaryFunction>,
+                                                 range_reference_t<InputRange1>>>());
                 return std::transform(ranges::begin(rng), ranges::end(rng),
-                                      detail::move(out), ranges::make_invokable(detail::move(fun)));
+                                      detail::move(out),
+                                      ranges::make_invokable(detail::move(fun)));
             }
 
             /// \overload
@@ -76,15 +85,47 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
                 CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
-                using Ref1 = range_reference_t<InputRange1>;
-                using Ref2 = range_reference_t<InputRange2>;
-                CONCEPT_ASSERT(ranges::Callable<invokable_t<BinaryFunction>, Ref1, Ref2>());
-                using Value3 = result_of_t<invokable_t<BinaryFunction>(Ref1, Ref2)>;
-                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator, Value3>());
+                CONCEPT_ASSERT(ranges::Callable<invokable_t<BinaryFunction>,
+                                                range_reference_t<InputRange1>,
+                                                range_reference_t<InputRange2>>());
+                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
+                    concepts::Callable::result_t<invokable_t<BinaryFunction>,
+                                                 range_reference_t<InputRange1>,
+                                                 range_reference_t<InputRange2>>>());
                 return detail::transform_impl(ranges::begin(rng1), ranges::end(rng1),
                                               ranges::begin(rng2), ranges::end(rng2),
                                               detail::move(out),
                                               ranges::make_invokable(detail::move(fun)));
+            }
+
+            /// \overload
+            /// for rng | transform(out, uni_fun)
+            template<typename OutputIterator, typename UnaryFunction>
+            static auto
+            invoke(transformer transform, OutputIterator out, UnaryFunction fun)
+                -> decltype(transform(std::placeholders::_1, detail::move(out), detail::move(fun)))
+            {
+                return transform(std::placeholders::_1, detail::move(out), detail::move(fun));
+            }
+
+            /// \overload
+            /// for rng | transform(rng2, out, bin_fun)
+            template<typename InputRange2, typename OutputIterator, typename BinaryFunction,
+                CONCEPT_REQUIRES(!(
+                    ranges::InputRange<InputRange2>() &&
+                    ranges::Callable<invokable_t<BinaryFunction>,
+                                                 range_reference_t<InputRange2>>() &&
+                    ranges::OutputIterator<OutputIterator,
+                        concepts::Callable::result_t<invokable_t<BinaryFunction>,
+                                                     range_reference_t<InputRange2>>>()))>
+            static auto
+            invoke(transformer transform, InputRange2 && rng2, OutputIterator out,
+                   BinaryFunction fun)
+                   -> decltype(transform(std::placeholders::_1, detail::forward<InputRange2>(rng2),
+                    detail::move(out), detail::move(fun)))
+            {
+                return transform(std::placeholders::_1, detail::forward<InputRange2>(rng2),
+                    detail::move(out), detail::move(fun));
             }
         };
 

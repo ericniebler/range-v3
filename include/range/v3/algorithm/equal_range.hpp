@@ -59,22 +59,25 @@ namespace ranges
             /// \overload
             /// for rng | equal_range(val)
             template<typename Value>
-            static auto invoke(equal_ranger equal_range, Value val)
-                -> decltype(equal_range(std::placeholders::_1, detail::move(val)))
+            static auto invoke(equal_ranger equal_range, Value && val)
+                -> decltype(equal_range(std::placeholders::_1, detail::forward<Value>(val)))
             {
-                return equal_range(std::placeholders::_1, detail::move(val));
+                return equal_range(std::placeholders::_1, detail::forward<Value>(val));
             }
 
             /// \overload
             /// for rng | equal_range(val, pred)
             template<typename Value, typename BinaryPredicate,
-                CONCEPT_REQUIRES(!(ranges::Range<Value>() &&
-                                   ranges::LessThanComparable<BinaryPredicate &, range_reference_t<Value>>() &&
-                                   ranges::LessThanComparable<range_reference_t<Value>, BinaryPredicate &>()))>
-            static auto invoke(equal_ranger equal_range, Value val, BinaryPredicate pred)
-                -> decltype(equal_range(std::placeholders::_1, detail::move(val), detail::move(pred)))
+                CONCEPT_REQUIRES(
+                    !(ranges::Range<Value>() &&
+                      ranges::LessThanComparable<BinaryPredicate, range_reference_t<Value>>() &&
+                      ranges::LessThanComparable<range_reference_t<Value>, BinaryPredicate>()))>
+            static auto invoke(equal_ranger equal_range, Value && val, BinaryPredicate pred)
+                -> decltype(equal_range(std::placeholders::_1, detail::forward<Value>(val),
+                    detail::move(pred)))
             {
-                return equal_range(std::placeholders::_1, detail::move(val), detail::move(pred));
+                return equal_range(std::placeholders::_1, detail::forward<Value>(val),
+                    detail::move(pred));
             }
         };
 

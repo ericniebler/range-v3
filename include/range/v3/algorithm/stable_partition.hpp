@@ -36,9 +36,13 @@ namespace ranges
             invoke(stable_partitioner, BidirectionalRange && rng, UnaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
+                                                      range_reference_t<BidirectionalRange>>());
                 return std::stable_partition(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(detail::move(pred)));
             }
+
+            /// BUGBUG what if rng is an rvalue?
 
             /// \overload
             template<typename UnaryPredicate>
