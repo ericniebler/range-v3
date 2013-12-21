@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <memory>
 #include <sstream>
 #include <iostream>
 #include <functional>
@@ -128,6 +129,18 @@ struct identity
         return std::forward<T>(t);
     }
 } ident {};
+
+void test_indirect_view()
+{
+    using namespace ranges;
+    std::vector<std::shared_ptr<int>> vp;
+    for(int i = 0; i < 10; ++i)
+        vp.push_back(std::make_shared<int>(i));
+    std::cout << "\nindirected:\n";
+    for(int & i : vp | view::indirect)
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
 
 void test_view_replace()
 {
@@ -354,6 +367,6 @@ int main()
 
     std::cout << '\n';
     test_slicer();
-
+    test_indirect_view();
 }
 //*/

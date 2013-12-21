@@ -149,6 +149,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\filter.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\indirect.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp" />

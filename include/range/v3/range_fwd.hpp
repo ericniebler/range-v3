@@ -397,6 +397,15 @@ namespace ranges
             extern filterer const filter;
         }
 
+        template<typename InputRange>
+        struct indirect_range_view;
+
+        namespace view
+        {
+            struct indirecter;
+            extern indirecter const indirect;
+        }
+
         template<typename Rng0, typename Rng1>
         struct join_range_view;
 
