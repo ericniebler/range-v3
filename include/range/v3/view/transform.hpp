@@ -44,7 +44,7 @@ namespace ranges
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<Const>
-                  , typename std::remove_reference<reference_t<Const>>
+                  , typename std::remove_reference<reference_t<Const>>::type
                   , range_category_t<detail::add_const_if_t<InputRange, Const>>
                   , reference_t<Const>
                   , range_difference_t<detail::add_const_if_t<InputRange, Const>>
