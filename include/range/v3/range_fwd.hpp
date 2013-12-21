@@ -412,6 +412,15 @@ namespace ranges
             extern reverser const reverse;
         }
 
+        template<typename InputRange>
+        struct slice_range_view;
+
+        namespace view
+        {
+            struct slicer;
+            extern slicer const slice;
+        }
+
         template<typename Rng, typename Fun>
         struct transform_range_view;
 

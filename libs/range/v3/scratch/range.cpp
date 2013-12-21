@@ -141,6 +141,29 @@ void test_view_replace()
     std::cout << '\n';
 }
 
+void test_slicer()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    int rgi[] = {0,1,2,3,4,5,6,7,8,9,10};
+    auto sl = rgi | view::slice(3,9);
+    for(int& i : rgi | view::slice(3,9))
+        std::cout << i << ' ';
+    std::cout << '\n';
+    for(int& i : sl | view::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+    for(int i : std::vector<int>{0,1,2,3,4,5,6,7,8,9,10} | view::slice(3,9) | view::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    std::stringstream sin("0 1 2 3 4 5 6 7 8 9 10");
+    for(int i : istream<int>(sin) | view::slice(3,9))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
 void test_adjacent_filter()
 {
     using namespace ranges;
@@ -322,5 +345,9 @@ int main()
 
     std::cout << '\n';
     std::cout << (joined.end() - joined.begin()) << std::endl;
+
+    std::cout << '\n';
+    test_slicer();
+
 }
 //*/
