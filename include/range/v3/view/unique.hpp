@@ -14,7 +14,10 @@
 #ifndef RANGES_V3_VIEW_UNIQUE_HPP
 #define RANGES_V3_VIEW_UNIQUE_HPP
 
+#include <utility>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/view/adjacent_filter.hpp>
+#include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {

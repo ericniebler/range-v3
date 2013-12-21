@@ -19,6 +19,7 @@
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/join.hpp>
+#include <range/v3/view/map.hpp>
 #include <range/v3/view/replace.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/slice.hpp>

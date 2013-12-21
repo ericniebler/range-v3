@@ -151,6 +151,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\indirect.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\map.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\slice.hpp" />

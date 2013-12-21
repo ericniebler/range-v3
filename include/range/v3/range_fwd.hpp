@@ -141,6 +141,9 @@ namespace ranges
 
             template<typename T, bool B>
             using add_const_if_t = typename std::conditional<B, T const, T>::type;
+
+            struct get_first;
+            struct get_second;
         }
 
         template<typename First, typename Second>
@@ -449,6 +452,21 @@ namespace ranges
         {
             struct uniquer;
             extern uniquer const unique;
+        }
+
+        template<typename InputRange>
+        using keys_range_view = transform_range_view<InputRange, detail::get_first>;
+
+        template<typename InputRange>
+        using values_range_view = transform_range_view<InputRange, detail::get_second>;
+
+        namespace view
+        {
+            struct map_keys;
+            extern map_keys const keys;
+
+            struct map_values;
+            extern map_values const values;
         }
     }
 }

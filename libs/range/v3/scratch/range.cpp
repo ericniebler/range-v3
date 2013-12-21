@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <iostream>
@@ -138,6 +139,23 @@ void test_indirect_view()
         vp.push_back(std::make_shared<int>(i));
     std::cout << "\nindirected:\n";
     for(int & i : vp | view::indirect)
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_keys_values_view()
+{
+    using namespace ranges;
+    std::map<std::string, int> m ={
+        {"this",0},
+        {"that",1},
+        {"other",2}};
+    std::cout << "\nkeys:\n";
+    for(std::string const & s : m | view::keys)
+        std::cout << s << ' ';
+    std::cout << '\n';
+    std::cout << "\nvalues:\n";
+    for(int & i : m | view::const_ | view::values)
         std::cout << i << ' ';
     std::cout << '\n';
 }
@@ -368,5 +386,6 @@ int main()
     std::cout << '\n';
     test_slicer();
     test_indirect_view();
+    test_keys_values_view();
 }
 //*/
