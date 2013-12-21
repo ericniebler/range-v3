@@ -102,7 +102,6 @@ namespace ranges
 
         struct partial_sorter_copier : bindable<partial_sorter_copier>
         {
-
             /// \brief template function partial_sort_copy
             ///
             /// range-based version of the partial_sort_copy std algorithm

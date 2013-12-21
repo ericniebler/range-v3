@@ -15,6 +15,7 @@
 #define RANGES_V3_VIEW_CONST_HPP
 
 #include <utility>
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
@@ -29,7 +30,7 @@ namespace ranges
         private:
             Rng rng_;
         public:
-            using iterator = decltype(ranges::cbegin(std::declval<Rng const &>()));
+            using iterator = range_iterator_t<typename std::remove_reference<Rng>::type const &>;
             using const_iterator = iterator;
 
             explicit const_range_view(Rng && rng)

@@ -27,31 +27,33 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Rng>
+        template<typename BidirectionalRange>
         struct reverse_range_view
         {
         private:
-            Rng rng_;
+            BidirectionalRange rng_;
 
-            template<typename RevRng>
+            template<bool Const>
             struct basic_iterator
               : ranges::iterator_facade<
-                    basic_iterator<RevRng>
-                  , range_value_t<Rng>
-                  , range_category_t<Rng>
-                  , decltype(*ranges::begin(std::declval<RevRng &>().rng_))
-                  , range_difference_t<Rng>
+                    basic_iterator<Const>
+                  , range_value_t<detail::add_const_if_t<BidirectionalRange, Const>>
+                  , range_category_t<detail::add_const_if_t<BidirectionalRange, Const>>
+                  , range_reference_t<detail::add_const_if_t<BidirectionalRange, Const>>
+                  , range_difference_t<detail::add_const_if_t<BidirectionalRange, Const>>
                 >
             {
             private:
                 friend struct reverse_range_view;
                 friend struct ranges::iterator_core_access;
-                using base_range_iterator = decltype(ranges::begin(std::declval<RevRng &>().rng_));
+                using base_range = detail::add_const_if_t<BidirectionalRange, Const>;
+                using base_range_iterator = range_iterator_t<base_range>;
+                using reverse_range_view_ = detail::add_const_if_t<reverse_range_view, Const>;
 
-                RevRng *rng_;
+                reverse_range_view_ *rng_;
                 base_range_iterator it_;
 
-                basic_iterator(RevRng &rng, base_range_iterator it)
+                basic_iterator(reverse_range_view_ &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
                 {}
                 void increment()
@@ -64,11 +66,11 @@ namespace ranges
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
                     ++it_;
                 }
-                void advance(typename basic_iterator::difference_type n)
+                void advance(range_difference_t<base_range> n)
                 {
                     it_ -= n;
                 }
-                typename basic_iterator::difference_type distance_to(basic_iterator const &that) const
+                range_difference_t<base_range> distance_to(basic_iterator const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ - that.it_;
@@ -78,7 +80,7 @@ namespace ranges
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                auto dereference() const -> decltype(*it_)
+                range_reference_t<base_range> dereference() const
                 {
                     RANGES_ASSERT(it_ != ranges::begin(rng_->rng_));
                     return *std::prev(it_);
@@ -88,20 +90,19 @@ namespace ranges
                   : rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<typename OtherRevRng,
-                         typename = typename std::enable_if<
-                                        !std::is_const<OtherRevRng>::value>::type>
-                basic_iterator(basic_iterator<OtherRevRng> that)
+                template<bool OtherConst,
+                         typename std::enable_if<!OtherConst, int>::type = 0>
+                basic_iterator(basic_iterator<OtherConst> that)
                   : rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };
 
         public:
-            using iterator       = basic_iterator<reverse_range_view>;
-            using const_iterator = basic_iterator<reverse_range_view const>;
+            using iterator       = basic_iterator<false>;
+            using const_iterator = basic_iterator<true>;
 
-            explicit reverse_range_view(Rng && rng)
-              : rng_(std::forward<Rng>(rng))
+            explicit reverse_range_view(BidirectionalRange && rng)
+              : rng_(std::forward<BidirectionalRange>(rng))
             {}
             iterator begin()
             {
@@ -127,11 +128,11 @@ namespace ranges
             {
                 return begin() != end();
             }
-            Rng & base()
+            BidirectionalRange & base()
             {
                 return rng_;
             }
-            Rng const & base() const
+            BidirectionalRange const & base() const
             {
                 return rng_;
             }

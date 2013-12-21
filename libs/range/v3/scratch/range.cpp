@@ -13,6 +13,7 @@
 #include <utility>
 #include <string>
 #include <vector>
+#include <list>
 #include <sstream>
 #include <iostream>
 #include <functional>
@@ -160,6 +161,11 @@ void test_slicer()
 
     std::stringstream sin("0 1 2 3 4 5 6 7 8 9 10");
     for(int i : istream<int>(sin) | view::slice(3,9))
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    std::list<int> li {0,1,2,3,4,5,6,7,8,9,10};
+    for(int i : li | view::slice(3,9) | view::reverse)
         std::cout << i << ' ';
     std::cout << '\n';
 }

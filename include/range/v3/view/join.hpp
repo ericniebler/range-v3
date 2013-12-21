@@ -23,6 +23,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {
@@ -39,7 +40,8 @@ namespace ranges
             };
 
             template<typename Iter, typename Diff>
-            void advance_fwd_bounded(Iter & it, Iter end, Diff & n, std::bidirectional_iterator_tag)
+            void advance_fwd_bounded(Iter & it, Iter end, Diff & n,
+                std::bidirectional_iterator_tag)
             {
                 while(n > 0 && it != end)
                 {
@@ -49,7 +51,8 @@ namespace ranges
             }
 
             template<typename Iter, typename Diff>
-            void advance_fwd_bounded(Iter & it, Iter end, Diff & n, std::random_access_iterator_tag)
+            void advance_fwd_bounded(Iter & it, Iter end, Diff & n,
+                std::random_access_iterator_tag)
             {
                 auto const room = end - it;
                 if(room < n)
@@ -68,11 +71,12 @@ namespace ranges
             void advance_fwd_bounded(Iter & it, Iter end, Diff & n)
             {
                 RANGES_ASSERT(n >= 0);
-                advance_fwd_bounded(it, end, n, typename std::iterator_traits<Iter>::iterator_category{});
+                advance_fwd_bounded(it, end, n, iterator_category_t<Iter>{});
             }
 
             template<typename Iter, typename Diff>
-            void advance_back_bounded(Iter & it, Iter begin, Diff & n, std::bidirectional_iterator_tag)
+            void advance_back_bounded(Iter & it, Iter begin, Diff & n,
+                std::bidirectional_iterator_tag)
             {
                 while(n < 0 && it != begin)
                 {
@@ -82,7 +86,8 @@ namespace ranges
             }
 
             template<typename Iter, typename Diff>
-            void advance_back_bounded(Iter & it, Iter begin, Diff & n, std::random_access_iterator_tag)
+            void advance_back_bounded(Iter & it, Iter begin, Diff & n,
+                std::random_access_iterator_tag)
             {
                 auto const room = -(it - begin);
                 if(n < room)
@@ -101,7 +106,7 @@ namespace ranges
             void advance_back_bounded(Iter & it, Iter begin, Diff & n)
             {
                 RANGES_ASSERT(n <= 0);
-                advance_back_bounded(it, begin, n, typename std::iterator_traits<Iter>::iterator_category{});
+                advance_back_bounded(it, begin, n, iterator_category_t<Iter>{});
             }
         }
 
@@ -114,25 +119,30 @@ namespace ranges
             Rng0 rng0_;
             Rng1 rng1_;
 
-            // JoinRng is either join_range_view or join_range_view const.
-            template<typename JoinRng>
+            template<bool Const>
+            static detail::add_const_if_t<Rng0, Const> & declrng0();
+            template<bool Const>
+            static detail::add_const_if_t<Rng1, Const> & declrng1();
+
+            template<bool Const>
             struct basic_iterator
               : ranges::iterator_facade<
-                    basic_iterator<JoinRng>
+                    basic_iterator<Const>
                   , range_value_t<Rng0>
                   , decltype(true ? range_category_t<Rng0>{} : range_category_t<Rng1>{})
-                  , decltype(true ? *ranges::begin(std::declval<JoinRng &>().rng0_)
-                                  : *ranges::begin(std::declval<JoinRng &>().rng1_))
+                  , decltype(true ? *ranges::begin(declrng0<Const>())
+                                  : *ranges::begin(declrng1<Const>()))
                   , decltype(true ? range_difference_t<Rng0>{} : range_difference_t<Rng1>{})
                 >
             {
             private:
                 friend struct join_range_view;
                 friend struct ranges::iterator_core_access;
-                using base_range_iterator0 = decltype(ranges::begin(std::declval<JoinRng &>().rng0_));
-                using base_range_iterator1 = decltype(ranges::begin(std::declval<JoinRng &>().rng1_));
+                using base_range_iterator0 = decltype(ranges::begin(declrng0<Const>()));
+                using base_range_iterator1 = decltype(ranges::begin(declrng1<Const>()));
+                using join_range_view_ = detail::add_const_if_t<join_range_view, Const>;
 
-                JoinRng * rng_;
+                join_range_view_ * rng_;
                 union
                 {
                     base_range_iterator0 it0_;
@@ -140,10 +150,12 @@ namespace ranges
                 };
                 detail::which which_;
 
-                basic_iterator(JoinRng &rng, base_range_iterator0 it, detail::first_range_tag)
+                basic_iterator(join_range_view_ &rng, base_range_iterator0 it,
+                    detail::first_range_tag)
                   : rng_(&rng), it0_(std::move(it)), which_(detail::which::first)
                 {}
-                basic_iterator(JoinRng &rng, base_range_iterator1 it, detail::second_range_tag)
+                basic_iterator(join_range_view_ &rng, base_range_iterator1 it,
+                    detail::second_range_tag)
                   : rng_(&rng), it1_(std::move(it)), which_(detail::which::second)
                 {}
                 void increment()
@@ -389,10 +401,9 @@ namespace ranges
                     return *this;
                 }
                 // For iterator -> const_iterator conversion
-                template<typename OtherFltRng,
-                         typename = typename std::enable_if<
-                                        !std::is_const<OtherFltRng>::value>::type>
-                basic_iterator(basic_iterator<OtherFltRng> that)
+                template<bool OtherConst,
+                         typename std::enable_if<!OtherConst, int>::type = 0>
+                basic_iterator(basic_iterator<OtherConst> that)
                   : basic_iterator{}
                 {
                     clean();
@@ -415,8 +426,8 @@ namespace ranges
                 }
             };
         public:
-            using iterator       = basic_iterator<join_range_view>;
-            using const_iterator = basic_iterator<join_range_view const>;
+            using iterator       = basic_iterator<false>;
+            using const_iterator = basic_iterator<true>;
 
             join_range_view(Rng0 && rng0, Rng1 && rng1)
               : rng0_(rng0), rng1_(rng1)

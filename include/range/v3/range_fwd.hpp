@@ -138,6 +138,9 @@ namespace ranges
             using always_t = typename always<A, Rest...>::type;
 
             struct not_equal_to;
+
+            template<typename T, bool B>
+            using add_const_if_t = typename std::conditional<B, T const, T>::type;
         }
 
         template<typename First, typename Second>

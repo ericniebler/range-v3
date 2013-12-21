@@ -30,25 +30,28 @@ namespace ranges
         private:
             compressed_pair<ForwardRange, invokable_t<BinaryPredicate>> rng_and_pred_;
 
-            template<typename AdjacentFilterRange>
+            template<bool Const>
             struct basic_iterator
               : iterator_facade<
-                    basic_iterator<AdjacentFilterRange>
-                  , range_value_t<ForwardRange>
+                    basic_iterator<Const>
+                  , range_value_t<detail::add_const_if_t<ForwardRange, Const>>
                   , std::forward_iterator_tag
-                  , range_reference_t<ForwardRange>
-                  , range_difference_t<ForwardRange>
+                  , range_reference_t<detail::add_const_if_t<ForwardRange, Const>>
+                  , range_difference_t<detail::add_const_if_t<ForwardRange, Const>>
                 >
             {
             private:
                 friend struct adjacent_filter_range_view;
                 friend struct ranges::iterator_core_access;
-                using base_range_iterator = range_iterator_t<ForwardRange>;
+                using base_range = detail::add_const_if_t<ForwardRange, Const>;
+                using base_range_iterator = range_iterator_t<base_range>;
+                using adjacent_filter_range_view_ =
+                    detail::add_const_if_t<adjacent_filter_range_view, Const>;
 
-                AdjacentFilterRange *rng_;
+                adjacent_filter_range_view_ *rng_;
                 base_range_iterator it_;
 
-                basic_iterator(AdjacentFilterRange &rng, base_range_iterator it)
+                basic_iterator(adjacent_filter_range_view_ &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
                 {}
                 void increment()
@@ -75,16 +78,15 @@ namespace ranges
                   : rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<typename Other,
-                         typename = typename std::enable_if<
-                                        !std::is_const<Other>::value>::type>
-                basic_iterator(basic_iterator<Other> that)
+                template<bool OtherConst,
+                         typename std::enable_if<!OtherConst, int>::type = 0>
+                basic_iterator(basic_iterator<OtherConst> that)
                   : rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };
         public:
-            using iterator       = basic_iterator<adjacent_filter_range_view>;
-            using const_iterator = basic_iterator<adjacent_filter_range_view const>;
+            using iterator       = basic_iterator<false>;
+            using const_iterator = basic_iterator<true>;
 
             adjacent_filter_range_view(ForwardRange && rng, BinaryPredicate pred)
               : rng_and_pred_{std::forward<ForwardRange>(rng),

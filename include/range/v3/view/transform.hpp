@@ -35,30 +35,32 @@ namespace ranges
         private:
             compressed_pair<InputRange, invokable_t<UnaryFunction>> rng_and_fun_;
 
-            template<typename TfxRng>
+            template<bool Const>
+            using reference_t =
+                result_of_t<detail::add_const_if_t<invokable_t<UnaryFunction>, Const> &(
+                    range_reference_t<detail::add_const_if_t<InputRange, Const>>)>;
+
+            template<bool Const>
             struct basic_iterator
               : ranges::iterator_facade<
-                    basic_iterator<TfxRng>
-                  , typename std::remove_reference<
-                        decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
-                            *ranges::begin(std::declval<TfxRng &>().rng_and_fun_.first())))
-                    >::type
-                  , range_category_t<InputRange>
-                  , decltype(std::declval<TfxRng &>().rng_and_fun_.second()(
-                        *ranges::begin(std::declval<TfxRng &>().rng_and_fun_.first())))
-                  , range_difference_t<InputRange>
+                    basic_iterator<Const>
+                  , typename std::remove_reference<reference_t<Const>>
+                  , range_category_t<detail::add_const_if_t<InputRange, Const>>
+                  , reference_t<Const>
+                  , range_difference_t<detail::add_const_if_t<InputRange, Const>>
                 >
             {
             private:
                 friend struct transform_range_view;
                 friend struct ranges::iterator_core_access;
-                using base_range_iterator =
-                    decltype(ranges::begin(std::declval<TfxRng &>().rng_and_fun_.first()));
+                using base_range = detail::add_const_if_t<InputRange, Const>;
+                using base_range_iterator = range_iterator_t<base_range>;
+                using transform_range_view_ = detail::add_const_if_t<transform_range_view, Const>;
 
-                TfxRng *rng_;
+                transform_range_view_ *rng_;
                 base_range_iterator it_;
 
-                basic_iterator(TfxRng &rng, base_range_iterator it)
+                basic_iterator(transform_range_view_ &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
                 {}
                 void increment()
@@ -71,11 +73,11 @@ namespace ranges
                     RANGES_ASSERT(it_ != ranges::begin(rng_->rng_and_fun_.first()));
                     --it_;
                 }
-                void advance(typename basic_iterator::difference_type n)
+                void advance(range_difference_t<base_range> n)
                 {
                     it_ += n;
                 }
-                typename basic_iterator::difference_type distance_to(basic_iterator const &that) const
+                range_difference_t<base_range> distance_to(basic_iterator const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return that.it_ - it_;
@@ -85,7 +87,7 @@ namespace ranges
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                auto dereference() const -> decltype(rng_->rng_and_fun_.second()(*it_))
+                reference_t<Const> dereference() const
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_fun_.first()));
                     return rng_->rng_and_fun_.second()(*it_);
@@ -95,17 +97,15 @@ namespace ranges
                   : rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<typename OtherTfxRng,
-                         typename = typename std::enable_if<
-                                        !std::is_const<OtherTfxRng>::value>::type>
-                basic_iterator(basic_iterator<OtherTfxRng> that)
+                template<bool OtherConst,
+                         typename std::enable_if<!OtherConst, int>::type = 0>
+                basic_iterator(basic_iterator<OtherConst> that)
                   : rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };
-
         public:
-            using iterator       = basic_iterator<transform_range_view>;
-            using const_iterator = basic_iterator<transform_range_view const>;
+            using iterator       = basic_iterator<false>;
+            using const_iterator = basic_iterator<true>;
 
             transform_range_view(InputRange && rng, UnaryFunction fun)
               : rng_and_fun_{std::forward<InputRange>(rng), make_invokable(std::move(fun))}

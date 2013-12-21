@@ -16,6 +16,7 @@
 #include <iterator>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {
@@ -24,9 +25,9 @@ namespace ranges
         struct nexter : bindable<nexter>
         {
             template<typename Iter>
-            static Iter invoke(nexter, Iter it)
+            static Iter invoke(nexter, Iter it, iterator_difference_t<Iter> n = 1)
             {
-                ++it;
+                std::advance(it, n);
                 return it;
             }
         };
@@ -34,9 +35,9 @@ namespace ranges
         struct prever : bindable<prever>
         {
             template<typename Iter>
-            static Iter invoke(prever, Iter it)
+            static Iter invoke(prever, Iter it, iterator_difference_t<Iter> n = 1)
             {
-                --it;
+                std::advance(it, -n);
                 return it;
             }
         };

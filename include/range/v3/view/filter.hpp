@@ -42,26 +42,27 @@ namespace ranges
         private:
             compressed_pair<InputRange, invokable_t<UnaryPredicate>> rng_and_pred_;
 
-            // FltRng is either filter_range or filter_range const.
-            template<typename FltRng>
+            template<bool Const>
             struct basic_iterator
               : ranges::iterator_facade<
-                    basic_iterator<FltRng>
-                  , range_value_t<InputRange>
+                    basic_iterator<Const>
+                  , range_value_t<detail::add_const_if_t<InputRange, Const>>
                   , decltype(detail::filter_range_category(range_category_t<InputRange>{}))
-                  , decltype(*ranges::begin(std::declval<FltRng &>().rng_and_pred_.first()))
+                  , range_reference_t<detail::add_const_if_t<InputRange, Const>>
+                  , range_difference_t<detail::add_const_if_t<InputRange, Const>>
                 >
             {
             private:
                 friend struct filter_range_view;
                 friend struct ranges::iterator_core_access;
-                using base_range_iterator =
-                    decltype(ranges::begin(std::declval<FltRng &>().rng_and_pred_.first()));
+                using base_range = detail::add_const_if_t<InputRange, Const>;
+                using base_range_iterator = range_iterator_t<base_range>;
+                using filter_range_view_ = detail::add_const_if_t<filter_range_view, Const>;
 
-                FltRng *rng_;
+                filter_range_view_ *rng_;
                 base_range_iterator it_;
 
-                basic_iterator(FltRng &rng, base_range_iterator it)
+                basic_iterator(filter_range_view_ &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
                 {
                     satisfy();
@@ -80,7 +81,7 @@ namespace ranges
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                auto dereference() const -> decltype(*it_)
+                range_reference_t<base_range> dereference() const
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_pred_.first()));
                     return *it_;
@@ -96,16 +97,15 @@ namespace ranges
                   : rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<typename OtherFltRng,
-                         typename = typename std::enable_if<
-                                        !std::is_const<OtherFltRng>::value>::type>
-                basic_iterator(basic_iterator<OtherFltRng> that)
+                template<bool OtherConst,
+                         typename std::enable_if<!OtherConst, int>::type = 0>
+                basic_iterator(basic_iterator<OtherConst> that)
                   : rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };
         public:
-            using iterator       = basic_iterator<filter_range_view>;
-            using const_iterator = basic_iterator<filter_range_view const>;
+            using iterator       = basic_iterator<false>;
+            using const_iterator = basic_iterator<true>;
 
             filter_range_view(InputRange && rng, UnaryPredicate pred)
               : rng_and_pred_{std::forward<InputRange>(rng), make_invokable(std::move(pred))}
