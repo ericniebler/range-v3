@@ -301,5 +301,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\map.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\replace_if.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

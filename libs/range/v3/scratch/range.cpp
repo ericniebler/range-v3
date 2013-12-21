@@ -155,7 +155,7 @@ void test_keys_values_view()
         std::cout << s << ' ';
     std::cout << '\n';
     std::cout << "\nvalues:\n";
-    for(int & i : m | view::const_ | view::values)
+    for(int & i : m | view::values)
         std::cout << i << ' ';
     std::cout << '\n';
 }
@@ -169,6 +169,19 @@ void test_view_replace()
     std::stringstream sin{str};
 
     for(auto & i : istream<int>(sin) | view::replace(1, 42))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_view_replace_if()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
+    std::stringstream sin{str};
+
+    for(auto & i : istream<int>(sin) | view::replace_if([](int i){return i==1;}, 42))
         std::cout << i << ' ';
     std::cout << '\n';
 }
@@ -387,5 +400,6 @@ int main()
     test_slicer();
     test_indirect_view();
     test_keys_values_view();
+    test_view_replace_if();
 }
 //*/

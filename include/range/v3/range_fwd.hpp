@@ -418,6 +418,15 @@ namespace ranges
             extern joiner const join;
         }
 
+        namespace view
+        {
+            struct replacer;
+            extern replacer const replace;
+
+            struct replacer_if;
+            extern replacer_if const replace_if;
+        }
+
         template<typename Rng>
         struct reverse_range_view;
 
