@@ -19,6 +19,7 @@
 #include <sstream>
 #include <iostream>
 #include <functional>
+#include <initializer_list>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/bindable.hpp>
 
@@ -264,6 +265,20 @@ void test_partial_sort_copy()
     std::cout << '\n';
 }
 
+void test_tokenize_view()
+{
+    // Drat, can't test this because libstdc++ doesn't have <regex> yet. :(
+    //
+    //using namespace ranges;
+    //
+    //for(auto & sub : std::string("this is his face")
+    //               | view::tokenize(std::regex("\\w+"), {1,2,3,4}))
+    //{
+    //    std::cout << sub << '*';
+    //}
+    //std::cout << '\n';
+}
+
 //*
 int main()
 {
@@ -401,5 +416,6 @@ int main()
     test_indirect_view();
     test_keys_values_view();
     test_view_replace_if();
+    test_tokenize_view();
 }
 //*/
