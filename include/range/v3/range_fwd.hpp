@@ -147,7 +147,7 @@ namespace ranges
         }
 
         template<typename First, typename Second>
-        struct compressed_pair;
+        class compressed_pair;
 
         struct invokable_maker;
         extern invokable_maker const make_invokable;
