@@ -139,11 +139,19 @@ namespace ranges
 
             struct not_equal_to;
 
+            template<bool B, typename T, typename U>
+            using conditional_t = typename std::conditional<B, T, U>::type;
+
             template<typename T, bool B>
-            using add_const_if_t = typename std::conditional<B, T const, T>::type;
+            using add_const_if_t = conditional_t<B, T const, T>;
 
             struct get_first;
             struct get_second;
+
+            struct begin_tag {};
+            struct end_tag {};
+            struct dirty_tag {};
+            struct offset_tag {};
         }
 
         template<typename First, typename Second>

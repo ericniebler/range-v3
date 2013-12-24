@@ -40,7 +40,7 @@ namespace ranges
         template<bool ...Bools>
         struct logical_and
           : decltype(detail::logical_and_impl_(
-                typename std::conditional<Bools, int*, int>::type{}...))
+                detail::conditional_t<Bools, int*, int>{}...))
         {};
 
         template<>
@@ -51,7 +51,7 @@ namespace ranges
         template<bool ...Bools>
         struct logical_or
           : decltype(detail::logical_or_impl_(
-                typename std::conditional<Bools, int, int*>::type{}...))
+                detail::conditional_t<Bools, int, int*>{}...))
         {};
 
         template<>

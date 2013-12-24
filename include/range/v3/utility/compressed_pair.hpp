@@ -17,6 +17,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/box.hpp>
 
 namespace ranges
 {
@@ -24,63 +25,13 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename Element, int I, typename Enable = void>
-            struct box
-            {
-            private:
-                Element value_;
-            public:
-                box() = default;
-
-                template<typename E,
-                    typename = typename std::enable_if<std::is_constructible<Element, E &&>::value>::type>
-                constexpr explicit box(E && e)
-                  : value_(detail::forward<E>(e))
-                {}
-
-                auto get() & -> Element &
-                {
-                    return value_;
-                }
-                constexpr auto get() const & -> Element const &
-                {
-                    return value_;
-                }
-                constexpr auto get() const && -> Element &&
-                {
-                    return const_cast<box &&>(*this).value_;
-                }
-            };
-
-            template<typename Element, int I>
-            struct box<Element, I, typename std::enable_if<std::is_empty<Element>::value>::type>
-              : private Element
-            {
-                box() = default;
-
-                template<typename E,
-                    typename = typename std::enable_if<std::is_constructible<Element, E &&>::value>::type>
-                constexpr explicit box(E && e)
-                  : Element(detail::forward<E>(e))
-                {}
-
-                auto get() & -> Element &
-                {
-                    return *this;
-                }
-                constexpr auto get() const & -> Element const &
-                {
-                    return *this;
-                }
-                constexpr auto get() const && -> Element &&
-                {
-                    return const_cast<box &&>(*this);
-                }
-            };
+            struct first_tag {};
+            struct second_tag {};
         }
 
         template<typename First, typename Second>
-        class compressed_pair : detail::box<First, 0>, detail::box<Second, 1>
+        class compressed_pair : box<First, detail::first_tag>
+                              , box<Second, detail::second_tag>
         {
         public:
             compressed_pair() = default;
@@ -89,34 +40,34 @@ namespace ranges
                 typename = typename std::enable_if<std::is_constructible<First, F &&>::value>::type,
                 typename = typename std::enable_if<std::is_constructible<Second, S &&>::value>::type>
             constexpr compressed_pair(F && f, S && s)
-              : detail::box<First, 0>(detail::forward<F>(f)),
-                detail::box<Second, 1>(detail::forward<S>(s))
+              : box<First, detail::first_tag>(detail::forward<F>(f)),
+                box<Second, detail::second_tag>(detail::forward<S>(s))
             {}
 
             auto first() & -> First &
             {
-                return detail::box<First, 0>::get();
+                return ranges::get<detail::first_tag>(*this);
             }
             constexpr auto first() const & -> First const &
             {
-                return detail::box<First, 0>::get();
+                return ranges::get<detail::first_tag>(*this);
             }
             constexpr auto first() const && -> First &&
             {
-                return const_cast<compressed_pair &&>(*this).detail::box<First, 0>::get();
+                return ranges::get<detail::first_tag>(const_cast<compressed_pair &&>(*this));
             }
 
             auto second() & -> Second &
             {
-                return detail::box<Second, 1>::get();
+                return ranges::get<detail::second_tag>(*this);
             }
             constexpr auto second() const & -> Second const &
             {
-                return detail::box<Second, 1>::get();
+                return ranges::get<detail::second_tag>(*this);
             }
             constexpr auto second() const && -> Second &&
             {
-                return const_cast<compressed_pair &&>(*this).detail::box<Second, 1>::get();
+                return ranges::get<detail::second_tag>(const_cast<compressed_pair &&>(*this));
             }
         };
 

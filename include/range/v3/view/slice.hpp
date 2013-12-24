@@ -20,55 +20,18 @@
 #include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/next_prev.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/box.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            struct begin_tag {};
-            struct end_tag {};
-
-            template<typename Category>
-            struct dirty
-            {
-                explicit dirty(bool = false)
-                {}
-                constexpr bool is_dirty() const
-                {
-                    return false;
-                }
-                void set_dirty(bool b)
-                {}
-            };
-
-            // Bidirectional iterators need a runtime flag for when a slice
-            // iterator represents the end of the slice. The actual end iterator
-            // is computed lazily when decrementing it the first time.
-            template<>
-            struct dirty<std::bidirectional_iterator_tag>
-            {
-                bool dirty_;
-                explicit dirty(bool b = false)
-                  : dirty_(b)
-                {}
-                bool is_dirty() const
-                {
-                    return dirty_;
-                }
-                void set_dirty(bool b)
-                {
-                    dirty_ = b;
-                }
-            };
-        }
-
         template<typename InputRange>
         struct slice_range_view
         {
@@ -87,6 +50,17 @@ namespace ranges
                        std::is_same<range_category_t<InputRange>, std::input_iterator_tag>::value;
             }
 
+            static constexpr bool is_bidi()
+            {
+                return std::is_convertible<range_category_t<InputRange>,
+                    std::bidirectional_iterator_tag>::value;
+            }
+
+            using dirty_t = box<
+                    detail::conditional_t<is_bidi(), bool, constant<bool, false>>
+                  , detail::dirty_tag
+                >;
+
             // Implementation for InputIterator, ForwardIterator and BidirectionalIterator
             template<bool Const>
             struct basic_iterator
@@ -97,12 +71,11 @@ namespace ranges
                   , range_reference_t<detail::add_const_if_t<InputRange, Const>>
                   , range_difference_t<detail::add_const_if_t<InputRange, Const>>
                 >
-              , detail::dirty<range_category_t<InputRange>>
+              , private dirty_t
             {
             private:
                 friend struct slice_range_view;
                 friend struct ranges::iterator_core_access;
-                using dirty = detail::dirty<range_category_t<InputRange>>;
                 using base_range = detail::add_const_if_t<InputRange, Const>;
                 using slice_range_view_ = detail::add_const_if_t<slice_range_view, Const>;
 
@@ -111,10 +84,10 @@ namespace ranges
                 range_iterator_t<base_range> it_;
 
                 basic_iterator(slice_range_view_ &rng, detail::begin_tag)
-                  : dirty{false}, rng_(&rng), n_(rng_->from_), it_(rng_->begin_)
+                  : dirty_t{false}, rng_(&rng), n_(rng_->from_), it_(rng_->begin_)
                 {}
                 basic_iterator(slice_range_view_ &rng, detail::end_tag)
-                  : dirty{true}, rng_(&rng), n_(rng_->to_), it_(rng_->begin_)
+                  : dirty_t{true}, rng_(&rng), n_(rng_->to_), it_(rng_->begin_)
                 {}
                 void increment()
                 {
@@ -143,23 +116,32 @@ namespace ranges
                 }
                 void clean()
                 {
-                    if(this->is_dirty())
+                    if(is_dirty())
                     {
                         // BUGBUG investigate why this gets called twice
                         //std::cout << "\ncleaning!!!\n";
                         it_ = ranges::next(rng_->begin_, rng_->to_ - rng_->from_);
-                        this->set_dirty(false);
+                        set_dirty(false);
                     }
+                }
+                bool is_dirty() const
+                {
+                    return ranges::get<detail::dirty_tag>(*this);
+                }
+                void set_dirty(bool b)
+                {
+                    ranges::get<detail::dirty_tag>(*this) = b;
                 }
             public:
                 basic_iterator()
-                  : dirty{}, rng_{}, n_{}, it_{}
+                  : dirty_t{}, rng_{}, n_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
                 template<bool OtherConst,
                          typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
-                  : dirty{that.is_dirty()}, rng_(that.rng_), n_(that.n_), it_(std::move(that).it_)
+                  : dirty_t{that.is_dirty()}
+                  , rng_(that.rng_), n_(that.n_), it_(std::move(that).it_)
                 {}
             };
 

@@ -24,88 +24,10 @@ namespace ranges
         template<typename I, typename V, typename TC, typename R, typename D>
         struct iterator_facade;
 
-        //namespace concepts
-        //{
-        //    struct IteratorFacade
-        //    {
-        //        template<typename T>
-        //        auto requires(T && t -> decltype(
-        //            concepts::valid_expr(
-        //                concepts::is_void((t.increment(), concepts::void_)),
-        //                t.dereference()
-        //            ));
-        //    };
-
-        //    struct OutputIteratorFacade
-        //      : refines<IteratorFacade>
-        //    {};
-
-        //    struct InputIteratorFacade
-        //      : refines<IteratorFacade>
-        //    {
-        //        template<typename T>
-        //        auto requires(T && t) -> decltype(
-        //            concepts::valid_expr(
-        //                concepts::convertible_to<bool>(t.equal(t))
-        //            ));
-        //    };
-
-        //    struct BidirectionalIteratorFacade
-        //      : refines<InputIteratorFacade>
-        //    {
-        //        template<typename T>
-        //        auto requires(T && t) -> decltype(
-        //            concepts::valid_expr(
-        //                concepts::is_void((t.decrement(), concepts::void_))
-        //            ));
-        //    };
-
-        //    struct RandomAccessIteratorFacade
-        //      : refines<BidirectionalIteratorFacade>
-        //    {
-        //        template<typename T>
-        //        auto requires(T && t) -> decltype(
-        //            concepts::valid_expr(
-        //                concepts::is_void((t.advance(42), concepts::void_)),
-        //                concepts::model_of<concepts::SignedIntegral>(t.distance_to(42))
-        //            ));
-        //    };
-        //}
-
-        //template<typename T>
-        //constexpr bool IteratorFacade()
-        //{
-        //    return concepts::models<concepts::IteratorFacade, T>();
-        //}
-
-        //template<typename T>
-        //constexpr bool OutputIteratorFacade()
-        //{
-        //    return concepts::models<concepts::OutputIteratorFacade, T>();
-        //}
-
-        //template<typename T>
-        //constexpr bool InputIteratorFacade()
-        //{
-        //    return concepts::models<concepts::InputIteratorFacade, T>();
-        //}
-
-        //template<typename T>
-        //constexpr bool BidirectionalIteratorFacade()
-        //{
-        //    return concepts::models<concepts::BidirectionalIteratorFacade, T>();
-        //}
-
-        //template<typename T>
-        //constexpr bool RandomAccessIteratorFacade()
-        //{
-        //    return concepts::models<concepts::RandomAccessIteratorFacade, T>();
-        //}
-
         namespace detail
         {
             template<bool B, typename U, typename V>
-            using lazy_conditional = typename std::conditional<B, U, V>::type;
+            using lazy_conditional_t = typename detail::conditional_t<B, U, V>::type;
 
             template<typename T>
             struct is_reference_to_const
@@ -209,15 +131,15 @@ namespace ranges
 
             template<typename Iterator, typename ValueType, typename Reference>
             using operator_brackets_dispatch =
-                typename std::conditional<
+                detail::conditional_t<
                     iterator_writability_disabled<ValueType, Reference>::value,
-                    typename std::conditional<
+                    detail::conditional_t<
                         std::is_pod<ValueType>::value,
                         operator_brackets_value<typename std::remove_const<ValueType>::type>,
                         operator_brackets_const_proxy<Iterator, Reference>
-                    >::type,
+                    >,
                     operator_brackets_proxy<Iterator, Reference>
-                >::type;
+                >;
 
             //
             // enable if for use in operator implementation.
@@ -246,11 +168,11 @@ namespace ranges
                 using value_type = typename std::remove_const<ValueParam>::type;
 
                 // Not the real associated pointer type
-                using pointer = typename detail::lazy_conditional<
+                using pointer = detail::lazy_conditional_t<
                     detail::iterator_writability_disabled<ValueParam, Reference>::value
                   , std::add_pointer<const value_type>
                   , std::add_pointer<value_type>
-                >::type;
+                >;
             };
 
             // iterators whose dereference operators reference the same value
@@ -353,7 +275,7 @@ namespace ranges
             // *r also returns a proxy.
             template<typename Iterator, typename Value, typename Reference, typename Category>
             using postfix_increment_result =
-                typename detail::lazy_conditional<
+                detail::lazy_conditional_t<
                     // A proxy is only needed for readable iterators
                     std::is_convertible<Reference, Value const&>::value &&
                     // No forward iterator can have values that disappear
@@ -365,7 +287,7 @@ namespace ranges
                       , writable_postfix_increment_proxy<Iterator>
                     >
                   , detail::identity<Iterator>
-                >::type;
+                >;
 
             // operator->() needs special support for input iterators to strictly meet the
             // standard's requirements. If *i is not a reference type, we must still
@@ -408,11 +330,11 @@ namespace ranges
 
             template<typename I1, typename I2>
             using choose_difference_type =
-                typename std::conditional<
+                detail::conditional_t<
                    std::is_convertible<I2, I1>::value
                  , typename std::iterator_traits<I1>::difference_type
                  , typename std::iterator_traits<I2>::difference_type
-               >::type;
+               >;
         } // namespace detail
 
         //

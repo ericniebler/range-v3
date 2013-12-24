@@ -138,6 +138,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\bind.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\bindable.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />

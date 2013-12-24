@@ -25,6 +25,7 @@
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/box.hpp>
 
 namespace ranges
 {
@@ -38,34 +39,58 @@ namespace ranges
             InputRange rng_;
             difference_type stride_;
 
+            static constexpr bool is_bidi()
+            {
+                return std::is_convertible<range_category_t<InputRange>,
+                    std::bidirectional_iterator_tag>::value;
+            }
+
+            using dirty_t = box<
+                    detail::conditional_t<is_bidi(), mutable_<bool>, constant<bool, false>>
+                  , detail::dirty_tag
+                >;
+
+            using offset_t = box<
+                    detail::conditional_t<is_bidi(),
+                        mutable_<difference_type>,
+                        constant<difference_type, 0>>
+                  , detail::offset_tag
+                >;
+
             template<bool Const>
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<Const>
                   , range_value_t<detail::add_const_if_t<InputRange, Const>>
-                  , range_category_t<detail::add_const_if_t<InputRange, Const>>
+                  , range_category_t<InputRange>
                   , range_reference_t<detail::add_const_if_t<InputRange, Const>>
-                  , range_difference_t<detail::add_const_if_t<InputRange, Const>>
+                  , difference_type
                 >
+              , private dirty_t
+              , private offset_t
             {
             private:
                 friend struct stride_range_view;
                 friend struct ranges::iterator_core_access;
                 using stride_range_view_ = detail::add_const_if_t<stride_range_view, Const>;
-                using base_range =
-                    detail::add_const_if_t<InputRange, Const>;
+                using base_range = detail::add_const_if_t<InputRange, Const>;
                 using base_range_iterator = range_iterator_t<base_range>;
 
                 stride_range_view_ *rng_;
                 base_range_iterator it_;
 
-                basic_iterator(stride_range_view_ &rng, base_range_iterator it)
-                  : rng_(&rng), it_(std::move(it))
+                basic_iterator(stride_range_view_ &rng, detail::begin_tag)
+                  : dirty_t(false), offset_t(0), rng_(&rng), it_(ranges::begin(rng_->rng_))
+                {}
+                basic_iterator(stride_range_view_ &rng, detail::end_tag)
+                  : dirty_t(true), offset_t(0), rng_(&rng), it_(ranges::end(rng_->rng_))
                 {}
                 void increment()
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
-                    detail::advance_bounded(it_, rng_->stride_, ranges::end(rng_->rng_));
+                    RANGES_ASSERT(0 == offset());
+                    this->set_offset(detail::advance_bounded(it_, rng_->stride_ + offset(),
+                        ranges::end(rng_->rng_)));
                 }
                 bool equal(basic_iterator const &that) const
                 {
@@ -75,37 +100,69 @@ namespace ranges
                 range_reference_t<base_range> dereference() const
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                    RANGES_ASSERT(0 == offset());
                     return *it_;
                 }
                 void decrement()
                 {
                     RANGES_ASSERT(it_ != ranges::begin(rng_->rng_));
-                    detail::advance_bounded(it_, -rng_->stride_, ranges::begin(rng_->rng_));
+                    clean();
+                    this->set_offset(detail::advance_bounded(it_, -rng_->stride_ + offset(),
+                        ranges::begin(rng_->rng_)));
+                    RANGES_ASSERT(0 == offset());
                 }
-                range_difference_t<InputRange> distance_to(basic_iterator const &that) const
+                difference_type distance_to(basic_iterator const &that) const
                 {
+                    clean();
+                    that.clean();
                     RANGES_ASSERT(rng_ == that.rng_);
-                    range_difference_t<InputRange> n = that.it_ - it_,
-                                                   e = rng_->stride_ - 1;
-                    RANGES_ASSERT(it_ == ranges::end(rng_->rng_) ||
-                                  that.it_ == ranges::end(rng_->rng_) ||
-                                  0 == n % rng_->stride_);
-                    return (n + (0 < n ? e : -e)) / rng_->stride_;
+                    RANGES_ASSERT(0 == ((that.it_ - it_) +
+                                        (that.offset() - offset())) % rng_->stride_);
+                    return ((that.it_ - it_) + (that.offset() - offset())) / rng_->stride_;
                 }
-                void advance(range_difference_t<InputRange> n)
+                void advance(difference_type n)
                 {
-                    detail::advance_bounded(it_, n * rng_->stride_,
-                        0 < n ? ranges::end(rng_->rng_) : ranges::begin(rng_->rng_));
+                    clean();
+                    this->set_offset(detail::advance_bounded(it_, n * rng_->stride_ + offset(),
+                        0 < n ? ranges::end(rng_->rng_) : ranges::begin(rng_->rng_)));
+                }
+                void clean() const
+                {
+                    if(is_dirty())
+                    {
+                        this->set_offset(std::distance(ranges::begin(rng_->rng_),
+                            ranges::end(rng_->rng_)) % rng_->stride_);
+                        if(0 != offset())
+                            this->set_offset(rng_->stride_ - offset());
+                        set_dirty(false);
+                    }
+                }
+                bool is_dirty() const
+                {
+                    return ranges::get<detail::dirty_tag>(*this);
+                }
+                void set_dirty(bool b) const
+                {
+                    ranges::get<detail::dirty_tag>(*this) = b;
+                }
+                difference_type offset() const
+                {
+                    return ranges::get<detail::offset_tag>(*this);
+                }
+                void set_offset(difference_type off) const
+                {
+                    ranges::get<detail::offset_tag>(*this) = off;
                 }
             public:
                 basic_iterator()
-                  : rng_{}, it_{}
+                  : dirty_t{}, offset_t{}, rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
                 template<bool OtherConst,
                          typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
+                  : dirty_t(that.is_dirty()), offset_t(that.offset())
+                  , rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };
         public:
@@ -120,19 +177,19 @@ namespace ranges
             }
             iterator begin()
             {
-                return {*this, ranges::begin(rng_)};
+                return {*this, detail::begin_tag{}};
             }
             iterator end()
             {
-                return {*this, ranges::end(rng_)};
+                return {*this, detail::end_tag{}};
             }
             const_iterator begin() const
             {
-                return {*this, ranges::begin(rng_)};
+                return {*this, detail::begin_tag{}};
             }
             const_iterator end() const
             {
-                return {*this, ranges::end(rng_)};
+                return {*this, detail::end_tag{}};
             }
             bool operator!() const
             {

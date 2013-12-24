@@ -172,12 +172,12 @@ namespace ranges
 
                 template<typename Head, typename...Tail, typename Impl = most_refined_impl_>
                 static auto invoke(typelist<Head, Tail...> *) ->
-                    typename std::conditional<
+                    detail::conditional_t<
                         (concepts::models<Head, Ts...>()),
                         Head,
                         decltype(Impl::invoke(
                             (typelist_concat_t<typelist<Tail...>, base_concepts_of_t<Head>> *)nullptr))
-                    >::type;
+                    >;
             };
         }
 
