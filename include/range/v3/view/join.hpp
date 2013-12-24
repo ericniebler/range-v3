@@ -24,6 +24,7 @@
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/detail/advance_bounded.hpp>
 
 namespace ranges
 {
@@ -38,76 +39,6 @@ namespace ranges
             {
                 neither, first, second
             };
-
-            template<typename Iter, typename Diff>
-            void advance_fwd_bounded(Iter & it, Iter end, Diff & n,
-                std::bidirectional_iterator_tag)
-            {
-                while(n > 0 && it != end)
-                {
-                    ++it;
-                    --n;
-                }
-            }
-
-            template<typename Iter, typename Diff>
-            void advance_fwd_bounded(Iter & it, Iter end, Diff & n,
-                std::random_access_iterator_tag)
-            {
-                auto const room = end - it;
-                if(room < n)
-                {
-                    it = end;
-                    n -= room;
-                }
-                else
-                {
-                    it += n;
-                    n = 0;
-                }
-            }
-
-            template<typename Iter, typename Diff>
-            void advance_fwd_bounded(Iter & it, Iter end, Diff & n)
-            {
-                RANGES_ASSERT(n >= 0);
-                advance_fwd_bounded(it, end, n, iterator_category_t<Iter>{});
-            }
-
-            template<typename Iter, typename Diff>
-            void advance_back_bounded(Iter & it, Iter begin, Diff & n,
-                std::bidirectional_iterator_tag)
-            {
-                while(n < 0 && it != begin)
-                {
-                    --it;
-                    ++n;
-                }
-            }
-
-            template<typename Iter, typename Diff>
-            void advance_back_bounded(Iter & it, Iter begin, Diff & n,
-                std::random_access_iterator_tag)
-            {
-                auto const room = -(it - begin);
-                if(n < room)
-                {
-                    it = begin;
-                    n -= room;
-                }
-                else
-                {
-                    it += n;
-                    n = 0;
-                }
-            }
-
-            template<typename Iter, typename Diff>
-            void advance_back_bounded(Iter & it, Iter begin, Diff & n)
-            {
-                RANGES_ASSERT(n <= 0);
-                advance_back_bounded(it, begin, n, iterator_category_t<Iter>{});
-            }
         }
 
         template<typename Rng0, typename Rng1>
@@ -211,7 +142,7 @@ namespace ranges
                     case detail::which::first:
                         if(n > 0)
                         {
-                            detail::advance_fwd_bounded(it0_, ranges::end(rng_->rng0_), n);
+                            n = detail::advance_bounded(it0_, n, ranges::end(rng_->rng0_));
                             if(it0_ == ranges::end(rng_->rng0_))
                             {
                                 it0_.~base_range_iterator0();
@@ -227,7 +158,7 @@ namespace ranges
                     case detail::which::second:
                         if(n < 0)
                         {
-                            detail::advance_back_bounded(it1_, ranges::begin(rng_->rng1_), n);
+                            n = detail::advance_bounded(it1_, n, ranges::begin(rng_->rng1_));
                             if(n < 0)
                             {
                                 it1_.~base_range_iterator1();

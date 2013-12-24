@@ -64,6 +64,8 @@
     <None Include="..\..\..\..\Jamroot" />
     <None Include="..\..\..\..\LICENSE" />
     <None Include="..\..\..\..\README.md" />
+    <None Include="..\doc\Jamfile" />
+    <None Include="..\doc\ranges.qbk" />
     <None Include="Jamfile" />
     <None Include="Makefile" />
   </ItemGroup>
@@ -126,6 +128,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\unique_copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\advance_bounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\next_prev.hpp" />
@@ -156,6 +159,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\slice.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\stride.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\tokenize.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />

@@ -445,6 +445,15 @@ namespace ranges
             extern slicer const slice;
         }
 
+        template<typename InputRange>
+        struct stride_range_view;
+
+        namespace view
+        {
+            struct strider;
+            extern strider const stride;
+        }
+
         template<typename BidirectionalRange, typename Regex, typename SubMatchRange>
         struct tokenize_range_view;
 

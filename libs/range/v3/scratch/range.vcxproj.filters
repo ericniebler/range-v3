@@ -22,6 +22,12 @@
     <Filter Include="Header Files\view">
       <UniqueIdentifier>{1f2a27ab-42a7-4938-911a-25fa526b2316}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Doc Files">
+      <UniqueIdentifier>{675985ce-8f00-458c-8f93-c8f8d422af97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\detail">
+      <UniqueIdentifier>{66529b85-f87c-4a81-9969-20ddd8e909fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
@@ -35,6 +41,12 @@
     </None>
     <None Include="Makefile">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\doc\ranges.qbk">
+      <Filter>Doc Files</Filter>
+    </None>
+    <None Include="..\doc\Jamfile">
+      <Filter>Doc Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -306,6 +318,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\tokenize.hpp">
       <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\stride.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\advance_bounded.hpp">
+      <Filter>Header Files\detail</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -24,6 +24,7 @@
 #include <range/v3/view/replace_if.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/slice.hpp>
+#include <range/v3/view/stride.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/tokenize.hpp>
 #include <range/v3/view/unique.hpp>
