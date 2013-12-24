@@ -459,6 +459,13 @@ namespace ranges
             using pointer = typename operator_arrow_dispatch_::result_type;
             using iterator_category = typename associated_types::iterator_category;
 
+#define REQUIRES(x)                                                         \
+    template<typename Cat = iterator_category,                              \
+             typename std::enable_if<                                       \
+                std::is_convertible<Cat, std::x ## _iterator_tag>::value,   \
+                int>::type = 0                                              \
+             >
+
             reference operator*() const
             {
                 return iterator_core_access::dereference(derived());
@@ -467,49 +474,58 @@ namespace ranges
             {
                 return operator_arrow_dispatch_::apply(*derived());
             }
-            typename operator_brackets_dispatch_::result_type
-            operator[](difference_type n) const
-            {
-                return operator_brackets_dispatch_::apply(derived() + n);
-            }
             Derived& operator++()
             {
                 iterator_core_access::increment(derived());
                 return derived();
             }
-            Derived& operator--()
+            REQUIRES(bidirectional) Derived& operator--()
             {
                 iterator_core_access::decrement(derived());
                 return derived();
             }
-            Derived operator--(int)
+            REQUIRES(bidirectional) Derived operator--(int)
             {
                 Derived tmp(derived());
                 --*this;
                 return tmp;
             }
-            Derived& operator+=(difference_type n)
+            REQUIRES(random_access) Derived& operator+=(difference_type n)
             {
                 iterator_core_access::advance(derived(), n);
                 return derived();
             }
-            Derived& operator-=(difference_type n)
+            REQUIRES(random_access) Derived& operator-=(difference_type n)
             {
                 iterator_core_access::advance(derived(), -n);
                 return derived();
             }
-            Derived operator-(difference_type x) const &
+            REQUIRES(random_access) Derived operator-(difference_type x) const &
             {
                 Derived result(derived());
                 result -= x;
                 return result;
             }
-            Derived operator-(difference_type x) &&
+            REQUIRES(random_access) Derived operator-(difference_type x) &&
             {
                 *this -= x;
                 return std::move(*this);
             }
+            REQUIRES(random_access) typename operator_brackets_dispatch_::result_type
+            operator[](difference_type n) const
+            {
+                return operator_brackets_dispatch_::apply(derived() + n);
+            }
+
+#undef REQUIRES
         };
+
+#define REQUIRES(ITER, CAT)                                         \
+    typename std::enable_if<                                        \
+        std::is_convertible<typename ITER::iterator_category,       \
+                            std::CAT ## _iterator_tag>::value,      \
+        int                                                         \
+    >::type = 0                                                     \
 
         template<typename I, typename V, typename TC, typename R, typename D>
         detail::postfix_increment_result<I, V, R, TC>
@@ -534,9 +550,6 @@ namespace ranges
         // that do not provide them. (Actually it's even worse, they do not provide
         // them for only a few iterators.)
         //
-        // ?? Maybe a BOOST_ITERATOR_NO_FULL_INTEROPERABILITY macro should
-        //    enable the user to turn off mixed type operators
-        //
         // The library takes care to provide only the right operator overloads.
         // I.e.
         //
@@ -544,47 +557,6 @@ namespace ranges
         // bool operator==(ConstIterator, Iterator);
         // bool operator==(Iterator,      ConstIterator);
         // bool operator==(ConstIterator, ConstIterator);
-        //
-        //   ...
-        //
-        // In order to do so it uses c++ idioms that are not yet widely supported
-        // by current compiler releases. The library is designed to degrade gracefully
-        // in the face of compiler deficiencies. In general compiler
-        // deficiencies result in less strict error checking and more obscure
-        // error messages, functionality is not affected.
-        //
-        // For full operation compiler support for "Substitution Failure Is Not An Error"
-        // (aka. enable_if) and is_convertible is required.
-        //
-        // The following problems occur if support is lacking.
-        //
-        // Pseudo code
-        //
-        // ---------------
-        // AdaptorA<Iterator1> a1;
-        // AdaptorA<Iterator2> a2;
-        //
-        // // This will result in a no such overload error in full operation
-        // // If enable_if or is_convertible is not supported
-        // // The instantiation will fail with an error hopefully indicating that
-        // // there is no operator== for Iterator1, Iterator2
-        // // The same will happen if no enable_if is used to remove
-        // // false overloads from the templated conversion constructor
-        // // of AdaptorA.
-        //
-        // a1 == a2;
-        // ----------------
-        //
-        // AdaptorA<Iterator> a;
-        // AdaptorB<Iterator> b;
-        //
-        // // This will result in a no such overload error in full operation
-        // // If enable_if is not supported the static assert used
-        // // in the operatorimplementation will fail.
-        // // This will accidently work if std::is_convertible is not supported.
-        //
-        // a == b;
-        // ----------------
         //
         template<
             typename Derived1, typename V1, typename TC1, typename R1, typename D1
@@ -621,6 +593,8 @@ namespace ranges
         template<
             typename Derived1, typename V1, typename TC1, typename R1, typename D1
           , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+          , REQUIRES(Derived1, random_access)
+          , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator<(
@@ -637,6 +611,8 @@ namespace ranges
         template<
             typename Derived1, typename V1, typename TC1, typename R1, typename D1
           , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+          , REQUIRES(Derived1, random_access)
+          , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator>(
@@ -653,6 +629,8 @@ namespace ranges
         template<
             typename Derived1, typename V1, typename TC1, typename R1, typename D1
           , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+          , REQUIRES(Derived1, random_access)
+          , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator<=(
@@ -669,6 +647,8 @@ namespace ranges
         template<
             typename Derived1, typename V1, typename TC1, typename R1, typename D1
           , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+          , REQUIRES(Derived1, random_access)
+          , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator>=(
@@ -686,6 +666,8 @@ namespace ranges
         template<
             typename Derived1, typename V1, typename TC1, typename R1, typename D1
           , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+          , REQUIRES(Derived1, random_access)
+          , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<
             Derived1, Derived2
@@ -702,7 +684,9 @@ namespace ranges
             );
         }
 
-        template<typename Derived, typename V, typename TC, typename R, typename D>
+        template<typename Derived, typename V, typename TC, typename R, typename D
+          , REQUIRES(Derived, random_access)
+        >
         inline Derived operator+(
             iterator_facade<Derived, V, TC, R, D> const& i
           , typename Derived::difference_type n)
@@ -711,7 +695,9 @@ namespace ranges
             return tmp += n;
         }
 
-        template<typename Derived, typename V, typename TC, typename R, typename D>
+        template<typename Derived, typename V, typename TC, typename R, typename D
+          , REQUIRES(Derived, random_access)
+        >
         inline Derived operator+(
             iterator_facade<Derived, V, TC, R, D> && i
           , typename Derived::difference_type n)
@@ -720,7 +706,9 @@ namespace ranges
             return tmp += n;
         }
 
-        template<typename Derived, typename V, typename TC, typename R, typename D>
+        template<typename Derived, typename V, typename TC, typename R, typename D
+          , REQUIRES(Derived, random_access)
+        >
         inline Derived operator+(
             typename Derived::difference_type n
           , iterator_facade<Derived, V, TC, R, D> const& i)
@@ -729,7 +717,9 @@ namespace ranges
             return tmp += n;
         }
 
-        template<typename Derived, typename V, typename TC, typename R, typename D>
+        template<typename Derived, typename V, typename TC, typename R, typename D
+          , REQUIRES(Derived, random_access)
+        >
         inline Derived operator+(
             typename Derived::difference_type n
           , iterator_facade<Derived, V, TC, R, D> && i)
@@ -738,6 +728,8 @@ namespace ranges
             return tmp += n;
         }
     }
+
+#undef REQUIRES
 }
 
 #endif // RANGES_V3_UTILITY_ITERATOR_FACADE_HPP
