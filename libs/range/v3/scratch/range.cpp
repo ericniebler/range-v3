@@ -179,6 +179,7 @@ void test_view_replace_if()
     using namespace ranges;
     using namespace std::placeholders;
 
+    std::cout << "\nreplace_if\n";
     std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
     std::stringstream sin{str};
 
@@ -218,6 +219,8 @@ void test_slicer()
 void test_stride_view()
 {
     using namespace ranges;
+    std::cout << "\nstride\n";
+
     std::vector<int> v(50);
     std::iota(v.begin(), v.end(), 0);
     for(int i : v | view::stride(3) | view::reverse)
@@ -230,8 +233,18 @@ void test_stride_view()
         std::cout << i << ' ';
     std::cout << '\n';
 
+    std::list<int> li;
+    copy(v, std::back_inserter(li));
+    for(int i : li | view::stride(3))
+        std::cout << i << ' ';
+    std::cout << '\n';
+    for(int i : li | view::stride(3) | view::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
     auto x = v | view::stride(3);
     std::cout << std::distance(begin(x), end(x)) << '\n';
+    std::cout << '\n';
 }
 
 void test_adjacent_filter()

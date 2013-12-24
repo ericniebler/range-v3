@@ -41,8 +41,14 @@ namespace ranges
 
             static constexpr bool is_bidi()
             {
-                return std::is_convertible<range_category_t<InputRange>,
+                return std::is_same<range_category_t<InputRange>,
                     std::bidirectional_iterator_tag>::value;
+            }
+
+            static constexpr bool is_rand()
+            {
+                return std::is_same<range_category_t<InputRange>,
+                    std::random_access_iterator_tag>::value;
             }
 
             using dirty_t = box<
@@ -51,7 +57,7 @@ namespace ranges
                 >;
 
             using offset_t = box<
-                    detail::conditional_t<is_bidi(),
+                    detail::conditional_t<is_bidi() || is_rand(),
                         mutable_<difference_type>,
                         constant<difference_type, 0>>
                   , detail::offset_tag
@@ -84,7 +90,10 @@ namespace ranges
                 {}
                 basic_iterator(stride_range_view_ &rng, detail::end_tag)
                   : dirty_t(true), offset_t(0), rng_(&rng), it_(ranges::end(rng_->rng_))
-                {}
+                {
+                    if(is_rand())
+                        do_clean();
+                }
                 void increment()
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
@@ -130,12 +139,16 @@ namespace ranges
                 {
                     if(is_dirty())
                     {
-                        this->set_offset(std::distance(ranges::begin(rng_->rng_),
-                            ranges::end(rng_->rng_)) % rng_->stride_);
-                        if(0 != offset())
-                            this->set_offset(rng_->stride_ - offset());
+                        do_clean();
                         set_dirty(false);
                     }
+                }
+                void do_clean() const
+                {
+                    this->set_offset(std::distance(ranges::begin(rng_->rng_),
+                        ranges::end(rng_->rng_)) % rng_->stride_);
+                    if(0 != offset())
+                        this->set_offset(rng_->stride_ - offset());
                 }
                 bool is_dirty() const
                 {
