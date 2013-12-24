@@ -22,6 +22,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/next_prev.hpp>
+#include <range/v3/distance.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
@@ -145,8 +146,7 @@ namespace ranges
                 }
                 void do_clean() const
                 {
-                    this->set_offset(std::distance(ranges::begin(rng_->rng_),
-                        ranges::end(rng_->rng_)) % rng_->stride_);
+                    this->set_offset(ranges::distance(rng_->rng_) % rng_->stride_);
                     if(0 != offset())
                         this->set_offset(rng_->stride_ - offset());
                 }

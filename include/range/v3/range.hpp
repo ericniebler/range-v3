@@ -16,11 +16,13 @@
 
 #include <range/v3/algorithm.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/istream_range.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/next_prev.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/view.hpp>
 
 #endif

@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <functional>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 
@@ -34,7 +35,7 @@ namespace ranges
             static ForwardRange invoke(filler_n, ForwardRange && rng, Size n, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                RANGES_ASSERT(static_cast<Size>(std::distance(ranges::begin(rng), ranges::end(rng))) >= n);
+                RANGES_ASSERT(static_cast<Size>(ranges::distance(rng)) >= n);
                 std::fill_n(ranges::begin(rng), n, val);
                 return std::forward<ForwardRange>(rng);
             }

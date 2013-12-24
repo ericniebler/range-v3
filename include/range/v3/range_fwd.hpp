@@ -61,10 +61,16 @@ namespace ranges
         extern adl_begin_end_detail::cender const cend;
 
         struct nexter;
-        struct prever;
-
         extern nexter const next;
+
+        struct prever;
         extern prever const prev;
+
+        struct size_;
+        extern size_ const size;
+
+        struct distance_;
+        extern distance_ const distance;
 
         namespace detail
         {

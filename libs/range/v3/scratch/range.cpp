@@ -223,18 +223,27 @@ void test_stride_view()
 
     std::vector<int> v(50);
     std::iota(v.begin(), v.end(), 0);
+    static_assert(
+        sizeof((v|view::stride(3)).begin()) == 
+        sizeof(void*)+sizeof(v.begin())+sizeof(std::ptrdiff_t),"");
     for(int i : v | view::stride(3) | view::reverse)
         std::cout << i << ' ';
     std::cout << '\n';
 
     std::stringstream str;
     copy(v, std::ostream_iterator<int>{str, " "});
+    static_assert(
+        sizeof((istream<int>(str)|view::stride(3)).begin()) == 
+        sizeof(void*)+sizeof(istream<int>(str).begin()),"");
     for(int i : istream<int>(str) | view::stride(3))
         std::cout << i << ' ';
     std::cout << '\n';
 
     std::list<int> li;
     copy(v, std::back_inserter(li));
+    static_assert(
+        sizeof((li|view::stride(3)).begin()) == 
+        sizeof(void*)+sizeof(li.begin())+sizeof(int)+sizeof(std::ptrdiff_t),"");
     for(int i : li | view::stride(3))
         std::cout << i << ' ';
     std::cout << '\n';
@@ -243,7 +252,7 @@ void test_stride_view()
     std::cout << '\n';
 
     auto x = v | view::stride(3);
-    std::cout << std::distance(begin(x), end(x)) << '\n';
+    std::cout << ranges::distance(x) << '\n';
     std::cout << '\n';
 }
 
