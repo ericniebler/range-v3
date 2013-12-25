@@ -334,5 +334,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\size.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

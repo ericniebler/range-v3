@@ -222,7 +222,7 @@ void test_stride_view()
     std::cout << "\nstride\n";
 
     std::vector<int> v(50);
-    std::iota(v.begin(), v.end(), 0);
+    iota(v, 0);
     static_assert(
         sizeof((v|view::stride(3)).begin()) == 
         sizeof(void*)+sizeof(v.begin())+sizeof(std::ptrdiff_t),"");

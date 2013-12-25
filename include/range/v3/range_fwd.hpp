@@ -385,6 +385,23 @@ namespace ranges
         struct upper_bound_finder;
         extern upper_bound_finder const upper_bound;
 
+        // Numeric algorithms
+        //
+        struct accumulate_;
+        extern accumulate_ const accumulate;
+
+        struct inner_product_;
+        extern inner_product_ const inner_product;
+
+        struct partial_sum_;
+        extern partial_sum_ const partial_sum;
+
+        struct adjacent_difference_;
+        extern adjacent_difference_ const adjacent_difference;
+
+        struct iota_;
+        extern iota_ const iota;
+
         // Views
         //
         template<typename ForwardRange, typename BinaryPredicate>
