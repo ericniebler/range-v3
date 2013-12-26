@@ -197,10 +197,11 @@ namespace ranges
         struct iota_ : bindable<iota_>
         {
             template<typename ForwardRange, typename Value>
-            static void invoke(iota_, ForwardRange && rng, Value value)
+            static ForwardRange invoke(iota_, ForwardRange && rng, Value value)
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::iota(ranges::begin(rng), ranges::end(rng), std::move(value));
+                std::iota(ranges::begin(rng), ranges::end(rng), std::move(value));
+                return std::forward<ForwardRange>(rng);
             }
 
             template<typename Value>

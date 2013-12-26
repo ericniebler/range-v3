@@ -332,8 +332,7 @@ namespace ranges
                     return *this;
                 }
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst,
-                         typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
                   : basic_iterator{}
                 {

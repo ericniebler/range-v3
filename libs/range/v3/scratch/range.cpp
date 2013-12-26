@@ -320,6 +320,38 @@ void test_tokenize_view()
     //std::cout << '\n';
 }
 
+void test_zip_view()
+{
+    using namespace ranges;
+    std::cout << "\nzip view:\n";
+
+    std::vector<int> vi{0,1,2,3,4,5,6,7,8,9,10};
+    std::vector<std::string> vs{
+        "hello"
+      , "goodbye"
+      , "hello"
+      , "goodbye"
+    };
+    std::stringstream str{"john paul george ringo"};
+    for(auto t : view::zip(vi, vs, istream<std::string>(str)))
+    {
+        std::cout << "{"
+            << std::get<0>(t) << ", "
+            << std::get<1>(t) << ", "
+            << std::get<2>(t) << "}\n"; 
+    }
+
+    auto rnd_rng = view::zip(vi, vs);
+    auto rnd_it = rnd_rng.begin();
+    auto tmp = rnd_it + 3;
+    std::cout << "\n{"
+        << std::get<0>(*tmp) << ", "
+        << std::get<1>(*tmp) << "}\n";
+
+    std::cout << rnd_rng.end() - rnd_rng.begin() << "\n";
+    std::cout << rnd_rng.begin() - rnd_rng.end() << "\n";
+}
+
 //*
 int main()
 {
@@ -459,5 +491,6 @@ int main()
     test_view_replace_if();
     test_tokenize_view();
     test_stride_view();
+    test_zip_view();
 }
 //*/

@@ -151,6 +151,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\tuple_algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\typelist.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\tokenize.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

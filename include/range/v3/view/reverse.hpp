@@ -38,9 +38,9 @@ namespace ranges
               : ranges::iterator_facade<
                     basic_iterator<Const>
                   , range_value_t<detail::add_const_if_t<BidirectionalRange, Const>>
-                  , range_category_t<detail::add_const_if_t<BidirectionalRange, Const>>
+                  , range_category_t<BidirectionalRange>
                   , range_reference_t<detail::add_const_if_t<BidirectionalRange, Const>>
-                  , range_difference_t<detail::add_const_if_t<BidirectionalRange, Const>>
+                  , range_difference_t<BidirectionalRange>
                 >
             {
             private:
@@ -90,8 +90,7 @@ namespace ranges
                   : rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst,
-                         typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
                   : rng_(that.rng_), it_(std::move(that).it_)
                 {}

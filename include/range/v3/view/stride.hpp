@@ -23,7 +23,6 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/next_prev.hpp>
 #include <range/v3/distance.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/box.hpp>
@@ -52,11 +51,16 @@ namespace ranges
                     std::random_access_iterator_tag>::value;
             }
 
-            using dirty_t = box<
+            // Bidirectional stride iterators need a runtime boolean to keep track
+            // of when the offset variable is dirty and needs to be recalculated.
+            using is_dirty_t = box<
                     detail::conditional_t<is_bidi(), mutable_<bool>, constant<bool, false>>
                   , detail::dirty_tag
                 >;
 
+            // Bidirectional and random-access stride iterators need to remember how
+            // far past they end they are, so that when they're decremented, they can
+            // visit the correct elements.
             using offset_t = box<
                     detail::conditional_t<is_bidi() || is_rand(),
                         mutable_<difference_type>,
@@ -73,7 +77,7 @@ namespace ranges
                   , range_reference_t<detail::add_const_if_t<InputRange, Const>>
                   , difference_type
                 >
-              , private dirty_t
+              , private is_dirty_t
               , private offset_t
             {
             private:
@@ -87,10 +91,10 @@ namespace ranges
                 base_range_iterator it_;
 
                 basic_iterator(stride_range_view_ &rng, detail::begin_tag)
-                  : dirty_t(false), offset_t(0), rng_(&rng), it_(ranges::begin(rng_->rng_))
+                  : is_dirty_t(false), offset_t(0), rng_(&rng), it_(ranges::begin(rng_->rng_))
                 {}
                 basic_iterator(stride_range_view_ &rng, detail::end_tag)
-                  : dirty_t(true), offset_t(0), rng_(&rng), it_(ranges::end(rng_->rng_))
+                  : is_dirty_t(true), offset_t(0), rng_(&rng), it_(ranges::end(rng_->rng_))
                 {
                     if(is_rand())
                         do_clean();
@@ -168,13 +172,12 @@ namespace ranges
                 }
             public:
                 basic_iterator()
-                  : dirty_t{}, offset_t{}, rng_{}, it_{}
+                  : is_dirty_t{}, offset_t{}, rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst,
-                         typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
-                  : dirty_t(that.is_dirty()), offset_t(that.offset())
+                  : is_dirty_t(that.is_dirty()), offset_t(that.offset())
                   , rng_(that.rng_), it_(std::move(that).it_)
                 {}
             };

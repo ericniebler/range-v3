@@ -526,6 +526,15 @@ namespace ranges
             struct map_values;
             extern map_values const values;
         }
+
+        template<typename...InputRanges>
+        struct zip_range_view;
+
+        namespace view
+        {
+            struct zipper;
+            extern zipper const zip;
+        }
     }
 }
 

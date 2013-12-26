@@ -45,9 +45,9 @@ namespace ranges
               : ranges::iterator_facade<
                     basic_iterator<Const>
                   , typename std::remove_reference<reference_t<Const>>::type
-                  , range_category_t<detail::add_const_if_t<InputRange, Const>>
+                  , range_category_t<InputRange>
                   , reference_t<Const>
-                  , range_difference_t<detail::add_const_if_t<InputRange, Const>>
+                  , range_difference_t<InputRange>
                 >
             {
             private:
@@ -97,8 +97,7 @@ namespace ranges
                   : rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst,
-                         typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
                   : rng_(that.rng_), it_(std::move(that).it_)
                 {}

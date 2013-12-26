@@ -37,8 +37,8 @@ namespace ranges
             compressed_pair() = default;
 
             template<typename F, typename S,
-                typename = typename std::enable_if<std::is_constructible<First, F &&>::value>::type,
-                typename = typename std::enable_if<std::is_constructible<Second, S &&>::value>::type>
+                typename std::enable_if<std::is_constructible<First, F &&>::value &&
+                                        std::is_constructible<Second, S &&>::value, int>::type = 0>
             constexpr compressed_pair(F && f, S && s)
               : box<First, detail::first_tag>(detail::forward<F>(f)),
                 box<Second, detail::second_tag>(detail::forward<S>(s))

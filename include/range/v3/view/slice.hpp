@@ -52,11 +52,11 @@ namespace ranges
 
             static constexpr bool is_bidi()
             {
-                return std::is_convertible<range_category_t<InputRange>,
+                return std::is_same<range_category_t<InputRange>,
                     std::bidirectional_iterator_tag>::value;
             }
 
-            using dirty_t = box<
+            using is_dirty_t = box<
                     detail::conditional_t<is_bidi(), bool, constant<bool, false>>
                   , detail::dirty_tag
                 >;
@@ -67,11 +67,11 @@ namespace ranges
               : ranges::iterator_facade<
                     basic_iterator<Const>
                   , range_value_t<detail::add_const_if_t<InputRange, Const>>
-                  , range_category_t<detail::add_const_if_t<InputRange, Const>>
+                  , range_category_t<InputRange>
                   , range_reference_t<detail::add_const_if_t<InputRange, Const>>
-                  , range_difference_t<detail::add_const_if_t<InputRange, Const>>
+                  , range_difference_t<InputRange>
                 >
-              , private dirty_t
+              , private is_dirty_t
             {
             private:
                 friend struct slice_range_view;
@@ -84,10 +84,10 @@ namespace ranges
                 range_iterator_t<base_range> it_;
 
                 basic_iterator(slice_range_view_ &rng, detail::begin_tag)
-                  : dirty_t{false}, rng_(&rng), n_(rng_->from_), it_(rng_->begin_)
+                  : is_dirty_t{false}, rng_(&rng), n_(rng_->from_), it_(rng_->begin_)
                 {}
                 basic_iterator(slice_range_view_ &rng, detail::end_tag)
-                  : dirty_t{true}, rng_(&rng), n_(rng_->to_), it_(rng_->begin_)
+                  : is_dirty_t{true}, rng_(&rng), n_(rng_->to_), it_(rng_->begin_)
                 {}
                 void increment()
                 {
@@ -120,9 +120,13 @@ namespace ranges
                     {
                         // BUGBUG investigate why this gets called twice
                         //std::cout << "\ncleaning!!!\n";
-                        it_ = ranges::next(rng_->begin_, rng_->to_ - rng_->from_);
+                        do_clean();
                         set_dirty(false);
                     }
+                }
+                void do_clean()
+                {
+                    it_ = ranges::next(rng_->begin_, rng_->to_ - rng_->from_);
                 }
                 bool is_dirty() const
                 {
@@ -134,13 +138,12 @@ namespace ranges
                 }
             public:
                 basic_iterator()
-                  : dirty_t{}, rng_{}, n_{}, it_{}
+                  : is_dirty_t{}, rng_{}, n_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst,
-                         typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
-                  : dirty_t{that.is_dirty()}
+                  : is_dirty_t{that.is_dirty()}
                   , rng_(that.rng_), n_(that.n_), it_(std::move(that).it_)
                 {}
             };
