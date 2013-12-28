@@ -16,8 +16,6 @@
 
 #include <utility>
 #include <iterator>
-#include <type_traits>
-#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
@@ -33,91 +31,28 @@ namespace ranges
         private:
             BidirectionalRange rng_;
 
-            template<bool Const>
-            struct basic_iterator
-              : ranges::iterator_facade<
-                    basic_iterator<Const>
-                  , range_value_t<detail::add_const_if_t<BidirectionalRange, Const>>
-                  , range_category_t<BidirectionalRange>
-                  , range_reference_t<detail::add_const_if_t<BidirectionalRange, Const>>
-                  , range_difference_t<BidirectionalRange>
-                >
-            {
-            private:
-                friend struct reverse_range_view;
-                friend struct ranges::iterator_core_access;
-                using base_range = detail::add_const_if_t<BidirectionalRange, Const>;
-                using base_range_iterator = range_iterator_t<base_range>;
-                using reverse_range_view_ = detail::add_const_if_t<reverse_range_view, Const>;
-
-                reverse_range_view_ *rng_;
-                base_range_iterator it_;
-
-                basic_iterator(reverse_range_view_ &rng, base_range_iterator it)
-                  : rng_(&rng), it_(std::move(it))
-                {}
-                void increment()
-                {
-                    RANGES_ASSERT(it_ != ranges::begin(rng_->rng_));
-                    --it_;
-                }
-                void decrement()
-                {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
-                    ++it_;
-                }
-                void advance(range_difference_t<base_range> n)
-                {
-                    it_ -= n;
-                }
-                range_difference_t<base_range> distance_to(basic_iterator const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    return it_ - that.it_;
-                }
-                bool equal(basic_iterator const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    return it_ == that.it_;
-                }
-                range_reference_t<base_range> dereference() const
-                {
-                    RANGES_ASSERT(it_ != ranges::begin(rng_->rng_));
-                    return *std::prev(it_);
-                }
-            public:
-                basic_iterator()
-                  : rng_{}, it_{}
-                {}
-                // For iterator -> const_iterator conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
-                basic_iterator(basic_iterator<OtherConst> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
-                {}
-            };
-
         public:
-            using iterator       = basic_iterator<false>;
-            using const_iterator = basic_iterator<true>;
+            using iterator       = std::reverse_iterator<range_iterator_t<BidirectionalRange>>;
+            using const_iterator = std::reverse_iterator<range_iterator_t<BidirectionalRange const>>;
 
             explicit reverse_range_view(BidirectionalRange && rng)
               : rng_(std::forward<BidirectionalRange>(rng))
             {}
             iterator begin()
             {
-                return {*this, ranges::end(rng_)};
+                return iterator{ranges::end(rng_)};
             }
             iterator end()
             {
-                return {*this, ranges::begin(rng_)};
+                return iterator{ranges::begin(rng_)};
             }
             const_iterator begin() const
             {
-                return {*this, ranges::end(rng_)};
+                return const_iterator{ranges::end(rng_)};
             }
             const_iterator end() const
             {
-                return {*this, ranges::begin(rng_)};
+                return const_iterator{ranges::begin(rng_)};
             }
             bool operator!() const
             {

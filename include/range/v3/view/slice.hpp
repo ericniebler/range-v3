@@ -206,26 +206,26 @@ namespace ranges
                            std::move(that).begin_ :
                            ranges::next(ranges::begin(rng_), from_))
             {}
-            slice_range_view &operator=(slice_range_view const &that)
-            {
-                rng_   = that.rng_;
-                from_  = that.from_;
-                to_    = that.to_;
-                begin_ = use_other_iterator_on_copy_and_move() ?
-                             that.begin_ :
-                             ranges::next(ranges::begin(rng_), from_);
-                return *this;
-            }
-            slice_range_view &operator=(slice_range_view &&that)
-            {
-                rng_   = std::move(that).rng_;
-                from_  = that.from_;
-                to_    = that.to_;
-                begin_ = use_other_iterator_on_copy_and_move() ?
-                             std::move(that).begin_ :
-                             ranges::next(ranges::begin(rng_), from_);
-                return *this;
-            }
+            slice_range_view &operator=(slice_range_view const &that) = delete;
+            //{
+            //    rng_   = that.rng_;
+            //    from_  = that.from_;
+            //    to_    = that.to_;
+            //    begin_ = use_other_iterator_on_copy_and_move() ?
+            //                 that.begin_ :
+            //                 ranges::next(ranges::begin(rng_), from_);
+            //    return *this;
+            //}
+            slice_range_view &operator=(slice_range_view &&that) = delete;
+            //{
+            //    rng_   = std::move(that).rng_;
+            //    from_  = that.from_;
+            //    to_    = that.to_;
+            //    begin_ = use_other_iterator_on_copy_and_move() ?
+            //                 std::move(that).begin_ :
+            //                 ranges::next(ranges::begin(rng_), from_);
+            //    return *this;
+            //}
             iterator begin()
             {
                 return iterator_factory<false>::make_iterator(*this, detail::begin_tag{});

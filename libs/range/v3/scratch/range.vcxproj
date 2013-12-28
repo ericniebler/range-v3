@@ -146,6 +146,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_adaptor.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_facade.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\indirect.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\map.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\move.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp" />

@@ -352,6 +352,26 @@ void test_zip_view()
     std::cout << rnd_rng.begin() - rnd_rng.end() << "\n";
 }
 
+void test_move_view()
+{
+    using namespace ranges;
+    std::cout << "\nmove view:\n";
+    std::vector<std::string> vs {
+        "'allo",
+        "'allo",
+        "???"
+    };
+    move_range_view<std::vector<std::string>&> x = vs | view::move;
+    std::vector<std::string> vs2(x.begin(), x.end());
+    static_assert(std::is_same<std::string&&, decltype(*x.begin())>::value, "");
+    std::cout << "target:\n";
+    for(std::string &s : vs2)
+        std::cout << '"' << s << "\" ";
+    std::cout << "\nsource:\n";
+    for(std::string &s : vs)
+        std::cout << '"' << s << "\" ";
+}
+
 //*
 int main()
 {
@@ -492,5 +512,6 @@ int main()
     test_tokenize_view();
     test_stride_view();
     test_zip_view();
+    test_move_view();
 }
 //*/

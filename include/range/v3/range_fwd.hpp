@@ -75,7 +75,11 @@ namespace ranges
         namespace detail
         {
             struct empty
-            {};
+            {
+                template<typename ...Ts>
+                empty(Ts &&...)
+                {}
+            };
 
             template<typename T>
             using uncvref_t =
@@ -147,6 +151,9 @@ namespace ranges
 
             template<bool B, typename T, typename U>
             using conditional_t = typename std::conditional<B, T, U>::type;
+
+            template<bool B, typename T, typename U>
+            using lazy_conditional_t = typename conditional_t<B, T, U>::type;
 
             template<typename T, bool B>
             using add_const_if_t = conditional_t<B, T const, T>;
@@ -447,6 +454,15 @@ namespace ranges
         {
             struct joiner;
             extern joiner const join;
+        }
+
+        template<typename InputRange>
+        struct move_range_view;
+
+        namespace view
+        {
+            struct mover;
+            extern mover const move;
         }
 
         namespace view

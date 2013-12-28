@@ -26,9 +26,6 @@ namespace ranges
 
         namespace detail
         {
-            template<bool B, typename U, typename V>
-            using lazy_conditional_t = typename detail::conditional_t<B, U, V>::type;
-
             template<typename T>
             struct is_reference_to_const
               : std::false_type
@@ -36,6 +33,11 @@ namespace ranges
 
             template<typename T>
             struct is_reference_to_const<T const&>
+              : std::true_type
+            {};
+
+            template<typename T>
+            struct is_reference_to_const<T const&&>
               : std::true_type
             {};
 
@@ -185,7 +187,7 @@ namespace ranges
             struct postfix_increment_proxy
             {
             private:
-                using value_type = typename std::iterator_traits<Iterator>::value_type;
+                using value_type = iterator_value_t<Iterator>;
                 mutable value_type value_;
             public:
                 explicit postfix_increment_proxy(Iterator const& x)
@@ -209,7 +211,7 @@ namespace ranges
             struct writable_postfix_increment_proxy
             {
             private:
-                using value_type = typename std::iterator_traits<Iterator>::value_type;
+                using value_type = iterator_value_t<Iterator>;
                 mutable value_type value_;
                 Iterator it_;
             public:
@@ -219,7 +221,7 @@ namespace ranges
                 {}
                 // Dereferencing must return a proxy so that both *r++ = o and
                 // value_type(*r++) can work.  In this case, *r is the same as
-                // *r++, and the conversion operatorbelow is used to ensure
+                // *r++, and the conversion operator below is used to ensure
                 // readability.
                 writable_postfix_increment_proxy const& operator*() const
                 {
@@ -290,25 +292,31 @@ namespace ranges
                 >;
 
             // operator->() needs special support for input iterators to strictly meet the
-            // standard's requirements. If *i is not a reference type, we must still
+            // standard's requirements. If *i is not an lvalue reference type, we must still
             // produce an lvalue to which a pointer can be formed.  We do that by
             // returning a proxy object containing an instance of the reference object.
+            //
+            // NOTE: Below, Reference could be an rvalue reference or a non-reference type.
             template<typename Reference>
             struct operator_arrow_dispatch // proxy references
             {
             private:
                 struct proxy
                 {
-                    Reference* operator->()
-                    {
-                        return std::addressof(m_ref);
-                    }
                 private:
                     friend struct operator_arrow_dispatch;
+                    using reference = typename std::remove_reference<Reference>::type;
+
+                    reference m_ref;
+
                     explicit proxy(Reference x)
                       : m_ref(std::move(x))
                     {}
-                    Reference m_ref;
+                public:
+                    reference* operator->()
+                    {
+                        return std::addressof(m_ref);
+                    }
                 };
             public:
                 using result_type = proxy;
@@ -319,10 +327,10 @@ namespace ranges
             };
 
             template<typename T>
-            struct operator_arrow_dispatch<T&> // "real" references
+            struct operator_arrow_dispatch<T &> // "real" lvalue references
             {
                 using result_type = T *;
-                static result_type apply(T& x)
+                static result_type apply(T & x)
                 {
                     return std::addressof(x);
                 }
@@ -449,8 +457,7 @@ namespace ranges
             }
         protected:
             // For use by derived classes
-            using iterator_facade_ =
-                iterator_facade<Derived, Value, Category, Reference, Difference>;
+            using iterator_facade_ = iterator_facade;
 
         public:
             using value_type = typename associated_types::value_type;

@@ -148,12 +148,14 @@ namespace ranges
                 }
                 bool equal(basic_iterator const &that) const
                 {
+                    RANGES_ASSERT(rng_ == that.rng_);
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
                     // one reaches the end.
                     return tuple_foldl(
                         tuple_transform(its_, that.its_, detail::equal_to),
-                        false, [](bool a, bool b) { return a || b; });
+                        false,
+                        [](bool a, bool b) { return a || b; });
                 }
                 void increment()
                 {
@@ -172,6 +174,7 @@ namespace ranges
                 }
                 difference_type distance_to(basic_iterator const &that) const
                 {
+                    RANGES_ASSERT(rng_ == that.rng_);
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accomodate zippers of sequences of different length.
                     if(0 < std::get<0>(that.its_) - std::get<0>(its_))

@@ -20,6 +20,7 @@
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/map.hpp>
+#include <range/v3/view/move.hpp>
 #include <range/v3/view/replace.hpp>
 #include <range/v3/view/replace_if.hpp>
 #include <range/v3/view/reverse.hpp>

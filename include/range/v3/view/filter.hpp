@@ -69,7 +69,7 @@ namespace ranges
                 }
                 void increment()
                 {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_pred_.first()));
+                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     ++it_; satisfy();
                 }
                 void decrement()
@@ -83,12 +83,12 @@ namespace ranges
                 }
                 range_reference_t<base_range> dereference() const
                 {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_pred_.first()));
+                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     return *it_;
                 }
                 void satisfy()
                 {
-                    auto const e = ranges::end(rng_->rng_and_pred_.first());
+                    auto const e = ranges::end(rng_->base());
                     while(it_ != e && !rng_->rng_and_pred_.second()(*it_))
                         ++it_;
                 }
@@ -111,19 +111,19 @@ namespace ranges
             {}
             iterator begin()
             {
-                return {*this, ranges::begin(rng_and_pred_.first())};
+                return {*this, ranges::begin(base())};
             }
             iterator end()
             {
-                return {*this, ranges::end(rng_and_pred_.first())};
+                return {*this, ranges::end(base())};
             }
             const_iterator begin() const
             {
-                return {*this, ranges::begin(rng_and_pred_.first())};
+                return {*this, ranges::begin(base())};
             }
             const_iterator end() const
             {
-                return {*this, ranges::end(rng_and_pred_.first())};
+                return {*this, ranges::end(base())};
             }
             bool operator!() const
             {

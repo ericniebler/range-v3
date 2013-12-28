@@ -56,7 +56,7 @@ namespace ranges
                 {}
                 void increment()
                 {
-                    auto const e = ranges::end(rng_->rng_and_pred_.first());
+                    auto const e = ranges::end(rng_->base());
                     RANGES_ASSERT(it_ != e);
                     auto &pred = rng_->rng_and_pred_.second();
                     auto const prev = it_++;
@@ -68,9 +68,9 @@ namespace ranges
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                auto dereference() const -> decltype(*it_)
+                typename basic_iterator::reference dereference() const
                 {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_pred_.first()));
+                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     return *it_;
                 }
             public:
@@ -93,19 +93,19 @@ namespace ranges
             {}
             iterator begin()
             {
-                return {*this, ranges::begin(rng_and_pred_.first())};
+                return {*this, ranges::begin(base())};
             }
             iterator end()
             {
-                return {*this, ranges::end(rng_and_pred_.first())};
+                return {*this, ranges::end(base())};
             }
             const_iterator begin() const
             {
-                return {*this, ranges::begin(rng_and_pred_.first())};
+                return {*this, ranges::begin(base())};
             }
             const_iterator end() const
             {
-                return {*this, ranges::end(rng_and_pred_.first())};
+                return {*this, ranges::end(base())};
             }
             bool operator!() const
             {
