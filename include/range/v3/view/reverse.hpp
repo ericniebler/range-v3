@@ -20,11 +20,24 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/debug_iterator.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        struct reverse_iterator_maker : bindable<reverse_iterator_maker>
+        {
+            template<typename Iterator>
+            static std::reverse_iterator<Iterator>
+            invoke(reverse_iterator_maker, Iterator it)
+            {
+                return std::reverse_iterator<Iterator>{std::move(it)};
+            }
+        };
+
+        RANGES_CONSTEXPR reverse_iterator_maker make_reverse_iterator {};
+
         template<typename BidirectionalRange>
         struct reverse_range_view
         {
@@ -32,27 +45,36 @@ namespace ranges
             BidirectionalRange rng_;
 
         public:
-            using iterator       = std::reverse_iterator<range_iterator_t<BidirectionalRange>>;
-            using const_iterator = std::reverse_iterator<range_iterator_t<BidirectionalRange const>>;
+            using iterator =
+                RANGES_DEBUG_ITERATOR(reverse_range_view,
+                    std::reverse_iterator<range_iterator_t<BidirectionalRange>>);
+
+            using const_iterator =
+                RANGES_DEBUG_ITERATOR(reverse_range_view const,
+                    std::reverse_iterator<range_iterator_t<BidirectionalRange const>>);
 
             explicit reverse_range_view(BidirectionalRange && rng)
               : rng_(std::forward<BidirectionalRange>(rng))
             {}
             iterator begin()
             {
-                return iterator{ranges::end(rng_)};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    ranges::make_reverse_iterator(ranges::end(rng_)));
             }
             iterator end()
             {
-                return iterator{ranges::begin(rng_)};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    ranges::make_reverse_iterator(ranges::begin(rng_)));
             }
             const_iterator begin() const
             {
-                return const_iterator{ranges::end(rng_)};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    ranges::make_reverse_iterator(ranges::end(rng_)));
             }
             const_iterator end() const
             {
-                return const_iterator{ranges::begin(rng_)};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    ranges::make_reverse_iterator(ranges::begin(rng_)));
             }
             bool operator!() const
             {

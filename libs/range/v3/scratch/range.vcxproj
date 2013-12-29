@@ -144,6 +144,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\debug_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_adaptor.hpp" />

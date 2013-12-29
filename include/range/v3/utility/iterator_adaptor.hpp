@@ -135,10 +135,6 @@ namespace ranges
             {
                 return it_ == x.base();
             }
-            void advance(typename iterator_adaptor::difference_type n)
-            {
-                it_ += n;
-            }
             void increment()
             {
                 ++it_;
@@ -146,6 +142,10 @@ namespace ranges
             void decrement() 
             {
                 --it_;
+            }
+            void advance(typename iterator_adaptor::difference_type n)
+            {
+                it_ += n;
             }
             template<typename OD, typename OB, typename V, typename C, typename R, typename D>   
             typename iterator_adaptor::difference_type

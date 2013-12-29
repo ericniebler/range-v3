@@ -349,5 +349,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\move.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\debug_iterator.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
