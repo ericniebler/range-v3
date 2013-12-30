@@ -17,14 +17,12 @@
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/next_prev.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/debug_iterator.hpp>
+#include <range/v3/utility/iterator_adaptor.hpp>
 
 namespace ranges
 {
@@ -35,76 +33,49 @@ namespace ranges
         {
         private:
             InputRange rng_;
-            using reference_t = decltype(*std::declval<range_reference_t<InputRange const>>());
+            using reference = decltype(*std::declval<range_reference_t<InputRange const>>());
+            using base_range_iterator = range_iterator_t<InputRange const>;
 
-        public:
-            using const_iterator = struct iterator
-              : ranges::iterator_facade<
-                    iterator
-                  , typename std::remove_reference<reference_t>::type
-                  , range_category_t<InputRange>
-                  , reference_t
-                  , range_difference_t<InputRange>
+            struct basic_iterator
+              : ranges::iterator_adaptor<
+                    basic_iterator
+                  , base_range_iterator
+                  , typename std::remove_reference<reference>::type
+                  , use_default
+                  , reference
                 >
             {
             private:
                 friend struct indirect_range_view;
                 friend struct ranges::iterator_core_access;
-                using base_range_iterator = range_iterator_t<InputRange const>;
+                using iterator_adaptor_ = typename basic_iterator::iterator_adaptor_;
 
-                base_range_iterator it_;
-
-                explicit iterator(base_range_iterator it)
-                  : it_(std::move(it))
+                explicit basic_iterator(base_range_iterator it)
+                  : iterator_adaptor_(std::move(it))
                 {}
-                void increment()
+                reference dereference() const
                 {
-                    ++it_;
-                }
-                bool equal(iterator const &that) const
-                {
-                    return it_ == that.it_;
-                }
-                void decrement()
-                {
-                    --it_;
-                }
-                reference_t dereference() const
-                {
-                    return **it_;
-                }
-                void advance(range_difference_t<InputRange> n)
-                {
-                    it_ += n;
-                }
-                range_difference_t<InputRange> distance_to(iterator that) const
-                {
-                    return that.it_ - it_;
+                    return **this->base();
                 }
             public:
-                iterator()
-                  : it_{}
+                basic_iterator()
+                  : iterator_adaptor_{}
                 {}
             };
+        public:
+            using iterator = RANGES_DEBUG_ITERATOR(indirect_range_view const, basic_iterator);
+            using const_iterator = iterator;
 
             explicit indirect_range_view(InputRange && rng)
               : rng_(std::forward<InputRange>(rng))
             {}
-            iterator begin()
+            iterator begin() const
             {
-                return iterator{rng_.begin()};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this, basic_iterator{ranges::begin(rng_)});
             }
-            iterator end()
+            iterator end() const
             {
-                return iterator{rng_.end()};
-            }
-            const_iterator begin() const
-            {
-                return const_iterator{rng_.begin()};
-            }
-            const_iterator end() const
-            {
-                return const_iterator{rng_.end()};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this, basic_iterator{ranges::end(rng_)});
             }
             bool operator!() const
             {

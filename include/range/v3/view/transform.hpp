@@ -65,12 +65,12 @@ namespace ranges
                 {}
                 void increment()
                 {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_fun_.first()));
+                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     ++it_;
                 }
                 void decrement()
                 {
-                    RANGES_ASSERT(it_ != ranges::begin(rng_->rng_and_fun_.first()));
+                    RANGES_ASSERT(it_ != ranges::begin(rng_->base()));
                     --it_;
                 }
                 void advance(range_difference_t<base_range> n)
@@ -89,8 +89,8 @@ namespace ranges
                 }
                 reference_t<Const> dereference() const
                 {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_and_fun_.first()));
-                    return rng_->rng_and_fun_.second()(*it_);
+                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
+                    return rng_->fun()(*it_);
                 }
             public:
                 basic_iterator()
@@ -111,19 +111,19 @@ namespace ranges
             {}
             iterator begin()
             {
-                return {*this, ranges::begin(rng_and_fun_.first())};
+                return {*this, ranges::begin(base())};
             }
             iterator end()
             {
-                return {*this, ranges::end(rng_and_fun_.first())};
+                return {*this, ranges::end(base())};
             }
             const_iterator begin() const
             {
-                return {*this, ranges::begin(rng_and_fun_.first())};
+                return {*this, ranges::begin(base())};
             }
             const_iterator end() const
             {
-                return {*this, ranges::end(rng_and_fun_.first())};
+                return {*this, ranges::end(base())};
             }
             bool operator!() const
             {
@@ -140,6 +140,10 @@ namespace ranges
             InputRange const & base() const
             {
                 return rng_and_fun_.first();
+            }
+            invokable_t<UnaryFunction> const & fun() const
+            {
+                return rng_and_fun_.second();
             }
         };
 

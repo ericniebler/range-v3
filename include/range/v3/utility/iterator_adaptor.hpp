@@ -19,27 +19,11 @@ namespace ranges
 {
     inline namespace v3
     {
-        // Used as a default template argument internally, merely to
-        // indicate "use the default", this can also be passed by users
-        // explicitly in order to specify that the default should be used.
-        struct use_default
-        {};
-
         //
         // Default template argument handling for iterator_adaptor
         //
         namespace detail
         {
-            // If T is use_default, return the result of invoking
-            // DefaultNullaryFn, otherwise return T.
-            template<typename T, typename DefaultNullaryFn>
-            using conditional_with_default_t =
-                lazy_conditional_t<
-                    std::is_same<T, use_default>::value
-                  , DefaultNullaryFn
-                  , identity<T>
-                >;
-
             // A metafunction which computes an iterator_adaptor's base class,
             // a specialization of iterator_facade.
             template<
@@ -49,6 +33,7 @@ namespace ranges
               , typename Category
               , typename Reference
               , typename Difference
+              , typename Pointer
             >
             using iterator_adaptor_base = iterator_facade<
                 Derived
@@ -76,6 +61,7 @@ namespace ranges
                     Difference
                   , iterator_difference<Base>
                 >
+              , Pointer
             >;
         }
 
@@ -111,10 +97,11 @@ namespace ranges
           , typename Category     = use_default
           , typename Reference    = use_default
           , typename Difference   = use_default
+          , typename Pointer      = use_default
         >
         struct iterator_adaptor
           : detail::iterator_adaptor_base<
-                Derived, Base, Value, Category, Reference, Difference
+                Derived, Base, Value, Category, Reference, Difference, Pointer
             >
         {
         private:
@@ -130,8 +117,8 @@ namespace ranges
             {
                 return *it_;
             }
-            template<typename OD, typename OB, typename V, typename C, typename R, typename D>   
-            bool equal(iterator_adaptor<OD, OB, V, C, R, D> const& x) const
+            template<typename OD, typename OB, typename V, typename C, typename R, typename D, typename P>
+            bool equal(iterator_adaptor<OD, OB, V, C, R, D, P> const& x) const
             {
                 return it_ == x.base();
             }
@@ -139,7 +126,7 @@ namespace ranges
             {
                 ++it_;
             }
-            void decrement() 
+            void decrement()
             {
                 --it_;
             }
@@ -147,9 +134,9 @@ namespace ranges
             {
                 it_ += n;
             }
-            template<typename OD, typename OB, typename V, typename C, typename R, typename D>   
+            template<typename OD, typename OB, typename V, typename C, typename R, typename D, typename P>
             typename iterator_adaptor::difference_type
-            distance_to(iterator_adaptor<OD, OB, V, C, R, D> const& y) const
+            distance_to(iterator_adaptor<OD, OB, V, C, R, D, P> const& y) const
             {
                 return y.base() - it_;
             }
@@ -176,8 +163,8 @@ namespace ranges
             iterator_adaptor()
               : it_{}
             {}
-            explicit iterator_adaptor(Base iter)
-              : it_(std::move(iter))
+            explicit iterator_adaptor(Base it)
+              : it_(std::move(it))
             {}
             Base const& base() const
             {

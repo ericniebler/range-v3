@@ -133,14 +133,13 @@ namespace ranges
                 friend struct ranges::iterator_core_access;
                 using zip_range_view_ = detail::add_const_if_t<zip_range_view, Const>;
 
-                zip_range_view_ *rng_;
                 std::tuple<range_iterator_t<detail::add_const_if_t<InputRanges, Const>>...> its_;
 
                 basic_iterator(zip_range_view_ &rng, detail::begin_tag)
-                  : rng_(&rng), its_(tuple_transform(rng_->rngs_, ranges::begin))
+                  : its_(tuple_transform(rng.rngs_, ranges::begin))
                 {}
                 basic_iterator(zip_range_view_ &rng, detail::end_tag)
-                  : rng_(&rng), its_(tuple_transform(rng_->rngs_, ranges::end))
+                  : its_(tuple_transform(rng.rngs_, ranges::end))
                 {}
                 reference dereference() const
                 {
@@ -148,7 +147,6 @@ namespace ranges
                 }
                 bool equal(basic_iterator const &that) const
                 {
-                    RANGES_ASSERT(rng_ == that.rng_);
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
                     // one reaches the end.
@@ -159,12 +157,10 @@ namespace ranges
                 }
                 void increment()
                 {
-                    RANGES_ASSERT(*this != rng_->end());
                     tuple_for_each(its_, detail::inc);
                 }
                 void decrement()
                 {
-                    RANGES_ASSERT(*this != rng_->begin());
                     tuple_for_each(its_, detail::dec);
                 }
                 void advance(difference_type n)
@@ -174,7 +170,6 @@ namespace ranges
                 }
                 difference_type distance_to(basic_iterator const &that) const
                 {
-                    RANGES_ASSERT(rng_ == that.rng_);
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accomodate zippers of sequences of different length.
                     if(0 < std::get<0>(that.its_) - std::get<0>(its_))
@@ -190,36 +185,42 @@ namespace ranges
                 }
             public:
                 basic_iterator()
-                  : rng_{}, its_{}
+                  : its_{}
                 {}
                 // For iterator -> const_iterator conversion
                 template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
-                  : rng_(that.rng_), its_(std::move(that).its_)
+                  : its_(std::move(that).its_)
                 {}
             };
         public:
-            using iterator = basic_iterator<false>;
-            using const_iterator = basic_iterator<true>;
+            using iterator =
+                RANGES_DEBUG_ITERATOR(zip_range_view, basic_iterator<false>);
+            using const_iterator =
+                RANGES_DEBUG_ITERATOR(zip_range_view const, basic_iterator<true>);
 
             explicit zip_range_view(InputRanges &&...rngs)
               : rngs_{std::forward<InputRanges>(rngs)...}
             {}
             iterator begin()
             {
-                return {*this, detail::begin_tag{}};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    basic_iterator<false>{*this, detail::begin_tag{}});
             }
             iterator end()
             {
-                return {*this, detail::end_tag{}};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    basic_iterator<false>{*this, detail::end_tag{}});
             }
             const_iterator begin() const
             {
-                return {*this, detail::begin_tag{}};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    basic_iterator<true>{*this, detail::begin_tag{}});
             }
             const_iterator end() const
             {
-                return {*this, detail::end_tag{}};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    basic_iterator<true>{*this, detail::end_tag{}});
             }
             bool operator!() const
             {

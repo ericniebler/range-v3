@@ -18,10 +18,11 @@
 #include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/iterator_adaptor.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_adaptor.hpp>
+#include <range/v3/utility/debug_iterator.hpp>
 
 namespace ranges
 {
@@ -61,6 +62,8 @@ namespace ranges
                   , detail::move_iterator_reference_t<
                         range_reference_t<detail::add_const_if_t<InputRange, Const>>
                     >
+                  , use_default
+                  , range_iterator_t<detail::add_const_if_t<InputRange, Const>>
                 >
             {
             private:
@@ -71,16 +74,18 @@ namespace ranges
                 using base_range          = detail::add_const_if_t<InputRange, Const>;
                 using base_range_iterator = range_iterator_t<base_range>;
 
-                basic_iterator(move_range_view_ &, base_range_iterator it)
+                explicit basic_iterator(base_range_iterator it)
                   : iterator_adaptor_(std::move(it))
                 {}
                 typename iterator_adaptor_::reference dereference() const
                 {
                     return std::move(*this->base());
                 }
+                typename iterator_adaptor_::pointer arrow() const
+                {
+                    return this->base();
+                }
             public:
-                using pointer = base_range_iterator;
-
                 basic_iterator()
                   : iterator_adaptor_{}
                 {}
@@ -89,34 +94,36 @@ namespace ranges
                 basic_iterator(basic_iterator<OtherConst> that)
                   : iterator_adaptor_(std::move(that).base_reference())
                 {}
-                pointer operator->() const
-                {
-                    return this->base();
-                }
             };
 
         public:
-            using iterator       = basic_iterator<false>;
-            using const_iterator = basic_iterator<true>;
+            using iterator =
+                RANGES_DEBUG_ITERATOR(move_range_view, basic_iterator<false>);
+            using const_iterator =
+                RANGES_DEBUG_ITERATOR(move_range_view const, basic_iterator<true>);
 
             explicit move_range_view(InputRange && rng)
               : rng_(std::forward<InputRange>(rng))
             {}
             iterator begin()
             {
-                return {*this, ranges::begin(rng_)};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    basic_iterator<false>{ranges::begin(rng_)});
             }
             iterator end()
             {
-                return {*this, ranges::end(rng_)};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    basic_iterator<false>{ranges::end(rng_)});
             }
             const_iterator begin() const
             {
-                return {*this, ranges::begin(rng_)};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    basic_iterator<true>{ranges::begin(rng_)});
             }
             const_iterator end() const
             {
-                return {*this, ranges::end(rng_)};
+                return RANGES_MAKE_DEBUG_ITERATOR(*this,
+                    basic_iterator<true>{ranges::end(rng_)});
             }
             bool operator!() const
             {

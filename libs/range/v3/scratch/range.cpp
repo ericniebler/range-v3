@@ -224,7 +224,7 @@ void test_stride_view()
     std::vector<int> v(50);
     iota(v, 0);
     static_assert(
-        sizeof((v|view::stride(3)).begin()) == 
+        sizeof((v|view::stride(3)).begin()) ==
         sizeof(void*)+sizeof(v.begin())+sizeof(std::ptrdiff_t),"");
     for(int i : v | view::stride(3) | view::reverse)
         std::cout << i << ' ';
@@ -233,7 +233,7 @@ void test_stride_view()
     std::stringstream str;
     copy(v, std::ostream_iterator<int>{str, " "});
     static_assert(
-        sizeof((istream<int>(str)|view::stride(3)).begin()) == 
+        sizeof((istream<int>(str)|view::stride(3)).begin()) ==
         sizeof(void*)+sizeof(istream<int>(str).begin()),"");
     for(int i : istream<int>(str) | view::stride(3))
         std::cout << i << ' ';
@@ -242,7 +242,7 @@ void test_stride_view()
     std::list<int> li;
     copy(v, std::back_inserter(li));
     static_assert(
-        sizeof((li|view::stride(3)).begin()) == 
+        sizeof((li|view::stride(3)).begin()) ==
         sizeof(void*)+sizeof(li.begin())+sizeof(int)+sizeof(std::ptrdiff_t),"");
     for(int i : li | view::stride(3))
         std::cout << i << ' ';
@@ -338,7 +338,7 @@ void test_zip_view()
         std::cout << "{"
             << std::get<0>(t) << ", "
             << std::get<1>(t) << ", "
-            << std::get<2>(t) << "}\n"; 
+            << std::get<2>(t) << "}\n";
     }
 
     auto rnd_rng = view::zip(vi, vs);
@@ -362,6 +362,7 @@ void test_move_view()
         "???"
     };
     move_range_view<std::vector<std::string>&> x = vs | view::move;
+    if(0) std::cout << x.begin()->c_str() << std::endl;
     std::vector<std::string> vs2(x.begin(), x.end());
     static_assert(std::is_same<std::string&&, decltype(*x.begin())>::value, "");
     std::cout << "target:\n";

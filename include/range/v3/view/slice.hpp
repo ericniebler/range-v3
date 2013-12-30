@@ -165,14 +165,22 @@ namespace ranges
             template<bool Const>
             struct iterator_factory<Const, std::random_access_iterator_tag>
             {
-                using iterator = range_iterator_t<detail::add_const_if_t<InputRange, Const>>;
-                static iterator make_iterator(slice_range_view const &rng, detail::begin_tag tag)
+                using base_range_iterator =
+                    range_iterator_t<detail::add_const_if_t<InputRange, Const>>;
+                using slice_range_view_ =
+                    detail::add_const_if_t<slice_range_view, Const>;
+                using iterator =
+                    RANGES_DEBUG_ITERATOR(slice_range_view_, base_range_iterator);
+
+                static iterator make_iterator(slice_range_view_ &rng, detail::begin_tag tag)
                 {
-                    return rng.begin_;
+                    return RANGES_MAKE_DEBUG_ITERATOR(rng,
+                        base_range_iterator{rng.begin_});
                 }
-                static iterator make_iterator(slice_range_view const &rng, detail::end_tag tag)
+                static iterator make_iterator(slice_range_view_ &rng, detail::end_tag tag)
                 {
-                    return rng.begin_ + (rng.to_ - rng.from_);
+                    return RANGES_MAKE_DEBUG_ITERATOR(rng,
+                        base_range_iterator{rng.begin_ + (rng.to_ - rng.from_)});
                 }
             };
 

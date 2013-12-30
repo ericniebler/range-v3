@@ -52,7 +52,7 @@ namespace ranges
                 RANGES_ASSERT(*this != ranges::end(*rng_));
                 ++this->base_reference();
             }
-            void decrement() 
+            void decrement()
             {
                 RANGES_ASSERT(*this != ranges::begin(*rng_));
                 --this->base_reference();
@@ -74,6 +74,15 @@ namespace ranges
             {}
             debug_iterator(Range & rng, Iterator it)
               : iterator_adaptor_{std::move(it)}, rng_(&rng)
+            {}
+            // For iterator -> const_iterator conversion
+            template<typename OtherRange, typename OtherIterator,
+                typename std::enable_if<
+                    std::is_convertible<OtherRange *, Range *>::value &&
+                    std::is_convertible<OtherIterator, Iterator>::value, int
+                >::type = 0>
+            debug_iterator(debug_iterator<OtherRange, OtherIterator> it)
+              : iterator_adaptor_{std::move(it).base_reference()}, rng_(it.rng_)
             {}
         };
 

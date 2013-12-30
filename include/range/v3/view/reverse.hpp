@@ -28,11 +28,12 @@ namespace ranges
     {
         struct reverse_iterator_maker : bindable<reverse_iterator_maker>
         {
-            template<typename Iterator>
-            static std::reverse_iterator<Iterator>
-            invoke(reverse_iterator_maker, Iterator it)
+            template<typename BidirectionalIterator>
+            static std::reverse_iterator<BidirectionalIterator>
+            invoke(reverse_iterator_maker, BidirectionalIterator it)
             {
-                return std::reverse_iterator<Iterator>{std::move(it)};
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
+                return std::reverse_iterator<BidirectionalIterator>{std::move(it)};
             }
         };
 

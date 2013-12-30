@@ -19,13 +19,36 @@ namespace ranges
 {
     inline namespace v3
     {
+        // Used as a default template argument internally, merely to
+        // indicate "use the default", this can also be passed by users
+        // explicitly in order to specify that the default should be used.
+        struct use_default
+        {};
+
         // This forward declaration is required for the friend declaration
         // in iterator_core_access
-        template<typename I, typename V, typename TC, typename R, typename D>
+        template<
+            typename Derived             // The derived iterator type being constructed
+          , typename Value
+          , typename Category
+          , typename Reference   = Value &
+          , typename Difference  = std::ptrdiff_t
+          , typename Pointer     = use_default
+        >
         struct iterator_facade;
 
         namespace detail
         {
+            // If T is use_default, return the result of invoking
+            // DefaultNullaryFn, otherwise return T.
+            template<typename T, typename DefaultNullaryFn>
+            using conditional_with_default_t =
+                lazy_conditional_t<
+                    std::is_same<T, use_default>::value
+                  , DefaultNullaryFn
+                  , identity<T>
+                >;
+
             template<typename T>
             struct is_reference_to_const
               : std::false_type
@@ -48,7 +71,7 @@ namespace ranges
             //
             template<typename ValueParam, typename Reference>
             using iterator_writability_disabled =
-                std::integral_constant<bool, 
+                std::integral_constant<bool,
                     std::is_const<Reference>::value ||
                     is_reference_to_const<Reference>::value ||
                     std::is_const<ValueParam>::value
@@ -153,29 +176,6 @@ namespace ranges
                     std::is_convertible<Facade2, Facade1>::value
                   , Return
                 >::type;
-
-            //
-            // Generates associated types for an iterator_facade with the
-            // given parameters.
-            //
-            template<
-                typename ValueParam
-              , typename Category
-              , typename Reference
-              , typename Difference
-            >
-            struct iterator_facade_types
-            {
-                using iterator_category = Category;
-                using value_type = typename std::remove_const<ValueParam>::type;
-
-                // Not the real associated pointer type
-                using pointer = detail::lazy_conditional_t<
-                    detail::iterator_writability_disabled<ValueParam, Reference>::value
-                  , std::add_pointer<const value_type>
-                  , std::add_pointer<value_type>
-                >;
-            };
 
             // iterators whose dereference operators reference the same value
             // for all iterators into the same sequence (like many input
@@ -319,29 +319,53 @@ namespace ranges
                     }
                 };
             public:
-                using result_type = proxy;
-                static result_type apply(Reference x)
+                using type = proxy;
+                static type apply(Reference x)
                 {
-                    return result_type{std::move(x)};
+                    return type{std::move(x)};
                 }
             };
 
             template<typename T>
             struct operator_arrow_dispatch<T &> // "real" lvalue references
             {
-                using result_type = T *;
-                static result_type apply(T & x)
+                using type = T *;
+                static type apply(T & x)
                 {
                     return std::addressof(x);
                 }
+            };
+
+            //
+            // Generates associated types for an iterator_facade with the
+            // given parameters.
+            //
+            template<
+                typename ValueParam
+              , typename Category
+              , typename Reference
+              , typename Difference
+              , typename Pointer
+            >
+            struct iterator_facade_types
+            {
+                using iterator_category = Category;
+                using value_type = typename std::remove_const<ValueParam>::type;
+
+                // Not the real associated pointer type
+                using pointer =
+                    conditional_with_default_t<
+                        Pointer
+                      , operator_arrow_dispatch<Reference>
+                    >;
             };
 
             template<typename I1, typename I2>
             using choose_difference_type =
                 detail::conditional_t<
                    std::is_convertible<I2, I1>::value
-                 , typename std::iterator_traits<I1>::difference_type
-                 , typename std::iterator_traits<I2>::difference_type
+                 , iterator_difference_t<I1>
+                 , iterator_difference_t<I2>
                >;
         } // namespace detail
 
@@ -359,13 +383,18 @@ namespace ranges
             // objects of this typename are useless
             iterator_core_access() = delete;
 
-            template<typename I, typename V, typename TC, typename R, typename D>
+            template<typename I, typename V, typename TC, typename R, typename D, typename P>
             friend struct iterator_facade;
 
             template<typename Facade>
             static typename Facade::reference dereference(Facade const& f)
             {
                 return f.dereference();
+            }
+            template<typename Facade>
+            static typename Facade::pointer arrow(Facade const& f)
+            {
+                return f.arrow();
             }
             template<typename Facade>
             static void increment(Facade& f)
@@ -408,13 +437,13 @@ namespace ranges
             //
             // Curiously Recurring Template interface.
             //
-            template<typename I, typename V, typename TC, typename R, typename D>
-            static I& derived(iterator_facade<I, V, TC, R, D>& facade)
+            template<typename I, typename V, typename TC, typename R, typename D, typename P>
+            static I& derived(iterator_facade<I, V, TC, R, D, P>& facade)
             {
                 return *static_cast<I*>(&facade);
             }
-            template<typename I, typename V, typename TC, typename R, typename D>
-            static I const& derived(iterator_facade<I, V, TC, R, D> const& facade)
+            template<typename I, typename V, typename TC, typename R, typename D, typename P>
+            static I const& derived(iterator_facade<I, V, TC, R, D, P> const& facade)
             {
                 return *static_cast<I const*>(&facade);
             }
@@ -428,22 +457,31 @@ namespace ranges
             typename Derived             // The derived iterator type being constructed
           , typename Value
           , typename Category
-          , typename Reference   = Value&
-          , typename Difference  = std::ptrdiff_t
+          , typename Reference
+          , typename Difference
+          , typename Pointer
         >
         struct iterator_facade
         {
         private:
-            using operator_arrow_dispatch_ =
-                detail::operator_arrow_dispatch<Reference>;
+            friend struct iterator_core_access;
+            //using operator_arrow_dispatch_ =
+            //    detail::operator_arrow_dispatch<Reference>;
             using associated_types =
-                detail::iterator_facade_types<Value, Category, Reference, Difference>;
+                detail::iterator_facade_types<Value, Category, Reference, Difference, Pointer>;
             using operator_brackets_dispatch_ =
                 detail::operator_brackets_dispatch<
                     Derived
                   , Value
                   , Reference
                 >;
+
+            // Default implementation of operator->
+            typename associated_types::pointer arrow() const
+            {
+                return detail::operator_arrow_dispatch<Reference>::apply(*derived());
+            }
+
             //
             // Curiously Recurring Template interface.
             //
@@ -455,6 +493,7 @@ namespace ranges
             {
                 return *static_cast<Derived const*>(this);
             }
+
         protected:
             // For use by derived classes
             using iterator_facade_ = iterator_facade;
@@ -463,7 +502,7 @@ namespace ranges
             using value_type = typename associated_types::value_type;
             using reference = Reference;
             using difference_type = Difference;
-            using pointer = typename operator_arrow_dispatch_::result_type;
+            using pointer = typename associated_types::pointer;
             using iterator_category = typename associated_types::iterator_category;
 
 #define REQUIRES(x)                                                         \
@@ -479,7 +518,7 @@ namespace ranges
             }
             pointer operator->() const
             {
-                return operator_arrow_dispatch_::apply(*derived());
+                return iterator_core_access::arrow(derived());
             }
             Derived& operator++()
             {
@@ -534,9 +573,9 @@ namespace ranges
         int                                                         \
     >::type = 0                                                     \
 
-        template<typename I, typename V, typename TC, typename R, typename D>
+        template<typename I, typename V, typename TC, typename R, typename D, typename P>
         detail::postfix_increment_result<I, V, R, TC>
-        operator++(iterator_facade<I, V, TC, R, D>& i, int)
+        operator++(iterator_facade<I, V, TC, R, D, P>& i, int)
         {
             detail::postfix_increment_result<I, V, R, TC> tmp(*static_cast<I*>(&i));
             ++i;
@@ -566,13 +605,13 @@ namespace ranges
         // bool operator==(ConstIterator, ConstIterator);
         //
         template<
-            typename Derived1, typename V1, typename TC1, typename R1, typename D1
-          , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+            typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
+          , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator==(
-            iterator_facade<Derived1, V1, TC1, R1, D1> const& lhs
-          , iterator_facade<Derived2, V2, TC2, R2, D2> const& rhs)
+            iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
+          , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
         {
             return iterator_core_access::equal(
                 *static_cast<Derived1 const*>(&lhs)
@@ -582,13 +621,13 @@ namespace ranges
         }
 
         template<
-            typename Derived1, typename V1, typename TC1, typename R1, typename D1
-          , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+            typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
+          , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator!=(
-            iterator_facade<Derived1, V1, TC1, R1, D1> const& lhs
-          , iterator_facade<Derived2, V2, TC2, R2, D2> const& rhs)
+            iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
+          , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
         {
             return !iterator_core_access::equal(
                 *static_cast<Derived1 const*>(&lhs)
@@ -598,15 +637,15 @@ namespace ranges
         }
 
         template<
-            typename Derived1, typename V1, typename TC1, typename R1, typename D1
-          , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+            typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
+          , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator<(
-            iterator_facade<Derived1, V1, TC1, R1, D1> const& lhs
-          , iterator_facade<Derived2, V2, TC2, R2, D2> const& rhs)
+            iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
+          , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
         {
             return 0 > iterator_core_access::distance_from(
                 *static_cast<Derived1 const*>(&lhs)
@@ -616,15 +655,15 @@ namespace ranges
         }
 
         template<
-            typename Derived1, typename V1, typename TC1, typename R1, typename D1
-          , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+            typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
+          , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator>(
-            iterator_facade<Derived1, V1, TC1, R1, D1> const& lhs
-          , iterator_facade<Derived2, V2, TC2, R2, D2> const& rhs)
+            iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
+          , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
         {
             return 0 < iterator_core_access::distance_from(
                 *static_cast<Derived1 const*>(&lhs)
@@ -634,15 +673,15 @@ namespace ranges
         }
 
         template<
-            typename Derived1, typename V1, typename TC1, typename R1, typename D1
-          , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+            typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
+          , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator<=(
-            iterator_facade<Derived1, V1, TC1, R1, D1> const& lhs
-          , iterator_facade<Derived2, V2, TC2, R2, D2> const& rhs)
+            iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
+          , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
         {
             return 0 >= iterator_core_access::distance_from(
                 *static_cast<Derived1 const*>(&lhs)
@@ -652,15 +691,15 @@ namespace ranges
         }
 
         template<
-            typename Derived1, typename V1, typename TC1, typename R1, typename D1
-          , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+            typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
+          , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
         detail::enable_if_interoperable<Derived1, Derived2, bool>
         operator>=(
-            iterator_facade<Derived1, V1, TC1, R1, D1> const& lhs
-          , iterator_facade<Derived2, V2, TC2, R2, D2> const& rhs)
+            iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
+          , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
         {
             return 0 <= iterator_core_access::distance_from(
                 *static_cast<Derived1 const*>(&lhs)
@@ -671,8 +710,8 @@ namespace ranges
 
         // operator- requires an additional part in the static assertion
         template<
-            typename Derived1, typename V1, typename TC1, typename R1, typename D1
-          , typename Derived2, typename V2, typename TC2, typename R2, typename D2
+            typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
+          , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
@@ -681,8 +720,8 @@ namespace ranges
           , detail::choose_difference_type<Derived1, Derived2>
         >
         operator-(
-            iterator_facade<Derived1, V1, TC1, R1, D1> const& lhs
-          , iterator_facade<Derived2, V2, TC2, R2, D2> const& rhs)
+            iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
+          , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
         {
             return iterator_core_access::distance_from(
                 *static_cast<Derived1 const*>(&lhs)
@@ -691,45 +730,45 @@ namespace ranges
             );
         }
 
-        template<typename Derived, typename V, typename TC, typename R, typename D
+        template<typename Derived, typename V, typename TC, typename R, typename D, typename P
           , REQUIRES(Derived, random_access)
         >
         inline Derived operator+(
-            iterator_facade<Derived, V, TC, R, D> const& i
+            iterator_facade<Derived, V, TC, R, D, P> const& i
           , typename Derived::difference_type n)
         {
             Derived tmp(static_cast<Derived const&>(i));
             return tmp += n;
         }
 
-        template<typename Derived, typename V, typename TC, typename R, typename D
+        template<typename Derived, typename V, typename TC, typename R, typename D, typename P
           , REQUIRES(Derived, random_access)
         >
         inline Derived operator+(
-            iterator_facade<Derived, V, TC, R, D> && i
+            iterator_facade<Derived, V, TC, R, D, P> && i
           , typename Derived::difference_type n)
         {
             Derived tmp(static_cast<Derived &&>(i));
             return tmp += n;
         }
 
-        template<typename Derived, typename V, typename TC, typename R, typename D
+        template<typename Derived, typename V, typename TC, typename R, typename D, typename P
           , REQUIRES(Derived, random_access)
         >
         inline Derived operator+(
             typename Derived::difference_type n
-          , iterator_facade<Derived, V, TC, R, D> const& i)
+          , iterator_facade<Derived, V, TC, R, D, P> const& i)
         {
             Derived tmp(static_cast<Derived const&>(i));
             return tmp += n;
         }
 
-        template<typename Derived, typename V, typename TC, typename R, typename D
+        template<typename Derived, typename V, typename TC, typename R, typename D, typename P
           , REQUIRES(Derived, random_access)
         >
         inline Derived operator+(
             typename Derived::difference_type n
-          , iterator_facade<Derived, V, TC, R, D> && i)
+          , iterator_facade<Derived, V, TC, R, D, P> && i)
         {
             Derived tmp(static_cast<Derived &&>(i));
             return tmp += n;
