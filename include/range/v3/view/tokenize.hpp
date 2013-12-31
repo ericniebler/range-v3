@@ -132,10 +132,10 @@ namespace ranges
                 static auto invoke(tokenizer_ tokenize, Regex && rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
-                    -> decltype(tokenize(std::placeholders::_1, std::forward<Regex>(rex),
+                    -> decltype(tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
                             std::move(sub), std::move(flags)))
                 {
-                    return tokenize(std::placeholders::_1, std::forward<Regex>(rex),
+                    return tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
                         std::move(sub), std::move(flags));
                 }
 
@@ -143,10 +143,10 @@ namespace ranges
                 static auto invoke(tokenizer_ tokenize, Regex && rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
-                    -> decltype(tokenize(std::placeholders::_1, std::forward<Regex>(rex),
+                    -> decltype(tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
                         std::move(subs), std::move(flags)))
                 {
-                    return tokenize(std::placeholders::_1, std::forward<Regex>(rex),
+                    return tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
                         std::move(subs), std::move(flags));
                 }
 
@@ -154,10 +154,10 @@ namespace ranges
                 static auto invoke(tokenizer_ tokenize, Regex && rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
-                    -> decltype(tokenize(std::placeholders::_1, std::forward<Regex>(rex),
+                    -> decltype(tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
                             std::move(subs), std::move(flags)))
                 {
-                    return tokenize(std::placeholders::_1, std::forward<Regex>(rex),
+                    return tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
                         std::move(subs), std::move(flags));
                 }
             };

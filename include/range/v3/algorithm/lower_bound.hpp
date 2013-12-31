@@ -59,9 +59,9 @@ namespace ranges
             template<typename Value>
             static auto
             invoke(lower_bound_finder lower_bound, Value && val)
-                -> decltype(lower_bound(std::placeholders::_1, std::forward<Value>(val)))
+                -> decltype(lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(val)))
             {
-                return lower_bound(std::placeholders::_1, std::forward<Value>(val));
+                return lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(val));
             }
 
             /// \overload
@@ -70,10 +70,10 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<Value>())>
             static auto
             invoke(lower_bound_finder lower_bound, Value && val, BinaryPredicate pred)
-                -> decltype(lower_bound(std::placeholders::_1, std::forward<Value>(val),
+                -> decltype(lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
                     std::move(pred)))
             {
-                return lower_bound(std::placeholders::_1, std::forward<Value>(val),
+                return lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
                     std::move(pred));
             }
         };

@@ -67,12 +67,12 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterator<BidirectionalIterator>())>
             static auto
             invoke(inplace_merger inplace_merge, BidirectionalIterator middle)
-                -> decltype(inplace_merge(std::placeholders::_1, std::move(middle)))
+                -> decltype(inplace_merge.move_bind(std::placeholders::_1, std::move(middle)))
             {
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<
                     iterator_reference_t<BidirectionalIterator>>());
-                return inplace_merge(std::placeholders::_1, std::move(middle));
+                return inplace_merge.move_bind(std::placeholders::_1, std::move(middle));
             }
 
             /// \overload
@@ -81,14 +81,14 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterator<BidirectionalIterator>())>
             static auto
             invoke(inplace_merger inplace_merge, BidirectionalIterator middle, BinaryPredicate pred)
-                -> decltype(inplace_merge(std::placeholders::_1, std::move(middle),
+                -> decltype(inplace_merge.move_bind(std::placeholders::_1, std::move(middle),
                                           std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        iterator_reference_t<BidirectionalIterator>,
                                                        iterator_reference_t<BidirectionalIterator>>());
-                return inplace_merge(std::placeholders::_1, std::move(middle),
+                return inplace_merge.move_bind(std::placeholders::_1, std::move(middle),
                                      std::move(pred));
             }
         };

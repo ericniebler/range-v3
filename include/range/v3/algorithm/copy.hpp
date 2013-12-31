@@ -43,10 +43,10 @@ namespace ranges
             /// for rng | copy(out)
             template<typename OutputIterator>
             static auto invoke(copier copy, OutputIterator out)
-                -> decltype(copy(std::placeholders::_1, std::move(out)))
+                -> decltype(copy.move_bind(std::placeholders::_1, std::move(out)))
             {
                 CONCEPT_ASSERT(ranges::Iterator<OutputIterator>());
-                return copy(std::placeholders::_1, std::move(out));
+                return copy.move_bind(std::placeholders::_1, std::move(out));
             }
         };
 

@@ -60,10 +60,10 @@ namespace ranges
             template<typename RandomNumberGenerator,
                 CONCEPT_REQUIRES(!ranges::Range<RandomNumberGenerator>())>
             static auto invoke(random_shuffler random_shuffle, RandomNumberGenerator && gen)
-                -> decltype(random_shuffle(std::placeholders::_1,
+                -> decltype(random_shuffle.move_bind(std::placeholders::_1,
                     std::forward<RandomNumberGenerator>(gen)))
             {
-                return random_shuffle(std::placeholders::_1,
+                return random_shuffle.move_bind(std::placeholders::_1,
                     std::forward<RandomNumberGenerator>(gen));
             }
         };

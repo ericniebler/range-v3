@@ -51,10 +51,10 @@ namespace ranges
             template<typename OutputIterator, typename Value>
             static auto
             invoke(remover_copier remove_copy, OutputIterator out, Value && val) ->
-                decltype(remove_copy(std::placeholders::_1, std::move(out),
+                decltype(remove_copy.move_bind(std::placeholders::_1, std::move(out),
                     std::forward<Value>(val)))
             {
-                return remove_copy(std::placeholders::_1, std::move(out),
+                return remove_copy.move_bind(std::placeholders::_1, std::move(out),
                     std::forward<Value>(val));
             }
         };

@@ -97,6 +97,7 @@ namespace ranges
         struct bindable
         {
         private:
+            friend Derived;
             Derived const & derived() const &
             {
                 return static_cast<Derived const &>(*this);
@@ -104,6 +105,13 @@ namespace ranges
             Derived && derived() &&
             {
                 return static_cast<Derived &&>(*this);
+            }
+            template<typename...Args>
+            auto move_bind(Args &&...args)
+                -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
+            {
+                return detail::wrap_bind(std::move(*this).derived(),
+                    detail::unwrap_bind(std::forward<Args>(args))...);
             }
         public:
             // This gets called when one or more of the arguments are either a

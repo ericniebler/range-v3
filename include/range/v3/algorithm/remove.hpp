@@ -41,9 +41,9 @@ namespace ranges
             /// for rng | remove(val)
             template<typename Value>
             static auto invoke(remover remove, Value && val)
-                -> decltype(remove(std::placeholders::_1, std::forward<Value>(val)))
+                -> decltype(remove.move_bind(std::placeholders::_1, std::forward<Value>(val)))
             {
-                return remove(std::placeholders::_1, std::forward<Value>(val));
+                return remove.move_bind(std::placeholders::_1, std::forward<Value>(val));
             }
         };
 

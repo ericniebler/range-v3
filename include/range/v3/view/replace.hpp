@@ -75,10 +75,10 @@ namespace ranges
                     CONCEPT_REQUIRES(ranges::SameType<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
                 static auto invoke(replacer replace, Value1 && old_value, Value2 && new_value) ->
-                    decltype(replace(std::placeholders::_1, std::forward<Value1>(old_value),
+                    decltype(replace.move_bind(std::placeholders::_1, std::forward<Value1>(old_value),
                         std::forward<Value2>(new_value)))
                 {
-                    return replace(std::placeholders::_1, std::forward<Value1>(old_value),
+                    return replace.move_bind(std::placeholders::_1, std::forward<Value1>(old_value),
                         std::forward<Value2>(new_value));
                 }
             };

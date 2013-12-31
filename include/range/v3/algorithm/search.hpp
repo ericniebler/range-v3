@@ -64,9 +64,9 @@ namespace ranges
             template<typename ForwardRange2>
             static auto
             invoke(searcher search, ForwardRange2 && rng2) ->
-                decltype(search(std::placeholders::_1, std::forward<ForwardRange2>(rng2)))
+                decltype(search.move_bind(std::placeholders::_1, std::forward<ForwardRange2>(rng2)))
             {
-                return search(std::placeholders::_1, std::forward<ForwardRange2>(rng2));
+                return search.move_bind(std::placeholders::_1, std::forward<ForwardRange2>(rng2));
             }
 
             /// \overload
@@ -75,10 +75,10 @@ namespace ranges
                                 !ranges::Range<BinaryPredicate>())>
             static auto
             invoke(searcher search, ForwardRange2 && rng2, BinaryPredicate pred) ->
-                decltype(search(std::placeholders::_1, std::forward<ForwardRange2>(rng2),
+                decltype(search.move_bind(std::placeholders::_1, std::forward<ForwardRange2>(rng2),
                     std::move(pred)))
             {
-                return search(std::placeholders::_1, std::forward<ForwardRange2>(rng2),
+                return search.move_bind(std::placeholders::_1, std::forward<ForwardRange2>(rng2),
                     std::move(pred));
             }
         };

@@ -42,10 +42,10 @@ namespace ranges
             /// for rng | replace(that, that)
             template<typename Value1, typename Value2>
             static auto invoke(replacer replace, Value1 && old_value, Value2 && new_value) ->
-                decltype(replace(std::placeholders::_1, std::forward<Value1>(old_value),
+                decltype(replace.move_bind(std::placeholders::_1, std::forward<Value1>(old_value),
                     std::forward<Value2>(new_value)))
             {
-                return replace(std::placeholders::_1, std::forward<Value1>(old_value),
+                return replace.move_bind(std::placeholders::_1, std::forward<Value1>(old_value),
                     std::forward<Value2>(new_value));
             }
         };

@@ -49,11 +49,11 @@ namespace ranges
             template<typename OutputIterator, typename Value1, typename Value2>
             static auto invoke(replacer_copier replace_copy, OutputIterator out, Value1 && old_value,
                 Value2 && new_value) ->
-                decltype(replace_copy(std::placeholders::_1, std::move(out),
+                decltype(replace_copy.move_bind(std::placeholders::_1, std::move(out),
                     std::forward<Value1>(old_value), std::forward<Value2>(new_value)))
             {
                 CONCEPT_ASSERT(ranges::Iterator<OutputIterator>());
-                return replace_copy(std::placeholders::_1, std::move(out),
+                return replace_copy.move_bind(std::placeholders::_1, std::move(out),
                     std::forward<Value1>(old_value), std::forward<Value2>(new_value));
             }
         };

@@ -65,10 +65,10 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
             invoke(partial_sorter partial_sort, RandomAccessIterator nth)
-                -> decltype(partial_sort(std::placeholders::_1, std::move(nth)))
+                -> decltype(partial_sort.move_bind(std::placeholders::_1, std::move(nth)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
-                return partial_sort(std::placeholders::_1, std::move(nth));
+                return partial_sort.move_bind(std::placeholders::_1, std::move(nth));
             }
 
             /// \overload
@@ -77,10 +77,10 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
             invoke(partial_sorter partial_sort, RandomAccessIterator nth, BinaryPredicate pred)
-                -> decltype(partial_sort(std::placeholders::_1, std::move(nth), std::move(pred)))
+                -> decltype(partial_sort.move_bind(std::placeholders::_1, std::move(nth), std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
-                return partial_sort(std::placeholders::_1, std::move(nth), std::move(pred));
+                return partial_sort.move_bind(std::placeholders::_1, std::move(nth), std::move(pred));
             }
         };
 

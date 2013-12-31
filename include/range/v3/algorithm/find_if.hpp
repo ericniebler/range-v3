@@ -46,9 +46,9 @@ namespace ranges
             /// \overload
             template<typename UnaryPredicate>
             static auto invoke(finder_if find_if, UnaryPredicate pred)
-                -> decltype(find_if(std::placeholders::_1, std::move(pred)))
+                -> decltype(find_if.move_bind(std::placeholders::_1, std::move(pred)))
             {
-                return find_if(std::placeholders::_1, std::move(pred));
+                return find_if.move_bind(std::placeholders::_1, std::move(pred));
             }
         };
 

@@ -59,9 +59,9 @@ namespace ranges
             template<typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto invoke(sorter sort, BinaryPredicate pred)
-                -> decltype(sort(std::placeholders::_1, std::move(pred)))
+                -> decltype(sort.move_bind(std::placeholders::_1, std::move(pred)))
             {
-                return sort(std::placeholders::_1, std::move(pred));
+                return sort.move_bind(std::placeholders::_1, std::move(pred));
             }
         };
 

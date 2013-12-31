@@ -66,10 +66,10 @@ namespace ranges
             template<typename Integer, typename Value>
             static auto
             invoke(searcher_n search_n, Integer count, Value && value) ->
-                decltype(search_n(std::placeholders::_1, std::move(count),
+                decltype(search_n.move_bind(std::placeholders::_1, std::move(count),
                     std::forward<Value>(value)))
             {
-                return search_n(std::placeholders::_1, std::move(count),
+                return search_n.move_bind(std::placeholders::_1, std::move(count),
                     std::forward<Value>(value));
             }
 
@@ -78,10 +78,10 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Integral<Integer>())>
             static auto
             invoke(searcher_n search_n, Integer count, Value && value, BinaryPredicate pred) ->
-                decltype(search_n(std::placeholders::_1, std::move(count),
+                decltype(search_n.move_bind(std::placeholders::_1, std::move(count),
                     std::forward<Value>(value), std::move(pred)))
             {
-                return search_n(std::placeholders::_1, std::move(count),
+                return search_n.move_bind(std::placeholders::_1, std::move(count),
                     std::forward<Value>(value), std::move(pred));
             }
         };

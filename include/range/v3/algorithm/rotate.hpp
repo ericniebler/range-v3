@@ -43,10 +43,10 @@ namespace ranges
             /// for rng | rotate(middle)
             template<typename ForwardIterator>
             static auto invoke(rotater rotate, ForwardIterator middle) ->
-                decltype(rotate(std::placeholders::_1, std::move(middle)))
+                decltype(rotate.move_bind(std::placeholders::_1, std::move(middle)))
             {
                 CONCEPT_ASSERT(ranges::ForwardIterator<ForwardIterator>());
-                return rotate(std::placeholders::_1, std::move(middle));
+                return rotate.move_bind(std::placeholders::_1, std::move(middle));
             }
         };
 

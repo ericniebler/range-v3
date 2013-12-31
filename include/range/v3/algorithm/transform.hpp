@@ -103,9 +103,9 @@ namespace ranges
             template<typename OutputIterator, typename UnaryFunction>
             static auto
             invoke(transformer transform, OutputIterator out, UnaryFunction fun)
-                -> decltype(transform(std::placeholders::_1, std::move(out), std::move(fun)))
+                -> decltype(transform.move_bind(std::placeholders::_1, std::move(out), std::move(fun)))
             {
-                return transform(std::placeholders::_1, std::move(out), std::move(fun));
+                return transform.move_bind(std::placeholders::_1, std::move(out), std::move(fun));
             }
 
             /// \overload
@@ -121,10 +121,10 @@ namespace ranges
             static auto
             invoke(transformer transform, InputRange2 && rng2, OutputIterator out,
                    BinaryFunction fun)
-                   -> decltype(transform(std::placeholders::_1, std::forward<InputRange2>(rng2),
+                   -> decltype(transform.move_bind(std::placeholders::_1, std::forward<InputRange2>(rng2),
                     std::move(out), std::move(fun)))
             {
-                return transform(std::placeholders::_1, std::forward<InputRange2>(rng2),
+                return transform.move_bind(std::placeholders::_1, std::forward<InputRange2>(rng2),
                     std::move(out), std::move(fun));
             }
         };

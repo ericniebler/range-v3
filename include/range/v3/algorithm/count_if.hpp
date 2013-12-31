@@ -47,9 +47,9 @@ namespace ranges
             /// \pre \c UnaryPredicate is a model of the UnaryPredicate concept
             template<typename UnaryPredicate>
             static auto invoke(counter_if count_if, UnaryPredicate pred)
-                -> decltype(count_if(std::placeholders::_1, std::move(pred)))
+                -> decltype(count_if.move_bind(std::placeholders::_1, std::move(pred)))
             {
-                return count_if(std::placeholders::_1, std::move(pred));
+                return count_if.move_bind(std::placeholders::_1, std::move(pred));
             }
         };
 

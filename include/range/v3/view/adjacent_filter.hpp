@@ -141,9 +141,9 @@ namespace ranges
                 }
                 template<typename BinaryPredicate>
                 static auto invoke(adjacent_filterer adjacent_filter, BinaryPredicate pred)
-                    -> decltype(adjacent_filter(std::placeholders::_1, std::move(pred)))
+                    -> decltype(adjacent_filter.move_bind(std::placeholders::_1, std::move(pred)))
                 {
-                    return adjacent_filter(std::placeholders::_1, std::move(pred));
+                    return adjacent_filter.move_bind(std::placeholders::_1, std::move(pred));
                 }
             };
 

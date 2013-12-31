@@ -40,9 +40,9 @@ namespace ranges
             /// rng | find(val)
             template<typename Value>
             static auto invoke(finder find, Value && val)
-                -> decltype(find(std::placeholders::_1, std::forward<Value>(val)))
+                -> decltype(find.move_bind(std::placeholders::_1, std::forward<Value>(val)))
             {
-                return find(std::placeholders::_1, std::forward<Value>(val));
+                return find.move_bind(std::placeholders::_1, std::forward<Value>(val));
             }
         };
 

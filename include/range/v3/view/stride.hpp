@@ -239,10 +239,10 @@ namespace ranges
 
                 template<typename Difference>
                 static auto invoke(strider stride, Difference step)
-                    -> decltype(stride(std::placeholders::_1, std::move(step)))
+                    -> decltype(stride.move_bind(std::placeholders::_1, std::move(step)))
                 {
                     CONCEPT_ASSERT(ranges::Integral<Difference>());
-                    return stride(std::placeholders::_1, std::move(step));
+                    return stride.move_bind(std::placeholders::_1, std::move(step));
                 }
             };
 

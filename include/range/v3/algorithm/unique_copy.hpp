@@ -77,9 +77,9 @@ namespace ranges
             template<typename OutputIterator>
             static auto
             invoke(uniquer_copier unique_copy, OutputIterator out)
-                -> decltype(unique_copy(std::placeholders::_1, std::move(out)))
+                -> decltype(unique_copy.move_bind(std::placeholders::_1, std::move(out)))
             {
-                return unique_copy(std::placeholders::_1, std::move(out));
+                return unique_copy.move_bind(std::placeholders::_1, std::move(out));
             }
 
             /// \overload
@@ -88,9 +88,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<OutputIterator>())>
             static auto
             invoke(uniquer_copier unique_copy, OutputIterator out, BinaryPredicate pred)
-                -> decltype(unique_copy(std::placeholders::_1, std::move(out), std::move(pred)))
+                -> decltype(unique_copy.move_bind(std::placeholders::_1, std::move(out), std::move(pred)))
             {
-                return unique_copy(std::placeholders::_1, std::move(out), std::move(pred));
+                return unique_copy.move_bind(std::placeholders::_1, std::move(out), std::move(pred));
             }
         };
 

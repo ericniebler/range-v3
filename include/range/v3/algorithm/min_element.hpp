@@ -60,9 +60,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(min_element_finder min_element, BinaryPredicate pred)
-                -> decltype(min_element(std::placeholders::_1, std::move(pred)))
+                -> decltype(min_element.move_bind(std::placeholders::_1, std::move(pred)))
             {
-                return min_element(std::placeholders::_1, std::move(pred));
+                return min_element.move_bind(std::placeholders::_1, std::move(pred));
             }
         };
 

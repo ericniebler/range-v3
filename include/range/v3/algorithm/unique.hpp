@@ -61,9 +61,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(uniquer unique, BinaryPredicate pred)
-                -> decltype(unique(std::placeholders::_1, std::move(pred)))
+                -> decltype(unique.move_bind(std::placeholders::_1, std::move(pred)))
             {
-                return unique(std::placeholders::_1, std::move(pred));
+                return unique.move_bind(std::placeholders::_1, std::move(pred));
             }
         };
 

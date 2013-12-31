@@ -61,9 +61,9 @@ namespace ranges
             template<typename Value>
             static auto
             invoke(upper_bound_finder upper_bound, Value && val)
-                -> decltype(upper_bound(std::placeholders::_1, std::forward<Value>(val)))
+                -> decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val)))
             {
-                return upper_bound(std::placeholders::_1, std::forward<Value>(val));
+                return upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val));
             }
 
             /// \overload
@@ -73,10 +73,10 @@ namespace ranges
                                                              range_reference_t<Value>>())>
             static auto
             invoke(upper_bound_finder upper_bound, Value && val, BinaryPredicate pred)
-                -> decltype(upper_bound(std::placeholders::_1, std::forward<Value>(val),
+                -> decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
                     std::move(pred)))
             {
-                return upper_bound(std::placeholders::_1, std::forward<Value>(val),
+                return upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
                     std::move(pred));
             }
         };

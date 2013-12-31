@@ -58,10 +58,10 @@ namespace ranges
             template<typename OutputIterator, typename UnaryPredicate, typename Value>
             static auto invoke(replacer_copier_if replace_copy_if, OutputIterator out,
                                UnaryPredicate pred, Value && new_value)
-                -> decltype(replace_copy_if(std::placeholders::_1, std::move(out),
+                -> decltype(replace_copy_if.move_bind(std::placeholders::_1, std::move(out),
                             std::move(pred), std::forward<Value>(new_value)))
             {
-                return replace_copy_if(std::placeholders::_1, std::move(out),
+                return replace_copy_if.move_bind(std::placeholders::_1, std::move(out),
                     std::move(pred), std::forward<Value>(new_value));
             }
         };

@@ -60,9 +60,9 @@ namespace ranges
             /// for rng | equal_range(val)
             template<typename Value>
             static auto invoke(equal_ranger equal_range, Value && val)
-                -> decltype(equal_range(std::placeholders::_1, std::forward<Value>(val)))
+                -> decltype(equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val)))
             {
-                return equal_range(std::placeholders::_1, std::forward<Value>(val));
+                return equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val));
             }
 
             /// \overload
@@ -73,10 +73,10 @@ namespace ranges
                       ranges::LessThanComparable<BinaryPredicate, range_reference_t<Value>>() &&
                       ranges::LessThanComparable<range_reference_t<Value>, BinaryPredicate>()))>
             static auto invoke(equal_ranger equal_range, Value && val, BinaryPredicate pred)
-                -> decltype(equal_range(std::placeholders::_1, std::forward<Value>(val),
+                -> decltype(equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val),
                     std::move(pred)))
             {
-                return equal_range(std::placeholders::_1, std::forward<Value>(val),
+                return equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val),
                     std::move(pred));
             }
         };

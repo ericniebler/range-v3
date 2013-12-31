@@ -60,9 +60,9 @@ namespace ranges
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
             invoke(max_element_finder max_element, BinaryPredicate pred)
-                -> decltype(max_element(std::placeholders::_1, std::move(pred)))
+                -> decltype(max_element.move_bind(std::placeholders::_1, std::move(pred)))
             {
-                return max_element(std::placeholders::_1, std::move(pred));
+                return max_element.move_bind(std::placeholders::_1, std::move(pred));
             }
         };
 

@@ -46,10 +46,10 @@ namespace ranges
             /// for rng | generate(gen)
             template<typename Generator>
             static auto invoke(generator generate, Generator gen)
-                -> decltype(generate(std::placeholders::_1, std::move(gen)))
+                -> decltype(generate.move_bind(std::placeholders::_1, std::move(gen)))
             {
                 CONCEPT_ASSERT(ranges::Callable<Generator>());
-                return generate(std::placeholders::_1, std::move(gen));
+                return generate.move_bind(std::placeholders::_1, std::move(gen));
             }
         };
 
