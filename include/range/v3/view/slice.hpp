@@ -17,42 +17,41 @@
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/next_prev.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
+#include <range/v3/utility/box.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
-#include <range/v3/utility/box.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        template<typename InputRange>
+        template<typename InputIterable>
         struct slice_range_view
         {
         private:
-            InputRange rng_;
+            InputIterable rng_;
             std::size_t from_;
             std::size_t to_;
             // The following iterator essentially amounts to an internal pointer
             // if rng_ is not a reference, so care must be taken to implement copy
             // and move correctly.
-            range_iterator_t<InputRange> begin_;
+            range_iterator_t<InputIterable> begin_;
 
             static constexpr bool use_other_iterator_on_copy_and_move()
             {
-                return std::is_reference<InputRange>::value ||
-                       std::is_same<range_category_t<InputRange>, std::input_iterator_tag>::value;
+                return std::is_reference<InputIterable>::value ||
+                       std::is_same<range_category_t<InputIterable>, std::input_iterator_tag>::value;
             }
 
             static constexpr bool is_bidi()
             {
-                return std::is_same<range_category_t<InputRange>,
+                return std::is_same<range_category_t<InputIterable>,
                     std::bidirectional_iterator_tag>::value;
             }
 
@@ -66,17 +65,17 @@ namespace ranges
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<Const>
-                  , range_value_t<detail::add_const_if_t<InputRange, Const>>
-                  , range_category_t<InputRange>
-                  , range_reference_t<detail::add_const_if_t<InputRange, Const>>
-                  , range_difference_t<InputRange>
+                  , range_value_t<detail::add_const_if_t<InputIterable, Const>>
+                  , range_category_t<InputIterable>
+                  , range_reference_t<detail::add_const_if_t<InputIterable, Const>>
+                  , range_difference_t<InputIterable>
                 >
               , private is_dirty_t
             {
             private:
                 friend struct slice_range_view;
                 friend struct ranges::iterator_core_access;
-                using base_range = detail::add_const_if_t<InputRange, Const>;
+                using base_range = detail::add_const_if_t<InputIterable, Const>;
                 using slice_range_view_ = detail::add_const_if_t<slice_range_view, Const>;
 
                 slice_range_view_ *rng_;
@@ -92,7 +91,7 @@ namespace ranges
                 void increment()
                 {
                     RANGES_ASSERT(n_ < rng_->to_);
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                    this->check_end(range_concept_t<InputIterable>{});
                     ++it_;
                     ++n_;
                 }
@@ -104,7 +103,7 @@ namespace ranges
                 range_reference_t<base_range> dereference() const
                 {
                     RANGES_ASSERT(n_ < rng_->to_);
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                    this->check_end(range_concept_t<InputIterable>{});
                     return *it_;
                 }
                 void decrement()
@@ -136,6 +135,14 @@ namespace ranges
                 {
                     ranges::get<detail::dirty_tag>(*this) = b;
                 }
+                void check_end(concepts::Iterable) const
+                {
+                    // no-op, iterables don't have ends to check
+                }
+                void check_end(concepts::Range) const
+                {
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                }
             public:
                 basic_iterator()
                   : is_dirty_t{}, rng_{}, n_{}, it_{}
@@ -148,7 +155,7 @@ namespace ranges
                 {}
             };
 
-            template<bool Const, typename Category = range_category_t<InputRange>>
+            template<bool Const, typename Category = range_category_t<InputIterable>>
             struct iterator_factory
             {
                 using iterator = basic_iterator<Const>;
@@ -166,7 +173,7 @@ namespace ranges
             struct iterator_factory<Const, std::random_access_iterator_tag>
             {
                 using base_range_iterator =
-                    range_iterator_t<detail::add_const_if_t<InputRange, Const>>;
+                    range_iterator_t<detail::add_const_if_t<InputIterable, Const>>;
                 using slice_range_view_ =
                     detail::add_const_if_t<slice_range_view, Const>;
                 using iterator =
@@ -190,8 +197,8 @@ namespace ranges
             using iterator       = basic_iterator_t<false>;
             using const_iterator = basic_iterator_t<true>;
 
-            slice_range_view(InputRange && rng, std::size_t from, std::size_t to)
-              : rng_(std::forward<InputRange>(rng))
+            slice_range_view(InputIterable && rng, std::size_t from, std::size_t to)
+              : rng_(std::forward<InputIterable>(rng))
               , from_(from)
               , to_(to)
               , begin_(ranges::next(ranges::begin(rng_), from_))
@@ -215,25 +222,8 @@ namespace ranges
                            ranges::next(ranges::begin(rng_), from_))
             {}
             slice_range_view &operator=(slice_range_view const &that) = delete;
-            //{
-            //    rng_   = that.rng_;
-            //    from_  = that.from_;
-            //    to_    = that.to_;
-            //    begin_ = use_other_iterator_on_copy_and_move() ?
-            //                 that.begin_ :
-            //                 ranges::next(ranges::begin(rng_), from_);
-            //    return *this;
-            //}
             slice_range_view &operator=(slice_range_view &&that) = delete;
-            //{
-            //    rng_   = std::move(that).rng_;
-            //    from_  = that.from_;
-            //    to_    = that.to_;
-            //    begin_ = use_other_iterator_on_copy_and_move() ?
-            //                 std::move(that).begin_ :
-            //                 ranges::next(ranges::begin(rng_), from_);
-            //    return *this;
-            //}
+
             iterator begin()
             {
                 return iterator_factory<false>::make_iterator(*this, detail::begin_tag{});
@@ -258,11 +248,11 @@ namespace ranges
             {
                 return to_ != from_;
             }
-            InputRange & base()
+            InputIterable & base()
             {
                 return rng_;
             }
-            InputRange const & base() const
+            InputIterable const & base() const
             {
                 return rng_;
             }
@@ -272,11 +262,12 @@ namespace ranges
         {
             struct slicer : bindable<slicer>
             {
-                template<typename InputRange>
-                static slice_range_view<InputRange>
-                invoke(slicer, InputRange && rng, std::size_t from, std::size_t to)
+                template<typename InputIterable>
+                static slice_range_view<InputIterable>
+                invoke(slicer, InputIterable && rng, std::size_t from, std::size_t to)
                 {
-                    return {std::forward<InputRange>(rng), from, to};
+                    CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                    return {std::forward<InputIterable>(rng), from, to};
                 }
                 template<typename Slicer = slicer>
                 static auto

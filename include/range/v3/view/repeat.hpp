@@ -1,0 +1,89 @@
+// Boost.Range library
+//
+//  Copyright Eric Niebler 2013.
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
+
+#ifndef RANGES_V3_VIEW_REPEAT_HPP
+#define RANGES_V3_VIEW_REPEAT_HPP
+
+#include <range/v3/range_fwd.hpp>
+#include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
+
+namespace ranges
+{
+    inline namespace v3
+    {
+        template<typename Value>
+        struct repeat_iterable_view
+        {
+        private:
+            Value value_;
+
+        public:
+            using const_iterator = struct iterator
+              : ranges::iterator_facade<
+                    iterator
+                  , Value
+                  , std::input_iterator_tag
+                  , Value const &
+                >
+            {
+            private:
+                friend struct repeat_iterable_view;
+                friend struct iterator_core_access;
+                Value value_;
+
+                explicit iterator(Value value)
+                  : value_(std::move(value))
+                {}
+                Value const &dereference() const
+                {
+                    return value_;
+                }
+                bool equal(iterator const &that) const
+                {
+                    return true;
+                }
+                void increment()
+                {}
+            public:
+                iterator()
+                  : value_{}
+                {}
+            };
+
+            explicit repeat_iterable_view(Value value)
+              : value_(std::move(value))
+            {}
+
+            iterator begin() const
+            {
+                return iterator{value_};
+            }
+        };
+
+        namespace view
+        {
+            struct repeater : bindable<repeater>, pipeable<repeater>
+            {
+                template<typename Value>
+                static repeat_iterable_view<Value> invoke(repeater, Value value)
+                {
+                    return repeat_iterable_view<Value>{std::move(value)};
+                }
+            };
+
+            RANGES_CONSTEXPR repeater repeat{};
+        }
+    }
+}
+
+#endif

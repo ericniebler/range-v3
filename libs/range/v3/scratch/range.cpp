@@ -373,7 +373,34 @@ void test_move_view()
         std::cout << '"' << s << "\" ";
 }
 
-//*
+void test_slice_iota()
+{
+    using namespace ranges;
+    std::cout << "\n\nslice an infinite range:\n";
+    for (int i : view::iota(10) | view::slice(10, 20))
+        std::cout << i << ' ';
+    (view::iota(10) | view::slice(2, 4)).begin() + 1;
+    std::cout << '\n';
+}
+
+void test_delimit_iota()
+{
+    using namespace ranges;
+    std::cout << "\n\ndelimit an infinite range:\n";
+    for (int i : view::iota(10) | view::delimit(50))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_take_repeat()
+{
+    using namespace ranges;
+    std::cout << "\n\nslice a repeat infinite range:\n";
+    for (int i : view::repeat(9) | view::take(10))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
 int main()
 {
     using namespace ranges;
@@ -514,5 +541,8 @@ int main()
     test_stride_view();
     test_zip_view();
     test_move_view();
+    test_slice_iota();
+    test_delimit_iota();
+    test_take_repeat();
 }
 //*/

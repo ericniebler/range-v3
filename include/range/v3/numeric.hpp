@@ -23,30 +23,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace concepts
-        {
-            struct Addable
-            {
-                template<typename T, typename U>
-                using result_t = decltype(std::declval<T>() + std::declval<U>());
-
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        t + t
-                    ));
-
-                template<typename T, typename U>
-                auto requires(T && t, U && u) -> decltype(
-                    concepts::valid_expr(
-                        t + u
-                    ));
-            };
-        }
-
-        template<typename T, typename U = T>
-        using Addable = concepts::models<concepts::Addable, T, U>;
-
         struct accumulate_ : bindable<accumulate_>
         {
             template<typename InputRange, typename Value,

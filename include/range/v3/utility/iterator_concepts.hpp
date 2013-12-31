@@ -131,7 +131,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::has_type<T &>( --t ),
+                        concepts::has_type<T &>(--t),
                         concepts::same_type(*t, *t--)
                     ));
             };

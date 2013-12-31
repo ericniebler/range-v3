@@ -1,7 +1,8 @@
 CXX="C:/cygwin/usr/local/clang-3.3/bin/clang++.exe"
 CFLAGS=-c -O0
 #CXXFLAGS=-Xclang -std=gnu++1y -I../../../../include
-CXXFLAGS=--std=gnu++11 -I../../../../include
+#CXXFLAGS=--std=gnu++11 -I../../../../include -IC:/Users/eric/Code/modular-boost
+CXXFLAGS=--std=gnu++11 -I../../../../include -IC:/Users/eric/Code/modular-boost
 LDFLAGS=
 
 all: range.cpp range.exe

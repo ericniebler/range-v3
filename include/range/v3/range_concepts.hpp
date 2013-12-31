@@ -26,7 +26,7 @@ namespace ranges
     {
         namespace concepts
         {
-            struct Range
+            struct Iterable
               : refines<CopyConstructible>
             {
                 // Associated types
@@ -52,16 +52,14 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::same_type(ranges::begin(t), ranges::end(t)),
-                        concepts::same_type(ranges::cbegin(t), ranges::cend(t)),
                         concepts::model_of<Iterator>(ranges::begin(t)),
                         concepts::model_of<Iterator>(ranges::cbegin(t)),
                         concepts::convertible_to<decltype(ranges::cbegin(t))>(ranges::begin(t))
                     ));
             };
 
-            struct InputRange
-              : refines<Range>
+            struct InputIterable
+              : refines<Iterable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -71,8 +69,8 @@ namespace ranges
                     ));
             };
 
-            struct ForwardRange
-              : refines<InputRange>
+            struct ForwardIterable
+              : refines<InputIterable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -82,8 +80,8 @@ namespace ranges
                     ));
             };
 
-            struct BidirectionalRange
-              : refines<ForwardRange>
+            struct BidirectionalIterable
+              : refines<ForwardIterable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -93,8 +91,8 @@ namespace ranges
                     ));
             };
 
-            struct RandomAccessRange
-              : refines<BidirectionalRange>
+            struct RandomAccessIterable
+              : refines<BidirectionalIterable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -103,7 +101,50 @@ namespace ranges
                         concepts::model_of<RandomAccessIterator>(ranges::cbegin(t))
                     ));
             };
+
+            struct Range
+              : refines<Iterable>
+            {
+                // Valid expressions
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::same_type(ranges::begin(t), ranges::end(t)),
+                        concepts::same_type(ranges::cbegin(t), ranges::cend(t))
+                    ));
+            };
+
+            struct InputRange
+              : refines<Range, InputIterable>
+            {};
+
+            struct ForwardRange
+              : refines<InputRange, ForwardIterable>
+            {};
+
+            struct BidirectionalRange
+              : refines<ForwardRange, BidirectionalIterable>
+            {};
+
+            struct RandomAccessRange
+              : refines<BidirectionalRange, RandomAccessIterable>
+            {};
         }
+
+        template<typename T>
+        using Iterable = concepts::models<concepts::Iterable, T>;
+
+        template<typename T>
+        using InputIterable = concepts::models<concepts::InputIterable, T>;
+
+        template<typename T>
+        using ForwardIterable = concepts::models<concepts::ForwardIterable, T>;
+
+        template<typename T>
+        using BidirectionalIterable = concepts::models<concepts::BidirectionalIterable, T>;
+
+        template<typename T>
+        using RandomAccessIterable = concepts::models<concepts::RandomAccessIterable, T>;
 
         template<typename T>
         using Range = concepts::models<concepts::Range, T>;

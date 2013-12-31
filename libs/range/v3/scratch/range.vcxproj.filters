@@ -352,5 +352,17 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\debug_iterator.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\iota.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\repeat.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\take.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -42,7 +42,7 @@ namespace ranges
             constexpr struct valid_expr_t
             {
                 template<typename ...T>
-                std::true_type operator()(T &&...) const;
+                void operator()(T &&...) const;
             } valid_expr {};
 
             constexpr struct same_type_t
@@ -118,8 +118,11 @@ namespace ranges
 
             template<typename ...Concepts>
             struct refines
-              : detail::base_concept<Concepts>::type...
-            {};
+              : virtual detail::base_concept<Concepts>::type...
+            {
+                template<typename...Ts>
+                void requires(Ts &&...);
+            };
 
             template<typename Concept, typename ...Ts>
             using models = decltype(detail::models_<Concept, Ts...>{}());
@@ -132,28 +135,7 @@ namespace ranges
         namespace detail
         {
             ////////////////////////////////////////////////////////////////////////////////////
-            // models_
-            template<typename Concept, typename ...Ts>
-            struct models_
-            {
-            private:
-                static std::true_type test_refines(void *); // No refinements, ok
-                template<typename ...Bases>
-                static auto test_refines(concepts::refines<Bases...> *) ->
-                    logical_and<static_cast<bool>(concepts::models<Bases, Ts...>())...>;
-            public:
-                std::false_type operator()() const;
-                template<typename C = Concept>
-                auto operator()() ->
-                    std::integral_constant<bool, (decltype(C{}.requires(std::declval<Ts>()...))() &&
-                           decltype(models_::test_refines((C *)nullptr))())>;
-            };
-
-            template<typename Concept, typename...Args, typename ...Ts>
-            struct models_<Concept(Args...), Ts...>
-              : models_<Concept, typelist_element_t<Args::value, typelist<Ts...>>...>
-            {};
-
+            // base_concepts
             typelist<> base_concepts_of_impl_(void *);
 
             template<typename...BaseConcepts>
@@ -161,6 +143,37 @@ namespace ranges
 
             template<typename Concept>
             using base_concepts_of_t = decltype(detail::base_concepts_of_impl_((Concept *)nullptr));
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // models_refines_
+            template<typename Concepts, typename...Ts>
+            struct models_refines_;
+
+            template<typename...Ts>
+            struct models_refines_<typelist<>, Ts...>
+              : std::true_type
+            {};
+
+            template<typename...Concepts, typename...Ts>
+            struct models_refines_<typelist<Concepts...>, Ts...>
+              : logical_and<concepts::models<Concepts, Ts...>::value...>
+            {};
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // models_
+            template<typename Concept, typename ...Ts>
+            struct models_
+            {
+                auto operator()() const -> std::false_type;
+
+                template<typename C = Concept, typename = decltype(C{}.requires(std::declval<Ts>()...))>
+                auto operator()() -> models_refines_<base_concepts_of_t<C>, Ts...>;
+            };
+
+            template<typename Concept, typename...Args, typename ...Ts>
+            struct models_<Concept(Args...), Ts...>
+              : models_<Concept, typelist_element_t<Args::value, typelist<Ts...>>...>
+            {};
 
             struct not_a_concept
             {};
@@ -398,6 +411,24 @@ namespace ranges
                                                   std::forward<Arg1>(arg1))
                     ));
             };
+
+            struct Addable
+            {
+                template<typename T, typename U>
+                using result_t = decltype(std::declval<T>() + std::declval<U>());
+
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                    t + t
+                    ));
+
+                template<typename T, typename U>
+                auto requires(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                    t + u
+                    ));
+            };
         }
 
         template<typename T, typename U>
@@ -453,6 +484,9 @@ namespace ranges
 
         template<typename Fun, typename Arg0, typename Arg1>
         using BinaryPredicate = concepts::models<concepts::BinaryPredicate, Fun, Arg0, Arg1>;
+
+        template<typename T, typename U = T>
+        using Addable = concepts::models<concepts::Addable, T, U>;
     }
 }
 

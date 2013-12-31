@@ -447,6 +447,15 @@ namespace ranges
             extern indirecter const indirect;
         }
 
+        template<typename InputRange>
+        struct iota_iterable_view;
+
+        namespace view
+        {
+            struct iota_maker;
+            extern iota_maker const iota;
+        }
+
         template<typename Rng0, typename Rng1>
         struct join_range_view;
 
@@ -463,6 +472,15 @@ namespace ranges
         {
             struct mover;
             extern mover const move;
+        }
+
+        template<typename Value>
+        struct repeat_iterable_view;
+
+        namespace view
+        {
+            struct repeater;
+            extern repeater const repeat;
         }
 
         namespace view
@@ -499,6 +517,12 @@ namespace ranges
         {
             struct strider;
             extern strider const stride;
+        }
+
+        namespace view
+        {
+            struct taker;
+            extern taker const take;
         }
 
         template<typename BidirectionalRange, typename Regex, typename SubMatchRange>

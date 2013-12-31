@@ -154,6 +154,7 @@ namespace ranges
         struct pipeable
         {
         private:
+            friend Derived;
             Derived const & derived() const &
             {
                 return static_cast<Derived const &>(*this);
