@@ -158,6 +158,9 @@ namespace ranges
             template<typename T, bool B>
             using add_const_if_t = conditional_t<B, T const, T>;
 
+            template<typename...Ts>
+            using common_type_t = typename std::common_type<Ts...>::type;
+
             struct get_first;
             struct get_second;
 

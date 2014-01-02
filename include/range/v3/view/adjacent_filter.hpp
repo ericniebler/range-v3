@@ -34,7 +34,7 @@ namespace ranges
             struct basic_iterator
               : iterator_facade<
                     basic_iterator<Const>
-                  , range_value_t<detail::add_const_if_t<ForwardRange, Const>>
+                  , range_value_t<ForwardRange>
                   , std::forward_iterator_tag
                   , range_reference_t<detail::add_const_if_t<ForwardRange, Const>>
                   , range_difference_t<ForwardRange>

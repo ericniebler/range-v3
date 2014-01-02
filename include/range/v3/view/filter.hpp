@@ -29,13 +29,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            auto filter_range_category(std::input_iterator_tag)           -> std::input_iterator_tag;
-            auto filter_range_category(std::forward_iterator_tag)         -> std::forward_iterator_tag;
-            auto filter_range_category(std::bidirectional_iterator_tag)   -> std::bidirectional_iterator_tag;
-        }
-
         template<typename InputRange, typename UnaryPredicate>
         struct filter_range_view
         {
@@ -46,8 +39,8 @@ namespace ranges
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<Const>
-                  , range_value_t<detail::add_const_if_t<InputRange, Const>>
-                  , decltype(detail::filter_range_category(range_category_t<InputRange>{}))
+                  , range_value_t<InputRange>
+                  , decltype(true ? range_category_t<InputRange>{} : std::bidirectional_iterator_tag{})
                   , range_reference_t<detail::add_const_if_t<InputRange, Const>>
                   , range_difference_t<InputRange>
                 >

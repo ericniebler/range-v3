@@ -72,7 +72,7 @@ namespace ranges
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<Const>
-                  , range_value_t<detail::add_const_if_t<InputRange, Const>>
+                  , range_value_t<InputRange>
                   , range_category_t<InputRange>
                   , range_reference_t<detail::add_const_if_t<InputRange, Const>>
                   , difference_type

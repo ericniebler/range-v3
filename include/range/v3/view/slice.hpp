@@ -65,7 +65,7 @@ namespace ranges
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<Const>
-                  , range_value_t<detail::add_const_if_t<InputIterable, Const>>
+                  , range_value_t<InputIterable>
                   , range_category_t<InputIterable>
                   , range_reference_t<detail::add_const_if_t<InputIterable, Const>>
                   , range_difference_t<InputIterable>

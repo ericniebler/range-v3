@@ -120,10 +120,10 @@ namespace ranges
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<false>,
-                    std::tuple<range_value_t<detail::add_const_if_t<InputRanges, Const>>...>,
-                    typename std::common_type<range_category_t<InputRanges>...>::type,
+                    std::tuple<range_value_t<InputRanges>...>,
+                    detail::common_type_t<range_category_t<InputRanges>...>,
                     std::tuple<range_reference_t<detail::add_const_if_t<InputRanges, Const>>...>,
-                    typename std::common_type<range_difference_t<InputRanges>...>::type
+                    detail::common_type_t<range_difference_t<InputRanges>...>
                 >
             {
                 using reference = typename basic_iterator::reference;

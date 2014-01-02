@@ -21,11 +21,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            auto delimit_category(std::input_iterator_tag)->std::input_iterator_tag;
-            auto delimit_category(std::forward_iterator_tag)->std::forward_iterator_tag;
-        }
         template<typename InputIterable, typename Value>
         struct delimit_iterable_view
         {
@@ -39,7 +34,7 @@ namespace ranges
                     basic_iterator<Const>
                   , range_iterator_t<detail::add_const_if_t<InputIterable, Const>>
                   , use_default
-                  , decltype(detail::delimit_category(range_category_t<InputIterable>{}))
+                  , decltype(true ? range_category_t<InputIterable>{} : std::forward_iterator_tag{})
                 >
             {
             private:
