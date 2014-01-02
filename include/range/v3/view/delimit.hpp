@@ -52,16 +52,33 @@ namespace ranges
 
                 delimit_iterable_view_ *rng_;
 
-                explicit basic_iterator(delimit_iterable_view_ &rng)
+                basic_iterator(delimit_iterable_view_ &rng, detail::begin_tag)
                   : iterator_adaptor_{ranges::begin(rng.rng_)}, rng_(&rng)
                 {}
-                // BUGBUG *If* InputIterable is actually a Range, we need to make sure
-                // we don't run off the end.
+                basic_iterator(delimit_iterable_view_ &rng, detail::end_tag tag)
+                  : basic_iterator(rng, tag, range_concept_t<InputIterable>{})
+                {}
+                basic_iterator(delimit_iterable_view_ &, detail::end_tag, concepts::Iterable)
+                  : basic_iterator{}
+                {}
+                basic_iterator(delimit_iterable_view_ &rng, detail::end_tag, concepts::Range)
+                  : iterator_adaptor_{ranges::end(rng.rng_)}, rng_{}
+                {}
                 bool equal(basic_iterator const &that) const
                 {
-                    return (nullptr == rng_)
-                        ? (nullptr == that.rng_ || *that.base() == that.rng_->value_)
-                        : (nullptr != that.rng_ || *this->base() == rng_->value_);
+                    RANGES_ASSERT(rng_ == that.rng_ || !rng_ || !that.rng_);
+                    return this->equal_it(that, range_concept_t<InputIterable>{}) ||
+                        (!rng_)
+                      ? (!that.rng_ || *that.base() == that.rng_->value_)
+                      : (!!that.rng_ || *this->base() == rng_->value_);
+                }
+                bool equal_it(basic_iterator const &, concepts::Iterable) const
+                {
+                    return false;
+                }
+                bool equal_it(basic_iterator const &that, concepts::Range) const
+                {
+                    return this->base() == that.base();
                 }
             public:
                 basic_iterator()
@@ -83,19 +100,19 @@ namespace ranges
 
             iterator begin()
             {
-                return iterator{*this};
+                return {*this, detail::begin_tag{}};
             }
             iterator end()
             {
-                return {};
+                return {*this, detail::end_tag{}};
             }
             const_iterator begin() const
             {
-                return const_iterator{*this};
+                return {*this, detail::begin_tag{}};
             }
             const_iterator end() const
             {
-                return {};
+                return {*this, detail::end_tag{}};
             }
             bool operator!() const
             {

@@ -392,6 +392,15 @@ void test_delimit_iota()
     std::cout << '\n';
 }
 
+void test_delimit_iota_finite()
+{
+    using namespace ranges;
+    std::cout << "\n\ndelimit an finite range:\n";
+    for (int i : std::vector<int>(10) | iota(10) | view::delimit(50))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
 void test_take_repeat()
 {
     using namespace ranges;
@@ -543,6 +552,7 @@ int main()
     test_move_view();
     test_slice_iota();
     test_delimit_iota();
+    test_delimit_iota_finite();
     test_take_repeat();
 }
 //*/
