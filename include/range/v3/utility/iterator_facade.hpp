@@ -107,7 +107,7 @@ namespace ranges
                     {}
                     friend struct operator_brackets_const_proxy;
                 public:
-                    void operator=(result_type&) = delete;
+                    result_type const & operator=(result_type &) const = delete;
                     operator Reference() const
                     {
                         return *it_;
@@ -125,7 +125,7 @@ namespace ranges
                 struct result_type
                 {
                 private:
-                using value_type = typename std::iterator_traits<Iterator>::value_type;
+                    using value_type = iterator_value_t<Iterator>;
                     Iterator const it_;
                     explicit result_type(Iterator i)
                       : it_(std::move(i))
@@ -136,13 +136,13 @@ namespace ranges
                     {
                         return *it_;
                     }
-                    operator_brackets_proxy const & operator=(result_type&) const = delete;
-                    operator_brackets_proxy const & operator=(value_type const & x) const
+                    result_type const & operator=(result_type&) const = delete;
+                    result_type const & operator=(value_type const & x) const
                     {
                         *it_ = x;
                         return *this;
                     }
-                    operator_brackets_proxy const & operator=(value_type && x) const
+                    result_type const & operator=(value_type && x) const
                     {
                         *it_ = std::move(x);
                         return *this;

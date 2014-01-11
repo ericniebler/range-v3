@@ -80,6 +80,9 @@ namespace ranges
             {
                 using type = Concept;
             };
+
+            template<typename Concept>
+            using base_concept_t = typename base_concept<Concept>::type;
         }
 
         namespace concepts
@@ -118,7 +121,7 @@ namespace ranges
 
             template<typename ...Concepts>
             struct refines
-              : virtual detail::base_concept<Concepts>::type...
+              : virtual detail::base_concept_t<Concepts>...
             {
                 template<typename...Ts>
                 void requires(Ts &&...);

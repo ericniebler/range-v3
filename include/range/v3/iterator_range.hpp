@@ -19,6 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {
@@ -59,12 +60,12 @@ namespace ranges
             {
                 return begin_ != end_;
             }
-            iterator_range & advance_begin(typename std::iterator_traits<Iter>::difference_type n)
+            iterator_range & advance_begin(iterator_difference_t<Iter> n)
             {
                 std::advance(begin_, n);
                 return *this;
             }
-            iterator_range & advance_end(typename std::iterator_traits<Iter>::difference_type n)
+            iterator_range & advance_end(iterator_difference_t<Iter> n)
             {
                 std::advance(end_, n);
                 return *this;
