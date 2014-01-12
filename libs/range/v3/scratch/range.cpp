@@ -455,6 +455,21 @@ void test_safe_int()
     static_assert((neg_inf / pos_inf).is_NaN(), "");
     static_assert((neg_inf / neg_inf).is_NaN(), "");
     static_assert(i / 2 == 21, "");
+    static_assert(i * 2 == 84, "");
+    static_assert(i * pos_inf == pos_inf, "");
+    static_assert(-i * pos_inf == neg_inf, "");
+    static_assert(i * neg_inf == neg_inf, "");
+    static_assert(-i * neg_inf == pos_inf, "");
+    static_assert((0 * pos_inf).is_NaN(), "");
+    static_assert((0 * neg_inf).is_NaN(), "");
+    static_assert(pos_inf * pos_inf == pos_inf, "");
+    static_assert(neg_inf * neg_inf == pos_inf, "");
+    static_assert(pos_inf * neg_inf == neg_inf, "");
+    static_assert(neg_inf * pos_inf == neg_inf, "");
+    static_assert(safe_int<int>{0x8000} * safe_int<int>{0x10000} == pos_inf, "");
+    static_assert(safe_int<int>{0x8000} * safe_int<int>{-(int)0x10000} == neg_inf, "");
+    static_assert(safe_int<int>{-(int)0x8000} * safe_int<int>{-(int)0x10000} == pos_inf, "");
+
     RANGES_ASSERT(!(view::iota(10) | distance).is_finite());
 }
 

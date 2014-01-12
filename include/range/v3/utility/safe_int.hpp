@@ -49,6 +49,44 @@ namespace ranges
         Therefore, (a%b) is only defined when both a and b are finite.
         */
 
+        namespace detail
+        {
+            template<typename Signed>
+            using unsigned_t = typename std::make_unsigned<Signed>::type;
+
+            template<typename Signed>
+            constexpr unsigned_t<Signed> abs(Signed i)
+            {
+                return i < 0 ? (unsigned_t<Signed>)-i : (unsigned_t<Signed>)i;
+            }
+
+            template<typename Signed>
+            constexpr unsigned_t<Signed> signbit(Signed i)
+            {
+                return i < 0 ? -1 : 1;
+            }
+
+            template<typename Unsigned>
+            constexpr Unsigned log2(Unsigned n, Unsigned p = 0)
+            {
+                return n <= 1 ? p : log2(n >> 1, p + 1);
+            }
+
+            template<typename Signed>
+            constexpr bool is_mult_safe(Signed left, Signed right)
+            {
+                // A conservative check for overflow. Not 100% accurate, but fast.
+                return log2(abs(left)) + log2(abs(right)) + 2 <=
+                    std::numeric_limits<Signed>::digits;
+            }
+
+            template<typename Signed>
+            constexpr bool same_sign(Signed left, Signed right)
+            {
+                return signbit(left) == signbit(right);
+            }
+        }
+
         template<typename SignedInteger>
         struct safe_int
         {
@@ -95,6 +133,14 @@ namespace ranges
             constexpr bool is_NaN() const noexcept
             {
                 return i_ == NaN_;
+            }
+            constexpr explicit operator bool() const
+            {
+                return i_ != 0;
+            }
+            constexpr bool operator!() const
+            {
+                return i_ == 0;
             }
             constexpr safe_int operator-() const noexcept
             {
@@ -200,8 +246,23 @@ namespace ranges
                 *this = *this % that;
                 return *this;
             }
-
-            // TODO multiplication
+            friend constexpr safe_int operator*(safe_int left, safe_int right)
+            {
+                return (left.is_NaN() || right.is_NaN()) ? NaN() :
+                    // Zero * infinity is NaN
+                    ((left == 0 && !right.is_finite()) || (right == 0 && !left.is_finite())) ? NaN() :
+                    // Check for overflow. This also handles infinities.
+                    !detail::is_mult_safe(left.i_, right.i_) ?
+                        (detail::same_sign(left.i_, right.i_) ? inf() : -inf()) :
+                    // Do the multiplication
+                    left.i_ * right.i_;
+            }
+            safe_int & operator*=(safe_int that)
+            {
+                *this = *this * that;
+                return *this;
+            }
+        private:
         };
 
         template<typename SignedInteger>
