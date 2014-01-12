@@ -22,6 +22,33 @@ namespace ranges
 {
     inline namespace v3
     {
+        /*
+        Modulus is defined so that the following relation is true:
+
+        a % b == a - (a/b)*b
+
+            a        b        a/b     (a/b)*b   a - (a/b)*b
+            ------------------------------------------------
+            0        0        NaN      NaN         NaN
+            x        0        +-inf    NaN         NaN
+            +-inf    0        +-inf    NaN         NaN
+            NaN      0        NaN      NaN         NaN
+            0        y        0        0           0
+            x        y        z        q           r
+            +-inf    y        +-inf    +-inf       NaN
+            NaN      y        NaN      NaN         NaN
+            0        +-inf    0        NaN         NaN
+            x        +-inf    0        NaN         NaN
+            +-inf    +-inf    NaN      NaN         NaN
+            NaN      +-inf    NaN      NaN         NaN
+            0        NaN      NaN      NaN         NaN
+            x        NaN      NaN      NaN         NaN
+            +-inf    NaN      NaN      NaN         NaN
+            NaN      NaN      NaN      NaN         NaN
+
+        Therefore, (a%b) is only defined when both a and b are finite.
+        */
+
         template<typename SignedInteger>
         struct safe_int
         {
@@ -125,7 +152,7 @@ namespace ranges
             friend constexpr safe_int operator+(safe_int left, safe_int right) noexcept
             {
                 return (right == NaN() || left == NaN()) ? NaN() :
-                       // Addiing infinities results in infinity if they're the same sign,
+                       // Adding infinities results in infinity if they're the same sign,
                        // or NaN if they're different signs
                        (!left.is_finite() && !right.is_finite()) ? (left == right ? left : NaN()) :
                        // Adding a finite value to infinity is infinity
@@ -154,12 +181,9 @@ namespace ranges
             friend constexpr safe_int operator/(safe_int left, safe_int right)
             {
                 return (left.is_NaN() || right.is_NaN()) ? NaN() :
-                       (left == 0 && right == 0) ? NaN() :
-                       (!left.is_finite() && right == 0) ? left :
-                       (!left.is_finite() && right.is_finite()) ? (right < 0 ? -left : left) :
-                       (!left.is_finite() && !right.is_finite()) ? NaN() :
-                       (left.is_finite() && right == 0) ? (left < 0 ? -inf() : inf()) :
-                       (left.is_finite() && !right.is_finite()) ? (left < 0 ? -right : right) :
+                       right == 0 ? (left == 0 ? NaN() : (left < 0 ? -inf() : inf())) :
+                       !right.is_finite() ? (!left.is_finite() ? NaN() : 0) :
+                       !left.is_finite() ? (right < 0 ? -left : left) :
                        left.i_ / right.i_;
             }
             safe_int & operator/=(safe_int that)
@@ -167,6 +191,16 @@ namespace ranges
                 *this = *this / that;
                 return *this;
             }
+            friend constexpr safe_int operator%(safe_int left, safe_int right)
+            {
+                return (left.is_finite() && right.is_finite()) ? left.i_ % right.i_ : NaN();
+            }
+            safe_int & operator%=(safe_int that)
+            {
+                *this = *this % that;
+                return *this;
+            }
+
             // TODO multiplication
         };
 

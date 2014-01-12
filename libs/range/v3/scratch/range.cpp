@@ -415,22 +415,47 @@ void test_take_repeat()
 void test_safe_int()
 {
     using namespace ranges;
-    safe_int<int> i = 42;
-    RANGES_ASSERT(i + 1 == 43);
-    RANGES_ASSERT(i + std::numeric_limits<int>::max() == safe_int<int>::inf());
-    RANGES_ASSERT(-i - std::numeric_limits<int>::max() == -safe_int<int>::inf());
+    constexpr safe_int<int> i = 42;
+    constexpr safe_int<int> pos_inf = safe_int<int>::inf();
+    constexpr safe_int<int> neg_inf = -safe_int<int>::inf();
+    constexpr safe_int<int> NaN = safe_int<int>::NaN();
+    constexpr safe_int<int> zero = 0;
+    static_assert(i + 1 == 43, "");
+    static_assert(i + std::numeric_limits<int>::max() == pos_inf, "");
+    static_assert(-i - std::numeric_limits<int>::max() == neg_inf, "");
+    static_assert(pos_inf == - neg_inf, "");
+    static_assert(pos_inf - 1 == pos_inf, "");
+    static_assert(1 - pos_inf == neg_inf, "");
+    static_assert(pos_inf != NaN, "");
+    static_assert(neg_inf != NaN, "");
+    static_assert(!(pos_inf == NaN), "");
+    static_assert(!(neg_inf == NaN), "");
+    static_assert(!(NaN == NaN), "");
+    static_assert(NaN != NaN, "");
+    static_assert(neg_inf != pos_inf, "");
+    static_assert(!(neg_inf == pos_inf), "");
+    static_assert((pos_inf - pos_inf).is_NaN(), "");
+    static_assert((pos_inf + neg_inf).is_NaN(), "");
+    static_assert(pos_inf + pos_inf == pos_inf, "");
+    static_assert(neg_inf - pos_inf == neg_inf, "");
+    static_assert(zero / pos_inf == 0, "");
+    static_assert(zero / -pos_inf == 0, "");
+    static_assert(i / pos_inf == 0, "");
+    static_assert(i / -pos_inf == 0, "");
+    static_assert(i / zero == pos_inf, "");
+    static_assert((zero / zero).is_NaN(), "");
+    static_assert(pos_inf / zero == pos_inf, "");
+    static_assert(neg_inf / zero == neg_inf, "");
+    static_assert(pos_inf / i == pos_inf, "");
+    static_assert(neg_inf / i == neg_inf, "");
+    static_assert(pos_inf / -i == neg_inf, "");
+    static_assert(neg_inf / -i == pos_inf, "");
+    static_assert((pos_inf / pos_inf).is_NaN(), "");
+    static_assert((pos_inf / neg_inf).is_NaN(), "");
+    static_assert((neg_inf / pos_inf).is_NaN(), "");
+    static_assert((neg_inf / neg_inf).is_NaN(), "");
+    static_assert(i / 2 == 21, "");
     RANGES_ASSERT(!(view::iota(10) | distance).is_finite());
-    RANGES_ASSERT(safe_int<int>::inf() == - -safe_int<int>::inf());
-    RANGES_ASSERT(safe_int<int>::inf() - 1 == safe_int<int>::inf());
-    RANGES_ASSERT(1 - safe_int<int>::inf() == -safe_int<int>::inf());
-    RANGES_ASSERT(safe_int<int>::inf() != safe_int<int>::NaN());
-    RANGES_ASSERT(-safe_int<int>::inf() != safe_int<int>::NaN());
-    RANGES_ASSERT(-safe_int<int>::inf() != safe_int<int>::inf());
-    RANGES_ASSERT(!(-safe_int<int>::inf() == safe_int<int>::inf()));
-    RANGES_ASSERT((safe_int<int>::inf() - safe_int<int>::inf()).is_NaN());
-    RANGES_ASSERT((safe_int<int>::inf() + -safe_int<int>::inf()).is_NaN());
-    RANGES_ASSERT(safe_int<int>::inf() + safe_int<int>::inf() == safe_int<int>::inf());
-    RANGES_ASSERT(-safe_int<int>::inf() - safe_int<int>::inf() == -safe_int<int>::inf());
 }
 
 int main()
