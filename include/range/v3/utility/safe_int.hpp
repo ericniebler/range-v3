@@ -15,6 +15,7 @@
 
 #include <limits>
 #include <type_traits>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
 
 namespace ranges
@@ -33,17 +34,22 @@ namespace ranges
                 -std::numeric_limits<SignedInteger>::max();
             static constexpr SignedInteger NaN_ =
                 std::numeric_limits<SignedInteger>::min();
-            static_assert(NaN_ != neg_inf_,
+            static_assert(NaN_ < neg_inf_ && neg_inf_ == -pos_inf_,
                 "Are you really running on a machine that doesn't do 2's complement? "
                 "Like, really?");
 
             SignedInteger i_ = 0;
         public:
             constexpr safe_int(SignedInteger i) noexcept
-              : i_(i < neg_inf_ ? neg_inf_ : i)
+              : i_(i)
             {}
-            constexpr SignedInteger get() const noexcept
+            constexpr SignedInteger const_get() const noexcept
             {
+                return i_;
+            }
+            SignedInteger get() const noexcept
+            {
+                RANGES_ASSERT(is_finite());
                 return i_;
             }
             static constexpr safe_int inf() noexcept
@@ -54,6 +60,7 @@ namespace ranges
             {
                 return NaN_;
             }
+            /// \return *this != inf() && this != -inf() && *this != NaN()
             constexpr bool is_finite() const noexcept
             {
                 return i_ < pos_inf_ && i_ > neg_inf_;
@@ -64,17 +71,13 @@ namespace ranges
             }
             constexpr safe_int operator-() const noexcept
             {
+                // This handles infinity because of how we've define neg_inf_
                 return i_ == NaN_ ? NaN_ : -i_;
             }
             safe_int & operator++() noexcept
             {
-                switch(i_)
-                {
-                case pos_inf_:  break;
-                case neg_inf_:  break;
-                case NaN_:      break;
-                default:        ++i_;
-                }
+                if(is_finite())
+                    ++i_;
                 return *this;
             }
             safe_int & operator++(int) noexcept
@@ -85,13 +88,8 @@ namespace ranges
             }
             safe_int & operator--() noexcept
             {
-                switch(i_)
-                {
-                case pos_inf_:  break;
-                case neg_inf_:  break;
-                case NaN_:      break;
-                default:        --i_;
-                }
+                if(is_finite())
+                    --i_;
                 return *this;
             }
             safe_int & operator--(int) noexcept
@@ -127,11 +125,16 @@ namespace ranges
             friend constexpr safe_int operator+(safe_int left, safe_int right) noexcept
             {
                 return (right == NaN() || left == NaN()) ? NaN() :
+                       // Addiing infinities results in infinity if they're the same sign,
+                       // or NaN if they're different signs
                        (!left.is_finite() && !right.is_finite()) ? (left == right ? left : NaN()) :
+                       // Adding a finite value to infinity is infinity
                        (!left.is_finite() && right.is_finite()) ? left :
                        (left.is_finite() && !right.is_finite()) ? right :
+                       // Do overflow checking
                        (right.i_ >= 0 && left.i_ > pos_inf_ - right.i_) ? inf() :
                        (right.i_ < 0 && left.i_ < neg_inf_ - right.i_) ? -inf() :
+                       // Addition won't overflow
                        left.i_ + right.i_;
             }
             friend constexpr safe_int operator-(safe_int left, safe_int right) noexcept
@@ -152,10 +155,11 @@ namespace ranges
             {
                 return (left.is_NaN() || right.is_NaN()) ? NaN() :
                        (left == 0 && right == 0) ? NaN() :
-                       (left.is_finite() && right == 0) ? (left < 0 ? -inf() : inf()) :
-                       (left.is_finite() && !right.is_finite()) ? (left < 0 ? -right : right) :
                        (!left.is_finite() && right == 0) ? left :
                        (!left.is_finite() && right.is_finite()) ? (right < 0 ? -left : left) :
+                       (!left.is_finite() && !right.is_finite()) ? NaN() :
+                       (left.is_finite() && right == 0) ? (left < 0 ? -inf() : inf()) :
+                       (left.is_finite() && !right.is_finite()) ? (left < 0 ? -right : right) :
                        left.i_ / right.i_;
             }
             safe_int & operator/=(safe_int that)

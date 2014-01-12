@@ -423,8 +423,12 @@ void test_safe_int()
     RANGES_ASSERT(safe_int<int>::inf() == - -safe_int<int>::inf());
     RANGES_ASSERT(safe_int<int>::inf() - 1 == safe_int<int>::inf());
     RANGES_ASSERT(1 - safe_int<int>::inf() == -safe_int<int>::inf());
-    RANGES_ASSERT(safe_int<int>::inf() - safe_int<int>::inf() == safe_int<int>::NaN());
-    RANGES_ASSERT(safe_int<int>::inf() + -safe_int<int>::inf() == safe_int<int>::NaN());
+    RANGES_ASSERT(safe_int<int>::inf() != safe_int<int>::NaN());
+    RANGES_ASSERT(-safe_int<int>::inf() != safe_int<int>::NaN());
+    RANGES_ASSERT(-safe_int<int>::inf() != safe_int<int>::inf());
+    RANGES_ASSERT(!(-safe_int<int>::inf() == safe_int<int>::inf()));
+    RANGES_ASSERT((safe_int<int>::inf() - safe_int<int>::inf()).is_NaN());
+    RANGES_ASSERT((safe_int<int>::inf() + -safe_int<int>::inf()).is_NaN());
     RANGES_ASSERT(safe_int<int>::inf() + safe_int<int>::inf() == safe_int<int>::inf());
     RANGES_ASSERT(-safe_int<int>::inf() - safe_int<int>::inf() == -safe_int<int>::inf());
 }
