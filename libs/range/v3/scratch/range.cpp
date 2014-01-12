@@ -421,8 +421,10 @@ void test_safe_int()
     RANGES_ASSERT(-i - std::numeric_limits<int>::max() == -safe_int<int>::inf());
     RANGES_ASSERT(!(view::iota(10) | distance).is_finite());
     RANGES_ASSERT(safe_int<int>::inf() == - -safe_int<int>::inf());
-    RANGES_ASSERT(safe_int<int>::inf() - safe_int<int>::inf() == 0);
-    RANGES_ASSERT(safe_int<int>::inf() + -safe_int<int>::inf() == 0);
+    RANGES_ASSERT(safe_int<int>::inf() - 1 == safe_int<int>::inf());
+    RANGES_ASSERT(1 - safe_int<int>::inf() == -safe_int<int>::inf());
+    RANGES_ASSERT(safe_int<int>::inf() - safe_int<int>::inf() == safe_int<int>::NaN());
+    RANGES_ASSERT(safe_int<int>::inf() + -safe_int<int>::inf() == safe_int<int>::NaN());
     RANGES_ASSERT(safe_int<int>::inf() + safe_int<int>::inf() == safe_int<int>::inf());
     RANGES_ASSERT(-safe_int<int>::inf() - safe_int<int>::inf() == -safe_int<int>::inf());
 }
