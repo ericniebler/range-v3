@@ -12,7 +12,8 @@
 #define RANGES_V3_ALGORITHM_LOWER_BOUND_HPP
 
 #include <utility>
-#include <algorithm>
+#include <iterator>
+#include <range/v3/distance.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
@@ -23,6 +24,32 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename EndForwardIterator, typename Value,
+                typename BinaryPredicate = ranges::less>
+            ForwardIterator
+            lower_bound(ForwardIterator begin, EndForwardIterator end, Value const& val,
+                BinaryPredicate pred = BinaryPredicate{})
+            {
+                auto dist = detail::distance(begin, end);
+                while(0 != dist)
+                {
+                    auto half = dist / 2;
+                    auto middle = begin;
+                    std::advance(middle, half);
+                    if(pred(*middle, val))
+                    {
+                        begin = std::move(++middle);
+                        dist -= half + 1;
+                    }
+                    else
+                        dist = half;
+                }
+                return begin;
+            }
+        }
+
         struct lower_bound_finder : bindable<lower_bound_finder>
         {
             /// \brief template function \c lower_bound_finder::operator()
@@ -38,7 +65,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardRange>,
                                                           Value const &>());
-                return std::lower_bound(ranges::begin(rng), ranges::end(rng), val);
+                return detail::lower_bound(ranges::begin(rng), ranges::end(rng), val);
             }
 
             /// \overload
@@ -50,7 +77,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardRange>,
                                                        Value const &>());
-                return std::lower_bound(ranges::begin(rng), ranges::end(rng), val,
+                return detail::lower_bound(ranges::begin(rng), ranges::end(rng), val,
                     ranges::make_invokable(std::move(pred)));
             }
 

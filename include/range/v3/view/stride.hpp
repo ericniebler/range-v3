@@ -106,7 +106,8 @@ namespace ranges
                     this->set_offset(detail::advance_bounded(it_, rng_->stride_ + offset(),
                         ranges::end(rng_->rng_)));
                 }
-                bool equal(basic_iterator const &that) const
+                template<bool OtherConst>
+                bool equal(basic_iterator<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
@@ -125,7 +126,8 @@ namespace ranges
                         ranges::begin(rng_->rng_)));
                     RANGES_ASSERT(0 == offset());
                 }
-                difference_type distance_to(basic_iterator const &that) const
+                template<bool OtherConst>
+                difference_type distance_to(basic_iterator<OtherConst> const &that) const
                 {
                     clean();
                     that.clean();

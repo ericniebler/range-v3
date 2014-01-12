@@ -77,12 +77,14 @@ namespace ranges
                 {
                     it_ += n;
                 }
-                range_difference_t<base_range> distance_to(basic_iterator const &that) const
+                template<bool OtherConst>
+                range_difference_t<base_range> distance_to(basic_iterator<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return that.it_ - it_;
                 }
-                bool equal(basic_iterator const &that) const
+                template<bool OtherConst>
+                bool equal(basic_iterator<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;

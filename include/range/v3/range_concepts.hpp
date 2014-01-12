@@ -54,7 +54,9 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::model_of<Iterator>(ranges::begin(t)),
                         concepts::model_of<Iterator>(ranges::cbegin(t)),
-                        concepts::convertible_to<decltype(ranges::cbegin(t))>(ranges::begin(t))
+                        concepts::convertible_to<decltype(ranges::cbegin(t))>(ranges::begin(t)),
+                        ranges::begin(t) == ranges::end(t),
+                        ranges::cbegin(t) == ranges::cend(t)
                     ));
             };
 

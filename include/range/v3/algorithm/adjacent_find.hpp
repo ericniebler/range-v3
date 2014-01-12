@@ -11,17 +11,37 @@
 #ifndef RANGES_V3_ALGORITHM_ADJACENT_FIND_HPP
 #define RANGES_V3_ALGORITHM_ADJACENT_FIND_HPP
 
-#include <algorithm>
+#include <functional>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename EndForwardIterator,
+                typename BinaryPredicate = ranges::equal_to>
+            ForwardIterator
+            adjacent_find(ForwardIterator begin, EndForwardIterator end,
+                BinaryPredicate pred = BinaryPredicate{})
+            {
+                if(begin == end)
+                    return begin;
+                auto next = begin;
+                for(; ++next != end; begin = next)
+                    if(pred(*begin, *next))
+                        return begin;
+                return next;
+            }
+        }
+
         struct adjacent_finder : bindable<adjacent_finder>,
                                  pipeable<adjacent_finder>
         {
@@ -37,7 +57,7 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardRange>>());
-                return std::adjacent_find(ranges::begin(rng), ranges::end(rng));
+                return detail::adjacent_find(ranges::begin(rng), ranges::end(rng));
             }
 
             /// \overload
@@ -49,7 +69,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardRange>,
                                                        range_reference_t<ForwardRange>>());
-                return std::adjacent_find(ranges::begin(rng), ranges::end(rng),
+                return detail::adjacent_find(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }
         };

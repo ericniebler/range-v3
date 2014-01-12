@@ -95,7 +95,8 @@ namespace ranges
                     ++it_;
                     ++n_;
                 }
-                bool equal(basic_iterator const &that) const
+                template<bool OtherConst>
+                bool equal(basic_iterator<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return n_ == that.n_;

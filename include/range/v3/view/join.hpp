@@ -176,7 +176,9 @@ namespace ranges
                         break;
                     }
                 }
-                typename basic_iterator::difference_type distance_to(basic_iterator const &that) const
+                template<bool OtherConst>
+                typename basic_iterator::difference_type
+                distance_to(basic_iterator<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     switch(which_)
@@ -211,7 +213,8 @@ namespace ranges
                         return 0;
                     }
                 }
-                bool equal(basic_iterator const &that) const
+                template<bool OtherConst>
+                bool equal(basic_iterator<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     if(which_ != that.which_)

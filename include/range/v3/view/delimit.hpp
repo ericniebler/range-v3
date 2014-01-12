@@ -29,12 +29,21 @@ namespace ranges
             Value value_;
 
             template<bool Const>
+            struct basic_iterator;
+
+            template<bool Const>
+            struct basic_sentinel
+              : ranges::sentinel_facade<basic_sentinel<Const>, basic_iterator<Const>>
+            {};
+
+            template<bool Const>
             struct basic_iterator
               : ranges::iterator_adaptor<
                     basic_iterator<Const>
                   , range_iterator_t<detail::add_const_if_t<InputIterable, Const>>
                   , use_default
-                  , decltype(true ? range_category_t<InputIterable>{} : std::forward_iterator_tag{})
+                  , decltype(true ? range_category_t<InputIterable>{}
+                                  : std::bidirectional_iterator_tag{})
                 >
             {
             private:
@@ -50,30 +59,17 @@ namespace ranges
                 basic_iterator(delimit_iterable_view_ &rng, detail::begin_tag)
                   : iterator_adaptor_{ranges::begin(rng.rng_)}, rng_(&rng)
                 {}
-                basic_iterator(delimit_iterable_view_ &rng, detail::end_tag tag)
-                  : basic_iterator(rng, tag, range_concept_t<InputIterable>{})
-                {}
-                basic_iterator(delimit_iterable_view_ &, detail::end_tag, concepts::Iterable)
-                  : basic_iterator{}
-                {}
-                basic_iterator(delimit_iterable_view_ &rng, detail::end_tag, concepts::Range)
-                  : iterator_adaptor_{ranges::end(rng.rng_)}, rng_{}
-                {}
-                bool equal(basic_iterator const &that) const
+                template<bool OtherConst>
+                bool equal(basic_iterator<OtherConst> const &that) const
                 {
-                    RANGES_ASSERT(rng_ == that.rng_ || !rng_ || !that.rng_);
-                    return this->equal_it(that, range_concept_t<InputIterable>{}) ||
-                        (!rng_)
-                      ? (!that.rng_ || *that.base() == that.rng_->value_)
-                      : (!!that.rng_ || *this->base() == rng_->value_);
-                }
-                bool equal_it(basic_iterator const &, concepts::Iterable) const
-                {
-                    return false;
-                }
-                bool equal_it(basic_iterator const &that, concepts::Range) const
-                {
+                    RANGES_ASSERT(rng_ == that.rng_);
                     return this->base() == that.base();
+                }
+                template<bool OtherConst>
+                bool equal(basic_sentinel<OtherConst> const &) const
+                {
+                    return this->base() == ranges::end(rng_->rng_) ||
+                          *this->base() == rng_->value_;
                 }
             public:
                 basic_iterator()
@@ -89,6 +85,9 @@ namespace ranges
             using iterator = basic_iterator<false>;
             using const_iterator = basic_iterator<false>;
 
+            using sentinel = basic_sentinel<false>;
+            using const_sentinel = basic_sentinel<true>;
+
             delimit_iterable_view(InputIterable && rng, Value value)
               : rng_(std::forward<InputIterable>(rng)), value_(std::move(value))
             {}
@@ -97,17 +96,17 @@ namespace ranges
             {
                 return {*this, detail::begin_tag{}};
             }
-            iterator end()
-            {
-                return {*this, detail::end_tag{}};
-            }
             const_iterator begin() const
             {
                 return {*this, detail::begin_tag{}};
             }
-            const_iterator end() const
+            sentinel end()
             {
-                return {*this, detail::end_tag{}};
+                return {};
+            }
+            const_sentinel end() const
+            {
+                return {};
             }
             bool operator!() const
             {

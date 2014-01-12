@@ -145,7 +145,8 @@ namespace ranges
                 {
                     return tuple_transform(its_, detail::deref);
                 }
-                bool equal(basic_iterator const &that) const
+                template<bool OtherConst>
+                bool equal(basic_iterator<OtherConst> const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
@@ -168,7 +169,8 @@ namespace ranges
                     using std::placeholders::_1;
                     tuple_for_each(its_, std::bind(detail::advance, _1, n));
                 }
-                difference_type distance_to(basic_iterator const &that) const
+                template<bool OtherConst>
+                difference_type distance_to(basic_iterator<OtherConst> const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accomodate zippers of sequences of different length.

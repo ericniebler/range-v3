@@ -14,6 +14,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/sentinel_facade.hpp>
 
 namespace ranges
 {
@@ -27,15 +28,6 @@ namespace ranges
 
         // This forward declaration is required for the friend declaration
         // in iterator_core_access
-        template<
-            typename Derived             // The derived iterator type being constructed
-          , typename Value
-          , typename Category
-          , typename Reference   = Value &
-          , typename Difference  = std::ptrdiff_t
-          , typename Pointer     = use_default
-        >
-        struct iterator_facade;
 
         namespace detail
         {
@@ -165,17 +157,6 @@ namespace ranges
                     >,
                     operator_brackets_proxy<Iterator, Reference>
                 >;
-
-            //
-            // enable if for use in operator implementation.
-            //
-            template<typename Facade1, typename Facade2, typename Return>
-            using enable_if_interoperable =
-                typename std::enable_if<
-                    std::is_convertible<Facade1, Facade2>::value ||
-                    std::is_convertible<Facade2, Facade1>::value
-                  , Return
-                >::type;
 
             // iterators whose dereference operators reference the same value
             // for all iterators into the same sequence (like many input
@@ -359,95 +340,7 @@ namespace ranges
                       , operator_arrow_dispatch<Reference>
                     >;
             };
-
-            template<typename I1, typename I2>
-            using choose_difference_type =
-                detail::conditional_t<
-                   std::is_convertible<I2, I1>::value
-                 , iterator_difference_t<I1>
-                 , iterator_difference_t<I2>
-               >;
         } // namespace detail
-
-        //
-        // Helper typename for granting access to the iterator core interface.
-        //
-        // The simple core interface is used by iterator_facade. The core
-        // interface of a user/library defined iterator type should not be made public
-        // so that it does not clutter the public interface. Instead iterator_core_access
-        // should be made friend so that iterator_facade can access the core
-        // interface through iterator_core_access.
-        //
-        struct iterator_core_access
-        {
-            // objects of this typename are useless
-            iterator_core_access() = delete;
-
-            template<typename I, typename V, typename TC, typename R, typename D, typename P>
-            friend struct iterator_facade;
-
-            template<typename Facade>
-            static typename Facade::reference dereference(Facade const& f)
-            {
-                return f.dereference();
-            }
-            template<typename Facade>
-            static typename Facade::pointer arrow(Facade const& f)
-            {
-                return f.arrow();
-            }
-            template<typename Facade>
-            static void increment(Facade& f)
-            {
-                f.increment();
-            }
-            template<typename Facade1, typename Facade2>
-            static bool equal(Facade1 const& f1, Facade2 const& f2, std::true_type)
-            {
-                return f1.equal(f2);
-            }
-            template<typename Facade1, typename Facade2>
-            static bool equal(Facade1 const& f1, Facade2 const& f2, std::false_type)
-            {
-                return f2.equal(f1);
-            }
-            template<typename Facade>
-            static void decrement(Facade& f)
-            {
-                f.decrement();
-            }
-            template<typename Facade>
-            static void advance(Facade& f, typename Facade::difference_type n)
-            {
-                f.advance(n);
-            }
-            template<typename Facade1, typename Facade2>
-            static auto distance_from(Facade1 const& f1, Facade2 const& f2, std::true_type)
-                -> typename Facade1::difference_type
-            {
-                return -f1.distance_to(f2);
-            }
-            template<typename Facade1, typename Facade2>
-            static auto distance_from(Facade1 const& f1, Facade2 const& f2, std::false_type)
-                -> typename Facade2::difference_type
-            {
-                return f2.distance_to(f1);
-            }
-
-            //
-            // Curiously Recurring Template interface.
-            //
-            template<typename I, typename V, typename TC, typename R, typename D, typename P>
-            static I& derived(iterator_facade<I, V, TC, R, D, P>& facade)
-            {
-                return *static_cast<I*>(&facade);
-            }
-            template<typename I, typename V, typename TC, typename R, typename D, typename P>
-            static I const& derived(iterator_facade<I, V, TC, R, D, P> const& facade)
-            {
-                return *static_cast<I const*>(&facade);
-            }
-        };
 
         //
         // iterator_facade - use as a public base typename for defining new
@@ -465,16 +358,10 @@ namespace ranges
         {
         private:
             friend struct iterator_core_access;
-            //using operator_arrow_dispatch_ =
-            //    detail::operator_arrow_dispatch<Reference>;
             using associated_types =
                 detail::iterator_facade_types<Value, Category, Reference, Difference, Pointer>;
             using operator_brackets_dispatch_ =
-                detail::operator_brackets_dispatch<
-                    Derived
-                  , Value
-                  , Reference
-                >;
+                detail::operator_brackets_dispatch<Derived, Value, Reference>;
 
             // Default implementation of operator->
             typename associated_types::pointer arrow() const
@@ -608,7 +495,7 @@ namespace ranges
             typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
           , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
         >
-        detail::enable_if_interoperable<Derived1, Derived2, bool>
+        detail::enable_if_interoperable_t<Derived1, Derived2, bool>
         operator==(
             iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
           , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
@@ -624,7 +511,7 @@ namespace ranges
             typename Derived1, typename V1, typename TC1, typename R1, typename D1, typename P1
           , typename Derived2, typename V2, typename TC2, typename R2, typename D2, typename P2
         >
-        detail::enable_if_interoperable<Derived1, Derived2, bool>
+        detail::enable_if_interoperable_t<Derived1, Derived2, bool>
         operator!=(
             iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
           , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
@@ -642,7 +529,7 @@ namespace ranges
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
-        detail::enable_if_interoperable<Derived1, Derived2, bool>
+        detail::enable_if_interoperable_t<Derived1, Derived2, bool>
         operator<(
             iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
           , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
@@ -660,7 +547,7 @@ namespace ranges
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
-        detail::enable_if_interoperable<Derived1, Derived2, bool>
+        detail::enable_if_interoperable_t<Derived1, Derived2, bool>
         operator>(
             iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
           , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
@@ -678,7 +565,7 @@ namespace ranges
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
-        detail::enable_if_interoperable<Derived1, Derived2, bool>
+        detail::enable_if_interoperable_t<Derived1, Derived2, bool>
         operator<=(
             iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
           , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
@@ -696,7 +583,7 @@ namespace ranges
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
-        detail::enable_if_interoperable<Derived1, Derived2, bool>
+        detail::enable_if_interoperable_t<Derived1, Derived2, bool>
         operator>=(
             iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs
           , iterator_facade<Derived2, V2, TC2, R2, D2, P2> const& rhs)
@@ -715,9 +602,9 @@ namespace ranges
           , REQUIRES(Derived1, random_access)
           , REQUIRES(Derived2, random_access)
         >
-        detail::enable_if_interoperable<
+        detail::enable_if_interoperable_t<
             Derived1, Derived2
-          , detail::choose_difference_type<Derived1, Derived2>
+          , detail::choose_difference_type_t<Derived1, Derived2>
         >
         operator-(
             iterator_facade<Derived1, V1, TC1, R1, D1, P1> const& lhs

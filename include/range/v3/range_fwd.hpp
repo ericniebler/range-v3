@@ -170,6 +170,23 @@ namespace ranges
             struct offset_tag {};
         }
 
+        struct use_default;
+
+        template<
+            typename Derived
+          , typename Value
+          , typename Category
+          , typename Reference   = Value &
+          , typename Difference  = std::ptrdiff_t
+          , typename Pointer     = use_default
+        >
+        struct iterator_facade;
+
+        template<typename Derived, typename It>
+        struct sentinel_facade;
+
+        struct iterator_core_access;
+
         template<typename First, typename Second>
         class compressed_pair;
 

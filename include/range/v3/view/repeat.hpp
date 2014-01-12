@@ -28,6 +28,7 @@ namespace ranges
             Value value_;
 
         public:
+            struct sentinel;
             using const_iterator = struct iterator
               : ranges::iterator_facade<
                     iterator
@@ -48,9 +49,13 @@ namespace ranges
                 {
                     return value_;
                 }
-                bool equal(iterator const &that) const
+                constexpr bool equal(iterator const &) const
                 {
                     return true;
+                }
+                constexpr bool equal(sentinel) const
+                {
+                    return false;
                 }
                 void increment()
                 {}
@@ -59,6 +64,9 @@ namespace ranges
                   : value_{}
                 {}
             };
+            using const_sentinel = struct sentinel
+              : ranges::sentinel_facade<sentinel, iterator>
+            {};
 
             explicit repeat_iterable_view(Value value)
               : value_(std::move(value))
@@ -67,6 +75,10 @@ namespace ranges
             iterator begin() const
             {
                 return iterator{value_};
+            }
+            sentinel end() const
+            {
+                return {};
             }
         };
 

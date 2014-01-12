@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_VIEW_IOTA_HPP
 #define RANGES_V3_VIEW_IOTA_HPP
 
+#include <limits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
@@ -75,6 +76,7 @@ namespace ranges
             Value value_;
 
         public:
+            struct sentinel;
             using const_iterator = struct iterator
               : ranges::iterator_facade<
                     iterator
@@ -99,6 +101,10 @@ namespace ranges
                 {
                     return value_ == that.value_;
                 }
+                constexpr bool equal(sentinel const &) const
+                {
+                    return false;
+                }
                 void increment()
                 {
                     ++value_;
@@ -115,11 +121,19 @@ namespace ranges
                 {
                     return that.value_ - value_;
                 }
+                std::ptrdiff_t distance_to(sentinel) const
+                {
+                    // BUGBUG need a signed integral class that can represent infinity
+                    return std::numeric_limits<std::ptrdiff_t>::max();
+                }
             public:
                 iterator()
                   : value_{}
                 {}
             };
+            using const_sentinel = struct sentinel
+              : ranges::sentinel_facade<sentinel, iterator>
+            {};
 
             explicit iota_iterable_view(Value value)
               : value_(std::move(value))
@@ -128,6 +142,10 @@ namespace ranges
             iterator begin() const
             {
                 return iterator{value_};
+            }
+            sentinel end() const
+            {
+                return {};
             }
         };
 

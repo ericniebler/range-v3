@@ -387,8 +387,9 @@ void test_delimit_iota()
 {
     using namespace ranges;
     std::cout << "\n\ndelimit an infinite range:\n";
-    for (int i : view::iota(10) | view::delimit(50))
+    view::iota(10) | view::delimit(50) | for_each([](int i) {
         std::cout << i << ' ';
+    });
     std::cout << '\n';
 }
 
@@ -396,8 +397,9 @@ void test_delimit_iota_finite()
 {
     using namespace ranges;
     std::cout << "\n\ndelimit a finite range:\n";
-    for (int i : std::vector<int>(10) | iota(10) | view::delimit(50))
-        std::cout << i << ' ';
+    std::vector<int>(10) | iota(10) | view::delimit(50) | for_each([](int i) {
+        std::cout << i << ' ' << std::flush;
+    });
     std::cout << '\n';
 }
 

@@ -63,7 +63,8 @@ namespace ranges
                     for(; it_ != e && !pred(*prev, *it_); ++it_)
                         ;
                 }
-                bool equal(basic_iterator const &that) const
+                template<bool OtherConst>
+                bool equal(basic_iterator<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;

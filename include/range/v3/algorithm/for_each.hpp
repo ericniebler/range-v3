@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_FOR_EACH_HPP
 
 #include <utility>
-#include <algorithm>
 #include <functional>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -24,6 +23,17 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename InputIterator, typename EndInputIterator, typename UnaryFunction>
+            UnaryFunction for_each(InputIterator begin, EndInputIterator end, UnaryFunction fun)
+            {
+                for(; begin != end; ++begin)
+                    fun(*begin);
+                return fun;
+            }
+        }
+
         struct for_eacher : bindable<for_eacher>
         {
             /// \brief template function \c for_eacher::operator()
@@ -32,13 +42,13 @@ namespace ranges
             ///
             /// \pre \c InputRange is a model of the InputRange concept
             /// \pre \c UnaryFunction is a model of the UnaryFunction concept
-            template<typename InputRange, typename UnaryFunction>
-            static UnaryFunction invoke(for_eacher, InputRange && rng, UnaryFunction fun)
+            template<typename InputIterable, typename UnaryFunction>
+            static UnaryFunction invoke(for_eacher, InputIterable && rng, UnaryFunction fun)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
                 CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
-                                                range_reference_t<InputRange>>());
-                return std::for_each(ranges::begin(rng), ranges::end(rng),
+                                                range_reference_t<InputIterable>>());
+                return detail::for_each(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(fun)));
             }
 
