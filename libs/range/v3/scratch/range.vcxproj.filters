@@ -370,5 +370,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\sentinel_facade.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

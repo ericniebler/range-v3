@@ -14,9 +14,11 @@
 #define RANGES_V3_VIEW_IOTA_HPP
 
 #include <limits>
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
+#include <range/v3/utility/safe_int.hpp>
 
 namespace ranges
 {
@@ -50,8 +52,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::has_type<T &>(t += (std::ptrdiff_t)1),
-                        concepts::convertible_to<std::ptrdiff_t>(t - t)
+                        concepts::has_type<T &>(t += (t - t))
                     ));
             };
         }
@@ -67,6 +68,16 @@ namespace ranges
             auto iota_category(concepts::ForwardIota)->std::forward_iterator_tag;
             auto iota_category(concepts::BidirectionalIota)->std::bidirectional_iterator_tag;
             auto iota_category(concepts::RandomAccessIota)->std::random_access_iterator_tag;
+
+            template<typename Value>
+            auto iota_difference(concepts::ForwardIota) -> safe_int<std::ptrdiff_t>;
+            template<typename Value>
+            auto iota_difference(concepts::RandomAccessIota) ->
+                safe_int<
+                    typename std::make_signed<
+                        decltype(std::declval<Value>() - std::declval<Value>())
+                    >::type
+                >;
         }
 
         template<typename Value>
@@ -83,8 +94,10 @@ namespace ranges
                   , Value
                   , decltype(detail::iota_category(iota_concept_t<Value>{}))
                   , Value
+                  , decltype(detail::iota_difference<Value>(iota_concept_t<Value>{}))
                 >
             {
+                using difference_type = typename iterator::difference_type;
             private:
                 friend struct iota_iterable_view;
                 friend struct iterator_core_access;
@@ -113,18 +126,18 @@ namespace ranges
                 {
                     ++value_;
                 }
-                void advance(std::ptrdiff_t n)
+                void advance(difference_type n)
                 {
-                    value_ += n;
+                    RANGES_ASSERT(n.is_finite());
+                    value_ += n.get();
                 }
-                std::ptrdiff_t distance_to(iterator const &that) const
+                difference_type distance_to(iterator const &that) const
                 {
                     return that.value_ - value_;
                 }
-                std::ptrdiff_t distance_to(sentinel) const
+                difference_type distance_to(sentinel) const
                 {
-                    // BUGBUG need a signed integral class that can represent infinity
-                    return std::numeric_limits<std::ptrdiff_t>::max();
+                    return difference_type::inf();
                 }
             public:
                 iterator()

@@ -412,6 +412,21 @@ void test_take_repeat()
     std::cout << '\n';
 }
 
+void test_safe_int()
+{
+    using namespace ranges;
+    safe_int<int> i = 42;
+    RANGES_ASSERT(i + 1 == 43);
+    RANGES_ASSERT(i + std::numeric_limits<int>::max() == safe_int<int>::inf());
+    RANGES_ASSERT(-i - std::numeric_limits<int>::max() == -safe_int<int>::inf());
+    RANGES_ASSERT(!(view::iota(10) | distance).is_finite());
+    RANGES_ASSERT(safe_int<int>::inf() == - -safe_int<int>::inf());
+    RANGES_ASSERT(safe_int<int>::inf() - safe_int<int>::inf() == 0);
+    RANGES_ASSERT(safe_int<int>::inf() + -safe_int<int>::inf() == 0);
+    RANGES_ASSERT(safe_int<int>::inf() + safe_int<int>::inf() == safe_int<int>::inf());
+    RANGES_ASSERT(-safe_int<int>::inf() - safe_int<int>::inf() == -safe_int<int>::inf());
+}
+
 int main()
 {
     using namespace ranges;
@@ -556,5 +571,6 @@ int main()
     test_delimit_iota();
     test_delimit_iota_finite();
     test_take_repeat();
+    test_safe_int();
 }
 //*/

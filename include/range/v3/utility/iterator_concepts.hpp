@@ -148,7 +148,7 @@ namespace ranges
                         t = t - (t-t),
                         t += (t-t),
                         t -= (t-t),
-                        concepts::same_type(*t, t[t-t]),
+                        concepts::convertible_to<decltype(*t)>(t[t-t]),
                         concepts::model_of<Orderable>(t)
                     ));
             };
