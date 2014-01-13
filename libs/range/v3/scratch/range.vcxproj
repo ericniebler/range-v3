@@ -148,6 +148,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\functional.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\is_infinity.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_adaptor.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_facade.hpp" />

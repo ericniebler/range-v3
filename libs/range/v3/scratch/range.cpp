@@ -420,6 +420,8 @@ void test_safe_int()
     constexpr safe_int<int> neg_inf = -safe_int<int>::inf();
     constexpr safe_int<int> NaN = safe_int<int>::NaN();
     constexpr safe_int<int> zero = 0;
+    constexpr safe_int<int> zero2{};
+    static_assert(zero == zero2, "");
     static_assert(i + 1 == 43, "");
     static_assert(i + std::numeric_limits<int>::max() == pos_inf, "");
     static_assert(-i - std::numeric_limits<int>::max() == neg_inf, "");
@@ -470,7 +472,17 @@ void test_safe_int()
     static_assert(safe_int<int>{0x8000} * safe_int<int>{-(int)0x10000} == neg_inf, "");
     static_assert(safe_int<int>{-(int)0x8000} * safe_int<int>{-(int)0x10000} == pos_inf, "");
 
-    RANGES_ASSERT(!(view::iota(10) | distance).is_finite());
+    RANGES_ASSERT((view::iota(10) | distance) == safe_int<int>::inf());
+}
+
+void test_find_end_iterable()
+{
+    using namespace ranges;
+    std::cout << "\nfind_end on a delimited range:\n";
+    iterator_range<char const *> input = {"now is the time for all good men to come to the aid of their country", nullptr};
+    iterator_range<char const *> pattern = {"to", nullptr};
+    auto result = find_end(view::delimit(input, '\0'), view::delimit(pattern, '\0'));
+    std::cout << result.base() << '\n';
 }
 
 int main()
@@ -618,5 +630,6 @@ int main()
     test_delimit_iota_finite();
     test_take_repeat();
     test_safe_int();
+    test_find_end_iterable();
 }
 //*/

@@ -12,10 +12,8 @@
 #define RANGES_V3_ALGORITHM_FILL_N_HPP
 
 #include <utility>
-#include <algorithm>
 #include <functional>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 
@@ -23,21 +21,33 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel, typename Size, typename Value>
+            void fill_n(ForwardIterator begin, Sentinel end, Size n, Value const & val)
+            {
+                for(; n != 0; --n, ++begin)
+                {
+                    RANGES_ASSERT(begin != end);
+                    *begin = val;
+                }
+            }
+        }
+
         struct filler_n : bindable<filler_n>
         {
             /// \brief template function \c filler_n::operator()
             ///
             /// range-based version of the \c fill_n std algorithm
             ///
-            /// \pre \c ForwardRange is a model of the ForwardRange concept
+            /// \pre \c ForwardIterable is a model of the ForwardIterable concept
             /// \pre <tt>n \<= std::distance(ranges::begin(rng), ranges::end(rng))</tt>
-            template<typename ForwardRange, typename Size, typename Value>
-            static ForwardRange invoke(filler_n, ForwardRange && rng, Size n, Value const & val)
+            template<typename ForwardIterable, typename Size, typename Value>
+            static ForwardIterable invoke(filler_n, ForwardIterable && rng, Size n, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                RANGES_ASSERT(static_cast<Size>(ranges::distance(rng)) >= n);
-                std::fill_n(ranges::begin(rng), n, val);
-                return std::forward<ForwardRange>(rng);
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                detail::fill_n(ranges::begin(rng), ranges::end(rng), n, val);
+                return std::forward<ForwardIterable>(rng);
             }
 
             /// \overload

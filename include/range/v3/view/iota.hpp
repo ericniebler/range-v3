@@ -73,11 +73,7 @@ namespace ranges
             auto iota_difference(concepts::ForwardIota) -> safe_int<std::ptrdiff_t>;
             template<typename Value>
             auto iota_difference(concepts::RandomAccessIota) ->
-                safe_int<
-                    typename std::make_signed<
-                        decltype(std::declval<Value>() - std::declval<Value>())
-                    >::type
-                >;
+                make_safe_int_t<decltype(std::declval<Value>() - std::declval<Value>())>;
         }
 
         template<typename Value>

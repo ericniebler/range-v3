@@ -56,7 +56,7 @@ namespace ranges
 
                 delimit_iterable_view_ *rng_;
 
-                basic_iterator(delimit_iterable_view_ &rng, detail::begin_tag)
+                basic_iterator(delimit_iterable_view_ &rng)
                   : iterator_adaptor_{ranges::begin(rng.rng_)}, rng_(&rng)
                 {}
                 template<bool OtherConst>
@@ -83,7 +83,7 @@ namespace ranges
             };
         public:
             using iterator = basic_iterator<false>;
-            using const_iterator = basic_iterator<false>;
+            using const_iterator = basic_iterator<true>;
 
             using sentinel = basic_sentinel<false>;
             using const_sentinel = basic_sentinel<true>;
@@ -94,11 +94,11 @@ namespace ranges
 
             iterator begin()
             {
-                return {*this, detail::begin_tag{}};
+                return iterator{*this};
             }
             const_iterator begin() const
             {
-                return {*this, detail::begin_tag{}};
+                return const_iterator{*this};
             }
             sentinel end()
             {

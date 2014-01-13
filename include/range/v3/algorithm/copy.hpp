@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_COPY_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
@@ -22,21 +21,32 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename InputIterator, typename Sentinel, typename OutputIterator>
+            OutputIterator copy(InputIterator begin, Sentinel end, OutputIterator out)
+            {
+                for(; begin != end; ++begin, ++out)
+                    *out = *begin;
+                return out;
+            }
+        }
+
         struct copier : bindable<copier>
         {
             /// \brief template function copier::operator()
             ///
             /// range-based version of the \c copy std algorithm
             ///
-            /// \pre \c InputRange is a model of the InputRange concept
+            /// \pre \c InputIterable is a model of the InputIterable concept
             /// \pre \c OutputIterator is a model of the OutputIterator concept
-            template<typename InputRange, typename OutputIterator>
-            static OutputIterator invoke(copier, InputRange && rng, OutputIterator out)
+            template<typename InputIterable, typename OutputIterator>
+            static OutputIterator invoke(copier, InputIterable && rng, OutputIterator out)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
-                                                      range_reference_t<InputRange>>());
-                return std::copy(ranges::begin(rng), ranges::end(rng), std::move(out));
+                                                      range_reference_t<InputIterable>>());
+                return detail::copy(ranges::begin(rng), ranges::end(rng), std::move(out));
             }
 
             /// \overload

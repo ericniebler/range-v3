@@ -20,6 +20,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/is_infinity.hpp>
 
 namespace ranges
 {
@@ -28,30 +29,38 @@ namespace ranges
         namespace detail
         {
             // distance_impl
-            template<typename InputIterator, typename EndInputIterator>
+            template<typename InputIterator, typename Sentinel>
             iterator_difference_t<InputIterator>
-            distance_impl(InputIterator begin, EndInputIterator end,
+            distance_impl(InputIterator begin, Sentinel end, InputIterator *pend,
                 concepts::InputIterator)
             {
                 iterator_difference_t<InputIterator> n = 0;
                 for(; begin != end; ++begin)
                     ++n;
+                if(pend)
+                    *pend = begin;
                 return n;
             }
 
-            template<typename InputIterator, typename EndInputIterator>
+            template<typename InputIterator, typename Sentinel>
             iterator_difference_t<InputIterator>
-            distance_impl(InputIterator begin, EndInputIterator end,
+            distance_impl(InputIterator begin, Sentinel end, InputIterator *pend,
                 concepts::RandomAccessIterator)
             {
-                return end - begin;
+                iterator_difference_t<InputIterator> n = end - begin;
+                if(pend)
+                {
+                    RANGES_ASSERT(!ranges::is_infinity(n));
+                    *pend = begin + n;
+                }
+                return n;
             }
 
-            template<typename InputIterator, typename EndInputIterator>
+            template<typename InputIterator, typename Sentinel>
             iterator_difference_t<InputIterator>
-            distance(InputIterator begin, EndInputIterator end)
+            distance(InputIterator begin, Sentinel end, InputIterator *pend = 0)
             {
-                return detail::distance_impl(std::move(begin), std::move(end),
+                return detail::distance_impl(std::move(begin), std::move(end), pend,
                     iterator_concept_t<InputIterator>{});
             }
         }

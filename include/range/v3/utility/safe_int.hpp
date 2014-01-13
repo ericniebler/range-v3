@@ -87,6 +87,7 @@ namespace ranges
             }
         }
 
+        // Requires: 2's complement representation
         template<typename SignedInteger>
         struct safe_int
         {
@@ -97,6 +98,7 @@ namespace ranges
             // Use -max instead of min for 2's complement weirdness.
             static constexpr SignedInteger neg_inf_ =
                 -std::numeric_limits<SignedInteger>::max();
+            // That leaves min unused, so we can use it to represent NaN.
             static constexpr SignedInteger NaN_ =
                 std::numeric_limits<SignedInteger>::min();
             static_assert(NaN_ < neg_inf_ && neg_inf_ == -pos_inf_,
@@ -105,6 +107,7 @@ namespace ranges
 
             SignedInteger i_ = 0;
         public:
+            constexpr safe_int() = default;
             constexpr safe_int(SignedInteger i) noexcept
               : i_(i)
             {}
@@ -262,8 +265,24 @@ namespace ranges
                 *this = *this * that;
                 return *this;
             }
-        private:
         };
+
+        template<typename Int>
+        struct make_safe_int
+        {
+            using type = safe_int<typename std::make_signed<Int>::type>;
+        };
+
+        template<typename Int>
+        struct make_safe_int<safe_int<Int>>
+        {
+            using type = safe_int<Int>;
+        };
+
+        template<typename Int>
+        using make_safe_int_t = typename make_safe_int<Int>::type;
+
+        static_assert(std::is_literal_type<safe_int<int>>::value, "");
 
         template<typename SignedInteger>
         constexpr SignedInteger safe_int<SignedInteger>::pos_inf_;

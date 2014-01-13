@@ -21,19 +21,31 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel, typename Value>
+            ForwardIterator find(ForwardIterator begin, Sentinel end, Value const & val)
+            {
+                for(; begin != end; ++begin)
+                    if(*begin == val)
+                        break;
+                return begin;
+            }
+        }
+
         struct finder : bindable<finder>
         {
             /// \brief template function \c finder::operator()
             ///
             /// range-based version of the \c find std algorithm
             ///
-            /// \pre \c InputRange is a model of the InputRange concept
-            template<typename InputRange, typename Value>
-            static range_iterator_t<InputRange>
-            invoke(finder, InputRange && rng, Value const & val)
+            /// \pre \c InputIterable is a model of the InputIterable concept
+            template<typename InputIterable, typename Value>
+            static range_iterator_t<InputIterable>
+            invoke(finder, InputIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                return std::find(ranges::begin(rng), ranges::end(rng), val);
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                return detail::find(ranges::begin(rng), ranges::end(rng), val);
             }
 
             /// \overload

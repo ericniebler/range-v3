@@ -12,31 +12,45 @@
 #define RANGES_V3_ALGORITHM_COUNT_IF_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename InputIterator, typename Sentinel, typename UnaryPredicate>
+            iterator_difference_t<InputIterator>
+            count_if(InputIterator begin, Sentinel end, UnaryPredicate pred)
+            {
+                iterator_difference_t<InputIterator> n = 0;
+                for(; begin != end; ++begin)
+                    if(pred(*begin))
+                        ++n;
+                return n;
+            }
+        }
+
         struct counter_if : bindable<counter_if>
         {
             /// \brief template function \c counter_if::operator()
             ///
             /// range-based version of the \c count_if std algorithm
             ///
-            /// \pre \c InputRange is a model of the InputRange concept
+            /// \pre \c InputIterable is a model of the InputIterable concept
             /// \pre \c UnaryPredicate is a model of the UnaryPredicate concept
-            template<typename InputRange, typename UnaryPredicate>
-            static range_difference_t<InputRange>
-            invoke(counter_if, InputRange && rng, UnaryPredicate pred)
+            template<typename InputIterable, typename UnaryPredicate>
+            static range_difference_t<InputIterable>
+            invoke(counter_if, InputIterable && rng, UnaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                return std::count_if(ranges::begin(rng), ranges::end(rng),
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                return detail::count_if(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }
 

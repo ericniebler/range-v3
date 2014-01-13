@@ -12,48 +12,64 @@
 #define RANGES_V3_ALGORITHM_EQUAL_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename InputIterator1, typename Sentinel1,
+                     typename InputIterator2, typename Sentinel2,
+                     typename BinaryPredicate = ranges::equal_to>
+            bool equal(InputIterator1 begin1, Sentinel1 end1,
+                       InputIterator2 begin2, Sentinel2 end2,
+                       BinaryPredicate pred = BinaryPredicate{})
+            {
+                for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
+                    if(!pred(*begin1, *begin2))
+                        return false;
+                return begin1 == end1 && begin2 == end2;
+            }
+        }
+
         struct equaler : bindable<equaler>
         {
             /// \brief template function \c equaler::operator()
             ///
             /// range-based version of the \c equal std algorithm
             ///
-            /// \pre \c InputRange1 is a model of the InputRange concept
-            /// \pre \c InputRange2 is a model of the InputRange concept
+            /// \pre \c InputIterable1 is a model of the InputIterable concept
+            /// \pre \c InputIterable2 is a model of the InputIterable concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename InputRange1, typename InputRange2>
-            static bool invoke(equaler, InputRange1 && rng1, InputRange2 && rng2)
+            template<typename InputIterable1, typename InputIterable2>
+            static bool invoke(equaler, InputIterable1 && rng1, InputIterable2 && rng2)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
-                return std::equal(ranges::begin(rng1), ranges::end(rng1),
-                                  ranges::begin(rng2), ranges::end(rng2));
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2>());
+                return detail::equal(ranges::begin(rng1), ranges::end(rng1),
+                                     ranges::begin(rng2), ranges::end(rng2));
             }
 
             /// \overload
-            template<typename InputRange1, typename InputRange2, typename BinaryPredicate>
-            static bool invoke(equaler, InputRange1 && rng1, InputRange2 && rng2,
+            template<typename InputIterable1, typename InputIterable2, typename BinaryPredicate>
+            static bool invoke(equaler, InputIterable1 && rng1, InputIterable2 && rng2,
                 BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputRange1>,
-                                                       range_reference_t<InputRange2>>());
-                return std::equal(ranges::begin(rng1), ranges::end(rng1),
-                                  ranges::begin(rng2), ranges::end(rng2),
-                                  ranges::make_invokable(std::move(pred)));
+                                                       range_reference_t<InputIterable1>,
+                                                       range_reference_t<InputIterable2>>());
+                return detail::equal(ranges::begin(rng1), ranges::end(rng1),
+                                     ranges::begin(rng2), ranges::end(rng2),
+                                     ranges::make_invokable(std::move(pred)));
             }
         };
 

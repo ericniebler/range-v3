@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_FILL_HPP
 
 #include <utility>
-#include <algorithm>
 #include <functional>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -22,19 +21,29 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel, typename Value>
+            void fill(ForwardIterator begin, Sentinel end, Value const & val)
+            {
+                for(; begin != end; ++begin)
+                    *begin = val;
+            }
+        }
+
         struct filler : bindable<filler>
         {
             /// \brief template function \c filler::operator()
             ///
             /// range-based version of the \c fill std algorithm
             ///
-            /// \pre \c ForwardRange is a model of the ForwardRange concept
-            template<typename ForwardRange, typename Value>
-            static ForwardRange invoke(filler, ForwardRange && rng, Value const & val)
+            /// \pre \c ForwardIterable is a model of the ForwardIterable concept
+            template<typename ForwardIterable, typename Value>
+            static ForwardIterable invoke(filler, ForwardIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                std::fill(ranges::begin(rng), ranges::end(rng), val);
-                return std::forward<ForwardRange>(rng);
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                detail::fill(ranges::begin(rng), ranges::end(rng), val);
+                return std::forward<ForwardIterable>(rng);
             }
 
             /// \overload
