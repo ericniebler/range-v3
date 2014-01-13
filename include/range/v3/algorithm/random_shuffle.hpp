@@ -59,8 +59,8 @@ namespace ranges
             /// for rng | random_shuffle(gen)
             template<typename RandomNumberGenerator,
                 CONCEPT_REQUIRES(!ranges::Range<RandomNumberGenerator>())>
-            static auto invoke(random_shuffler random_shuffle, RandomNumberGenerator && gen)
-                -> decltype(random_shuffle.move_bind(std::placeholders::_1,
+            static auto invoke(random_shuffler random_shuffle, RandomNumberGenerator && gen) ->
+                decltype(random_shuffle.move_bind(std::placeholders::_1,
                     std::forward<RandomNumberGenerator>(gen)))
             {
                 return random_shuffle.move_bind(std::placeholders::_1,

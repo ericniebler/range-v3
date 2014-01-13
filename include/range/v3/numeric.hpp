@@ -47,16 +47,16 @@ namespace ranges
             }
 
             template<typename Value>
-            static auto invoke(accumulate_ accumulate, Value init)
-                -> decltype(accumulate.move_bind(std::placeholders::_1, std::move(init)))
+            static auto invoke(accumulate_ accumulate, Value init) ->
+                decltype(accumulate.move_bind(std::placeholders::_1, std::move(init)))
             {
                 return accumulate.move_bind(std::placeholders::_1, std::move(init));
             }
 
             template<typename Value, typename BinaryOperation,
                 CONCEPT_REQUIRES(!ranges::Range<Value>())>
-            static auto invoke(accumulate_ accumulate, Value init, BinaryOperation op)
-                -> decltype(accumulate.move_bind(std::placeholders::_1, std::move(init), std::move(op)))
+            static auto invoke(accumulate_ accumulate, Value init, BinaryOperation op) ->
+                decltype(accumulate.move_bind(std::placeholders::_1, std::move(init), std::move(op)))
             {
                 return accumulate.move_bind(std::placeholders::_1, std::move(init), std::move(op));
             }
@@ -112,16 +112,16 @@ namespace ranges
             }
 
             template<typename OutputIterator>
-            static auto invoke(partial_sum_ partial_sum, OutputIterator result)
-                -> decltype(partial_sum.move_bind(std::placeholders::_1, std::move(result)))
+            static auto invoke(partial_sum_ partial_sum, OutputIterator result) ->
+                decltype(partial_sum.move_bind(std::placeholders::_1, std::move(result)))
             {
                 return partial_sum.move_bind(std::placeholders::_1, std::move(result));
             }
 
             template<typename OutputIterator, typename BinaryOperation,
                 CONCEPT_REQUIRES(!ranges::Range<OutputIterator>())>
-            static auto invoke(partial_sum_ partial_sum, OutputIterator result, BinaryOperation op)
-                -> decltype(partial_sum.move_bind(std::placeholders::_1, std::move(result), std::move(op)))
+            static auto invoke(partial_sum_ partial_sum, OutputIterator result, BinaryOperation op) ->
+                decltype(partial_sum.move_bind(std::placeholders::_1, std::move(result), std::move(op)))
             {
                 return partial_sum.move_bind(std::placeholders::_1, std::move(result), std::move(op));
             }
@@ -151,8 +151,8 @@ namespace ranges
             }
 
             template<typename OutputIterator>
-            static auto invoke(adjacent_difference_ adjacent_difference, OutputIterator result)
-                -> decltype(adjacent_difference.move_bind(std::placeholders::_1, std::move(result)))
+            static auto invoke(adjacent_difference_ adjacent_difference, OutputIterator result) ->
+                decltype(adjacent_difference.move_bind(std::placeholders::_1, std::move(result)))
             {
                 return adjacent_difference.move_bind(std::placeholders::_1, std::move(result));
             }
@@ -160,8 +160,8 @@ namespace ranges
             template<typename OutputIterator, typename BinaryOperation,
                 CONCEPT_REQUIRES(!ranges::Range<OutputIterator>())>
             static auto invoke(adjacent_difference_ adjacent_difference, OutputIterator result,
-                BinaryOperation op)
-                -> decltype(adjacent_difference.move_bind(std::placeholders::_1, std::move(result),
+                BinaryOperation op) ->
+                decltype(adjacent_difference.move_bind(std::placeholders::_1, std::move(result),
                         std::move(op)))
             {
                 return adjacent_difference.move_bind(std::placeholders::_1, std::move(result), std::move(op));
@@ -181,8 +181,8 @@ namespace ranges
             }
 
             template<typename Value>
-            static auto invoke(iota_ iota, Value value)
-                -> decltype(iota.move_bind(std::placeholders::_1, std::move(value)))
+            static auto invoke(iota_ iota, Value value) ->
+                decltype(iota.move_bind(std::placeholders::_1, std::move(value)))
             {
                 return iota.move_bind(std::placeholders::_1, std::move(value));
             }

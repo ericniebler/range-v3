@@ -64,8 +64,8 @@ namespace ranges
             template<typename RandomAccessIterator,
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
-            invoke(nth_element_finder nth_element, RandomAccessIterator nth)
-                -> decltype(nth_element.move_bind(std::placeholders::_1, std::move(nth)))
+            invoke(nth_element_finder nth_element, RandomAccessIterator nth) ->
+                decltype(nth_element.move_bind(std::placeholders::_1, std::move(nth)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
                 return nth_element.move_bind(std::placeholders::_1, std::move(nth));
@@ -76,8 +76,8 @@ namespace ranges
             template<typename RandomAccessIterator, typename BinaryPredicate,
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
-            invoke(nth_element_finder nth_element, RandomAccessIterator nth, BinaryPredicate pred)
-            -> decltype(nth_element.move_bind(std::placeholders::_1, std::move(nth), std::move(pred)))
+            invoke(nth_element_finder nth_element, RandomAccessIterator nth, BinaryPredicate pred) ->
+            decltype(nth_element.move_bind(std::placeholders::_1, std::move(nth), std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
                 return nth_element.move_bind(std::placeholders::_1, std::move(nth), std::move(pred));

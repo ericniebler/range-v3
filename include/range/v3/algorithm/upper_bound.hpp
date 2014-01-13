@@ -60,8 +60,8 @@ namespace ranges
             /// for rng | upper_bound(val)
             template<typename Value>
             static auto
-            invoke(upper_bound_finder upper_bound, Value && val)
-                -> decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val)))
+            invoke(upper_bound_finder upper_bound, Value && val) ->
+                decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val)))
             {
                 return upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val));
             }
@@ -72,8 +72,8 @@ namespace ranges
                                  !ranges::EqualityComparable<BinaryPredicate,
                                                              range_reference_t<Value>>())>
             static auto
-            invoke(upper_bound_finder upper_bound, Value && val, BinaryPredicate pred)
-                -> decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
+            invoke(upper_bound_finder upper_bound, Value && val, BinaryPredicate pred) ->
+                decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
                     std::move(pred)))
             {
                 return upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),

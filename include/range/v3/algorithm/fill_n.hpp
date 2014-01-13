@@ -52,8 +52,8 @@ namespace ranges
 
             /// \overload
             template<typename Size, typename Value>
-            static auto invoke(filler_n fill_n, Size n, Value && val)
-                -> decltype(fill_n.move_bind(std::placeholders::_1, n, std::forward<Value>(val)))
+            static auto invoke(filler_n fill_n, Size n, Value && val) ->
+                decltype(fill_n.move_bind(std::placeholders::_1, n, std::forward<Value>(val)))
             {
                 return fill_n.move_bind(std::placeholders::_1, n, std::forward<Value>(val));
             }

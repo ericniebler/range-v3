@@ -46,8 +46,8 @@ namespace ranges
             /// \overload
             /// for rng | replace_if(pred, that)
             template<typename UnaryPredicate, typename Value>
-            static auto invoke(replacer_if replace_if, UnaryPredicate pred, Value && new_value)
-                -> decltype(replace_if.move_bind(std::placeholders::_1, std::move(pred),
+            static auto invoke(replacer_if replace_if, UnaryPredicate pred, Value && new_value) ->
+                decltype(replace_if.move_bind(std::placeholders::_1, std::move(pred),
                         std::forward<Value>(new_value)))
             {
                 return replace_if.move_bind(std::placeholders::_1, std::move(pred),

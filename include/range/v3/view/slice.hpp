@@ -272,8 +272,8 @@ namespace ranges
                 }
                 template<typename Slicer = slicer>
                 static auto
-                invoke(Slicer slice, std::size_t from, std::size_t to)
-                    -> decltype(slice.move_bind(std::placeholders::_1, (std::size_t)from, (std::size_t)to))
+                invoke(Slicer slice, std::size_t from, std::size_t to) ->
+                    decltype(slice.move_bind(std::placeholders::_1, (std::size_t)from, (std::size_t)to))
                 {
                     return slice.move_bind(std::placeholders::_1, (std::size_t)from, (std::size_t)to);
                 }

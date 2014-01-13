@@ -64,8 +64,8 @@ namespace ranges
             template<typename RandomAccessIterator,
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
-            invoke(partial_sorter partial_sort, RandomAccessIterator nth)
-                -> decltype(partial_sort.move_bind(std::placeholders::_1, std::move(nth)))
+            invoke(partial_sorter partial_sort, RandomAccessIterator nth) ->
+                decltype(partial_sort.move_bind(std::placeholders::_1, std::move(nth)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
                 return partial_sort.move_bind(std::placeholders::_1, std::move(nth));
@@ -76,8 +76,8 @@ namespace ranges
             template<typename RandomAccessIterator, typename BinaryPredicate,
                 CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
             static auto
-            invoke(partial_sorter partial_sort, RandomAccessIterator nth, BinaryPredicate pred)
-                -> decltype(partial_sort.move_bind(std::placeholders::_1, std::move(nth), std::move(pred)))
+            invoke(partial_sorter partial_sort, RandomAccessIterator nth, BinaryPredicate pred) ->
+                decltype(partial_sort.move_bind(std::placeholders::_1, std::move(nth), std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<RandomAccessIterator>());
                 return partial_sort.move_bind(std::placeholders::_1, std::move(nth), std::move(pred));

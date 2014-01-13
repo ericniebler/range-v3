@@ -45,8 +45,8 @@ namespace ranges
             /// \overload
             /// for rng | copy_backward(out)
             template<typename BidirectionalIterator>
-            static auto invoke(backward_copier copy_backward, BidirectionalIterator out)
-                -> decltype(copy_backward.move_bind(std::placeholders::_1, std::move(out)))
+            static auto invoke(backward_copier copy_backward, BidirectionalIterator out) ->
+                decltype(copy_backward.move_bind(std::placeholders::_1, std::move(out)))
             {
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
                 return copy_backward.move_bind(std::placeholders::_1, std::move(out));

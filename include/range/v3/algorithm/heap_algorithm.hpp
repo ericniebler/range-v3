@@ -55,8 +55,8 @@ namespace ranges
             template<typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
-            invoke(heap_pusher push_heap, BinaryPredicate pred)
-                -> decltype(push_heap.move_bind(std::placeholders::_1, std::move(pred)))
+            invoke(heap_pusher push_heap, BinaryPredicate pred) ->
+                decltype(push_heap.move_bind(std::placeholders::_1, std::move(pred)))
             {
                 return push_heap.move_bind(std::placeholders::_1, std::move(pred));
             }
@@ -97,8 +97,8 @@ namespace ranges
             template<typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
-            invoke(heap_popper pop_heap, BinaryPredicate pred)
-                -> decltype(pop_heap.move_bind(std::placeholders::_1, std::move(pred)))
+            invoke(heap_popper pop_heap, BinaryPredicate pred) ->
+                decltype(pop_heap.move_bind(std::placeholders::_1, std::move(pred)))
             {
                 return pop_heap.move_bind(std::placeholders::_1, std::move(pred));
             }
@@ -139,8 +139,8 @@ namespace ranges
             template<typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
-            invoke(heap_maker make_heap, BinaryPredicate pred)
-                -> decltype(make_heap.move_bind(std::placeholders::_1, std::move(pred)))
+            invoke(heap_maker make_heap, BinaryPredicate pred) ->
+                decltype(make_heap.move_bind(std::placeholders::_1, std::move(pred)))
             {
                 return make_heap.move_bind(std::placeholders::_1, std::move(pred));
             }
@@ -181,8 +181,8 @@ namespace ranges
             template<typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
-            invoke(heap_sorter sort_heap, BinaryPredicate pred)
-                -> decltype(sort_heap.move_bind(std::placeholders::_1, std::move(pred)))
+            invoke(heap_sorter sort_heap, BinaryPredicate pred) ->
+                decltype(sort_heap.move_bind(std::placeholders::_1, std::move(pred)))
             {
                 return sort_heap.move_bind(std::placeholders::_1, std::move(pred));
             }

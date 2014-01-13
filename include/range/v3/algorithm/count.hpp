@@ -57,8 +57,8 @@ namespace ranges
             ///
             /// \pre \c InputIterable is a model of the InputIterable concept
             template<typename Value>
-            static auto invoke(counter count, Value && val)
-                -> decltype(count.move_bind(std::placeholders::_1, std::forward<Value>(val)))
+            static auto invoke(counter count, Value && val) ->
+                decltype(count.move_bind(std::placeholders::_1, std::forward<Value>(val)))
             {
                 return count.move_bind(std::placeholders::_1, std::forward<Value>(val));
             }

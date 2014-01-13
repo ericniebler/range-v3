@@ -35,8 +35,8 @@ namespace ranges
                     return {std::forward<InputIterable>(rng), 0, to};
                 }
                 static auto
-                invoke(taker take, std::size_t to)
-                    -> decltype(take.move_bind(std::placeholders::_1, (std::size_t)to))
+                invoke(taker take, std::size_t to) ->
+                    decltype(take.move_bind(std::placeholders::_1, (std::size_t)to))
                 {
                     return take.move_bind(std::placeholders::_1, (std::size_t)to);
                 }

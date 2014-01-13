@@ -45,8 +45,8 @@ namespace ranges
             /// \overload
             /// for rng | generate(gen)
             template<typename Generator>
-            static auto invoke(generator generate, Generator gen)
-                -> decltype(generate.move_bind(std::placeholders::_1, std::move(gen)))
+            static auto invoke(generator generate, Generator gen) ->
+                decltype(generate.move_bind(std::placeholders::_1, std::move(gen)))
             {
                 CONCEPT_ASSERT(ranges::Callable<Generator>());
                 return generate.move_bind(std::placeholders::_1, std::move(gen));

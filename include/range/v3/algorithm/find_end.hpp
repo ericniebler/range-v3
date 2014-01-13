@@ -130,8 +130,8 @@ namespace ranges
             /// for rng | find_end(rng2)
             template<typename ForwardIterable2>
             static auto
-            invoke(end_finder find_end, ForwardIterable2 && rng2)
-                -> decltype(find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2)))
+            invoke(end_finder find_end, ForwardIterable2 && rng2) ->
+                decltype(find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2)))
             {
                 CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2>());
                 return find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2));
@@ -143,8 +143,8 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable2>() &&
                                 !ranges::Iterable<BinaryPredicate>())>
             static auto
-            invoke(end_finder find_end, ForwardIterable2 && rng2, BinaryPredicate pred)
-                -> decltype(find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2), std::move(pred)))
+            invoke(end_finder find_end, ForwardIterable2 && rng2, BinaryPredicate pred) ->
+                decltype(find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2), std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2>());
                 return find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2), std::move(pred));

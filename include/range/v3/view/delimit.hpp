@@ -139,8 +139,8 @@ namespace ranges
 
                 template<typename Value>
                 static auto
-                invoke(delimiter delimit, Value value)
-                    -> decltype(delimit.move_bind(std::placeholders::_1, std::move(value)))
+                invoke(delimiter delimit, Value value) ->
+                    decltype(delimit.move_bind(std::placeholders::_1, std::move(value)))
                 {
                     return delimit.move_bind(std::placeholders::_1, std::move(value));
                 }

@@ -55,10 +55,8 @@ namespace ranges
                         dist = half;
                     }
                     else
-                        return {
-                            std::lower_bound(std::move(begin), middle, val, std::ref(pred)),
-                            std::upper_bound(ranges::next(middle), end, val, std::ref(pred))
-                        };
+                        return {std::lower_bound(std::move(begin), middle, val, std::ref(pred)),
+                                std::upper_bound(ranges::next(middle), end, val, std::ref(pred))};
                 }
                 return {begin, begin};
             }
@@ -99,8 +97,8 @@ namespace ranges
             /// \overload
             /// for rng | equal_range(val)
             template<typename Value>
-            static auto invoke(equal_ranger equal_range, Value && val)
-                -> decltype(equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val)))
+            static auto invoke(equal_ranger equal_range, Value && val) ->
+                decltype(equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val)))
             {
                 return equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val));
             }
@@ -112,8 +110,8 @@ namespace ranges
                     !(ranges::Iterable<Value>() &&
                       ranges::LessThanComparable<BinaryPredicate, range_reference_t<Value>>() &&
                       ranges::LessThanComparable<range_reference_t<Value>, BinaryPredicate>()))>
-            static auto invoke(equal_ranger equal_range, Value && val, BinaryPredicate pred)
-                -> decltype(equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val),
+            static auto invoke(equal_ranger equal_range, Value && val, BinaryPredicate pred) ->
+                decltype(equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val),
                     std::move(pred)))
             {
                 return equal_range.move_bind(std::placeholders::_1, std::forward<Value>(val),

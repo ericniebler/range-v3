@@ -141,8 +141,8 @@ namespace ranges
                     return {std::forward<ForwardRange>(rng), std::move(pred)};
                 }
                 template<typename BinaryPredicate>
-                static auto invoke(adjacent_filterer adjacent_filter, BinaryPredicate pred)
-                    -> decltype(adjacent_filter.move_bind(std::placeholders::_1, std::move(pred)))
+                static auto invoke(adjacent_filterer adjacent_filter, BinaryPredicate pred) ->
+                    decltype(adjacent_filter.move_bind(std::placeholders::_1, std::move(pred)))
                 {
                     return adjacent_filter.move_bind(std::placeholders::_1, std::move(pred));
                 }

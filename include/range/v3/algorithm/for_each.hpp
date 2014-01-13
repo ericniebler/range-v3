@@ -55,8 +55,8 @@ namespace ranges
             /// \overload
             /// for rng | for_each(fun)
             template<typename UnaryFunction>
-            static auto invoke(for_eacher for_each, UnaryFunction fun)
-                -> decltype(for_each.move_bind(std::placeholders::_1, std::move(fun)))
+            static auto invoke(for_eacher for_each, UnaryFunction fun) ->
+                decltype(for_each.move_bind(std::placeholders::_1, std::move(fun)))
             {
                 return for_each.move_bind(std::placeholders::_1, std::move(fun));
             }

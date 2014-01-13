@@ -46,8 +46,8 @@ namespace ranges
 
             /// \overload
             template<typename UnaryPredicate>
-            static auto invoke(stable_partitioner stable_partition, UnaryPredicate pred)
-                -> decltype(stable_partition.move_bind(std::placeholders::_1, std::move(pred)))
+            static auto invoke(stable_partitioner stable_partition, UnaryPredicate pred) ->
+                decltype(stable_partition.move_bind(std::placeholders::_1, std::move(pred)))
             {
                 return stable_partition.move_bind(std::placeholders::_1, std::move(pred));
             }

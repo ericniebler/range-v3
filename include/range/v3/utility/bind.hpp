@@ -47,8 +47,8 @@ namespace ranges
             {
             private:
                 template<typename T, typename Args, std::size_t...Is>
-                static auto apply_(T && t, Args && args, integer_sequence<Is...>)
-                    -> decltype(std::declval<T>()(std::get<Is>(std::declval<Args>())...))
+                static auto apply_(T && t, Args && args, integer_sequence<Is...>) ->
+                    decltype(std::declval<T>()(std::get<Is>(std::declval<Args>())...))
                 {
                     return std::forward<T>(t)(std::get<Is>(std::forward<Args>(args))...);
                 }

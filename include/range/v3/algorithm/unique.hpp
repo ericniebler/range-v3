@@ -60,8 +60,8 @@ namespace ranges
             template<typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
             static auto
-            invoke(uniquer unique, BinaryPredicate pred)
-                -> decltype(unique.move_bind(std::placeholders::_1, std::move(pred)))
+            invoke(uniquer unique, BinaryPredicate pred) ->
+                decltype(unique.move_bind(std::placeholders::_1, std::move(pred)))
             {
                 return unique.move_bind(std::placeholders::_1, std::move(pred));
             }

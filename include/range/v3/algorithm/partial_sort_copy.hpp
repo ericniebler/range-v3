@@ -141,8 +141,8 @@ namespace ranges
 
             template<typename RandomAccessRange>
             static auto
-            invoke(partial_sorter_copier partial_sort_copy, RandomAccessRange && rng2)
-                -> decltype(partial_sort_copy.move_bind(std::placeholders::_1,
+            invoke(partial_sorter_copier partial_sort_copy, RandomAccessRange && rng2) ->
+                decltype(partial_sort_copy.move_bind(std::placeholders::_1,
                                               std::forward<RandomAccessRange>(rng2)))
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
@@ -156,8 +156,8 @@ namespace ranges
                                 !ranges::Range<BinaryPredicate>())>
             static auto
             invoke(partial_sorter_copier partial_sort_copy, RandomAccessRange && rng2,
-                   BinaryPredicate pred)
-                -> decltype(partial_sort_copy.move_bind(std::placeholders::_1,
+                   BinaryPredicate pred) ->
+                decltype(partial_sort_copy.move_bind(std::placeholders::_1,
                                               std::forward<RandomAccessRange>(rng2),
                                               std::move(pred)))
             {

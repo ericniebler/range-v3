@@ -265,6 +265,7 @@ namespace ranges
                 *this = *this * that;
                 return *this;
             }
+            // TODO bitwise ops and shifts
         };
 
         template<typename Int>

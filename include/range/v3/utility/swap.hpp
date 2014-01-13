@@ -30,8 +30,8 @@ namespace ranges
             {
                 template<typename T, typename U>
                 auto operator()(T && t, U && u) const
-                    noexcept(noexcept(swap(std::declval<T>(), std::declval<U>())))
-                    -> decltype(swap(std::declval<T>(), std::declval<U>()))
+                    noexcept(noexcept(swap(std::declval<T>(), std::declval<U>()))) ->
+                    decltype(swap(std::declval<T>(), std::declval<U>()))
                 {
                     swap(std::forward<T>(t), std::forward<U>(u));
                 }

@@ -167,21 +167,21 @@ namespace ranges
             // Default Pipe behavior just passes the argument to the pipe's function call
             // operator
             template<typename Arg, typename Pipe>
-            static auto pipe(Arg && arg, Pipe && pipe)
-                -> decltype(std::declval<Pipe>()(std::declval<Arg>()))
+            static auto pipe(Arg && arg, Pipe && pipe) ->
+                decltype(std::declval<Pipe>()(std::declval<Arg>()))
             {
                 return std::forward<Pipe>(pipe)(std::forward<Arg>(arg));
             }
         public:
             template<typename Arg>
-            friend auto operator|(Arg && arg, pipeable const & pipe)
-                -> decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived const &>()))
+            friend auto operator|(Arg && arg, pipeable const & pipe) ->
+                decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived const &>()))
             {
                 return Derived::pipe(std::forward<Arg>(arg), pipe.derived());
             }
             template<typename Arg>
-            friend auto operator|(Arg && arg, pipeable && pipe)
-                -> decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived>()))
+            friend auto operator|(Arg && arg, pipeable && pipe) ->
+                decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived>()))
             {
                 return Derived::pipe(std::forward<Arg>(arg), std::move(pipe).derived());
             }
