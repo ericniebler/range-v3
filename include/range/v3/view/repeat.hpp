@@ -60,7 +60,7 @@ namespace ranges
                 void increment()
                 {}
             public:
-                iterator()
+                constexpr iterator()
                   : value_{}
                 {}
             };

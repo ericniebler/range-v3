@@ -485,6 +485,33 @@ void test_find_end_iterable()
     std::cout << result.base() << '\n';
 }
 
+template<typename It, typename S>
+std::integral_constant<bool, ranges::is_infinity(S{} - It{})>
+has_infinite_size(int);
+
+template<typename It, typename S>
+std::false_type
+has_infinite_size(...);
+
+template<typename Iterable>
+struct IsInfiniteIterable
+  : decltype(::has_infinite_size<ranges::range_iterator_t<Iterable>,
+                                 ranges::range_sentinel_t<Iterable>>(1))
+{};
+
+void test_sentinel()
+{
+    using namespace ranges;
+    using It = iota_iterable_view<int>::iterator;
+    using S = iota_iterable_view<int>::sentinel;
+    constexpr It begin{};
+    constexpr S end{};
+    constexpr safe_int<int> d = end - begin;
+    static_assert(d == safe_int<int>::inf(), "");
+    static_assert(IsInfiniteIterable<iota_iterable_view<int>>::value, "");
+    static_assert(!IsInfiniteIterable<std::vector<int>>::value, "");
+}
+
 int main()
 {
     using namespace ranges;

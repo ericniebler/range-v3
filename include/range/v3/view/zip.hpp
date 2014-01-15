@@ -186,7 +186,7 @@ namespace ranges
                             detail::max_);
                 }
             public:
-                basic_iterator()
+                constexpr basic_iterator()
                   : its_{}
                 {}
                 // For iterator -> const_iterator conversion

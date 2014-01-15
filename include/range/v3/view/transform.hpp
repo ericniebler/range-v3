@@ -95,7 +95,7 @@ namespace ranges
                     return rng_->fun()(*it_);
                 }
             public:
-                basic_iterator()
+                constexpr basic_iterator()
                   : rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion

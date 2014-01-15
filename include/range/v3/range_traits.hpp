@@ -26,28 +26,40 @@ namespace ranges
     {
         // Aliases (SFINAE-able)
         template<typename Rng>
-        using range_iterator_t = concepts::Range::iterator_t<Rng>;
+        using range_iterator_t = concepts::Iterable::iterator_t<Rng>;
 
         template<typename Rng>
-        using range_value_t = concepts::Range::value_t<Rng>;
+        using range_sentinel_t = concepts::Iterable::sentinel_t<Rng>;
 
         template<typename Rng>
-        using range_reference_t = concepts::Range::reference_t<Rng>;
+        using range_value_t = concepts::Iterable::value_t<Rng>;
 
         template<typename Rng>
-        using range_category_t = concepts::Range::category_t<Rng>;
+        using range_reference_t = concepts::Iterable::reference_t<Rng>;
 
         template<typename Rng>
-        using range_difference_t = concepts::Range::difference_t<Rng>;
+        using range_category_t = concepts::Iterable::category_t<Rng>;
 
         template<typename Rng>
-        using range_pointer_t = concepts::Range::pointer_t<Rng>;
+        using range_difference_t = concepts::Iterable::difference_t<Rng>;
+
+        template<typename Rng>
+        using range_pointer_t = concepts::Iterable::pointer_t<Rng>;
+
+        template<typename Rng>
+        using range_is_finite_t = concepts::Iterable::is_finite_t<Rng>;
 
         // Metafunctions
         template<typename Rng>
         struct range_iterator
         {
             using type = range_iterator_t<Rng>;
+        };
+
+        template<typename Rng>
+        struct range_sentinel
+        {
+            using type = range_sentinel_t<Rng>;
         };
 
         template<typename Rng>
@@ -78,6 +90,12 @@ namespace ranges
         struct range_reference
         {
             using type = range_reference_t<Rng>;
+        };
+
+        template<typename Rng>
+        struct range_is_finite
+        {
+            using type = range_is_finite_t<Rng>;
         };
     }
 }

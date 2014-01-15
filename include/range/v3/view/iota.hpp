@@ -131,12 +131,12 @@ namespace ranges
                 {
                     return that.value_ - value_;
                 }
-                difference_type distance_to(sentinel) const
+                constexpr difference_type distance_to(sentinel) const
                 {
                     return difference_type::inf();
                 }
             public:
-                iterator()
+                constexpr iterator()
                   : value_{}
                 {}
             };

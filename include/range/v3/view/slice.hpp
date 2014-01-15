@@ -145,7 +145,7 @@ namespace ranges
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
                 }
             public:
-                basic_iterator()
+                constexpr basic_iterator()
                   : is_dirty_t{}, rng_{}, n_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion

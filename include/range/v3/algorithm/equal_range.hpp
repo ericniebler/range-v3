@@ -22,7 +22,6 @@
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/is_infinity.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
@@ -39,7 +38,6 @@ namespace ranges
             {
                 ForwardIterator end;
                 auto dist = detail::distance(begin, end_, &end);
-                RANGES_ASSERT(!ranges::is_infinity(dist));
                 while(0 != dist)
                 {
                     auto half = dist / 2;
@@ -77,7 +75,7 @@ namespace ranges
             static iterator_range<range_iterator_t<ForwardIterable>>
             invoke(equal_ranger, ForwardIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 return detail::equal_range(ranges::begin(rng), ranges::end(rng), val);
             }
 
@@ -86,7 +84,7 @@ namespace ranges
             static iterator_range<range_iterator_t<ForwardIterable>>
             invoke(equal_ranger, ForwardIterable && rng, Value const & val, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable>,
                                                        Value const &>());

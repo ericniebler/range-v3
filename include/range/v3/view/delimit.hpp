@@ -72,7 +72,7 @@ namespace ranges
                           *this->base() == rng_->value_;
                 }
             public:
-                basic_iterator()
+                constexpr basic_iterator()
                   : iterator_adaptor_{}, rng_{}
                 {}
                 // For iterator -> const_iterator conversion

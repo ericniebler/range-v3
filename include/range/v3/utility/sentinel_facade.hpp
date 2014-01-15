@@ -92,7 +92,7 @@ namespace ranges
                 return f2.equal(f1);
             }
             template<typename Facade, typename Sentinel>
-            static bool done(Facade const& f, Sentinel const& s)
+            static constexpr bool done(Facade const& f, Sentinel const& s)
             {
                 return f.equal(s);
             }
@@ -119,7 +119,7 @@ namespace ranges
                 return f2.distance_to(f1);
             }
             template<typename Facade, typename Sentinel>
-            static auto distance_sentinel(Facade const& f, Sentinel const& s)
+            static constexpr auto distance_sentinel(Facade const& f, Sentinel const& s)
                 -> typename Facade::difference_type
             {
                 return f.distance_to(s);
@@ -139,14 +139,14 @@ namespace ranges
             {
                 return *static_cast<Derived*>(this);
             }
-            Derived const& derived() const
+            constexpr Derived const& derived() const
             {
                 return *static_cast<Derived const*>(this);
             }
         public:
             // operator==
             template<typename I, typename V, typename TC, typename R, typename D, typename P>
-            friend detail::enable_if_interoperable_t<It, I, bool>
+            friend constexpr detail::enable_if_interoperable_t<It, I, bool>
             operator==(iterator_facade<I, V, TC, R, D, P> const& f, sentinel_facade const &s)
             {
                 return iterator_core_access::done(static_cast<I const &>(f), s.derived());
@@ -157,7 +157,7 @@ namespace ranges
             }
             // operator!=
             template<typename I, typename V, typename TC, typename R, typename D, typename P>
-            friend detail::enable_if_interoperable_t<It, I, bool>
+            friend constexpr detail::enable_if_interoperable_t<It, I, bool>
             operator!=(iterator_facade<I, V, TC, R, D, P> const& f, sentinel_facade const &s)
             {
                 return !iterator_core_access::done(static_cast<I const &>(f), s.derived());
@@ -170,7 +170,7 @@ namespace ranges
             // operator-
             template<typename I, typename V, typename TC, typename R, typename D, typename P,
                 REQUIRES(I, random_access)>
-            friend detail::enable_if_interoperable_t<
+            friend constexpr detail::enable_if_interoperable_t<
                 It, I
               , detail::choose_difference_type_t<It, I>
             >
@@ -183,7 +183,7 @@ namespace ranges
             }
             template<typename I, typename V, typename TC, typename R, typename D, typename P,
                 REQUIRES(I, random_access)>
-            friend detail::enable_if_interoperable_t<
+            friend constexpr detail::enable_if_interoperable_t<
                 It, I
               , detail::choose_difference_type_t<It, I>
             >
@@ -194,7 +194,7 @@ namespace ranges
                   , s.derived()
                 );
             }
-            friend iterator_difference_t<It>
+            friend constexpr iterator_difference_t<It>
             operator-(sentinel_facade const &, sentinel_facade const &)
             {
                 return iterator_difference_t<It>{};

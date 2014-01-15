@@ -37,7 +37,7 @@ namespace ranges
             static range_iterator_t<ForwardRange>
             invoke(upper_bound_finder, ForwardRange && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::FiniteForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<Value const &,
                                                           range_reference_t<ForwardRange>>());
                 return std::upper_bound(ranges::begin(rng), ranges::end(rng), val);
@@ -48,7 +48,7 @@ namespace ranges
             static range_iterator_t<ForwardRange>
             invoke(upper_bound_finder, ForwardRange && rng, Value const & val, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::FiniteForwardRange<ForwardRange>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        Value const &,
                                                        range_reference_t<ForwardRange>>());

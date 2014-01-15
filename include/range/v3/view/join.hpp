@@ -263,7 +263,7 @@ namespace ranges
                     }
                 }
             public:
-                basic_iterator()
+                constexpr basic_iterator()
                     noexcept(std::is_nothrow_default_constructible<base_range_iterator0>::value)
                   : rng_{}, it0_{}, which_(detail::which::first)
                 {}

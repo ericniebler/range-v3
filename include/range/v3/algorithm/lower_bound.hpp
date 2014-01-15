@@ -20,7 +20,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
-#include <range/v3/utility/is_infinity.hpp>
 
 namespace ranges
 {
@@ -35,7 +34,6 @@ namespace ranges
                 BinaryPredicate pred = BinaryPredicate{})
             {
                 auto dist = detail::distance(begin, end);
-                RANGES_ASSERT(!ranges::is_infinity(dist));
                 while(0 != dist)
                 {
                     auto half = dist / 2;
@@ -64,7 +62,7 @@ namespace ranges
             static range_iterator_t<ForwardIterable>
             invoke(lower_bound_finder, ForwardIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardIterable>,
                                                           Value const &>());
                 return detail::lower_bound(ranges::begin(rng), ranges::end(rng), val);
@@ -75,7 +73,7 @@ namespace ranges
             static range_iterator_t<ForwardIterable>
             invoke(lower_bound_finder, ForwardIterable && rng, Value const & val, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable>,
                                                        Value const &>());

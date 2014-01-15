@@ -26,10 +26,10 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename ForwardIterator, typename EndForwardIterator,
+            template<typename ForwardIterator, typename Sentinel,
                 typename BinaryPredicate = ranges::equal_to>
             ForwardIterator
-            adjacent_find(ForwardIterator begin, EndForwardIterator end,
+            adjacent_find(ForwardIterator begin, Sentinel end,
                 BinaryPredicate pred = BinaryPredicate{})
             {
                 if(begin == end)
@@ -49,26 +49,26 @@ namespace ranges
             ///
             /// range-based version of the \c adjacent_find std algorithm
             ///
-            /// \pre \c ForwardRange is a model of the ForwardRange concept
+            /// \pre \c ForwardIterable is a model of the ForwardIterable concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardRange>
-            static range_iterator_t<ForwardRange>
-            invoke(adjacent_finder, ForwardRange && rng)
+            template<typename ForwardIterable>
+            static range_iterator_t<ForwardIterable>
+            invoke(adjacent_finder, ForwardIterable && rng)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardRange>>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardIterable>>());
                 return detail::adjacent_find(ranges::begin(rng), ranges::end(rng));
             }
 
             /// \overload
-            template<typename ForwardRange, typename BinaryPredicate>
-            static range_iterator_t<ForwardRange>
-            invoke(adjacent_finder, ForwardRange && rng, BinaryPredicate pred)
+            template<typename ForwardIterable, typename BinaryPredicate>
+            static range_iterator_t<ForwardIterable>
+            invoke(adjacent_finder, ForwardIterable && rng, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<ForwardRange>,
-                                                       range_reference_t<ForwardRange>>());
+                                                       range_reference_t<ForwardIterable>,
+                                                       range_reference_t<ForwardIterable>>());
                 return detail::adjacent_find(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }

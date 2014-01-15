@@ -27,10 +27,10 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename ForwardIterator, typename EndForwardIterator, typename Value,
+            template<typename ForwardIterator, typename Sentinel, typename Value,
                 typename BinaryPredicate = ranges::less>
             bool
-            binary_search(ForwardIterator begin, EndForwardIterator end, Value const& val,
+            binary_search(ForwardIterator begin, Sentinel end, Value const& val,
                 BinaryPredicate pred = BinaryPredicate{})
             {
                 begin = detail::lower_bound(std::move(begin), end, val, std::ref(pred));
@@ -44,24 +44,24 @@ namespace ranges
             ///
             /// range-based version of the \c binary_search std algorithm
             ///
-            /// \pre \c ForwardRange is a model of the ForwardRange concept
+            /// \pre \c ForwardIterable is a model of the ForwardIterable concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardRange, typename Value>
-            static bool invoke(binary_searcher, ForwardRange && rng, Value const & val)
+            template<typename ForwardIterable, typename Value>
+            static bool invoke(binary_searcher, ForwardIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 return detail::binary_search(ranges::begin(rng), ranges::end(rng), val);
             }
 
             /// \overload
-            template<typename ForwardRange, typename Value, typename BinaryPredicate>
-            static bool invoke(binary_searcher, ForwardRange && rng, Value const & val,
+            template<typename ForwardIterable, typename Value, typename BinaryPredicate>
+            static bool invoke(binary_searcher, ForwardIterable && rng, Value const & val,
                 BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<ForwardRange>,
-                                                       range_reference_t<ForwardRange>>());
+                                                       range_reference_t<ForwardIterable>,
+                                                       range_reference_t<ForwardIterable>>());
                 return detail::binary_search(ranges::begin(rng), ranges::end(rng), val,
                     ranges::make_invokable(std::move(pred)));
             }

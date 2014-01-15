@@ -173,7 +173,7 @@ namespace ranges
                     ranges::get<detail::offset_tag>(*this) = off;
                 }
             public:
-                basic_iterator()
+                constexpr basic_iterator()
                   : is_dirty_t{}, offset_t{}, rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion

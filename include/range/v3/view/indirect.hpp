@@ -58,7 +58,7 @@ namespace ranges
                     return **this->base();
                 }
             public:
-                basic_iterator()
+                constexpr basic_iterator()
                   : iterator_adaptor_{}
                 {}
             };

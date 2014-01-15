@@ -43,7 +43,9 @@ namespace ranges
                     std::input_iterator_tag
                 >
             {
-                iterator() : rng_{} {}
+                constexpr iterator()
+                  : rng_{}
+                {}
             private:
                 friend struct istream_range;
                 friend struct ranges::iterator_core_access;

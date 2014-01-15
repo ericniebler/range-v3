@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_RANGE_CONCEPTS_HPP
 #define RANGES_V3_RANGE_CONCEPTS_HPP
 
+#include <limits>
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
@@ -34,6 +35,9 @@ namespace ranges
                 using iterator_t = decltype(ranges::begin(std::declval<T>()));
 
                 template<typename T>
+                using sentinel_t = decltype(ranges::end(std::declval<T>()));
+
+                template<typename T>
                 using category_t = Iterator::category_t<iterator_t<T>>;
 
                 template<typename T>
@@ -47,6 +51,10 @@ namespace ranges
 
                 template<typename T>
                 using pointer_t = Iterator::pointer_t<iterator_t<T>>;
+
+                template<typename T>
+                using is_finite_t = std::integral_constant<bool,
+                                        !std::numeric_limits<difference_t<T>>::has_infinity>;
 
                 // Valid expressions
                 template<typename T>
@@ -104,6 +112,33 @@ namespace ranges
                     ));
             };
 
+            struct FiniteIterable
+              : refines<Iterable>
+            {
+                // Valid expressions
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(Iterable::is_finite_t<T>{})
+                    ));
+            };
+
+            struct FiniteInputIterable
+              : refines<FiniteIterable, InputIterable>
+            {};
+
+            struct FiniteForwardIterable
+              : refines<FiniteInputIterable, ForwardIterable>
+            {};
+
+            struct FiniteBidirectionalIterable
+              : refines<FiniteForwardIterable, BidirectionalIterable>
+            {};
+
+            struct FiniteRandomAccessIterable
+              : refines<FiniteBidirectionalIterable, RandomAccessIterable>
+            {};
+
             struct Range
               : refines<Iterable>
             {
@@ -131,6 +166,26 @@ namespace ranges
             struct RandomAccessRange
               : refines<BidirectionalRange, RandomAccessIterable>
             {};
+
+            struct FiniteRange
+              : refines<Range, FiniteIterable>
+            {};
+
+            struct FiniteInputRange
+              : refines<FiniteRange, InputRange>
+            {};
+
+            struct FiniteForwardRange
+              : refines<FiniteInputRange, ForwardRange>
+            {};
+
+            struct FiniteBidirectionalRange
+              : refines<FiniteForwardRange, BidirectionalRange>
+            {};
+
+            struct FiniteRandomAccessRange
+              : refines<FiniteBidirectionalRange, RandomAccessRange>
+            {};
         }
 
         template<typename T>
@@ -149,6 +204,21 @@ namespace ranges
         using RandomAccessIterable = concepts::models<concepts::RandomAccessIterable, T>;
 
         template<typename T>
+        using FiniteIterable = concepts::models<concepts::FiniteIterable, T>;
+
+        template<typename T>
+        using FiniteInputIterable = concepts::models<concepts::FiniteInputIterable, T>;
+
+        template<typename T>
+        using FiniteForwardIterable = concepts::models<concepts::FiniteForwardIterable, T>;
+
+        template<typename T>
+        using FiniteBidirectionalIterable = concepts::models<concepts::FiniteBidirectionalIterable, T>;
+
+        template<typename T>
+        using FiniteRandomAccessIterable = concepts::models<concepts::FiniteRandomAccessIterable, T>;
+
+        template<typename T>
         using Range = concepts::models<concepts::Range, T>;
 
         template<typename T>
@@ -162,6 +232,21 @@ namespace ranges
 
         template<typename T>
         using RandomAccessRange = concepts::models<concepts::RandomAccessRange, T>;
+
+        template<typename T>
+        using FiniteRange = concepts::models<concepts::FiniteRange, T>;
+
+        template<typename T>
+        using FiniteInputRange = concepts::models<concepts::FiniteInputRange, T>;
+
+        template<typename T>
+        using FiniteForwardRange = concepts::models<concepts::FiniteForwardRange, T>;
+
+        template<typename T>
+        using FiniteBidirectionalRange = concepts::models<concepts::FiniteBidirectionalRange, T>;
+
+        template<typename T>
+        using FiniteRandomAccessRange = concepts::models<concepts::FiniteRandomAccessRange, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept

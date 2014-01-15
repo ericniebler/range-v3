@@ -86,7 +86,7 @@ namespace ranges
                     return this->base();
                 }
             public:
-                basic_iterator()
+                constexpr basic_iterator()
                   : iterator_adaptor_{}
                 {}
                 // For iterator -> const_iterator conversion
