@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_VIEW_SLICE_HPP
 #define RANGES_V3_VIEW_SLICE_HPP
 
+#include <limits>
 #include <utility>
 #include <iterator>
 #include <type_traits>
@@ -176,6 +177,8 @@ namespace ranges
               , begin_(ranges::next(ranges::begin(rng_), from_))
             {
                 RANGES_ASSERT(from <= to);
+                // Must be able to represent iterator difference:
+                RANGES_ASSERT(to - from <= static_cast<std::size_t>(std::numeric_limits<std::ptrdiff_t>::max()));
             }
             slice_range_view(slice_range_view const &that)
               : rng_(that.rng_)
