@@ -25,7 +25,7 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
-#include <range/v3/utility/box.hpp>
+#include <range/v3/utility/compressed_tuple.hpp>
 
 namespace ranges
 {
@@ -53,20 +53,16 @@ namespace ranges
 
             // Bidirectional stride iterators need a runtime boolean to keep track
             // of when the offset variable is dirty and needs to be recalculated.
-            using is_dirty_t = box<
-                    detail::conditional_t<is_bidi(), mutable_<bool>, constant<bool, false>>
-                  , detail::dirty_tag
-                >;
+            using is_dirty_t =
+                detail::conditional_t<is_bidi(), mutable_<bool>, constant<bool, false>>;
 
             // Bidirectional and random-access stride iterators need to remember how
             // far past they end they are, so that when they're decremented, they can
             // visit the correct elements.
-            using offset_t = box<
-                    detail::conditional_t<is_bidi() || is_rand(),
-                        mutable_<difference_type>,
-                        constant<difference_type, 0>>
-                  , detail::offset_tag
-                >;
+            using offset_t =
+                detail::conditional_t<is_bidi() || is_rand(),
+                                      mutable_<difference_type>,
+                                      constant<difference_type, 0>>;
 
             template<bool Const>
             struct basic_iterator
@@ -77,8 +73,6 @@ namespace ranges
                   , range_reference_t<detail::add_const_if_t<InputRange, Const>>
                   , difference_type
                 >
-              , private is_dirty_t
-              , private offset_t
             {
             private:
                 friend struct stride_range_view;
@@ -88,41 +82,41 @@ namespace ranges
                 using base_range_iterator = range_iterator_t<base_range>;
 
                 stride_range_view_ *rng_;
-                base_range_iterator it_;
+                compressed_tuple<base_range_iterator, is_dirty_t, offset_t> it_dirt_off_;
 
                 basic_iterator(stride_range_view_ &rng, detail::begin_tag)
-                  : is_dirty_t(false), offset_t(0), rng_(&rng), it_(ranges::begin(rng_->rng_))
+                  : rng_(&rng), it_dirt_off_{ranges::begin(rng_->rng_), false, 0}
                 {}
                 basic_iterator(stride_range_view_ &rng, detail::end_tag)
-                  : is_dirty_t(true), offset_t(0), rng_(&rng), it_(ranges::end(rng_->rng_))
+                  : rng_(&rng), it_dirt_off_{ranges::end(rng_->rng_), true, 0}
                 {
                     if(is_rand())
                         do_clean();
                 }
                 void increment()
                 {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                    RANGES_ASSERT(it() != ranges::end(rng_->rng_));
                     RANGES_ASSERT(0 == offset());
-                    this->set_offset(detail::advance_bounded(it_, rng_->stride_ + offset(),
+                    this->set_offset(detail::advance_bounded(it(), rng_->stride_ + offset(),
                         ranges::end(rng_->rng_)));
                 }
                 template<bool OtherConst>
                 bool equal(basic_iterator<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
-                    return it_ == that.it_;
+                    return it() == that.it();
                 }
                 range_reference_t<base_range> dereference() const
                 {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                    RANGES_ASSERT(it() != ranges::end(rng_->rng_));
                     RANGES_ASSERT(0 == offset());
-                    return *it_;
+                    return *it();
                 }
                 void decrement()
                 {
-                    RANGES_ASSERT(it_ != ranges::begin(rng_->rng_));
+                    RANGES_ASSERT(it() != ranges::begin(rng_->rng_));
                     clean();
-                    this->set_offset(detail::advance_bounded(it_, -rng_->stride_ + offset(),
+                    this->set_offset(detail::advance_bounded(it(), -rng_->stride_ + offset(),
                         ranges::begin(rng_->rng_)));
                     RANGES_ASSERT(0 == offset());
                 }
@@ -132,14 +126,14 @@ namespace ranges
                     clean();
                     that.clean();
                     RANGES_ASSERT(rng_ == that.rng_);
-                    RANGES_ASSERT(0 == ((that.it_ - it_) +
+                    RANGES_ASSERT(0 == ((that.it() - it()) +
                                         (that.offset() - offset())) % rng_->stride_);
-                    return ((that.it_ - it_) + (that.offset() - offset())) / rng_->stride_;
+                    return ((that.it() - it()) + (that.offset() - offset())) / rng_->stride_;
                 }
                 void advance(difference_type n)
                 {
                     clean();
-                    this->set_offset(detail::advance_bounded(it_, n * rng_->stride_ + offset(),
+                    this->set_offset(detail::advance_bounded(it(), n * rng_->stride_ + offset(),
                         0 < n ? ranges::end(rng_->rng_) : ranges::begin(rng_->rng_)));
                 }
                 void clean() const
@@ -150,6 +144,14 @@ namespace ranges
                         set_dirty(false);
                     }
                 }
+                base_range_iterator & it()
+                {
+                    return ranges::get<0>(it_dirt_off_);
+                }
+                base_range_iterator const & it() const
+                {
+                    return ranges::get<0>(it_dirt_off_);
+                }
                 void do_clean() const
                 {
                     this->set_offset(ranges::distance(rng_->rng_) % rng_->stride_);
@@ -158,29 +160,28 @@ namespace ranges
                 }
                 bool is_dirty() const
                 {
-                    return ranges::get<detail::dirty_tag>(*this);
+                    return ranges::get<1>(it_dirt_off_);
                 }
                 void set_dirty(bool b) const
                 {
-                    ranges::get<detail::dirty_tag>(*this) = b;
+                    ranges::get<1>(it_dirt_off_) = b;
                 }
                 difference_type offset() const
                 {
-                    return ranges::get<detail::offset_tag>(*this);
+                    return ranges::get<2>(it_dirt_off_);
                 }
                 void set_offset(difference_type off) const
                 {
-                    ranges::get<detail::offset_tag>(*this) = off;
+                    ranges::get<2>(it_dirt_off_) = off;
                 }
             public:
                 constexpr basic_iterator()
-                  : is_dirty_t{}, offset_t{}, rng_{}, it_{}
+                  : rng_{}, it_dirt_off_{}
                 {}
                 // For iterator -> const_iterator conversion
                 template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
-                  : is_dirty_t(that.is_dirty()), offset_t(that.offset())
-                  , rng_(that.rng_), it_(std::move(that).it_)
+                  : rng_(that.rng_), it_dirt_off_(std::move(that).it_dirt_off_)
                 {}
             };
         public:

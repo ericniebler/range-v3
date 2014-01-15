@@ -120,6 +120,10 @@ namespace ranges
                 RANGES_ASSERT(is_finite());
                 return i_;
             }
+            explicit operator SignedInteger() const noexcept
+            {
+                return get();
+            }
             static constexpr safe_int inf() noexcept
             {
                 return pos_inf_;

@@ -166,8 +166,9 @@ namespace ranges
 
             struct begin_tag {};
             struct end_tag {};
-            struct dirty_tag {};
-            struct offset_tag {};
+
+            template<typename...Ts>
+            void valid_exprs(Ts &&...);
         }
 
         struct use_default;
@@ -189,6 +190,9 @@ namespace ranges
 
         template<typename First, typename Second>
         class compressed_pair;
+
+        template<typename...Ts>
+        class compressed_tuple;
 
         struct invokable_maker;
         extern invokable_maker const make_invokable;

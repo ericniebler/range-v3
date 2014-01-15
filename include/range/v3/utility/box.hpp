@@ -73,6 +73,7 @@ namespace ranges
             {}
         };
 
+        // Get by tag type
         template<typename Tag, typename Element>
         Element & get(box<Element, Tag, false> & b)
         {
@@ -105,6 +106,43 @@ namespace ranges
 
         template<typename Tag, typename Element>
         constexpr Element && get(box<Element, Tag, true> && b)
+        {
+            return detail::move(b);
+        }
+
+        // Get by index
+        template<std::size_t I, typename Element>
+        Element & get(box<Element, std::integral_constant<std::size_t, I>, false> & b)
+        {
+            return b.value;
+        }
+
+        template<std::size_t I, typename Element>
+        constexpr Element const & get(box<Element, std::integral_constant<std::size_t, I>, false> const & b)
+        {
+            return b.value;
+        }
+
+        template<std::size_t I, typename Element>
+        constexpr Element && get(box<Element, std::integral_constant<std::size_t, I>, false> && b)
+        {
+            return detail::move(b).value;
+        }
+
+        template<std::size_t I, typename Element>
+        Element & get(box<Element, std::integral_constant<std::size_t, I>, true> & b)
+        {
+            return b;
+        }
+
+        template<std::size_t I, typename Element>
+        constexpr Element const & get(box<Element, std::integral_constant<std::size_t, I>, true> const & b)
+        {
+            return b;
+        }
+
+        template<std::size_t I, typename Element>
+        constexpr Element && get(box<Element, std::integral_constant<std::size_t, I>, true> && b)
         {
             return detail::move(b);
         }

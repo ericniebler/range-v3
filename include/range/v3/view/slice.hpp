@@ -26,6 +26,7 @@
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
+#include <range/v3/utility/compressed_tuple.hpp>
 
 namespace ranges
 {
@@ -55,10 +56,7 @@ namespace ranges
                     std::bidirectional_iterator_tag>::value;
             }
 
-            using is_dirty_t = box<
-                    detail::conditional_t<is_bidi(), bool, constant<bool, false>>
-                  , detail::dirty_tag
-                >;
+            using is_dirty_t = detail::conditional_t<is_bidi(), bool, constant<bool, false>>;
 
             // Implementation for InputIterator, ForwardIterator and BidirectionalIterator
             template<bool Const>
@@ -68,9 +66,8 @@ namespace ranges
                   , range_value_t<InputIterable>
                   , range_category_t<InputIterable>
                   , range_reference_t<detail::add_const_if_t<InputIterable, Const>>
-                  , range_difference_t<InputIterable>
+                  , std::ptrdiff_t
                 >
-              , private is_dirty_t
             {
             private:
                 friend struct slice_range_view;
@@ -80,20 +77,20 @@ namespace ranges
 
                 slice_range_view_ *rng_;
                 std::size_t n_;
-                range_iterator_t<base_range> it_;
+                compressed_tuple<range_iterator_t<base_range>, is_dirty_t> it_dirt_;
 
                 basic_iterator(slice_range_view_ &rng, detail::begin_tag)
-                  : is_dirty_t{false}, rng_(&rng), n_(rng_->from_), it_(rng_->begin_)
+                  : rng_(&rng), n_(rng_->from_), it_dirt_{rng_->begin_, false}
                 {}
                 basic_iterator(slice_range_view_ &rng, detail::end_tag)
-                  : is_dirty_t{true}, rng_(&rng), n_(rng_->to_), it_(rng_->begin_)
+                  : rng_(&rng), n_(rng_->to_), it_dirt_{rng_->begin_, true}
                 {}
                 void increment()
                 {
                     RANGES_ASSERT(n_ < rng_->to_);
-                    this->check_end(range_concept_t<InputIterable>{});
-                    ++it_;
+                    RANGES_ASSERT(it() != ranges::end(rng_->rng_));
                     ++n_;
+                    ++it();
                 }
                 template<bool OtherConst>
                 bool equal(basic_iterator<OtherConst> const &that) const
@@ -104,15 +101,36 @@ namespace ranges
                 range_reference_t<base_range> dereference() const
                 {
                     RANGES_ASSERT(n_ < rng_->to_);
-                    this->check_end(range_concept_t<InputIterable>{});
-                    return *it_;
+                    RANGES_ASSERT(it() != ranges::end(rng_->rng_));
+                    return *it();
                 }
                 void decrement()
                 {
                     RANGES_ASSERT(rng_->from_ < n_);
                     clean();
                     --n_;
-                    --it_;
+                    --it();
+                }
+                void advance(std::ptrdiff_t d)
+                {
+                    RANGES_ASSERT(n_ + d >= rng_->from_ && n_ + d <= rng_->to_);
+                    clean();
+                    n_ += d;
+                    it() += d;
+                }
+                template<bool OtherConst>
+                std::ptrdiff_t distance_to(basic_iterator<OtherConst> const & that) const
+                {
+                    return n_ >= that.n_ ? -static_cast<std::ptrdiff_t>(n_ - that.n_)
+                                         :  static_cast<std::ptrdiff_t>(that.n_ - n_);
+                }
+                range_iterator_t<base_range> & it()
+                {
+                    return ranges::get<0>(it_dirt_);
+                }
+                range_iterator_t<base_range> const & it() const
+                {
+                    return ranges::get<0>(it_dirt_);
                 }
                 void clean()
                 {
@@ -126,77 +144,30 @@ namespace ranges
                 }
                 void do_clean()
                 {
-                    it_ = ranges::next(rng_->begin_, rng_->to_ - rng_->from_);
+                    it() = ranges::next(rng_->begin_, rng_->to_ - rng_->from_);
                 }
                 bool is_dirty() const
                 {
-                    return ranges::get<detail::dirty_tag>(*this);
+                    return ranges::get<1>(it_dirt_);
                 }
                 void set_dirty(bool b)
                 {
-                    ranges::get<detail::dirty_tag>(*this) = b;
-                }
-                void check_end(concepts::Iterable) const
-                {
-                    // no-op, iterables don't have ends to check
-                }
-                void check_end(concepts::Range) const
-                {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                    ranges::get<1>(it_dirt_) = b;
                 }
             public:
                 constexpr basic_iterator()
-                  : is_dirty_t{}, rng_{}, n_{}, it_{}
+                  : rng_{}, n_{}, it_dirt_{}
                 {}
                 // For iterator -> const_iterator conversion
                 template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
-                  : is_dirty_t{that.is_dirty()}
-                  , rng_(that.rng_), n_(that.n_), it_(std::move(that).it_)
+                  : rng_(that.rng_), n_(that.n_), it_dirt_(std::move(that).it_dirt_)
                 {}
             };
 
-            template<bool Const, typename Category = range_category_t<InputIterable>>
-            struct iterator_factory
-            {
-                using iterator = basic_iterator<Const>;
-                using slice_range_view_ = detail::add_const_if_t<slice_range_view, Const>;
-                template<typename Tag>
-                static iterator make_iterator(slice_range_view_ &rng, Tag tag)
-                {
-                    return {rng, tag};
-                }
-            };
-
-            // For random-access ranges, the view's iterator type can simply be
-            // the adapted range's iterator type.
-            template<bool Const>
-            struct iterator_factory<Const, std::random_access_iterator_tag>
-            {
-                using base_range_iterator =
-                    range_iterator_t<detail::add_const_if_t<InputIterable, Const>>;
-                using slice_range_view_ =
-                    detail::add_const_if_t<slice_range_view, Const>;
-                using iterator =
-                    RANGES_DEBUG_ITERATOR(slice_range_view_, base_range_iterator);
-
-                static iterator make_iterator(slice_range_view_ &rng, detail::begin_tag tag)
-                {
-                    return RANGES_MAKE_DEBUG_ITERATOR(rng,
-                        base_range_iterator{rng.begin_});
-                }
-                static iterator make_iterator(slice_range_view_ &rng, detail::end_tag tag)
-                {
-                    return RANGES_MAKE_DEBUG_ITERATOR(rng,
-                        base_range_iterator{rng.begin_ + (rng.to_ - rng.from_)});
-                }
-            };
-
-            template<bool Const>
-            using basic_iterator_t = typename iterator_factory<Const>::iterator;
         public:
-            using iterator       = basic_iterator_t<false>;
-            using const_iterator = basic_iterator_t<true>;
+            using iterator       = basic_iterator<false>;
+            using const_iterator = basic_iterator<true>;
 
             slice_range_view(InputIterable && rng, std::size_t from, std::size_t to)
               : rng_(std::forward<InputIterable>(rng))
@@ -227,19 +198,19 @@ namespace ranges
 
             iterator begin()
             {
-                return iterator_factory<false>::make_iterator(*this, detail::begin_tag{});
-            }
-            iterator end()
-            {
-                return iterator_factory<false>::make_iterator(*this, detail::end_tag{});
+                return {*this, detail::begin_tag{}};
             }
             const_iterator begin() const
             {
-                return iterator_factory<true>::make_iterator(*this, detail::begin_tag{});
+                return {*this, detail::begin_tag{}};
+            }
+            iterator end()
+            {
+                return {*this, detail::end_tag{}};
             }
             const_iterator end() const
             {
-                return iterator_factory<true>::make_iterator(*this, detail::end_tag{});
+                return {*this, detail::end_tag{}};
             }
             bool operator!() const
             {

@@ -1,0 +1,63 @@
+// Boost.Range library
+//
+//  Copyright Eric Niebler 2014.
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
+
+#ifndef RANGES_V3_UTILITY_COMPRESSED_TUPLE_HPP
+#define RANGES_V3_UTILITY_COMPRESSED_TUPLE_HPP
+
+#include <utility>
+#include <type_traits>
+#include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/box.hpp>
+#include <range/v3/utility/integer_sequence.hpp>
+
+namespace ranges
+{
+    inline namespace v3
+    {
+        namespace detail
+        {
+            template<typename Indices, typename...Ts>
+            struct compressed_tuple_data;
+
+            template<std::size_t...Is, typename...Ts>
+            struct compressed_tuple_data<integer_sequence<Is...>, Ts...>
+              : box<Ts, std::integral_constant<std::size_t, Is>>...
+            {
+                constexpr compressed_tuple_data() = default;
+                template<typename...Us,
+                         typename = decltype(detail::valid_exprs(Ts{std::declval<Us>()}...))>
+                explicit constexpr compressed_tuple_data(Us &&...us)
+                  : box<Ts, std::integral_constant<std::size_t, Is>>{detail::forward<Us>(us)}...
+                {}
+            };
+        }
+
+        template<typename... Ts>
+        struct compressed_tuple
+          : detail::compressed_tuple_data<integer_sequence_t<sizeof...(Ts)>, Ts...>
+        {
+            using detail::compressed_tuple_data<integer_sequence_t<sizeof...(Ts)>, Ts...>::compressed_tuple_data;
+        };
+
+        RANGES_CONSTEXPR struct compressed_tuple_maker
+        {
+            template<typename...Ts>
+            constexpr auto operator()(Ts &&... ts) const ->
+                compressed_tuple<Ts...>
+            {
+                return compressed_tuple<Ts...>{detail::forward<Ts>(ts)...};
+            }
+        } make_compressed_tuple {};
+    }
+}
+
+#endif
