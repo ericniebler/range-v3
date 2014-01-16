@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_GENERATE_HPP
 
 #include <utility>
-#include <algorithm>
 #include <functional>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -24,22 +23,32 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel, typename Generator>
+            void generate(ForwardIterator begin, Sentinel end, Generator gen)
+            {
+                for(; begin != end; ++begin)
+                    *begin = gen();
+            }
+        }
+
         struct generator : bindable<generator>
         {
             /// \brief template function generate
             ///
             /// range-based version of the generate std algorithm
             ///
-            /// \pre ForwardRange is a model of the ForwardRange concept
-            /// \pre Generator is a model of the UnaryFunction concept
-            template<typename ForwardRange, typename Generator>
-            static ForwardRange invoke(generator, ForwardRange && rng, Generator gen)
+            /// \pre ForwardIterable is a model of the ForwardIterable concept
+            /// \pre Generator is a model of the NullaryFunction concept
+            template<typename ForwardIterable, typename Generator>
+            static ForwardIterable invoke(generator, ForwardIterable && rng, Generator gen)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::Callable<Generator>());
                 std::generate(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(gen)));
-                return std::forward<ForwardRange>(rng);
+                return std::forward<ForwardIterable>(rng);
             }
 
             /// \overload

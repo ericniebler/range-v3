@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\for_each.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\generate.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\generate_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\heap_algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\inplace_merge.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lexicographical_compare.hpp" />

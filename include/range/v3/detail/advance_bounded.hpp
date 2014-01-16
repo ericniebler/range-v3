@@ -27,8 +27,9 @@ namespace ranges
             struct advance_bounded_
             {
             private:
-                template<typename Iter, typename Diff>
-                static Diff fwd(Iter & it, Diff n, Iter end, std::input_iterator_tag)
+                template<typename InputIterator, typename Diff, typename Sentinel>
+                static Diff fwd(InputIterator & it, Diff n, Sentinel end,
+                    std::input_iterator_tag)
                 {
                     while(n > 0 && it != end)
                     {
@@ -37,8 +38,9 @@ namespace ranges
                     }
                     return n;
                 }
-                template<typename Iter, typename Diff>
-                static Diff fwd(Iter & it, Diff n, Iter end, std::random_access_iterator_tag)
+                template<typename RandomAccessIterator, typename Diff, typename Sentinel>
+                static Diff fwd(RandomAccessIterator & it, Diff n, Sentinel end,
+                    std::random_access_iterator_tag)
                 {
                     auto const room = end - it;
                     if(room < n)
@@ -53,14 +55,16 @@ namespace ranges
                     }
                     return n;
                 }
-                template<typename Iter, typename Diff>
-                static Diff back(Iter & it, Diff n, Iter begin, std::input_iterator_tag)
+                template<typename InputIterator, typename Diff, typename Sentinel>
+                static Diff back(InputIterator &, Diff n, Sentinel,
+                    std::input_iterator_tag)
                 {
                     RANGES_ASSERT(false);
                     return n;
                 }
-                template<typename Iter, typename Diff>
-                static Diff back(Iter & it, Diff n, Iter begin, std::bidirectional_iterator_tag)
+                template<typename BidirectionalIterator, typename Diff>
+                static Diff back(BidirectionalIterator & it, Diff n, BidirectionalIterator begin,
+                    std::bidirectional_iterator_tag)
                 {
                     while(n < 0 && it != begin)
                     {
@@ -69,8 +73,9 @@ namespace ranges
                     }
                     return n;
                 }
-                template<typename Iter, typename Diff>
-                static Diff back(Iter & it, Diff n, Iter begin, std::random_access_iterator_tag)
+                template<typename RandomAccessIterator, typename Diff>
+                static Diff back(RandomAccessIterator & it, Diff n, RandomAccessIterator begin,
+                    std::random_access_iterator_tag)
                 {
                     auto const room = -(it - begin);
                     if(n < room)
@@ -86,14 +91,16 @@ namespace ranges
                     return n;
                 }
             public:
-                template<typename Iter, typename Diff>
-                Diff operator()(Iter & it, Diff n, Iter bound) const
+                template<typename InputIterator, typename Diff, typename Sentinel>
+                Diff operator()(InputIterator & it, Diff n, Sentinel bound) const
                 {
                     using impl = advance_bounded_;
-                    if(0 < n)
-                        return impl::fwd(it, n, std::move(bound), iterator_category_t<Iter>{});
+                    if(0 <= n)
+                        return impl::fwd(it, n, std::move(bound),
+                            iterator_category_t<InputIterator>{});
                     else
-                        return impl::back(it, n, std::move(bound), iterator_category_t<Iter>{});
+                        return impl::back(it, n, std::move(bound),
+                            iterator_category_t<InputIterator>{});
                 }
             };
 

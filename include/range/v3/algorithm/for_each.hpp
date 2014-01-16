@@ -25,8 +25,8 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename InputIterator, typename EndInputIterator, typename UnaryFunction>
-            UnaryFunction for_each(InputIterator begin, EndInputIterator end, UnaryFunction fun)
+            template<typename InputIterator, typename Sentinel, typename UnaryFunction>
+            UnaryFunction for_each(InputIterator begin, Sentinel end, UnaryFunction fun)
             {
                 for(; begin != end; ++begin)
                     fun(*begin);

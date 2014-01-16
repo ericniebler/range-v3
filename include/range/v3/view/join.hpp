@@ -32,45 +32,42 @@ namespace ranges
     {
         namespace detail
         {
-            struct first_range_tag {};
-            struct second_range_tag {};
-
             enum class which : unsigned short
             {
                 neither, first, second
             };
         }
 
-        template<typename Rng0, typename Rng1>
+        template<typename InputRange0, typename InputRange1>
         struct join_range_view
         {
         private:
-            static_assert(std::is_same<range_value_t<Rng0>, range_value_t<Rng1>>::value,
+            static_assert(std::is_same<range_value_t<InputRange0>, range_value_t<InputRange1>>::value,
                           "Range value types must be the same to join them");
-            Rng0 rng0_;
-            Rng1 rng1_;
+            InputRange0 rng0_;
+            InputRange1 rng1_;
 
-            template<bool Const>
-            static detail::add_const_if_t<Rng0, Const> & declrng0();
-            template<bool Const>
-            static detail::add_const_if_t<Rng1, Const> & declrng1();
+            template<bool Const> using base_range0_t = detail::add_const_if_t<InputRange0, Const>;
+            template<bool Const> using base_range1_t = detail::add_const_if_t<InputRange1, Const>;
 
             template<bool Const>
             struct basic_iterator
               : ranges::iterator_facade<
                     basic_iterator<Const>
-                  , range_value_t<Rng0>
-                  , decltype(true ? range_category_t<Rng0>{} : range_category_t<Rng1>{})
-                  , decltype(true ? *ranges::begin(declrng0<Const>())
-                                  : *ranges::begin(declrng1<Const>()))
-                  , decltype(true ? range_difference_t<Rng0>{} : range_difference_t<Rng1>{})
+                  , range_value_t<InputRange0>
+                  , decltype(true ? range_category_t<InputRange0>{}
+                                  : range_category_t<InputRange1>{})
+                  , decltype(true ? std::declval<range_reference_t<base_range0_t<Const>>>()
+                                  : std::declval<range_reference_t<base_range1_t<Const>>>())
+                  , decltype(true ? range_difference_t<InputRange0>{}
+                                  : range_difference_t<InputRange1>{})
                 >
             {
             private:
                 friend struct join_range_view;
                 friend struct ranges::iterator_core_access;
-                using base_range_iterator0 = decltype(ranges::begin(declrng0<Const>()));
-                using base_range_iterator1 = decltype(ranges::begin(declrng1<Const>()));
+                using base_range_iterator0 = range_iterator_t<base_range0_t<Const>>;
+                using base_range_iterator1 = range_iterator_t<base_range1_t<Const>>;
                 using join_range_view_ = detail::add_const_if_t<join_range_view, Const>;
 
                 join_range_view_ * rng_;
@@ -81,14 +78,43 @@ namespace ranges
                 };
                 detail::which which_;
 
-                basic_iterator(join_range_view_ &rng, base_range_iterator0 it,
-                    detail::first_range_tag)
-                  : rng_(&rng), it0_(std::move(it)), which_(detail::which::first)
+                basic_iterator(join_range_view_ &rng, detail::begin_tag)
+                  : rng_(&rng), it0_(ranges::begin(rng.rng0_)), which_(detail::which::first)
                 {}
-                basic_iterator(join_range_view_ &rng, base_range_iterator1 it,
-                    detail::second_range_tag)
-                  : rng_(&rng), it1_(std::move(it)), which_(detail::which::second)
+                basic_iterator(join_range_view_ &rng, detail::end_tag)
+                  : rng_(&rng), it1_(ranges::end(rng.rng1_)), which_(detail::which::second)
                 {}
+                typename basic_iterator::reference dereference() const
+                {
+                    switch(which_)
+                    {
+                    case detail::which::first:
+                        return *it0_;
+                    case detail::which::second:
+                        RANGES_ASSERT(it1_ != ranges::end(rng_->rng1_));
+                        return *it1_;
+                    default:
+                        RANGES_ASSERT(!"Attempt to dereference an invalid join_range_view iterator");
+                        return *it1_;
+                    }
+                }
+                template<bool OtherConst>
+                bool equal(basic_iterator<OtherConst> const &that) const
+                {
+                    RANGES_ASSERT(rng_ == that.rng_);
+                    if(which_ != that.which_)
+                        return false;
+                    switch(which_)
+                    {
+                    case detail::which::first:
+                        return it0_ == that.it0_;
+                    case detail::which::second:
+                        return it1_ == that.it1_;
+                    default:
+                        RANGES_ASSERT(!"Attempt to compare invalid join_range_view iterators");
+                        return true;
+                    }
+                }
                 void increment()
                 {
                     switch(which_)
@@ -213,37 +239,6 @@ namespace ranges
                         return 0;
                     }
                 }
-                template<bool OtherConst>
-                bool equal(basic_iterator<OtherConst> const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    if(which_ != that.which_)
-                        return false;
-                    switch(which_)
-                    {
-                    case detail::which::first:
-                        return it0_ == that.it0_;
-                    case detail::which::second:
-                        return it1_ == that.it1_;
-                    default:
-                        RANGES_ASSERT(!"Attempt to compare invalid join_range_view iterators");
-                        return true;
-                    }
-                }
-                typename basic_iterator::reference dereference() const
-                {
-                    switch(which_)
-                    {
-                    case detail::which::first:
-                        return *it0_;
-                    case detail::which::second:
-                        RANGES_ASSERT(it1_ != ranges::end(rng_->rng1_));
-                        return *it1_;
-                    default:
-                        RANGES_ASSERT(!"Attempt to dereference an invalid join_range_view iterator");
-                        return *it1_;
-                    }
-                }
                 void clean()
                     //noexcept(std::is_nothrow_destructible<base_range_iterator0>::value &&
                     //         std::is_nothrow_destructible<base_range_iterator1>::value)
@@ -362,24 +357,24 @@ namespace ranges
             using iterator       = basic_iterator<false>;
             using const_iterator = basic_iterator<true>;
 
-            join_range_view(Rng0 && rng0, Rng1 && rng1)
+            join_range_view(InputRange0 && rng0, InputRange1 && rng1)
               : rng0_(rng0), rng1_(rng1)
             {}
             iterator begin()
             {
-                return {*this, ranges::begin(rng0_), detail::first_range_tag{}};
-            }
-            iterator end()
-            {
-                return {*this, ranges::end(rng1_), detail::second_range_tag{}};
+                return {*this, detail::begin_tag{}};
             }
             const_iterator begin() const
             {
-                return {*this, ranges::begin(rng0_), detail::first_range_tag{}};
+                return {*this, detail::begin_tag{}};
+            }
+            iterator end()
+            {
+                return {*this, detail::end_tag{}};
             }
             const_iterator end() const
             {
-                return {*this, ranges::end(rng1_), detail::second_range_tag{}};
+                return {*this, detail::end_tag{}};
             }
             bool operator!() const
             {
@@ -389,19 +384,19 @@ namespace ranges
             {
                 return begin() != end();
             }
-            Rng0 & first()
+            InputRange0 & first()
             {
                 return rng0_;
             }
-            Rng0 const & first() const
+            InputRange0 const & first() const
             {
                 return rng0_;
             }
-            Rng1 & second()
+            InputRange1 & second()
             {
                 return rng1_;
             }
-            Rng1 const & second() const
+            InputRange1 const & second() const
             {
                 return rng1_;
             }
@@ -411,10 +406,14 @@ namespace ranges
         {
             struct joiner : bindable<joiner>
             {
-                template<typename Rng0, typename Rng1>
-                static join_range_view<Rng0, Rng1> invoke(joiner, Rng0 && rng0, Rng1 && rng1)
+                template<typename InputRange0, typename InputRange1>
+                static join_range_view<InputRange0, InputRange1>
+                invoke(joiner, InputRange0 && rng0, InputRange1 && rng1)
                 {
-                    return {std::forward<Rng0>(rng0), std::forward<Rng1>(rng1)};
+                    // TODO Make join_range_view work with Iterables instead of Ranges
+                    CONCEPT_ASSERT(ranges::InputRange<InputRange0>());
+                    CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
+                    return {std::forward<InputRange0>(rng0), std::forward<InputRange1>(rng1)};
                 }
             };
 

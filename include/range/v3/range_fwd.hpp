@@ -281,6 +281,9 @@ namespace ranges
         struct generator;
         extern generator const generate;
 
+        struct generator_n;
+        extern generator_n const generate_n;
+
         struct heap_pusher;
         extern heap_pusher const push_heap;
 

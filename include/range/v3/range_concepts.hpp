@@ -68,6 +68,17 @@ namespace ranges
                     ));
             };
 
+            struct OutputIterable
+              : refines<Iterable(_1)>
+            {
+                template<typename T, typename O>
+                auto requires(T && t, O && o) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<OutputIterator>(ranges::begin(t), (O &&)o),
+                        concepts::model_of<OutputIterator>(ranges::cbegin(t), (O &&)o)
+                    ));
+            };
+
             struct InputIterable
               : refines<Iterable>
             {
@@ -123,6 +134,10 @@ namespace ranges
                     ));
             };
 
+            struct FiniteOutputIterable
+              : refines<FiniteIterable(_1), OutputIterable>
+            {};
+
             struct FiniteInputIterable
               : refines<FiniteIterable, InputIterable>
             {};
@@ -151,6 +166,10 @@ namespace ranges
                     ));
             };
 
+            struct OutputRange
+              : refines<Range(_1), OutputIterable>
+            {};
+
             struct InputRange
               : refines<Range, InputIterable>
             {};
@@ -169,6 +188,10 @@ namespace ranges
 
             struct FiniteRange
               : refines<Range, FiniteIterable>
+            {};
+
+            struct FiniteOutputRange
+              : refines<FiniteRange(_1), OutputRange>
             {};
 
             struct FiniteInputRange
@@ -191,6 +214,9 @@ namespace ranges
         template<typename T>
         using Iterable = concepts::models<concepts::Iterable, T>;
 
+        template<typename T, typename O>
+        using OutputIterable = concepts::models<concepts::OutputIterable, T, O>;
+
         template<typename T>
         using InputIterable = concepts::models<concepts::InputIterable, T>;
 
@@ -205,6 +231,9 @@ namespace ranges
 
         template<typename T>
         using FiniteIterable = concepts::models<concepts::FiniteIterable, T>;
+
+        template<typename T, typename O>
+        using FiniteOutputIterable = concepts::models<concepts::FiniteOutputIterable, T, O>;
 
         template<typename T>
         using FiniteInputIterable = concepts::models<concepts::FiniteInputIterable, T>;
@@ -221,6 +250,9 @@ namespace ranges
         template<typename T>
         using Range = concepts::models<concepts::Range, T>;
 
+        template<typename T, typename O>
+        using OutputRange = concepts::models<concepts::OutputRange, T, O>;
+
         template<typename T>
         using InputRange = concepts::models<concepts::InputRange, T>;
 
@@ -235,6 +267,9 @@ namespace ranges
 
         template<typename T>
         using FiniteRange = concepts::models<concepts::FiniteRange, T>;
+
+        template<typename T, typename O>
+        using FiniteOutputRange = concepts::models<concepts::FiniteOutputRange, T, O>;
 
         template<typename T>
         using FiniteInputRange = concepts::models<concepts::FiniteInputRange, T>;
