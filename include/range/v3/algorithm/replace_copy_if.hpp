@@ -24,6 +24,20 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel,
+                     typename OutputIterator, typename UnaryPredicate,
+                     typename Value>
+            OutputIterator
+            replace_copy_if(ForwardIterator begin, Sentinel end, OutputIterator out,
+                UnaryPredicate pred, Value const& new_value)
+            {
+                for(; begin != end; ++begin, ++out)
+                    *out = pred(*begin) ? new_value : *begin;
+                return out;
+            }
+        }
 
         struct replacer_copier_if : bindable<replacer_copier_if>
         {
@@ -31,23 +45,23 @@ namespace ranges
             ///
             /// range-based version of the replace_copy_if std algorithm
             ///
-            /// \pre ForwardRange is a model of the ForwardRange concept
+            /// \pre ForwardIterable is a model of the ForwardIterable concept
             /// \pre UnaryPredicate is a model of the UnaryPredicate concept
             /// \pre Value is convertible to UnaryPredicate's argument type
             /// \pre Value is CopyAssignable
             /// \pre Value is convertible to a type in OutputIterator's set of value types.
-            template<typename ForwardRange, typename OutputIterator, typename UnaryPredicate,
+            template<typename ForwardIterable, typename OutputIterator, typename UnaryPredicate,
                 typename Value>
             static OutputIterator
-            invoke(replacer_copier_if, ForwardRange && rng, OutputIterator out, UnaryPredicate pred,
-                Value const & new_value)
+            invoke(replacer_copier_if, ForwardIterable && rng, OutputIterator out,
+                UnaryPredicate pred, Value const & new_value)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
-                                                      range_reference_t<ForwardRange>>());
+                                                      range_reference_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
-                                                      range_reference_t<ForwardRange>>());
-                return std::replace_copy_if(ranges::begin(rng), ranges::end(rng),
+                                                      range_reference_t<ForwardIterable>>());
+                return detail::replace_copy_if(ranges::begin(rng), ranges::end(rng),
                     std::move(out), ranges::make_invokable(std::move(pred)), new_value);
             }
 

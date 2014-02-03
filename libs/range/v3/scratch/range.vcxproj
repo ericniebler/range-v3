@@ -99,6 +99,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\min_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\mismatch.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move_backward.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\nth_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partial_sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partial_sort_copy.hpp" />
@@ -156,6 +158,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\sentinel_adaptor.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\sentinel_facade.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\tuple_algorithm.hpp" />

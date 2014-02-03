@@ -12,49 +12,70 @@
 #define RANGES_V3_ALGORITHM_LEXICOGRAPHICAL_COMPARE_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename InputIterator1, typename Sentinel1,
+                     typename InputIterator2, typename Sentinel2,
+                     typename BinaryPredicate = ranges::less>
+            bool
+            lexicographical_compare(InputIterator1 begin1, Sentinel1 end1,
+                                    InputIterator2 begin2, Sentinel2 end2,
+                                    BinaryPredicate pred = BinaryPredicate{})
+            {
+                for(; begin2 != end2; ++begin1, ++begin2)
+                {
+                    if(begin1 == end1 || pred(*begin1, *begin2))
+                        return true;
+                    if(pred(*begin2, *begin1))
+                        return false;
+                }
+                return false;
+            }
+        }
+
         struct lexicographical_comparer : bindable<lexicographical_comparer>
         {
             /// \brief template function \s lexicographical_comparer::operator()
             ///
             /// range-based version of the \c lexicographical_compare std algorithm
             ///
-            /// \pre \c InputRange1 is a model of the InputRange concept
-            /// \pre \c InputRange2 is a model of the InputRange concept
-            template<typename InputRange1, typename InputRange2>
-            static bool invoke(lexicographical_comparer, InputRange1 const & rng1,
-                InputRange2 const & rng2)
+            /// \pre \c InputIterable1 is a model of the InputIterable concept
+            /// \pre \c InputIterable2 is a model of the InputIterable concept
+            template<typename InputIterable1, typename InputIterable2>
+            static bool invoke(lexicographical_comparer, InputIterable1 const & rng1,
+                InputIterable2 const & rng2)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange1 const>());
-                CONCEPT_ASSERT(ranges::InputRange<InputRange2 const>());
-                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputRange1 const>,
-                                                          range_reference_t<InputRange2 const>>());
-                return std::lexicographical_compare(
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputIterable1 const>,
+                                                          range_reference_t<InputIterable2 const>>());
+                return detail::lexicographical_compare(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2));
             }
 
             /// \overload
-            template<typename InputRange1, typename InputRange2, typename BinaryPredicate>
-            static bool invoke(lexicographical_comparer, InputRange1 const & rng1,
-                InputRange2 const & rng2, BinaryPredicate pred)
+            template<typename InputIterable1, typename InputIterable2, typename BinaryPredicate>
+            static bool invoke(lexicographical_comparer, InputIterable1 const & rng1,
+                InputIterable2 const & rng2, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange1 const>());
-                CONCEPT_ASSERT(ranges::InputRange<InputRange2 const>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputRange1 const>,
-                                                       range_reference_t<InputRange2 const>>());
-                return std::lexicographical_compare(
+                                                       range_reference_t<InputIterable1 const>,
+                                                       range_reference_t<InputIterable2 const>>());
+                return detail::lexicographical_compare(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),
                     ranges::make_invokable(std::move(pred)));

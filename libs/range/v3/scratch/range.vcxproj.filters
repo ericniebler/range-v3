@@ -379,5 +379,14 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\generate_n.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\sentinel_adaptor.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move.hpp">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move_backward.hpp">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

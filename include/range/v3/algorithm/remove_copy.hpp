@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_REMOVE_COPY_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
@@ -22,27 +21,42 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename InputIterator, typename Sentinel,
+                     typename OutputIterator, typename Value>
+            OutputIterator
+            remove_copy(InputIterator begin, Sentinel end,
+                        OutputIterator out, Value const & value)
+            {
+                for (; begin != end; ++begin)
+                    if (!(*begin == value))
+                        *out++ = *begin;
+                return out;
+            }
+        }
+
         struct remover_copier : bindable<remover_copier>
         {
             /// \brief template function remove_copy
             ///
             /// range-based version of the remove_copy std algorithm
             ///
-            /// \pre InputRange is a model of the InputRange concept
+            /// \pre InputIterable is a model of the InputIterable concept
             /// \pre OutputIterator is a model of the OutputIterator concept
             /// \pre Value is a model of the EqualityComparable concept
             /// \pre Objects of type Value can be compared for equality with objects of
             /// InputIterator's value type.
-            template<typename InputRange, typename OutputIterator, typename Value>
+            template<typename InputIterable, typename OutputIterator, typename Value>
             static OutputIterator
-            invoke(remover_copier, InputRange && rng, OutputIterator out, Value const & val)
+            invoke(remover_copier, InputIterable && rng, OutputIterator out, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
-                                                      range_reference_t<InputRange>>());
-                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputRange>,
+                                                      range_reference_t<InputIterable>>());
+                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputIterable>,
                                                           Value const &>());
-                return std::remove_copy(ranges::begin(rng), ranges::end(rng),
+                return detail::remove_copy(ranges::begin(rng), ranges::end(rng),
                     std::move(out), val);
             }
 

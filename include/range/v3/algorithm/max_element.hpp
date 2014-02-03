@@ -12,16 +12,33 @@
 #define RANGES_V3_ALGORITHM_MAX_ELEMENT_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/next_prev.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel,
+                     typename BinaryPredicate = ranges::less>
+            ForwardIterator
+            max_element(ForwardIterator begin, Sentinel end,
+                        BinaryPredicate pred = BinaryPredicate{})
+            {
+                if(begin != end)
+                    for(auto tmp = ranges::next(begin); tmp != end; ++tmp)
+                        if(pred(*begin, *tmp))
+                            begin = tmp;
+                return begin;
+            }
+        }
+
         struct max_element_finder : bindable<max_element_finder>,
                                     pipeable<max_element_finder>
         {
@@ -29,27 +46,27 @@ namespace ranges
             ///
             /// range-based version of the max_element std algorithm
             ///
-            /// \pre ForwardRange is a model of the ForwardRange concept
+            /// \pre ForwardIterable is a model of the ForwardIterable concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardRange,
-                CONCEPT_REQUIRES(ranges::Range<ForwardRange>())>
-            static range_iterator_t<ForwardRange>
-            invoke(max_element_finder, ForwardRange && rng)
+            template<typename ForwardIterable,
+                CONCEPT_REQUIRES(ranges::Range<ForwardIterable>())>
+            static range_iterator_t<ForwardIterable>
+            invoke(max_element_finder, ForwardIterable && rng)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardRange>>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardIterable>>());
                 return std::max_element(ranges::begin(rng), ranges::end(rng));
             }
 
             /// \overload
-            template<typename ForwardRange, typename BinaryPredicate>
-            static range_iterator_t<ForwardRange>
-            invoke(max_element_finder, ForwardRange && rng, BinaryPredicate pred)
+            template<typename ForwardIterable, typename BinaryPredicate>
+            static range_iterator_t<ForwardIterable>
+            invoke(max_element_finder, ForwardIterable && rng, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<ForwardRange>,
-                                                       range_reference_t<ForwardRange>>());
+                                                       range_reference_t<ForwardIterable>,
+                                                       range_reference_t<ForwardIterable>>());
                 return std::max_element(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }
@@ -57,7 +74,7 @@ namespace ranges
             /// \overload
             /// for rng | max_element(pred)
             template<typename BinaryPredicate,
-                CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
+                CONCEPT_REQUIRES(!ranges::Iterable<BinaryPredicate>())>
             static auto
             invoke(max_element_finder max_element, BinaryPredicate pred) ->
                 decltype(max_element.move_bind(std::placeholders::_1, std::move(pred)))

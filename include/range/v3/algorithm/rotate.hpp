@@ -16,6 +16,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -23,6 +24,56 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            // With credit to Howard Hinnant
+            template<typename ForwardIterator, typename Sentinel>
+            ForwardIterator
+            rotate(ForwardIterator begin, ForwardIterator middle, Sentinel end,
+                concepts::ForwardIterable)
+            {
+                if(begin == middle)
+                    return end;
+                if(middle == end)
+                    return begin;
+                for(auto i = middle;;)
+                {
+                    ranges::swap(*begin, *i);
+                    ++begin;
+                    if(++i == end)
+                        break;
+                    if(begin == middle)
+                        middle = i;
+                }
+                auto ret = begin;
+                if(begin != middle)
+                {
+                    for(auto i = middle;;)
+                    {
+                        ranges::swap(*begin, *i);
+                        ++begin;
+                        if(++i == end)
+                        {
+                            if(begin == middle)
+                                break;
+                            i = middle;
+                        }
+                        else if (begin == middle)
+                            middle = i;
+                    }
+                }
+                return ret;
+            }
+
+            template<typename ForwardIterator>
+            ForwardIterator
+            rotate(ForwardIterator begin, ForwardIterator middle, ForwardIterator end,
+                concepts::ForwardRange)
+            {
+                return std::rotate(std::move(begin), std::move(middle), std::move(end));
+            }
+        }
+
         struct rotater : bindable<rotater>
         {
             /// \brief template function rotate
@@ -30,13 +81,14 @@ namespace ranges
             /// range-based version of the rotate std algorithm
             ///
             /// \pre Rng meets the requirements for a Forward range
-            template<typename ForwardRange>
-            static ForwardRange invoke(rotater, ForwardRange && rng,
-                range_iterator_t<ForwardRange> middle)
+            template<typename ForwardIterable>
+            static ForwardIterable invoke(rotater, ForwardIterable && rng,
+                range_iterator_t<ForwardIterable> middle)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                std::rotate(ranges::begin(rng), std::move(middle), ranges::end(rng));
-                return std::forward<ForwardRange>(rng);
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                detail::rotate(ranges::begin(rng), std::move(middle), ranges::end(rng),
+                    range_concept_t<ForwardIterable>{});
+                return std::forward<ForwardIterable>(rng);
             }
 
             /// \overload

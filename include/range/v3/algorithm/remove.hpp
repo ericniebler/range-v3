@@ -12,29 +12,45 @@
 #define RANGES_V3_ALGORITHM_REMOVE_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/next_prev.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/algorithm/find.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel, typename Value>
+            ForwardIterator
+            remove(ForwardIterator begin, Sentinel end, Value const & value)
+            {
+                begin = detail::find(std::move(begin), end, value);
+                if(begin != end)
+                    for(auto tmp = ranges::next(begin); tmp != end; ++tmp)
+                        if(!(*tmp == value))
+                            *begin++ = std::move(*tmp);
+                return begin;
+            }
+        }
+
         struct remover : bindable<remover>
         {
             /// \brief template function remove
             ///
             /// range-based version of the remove std algorithm
             ///
-            /// \pre ForwardRange is a model of the ForwardRange concept
-            template<typename ForwardRange, typename Value>
-            static range_iterator_t<ForwardRange>
-            invoke(remover, ForwardRange && rng, Value const & val)
+            /// \pre ForwardIterable is a model of the ForwardIterable concept
+            template<typename ForwardIterable, typename Value>
+            static range_iterator_t<ForwardIterable>
+            invoke(remover, ForwardIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                return std::remove(ranges::begin(rng), ranges::end(rng), val);
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                return detail::remove(ranges::begin(rng), ranges::end(rng), val);
             }
 
             /// \overload

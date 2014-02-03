@@ -317,6 +317,12 @@ namespace ranges
         struct mismatcher;
         extern mismatcher const mismatch;
 
+        struct mover;
+        extern mover const move;
+
+        struct backward_mover;
+        extern backward_mover const move_backward;
+
         struct nth_element_finder;
         extern nth_element_finder const nth_element;
 

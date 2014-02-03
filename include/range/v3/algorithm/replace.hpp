@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_REPLACE_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
@@ -22,20 +21,34 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel, typename Value>
+            void
+            replace(ForwardIterator begin, Sentinel end,
+                Value const& old_value, Value const& new_value)
+            {
+                for(; begin != end; ++begin)
+                    if(*begin == old_value)
+                        *begin = new_value;
+            }
+        }
+
         struct replacer : bindable<replacer>
         {
             /// \brief template function replace
             ///
             /// range-based version of the replace std algorithm
             ///
-            /// \pre ForwardRange is a model of the ForwardRange concept
-            template<typename ForwardRange, typename Value>
-            static ForwardRange
-            invoke(replacer, ForwardRange && rng, Value const & old_value, Value const & new_value)
+            /// \pre ForwardIterable is a model of the ForwardIterable concept
+            template<typename ForwardIterable, typename Value>
+            static ForwardIterable
+            invoke(replacer, ForwardIterable && rng, Value const & old_value,
+                Value const & new_value)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
-                std::replace(ranges::begin(rng), ranges::end(rng), old_value, new_value);
-                return std::forward<ForwardRange>(rng);
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                detail::replace(ranges::begin(rng), ranges::end(rng), old_value, new_value);
+                return std::forward<ForwardIterable>(rng);
             }
 
             /// \overload

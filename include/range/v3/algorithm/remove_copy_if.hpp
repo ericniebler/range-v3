@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_REMOVE_COPY_IF_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
@@ -23,23 +22,38 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename InputIterator, typename Sentinel,
+                     typename OutputIterator, typename UnaryPredicate>
+            OutputIterator
+            remove_copy_if(InputIterator begin, Sentinel end,
+                           OutputIterator out, UnaryPredicate pred)
+            {
+                for (; begin != end; ++begin)
+                    if (!pred(*begin))
+                        *out++ = *begin;
+                return out;
+            }
+        }
+
         struct remover_copier_if : bindable<remover_copier_if>
         {
             /// \brief template function remove_copy_if
             ///
             /// range-based version of the remove_copy_if std algorithm
             ///
-            /// \pre InputRange is a model of the InputRange concept
+            /// \pre InputIterable is a model of the InputIterable concept
             /// \pre OutputIterator is a model of the OutputIterator concept
             /// \pre UnaryPredicate is a model of the UnaryPredicate concept
             /// \pre InputIterator's value type is convertible to Predicate's argument type
             /// \pre out is not an iterator in the range rng
-            template<typename InputRange, typename OutputIterator, typename UnaryPredicate>
+            template<typename InputIterable, typename OutputIterator, typename UnaryPredicate>
             static OutputIterator
-            invoke(remover_copier_if, InputRange && rng, OutputIterator out, UnaryPredicate pred)
+            invoke(remover_copier_if, InputIterable && rng, OutputIterator out, UnaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                return std::remove_copy_if(ranges::begin(rng), ranges::end(rng),
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                return detail::remove_copy_if(ranges::begin(rng), ranges::end(rng),
                     std::move(out), ranges::make_invokable(std::move(pred)));
             }
 

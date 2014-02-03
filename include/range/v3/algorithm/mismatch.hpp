@@ -12,11 +12,11 @@
 #define RANGES_V3_ALGORITHM_MISMATCH_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -24,31 +24,20 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename InputIterator1, typename InputIterator2>
+            template<typename InputIterator1, typename Sentinel1,
+                     typename InputIterator2, typename Sentinel2,
+                     typename BinaryPredicate = ranges::equal_to>
             std::pair<InputIterator1, InputIterator2>
-            mismatch_impl(InputIterator1 first1, InputIterator1 last1,
-                          InputIterator2 first2, InputIterator2 last2)
+            mismatch(InputIterator1 begin1, Sentinel1 end1,
+                     InputIterator2 begin2, Sentinel2 end2,
+                     BinaryPredicate pred = BinaryPredicate{})
             {
-                while(first1 != last1 && first2 != last2 && *first1 == *first2)
+                while(begin1 != end1 && begin2 != end2 && pred(*begin1, *begin2))
                 {
-                    ++first1;
-                    ++first2;
+                    ++begin1;
+                    ++begin2;
                 }
-                return {first1, first2};
-            }
-
-            template<typename InputIterator1, typename InputIterator2, typename BinaryPredicate>
-            std::pair<InputIterator1, InputIterator2>
-            mismatch_impl(InputIterator1 first1, InputIterator1 last1,
-                          InputIterator2 first2, InputIterator2 last2,
-                          BinaryPredicate pred)
-            {
-                while(first1 != last1 && first2 != last2 && pred(*first1, *first2))
-                {
-                    ++first1;
-                    ++first2;
-                }
-                return {first1, first2};
+                return {begin1, begin2};
             }
         } // namespace range_detail
 
@@ -58,36 +47,34 @@ namespace ranges
             ///
             /// range-based version of the mismatch std algorithm
             ///
-            /// \pre InputRange1 is a model of the InputRange concept
-            /// \pre InputRange2 is a model of the InputRange concept
+            /// \pre InputIterable1 is a model of the InputIterable concept
+            /// \pre InputIterable2 is a model of the InputIterable concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename InputRange1, typename InputRange2>
-            static std::pair<range_iterator_t<InputRange1>, range_iterator_t<InputRange2>>
-            invoke(mismatcher, InputRange1 && rng1, InputRange2 && rng2)
+            template<typename InputIterable1, typename InputIterable2>
+            static std::pair<range_iterator_t<InputIterable1>, range_iterator_t<InputIterable2>>
+            invoke(mismatcher, InputIterable1 && rng1, InputIterable2 && rng2)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
-                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputRange1>,
-                                                          range_reference_t<InputRange2>> ());
-                return ranges::detail::mismatch_impl(
-                    ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2));
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2>());
+                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputIterable1>,
+                                                          range_reference_t<InputIterable2>> ());
+                return detail::mismatch(ranges::begin(rng1), ranges::end(rng1),
+                                        ranges::begin(rng2), ranges::end(rng2));
             }
 
             /// \overload
-            template<typename InputRange1, typename InputRange2, typename BinaryPredicate>
-            static std::pair<range_iterator_t<InputRange1>, range_iterator_t<InputRange2>>
-            invoke(mismatcher, InputRange1 && rng1, InputRange2 && rng2, BinaryPredicate pred)
+            template<typename InputIterable1, typename InputIterable2, typename BinaryPredicate>
+            static std::pair<range_iterator_t<InputIterable1>, range_iterator_t<InputIterable2>>
+            invoke(mismatcher, InputIterable1 && rng1, InputIterable2 && rng2, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputRange1>,
-                                                       range_reference_t<InputRange2>>());
-                return ranges::detail::mismatch_impl(
-                    ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2), ranges::end(rng2),
-                    ranges::make_invokable(std::move(pred)));
+                                                       range_reference_t<InputIterable1>,
+                                                       range_reference_t<InputIterable2>>());
+                return detail::mismatch(ranges::begin(rng1), ranges::end(rng1),
+                                        ranges::begin(rng2), ranges::end(rng2),
+                                        ranges::make_invokable(std::move(pred)));
             }
         };
 

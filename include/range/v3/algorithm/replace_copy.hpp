@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_REPLACE_COPY_HPP
 
 #include <utility>
-#include <algorithm>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
@@ -23,22 +22,36 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel,
+                     typename OutputIterator, typename Value>
+            OutputIterator
+            replace_copy(ForwardIterator begin, Sentinel end, OutputIterator out,
+                Value const& old_value, Value const& new_value)
+            {
+                for(; begin != end; ++begin, ++out)
+                    *out = (*begin == old_value) ? new_value : *begin;
+                return out;
+            }
+        }
+
         struct replacer_copier : bindable<replacer_copier>
         {
             /// \brief template function replace_copy
             ///
             /// range-based version of the replace_copy std algorithm
             ///
-            /// \pre ForwardRange is a model of the ForwardRange concept
-            template<typename ForwardRange, typename OutputIterator, typename Value>
+            /// \pre ForwardIterable is a model of the ForwardIterable concept
+            template<typename ForwardIterable, typename OutputIterator, typename Value>
             static OutputIterator
-            invoke(replacer_copier, ForwardRange && rng, OutputIterator out,
+            invoke(replacer_copier, ForwardIterable && rng, OutputIterator out,
                    Value const & old_value, Value const & new_value)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
-                                                      range_reference_t<ForwardRange>>());
-                return std::replace_copy(ranges::begin(rng), ranges::end(rng),
+                                                      range_reference_t<ForwardIterable>>());
+                return detail::replace_copy(ranges::begin(rng), ranges::end(rng),
                     std::move(out), old_value, new_value);
             }
 

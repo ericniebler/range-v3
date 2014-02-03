@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_FIND_IF_HPP
 
 #include <utility>
-#include <algorithm>
 #include <functional>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -24,22 +23,35 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel, typename UnaryPredicate>
+            ForwardIterator
+            find_if(ForwardIterator begin, Sentinel end, UnaryPredicate pred)
+            {
+                for(; begin != end; ++begin)
+                    if(pred(*begin))
+                        break;
+                return begin;
+            }
+        }
+
         struct finder_if : bindable<finder_if>
         {
             /// \brief template function \c finder_if::operator()
             ///
             /// range-based version of the \c find_if std algorithm
             ///
-            /// \pre \c InputRange is a model of the InputRange concept
+            /// \pre \c InputIterable is a model of the InputIterable concept
             /// \pre \c UnaryPredicate is a model of the UnaryPredicate concept
-            template<typename InputRange, typename UnaryPredicate>
-            static range_iterator_t<InputRange>
-            invoke(finder_if, InputRange && rng, UnaryPredicate pred)
+            template<typename InputIterable, typename UnaryPredicate>
+            static range_iterator_t<InputIterable>
+            invoke(finder_if, InputIterable && rng, UnaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
-                                                      range_reference_t<InputRange>>());
-                return std::find_if(ranges::begin(rng), ranges::end(rng),
+                                                      range_reference_t<InputIterable>>());
+                return detail::find_if(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }
 

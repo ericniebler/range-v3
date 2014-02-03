@@ -39,6 +39,7 @@ namespace ranges
             invoke(inplace_merger, BidirectionalRange && rng,
                 range_iterator_t<BidirectionalRange> middle)
             {
+                // Can this be FiniteBidirectionalIterable?
                 CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<BidirectionalRange>>());
                 std::inplace_merge(ranges::begin(rng), std::move(middle), ranges::end(rng));

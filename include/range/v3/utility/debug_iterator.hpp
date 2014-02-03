@@ -69,7 +69,7 @@ namespace ranges
                 return that.base() - this->base();
             }
         public:
-            debug_iterator()
+            constexpr debug_iterator()
               : iterator_adaptor_{}, rng_{}
             {}
             debug_iterator(Range & rng, Iterator it)

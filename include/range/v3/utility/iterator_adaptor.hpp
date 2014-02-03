@@ -35,7 +35,7 @@ namespace ranges
               , typename Difference
               , typename Pointer
             >
-            using iterator_adaptor_base = iterator_facade<
+            using iterator_adaptor_base_t = iterator_facade<
                 Derived
               , conditional_with_default_t<
                     Value
@@ -100,7 +100,7 @@ namespace ranges
           , typename Pointer      = use_default
         >
         struct iterator_adaptor
-          : detail::iterator_adaptor_base<
+          : detail::iterator_adaptor_base_t<
                 Derived, Base, Value, Category, Reference, Difference, Pointer
             >
         {
@@ -160,7 +160,7 @@ namespace ranges
         public:
             using base_type = Base;
 
-            iterator_adaptor()
+            constexpr iterator_adaptor()
               : it_{}
             {}
             explicit iterator_adaptor(Base it)

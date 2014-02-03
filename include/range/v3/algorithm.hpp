@@ -37,6 +37,8 @@
 #include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/min_element.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
+#include <range/v3/algorithm/move.hpp>
+#include <range/v3/algorithm/move_backward.hpp>
 #include <range/v3/algorithm/nth_element.hpp>
 #include <range/v3/algorithm/partial_sort.hpp>
 #include <range/v3/algorithm/partial_sort_copy.hpp>
