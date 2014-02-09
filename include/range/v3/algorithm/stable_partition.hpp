@@ -42,8 +42,6 @@ namespace ranges
                     ranges::make_invokable(std::move(pred)));
             }
 
-            /// BUGBUG what if rng is an rvalue?
-
             /// \overload
             template<typename UnaryPredicate>
             static auto invoke(stable_partitioner stable_partition, UnaryPredicate pred) ->

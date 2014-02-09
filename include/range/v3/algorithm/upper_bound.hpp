@@ -14,6 +14,7 @@
 #include <utility>
 #include <algorithm>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/next_prev.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
@@ -23,60 +24,65 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator, typename Sentinel,
+                     typename Value, typename BinaryPredicate>
+            ForwardIterator
+            upper_bound(ForwardIterator begin, ForwardIterator end,
+                        Value const & value, BinaryPredicate pred)
+            {
+                auto dist = detail::distance(begin, end);
+                while(dist != 0)
+                {
+                    auto half = dist / 2;
+                    auto middle = ranges::next(begin, half);
+                    if(pred(value, *middle))
+                        dist = half;
+                    else
+                    {
+                        begin = std::move(++middle);
+                        dist -= half + 1;
+                    }
+                }
+                return begin;
+            }
+        }
+
         struct upper_bound_finder : bindable<upper_bound_finder>
         {
             /// \brief template function upper_bound
             ///
             /// range-based version of the upper_bound std algorithm
             ///
-            /// \pre ForwardRange is a model of the ForwardRange concept
-            template<typename ForwardRange, typename Value,
-                CONCEPT_REQUIRES(ranges::Range<ForwardRange>() &&
-                                 ranges::EqualityComparable<Value const &,
-                                                            range_reference_t<ForwardRange>>())>
-            static range_iterator_t<ForwardRange>
-            invoke(upper_bound_finder, ForwardRange && rng, Value const & val)
+            /// \pre ForwardIterable is a model of the ForwardIterable concept
+            template<typename ForwardIterable, typename Value,
+                typename BinaryPredicate = ranges::less,
+                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable>())>
+            static range_iterator_t<ForwardIterable>
+            invoke(upper_bound_finder, ForwardIterable && rng, Value const & value,
+                BinaryPredicate pred = BinaryPredicate{})
             {
-                CONCEPT_ASSERT(ranges::FiniteForwardRange<ForwardRange>());
-                CONCEPT_ASSERT(ranges::EqualityComparable<Value const &,
-                                                          range_reference_t<ForwardRange>>());
-                return std::upper_bound(ranges::begin(rng), ranges::end(rng), val);
-            }
-
-            /// \overload
-            template<typename ForwardRange, typename Value, typename BinaryPredicate>
-            static range_iterator_t<ForwardRange>
-            invoke(upper_bound_finder, ForwardRange && rng, Value const & val, BinaryPredicate pred)
-            {
-                CONCEPT_ASSERT(ranges::FiniteForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        Value const &,
-                                                       range_reference_t<ForwardRange>>());
-                return std::upper_bound(ranges::begin(rng), ranges::end(rng), val,
-                    ranges::make_invokable(std::move(pred)));
+                                                       range_reference_t<ForwardIterable>>());
+                return detail::upper_bound(
+                    ranges::begin(rng), ranges::end(rng),
+                    value, ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
-            /// for rng | upper_bound(val)
-            template<typename Value>
+            /// for rng | upper_bound(value)
+            template<typename Value, typename BinaryPredicate = ranges::less,
+                CONCEPT_REQUIRES(!ranges::Iterable<Value>())>
             static auto
-            invoke(upper_bound_finder upper_bound, Value && val) ->
-                decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val)))
-            {
-                return upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val));
-            }
-
-            /// \overload
-            template<typename Value, typename BinaryPredicate,
-                CONCEPT_REQUIRES(!ranges::Range<Value>() ||
-                                 !ranges::EqualityComparable<BinaryPredicate,
-                                                             range_reference_t<Value>>())>
-            static auto
-            invoke(upper_bound_finder upper_bound, Value && val, BinaryPredicate pred) ->
-                decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
+            invoke(upper_bound_finder upper_bound, Value && value,
+                BinaryPredicate pred = BinaryPredicate{}) ->
+                decltype(upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(value),
                     std::move(pred)))
             {
-                return upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
+                return upper_bound.move_bind(std::placeholders::_1, std::forward<Value>(value),
                     std::move(pred));
             }
         };

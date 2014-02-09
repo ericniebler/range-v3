@@ -30,7 +30,7 @@ namespace ranges
             template<typename ForwardIterator, typename Sentinel, typename Value,
                 typename BinaryPredicate = ranges::less>
             ForwardIterator
-            lower_bound(ForwardIterator begin, Sentinel end, Value const& val,
+            lower_bound(ForwardIterator begin, Sentinel end, Value const& value,
                 BinaryPredicate pred = BinaryPredicate{})
             {
                 auto dist = detail::distance(begin, end);
@@ -38,7 +38,7 @@ namespace ranges
                 {
                     auto half = dist / 2;
                     auto middle = ranges::next(begin, half);
-                    if(pred(*middle, val))
+                    if(pred(*middle, value))
                     {
                         begin = std::move(++middle);
                         dist -= half + 1;
@@ -60,47 +60,47 @@ namespace ranges
             template<typename ForwardIterable, typename Value,
                 CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable>())>
             static range_iterator_t<ForwardIterable>
-            invoke(lower_bound_finder, ForwardIterable && rng, Value const & val)
+            invoke(lower_bound_finder, ForwardIterable && rng, Value const & value)
             {
                 CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardIterable>,
                                                           Value const &>());
-                return detail::lower_bound(ranges::begin(rng), ranges::end(rng), val);
+                return detail::lower_bound(ranges::begin(rng), ranges::end(rng), value);
             }
 
             /// \overload
             template<typename ForwardIterable, typename Value, typename BinaryPredicate>
             static range_iterator_t<ForwardIterable>
-            invoke(lower_bound_finder, ForwardIterable && rng, Value const & val, BinaryPredicate pred)
+            invoke(lower_bound_finder, ForwardIterable && rng, Value const & value, BinaryPredicate pred)
             {
                 CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable>,
                                                        Value const &>());
-                return detail::lower_bound(ranges::begin(rng), ranges::end(rng), val,
+                return detail::lower_bound(ranges::begin(rng), ranges::end(rng), value,
                     ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload
-            /// for rng | lower_bound(val)
+            /// for rng | lower_bound(value)
             template<typename Value>
             static auto
-            invoke(lower_bound_finder lower_bound, Value && val) ->
-                decltype(lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(val)))
+            invoke(lower_bound_finder lower_bound, Value && value) ->
+                decltype(lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(value)))
             {
-                return lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(val));
+                return lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(value));
             }
 
             /// \overload
-            /// for rng | lower_bound(val, pred)
+            /// for rng | lower_bound(value, pred)
             template<typename Value, typename BinaryPredicate,
                 CONCEPT_REQUIRES(!ranges::Iterable<Value>())>
             static auto
-            invoke(lower_bound_finder lower_bound, Value && val, BinaryPredicate pred) ->
-                decltype(lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
+            invoke(lower_bound_finder lower_bound, Value && value, BinaryPredicate pred) ->
+                decltype(lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(value),
                     std::move(pred)))
             {
-                return lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(val),
+                return lower_bound.move_bind(std::placeholders::_1, std::forward<Value>(value),
                     std::move(pred));
             }
         };

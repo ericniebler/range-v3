@@ -17,24 +17,43 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/swap.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename ForwardIterator1, typename Sentinel1,
+                     typename ForwardIterator2, typename Sentinel2>
+            ForwardIterator2
+            swap_ranges(ForwardIterator1 begin1, Sentinel1 end1,
+                        ForwardIterator2 begin2, Sentinel2 end2)
+            {
+                for(; begin1 != end1; ++begin1, ++begin2)
+                {
+                    RANGE_ASSERT(begin2 != end2);
+                    ranges::swap(*begin1, *begin2);
+                }
+                return begin2;
+            }
+        }
+
         struct range_swapper : bindable<range_swapper>
         {
             /// \overload
-            template<typename ForwardRange1, typename ForwardRange2>
-            static range_iterator_t<ForwardRange2>
-            invoke(range_swapper, ForwardRange1 && rng1, ForwardRange2 && rng2)
+            template<typename ForwardIterable1, typename ForwardIterable2>
+            static range_iterator_t<ForwardIterable2>
+            invoke(range_swapper, ForwardIterable1 && rng1, ForwardIterable2 && rng2)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange1>());
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange2>());
-                CONCEPT_ASSERT(ranges::Swappable<range_reference_t<ForwardRange1>,
-                                                 range_reference_t<ForwardRange2>>());
-                return std::swap_ranges(ranges::begin(rng1), ranges::end(rng1),
-                    ranges::begin(rng2));
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable1>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::Swappable<range_reference_t<ForwardIterable1>,
+                                                 range_reference_t<ForwardIterable2>>());
+                return detail::swap_ranges(
+                    ranges::begin(rng1), ranges::end(rng1),
+                    ranges::begin(rng2), ranges::end(rng2));
             }
         };
 
