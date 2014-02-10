@@ -17,9 +17,9 @@
 #include <utility>
 #include <iterator>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/compressed_pair.hpp>
 
 namespace ranges
 {
@@ -28,55 +28,60 @@ namespace ranges
         // Intentionally resisting the urge to fatten this interface to make
         // it look like a container, like iterator_range. It's a range,
         // not a container.
-        template<typename Iter>
+        template<typename Iterator, typename Sentinel /* = Iterator */>
         struct iterator_range
         {
         private:
-            Iter begin_, end_;
+            compressed_pair<Iterator, Sentinel> begin_end_;
         public:
-            using iterator = Iter;
-            using const_iterator = Iter;
+            using iterator = Iterator;
+            using const_iterator = Iterator;
+            using sentinel = Sentinel;
+            using const_sentinel = Sentinel;
 
             iterator_range() = default;
-            constexpr iterator_range(Iter begin, Iter end)
-              : begin_(detail::move(begin)), end_(detail::move(end))
+            constexpr iterator_range(Iterator begin, Sentinel end)
+              : begin_end_(detail::move(begin), detail::move(end))
             {}
-            constexpr iterator_range(std::pair<Iter, Iter> rng)
-              : begin_(detail::move(rng.first)), end_(detail::move(rng.second))
+            constexpr iterator_range(std::pair<Iterator, Sentinel> rng)
+              : begin_end_(detail::move(rng.first), detail::move(rng.second))
             {}
             iterator begin() const
             {
-                return begin_;
+                return begin_end_.first();
             }
-            iterator end() const
+            sentinel end() const
             {
-                return end_;
+                return begin_end_.second();
             }
             bool operator!() const
             {
-                return begin_ == end_;
+                return begin_end_.first() == begin_end_.second();
             }
             explicit operator bool() const
             {
-                return begin_ != end_;
+                return begin_end_.first() != begin_end_.second();
             }
-            iterator_range & advance_begin(iterator_difference_t<Iter> n)
+            iterator_range & advance_begin(iterator_difference_t<Iterator> n)
             {
-                std::advance(begin_, n);
+                std::advance(begin_end_.first(), n);
                 return *this;
             }
-            iterator_range & advance_end(iterator_difference_t<Iter> n)
+            template<typename This = iterator_range,
+                     CONCEPT_REQUIRES(ranges::Range<This>())>
+            iterator_range & advance_end(iterator_difference_t<Iterator> n)
             {
-                std::advance(end_, n);
+                std::advance(begin_end_.second(), n);
                 return *this;
             }
         };
 
         struct ranger : bindable<ranger>
         {
-            template<typename Iter>
-            static iterator_range<Iter> invoke(ranger, Iter begin, Iter end)
+            template<typename Iterator, typename Sentinel>
+            static iterator_range<Iterator> invoke(ranger, Iterator begin, Sentinel end)
             {
+                CONCEPT_ASSERT(ranges::EqualityComparable<Iterator, Sentinel>());
                 return {std::move(begin), std::move(end)};
             }
         };

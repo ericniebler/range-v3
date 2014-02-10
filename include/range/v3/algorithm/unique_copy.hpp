@@ -112,7 +112,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(
-                    (ranges::ForwardIterable<InputIterable>() &&
+                    (ranges::ForwardIterable<InputIterable>() ||
                      ranges::ForwardIterator<OutputIterator>()) ||
                     (ranges::CopyConstructible<range_value_t<InputIterable>>() &&
                      ranges::CopyAssignable<range_value_t<InputIterable>>()));
@@ -134,7 +134,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(
-                    (ranges::ForwardIterable<InputIterable>() &&
+                    (ranges::ForwardIterable<InputIterable>() ||
                      ranges::ForwardIterator<OutputIterator>()) ||
                     (ranges::CopyConstructible<range_value_t<InputIterable>>() &&
                      ranges::CopyAssignable<range_value_t<InputIterable>>()));

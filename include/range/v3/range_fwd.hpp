@@ -209,7 +209,7 @@ namespace ranges
         template<typename T>
         istream_range<T> istream(std::istream & sin);
 
-        template<typename Iter>
+        template<typename Iterator, typename Sentinel = Iterator>
         struct iterator_range;
 
         struct ranger;
