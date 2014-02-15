@@ -16,6 +16,8 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
+#include <range/v3/utility/sentinel_facade.hpp>
+#include <range/v3/utility/infinity.hpp>
 
 namespace ranges
 {
@@ -59,6 +61,10 @@ namespace ranges
                 }
                 void increment()
                 {}
+                constexpr infinity distance_to(sentinel) const
+                {
+                    return {};
+                }
             public:
                 constexpr iterator()
                   : value_{}

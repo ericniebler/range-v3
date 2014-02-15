@@ -39,14 +39,53 @@ namespace ranges
                   : box<Ts, std::integral_constant<std::size_t, Is>>{detail::forward<Us>(us)}...
                 {}
             };
+
+            struct compressed_tuple_core_access
+            {
+                template<typename Tuple>
+                static constexpr auto get_data(Tuple && tup) ->
+                    decltype((std::forward<Tuple>(tup).data_))
+                {
+                    return detail::forward<Tuple>(tup).data_;
+                }
+            };
         }
 
         template<typename... Ts>
         struct compressed_tuple
-          : detail::compressed_tuple_data<integer_sequence_t<sizeof...(Ts)>, Ts...>
         {
-            using detail::compressed_tuple_data<integer_sequence_t<sizeof...(Ts)>, Ts...>::compressed_tuple_data;
+            constexpr compressed_tuple() = default;
+            template<typename...Us,
+                     typename = decltype(detail::valid_exprs(Ts{std::declval<Us>()}...))>
+            explicit constexpr compressed_tuple(Us &&...us)
+              : data_{detail::forward<Us>(us)...}
+            {}
+        private:
+            friend struct detail::compressed_tuple_core_access;
+            detail::compressed_tuple_data<integer_sequence_t<sizeof...(Ts)>, Ts...> data_;
         };
+
+        // Get by index
+        template<std::size_t I, typename ...Ts>
+        auto get(compressed_tuple<Ts...> & tup) ->
+            decltype(ranges::get<I>(detail::compressed_tuple_core_access::get_data(tup)))
+        {
+            return ranges::get<I>(detail::compressed_tuple_core_access::get_data(tup));
+        }
+
+        template<std::size_t I, typename ...Ts>
+        constexpr auto get(compressed_tuple<Ts...> const & tup) ->
+            decltype(ranges::get<I>(detail::compressed_tuple_core_access::get_data(tup)))
+        {
+            return ranges::get<I>(detail::compressed_tuple_core_access::get_data(tup));
+        }
+
+        template<std::size_t I, typename ...Ts>
+        constexpr auto get(compressed_tuple<Ts...> && tup) ->
+            decltype(ranges::get<I>(detail::compressed_tuple_core_access::get_data(detail::move(tup))))
+        {
+            return ranges::get<I>(detail::compressed_tuple_core_access::get_data(detail::move(tup)));
+        }
 
         RANGES_CONSTEXPR struct compressed_tuple_maker
         {

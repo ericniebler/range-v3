@@ -42,13 +42,17 @@ namespace ranges
         struct join_range_view
         {
         private:
-            static_assert(std::is_same<range_value_t<InputRange0>, range_value_t<InputRange1>>::value,
+            static_assert(std::is_same<range_value_t<InputRange0>,
+                                       range_value_t<InputRange1>>::value,
                           "Range value types must be the same to join them");
             InputRange0 rng0_;
             InputRange1 rng1_;
 
-            template<bool Const> using base_range0_t = detail::add_const_if_t<InputRange0, Const>;
-            template<bool Const> using base_range1_t = detail::add_const_if_t<InputRange1, Const>;
+            template<bool Const>
+            using base_range0_t = detail::add_const_if_t<InputRange0, Const>;
+
+            template<bool Const>
+            using base_range1_t = detail::add_const_if_t<InputRange1, Const>;
 
             template<bool Const>
             struct basic_iterator

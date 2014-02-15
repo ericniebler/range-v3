@@ -15,6 +15,7 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
@@ -149,6 +150,20 @@ namespace ranges
         using typelist_front_t = typename typelist_front<List>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_push_front
+        template<typename T, typename List>
+        struct typelist_push_front;
+
+        template<typename T, typename ...List>
+        struct typelist_push_front<T, typelist<List...>>
+        {
+            using type = typelist<T, List...>;
+        };
+
+        template<typename T, typename List>
+        using typelist_push_front_t = typename typelist_push_front<T, List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
         // typelist_pop_front
         template<typename List>
         struct typelist_pop_front
@@ -177,6 +192,20 @@ namespace ranges
         template<typename List>
         using typelist_back_t = typename typelist_back<List>::type;
 
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_push_back
+        template<typename T, typename List>
+        struct typelist_push_back;
+
+        template<typename T, typename ...List>
+        struct typelist_push_back<T, typelist<List...>>
+        {
+            using type = typelist<List..., T>;
+        };
+
+        template<typename T, typename List>
+        using typelist_push_back_t = typename typelist_push_back<T, List>::type;
+
         // typelist_pop_back not provided because it cannot be made to meet the complixity
         // guarantees one would expect.
 
@@ -191,6 +220,99 @@ namespace ranges
         struct typelist_is_empty<typelist<>>
           : std::true_type
         {};
+
+        namespace detail
+        {
+            template<typename T, typename List>
+            struct typelist_in_
+            {
+                static std::false_type has(void*);
+            };
+
+            template<typename T, typename Head, typename...List>
+            struct typelist_in_<T, typelist<Head, List...>>
+              : typelist_in_<T, typelist<List...>>
+            {
+                using typelist_in_<T, typelist<List...>>::has;
+                static std::true_type has(detail::identity<Head>*);
+            };
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_in
+        template<typename T, typename List>
+        struct typelist_in;
+
+        template<typename T, typename ...List>
+        struct typelist_in<T, typelist<List...>>
+          : decltype(detail::typelist_in_<T, typelist<List...>>
+                ::has((detail::identity<T>*)nullptr))
+        {};
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_unique
+        template<typename List>
+        struct typelist_unique
+        {
+            using type = List;
+        };
+
+        template<typename List>
+        using typelist_unique_t = typename typelist_unique<List>::type;
+
+        template<typename Head, typename...List>
+        struct typelist_unique<typelist<Head, List...>>
+        {
+            using type =
+                detail::lazy_conditional_t<
+                    typelist_in<Head, typelist<List...>>::value
+                  , typelist_unique<typelist<List...>>
+                  , typelist_push_back<Head, typelist_unique_t<typelist<List...>>>
+                >;
+        };
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_replace
+        template<typename T, typename U, typename List>
+        struct typelist_replace;
+
+        template<typename T, typename U, typename...List>
+        struct typelist_replace<T, U, typelist<List...>>
+        {
+            using type = typelist<
+                detail::conditional_t<std::is_same<T, List>::value, U, List>...>;
+        };
+
+        template<typename T, typename U, typename List>
+        using typelist_replace_t = typename typelist_replace<T, U, List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_expand
+        template<template<typename...> class C, typename List>
+        struct typelist_expand;
+
+        template<template<typename...> class C, typename ...List>
+        struct typelist_expand<C, typelist<List...>>
+        {
+            using type = C<List...>;
+        };
+
+        template<template<typename...> class C, typename List>
+        using typelist_expand_t = typename typelist_expand<C, List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_transform
+        template<typename List, template<typename> class Fun>
+        struct typelist_transform;
+
+        template<typename ...List, template<typename> class Fun>
+        struct typelist_transform<typelist<List...>, Fun>
+        {
+            using type = typelist<typename Fun<List>::type...>;
+        };
+
+        template<typename List, template<typename> class Fun>
+        using typelist_transform_t = typename typelist_transform<List, Fun>::type;
     }
 }
 

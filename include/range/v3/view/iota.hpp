@@ -18,7 +18,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
-#include <range/v3/utility/safe_int.hpp>
+#include <range/v3/utility/infinity.hpp>
 
 namespace ranges
 {
@@ -70,10 +70,10 @@ namespace ranges
             auto iota_category(concepts::RandomAccessIota)->std::random_access_iterator_tag;
 
             template<typename Value>
-            auto iota_difference(concepts::ForwardIota) -> safe_int<std::ptrdiff_t>;
+            auto iota_difference(concepts::ForwardIota) -> std::ptrdiff_t;
             template<typename Value>
             auto iota_difference(concepts::RandomAccessIota) ->
-                make_safe_int_t<decltype(std::declval<Value>() - std::declval<Value>())>;
+                typename std::make_signed<Value>::type;
         }
 
         template<typename Value>
@@ -124,16 +124,15 @@ namespace ranges
                 }
                 void advance(difference_type n)
                 {
-                    RANGES_ASSERT(n.is_finite());
-                    value_ += n.get();
+                    value_ += n;
                 }
                 difference_type distance_to(iterator const &that) const
                 {
                     return that.value_ - value_;
                 }
-                constexpr difference_type distance_to(sentinel) const
+                constexpr infinity distance_to(sentinel) const
                 {
-                    return difference_type::inf();
+                    return {};
                 }
             public:
                 constexpr iterator()

@@ -120,7 +120,7 @@ namespace ranges
             }
             template<typename Facade, typename Sentinel>
             static constexpr auto distance_sentinel(Facade const& f, Sentinel const& s)
-                -> typename Facade::difference_type
+                -> decltype(f.distance_to(s))
             {
                 return f.distance_to(s);
             }
@@ -182,12 +182,18 @@ namespace ranges
                 );
             }
             template<typename I, typename V, typename TC, typename R, typename D, typename P,
-                REQUIRES(I, random_access)>
-            friend constexpr detail::enable_if_interoperable_t<
-                It, I
-              , detail::choose_difference_type_t<It, I>
-            >
-            operator-(sentinel_facade const &s, iterator_facade<I, V, TC, R, D, P> const& f)
+                REQUIRES(I, random_access)
+              , typename std::enable_if<
+                    std::is_convertible<It, I>::value ||
+                    std::is_convertible<I, It>::value
+                  , int
+                >::type = 0>
+            friend constexpr auto
+            operator-(sentinel_facade const &s, iterator_facade<I, V, TC, R, D, P> const& f) ->
+                decltype(iterator_core_access::distance_sentinel(
+                    std::declval<I const &>()
+                  , std::declval<Derived const &>()
+                ))
             {
                 return iterator_core_access::distance_sentinel(
                     static_cast<I const &>(f)

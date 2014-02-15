@@ -10,18 +10,19 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#include <iomanip>
-#include <utility>
+#include <map>
+#include <list>
 #include <string>
 #include <vector>
-#include <list>
-#include <map>
 #include <memory>
+#include <iomanip>
+#include <utility>
 #include <sstream>
 #include <iostream>
 #include <functional>
 #include <initializer_list>
 #include <range/v3/range.hpp>
+#include <range/v3/utility/safe_int.hpp>
 
 template<std::size_t>
 struct undef_i;
@@ -473,7 +474,7 @@ void test_safe_int()
     static_assert(safe_int<int>{0x8000} * safe_int<int>{-(int)0x10000} == neg_inf, "");
     static_assert(safe_int<int>{-(int)0x8000} * safe_int<int>{-(int)0x10000} == pos_inf, "");
 
-    RANGES_ASSERT((view::iota(10) | distance) == safe_int<int>::inf());
+//    RANGES_ASSERT((view::iota(10) | distance) == safe_int<int>::inf());
 }
 
 void test_find_end_iterable()
@@ -486,20 +487,6 @@ void test_find_end_iterable()
     std::cout << result.base() << '\n';
 }
 
-template<typename It, typename S>
-std::integral_constant<bool, ranges::is_infinity(S{} - It{})>
-has_infinite_size(int);
-
-template<typename It, typename S>
-std::false_type
-has_infinite_size(...);
-
-template<typename Iterable>
-struct IsInfiniteIterable
-  : decltype(::has_infinite_size<ranges::range_iterator_t<Iterable>,
-                                 ranges::range_sentinel_t<Iterable>>(1))
-{};
-
 void test_sentinel()
 {
     using namespace ranges;
@@ -507,11 +494,27 @@ void test_sentinel()
     using S = iota_iterable_view<int>::sentinel;
     constexpr It begin{};
     constexpr S end{};
-    constexpr safe_int<int> d = end - begin;
-    static_assert(d == safe_int<int>::inf(), "");
-    static_assert(IsInfiniteIterable<iota_iterable_view<int>>::value, "");
-    static_assert(!IsInfiniteIterable<std::vector<int>>::value, "");
+    constexpr ranges::infinity d = end - begin;
+    static_assert(!concepts::Iterable::is_finite_t<iota_iterable_view<int>>::value, "");
+    static_assert(concepts::Iterable::is_finite_t<std::vector<int>>::value, "");
 }
+
+struct infinite_range
+{
+    struct sentinel
+    {
+        friend constexpr ranges::infinity operator-(sentinel, int*)
+        {
+            return ranges::infinity{};
+        }
+    };
+    int *begin() const { return nullptr; }
+    sentinel end() const { return {}; }
+};
+
+static_assert(!ranges::concepts::detail::is_infinite<std::vector<int>>::value, "");
+static_assert(!ranges::concepts::detail::is_infinite<ranges::istream_range<int>>::value, "");
+static_assert(ranges::concepts::detail::is_infinite<infinite_range>::value, "");
 
 int main()
 {
@@ -661,3 +664,61 @@ int main()
     test_find_end_iterable();
 }
 //*/
+
+
+//#include <typeinfo>
+//#include <iostream>
+//#include <range/v3/utility/typelist.hpp>
+//#include <range/v3/utility/concepts.hpp>
+//#include <range/v3/utility/variant.hpp>
+//
+//struct S
+//{
+//    S() {}
+//    ~S() {std::cout << "S::~S()\n";}
+//    friend std::ostream& operator<<(std::ostream& sout, S)
+//    {
+//        return sout << "S";
+//    }
+//};
+//
+//template<std::size_t N>
+//struct undef;
+//
+//struct disp
+//{
+//    template<typename T>
+//    void operator()(T const & t) const
+//    {
+//        std::cout << typeid(T).name() << " : " << t << '\n';
+//    }
+//};
+//
+//struct my_visitor
+//{
+//    int operator()(int i) const { return i; }
+//    float operator()(float i) const { return i; }
+//    template<typename T>
+//    void operator()(T) const {}
+//};
+//
+//int main()
+//{
+//    using namespace ranges;
+//    using x = typelist_unique_t<typelist<int, int, int>>;
+//    static_assert(std::is_same<x, typelist<int>>::value, "");
+//
+//    using y = typelist_unique_t<typelist<int, short, int>>;
+//    static_assert(std::is_same<y, typelist<int, short>>::value, "");
+//
+//    std::cout << "here1\n";
+//    variant<int, char const *, short, char, S, wchar_t, long, float> v(S{});
+//    v.apply(disp{});
+//    v = 3.14f;
+//    v.apply(disp{});
+//    variant<int, void_, float> vv = v.apply(my_visitor{});
+//    assert(typeid(float)==vv.type());
+//    v = S{};
+//    v.apply(disp{});
+//    std::cout << "here2\n";
+//}

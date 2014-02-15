@@ -20,6 +20,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/utility/infinity.hpp>
 
 namespace ranges
 {
@@ -27,6 +28,26 @@ namespace ranges
     {
         namespace concepts
         {
+            namespace detail
+            {
+                template<typename T>
+                using difference_t =
+                    decltype(ranges::end(std::declval<T>())-ranges::begin(std::declval<T>()));
+
+                template<typename T, typename Void = void>
+                struct is_infinite
+                  : std::false_type
+                {};
+
+                template<typename T>
+                struct is_infinite<
+                    T,
+                    typename std::enable_if<
+                        std::is_same<difference_t<T>, infinity>::value>::type>
+                  : std::true_type
+                {};
+            }
+
             struct Iterable
               : refines<CopyConstructible>
             {
@@ -53,8 +74,7 @@ namespace ranges
                 using pointer_t = Iterator::pointer_t<iterator_t<T>>;
 
                 template<typename T>
-                using is_finite_t = std::integral_constant<bool,
-                                        !std::numeric_limits<difference_t<T>>::has_infinity>;
+                using is_finite_t = std::integral_constant<bool, !detail::is_infinite<T>::value>;
 
                 // Valid expressions
                 template<typename T>

@@ -388,5 +388,17 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move_backward.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_facade.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_tuple.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\variant.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\infinity.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

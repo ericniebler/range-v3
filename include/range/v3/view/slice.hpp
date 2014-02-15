@@ -48,13 +48,20 @@ namespace ranges
             static constexpr bool use_other_iterator_on_copy_and_move()
             {
                 return std::is_reference<InputIterable>::value ||
-                       std::is_same<range_category_t<InputIterable>, std::input_iterator_tag>::value;
+                       std::is_same<range_category_t<InputIterable>,
+                           std::input_iterator_tag>::value;
             }
 
             static constexpr bool is_bidi()
             {
                 return std::is_same<range_category_t<InputIterable>,
                     std::bidirectional_iterator_tag>::value;
+            }
+
+            static constexpr bool is_rand()
+            {
+                return std::is_same<range_category_t<InputIterable>,
+                    std::random_access_iterator_tag>::value;
             }
 
             using is_dirty_t = detail::conditional_t<is_bidi(), bool, constant<bool, false>>;
@@ -85,7 +92,10 @@ namespace ranges
                 {}
                 basic_iterator(slice_range_view_ &rng, detail::end_tag)
                   : rng_(&rng), n_(rng_->to_), it_dirt_{rng_->begin_, true}
-                {}
+                {
+                    if(is_rand())
+                        do_clean();
+                }
                 void increment()
                 {
                     RANGES_ASSERT(n_ < rng_->to_);
