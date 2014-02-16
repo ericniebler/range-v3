@@ -494,6 +494,6 @@ namespace ranges
 }
 
 #define CONCEPT_REQUIRES(...) typename = ranges::concepts::requires_t<(__VA_ARGS__)>
-#define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed");
+#define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

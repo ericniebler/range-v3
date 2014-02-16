@@ -17,8 +17,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/iterator_facade.hpp>
-#include <range/v3/utility/infinity.hpp>
+#include <range/v3/range_facade.hpp>
 
 namespace ranges
 {
@@ -26,8 +25,8 @@ namespace ranges
     {
         namespace concepts
         {
-            struct ForwardIota
-              : refines<EqualityComparable, DefaultConstructible>
+            struct InputIota
+              : refines<DefaultConstructible>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -35,6 +34,10 @@ namespace ranges
                         concepts::has_type<T &>(++t)
                     ));
             };
+
+            struct ForwardIota
+              : refines<InputIota, EqualityComparable>
+            {};
 
             struct BidirectionalIota
               : refines<ForwardIota>
@@ -58,103 +61,80 @@ namespace ranges
         }
 
         template<typename T>
-        using Iota = concepts::models<concepts::ForwardIota, T>;
+        using InputIota = concepts::models<concepts::InputIota, T>;
+        template<typename T>
+        using ForwardIota = concepts::models<concepts::ForwardIota, T>;
+        template<typename T>
+        using BidirectionalIota = concepts::models<concepts::BidirectionalIota, T>;
+        template<typename T>
+        using RandomAccessIota = concepts::models<concepts::RandomAccessIota, T>;
 
         template<typename T>
         using iota_concept_t = concepts::most_refined_t<concepts::RandomAccessIota, T>;
 
         namespace detail
         {
-            auto iota_category(concepts::ForwardIota)->std::forward_iterator_tag;
-            auto iota_category(concepts::BidirectionalIota)->std::bidirectional_iterator_tag;
-            auto iota_category(concepts::RandomAccessIota)->std::random_access_iterator_tag;
+            template<typename Value>
+            auto iota_difference(concepts::InputIota) -> std::ptrdiff_t;
 
             template<typename Value>
-            auto iota_difference(concepts::ForwardIota) -> std::ptrdiff_t;
-            template<typename Value>
             auto iota_difference(concepts::RandomAccessIota) ->
-                typename std::make_signed<Value>::type;
+                typename std::make_signed<
+                    decltype(std::declval<Value>() - std::declval<Value>())
+                >::type;
         }
 
         template<typename Value>
         struct iota_iterable_view
+          : iterable_facade<iota_iterable_view<Value>>
         {
         private:
-            Value value_;
-
+            using iota_concept_t = ranges::iota_concept_t<Value>;
+            friend struct iterable_facade<iota_iterable_view>;
         public:
-            struct sentinel;
-            using const_iterator = struct iterator
-              : ranges::iterator_facade<
-                    iterator
-                  , Value
-                  , decltype(detail::iota_category(iota_concept_t<Value>{}))
-                  , Value
-                  , decltype(detail::iota_difference<Value>(iota_concept_t<Value>{}))
-                >
+            using difference_type = decltype(detail::iota_difference<Value>(iota_concept_t{}));
+        private:
+            Value value_;
+            using is_infinite = std::true_type;
+            Value dereference() const
             {
-                using difference_type = typename iterator::difference_type;
-            private:
-                friend struct iota_iterable_view;
-                friend struct iterator_core_access;
-                Value value_;
-
-                explicit iterator(Value value)
-                  : value_(std::move(value))
-                {}
-                Value dereference() const
-                {
-                    return value_;
-                }
-                bool equal(iterator const &that) const
-                {
-                    return value_ == that.value_;
-                }
-                constexpr bool equal(sentinel const &) const
-                {
-                    return false;
-                }
-                void increment()
-                {
-                    ++value_;
-                }
-                void decrement()
-                {
-                    ++value_;
-                }
-                void advance(difference_type n)
-                {
-                    value_ += n;
-                }
-                difference_type distance_to(iterator const &that) const
-                {
-                    return that.value_ - value_;
-                }
-                constexpr infinity distance_to(sentinel) const
-                {
-                    return {};
-                }
-            public:
-                constexpr iterator()
-                  : value_{}
-                {}
-            };
-            using const_sentinel = struct sentinel
-              : ranges::sentinel_facade<sentinel, iterator>
-            {};
-
-            explicit iota_iterable_view(Value value)
+                return value_;
+            }
+            void increment()
+            {
+                ++value_;
+            }
+            constexpr bool done() const
+            {
+                return false;
+            }
+            template<typename V = Value, CONCEPT_REQUIRES(ForwardIota<V>())>
+            bool equal(iota_iterable_view const &that) const
+            {
+                return that.value_ == value_;
+            }
+            template<typename V = Value, CONCEPT_REQUIRES(BidirectionalIota<V>())>
+            void decrement()
+            {
+                --value_;
+            }
+            template<typename V = Value, CONCEPT_REQUIRES(RandomAccessIota<V>())>
+            void advance(difference_type n)
+            {
+                value_ += n;
+            }
+            template<typename V = Value, CONCEPT_REQUIRES(RandomAccessIota<V>())>
+            difference_type distance_to(iota_iterable_view const &that) const
+            {
+                return that.value_ - value_;
+            }
+        public:
+            constexpr iota_iterable_view()
+              : value_{}
+            {}
+            constexpr explicit iota_iterable_view(Value value)
               : value_(std::move(value))
             {}
-
-            iterator begin() const
-            {
-                return iterator{value_};
-            }
-            sentinel end() const
-            {
-                return {};
-            }
         };
 
         namespace view
@@ -164,7 +144,7 @@ namespace ranges
                 template<typename Value>
                 static iota_iterable_view<Value> invoke(iota_maker, Value value)
                 {
-                    CONCEPT_ASSERT(ranges::Iota<Value>());
+                    CONCEPT_ASSERT(ranges::InputIota<Value>());
                     return iota_iterable_view<Value>{std::move(value)};
                 }
             };

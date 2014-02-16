@@ -30,22 +30,14 @@ namespace ranges
         {
             namespace detail
             {
-                template<typename T>
-                using difference_t =
-                    decltype(ranges::end(std::declval<T>())-ranges::begin(std::declval<T>()));
-
-                template<typename T, typename Void = void>
-                struct is_infinite
-                  : std::false_type
-                {};
-
-                template<typename T>
-                struct is_infinite<
-                    T,
-                    typename std::enable_if<
-                        std::is_same<difference_t<T>, infinity>::value>::type>
-                  : std::true_type
-                {};
+                struct InfiniteRange
+                {
+                    template<typename T>
+                    auto requires(T && t) -> decltype(
+                        concepts::valid_expr(
+                            concepts::has_type<infinity>(ranges::end(t)-ranges::begin(t))
+                        ));
+                };
             }
 
             struct Iterable
@@ -74,7 +66,8 @@ namespace ranges
                 using pointer_t = Iterator::pointer_t<iterator_t<T>>;
 
                 template<typename T>
-                using is_finite_t = std::integral_constant<bool, !detail::is_infinite<T>::value>;
+                using is_finite_t = std::integral_constant<bool,
+                    !concepts::models<detail::InfiniteRange, T>()>;
 
                 // Valid expressions
                 template<typename T>

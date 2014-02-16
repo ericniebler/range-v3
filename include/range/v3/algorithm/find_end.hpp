@@ -100,7 +100,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable1>());
                 CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2 const>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardIterable1>,
-                                                          range_reference_t<ForwardIterable2 const>>())
+                                                          range_reference_t<ForwardIterable2 const>>());
                 return detail::find_end(ranges::begin(rng1), ranges::end(rng1),
                                         ranges::begin(rng2), ranges::end(rng2),
                                         ranges::equal_to{},
@@ -118,7 +118,7 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2 const>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable1>,
-                                                       range_reference_t<ForwardIterable2 const>>())
+                                                       range_reference_t<ForwardIterable2 const>>());
                 return detail::find_end(ranges::begin(rng1), ranges::end(rng1),
                                         ranges::begin(rng2), ranges::end(rng2),
                                         ranges::make_invokable(std::move(pred)),

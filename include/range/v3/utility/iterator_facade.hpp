@@ -276,27 +276,21 @@ namespace ranges
             // standard's requirements. If *i is not an lvalue reference type, we must still
             // produce an lvalue to which a pointer can be formed.  We do that by
             // returning a proxy object containing an instance of the reference object.
-            //
-            // NOTE: Below, Reference could be an rvalue reference or a non-reference type.
-            template<typename Reference>
+            template<typename Reference, bool B = std::is_reference<Reference>::value>
             struct operator_arrow_dispatch // proxy references
             {
             private:
                 struct proxy
                 {
                 private:
-                    friend struct operator_arrow_dispatch;
-                    using reference = typename std::remove_reference<Reference>::type;
-
-                    reference m_ref;
-
-                    explicit proxy(Reference x)
-                      : m_ref(std::move(x))
-                    {}
+                    Reference ref_;
                 public:
-                    reference* operator->()
+                    explicit proxy(Reference x)
+                      : ref_(std::move(x))
+                    {}
+                    Reference* operator->()
                     {
-                        return std::addressof(m_ref);
+                        return std::addressof(ref_);
                     }
                 };
             public:
@@ -307,11 +301,12 @@ namespace ranges
                 }
             };
 
-            template<typename T>
-            struct operator_arrow_dispatch<T &> // "real" lvalue references
+            // NOTE: Below, Reference could be an rvalue reference or an lvalue reference.
+            template<typename Reference>
+            struct operator_arrow_dispatch<Reference, true>
             {
-                using type = T *;
-                static type apply(T & x)
+                using type = typename std::remove_reference<Reference>::type *;
+                static type apply(Reference x)
                 {
                     return std::addressof(x);
                 }

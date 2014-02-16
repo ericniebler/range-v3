@@ -15,9 +15,7 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/iterator_facade.hpp>
-#include <range/v3/utility/sentinel_facade.hpp>
-#include <range/v3/utility/infinity.hpp>
+#include <range/v3/range_facade.hpp>
 
 namespace ranges
 {
@@ -25,67 +23,39 @@ namespace ranges
     {
         template<typename Value>
         struct repeat_iterable_view
+          : iterable_facade<repeat_iterable_view<Value>>
         {
         private:
             Value value_;
+            friend struct iterable_facade<repeat_iterable_view<Value>>;
+            using is_infinite = std::true_type;
 
-        public:
-            struct sentinel;
-            using const_iterator = struct iterator
-              : ranges::iterator_facade<
-                    iterator
-                  , Value
-                  , std::input_iterator_tag
-                  , Value const &
-                >
+            struct impl
             {
-            private:
-                friend struct repeat_iterable_view;
-                friend struct iterator_core_access;
-                Value value_;
-
-                explicit iterator(Value value)
-                  : value_(std::move(value))
+                repeat_iterable_view const *view_;
+                impl(repeat_iterable_view const *view)
+                  : view_(view)
                 {}
                 Value const &dereference() const
                 {
-                    return value_;
+                    return view_->value_;
                 }
-                constexpr bool equal(iterator const &) const
-                {
-                    return true;
-                }
-                constexpr bool equal(sentinel) const
+                constexpr bool done() const
                 {
                     return false;
                 }
-                void increment()
-                {}
-                constexpr infinity distance_to(sentinel) const
-                {
-                    return {};
-                }
-            public:
-                constexpr iterator()
-                  : value_{}
+                void increment() const
                 {}
             };
-            using const_sentinel = struct sentinel
-              : ranges::sentinel_facade<sentinel, iterator>
-            {};
-
-            explicit repeat_iterable_view(Value value)
-              : value_(std::move(value))
+            impl get_impl() const
+            {
+                return {this};
+            }
+        public:
+            repeat_iterable_view() = default;
+            constexpr explicit repeat_iterable_view(Value value)
+              : value_(detail::move(value))
             {}
-
-            iterator begin() const
-            {
-                return iterator{value_};
-            }
-            sentinel end() const
-            {
-                return {};
-            }
         };
 
         namespace view

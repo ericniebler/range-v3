@@ -1,3 +1,42 @@
+
+//#include <iomanip>
+//#include <iostream>
+//#include <range/v3/next_prev.hpp>
+//#include <range/v3/view/iota.hpp>
+//#include <range/v3/algorithm/for_each.hpp>
+//
+//CONCEPT_ASSERT(ranges::ForwardIterable<ranges::iota_iterable_view<int>>());
+//
+//struct S
+//{
+//    S& operator++(){return *this;}
+//    int i;
+//};
+//
+//int main()
+//{
+//    using namespace ranges;
+//    iota_iterable_view<int> iota(1);
+//    auto it = iota.begin();
+//    std::cout << it[42] << std::endl;
+//    bool b = (it == it);
+//    int i = *it++;
+//    --it;
+//    infinity x = iota.end() - iota.begin();
+//    std::cout << i << std::endl;
+//    std::cout << (next(it)-it) << std::endl;
+//    std::cout << std::boolalpha << (it<next(it)) << std::endl;
+//    std::cout << std::boolalpha << (it<=it) << std::endl;
+//    std::cout << std::boolalpha << (next(it)>it) << std::endl;
+//    std::cout << std::boolalpha << (it>=it) << std::endl;
+//    std::cout << std::boolalpha << (it>=next(it)) << std::endl;
+//    //iota | for_each([](int j){
+//    //    std::cout << j << std::endl;
+//    //});
+//
+//}
+
+
 // Boost.Range library
 //
 //  Copyright Eric Niebler 2013.
@@ -499,22 +538,10 @@ void test_sentinel()
     static_assert(concepts::Iterable::is_finite_t<std::vector<int>>::value, "");
 }
 
-struct infinite_range
-{
-    struct sentinel
-    {
-        friend constexpr ranges::infinity operator-(sentinel, int*)
-        {
-            return ranges::infinity{};
-        }
-    };
-    int *begin() const { return nullptr; }
-    sentinel end() const { return {}; }
-};
-
-static_assert(!ranges::concepts::detail::is_infinite<std::vector<int>>::value, "");
-static_assert(!ranges::concepts::detail::is_infinite<ranges::istream_range<int>>::value, "");
-static_assert(ranges::concepts::detail::is_infinite<infinite_range>::value, "");
+static_assert(ranges::FiniteIterable<std::vector<int>>(), "");
+static_assert(ranges::FiniteIterable<ranges::istream_range<int>>(), "");
+static_assert(ranges::Iterable<ranges::iota_iterable_view<int>>(), "");
+static_assert(!ranges::FiniteIterable<ranges::iota_iterable_view<int>>(), "");
 
 int main()
 {
