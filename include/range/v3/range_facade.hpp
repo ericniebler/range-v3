@@ -77,6 +77,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<concepts::SignedIntegral>(t.distance_to(t)),
                         (t.advance(t.distance_to(t)), concepts::void_)
                     ));
             };
