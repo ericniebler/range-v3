@@ -15,7 +15,7 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/iterator_adaptor.hpp>
+#include <range/v3/range_facade.hpp>
 
 namespace ranges
 {
@@ -23,99 +23,68 @@ namespace ranges
     {
         template<typename InputIterable, typename Value>
         struct delimit_iterable_view
+          : range_facade<delimit_iterable_view<InputIterable, Value>>
         {
         private:
+            friend struct range_facade<delimit_iterable_view>;
             InputIterable rng_;
             Value value_;
 
             template<bool Const>
-            struct basic_iterator;
-
-            template<bool Const>
-            struct basic_sentinel
-              : ranges::sentinel_facade<basic_sentinel<Const>, basic_iterator<Const>>
-            {};
-
-            template<bool Const>
-            struct basic_iterator
-              : ranges::iterator_adaptor<
-                    basic_iterator<Const>
-                  , range_iterator_t<detail::add_const_if_t<InputIterable, Const>>
-                  , use_default
-                  , decltype(true ? range_category_t<InputIterable>{}
-                                  : std::bidirectional_iterator_tag{})
-                >
+            struct basic_impl
             {
-            private:
-                friend struct delimit_iterable_view;
-                friend struct iterator_core_access;
-
-                using iterator_adaptor_ = typename basic_iterator::iterator_adaptor_;
                 using base_range = detail::add_const_if_t<InputIterable, Const>;
+                using base_range_iterator = range_iterator_t<base_range>;
                 using delimit_iterable_view_ = detail::add_const_if_t<delimit_iterable_view, Const>;
 
                 delimit_iterable_view_ *rng_;
+                base_range_iterator it_;
 
-                basic_iterator(delimit_iterable_view_ &rng)
-                  : iterator_adaptor_{ranges::begin(rng.rng_)}, rng_(&rng)
+                constexpr basic_impl()
+                  : rng_{}, it_{}
                 {}
-                template<bool OtherConst>
-                bool equal(basic_iterator<OtherConst> const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    return this->base() == that.base();
-                }
-                template<bool OtherConst>
-                bool equal(basic_sentinel<OtherConst> const &) const
-                {
-                    return this->base() == ranges::end(rng_->rng_) ||
-                          *this->base() == rng_->value_;
-                }
-            public:
-                constexpr basic_iterator()
-                  : iterator_adaptor_{}, rng_{}
+                basic_impl(delimit_iterable_view_ &rng)
+                  : rng_(&rng), it_(ranges::begin(rng.rng_))
                 {}
                 // For iterator -> const_iterator conversion
                 template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
-                basic_iterator(basic_iterator<OtherConst> that)
-                  : iterator_adaptor_{std::move(that).base_reference()}, rng_(that.rng_)
+                basic_impl(basic_impl<OtherConst> that)
+                  : rng_(that.rng_), it_(std::move(that).it_)
                 {}
+                bool done() const
+                {
+                    return it_ == ranges::end(rng_->rng_) ||
+                          *it_ == rng_->value_;
+                }
+                template<bool OtherConst>
+                bool equal(basic_impl<OtherConst> const &that) const
+                {
+                    RANGES_ASSERT(rng_ == that.rng_);
+                    return it_ == that.it_;
+                }
+                auto dereference() const -> decltype(*it_)
+                {
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                    return *it_;
+                }
+                void increment()
+                {
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
+                    ++it_;
+                }
             };
+            basic_impl<false> get_impl(begin_tag)
+            {
+                return {*this};
+            }
+            basic_impl<true> get_impl(begin_tag) const
+            {
+                return {*this};
+            }
         public:
-            using iterator = basic_iterator<false>;
-            using const_iterator = basic_iterator<true>;
-
-            using sentinel = basic_sentinel<false>;
-            using const_sentinel = basic_sentinel<true>;
-
             delimit_iterable_view(InputIterable && rng, Value value)
               : rng_(std::forward<InputIterable>(rng)), value_(std::move(value))
             {}
-
-            iterator begin()
-            {
-                return iterator{*this};
-            }
-            const_iterator begin() const
-            {
-                return const_iterator{*this};
-            }
-            sentinel end()
-            {
-                return {};
-            }
-            const_sentinel end() const
-            {
-                return {};
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
-            }
             InputIterable & base()
             {
                 return rng_;

@@ -86,11 +86,11 @@ namespace ranges
 
         template<typename Value>
         struct iota_iterable_view
-          : iterable_facade<iota_iterable_view<Value>>
+          : range_facade<iota_iterable_view<Value>>
         {
         private:
             using iota_concept_t = ranges::iota_concept_t<Value>;
-            friend struct iterable_facade<iota_iterable_view>;
+            friend struct range_facade<iota_iterable_view>;
         public:
             using difference_type = decltype(detail::iota_difference<Value>(iota_concept_t{}));
         private:

@@ -19,6 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/range_facade.hpp>
 
 namespace ranges
 {
@@ -26,23 +27,15 @@ namespace ranges
     {
         template<typename ForwardRange, typename BinaryPredicate>
         struct adjacent_filter_range_view
+            : range_facade<adjacent_filter_range_view<ForwardRange, BinaryPredicate>>
         {
         private:
+            friend struct range_facade<adjacent_filter_range_view>;
             compressed_pair<ForwardRange, invokable_t<BinaryPredicate>> rng_and_pred_;
 
             template<bool Const>
-            struct basic_iterator
-              : iterator_facade<
-                    basic_iterator<Const>
-                  , range_value_t<ForwardRange>
-                  , std::forward_iterator_tag
-                  , range_reference_t<detail::add_const_if_t<ForwardRange, Const>>
-                  , range_difference_t<ForwardRange>
-                >
+            struct basic_impl
             {
-            private:
-                friend struct adjacent_filter_range_view;
-                friend struct ranges::iterator_core_access;
                 using base_range = detail::add_const_if_t<ForwardRange, Const>;
                 using base_range_iterator = range_iterator_t<base_range>;
                 using adjacent_filter_range_view_ =
@@ -51,8 +44,16 @@ namespace ranges
                 adjacent_filter_range_view_ *rng_;
                 base_range_iterator it_;
 
-                basic_iterator(adjacent_filter_range_view_ &rng, base_range_iterator it)
+                constexpr basic_impl()
+                  : rng_{}, it_{}
+                {}
+                basic_impl(adjacent_filter_range_view_ &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
+                {}
+                // For iterator -> const_iterator conversion
+                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                basic_impl(basic_impl<OtherConst> that)
+                  : rng_(that.rng_), it_(std::move(that).it_)
                 {}
                 void increment()
                 {
@@ -64,58 +65,38 @@ namespace ranges
                         ;
                 }
                 template<bool OtherConst>
-                bool equal(basic_iterator<OtherConst> const &that) const
+                bool equal(basic_impl<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                typename basic_iterator::reference dereference() const
+                auto dereference() const -> decltype(*it_)
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     return *it_;
                 }
-            public:
-                constexpr basic_iterator()
-                  : rng_{}, it_{}
-                {}
-                // For iterator -> const_iterator conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
-                basic_iterator(basic_iterator<OtherConst> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
-                {}
             };
+            basic_impl<false> get_impl(begin_tag)
+            {
+                return {*this, ranges::begin(base())};
+            }
+            basic_impl<true> get_impl(begin_tag) const
+            {
+                return {*this, ranges::begin(base())};
+            }
+            basic_impl<false> get_impl(end_tag)
+            {
+                return {*this, ranges::end(base())};
+            }
+            basic_impl<true> get_impl(end_tag) const
+            {
+                return {*this, ranges::end(base())};
+            }
         public:
-            using iterator       = basic_iterator<false>;
-            using const_iterator = basic_iterator<true>;
-
             adjacent_filter_range_view(ForwardRange && rng, BinaryPredicate pred)
               : rng_and_pred_{std::forward<ForwardRange>(rng),
                               make_invokable(std::move(pred))}
             {}
-            iterator begin()
-            {
-                return {*this, ranges::begin(base())};
-            }
-            iterator end()
-            {
-                return {*this, ranges::end(base())};
-            }
-            const_iterator begin() const
-            {
-                return {*this, ranges::begin(base())};
-            }
-            const_iterator end() const
-            {
-                return {*this, ranges::end(base())};
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
-            }
             ForwardRange & base()
             {
                 return rng_and_pred_.first();

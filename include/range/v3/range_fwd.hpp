@@ -164,12 +164,12 @@ namespace ranges
             struct get_first;
             struct get_second;
 
-            struct begin_tag {};
-            struct end_tag {};
-
             template<typename...Ts>
             void valid_exprs(Ts &&...);
         }
+
+        struct begin_tag {};
+        struct end_tag {};
 
         struct use_default;
 

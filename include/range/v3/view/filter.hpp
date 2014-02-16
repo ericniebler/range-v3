@@ -17,10 +17,10 @@
 #include <utility>
 #include <iterator>
 #include <type_traits>
-#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_facade.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
@@ -31,23 +31,15 @@ namespace ranges
     {
         template<typename InputRange, typename UnaryPredicate>
         struct filter_range_view
+          : range_facade<filter_range_view<InputRange, UnaryPredicate>>
         {
         private:
+            friend struct range_facade<filter_range_view>;
             compressed_pair<InputRange, invokable_t<UnaryPredicate>> rng_and_pred_;
 
             template<bool Const>
-            struct basic_iterator
-              : ranges::iterator_facade<
-                    basic_iterator<Const>
-                  , range_value_t<InputRange>
-                  , decltype(true ? range_category_t<InputRange>{} : std::bidirectional_iterator_tag{})
-                  , range_reference_t<detail::add_const_if_t<InputRange, Const>>
-                  , range_difference_t<InputRange>
-                >
+            struct basic_impl
             {
-            private:
-                friend struct filter_range_view;
-                friend struct ranges::iterator_core_access;
                 using base_range = detail::add_const_if_t<InputRange, Const>;
                 using base_range_iterator = range_iterator_t<base_range>;
                 using filter_range_view_ = detail::add_const_if_t<filter_range_view, Const>;
@@ -55,30 +47,44 @@ namespace ranges
                 filter_range_view_ *rng_;
                 base_range_iterator it_;
 
-                basic_iterator(filter_range_view_ &rng, base_range_iterator it)
+                // TODO use this in range_facade
+                using difference_type = range_difference_t<InputRange>;
+
+                constexpr basic_impl()
+                  : rng_{}, it_{}
+                {}
+                // For iterator -> const_iterator conversion
+                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                basic_impl(basic_impl<OtherConst> that)
+                  : rng_(that.rng_), it_(std::move(that).it_)
+                {}
+                basic_impl(filter_range_view_ &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
                 {
                     satisfy();
                 }
-                void increment()
-                {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
-                    ++it_; satisfy();
-                }
-                void decrement()
-                {
-                    while(!rng_->rng_and_pred_.second()(*--it_)) {}
-                }
                 template<bool OtherConst>
-                bool equal(basic_iterator<OtherConst> const &that) const
+                bool equal(basic_impl<OtherConst> const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                range_reference_t<base_range> dereference() const
+                auto dereference() const -> decltype(*it_)
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     return *it_;
+                }
+                void increment()
+                {
+                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
+                    ++it_;
+                    satisfy();
+                }
+                template<typename R = InputRange, CONCEPT_REQUIRES(BidirectionalIterable<R>())>
+                void decrement()
+                {
+                    while(!rng_->rng_and_pred_.second()(*--it_))
+                        ;
                 }
                 void satisfy()
                 {
@@ -86,47 +92,27 @@ namespace ranges
                     while(it_ != e && !rng_->rng_and_pred_.second()(*it_))
                         ++it_;
                 }
-            public:
-                constexpr basic_iterator()
-                  : rng_{}, it_{}
-                {}
-                // For iterator -> const_iterator conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
-                basic_iterator(basic_iterator<OtherConst> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
-                {}
             };
+            basic_impl<false> get_impl(begin_tag)
+            {
+                return {*this, ranges::begin(base())};
+            }
+            basic_impl<true> get_impl(begin_tag) const
+            {
+                return {*this, ranges::begin(base())};
+            }
+            basic_impl<false> get_impl(end_tag)
+            {
+                return {*this, ranges::end(base())};
+            }
+            basic_impl<true> get_impl(end_tag) const
+            {
+                return {*this, ranges::end(base())};
+            }
         public:
-            using iterator       = basic_iterator<false>;
-            using const_iterator = basic_iterator<true>;
-
             filter_range_view(InputRange && rng, UnaryPredicate pred)
               : rng_and_pred_{std::forward<InputRange>(rng), make_invokable(std::move(pred))}
             {}
-            iterator begin()
-            {
-                return {*this, ranges::begin(base())};
-            }
-            iterator end()
-            {
-                return {*this, ranges::end(base())};
-            }
-            const_iterator begin() const
-            {
-                return {*this, ranges::begin(base())};
-            }
-            const_iterator end() const
-            {
-                return {*this, ranges::end(base())};
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
-            }
             InputRange & base()
             {
                 return rng_and_pred_.first();

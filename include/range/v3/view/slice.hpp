@@ -87,10 +87,10 @@ namespace ranges
                 std::size_t n_;
                 compressed_tuple<range_iterator_t<base_range>, is_dirty_t> it_dirt_;
 
-                basic_iterator(slice_range_view_ &rng, detail::begin_tag)
+                basic_iterator(slice_range_view_ &rng, begin_tag)
                   : rng_(&rng), n_(rng_->from_), it_dirt_{rng_->begin_, false}
                 {}
-                basic_iterator(slice_range_view_ &rng, detail::end_tag)
+                basic_iterator(slice_range_view_ &rng, end_tag)
                   : rng_(&rng), n_(rng_->to_), it_dirt_{rng_->begin_, true}
                 {
                     if(is_rand())
@@ -211,19 +211,19 @@ namespace ranges
 
             iterator begin()
             {
-                return {*this, detail::begin_tag{}};
+                return {*this, begin_tag{}};
             }
             const_iterator begin() const
             {
-                return {*this, detail::begin_tag{}};
+                return {*this, begin_tag{}};
             }
             iterator end()
             {
-                return {*this, detail::end_tag{}};
+                return {*this, end_tag{}};
             }
             const_iterator end() const
             {
-                return {*this, detail::end_tag{}};
+                return {*this, end_tag{}};
             }
             bool operator!() const
             {

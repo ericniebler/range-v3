@@ -79,9 +79,9 @@ namespace ranges
             template<typename Value>
             struct operator_brackets_value
             {
-                using result_type = Value;
+                using type = Value;
                 template<typename Iterator>
-                static result_type apply(Iterator const & i)
+                static type apply(Iterator const & i)
                 {
                     return *i;
                 }
@@ -90,36 +90,36 @@ namespace ranges
             template<typename Iterator, typename Reference>
             struct operator_brackets_const_proxy
             {
-                struct result_type
+                using type = struct proxy
                 {
                 private:
                     Iterator const it_;
-                    explicit result_type(Iterator i)
+                    explicit proxy(Iterator i)
                       : it_(std::move(i))
                     {}
                     friend struct operator_brackets_const_proxy;
                 public:
-                    result_type const & operator=(result_type &) const = delete;
+                    proxy const & operator=(proxy &) const = delete;
                     operator Reference() const
                     {
                         return *it_;
                     }
                 };
-                static result_type apply(Iterator i)
+                static type apply(Iterator i)
                 {
-                    return result_type{std::move(i)};
+                    return type{std::move(i)};
                 }
             };
 
             template<typename Iterator, typename Reference>
             struct operator_brackets_proxy
             {
-                struct result_type
+                using type = struct proxy
                 {
                 private:
                     using value_type = iterator_value_t<Iterator>;
                     Iterator const it_;
-                    explicit result_type(Iterator i)
+                    explicit proxy(Iterator i)
                       : it_(std::move(i))
                     {}
                     friend struct operator_brackets_proxy;
@@ -128,21 +128,21 @@ namespace ranges
                     {
                         return *it_;
                     }
-                    result_type const & operator=(result_type&) const = delete;
-                    result_type const & operator=(value_type const & x) const
+                    proxy const & operator=(proxy&) const = delete;
+                    proxy const & operator=(value_type const & x) const
                     {
                         *it_ = x;
                         return *this;
                     }
-                    result_type const & operator=(value_type && x) const
+                    proxy const & operator=(value_type && x) const
                     {
                         *it_ = std::move(x);
                         return *this;
                     }
                 };
-                static result_type apply(Iterator i)
+                static type apply(Iterator i)
                 {
-                    return result_type{std::move(i)};
+                    return type{std::move(i)};
                 }
             };
 
@@ -439,7 +439,7 @@ namespace ranges
                 *this -= x;
                 return std::move(*this);
             }
-            REQUIRES(random_access) typename operator_brackets_dispatch_::result_type
+            REQUIRES(random_access) typename operator_brackets_dispatch_::type
             operator[](difference_type n) const
             {
                 return operator_brackets_dispatch_::apply(derived() + n);

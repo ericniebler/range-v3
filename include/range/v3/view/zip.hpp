@@ -135,10 +135,10 @@ namespace ranges
 
                 std::tuple<range_iterator_t<detail::add_const_if_t<InputRanges, Const>>...> its_;
 
-                basic_iterator(zip_range_view_ &rng, detail::begin_tag)
+                basic_iterator(zip_range_view_ &rng, begin_tag)
                   : its_(tuple_transform(rng.rngs_, ranges::begin))
                 {}
-                basic_iterator(zip_range_view_ &rng, detail::end_tag)
+                basic_iterator(zip_range_view_ &rng, end_tag)
                   : its_(tuple_transform(rng.rngs_, ranges::end))
                 {}
                 reference dereference() const
@@ -207,22 +207,22 @@ namespace ranges
             iterator begin()
             {
                 return RANGES_MAKE_DEBUG_ITERATOR(*this,
-                    basic_iterator<false>{*this, detail::begin_tag{}});
+                    basic_iterator<false>{*this, begin_tag{}});
             }
             iterator end()
             {
                 return RANGES_MAKE_DEBUG_ITERATOR(*this,
-                    basic_iterator<false>{*this, detail::end_tag{}});
+                    basic_iterator<false>{*this, end_tag{}});
             }
             const_iterator begin() const
             {
                 return RANGES_MAKE_DEBUG_ITERATOR(*this,
-                    basic_iterator<true>{*this, detail::begin_tag{}});
+                    basic_iterator<true>{*this, begin_tag{}});
             }
             const_iterator end() const
             {
                 return RANGES_MAKE_DEBUG_ITERATOR(*this,
-                    basic_iterator<true>{*this, detail::end_tag{}});
+                    basic_iterator<true>{*this, end_tag{}});
             }
             bool operator!() const
             {

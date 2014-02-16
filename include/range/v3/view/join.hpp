@@ -82,10 +82,10 @@ namespace ranges
                 };
                 detail::which which_;
 
-                basic_iterator(join_range_view_ &rng, detail::begin_tag)
+                basic_iterator(join_range_view_ &rng, begin_tag)
                   : rng_(&rng), it0_(ranges::begin(rng.rng0_)), which_(detail::which::first)
                 {}
-                basic_iterator(join_range_view_ &rng, detail::end_tag)
+                basic_iterator(join_range_view_ &rng, end_tag)
                   : rng_(&rng), it1_(ranges::end(rng.rng1_)), which_(detail::which::second)
                 {}
                 typename basic_iterator::reference dereference() const
@@ -366,19 +366,19 @@ namespace ranges
             {}
             iterator begin()
             {
-                return {*this, detail::begin_tag{}};
+                return {*this, begin_tag{}};
             }
             const_iterator begin() const
             {
-                return {*this, detail::begin_tag{}};
+                return {*this, begin_tag{}};
             }
             iterator end()
             {
-                return {*this, detail::end_tag{}};
+                return {*this, end_tag{}};
             }
             const_iterator end() const
             {
-                return {*this, detail::end_tag{}};
+                return {*this, end_tag{}};
             }
             bool operator!() const
             {

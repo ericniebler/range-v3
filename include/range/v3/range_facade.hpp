@@ -24,12 +24,10 @@ namespace ranges
     inline namespace v3
     {
         template<typename Derived>
-        struct iterable_facade
+        struct range_facade
         {
-            struct sentinel
-            {};
         protected:
-            using iterable_facade_ = iterable_facade;
+            using iterable_facade_ = range_facade;
         private:
             friend Derived;
             Derived & derived()
@@ -48,9 +46,9 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
+                        //t.done(),
                         t.dereference(),
-                        (t.increment(), concepts::void_),
-                        t.done()
+                        (t.increment(), concepts::void_)
                     ));
             };
             struct ForwardImplConcept
@@ -113,20 +111,35 @@ namespace ranges
             static auto iter_cat(BidirectionalImplConcept) -> std::bidirectional_iterator_tag;
             static auto iter_cat(RandomAccessImplConcept) -> std::random_access_iterator_tag;
 
+            struct RangeFacadeConcept
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::same_type(t.get_impl(begin_tag{}), t.get_impl(end_tag{}))
+                    ));
+            };
+
+            template<typename T>
+            using RangeFacade = concepts::models<RangeFacadeConcept, T>;
+
             // Default implementations
-            Derived get_impl() const
+            Derived get_impl(begin_tag) const
             {
                 return derived();
             }
+
+            struct sentinel
+            {};
 
             template<bool Const>
             struct basic_iterator
             {
             private:
                 using derived_t = detail::add_const_if_t<Derived, Const>;
-                using impl_t = decltype(std::declval<derived_t &>().get_impl());
+                using impl_t = decltype(std::declval<derived_t &>().get_impl(begin_tag{}));
                 CONCEPT_ASSERT(InputImpl<impl_t>());
-                using impl_concept_t = iterable_facade::impl_concept_t<impl_t>;
+                using impl_concept_t = range_facade::impl_concept_t<impl_t>;
                 impl_t impl_;
                 static auto iter_diff(InputImplConcept) -> std::ptrdiff_t;
                 template<typename Impl = impl_t>
@@ -144,7 +157,7 @@ namespace ranges
             public:
                 using reference = decltype(std::declval<impl_t const&>().dereference());
                 using value_type = detail::uncvref_t<reference>;
-                using iterator_category = decltype(iterable_facade::iter_cat(impl_concept_t{}));
+                using iterator_category = decltype(range_facade::iter_cat(impl_concept_t{}));
                 using difference_type = decltype(basic_iterator::iter_diff(impl_concept_t{}));
                 using pointer = typename detail::operator_arrow_dispatch<reference>::type;
             private:
@@ -153,7 +166,7 @@ namespace ranges
                         basic_iterator, value_type, reference, iterator_category>;
                 using operator_brackets_dispatch_t =
                     detail::operator_brackets_dispatch<basic_iterator, value_type, reference>;
-                friend struct iterable_facade;
+                friend struct range_facade;
                 basic_iterator(impl_t data)
                   : impl_(std::move(data))
                 {}
@@ -321,31 +334,55 @@ namespace ranges
                     return true;
                 }
                 REQUIRES(RandomAccess)
-                typename operator_brackets_dispatch_t::result_type
+                typename operator_brackets_dispatch_t::type
                 operator[](difference_type n) const
                 {
                     return operator_brackets_dispatch_t::apply(*this + n);
                 }
             };
+            sentinel make_end(std::false_type) const
+            {
+                return {};
+            }
+            basic_iterator<false> make_end(std::true_type)
+            {
+                return {derived().get_impl(end_tag{})};
+            }
+            basic_iterator<true> make_end(std::true_type) const
+            {
+                return {derived().get_impl(end_tag{})};
+            }
         public:
             using iterator = basic_iterator<false>;
             using const_iterator = basic_iterator<true>;
 
             iterator begin()
             {
-                return {derived().get_impl()};
+                return {derived().get_impl(begin_tag{})};
             };
             const_iterator begin() const
             {
-                return {derived().get_impl()};
+                return {derived().get_impl(begin_tag{})};
             };
-            sentinel end() const
+            template<typename D = Derived, CONCEPT_REQUIRES(SameType<D, Derived>())>
+            auto end() ->
+                decltype(std::declval<range_facade &>().make_end(RangeFacade<D>()))
             {
-                return {};
+                return this->make_end(RangeFacade<D>());
+            }
+            template<typename D = Derived, CONCEPT_REQUIRES(SameType<D, Derived>())>
+            auto end() const ->
+                decltype(std::declval<range_facade const &>().make_end(RangeFacade<D>()))
+            {
+                return this->make_end(RangeFacade<D>());
+            }
+            constexpr bool operator!() const
+            {
+                return begin() == end();
             }
             constexpr explicit operator bool() const
             {
-                return begin() != end();
+                return !!*this;
             }
         };
     }

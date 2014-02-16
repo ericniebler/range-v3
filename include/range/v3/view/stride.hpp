@@ -84,10 +84,10 @@ namespace ranges
                 stride_range_view_ *rng_;
                 compressed_tuple<base_range_iterator, is_dirty_t, offset_t> it_dirt_off_;
 
-                basic_iterator(stride_range_view_ &rng, detail::begin_tag)
+                basic_iterator(stride_range_view_ &rng, begin_tag)
                   : rng_(&rng), it_dirt_off_{ranges::begin(rng_->rng_), false, 0}
                 {}
-                basic_iterator(stride_range_view_ &rng, detail::end_tag)
+                basic_iterator(stride_range_view_ &rng, end_tag)
                   : rng_(&rng), it_dirt_off_{ranges::end(rng_->rng_), true, 0}
                 {
                     if(is_rand())
@@ -196,19 +196,19 @@ namespace ranges
             }
             iterator begin()
             {
-                return {*this, detail::begin_tag{}};
+                return {*this, begin_tag{}};
             }
             iterator end()
             {
-                return {*this, detail::end_tag{}};
+                return {*this, end_tag{}};
             }
             const_iterator begin() const
             {
-                return {*this, detail::begin_tag{}};
+                return {*this, begin_tag{}};
             }
             const_iterator end() const
             {
-                return {*this, detail::end_tag{}};
+                return {*this, end_tag{}};
             }
             bool operator!() const
             {

@@ -34,7 +34,7 @@ namespace ranges
             using const_iterator = iterator;
 
             explicit const_range_view(Rng && rng)
-              : rng_(rng)
+              : rng_(std::forward<Rng>(rng))
             {}
             iterator begin() const
             {

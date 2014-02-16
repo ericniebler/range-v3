@@ -301,6 +301,7 @@ void test_adjacent_filter()
     using namespace ranges;
     using namespace std::placeholders;
 
+    std::cout << "\nTesting adjacent_filter:\n";
     int rgi[] = {1,1,1,2,3,4,4};
     rgi | view::adjacent_filter(std::not_equal_to<int>{})
         | copy(std::ostream_iterator<int>(std::cout, " "));
@@ -523,14 +524,14 @@ void test_find_end_iterable()
     iterator_range<char const *> input = {"now is the time for all good men to come to the aid of their country", nullptr};
     iterator_range<char const *> pattern = {"to", nullptr};
     auto result = find_end(view::delimit(input, '\0'), view::delimit(pattern, '\0'));
-    std::cout << result.base() << '\n';
+    std::cout << &*result << '\n';
 }
 
 void test_sentinel()
 {
     using namespace ranges;
-    using It = iota_iterable_view<int>::iterator;
-    using S = iota_iterable_view<int>::sentinel;
+    using It = range_iterator_t<iota_iterable_view<int>>;
+    using S = range_sentinel_t<iota_iterable_view<int>>;
     constexpr It begin{};
     constexpr S end{};
     constexpr ranges::infinity d = end - begin;
@@ -542,6 +543,44 @@ static_assert(ranges::FiniteIterable<std::vector<int>>(), "");
 static_assert(ranges::FiniteIterable<ranges::istream_range<int>>(), "");
 static_assert(ranges::Iterable<ranges::iota_iterable_view<int>>(), "");
 static_assert(!ranges::FiniteIterable<ranges::iota_iterable_view<int>>(), "");
+
+struct MyRange
+  : ranges::range_facade<MyRange>
+{
+private:
+    friend struct ranges::range_facade<MyRange>;
+    std::vector<int> ints_;
+    struct impl
+    {
+        impl(std::vector<int>::const_iterator it) : iter(it) {}
+        std::vector<int>::const_iterator iter;
+        int const & dereference() const { return *iter; }
+        void increment() { ++iter; }
+        bool equal(impl const &that) const { return iter == that.iter; }
+    };
+    impl get_impl(ranges::begin_tag) const
+    {
+        return {ints_.begin()};
+    }
+    impl get_impl(ranges::end_tag) const
+    {
+        return {ints_.end()};
+    }
+public:
+    MyRange()
+      : ints_{1,2,3,4,5,6,7}
+    {}
+};
+
+void test_range_facade()
+{
+    using namespace ranges;
+    std::cout << "\nTesting range facade:\n";
+    if(auto r = MyRange{})
+        for(auto &i : r)
+            std::cout << i << ' ';
+    std::cout << std::endl;
+}
 
 int main()
 {
@@ -689,6 +728,7 @@ int main()
     test_take_repeat();
     test_safe_int();
     test_find_end_iterable();
+    test_range_facade();
 }
 //*/
 

@@ -20,9 +20,8 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_facade.hpp>
 #include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/debug_iterator.hpp>
-#include <range/v3/utility/iterator_adaptor.hpp>
 
 namespace ranges
 {
@@ -30,61 +29,67 @@ namespace ranges
     {
         template<typename InputRange>
         struct indirect_range_view
+            // TODO desparately need a range adaptor
+          : range_facade<indirect_range_view<InputRange>>
         {
         private:
+            friend struct range_facade<indirect_range_view>;
             InputRange rng_;
-            using reference = decltype(*std::declval<range_reference_t<InputRange const>>());
             using base_range_iterator = range_iterator_t<InputRange const>;
 
-            struct basic_iterator
-              : ranges::iterator_adaptor<
-                    basic_iterator
-                  , base_range_iterator
-                  , typename std::remove_reference<reference>::type
-                  , use_default
-                  , reference
-                >
+            struct impl
             {
-            private:
-                friend struct indirect_range_view;
-                friend struct ranges::iterator_core_access;
-                using iterator_adaptor_ = typename basic_iterator::iterator_adaptor_;
-
-                explicit basic_iterator(base_range_iterator it)
-                  : iterator_adaptor_(std::move(it))
+                base_range_iterator it_;
+                constexpr impl()
+                  : it_{}
                 {}
-                reference dereference() const
+                impl(base_range_iterator it)
+                  : it_(std::move(it))
+                {}
+                auto dereference() const -> decltype(**it_)
                 {
-                    return **this->base();
+                    return **it_;
                 }
-            public:
-                constexpr basic_iterator()
-                  : iterator_adaptor_{}
-                {}
+                // UGH, these should be automatically generated with an adaptor class
+                bool equal(impl const &that) const
+                {
+                    return it_ == that.it_;
+                }
+                void increment()
+                {
+                    ++it_;
+                }
+                template<typename Rng = InputRange,
+                    CONCEPT_REQUIRES(BidirectionalIterable<Rng>())>
+                void decrement()
+                {
+                    --it_;
+                }
+                template<typename Rng = InputRange,
+                    CONCEPT_REQUIRES(RandomAccessIterable<Rng>())>
+                void advance(range_difference_t<Rng> n)
+                {
+                    it_ += n;
+                }
+                template<typename Rng = InputRange,
+                    CONCEPT_REQUIRES(RandomAccessIterable<Rng>())>
+                range_difference_t<Rng> distance_to(impl const &that)
+                {
+                    return that.it_ - it_;
+                }
             };
+            impl get_impl(begin_tag) const
+            {
+                return {ranges::begin(base())};
+            }
+            impl get_impl(end_tag) const
+            {
+                return {ranges::end(base())};
+            }
         public:
-            using iterator = RANGES_DEBUG_ITERATOR(indirect_range_view const, basic_iterator);
-            using const_iterator = iterator;
-
             explicit indirect_range_view(InputRange && rng)
               : rng_(std::forward<InputRange>(rng))
             {}
-            iterator begin() const
-            {
-                return RANGES_MAKE_DEBUG_ITERATOR(*this, basic_iterator{ranges::begin(rng_)});
-            }
-            iterator end() const
-            {
-                return RANGES_MAKE_DEBUG_ITERATOR(*this, basic_iterator{ranges::end(rng_)});
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
-            }
             InputRange & base()
             {
                 return rng_;

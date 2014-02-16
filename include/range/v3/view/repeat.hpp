@@ -23,11 +23,11 @@ namespace ranges
     {
         template<typename Value>
         struct repeat_iterable_view
-          : iterable_facade<repeat_iterable_view<Value>>
+          : range_facade<repeat_iterable_view<Value>>
         {
         private:
             Value value_;
-            friend struct iterable_facade<repeat_iterable_view<Value>>;
+            friend struct range_facade<repeat_iterable_view>;
             using is_infinite = std::true_type;
 
             struct impl
@@ -47,7 +47,7 @@ namespace ranges
                 void increment() const
                 {}
             };
-            impl get_impl() const
+            impl get_impl(begin_tag) const
             {
                 return {this};
             }
