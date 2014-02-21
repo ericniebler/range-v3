@@ -73,11 +73,11 @@ namespace ranges
                     ++it_;
                 }
             };
-            basic_impl<false> get_impl(begin_tag)
+            basic_impl<false> begin_impl()
             {
                 return {*this};
             }
-            basic_impl<true> get_impl(begin_tag) const
+            basic_impl<true> begin_impl() const
             {
                 return {*this};
             }

@@ -1,42 +1,3 @@
-
-//#include <iomanip>
-//#include <iostream>
-//#include <range/v3/next_prev.hpp>
-//#include <range/v3/view/iota.hpp>
-//#include <range/v3/algorithm/for_each.hpp>
-//
-//CONCEPT_ASSERT(ranges::ForwardIterable<ranges::iota_iterable_view<int>>());
-//
-//struct S
-//{
-//    S& operator++(){return *this;}
-//    int i;
-//};
-//
-//int main()
-//{
-//    using namespace ranges;
-//    iota_iterable_view<int> iota(1);
-//    auto it = iota.begin();
-//    std::cout << it[42] << std::endl;
-//    bool b = (it == it);
-//    int i = *it++;
-//    --it;
-//    infinity x = iota.end() - iota.begin();
-//    std::cout << i << std::endl;
-//    std::cout << (next(it)-it) << std::endl;
-//    std::cout << std::boolalpha << (it<next(it)) << std::endl;
-//    std::cout << std::boolalpha << (it<=it) << std::endl;
-//    std::cout << std::boolalpha << (next(it)>it) << std::endl;
-//    std::cout << std::boolalpha << (it>=it) << std::endl;
-//    std::cout << std::boolalpha << (it>=next(it)) << std::endl;
-//    //iota | for_each([](int j){
-//    //    std::cout << j << std::endl;
-//    //});
-//
-//}
-
-
 // Boost.Range library
 //
 //  Copyright Eric Niebler 2013.
@@ -558,11 +519,11 @@ private:
         void increment() { ++iter; }
         bool equal(impl const &that) const { return iter == that.iter; }
     };
-    impl get_impl(ranges::begin_tag) const
+    impl begin_impl() const
     {
         return {ints_.begin()};
     }
-    impl get_impl(ranges::end_tag) const
+    impl end_impl() const
     {
         return {ints_.end()};
     }

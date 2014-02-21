@@ -104,7 +104,7 @@ namespace ranges
 # define RANGES_DEBUG_ITERATOR(...) ranges::debug_iterator<__VA_ARGS__>
 # define RANGES_MAKE_DEBUG_ITERATOR(RNG, ...) ranges::make_debug_iterator(RNG, __VA_ARGS__)
 #else
-# define RANGES_DEBUG_ITERATOR(...) __VA_ARGS__
+# define RANGES_DEBUG_ITERATOR(RNG, ...) __VA_ARGS__
 # define RANGES_MAKE_DEBUG_ITERATOR(RNG, ...) __VA_ARGS__
 #endif
 

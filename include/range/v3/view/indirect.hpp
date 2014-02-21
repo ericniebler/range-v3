@@ -78,11 +78,11 @@ namespace ranges
                     return that.it_ - it_;
                 }
             };
-            impl get_impl(begin_tag) const
+            impl begin_impl() const
             {
                 return {ranges::begin(base())};
             }
-            impl get_impl(end_tag) const
+            impl end_impl() const
             {
                 return {ranges::end(base())};
             }

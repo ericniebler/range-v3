@@ -49,7 +49,7 @@ namespace ranges
             /// \pre ForwardIterable is a model of the ForwardIterable concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardIterable,
-                CONCEPT_REQUIRES(ranges::Range<ForwardIterable>())>
+                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable>())>
             static range_iterator_t<ForwardIterable>
             invoke(max_element_finder, ForwardIterable && rng)
             {

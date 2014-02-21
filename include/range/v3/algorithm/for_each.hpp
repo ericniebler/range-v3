@@ -40,7 +40,7 @@ namespace ranges
             ///
             /// range-based version of the \c for_each std algorithm
             ///
-            /// \pre \c InputRange is a model of the InputRange concept
+            /// \pre \c InputIterable is a model of the InputIterable concept
             /// \pre \c UnaryFunction is a model of the UnaryFunction concept
             template<typename InputIterable, typename UnaryFunction>
             static UnaryFunction invoke(for_eacher, InputIterable && rng, UnaryFunction fun)

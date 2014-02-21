@@ -47,7 +47,7 @@ namespace ranges
                 void increment() const
                 {}
             };
-            impl get_impl(begin_tag) const
+            impl begin_impl() const
             {
                 return {this};
             }

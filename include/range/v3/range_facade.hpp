@@ -27,7 +27,7 @@ namespace ranges
         struct range_facade
         {
         protected:
-            using iterable_facade_ = range_facade;
+            using range_facade_ = range_facade;
         private:
             friend Derived;
             Derived & derived()
@@ -116,28 +116,63 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::same_type(t.get_impl(begin_tag{}), t.get_impl(end_tag{}))
+                        concepts::same_type(t.begin_impl(), t.end_impl())
                     ));
             };
 
             template<typename T>
             using RangeFacade = concepts::models<RangeFacadeConcept, T>;
 
+            struct default_sentinel_impl
+            {
+                template<typename Impl>
+                static constexpr bool done(Impl const &impl)
+                {
+                    return impl.done();
+                }
+            };
+
             // Default implementations
-            Derived get_impl(begin_tag) const
+            Derived begin_impl() const
             {
                 return derived();
             }
+            default_sentinel_impl end_impl() const
+            {
+                return {};
+            }
 
-            struct sentinel
-            {};
+            template<bool Const>
+            struct basic_iterator;
+
+            template<bool Const>
+            struct basic_sentinel
+            {
+            private:
+                template<bool OtherConst>
+                friend struct basic_iterator;
+                using derived_t = detail::add_const_if_t<Derived, Const>;
+                using impl_t = decltype(std::declval<derived_t &>().end_impl());
+                impl_t impl_;
+                friend struct range_facade;
+                basic_sentinel(impl_t impl)
+                  : impl_(std::move(impl))
+                {}
+            public:
+                basic_sentinel() = default;
+                // For sentinel -> const_sentinel conversion
+                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                basic_sentinel(basic_sentinel<OtherConst> that)
+                  : impl_(std::move(that.impl_))
+                {}
+            };
 
             template<bool Const>
             struct basic_iterator
             {
             private:
                 using derived_t = detail::add_const_if_t<Derived, Const>;
-                using impl_t = decltype(std::declval<derived_t &>().get_impl(begin_tag{}));
+                using impl_t = decltype(std::declval<derived_t &>().begin_impl());
                 CONCEPT_ASSERT(InputImpl<impl_t>());
                 using impl_concept_t = range_facade::impl_concept_t<impl_t>;
                 impl_t impl_;
@@ -206,19 +241,27 @@ namespace ranges
                 {
                     return !(*this == that);
                 }
-                friend constexpr bool operator==(basic_iterator const &left, sentinel const &)
+                template<bool OtherConst>
+                friend constexpr bool operator==(basic_iterator const &left,
+                    basic_sentinel<OtherConst> const &right)
                 {
-                    return left.impl_.done();
+                    return right.impl_.done(left.impl_);
                 }
-                friend constexpr bool operator!=(basic_iterator const &left, sentinel const &right)
+                template<bool OtherConst>
+                friend constexpr bool operator!=(basic_iterator const &left,
+                    basic_sentinel<OtherConst> const &right)
                 {
                     return !(left == right);
                 }
-                friend constexpr bool operator==(sentinel const &, basic_iterator const &right)
+                template<bool OtherConst>
+                friend constexpr bool operator==(basic_sentinel<OtherConst> const & left,
+                    basic_iterator const &right)
                 {
-                    return right.impl_.done();
+                    return left.impl_.done(right.impl_);
                 }
-                friend constexpr bool operator!=(sentinel const &left, basic_iterator const &right)
+                template<bool OtherConst>
+                friend constexpr bool operator!=(basic_sentinel<OtherConst> const &left,
+                    basic_iterator const &right)
                 {
                     return !(left == right);
                 }
@@ -266,8 +309,9 @@ namespace ranges
                 {
                     return right.impl_.distance_to(impl_);
                 }
-                REQUIRES(Infinite)
-                friend constexpr infinity operator-(sentinel const &, basic_iterator const &)
+                template<bool OtherConst, REQUIRES_(Infinite)>
+                friend constexpr infinity operator-(basic_sentinel<OtherConst> const &,
+                    basic_iterator const &)
                 {
                     return {};
                 }
@@ -293,43 +337,51 @@ namespace ranges
                     return (that - *this) <= 0;
                 }
                 // asymmetric comparisons
-                REQUIRES(RandomAccess)
-                friend constexpr bool operator<(basic_iterator const &that, sentinel const &)
+                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                friend constexpr bool operator<(basic_iterator const &left,
+                    basic_sentinel<OtherConst> const &right)
                 {
-                    return !that.done();
+                    return !right.impl_.done(left.impl_);
                 }
-                REQUIRES(RandomAccess)
-                friend constexpr bool operator<=(basic_iterator const &that, sentinel const &)
+                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                friend constexpr bool operator<=(basic_iterator const &left,
+                    basic_sentinel<OtherConst> const &right)
                 {
                     return true;
                 }
-                REQUIRES(RandomAccess)
-                friend constexpr bool operator>(basic_iterator const &that, sentinel const &)
+                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                friend constexpr bool operator>(basic_iterator const &left,
+                    basic_sentinel<OtherConst> const &right)
                 {
                     return false;
                 }
-                REQUIRES(RandomAccess)
-                friend constexpr bool operator>=(basic_iterator const &that, sentinel const &)
+                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                friend constexpr bool operator>=(basic_iterator const &left,
+                    basic_sentinel<OtherConst> const &right)
                 {
-                    return that.done();
+                    return right.impl_.done(left.impl_);
                 }
-                REQUIRES(RandomAccess)
-                friend constexpr bool operator<(sentinel const &, basic_iterator const &that)
+                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                friend constexpr bool operator<(basic_sentinel<OtherConst> const &left,
+                    basic_iterator const &right)
                 {
                     return false;
                 }
-                REQUIRES(RandomAccess)
-                friend constexpr bool operator<=(sentinel const &, basic_iterator const &that)
+                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                friend constexpr bool operator<=(basic_sentinel<OtherConst> const &left,
+                    basic_iterator const &right)
                 {
-                    return that.done();
+                    return left.impl_.done(right.impl_);
                 }
-                REQUIRES(RandomAccess)
-                friend constexpr bool operator>(sentinel const &, basic_iterator const &that)
+                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                friend constexpr bool operator>(basic_sentinel<OtherConst> const &left,
+                    basic_iterator const &right)
                 {
-                    return !that.done();
+                    return !left.impl_.done(right.impl_);
                 }
-                REQUIRES(RandomAccess)
-                friend constexpr bool operator>=(sentinel const &, basic_iterator const &that)
+                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                friend constexpr bool operator>=(basic_sentinel<OtherConst> const &left,
+                    basic_iterator const &right)
                 {
                     return true;
                 }
@@ -340,41 +392,31 @@ namespace ranges
                     return operator_brackets_dispatch_t::apply(*this + n);
                 }
             };
-            sentinel make_end(std::false_type) const
-            {
-                return {};
-            }
-            basic_iterator<false> make_end(std::true_type)
-            {
-                return {derived().get_impl(end_tag{})};
-            }
-            basic_iterator<true> make_end(std::true_type) const
-            {
-                return {derived().get_impl(end_tag{})};
-            }
         public:
             using iterator = basic_iterator<false>;
             using const_iterator = basic_iterator<true>;
+            using sentinel = basic_sentinel<false>;
+            using const_sentinel = basic_sentinel<true>;
 
             iterator begin()
             {
-                return {derived().get_impl(begin_tag{})};
+                return {derived().begin_impl()};
             };
             const_iterator begin() const
             {
-                return {derived().get_impl(begin_tag{})};
+                return {derived().begin_impl()};
             };
             template<typename D = Derived, CONCEPT_REQUIRES(SameType<D, Derived>())>
-            auto end() ->
-                decltype(std::declval<range_facade &>().make_end(RangeFacade<D>()))
+            detail::conditional_t<(RangeFacade<D>()), iterator, sentinel>
+            end()
             {
-                return this->make_end(RangeFacade<D>());
+                return {derived().end_impl()};
             }
             template<typename D = Derived, CONCEPT_REQUIRES(SameType<D, Derived>())>
-            auto end() const ->
-                decltype(std::declval<range_facade const &>().make_end(RangeFacade<D>()))
+            detail::conditional_t<(RangeFacade<D>()), const_iterator, const_sentinel>
+            end() const
             {
-                return this->make_end(RangeFacade<D>());
+                return {derived().end_impl()};
             }
             constexpr bool operator!() const
             {

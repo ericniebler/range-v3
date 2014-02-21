@@ -93,19 +93,19 @@ namespace ranges
                         ++it_;
                 }
             };
-            basic_impl<false> get_impl(begin_tag)
+            basic_impl<false> begin_impl()
             {
                 return {*this, ranges::begin(base())};
             }
-            basic_impl<true> get_impl(begin_tag) const
+            basic_impl<true> begin_impl() const
             {
                 return {*this, ranges::begin(base())};
             }
-            basic_impl<false> get_impl(end_tag)
+            basic_impl<false> end_impl()
             {
                 return {*this, ranges::end(base())};
             }
-            basic_impl<true> get_impl(end_tag) const
+            basic_impl<true> end_impl() const
             {
                 return {*this, ranges::end(base())};
             }
