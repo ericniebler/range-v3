@@ -47,8 +47,8 @@ namespace ranges
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         //t.done(),
-                        t.dereference(),
-                        (t.increment(), concepts::void_)
+                        t.current(),
+                        (t.next(), concepts::void_)
                     ));
             };
             struct ForwardImplConcept
@@ -66,7 +66,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        (t.decrement(), concepts::void_)
+                        (t.prev(), concepts::void_)
                     ));
             };
             struct RandomAccessImplConcept
@@ -151,10 +151,10 @@ namespace ranges
             private:
                 template<bool OtherConst>
                 friend struct basic_iterator;
+                friend struct range_facade;
                 using derived_t = detail::add_const_if_t<Derived, Const>;
                 using impl_t = decltype(std::declval<derived_t &>().end_impl());
                 impl_t impl_;
-                friend struct range_facade;
                 basic_sentinel(impl_t impl)
                   : impl_(std::move(impl))
                 {}
@@ -190,7 +190,7 @@ namespace ranges
                     return that.impl_.equal(impl_);
                 }
             public:
-                using reference = decltype(std::declval<impl_t const&>().dereference());
+                using reference = decltype(std::declval<impl_t const&>().current());
                 using value_type = detail::uncvref_t<reference>;
                 using iterator_category = decltype(range_facade::iter_cat(impl_concept_t{}));
                 using difference_type = decltype(basic_iterator::iter_diff(impl_concept_t{}));
@@ -214,7 +214,7 @@ namespace ranges
                 {}
                 reference operator*() const
                 {
-                    return impl_.dereference();
+                    return impl_.current();
                 }
                 pointer operator->() const
                 {
@@ -222,7 +222,7 @@ namespace ranges
                 }
                 basic_iterator& operator++()
                 {
-                    impl_.increment();
+                    impl_.next();
                     return *this;
                 }
                 postfix_increment_result_t operator++(int)
@@ -267,7 +267,7 @@ namespace ranges
                 }
                 REQUIRES(Bidirectional) basic_iterator& operator--()
                 {
-                    impl_.decrement();
+                    impl_.prev();
                     return *this;
                 }
                 REQUIRES(Bidirectional) basic_iterator operator--(int)

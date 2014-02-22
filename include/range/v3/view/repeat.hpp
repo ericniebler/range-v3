@@ -36,7 +36,7 @@ namespace ranges
                 impl(repeat_iterable_view const *view)
                   : view_(view)
                 {}
-                Value const &dereference() const
+                Value const &current() const
                 {
                     return view_->value_;
                 }
@@ -44,7 +44,7 @@ namespace ranges
                 {
                     return false;
                 }
-                void increment() const
+                void next() const
                 {}
             };
             impl begin_impl() const

@@ -96,11 +96,11 @@ namespace ranges
         private:
             Value value_;
             using is_infinite = std::true_type;
-            Value dereference() const
+            Value current() const
             {
                 return value_;
             }
-            void increment()
+            void next()
             {
                 ++value_;
             }
@@ -114,7 +114,7 @@ namespace ranges
                 return that.value_ == value_;
             }
             template<typename V = Value, CONCEPT_REQUIRES(BidirectionalIota<V>())>
-            void decrement()
+            void prev()
             {
                 --value_;
             }

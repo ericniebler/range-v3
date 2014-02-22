@@ -62,12 +62,12 @@ namespace ranges
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                auto dereference() const -> decltype(*it_)
+                auto current() const -> decltype(*it_)
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
                     return *it_;
                 }
-                void increment()
+                void next()
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
                     ++it_;

@@ -46,7 +46,7 @@ namespace ranges
                 impl(base_range_iterator it)
                   : it_(std::move(it))
                 {}
-                auto dereference() const -> decltype(**it_)
+                auto current() const -> decltype(**it_)
                 {
                     return **it_;
                 }
@@ -55,13 +55,13 @@ namespace ranges
                 {
                     return it_ == that.it_;
                 }
-                void increment()
+                void next()
                 {
                     ++it_;
                 }
                 template<typename Rng = InputRange,
                     CONCEPT_REQUIRES(BidirectionalIterable<Rng>())>
-                void decrement()
+                void prev()
                 {
                     --it_;
                 }

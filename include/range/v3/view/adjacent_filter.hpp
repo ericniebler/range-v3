@@ -55,7 +55,7 @@ namespace ranges
                 basic_impl(basic_impl<OtherConst> that)
                   : rng_(that.rng_), it_(std::move(that).it_)
                 {}
-                void increment()
+                void next()
                 {
                     auto const e = ranges::end(rng_->base());
                     RANGES_ASSERT(it_ != e);
@@ -70,7 +70,7 @@ namespace ranges
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                auto dereference() const -> decltype(*it_)
+                auto current() const -> decltype(*it_)
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     return *it_;

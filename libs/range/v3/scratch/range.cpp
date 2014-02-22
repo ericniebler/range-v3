@@ -515,8 +515,8 @@ private:
     {
         impl(std::vector<int>::const_iterator it) : iter(it) {}
         std::vector<int>::const_iterator iter;
-        int const & dereference() const { return *iter; }
-        void increment() { ++iter; }
+        int const & current() const { return *iter; }
+        void next() { ++iter; }
         bool equal(impl const &that) const { return iter == that.iter; }
     };
     impl begin_impl() const

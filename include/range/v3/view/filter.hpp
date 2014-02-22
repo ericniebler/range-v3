@@ -69,19 +69,19 @@ namespace ranges
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
                 }
-                auto dereference() const -> decltype(*it_)
+                auto current() const -> decltype(*it_)
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     return *it_;
                 }
-                void increment()
+                void next()
                 {
                     RANGES_ASSERT(it_ != ranges::end(rng_->base()));
                     ++it_;
                     satisfy();
                 }
                 template<typename R = InputRange, CONCEPT_REQUIRES(BidirectionalIterable<R>())>
-                void decrement()
+                void prev()
                 {
                     while(!rng_->rng_and_pred_.second()(*--it_))
                         ;
