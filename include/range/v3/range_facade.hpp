@@ -151,11 +151,11 @@ namespace ranges
             template<typename Range, bool Const>
             using basic_impl_t = typename basic_impl_detail_t<Range, Const>::type;
 
-            template<typename Derived>
-            using impl_t = basic_impl_t<Derived, false>;
+            template<typename Range>
+            using impl_t = basic_impl_t<Range, false>;
 
-            template<typename Derived>
-            using const_impl_t = basic_impl_t<Derived, true>;
+            template<typename Range>
+            using const_impl_t = basic_impl_t<Range, true>;
         };
 
         namespace detail

@@ -560,7 +560,10 @@ private:
     struct basic_impl : impl_base_t<Const>
     {
         using impl_base_t<Const>::base;
-        using impl_base_t<Const>::impl_base_t;
+        basic_impl() = default;
+        basic_impl(impl_base_t<Const> base)
+          : impl_base_t<Const>(std::move(base))
+        {}
         void next()
         {
             base().prev();
@@ -630,6 +633,13 @@ void test_adaptor()
     std::cout << std::endl;
 
     my_delimited_range r{view::delimit(istream<int>(std::cin), 42)};
+    //r.begin();
+    //r.end();
+    //ranges::begin(r);
+    //ranges::end(r);
+    //auto cb = ranges::cbegin(r);
+    //auto ce = ranges::cend(r);
+    //cb = ranges::begin(r);
     r | for_each([](int i){
         std::cout << '\t' << i << std::endl;
     });
