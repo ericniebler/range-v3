@@ -138,6 +138,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\next_prev.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_facade.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp" />

@@ -34,7 +34,7 @@ namespace ranges
           : range_facade<filter_range_view<InputRange, UnaryPredicate>>
         {
         private:
-            friend struct range_facade<filter_range_view>;
+            friend struct range_core_access;
             compressed_pair<InputRange, invokable_t<UnaryPredicate>> rng_and_pred_;
 
             template<bool Const>

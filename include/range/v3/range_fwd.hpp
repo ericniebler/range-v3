@@ -176,7 +176,7 @@ namespace ranges
         template<typename Derived>
         struct range_facade;
 
-        template<typename Range>
+        template<typename Derived, typename Range>
         struct range_adaptor;
 
         template<

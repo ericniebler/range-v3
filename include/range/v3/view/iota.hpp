@@ -90,7 +90,7 @@ namespace ranges
         {
         private:
             using iota_concept_t = ranges::iota_concept_t<Value>;
-            friend struct range_facade<iota_iterable_view>;
+            friend struct range_core_access;
         public:
             using difference_type = decltype(detail::iota_difference<Value>(iota_concept_t{}));
         private:

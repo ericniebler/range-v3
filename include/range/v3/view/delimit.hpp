@@ -26,7 +26,7 @@ namespace ranges
           : range_facade<delimit_iterable_view<InputIterable, Value>>
         {
         private:
-            friend struct range_facade<delimit_iterable_view>;
+            friend struct range_core_access;
             InputIterable rng_;
             Value value_;
 

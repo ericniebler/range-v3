@@ -30,7 +30,7 @@ namespace ranges
             : range_facade<adjacent_filter_range_view<ForwardRange, BinaryPredicate>>
         {
         private:
-            friend struct range_facade<adjacent_filter_range_view>;
+            friend struct range_core_access;
             compressed_pair<ForwardRange, invokable_t<BinaryPredicate>> rng_and_pred_;
 
             template<bool Const>

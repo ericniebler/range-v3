@@ -27,7 +27,7 @@ namespace ranges
         {
         private:
             Value value_;
-            friend struct range_facade<repeat_iterable_view>;
+            friend struct range_core_access;
             using is_infinite = std::true_type;
 
             struct impl

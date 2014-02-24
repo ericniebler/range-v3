@@ -400,5 +400,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\infinity.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

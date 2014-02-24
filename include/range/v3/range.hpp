@@ -18,6 +18,8 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_facade.hpp>
+#include <range/v3/range_adaptor.hpp>
 #include <range/v3/istream_range.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/next_prev.hpp>

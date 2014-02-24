@@ -33,7 +33,7 @@ namespace ranges
           : range_facade<indirect_range_view<InputRange>>
         {
         private:
-            friend struct range_facade<indirect_range_view>;
+            friend struct range_core_access;
             InputRange rng_;
             using base_range_iterator = range_iterator_t<InputRange const>;
 

@@ -509,7 +509,7 @@ struct MyRange
   : ranges::range_facade<MyRange>
 {
 private:
-    friend struct ranges::range_facade<MyRange>;
+    friend struct ranges::range_core_access;
     std::vector<int> ints_;
     struct impl
     {
@@ -541,6 +541,98 @@ void test_range_facade()
         for(auto &i : r)
             std::cout << i << ' ';
     std::cout << std::endl;
+}
+
+// TODO: Way more boilerplate than it should be.
+template<typename BidiRange>
+struct my_reverse_view
+  : ranges::range_adaptor<my_reverse_view<BidiRange>, BidiRange>
+{
+private:
+    CONCEPT_ASSERT(ranges::BidirectionalRange<BidiRange>());
+    friend struct ranges::range_core_access;
+
+    using base_t = ranges::range_adaptor<my_reverse_view, BidiRange>;
+    template<bool Const>
+    using impl_base_t = ranges::range_core_access::basic_impl_t<base_t, Const>;
+
+    template<bool Const>
+    struct basic_impl : impl_base_t<Const>
+    {
+        using impl_base_t<Const>::base;
+        using impl_base_t<Const>::impl_base_t;
+        void next()
+        {
+            base().prev();
+        }
+        void prev()
+        {
+            base().next();
+        }
+        auto current() const -> decltype(base().current())
+        {
+            auto tmp = base();
+            tmp.prev();
+            return tmp.current();
+        }
+        // BUGBUG This is HORRIBLE
+        template<typename D = BidiRange, CONCEPT_REQUIRES(ranges::RandomAccessRange<D>())>
+        void advance(ranges::range_difference_t<BidiRange> n)
+        {
+            base().advance(-n);
+        }
+        template<bool OtherConst, typename D = BidiRange,
+            CONCEPT_REQUIRES(ranges::RandomAccessRange<D>())>
+        ranges::range_difference_t<BidiRange> distance_to(basic_impl<OtherConst> const &that)
+        {
+            return that.base().distance_to(base());
+        }
+    };
+
+    // BUGBUG this is less than ideal.
+    using base_t::adaptor;
+    basic_impl<false> begin_impl()
+    {
+        return {adaptor().end_impl()};
+    }
+    basic_impl<true> begin_impl() const
+    {
+        return {adaptor().end_impl()};
+    }
+    basic_impl<false> end_impl()
+    {
+        return {adaptor().begin_impl()};
+    }
+    basic_impl<true> end_impl() const
+    {
+        return {adaptor().begin_impl()};
+    }
+
+public:
+    using base_t::base_t;
+};
+
+struct my_delimited_range
+  : ranges::range_adaptor<
+        my_delimited_range
+      , ranges::delimit_iterable_view<ranges::istream_range<int>, int>>
+{
+    using range_adaptor_::range_adaptor_;
+};
+
+void test_adaptor()
+{
+    using namespace ranges;
+    std::vector<int> v {1,2,3,4};
+    my_reverse_view<std::vector<int>& > retro{v};
+    for(int i : retro)
+        std::cout << i << ' ';
+    std::cout << std::endl;
+
+    my_delimited_range r{view::delimit(istream<int>(std::cin), 42)};
+    r | for_each([](int i){
+        std::cout << '\t' << i << std::endl;
+    });
 }
 
 int main()
