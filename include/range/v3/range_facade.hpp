@@ -143,19 +143,23 @@ namespace ranges
             }
 
             template<typename Range, bool Const>
-            struct basic_impl_detail_t
-            {
-                typedef typename Range::template basic_impl<Const> type;
-            };
-
-            template<typename Range, bool Const>
-            using basic_impl_t = typename basic_impl_detail_t<Range, Const>::type;
+            using basic_impl_t = typename Range::template basic_impl<Const>;
 
             template<typename Range>
             using impl_t = basic_impl_t<Range, false>;
 
             template<typename Range>
             using const_impl_t = basic_impl_t<Range, true>;
+
+            template<typename Range, bool Const>
+            using basic_sentinel_t =
+                typename Range::template basic_sentinel<Const>;
+
+            template<typename Range>
+            using sentinel_t = basic_sentinel_t<Range, false>;
+
+            template<typename Range>
+            using const_sentinel_t = basic_sentinel_t<Range, true>;
         };
 
         namespace detail

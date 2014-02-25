@@ -15,7 +15,7 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/range_adaptor.hpp>
 
 namespace ranges
 {
@@ -23,76 +23,50 @@ namespace ranges
     {
         template<typename InputIterable, typename Value>
         struct delimit_iterable_view
-          : range_facade<delimit_iterable_view<InputIterable, Value>>
+          : range_adaptor<delimit_iterable_view<InputIterable, Value>, InputIterable>
         {
         private:
             friend struct range_core_access;
-            InputIterable rng_;
+            using base_t = range_adaptor<delimit_iterable_view, InputIterable>;
+            template<bool Const>
+            using basic_impl_t = range_core_access::basic_impl_t<base_t, Const>;
+            template<bool Const>
+            using sentinel_base_t = range_core_access::basic_sentinel_t<base_t, Const>;
             Value value_;
 
             template<bool Const>
-            struct basic_impl
+            struct basic_sentinel : sentinel_base_t<Const>
             {
-                using base_range = detail::add_const_if_t<InputIterable, Const>;
-                using base_range_iterator = range_iterator_t<base_range>;
-                using delimit_iterable_view_ = detail::add_const_if_t<delimit_iterable_view, Const>;
-
-                delimit_iterable_view_ *rng_;
-                base_range_iterator it_;
-
-                constexpr basic_impl()
-                  : rng_{}, it_{}
+                Value const *value_;
+                basic_sentinel() = default;
+                basic_sentinel(sentinel_base_t<Const> base, Value const *value)
+                  : sentinel_base_t<Const>(std::move(base)), value_(value)
                 {}
-                basic_impl(delimit_iterable_view_ &rng)
-                  : rng_(&rng), it_(ranges::begin(rng.rng_))
-                {}
-                // For iterator -> const_iterator conversion
+                // For sentinel -> const_sentinel conversion
                 template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
-                basic_impl(basic_impl<OtherConst> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
+                basic_sentinel(basic_sentinel<OtherConst> that)
+                  : sentinel_base_t<Const>(std::move(that)), value_(that.value_)
                 {}
-                bool done() const
-                {
-                    return it_ == ranges::end(rng_->rng_) ||
-                          *it_ == rng_->value_;
-                }
                 template<bool OtherConst>
-                bool equal(basic_impl<OtherConst> const &that) const
+                bool done(basic_impl_t<OtherConst> const &that) const
                 {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    return it_ == that.it_;
-                }
-                auto current() const -> decltype(*it_)
-                {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
-                    return *it_;
-                }
-                void next()
-                {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
-                    ++it_;
+                    return this->base().equal(that) ||
+                           that.current() == *value_;
                 }
             };
-            basic_impl<false> begin_impl()
+
+            basic_sentinel<false> end_impl()
             {
-                return {*this};
+                return {this->adaptor().end_impl(), &value_};
             }
-            basic_impl<true> begin_impl() const
+            basic_sentinel<true> end_impl() const
             {
-                return {*this};
+                return {this->adaptor().end_impl(), &value_};
             }
         public:
             delimit_iterable_view(InputIterable && rng, Value value)
-              : rng_(std::forward<InputIterable>(rng)), value_(std::move(value))
+              : base_t(std::forward<InputIterable>(rng)), value_(std::move(value))
             {}
-            InputIterable & base()
-            {
-                return rng_;
-            }
-            InputIterable const & base() const
-            {
-                return rng_;
-            }
         };
 
         namespace view

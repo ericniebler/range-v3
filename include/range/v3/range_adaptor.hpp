@@ -49,7 +49,7 @@ namespace ranges
             friend Derived;
 
             template<bool Const>
-            struct basic_sentinel;
+            struct basic_sentinel_impl;
 
             // Give BaseRange::iterator a simple interface for passing to Derived
             template<bool Const>
@@ -58,7 +58,7 @@ namespace ranges
             private:
                 friend struct range_adaptor;
                 template<bool OtherConst>
-                friend struct basic_sentinel;
+                friend struct basic_sentinel_impl;
                 using base_range = detail::add_const_if_t<BaseRange, Const>;
                 using base_range_iterator = range_iterator_t<base_range>;
                 base_range_iterator it_;
@@ -95,6 +95,11 @@ namespace ranges
                 {
                     return it_ == that.it_;
                 }
+                template<bool OtherConst>
+                bool equal(basic_sentinel_impl<OtherConst> const &that) const
+                {
+                    return that.done(*this);
+                }
                 REQUIRES(BidirectionalIterable)
                 void prev()
                 {
@@ -113,32 +118,39 @@ namespace ranges
             };
 
             template<bool Const>
-            struct basic_sentinel
+            struct basic_sentinel_impl
             {
             private:
+                template<bool OtherConst>
+                friend struct basic_impl;
                 friend struct range_adaptor;
                 using base_range = detail::add_const_if_t<BaseRange, Const>;
                 using base_range_sentinel = range_sentinel_t<base_range>;
                 base_range_sentinel end_;
-                constexpr basic_sentinel(base_range_sentinel end)
+                constexpr basic_sentinel_impl(base_range_sentinel end)
                   : end_(detail::move(end))
                 {}
             public:
-                constexpr basic_sentinel()
+                constexpr basic_sentinel_impl()
                   : end_{}
                 {}
                 // For iterator -> const_iterator conversion
                 template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
-                constexpr basic_sentinel(basic_sentinel<OtherConst> that)
+                constexpr basic_sentinel_impl(basic_sentinel_impl<OtherConst> that)
                   : end_(detail::move(that.end_))
                 {}
-                basic_sentinel &base()
+                basic_sentinel_impl &base()
                 {
                     return *this;
                 }
-                basic_sentinel const &base() const
+                basic_sentinel_impl const &base() const
                 {
                     return *this;
+                }
+                template<bool OtherConst>
+                bool equal(basic_impl<OtherConst> const &that) const
+                {
+                    return this->done(that);
                 }
                 template<bool OtherConst>
                 constexpr bool done(basic_impl<OtherConst> const &that) const
@@ -146,6 +158,13 @@ namespace ranges
                     return that.it_ == end_;
                 }
             };
+
+            template<bool Const>
+            using basic_sentinel =
+                detail::conditional_t<
+                    (Range<BaseRange>())
+                  , basic_impl<Const>
+                  , basic_sentinel_impl<Const>>;
 
             basic_impl<false> begin_impl()
             {
@@ -155,13 +174,11 @@ namespace ranges
             {
                 return {ranges::begin(rng_)};
             }
-            detail::conditional_t<(Range<BaseRange>()), basic_impl<false>, basic_sentinel<false>>
-            end_impl()
+            basic_sentinel<false> end_impl()
             {
                 return {ranges::end(rng_)};
             }
-            detail::conditional_t<(Range<BaseRange>()), basic_impl<true>, basic_sentinel<true>>
-            end_impl() const
+            basic_sentinel<true> end_impl() const
             {
                 return {ranges::end(rng_)};
             }
