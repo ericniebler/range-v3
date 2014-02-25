@@ -22,7 +22,6 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_adaptor.hpp>
-//#include <range/v3/utility/sentinel_adaptor.hpp>
 #include <range/v3/utility/debug_iterator.hpp>
 
 namespace ranges
@@ -56,15 +55,6 @@ namespace ranges
             template<bool Const>
             struct basic_iterator;
 
-            //template<bool Const>
-            //struct basic_sentinel
-            //  : ranges::sentinel_adaptor<
-            //        basic_sentinel<Const>
-            //      , range_sentinel_t<detail::add_const_if_t<InputRange, Const>>
-            //      , basic_iterator<Const>
-            //    >
-            //{};
-
             template<bool Const>
             struct basic_iterator
               : ranges::iterator_adaptor<
@@ -90,12 +80,6 @@ namespace ranges
                 explicit basic_iterator(base_range_iterator it)
                   : iterator_adaptor_(std::move(it))
                 {}
-                //using iterator_adaptor_::equal;
-                //template<bool OtherConst>
-                //constexpr bool equal(basic_sentinel<OtherConst> const &s) const
-                //{
-                //    return this->base() == s.base();
-                //};
                 typename iterator_adaptor_::reference dereference() const
                 {
                     return std::move(*this->base());
@@ -104,13 +88,6 @@ namespace ranges
                 {
                     return this->base();
                 }
-                //using iterator_adaptor_::distance_to;
-                //template<bool OtherConst>
-                //typename iterator_adaptor_::difference_type
-                //distance_to(basic_sentinel<OtherConst> const &s) const
-                //{
-                //    return s.base() - this->base();
-                //}
             public:
                 constexpr basic_iterator()
                   : iterator_adaptor_{}
@@ -127,9 +104,6 @@ namespace ranges
                 RANGES_DEBUG_ITERATOR(move_range_view, basic_iterator<false>);
             using const_iterator =
                 RANGES_DEBUG_ITERATOR(move_range_view const, basic_iterator<true>);
-
-            //using sentinel = detail::conditional_t<
-            //        ranges::models<concepts::Range, InputRange>(), >;
 
             explicit move_range_view(InputRange && rng)
               : rng_(std::forward<InputRange>(rng))

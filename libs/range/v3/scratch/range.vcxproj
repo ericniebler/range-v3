@@ -162,8 +162,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\sentinel_adaptor.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\sentinel_facade.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\tuple_algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\typelist.hpp" />
