@@ -98,7 +98,7 @@ namespace ranges
                 template<bool OtherConst>
                 bool equal(basic_sentinel_impl<OtherConst> const &that) const
                 {
-                    return that.done(*this);
+                    return that.equal(*this);
                 }
                 REQUIRES(BidirectionalIterable)
                 void prev()
@@ -148,12 +148,7 @@ namespace ranges
                     return *this;
                 }
                 template<bool OtherConst>
-                bool equal(basic_impl<OtherConst> const &that) const
-                {
-                    return this->done(that);
-                }
-                template<bool OtherConst>
-                constexpr bool done(basic_impl<OtherConst> const &that) const
+                constexpr bool equal(basic_impl<OtherConst> const &that) const
                 {
                     return that.it_ == end_;
                 }

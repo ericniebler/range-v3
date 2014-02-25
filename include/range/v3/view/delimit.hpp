@@ -48,7 +48,7 @@ namespace ranges
                   : sentinel_base_t<Const>(std::move(that)), value_(that.value_)
                 {}
                 template<bool OtherConst>
-                bool done(basic_impl_t<OtherConst> const &that) const
+                bool equal(basic_impl_t<OtherConst> const &that) const
                 {
                     return this->base().equal(that) ||
                            that.current() == *value_;

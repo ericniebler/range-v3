@@ -113,12 +113,6 @@ namespace ranges
                 return impl.done();
             }
             template<typename Impl0, typename Impl1>
-            static constexpr auto done(Impl0 const & impl0, Impl1 const &impl1) ->
-                decltype(impl0.done(impl1))
-            {
-                return impl0.done(impl1);
-            }
-            template<typename Impl0, typename Impl1>
             static auto equal(Impl0 const &impl0, Impl1 const &impl1) ->
                 decltype(impl0.equal(impl1))
             {
@@ -223,7 +217,7 @@ namespace ranges
             struct default_sentinel_impl
             {
                 template<typename Impl>
-                static constexpr bool done(Impl const &impl)
+                static constexpr bool equal(Impl const &impl)
                 {
                     return range_core_access::done(impl);
                 }
@@ -347,7 +341,7 @@ namespace ranges
                 friend constexpr bool operator==(basic_iterator const &left,
                     basic_sentinel<OtherConst> const &right)
                 {
-                    return range_core_access::done(right.impl_, left.impl_);
+                    return range_core_access::equal(right.impl_, left.impl_);
                 }
                 template<bool OtherConst>
                 friend constexpr bool operator!=(basic_iterator const &left,
@@ -359,7 +353,7 @@ namespace ranges
                 friend constexpr bool operator==(basic_sentinel<OtherConst> const & left,
                     basic_iterator const &right)
                 {
-                    return range_core_access::done(left.impl_, right.impl_);
+                    return range_core_access::equal(left.impl_, right.impl_);
                 }
                 template<bool OtherConst>
                 friend constexpr bool operator!=(basic_sentinel<OtherConst> const &left,
@@ -443,7 +437,7 @@ namespace ranges
                 friend constexpr bool operator<(basic_iterator const &left,
                     basic_sentinel<OtherConst> const &right)
                 {
-                    return !range_core_access::done(right.impl_, left.impl_);
+                    return !range_core_access::equal(right.impl_, left.impl_);
                 }
                 template<bool OtherConst, REQUIRES_(RandomAccess)>
                 friend constexpr bool operator<=(basic_iterator const &left,
@@ -461,7 +455,7 @@ namespace ranges
                 friend constexpr bool operator>=(basic_iterator const &left,
                     basic_sentinel<OtherConst> const &right)
                 {
-                    return range_core_access::done(right.impl_, left.impl_);
+                    return range_core_access::equal(right.impl_, left.impl_);
                 }
                 template<bool OtherConst, REQUIRES_(RandomAccess)>
                 friend constexpr bool operator<(basic_sentinel<OtherConst> const &left,
@@ -473,13 +467,13 @@ namespace ranges
                 friend constexpr bool operator<=(basic_sentinel<OtherConst> const &left,
                     basic_iterator const &right)
                 {
-                    return range_core_access::done(left.impl_, right.impl_);
+                    return range_core_access::equal(left.impl_, right.impl_);
                 }
                 template<bool OtherConst, REQUIRES_(RandomAccess)>
                 friend constexpr bool operator>(basic_sentinel<OtherConst> const &left,
                     basic_iterator const &right)
                 {
-                    return !range_core_access::done(left.impl_, right.impl_);
+                    return !range_core_access::equal(left.impl_, right.impl_);
                 }
                 template<bool OtherConst, REQUIRES_(RandomAccess)>
                 friend constexpr bool operator>=(basic_sentinel<OtherConst> const &left,
