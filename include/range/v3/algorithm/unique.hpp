@@ -53,7 +53,7 @@ namespace ranges
             ///
             /// \pre Rng meets the requirements for a Forward range
             template<typename ForwardIterable,
-                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable>())>
+                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>())>
             static range_iterator_t<ForwardIterable>
             invoke(uniquer, ForwardIterable && rng)
             {
@@ -80,7 +80,7 @@ namespace ranges
             /// \overload
             /// for rng | unique(pred)
             template<typename BinaryPredicate,
-                CONCEPT_REQUIRES(!ranges::Iterable<BinaryPredicate>())>
+                CONCEPT_REQUIRES_(!ranges::Iterable<BinaryPredicate>())>
             static auto
             invoke(uniquer unique, BinaryPredicate pred) ->
                 decltype(unique.move_bind(std::placeholders::_1, std::move(pred)))

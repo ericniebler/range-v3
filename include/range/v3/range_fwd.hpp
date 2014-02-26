@@ -49,6 +49,10 @@ namespace ranges
         template<typename Sig>
         using result_of_t = typename std::result_of<Sig>::type;
 
+        template<bool Condition>
+        using enable_if_t =
+            typename std::enable_if<Condition, int>::type;
+
         template<typename Derived>
         struct bindable;
 

@@ -53,7 +53,7 @@ namespace ranges
                 };
             public:
                 template<typename InputRange, typename Value1, typename Value2,
-                    CONCEPT_REQUIRES(ranges::SameType<typename std::decay<Value1>::type,
+                    CONCEPT_REQUIRES_(ranges::SameType<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
                 static transform_range_view<InputRange,
                                             replacer_fun<typename std::decay<Value1>::type>>
@@ -72,7 +72,7 @@ namespace ranges
 
                 /// \overload
                 template<typename Value1, typename Value2,
-                    CONCEPT_REQUIRES(ranges::SameType<typename std::decay<Value1>::type,
+                    CONCEPT_REQUIRES_(ranges::SameType<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
                 static auto invoke(replacer replace, Value1 && old_value, Value2 && new_value) ->
                     decltype(replace.move_bind(std::placeholders::_1, std::forward<Value1>(old_value),

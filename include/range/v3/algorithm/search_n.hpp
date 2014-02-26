@@ -88,7 +88,7 @@ namespace ranges
             /// \pre Objects of ForwardIterable's value type can be compared for equality with
             ///      objects of type Value
             template<typename ForwardIterable, typename Integer, typename Value,
-                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable>())>
+                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>())>
             static range_iterator_t<ForwardIterable>
             invoke(searcher_n, ForwardIterable && rng, Integer count, Value const & value)
             {
@@ -129,7 +129,7 @@ namespace ranges
 
             /// \overload
             template<typename Integer, typename Value, typename BinaryPredicate,
-                CONCEPT_REQUIRES(ranges::Integral<Integer>())>
+                CONCEPT_REQUIRES_(ranges::Integral<Integer>())>
             static auto
             invoke(searcher_n search_n, Integer count, Value && value, BinaryPredicate pred) ->
                 decltype(search_n.move_bind(std::placeholders::_1, std::move(count),

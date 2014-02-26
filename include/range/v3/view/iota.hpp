@@ -108,22 +108,22 @@ namespace ranges
             {
                 return false;
             }
-            template<typename V = Value, CONCEPT_REQUIRES(ForwardIota<V>())>
+            CONCEPT_REQUIRES(ForwardIota<Value>())
             bool equal(iota_iterable_view const &that) const
             {
                 return that.value_ == value_;
             }
-            template<typename V = Value, CONCEPT_REQUIRES(BidirectionalIota<V>())>
+            CONCEPT_REQUIRES(BidirectionalIota<Value>())
             void prev()
             {
                 --value_;
             }
-            template<typename V = Value, CONCEPT_REQUIRES(RandomAccessIota<V>())>
+            CONCEPT_REQUIRES(RandomAccessIota<Value>())
             void advance(difference_type n)
             {
                 value_ += n;
             }
-            template<typename V = Value, CONCEPT_REQUIRES(RandomAccessIota<V>())>
+            CONCEPT_REQUIRES(RandomAccessIota<Value>())
             difference_type distance_to(iota_iterable_view const &that) const
             {
                 return that.value_ - value_;

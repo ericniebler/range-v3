@@ -110,7 +110,7 @@ namespace ranges
             /// \pre RandomAccessRange is a model of the Mutable_RandomAccessRangeConcept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename InputRange, typename RandomAccessRange,
-                CONCEPT_REQUIRES(ranges::Range<InputRange>() && ranges::Range<RandomAccessRange>())>
+                CONCEPT_REQUIRES_(ranges::Range<InputRange>() && ranges::Range<RandomAccessRange>())>
             static partial_sort_copy_result<RandomAccessRange>
             invoke(partial_sorter_copier, InputRange && rng1, RandomAccessRange && rng2)
             {
@@ -152,7 +152,7 @@ namespace ranges
 
             /// \overload
             template<typename RandomAccessRange, typename BinaryPredicate,
-                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>() &&
+                CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>() &&
                                 !ranges::Range<BinaryPredicate>())>
             static auto
             invoke(partial_sorter_copier partial_sort_copy, RandomAccessRange && rng2,

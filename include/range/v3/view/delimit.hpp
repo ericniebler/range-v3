@@ -38,12 +38,12 @@ namespace ranges
             struct basic_sentinel : sentinel_base_t<Const>
             {
                 Value const *value_;
-                basic_sentinel() = default;
+                using sentinel_base_t<Const>::sentinel_base_t;
                 basic_sentinel(sentinel_base_t<Const> base, Value const *value)
                   : sentinel_base_t<Const>(std::move(base)), value_(value)
                 {}
                 // For sentinel -> const_sentinel conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
                 basic_sentinel(basic_sentinel<OtherConst> that)
                   : sentinel_base_t<Const>(std::move(that)), value_(that.value_)
                 {}

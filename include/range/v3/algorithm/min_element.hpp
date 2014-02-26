@@ -49,7 +49,7 @@ namespace ranges
             /// \pre ForwardIterable is a model of the ForwardIterable concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardIterable,
-                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable>())>
+                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>())>
             static range_iterator_t<ForwardIterable>
             invoke(min_element_finder, ForwardIterable && rng)
             {
@@ -74,7 +74,7 @@ namespace ranges
             /// \overload
             /// for rng | min_element(pred)
             template<typename BinaryPredicate,
-                CONCEPT_REQUIRES(!ranges::Iterable<BinaryPredicate>())>
+                CONCEPT_REQUIRES_(!ranges::Iterable<BinaryPredicate>())>
             static auto
             invoke(min_element_finder min_element, BinaryPredicate pred) ->
                 decltype(min_element.move_bind(std::placeholders::_1, std::move(pred)))

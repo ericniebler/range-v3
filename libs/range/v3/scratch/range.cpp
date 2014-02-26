@@ -560,10 +560,7 @@ private:
     struct basic_impl : impl_base_t<Const>
     {
         using impl_base_t<Const>::base;
-        basic_impl() = default;
-        basic_impl(impl_base_t<Const> base)
-          : impl_base_t<Const>(std::move(base))
-        {}
+        using impl_base_t<Const>::impl_base_t;
         void next()
         {
             base().prev();
@@ -578,14 +575,13 @@ private:
             tmp.prev();
             return tmp.current();
         }
-        // BUGBUG This is HORRIBLE
-        template<typename D = BidiRange, CONCEPT_REQUIRES(ranges::RandomAccessRange<D>())>
+        CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
         void advance(ranges::range_difference_t<BidiRange> n)
         {
             base().advance(-n);
         }
-        template<bool OtherConst, typename D = BidiRange,
-            CONCEPT_REQUIRES(ranges::RandomAccessRange<D>())>
+        template<bool OtherConst,
+                 CONCEPT_REQUIRES_(ranges::RandomAccessRange<BidiRange>())>
         ranges::range_difference_t<BidiRange> distance_to(basic_impl<OtherConst> const &that)
         {
             return that.base().distance_to(base());
@@ -623,26 +619,29 @@ struct my_delimited_range
     using range_adaptor_::range_adaptor_;
 };
 
-void test_adaptor()
+void test_range_adaptor()
 {
     using namespace ranges;
+    std::cout << "\nTesting range adaptor:\n";
+
     std::vector<int> v {1,2,3,4};
     my_reverse_view<std::vector<int>& > retro{v};
     for(int i : retro)
         std::cout << i << ' ';
     std::cout << std::endl;
 
-    my_delimited_range r{view::delimit(istream<int>(std::cin), 42)};
-    //r.begin();
-    //r.end();
-    //ranges::begin(r);
-    //ranges::end(r);
-    //auto cb = ranges::cbegin(r);
-    //auto ce = ranges::cend(r);
-    //cb = ranges::begin(r);
+    std::list<int> l { 1,2,3,4 };
+    my_reverse_view<std::list<int>& > retro2{l};
+    for(int i : retro2)
+        std::cout << i << ' ';
+    std::cout << std::endl;
+
+    std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
+    my_delimited_range r{view::delimit(istream<int>(sinx), 42)};
     r | for_each([](int i){
-        std::cout << '\t' << i << std::endl;
+        std::cout << i << ' ';
     });
+    std::cout << std::endl;
 }
 
 int main()
@@ -792,6 +791,7 @@ int main()
     test_safe_int();
     test_find_end_iterable();
     test_range_facade();
+    test_range_adaptor();
 }
 //*/
 

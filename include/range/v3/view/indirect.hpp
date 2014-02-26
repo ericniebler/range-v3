@@ -38,10 +38,7 @@ namespace ranges
 
             struct impl : impl_base_t
             {
-                impl() = default;
-                impl(impl_base_t base)
-                  : impl_base_t(std::move(base))
-                {}
+                using impl_base_t::impl_base_t;
                 auto current() const -> decltype(*this->base().current())
                 {
                     return *this->base().current();

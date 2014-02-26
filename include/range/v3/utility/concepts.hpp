@@ -213,12 +213,6 @@ namespace ranges
                 using type = most_refined_t<Concept, Ts...>;
             };
 
-            ////////////////////////////////////////////////////////////////////////////////////////////
-            // requires_t
-            template<bool Requires>
-            using requires_t =
-                typename std::enable_if<Requires>::type;
-
             struct SameType
             {
                 template<typename T, typename U>
@@ -493,7 +487,20 @@ namespace ranges
     }
 }
 
-#define CONCEPT_REQUIRES(...) typename = ranges::concepts::requires_t<(__VA_ARGS__)>
+#define CONCEPT_PP_CAT_(X, Y) X ## Y
+#define CONCEPT_PP_CAT(X, Y)  CONCEPT_PP_CAT_(X, Y)
+
+#define CONCEPT_REQUIRES_(...)                                                      \
+    int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                          \
+    ranges::enable_if_t<                                                            \
+        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || (__VA_ARGS__)       \
+    > = 0                                                                           \
+    /**/
+
+#define CONCEPT_REQUIRES(...)                                                       \
+    template<CONCEPT_REQUIRES_(__VA_ARGS__)>                                        \
+    /**/
+
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

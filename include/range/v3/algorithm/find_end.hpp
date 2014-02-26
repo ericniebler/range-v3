@@ -92,7 +92,7 @@ namespace ranges
             /// \pre \c ForwardIterable2 is a model of the ForwardIterable concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardIterable1, typename ForwardIterable2,
-                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable1>() &&
+                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable1>() &&
                                  ranges::Iterable<ForwardIterable2 const>())>
             static range_iterator_t<ForwardIterable1>
             invoke(end_finder, ForwardIterable1 && rng1, ForwardIterable2 const & rng2)
@@ -140,7 +140,7 @@ namespace ranges
             /// \overload
             /// for rng | find_end(rng2, pred)
             template<typename ForwardIterable2, typename BinaryPredicate,
-                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable2>() &&
+                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable2>() &&
                                 !ranges::Iterable<BinaryPredicate>())>
             static auto
             invoke(end_finder find_end, ForwardIterable2 && rng2, BinaryPredicate pred) ->

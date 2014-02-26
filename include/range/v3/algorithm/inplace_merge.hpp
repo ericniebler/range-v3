@@ -34,7 +34,7 @@ namespace ranges
             /// \pre \c BidirectionalRange is a model of the BidirectionalRange concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename BidirectionalRange,
-                CONCEPT_REQUIRES(ranges::Range<BidirectionalRange>())>
+                CONCEPT_REQUIRES_(ranges::Range<BidirectionalRange>())>
             static BidirectionalRange
             invoke(inplace_merger, BidirectionalRange && rng,
                 range_iterator_t<BidirectionalRange> middle)
@@ -48,7 +48,7 @@ namespace ranges
 
             /// \overload
             template<typename BidirectionalRange, typename BinaryPredicate,
-                CONCEPT_REQUIRES(ranges::Range<BidirectionalRange>())>
+                CONCEPT_REQUIRES_(ranges::Range<BidirectionalRange>())>
             static BidirectionalRange
             invoke(inplace_merger, BidirectionalRange && rng,
                 range_iterator_t<BidirectionalRange> middle, BinaryPredicate pred)
@@ -65,7 +65,7 @@ namespace ranges
             /// \overload
             /// for rng | inplace_merge(middle)
             template<typename BidirectionalIterator,
-                CONCEPT_REQUIRES(ranges::Iterator<BidirectionalIterator>())>
+                CONCEPT_REQUIRES_(ranges::Iterator<BidirectionalIterator>())>
             static auto
             invoke(inplace_merger inplace_merge, BidirectionalIterator middle) ->
                 decltype(inplace_merge.move_bind(std::placeholders::_1, std::move(middle)))
@@ -79,7 +79,7 @@ namespace ranges
             /// \overload
             /// for rng | inplace_merge(middle, pred)
             template<typename BidirectionalIterator, typename BinaryPredicate,
-                CONCEPT_REQUIRES(ranges::Iterator<BidirectionalIterator>())>
+                CONCEPT_REQUIRES_(ranges::Iterator<BidirectionalIterator>())>
             static auto
             invoke(inplace_merger inplace_merge, BidirectionalIterator middle, BinaryPredicate pred) ->
                 decltype(inplace_merge.move_bind(std::placeholders::_1, std::move(middle),

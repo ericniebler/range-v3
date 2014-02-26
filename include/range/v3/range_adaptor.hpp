@@ -14,20 +14,11 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/range_traits.hpp>
 
-#define REQUIRES_(CAT)                                  \
-    typename D = BaseRange,                             \
-    CONCEPT_REQUIRES(ranges::SameType<D, BaseRange>()), \
-    CONCEPT_REQUIRES(ranges::CAT<D>())                  \
-    /**/
-#define REQUIRES(CAT)                                   \
-    template<REQUIRES_(CAT)>                            \
-    /**/
-
 namespace ranges
 {
     inline namespace v3
     {
-        template<typename Derived, typename BaseRange>
+        template<typename Derived, typename BaseIterable>
         struct range_adaptor
           : range_facade<Derived>
         {
@@ -44,14 +35,14 @@ namespace ranges
                 return *this;
             }
         private:
-            BaseRange rng_;
+            BaseIterable rng_;
             friend struct range_core_access;
             friend Derived;
 
             template<bool Const>
             struct basic_sentinel_impl;
 
-            // Give BaseRange::iterator a simple interface for passing to Derived
+            // Give BaseIterable::iterator a simple interface for passing to Derived
             template<bool Const>
             struct basic_impl
             {
@@ -59,7 +50,7 @@ namespace ranges
                 friend struct range_adaptor;
                 template<bool OtherConst>
                 friend struct basic_sentinel_impl;
-                using base_range = detail::add_const_if_t<BaseRange, Const>;
+                using base_range = detail::add_const_if_t<BaseIterable, Const>;
                 using base_range_iterator = range_iterator_t<base_range>;
                 base_range_iterator it_;
                 constexpr basic_impl(base_range_iterator it)
@@ -70,7 +61,7 @@ namespace ranges
                   : it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, enable_if_t<!OtherConst || Const> = 0>
                 constexpr basic_impl(basic_impl<OtherConst> that)
                   : it_(detail::move(that.it_))
                 {}
@@ -100,18 +91,19 @@ namespace ranges
                 {
                     return that.equal(*this);
                 }
-                REQUIRES(BidirectionalIterable)
+                CONCEPT_REQUIRES(BidirectionalIterable<BaseIterable>())
                 void prev()
                 {
                     --it_;
                 }
-                REQUIRES(RandomAccessIterable)
-                void advance(range_difference_t<BaseRange> n)
+                CONCEPT_REQUIRES(RandomAccessIterable<BaseIterable>())
+                void advance(range_difference_t<BaseIterable> n)
                 {
                     it_ += n;
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccessIterable)>
-                range_difference_t<BaseRange> distance_to(basic_impl<OtherConst> const &that) const
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(RandomAccessIterable<BaseIterable>())>
+                range_difference_t<BaseIterable> distance_to(basic_impl<OtherConst> const &that) const
                 {
                     return that.it_ - it_;
                 }
@@ -124,7 +116,7 @@ namespace ranges
                 template<bool OtherConst>
                 friend struct basic_impl;
                 friend struct range_adaptor;
-                using base_range = detail::add_const_if_t<BaseRange, Const>;
+                using base_range = detail::add_const_if_t<BaseIterable, Const>;
                 using base_range_sentinel = range_sentinel_t<base_range>;
                 base_range_sentinel end_;
                 constexpr basic_sentinel_impl(base_range_sentinel end)
@@ -135,7 +127,7 @@ namespace ranges
                   : end_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, enable_if_t<!OtherConst || Const> = 0>
                 constexpr basic_sentinel_impl(basic_sentinel_impl<OtherConst> that)
                   : end_(detail::move(that.end_))
                 {}
@@ -157,7 +149,7 @@ namespace ranges
             template<bool Const>
             using basic_sentinel =
                 detail::conditional_t<
-                    (Range<BaseRange>())
+                    (Range<BaseIterable>())
                   , basic_impl<Const>
                   , basic_sentinel_impl<Const>>;
 
@@ -179,14 +171,14 @@ namespace ranges
             }
 
         public:
-            constexpr range_adaptor(BaseRange && rng)
-              : rng_(detail::forward<BaseRange>(rng))
+            constexpr range_adaptor(BaseIterable && rng)
+              : rng_(detail::forward<BaseIterable>(rng))
             {}
-            BaseRange & base()
+            BaseIterable & base()
             {
                 return rng_;
             }
-            BaseRange const & base() const
+            BaseIterable const & base() const
             {
                 return rng_;
             }

@@ -103,7 +103,7 @@ namespace ranges
             /// \pre OutputIterator is a model of the OutputIterator concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename InputIterable, typename OutputIterator,
-                CONCEPT_REQUIRES(ranges::Iterable<InputIterable>())>
+                CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>())>
             static OutputIterator
             invoke(uniquer_copier, InputIterable && rng, OutputIterator out)
             {
@@ -156,7 +156,7 @@ namespace ranges
             /// \overload
             /// for rng | unique_copy(out, pred)
             template<typename OutputIterator, typename BinaryPredicate,
-                CONCEPT_REQUIRES(!ranges::Iterable<OutputIterator>())>
+                CONCEPT_REQUIRES_(!ranges::Iterable<OutputIterator>())>
             static auto
             invoke(uniquer_copier unique_copy, OutputIterator out, BinaryPredicate pred) ->
                 decltype(unique_copy.move_bind(std::placeholders::_1, std::move(out), std::move(pred)))

@@ -179,7 +179,7 @@ namespace ranges
                   : rng_{}, it_dirt_off_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
                   : rng_(that.rng_), it_dirt_off_(std::move(that).it_dirt_off_)
                 {}

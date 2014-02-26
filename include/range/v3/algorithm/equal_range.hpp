@@ -69,7 +69,7 @@ namespace ranges
             /// \pre \c ForwardIterable is a model of the ForwardIterable concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardIterable, typename Value,
-                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable>() &&
+                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>() &&
                                  ranges::LessThanComparable<Value const &, range_reference_t<ForwardIterable>>() &&
                                  ranges::LessThanComparable<range_reference_t<ForwardIterable>, Value const &>())>
             static iterator_range<range_iterator_t<ForwardIterable>>
@@ -104,7 +104,7 @@ namespace ranges
             /// \overload
             /// for rng | equal_range(val, pred)
             template<typename Value, typename BinaryPredicate,
-                CONCEPT_REQUIRES(
+                CONCEPT_REQUIRES_(
                     !(ranges::Iterable<Value>() &&
                       ranges::LessThanComparable<BinaryPredicate, range_reference_t<Value>>() &&
                       ranges::LessThanComparable<range_reference_t<Value>, BinaryPredicate>()))>

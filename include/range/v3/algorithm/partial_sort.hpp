@@ -33,7 +33,7 @@ namespace ranges
             /// \pre RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename RandomAccessRange,
-                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
+                CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange
             invoke(partial_sorter, RandomAccessRange && rng,
                 range_iterator_t<RandomAccessRange> middle)
@@ -62,7 +62,7 @@ namespace ranges
             /// \overload
             /// for rng | partial_sort(it)
             template<typename RandomAccessIterator,
-                CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
+                CONCEPT_REQUIRES_(ranges::Iterator<RandomAccessIterator>())>
             static auto
             invoke(partial_sorter partial_sort, RandomAccessIterator nth) ->
                 decltype(partial_sort.move_bind(std::placeholders::_1, std::move(nth)))
@@ -74,7 +74,7 @@ namespace ranges
             /// \overload
             /// for rng | partial_sort(it, pred)
             template<typename RandomAccessIterator, typename BinaryPredicate,
-                CONCEPT_REQUIRES(ranges::Iterator<RandomAccessIterator>())>
+                CONCEPT_REQUIRES_(ranges::Iterator<RandomAccessIterator>())>
             static auto
             invoke(partial_sorter partial_sort, RandomAccessIterator nth, BinaryPredicate pred) ->
                 decltype(partial_sort.move_bind(std::placeholders::_1, std::move(nth), std::move(pred)))

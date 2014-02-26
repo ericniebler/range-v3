@@ -33,7 +33,7 @@ namespace ranges
             /// \pre RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre BinaryPredicate is a model of the BinaryPredicate concept
             template<typename RandomAccessRange,
-                CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
+                CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange invoke(stable_sorter, RandomAccessRange && rng)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
@@ -58,7 +58,7 @@ namespace ranges
 
             /// \overload
             template<typename BinaryPredicate,
-                CONCEPT_REQUIRES(!ranges::Range<BinaryPredicate>())>
+                CONCEPT_REQUIRES_(!ranges::Range<BinaryPredicate>())>
             static auto invoke(stable_sorter stable_sort, BinaryPredicate pred) ->
                 decltype(stable_sort.move_bind(std::placeholders::_1, std::move(pred)))
             {

@@ -54,7 +54,7 @@ namespace ranges
                   : rng_{}, it_{}
                 {}
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
                 basic_impl(basic_impl<OtherConst> that)
                   : rng_(that.rng_), it_(std::move(that).it_)
                 {}
@@ -80,7 +80,7 @@ namespace ranges
                     ++it_;
                     satisfy();
                 }
-                template<typename R = InputRange, CONCEPT_REQUIRES(BidirectionalIterable<R>())>
+                CONCEPT_REQUIRES(BidirectionalIterable<InputRange>())
                 void prev()
                 {
                     while(!rng_->rng_and_pred_.second()(*--it_))

@@ -58,7 +58,7 @@ namespace ranges
             /// \pre ForwardIterable is a model of the ForwardIterable concept
             template<typename ForwardIterable, typename Value,
                 typename BinaryPredicate = ranges::less,
-                CONCEPT_REQUIRES(ranges::Iterable<ForwardIterable>())>
+                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>())>
             static range_iterator_t<ForwardIterable>
             invoke(upper_bound_finder, ForwardIterable && rng, Value const & value,
                 BinaryPredicate pred = BinaryPredicate{})
@@ -75,7 +75,7 @@ namespace ranges
             /// \overload
             /// for rng | upper_bound(value)
             template<typename Value, typename BinaryPredicate = ranges::less,
-                CONCEPT_REQUIRES(!ranges::Iterable<Value>())>
+                CONCEPT_REQUIRES_(!ranges::Iterable<Value>())>
             static auto
             invoke(upper_bound_finder upper_bound, Value && value,
                 BinaryPredicate pred = BinaryPredicate{}) ->

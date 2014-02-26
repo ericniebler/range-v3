@@ -72,13 +72,13 @@ namespace ranges
             RANGES_CONSTEXPR struct unwrap_binder
             {
                 template<typename T,
-                    CONCEPT_REQUIRES(!is_bind_wrapper<uncvref_t<T>>())>
+                    CONCEPT_REQUIRES_(!is_bind_wrapper<uncvref_t<T>>())>
                 T && operator()(T && t) const
                 {
                     return std::forward<T>(t);
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES(is_bind_wrapper<uncvref_t<T>>())>
+                    CONCEPT_REQUIRES_(is_bind_wrapper<uncvref_t<T>>())>
                 auto operator()(T && t) const -> decltype(std::declval<T>().bind())
                 {
                     return std::forward<T>(t).bind();
@@ -117,7 +117,7 @@ namespace ranges
             // This gets called when one or more of the arguments are either a
             // std placeholder, or another bind expression made with bindable
             template<typename ...Args,
-                CONCEPT_REQUIRES(contains_placeholder_expression<Args...>())>
+                CONCEPT_REQUIRES_(contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) const &
                 -> detail::bind_t<Derived const &, detail::unwrap_bind_t<Args>...>
             {
@@ -125,7 +125,7 @@ namespace ranges
                                          detail::unwrap_bind(std::forward<Args>(args))...);
             }
             template<typename ...Args,
-                CONCEPT_REQUIRES(contains_placeholder_expression<Args...>())>
+                CONCEPT_REQUIRES_(contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) &&
                 -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
             {
@@ -135,14 +135,14 @@ namespace ranges
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.
             template<typename ...Args,
-                CONCEPT_REQUIRES(!contains_placeholder_expression<Args...>())>
+                CONCEPT_REQUIRES_(!contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) const &
                 -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived const &>(), std::declval<Args>()...))
             {
                 return Derived::invoke(derived(), std::forward<Args>(args)...);
             }
             template<typename ...Args,
-                CONCEPT_REQUIRES(!contains_placeholder_expression<Args...>())>
+                CONCEPT_REQUIRES_(!contains_placeholder_expression<Args...>())>
             auto operator()(Args &&... args) &&
                 -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived>(), std::declval<Args>()...))
             {

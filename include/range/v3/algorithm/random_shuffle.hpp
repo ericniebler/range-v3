@@ -33,7 +33,7 @@ namespace ranges
             /// \pre RandomAccessRange is a model of the RandomAccessRange concept
             /// \pre RandomNumberGenerator is a model of the UnaryFunction concept
             template<typename RandomAccessRange,
-                     CONCEPT_REQUIRES(ranges::Range<RandomAccessRange>())>
+                     CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange invoke(random_shuffler, RandomAccessRange && rng)
             {
                 CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
@@ -58,7 +58,7 @@ namespace ranges
             /// \overload
             /// for rng | random_shuffle(gen)
             template<typename RandomNumberGenerator,
-                CONCEPT_REQUIRES(!ranges::Range<RandomNumberGenerator>())>
+                CONCEPT_REQUIRES_(!ranges::Range<RandomNumberGenerator>())>
             static auto invoke(random_shuffler random_shuffle, RandomNumberGenerator && gen) ->
                 decltype(random_shuffle.move_bind(std::placeholders::_1,
                     std::forward<RandomNumberGenerator>(gen)))

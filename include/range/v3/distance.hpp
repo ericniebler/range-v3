@@ -73,7 +73,7 @@ namespace ranges
         struct distance_ : bindable<distance_>, pipeable<distance_>
         {
             template<typename FiniteIterable,
-                CONCEPT_REQUIRES(ranges::FiniteIterable<FiniteIterable>())>
+                CONCEPT_REQUIRES_(ranges::FiniteIterable<FiniteIterable>())>
             static range_difference_t<FiniteIterable>
             invoke(distance_, FiniteIterable && rng)
             {
@@ -81,8 +81,8 @@ namespace ranges
             }
 
             template<typename FiniteIterable, typename Distance,
-                CONCEPT_REQUIRES(ranges::FiniteIterable<FiniteIterable>())
-              , CONCEPT_REQUIRES(ranges::Integral<Distance>())
+                CONCEPT_REQUIRES_(ranges::FiniteIterable<FiniteIterable>())
+              , CONCEPT_REQUIRES_(ranges::Integral<Distance>())
             >
             static Distance
             invoke(distance_, FiniteIterable && rng, Distance d)

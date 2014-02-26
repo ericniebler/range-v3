@@ -16,9 +16,6 @@
 #include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/utility/infinity.hpp>
 
-#define REQUIRES_(CAT) typename Impl = impl_t, CONCEPT_REQUIRES(detail::CAT##Impl<Impl>())
-#define REQUIRES(CAT)  template<REQUIRES_(CAT)>
-
 namespace ranges
 {
     inline namespace v3
@@ -113,7 +110,7 @@ namespace ranges
                 return impl.done();
             }
             template<typename Impl0, typename Impl1>
-            static auto equal(Impl0 const &impl0, Impl1 const &impl1) ->
+            static constexpr auto equal(Impl0 const &impl0, Impl1 const &impl1) ->
                 decltype(impl0.equal(impl1))
             {
                 return impl0.equal(impl1);
@@ -251,7 +248,7 @@ namespace ranges
             public:
                 basic_sentinel() = default;
                 // For sentinel -> const_sentinel conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
                 basic_sentinel(basic_sentinel<OtherConst> that)
                   : impl_(std::move(that.impl_))
                 {}
@@ -304,7 +301,7 @@ namespace ranges
             public:
                 constexpr basic_iterator() = default;
                 // For iterator -> const_iterator conversion
-                template<bool OtherConst, typename std::enable_if<!OtherConst, int>::type = 0>
+                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
                   : impl_(std::move(that.impl_))
                 {}
@@ -361,127 +358,145 @@ namespace ranges
                 {
                     return !(left == right);
                 }
-                REQUIRES(Bidirectional) basic_iterator& operator--()
+                CONCEPT_REQUIRES(detail::BidirectionalImpl<impl_t>())
+                basic_iterator& operator--()
                 {
                     range_core_access::prev(impl_);
                     return *this;
                 }
-                REQUIRES(Bidirectional) basic_iterator operator--(int)
+                CONCEPT_REQUIRES(detail::BidirectionalImpl<impl_t>())
+                basic_iterator operator--(int)
                 {
                     auto tmp{*this};
                     --*this;
                     return tmp;
                 }
-                REQUIRES(RandomAccess) basic_iterator& operator+=(difference_type n)
+                CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+                basic_iterator& operator+=(difference_type n)
                 {
                     range_core_access::advance(impl_, n);
                     return *this;
                 }
-                REQUIRES(RandomAccess)
+                CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
                 friend basic_iterator operator+(basic_iterator left, difference_type n)
                 {
                     left += n;
                     return left;
                 }
-                REQUIRES(RandomAccess)
+                CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
                 friend basic_iterator operator+(difference_type n, basic_iterator right)
                 {
                     right += n;
                     return right;
                 }
-                REQUIRES(RandomAccess) basic_iterator& operator-=(difference_type n)
+                CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+                basic_iterator& operator-=(difference_type n)
                 {
                     range_core_access::advance(impl_, -n);
                     return *this;
                 }
-                REQUIRES(RandomAccess)
+                CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
                 friend basic_iterator operator-(basic_iterator left, difference_type n)
                 {
                     left -= n;
                     return left;
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 difference_type operator-(basic_iterator<OtherConst> const &right) const
                 {
                     return range_core_access::distance_to(right.impl_, impl_);
                 }
-                template<bool OtherConst, REQUIRES_(Infinite)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::InfiniteImpl<impl_t>())>
                 friend constexpr infinity operator-(basic_sentinel<OtherConst> const &,
                     basic_iterator const &)
                 {
                     return {};
                 }
                 // symmetric comparisons
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 bool operator<(basic_iterator<OtherConst> const &that) const
                 {
                     return 0 < (that - *this);
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 bool operator<=(basic_iterator<OtherConst> const &that) const
                 {
                     return 0 <= (that - *this);
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 bool operator>(basic_iterator<OtherConst> const &that) const
                 {
                     return (that - *this) < 0;
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 bool operator>=(basic_iterator<OtherConst> const &that) const
                 {
                     return (that - *this) <= 0;
                 }
                 // asymmetric comparisons
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 friend constexpr bool operator<(basic_iterator const &left,
                     basic_sentinel<OtherConst> const &right)
                 {
                     return !range_core_access::equal(right.impl_, left.impl_);
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 friend constexpr bool operator<=(basic_iterator const &left,
                     basic_sentinel<OtherConst> const &right)
                 {
                     return true;
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 friend constexpr bool operator>(basic_iterator const &left,
                     basic_sentinel<OtherConst> const &right)
                 {
                     return false;
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 friend constexpr bool operator>=(basic_iterator const &left,
                     basic_sentinel<OtherConst> const &right)
                 {
                     return range_core_access::equal(right.impl_, left.impl_);
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 friend constexpr bool operator<(basic_sentinel<OtherConst> const &left,
                     basic_iterator const &right)
                 {
                     return false;
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 friend constexpr bool operator<=(basic_sentinel<OtherConst> const &left,
                     basic_iterator const &right)
                 {
                     return range_core_access::equal(left.impl_, right.impl_);
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 friend constexpr bool operator>(basic_sentinel<OtherConst> const &left,
                     basic_iterator const &right)
                 {
                     return !range_core_access::equal(left.impl_, right.impl_);
                 }
-                template<bool OtherConst, REQUIRES_(RandomAccess)>
+                template<bool OtherConst,
+                         CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
                 friend constexpr bool operator>=(basic_sentinel<OtherConst> const &left,
                     basic_iterator const &right)
                 {
                     return true;
                 }
-                REQUIRES(RandomAccess)
+                CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
                 typename operator_brackets_dispatch_t::type
                 operator[](difference_type n) const
                 {
@@ -502,13 +517,13 @@ namespace ranges
             {
                 return {range_core_access::begin_impl(derived())};
             };
-            template<typename D = Derived, CONCEPT_REQUIRES(SameType<D, Derived>())>
+            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
             detail::conditional_t<(detail::RangeFacade<D>()), iterator, sentinel>
             end()
             {
                 return {range_core_access::end_impl(derived())};
             }
-            template<typename D = Derived, CONCEPT_REQUIRES(SameType<D, Derived>())>
+            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
             detail::conditional_t<(detail::RangeFacade<D>()), const_iterator, const_sentinel>
             end() const
             {
@@ -525,7 +540,5 @@ namespace ranges
         };
     }
 }
-#undef REQUIRES
-#undef REQUIRES_
 
 #endif

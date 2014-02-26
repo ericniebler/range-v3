@@ -67,8 +67,7 @@ namespace ranges
                 std::advance(begin_end_.first(), n);
                 return *this;
             }
-            template<typename This = iterator_range,
-                     CONCEPT_REQUIRES(ranges::Range<This>())>
+            CONCEPT_REQUIRES(SameType<Iterator, Sentinel>())
             iterator_range & advance_end(iterator_difference_t<Iterator> n)
             {
                 std::advance(begin_end_.second(), n);

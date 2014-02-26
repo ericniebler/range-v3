@@ -26,7 +26,7 @@ namespace ranges
         struct accumulate_ : bindable<accumulate_>
         {
             template<typename InputRange, typename Value,
-                CONCEPT_REQUIRES(ranges::Range<InputRange>())>
+                CONCEPT_REQUIRES_(ranges::Range<InputRange>())>
             static Value invoke(accumulate_, InputRange && rng, Value init)
             {
                 CONCEPT_ASSERT(ranges::InputRange<InputRange>());
@@ -54,7 +54,7 @@ namespace ranges
             }
 
             template<typename Value, typename BinaryOperation,
-                CONCEPT_REQUIRES(!ranges::Range<Value>())>
+                CONCEPT_REQUIRES_(!ranges::Range<Value>())>
             static auto invoke(accumulate_ accumulate, Value init, BinaryOperation op) ->
                 decltype(accumulate.move_bind(std::placeholders::_1, std::move(init), std::move(op)))
             {
@@ -94,7 +94,7 @@ namespace ranges
         struct partial_sum_ : bindable<partial_sum_>
         {
             template<typename InputRange, typename OutputIterator,
-                CONCEPT_REQUIRES(ranges::Range<InputRange>())>
+                CONCEPT_REQUIRES_(ranges::Range<InputRange>())>
             static OutputIterator
             invoke(partial_sum_, InputRange && rng, OutputIterator result)
             {
@@ -119,7 +119,7 @@ namespace ranges
             }
 
             template<typename OutputIterator, typename BinaryOperation,
-                CONCEPT_REQUIRES(!ranges::Range<OutputIterator>())>
+                CONCEPT_REQUIRES_(!ranges::Range<OutputIterator>())>
             static auto invoke(partial_sum_ partial_sum, OutputIterator result, BinaryOperation op) ->
                 decltype(partial_sum.move_bind(std::placeholders::_1, std::move(result), std::move(op)))
             {
@@ -158,7 +158,7 @@ namespace ranges
             }
 
             template<typename OutputIterator, typename BinaryOperation,
-                CONCEPT_REQUIRES(!ranges::Range<OutputIterator>())>
+                CONCEPT_REQUIRES_(!ranges::Range<OutputIterator>())>
             static auto invoke(adjacent_difference_ adjacent_difference, OutputIterator result,
                 BinaryOperation op) ->
                 decltype(adjacent_difference.move_bind(std::placeholders::_1, std::move(result),

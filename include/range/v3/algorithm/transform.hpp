@@ -65,7 +65,7 @@ namespace ranges
             /// \pre UnaryFunction is a model of the UnaryFunction concept
             /// \pre BinaryFunction is a model of the BinaryFunction concept
             template<typename InputIterable1, typename OutputIterator, typename UnaryFunction,
-                CONCEPT_REQUIRES(
+                CONCEPT_REQUIRES_(
                     ranges::InputIterable<InputIterable1>() &&
                     ranges::Callable<invokable_t<UnaryFunction>,
                                                  range_reference_t<InputIterable1>>() &&
@@ -121,7 +121,7 @@ namespace ranges
             /// \overload
             /// for rng | transform(rng2, out, bin_fun)
             template<typename InputIterable2, typename OutputIterator, typename BinaryFunction,
-                CONCEPT_REQUIRES(!(
+                CONCEPT_REQUIRES_(!(
                     ranges::InputIterable<InputIterable2>() &&
                     ranges::Callable<invokable_t<BinaryFunction>,
                                                  range_reference_t<InputIterable2>>() &&
