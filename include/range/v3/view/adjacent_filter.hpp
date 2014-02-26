@@ -27,10 +27,11 @@ namespace ranges
     {
         template<typename ForwardRange, typename BinaryPredicate>
         struct adjacent_filter_range_view
-            : range_facade<adjacent_filter_range_view<ForwardRange, BinaryPredicate>>
+          : range_facade<adjacent_filter_range_view<ForwardRange, BinaryPredicate>,
+                         is_infinite<ForwardRange>::value>
         {
         private:
-            friend struct range_core_access;
+            friend range_core_access;
             compressed_pair<ForwardRange, invokable_t<BinaryPredicate>> rng_and_pred_;
 
             template<bool Const>

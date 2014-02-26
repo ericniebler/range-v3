@@ -31,10 +31,11 @@ namespace ranges
     {
         template<typename InputRange, typename UnaryPredicate>
         struct filter_range_view
-          : range_facade<filter_range_view<InputRange, UnaryPredicate>>
+          : range_facade<filter_range_view<InputRange, UnaryPredicate>,
+                         is_infinite<InputRange>::value>
         {
         private:
-            friend struct range_core_access;
+            friend range_core_access;
             compressed_pair<InputRange, invokable_t<UnaryPredicate>> rng_and_pred_;
 
             template<bool Const>

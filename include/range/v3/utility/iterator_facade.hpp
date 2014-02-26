@@ -14,6 +14,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {

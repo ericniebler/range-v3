@@ -23,11 +23,14 @@ namespace ranges
     {
         template<typename InputIterable, typename Value>
         struct delimit_iterable_view
-          : range_adaptor<delimit_iterable_view<InputIterable, Value>, InputIterable>
+          : range_adaptor<
+                delimit_iterable_view<InputIterable, Value>
+              , InputIterable
+              , is_infinite<InputIterable>::value>
         {
         private:
-            friend struct range_core_access;
-            using base_t = range_adaptor<delimit_iterable_view, InputIterable>;
+            friend range_core_access;
+            using base_t = range_adaptor<delimit_iterable_view, InputIterable, is_infinite<InputIterable>::value>;
             template<bool Const>
             using basic_impl_t = range_core_access::basic_impl_t<base_t, Const>;
             template<bool Const>

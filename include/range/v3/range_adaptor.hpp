@@ -18,13 +18,13 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Derived, typename BaseIterable>
+        template<typename Derived, typename BaseIterable, bool Infinite>
         struct range_adaptor
-          : range_facade<Derived>
+          : range_facade<Derived, Infinite>
         {
         protected:
             using range_adaptor_ = range_adaptor;
-            using range_facade<Derived>::derived;
+            using range_facade<Derived, Infinite>::derived;
 
             range_adaptor &adaptor()
             {
@@ -36,7 +36,7 @@ namespace ranges
             }
         private:
             BaseIterable rng_;
-            friend struct range_core_access;
+            friend range_core_access;
             friend Derived;
 
             template<bool Const>

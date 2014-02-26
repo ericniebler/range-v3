@@ -86,16 +86,15 @@ namespace ranges
 
         template<typename Value>
         struct iota_iterable_view
-          : range_facade<iota_iterable_view<Value>>
+          : range_facade<iota_iterable_view<Value>, true>
         {
         private:
             using iota_concept_t = ranges::iota_concept_t<Value>;
-            friend struct range_core_access;
+            friend range_core_access;
         public:
             using difference_type = decltype(detail::iota_difference<Value>(iota_concept_t{}));
         private:
             Value value_;
-            using is_infinite = std::true_type;
             Value current() const
             {
                 return value_;

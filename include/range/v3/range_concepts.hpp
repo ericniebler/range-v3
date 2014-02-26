@@ -20,26 +20,18 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/utility/infinity.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        template<typename Iterable, typename Void = void>
+        struct is_infinite
+          : std::is_base_of<detail::is_infinite<true>, Iterable>
+        {};
+
         namespace concepts
         {
-            namespace detail
-            {
-                struct InfiniteRange
-                {
-                    template<typename T>
-                    auto requires(T && t) -> decltype(
-                        concepts::valid_expr(
-                            concepts::has_type<infinity>(ranges::end(t)-ranges::begin(t))
-                        ));
-                };
-            }
-
             struct Iterable
               : refines<CopyConstructible>
             {
@@ -66,8 +58,7 @@ namespace ranges
                 using pointer_t = Iterator::pointer_t<iterator_t<T>>;
 
                 template<typename T>
-                using is_finite_t = std::integral_constant<bool,
-                    !concepts::models<detail::InfiniteRange, T>()>;
+                using is_finite_t = std::integral_constant<bool, !is_infinite<T>::value>;
 
                 // Valid expressions
                 template<typename T>

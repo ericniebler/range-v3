@@ -493,9 +493,6 @@ void test_sentinel()
     using namespace ranges;
     using It = range_iterator_t<iota_iterable_view<int>>;
     using S = range_sentinel_t<iota_iterable_view<int>>;
-    constexpr It begin{};
-    constexpr S end{};
-    constexpr ranges::infinity d = end - begin;
     static_assert(!concepts::Iterable::is_finite_t<iota_iterable_view<int>>::value, "");
     static_assert(concepts::Iterable::is_finite_t<std::vector<int>>::value, "");
 }

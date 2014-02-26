@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_UTILITY_ITERATOR_CONCEPTS_HPP
 #define RANGES_V3_UTILITY_ITERATOR_CONCEPTS_HPP
 
+#include <iterator>
 #include <range/v3/utility/concepts.hpp>
 
 namespace ranges

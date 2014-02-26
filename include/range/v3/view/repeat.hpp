@@ -23,22 +23,18 @@ namespace ranges
     {
         template<typename Value>
         struct repeat_iterable_view
-          : range_facade<repeat_iterable_view<Value>>
+          : range_facade<repeat_iterable_view<Value>, true>
         {
         private:
             Value value_;
-            friend struct range_core_access;
-            using is_infinite = std::true_type;
+            friend range_core_access;
 
             struct impl
             {
-                repeat_iterable_view const *view_;
-                impl(repeat_iterable_view const *view)
-                  : view_(view)
-                {}
+                Value const *value_;
                 Value const &current() const
                 {
-                    return view_->value_;
+                    return *value_;
                 }
                 constexpr bool done() const
                 {
@@ -49,7 +45,7 @@ namespace ranges
             };
             impl begin_impl() const
             {
-                return {this};
+                return {&value_};
             }
         public:
             repeat_iterable_view() = default;

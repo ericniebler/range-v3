@@ -170,6 +170,10 @@ namespace ranges
 
             template<typename...Ts>
             void valid_exprs(Ts &&...);
+
+            template<bool Infinite>
+            struct is_infinite
+            {};
         }
 
         struct begin_tag {};
@@ -177,10 +181,10 @@ namespace ranges
 
         struct use_default;
 
-        template<typename Derived>
+        template<typename Derived, bool Infinite = false>
         struct range_facade;
 
-        template<typename Derived, typename Range>
+        template<typename Derived, typename BaseIterable, bool Infinite = false>
         struct range_adaptor;
 
         template<

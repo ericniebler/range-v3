@@ -14,7 +14,6 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
-#include <range/v3/utility/infinity.hpp>
 
 namespace ranges
 {
@@ -193,8 +192,8 @@ namespace ranges
                 std::random_access_iterator_tag;
         }
 
-        template<typename Derived>
-        struct range_facade
+        template<typename Derived, bool Infinite>
+        struct range_facade : private detail::is_infinite<Infinite>
         {
         protected:
             using range_facade_ = range_facade;
@@ -208,7 +207,7 @@ namespace ranges
             }
         private:
             friend Derived;
-            friend struct range_core_access;
+            friend range_core_access;
 
             // Default implementations
             struct default_sentinel_impl
@@ -406,13 +405,6 @@ namespace ranges
                 difference_type operator-(basic_iterator<OtherConst> const &right) const
                 {
                     return range_core_access::distance_to(right.impl_, impl_);
-                }
-                template<bool OtherConst,
-                         CONCEPT_REQUIRES_(detail::InfiniteImpl<impl_t>())>
-                friend constexpr infinity operator-(basic_sentinel<OtherConst> const &,
-                    basic_iterator const &)
-                {
-                    return {};
                 }
                 // symmetric comparisons
                 template<bool OtherConst,
