@@ -33,8 +33,8 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using base_t = range_adaptor<indirect_range_view, InputRange>;
-            using impl_base_t = range_core_access::const_impl_t<base_t>;
+            using base_t = range_adaptor_t<indirect_range_view>;
+            using impl_base_t = basic_adaptor_impl<InputRange, true>;
 
             struct impl : impl_base_t
             {

@@ -30,11 +30,9 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using base_t = range_adaptor<delimit_iterable_view, InputIterable, is_infinite<InputIterable>::value>;
+            using base_t = range_adaptor_t<delimit_iterable_view>;
             template<bool Const>
-            using basic_impl_t = range_core_access::basic_impl_t<base_t, Const>;
-            template<bool Const>
-            using sentinel_base_t = range_core_access::basic_sentinel_t<base_t, Const>;
+            using sentinel_base_t = basic_adaptor_sentinel<InputIterable, Const>;
             Value value_;
 
             template<bool Const>
@@ -51,7 +49,7 @@ namespace ranges
                   : sentinel_base_t<Const>(std::move(that)), value_(that.value_)
                 {}
                 template<bool OtherConst>
-                bool equal(basic_impl_t<OtherConst> const &that) const
+                bool equal(basic_adaptor_impl<InputIterable, OtherConst> const &that) const
                 {
                     return this->base().equal(that) ||
                            that.current() == *value_;
