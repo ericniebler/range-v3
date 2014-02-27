@@ -1,1126 +1,850 @@
-#include <deque>
-#include <utility>
-#include <iostream>
-#include <algorithm>
-#include <range/v3/range.hpp>
-using namespace ranges;
+// Boost.Range library
+//
+//  Copyright Eric Niebler 2013.
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
 
-namespace std
+#include <map>
+#include <list>
+#include <string>
+#include <vector>
+#include <memory>
+#include <iomanip>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <functional>
+#include <initializer_list>
+#include <range/v3/range.hpp>
+#include <range/v3/utility/safe_int.hpp>
+
+template<std::size_t>
+struct undef_i;
+
+template<typename T>
+struct undef_t;
+
+struct noncopyable
+{
+    noncopyable(noncopyable const &) = delete;
+};
+
+struct nondefaultconstructible
+{
+    nondefaultconstructible(int) {};
+};
+
+static_assert(ranges::CopyAssignable<int>(), "");
+static_assert(!ranges::CopyAssignable<int const>(), "");
+
+static_assert(ranges::CopyConstructible<int>(), "");
+static_assert(!ranges::CopyConstructible<noncopyable>(), "");
+
+static_assert(ranges::DefaultConstructible<int>(), "");
+static_assert(!ranges::DefaultConstructible<nondefaultconstructible>(), "");
+
+static_assert(ranges::InputIterator<int*>(), "");
+static_assert(!ranges::InputIterator<int>(), "");
+
+static_assert(ranges::ForwardIterator<int*>(), "");
+static_assert(!ranges::ForwardIterator<int>(), "");
+
+static_assert(ranges::BidirectionalIterator<int*>(), "");
+static_assert(!ranges::BidirectionalIterator<int>(), "");
+
+static_assert(ranges::RandomAccessIterator<int*>(), "");
+static_assert(!ranges::RandomAccessIterator<int>(), "");
+
+static_assert(ranges::InputRange<ranges::istream_range<int>>(), "");
+static_assert(!ranges::InputRange<int>(), "");
+
+static_assert(ranges::RandomAccessRange<std::vector<int> const &>(), "");
+static_assert(!ranges::RandomAccessRange<ranges::istream_range<int>>(), "");
+
+static_assert(ranges::BinaryPredicate<std::less<int>, int, int>(), "");
+static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
+
+static_assert(ranges::OutputIterator<int *, int>(), "");
+static_assert(!ranges::OutputIterator<int const *, int>(), "");
+
+struct NotDestructible
+{
+    ~NotDestructible() = delete;
+};
+
+static_assert(ranges::Destructible<int>(), "");
+static_assert(!ranges::Destructible<NotDestructible>(), "");
+
+struct IntComparable
+{
+    friend bool operator<(int, IntComparable);
+};
+
+static_assert(ranges::LessThanComparable<int>(), "");
+static_assert(ranges::LessThanComparable<int, IntComparable>(), "");
+static_assert(!ranges::LessThanComparable<IntComparable, int>(), "");
+
+static_assert(
+    std::is_same<
+        ranges::range_concept_t<std::vector<int>>,
+        ranges::concepts::RandomAccessRange
+    >::value, "");
+
+static_assert(
+    std::is_same<
+        ranges::range_concept_t<ranges::istream_range<int>>,
+        ranges::concepts::InputRange
+    >::value, "");
+
+struct Abstract { virtual ~Abstract() = 0; };
+static_assert(std::is_same<ranges::typelist_element_t<0, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int>::value, "");
+static_assert(std::is_same<ranges::typelist_element_t<1, ranges::typelist<int, Abstract, float(), int(&&)[]>>, Abstract>::value, "");
+static_assert(std::is_same<ranges::typelist_element_t<2, ranges::typelist<int, Abstract, float(), int(&&)[]>>, float()>::value, "");
+static_assert(std::is_same<ranges::typelist_element_t<3, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
+
+static_assert(std::is_same<ranges::typelist_back_t<ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
+
+static_assert(std::is_same<ranges::typelist_drop_t<0, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<int, Abstract, float(), int(&&)[]>>::value, "");
+static_assert(std::is_same<ranges::typelist_drop_t<1, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<Abstract, float(), int(&&)[]>>::value, "");
+static_assert(std::is_same<ranges::typelist_drop_t<2, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<float(), int(&&)[]>>::value, "");
+static_assert(std::is_same<ranges::typelist_drop_t<3, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<int(&&)[]>>::value, "");
+static_assert(std::is_same<ranges::typelist_drop_t<4, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<>>::value, "");
+
+struct move_only
+{
+    move_only() = default;
+    move_only(move_only &&) = default;
+    move_only(move_only const &) = delete;
+    int operator()(std::string const &str) const { return str.length(); }
+};
+
+struct identity
 {
     template<typename T>
-    struct is_trivially_move_assignable
-        : std::false_type
-    {};
-    template<>
-    struct is_trivially_move_assignable<int>
-        : std::true_type
-    {};
-}
-
-namespace _std
-{
-    namespace _VSTD = _std;
-// rotate
-
-template <class _ForwardIterator>
-__attribute__((always_inline))
-_ForwardIterator
-__rotate_left(_ForwardIterator __first, _ForwardIterator __last)
-{
-    typedef typename std::iterator_traits<_ForwardIterator>::value_type value_type;
-    value_type __tmp = std::move(*__first);
-    _ForwardIterator __lm1 = std::move(std::next(__first), __last, __first);
-    *__lm1 = std::move(__tmp);
-    return __lm1;
-}
-
-template <class _BidirectionalIterator>
-__attribute__((always_inline))
-_BidirectionalIterator
-__rotate_right(_BidirectionalIterator __first, _BidirectionalIterator __last)
-{
-    typedef typename std::iterator_traits<_BidirectionalIterator>::value_type value_type;
-    _BidirectionalIterator __lm1 = std::prev(__last);
-    value_type __tmp = std::move(*__lm1);
-    _BidirectionalIterator __fp1 = std::move_backward(__first, __lm1, __last);
-    *__first = std::move(__tmp);
-    return __fp1;
-}
-
-template <class _ForwardIterator>
-__attribute__((always_inline))
-_ForwardIterator
-__rotate_forward(_ForwardIterator __first, _ForwardIterator __middle, _ForwardIterator __last)
-{
-    using std::swap;
-    _ForwardIterator __i = __middle;
-    while (true)
+    T operator()(T && t) const
     {
-        swap(*__first, *__i);
-        ++__first;
-        if (++__i == __last)
-            break;
-        if (__first == __middle)
-            __middle = __i;
+        return std::forward<T>(t);
     }
-    _ForwardIterator __r = __first;
-    if (__first != __middle)
+} ident {};
+
+void test_indirect_view()
+{
+    using namespace ranges;
+    std::vector<std::shared_ptr<int>> vp;
+    for(int i = 0; i < 10; ++i)
+        vp.push_back(std::make_shared<int>(i));
+    std::cout << "\nindirected:\n";
+    for(int & i : vp | view::indirect)
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_keys_values_view()
+{
+    using namespace ranges;
+    std::map<std::string, int> m ={
+        {"this",0},
+        {"that",1},
+        {"other",2}};
+    std::cout << "\nkeys:\n";
+    for(std::string const & s : m | view::keys)
+        std::cout << s << ' ';
+    std::cout << '\n';
+    std::cout << "\nvalues:\n";
+    for(int & i : m | view::values)
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_view_replace()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
+    std::stringstream sin{str};
+
+    for(auto & i : istream<int>(sin) | view::replace(1, 42))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_view_replace_if()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    std::cout << "\nreplace_if\n";
+    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
+    std::stringstream sin{str};
+
+    for(auto & i : istream<int>(sin) | view::replace_if([](int i){return i==1;}, 42))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_slicer()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    int rgi[] = {0,1,2,3,4,5,6,7,8,9,10};
+    auto sl = rgi | view::slice(3,9);
+    for(int& i : rgi | view::slice(3,9))
+        std::cout << i << ' ';
+    std::cout << '\n';
+    for(int& i : sl | view::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+    for(int i : std::vector<int>{0,1,2,3,4,5,6,7,8,9,10} | view::slice(3,9) | view::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    std::stringstream sin("0 1 2 3 4 5 6 7 8 9 10");
+    for(int i : istream<int>(sin) | view::slice(3,9))
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    std::list<int> li {0,1,2,3,4,5,6,7,8,9,10};
+    for(int i : li | view::slice(3,9) | view::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_stride_view()
+{
+    using namespace ranges;
+    std::cout << "\nstride\n";
+
+    std::vector<int> v(50);
+    iota(v, 0);
+    static_assert(
+        sizeof((v|view::stride(3)).begin()) ==
+        sizeof(void*)+sizeof(v.begin())+sizeof(std::ptrdiff_t),"");
+    for(int i : v | view::stride(3) | view::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    std::stringstream str;
+    copy(v, std::ostream_iterator<int>{str, " "});
+    static_assert(
+        sizeof((istream<int>(str)|view::stride(3)).begin()) ==
+        sizeof(void*)+sizeof(istream<int>(str).begin()),"");
+    for(int i : istream<int>(str) | view::stride(3))
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    std::list<int> li;
+    copy(v, std::back_inserter(li));
+    // static_assert(
+    //     sizeof((li|view::stride(3)).begin()) ==
+    //     sizeof(void*)+sizeof(li.begin())+sizeof(int)+sizeof(std::ptrdiff_t),"");
+    for(int i : li | view::stride(3))
+        std::cout << i << ' ';
+    std::cout << '\n';
+    for(int i : li | view::stride(3) | view::reverse)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    auto x = v | view::stride(3);
+    std::cout << ranges::distance(x) << '\n';
+    std::cout << '\n';
+}
+
+void test_adjacent_filter()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    std::cout << "\nTesting adjacent_filter:\n";
+    int rgi[] = {1,1,1,2,3,4,4};
+    rgi | view::adjacent_filter(std::not_equal_to<int>{})
+        | copy(std::ostream_iterator<int>(std::cout, " "));
+    std::cout << '\n';
+}
+
+void test_unique_view()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    int const rgi[] = {1,1,1,2,3,4,4};
+    rgi | view::unique
+        | copy(std::ostream_iterator<int>(std::cout, " "));
+    std::cout << '\n';
+}
+
+void test_partial_sort_copy()
+{
+    using namespace ranges;
+    using namespace std::placeholders;
+
+    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
+    std::stringstream sin{str};
+    partial_sort_copy_result<std::vector<int>> x
+        = istream<int>(sin)
+            | partial_sort_copy(std::vector<int>(20,0));
+    for(int i : x)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    std::stringstream sin2{str};
+    std::vector<int> vi(20,0);
+    partial_sort_copy_result<std::vector<int> &> y =
+        istream<int>(sin2)
+            | partial_sort_copy(vi);
+    for(int i : y)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    for(int i : vi)
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_tokenize_view()
+{
+    // Drat, can't test this because libstdc++ doesn't have <regex> yet. :(
+    //
+    //using namespace ranges;
+    //
+    //for(auto & sub : std::string("this is his face")
+    //               | view::tokenize(std::regex("\\w+"), {1,2,3,4}))
+    //{
+    //    std::cout << sub << '*';
+    //}
+    //std::cout << '\n';
+}
+
+void test_zip_view()
+{
+    using namespace ranges;
+    std::cout << "\nzip view:\n";
+
+    std::vector<int> vi{0,1,2,3,4,5,6,7,8,9,10};
+    std::vector<std::string> vs{
+        "hello"
+      , "goodbye"
+      , "hello"
+      , "goodbye"
+    };
+    std::stringstream str{"john paul george ringo"};
+    for(auto t : view::zip(vi, vs, istream<std::string>(str)))
     {
-        __i = __middle;
-        while (true)
-        {
-            swap(*__first, *__i);
-            ++__first;
-            if (++__i == __last)
-            {
-                if (__first == __middle)
-                    break;
-                __i = __middle;
-            }
-            else if (__first == __middle)
-                __middle = __i;
-        }
+        std::cout << "{"
+            << std::get<0>(t) << ", "
+            << std::get<1>(t) << ", "
+            << std::get<2>(t) << "}\n";
     }
-    return __r;
+
+    auto rnd_rng = view::zip(vi, vs);
+    auto rnd_it = rnd_rng.begin();
+    auto tmp = rnd_it + 3;
+    std::cout << "\n{"
+        << std::get<0>(*tmp) << ", "
+        << std::get<1>(*tmp) << "}\n";
+
+    std::cout << rnd_rng.end() - rnd_rng.begin() << "\n";
+    std::cout << rnd_rng.begin() - rnd_rng.end() << "\n";
 }
 
-template<typename _Integral>
-__attribute__((always_inline))
-_Integral
-__gcd(_Integral __x, _Integral __y)
+void test_move_view()
 {
-    do
-    {
-        _Integral __t = __x % __y;
-        __x = __y;
-        __y = __t;
-    } while (__y);
-    return __x;
+    using namespace ranges;
+    std::cout << "\nmove view:\n";
+    std::vector<std::string> vs {
+        "'allo",
+        "'allo",
+        "???"
+    };
+    move_range_view<std::vector<std::string>&> x = vs | view::move;
+    if(0) std::cout << x.begin()->c_str() << std::endl;
+    std::vector<std::string> vs2(x.begin(), x.end());
+    static_assert(std::is_same<std::string&&, decltype(*x.begin())>::value, "");
+    std::cout << "target:\n";
+    for(std::string &s : vs2)
+        std::cout << '"' << s << "\" ";
+    std::cout << "\nsource:\n";
+    for(std::string &s : vs)
+        std::cout << '"' << s << "\" ";
 }
 
-template<typename _RandomAccessIterator>
-__attribute__((always_inline)) _RandomAccessIterator
-__rotate_gcd(_RandomAccessIterator __first, _RandomAccessIterator __middle, _RandomAccessIterator __last)
+void test_slice_iota()
 {
-    typedef typename std::iterator_traits<_RandomAccessIterator>::difference_type difference_type;
-    typedef typename std::iterator_traits<_RandomAccessIterator>::value_type value_type;
+    using namespace ranges;
+    std::cout << "\n\nslice an infinite range:\n";
+    for (int i : view::iota(10) | view::slice(10, 20))
+        std::cout << i << ' ';
+    (view::iota(10) | view::slice(2, 4)).begin() + 1;
+    CONCEPT_ASSERT(FiniteRange<decltype(view::iota(10) | view::slice(2, 4))>());
+    std::cout << '\n';
+}
 
-    const difference_type __m1 = __middle - __first;
-    const difference_type __m2 = __last - __middle;
-    if (__m1 == __m2)
+void test_delimit_iota()
+{
+    using namespace ranges;
+    std::cout << "\n\ndelimit an infinite range:\n";
+    view::iota(10) | view::delimit(50) | for_each([](int i) {
+        std::cout << i << ' ';
+    });
+    std::cout << '\n';
+}
+
+void test_delimit_iota_finite()
+{
+    using namespace ranges;
+    std::cout << "\n\ndelimit a finite range:\n";
+    std::vector<int>(10) | iota(10) | view::delimit(50) | for_each([](int i) {
+        std::cout << i << ' ' << std::flush;
+    });
+    std::cout << '\n';
+}
+
+void test_take_repeat()
+{
+    using namespace ranges;
+    std::cout << "\n\nslice a repeat infinite range:\n";
+    for (int i : view::repeat(9) | view::take(10))
+        std::cout << i << ' ';
+    std::cout << '\n';
+}
+
+void test_safe_int()
+{
+    using namespace ranges;
+    constexpr safe_int<int> i = 42;
+    constexpr safe_int<int> pos_inf = safe_int<int>::inf();
+    constexpr safe_int<int> neg_inf = -safe_int<int>::inf();
+    constexpr safe_int<int> NaN = safe_int<int>::NaN();
+    constexpr safe_int<int> zero = 0;
+    constexpr safe_int<int> zero2{};
+    static_assert(zero == zero2, "");
+    static_assert(i + 1 == 43, "");
+    static_assert(i + std::numeric_limits<int>::max() == pos_inf, "");
+    static_assert(-i - std::numeric_limits<int>::max() == neg_inf, "");
+    static_assert(pos_inf == - neg_inf, "");
+    static_assert(pos_inf - 1 == pos_inf, "");
+    static_assert(1 - pos_inf == neg_inf, "");
+    static_assert(pos_inf != NaN, "");
+    static_assert(neg_inf != NaN, "");
+    static_assert(!(pos_inf == NaN), "");
+    static_assert(!(neg_inf == NaN), "");
+    static_assert(!(NaN == NaN), "");
+    static_assert(NaN != NaN, "");
+    static_assert(neg_inf != pos_inf, "");
+    static_assert(!(neg_inf == pos_inf), "");
+    static_assert((pos_inf - pos_inf).is_NaN(), "");
+    static_assert((pos_inf + neg_inf).is_NaN(), "");
+    static_assert(pos_inf + pos_inf == pos_inf, "");
+    static_assert(neg_inf - pos_inf == neg_inf, "");
+    static_assert(zero / pos_inf == 0, "");
+    static_assert(zero / -pos_inf == 0, "");
+    static_assert(i / pos_inf == 0, "");
+    static_assert(i / -pos_inf == 0, "");
+    static_assert(i / zero == pos_inf, "");
+    static_assert((zero / zero).is_NaN(), "");
+    static_assert(pos_inf / zero == pos_inf, "");
+    static_assert(neg_inf / zero == neg_inf, "");
+    static_assert(pos_inf / i == pos_inf, "");
+    static_assert(neg_inf / i == neg_inf, "");
+    static_assert(pos_inf / -i == neg_inf, "");
+    static_assert(neg_inf / -i == pos_inf, "");
+    static_assert((pos_inf / pos_inf).is_NaN(), "");
+    static_assert((pos_inf / neg_inf).is_NaN(), "");
+    static_assert((neg_inf / pos_inf).is_NaN(), "");
+    static_assert((neg_inf / neg_inf).is_NaN(), "");
+    static_assert(i / 2 == 21, "");
+    static_assert(i * 2 == 84, "");
+    static_assert(i * pos_inf == pos_inf, "");
+    static_assert(-i * pos_inf == neg_inf, "");
+    static_assert(i * neg_inf == neg_inf, "");
+    static_assert(-i * neg_inf == pos_inf, "");
+    static_assert((0 * pos_inf).is_NaN(), "");
+    static_assert((0 * neg_inf).is_NaN(), "");
+    static_assert(pos_inf * pos_inf == pos_inf, "");
+    static_assert(neg_inf * neg_inf == pos_inf, "");
+    static_assert(pos_inf * neg_inf == neg_inf, "");
+    static_assert(neg_inf * pos_inf == neg_inf, "");
+    static_assert(safe_int<int>{0x8000} * safe_int<int>{0x10000} == pos_inf, "");
+    static_assert(safe_int<int>{0x8000} * safe_int<int>{-(int)0x10000} == neg_inf, "");
+    static_assert(safe_int<int>{-(int)0x8000} * safe_int<int>{-(int)0x10000} == pos_inf, "");
+
+//    RANGES_ASSERT((view::iota(10) | distance) == safe_int<int>::inf());
+}
+
+void test_find_end_iterable()
+{
+    using namespace ranges;
+    std::cout << "\nfind_end on a delimited range:\n";
+    iterator_range<char const *> input = {"now is the time for all good men to come to the aid of their country", nullptr};
+    iterator_range<char const *> pattern = {"to", nullptr};
+    auto result = find_end(view::delimit(input, '\0'), view::delimit(pattern, '\0'));
+    std::cout << &*result << '\n';
+}
+
+void test_sentinel()
+{
+    using namespace ranges;
+    using It = range_iterator_t<iota_iterable_view<int>>;
+    using S = range_sentinel_t<iota_iterable_view<int>>;
+    static_assert(!concepts::Iterable::is_finite_t<iota_iterable_view<int>>::value, "");
+    static_assert(concepts::Iterable::is_finite_t<std::vector<int>>::value, "");
+}
+
+static_assert(ranges::FiniteIterable<std::vector<int>>(), "");
+static_assert(ranges::FiniteIterable<ranges::istream_range<int>>(), "");
+static_assert(ranges::Iterable<ranges::iota_iterable_view<int>>(), "");
+static_assert(!ranges::FiniteIterable<ranges::iota_iterable_view<int>>(), "");
+
+struct MyRange
+  : ranges::range_facade<MyRange>
+{
+private:
+    friend struct ranges::range_core_access;
+    std::vector<int> ints_;
+    struct impl
     {
-        std::swap_ranges(__first, __middle, __middle);
-        return __middle;
+        impl(std::vector<int>::const_iterator it) : iter(it) {}
+        std::vector<int>::const_iterator iter;
+        int const & current() const { return *iter; }
+        void next() { ++iter; }
+        bool equal(impl const &that) const { return iter == that.iter; }
+    };
+    impl begin_impl() const
+    {
+        return {ints_.begin()};
     }
-    const difference_type __g = _VSTD::__gcd(__m1, __m2);
-    for (_RandomAccessIterator __p = __first + __g; __p != __first;)
+    impl end_impl() const
     {
-        value_type __t(std::move(*--__p));
-        _RandomAccessIterator __p1 = __p;
-        _RandomAccessIterator __p2 = __p1 + __m1;
-        do
-        {
-            *__p1 = std::move(*__p2);
-            __p1 = __p2;
-            const difference_type __d = __last - __p2;
-            if (__m1 < __d)
-                __p2 += __m1;
-            else
-                __p2 = __first + (__m1 - __d);
-        } while (__p2 != __p);
-        *__p1 = std::move(__t);
+        return {ints_.end()};
     }
-    return __first + __m2;
-}
-
-template <class _ForwardIterator>
-__attribute__((always_inline)) 
-_ForwardIterator
-__rotate(_ForwardIterator __first, _ForwardIterator __middle, _ForwardIterator __last,
-         std::forward_iterator_tag)
-{
-    typedef typename std::iterator_traits<_ForwardIterator>::value_type value_type;
-    if (std::is_trivially_move_assignable<value_type>::value)
-    {
-        if (std::next(__first) == __middle)
-            return _VSTD::__rotate_left(__first, __last);
-    }
-    return _VSTD::__rotate_forward(__first, __middle, __last);
-}
-
-template <class _BidirectionalIterator>
-__attribute__((always_inline)) 
-_BidirectionalIterator
-__rotate(_BidirectionalIterator __first, _BidirectionalIterator __middle, _BidirectionalIterator __last,
-         std::bidirectional_iterator_tag)
-{
-    typedef typename std::iterator_traits<_BidirectionalIterator>::value_type value_type;
-    if (std::is_trivially_move_assignable<value_type>::value)
-    {
-        if (std::next(__first) == __middle)
-            return _VSTD::__rotate_left(__first, __last);
-        if (std::next(__middle) == __last)
-            return _VSTD::__rotate_right(__first, __last);
-    }
-    return _VSTD::__rotate_forward(__first, __middle, __last);
-}
-
-template <class _RandomAccessIterator>
-__attribute__((always_inline)) 
-_RandomAccessIterator
-__rotate(_RandomAccessIterator __first, _RandomAccessIterator __middle, _RandomAccessIterator __last,
-         std::random_access_iterator_tag)
-{
-    typedef typename std::iterator_traits<_RandomAccessIterator>::value_type value_type;
-    if (std::is_trivially_move_assignable<value_type>::value)
-    {
-        if (std::next(__first) == __middle)
-            return _VSTD::__rotate_left(__first, __last);
-        if (std::next(__middle) == __last)
-            return _VSTD::__rotate_right(__first, __last);
-        return _VSTD::__rotate_gcd(__first, __middle, __last);
-    }
-    return _VSTD::__rotate_forward(__first, __middle, __last);
-}
-
-template <class _ForwardIterator>
-__attribute__((always_inline)) 
-_ForwardIterator
-rotate(_ForwardIterator __first, _ForwardIterator __middle, _ForwardIterator __last)
-{
-    if (__first == __middle)
-        return __last;
-    if (__middle == __last)
-        return __first;
-    return _VSTD::__rotate(__first, __middle, __last,
-                           typename std::iterator_traits<_ForwardIterator>::iterator_category());
-}
-}
-
-
-
-
-//template<typename It>
-//class counted_range : public range_facade<counted_range<It>>
-//{
-//    friend range_core_access;
-//    It it_;
-//    iterator_difference_t<It> n_;
-//    auto current() const -> decltype(*it_)
-//        { return *it_; }
-//    bool done() const
-//        { return 0 == n_; }
-//    bool equal(counted_range<It> const &that) const
-//        { return n_ == that.n_; }
-//    void next() { ++it_, --n_; }
-//    CONCEPT_REQUIRES(BidirectionalIterator<It>())
-//    void prev()
-//        { --it_, ++n_; }
-//    CONCEPT_REQUIRES(RandomAccessIterator<It>())
-//    void advance(iterator_difference_t<It> n)
-//        { it_ += n, n_ -= n; }
-//    CONCEPT_REQUIRES(RandomAccessIterator<It>())
-//    iterator_difference_t<It>
-//    distance_to(counted_range<It> const &that) const
-//        { return n_ - that.n_; }
-//public:
-//    counted_range(It it, iterator_difference_t<It> n)
-//      : it_(it), n_(n)
-//    {}
-//};
-//
-//template<typename It>
-//counted_range<It> counted(It it, iterator_difference_t<It> n)
-//{
-//    return {it, n};
-//}
-
-struct my_vector
-  : range_adaptor<my_vector, std::vector<int>>
-{
-    my_vector() = default;
-    my_vector(std::initializer_list<int> i)
-      : range_adaptor_t<my_vector>{i}
+public:
+    MyRange()
+      : ints_{1,2,3,4,5,6,7}
     {}
 };
 
-template<typename I,
-    CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-iterator_range<I> slide(I f, I l, I p)
+void test_range_facade()
 {
-    if(p < f) return {p, _std::rotate(p, f, l) };
-    if(l < p) return {_std::rotate(f, l, p), p };
-    return { f, l };
+    using namespace ranges;
+    std::cout << "\nTesting range facade:\n";
+    if(auto r = MyRange{})
+        for(auto &i : r)
+            std::cout << i << ' ';
+    std::cout << std::endl;
+}
+
+template<typename BidiRange>
+struct my_reverse_view
+  : ranges::range_adaptor<
+        my_reverse_view<BidiRange>
+      , BidiRange
+      , ranges::is_infinite<BidiRange>::value>
+{
+private:
+    CONCEPT_ASSERT(ranges::BidirectionalRange<BidiRange>());
+    friend ranges::range_core_access;
+    using base_t = ranges::range_adaptor_t<my_reverse_view>;
+    template<bool Const>
+    using impl_base_t = ranges::basic_adaptor_impl<BidiRange, Const>;
+
+    template<bool Const>
+    struct basic_impl : impl_base_t<Const>
+    {
+        using impl_base_t<Const>::base;
+        using impl_base_t<Const>::impl_base_t;
+        void next()
+        {
+            base().prev();
+        }
+        void prev()
+        {
+            base().next();
+        }
+        auto current() const -> decltype(base().current())
+        {
+            auto tmp = base();
+            tmp.prev();
+            return tmp.current();
+        }
+        CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
+        void advance(ranges::range_difference_t<BidiRange> n)
+        {
+            base().advance(-n);
+        }
+        template<bool OtherConst,
+                 CONCEPT_REQUIRES_(ranges::RandomAccessRange<BidiRange>())>
+        ranges::range_difference_t<BidiRange>
+        distance_to(basic_impl<OtherConst> const &that)
+        {
+            return that.base().distance_to(base());
+        }
+    };
+    // Cross-wire begin and end.
+    basic_impl<false> begin_impl()
+    {
+        return {ranges::end(this->base())};
+    }
+    basic_impl<true> begin_impl() const
+    {
+        return {ranges::end(this->base())};
+    }
+    basic_impl<false> end_impl()
+    {
+        return {ranges::begin(this->base())};
+    }
+    basic_impl<true> end_impl() const
+    {
+        return {ranges::begin(this->base())};
+    }
+public:
+    using base_t::base_t;
+};
+
+struct my_delimited_range
+  : ranges::range_adaptor<
+        my_delimited_range
+      , ranges::delimit_iterable_view<ranges::istream_range<int>, int>>
+{
+    using range_adaptor_::range_adaptor_;
+};
+
+void test_range_adaptor()
+{
+    using namespace ranges;
+    std::cout << "\nTesting range adaptor:\n";
+
+    std::vector<int> v {1,2,3,4};
+    my_reverse_view<std::vector<int>& > retro{v};
+    for(int i : retro)
+        std::cout << i << ' ';
+    std::cout << std::endl;
+
+    std::list<int> l { 1,2,3,4 };
+    my_reverse_view<std::list<int>& > retro2{l};
+    for(int i : retro2)
+        std::cout << i << ' ';
+    std::cout << std::endl;
+
+    std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
+    my_delimited_range r{view::delimit(istream<int>(sinx), 42)};
+    r | for_each([](int i){
+        std::cout << i << ' ';
+    });
+    std::cout << std::endl;
 }
 
 int main()
 {
-    // Make a vector
-    my_vector v {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+    using namespace ranges;
+    using namespace std::placeholders;
 
-    // This works:
-    slide(next(v.begin(), 5), next(v.begin(), 7), next(v.begin(), 17));
-    for_each(v, [](int i){std::cout << i << ' ';});
-    std::cout << std::endl;
+    test_adjacent_filter();
+    test_unique_view();
 
-    // Make a counted range of the vector:
-    auto r = view::counted(begin(v), distance(v));
+    // Pipeable algorithms
+    std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 ");
+    istream<int>(sinx)
+        | partial_sort_copy(std::vector<int>(20,0))
+        | view::transform([](int i){return -i;})
+        | for_each([](int i)
+          {
+              std::cout << i << ' ';
+          });
 
-    // This works, too
-    slide(next(r.begin(), 15), next(r.begin(), 17), next(r.begin(), 5));
-    for_each(r, [](int i){std::cout << i << ' ';});
-    std::cout << std::endl;
+    std::vector<int> vi{ 1, 2, 2, 3, 4 };
+    std::cout << '\n';
+    std::cout << (vi | count(2)) << std::endl;
+
+    // Range placeholder expressions.
+    std::cout << "\n";
+    for (int i : vi | range(adjacent_find(_1), prev(end(_1))))
+        std::cout << "> " << i << '\n';
+
+    // A pipeline where some algorithms return iterators into rvalue ranges. It's ok!
+    std::cout << "\n";
+    vi | view::filter([](int) {return true;})
+       | range(adjacent_find(_1), prev(end(_1)))
+       | range(begin(_1), next(end(_1)))
+       | for_each([](int i)
+         {
+             std::cout << "> " << i << '\n';
+         });
+
+    std::cout << "\n";
+    for( int i : vi | view::transform(_1, [](int i){return i*2;}))
+        std::cout << "> " << i << '\n';
+
+    // Mutate in-place
+    transform(vi, vi.begin(), [](int i){return -i;});
+    std::cout << "\n";
+    for( int i : vi )
+        std::cout << "> " << i << '\n';
+
+    std::cout << "\n";
+    std::istringstream sin{"this is his face"};
+    istream_range<std::string> lines{sin};
+    for(auto line : view::filter(lines, [](std::string s){return s.length()>2;}))
+        std::cout << "> " << line << '\n';
+
+    std::cout << "\n";
+    auto lines2 = std::vector<std::string>{"this","is","his","face"}
+                    | view::filter([](std::string s){return s.length()>2;})
+                    | view::filter(_1, [](std::string s){return s.length()<4;})
+                    | view::transform([](std::string s){return s + " or her";})
+                    ;
+    //undef_i<sizeof(lines2)> ttt;
+    for(std::string const & line : lines2)
+    {
+        //line += " or her";
+        std::cout << "> " << line << '\n';
+    }
+    auto b = lines2.begin();
+    decltype(lines2)::const_iterator bc = b;
+
+    std::cout << "\n";
+    for(auto const &line : lines2.base().base())//.base())
+        std::cout << "> " << line << '\n';
+
+    std::cout << "\n";
+    auto sizes = std::vector<std::string>{"this","is","his","face"}
+                    //| view::transform([](std::string const &str){return &str; })
+                    | view::transform(_1, &std::string::length);
+                    //| view::transform(move_only{});
+    for(std::size_t size : sizes)
+        std::cout << "> " << size << '\n';
+
+    std::cout << "\n";
+    //std::istringstream sin2{"this is his face"};
+    auto joined = view::join(std::vector<std::string>{"this","is","his","face"},
+                             std::vector<std::string>{"another","fine","mess"});
+    for(std::string & s : joined | view::reverse)
+        std::cout << "> " << s << '\n';
+
+    auto revjoin = joined | view::reverse;
+    std::cout << "*** " << (revjoin.end() - revjoin.begin()) << std::endl;
+
+    std::cout << '\n';
+    auto begin = joined.begin();
+    std::cout << *(begin+0) << "\n";
+    std::cout << *(begin+1) << "\n";
+    std::cout << *(begin+2) << "\n";
+    std::cout << *(begin+3) << "\n";
+    std::cout << *(begin+4) << "\n";
+    std::cout << *(begin+5) << "\n";
+    std::cout << *(begin+6) << "\n";
+
+    std::cout << '\n';
+    std::cout << *(begin) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+    std::cout << *(begin+=1) << "\n";
+
+    std::cout << '\n';
+    auto end = joined.end();
+    std::cout << *(end-1) << "\n";
+    std::cout << *(end-2) << "\n";
+    std::cout << *(end-3) << "\n";
+    std::cout << *(end-4) << "\n";
+    std::cout << *(end-5) << "\n";
+    std::cout << *(end-6) << "\n";
+    std::cout << *(end-7) << "\n";
+
+    std::cout << '\n';
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+    std::cout << *(end-=1) << "\n";
+
+    std::cout << '\n';
+    std::cout << (joined.end() - joined.begin()) << std::endl;
+
+    std::cout << '\n';
+    test_slicer();
+    test_indirect_view();
+    test_keys_values_view();
+    test_view_replace_if();
+    test_tokenize_view();
+    test_stride_view();
+    test_zip_view();
+    test_move_view();
+    test_slice_iota();
+    test_delimit_iota();
+    test_delimit_iota_finite();
+    test_take_repeat();
+    test_safe_int();
+    test_find_end_iterable();
+    test_range_facade();
+    test_range_adaptor();
 }
+//*/
 
 
-
-//// Boost.Range library
-////
-////  Copyright Eric Niebler 2013.
-////
-////  Use, modification and distribution is subject to the
-////  Boost Software License, Version 1.0. (See accompanying
-////  file LICENSE_1_0.txt or copy at
-////  http://www.boost.org/LICENSE_1_0.txt)
-////
-//// For more information, see http://www.boost.org/libs/range/
-////
-//
-//#include <map>
-//#include <list>
-//#include <string>
-//#include <vector>
-//#include <memory>
-//#include <iomanip>
-//#include <utility>
-//#include <sstream>
+//#include <typeinfo>
 //#include <iostream>
-//#include <functional>
-//#include <initializer_list>
-//#include <range/v3/range.hpp>
-//#include <range/v3/utility/safe_int.hpp>
+//#include <range/v3/utility/typelist.hpp>
+//#include <range/v3/utility/concepts.hpp>
+//#include <range/v3/utility/variant.hpp>
 //
-//template<std::size_t>
-//struct undef_i;
-//
-//template<typename T>
-//struct undef_t;
-//
-//struct noncopyable
+//struct S
 //{
-//    noncopyable(noncopyable const &) = delete;
+//    S() {}
+//    ~S() {std::cout << "S::~S()\n";}
+//    friend std::ostream& operator<<(std::ostream& sout, S)
+//    {
+//        return sout << "S";
+//    }
 //};
 //
-//struct nondefaultconstructible
-//{
-//    nondefaultconstructible(int) {};
-//};
+//template<std::size_t N>
+//struct undef;
 //
-//static_assert(ranges::CopyAssignable<int>(), "");
-//static_assert(!ranges::CopyAssignable<int const>(), "");
-//
-//static_assert(ranges::CopyConstructible<int>(), "");
-//static_assert(!ranges::CopyConstructible<noncopyable>(), "");
-//
-//static_assert(ranges::DefaultConstructible<int>(), "");
-//static_assert(!ranges::DefaultConstructible<nondefaultconstructible>(), "");
-//
-//static_assert(ranges::InputIterator<int*>(), "");
-//static_assert(!ranges::InputIterator<int>(), "");
-//
-//static_assert(ranges::ForwardIterator<int*>(), "");
-//static_assert(!ranges::ForwardIterator<int>(), "");
-//
-//static_assert(ranges::BidirectionalIterator<int*>(), "");
-//static_assert(!ranges::BidirectionalIterator<int>(), "");
-//
-//static_assert(ranges::RandomAccessIterator<int*>(), "");
-//static_assert(!ranges::RandomAccessIterator<int>(), "");
-//
-//static_assert(ranges::InputRange<ranges::istream_range<int>>(), "");
-//static_assert(!ranges::InputRange<int>(), "");
-//
-//static_assert(ranges::RandomAccessRange<std::vector<int> const &>(), "");
-//static_assert(!ranges::RandomAccessRange<ranges::istream_range<int>>(), "");
-//
-//static_assert(ranges::BinaryPredicate<std::less<int>, int, int>(), "");
-//static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
-//
-//static_assert(ranges::OutputIterator<int *, int>(), "");
-//static_assert(!ranges::OutputIterator<int const *, int>(), "");
-//
-//struct NotDestructible
-//{
-//    ~NotDestructible() = delete;
-//};
-//
-//static_assert(ranges::Destructible<int>(), "");
-//static_assert(!ranges::Destructible<NotDestructible>(), "");
-//
-//struct IntComparable
-//{
-//    friend bool operator<(int, IntComparable);
-//};
-//
-//static_assert(ranges::LessThanComparable<int>(), "");
-//static_assert(ranges::LessThanComparable<int, IntComparable>(), "");
-//static_assert(!ranges::LessThanComparable<IntComparable, int>(), "");
-//
-//static_assert(
-//    std::is_same<
-//        ranges::range_concept_t<std::vector<int>>,
-//        ranges::concepts::RandomAccessRange
-//    >::value, "");
-//
-//static_assert(
-//    std::is_same<
-//        ranges::range_concept_t<ranges::istream_range<int>>,
-//        ranges::concepts::InputRange
-//    >::value, "");
-//
-//struct Abstract { virtual ~Abstract() = 0; };
-//static_assert(std::is_same<ranges::typelist_element_t<0, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int>::value, "");
-//static_assert(std::is_same<ranges::typelist_element_t<1, ranges::typelist<int, Abstract, float(), int(&&)[]>>, Abstract>::value, "");
-//static_assert(std::is_same<ranges::typelist_element_t<2, ranges::typelist<int, Abstract, float(), int(&&)[]>>, float()>::value, "");
-//static_assert(std::is_same<ranges::typelist_element_t<3, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
-//
-//static_assert(std::is_same<ranges::typelist_back_t<ranges::typelist<int, Abstract, float(), int(&&)[]>>, int(&&)[]>::value, "");
-//
-//static_assert(std::is_same<ranges::typelist_drop_t<0, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<int, Abstract, float(), int(&&)[]>>::value, "");
-//static_assert(std::is_same<ranges::typelist_drop_t<1, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<Abstract, float(), int(&&)[]>>::value, "");
-//static_assert(std::is_same<ranges::typelist_drop_t<2, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<float(), int(&&)[]>>::value, "");
-//static_assert(std::is_same<ranges::typelist_drop_t<3, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<int(&&)[]>>::value, "");
-//static_assert(std::is_same<ranges::typelist_drop_t<4, ranges::typelist<int, Abstract, float(), int(&&)[]>>, ranges::typelist<>>::value, "");
-//
-//struct move_only
-//{
-//    move_only() = default;
-//    move_only(move_only &&) = default;
-//    move_only(move_only const &) = delete;
-//    int operator()(std::string const &str) const { return str.length(); }
-//};
-//
-//struct identity
+//struct disp
 //{
 //    template<typename T>
-//    T operator()(T && t) const
+//    void operator()(T const & t) const
 //    {
-//        return std::forward<T>(t);
+//        std::cout << typeid(T).name() << " : " << t << '\n';
 //    }
-//} ident {};
-//
-//void test_indirect_view()
-//{
-//    using namespace ranges;
-//    std::vector<std::shared_ptr<int>> vp;
-//    for(int i = 0; i < 10; ++i)
-//        vp.push_back(std::make_shared<int>(i));
-//    std::cout << "\nindirected:\n";
-//    for(int & i : vp | view::indirect)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//}
-//
-//void test_keys_values_view()
-//{
-//    using namespace ranges;
-//    std::map<std::string, int> m ={
-//        {"this",0},
-//        {"that",1},
-//        {"other",2}};
-//    std::cout << "\nkeys:\n";
-//    for(std::string const & s : m | view::keys)
-//        std::cout << s << ' ';
-//    std::cout << '\n';
-//    std::cout << "\nvalues:\n";
-//    for(int & i : m | view::values)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//}
-//
-//void test_view_replace()
-//{
-//    using namespace ranges;
-//    using namespace std::placeholders;
-//
-//    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
-//    std::stringstream sin{str};
-//
-//    for(auto & i : istream<int>(sin) | view::replace(1, 42))
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//}
-//
-//void test_view_replace_if()
-//{
-//    using namespace ranges;
-//    using namespace std::placeholders;
-//
-//    std::cout << "\nreplace_if\n";
-//    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
-//    std::stringstream sin{str};
-//
-//    for(auto & i : istream<int>(sin) | view::replace_if([](int i){return i==1;}, 42))
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//}
-//
-//void test_slicer()
-//{
-//    using namespace ranges;
-//    using namespace std::placeholders;
-//
-//    int rgi[] = {0,1,2,3,4,5,6,7,8,9,10};
-//    auto sl = rgi | view::slice(3,9);
-//    for(int& i : rgi | view::slice(3,9))
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//    for(int& i : sl | view::reverse)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//    for(int i : std::vector<int>{0,1,2,3,4,5,6,7,8,9,10} | view::slice(3,9) | view::reverse)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//
-//    std::stringstream sin("0 1 2 3 4 5 6 7 8 9 10");
-//    for(int i : istream<int>(sin) | view::slice(3,9))
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//
-//    std::list<int> li {0,1,2,3,4,5,6,7,8,9,10};
-//    for(int i : li | view::slice(3,9) | view::reverse)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//}
-//
-//void test_stride_view()
-//{
-//    using namespace ranges;
-//    std::cout << "\nstride\n";
-//
-//    std::vector<int> v(50);
-//    iota(v, 0);
-//    static_assert(
-//        sizeof((v|view::stride(3)).begin()) ==
-//        sizeof(void*)+sizeof(v.begin())+sizeof(std::ptrdiff_t),"");
-//    for(int i : v | view::stride(3) | view::reverse)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//
-//    std::stringstream str;
-//    copy(v, std::ostream_iterator<int>{str, " "});
-//    static_assert(
-//        sizeof((istream<int>(str)|view::stride(3)).begin()) ==
-//        sizeof(void*)+sizeof(istream<int>(str).begin()),"");
-//    for(int i : istream<int>(str) | view::stride(3))
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//
-//    std::list<int> li;
-//    copy(v, std::back_inserter(li));
-//    // static_assert(
-//    //     sizeof((li|view::stride(3)).begin()) ==
-//    //     sizeof(void*)+sizeof(li.begin())+sizeof(int)+sizeof(std::ptrdiff_t),"");
-//    for(int i : li | view::stride(3))
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//    for(int i : li | view::stride(3) | view::reverse)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//
-//    auto x = v | view::stride(3);
-//    std::cout << ranges::distance(x) << '\n';
-//    std::cout << '\n';
-//}
-//
-//void test_adjacent_filter()
-//{
-//    using namespace ranges;
-//    using namespace std::placeholders;
-//
-//    std::cout << "\nTesting adjacent_filter:\n";
-//    int rgi[] = {1,1,1,2,3,4,4};
-//    rgi | view::adjacent_filter(std::not_equal_to<int>{})
-//        | copy(std::ostream_iterator<int>(std::cout, " "));
-//    std::cout << '\n';
-//}
-//
-//void test_unique_view()
-//{
-//    using namespace ranges;
-//    using namespace std::placeholders;
-//
-//    int const rgi[] = {1,1,1,2,3,4,4};
-//    rgi | view::unique
-//        | copy(std::ostream_iterator<int>(std::cout, " "));
-//    std::cout << '\n';
-//}
-//
-//void test_partial_sort_copy()
-//{
-//    using namespace ranges;
-//    using namespace std::placeholders;
-//
-//    std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
-//    std::stringstream sin{str};
-//    partial_sort_copy_result<std::vector<int>> x
-//        = istream<int>(sin)
-//            | partial_sort_copy(std::vector<int>(20,0));
-//    for(int i : x)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//
-//    std::stringstream sin2{str};
-//    std::vector<int> vi(20,0);
-//    partial_sort_copy_result<std::vector<int> &> y =
-//        istream<int>(sin2)
-//            | partial_sort_copy(vi);
-//    for(int i : y)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//
-//    for(int i : vi)
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//}
-//
-//void test_tokenize_view()
-//{
-//    // Drat, can't test this because libstdc++ doesn't have <regex> yet. :(
-//    //
-//    //using namespace ranges;
-//    //
-//    //for(auto & sub : std::string("this is his face")
-//    //               | view::tokenize(std::regex("\\w+"), {1,2,3,4}))
-//    //{
-//    //    std::cout << sub << '*';
-//    //}
-//    //std::cout << '\n';
-//}
-//
-//void test_zip_view()
-//{
-//    using namespace ranges;
-//    std::cout << "\nzip view:\n";
-//
-//    std::vector<int> vi{0,1,2,3,4,5,6,7,8,9,10};
-//    std::vector<std::string> vs{
-//        "hello"
-//      , "goodbye"
-//      , "hello"
-//      , "goodbye"
-//    };
-//    std::stringstream str{"john paul george ringo"};
-//    for(auto t : view::zip(vi, vs, istream<std::string>(str)))
-//    {
-//        std::cout << "{"
-//            << std::get<0>(t) << ", "
-//            << std::get<1>(t) << ", "
-//            << std::get<2>(t) << "}\n";
-//    }
-//
-//    auto rnd_rng = view::zip(vi, vs);
-//    auto rnd_it = rnd_rng.begin();
-//    auto tmp = rnd_it + 3;
-//    std::cout << "\n{"
-//        << std::get<0>(*tmp) << ", "
-//        << std::get<1>(*tmp) << "}\n";
-//
-//    std::cout << rnd_rng.end() - rnd_rng.begin() << "\n";
-//    std::cout << rnd_rng.begin() - rnd_rng.end() << "\n";
-//}
-//
-//void test_move_view()
-//{
-//    using namespace ranges;
-//    std::cout << "\nmove view:\n";
-//    std::vector<std::string> vs {
-//        "'allo",
-//        "'allo",
-//        "???"
-//    };
-//    move_range_view<std::vector<std::string>&> x = vs | view::move;
-//    if(0) std::cout << x.begin()->c_str() << std::endl;
-//    std::vector<std::string> vs2(x.begin(), x.end());
-//    static_assert(std::is_same<std::string&&, decltype(*x.begin())>::value, "");
-//    std::cout << "target:\n";
-//    for(std::string &s : vs2)
-//        std::cout << '"' << s << "\" ";
-//    std::cout << "\nsource:\n";
-//    for(std::string &s : vs)
-//        std::cout << '"' << s << "\" ";
-//}
-//
-//void test_slice_iota()
-//{
-//    using namespace ranges;
-//    std::cout << "\n\nslice an infinite range:\n";
-//    for (int i : view::iota(10) | view::slice(10, 20))
-//        std::cout << i << ' ';
-//    (view::iota(10) | view::slice(2, 4)).begin() + 1;
-//    CONCEPT_ASSERT(FiniteRange<decltype(view::iota(10) | view::slice(2, 4))>());
-//    std::cout << '\n';
-//}
-//
-//void test_delimit_iota()
-//{
-//    using namespace ranges;
-//    std::cout << "\n\ndelimit an infinite range:\n";
-//    view::iota(10) | view::delimit(50) | for_each([](int i) {
-//        std::cout << i << ' ';
-//    });
-//    std::cout << '\n';
-//}
-//
-//void test_delimit_iota_finite()
-//{
-//    using namespace ranges;
-//    std::cout << "\n\ndelimit a finite range:\n";
-//    std::vector<int>(10) | iota(10) | view::delimit(50) | for_each([](int i) {
-//        std::cout << i << ' ' << std::flush;
-//    });
-//    std::cout << '\n';
-//}
-//
-//void test_take_repeat()
-//{
-//    using namespace ranges;
-//    std::cout << "\n\nslice a repeat infinite range:\n";
-//    for (int i : view::repeat(9) | view::take(10))
-//        std::cout << i << ' ';
-//    std::cout << '\n';
-//}
-//
-//void test_safe_int()
-//{
-//    using namespace ranges;
-//    constexpr safe_int<int> i = 42;
-//    constexpr safe_int<int> pos_inf = safe_int<int>::inf();
-//    constexpr safe_int<int> neg_inf = -safe_int<int>::inf();
-//    constexpr safe_int<int> NaN = safe_int<int>::NaN();
-//    constexpr safe_int<int> zero = 0;
-//    constexpr safe_int<int> zero2{};
-//    static_assert(zero == zero2, "");
-//    static_assert(i + 1 == 43, "");
-//    static_assert(i + std::numeric_limits<int>::max() == pos_inf, "");
-//    static_assert(-i - std::numeric_limits<int>::max() == neg_inf, "");
-//    static_assert(pos_inf == - neg_inf, "");
-//    static_assert(pos_inf - 1 == pos_inf, "");
-//    static_assert(1 - pos_inf == neg_inf, "");
-//    static_assert(pos_inf != NaN, "");
-//    static_assert(neg_inf != NaN, "");
-//    static_assert(!(pos_inf == NaN), "");
-//    static_assert(!(neg_inf == NaN), "");
-//    static_assert(!(NaN == NaN), "");
-//    static_assert(NaN != NaN, "");
-//    static_assert(neg_inf != pos_inf, "");
-//    static_assert(!(neg_inf == pos_inf), "");
-//    static_assert((pos_inf - pos_inf).is_NaN(), "");
-//    static_assert((pos_inf + neg_inf).is_NaN(), "");
-//    static_assert(pos_inf + pos_inf == pos_inf, "");
-//    static_assert(neg_inf - pos_inf == neg_inf, "");
-//    static_assert(zero / pos_inf == 0, "");
-//    static_assert(zero / -pos_inf == 0, "");
-//    static_assert(i / pos_inf == 0, "");
-//    static_assert(i / -pos_inf == 0, "");
-//    static_assert(i / zero == pos_inf, "");
-//    static_assert((zero / zero).is_NaN(), "");
-//    static_assert(pos_inf / zero == pos_inf, "");
-//    static_assert(neg_inf / zero == neg_inf, "");
-//    static_assert(pos_inf / i == pos_inf, "");
-//    static_assert(neg_inf / i == neg_inf, "");
-//    static_assert(pos_inf / -i == neg_inf, "");
-//    static_assert(neg_inf / -i == pos_inf, "");
-//    static_assert((pos_inf / pos_inf).is_NaN(), "");
-//    static_assert((pos_inf / neg_inf).is_NaN(), "");
-//    static_assert((neg_inf / pos_inf).is_NaN(), "");
-//    static_assert((neg_inf / neg_inf).is_NaN(), "");
-//    static_assert(i / 2 == 21, "");
-//    static_assert(i * 2 == 84, "");
-//    static_assert(i * pos_inf == pos_inf, "");
-//    static_assert(-i * pos_inf == neg_inf, "");
-//    static_assert(i * neg_inf == neg_inf, "");
-//    static_assert(-i * neg_inf == pos_inf, "");
-//    static_assert((0 * pos_inf).is_NaN(), "");
-//    static_assert((0 * neg_inf).is_NaN(), "");
-//    static_assert(pos_inf * pos_inf == pos_inf, "");
-//    static_assert(neg_inf * neg_inf == pos_inf, "");
-//    static_assert(pos_inf * neg_inf == neg_inf, "");
-//    static_assert(neg_inf * pos_inf == neg_inf, "");
-//    static_assert(safe_int<int>{0x8000} * safe_int<int>{0x10000} == pos_inf, "");
-//    static_assert(safe_int<int>{0x8000} * safe_int<int>{-(int)0x10000} == neg_inf, "");
-//    static_assert(safe_int<int>{-(int)0x8000} * safe_int<int>{-(int)0x10000} == pos_inf, "");
-//
-////    RANGES_ASSERT((view::iota(10) | distance) == safe_int<int>::inf());
-//}
-//
-//void test_find_end_iterable()
-//{
-//    using namespace ranges;
-//    std::cout << "\nfind_end on a delimited range:\n";
-//    iterator_range<char const *> input = {"now is the time for all good men to come to the aid of their country", nullptr};
-//    iterator_range<char const *> pattern = {"to", nullptr};
-//    auto result = find_end(view::delimit(input, '\0'), view::delimit(pattern, '\0'));
-//    std::cout << &*result << '\n';
-//}
-//
-//void test_sentinel()
-//{
-//    using namespace ranges;
-//    using It = range_iterator_t<iota_iterable_view<int>>;
-//    using S = range_sentinel_t<iota_iterable_view<int>>;
-//    static_assert(!concepts::Iterable::is_finite_t<iota_iterable_view<int>>::value, "");
-//    static_assert(concepts::Iterable::is_finite_t<std::vector<int>>::value, "");
-//}
-//
-//static_assert(ranges::FiniteIterable<std::vector<int>>(), "");
-//static_assert(ranges::FiniteIterable<ranges::istream_range<int>>(), "");
-//static_assert(ranges::Iterable<ranges::iota_iterable_view<int>>(), "");
-//static_assert(!ranges::FiniteIterable<ranges::iota_iterable_view<int>>(), "");
-//
-//struct MyRange
-//  : ranges::range_facade<MyRange>
-//{
-//private:
-//    friend struct ranges::range_core_access;
-//    std::vector<int> ints_;
-//    struct impl
-//    {
-//        impl(std::vector<int>::const_iterator it) : iter(it) {}
-//        std::vector<int>::const_iterator iter;
-//        int const & current() const { return *iter; }
-//        void next() { ++iter; }
-//        bool equal(impl const &that) const { return iter == that.iter; }
-//    };
-//    impl begin_impl() const
-//    {
-//        return {ints_.begin()};
-//    }
-//    impl end_impl() const
-//    {
-//        return {ints_.end()};
-//    }
-//public:
-//    MyRange()
-//      : ints_{1,2,3,4,5,6,7}
-//    {}
 //};
 //
-//void test_range_facade()
+//struct my_visitor
 //{
-//    using namespace ranges;
-//    std::cout << "\nTesting range facade:\n";
-//    if(auto r = MyRange{})
-//        for(auto &i : r)
-//            std::cout << i << ' ';
-//    std::cout << std::endl;
-//}
-//
-//template<typename BidiRange>
-//struct my_reverse_view
-//  : ranges::range_adaptor<
-//        my_reverse_view<BidiRange>
-//      , BidiRange
-//      , ranges::is_infinite<BidiRange>::value>
-//{
-//private:
-//    CONCEPT_ASSERT(ranges::BidirectionalRange<BidiRange>());
-//    friend ranges::range_core_access;
-//    using base_t = ranges::range_adaptor_t<my_reverse_view>;
-//    template<bool Const>
-//    using impl_base_t = ranges::basic_adaptor_impl<BidiRange, Const>;
-//
-//    template<bool Const>
-//    struct basic_impl : impl_base_t<Const>
-//    {
-//        using impl_base_t<Const>::base;
-//        using impl_base_t<Const>::impl_base_t;
-//        void next()
-//        {
-//            base().prev();
-//        }
-//        void prev()
-//        {
-//            base().next();
-//        }
-//        auto current() const -> decltype(base().current())
-//        {
-//            auto tmp = base();
-//            tmp.prev();
-//            return tmp.current();
-//        }
-//        CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
-//        void advance(ranges::range_difference_t<BidiRange> n)
-//        {
-//            base().advance(-n);
-//        }
-//        template<bool OtherConst,
-//                 CONCEPT_REQUIRES_(ranges::RandomAccessRange<BidiRange>())>
-//        ranges::range_difference_t<BidiRange>
-//        distance_to(basic_impl<OtherConst> const &that)
-//        {
-//            return that.base().distance_to(base());
-//        }
-//    };
-//    // Cross-wire begin and end.
-//    basic_impl<false> begin_impl()
-//    {
-//        return {ranges::end(this->base())};
-//    }
-//    basic_impl<true> begin_impl() const
-//    {
-//        return {ranges::end(this->base())};
-//    }
-//    basic_impl<false> end_impl()
-//    {
-//        return {ranges::begin(this->base())};
-//    }
-//    basic_impl<true> end_impl() const
-//    {
-//        return {ranges::begin(this->base())};
-//    }
-//public:
-//    using base_t::base_t;
+//    int operator()(int i) const { return i; }
+//    float operator()(float i) const { return i; }
+//    template<typename T>
+//    void operator()(T) const {}
 //};
-//
-//struct my_delimited_range
-//  : ranges::range_adaptor<
-//        my_delimited_range
-//      , ranges::delimit_iterable_view<ranges::istream_range<int>, int>>
-//{
-//    using range_adaptor_::range_adaptor_;
-//};
-//
-//void test_range_adaptor()
-//{
-//    using namespace ranges;
-//    std::cout << "\nTesting range adaptor:\n";
-//
-//    std::vector<int> v {1,2,3,4};
-//    my_reverse_view<std::vector<int>& > retro{v};
-//    for(int i : retro)
-//        std::cout << i << ' ';
-//    std::cout << std::endl;
-//
-//    std::list<int> l { 1,2,3,4 };
-//    my_reverse_view<std::list<int>& > retro2{l};
-//    for(int i : retro2)
-//        std::cout << i << ' ';
-//    std::cout << std::endl;
-//
-//    std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
-//    my_delimited_range r{view::delimit(istream<int>(sinx), 42)};
-//    r | for_each([](int i){
-//        std::cout << i << ' ';
-//    });
-//    std::cout << std::endl;
-//}
 //
 //int main()
 //{
 //    using namespace ranges;
-//    using namespace std::placeholders;
+//    using x = typelist_unique_t<typelist<int, int, int>>;
+//    static_assert(std::is_same<x, typelist<int>>::value, "");
 //
-//    test_adjacent_filter();
-//    test_unique_view();
+//    using y = typelist_unique_t<typelist<int, short, int>>;
+//    static_assert(std::is_same<y, typelist<int, short>>::value, "");
 //
-//    // Pipeable algorithms
-//    std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 ");
-//    istream<int>(sinx)
-//        | partial_sort_copy(std::vector<int>(20,0))
-//        | view::transform([](int i){return -i;})
-//        | for_each([](int i)
-//          {
-//              std::cout << i << ' ';
-//          });
-//
-//    std::vector<int> vi{ 1, 2, 2, 3, 4 };
-//    std::cout << '\n';
-//    std::cout << (vi | count(2)) << std::endl;
-//
-//    // Range placeholder expressions.
-//    std::cout << "\n";
-//    for (int i : vi | range(adjacent_find(_1), prev(end(_1))))
-//        std::cout << "> " << i << '\n';
-//
-//    // A pipeline where some algorithms return iterators into rvalue ranges. It's ok!
-//    std::cout << "\n";
-//    vi | view::filter([](int) {return true;})
-//       | range(adjacent_find(_1), prev(end(_1)))
-//       | range(begin(_1), next(end(_1)))
-//       | for_each([](int i)
-//         {
-//             std::cout << "> " << i << '\n';
-//         });
-//
-//    std::cout << "\n";
-//    for( int i : vi | view::transform(_1, [](int i){return i*2;}))
-//        std::cout << "> " << i << '\n';
-//
-//    // Mutate in-place
-//    transform(vi, vi.begin(), [](int i){return -i;});
-//    std::cout << "\n";
-//    for( int i : vi )
-//        std::cout << "> " << i << '\n';
-//
-//    std::cout << "\n";
-//    std::istringstream sin{"this is his face"};
-//    istream_range<std::string> lines{sin};
-//    for(auto line : view::filter(lines, [](std::string s){return s.length()>2;}))
-//        std::cout << "> " << line << '\n';
-//
-//    std::cout << "\n";
-//    auto lines2 = std::vector<std::string>{"this","is","his","face"}
-//                    | view::filter([](std::string s){return s.length()>2;})
-//                    | view::filter(_1, [](std::string s){return s.length()<4;})
-//                    | view::transform([](std::string s){return s + " or her";})
-//                    ;
-//    //undef_i<sizeof(lines2)> ttt;
-//    for(std::string const & line : lines2)
-//    {
-//        //line += " or her";
-//        std::cout << "> " << line << '\n';
-//    }
-//    auto b = lines2.begin();
-//    decltype(lines2)::const_iterator bc = b;
-//
-//    std::cout << "\n";
-//    for(auto const &line : lines2.base().base())//.base())
-//        std::cout << "> " << line << '\n';
-//
-//    std::cout << "\n";
-//    auto sizes = std::vector<std::string>{"this","is","his","face"}
-//                    //| view::transform([](std::string const &str){return &str; })
-//                    | view::transform(_1, &std::string::length);
-//                    //| view::transform(move_only{});
-//    for(std::size_t size : sizes)
-//        std::cout << "> " << size << '\n';
-//
-//    std::cout << "\n";
-//    //std::istringstream sin2{"this is his face"};
-//    auto joined = view::join(std::vector<std::string>{"this","is","his","face"},
-//                             std::vector<std::string>{"another","fine","mess"});
-//    for(std::string & s : joined | view::reverse)
-//        std::cout << "> " << s << '\n';
-//
-//    auto revjoin = joined | view::reverse;
-//    std::cout << "*** " << (revjoin.end() - revjoin.begin()) << std::endl;
-//
-//    std::cout << '\n';
-//    auto begin = joined.begin();
-//    std::cout << *(begin+0) << "\n";
-//    std::cout << *(begin+1) << "\n";
-//    std::cout << *(begin+2) << "\n";
-//    std::cout << *(begin+3) << "\n";
-//    std::cout << *(begin+4) << "\n";
-//    std::cout << *(begin+5) << "\n";
-//    std::cout << *(begin+6) << "\n";
-//
-//    std::cout << '\n';
-//    std::cout << *(begin) << "\n";
-//    std::cout << *(begin+=1) << "\n";
-//    std::cout << *(begin+=1) << "\n";
-//    std::cout << *(begin+=1) << "\n";
-//    std::cout << *(begin+=1) << "\n";
-//    std::cout << *(begin+=1) << "\n";
-//    std::cout << *(begin+=1) << "\n";
-//
-//    std::cout << '\n';
-//    auto end = joined.end();
-//    std::cout << *(end-1) << "\n";
-//    std::cout << *(end-2) << "\n";
-//    std::cout << *(end-3) << "\n";
-//    std::cout << *(end-4) << "\n";
-//    std::cout << *(end-5) << "\n";
-//    std::cout << *(end-6) << "\n";
-//    std::cout << *(end-7) << "\n";
-//
-//    std::cout << '\n';
-//    std::cout << *(end-=1) << "\n";
-//    std::cout << *(end-=1) << "\n";
-//    std::cout << *(end-=1) << "\n";
-//    std::cout << *(end-=1) << "\n";
-//    std::cout << *(end-=1) << "\n";
-//    std::cout << *(end-=1) << "\n";
-//    std::cout << *(end-=1) << "\n";
-//
-//    std::cout << '\n';
-//    std::cout << (joined.end() - joined.begin()) << std::endl;
-//
-//    std::cout << '\n';
-//    test_slicer();
-//    test_indirect_view();
-//    test_keys_values_view();
-//    test_view_replace_if();
-//    test_tokenize_view();
-//    test_stride_view();
-//    test_zip_view();
-//    test_move_view();
-//    test_slice_iota();
-//    test_delimit_iota();
-//    test_delimit_iota_finite();
-//    test_take_repeat();
-//    test_safe_int();
-//    test_find_end_iterable();
-//    test_range_facade();
-//    test_range_adaptor();
+//    std::cout << "here1\n";
+//    variant<int, char const *, short, char, S, wchar_t, long, float> v(S{});
+//    v.apply(disp{});
+//    v = 3.14f;
+//    v.apply(disp{});
+//    variant<int, void_, float> vv = v.apply(my_visitor{});
+//    assert(typeid(float)==vv.type());
+//    v = S{};
+//    v.apply(disp{});
+//    std::cout << "here2\n";
 //}
-////*/
-//
-//
-////#include <typeinfo>
-////#include <iostream>
-////#include <range/v3/utility/typelist.hpp>
-////#include <range/v3/utility/concepts.hpp>
-////#include <range/v3/utility/variant.hpp>
-////
-////struct S
-////{
-////    S() {}
-////    ~S() {std::cout << "S::~S()\n";}
-////    friend std::ostream& operator<<(std::ostream& sout, S)
-////    {
-////        return sout << "S";
-////    }
-////};
-////
-////template<std::size_t N>
-////struct undef;
-////
-////struct disp
-////{
-////    template<typename T>
-////    void operator()(T const & t) const
-////    {
-////        std::cout << typeid(T).name() << " : " << t << '\n';
-////    }
-////};
-////
-////struct my_visitor
-////{
-////    int operator()(int i) const { return i; }
-////    float operator()(float i) const { return i; }
-////    template<typename T>
-////    void operator()(T) const {}
-////};
-////
-////int main()
-////{
-////    using namespace ranges;
-////    using x = typelist_unique_t<typelist<int, int, int>>;
-////    static_assert(std::is_same<x, typelist<int>>::value, "");
-////
-////    using y = typelist_unique_t<typelist<int, short, int>>;
-////    static_assert(std::is_same<y, typelist<int, short>>::value, "");
-////
-////    std::cout << "here1\n";
-////    variant<int, char const *, short, char, S, wchar_t, long, float> v(S{});
-////    v.apply(disp{});
-////    v = 3.14f;
-////    v.apply(disp{});
-////    variant<int, void_, float> vv = v.apply(my_visitor{});
-////    assert(typeid(float)==vv.type());
-////    v = S{};
-////    v.apply(disp{});
-////    std::cout << "here2\n";
-////}

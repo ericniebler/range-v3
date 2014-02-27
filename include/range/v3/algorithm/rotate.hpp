@@ -83,21 +83,21 @@ namespace ranges
             /// \pre Rng meets the requirements for a Forward range
             template<typename ForwardIterable>
             static range_iterator_t<ForwardIterable>
-            invoke(rotater, ForwardIterable && rng, range_iterator_t<ForwardIterable> middle)
+            invoke(rotater, ForwardIterable && rng, range_iterator_t<ForwardIterable> p)
             {
                 CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
-                return detail::rotate(ranges::begin(rng), std::move(middle), ranges::end(rng),
+                return detail::rotate(ranges::begin(rng), ranges::end(rng), std::move(p),
                     range_concept_t<ForwardIterable>{});
             }
 
             /// \overload
             /// for rng | rotate(middle)
             template<typename ForwardIterator>
-            static auto invoke(rotater rotate, ForwardIterator middle) ->
-                decltype(rotate.move_bind(std::placeholders::_1, std::move(middle)))
+            static auto invoke(rotater rotate, ForwardIterator p) ->
+                decltype(rotate.move_bind(std::placeholders::_1, std::move(p)))
             {
                 CONCEPT_ASSERT(ranges::ForwardIterator<ForwardIterator>());
-                return rotate.move_bind(std::placeholders::_1, std::move(middle));
+                return rotate.move_bind(std::placeholders::_1, std::move(p));
             }
         };
 
