@@ -476,6 +476,15 @@ namespace ranges
             extern conster const const_;
         }
 
+        template<typename InputIterator>
+        struct counted_iterable_view;
+
+        namespace view
+        {
+            struct counted_maker;
+            extern counted_maker const counted;
+        }
+
         template<typename Rng, typename Pred>
         struct filter_range_view;
 

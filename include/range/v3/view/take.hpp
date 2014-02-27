@@ -17,6 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view/slice.hpp>
+#include <range/v3/view/counted.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
@@ -27,12 +28,20 @@ namespace ranges
         {
             struct taker : bindable<taker>
             {
-                template<typename InputIterable>
+                template<typename InputIterable,
+                    CONCEPT_REQUIRES_(ranges::InputIterable<InputIterable>())>
                 static slice_range_view<InputIterable>
                 invoke(taker, InputIterable && rng, std::size_t to)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
                     return {std::forward<InputIterable>(rng), 0, to};
+                }
+                template<typename InputIterator,
+                    CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>())>
+                static counted_iterable_view<InputIterator>
+                invoke(taker, InputIterator it, std::size_t n)
+                {
+                    return {std::move(it),
+                            static_cast<iterator_difference_t<InputIterator>>(n)};
                 }
                 static auto
                 invoke(taker take, std::size_t to) ->

@@ -16,6 +16,7 @@
 
 #include <range/v3/view/adjacent_filter.hpp>
 #include <range/v3/view/const.hpp>
+#include <range/v3/view/counted.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/iota.hpp>

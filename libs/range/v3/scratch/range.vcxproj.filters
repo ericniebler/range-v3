@@ -397,5 +397,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

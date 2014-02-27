@@ -169,6 +169,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\indirect.hpp" />
