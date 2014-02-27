@@ -16,6 +16,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -80,24 +81,26 @@ namespace ranges
             ///
             /// range-based version of the rotate std algorithm
             ///
-            /// \pre Rng meets the requirements for a Forward range
-            template<typename ForwardIterable>
-            static range_iterator_t<ForwardIterable>
-            invoke(rotater, ForwardIterable && rng, range_iterator_t<ForwardIterable> p)
+            /// \pre ForwardRange models FiniteForwardRange
+            template<typename ForwardRange, typename Sentinel>
+            static range_iterator_t<ForwardRange>
+            invoke(rotater, ForwardRange && rng, Sentinel to)
             {
-                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
-                return detail::rotate(ranges::begin(rng), ranges::end(rng), std::move(p),
+                using ForwardIterable = iterator_range<range_iterator_t<ForwardRange>,
+                                                       Sentinel>;
+                CONCEPT_ASSERT(ranges::FiniteForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                return detail::rotate(ranges::begin(rng), ranges::end(rng), std::move(to),
                     range_concept_t<ForwardIterable>{});
             }
 
             /// \overload
-            /// for rng | rotate(middle)
-            template<typename ForwardIterator>
-            static auto invoke(rotater rotate, ForwardIterator p) ->
-                decltype(rotate.move_bind(std::placeholders::_1, std::move(p)))
+            /// for rng | rotate(to)
+            template<typename Sentinel>
+            static auto invoke(rotater rotate, Sentinel to) ->
+                decltype(rotate.move_bind(std::placeholders::_1, std::move(to)))
             {
-                CONCEPT_ASSERT(ranges::ForwardIterator<ForwardIterator>());
-                return rotate.move_bind(std::placeholders::_1, std::move(p));
+                return rotate.move_bind(std::placeholders::_1, std::move(to));
             }
         };
 
