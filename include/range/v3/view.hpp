@@ -15,6 +15,7 @@
 #define RANGES_V3_VIEW_HPP
 
 #include <range/v3/view/adjacent_filter.hpp>
+#include <range/v3/view/as_range.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/delimit.hpp>

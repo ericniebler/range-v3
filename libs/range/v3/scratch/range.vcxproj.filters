@@ -400,5 +400,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\as_range.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

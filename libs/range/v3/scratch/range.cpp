@@ -393,6 +393,7 @@ void test_delimit_iota()
     view::iota(10) | view::delimit(50) | for_each([](int i) {
         std::cout << i << ' ';
     });
+    CONCEPT_ASSERT(RandomAccessIterable<delimit_iterable_view<std::vector<int>, int>>());
     std::cout << '\n';
 }
 
@@ -640,6 +641,20 @@ void test_range_adaptor()
     std::cout << std::endl;
 }
 
+void test_as_range()
+{
+    using namespace ranges;
+    std::cout << "\nTesting as_range\n";
+
+    std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
+    for(int i : istream<int>(sinx) | view::delimit(42) | view::as_range)
+        std::cout << i << ' ';
+    std::cout << '\n';
+
+    using x = decltype(std::vector<int>{} | view::delimit(42) | view::as_range);
+    CONCEPT_ASSERT(RandomAccessRange<x>());
+}
+
 int main()
 {
     using namespace ranges;
@@ -788,6 +803,7 @@ int main()
     test_find_end_iterable();
     test_range_facade();
     test_range_adaptor();
+    test_as_range();
 }
 //*/
 
