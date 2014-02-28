@@ -651,8 +651,12 @@ void test_as_range()
         std::cout << i << ' ';
     std::cout << '\n';
 
-    using x = decltype(std::vector<int>{} | view::delimit(42) | view::as_range);
-    CONCEPT_ASSERT(RandomAccessRange<x>());
+    auto x = std::vector<int>{} | view::delimit(42) | view::as_range;
+    CONCEPT_ASSERT(RandomAccessRange<decltype(x)>());
+    auto const & y = x;
+    auto i = x.begin(); // non-const
+    auto j = y.begin(); // const
+    j = i;
 }
 
 int main()

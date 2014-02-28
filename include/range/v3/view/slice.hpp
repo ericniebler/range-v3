@@ -78,6 +78,8 @@ namespace ranges
                 >
             {
             private:
+                template<bool OtherConst>
+                friend struct basic_iterator;
                 friend struct slice_range_view;
                 friend struct ranges::iterator_core_access;
                 using base_range = detail::add_const_if_t<InputIterable, Const>;

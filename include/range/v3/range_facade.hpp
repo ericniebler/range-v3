@@ -217,6 +217,8 @@ namespace ranges
             {
             private:
                 template<bool OtherConst>
+                friend struct basic_sentinel;
+                template<bool OtherConst>
                 friend struct basic_iterator;
                 friend struct range_facade;
                 using derived_t = detail::add_const_if_t<Derived, Const>;
@@ -269,12 +271,14 @@ namespace ranges
                 using difference_type = decltype(basic_iterator::iter_diff(impl_concept_t{}));
                 using pointer = typename detail::operator_arrow_dispatch<reference>::type;
             private:
+                template<bool OtherConst>
+                friend struct basic_iterator;
+                friend struct range_facade;
                 using postfix_increment_result_t =
                     detail::postfix_increment_result<
                         basic_iterator, value_type, reference, iterator_category>;
                 using operator_brackets_dispatch_t =
                     detail::operator_brackets_dispatch<basic_iterator, value_type, reference>;
-                friend struct range_facade;
                 basic_iterator(impl_t data)
                   : impl_(std::move(data))
                 {}

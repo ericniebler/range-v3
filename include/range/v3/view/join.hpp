@@ -68,6 +68,8 @@ namespace ranges
                 >
             {
             private:
+                template<bool OtherConst>
+                friend struct basic_iterator;
                 friend struct join_range_view;
                 friend struct ranges::iterator_core_access;
                 using base_range_iterator0 = range_iterator_t<base_range0_t<Const>>;

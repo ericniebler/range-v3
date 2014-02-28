@@ -39,6 +39,12 @@ namespace ranges
                 base_sentinel_t se_;
                 bool is_sentinel_;
 
+                // For iterator->const_iterator conversions
+                CONCEPT_REQUIRES(!Const)
+                operator impl<!Const>() const
+                {
+                    return {it_, se_, is_sentinel_};
+                }
                 auto current() const -> decltype(*it_)
                 {
                     RANGES_ASSERT(!is_sentinel_ && it_ != se_);

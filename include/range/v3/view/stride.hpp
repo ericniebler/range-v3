@@ -75,6 +75,8 @@ namespace ranges
                 >
             {
             private:
+                template<bool OtherConst>
+                friend struct basic_iterator;
                 friend struct stride_range_view;
                 friend struct ranges::iterator_core_access;
                 using stride_range_view_ = detail::add_const_if_t<stride_range_view, Const>;

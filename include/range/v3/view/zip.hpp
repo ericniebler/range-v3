@@ -129,6 +129,8 @@ namespace ranges
                 using reference = typename basic_iterator::reference;
                 using difference_type = typename basic_iterator::difference_type;
             private:
+                template<bool OtherConst>
+                friend struct basic_iterator;
                 friend struct zip_range_view;
                 friend struct ranges::iterator_core_access;
                 using zip_range_view_ = detail::add_const_if_t<zip_range_view, Const>;

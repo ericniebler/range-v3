@@ -31,6 +31,8 @@ namespace ranges
         private:
             template<typename OtherIterable, bool OtherConst>
             friend struct detail::basic_adaptor_sentinel;
+            template<typename OtherIterable, bool OtherConst>
+            friend struct basic_adaptor_impl;
             using base_range = detail::add_const_if_t<Iterable, Const>;
             using base_range_iterator = range_iterator_t<base_range>;
             base_range_iterator it_;
@@ -97,6 +99,8 @@ namespace ranges
             struct basic_adaptor_sentinel
             {
             private:
+                template<typename OtherIterable, bool OtherConst>
+                friend struct basic_adaptor_sentinel;
                 using base_range = detail::add_const_if_t<Iterable, Const>;
                 using base_range_sentinel = range_sentinel_t<base_range>;
                 base_range_sentinel end_;
