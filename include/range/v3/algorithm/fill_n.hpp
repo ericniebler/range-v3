@@ -13,9 +13,11 @@
 
 #include <utility>
 #include <functional>
+#include <range/v3/distance.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/unreachable.hpp>
 
 namespace ranges
 {
@@ -36,6 +38,23 @@ namespace ranges
 
         struct filler_n : bindable<filler_n>
         {
+        private:
+            template<typename ForwardIterable, typename Size, typename Value>
+            static void
+            impl(ForwardIterable && rng, Size n, Value const & val,
+                concepts::Iterable)
+            {
+                detail::fill_n(ranges::begin(rng), ranges::end(rng), n, val);
+            }
+            template<typename ForwardIterable, typename Size, typename Value>
+            static void
+            impl(ForwardIterable && rng, Size n, Value const & val,
+                concepts::CountedIterable)
+            {
+                RANGES_ASSERT(n <= ranges::distance(rng));
+                detail::fill_n(ranges::begin(rng).base(), unreachable{}, n, val);
+            }
+        public:
             /// \brief template function \c filler_n::operator()
             ///
             /// range-based version of the \c fill_n std algorithm
@@ -46,7 +65,8 @@ namespace ranges
             static ForwardIterable invoke(filler_n, ForwardIterable && rng, Size n, Value const & val)
             {
                 CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
-                detail::fill_n(ranges::begin(rng), ranges::end(rng), n, val);
+                filler_n::impl(std::forward<ForwardIterable>(rng), n, val,
+                    range_concept_t<ForwardIterable>{});
                 return std::forward<ForwardIterable>(rng);
             }
 

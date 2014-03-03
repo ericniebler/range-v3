@@ -29,10 +29,10 @@ namespace ranges
         namespace detail
         {
             template<typename ForwardIterator, typename Sentinel, typename Value,
-                typename BinaryPredicate = ranges::less>
+                typename BinaryPredicate>
             ForwardIterator
             lower_bound(ForwardIterator begin, Sentinel end, Value const& value,
-                BinaryPredicate pred = BinaryPredicate{})
+                BinaryPredicate pred)
             {
                 auto dist = detail::distance(begin, end).first;
                 while(0 != dist)

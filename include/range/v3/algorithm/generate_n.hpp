@@ -12,11 +12,13 @@
 
 #include <utility>
 #include <functional>
+#include <range/v3/distance.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/unreachable.hpp>
 
 namespace ranges
 {
@@ -36,6 +38,33 @@ namespace ranges
 
         struct generator_n : bindable<generator_n>
         {
+        private:
+            template<typename OutputIterable, typename Size, typename Generator>
+            static void
+            impl(OutputIterable && rng, Size n, Generator gen,
+                concepts::Iterable)
+            {
+                detail::generate_n(ranges::begin(rng), ranges::end(rng), n, std::move(gen));
+            }
+            // BUGBUG The REQUIRES feels like a hack, but in the current hierarchy it's needed.
+            template<typename OutputIterable, typename Size, typename Generator,
+                CONCEPT_REQUIRES_(!CountedIterable<OutputIterable>())>
+            static void
+            impl(OutputIterable && rng, Size n, Generator gen,
+                concepts::RandomAccessRange)
+            {
+                RANGES_ASSERT(n <= ranges::distance(rng));
+                detail::generate_n(ranges::begin(rng), unreachable{}, n, std::move(gen));
+            }
+            template<typename OutputIterable, typename Size, typename Generator>
+            static void
+            impl(OutputIterable && rng, Size n, Generator gen,
+                concepts::CountedIterable)
+            {
+                RANGES_ASSERT(n <= ranges::distance(rng));
+                detail::generate_n(ranges::begin(rng).base(), unreachable{}, n, std::move(gen));
+            }
+        public:
             /// \brief template function generate_n
             ///
             /// range-based version of the generate_n std algorithm

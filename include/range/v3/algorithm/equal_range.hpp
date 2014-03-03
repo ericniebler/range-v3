@@ -31,10 +31,10 @@ namespace ranges
         namespace detail
         {
             template<typename ForwardIterator, typename Sentinel, typename Value,
-                typename BinaryPredicate = ranges::less>
+                typename BinaryPredicate>
             iterator_range<ForwardIterator>
             equal_range(ForwardIterator begin, Sentinel end_, Value const & val,
-                BinaryPredicate pred = BinaryPredicate{})
+                BinaryPredicate pred)
             {
                 auto dist_and_end = detail::distance(begin, end_);
                 auto dist = dist_and_end.first;
@@ -55,7 +55,7 @@ namespace ranges
                     }
                     else
                         return {std::lower_bound(std::move(begin), middle, val, std::ref(pred)),
-                                std::upper_bound(ranges::next(middle), end, val, std::ref(pred))};
+                                std::upper_bound(ranges::next(middle), std::move(end), val, std::ref(pred))};
                 }
                 return {begin, begin};
             }
@@ -70,20 +70,10 @@ namespace ranges
             /// \pre \c ForwardIterable is a model of the ForwardIterable concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
             template<typename ForwardIterable, typename Value,
-                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>() &&
-                                 ranges::LessThanComparable<Value const &, range_reference_t<ForwardIterable>>() &&
-                                 ranges::LessThanComparable<range_reference_t<ForwardIterable>, Value const &>())>
+                typename BinaryPredicate = ranges::less>
             static iterator_range<range_iterator_t<ForwardIterable>>
-            invoke(equal_ranger, ForwardIterable && rng, Value const & val)
-            {
-                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
-                return detail::equal_range(ranges::begin(rng), ranges::end(rng), val);
-            }
-
-            /// \overload
-            template<typename ForwardIterable, typename Value, typename BinaryPredicate>
-            static iterator_range<range_iterator_t<ForwardIterable>>
-            invoke(equal_ranger, ForwardIterable && rng, Value const & val, BinaryPredicate pred)
+            invoke(equal_ranger, ForwardIterable && rng, Value const & val,
+                BinaryPredicate pred = BinaryPredicate{})
             {
                 CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,

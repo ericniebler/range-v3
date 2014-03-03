@@ -82,7 +82,8 @@ namespace ranges
             static Distance
             invoke(distance_, FiniteIterable && rng, Distance d = Distance{0})
             {
-                return detail::distance(ranges::begin(rng), ranges::end(rng), d).first;
+                return distance_::impl(std::forward<FiniteIterable>(rng), d,
+                    range_concept_t<FiniteIterable>{});
             }
         };
 
