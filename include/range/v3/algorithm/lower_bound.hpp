@@ -20,6 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -33,7 +34,7 @@ namespace ranges
             lower_bound(ForwardIterator begin, Sentinel end, Value const& value,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                auto dist = detail::distance(begin, end);
+                auto dist = detail::distance(begin, end).first;
                 while(0 != dist)
                 {
                     auto half = dist / 2;
@@ -58,20 +59,10 @@ namespace ranges
             ///
             /// \pre \c ForwardIterable is a model of the ForwardIterable concept
             template<typename ForwardIterable, typename Value,
-                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>())>
+                typename BinaryPredicate = ranges::less>
             static range_iterator_t<ForwardIterable>
-            invoke(lower_bound_finder, ForwardIterable && rng, Value const & value)
-            {
-                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
-                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardIterable>,
-                                                          Value const &>());
-                return detail::lower_bound(ranges::begin(rng), ranges::end(rng), value);
-            }
-
-            /// \overload
-            template<typename ForwardIterable, typename Value, typename BinaryPredicate>
-            static range_iterator_t<ForwardIterable>
-            invoke(lower_bound_finder, ForwardIterable && rng, Value const & value, BinaryPredicate pred)
+            invoke(lower_bound_finder, ForwardIterable && rng, Value const & value,
+                BinaryPredicate pred = BinaryPredicate{})
             {
                 CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,

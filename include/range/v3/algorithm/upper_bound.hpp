@@ -32,7 +32,7 @@ namespace ranges
             upper_bound(ForwardIterator begin, ForwardIterator end,
                         Value const & value, BinaryPredicate pred)
             {
-                auto dist = detail::distance(begin, end);
+                auto dist = detail::distance(begin, end).first;
                 while(dist != 0)
                 {
                     auto half = dist / 2;

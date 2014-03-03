@@ -259,6 +259,15 @@ namespace ranges
                     ));
             };
 
+            struct Constructible
+            {
+                template<typename T, typename ...Us>
+                auto requires(T &&, Us &&...us) -> decltype(
+                    concepts::valid_expr(
+                        T{(Us&&)us...}
+                    ));
+            };
+
             struct DefaultConstructible
             {
                 template<typename T>
@@ -440,14 +449,17 @@ namespace ranges
         template<typename T>
         using SignedIntegral = concepts::models<concepts::SignedIntegral, T>;
 
+        template<typename T, typename...Us>
+        using Constructible = concepts::models<concepts::Constructible, T, Us...>;
+
+        template<typename T>
+        using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
+
         template<typename T>
         using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
 
         template<typename T>
         using MoveConstructible = concepts::models<concepts::MoveConstructible, T>;
-
-        template<typename T>
-        using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
 
         template<typename T>
         using Destructible = concepts::models<concepts::Destructible, T>;

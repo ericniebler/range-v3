@@ -93,13 +93,13 @@ static_assert(!ranges::LessThanComparable<IntComparable, int>(), "");
 static_assert(
     std::is_same<
         ranges::range_concept_t<std::vector<int>>,
-        ranges::concepts::RandomAccessRange
+        ranges::concepts::FiniteRandomAccessRange
     >::value, "");
 
 static_assert(
     std::is_same<
         ranges::range_concept_t<ranges::istream_range<int>>,
-        ranges::concepts::InputRange
+        ranges::concepts::FiniteInputRange
     >::value, "");
 
 struct Abstract { virtual ~Abstract() = 0; };
@@ -659,6 +659,22 @@ void test_as_range()
     j = i;
 }
 
+void test_counted_range()
+{
+    using namespace ranges;
+    std::cout << "\nTesting counted\n";
+    int rgi[] = {1,2,3,4,5,6,7,8,9,10};
+    auto rng = view::counted(rgi, 10);
+    CONCEPT_ASSERT(CountedIterable<decltype(rng)>());
+    auto i = rng.begin();
+    auto b = i.base();
+    auto c = i.count();
+    decltype(i) j{b,c};
+    for_each(rng, [](int i){
+        std::cout << i << ' ';
+    });
+}
+
 int main()
 {
     using namespace ranges;
@@ -808,6 +824,7 @@ int main()
     test_range_facade();
     test_range_adaptor();
     test_as_range();
+    test_counted_range();
 }
 //*/
 

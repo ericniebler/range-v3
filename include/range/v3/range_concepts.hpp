@@ -213,6 +213,64 @@ namespace ranges
             struct FiniteRandomAccessRange
               : refines<FiniteBidirectionalRange, RandomAccessRange>
             {};
+
+            struct CountedSentinel
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<SignedIntegral>(t.count())
+                    ));
+            };
+
+            struct CountedIterable
+              : refines<FiniteIterable>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<CountedIterator>(ranges::begin(t)),
+                        concepts::model_of<CountedIterator>(ranges::cbegin(t)),
+                        concepts::model_of<CountedSentinel>(ranges::end(t)),
+                        concepts::model_of<CountedSentinel>(ranges::cend(t))
+                    ));
+            };
+
+            struct CountedInputIterable
+              : refines<CountedIterable, FiniteInputIterable>
+            {};
+
+            struct CountedForwardIterable
+              : refines<CountedInputIterable, FiniteForwardIterable>
+            {};
+
+            struct CountedBidirectionalIterable
+              : refines<CountedForwardIterable, FiniteBidirectionalIterable>
+            {};
+
+            struct CountedRandomAccessIterable
+              : refines<CountedBidirectionalIterable, FiniteRandomAccessIterable>
+            {};
+
+            struct CountedRange
+              : refines<CountedIterable, FiniteRange>
+            {};
+
+            struct CountedInputRange
+              : refines<CountedRange, FiniteInputRange>
+            {};
+
+            struct CountedForwardRange
+              : refines<CountedInputRange, FiniteForwardRange>
+            {};
+
+            struct CountedBidirectionalRange
+              : refines<CountedForwardRange, FiniteBidirectionalRange>
+            {};
+
+            struct CountedRandomAccessRange
+              : refines<CountedBidirectionalRange, FiniteRandomAccessRange>
+            {};
         }
 
         template<typename T>
@@ -252,6 +310,21 @@ namespace ranges
         using FiniteRandomAccessIterable = concepts::models<concepts::FiniteRandomAccessIterable, T>;
 
         template<typename T>
+        using CountedIterable = concepts::models<concepts::CountedIterable, T>;
+
+        template<typename T>
+        using CountedInputIterable = concepts::models<concepts::CountedInputIterable, T>;
+
+        template<typename T>
+        using CountedForwardIterable = concepts::models<concepts::CountedForwardIterable, T>;
+
+        template<typename T>
+        using CountedBidirectionalIterable = concepts::models<concepts::CountedBidirectionalIterable, T>;
+
+        template<typename T>
+        using CountedRandomAccessIterable = concepts::models<concepts::CountedRandomAccessIterable, T>;
+
+        template<typename T>
         using Range = concepts::models<concepts::Range, T>;
 
         template<typename T, typename O>
@@ -287,11 +360,26 @@ namespace ranges
         template<typename T>
         using FiniteRandomAccessRange = concepts::models<concepts::FiniteRandomAccessRange, T>;
 
+        template<typename T>
+        using CountedRange = concepts::models<concepts::CountedRange, T>;
+
+        template<typename T>
+        using CountedInputRange = concepts::models<concepts::CountedInputRange, T>;
+
+        template<typename T>
+        using CountedForwardRange = concepts::models<concepts::CountedForwardRange, T>;
+
+        template<typename T>
+        using CountedBidirectionalRange = concepts::models<concepts::CountedBidirectionalRange, T>;
+
+        template<typename T>
+        using CountedRandomAccessRange = concepts::models<concepts::CountedRandomAccessRange, T>;
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept
         template<typename T>
         using range_concept_t =
-            concepts::most_refined_t<concepts::RandomAccessRange, T>;
+            concepts::most_refined_t<concepts::CountedRandomAccessRange, T>;
 
         template<typename T>
         struct range_concept

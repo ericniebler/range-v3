@@ -72,6 +72,23 @@ namespace ranges
                         concepts::is_true(typename T::is_infinite{})
                     ));
             };
+            struct CountedImplConcept
+              : concepts::refines<InputImplConcept>
+            {
+                template<typename T>
+                using base_iterator_t = decltype(std::declval<T>().base());
+
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        t.base(),
+                        t.count(),
+                        T{t.base(), t.count()}
+                        // Doesn't work. How strange.
+                        //concepts::model_of<Iterator>(t.base())
+                        //concepts::model_of<SignedIntegral>(t.count())
+                    ));
+            };
 
             struct RangeFacadeConcept
             {
@@ -131,6 +148,18 @@ namespace ranges
             {
                 return impl0.distance_to(impl1);
             }
+            template<typename Impl>
+            static auto base(Impl const &impl) ->
+                decltype(impl.base())
+            {
+                return impl.base();
+            }
+            template<typename Impl>
+            static auto count(Impl const &impl) ->
+                decltype(impl.count())
+            {
+                return impl.count();
+            }
         };
 
         namespace detail
@@ -154,6 +183,10 @@ namespace ranges
             template<typename T>
             using InfiniteImpl =
                 concepts::models<range_core_access::InfiniteImplConcept, T>;
+
+            template<typename T>
+            using CountedImpl =
+                concepts::models<range_core_access::CountedImplConcept, T>;
 
             template<typename T>
             using impl_concept_t =
@@ -234,6 +267,11 @@ namespace ranges
                 basic_sentinel(basic_sentinel<OtherConst> that)
                   : impl_(std::move(that.impl_))
                 {}
+                template<typename Impl = impl_t>
+                auto count() const -> decltype(range_core_access::count(std::declval<Impl>()))
+                {
+                    return range_core_access::count(impl_);
+                }
             };
 
             template<bool Const>
@@ -288,6 +326,12 @@ namespace ranges
                 template<bool OtherConst, enable_if_t<!OtherConst> = 0>
                 basic_iterator(basic_iterator<OtherConst> that)
                   : impl_(std::move(that.impl_))
+                {}
+                template<typename Impl = impl_t,
+                    CONCEPT_REQUIRES_(detail::CountedImpl<impl_t>())>
+                basic_iterator(range_core_access::CountedImplConcept::base_iterator_t<Impl> it,
+                               difference_type n)
+                  : impl_{it, n}
                 {}
                 reference operator*() const
                 {
@@ -478,6 +522,17 @@ namespace ranges
                 operator[](difference_type n) const
                 {
                     return operator_brackets_dispatch_t::apply(*this + n);
+                }
+                template<typename Impl = impl_t,
+                    CONCEPT_REQUIRES_(detail::CountedImpl<Impl>())>
+                auto base() const -> range_core_access::CountedImplConcept::base_iterator_t<Impl>
+                {
+                    return range_core_access::base(impl_);
+                }
+                CONCEPT_REQUIRES(detail::CountedImpl<impl_t>())
+                auto count() const -> difference_type
+                {
+                    return range_core_access::count(impl_);
                 }
             };
         public:

@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_DISTANCE_HPP
 #define RANGES_V3_DISTANCE_HPP
 
+#include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
@@ -30,64 +31,58 @@ namespace ranges
         {
             // distance_impl
             template<typename InputIterator, typename Sentinel, typename Distance>
-            Distance
-            distance_impl(InputIterator begin, Sentinel end, Distance d, InputIterator *pend,
+            std::pair<Distance, InputIterator>
+            distance_impl(InputIterator begin, Sentinel end, Distance d,
                 concepts::InputIterator)
             {
                 for(; begin != end; ++begin)
                     ++d;
-                if(pend)
-                    *pend = begin;
-                return d;
+                return {d, begin};
             }
 
-            template<typename InputIterator, typename Sentinel, typename Distance>
-            Distance
-            distance_impl(InputIterator begin, Sentinel end, Distance d, InputIterator *pend,
+            template<typename RandomAccessIterator, typename Distance>
+            std::pair<Distance, RandomAccessIterator>
+            distance_impl(RandomAccessIterator begin, RandomAccessIterator end, Distance d,
                 concepts::RandomAccessIterator)
             {
-                d = end - begin;
-                if(pend)
-                    *pend = begin + d;
-                return d;
+                return {end - begin, end};
             }
 
-            template<typename InputIterator, typename Sentinel>
-            iterator_difference_t<InputIterator>
-            distance(InputIterator begin, Sentinel end, InputIterator *pend = nullptr)
+            template<typename InputIterator, typename Sentinel,
+                typename Distance = iterator_difference_t<InputIterator>>
+            std::pair<Distance, InputIterator>
+            distance(InputIterator begin, Sentinel end, Distance d = Distance{0})
             {
-                return detail::distance_impl(std::move(begin), std::move(end),
-                    iterator_difference_t<InputIterator>{0}, pend,
-                    iterator_concept_t<InputIterator>{});
-            }
-
-            template<typename InputIterator, typename Sentinel, typename Distance>
-            Distance
-            distance(InputIterator begin, Sentinel end, Distance d, InputIterator *pend = nullptr)
-            {
-                return detail::distance_impl(std::move(begin), std::move(end), d, pend,
+                return detail::distance_impl(std::move(begin), std::move(end), d,
                     iterator_concept_t<InputIterator>{});
             }
         }
 
         struct distance_ : bindable<distance_>, pipeable<distance_>
         {
-            template<typename FiniteIterable,
-                CONCEPT_REQUIRES_(ranges::FiniteIterable<FiniteIterable>())>
-            static range_difference_t<FiniteIterable>
-            invoke(distance_, FiniteIterable && rng)
+        private:
+            template<typename FiniteIterable, typename Distance>
+            static Distance
+            impl(FiniteIterable && rng, Distance d, concepts::Iterable)
             {
-                return detail::distance(ranges::begin(rng), ranges::end(rng));
+                return detail::distance(ranges::begin(rng), ranges::end(rng), d).first;
             }
-
-            template<typename FiniteIterable, typename Distance,
-                CONCEPT_REQUIRES_(ranges::FiniteIterable<FiniteIterable>())
-              , CONCEPT_REQUIRES_(ranges::Integral<Distance>())
+            template<typename FiniteIterable, typename Distance>
+            static Distance
+            impl(FiniteIterable && rng, Distance d, concepts::CountedIterable)
+            {
+                return Distance{ranges::end(rng).count() - ranges::begin(rng).count()} + d;
+            }
+        public:
+            template<typename FiniteIterable,
+                typename Distance = range_difference_t<FiniteIterable>,
+                CONCEPT_REQUIRES_(ranges::FiniteIterable<FiniteIterable>() &&
+                                  ranges::Integral<Distance>())
             >
             static Distance
-            invoke(distance_, FiniteIterable && rng, Distance d)
+            invoke(distance_, FiniteIterable && rng, Distance d = Distance{0})
             {
-                return detail::distance(ranges::begin(rng), ranges::end(rng), d);
+                return detail::distance(ranges::begin(rng), ranges::end(rng), d).first;
             }
         };
 

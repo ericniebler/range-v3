@@ -36,8 +36,9 @@ namespace ranges
             equal_range(ForwardIterator begin, Sentinel end_, Value const & val,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                ForwardIterator end;
-                auto dist = detail::distance(begin, end_, &end);
+                auto dist_and_end = detail::distance(begin, end_);
+                auto dist = dist_and_end.first;
+                auto end = dist_and_end.second;
                 while(0 != dist)
                 {
                     auto half = dist / 2;

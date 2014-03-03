@@ -153,6 +153,37 @@ namespace ranges
                         concepts::model_of<Orderable>(t)
                     ));
             };
+
+            struct CountedIterator
+              : refines<Iterator>
+            {
+                template<typename T>
+                using base_iterator_t = decltype(std::declval<T>().base());
+
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Iterator>(t.base()),
+                        concepts::has_type<Iterator::difference_t<T>>(t.count()),
+                        T{t.base(), t.count()}
+                    ));
+            };
+
+            struct CountedInputIterator
+              : refines<CountedIterator, InputIterator>
+            {};
+
+            struct CountedForwardIterator
+              : refines<CountedInputIterator, ForwardIterator>
+            {};
+
+            struct CountedBidirectionalIterator
+              : refines<CountedForwardIterator, BidirectionalIterator>
+            {};
+
+            struct CountedRandomAccessIterator
+              : refines<CountedBidirectionalIterator, RandomAccessIterator>
+            {};
         }
 
         template<typename T>
@@ -173,11 +204,26 @@ namespace ranges
         template<typename T>
         using RandomAccessIterator = concepts::models<concepts::RandomAccessIterator, T>;
 
+        template<typename T>
+        using CountedIterator = concepts::models<concepts::CountedIterator, T>;
+
+        template<typename T>
+        using CountedInputIterator = concepts::models<concepts::CountedInputIterator, T>;
+
+        template<typename T>
+        using CountedForwardIterator = concepts::models<concepts::CountedForwardIterator, T>;
+
+        template<typename T>
+        using CountedBidirectionalIterator = concepts::models<concepts::CountedBidirectionalIterator, T>;
+
+        template<typename T>
+        using CountedRandomAccessIterator = concepts::models<concepts::CountedRandomAccessIterator, T>;
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator_concept
         template<typename T>
         using iterator_concept_t =
-            concepts::most_refined_t<concepts::RandomAccessIterator, T>;
+            concepts::most_refined_t<concepts::CountedRandomAccessIterator, T>;
 
         template<typename T>
         struct iterator_concept

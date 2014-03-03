@@ -29,40 +29,72 @@ namespace ranges
             friend range_core_access;
             InputIterator it_;
             iterator_difference_t<InputIterator> n_;
-            auto current() const -> decltype(*it_)
+            struct impl
             {
-                return *it_;
+                InputIterator it_;
+                iterator_difference_t<InputIterator> n_;
+                impl(InputIterator it, iterator_difference_t<InputIterator> n)
+                  : it_(it), n_(n)
+                {}
+                auto current() const -> decltype(*it_)
+                {
+                    return *it_;
+                }
+                bool equal(counted_iterable_view<InputIterator> const &that) const
+                {
+                    return n_ == that.n_;
+                }
+                void next()
+                {
+                    ++it_;
+                    ++n_;
+                }
+                InputIterator base() const
+                {
+                    return it_;
+                }
+                iterator_difference_t<InputIterator> count() const
+                {
+                    return n_;
+                }
+                CONCEPT_REQUIRES(BidirectionalIterator<InputIterator>())
+                void prev()
+                {
+                    --it_;
+                    --n_;
+                }
+                CONCEPT_REQUIRES(RandomAccessIterator<InputIterator>())
+                void advance(iterator_difference_t<InputIterator> n)
+                {
+                    it_ += n;
+                    n_ += n;
+                }
+                CONCEPT_REQUIRES(RandomAccessIterator<InputIterator>())
+                iterator_difference_t<InputIterator>
+                distance_to(counted_iterable_view<InputIterator> const &that) const
+                {
+                    return that.n_ - n_;
+                }
+            };
+            struct sentinel
+            {
+                iterator_difference_t<InputIterator> n_;
+                bool equal(impl const &that) const
+                {
+                    return n_ == that.n_;
+                }
+                iterator_difference_t<InputIterator> count() const
+                {
+                    return n_;
+                }
+            };
+            impl begin_impl() const
+            {
+                return {it_, 0};
             }
-            bool done() const
+            sentinel end_impl() const
             {
-                return 0 == n_;
-            }
-            bool equal(counted_iterable_view<InputIterator> const &that) const
-            {
-                return n_ == that.n_;
-            }
-            void next()
-            {
-                ++it_;
-                --n_;
-            }
-            CONCEPT_REQUIRES(BidirectionalIterator<InputIterator>())
-            void prev()
-            {
-                --it_;
-                ++n_;
-            }
-            CONCEPT_REQUIRES(RandomAccessIterator<InputIterator>())
-            void advance(iterator_difference_t<InputIterator> n)
-            {
-                it_ += n;
-                n_ -= n;
-            }
-            CONCEPT_REQUIRES(RandomAccessIterator<InputIterator>())
-            iterator_difference_t<InputIterator>
-            distance_to(counted_iterable_view<InputIterator> const &that) const
-            {
-                return n_ - that.n_;
+                return {n_};
             }
         public:
             counted_iterable_view(InputIterator it, iterator_difference_t<InputIterator> n)
