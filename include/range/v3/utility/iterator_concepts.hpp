@@ -160,11 +160,16 @@ namespace ranges
                 template<typename T>
                 using base_iterator_t = decltype(std::declval<T>().base());
 
+                // Axiom: *it and *it.base() must refer to the same value
+                // Axiom: *next(it) and *next(it).base() must refer to the same value
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Iterator>(t.base()),
                         concepts::has_type<Iterator::difference_t<T>>(t.count()),
+                        concepts::is_true(std::is_same<
+                                              Iterator::reference_t<T>,
+                                              Iterator::reference_t<decltype(t.base())>>{}),
                         T{t.base(), t.count()}
                     ));
             };

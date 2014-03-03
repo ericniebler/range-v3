@@ -599,6 +599,15 @@ namespace ranges
             extern transformer const transform;
         }
 
+        template<typename InputIterator>
+        struct unbounded_iterable_view;
+
+        namespace view
+        {
+            struct unbounded_maker;
+            extern unbounded_maker const unbounded;
+        }
+
         template<typename ForwardRange>
         using unique_range_view = adjacent_filter_range_view<ForwardRange, detail::not_equal_to>;
 

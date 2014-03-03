@@ -406,5 +406,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\unreachable.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\unbounded.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
