@@ -27,14 +27,14 @@ namespace ranges
         private:
             InputIterator it_;
         public:
-            explicit unbounded_iterable_view(InputIterator it)
-              : it_(std::move(it))
+            constexpr explicit unbounded_iterable_view(InputIterator it)
+              : it_(detail::move(it))
             {}
-            InputIterator begin() const
+            constexpr InputIterator begin() const
             {
                 return it_;
             }
-            unreachable end() const
+            constexpr unreachable end() const
             {
                 return {};
             }
@@ -45,11 +45,11 @@ namespace ranges
             struct unbounded_maker : bindable<unbounded_maker>
             {
                 template<typename InputIterator>
-                static unbounded_iterable_view<InputIterator>
+                static constexpr unbounded_iterable_view<InputIterator>
                 invoke(unbounded_maker, InputIterator it)
                 {
                     CONCEPT_ASSERT(ranges::InputIterator<InputIterator>());
-                    return unbounded_iterable_view<InputIterator>{std::move(it)};
+                    return unbounded_iterable_view<InputIterator>{detail::move(it)};
                 }
             };
 

@@ -178,7 +178,6 @@ void test_view_replace()
 void test_view_replace_if()
 {
     using namespace ranges;
-    using namespace std::placeholders;
 
     std::cout << "\nreplace_if\n";
     std::string str{"1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 "};
@@ -192,8 +191,8 @@ void test_view_replace_if()
 void test_slicer()
 {
     using namespace ranges;
-    using namespace std::placeholders;
 
+    std::cout << "\ttest slice\n";
     int rgi[] = {0,1,2,3,4,5,6,7,8,9,10};
     auto sl = rgi | view::slice(3,9);
     for(int& i : rgi | view::slice(3,9))
@@ -674,6 +673,21 @@ void test_counted_range()
         std::cout << i << ' ';
     });
 }
+
+void test_unbounded()
+{
+    using namespace ranges;
+    std::cout << "\nTesting unbounded\n";
+    static constexpr int rgi[] = {1,2,3,4,5,6,7,8,9,10};
+    constexpr unbounded_iterable_view<int const*> rng{&rgi[0]};
+    constexpr auto i = rng.begin();
+    constexpr auto e = rng.end();
+    constexpr bool b = i == e;
+    static_assert(!b,"");
+    CONCEPT_ASSERT(RandomAccessIterable<unbounded_iterable_view<int const*>>());
+    CONCEPT_ASSERT(!FiniteRandomAccessIterable<unbounded_iterable_view<int const*>>());
+}
+
 
 int main()
 {
