@@ -111,7 +111,7 @@ namespace ranges
         } // namespace detail
 
         template<typename ...InputRanges>
-        struct zip_range_view
+        struct zip_range_view : private range_base
         {
         private:
             std::tuple<InputRanges...> rngs_;

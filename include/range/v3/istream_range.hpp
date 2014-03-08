@@ -24,7 +24,7 @@ namespace ranges
     inline namespace v3
     {
         template< typename T >
-        struct istream_range
+        struct istream_range : private range_base
         {
         private:
             std::istream & sin_;

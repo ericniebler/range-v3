@@ -689,6 +689,24 @@ void test_unbounded()
     CONCEPT_ASSERT(!FiniteRandomAccessIterable<unbounded_iterable_view<int const*>>());
 }
 
+void test_as_iterable()
+{
+    using namespace ranges;
+
+    std::list<int> li{1,2,3,4};
+    RANGES_ASSERT(ranges::adl_size_detail::size(li)==4);
+    auto liter = view::all(li);
+    CONCEPT_ASSERT(SameType<decltype(liter), iterator_range<std::list<int>::iterator>>());
+
+    auto cli = view::counted(li.begin(), 4);
+    static_assert(is_iterable<decltype(cli)>::value, "");
+    auto cliter = view::all(cli);
+    CONCEPT_ASSERT(SameType<decltype(cliter),
+                            counted_iterable_view<std::list<int>::iterator>>());
+
+    // This triggers a static assert. It's unsafe to get a view of a temporary container.
+    //view::all(std::vector<int>{});
+}
 
 int main()
 {
@@ -709,6 +727,7 @@ int main()
           });
 
     std::vector<int> vi{ 1, 2, 2, 3, 4 };
+    ranges::size(vi);
     std::cout << '\n';
     std::cout << (vi | count(2)) << std::endl;
 

@@ -25,17 +25,68 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct size_ : bindable<size_>
+        namespace adl_size_detail
         {
-            template<typename RandomAccessRange>
-            range_difference_t<RandomAccessRange> operator()(RandomAccessRange && rng) const
+            namespace impl
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                return ranges::end(rng) - ranges::begin(rng);
-            }
-        };
+                // An Iterable with a .size() member function; e.g., std::list
+                struct SizedIterableConcept
+                  : concepts::refines<concepts::Iterable>
+                {
+                    template<typename T>
+                    auto requires(T && t) -> decltype(
+                        concepts::valid_expr(
+                            concepts::convertible_to<range_difference_t<T>>(t.size())
+                        ));
+                };
 
-        RANGES_CONSTEXPR size_ size {};
+                template<typename T>
+                using SizedIterable = concepts::models<SizedIterableConcept, T>;
+
+                struct Int { Int(long) {} };
+
+                template<typename Iterable,
+                    CONCEPT_REQUIRES_(SizedIterable<Iterable>())>
+                range_difference_t<Iterable>
+                size(Iterable && rng, int)
+                {
+                    return static_cast<range_difference_t<Iterable>>(rng.size());
+                }
+
+                template<typename Iterable,
+                    CONCEPT_REQUIRES_(CountedIterable<Iterable>())>
+                range_difference_t<Iterable>
+                size(Iterable && rng, long)
+                {
+                    return rng.end().count();
+                }
+
+                template<typename RandomAccessRange,
+                    CONCEPT_REQUIRES_(ranges::RandomAccessRange<RandomAccessRange>())>
+                range_difference_t<RandomAccessRange>
+                size(RandomAccessRange && rng, Int)
+                {
+                    return ranges::end(rng) - ranges::begin(rng);
+                }
+            }
+
+            template<typename Iterable>
+            inline auto size(Iterable && rng) -> decltype(impl::size(rng, 42))
+            {
+                return impl::size(rng, 42);
+            }
+
+            struct sizer : bindable<sizer>
+            {
+                template<typename Iterable>
+                static auto invoke(sizer, Iterable && rng) -> decltype(size(rng))
+                {
+                    return size(rng);
+                }
+            };
+        }
+
+        RANGES_CONSTEXPR adl_size_detail::sizer size {};
     }
 }
 

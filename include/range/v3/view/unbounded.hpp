@@ -22,7 +22,8 @@ namespace ranges
     {
         template<typename InputIterator>
         struct unbounded_iterable_view
-          : detail::is_infinite<true>
+          : private detail::is_infinite<true>
+          , private range_base
         {
         private:
             InputIterator it_;

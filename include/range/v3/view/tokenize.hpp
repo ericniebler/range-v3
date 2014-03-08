@@ -29,7 +29,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename BidirectionalRange, typename Regex, typename SubMatchRange>
-        struct tokenize_range_view
+        struct tokenize_range_view : private range_base
         {
         private:
             BidirectionalRange rng_;

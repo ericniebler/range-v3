@@ -54,15 +54,15 @@ namespace ranges
                 constexpr basic_impl()
                   : rng_{}, it_{}
                 {}
-                // For iterator -> const_iterator conversion
-                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-                basic_impl(basic_impl<OtherConst> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
-                {}
                 basic_impl(filter_range_view_ &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
                 {
                     satisfy();
+                }
+                // For iterator->const_iterator conversions
+                CONCEPT_REQUIRES(!Const) operator basic_impl<!Const>() const
+                {
+                    return {*rng_, it_};
                 }
                 template<bool OtherConst>
                 bool equal(basic_impl<OtherConst> const &that) const

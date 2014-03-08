@@ -29,7 +29,7 @@ namespace ranges
         // it look like a container, like iterator_range. It's a range,
         // not a container.
         template<typename Iterator, typename Sentinel /* = Iterator */>
-        struct iterator_range
+        struct iterator_range : private range_base
         {
         private:
             compressed_pair<Iterator, Sentinel> begin_end_;

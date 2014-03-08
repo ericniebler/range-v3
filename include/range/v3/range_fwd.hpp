@@ -46,6 +46,11 @@ namespace ranges
             struct cender;
         }
 
+        namespace adl_size_detail
+        {
+            struct sizer;
+        }
+
         template<typename Sig>
         using result_of_t = typename std::result_of<Sig>::type;
 
@@ -70,11 +75,10 @@ namespace ranges
         struct prever;
         extern prever const prev;
 
-        struct size_;
-        extern size_ const size;
-
         struct distance_;
         extern distance_ const distance;
+
+        extern adl_size_detail::sizer const size;
 
         namespace detail
         {
@@ -165,6 +169,9 @@ namespace ranges
             template<typename...Ts>
             using common_type_t = typename std::common_type<Ts...>::type;
 
+            template<typename T>
+            using not_t = std::integral_constant<bool, !T::value>;
+
             struct get_first;
             struct get_second;
 
@@ -180,6 +187,15 @@ namespace ranges
         struct end_tag {};
 
         struct use_default;
+
+        struct range_base
+        {};
+
+        template<typename Derived, bool Const = true>
+        struct basic_range_iterator;
+
+        template<typename Derived, bool Const = true>
+        struct basic_range_sentinel;
 
         template<typename Derived, bool Infinite = false>
         struct range_facade;
@@ -467,6 +483,12 @@ namespace ranges
             extern adjacent_filterer const adjacent_filter;
         }
 
+        namespace view
+        {
+            struct all_getter;
+            extern all_getter const all;
+        }
+
         template<typename Rng>
         struct const_range_view;
 
@@ -484,6 +506,12 @@ namespace ranges
             struct counted_maker;
             extern counted_maker const counted;
         }
+
+        template<typename InputIterator>
+        using counted_iterator = basic_range_iterator<counted_iterable_view<InputIterator>>;
+
+        template<typename InputIterator>
+        using counted_sentinel = basic_range_sentinel<counted_iterable_view<InputIterator>>;
 
         template<typename Rng, typename Pred>
         struct filter_range_view;

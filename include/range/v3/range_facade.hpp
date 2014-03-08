@@ -206,10 +206,7 @@ namespace ranges
                 std::random_access_iterator_tag;
         }
 
-        template<typename Iterable, bool Const = true>
-        struct basic_range_iterator;
-
-        template<typename Iterable, bool Const = true>
+        template<typename Iterable, bool Const /*= true*/>
         struct basic_range_sentinel
         {
         private:
@@ -505,7 +502,9 @@ namespace ranges
         };
 
         template<typename Derived, bool Infinite>
-        struct range_facade : private detail::is_infinite<Infinite>
+        struct range_facade
+          : private detail::is_infinite<Infinite>,
+            private range_base
         {
         protected:
             using range_facade_ = range_facade;

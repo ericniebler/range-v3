@@ -58,7 +58,7 @@ namespace ranges
                 using pointer_t = Iterator::pointer_t<iterator_t<T>>;
 
                 template<typename T>
-                using is_finite_t = std::integral_constant<bool, !is_infinite<T>::value>;
+                using is_finite_t = detail::not_t<is_infinite<T>>;
 
                 // Valid expressions
                 template<typename T>

@@ -27,6 +27,8 @@ namespace ranges
             using std::begin;
             using std::end;
 
+            // Handle char*, std::pair<iterator, iterator>, std::pair<interator, int> ?
+
             struct beginner : bindable<beginner>
             {
                 template<typename Rng>

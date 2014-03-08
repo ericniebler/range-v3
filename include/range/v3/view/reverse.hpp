@@ -40,7 +40,7 @@ namespace ranges
         RANGES_CONSTEXPR reverse_iterator_maker make_reverse_iterator {};
 
         template<typename BidirectionalRange>
-        struct reverse_range_view
+        struct reverse_range_view : private range_base
         {
         private:
             BidirectionalRange rng_;

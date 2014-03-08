@@ -39,7 +39,7 @@ namespace ranges
         }
 
         template<typename InputRange0, typename InputRange1>
-        struct join_range_view
+        struct join_range_view : private range_base
         {
         private:
             static_assert(std::is_same<range_value_t<InputRange0>,

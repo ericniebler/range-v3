@@ -32,7 +32,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename InputRange>
-        struct stride_range_view
+        struct stride_range_view : private range_base
         {
         private:
             using difference_type = range_difference_t<InputRange const>;

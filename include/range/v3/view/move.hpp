@@ -47,7 +47,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct move_range_view
+        struct move_range_view : private range_base
         {
         private:
             InputRange rng_;

@@ -30,7 +30,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename InputRange, typename UnaryFunction>
-        struct transform_range_view
+        struct transform_range_view : private range_base
         {
         private:
             compressed_pair<InputRange, invokable_t<UnaryFunction>> rng_and_fun_;
