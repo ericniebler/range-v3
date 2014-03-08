@@ -102,6 +102,12 @@ namespace ranges
             {}
         };
 
+        template<typename InputIterator>
+        using counted_iterator = basic_range_iterator<counted_iterable_view<InputIterator>>;
+
+        template<typename InputIterator>
+        using counted_sentinel = basic_range_sentinel<counted_iterable_view<InputIterator>>;
+
         namespace view
         {
             struct counted_maker : bindable<counted_maker>

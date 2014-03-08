@@ -672,6 +672,7 @@ void test_counted_range()
     for_each(rng, [](int i){
         std::cout << i << ' ';
     });
+    static_assert(std::is_same<decltype(i),counted_iterator<int*>>::value,"");
 }
 
 void test_unbounded()
