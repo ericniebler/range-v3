@@ -33,9 +33,17 @@ namespace ranges
             {
                 InputIterator it_;
                 iterator_difference_t<InputIterator> n_;
-                impl(InputIterator it, iterator_difference_t<InputIterator> n)
+                impl(public_t, InputIterator it, iterator_difference_t<InputIterator> n)
                   : it_(it), n_(n)
                 {}
+                InputIterator base() const
+                {
+                    return it_;
+                }
+                iterator_difference_t<InputIterator> count() const
+                {
+                    return n_;
+                }
                 auto current() const -> decltype(*it_)
                 {
                     return *it_;
@@ -48,14 +56,6 @@ namespace ranges
                 {
                     ++it_;
                     ++n_;
-                }
-                InputIterator base() const
-                {
-                    return it_;
-                }
-                iterator_difference_t<InputIterator> count() const
-                {
-                    return n_;
                 }
                 CONCEPT_REQUIRES(BidirectionalIterator<InputIterator>())
                 void prev()
@@ -90,7 +90,7 @@ namespace ranges
             };
             impl begin_impl() const
             {
-                return {it_, 0};
+                return {{}, it_, 0};
             }
             sentinel end_impl() const
             {

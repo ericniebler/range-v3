@@ -13,13 +13,12 @@
 #ifndef RANGES_V3_RANGE_CONCEPTS_HPP
 #define RANGES_V3_RANGE_CONCEPTS_HPP
 
-#include <limits>
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/begin_end.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/begin_end.hpp>
 
 namespace ranges
 {
@@ -67,8 +66,9 @@ namespace ranges
                         concepts::model_of<Iterator>(ranges::begin(t)),
                         concepts::model_of<Iterator>(ranges::cbegin(t)),
                         concepts::convertible_to<decltype(ranges::cbegin(t))>(ranges::begin(t)),
-                        ranges::begin(t) == ranges::end(t),
-                        ranges::cbegin(t) == ranges::cend(t)
+                        concepts::convertible_to<decltype(ranges::cend(t))>(ranges::end(t)),
+                        concepts::model_of<EqualityComparable>(ranges::begin(t), ranges::end(t)),
+                        concepts::model_of<EqualityComparable>(ranges::cbegin(t), ranges::cend(t))
                     ));
             };
 

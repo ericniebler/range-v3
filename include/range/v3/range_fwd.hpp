@@ -172,6 +172,9 @@ namespace ranges
             template<typename T>
             using not_t = std::integral_constant<bool, !T::value>;
 
+            template<typename T>
+            using decay_t = typename std::decay<T>::type;
+
             struct get_first;
             struct get_second;
 
@@ -181,6 +184,15 @@ namespace ranges
             template<bool Infinite>
             struct is_infinite
             {};
+
+            template<typename Iterator, typename Sentinel>
+            struct common_range;
+        }
+
+        namespace concepts
+        {
+            struct Iterable;
+            struct Range;
         }
 
         struct begin_tag {};
@@ -202,6 +214,12 @@ namespace ranges
 
         template<typename Derived, typename BaseIterable, bool Infinite = false>
         struct range_adaptor;
+
+        template<typename Iterator, typename Sentinel>
+        using common_range_iterator
+            = basic_range_iterator<detail::common_range<Iterator, Sentinel>>;
+
+        struct public_t;
 
         template<
             typename Derived
@@ -487,6 +505,15 @@ namespace ranges
         {
             struct all_getter;
             extern all_getter const all;
+        }
+
+        template<typename Iterable>
+        struct as_range_view;
+
+        namespace view
+        {
+            struct as_ranger;
+            extern as_ranger const as_range;
         }
 
         template<typename Rng>

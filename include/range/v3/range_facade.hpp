@@ -19,6 +19,9 @@ namespace ranges
 {
     inline namespace v3
     {
+        struct public_t
+        {};
+
         struct range_core_access
         {
             range_core_access() = delete;
@@ -83,10 +86,10 @@ namespace ranges
                     concepts::valid_expr(
                         t.base(),
                         t.count(),
-                        T{t.base(), t.count()}
+                        T{public_t{}, t.base(), t.count()}
                         // Doesn't work. How strange.
                         //concepts::model_of<Iterator>(t.base())
-                        //concepts::model_of<SignedIntegral>(t.count())
+                        //concepts::model_of<Integral>(t.count())
                     ));
             };
 
@@ -230,6 +233,21 @@ namespace ranges
             basic_range_sentinel(basic_range_sentinel<Iterable, OtherConst> that)
               : impl_(std::move(that.impl_))
             {}
+            template<typename...Ts,
+                CONCEPT_REQUIRES_(Constructible<impl_t, public_t, Ts...>())>
+            basic_range_sentinel(Ts &&... ts)
+              : impl_{public_t{}, std::forward<Ts>(ts)...}
+            {}
+            template<bool OtherConst>
+            constexpr bool operator==(basic_range_sentinel<Iterable, OtherConst> const &) const
+            {
+                return true;
+            }
+            template<bool OtherConst>
+            constexpr bool operator!=(basic_range_sentinel<Iterable, OtherConst> const &) const
+            {
+                return false;
+            }
             template<typename Impl = impl_t>
             auto count() const -> decltype(range_core_access::count(std::declval<Impl>()))
             {
@@ -291,11 +309,10 @@ namespace ranges
             basic_range_iterator(basic_range_iterator<Iterable, OtherConst> that)
               : impl_(std::move(that.impl_))
             {}
-            template<typename Impl = impl_t,
-                CONCEPT_REQUIRES_(detail::CountedImpl<impl_t>())>
-            basic_range_iterator(range_core_access::CountedImplConcept::base_iterator_t<Impl> it,
-                                 difference_type n)
-              : impl_{it, n}
+            template<typename...Ts,
+                CONCEPT_REQUIRES_(Constructible<impl_t, public_t, Ts...>())>
+            basic_range_iterator(Ts &&... ts)
+              : impl_{public_t{}, std::forward<Ts>(ts)...}
             {}
             reference operator*() const
             {

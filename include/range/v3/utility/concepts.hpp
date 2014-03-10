@@ -28,6 +28,17 @@ namespace ranges
     {
         namespace detail
         {
+            template<typename T, typename U, typename Enable = void>
+            struct common_type_impl
+            {};
+
+            template<typename T, typename U>
+            struct common_type_impl<T, U, 
+                always_t<void, decltype(true? std::declval<T>() : std::declval<U>())>>
+            {
+                using type = decay_t<decltype(true? std::declval<T>() : std::declval<U>())>;
+            };
+
             constexpr struct void_tester
             {
                 template<typename T>
@@ -104,6 +115,16 @@ namespace ranges
             using _8 = std::integral_constant<int, 7>;
             using _9 = std::integral_constant<int, 8>;
 
+            // Users should specialize this to hook the Common
+            // until std gets a SFINAE-friendly std::common_type
+            template<typename T, typename U>
+            struct common_type
+              : detail::common_type_impl<T, U>
+            {};
+
+            template<typename T, typename U>
+            using common_type_t = typename common_type<T, U>::type;
+
             template<typename Ret, typename T>
             Ret returns_(T const &);
 
@@ -112,8 +133,7 @@ namespace ranges
                 decltype(concepts::returns_<int>(static_cast<T>(u)));
 
             template<typename T, typename U>
-            auto has_common_type(T && t, U && u) ->
-                decltype(true ? static_cast<T &&>(t) : static_cast<U &&>(u));
+            auto has_common_type(T && t, U && u) -> common_type_t<T, U>;
 
             template<typename T, typename U>
             auto has_type(U &&) ->
@@ -222,6 +242,20 @@ namespace ranges
                     ));
             };
 
+            struct Common
+            {
+                template<typename T, typename U>
+                using common_t = common_type_t<T, U>;
+
+                template<typename T, typename U>
+                auto requires(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::has_common_type(t, u),
+                        concepts::convertible_to<common_t<T, U>>(t),
+                        concepts::convertible_to<common_t<T, U>>(u)
+                    ));
+            };
+
             struct Convertible
             {
                 template<typename T, typename U>
@@ -322,11 +356,19 @@ namespace ranges
                         concepts::convertible_to<bool>(t != t)
                     ));
 
-                template<typename T, typename U>
+                // Cross-type equality comparison from N3351:
+                // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf
+                template<typename T, typename U, typename C = common_type_t<T, U>>
                 auto requires(T && t, U && u) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<EqualityComparable>(t),
+                        concepts::model_of<EqualityComparable>(u),
+                        concepts::model_of<Common>(t, u),
+                        concepts::model_of<EqualityComparable>(static_cast<C>(t)),
                         concepts::convertible_to<bool>(t == u),
-                        concepts::convertible_to<bool>(t != u)
+                        concepts::convertible_to<bool>(u == t),
+                        concepts::convertible_to<bool>(t != u),
+                        concepts::convertible_to<bool>(u != t)
                     ));
             };
 
@@ -439,6 +481,9 @@ namespace ranges
 
         template<typename T, typename U>
         using SameType = concepts::models<concepts::SameType, T, U>;
+
+        template<typename T, typename U>
+        using Common = concepts::models<concepts::Common, T, U>;
 
         template<typename T, typename U>
         using Convertible = concepts::models<concepts::Convertible, T, U>;

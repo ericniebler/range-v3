@@ -62,7 +62,8 @@ namespace ranges
             struct Iterator
               : refines<CopyConstructible, CopyAssignable, Destructible>
             {
-                // Users should specialize this to hook the traits mechanism.
+                // Users should specialize this to hook the traits mechanism
+                // until std gets a SFINAE-friendly std::iterator_traits
                 template<typename T>
                 struct traits
                   : detail::iterator_traits_impl<T>

@@ -689,10 +689,11 @@ void test_unbounded()
     CONCEPT_ASSERT(!FiniteRandomAccessIterable<unbounded_iterable_view<int const*>>());
 }
 
-void test_as_iterable()
+void test_view_all()
 {
     using namespace ranges;
 
+    std::cout << "\nTesting view::all\n";
     std::list<int> li{1,2,3,4};
     RANGES_ASSERT(ranges::adl_size_detail::size(li)==4);
     auto liter = view::all(li);
@@ -706,6 +707,36 @@ void test_as_iterable()
 
     // This triggers a static assert. It's unsafe to get a view of a temporary container.
     //view::all(std::vector<int>{});
+}
+
+void test_common_range_iterator()
+{
+    using namespace ranges;
+    int rgi[] = {1,2,3,4,5};
+    common_range_iterator<int*, unreachable> it{rgi};
+    common_range_iterator<int*, unreachable> end{unreachable{}};
+
+    std::cout << "\nTesting common_range_iterator\n";
+    if(it != end)
+        std::cout << *it << ' ';
+    if(++it != end)
+        std::cout << *it << ' ';
+    if(++it != end)
+        std::cout << *it << ' ';
+    if(++it != end)
+        std::cout << *it << ' ';
+    if(++it != end)
+        std::cout << *it << ' ';
+    std::cout << '\n';
+
+    auto rng = view::counted(rgi, 5);
+    using it_t = range_iterator_t<decltype(rng)>;
+    using se_t = range_sentinel_t<decltype(rng)>;
+    static_assert(!std::is_same<it_t, se_t>::value, "");
+    using cit_t = typename std::common_type<it_t, se_t>::type;
+    CONCEPT_ASSERT(Common<it_t, se_t>());
+    static_assert(std::is_same<cit_t,
+        common_range_iterator<counted_iterator<int*>, counted_sentinel<int*>>>::value, "");
 }
 
 int main()
@@ -859,6 +890,7 @@ int main()
     test_range_adaptor();
     test_as_range();
     test_counted_range();
+    test_common_range_iterator();
 }
 //*/
 

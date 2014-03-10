@@ -10,12 +10,15 @@
 #ifndef RANGES_V3_VIEW_AS_RANGE_HPP
 #define RANGES_V3_VIEW_AS_RANGE_HPP
 
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
 {
@@ -66,20 +69,20 @@ namespace ranges
                     RANGES_ASSERT(!is_sentinel_ && it_ != se_);
                     ++it_;
                 }
-                CONCEPT_REQUIRES(BidirectionalIterable<Iterable>())
+                CONCEPT_REQUIRES(BidirectionalIterator<base_iterator_t>())
                 void prev()
                 {
                     clean();
                     --it_;
                 }
-                CONCEPT_REQUIRES(RandomAccessIterable<Iterable>())
+                CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
                 void advance(range_difference_t<Iterable> n)
                 {
                     clean();
                     it_ += n;
                 }
                 template<bool OtherConst,
-                    CONCEPT_REQUIRES_(RandomAccessIterable<Iterable>())>
+                    CONCEPT_REQUIRES_(RandomAccessIterator<base_iterator_t>())>
                 range_difference_t<Iterable> distance_to(impl<OtherConst> const &that) const
                 {
                     clean();
