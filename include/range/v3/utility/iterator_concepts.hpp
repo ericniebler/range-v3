@@ -113,7 +113,7 @@ namespace ranges
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         t++,
-                        concepts::has_common_type(*t, *t++)
+                        concepts::model_of<Common>(*t, *t++)
                     ));
             };
 

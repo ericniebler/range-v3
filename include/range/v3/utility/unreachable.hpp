@@ -49,111 +49,26 @@ namespace ranges
             }
         };
 
-        // Specializations of common_type for EqualityComparison
-        namespace concepts
+        // Specializations of common_type for concept checking, needed because
+        // std::common_type is not SFINAE-friendly.
+        template<typename T>
+        struct common_type<T, unreachable>
         {
-            template<typename T>
-            struct common_type<T, unreachable>
-            {
-                using type =
-                    basic_range_iterator<detail::common_range<detail::decay_t<T>, unreachable>>;
-            };
-            template<typename T>
-            struct common_type<T, unreachable const>
-            {
-                using type =
-                    basic_range_iterator<detail::common_range<detail::decay_t<T>, unreachable>>;
-            };
-            template<typename T>
-            struct common_type<T, unreachable &>
-            {
-                using type =
-                    basic_range_iterator<detail::common_range<detail::decay_t<T>, unreachable>>;
-            };
-            template<typename T>
-            struct common_type<T, unreachable const &>
-            {
-                using type =
-                    basic_range_iterator<detail::common_range<detail::decay_t<T>, unreachable>>;
-            };
-            template<typename T>
-            struct common_type<unreachable, T>
-            {
-                using type =
-                    basic_range_iterator<detail::common_range<detail::decay_t<T>, unreachable>>;
-            };
-            template<typename T>
-            struct common_type<unreachable const, T>
-            {
-                using type =
-                    basic_range_iterator<detail::common_range<detail::decay_t<T>, unreachable>>;
-            };
-            template<typename T>
-            struct common_type<unreachable &, T>
-            {
-                using type =
-                    basic_range_iterator<detail::common_range<detail::decay_t<T>, unreachable>>;
-            };
-            template<typename T>
-            struct common_type<unreachable const &, T>
-            {
-                using type =
-                    basic_range_iterator<detail::common_range<detail::decay_t<T>, unreachable>>;
-            };
-        }
+            using type =
+                basic_range_iterator<detail::common_range<T, unreachable>>;
+        };
+        template<typename T>
+        struct common_type<unreachable, T>
+        {
+            using type =
+                basic_range_iterator<detail::common_range<T, unreachable>>;
+        };
+        template<>
+        struct common_type<unreachable, unreachable>
+        {
+            using type = unreachable;
+        };
     }
-}
-
-namespace std
-{
-    template<typename T>
-    struct common_type<T, ranges::unreachable>
-    {
-        using type =
-            ranges::basic_range_iterator<ranges::detail::common_range<ranges::detail::decay_t<T>, ranges::unreachable>>;
-    };
-    template<typename T>
-    struct common_type<T, ranges::unreachable const>
-    {
-        using type =
-            ranges::basic_range_iterator<ranges::detail::common_range<ranges::detail::decay_t<T>, ranges::unreachable>>;
-    };
-    template<typename T>
-    struct common_type<T, ranges::unreachable &>
-    {
-        using type =
-            ranges::basic_range_iterator<ranges::detail::common_range<ranges::detail::decay_t<T>, ranges::unreachable>>;
-    };
-    template<typename T>
-    struct common_type<T, ranges::unreachable const &>
-    {
-        using type =
-            ranges::basic_range_iterator<ranges::detail::common_range<ranges::detail::decay_t<T>, ranges::unreachable>>;
-    };
-    template<typename T>
-    struct common_type<ranges::unreachable, T>
-    {
-        using type =
-            ranges::basic_range_iterator<ranges::detail::common_range<ranges::detail::decay_t<T>, ranges::unreachable>>;
-    };
-    template<typename T>
-    struct common_type<ranges::unreachable const, T>
-    {
-        using type =
-            ranges::basic_range_iterator<ranges::detail::common_range<ranges::detail::decay_t<T>, ranges::unreachable>>;
-    };
-    template<typename T>
-    struct common_type<ranges::unreachable &, T>
-    {
-        using type =
-            ranges::basic_range_iterator<ranges::detail::common_range<ranges::detail::decay_t<T>, ranges::unreachable>>;
-    };
-    template<typename T>
-    struct common_type<ranges::unreachable const &, T>
-    {
-        using type =
-            ranges::basic_range_iterator<ranges::detail::common_range<ranges::detail::decay_t<T>, ranges::unreachable>>;
-    };
 }
 
 #endif

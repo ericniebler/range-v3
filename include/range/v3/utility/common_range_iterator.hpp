@@ -24,6 +24,8 @@ namespace ranges
             template<typename Iterator, typename Sentinel>
             struct common_impl
             {
+                // BUGBUG relate to basic_range_iterator whether this is an
+                // input or forward iterator.
                 static_assert(!std::is_same<Iterator, Sentinel>::value,
                               "Error: iterator and sentinel types are the same");
                 Iterator it_;
@@ -57,13 +59,11 @@ namespace ranges
                                       Common<Sentinel, OtherSentinel>())>
                 bool equal(common_impl<OtherIterator, OtherSentinel> const &that) const
                 {
-                    if(is_sentinel_ && that.is_sentinel_)
-                        return true;
-                    if(is_sentinel_ && !that.is_sentinel_)
-                        return that.it_ == se_;
-                    if(that.is_sentinel_ && !is_sentinel_)
-                        return it_ == that.se_;
-                    return it_ == that.it_;
+                    return is_sentinel_ ?
+                        that.is_sentinel_ || that.it_ == se_ :
+                        that.is_sentinel_ ?
+                            it_ == that.se_ :
+                            it_ == that.it_;
                 }
                 void next()
                 {
@@ -80,78 +80,25 @@ namespace ranges
                 common_impl<Iterator, Sentinel> begin_impl() const;
             };
         }
+
+        template<typename Iterable, bool Const0, bool Const1>
+        struct common_type<basic_range_iterator<Iterable, Const0>,
+                           basic_range_sentinel<Iterable, Const1>>
+        {
+            using type = common_range_iterator<
+                basic_range_iterator<Iterable, Const0>,
+                basic_range_sentinel<Iterable, Const1>>;
+        };
+
+        template<typename Iterable, bool Const0, bool Const1>
+        struct common_type<basic_range_sentinel<Iterable, Const0>,
+                           basic_range_iterator<Iterable, Const1>>
+        {
+            using type = common_range_iterator<
+                basic_range_iterator<Iterable, Const0>,
+                basic_range_sentinel<Iterable, Const1>>;
+        };
     }
 }
-
-#define DEFINE_COMMON_ITERATOR_TYPE(CVREF0, CVREF1)                                                \
-    namespace ranges                                                                               \
-    {                                                                                              \
-        inline namespace v3                                                                        \
-        {                                                                                          \
-            namespace concepts                                                                     \
-            {                                                                                      \
-                template<typename Iterable, bool Const0, bool Const1>                              \
-                struct common_type<basic_range_iterator<Iterable, Const0> CVREF0,                  \
-                                   basic_range_sentinel<Iterable, Const1> CVREF1>                  \
-                {                                                                                  \
-                    using type = common_range_iterator<                                            \
-                        basic_range_iterator<Iterable, Const0>,                                    \
-                        basic_range_sentinel<Iterable, Const1>>;                                   \
-                };                                                                                 \
-                                                                                                   \
-                template<typename Iterable, bool Const0, bool Const1>                              \
-                struct common_type<basic_range_sentinel<Iterable, Const0> CVREF1,                  \
-                                   basic_range_iterator<Iterable, Const1> CVREF0>                  \
-                {                                                                                  \
-                    using type = common_range_iterator<                                            \
-                        basic_range_iterator<Iterable, Const0>,                                    \
-                        basic_range_sentinel<Iterable, Const1>>;                                   \
-                };                                                                                 \
-            }                                                                                      \
-        }                                                                                          \
-    }                                                                                              \
-                                                                                                   \
-    namespace std                                                                                  \
-    {                                                                                              \
-        template<typename Iterable, bool Const0, bool Const1>                                      \
-        struct common_type<ranges::basic_range_iterator<Iterable, Const0> CVREF0,                  \
-                           ranges::basic_range_sentinel<Iterable, Const1> CVREF1>                  \
-        {                                                                                          \
-            using type = ranges::common_range_iterator<                                            \
-                ranges::basic_range_iterator<Iterable, Const0>,                                    \
-                ranges::basic_range_sentinel<Iterable, Const1>>;                                   \
-        };                                                                                         \
-                                                                                                   \
-        template<typename Iterable, bool Const0, bool Const1>                                      \
-        struct common_type<ranges::basic_range_sentinel<Iterable, Const0> CVREF1,                  \
-                           ranges::basic_range_iterator<Iterable, Const1> CVREF0>                  \
-        {                                                                                          \
-            using type = ranges::common_range_iterator<                                            \
-                ranges::basic_range_iterator<Iterable, Const0>,                                    \
-                ranges::basic_range_sentinel<Iterable, Const1>>;                                   \
-        };                                                                                         \
-    }                                                                                              \
-    /**/
-
-// Ugh, the definition of common_type is *so* annoying. I'm submitting a defect report.
-// Ignore volatile and &&. It's just too damn annoying.
-DEFINE_COMMON_ITERATOR_TYPE(,)
-DEFINE_COMMON_ITERATOR_TYPE(const,)
-DEFINE_COMMON_ITERATOR_TYPE(&,)
-DEFINE_COMMON_ITERATOR_TYPE(const &,)
-DEFINE_COMMON_ITERATOR_TYPE(,const)
-DEFINE_COMMON_ITERATOR_TYPE(const,const)
-DEFINE_COMMON_ITERATOR_TYPE(&,const)
-DEFINE_COMMON_ITERATOR_TYPE(const &,const)
-DEFINE_COMMON_ITERATOR_TYPE(,&)
-DEFINE_COMMON_ITERATOR_TYPE(const,&)
-DEFINE_COMMON_ITERATOR_TYPE(&,&)
-DEFINE_COMMON_ITERATOR_TYPE(const &,&)
-DEFINE_COMMON_ITERATOR_TYPE(,const&)
-DEFINE_COMMON_ITERATOR_TYPE(const,const&)
-DEFINE_COMMON_ITERATOR_TYPE(&,const&)
-DEFINE_COMMON_ITERATOR_TYPE(const &,const&)
-
-#undef DEFINE_COMMON_ITERATOR_TYPE
 
 #endif

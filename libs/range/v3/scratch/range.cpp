@@ -733,7 +733,7 @@ void test_common_range_iterator()
     using it_t = range_iterator_t<decltype(rng)>;
     using se_t = range_sentinel_t<decltype(rng)>;
     static_assert(!std::is_same<it_t, se_t>::value, "");
-    using cit_t = typename std::common_type<it_t, se_t>::type;
+    using cit_t = common_type_t<it_t, se_t>;
     CONCEPT_ASSERT(Common<it_t, se_t>());
     static_assert(std::is_same<cit_t,
         common_range_iterator<counted_iterator<int*>, counted_sentinel<int*>>>::value, "");

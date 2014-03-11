@@ -19,13 +19,14 @@
 #include <iterator>
 #include <functional>
 #include <type_traits>
-#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/next_prev.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/common_type.hpp>
+#include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 
 namespace ranges
@@ -121,9 +122,9 @@ namespace ranges
               : ranges::iterator_facade<
                     basic_iterator<false>,
                     std::tuple<range_value_t<InputRanges>...>,
-                    detail::common_type_t<range_category_t<InputRanges>...>,
+                    common_type_t<range_category_t<InputRanges>...>,
                     std::tuple<range_reference_t<detail::add_const_if_t<InputRanges, Const>>...>,
-                    detail::common_type_t<range_difference_t<InputRanges>...>
+                    common_type_t<range_difference_t<InputRanges>...>
                 >
             {
                 using reference = typename basic_iterator::reference;

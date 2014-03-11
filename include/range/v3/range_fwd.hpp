@@ -51,6 +51,12 @@ namespace ranges
             struct sizer;
         }
 
+        template<typename ...Ts>
+        struct common_type;
+
+        template<typename ...Ts>
+        using common_type_t = typename common_type<Ts...>::type;
+
         template<typename Sig>
         using result_of_t = typename std::result_of<Sig>::type;
 
@@ -165,9 +171,6 @@ namespace ranges
 
             template<typename T, bool B>
             using add_const_if_t = conditional_t<B, T const, T>;
-
-            template<typename...Ts>
-            using common_type_t = typename std::common_type<Ts...>::type;
 
             template<typename T>
             using not_t = std::integral_constant<bool, !T::value>;
