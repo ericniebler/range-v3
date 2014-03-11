@@ -60,13 +60,15 @@ namespace ranges
                 using is_finite_t = detail::not_t<is_infinite<T>>;
 
                 // Valid expressions
-                template<typename T>
+                template<typename T,
+                    typename CI = iterator_t<detail::as_cref_t<T>>, // const iterator
+                    typename CS = sentinel_t<detail::as_cref_t<T>>> // const sentinel
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Iterator>(ranges::begin(t)),
                         concepts::model_of<Iterator>(ranges::cbegin(t)),
-                        concepts::convertible_to<decltype(ranges::cbegin(t))>(ranges::begin(t)),
-                        concepts::convertible_to<decltype(ranges::cend(t))>(ranges::end(t)),
+                        concepts::convertible_to<CI>(ranges::begin(t)),
+                        concepts::convertible_to<CS>(ranges::end(t)),
                         concepts::model_of<EqualityComparable>(ranges::begin(t), ranges::end(t)),
                         concepts::model_of<EqualityComparable>(ranges::cbegin(t), ranges::cend(t))
                     ));

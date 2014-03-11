@@ -25,14 +25,6 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename T>
-            using as_ref_t =
-                typename std::remove_const<typename std::remove_reference<T>::type>::type &;
-
-            template<typename T>
-            using as_cref_t =
-                typename std::add_const<typename std::remove_reference<T>::type>::type &;
-
             // An Iterable is container-like if the constness of its reference type
             // is sensitive to the constness of the Iterable
             template<typename T>

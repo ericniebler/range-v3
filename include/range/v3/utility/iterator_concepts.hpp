@@ -141,7 +141,7 @@ namespace ranges
             struct RandomAccessIterator
               : refines<BidirectionalIterator>
             {
-                template<typename T>
+                template<typename T, typename R = reference_t<T>>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<SignedIntegral>(t-t),
@@ -150,7 +150,7 @@ namespace ranges
                         t = t - (t-t),
                         t += (t-t),
                         t -= (t-t),
-                        concepts::convertible_to<decltype(*t)>(t[t-t]),
+                        concepts::convertible_to<R>(t[t-t]),
                         concepts::model_of<Orderable>(t)
                     ));
             };
@@ -163,14 +163,14 @@ namespace ranges
 
                 // Axiom: *it and *it.base() must refer to the same value
                 // Axiom: *next(it) and *next(it).base() must refer to the same value
-                template<typename T>
+                template<typename T, typename BI = base_iterator_t<T>>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Iterator>(t.base()),
                         concepts::has_type<Iterator::difference_t<T>>(t.count()),
                         concepts::is_true(std::is_same<
                                               Iterator::reference_t<T>,
-                                              Iterator::reference_t<decltype(t.base())>>{}),
+                                              Iterator::reference_t<BI>>{}),
                         T{t.base(), t.count()}
                     ));
             };

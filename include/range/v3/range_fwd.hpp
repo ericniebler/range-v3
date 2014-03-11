@@ -175,6 +175,14 @@ namespace ranges
             template<typename T>
             using decay_t = typename std::decay<T>::type;
 
+            template<typename T>
+            using as_ref_t =
+                typename std::remove_const<typename std::remove_reference<T>::type>::type &;
+
+            template<typename T>
+            using as_cref_t =
+                typename std::add_const<typename std::remove_reference<T>::type>::type &;
+
             struct get_first;
             struct get_second;
 
