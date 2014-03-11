@@ -11,78 +11,17 @@
 #ifndef RANGES_V3_ALGORITHM_FILL_N_HPP
 #define RANGES_V3_ALGORITHM_FILL_N_HPP
 
-#include <utility>
-#include <functional>
-#include <range/v3/distance.hpp>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/unreachable.hpp>
+#include <range/v3/range_traits.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename ForwardIterator, typename Sentinel, typename Size, typename Value>
-            void fill_n(ForwardIterator begin, Sentinel end, Size n, Value const & val)
-            {
-                for(; n != 0; --n, ++begin)
-                {
-                    RANGES_ASSERT(begin != end);
-                    *begin = val;
-                }
-            }
-        }
 
-        struct filler_n : bindable<filler_n>
-        {
-        private:
-            template<typename ForwardIterable, typename Size, typename Value>
-            static void
-            impl(ForwardIterable && rng, Size n, Value const & val,
-                concepts::Iterable)
-            {
-                detail::fill_n(ranges::begin(rng), ranges::end(rng), n, val);
-            }
-            template<typename ForwardIterable, typename Size, typename Value>
-            static void
-            impl(ForwardIterable && rng, Size n, Value const & val,
-                concepts::CountedIterable)
-            {
-                RANGES_ASSERT(n <= ranges::distance(rng));
-                detail::fill_n(ranges::begin(rng).base(), unreachable{}, n, val);
-            }
-        public:
-            /// \brief template function \c filler_n::operator()
-            ///
-            /// range-based version of the \c fill_n std algorithm
-            ///
-            /// \pre \c ForwardIterable is a model of the ForwardIterable concept
-            /// \pre <tt>n \<= std::distance(ranges::begin(rng), ranges::end(rng))</tt>
-            template<typename ForwardIterable, typename Size, typename Value>
-            static ForwardIterable invoke(filler_n, ForwardIterable && rng, Size n, Value const & val)
-            {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
-                filler_n::impl(std::forward<ForwardIterable>(rng), n, val,
-                    range_concept_t<ForwardIterable>{});
-                return std::forward<ForwardIterable>(rng);
-            }
-
-            /// \overload
-            template<typename Size, typename Value>
-            static auto invoke(filler_n fill_n, Size n, Value && val) ->
-                decltype(fill_n.move_bind(std::placeholders::_1, n, std::forward<Value>(val)))
-            {
-                return fill_n.move_bind(std::placeholders::_1, n, std::forward<Value>(val));
-            }
-        };
-
-        RANGES_CONSTEXPR filler_n fill_n {};
-
-    } // inline namespace v3
-
+    } // namespace v3
 } // namespace ranges
 
 #endif // include guard

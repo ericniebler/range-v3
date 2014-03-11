@@ -11,50 +11,17 @@
 #ifndef RANGES_V3_ALGORITHM_STABLE_PARTITION_HPP
 #define RANGES_V3_ALGORITHM_STABLE_PARTITION_HPP
 
-#include <utility>
-#include <algorithm>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct stable_partitioner : bindable<stable_partitioner>
-        {
-            /// \brief template function stable_partition
-            ///
-            /// range-based version of the stable_partition std algorithm
-            ///
-            /// \pre BidirectionalRange is a model of the BidirectionalRange concept
-            /// \pre UnaryPredicate is a model of the UnaryPredicate concept
-            template<typename BidirectionalRange, typename UnaryPredicate>
-            static range_iterator_t<BidirectionalRange>
-            invoke(stable_partitioner, BidirectionalRange && rng, UnaryPredicate pred)
-            {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
-                CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
-                                                      range_reference_t<BidirectionalRange>>());
-                return std::stable_partition(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(std::move(pred)));
-            }
 
-            /// \overload
-            template<typename UnaryPredicate>
-            static auto invoke(stable_partitioner stable_partition, UnaryPredicate pred) ->
-                decltype(stable_partition.move_bind(std::placeholders::_1, std::move(pred)))
-            {
-                return stable_partition.move_bind(std::placeholders::_1, std::move(pred));
-            }
-        };
-
-        RANGES_CONSTEXPR stable_partitioner stable_partition{};
-
-    } // inline namespace v3
-
+    } // namespace v3
 } // namespace ranges
 
 #endif // include guard

@@ -11,64 +11,17 @@
 #ifndef RANGES_V3_ALGORITHM_SORT_HPP
 #define RANGES_V3_ALGORITHM_SORT_HPP
 
-#include <utility>
-#include <algorithm>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct sorter : bindable<sorter>,
-                        pipeable<sorter>
-        {
-            /// \brief template function sort
-            ///
-            /// range-based version of the sort std algorithm
-            ///
-            /// \pre RandomAccessRange is a model of the RandomAccessRange concept
-            /// \pre BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename RandomAccessRange,
-                CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>())>
-            static RandomAccessRange invoke(sorter, RandomAccessRange && rng)
-            {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
-                std::sort(ranges::begin(rng), ranges::end(rng));
-                return std::forward<RandomAccessRange>(rng);
-            }
 
-            /// \overload
-            template<typename RandomAccessRange, typename BinaryPredicate>
-            static RandomAccessRange invoke(sorter, RandomAccessRange && rng, BinaryPredicate pred)
-            {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<RandomAccessRange>,
-                                                       range_reference_t<RandomAccessRange>>());
-                std::sort(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(std::move(pred)));
-                return std::forward<RandomAccessRange>(rng);
-            }
-
-            /// \overload
-            template<typename BinaryPredicate,
-                CONCEPT_REQUIRES_(!ranges::Range<BinaryPredicate>())>
-            static auto invoke(sorter sort, BinaryPredicate pred) ->
-                decltype(sort.move_bind(std::placeholders::_1, std::move(pred)))
-            {
-                return sort.move_bind(std::placeholders::_1, std::move(pred));
-            }
-        };
-
-        RANGES_CONSTEXPR sorter sort {};
-
-    } // inline namespace v3
-
+    } // namespace v3
 } // namespace ranges
 
 #endif // include guard

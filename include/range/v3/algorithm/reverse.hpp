@@ -11,37 +11,17 @@
 #ifndef RANGES_V3_ALGORITHM_REVERSE_HPP
 #define RANGES_V3_ALGORITHM_REVERSE_HPP
 
-#include <utility>
-#include <algorithm>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct reverser : bindable<reverser>, pipeable<reverser>
-        {
-            /// \brief template function \c reverser::operator()
-            ///
-            /// range-based version of the \c reverse std algorithm
-            ///
-            /// \pre \c BidirectionalRange is a model of the BidirectionalRange concept
-            template<typename BidirectionalRange>
-            static BidirectionalRange invoke(reverser, BidirectionalRange && rng)
-            {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
-                std::reverse(ranges::begin(rng), ranges::end(rng));
-                return std::forward<BidirectionalRange>(rng);
-            }
-        };
 
-        RANGES_CONSTEXPR reverser reverse {};
-
-    } // inline namespace v3
-
+    } // namespace v3
 } // namespace ranges
 
 #endif // include guard

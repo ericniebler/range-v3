@@ -11,61 +11,40 @@
 #ifndef RANGES_V3_ALGORITHM_FOR_EACH_HPP
 #define RANGES_V3_ALGORITHM_FOR_EACH_HPP
 
-#include <utility>
-#include <functional>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
+        template<typename InputIterator, typename Sentinel, typename Fun,
+            CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
+                              ranges::EqualityComparable<InputIterator, Sentinel>() &&
+                              ranges::Callable<Fun, iterator_reference_t<InputIterator>>())>
+        InputIterator
+        for_each(InputIterator begin, Sentinel end, Fun fun)
         {
-            template<typename InputIterator, typename Sentinel, typename UnaryFunction>
-            UnaryFunction for_each(InputIterator begin, Sentinel end, UnaryFunction fun)
+            for(; begin != end; ++begin)
             {
-                for(; begin != end; ++begin)
-                    fun(*begin);
-                return fun;
+                fun(*begin);
             }
+            return begin;
         }
 
-        struct for_eacher : bindable<for_eacher>
+        template<typename InputIterable, typename Fun,
+            CONCEPT_REQUIRES_(ranges::InputIterable<InputIterable>() &&
+                              ranges::Callable<Fun, range_reference_t<InputIterable>>())>
+        range_iterator_t<InputIterable>
+        for_each(InputIterable &rng, Fun fun)
         {
-            /// \brief template function \c for_eacher::operator()
-            ///
-            /// range-based version of the \c for_each std algorithm
-            ///
-            /// \pre \c InputIterable is a model of the InputIterable concept
-            /// \pre \c UnaryFunction is a model of the UnaryFunction concept
-            template<typename InputIterable, typename UnaryFunction>
-            static UnaryFunction invoke(for_eacher, InputIterable && rng, UnaryFunction fun)
-            {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
-                CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
-                                                range_reference_t<InputIterable>>());
-                return detail::for_each(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(std::move(fun)));
-            }
+            return ranges::for_each(ranges::begin(rng), ranges::end(rng), fun);
+        }
 
-            /// \overload
-            /// for rng | for_each(fun)
-            template<typename UnaryFunction>
-            static auto invoke(for_eacher for_each, UnaryFunction fun) ->
-                decltype(for_each.move_bind(std::placeholders::_1, std::move(fun)))
-            {
-                return for_each.move_bind(std::placeholders::_1, std::move(fun));
-            }
-        };
-
-        RANGES_CONSTEXPR for_eacher for_each {};
-
-    } // inline namespace v3
-
+    } // namespace v3
 } // namespace ranges
 
 #endif // include guard

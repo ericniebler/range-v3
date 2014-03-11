@@ -11,53 +11,17 @@
 #ifndef RANGES_V3_ALGORITHM_FILL_HPP
 #define RANGES_V3_ALGORITHM_FILL_HPP
 
-#include <utility>
-#include <functional>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/range_traits.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename ForwardIterator, typename Sentinel, typename Value>
-            void fill(ForwardIterator begin, Sentinel end, Value const & val)
-            {
-                for(; begin != end; ++begin)
-                    *begin = val;
-            }
-        }
 
-        struct filler : bindable<filler>
-        {
-            /// \brief template function \c filler::operator()
-            ///
-            /// range-based version of the \c fill std algorithm
-            ///
-            /// \pre \c ForwardIterable is a model of the ForwardIterable concept
-            template<typename ForwardIterable, typename Value>
-            static ForwardIterable invoke(filler, ForwardIterable && rng, Value const & val)
-            {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
-                detail::fill(ranges::begin(rng), ranges::end(rng), val);
-                return std::forward<ForwardIterable>(rng);
-            }
-
-            /// \overload
-            template<typename Value>
-            static auto invoke(filler fill, Value && val) ->
-                decltype(fill.move_bind(std::placeholders::_1, std::forward<Value>(val)))
-            {
-                return fill.move_bind(std::placeholders::_1, std::forward<Value>(val));
-            }
-        };
-
-        RANGES_CONSTEXPR filler fill {};
-
-    } // inline namespace v3
-}
+    } // namespace v3
+} // namespace ranges
 
 #endif // include guard
