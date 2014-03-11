@@ -59,8 +59,9 @@ namespace ranges
             {};
         }
 
-        // Users should specialize this to hook the Common
-        // until std gets a SFINAE-friendly std::common_type
+        // Users should specialize this to hook the Common concept
+        // until std gets a SFINAE-friendly std::common_type and there's
+        // some sane way to deal with cv and ref qualifiers.
         template<typename ...Ts>
         struct common_type
         {};
