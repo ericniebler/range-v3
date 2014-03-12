@@ -55,7 +55,7 @@ namespace ranges
                 template<typename InputRange, typename Value1, typename Value2,
                     CONCEPT_REQUIRES_(ranges::SameType<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
-                static transform_range_view<InputRange,
+                static transform_iterable_view<InputRange,
                                             replacer_fun<typename std::decay<Value1>::type>>
                 invoke(replacer, InputRange && rng, Value1 && old_value, Value2 && new_value)
                 {

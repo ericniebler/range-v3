@@ -806,7 +806,7 @@ int main()
         std::cout << "> " << line << '\n';
     }
     auto b = lines2.begin();
-    decltype(lines2)::const_iterator bc = b;
+    range_iterator_t<decltype(lines2) const> bc = b;
 
     std::cout << "\n";
     for(auto const &line : lines2.base().base())//.base())

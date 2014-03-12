@@ -24,9 +24,8 @@ namespace ranges
         template<typename InputIterable, typename Value>
         struct delimit_iterable_view
           : range_adaptor<
-                delimit_iterable_view<InputIterable, Value>
-              , InputIterable
-              , is_infinite<InputIterable>::value>
+                delimit_iterable_view<InputIterable, Value>,
+                InputIterable>
         {
         private:
             friend range_core_access;

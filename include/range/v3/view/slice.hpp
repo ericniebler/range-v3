@@ -46,13 +46,6 @@ namespace ranges
             // and move correctly.
             range_iterator_t<InputIterable> begin_;
 
-            static constexpr bool use_other_iterator_on_copy_and_move()
-            {
-                return std::is_reference<InputIterable>::value ||
-                       std::is_same<range_category_t<InputIterable>,
-                           std::input_iterator_tag>::value;
-            }
-
             static constexpr bool is_bidi()
             {
                 return std::is_same<range_category_t<InputIterable>,
@@ -187,17 +180,13 @@ namespace ranges
               : rng_(that.rng_)
               , from_(that.from_)
               , to_(that.to_)
-              , begin_(use_other_iterator_on_copy_and_move() ?
-                           that.begin_ :
-                           ranges::next(ranges::begin(rng_), from_))
+              , begin_(ranges::next(ranges::begin(rng_), from_))
             {}
             slice_range_view(slice_range_view &&that)
               : rng_(std::move(that).rng_)
               , from_(that.from_)
               , to_(that.to_)
-              , begin_(use_other_iterator_on_copy_and_move() ?
-                           std::move(that).begin_ :
-                           ranges::next(ranges::begin(rng_), from_))
+              , begin_(ranges::next(ranges::begin(rng_), from_))
             {}
             // BUGBUG
             slice_range_view &operator=(slice_range_view const &that) = delete;
