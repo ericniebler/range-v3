@@ -48,14 +48,36 @@ namespace ranges
             template<typename T, typename U,
                      typename TT = decay_t<T>, typename UU = decay_t<U>>
             struct common_type2
-            {
-                // Recurse to catch user specializations
-                using type = common_type_t<TT, UU>;
-            };
+              : common_type<TT, UU> // Recurse to catch user specializations
+            {};
 
             template<typename T, typename U>
             struct common_type2<T, U, T, U>
               : common_type_if<T, U>
+            {};
+
+            template<typename Meta, typename Enable = void>
+            struct has_type
+              : std::false_type
+            {};
+
+            template<typename Meta>
+            struct has_type<Meta, always_t<void, typename Meta::type>>
+              : std::true_type
+            {};
+
+            template<typename Meta, typename...Ts>
+            struct common_type_recurse
+              : common_type<typename Meta::type, Ts...>
+            {};
+
+            template<typename Meta, typename...Ts>
+            struct common_type_recurse_if
+              : std::conditional<
+                    has_type<Meta>::value,
+                    common_type_recurse<Meta, Ts...>,
+                    empty
+                >::type
             {};
         }
 
@@ -79,9 +101,8 @@ namespace ranges
 
         template<typename T, typename U, typename... Vs>
         struct common_type<T, U, Vs...>
-        {
-            using type = common_type_t<common_type_t<T, U>, Vs...>;
-        };
+          : detail::common_type_recurse_if<common_type<T, U>, Vs...>
+        {};
     }
 }
 
