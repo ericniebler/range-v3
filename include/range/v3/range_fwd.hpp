@@ -211,6 +211,9 @@ namespace ranges
 
         struct use_default;
 
+        template<typename Iterable, typename Void = void>
+        struct is_infinite;
+
         struct range_base
         {};
 
@@ -223,7 +226,9 @@ namespace ranges
         template<typename Derived, bool Infinite = false>
         struct range_facade;
 
-        template<typename Derived, typename BaseIterable, bool Infinite = false>
+        template<typename Derived,
+                 typename BaseIterable,
+                 bool Infinite = is_infinite<BaseIterable>::value>
         struct range_adaptor;
 
         template<typename Iterator, typename Sentinel>
@@ -448,7 +453,7 @@ namespace ranges
         }
 
         template<typename Rng, typename Fun>
-        struct transform_range_view;
+        struct transform_iterable_view;
 
         namespace view
         {
@@ -475,10 +480,10 @@ namespace ranges
         }
 
         template<typename InputRange>
-        using keys_range_view = transform_range_view<InputRange, detail::get_first>;
+        using keys_range_view = transform_iterable_view<InputRange, detail::get_first>;
 
         template<typename InputRange>
-        using values_range_view = transform_range_view<InputRange, detail::get_second>;
+        using values_range_view = transform_iterable_view<InputRange, detail::get_second>;
 
         namespace view
         {

@@ -26,7 +26,7 @@ namespace ranges
     {
         template<typename Iterable>
         struct as_range_view
-          : range_adaptor<as_range_view<Iterable>, Iterable, is_infinite<Iterable>::value>
+          : range_adaptor<as_range_view<Iterable>, Iterable>
         {
         private:
             friend range_core_access;

@@ -24,7 +24,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Iterable, typename Void = void>
+        template<typename Iterable, typename Void /*= void*/>
         struct is_infinite
           : std::is_base_of<detail::is_infinite<true>, Iterable>
         {};

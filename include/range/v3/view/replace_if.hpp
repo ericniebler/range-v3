@@ -53,9 +53,9 @@ namespace ranges
                 };
             public:
                 template<typename InputRange, typename UnaryPredicate, typename Value>
-                static transform_range_view<InputRange,
-                                            replacer_if_fun<UnaryPredicate,
-                                                typename std::decay<Value>::type>>
+                static transform_iterable_view<InputRange,
+                                               replacer_if_fun<UnaryPredicate,
+                                                    typename std::decay<Value>::type>>
                 invoke(replacer_if, InputRange && rng, UnaryPredicate pred, Value && new_value)
                 {
                     CONCEPT_ASSERT(ranges::InputRange<InputRange>());
