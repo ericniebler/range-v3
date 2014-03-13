@@ -348,7 +348,7 @@ namespace ranges
         using counted_sentinel = basic_range_sentinel<counted_iterable_view<InputIterator>>;
 
         template<typename Rng, typename Pred>
-        struct filter_range_view;
+        struct filter_iterable_view;
 
         namespace view
         {
