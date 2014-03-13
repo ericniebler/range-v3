@@ -29,24 +29,32 @@ namespace ranges
         private:
             friend range_core_access;
             std::istream *sin_;
-            Value obj_;
-            void next()
+            mutable Value obj_;
+            struct impl
             {
-                *sin_ >> obj_;
-            }
-            Value const &current() const
+                istream_iterable const *rng_;
+                void next()
+                {
+                    *rng_->sin_ >> rng_->obj_;
+                }
+                Value const &current() const
+                {
+                    return rng_->obj_;
+                }
+                bool done() const
+                {
+                    return !*rng_->sin_;
+                }
+            };
+            impl begin_impl() const
             {
-                return obj_;
-            }
-            bool done() const
-            {
-                return !*sin_;
+                return {this};
             }
         public:
             istream_iterable(std::istream &sin)
               : sin_(&sin), obj_{}
             {
-                next(); // prime the pump
+                *sin_ >> obj_; // prime the pump
             }
         };
 

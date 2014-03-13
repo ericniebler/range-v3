@@ -15,13 +15,12 @@
 #define RANGES_V3_VIEW_FILTER_HPP
 
 #include <utility>
-#include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/range_facade.hpp>
-#include <range/v3/utility/compressed_pair.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 
@@ -29,99 +28,93 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename InputRange, typename UnaryPredicate>
-        struct filter_range_view
-          : range_facade<filter_range_view<InputRange, UnaryPredicate>,
-                         is_infinite<InputRange>::value>
+        template<typename InputIterable, typename UnaryPredicate>
+        struct filter_iterable_view
+          : range_adaptor<
+                filter_iterable_view<InputIterable, UnaryPredicate>,
+                InputIterable>
         {
         private:
             friend range_core_access;
-            compressed_pair<InputRange, invokable_t<UnaryPredicate>> rng_and_pred_;
+            using base_t = range_adaptor_t<filter_iterable_view>;
+            template<bool Const>
+            using impl_base_t = basic_adaptor_impl<InputIterable, Const>;
+            template<bool Const>
+            using sentinel_base_t = basic_adaptor_sentinel<InputIterable, Const>;
+
+            invokable_t<UnaryPredicate> pred_;
 
             template<bool Const>
-            struct basic_impl
+            struct basic_impl : impl_base_t<Const>
             {
-                using base_range = detail::add_const_if_t<InputRange, Const>;
-                using base_range_iterator = range_iterator_t<base_range>;
-                using filter_range_view_ = detail::add_const_if_t<filter_range_view, Const>;
-
-                filter_range_view_ *rng_;
-                base_range_iterator it_;
-
-                // TODO use this in range_facade
-                using difference_type = range_difference_t<InputRange>;
-
-                constexpr basic_impl()
-                  : rng_{}, it_{}
+                using filter_iterable_view_ = detail::add_const_if_t<filter_iterable_view, Const>;
+                filter_iterable_view_ *rng_;
+                using impl_base_t<Const>::impl_base_t;
+                basic_impl() = default;
+                basic_impl(impl_base_t<Const> base, filter_iterable_view_ &rng)
+                  : impl_base_t<Const>(std::move(base)), rng_(&rng)
                 {}
-                basic_impl(filter_range_view_ &rng, base_range_iterator it)
-                  : rng_(&rng), it_(std::move(it))
-                {
-                    satisfy();
-                }
-                // For iterator->const_iterator conversions
-                CONCEPT_REQUIRES(!Const) operator basic_impl<!Const>() const
-                {
-                    return {*rng_, it_};
-                }
-                template<bool OtherConst>
-                bool equal(basic_impl<OtherConst> const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    return it_ == that.it_;
-                }
-                auto current() const -> decltype(*it_)
-                {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
-                    return *it_;
-                }
                 void next()
                 {
-                    RANGES_ASSERT(it_ != ranges::end(rng_->base()));
-                    ++it_;
+                    this->base().next();
                     satisfy();
                 }
-                CONCEPT_REQUIRES(BidirectionalIterable<InputRange>())
+                CONCEPT_REQUIRES(BidirectionalIterable<InputIterable>())
                 void prev()
                 {
-                    while(!rng_->rng_and_pred_.second()(*--it_))
-                        ;
+                    do
+                    {
+                        this->base().prev();
+                    } while (!rng_->pred_(this->current()));
                 }
                 void satisfy()
                 {
-                    auto const e = ranges::end(rng_->base());
-                    while(it_ != e && !rng_->rng_and_pred_.second()(*it_))
-                        ++it_;
+                    auto const e = rng_->end_impl();
+                    while(!e.equal(*this) && !rng_->pred_(this->current()))
+                        this->next();
                 }
             };
+
+            template<bool Const>
+            struct basic_sentinel : sentinel_base_t<Const>
+            {
+                using sentinel_base_t<Const>::sentinel_base_t;
+                basic_sentinel() = default;
+                basic_sentinel(sentinel_base_t<Const> base, filter_iterable_view const &)
+                  : sentinel_base_t<Const>(std::move(base))
+                {}
+            };
+
+            template<bool Const>
+            using basic_sentinel_t =
+                detail::conditional_t<
+                    (Range<InputIterable>()), basic_impl<Const>, basic_sentinel<Const>>;
+
             basic_impl<false> begin_impl()
             {
-                return {*this, ranges::begin(base())};
+                basic_impl<false> impl{this->adaptor().begin_impl(), *this};
+                impl.satisfy();
+                return impl;
             }
             basic_impl<true> begin_impl() const
             {
-                return {*this, ranges::begin(base())};
+                basic_impl<true> impl{this->adaptor().begin_impl(), *this};
+                impl.satisfy();
+                return impl;
             }
-            basic_impl<false> end_impl()
+            basic_sentinel_t<false> end_impl()
             {
-                return {*this, ranges::end(base())};
+                return {this->adaptor().end_impl(), *this};
             }
-            basic_impl<true> end_impl() const
+            basic_sentinel_t<true> end_impl() const
             {
-                return {*this, ranges::end(base())};
+                return {this->adaptor().end_impl(), *this};
             }
         public:
-            filter_range_view(InputRange && rng, UnaryPredicate pred)
-              : rng_and_pred_{std::forward<InputRange>(rng), make_invokable(std::move(pred))}
+            filter_iterable_view(InputIterable && rng, UnaryPredicate pred)
+              : base_t(std::forward<InputIterable>(rng))
+              , pred_(ranges::make_invokable(std::move(pred)))
             {}
-            InputRange & base()
-            {
-                return rng_and_pred_.first();
-            }
-            InputRange const & base() const
-            {
-                return rng_and_pred_.first();
-            }
         };
 
         namespace view
@@ -138,18 +131,18 @@ namespace ranges
                     filterer1(UnaryPredicate pred)
                       : pred_(std::move(pred))
                     {}
-                    template<typename InputRange, typename This>
-                    static filter_range_view<InputRange, UnaryPredicate> pipe(InputRange && rng, This && this_)
+                    template<typename InputIterable, typename This>
+                    static filter_iterable_view<InputIterable, UnaryPredicate> pipe(InputIterable && rng, This && this_)
                     {
-                        return {std::forward<InputRange>(rng), std::forward<This>(this_).pred_};
+                        return {std::forward<InputIterable>(rng), std::forward<This>(this_).pred_};
                     }
                 };
             public:
-                template<typename InputRange, typename UnaryPredicate>
-                static filter_range_view<InputRange, UnaryPredicate>
-                invoke(filterer, InputRange && rng, UnaryPredicate pred)
+                template<typename InputIterable, typename UnaryPredicate>
+                static filter_iterable_view<InputIterable, UnaryPredicate>
+                invoke(filterer, InputIterable && rng, UnaryPredicate pred)
                 {
-                    return {std::forward<InputRange>(rng), std::move(pred)};
+                    return {std::forward<InputIterable>(rng), std::move(pred)};
                 }
                 template<typename UnaryPredicate>
                 static filterer1<UnaryPredicate> invoke(filterer, UnaryPredicate pred)

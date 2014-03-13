@@ -240,9 +240,6 @@ void test_stride_view()
 
     std::list<int> li;
     copy(v, std::back_inserter(li));
-    // static_assert(
-    //     sizeof((li|view::stride(3)).begin()) ==
-    //     sizeof(void*)+sizeof(li.begin())+sizeof(int)+sizeof(std::ptrdiff_t),"");
     for(int i : li | view::stride(3))
         std::cout << i << ' ';
     std::cout << '\n';
@@ -738,6 +735,25 @@ void test_common_range_iterator()
         common_range_iterator<counted_iterator<int*>, counted_sentinel<int*>>>::value, "");
 }
 
+void test_filter()
+{
+    using namespace ranges;
+    std::cout << "\ntest filter\n";
+    std::stringstream sin("1 2 3 4 5 6 7 8 9");
+    auto ints = istream<int>(sin);
+    auto evens = ints | view::filter([](int i){return i % 2 == 0; });
+    using evens_t = decltype(evens);
+    range_iterator_t<evens_t> i = evens.begin();
+    range_iterator_t<evens_t const> j = evens.begin();
+    j = i;
+    range_sentinel_t<evens_t> k = evens.end();
+    range_sentinel_t<evens_t const> l = evens.end();
+    l = k;
+    for (; j != evens.end(); ++j)
+        std::cout << *j << ' ';
+    std::cout << '\n';
+}
+
 int main()
 {
     using namespace ranges;
@@ -745,8 +761,10 @@ int main()
 
     test_adjacent_filter();
     test_unique_view();
+    test_filter();
 
     // Pipeable algorithms
+    std::cout << '\n';
     std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 ");
     istream<int>(sinx)
         | view::as_range
@@ -790,7 +808,7 @@ int main()
     std::cout << "\n";
     std::istringstream sin{"this is his face"};
     istream_iterable<std::string> lines{sin};
-    for(auto line : view::filter(lines | view::as_range, [](std::string s){return s.length()>2;}))
+    for (auto line : view::filter(lines, [](std::string s){return s.length()>2; }) | view::as_range)
         std::cout << "> " << line << '\n';
 
     std::cout << "\n";
