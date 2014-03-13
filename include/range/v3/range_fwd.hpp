@@ -268,10 +268,10 @@ namespace ranges
         using invokable_t = decltype(make_invokable(std::declval<T>()));
 
         template<typename T>
-        struct istream_range;
+        struct istream_iterable;
 
         template<typename T>
-        istream_range<T> istream(std::istream & sin);
+        istream_iterable<T> istream(std::istream & sin);
 
         template<typename Iterator, typename Sentinel = Iterator>
         struct iterator_range;

@@ -52,19 +52,19 @@ namespace ranges
                     }
                 };
             public:
-                template<typename InputRange, typename Value1, typename Value2,
+                template<typename InputIterable, typename Value1, typename Value2,
                     CONCEPT_REQUIRES_(ranges::SameType<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
-                static transform_iterable_view<InputRange,
+                static transform_iterable_view<InputIterable,
                                             replacer_fun<typename std::decay<Value1>::type>>
-                invoke(replacer, InputRange && rng, Value1 && old_value, Value2 && new_value)
+                invoke(replacer, InputIterable && rng, Value1 && old_value, Value2 && new_value)
                 {
-                    CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                    CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputRange>,
+                    CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputIterable>,
                         typename std::decay<Value1>::type const &>());
                     CONCEPT_ASSERT(ranges::Convertible<typename std::decay<Value1>::type const &,
-                        range_reference_t<InputRange>>());
-                    return {std::forward<InputRange>(rng),
+                        range_reference_t<InputIterable>>());
+                    return {std::forward<InputIterable>(rng),
                             {std::forward<Value1>(old_value),
                              std::forward<Value2>(new_value)}};
 
