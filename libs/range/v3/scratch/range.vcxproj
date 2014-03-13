@@ -130,7 +130,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\unique_copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\as_iterable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\advance_bounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
