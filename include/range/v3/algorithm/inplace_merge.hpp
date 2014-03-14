@@ -39,8 +39,8 @@ namespace ranges
             invoke(inplace_merger, BidirectionalRange && rng,
                 range_iterator_t<BidirectionalRange> middle)
             {
-                // Can this be FiniteBidirectionalIterable?
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<BidirectionalRange>>());
                 std::inplace_merge(ranges::begin(rng), std::move(middle), ranges::end(rng));
                 return std::forward<BidirectionalRange>(rng);
@@ -53,7 +53,8 @@ namespace ranges
             invoke(inplace_merger, BidirectionalRange && rng,
                 range_iterator_t<BidirectionalRange> middle, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<BidirectionalRange>,
                                                        range_reference_t<BidirectionalRange>>());

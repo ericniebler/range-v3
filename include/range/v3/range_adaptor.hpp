@@ -74,18 +74,18 @@ namespace ranges
             {
                 return that.equal(*this);
             }
-            CONCEPT_REQUIRES(BidirectionalIterable<Iterable>())
+            CONCEPT_REQUIRES(BidirectionalIterator<range_iterator_t<Iterable>>())
             void prev()
             {
                 --it_;
             }
-            CONCEPT_REQUIRES(RandomAccessIterable<Iterable>())
+            CONCEPT_REQUIRES(RandomAccessIterator<range_iterator_t<Iterable>>())
             void advance(range_difference_t<Iterable> n)
             {
                 it_ += n;
             }
             template<bool OtherConst,
-                     CONCEPT_REQUIRES_(RandomAccessIterable<Iterable>())>
+                     CONCEPT_REQUIRES_(RandomAccessIterator<range_iterator_t<Iterable>>())>
             range_difference_t<Iterable>
             distance_to(basic_adaptor_impl<Iterable, OtherConst> const &that) const
             {

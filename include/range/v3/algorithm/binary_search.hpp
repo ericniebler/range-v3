@@ -49,7 +49,10 @@ namespace ranges
             template<typename ForwardIterable, typename Value>
             static bool invoke(binary_searcher, ForwardIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
+                static_assert(!ranges::is_infinite<ForwardIterable>::value,
+                    "Trying to binary search an infinite range");
                 return detail::binary_search(ranges::begin(rng), ranges::end(rng), val);
             }
 
@@ -58,10 +61,13 @@ namespace ranges
             static bool invoke(binary_searcher, ForwardIterable && rng, Value const & val,
                 BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable>,
                                                        range_reference_t<ForwardIterable>>());
+                static_assert(!ranges::is_infinite<ForwardIterable>::value,
+                    "Trying to binary search an infinite range");
                 return detail::binary_search(ranges::begin(rng), ranges::end(rng), val,
                     ranges::make_invokable(std::move(pred)));
             }

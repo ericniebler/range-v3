@@ -48,7 +48,8 @@ namespace ranges
             static range_iterator_t<InputIterable>
             invoke(finder_if, InputIterable && rng, UnaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
                                                       range_reference_t<InputIterable>>());
                 return detail::find_if(ranges::begin(rng), ranges::end(rng),

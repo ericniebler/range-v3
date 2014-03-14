@@ -35,7 +35,8 @@ namespace ranges
             static BidirectionalIterator
             invoke(backward_copier, BidirectionalRange && rng, BidirectionalIterator out)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
                 CONCEPT_ASSERT(ranges::OutputIterator<BidirectionalIterator,
                                                       range_reference_t<BidirectionalRange>>());

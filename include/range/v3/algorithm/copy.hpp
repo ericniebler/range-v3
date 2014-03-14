@@ -43,7 +43,8 @@ namespace ranges
             template<typename InputIterable, typename OutputIterator>
             static OutputIterator invoke(copier, InputIterable && rng, OutputIterator out)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable>>());
                 return detail::copy(ranges::begin(rng), ranges::end(rng), std::move(out));

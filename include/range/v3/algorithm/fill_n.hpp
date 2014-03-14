@@ -34,27 +34,18 @@ namespace ranges
                     *begin = val;
                 }
             }
+
+            template<typename ForwardIterator, typename Size, typename Value>
+            void fill_n(counted_iterator<ForwardIterator> begin,
+                        counted_sentinel<ForwardIterator> end, Size n, Value const & val)
+            {
+                RANGES_ASSERT(n <= end.count() - begin.count());
+                return detail::fill_n(begin.base(), unreachable{}, n, val);
+            }
         }
 
         struct filler_n : bindable<filler_n>
         {
-        private:
-            template<typename ForwardIterable, typename Size, typename Value>
-            static void
-            impl(ForwardIterable && rng, Size n, Value const & val,
-                concepts::Iterable)
-            {
-                detail::fill_n(ranges::begin(rng), ranges::end(rng), n, val);
-            }
-            template<typename ForwardIterable, typename Size, typename Value>
-            static void
-            impl(ForwardIterable && rng, Size n, Value const & val,
-                concepts::CountedIterable)
-            {
-                RANGES_ASSERT(n <= ranges::distance(rng));
-                detail::fill_n(ranges::begin(rng).base(), unreachable{}, n, val);
-            }
-        public:
             /// \brief template function \c filler_n::operator()
             ///
             /// range-based version of the \c fill_n std algorithm
@@ -64,9 +55,9 @@ namespace ranges
             template<typename ForwardIterable, typename Size, typename Value>
             static ForwardIterable invoke(filler_n, ForwardIterable && rng, Size n, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
-                filler_n::impl(std::forward<ForwardIterable>(rng), n, val,
-                    range_concept_t<ForwardIterable>{});
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
+                detail::fill_n(ranges::begin(rng), ranges::end(rng), n, val);
                 return std::forward<ForwardIterable>(rng);
             }
 

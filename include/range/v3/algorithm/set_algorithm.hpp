@@ -175,8 +175,10 @@ namespace ranges
             static bool invoke(includer, InputIterable1 const & rng1, InputIterable2 const & rng2,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<InputIterable1 const>,
                                                        range_reference_t<InputIterable2 const>>());
@@ -204,8 +206,10 @@ namespace ranges
                 InputIterable2 const & rng2, OutputIterator out,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
@@ -237,8 +241,10 @@ namespace ranges
                 InputIterable2 const & rng2, OutputIterator out,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
@@ -270,8 +276,10 @@ namespace ranges
                 InputIterable2 const & rng2, OutputIterator out,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
@@ -303,8 +311,10 @@ namespace ranges
                 InputIterable2 const & rng2, OutputIterator out,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,

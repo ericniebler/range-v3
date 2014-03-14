@@ -56,8 +56,10 @@ namespace ranges
             static bool invoke(lexicographical_comparer, InputIterable1 const & rng1,
                 InputIterable2 const & rng2)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputIterable1 const>,
                                                           range_reference_t<InputIterable2 const>>());
                 return detail::lexicographical_compare(
@@ -70,8 +72,10 @@ namespace ranges
             static bool invoke(lexicographical_comparer, InputIterable1 const & rng1,
                 InputIterable2 const & rng2, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1 const>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<InputIterable1 const>,
                                                        range_reference_t<InputIterable2 const>>());

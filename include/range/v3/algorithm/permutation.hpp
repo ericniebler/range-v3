@@ -34,7 +34,8 @@ namespace ranges
             template<typename BidirectionalRange>
             static bool invoke(next_permutation_finder, BidirectionalRange && rng)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 return std::next_permutation(ranges::begin(rng), ranges::end(rng));
             }
 
@@ -43,7 +44,8 @@ namespace ranges
             static bool invoke(next_permutation_finder, BidirectionalRange && rng,
                 BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 return std::next_permutation(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }
@@ -62,7 +64,8 @@ namespace ranges
             template<typename BidirectionalRange>
             static bool invoke(prev_permutation_finder, BidirectionalRange && rng)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 return std::prev_permutation(ranges::begin(rng), ranges::end(rng));
             }
 
@@ -71,7 +74,8 @@ namespace ranges
             static bool invoke(prev_permutation_finder, BidirectionalRange && rng,
                 BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 return std::prev_permutation(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }

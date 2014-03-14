@@ -44,7 +44,8 @@ namespace ranges
             static range_iterator_t<InputIterable>
             invoke(finder, InputIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 return detail::find(ranges::begin(rng), ranges::end(rng), val);
             }
 

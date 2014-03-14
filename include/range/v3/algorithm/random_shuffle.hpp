@@ -36,7 +36,8 @@ namespace ranges
                      CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange invoke(random_shuffler, RandomAccessRange && rng)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::random_shuffle(ranges::begin(rng), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
@@ -46,7 +47,8 @@ namespace ranges
             static RandomAccessRange invoke(random_shuffler, RandomAccessRange && rng,
                 RandomNumberGenerator && gen)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 CONCEPT_ASSERT(ranges::Callable<RandomNumberGenerator>());
                 CONCEPT_ASSERT(ranges::Convertible<result_of_t<RandomNumberGenerator()>,
                                                    range_difference_t<RandomAccessRange>>());

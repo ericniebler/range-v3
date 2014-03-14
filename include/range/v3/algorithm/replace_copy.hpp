@@ -48,7 +48,8 @@ namespace ranges
             invoke(replacer_copier, ForwardIterable && rng, OutputIterator out,
                    Value const & old_value, Value const & new_value)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<ForwardIterable>>());
                 return detail::replace_copy(ranges::begin(rng), ranges::end(rng),

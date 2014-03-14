@@ -32,7 +32,7 @@ namespace ranges
             ForwardIterator1
             find_end(ForwardIterator1 begin1, Sentinel1 end1,
                      ForwardIterator2 begin2, Sentinel2 end2, BinaryPredicate pred,
-                     concepts::ForwardIterable, concepts::ForwardIterable)
+                     concepts::Iterable, concepts::Iterable)
             {
                 bool found = false;
                 ForwardIterator1 res;
@@ -74,7 +74,7 @@ namespace ranges
             ForwardIterator1
             find_end(ForwardIterator1 begin1, ForwardIterator1 end1,
                      ForwardIterator2 begin2, ForwardIterator2 end2, BinaryPredicate pred,
-                     concepts::ForwardRange, concepts::ForwardRange)
+                     concepts::Range, concepts::Range)
             {
                 return std::find_end(std::move(begin1), std::move(end1),
                                      std::move(begin2), std::move(end2),
@@ -97,8 +97,10 @@ namespace ranges
             static range_iterator_t<ForwardIterable1>
             invoke(end_finder, ForwardIterable1 && rng1, ForwardIterable2 const & rng2)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable1>());
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable1>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable1>>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2 const>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2 const>>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardIterable1>,
                                                           range_reference_t<ForwardIterable2 const>>());
                 return detail::find_end(ranges::begin(rng1), ranges::end(rng1),
@@ -114,8 +116,10 @@ namespace ranges
             invoke(end_finder, ForwardIterable1 && rng1, ForwardIterable2 const & rng2,
                    BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable1>());
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable1>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable1>>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2 const>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2 const>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable1>,
                                                        range_reference_t<ForwardIterable2 const>>());
@@ -133,7 +137,8 @@ namespace ranges
             invoke(end_finder find_end, ForwardIterable2 && rng2) ->
                 decltype(find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2)))
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2>>());
                 return find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2));
             }
 
@@ -146,7 +151,8 @@ namespace ranges
             invoke(end_finder find_end, ForwardIterable2 && rng2, BinaryPredicate pred) ->
                 decltype(find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2), std::move(pred)))
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2>>());
                 return find_end.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2), std::move(pred));
             }
         };

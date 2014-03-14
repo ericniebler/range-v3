@@ -34,37 +34,28 @@ namespace ranges
                     *out = gen();
                 return out;
             }
+
+            template<typename RandomAccessIterator, typename Size, typename Generator,
+                CONCEPT_REQUIRES_(ranges::RandomAccessIterator<RandomAccessIterator>())>
+            RandomAccessIterator
+            generate_n(RandomAccessIterator begin, RandomAccessIterator end, Size n, Generator gen)
+            {
+                RANGES_ASSERT(n <= static_cast<Size>(end - begin));
+                return detail::generate_n(begin, unreachable{}, n, std::move(gen));
+            }
+
+            template<typename Iterator, typename Size, typename Generator>
+            Iterator
+            generate_n(counted_iterator<Iterator> begin, counted_sentinel<Iterator> end, Size n,
+                Generator gen)
+            {
+                RANGES_ASSERT(n <= static_cast<Size>(end.count() - begin.count()));
+                return detail::generate_n(begin.base(), unreachable{}, n, std::move(gen));
+            }
         }
 
         struct generator_n : bindable<generator_n>
         {
-        private:
-            template<typename OutputIterable, typename Size, typename Generator>
-            static void
-            impl(OutputIterable && rng, Size n, Generator gen,
-                concepts::Iterable)
-            {
-                detail::generate_n(ranges::begin(rng), ranges::end(rng), n, std::move(gen));
-            }
-            // BUGBUG The REQUIRES feels like a hack, but in the current hierarchy it's needed.
-            template<typename OutputIterable, typename Size, typename Generator,
-                CONCEPT_REQUIRES_(!CountedIterable<OutputIterable>())>
-            static void
-            impl(OutputIterable && rng, Size n, Generator gen,
-                concepts::RandomAccessRange)
-            {
-                RANGES_ASSERT(n <= ranges::distance(rng));
-                detail::generate_n(ranges::begin(rng), unreachable{}, n, std::move(gen));
-            }
-            template<typename OutputIterable, typename Size, typename Generator>
-            static void
-            impl(OutputIterable && rng, Size n, Generator gen,
-                concepts::CountedIterable)
-            {
-                RANGES_ASSERT(n <= ranges::distance(rng));
-                detail::generate_n(ranges::begin(rng).base(), unreachable{}, n, std::move(gen));
-            }
-        public:
             /// \brief template function generate_n
             ///
             /// range-based version of the generate_n std algorithm
@@ -76,7 +67,8 @@ namespace ranges
             invoke(generator_n, OutputIterable && rng, Size n, Generator gen)
             {
                 CONCEPT_ASSERT(ranges::Callable<Generator>());
-                CONCEPT_ASSERT(ranges::OutputIterable<OutputIterable,
+                CONCEPT_ASSERT(ranges::Iterable<OutputIterable>());
+                CONCEPT_ASSERT(ranges::OutputIterator<range_iterator_t<OutputIterable>,
                                                       concepts::Callable::result_t<Generator>>());
                 return detail::generate_n(ranges::begin(rng), ranges::end(rng), n,
                     ranges::make_invokable(std::move(gen)));

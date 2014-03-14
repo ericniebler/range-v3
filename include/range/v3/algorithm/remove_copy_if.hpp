@@ -52,7 +52,8 @@ namespace ranges
             static OutputIterator
             invoke(remover_copier_if, InputIterable && rng, OutputIterator out, UnaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 return detail::remove_copy_if(ranges::begin(rng), ranges::end(rng),
                     std::move(out), ranges::make_invokable(std::move(pred)));
             }

@@ -32,7 +32,8 @@ namespace ranges
             static BidirectionalIterator2 invoke(backward_mover, BidirectionalRange && rng,
                 BidirectionalIterator2 out)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 return std::move_backward(ranges::begin(rng), std::end(rng), std::move(out));
             }
 

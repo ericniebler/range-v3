@@ -36,7 +36,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>())>
             static RandomAccessRange invoke(sorter, RandomAccessRange && rng)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
                 std::sort(ranges::begin(rng), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
@@ -46,7 +47,8 @@ namespace ranges
             template<typename RandomAccessRange, typename BinaryPredicate>
             static RandomAccessRange invoke(sorter, RandomAccessRange && rng, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<RandomAccessRange>,
                                                        range_reference_t<RandomAccessRange>>());

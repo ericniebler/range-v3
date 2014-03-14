@@ -30,8 +30,7 @@ namespace ranges
                      typename Value, typename BinaryPredicate>
             ForwardIterator
             search_n(ForwardIterator begin, Sentinel end,
-                     Size count, Value const &value, BinaryPredicate pred,
-                     concepts::ForwardIterable)
+                     Size count, Value const &value, BinaryPredicate pred)
             {
                 if (count <= 0)
                     return begin;
@@ -64,11 +63,11 @@ namespace ranges
             }
 
             template<typename RandomAccessIterator, typename Size,
-                     typename Value, typename BinaryPredicate>
+                typename Value, typename BinaryPredicate,
+                CONCEPT_REQUIRES_(ranges::RandomAccessIterator<RandomAccessIterator>())>
             RandomAccessIterator
             search_n(RandomAccessIterator begin, RandomAccessIterator end,
-                     Size count, Value const &value, BinaryPredicate pred,
-                     concepts::RandomAccessRange)
+                     Size count, Value const &value, BinaryPredicate pred)
             {
                 return std::search_n(std::move(begin), std::move(end),
                     std::move(count), value, std::ref(pred));
@@ -92,12 +91,13 @@ namespace ranges
             static range_iterator_t<ForwardIterable>
             invoke(searcher_n, ForwardIterable && rng, Integer count, Value const & value)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::Integral<Integer>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardIterable>,
                                                           Value const &>());
                 return detail::search_n(ranges::begin(rng), ranges::end(rng), count, value,
-                    ranges::equal_to{}, range_concept_t<ForwardIterable>{});
+                    ranges::equal_to{});
             }
 
             /// \overload
@@ -107,13 +107,14 @@ namespace ranges
             invoke(searcher_n, ForwardIterable && rng, Integer count, Value const & value,
                 BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::Integral<Integer>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable>,
                                                        Value const &>());
                 return detail::search_n(ranges::begin(rng), ranges::end(rng), count, value,
-                    ranges::make_invokable(std::move(pred)), range_concept_t<ForwardIterable>{});
+                    ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload

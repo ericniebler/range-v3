@@ -56,7 +56,8 @@ namespace ranges
             invoke(replacer_copier_if, ForwardIterable && rng, OutputIterator out,
                 UnaryPredicate pred, Value const & new_value)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,

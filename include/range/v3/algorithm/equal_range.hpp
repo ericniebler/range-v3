@@ -75,10 +75,13 @@ namespace ranges
             invoke(equal_ranger, ForwardIterable && rng, Value const & val,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable>,
                                                        Value const &>());
+                static_assert(!ranges::is_infinite<ForwardIterable>::value,
+                    "Trying to binary search an infinite range");
                 return detail::equal_range(ranges::begin(rng), ranges::end(rng), val,
                     ranges::make_invokable(std::move(pred)));
             }

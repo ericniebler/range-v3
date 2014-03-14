@@ -31,7 +31,7 @@ namespace ranges
                      typename OutputIterator, typename BinaryPredicate>
             OutputIterator
             unique_copy(InputIterator begin, Sentinel end, OutputIterator out, BinaryPredicate pred,
-                        concepts::InputIterable, concepts::OutputIterator)
+                        concepts::InputIterator, concepts::OutputIterator)
             {
                 if(begin != end)
                 {
@@ -55,7 +55,7 @@ namespace ranges
                      typename OutputIterator, typename BinaryPredicate>
             OutputIterator
             unique_copy(ForwardIterator begin, Sentinel end, OutputIterator out, BinaryPredicate pred,
-                        concepts::ForwardIterable, concepts::OutputIterator)
+                        concepts::ForwardIterator, concepts::OutputIterator)
             {
                 if(begin != end)
                 {
@@ -79,7 +79,7 @@ namespace ranges
                      typename BinaryPredicate>
             ForwardIterator
             unique_copy(InputIterator begin, Sentinel end, ForwardIterator out, BinaryPredicate pred,
-                        concepts::InputIterable, concepts::ForwardIterator)
+                        concepts::InputIterator, concepts::ForwardIterator)
             {
                 if(begin != end)
                 {
@@ -107,17 +107,19 @@ namespace ranges
             static OutputIterator
             invoke(uniquer_copier, InputIterable && rng, OutputIterator out)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(
-                    (ranges::ForwardIterable<InputIterable>() ||
+                    ((ranges::Iterable<InputIterable>() &&
+                        ranges::ForwardIterator<range_iterator_t<InputIterable>>()) ||
                      ranges::ForwardIterator<OutputIterator>()) ||
                     (ranges::CopyConstructible<range_value_t<InputIterable>>() &&
                      ranges::CopyAssignable<range_value_t<InputIterable>>()));
                 return detail::unique_copy(ranges::begin(rng), ranges::end(rng),
-                    std::move(out), ranges::equal_to{}, range_concept_t<InputIterable>{},
+                    std::move(out), ranges::equal_to{}, iterator_concept_t<range_iterator_t<InputIterable>>{},
                     iterator_concept_t<OutputIterator>{});
             }
 
@@ -127,20 +129,23 @@ namespace ranges
             invoke(uniquer_copier, InputIterable && rng, OutputIterator out,
                    BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<InputIterable>,
                                                        range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(
-                    (ranges::ForwardIterable<InputIterable>() ||
+                    ((ranges::Iterable<InputIterable>() &&
+                        ranges::ForwardIterator<range_iterator_t<InputIterable>>()) ||
                      ranges::ForwardIterator<OutputIterator>()) ||
                     (ranges::CopyConstructible<range_value_t<InputIterable>>() &&
                      ranges::CopyAssignable<range_value_t<InputIterable>>()));
                 return detail::unique_copy(ranges::begin(rng), ranges::end(rng),
                     std::move(out), ranges::make_invokable(std::move(pred)),
-                    range_concept_t<InputIterable>{}, iterator_concept_t<OutputIterator>{});
+                    iterator_concept_t<range_iterator_t<InputIterable>>{},
+                    iterator_concept_t<OutputIterator>{});
             }
 
             /// \overload

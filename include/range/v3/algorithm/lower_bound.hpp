@@ -64,10 +64,13 @@ namespace ranges
             invoke(lower_bound_finder, ForwardIterable && rng, Value const & value,
                 BinaryPredicate pred = BinaryPredicate{})
             {
-                CONCEPT_ASSERT(ranges::FiniteForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable>,
                                                        Value const &>());
+                static_assert(!ranges::is_infinite<ForwardIterable>::value,
+                    "Trying to binary search an infinite range");
                 return detail::lower_bound(ranges::begin(rng), ranges::end(rng), value,
                     ranges::make_invokable(std::move(pred)));
             }

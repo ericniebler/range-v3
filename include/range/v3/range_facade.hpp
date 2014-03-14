@@ -575,23 +575,23 @@ namespace ranges
                 basic_range_sentinel<D, Const>
             >;
         public:
-            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             iterator_t<D, false> begin()
             {
                 return {range_core_access::begin_impl(derived())};
             };
-            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             iterator_t<D, true> begin() const
             {
                 return {range_core_access::begin_impl(derived())};
             };
-            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::conditional_t<(detail::RangeFacade<D>()), iterator_t<D, false>, sentinel_t<D, false>>
             end()
             {
                 return {range_core_access::end_impl(derived())};
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::conditional_t<(detail::RangeFacade<D>()), iterator_t<D, true>, sentinel_t<D, true>>
             end() const
             {

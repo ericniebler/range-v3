@@ -116,7 +116,8 @@ namespace ranges
                 static adjacent_filter_range_view<ForwardRange, BinaryPredicate>
                 invoke(adjacent_filterer, ForwardRange && rng, BinaryPredicate pred)
                 {
-                    CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                    CONCEPT_ASSERT(ranges::Range<ForwardRange>());
+                    CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardRange>>());
                     CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                            range_reference_t<ForwardRange>,
                                                            range_reference_t<ForwardRange>>());

@@ -36,7 +36,8 @@ namespace ranges
             static RandomAccessRange
             invoke(heap_pusher, RandomAccessRange && rng)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::push_heap(ranges::begin(rng), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
@@ -46,7 +47,8 @@ namespace ranges
             static RandomAccessRange
             invoke(heap_pusher, RandomAccessRange && rng, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::push_heap(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
@@ -77,7 +79,8 @@ namespace ranges
             static RandomAccessRange
             invoke(heap_popper, RandomAccessRange && rng)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::pop_heap(ranges::begin(rng), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
@@ -87,7 +90,8 @@ namespace ranges
             static RandomAccessRange
             invoke(heap_popper, RandomAccessRange && rng, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::pop_heap(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
@@ -119,7 +123,8 @@ namespace ranges
             static RandomAccessRange
             invoke(heap_maker, RandomAccessRange && rng)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::make_heap(ranges::begin(rng), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
@@ -129,7 +134,8 @@ namespace ranges
             static RandomAccessRange
             invoke(heap_maker, RandomAccessRange && rng, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::make_heap(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
                 return std::forward<RandomAccessRange>(rng);
@@ -161,7 +167,8 @@ namespace ranges
             static RandomAccessRange
             invoke(heap_sorter, RandomAccessRange && rng)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::sort_heap(ranges::begin(rng), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
             }
@@ -171,7 +178,8 @@ namespace ranges
             static RandomAccessRange
             invoke(heap_sorter, RandomAccessRange && rng, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 std::sort_heap(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
                 return std::forward<RandomAccessRange>(rng);

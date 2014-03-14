@@ -125,7 +125,8 @@ namespace ranges
                 static transform_iterable_view<InputRange1, UnaryFunction>
                 invoke(transformer, InputRange1 && rng, UnaryFunction fun)
                 {
-                    CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
+                    CONCEPT_ASSERT(ranges::Range<InputRange1>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange1>>());
                     CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
                                                     range_reference_t<InputRange1>>());
                     return {std::forward<InputRange1>(rng), std::move(fun)};

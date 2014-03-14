@@ -33,7 +33,8 @@ namespace ranges
             static OutputIterator
             invoke(reverser_copier, BidirectionalRange && rng, OutputIterator out)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 return std::reverse_copy(ranges::begin(rng), ranges::end(rng), out);
             }
 

@@ -29,8 +29,8 @@ namespace ranges
         {
             namespace impl
             {
-                // An Iterable with a .size() member function; e.g., std::list
-                struct SizedIterableConcept
+                // Not a real concept!
+                struct HasSizeConcept
                   : concepts::refines<concepts::Iterable>
                 {
                     template<typename T>
@@ -41,37 +41,30 @@ namespace ranges
                 };
 
                 template<typename T>
-                using SizedIterable = concepts::models<SizedIterableConcept, T>;
+                using HasSize = concepts::models<HasSizeConcept, T>;
 
                 struct Int { Int(long) {} };
 
                 template<typename Iterable,
-                    CONCEPT_REQUIRES_(SizedIterable<Iterable>())>
+                    CONCEPT_REQUIRES_(HasSize<Iterable>())>
                 range_difference_t<Iterable>
-                size(Iterable && rng, int)
+                size(Iterable const &rng, int)
                 {
                     return static_cast<range_difference_t<Iterable>>(rng.size());
                 }
 
-                template<typename Iterable,
-                    CONCEPT_REQUIRES_(CountedIterable<Iterable>())>
-                range_difference_t<Iterable>
-                size(Iterable && rng, long)
-                {
-                    return rng.end().count();
-                }
-
                 template<typename RandomAccessRange,
-                    CONCEPT_REQUIRES_(ranges::RandomAccessRange<RandomAccessRange>())>
+                    CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>() &&
+                                      ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>())>
                 range_difference_t<RandomAccessRange>
-                size(RandomAccessRange && rng, Int)
+                size(RandomAccessRange const &rng, Int)
                 {
                     return ranges::end(rng) - ranges::begin(rng);
                 }
             }
 
             template<typename Iterable>
-            inline auto size(Iterable && rng) -> decltype(impl::size(rng, 42))
+            inline auto range_size(Iterable const &rng) -> decltype(impl::size(rng, 42))
             {
                 return impl::size(rng, 42);
             }
@@ -79,9 +72,9 @@ namespace ranges
             struct sizer : bindable<sizer>
             {
                 template<typename Iterable>
-                static auto invoke(sizer, Iterable && rng) -> decltype(size(rng))
+                static auto invoke(sizer, Iterable const &rng) -> decltype(range_size(rng))
                 {
-                    return size(rng);
+                    return range_size(rng);
                 }
             };
         }

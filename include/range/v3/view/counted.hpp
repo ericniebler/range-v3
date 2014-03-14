@@ -117,6 +117,13 @@ namespace ranges
 
             RANGES_CONSTEXPR counted_maker counted {};
         }
+
+        template<typename InputIterator>
+        iterator_difference_t<InputIterator>
+        range_size(counted_iterable_view<InputIterator> const &rng)
+        {
+            return rng.end().count();
+        }
     }
 }
 

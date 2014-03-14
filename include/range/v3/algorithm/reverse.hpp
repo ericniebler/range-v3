@@ -32,7 +32,8 @@ namespace ranges
             template<typename BidirectionalRange>
             static BidirectionalRange invoke(reverser, BidirectionalRange && rng)
             {
-                CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                 std::reverse(ranges::begin(rng), ranges::end(rng));
                 return std::forward<BidirectionalRange>(rng);
             }

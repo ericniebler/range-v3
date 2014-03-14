@@ -34,7 +34,8 @@ namespace ranges
             static OutputIterator invoke(rotater_copier, ForwardIterable && rng,
                 range_iterator_t<ForwardIterable> middle, OutputIterator out)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<ForwardIterable>>());
                 detail::copy(ranges::begin(rng), middle,

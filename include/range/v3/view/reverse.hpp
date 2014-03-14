@@ -103,7 +103,8 @@ namespace ranges
                 static reverse_range_view<BidirectionalRange>
                 invoke(reverser, BidirectionalRange && rng)
                 {
-                    CONCEPT_ASSERT(ranges::BidirectionalRange<BidirectionalRange>());
+                    CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
+                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
                     return reverse_range_view<BidirectionalRange>{
                         std::forward<BidirectionalRange>(rng)};
                 }

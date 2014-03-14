@@ -43,7 +43,8 @@ namespace ranges
             static OutputIterator invoke(mover, InputIterable && rng,
                 OutputIterator out)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 return detail::move(ranges::begin(rng), std::end(rng), std::move(out));
             }
 

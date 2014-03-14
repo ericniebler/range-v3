@@ -47,7 +47,8 @@ namespace ranges
             static range_difference_t<InputIterable>
             invoke(counter, InputIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 return detail::count(ranges::begin(rng), ranges::end(rng), val);
             }
 

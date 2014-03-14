@@ -47,8 +47,10 @@ namespace ranges
             static range_iterator_t<ForwardIterable2>
             invoke(range_swapper, ForwardIterable1 && rng1, ForwardIterable2 && rng2)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable1>());
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable1>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable1>>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2>>());
                 CONCEPT_ASSERT(ranges::Swappable<range_reference_t<ForwardIterable1>,
                                                  range_reference_t<ForwardIterable2>>());
                 return detail::swap_ranges(

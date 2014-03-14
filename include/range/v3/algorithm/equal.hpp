@@ -51,8 +51,10 @@ namespace ranges
             template<typename InputIterable1, typename InputIterable2>
             static bool invoke(equaler, InputIterable1 && rng1, InputIterable2 && rng2)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2>>());
                 return detail::equal(ranges::begin(rng1), ranges::end(rng1),
                                      ranges::begin(rng2), ranges::end(rng2));
             }
@@ -62,8 +64,10 @@ namespace ranges
             static bool invoke(equaler, InputIterable1 && rng1, InputIterable2 && rng2,
                 BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<InputIterable1>,
                                                        range_reference_t<InputIterable2>>());

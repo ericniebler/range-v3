@@ -156,7 +156,8 @@ namespace ranges
                 static move_range_view<InputRange>
                 invoke(mover, InputRange && rng)
                 {
-                    CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                    CONCEPT_ASSERT(ranges::Range<InputRange>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                     return move_range_view<InputRange>{std::forward<InputRange>(rng)};
                 }
             };

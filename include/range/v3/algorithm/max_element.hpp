@@ -53,7 +53,8 @@ namespace ranges
             static range_iterator_t<ForwardIterable>
             invoke(max_element_finder, ForwardIterable && rng)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<ForwardIterable>>());
                 return std::max_element(ranges::begin(rng), ranges::end(rng));
             }
@@ -63,7 +64,8 @@ namespace ranges
             static range_iterator_t<ForwardIterable>
             invoke(max_element_finder, ForwardIterable && rng, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<ForwardIterable>,
                                                        range_reference_t<ForwardIterable>>());

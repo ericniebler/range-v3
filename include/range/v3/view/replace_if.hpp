@@ -58,7 +58,8 @@ namespace ranges
                                                     typename std::decay<Value>::type>>
                 invoke(replacer_if, InputIterable && rng, UnaryPredicate pred, Value && new_value)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                     CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
                                                           range_reference_t<InputIterable>>());
                     CONCEPT_ASSERT(ranges::Convertible<typename std::decay<Value>::type const &,

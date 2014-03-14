@@ -114,8 +114,10 @@ namespace ranges
             static partial_sort_copy_result<RandomAccessRange>
             invoke(partial_sorter_copier, InputRange && rng1, RandomAccessRange && rng2)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<InputRange>>());
                 return {std::forward<RandomAccessRange>(rng2),
                         std::partial_sort_copy(ranges::begin(rng1), ranges::end(rng1),
@@ -128,8 +130,10 @@ namespace ranges
             invoke(partial_sorter_copier, InputRange && rng1, RandomAccessRange && rng2,
                    BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<InputRange>,
                                                        range_reference_t<InputRange>>());
@@ -145,7 +149,8 @@ namespace ranges
                 decltype(partial_sort_copy.move_bind(std::placeholders::_1,
                                               std::forward<RandomAccessRange>(rng2)))
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 return partial_sort_copy.move_bind(std::placeholders::_1,
                                          std::forward<RandomAccessRange>(rng2));
             }
@@ -161,7 +166,8 @@ namespace ranges
                                               std::forward<RandomAccessRange>(rng2),
                                               std::move(pred)))
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 return partial_sort_copy.move_bind(std::placeholders::_1,
                                          std::forward<RandomAccessRange>(rng2),
                                          std::move(pred));

@@ -38,7 +38,8 @@ namespace ranges
             invoke(nth_element_finder, RandomAccessRange && rng,
                    range_iterator_t<RandomAccessRange> nth)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 CONCEPT_ASSERT(ranges::LessThanComparable<range_reference_t<RandomAccessRange>>());
                 std::nth_element(ranges::begin(rng), std::move(nth), ranges::end(rng));
                 return std::forward<RandomAccessRange>(rng);
@@ -50,7 +51,8 @@ namespace ranges
             invoke(nth_element_finder, RandomAccessRange && rng,
                    range_iterator_t<RandomAccessRange> nth, BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::RandomAccessRange<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
+                CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                        range_reference_t<RandomAccessRange>,
                                                        range_reference_t<RandomAccessRange>>());

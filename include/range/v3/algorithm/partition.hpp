@@ -28,8 +28,7 @@ namespace ranges
         {
             template<typename ForwardIterator, typename Sentinel, typename UnaryPredicate>
             ForwardIterator
-            partition(ForwardIterator begin, Sentinel end, UnaryPredicate pred,
-                      concepts::ForwardIterable)
+            partition(ForwardIterator begin, Sentinel end, UnaryPredicate pred)
             {
                 while(true)
                 {
@@ -50,10 +49,10 @@ namespace ranges
                 return begin;
             }
 
-            template<typename BidirectionalIterator, typename UnaryPredicate>
+            template<typename BidirectionalIterator, typename UnaryPredicate,
+                CONCEPT_REQUIRES_(ranges::BidirectionalIterator<BidirectionalIterator>())>
             BidirectionalIterator
-            partition(BidirectionalIterator begin, BidirectionalIterator end, UnaryPredicate pred,
-                      concepts::BidirectionalRange)
+            partition(BidirectionalIterator begin, BidirectionalIterator end, UnaryPredicate pred)
             {
                 while(true)
                 {
@@ -87,10 +86,10 @@ namespace ranges
             static range_iterator_t<ForwardIterable>
             invoke(partitioner, ForwardIterable && rng, UnaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 return detail::partition(ranges::begin(rng), ranges::end(rng),
-                                         ranges::make_invokable(std::move(pred)),
-                                         range_concept_t<ForwardIterable>{});
+                                         ranges::make_invokable(std::move(pred)));
             }
 
             /// \overload

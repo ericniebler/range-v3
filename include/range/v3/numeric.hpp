@@ -29,7 +29,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(ranges::Range<InputRange>())>
             static Value invoke(accumulate_, InputRange && rng, Value init)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::Range<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                 CONCEPT_ASSERT(ranges::Addable<Value, range_reference_t<InputRange>>());
                 return std::accumulate(ranges::begin(rng), ranges::end(rng),
                     std::move(init));
@@ -38,7 +39,8 @@ namespace ranges
             template<typename InputRange, typename Value, typename BinaryOperation>
             static Value invoke(accumulate_, InputRange && rng, Value init, BinaryOperation op)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::Range<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                 CONCEPT_ASSERT(ranges::Callable<invokable_t<BinaryOperation>,
                                                 Value,
                                                 range_reference_t<InputRange>>());
@@ -70,8 +72,10 @@ namespace ranges
             static Value
             invoke(inner_product_, InputRange1 && rng1, InputRange2 && rng2, Value init)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
+                CONCEPT_ASSERT(ranges::Range<InputRange1>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange1>>());
+                CONCEPT_ASSERT(ranges::Range<InputRange2>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange2>>());
                 return std::inner_product(ranges::begin(rng1), ranges::end(rng1),
                                           ranges::begin(rng2), std::move(init));
             }
@@ -82,8 +86,10 @@ namespace ranges
             invoke(inner_product_, InputRange1 && rng1, InputRange2 && rng2, Value init,
                 BinaryOperation1 op1, BinaryOperation2 op2)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
-                CONCEPT_ASSERT(ranges::InputRange<InputRange2>());
+                CONCEPT_ASSERT(ranges::Range<InputRange1>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange1>>());
+                CONCEPT_ASSERT(ranges::Range<InputRange2>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange2>>());
                 return std::inner_product(ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), std::move(init), std::move(op1), std::move(op2));
             }
@@ -98,7 +104,8 @@ namespace ranges
             static OutputIterator
             invoke(partial_sum_, InputRange && rng, OutputIterator result)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::Range<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                 return std::partial_sum(ranges::begin(rng), ranges::end(rng), std::move(result));
             }
 
@@ -106,7 +113,8 @@ namespace ranges
             static OutputIterator
             invoke(partial_sum_, InputRange && rng, OutputIterator result, BinaryOperation op)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::Range<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                 return std::partial_sum(ranges::begin(rng), ranges::end(rng),
                     std::move(result), std::move(op));
             }
@@ -135,7 +143,8 @@ namespace ranges
             static OutputIterator
             invoke(adjacent_difference_, InputRange && rng, OutputIterator result)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::Range<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                 return std::adjacent_difference(ranges::begin(rng), ranges::end(rng),
                                                  result);
             }
@@ -145,7 +154,8 @@ namespace ranges
             invoke(adjacent_difference_, InputRange && rng, OutputIterator result,
                 BinaryOperation op)
             {
-                CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                CONCEPT_ASSERT(ranges::Range<InputRange>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                 return std::adjacent_difference(ranges::begin(rng), ranges::end(rng),
                                                  result, op);
             }
@@ -175,7 +185,8 @@ namespace ranges
             template<typename ForwardRange, typename Value>
             static ForwardRange invoke(iota_, ForwardRange && rng, Value value)
             {
-                CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                CONCEPT_ASSERT(ranges::Range<ForwardRange>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardRange>>());
                 std::iota(ranges::begin(rng), ranges::end(rng), std::move(value));
                 return std::forward<ForwardRange>(rng);
             }

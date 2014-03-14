@@ -51,7 +51,8 @@ namespace ranges
             static OutputIterator
             invoke(remover_copier, InputIterable && rng, OutputIterator out, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputIterable>,

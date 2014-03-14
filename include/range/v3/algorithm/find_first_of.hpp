@@ -56,8 +56,10 @@ namespace ranges
             static range_iterator_t<InputIterable1>
             invoke(first_of_finder, InputIterable1 && rng1, ForwardIterable2 const & rng2)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2 const>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2 const>>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputIterable1>,
                                                           range_reference_t<ForwardIterable2 const>>());
                 return detail::find_first_of(ranges::begin(rng1), ranges::end(rng1),
@@ -70,8 +72,10 @@ namespace ranges
             invoke(first_of_finder, InputIterable1 && rng1, ForwardIterable2 const & rng2,
                    BinaryPredicate pred)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2 const>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2 const>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2 const>>());
                 CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
                                                        range_reference_t<InputIterable1>,
                                                        range_reference_t<ForwardIterable2 const>>());
@@ -87,7 +91,8 @@ namespace ranges
             invoke(first_of_finder find_first_of, ForwardIterable2 && rng2) ->
                 decltype(find_first_of.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2)))
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2>>());
                 return find_first_of.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2));
             }
 
@@ -100,7 +105,8 @@ namespace ranges
             invoke(first_of_finder find_first_of, ForwardIterable2 && rng2, BinaryPredicate pred) ->
                 decltype(find_first_of.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2), std::move(pred)))
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2>>());
                 return find_first_of.move_bind(std::placeholders::_1, std::forward<ForwardIterable2>(rng2), std::move(pred));
             }
         };

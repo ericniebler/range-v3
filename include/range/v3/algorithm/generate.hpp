@@ -44,7 +44,8 @@ namespace ranges
             template<typename ForwardIterable, typename Generator>
             static ForwardIterable invoke(generator, ForwardIterable && rng, Generator gen)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::Callable<Generator>());
                 std::generate(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(gen)));

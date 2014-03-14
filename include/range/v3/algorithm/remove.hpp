@@ -49,7 +49,8 @@ namespace ranges
             static range_iterator_t<ForwardIterable>
             invoke(remover, ForwardIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 return detail::remove(ranges::begin(rng), ranges::end(rng), val);
             }
 

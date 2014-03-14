@@ -41,7 +41,8 @@ namespace ranges
             template<typename ForwardIterable, typename Value>
             static ForwardIterable invoke(filler, ForwardIterable && rng, Value const & val)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 detail::fill(ranges::begin(rng), ranges::end(rng), val);
                 return std::forward<ForwardIterable>(rng);
             }

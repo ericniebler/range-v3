@@ -66,7 +66,8 @@ namespace ranges
             /// \pre BinaryFunction is a model of the BinaryFunction concept
             template<typename InputIterable1, typename OutputIterator, typename UnaryFunction,
                 CONCEPT_REQUIRES_(
-                    ranges::InputIterable<InputIterable1>() &&
+                    ranges::Iterable<InputIterable1>() &&
+                    ranges::InputIterator<range_iterator_t<InputIterable1>>() &&
                     ranges::Callable<invokable_t<UnaryFunction>,
                                                  range_reference_t<InputIterable1>>() &&
                     ranges::OutputIterator<OutputIterator,
@@ -75,7 +76,8 @@ namespace ranges
             static OutputIterator
             invoke(transformer, InputIterable1 && rng, OutputIterator out, UnaryFunction fun)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
                 CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
                                                 range_reference_t<InputIterable1>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
@@ -93,8 +95,10 @@ namespace ranges
             invoke(transformer, InputIterable1 && rng1, InputIterable2 && rng2, OutputIterator out,
                    BinaryFunction fun)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable1>());
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable2>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable1>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable2>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2>>());
                 CONCEPT_ASSERT(ranges::Callable<invokable_t<BinaryFunction>,
                                                 range_reference_t<InputIterable1>,
                                                 range_reference_t<InputIterable2>>());
@@ -122,7 +126,8 @@ namespace ranges
             /// for rng | transform(rng2, out, bin_fun)
             template<typename InputIterable2, typename OutputIterator, typename BinaryFunction,
                 CONCEPT_REQUIRES_(!(
-                    ranges::InputIterable<InputIterable2>() &&
+                    ranges::Iterable<InputIterable2>() &&
+                    ranges::InputIterator<range_iterator_t<InputIterable2>>() &&
                     ranges::Callable<invokable_t<BinaryFunction>,
                                                  range_reference_t<InputIterable2>>() &&
                     ranges::OutputIterator<OutputIterator,

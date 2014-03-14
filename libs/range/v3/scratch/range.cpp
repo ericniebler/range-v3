@@ -61,11 +61,13 @@ static_assert(!ranges::BidirectionalIterator<int>(), "");
 static_assert(ranges::RandomAccessIterator<int*>(), "");
 static_assert(!ranges::RandomAccessIterator<int>(), "");
 
-static_assert(ranges::InputIterable<ranges::istream_iterable<int>>(), "");
-static_assert(!ranges::InputIterable<int>(), "");
+static_assert(ranges::Iterable<ranges::istream_iterable<int>>(), "");
+static_assert(ranges::InputIterator<ranges::range_iterator_t<ranges::istream_iterable<int>>>(), "");
+static_assert(!ranges::Iterable<int>(), "");
 
-static_assert(ranges::RandomAccessRange<std::vector<int> const &>(), "");
-static_assert(!ranges::RandomAccessRange<ranges::istream_iterable<int>>(), "");
+static_assert(ranges::Range<std::vector<int> const &>(), "");
+static_assert(ranges::RandomAccessIterator<ranges::range_iterator_t<std::vector<int> const &>>(), "");
+static_assert(!ranges::Range<ranges::istream_iterable<int>>(), "");
 
 static_assert(ranges::BinaryPredicate<std::less<int>, int, int>(), "");
 static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
@@ -93,16 +95,14 @@ static_assert(!ranges::LessThanComparable<IntComparable, int>(), "");
 static_assert(
     std::is_same<
         ranges::range_concept_t<std::vector<int>>,
-        ranges::concepts::FiniteRandomAccessRange
+        ranges::concepts::Range
     >::value, "");
 
-// TODO looks like most_derived_t has bug. Simple breadth-first search
-// can yield suprising answers. Bummer.
-//static_assert(
-//    std::is_same<
-//        ranges::range_concept_t<ranges::istream_iterable<int>>,
-//        ranges::concepts::FiniteInputIterable
-//    >::value, "");
+static_assert(
+    std::is_same<
+        ranges::range_concept_t<ranges::istream_iterable<int>>,
+        ranges::concepts::Iterable
+    >::value, "");
 
 struct Abstract { virtual ~Abstract() = 0; };
 static_assert(std::is_same<ranges::typelist_element_t<0, ranges::typelist<int, Abstract, float(), int(&&)[]>>, int>::value, "");
@@ -377,7 +377,9 @@ void test_slice_iota()
     for (int i : view::iota(10) | view::slice(10, 20))
         std::cout << i << ' ';
     (view::iota(10) | view::slice(2, 4)).begin() + 1;
-    CONCEPT_ASSERT(FiniteRange<decltype(view::iota(10) | view::slice(2, 4))>());
+    CONCEPT_ASSERT(Range<decltype(view::iota(10) | view::slice(2, 4))>());
+    static_assert(!ranges::is_infinite<decltype(view::iota(10) | view::slice(2, 4))>::value, "");
+
     std::cout << '\n';
 }
 
@@ -388,7 +390,8 @@ void test_delimit_iota()
     view::iota(10) | view::delimit(50) | for_each([](int i) {
         std::cout << i << ' ';
     });
-    CONCEPT_ASSERT(RandomAccessIterable<delimit_iterable_view<std::vector<int>, int>>());
+    CONCEPT_ASSERT(Iterable<delimit_iterable_view<std::vector<int>, int>>());
+    CONCEPT_ASSERT(RandomAccessIterator<range_iterator_t<delimit_iterable_view<std::vector<int>, int>>>());
     std::cout << '\n';
 }
 
@@ -489,14 +492,13 @@ void test_sentinel()
     using namespace ranges;
     using It = range_iterator_t<iota_iterable_view<int>>;
     using S = range_sentinel_t<iota_iterable_view<int>>;
-    static_assert(!concepts::Iterable::is_finite_t<iota_iterable_view<int>>::value, "");
-    static_assert(concepts::Iterable::is_finite_t<std::vector<int>>::value, "");
+    static_assert(is_infinite<iota_iterable_view<int>>::value, "");
+    static_assert(!is_infinite<std::vector<int>>::value, "");
 }
 
-static_assert(ranges::FiniteIterable<std::vector<int>>(), "");
-static_assert(ranges::FiniteIterable<ranges::istream_iterable<int>>(), "");
-static_assert(ranges::Iterable<ranges::iota_iterable_view<int>>(), "");
-static_assert(!ranges::FiniteIterable<ranges::iota_iterable_view<int>>(), "");
+static_assert(!ranges::is_infinite<std::vector<int>>::value, "");
+static_assert(!ranges::is_infinite<ranges::istream_iterable<int>>::value, "");
+static_assert(ranges::is_infinite<ranges::iota_iterable_view<int>>::value, "");
 
 struct MyRange
   : ranges::range_facade<MyRange>
@@ -544,7 +546,8 @@ struct my_reverse_view
       , ranges::is_infinite<BidiRange>::value>
 {
 private:
-    CONCEPT_ASSERT(ranges::BidirectionalRange<BidiRange>());
+    CONCEPT_ASSERT(ranges::Range<BidiRange>());
+    CONCEPT_ASSERT(ranges::BidirectionalIterator<ranges::range_iterator_t<BidiRange>>());
     friend ranges::range_core_access;
     using base_t = ranges::range_adaptor_t<my_reverse_view>;
     template<bool Const>
@@ -569,13 +572,13 @@ private:
             tmp.prev();
             return tmp.current();
         }
-        CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
+        CONCEPT_REQUIRES(ranges::RandomAccessIterator<ranges::range_iterator_t<BidiRange>>())
         void advance(ranges::range_difference_t<BidiRange> n)
         {
             base().advance(-n);
         }
         template<bool OtherConst,
-                 CONCEPT_REQUIRES_(ranges::RandomAccessRange<BidiRange>())>
+                 CONCEPT_REQUIRES_(ranges::RandomAccessIterator<ranges::range_iterator_t<BidiRange>>())>
         ranges::range_difference_t<BidiRange>
         distance_to(basic_impl<OtherConst> const &that)
         {
@@ -647,7 +650,8 @@ void test_as_range()
     std::cout << '\n';
 
     auto x = std::vector<int>{} | view::delimit(42) | view::as_range;
-    CONCEPT_ASSERT(RandomAccessRange<decltype(x)>());
+    CONCEPT_ASSERT(Range<decltype(x)>());
+    CONCEPT_ASSERT(RandomAccessIterator<range_iterator_t<decltype(x)>>());
     auto const & y = x;
     auto i = x.begin(); // non-const
     auto j = y.begin(); // const
@@ -660,7 +664,6 @@ void test_counted_range()
     std::cout << "\nTesting counted\n";
     int rgi[] = {1,2,3,4,5,6,7,8,9,10};
     auto rng = view::counted(rgi, 10);
-    CONCEPT_ASSERT(CountedIterable<decltype(rng)>());
     auto i = rng.begin();
     auto b = i.base();
     auto c = i.count();
@@ -681,8 +684,9 @@ void test_unbounded()
     constexpr auto e = rng.end();
     constexpr bool b = i == e;
     static_assert(!b,"");
-    CONCEPT_ASSERT(RandomAccessIterable<unbounded_iterable_view<int const*>>());
-    CONCEPT_ASSERT(!FiniteRandomAccessIterable<unbounded_iterable_view<int const*>>());
+    CONCEPT_ASSERT(Iterable<unbounded_iterable_view<int const*>>());
+    CONCEPT_ASSERT(RandomAccessIterator<range_iterator_t<unbounded_iterable_view<int const*>>>());
+    static_assert(is_infinite<unbounded_iterable_view<int const*>>::value, "");
 }
 
 void test_view_all()
@@ -691,14 +695,14 @@ void test_view_all()
 
     std::cout << "\nTesting view::all\n";
     std::list<int> li{1,2,3,4};
-    RANGES_ASSERT(ranges::adl_size_detail::size(li)==4);
+    RANGES_ASSERT(ranges::adl_size_detail::range_size(li)==4);
     auto liter = view::all(li);
-    CONCEPT_ASSERT(SameType<decltype(liter), iterator_range<std::list<int>::iterator>>());
+    CONCEPT_ASSERT(Same<decltype(liter), iterator_range<std::list<int>::iterator>>());
 
     auto cli = view::counted(li.begin(), 4);
     static_assert(is_iterable<decltype(cli)>::value, "");
     auto cliter = view::all(cli);
-    CONCEPT_ASSERT(SameType<decltype(cliter),
+    CONCEPT_ASSERT(Same<decltype(cliter),
                             counted_iterable_view<std::list<int>::iterator>>());
 
     // This triggers a static assert. It's unsafe to get a view of a temporary container.

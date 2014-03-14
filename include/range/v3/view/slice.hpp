@@ -202,7 +202,8 @@ namespace ranges
                 invoke(slicer, InputIterable && rng, range_difference_t<InputIterable> from,
                     range_difference_t<InputIterable> to)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                     return {std::forward<InputIterable>(rng), from, to};
                 }
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>

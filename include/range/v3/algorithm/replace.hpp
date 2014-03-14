@@ -46,7 +46,8 @@ namespace ranges
             invoke(replacer, ForwardIterable && rng, Value const & old_value,
                 Value const & new_value)
             {
-                CONCEPT_ASSERT(ranges::ForwardIterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
+                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 detail::replace(ranges::begin(rng), ranges::end(rng), old_value, new_value);
                 return std::forward<ForwardIterable>(rng);
             }

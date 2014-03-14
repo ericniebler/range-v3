@@ -45,7 +45,8 @@ namespace ranges
             template<typename InputIterable, typename UnaryFunction>
             static UnaryFunction invoke(for_eacher, InputIterable && rng, UnaryFunction fun)
             {
-                CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
                                                 range_reference_t<InputIterable>>());
                 return detail::for_each(ranges::begin(rng), ranges::end(rng),
