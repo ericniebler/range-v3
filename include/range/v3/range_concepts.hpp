@@ -85,10 +85,36 @@ namespace ranges
         template<typename T>
         using Range = concepts::models<concepts::Range, T>;
 
+        // Handle sized iterables here:
+        #include <range/v3/detail/range_size.hpp>
+
+        namespace concepts
+        {
+            struct SizedIterable
+              : refines<Iterable>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Integral>(range_size(t))
+                    ));
+            };
+
+            struct SizedRange
+              : refines<Range, SizedIterable>
+            {};
+        }
+
+        template<typename T>
+        using SizedIterable = concepts::models<concepts::SizedIterable, T>;
+
+        template<typename T>
+        using SizedRange = concepts::models<concepts::SizedRange, T>;
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept
         template<typename T>
-        using range_concept_t = concepts::most_refined_t<concepts::Range, T>;
+        using range_concept_t = concepts::most_refined_t<concepts::SizedRange, T>;
 
         template<typename T>
         struct range_concept

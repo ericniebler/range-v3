@@ -17,7 +17,7 @@
 #include <iterator>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <range/v3/range_concepts.hpp> // defines range_size
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
 
@@ -25,61 +25,17 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace adl_size_detail
+        struct sizer : bindable<sizer>
         {
-            namespace impl
+            template<typename Iterable,
+                CONCEPT_REQUIRES_(ranges::SizedIterable<Iterable>())>
+            static auto invoke(sizer, Iterable const &rng) -> decltype(range_size(rng))
             {
-                // Not a real concept!
-                struct HasSizeConcept
-                  : concepts::refines<concepts::Iterable>
-                {
-                    template<typename T>
-                    auto requires(T && t) -> decltype(
-                        concepts::valid_expr(
-                            concepts::convertible_to<range_difference_t<T>>(t.size())
-                        ));
-                };
-
-                template<typename T>
-                using HasSize = concepts::models<HasSizeConcept, T>;
-
-                struct Int { Int(long) {} };
-
-                template<typename Iterable,
-                    CONCEPT_REQUIRES_(HasSize<Iterable>())>
-                range_difference_t<Iterable>
-                size(Iterable const &rng, int)
-                {
-                    return static_cast<range_difference_t<Iterable>>(rng.size());
-                }
-
-                template<typename RandomAccessRange,
-                    CONCEPT_REQUIRES_(ranges::Range<RandomAccessRange>() &&
-                                      ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>())>
-                range_difference_t<RandomAccessRange>
-                size(RandomAccessRange const &rng, Int)
-                {
-                    return ranges::end(rng) - ranges::begin(rng);
-                }
+                return range_size(rng);
             }
+        };
 
-            template<typename Iterable>
-            inline auto range_size(Iterable const &rng) -> decltype(impl::size(rng, 42))
-            {
-                return impl::size(rng, 42);
-            }
-
-            struct sizer : bindable<sizer>
-            {
-                template<typename Iterable>
-                static auto invoke(sizer, Iterable const &rng) -> decltype(range_size(rng))
-                {
-                    return range_size(rng);
-                }
-            };
-        }
-
-        RANGES_CONSTEXPR adl_size_detail::sizer size {};
+        RANGES_CONSTEXPR sizer size {};
     }
 }
 

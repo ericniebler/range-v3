@@ -95,7 +95,7 @@ static_assert(!ranges::LessThanComparable<IntComparable, int>(), "");
 static_assert(
     std::is_same<
         ranges::range_concept_t<std::vector<int>>,
-        ranges::concepts::Range
+        ranges::concepts::SizedRange
     >::value, "");
 
 static_assert(
@@ -664,6 +664,7 @@ void test_counted_range()
     std::cout << "\nTesting counted\n";
     int rgi[] = {1,2,3,4,5,6,7,8,9,10};
     auto rng = view::counted(rgi, 10);
+    CONCEPT_ASSERT(SizedIterable<decltype(rng)>());
     auto i = rng.begin();
     auto b = i.base();
     auto c = i.count();
@@ -695,7 +696,7 @@ void test_view_all()
 
     std::cout << "\nTesting view::all\n";
     std::list<int> li{1,2,3,4};
-    RANGES_ASSERT(ranges::adl_size_detail::range_size(li)==4);
+    RANGES_ASSERT(ranges::size(li)==4);
     auto liter = view::all(li);
     CONCEPT_ASSERT(Same<decltype(liter), iterator_range<std::list<int>::iterator>>());
 

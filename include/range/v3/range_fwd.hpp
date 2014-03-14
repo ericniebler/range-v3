@@ -46,10 +46,7 @@ namespace ranges
             struct cender;
         }
 
-        namespace adl_size_detail
-        {
-            struct sizer;
-        }
+        struct sizer;
 
         template<typename ...Ts>
         struct common_type;
@@ -84,7 +81,7 @@ namespace ranges
         struct distance_;
         extern distance_ const distance;
 
-        extern adl_size_detail::sizer const size;
+        extern sizer const size;
 
         namespace detail
         {
