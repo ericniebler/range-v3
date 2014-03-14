@@ -37,8 +37,9 @@ namespace ranges
             template<typename RandomAccessIterator, typename Size,
                 CONCEPT_REQUIRES_(ranges::RandomAccessIterator<RandomAccessIterator>())>
             iterator_range<RandomAccessIterator>
-            container_view_all2(RandomAccessIterator begin, RandomAccessIterator end, Size)
+            container_view_all2(RandomAccessIterator begin, RandomAccessIterator end, Size size)
             {
+                RANGES_ASSERT(size == static_cast<Size>(end - begin));
                 return {begin, end};
             }
 

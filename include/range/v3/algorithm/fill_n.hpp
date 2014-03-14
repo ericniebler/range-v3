@@ -42,6 +42,14 @@ namespace ranges
                 RANGES_ASSERT(n <= end.count() - begin.count());
                 return detail::fill_n(begin.base(), unreachable{}, n, val);
             }
+
+            template<typename ForwardIterator, typename Size, typename Value>
+            void fill_n(counted_iterator<ForwardIterator> begin,
+                        counted_iterator<ForwardIterator> end, Size n, Value const & val)
+            {
+                RANGES_ASSERT(n <= end.count() - begin.count());
+                return detail::fill_n(begin.base(), unreachable{}, n, val);
+            }
         }
 
         struct filler_n : bindable<filler_n>

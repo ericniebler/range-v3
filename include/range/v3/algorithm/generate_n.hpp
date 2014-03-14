@@ -52,6 +52,15 @@ namespace ranges
                 RANGES_ASSERT(n <= static_cast<Size>(end.count() - begin.count()));
                 return detail::generate_n(begin.base(), unreachable{}, n, std::move(gen));
             }
+
+            template<typename Iterator, typename Size, typename Generator>
+            Iterator
+            generate_n(counted_iterator<Iterator> begin, counted_iterator<Iterator> end, Size n,
+                Generator gen)
+            {
+                RANGES_ASSERT(n <= static_cast<Size>(end.count() - begin.count()));
+                return detail::generate_n(begin.base(), unreachable{}, n, std::move(gen));
+            }
         }
 
         struct generator_n : bindable<generator_n>
