@@ -30,36 +30,23 @@ namespace ranges
         private:
             friend range_core_access;
             using base_t = range_adaptor_t<delimit_iterable_view>;
-            template<bool Const>
-            using sentinel_base_t = basic_adaptor_sentinel<InputIterable, Const>;
+            using sentinel_base_t = basic_adaptor_sentinel<InputIterable>;
             Value value_;
 
-            template<bool Const>
-            struct basic_sentinel : sentinel_base_t<Const>
+            struct sentinel : sentinel_base_t
             {
                 Value const *value_;
-                using sentinel_base_t<Const>::sentinel_base_t;
-                basic_sentinel(sentinel_base_t<Const> base, Value const *value)
-                  : sentinel_base_t<Const>(std::move(base)), value_(value)
+                using sentinel_base_t::sentinel_base_t;
+                sentinel(sentinel_base_t base, Value const *value)
+                  : sentinel_base_t(std::move(base)), value_(value)
                 {}
-                // For sentinel -> const_sentinel conversion
-                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-                basic_sentinel(basic_sentinel<OtherConst> that)
-                  : sentinel_base_t<Const>(std::move(that)), value_(that.value_)
-                {}
-                template<bool OtherConst>
-                bool equal(basic_adaptor_impl<InputIterable, OtherConst> const &that) const
+                bool equal(basic_adaptor_impl<InputIterable> const &that) const
                 {
                     return this->base().equal(that) ||
                            that.current() == *value_;
                 }
             };
-
-            basic_sentinel<false> end_impl()
-            {
-                return {this->adaptor().end_impl(), &value_};
-            }
-            basic_sentinel<true> end_impl() const
+            sentinel end_impl() const
             {
                 return {this->adaptor().end_impl(), &value_};
             }

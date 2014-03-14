@@ -78,25 +78,24 @@ namespace ranges
             struct common_range
             {
                 common_impl<Iterator, Sentinel> begin_impl() const;
+                common_impl<Iterator, Sentinel> end_impl() const;
             };
         }
 
-        template<typename Iterable, bool Const0, bool Const1>
-        struct common_type<basic_range_iterator<Iterable, Const0>,
-                           basic_range_sentinel<Iterable, Const1>>
+        template<typename Iterable>
+        struct common_type<basic_range_iterator<Iterable>, basic_range_sentinel<Iterable>>
         {
             using type = common_range_iterator<
-                basic_range_iterator<Iterable, Const0>,
-                basic_range_sentinel<Iterable, Const1>>;
+                basic_range_iterator<Iterable>,
+                basic_range_sentinel<Iterable>>;
         };
 
-        template<typename Iterable, bool Const0, bool Const1>
-        struct common_type<basic_range_sentinel<Iterable, Const0>,
-                           basic_range_iterator<Iterable, Const1>>
+        template<typename Iterable>
+        struct common_type<basic_range_sentinel<Iterable>, basic_range_iterator<Iterable>>
         {
             using type = common_range_iterator<
-                basic_range_iterator<Iterable, Const0>,
-                basic_range_sentinel<Iterable, Const1>>;
+                basic_range_iterator<Iterable>,
+                basic_range_sentinel<Iterable>>;
         };
     }
 }

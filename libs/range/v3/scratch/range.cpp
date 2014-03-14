@@ -550,14 +550,12 @@ private:
     CONCEPT_ASSERT(ranges::BidirectionalIterator<ranges::range_iterator_t<BidiRange>>());
     friend ranges::range_core_access;
     using base_t = ranges::range_adaptor_t<my_reverse_view>;
-    template<bool Const>
-    using impl_base_t = ranges::basic_adaptor_impl<BidiRange, Const>;
+    using impl_base_t = ranges::basic_adaptor_impl<BidiRange>;
 
-    template<bool Const>
-    struct basic_impl : impl_base_t<Const>
+    struct impl : impl_base_t
     {
-        using impl_base_t<Const>::base;
-        using impl_base_t<Const>::impl_base_t;
+        using impl_base_t::base;
+        using impl_base_t::impl_base_t;
         void next()
         {
             base().prev();
@@ -577,28 +575,19 @@ private:
         {
             base().advance(-n);
         }
-        template<bool OtherConst,
-                 CONCEPT_REQUIRES_(ranges::RandomAccessIterator<ranges::range_iterator_t<BidiRange>>())>
+        CONCEPT_REQUIRES(ranges::RandomAccessIterator<ranges::range_iterator_t<BidiRange>>())
         ranges::range_difference_t<BidiRange>
-        distance_to(basic_impl<OtherConst> const &that)
+        distance_to(impl const &that)
         {
             return that.base().distance_to(base());
         }
     };
     // Cross-wire begin and end.
-    basic_impl<false> begin_impl()
+    impl begin_impl() const
     {
         return {ranges::end(this->base())};
     }
-    basic_impl<true> begin_impl() const
-    {
-        return {ranges::end(this->base())};
-    }
-    basic_impl<false> end_impl()
-    {
-        return {ranges::begin(this->base())};
-    }
-    basic_impl<true> end_impl() const
+    impl end_impl() const
     {
         return {ranges::begin(this->base())};
     }

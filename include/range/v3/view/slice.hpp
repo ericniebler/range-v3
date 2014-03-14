@@ -60,33 +60,28 @@ namespace ranges
 
             using is_dirty_t = detail::conditional_t<is_bidi(), bool, constant<bool, false>>;
 
-            template<bool Const>
-            struct basic_impl
+            struct impl
             {
-                using base_range = detail::add_const_if_t<InputIterable, Const>;
-                using slice_range_view_ = detail::add_const_if_t<slice_range_view, Const>;
-
-                slice_range_view_ *rng_;
+                slice_range_view const *rng_;
                 range_difference_t<InputIterable> n_;
-                compressed_tuple<range_iterator_t<base_range>, is_dirty_t> it_dirt_;
+                compressed_tuple<range_iterator_t<InputIterable>, is_dirty_t> it_dirt_;
 
-                basic_impl(slice_range_view_ &rng, begin_tag)
+                impl(slice_range_view const &rng, begin_tag)
                   : rng_(&rng), n_(rng_->from_), it_dirt_{rng_->begin_, false}
                 {}
-                basic_impl(slice_range_view_ &rng, end_tag)
+                impl(slice_range_view const &rng, end_tag)
                   : rng_(&rng), n_(rng_->to_), it_dirt_{rng_->begin_, true}
                 {
                     if(is_rand())
                         do_clean();
                 }
-                range_reference_t<base_range> current() const
+                range_reference_t<InputIterable> current() const
                 {
                     RANGES_ASSERT(n_ < rng_->to_);
                     RANGES_ASSERT(it() != ranges::end(rng_->rng_));
                     return *it();
                 }
-                template<bool OtherConst>
-                bool equal(basic_impl<OtherConst> const &that) const
+                bool equal(impl const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return n_ == that.n_;
@@ -112,17 +107,16 @@ namespace ranges
                     n_ += d;
                     it() += d;
                 }
-                template<bool OtherConst>
                 range_difference_t<InputIterable>
-                distance_to(basic_impl<OtherConst> const & that) const
+                distance_to(impl const & that) const
                 {
                     return that.n_ - n_;
                 }
-                range_iterator_t<base_range> & it()
+                range_iterator_t<InputIterable> & it()
                 {
                     return ranges::get<0>(it_dirt_);
                 }
-                range_iterator_t<base_range> const & it() const
+                range_iterator_t<InputIterable> const & it() const
                 {
                     return ranges::get<0>(it_dirt_);
                 }
@@ -149,19 +143,11 @@ namespace ranges
                     ranges::get<1>(it_dirt_) = b;
                 }
             };
-            basic_impl<false> begin_impl()
+            impl begin_impl() const
             {
                 return {*this, begin_tag{}};
             }
-            basic_impl<true> begin_impl() const
-            {
-                return {*this, begin_tag{}};
-            }
-            basic_impl<false> end_impl()
-            {
-                return {*this, end_tag{}};
-            }
-            basic_impl<true> end_impl() const
+            impl end_impl() const
             {
                 return {*this, end_tag{}};
             }

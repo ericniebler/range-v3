@@ -20,21 +20,21 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename Iterable, bool Const>
+            template<typename Iterable>
             struct basic_adaptor_sentinel;
         }
 
         // Give Iterable::iterator a simple interface for passing to Derived
-        template<typename Iterable, bool Const>
+        template<typename Iterable>
         struct basic_adaptor_impl
         {
         private:
-            template<typename OtherIterable, bool OtherConst>
+            template<typename OtherIterable>
             friend struct detail::basic_adaptor_sentinel;
-            template<typename OtherIterable, bool OtherConst>
+            template<typename OtherIterable>
             friend struct basic_adaptor_impl;
-            using base_range = detail::add_const_if_t<Iterable, Const>;
-            using base_range_iterator = range_iterator_t<base_range>;
+            // TODO remove the const here:
+            using base_range_iterator = range_iterator_t<Iterable const>;
             base_range_iterator it_;
         public:
             constexpr basic_adaptor_impl(base_range_iterator it)
@@ -43,10 +43,9 @@ namespace ranges
             constexpr basic_adaptor_impl()
               : it_{}
             {}
-            // For iterator -> const_iterator conversion
-            template<bool OtherConst, enable_if_t<!OtherConst || Const> = 0>
-            constexpr basic_adaptor_impl(basic_adaptor_impl<Iterable, OtherConst> that)
-              : it_(detail::move(that.it_))
+            template<typename I, CONCEPT_REQUIRES_(Same<I, Iterable>())>
+            basic_adaptor_impl(basic_adaptor_impl<I> that)
+              : it_(std::move(that).it_)
             {}
             basic_adaptor_impl &base()
             {
@@ -64,13 +63,11 @@ namespace ranges
             {
                 return *it_;
             }
-            template<bool OtherConst>
-            bool equal(basic_adaptor_impl<Iterable, OtherConst> const &that) const
+            bool equal(basic_adaptor_impl<Iterable> const &that) const
             {
                 return it_ == that.it_;
             }
-            template<bool OtherConst>
-            bool equal(detail::basic_adaptor_sentinel<Iterable, OtherConst> const &that) const
+            bool equal(detail::basic_adaptor_sentinel<Iterable> const &that) const
             {
                 return that.equal(*this);
             }
@@ -84,10 +81,9 @@ namespace ranges
             {
                 it_ += n;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(RandomAccessIterator<range_iterator_t<Iterable>>())>
+            CONCEPT_REQUIRES(RandomAccessIterator<range_iterator_t<Iterable>>())
             range_difference_t<Iterable>
-            distance_to(basic_adaptor_impl<Iterable, OtherConst> const &that) const
+            distance_to(basic_adaptor_impl<Iterable> const &that) const
             {
                 return that.it_ - it_;
             }
@@ -95,14 +91,14 @@ namespace ranges
 
         namespace detail
         {
-            template<typename Iterable, bool Const>
+            template<typename Iterable>
             struct basic_adaptor_sentinel
             {
             private:
-                template<typename OtherIterable, bool OtherConst>
+                template<typename OtherIterable>
                 friend struct basic_adaptor_sentinel;
-                using base_range = detail::add_const_if_t<Iterable, Const>;
-                using base_range_sentinel = range_sentinel_t<base_range>;
+                // TODO remove the const here
+                using base_range_sentinel = range_sentinel_t<Iterable const>;
                 base_range_sentinel end_;
             public:
                 constexpr basic_adaptor_sentinel(base_range_sentinel end)
@@ -111,10 +107,9 @@ namespace ranges
                 constexpr basic_adaptor_sentinel()
                   : end_{}
                 {}
-                // For iterator -> const_iterator conversion
-                template<bool OtherConst, enable_if_t<!OtherConst || Const> = 0>
-                constexpr basic_adaptor_sentinel(basic_adaptor_sentinel<Iterable, OtherConst> that)
-                  : end_(detail::move(that.end_))
+                template<typename I, CONCEPT_REQUIRES_(Same<I, Iterable>())>
+                basic_adaptor_sentinel(basic_adaptor_sentinel<I> that)
+                  : end_(std::move(that).end_)
                 {}
                 basic_adaptor_sentinel &base()
                 {
@@ -124,20 +119,19 @@ namespace ranges
                 {
                     return *this;
                 }
-                template<bool OtherConst>
-                constexpr bool equal(basic_adaptor_impl<Iterable, OtherConst> const &that) const
+                constexpr bool equal(basic_adaptor_impl<Iterable> const &that) const
                 {
                     return that.it_ == end_;
                 }
             };
         }
 
-        template<typename Iterable, bool Const>
+        template<typename Iterable>
         using basic_adaptor_sentinel =
             detail::conditional_t<
                 (Range<Iterable>())
-              , basic_adaptor_impl<Iterable, Const>
-              , detail::basic_adaptor_sentinel<Iterable, Const>>;
+              , basic_adaptor_impl<Iterable>
+              , detail::basic_adaptor_sentinel<Iterable>>;
 
         template<typename Derived>
         using range_adaptor_t = typename Derived::range_adaptor_;
@@ -163,19 +157,11 @@ namespace ranges
             friend range_core_access;
             friend Derived;
 
-            basic_adaptor_impl<BaseIterable, false> begin_impl()
+            basic_adaptor_impl<BaseIterable> begin_impl() const
             {
                 return {ranges::begin(rng_)};
             }
-            basic_adaptor_impl<BaseIterable, true> begin_impl() const
-            {
-                return {ranges::begin(rng_)};
-            }
-            basic_adaptor_sentinel<BaseIterable, false> end_impl()
-            {
-                return {ranges::end(rng_)};
-            }
-            basic_adaptor_sentinel<BaseIterable, true> end_impl() const
+            basic_adaptor_sentinel<BaseIterable> end_impl() const
             {
                 return {ranges::end(rng_)};
             }
