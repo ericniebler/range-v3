@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        // TODO Make this work with Iterables
         template<typename InputRange>
         struct indirect_range_view
           : range_adaptor<indirect_range_view<InputRange>, InputRange>
@@ -34,7 +35,7 @@ namespace ranges
         private:
             friend range_core_access;
             using base_t = range_adaptor_t<indirect_range_view>;
-            using impl_base_t = basic_adaptor_impl<InputRange, true>;
+            using impl_base_t = basic_adaptor_impl<InputRange>;
 
             struct impl : impl_base_t
             {

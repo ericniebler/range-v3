@@ -37,22 +37,18 @@ namespace ranges
         private:
             friend range_core_access;
             using base_t = range_adaptor_t<transform_iterable_view>;
-            template<bool Const>
-            using impl_base_t = basic_adaptor_impl<InputIterable, Const>;
-            template<bool Const>
-            using sentinel_base_t = basic_adaptor_sentinel<InputIterable, Const>;
+            using impl_base_t = basic_adaptor_impl<InputIterable>;
+            using sentinel_base_t = basic_adaptor_sentinel<InputIterable>;
 
             invokable_t<UnaryFunction> fun_;
 
-            template<bool Const>
-            struct basic_impl : impl_base_t<Const>
+            struct impl : impl_base_t
             {
-                using transform_iterable_view_ = detail::add_const_if_t<transform_iterable_view, Const>;
-                transform_iterable_view_ *rng_;
-                basic_impl() = default;
-                using impl_base_t<Const>::impl_base_t;
-                basic_impl(impl_base_t<Const> base, transform_iterable_view_ &rng)
-                  : impl_base_t<Const>(std::move(base)), rng_(&rng)
+                transform_iterable_view const *rng_;
+                impl() = default;
+                using impl_base_t::impl_base_t;
+                impl(impl_base_t base, transform_iterable_view const &rng)
+                  : impl_base_t(std::move(base)), rng_(&rng)
                 {}
                 auto current() const -> decltype(rng_->fun_(this->base().current()))
                 {
@@ -60,34 +56,22 @@ namespace ranges
                 }
             };
 
-            template<bool Const>
-            struct basic_sentinel : sentinel_base_t<Const>
+            struct sentinel : sentinel_base_t
             {
-                basic_sentinel() = default;
-                using sentinel_base_t<Const>::sentinel_base_t;
-                basic_sentinel(sentinel_base_t<Const> base, transform_iterable_view const &)
-                  : sentinel_base_t<Const>(std::move(base))
+                sentinel() = default;
+                using sentinel_base_t::sentinel_base_t;
+                sentinel(sentinel_base_t base, transform_iterable_view const &)
+                  : sentinel_base_t(std::move(base))
                 {}
             };
 
-            template<bool Const>
-            using basic_sentinel_t =
-                detail::conditional_t<
-                    (Range<InputIterable>()), basic_impl<Const>, basic_sentinel<Const>>;
+            using sentinel_t = detail::conditional_t<(Range<InputIterable>()), impl, sentinel>;
 
-            basic_impl<false> begin_impl()
+            impl begin_impl() const
             {
                 return {this->adaptor().begin_impl(), *this};
             }
-            basic_impl<true> begin_impl() const
-            {
-                return {this->adaptor().begin_impl(), *this};
-            }
-            basic_sentinel_t<false> end_impl()
-            {
-                return {this->adaptor().end_impl(), *this};
-            }
-            basic_sentinel_t<true> end_impl() const
+            sentinel_t end_impl() const
             {
                 return {this->adaptor().end_impl(), *this};
             }

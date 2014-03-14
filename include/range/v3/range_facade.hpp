@@ -209,7 +209,7 @@ namespace ranges
                 std::random_access_iterator_tag;
         }
 
-        template<typename Iterable, bool Const /*= true*/>
+        template<typename Iterable>
         struct basic_range_sentinel
         {
         private:
@@ -217,34 +217,24 @@ namespace ranges
             friend range_core_access;
             friend struct range_facade<Iterable, true>;
             friend struct range_facade<Iterable, false>;
-            friend struct basic_range_iterator<Iterable, true>;
-            friend struct basic_range_iterator<Iterable, false>;
-            friend struct basic_range_sentinel<Iterable, !Const>;
-            using iterable_t = detail::add_const_if_t<Iterable, Const>;
-            using impl_t = decltype(range_core_access::end_impl(std::declval<iterable_t &>()));
+            friend struct basic_range_iterator<Iterable>;
+            using impl_t = decltype(range_core_access::end_impl(std::declval<Iterable &>()));
             impl_t impl_;
             basic_range_sentinel(impl_t impl)
               : impl_(std::move(impl))
             {}
         public:
             basic_range_sentinel() = default;
-            // For sentinel -> const_sentinel conversion
-            template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-            basic_range_sentinel(basic_range_sentinel<Iterable, OtherConst> that)
-              : impl_(std::move(that.impl_))
-            {}
             template<typename...Ts,
                 CONCEPT_REQUIRES_(Constructible<impl_t, public_t, Ts...>())>
             basic_range_sentinel(Ts &&... ts)
               : impl_{public_t{}, std::forward<Ts>(ts)...}
             {}
-            template<bool OtherConst>
-            constexpr bool operator==(basic_range_sentinel<Iterable, OtherConst> const &) const
+            constexpr bool operator==(basic_range_sentinel<Iterable> const &) const
             {
                 return true;
             }
-            template<bool OtherConst>
-            constexpr bool operator!=(basic_range_sentinel<Iterable, OtherConst> const &) const
+            constexpr bool operator!=(basic_range_sentinel<Iterable> const &) const
             {
                 return false;
             }
@@ -255,36 +245,34 @@ namespace ranges
             }
         };
 
-        template<typename Iterable, bool Const>
+        template<typename Iterable>
         struct basic_range_iterator
         {
         private:
-            using iterable_t = detail::add_const_if_t<Iterable, Const>;
-            using impl_t = decltype(range_core_access::begin_impl(std::declval<iterable_t &>()));
+            using impl_t = decltype(range_core_access::begin_impl(std::declval<Iterable &>()));
             CONCEPT_ASSERT(detail::InputImpl<impl_t>());
             using impl_concept_t = detail::impl_concept_t<impl_t>;
             impl_t impl_;
+
             static auto iter_diff(range_core_access::InputImplConcept) ->
                 std::ptrdiff_t;
             template<typename Impl = impl_t>
             static auto iter_diff(range_core_access::RandomAccessImplConcept) ->
-                decltype(std::declval<Impl const&>().distance_to(
-                    std::declval<Impl const&>()));
-            template<bool OtherConst>
-            constexpr bool equal_(basic_range_iterator<Iterable, OtherConst> const&,
+                decltype(std::declval<Impl const&>().distance_to(std::declval<Impl const&>()));
+
+            constexpr bool equal_(basic_range_iterator<Iterable> const&,
                 range_core_access::InputImplConcept *) const
             {
                 return true;
             }
-            template<bool OtherConst>
-            constexpr bool equal_(basic_range_iterator<Iterable, OtherConst> const& that,
+            constexpr bool equal_(basic_range_iterator<Iterable> const& that,
                 range_core_access::ForwardImplConcept *) const
             {
                 return range_core_access::equal(impl_, that.impl_);
             }
         public:
             using reference =
-                decltype(range_core_access::current(std::declval<impl_t const&>()));
+                decltype(range_core_access::current(std::declval<impl_t const &>()));
             using value_type = detail::uncvref_t<reference>;
             using iterator_category = decltype(detail::iter_cat(impl_concept_t{}));
             using difference_type = decltype(basic_range_iterator::iter_diff(impl_concept_t{}));
@@ -293,7 +281,6 @@ namespace ranges
             friend Iterable;
             friend struct range_facade<Iterable, true>;
             friend struct range_facade<Iterable, false>;
-            friend struct basic_range_iterator<Iterable, !Const>;
             using postfix_increment_result_t =
                 detail::postfix_increment_result<
                     basic_range_iterator, value_type, reference, iterator_category>;
@@ -304,11 +291,6 @@ namespace ranges
             {}
         public:
             constexpr basic_range_iterator() = default;
-            // For iterator -> const_iterator conversion
-            template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-            basic_range_iterator(basic_range_iterator<Iterable, OtherConst> that)
-              : impl_(std::move(that.impl_))
-            {}
             template<typename...Ts,
                 CONCEPT_REQUIRES_(Constructible<impl_t, public_t, Ts...>())>
             basic_range_iterator(Ts &&... ts)
@@ -333,36 +315,30 @@ namespace ranges
                 ++*this;
                 return tmp;
             }
-            template<bool OtherConst>
-            constexpr bool operator==(basic_range_iterator<Iterable, OtherConst> const &that) const
+            constexpr bool operator==(basic_range_iterator<Iterable> const &that) const
             {
                 return equal_(that, static_cast<impl_concept_t *>(nullptr));
             }
-            template<bool OtherConst>
-            constexpr bool operator!=(basic_range_iterator<Iterable, OtherConst> const &that) const
+            constexpr bool operator!=(basic_range_iterator<Iterable> const &that) const
             {
                 return !(*this == that);
             }
-            template<bool OtherConst>
             friend constexpr bool operator==(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return range_core_access::equal(right.impl_, left.impl_);
             }
-            template<bool OtherConst>
             friend constexpr bool operator!=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return !(left == right);
             }
-            template<bool OtherConst>
-            friend constexpr bool operator==(basic_range_sentinel<Iterable, OtherConst> const & left,
+            friend constexpr bool operator==(basic_range_sentinel<Iterable> const & left,
                 basic_range_iterator const &right)
             {
                 return range_core_access::equal(left.impl_, right.impl_);
             }
-            template<bool OtherConst>
-            friend constexpr bool operator!=(basic_range_sentinel<Iterable, OtherConst> const &left,
+            friend constexpr bool operator!=(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
                 return !(left == right);
@@ -410,90 +386,77 @@ namespace ranges
                 left -= n;
                 return left;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            difference_type operator-(basic_range_iterator<Iterable, OtherConst> const &right) const
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            difference_type operator-(basic_range_iterator<Iterable> const &right) const
             {
                 return range_core_access::distance_to(right.impl_, impl_);
             }
             // symmetric comparisons
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            bool operator<(basic_range_iterator<Iterable, OtherConst> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            bool operator<(basic_range_iterator<Iterable> const &that) const
             {
                 return 0 < (that - *this);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            bool operator<=(basic_range_iterator<Iterable, OtherConst> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            bool operator<=(basic_range_iterator<Iterable> const &that) const
             {
                 return 0 <= (that - *this);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            bool operator>(basic_range_iterator<Iterable, OtherConst> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            bool operator>(basic_range_iterator<Iterable> const &that) const
             {
                 return (that - *this) < 0;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            bool operator>=(basic_range_iterator<Iterable, OtherConst> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            bool operator>=(basic_range_iterator<Iterable> const &that) const
             {
                 return (that - *this) <= 0;
             }
             // asymmetric comparisons
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
             friend constexpr bool operator<(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return !range_core_access::equal(right.impl_, left.impl_);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
             friend constexpr bool operator<=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return true;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
             friend constexpr bool operator>(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return false;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
             friend constexpr bool operator>=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return range_core_access::equal(right.impl_, left.impl_);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            friend constexpr bool operator<(basic_range_sentinel<Iterable, OtherConst> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            friend constexpr bool operator<(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
                 return false;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            friend constexpr bool operator<=(basic_range_sentinel<Iterable, OtherConst> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            friend constexpr bool operator<=(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
                 return range_core_access::equal(left.impl_, right.impl_);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            friend constexpr bool operator>(basic_range_sentinel<Iterable, OtherConst> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            friend constexpr bool operator>(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
                 return !range_core_access::equal(left.impl_, right.impl_);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            friend constexpr bool operator>=(basic_range_sentinel<Iterable, OtherConst> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            friend constexpr bool operator>=(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
                 return true;
@@ -555,44 +518,16 @@ namespace ranges
             {
                 return {};
             }
-
-            template<typename D, bool Const>
-            using iterator_t = detail::conditional_t<
-                std::is_same<
-                    decltype(range_core_access::begin_impl(std::declval<D &>())),
-                    decltype(range_core_access::begin_impl(std::declval<D const &>()))
-                >::value,
-                basic_range_iterator<D, true>,
-                basic_range_iterator<D, Const>
-            >;
-            template<typename D, bool Const>
-            using sentinel_t = detail::conditional_t<
-                std::is_same<
-                    decltype(range_core_access::end_impl(std::declval<D &>())),
-                    decltype(range_core_access::end_impl(std::declval<D const &>()))
-                >::value,
-                basic_range_sentinel<D, true>,
-                basic_range_sentinel<D, Const>
-            >;
         public:
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
-            iterator_t<D, false> begin()
+            basic_range_iterator<Derived> begin() const
             {
                 return {range_core_access::begin_impl(derived())};
-            };
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
-            iterator_t<D, true> begin() const
-            {
-                return {range_core_access::begin_impl(derived())};
-            };
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
-            detail::conditional_t<(detail::RangeFacade<D>()), iterator_t<D, false>, sentinel_t<D, false>>
-            end()
-            {
-                return {range_core_access::end_impl(derived())};
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
-            detail::conditional_t<(detail::RangeFacade<D>()), iterator_t<D, true>, sentinel_t<D, true>>
+            detail::conditional_t<
+                (detail::RangeFacade<D>()),
+                basic_range_iterator<D>,
+                basic_range_sentinel<D>>
             end() const
             {
                 return {range_core_access::end_impl(derived())};

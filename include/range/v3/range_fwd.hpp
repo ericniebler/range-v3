@@ -214,10 +214,10 @@ namespace ranges
         struct range_base
         {};
 
-        template<typename Derived, bool Const = true>
+        template<typename Derived>
         struct basic_range_iterator;
 
-        template<typename Derived, bool Const = true>
+        template<typename Derived>
         struct basic_range_sentinel;
 
         template<typename Derived, bool Infinite = false>
