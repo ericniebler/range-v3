@@ -698,7 +698,8 @@ void test_view_all()
     std::list<int> li{1,2,3,4};
     RANGES_ASSERT(ranges::size(li)==4);
     auto liter = view::all(li);
-    CONCEPT_ASSERT(Same<decltype(liter), iterator_range<std::list<int>::iterator>>());
+    CONCEPT_ASSERT(Same<decltype(liter), sized_iterator_range<std::list<int>::iterator>>());
+    RANGES_ASSERT(ranges::size(liter) == 4);
 
     auto cli = view::counted(li.begin(), 4);
     static_assert(is_iterable<decltype(cli)>::value, "");
