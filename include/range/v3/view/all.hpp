@@ -72,6 +72,9 @@ namespace ranges
 
             RANGES_CONSTEXPR all_getter all {};
         }
+
+        template<typename ConvertibleToRange>
+        using range_view_all_t = decltype(view::all(std::declval<ConvertibleToRange>()));
     }
 }
 

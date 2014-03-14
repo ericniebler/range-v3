@@ -46,9 +46,6 @@ namespace ranges
         template<typename Rng>
         using range_pointer_t = concepts::Iterable::pointer_t<Rng>;
 
-        template<typename Rng>
-        using range_is_finite_t = concepts::Iterable::is_finite_t<Rng>;
-
         // Metafunctions
         template<typename Rng>
         struct range_iterator
@@ -92,11 +89,11 @@ namespace ranges
             using type = range_reference_t<Rng>;
         };
 
-        template<typename Rng>
-        struct range_is_finite
-        {
-            using type = range_is_finite_t<Rng>;
-        };
+        // User customization point for infinite ranges:
+        template<typename Iterable, typename Void /*= void*/>
+        struct is_infinite
+          : std::is_base_of<detail::is_infinite<true>, Iterable>
+        {};
     }
 }
 

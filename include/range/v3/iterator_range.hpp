@@ -67,7 +67,7 @@ namespace ranges
                 std::advance(begin_end_.first(), n);
                 return *this;
             }
-            CONCEPT_REQUIRES(SameType<Iterator, Sentinel>())
+            CONCEPT_REQUIRES(Same<Iterator, Sentinel>())
             iterator_range & advance_end(iterator_difference_t<Iterator> n)
             {
                 std::advance(begin_end_.second(), n);
@@ -86,6 +86,8 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR ranger range {};
+
+        // TODO add specialization of is_infinite for when we can determine the range is infinite
     }
 }
 

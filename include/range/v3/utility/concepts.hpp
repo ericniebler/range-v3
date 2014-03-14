@@ -210,7 +210,7 @@ namespace ranges
                 using type = most_refined_t<Concept, Ts...>;
             };
 
-            struct SameType
+            struct Same
             {
                 template<typename T, typename U>
                 auto requires(T && t, U && u) -> decltype(
@@ -456,7 +456,7 @@ namespace ranges
         }
 
         template<typename T, typename U>
-        using SameType = concepts::models<concepts::SameType, T, U>;
+        using Same = concepts::models<concepts::Same, T, U>;
 
         template<typename T, typename U>
         using Common = concepts::models<concepts::Common, T, U>;

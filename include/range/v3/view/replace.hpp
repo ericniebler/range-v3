@@ -53,13 +53,14 @@ namespace ranges
                 };
             public:
                 template<typename InputIterable, typename Value1, typename Value2,
-                    CONCEPT_REQUIRES_(ranges::SameType<typename std::decay<Value1>::type,
+                    CONCEPT_REQUIRES_(ranges::Same<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
                 static transform_iterable_view<InputIterable,
                                             replacer_fun<typename std::decay<Value1>::type>>
                 invoke(replacer, InputIterable && rng, Value1 && old_value, Value2 && new_value)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                     CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputIterable>,
                         typename std::decay<Value1>::type const &>());
                     CONCEPT_ASSERT(ranges::Convertible<typename std::decay<Value1>::type const &,
@@ -72,7 +73,7 @@ namespace ranges
 
                 /// \overload
                 template<typename Value1, typename Value2,
-                    CONCEPT_REQUIRES_(ranges::SameType<typename std::decay<Value1>::type,
+                    CONCEPT_REQUIRES_(ranges::Same<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
                 static auto invoke(replacer replace, Value1 && old_value, Value2 && new_value) ->
                     decltype(replace.move_bind(std::placeholders::_1, std::forward<Value1>(old_value),

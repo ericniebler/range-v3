@@ -31,7 +31,8 @@ namespace ranges
             struct taker : bindable<taker>
             {
                 template<typename InputIterable,
-                    CONCEPT_REQUIRES_(ranges::InputIterable<InputIterable>())>
+                    CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
+                                      ranges::InputIterator<range_iterator_t<InputIterable>>())>
                 static slice_range_view<InputIterable>
                 invoke(taker, InputIterable && rng, range_difference_t<InputIterable> to)
                 {

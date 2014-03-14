@@ -59,7 +59,7 @@ namespace ranges
                     this->base().next();
                     satisfy();
                 }
-                CONCEPT_REQUIRES(BidirectionalIterable<InputIterable>())
+                CONCEPT_REQUIRES(BidirectionalIterator<range_iterator_t<InputIterable>>())
                 void prev()
                 {
                     do

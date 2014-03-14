@@ -61,29 +61,32 @@ namespace ranges
         struct distance_ : bindable<distance_>, pipeable<distance_>
         {
         private:
-            template<typename FiniteIterable, typename Distance>
+            template<typename InputIterator, typename Sentinel, typename Distance>
             static Distance
-            impl(FiniteIterable && rng, Distance d, concepts::Iterable)
+            impl(InputIterator begin, Sentinel end, Distance d)
             {
-                return detail::distance(ranges::begin(rng), ranges::end(rng), d).first;
+                return detail::distance(std::move(begin), std::move(end), d).first;
             }
-            template<typename FiniteIterable, typename Distance>
+            template<typename InputIterator, typename Distance>
             static Distance
-            impl(FiniteIterable && rng, Distance d, concepts::CountedIterable)
+            impl(counted_iterator<InputIterator> begin, counted_sentinel<InputIterator> end,
+                Distance d)
             {
-                return Distance{ranges::end(rng).count() - ranges::begin(rng).count()} + d;
+                return Distance{end.count() - begin.count()} + d;
             }
         public:
+            // TODO handle SizedIterables
             template<typename FiniteIterable,
                 typename Distance = range_difference_t<FiniteIterable>,
-                CONCEPT_REQUIRES_(ranges::FiniteIterable<FiniteIterable>() &&
+                CONCEPT_REQUIRES_(ranges::Iterable<FiniteIterable>() &&
                                   ranges::Integral<Distance>())
             >
             static Distance
             invoke(distance_, FiniteIterable && rng, Distance d = Distance{0})
             {
-                return distance_::impl(std::forward<FiniteIterable>(rng), d,
-                    range_concept_t<FiniteIterable>{});
+                static_assert(!ranges::is_infinite<FiniteIterable>::value,
+                    "Trying to compute the length of an infinite range!");
+                return distance_::impl(ranges::begin(rng), ranges::end(rng), d);
             }
         };
 

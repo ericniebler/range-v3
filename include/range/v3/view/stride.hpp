@@ -238,7 +238,8 @@ namespace ranges
                 static stride_range_view<InputRange>
                 invoke(strider, InputRange && rng, range_difference_t<InputRange> step)
                 {
-                    CONCEPT_ASSERT(ranges::InputRange<InputRange>());
+                    CONCEPT_ASSERT(ranges::Range<InputRange>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                     return {std::forward<InputRange>(rng), step};
                 }
 

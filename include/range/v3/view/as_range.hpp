@@ -129,7 +129,8 @@ namespace ranges
                 static as_range_view<InputIterable>
                 invoke(as_ranger, InputIterable && rng)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                     CONCEPT_ASSERT(!ranges::Range<InputIterable>());
                     return as_range_view<InputIterable>{std::forward<InputIterable>(rng)};
                 }
