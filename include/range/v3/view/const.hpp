@@ -18,29 +18,30 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        template<typename Rng>
+        template<typename Iterable>
         struct const_range_view : private range_base
         {
         private:
-            Rng rng_;
+            Iterable rng_;
         public:
-            using iterator = range_iterator_t<typename std::remove_reference<Rng>::type const &>;
-            using const_iterator = iterator;
+            using iterator = range_iterator_t<detail::as_cref_t<Iterable>>;
+            using sentinel = range_sentinel_t<detail::as_cref_t<Iterable>>;
 
-            explicit const_range_view(Rng && rng)
-              : rng_(std::forward<Rng>(rng))
+            explicit const_range_view(Iterable && rng)
+              : rng_(std::forward<Iterable>(rng))
             {}
             iterator begin() const
             {
                 return ranges::cbegin(rng_);
             }
-            iterator end() const
+            sentinel end() const
             {
                 return ranges::cend(rng_);
             }
@@ -50,7 +51,7 @@ namespace ranges
             }
             explicit operator bool() const
             {
-                return begin() != end();
+                return !!*this;
             }
         };
 
@@ -58,10 +59,11 @@ namespace ranges
         {
             struct conster : bindable<conster>, pipeable<conster>
             {
-                template<typename Rng>
-                static const_range_view<Rng> invoke(conster, Rng && rng)
+                template<typename Iterable>
+                static const_range_view<Iterable> invoke(conster, Iterable && rng)
                 {
-                    return const_range_view<Rng>{std::forward<Rng>(rng)};
+                    CONCEPT_ASSERT(ranges::Iterable<Iterable>());
+                    return const_range_view<Iterable>{std::forward<Iterable>(rng)};
                 }
             };
 
