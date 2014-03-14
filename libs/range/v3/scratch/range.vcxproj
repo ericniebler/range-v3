@@ -132,6 +132,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\advance_bounded.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp" />
