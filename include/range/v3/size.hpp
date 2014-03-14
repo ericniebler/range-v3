@@ -1,7 +1,6 @@
 // Boost.Range library
 //
-//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008.
-//  Copyright Eric Niebler 2013.
+//  Copyright Eric Niebler 2014.
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -14,11 +13,8 @@
 #ifndef RANGES_V3_SIZE_HPP
 #define RANGES_V3_SIZE_HPP
 
-#include <iterator>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp> // defines range_size
-#include <range/v3/begin_end.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges

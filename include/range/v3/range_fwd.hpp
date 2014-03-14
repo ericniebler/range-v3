@@ -273,6 +273,9 @@ namespace ranges
         template<typename Iterator, typename Sentinel = Iterator>
         struct iterator_range;
 
+        template<typename Iterator, typename Sentinel = Iterator>
+        struct sized_iterator_range;
+
         struct ranger;
         extern ranger const range;
 
