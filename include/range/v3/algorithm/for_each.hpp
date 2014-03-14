@@ -36,7 +36,8 @@ namespace ranges
         }
 
         template<typename InputIterable, typename Fun,
-            CONCEPT_REQUIRES_(ranges::InputIterable<InputIterable>() &&
+            CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
+                              ranges::InputIterator<range_iterator_t<InputIterable>>() &&
                               ranges::Callable<Fun, range_reference_t<InputIterable>>())>
         range_iterator_t<InputIterable>
         for_each(InputIterable &rng, Fun fun)
