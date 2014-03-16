@@ -36,65 +36,53 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using base_t = range_adaptor_t<filter_iterable_view>;
-            using impl_base_t = basic_adaptor_impl<InputIterable>;
-            using sentinel_base_t = basic_adaptor_sentinel<InputIterable>;
-
+            using base_cursor_t = base_cursor_t<filter_iterable_view>;
             invokable_t<UnaryPredicate> pred_;
 
-            struct impl : impl_base_t
+            struct adaptor : adaptor_defaults
             {
+            private:
                 filter_iterable_view const *rng_;
-                using impl_base_t::impl_base_t;
-                impl() = default;
-                impl(impl_base_t base, filter_iterable_view const &rng)
-                  : impl_base_t(std::move(base)), rng_(&rng)
-                {}
-                void next()
+                void satisfy(base_cursor_t &pos) const
                 {
-                    this->base().next();
-                    satisfy();
+                    auto const e = rng_->base_end();
+                    while (!e.equal(pos) && !rng_->pred_(pos.current()))
+                        pos.next();
+                }
+            public:
+                adaptor() = default;
+                adaptor(filter_iterable_view const &rng)
+                  : rng_(&rng)
+                {}
+                base_cursor_t begin(filter_iterable_view const &rng) const
+                {
+                    auto pos = adaptor_defaults::begin(rng);
+                    this->satisfy(pos);
+                    return pos;
+                }
+                void next(base_cursor_t &pos) const
+                {
+                    pos.next();
+                    this->satisfy(pos);
                 }
                 CONCEPT_REQUIRES(BidirectionalIterator<range_iterator_t<InputIterable>>())
-                void prev()
+                void prev(base_cursor_t &pos) const
                 {
                     do
                     {
-                        this->base().prev();
-                    } while (!rng_->pred_(this->current()));
-                }
-                void satisfy()
-                {
-                    auto const e = rng_->end_impl();
-                    while(!e.equal(*this) && !rng_->pred_(this->current()))
-                        this->next();
+                        pos.prev();
+                    } while (!rng_->pred_(pos.current()));
                 }
             };
-
-            struct sentinel : sentinel_base_t
+            // TODO: if end is a sentinel, it hold an unnecessary pointer back to
+            // this range.
+            adaptor get_adaptor(begin_end_tag) const
             {
-                using sentinel_base_t::sentinel_base_t;
-                sentinel() = default;
-                sentinel(sentinel_base_t base, filter_iterable_view const &)
-                  : sentinel_base_t(std::move(base))
-                {}
-            };
-
-            using sentinel_t = detail::conditional_t<(Range<InputIterable>()), impl, sentinel>;
-
-            impl begin_impl() const
-            {
-                impl begin{this->adaptor().begin_impl(), *this};
-                begin.satisfy();
-                return begin;
-            }
-            sentinel_t end_impl() const
-            {
-                return {this->adaptor().end_impl(), *this};
+                return {*this};
             }
         public:
             filter_iterable_view(InputIterable && rng, UnaryPredicate pred)
-              : base_t(std::forward<InputIterable>(rng))
+              : range_adaptor_t<filter_iterable_view>(std::forward<InputIterable>(rng))
               , pred_(ranges::make_invokable(std::move(pred)))
             {}
         };

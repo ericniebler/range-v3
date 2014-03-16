@@ -77,8 +77,8 @@ namespace ranges
             template<typename Iterator, typename Sentinel>
             struct common_range
             {
-                common_impl<Iterator, Sentinel> begin_impl() const;
-                common_impl<Iterator, Sentinel> end_impl() const;
+                common_impl<Iterator, Sentinel> get_begin() const;
+                common_impl<Iterator, Sentinel> get_end() const;
             };
         }
 

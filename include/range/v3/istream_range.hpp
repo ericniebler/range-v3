@@ -30,7 +30,7 @@ namespace ranges
             friend range_core_access;
             std::istream *sin_;
             mutable Value obj_;
-            struct impl
+            struct cursor
             {
                 istream_iterable const *rng_;
                 void next()
@@ -46,7 +46,7 @@ namespace ranges
                     return !*rng_->sin_;
                 }
             };
-            impl begin_impl() const
+            cursor get_begin() const
             {
                 return {this};
             }

@@ -506,19 +506,19 @@ struct MyRange
 private:
     friend struct ranges::range_core_access;
     std::vector<int> ints_;
-    struct impl
+    struct cursor
     {
-        impl(std::vector<int>::const_iterator it) : iter(it) {}
+        cursor(std::vector<int>::const_iterator it) : iter(it) {}
         std::vector<int>::const_iterator iter;
         int const & current() const { return *iter; }
         void next() { ++iter; }
-        bool equal(impl const &that) const { return iter == that.iter; }
+        bool equal(cursor const &that) const { return iter == that.iter; }
     };
-    impl begin_impl() const
+    cursor get_begin() const
     {
         return {ints_.begin()};
     }
-    impl end_impl() const
+    cursor get_end() const
     {
         return {ints_.end()};
     }
@@ -540,59 +540,56 @@ void test_range_facade()
 
 template<typename BidiRange>
 struct my_reverse_view
-  : ranges::range_adaptor<
-        my_reverse_view<BidiRange>
-      , BidiRange
-      , ranges::is_infinite<BidiRange>::value>
+  : ranges::range_adaptor<my_reverse_view<BidiRange>, BidiRange>
 {
 private:
     CONCEPT_ASSERT(ranges::Range<BidiRange>());
     CONCEPT_ASSERT(ranges::BidirectionalIterator<ranges::range_iterator_t<BidiRange>>());
     friend ranges::range_core_access;
-    using base_t = ranges::range_adaptor_t<my_reverse_view>;
-    using impl_base_t = ranges::basic_adaptor_impl<BidiRange>;
+    using base_cursor_t = ranges::base_cursor_t<my_reverse_view>;
 
-    struct impl : impl_base_t
+    struct adaptor : ranges::adaptor_defaults
     {
-        using impl_base_t::base;
-        using impl_base_t::impl_base_t;
-        void next()
+        // Cross-wire begin and end.
+        base_cursor_t begin(my_reverse_view const &rng) const
         {
-            base().prev();
+            return adaptor_defaults::end(rng);
         }
-        void prev()
+        base_cursor_t end(my_reverse_view const &rng) const
         {
-            base().next();
+            return adaptor_defaults::begin(rng);
         }
-        auto current() const -> decltype(base().current())
+        void next(base_cursor_t &pos)
         {
-            auto tmp = base();
+            pos.prev();
+        }
+        void prev(base_cursor_t &pos)
+        {
+            pos.next();
+        }
+        auto current(base_cursor_t tmp) const -> decltype(tmp.current())
+        {
             tmp.prev();
             return tmp.current();
         }
         CONCEPT_REQUIRES(ranges::RandomAccessIterator<ranges::range_iterator_t<BidiRange>>())
-        void advance(ranges::range_difference_t<BidiRange> n)
+        void advance(base_cursor_t &pos, ranges::range_difference_t<BidiRange> n)
         {
-            base().advance(-n);
+            pos.advance(-n);
         }
         CONCEPT_REQUIRES(ranges::RandomAccessIterator<ranges::range_iterator_t<BidiRange>>())
         ranges::range_difference_t<BidiRange>
-        distance_to(impl const &that)
+        distance_to(base_cursor_t const &here, base_cursor_t const &there)
         {
-            return that.base().distance_to(base());
+            return there.distance_to(here);
         }
     };
-    // Cross-wire begin and end.
-    impl begin_impl() const
+    adaptor get_adaptor(ranges::begin_end_tag) const
     {
-        return {ranges::end(this->base())};
-    }
-    impl end_impl() const
-    {
-        return {ranges::begin(this->base())};
+        return {};
     }
 public:
-    using base_t::base_t;
+    using ranges::range_adaptor_t<my_reverse_view>::range_adaptor_t;
 };
 
 struct my_delimited_range
@@ -820,10 +817,6 @@ int main()
     }
     auto b = lines2.begin();
     range_iterator_t<decltype(lines2) const> bc = b;
-
-    std::cout << "\n";
-    for(auto const &line : lines2.base().base())//.base())
-        std::cout << "> " << line << '\n';
 
     std::cout << "\n";
     auto sizes = std::vector<std::string>{"this","is","his","face"}

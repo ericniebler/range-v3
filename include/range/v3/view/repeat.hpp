@@ -29,7 +29,7 @@ namespace ranges
             Value value_;
             friend range_core_access;
 
-            struct impl
+            struct cursor
             {
                 Value const *value_;
                 Value const &current() const
@@ -43,7 +43,7 @@ namespace ranges
                 void next() const
                 {}
             };
-            impl begin_impl() const
+            cursor get_begin() const
             {
                 return {&value_};
             }

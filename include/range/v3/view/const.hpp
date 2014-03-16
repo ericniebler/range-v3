@@ -26,33 +26,28 @@ namespace ranges
     inline namespace v3
     {
         template<typename Iterable>
-        struct const_range_view : private range_base
+        struct const_iterable_view
+          : range_adaptor<const_iterable_view<Iterable>, Iterable>
         {
         private:
-            Iterable rng_;
+            friend range_core_access;
+            using reference = detail::as_cref_t<range_reference_t<Iterable>>;
+            using base_cursor_t = base_cursor_t<const_iterable_view>;
+            struct adaptor : adaptor_defaults
+            {
+                reference current(base_cursor_t const &pos) const
+                {
+                    return pos.current();
+                }
+            };
+            adaptor get_adaptor(begin_end_tag) const
+            {
+                return {};
+            }
         public:
-            using iterator = range_iterator_t<detail::as_cref_t<Iterable>>;
-            using sentinel = range_sentinel_t<detail::as_cref_t<Iterable>>;
-
-            explicit const_range_view(Iterable && rng)
-              : rng_(std::forward<Iterable>(rng))
+            explicit const_iterable_view(Iterable && rng)
+              : range_adaptor_t<const_iterable_view>(std::forward<Iterable>(rng))
             {}
-            iterator begin() const
-            {
-                return ranges::cbegin(rng_);
-            }
-            sentinel end() const
-            {
-                return ranges::cend(rng_);
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return !!*this;
-            }
         };
 
         namespace view
@@ -60,10 +55,10 @@ namespace ranges
             struct conster : bindable<conster>, pipeable<conster>
             {
                 template<typename Iterable>
-                static const_range_view<Iterable> invoke(conster, Iterable && rng)
+                static const_iterable_view<Iterable> invoke(conster, Iterable && rng)
                 {
                     CONCEPT_ASSERT(ranges::Iterable<Iterable>());
-                    return const_range_view<Iterable>{std::forward<Iterable>(rng)};
+                    return const_iterable_view<Iterable>{std::forward<Iterable>(rng)};
                 }
             };
 

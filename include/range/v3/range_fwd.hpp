@@ -205,6 +205,11 @@ namespace ranges
 
         struct begin_tag {};
         struct end_tag {};
+        struct begin_end_tag
+        {
+            begin_end_tag(begin_tag) {}
+            begin_end_tag(end_tag) {}
+        };
 
         struct use_default;
 
@@ -532,8 +537,8 @@ namespace ranges
             extern as_ranger const as_range;
         }
 
-        template<typename Rng>
-        struct const_range_view;
+        template<typename Iterable>
+        struct const_iterable_view;
 
         namespace view
         {
@@ -566,7 +571,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct indirect_range_view;
+        struct indirect_iterable_view;
 
         namespace view
         {
