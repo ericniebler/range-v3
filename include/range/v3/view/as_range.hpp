@@ -15,7 +15,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/range_facade.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -26,26 +26,42 @@ namespace ranges
     {
         template<typename Iterable>
         struct as_range_view
-          : range_adaptor<as_range_view<Iterable>, Iterable>
+          : range_facade<as_range_view<Iterable>, is_infinite<Iterable>::value>
         {
         private:
             friend range_core_access;
+            Iterable rng_;
 
-            struct impl
+            struct cursor
             {
-                using base_iterator_t = range_iterator_t<Iterable>;
-                using base_sentinel_t = range_sentinel_t<Iterable>;
+            private:
+                using base_iterator_t = range_iterator_t<Iterable const>;
+                using base_sentinel_t = range_sentinel_t<Iterable const>;
 
                 base_iterator_t it_;
                 base_sentinel_t se_;
                 bool is_sentinel_;
 
+                void clean()
+                {
+                    if(is_sentinel_)
+                    {
+                        while(it_ != se_)
+                            ++it_;
+                        is_sentinel_ = false;
+                    }
+                }
+            public:
+                cursor() = default;
+                cursor(base_iterator_t it, base_sentinel_t se, bool is_sentinel)
+                  : it_(std::move(it)), se_(std::move(se)), is_sentinel_(is_sentinel)
+                {}
                 auto current() const -> decltype(*it_)
                 {
                     RANGES_ASSERT(!is_sentinel_ && it_ != se_);
                     return *it_;
                 }
-                bool equal(impl const &that) const
+                bool equal(cursor const &that) const
                 {
                     return is_sentinel_ ?
                         that.is_sentinel_ || that.it_ == se_ :
@@ -71,33 +87,24 @@ namespace ranges
                     it_ += n;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                range_difference_t<Iterable> distance_to(impl const &that) const
+                range_difference_t<Iterable> distance_to(cursor const &that) const
                 {
                     clean();
                     that.clean();
                     return that.it_ - it_;
                 }
-                void clean()
-                {
-                    if(is_sentinel_)
-                    {
-                        while(it_ != se_)
-                            ++it_;
-                        is_sentinel_ = false;
-                    }
-                }
             };
-            impl begin_impl() const
+            cursor get_begin() const
             {
-                return {ranges::begin(this->base()), ranges::end(this->base()), false};
+                return {ranges::begin(rng_), ranges::end(rng_), false};
             }
-            impl end_impl() const
+            cursor get_end() const
             {
-                return {ranges::begin(this->base()), ranges::end(this->base()), true};
+                return {ranges::begin(rng_), ranges::end(rng_), true};
             }
         public:
             explicit as_range_view(Iterable && rng)
-              : range_adaptor_t<as_range_view>(std::forward<Iterable>(rng))
+              : rng_(std::forward<Iterable>(rng))
             {}
         };
 

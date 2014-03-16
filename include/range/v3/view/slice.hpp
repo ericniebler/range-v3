@@ -60,16 +60,16 @@ namespace ranges
 
             using is_dirty_t = detail::conditional_t<is_bidi(), bool, constant<bool, false>>;
 
-            struct impl
+            struct cursor
             {
                 slice_range_view const *rng_;
                 range_difference_t<InputIterable> n_;
                 compressed_tuple<range_iterator_t<InputIterable>, is_dirty_t> it_dirt_;
 
-                impl(slice_range_view const &rng, begin_tag)
+                cursor(slice_range_view const &rng, begin_tag)
                   : rng_(&rng), n_(rng_->from_), it_dirt_{rng_->begin_, false}
                 {}
-                impl(slice_range_view const &rng, end_tag)
+                cursor(slice_range_view const &rng, end_tag)
                   : rng_(&rng), n_(rng_->to_), it_dirt_{rng_->begin_, true}
                 {
                     if(is_rand())
@@ -81,7 +81,7 @@ namespace ranges
                     RANGES_ASSERT(it() != ranges::end(rng_->rng_));
                     return *it();
                 }
-                bool equal(impl const &that) const
+                bool equal(cursor const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return n_ == that.n_;
@@ -108,7 +108,7 @@ namespace ranges
                     it() += d;
                 }
                 range_difference_t<InputIterable>
-                distance_to(impl const & that) const
+                distance_to(cursor const & that) const
                 {
                     return that.n_ - n_;
                 }
@@ -143,11 +143,11 @@ namespace ranges
                     ranges::get<1>(it_dirt_) = b;
                 }
             };
-            impl begin_impl() const
+            cursor get_begin() const
             {
                 return {*this, begin_tag{}};
             }
-            impl end_impl() const
+            cursor get_end() const
             {
                 return {*this, end_tag{}};
             }

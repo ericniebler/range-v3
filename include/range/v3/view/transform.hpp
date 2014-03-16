@@ -36,48 +36,33 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using base_t = range_adaptor_t<transform_iterable_view>;
-            using impl_base_t = basic_adaptor_impl<InputIterable>;
-            using sentinel_base_t = basic_adaptor_sentinel<InputIterable>;
-
+            using base_cursor_t = base_cursor_t<transform_iterable_view>;
             invokable_t<UnaryFunction> fun_;
 
-            struct impl : impl_base_t
+            struct adaptor : adaptor_defaults
             {
+            private:
                 transform_iterable_view const *rng_;
-                impl() = default;
-                using impl_base_t::impl_base_t;
-                impl(impl_base_t base, transform_iterable_view const &rng)
-                  : impl_base_t(std::move(base)), rng_(&rng)
+            public:
+                adaptor() = default;
+                adaptor(transform_iterable_view const &rng)
+                  : rng_(&rng)
                 {}
-                auto current() const -> decltype(rng_->fun_(this->base().current()))
+                auto current(base_cursor_t const &pos) const ->
+                    decltype(rng_->fun_(pos.current()))
                 {
-                    return rng_->fun_(this->base().current());
+                    return rng_->fun_(pos.current());
                 }
             };
-
-            struct sentinel : sentinel_base_t
+            // TODO: if end is a sentinel, it hold an unnecessary pointer back to
+            // this range.
+            adaptor get_adaptor(begin_end_tag) const
             {
-                sentinel() = default;
-                using sentinel_base_t::sentinel_base_t;
-                sentinel(sentinel_base_t base, transform_iterable_view const &)
-                  : sentinel_base_t(std::move(base))
-                {}
-            };
-
-            using sentinel_t = detail::conditional_t<(Range<InputIterable>()), impl, sentinel>;
-
-            impl begin_impl() const
-            {
-                return {this->adaptor().begin_impl(), *this};
-            }
-            sentinel_t end_impl() const
-            {
-                return {this->adaptor().end_impl(), *this};
+                return {*this};
             }
         public:
             transform_iterable_view(InputIterable && rng, UnaryFunction fun)
-              : base_t(std::forward<InputIterable>(rng))
+              : range_adaptor_t<transform_iterable_view>(std::forward<InputIterable>(rng))
               , fun_(ranges::make_invokable(std::move(fun)))
             {}
         };

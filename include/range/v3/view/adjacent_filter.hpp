@@ -34,7 +34,7 @@ namespace ranges
             friend range_core_access;
             compressed_pair<ForwardRange, invokable_t<BinaryPredicate>> rng_and_pred_;
 
-            struct impl
+            struct cursor
             {
                 using base_range = ForwardRange;
                 using base_range_iterator = range_iterator_t<base_range>;
@@ -42,8 +42,8 @@ namespace ranges
                 adjacent_filter_range_view const *rng_;
                 base_range_iterator it_;
 
-                constexpr impl() = default;
-                impl(adjacent_filter_range_view const &rng, base_range_iterator it)
+                constexpr cursor() = default;
+                cursor(adjacent_filter_range_view const &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
                 {}
                 void next()
@@ -55,7 +55,7 @@ namespace ranges
                     for(; it_ != e && !pred(*prev, *it_); ++it_)
                         ;
                 }
-                bool equal(impl const &that) const
+                bool equal(cursor const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
@@ -66,11 +66,11 @@ namespace ranges
                     return *it_;
                 }
             };
-            impl begin_impl() const
+            cursor get_begin() const
             {
                 return {*this, ranges::begin(base())};
             }
-            impl end_impl() const
+            cursor get_end() const
             {
                 return {*this, ranges::end(base())};
             }

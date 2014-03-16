@@ -23,32 +23,29 @@ namespace ranges
     {
         template<typename InputIterable, typename Value>
         struct delimit_iterable_view
-          : range_adaptor<
-                delimit_iterable_view<InputIterable, Value>,
-                InputIterable>
+          : range_adaptor<delimit_iterable_view<InputIterable, Value>, InputIterable>
         {
         private:
             friend range_core_access;
-            using base_t = range_adaptor_t<delimit_iterable_view>;
-            using sentinel_base_t = basic_adaptor_sentinel<InputIterable>;
             Value value_;
 
-            struct sentinel : sentinel_base_t
+            using base_t        = range_adaptor_t<delimit_iterable_view>;
+            using base_cursor_t  = base_cursor_t<delimit_iterable_view>;
+            using base_sentinel_t    = base_sentinel_t<delimit_iterable_view>;
+            struct end_adaptor : adaptor_defaults
             {
                 Value const *value_;
-                using sentinel_base_t::sentinel_base_t;
-                sentinel(sentinel_base_t base, Value const *value)
-                  : sentinel_base_t(std::move(base)), value_(value)
-                {}
-                bool equal(basic_adaptor_impl<InputIterable> const &that) const
+                end_adaptor() = default;
+                end_adaptor(Value const *value) : value_(value) {}
+                bool empty(base_cursor_t const &pos, base_sentinel_t const &end) const
                 {
-                    return this->base().equal(that) ||
-                           that.current() == *value_;
+                    return end.equal(pos) || pos.current() == *value_;
                 }
             };
-            sentinel end_impl() const
+            using base_t::get_adaptor;
+            end_adaptor get_adaptor(end_tag) const
             {
-                return {this->adaptor().end_impl(), &value_};
+                return {&value_};
             }
         public:
             delimit_iterable_view(InputIterable && rng, Value value)
