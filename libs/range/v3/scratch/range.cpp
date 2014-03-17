@@ -360,8 +360,8 @@ void test_move_view()
     };
     auto x = vs | view::move;
     CONCEPT_ASSERT(Same<range_concept_t<decltype(x)>, concepts::SizedRange>());
-    // BUGBUG this should be Input
-    CONCEPT_ASSERT(Same<iterator_concept_t<decltype(x.begin())>, concepts::ForwardIterator>());
+    CONCEPT_ASSERT(Same<iterator_concept_t<decltype(x.begin())>, concepts::InputIterator>());
+    CONCEPT_ASSERT(Same<iterator_category_t<decltype(x.begin())>, std::input_iterator_tag>());
     if(0) std::cout << x.begin()->c_str() << std::endl;
     std::vector<std::string> vs2(x.begin(), x.end());
     static_assert(std::is_same<std::string&&, decltype(*x.begin())>::value, "");

@@ -138,7 +138,7 @@ namespace ranges
                 return pos.done();
             }
             template<typename Cursor>
-            static constexpr auto equal(Cursor const &pos0, Cursor const &pos1) ->
+            static auto equal(Cursor const &pos0, Cursor const &pos1) ->
                 decltype(pos0.equal(pos1))
             {
                 return pos0.equal(pos1);
@@ -178,6 +178,52 @@ namespace ranges
             {
                 return pos.count();
             }
+
+        private:
+            template<typename Cursor>
+            using random_access_cursor_difference_t =
+                decltype(range_core_access::distance_to(std::declval<Cursor>(), std::declval<Cursor>()));
+
+            template<typename Cursor, typename Enable = void>
+            struct cursor_difference2
+            {
+                using type = std::ptrdiff_t;
+            };
+
+            template<typename Cursor>
+            struct cursor_difference2<Cursor, detail::always_t<void, random_access_cursor_difference_t<Cursor>>>
+            {
+                using type = random_access_cursor_difference_t<Cursor>;
+            };
+
+            template<typename Cursor, typename Enable = void>
+            struct cursor_difference
+              : cursor_difference2<Cursor>
+            {};
+
+            template<typename Cursor>
+            struct cursor_difference<Cursor, detail::always_t<void, typename Cursor::difference_type>>
+            {
+                using type = typename Cursor::difference_type;
+            };
+
+            template<typename T, typename Enable = void>
+            struct single_pass
+            {
+                using type = std::false_type;
+            };
+
+            template<typename T>
+            struct single_pass<T, detail::always_t<void, typename T::single_pass>>
+            {
+                using type = typename T::single_pass;
+            };
+        public:
+            template<typename Cursor>
+            using cursor_difference_t = typename cursor_difference<Cursor>::type;
+
+            template<typename Cursor>
+            using single_pass_t = typename single_pass<Cursor>::type;
         };
 
         namespace detail
@@ -266,14 +312,13 @@ namespace ranges
         private:
             using cursor_t = decltype(range_core_access::get_begin(std::declval<Iterable &>()));
             CONCEPT_ASSERT(detail::InputCursor<cursor_t>());
-            using cursor_concept_t = detail::cursor_concept_t<cursor_t>;
+            using cursor_concept_t =
+                detail::conditional_t<
+                    range_core_access::single_pass_t<Iterable>::value ||
+                        range_core_access::single_pass_t<cursor_t>::value,
+                    range_core_access::InputCursorConcept,
+                    detail::cursor_concept_t<cursor_t>>;
             cursor_t pos_;
-
-            static auto iter_diff(range_core_access::InputCursorConcept) ->
-                std::ptrdiff_t;
-            template<typename Cursor = cursor_t>
-            static auto iter_diff(range_core_access::RandomAccessCursorConcept) ->
-                decltype(std::declval<Cursor const&>().distance_to(std::declval<Cursor const&>()));
 
             constexpr bool equal_(basic_range_iterator<Iterable> const&,
                 range_core_access::InputCursorConcept *) const
@@ -290,7 +335,7 @@ namespace ranges
                 decltype(range_core_access::current(std::declval<cursor_t const &>()));
             using value_type = detail::uncvref_t<reference>;
             using iterator_category = decltype(detail::iter_cat(cursor_concept_t{}));
-            using difference_type = decltype(basic_range_iterator::iter_diff(cursor_concept_t{}));
+            using difference_type = range_core_access::cursor_difference_t<cursor_t>;
             using pointer = typename detail::operator_arrow_dispatch<reference>::type;
         private:
             friend Iterable;

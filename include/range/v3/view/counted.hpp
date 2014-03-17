@@ -34,7 +34,7 @@ namespace ranges
                 InputIterator it_;
                 iterator_difference_t<InputIterator> n_;
                 cursor(public_t, InputIterator it, iterator_difference_t<InputIterator> n)
-                  : it_(it), n_(n)
+                  : it_(std::move(it)), n_(n)
                 {}
                 InputIterator base() const
                 {

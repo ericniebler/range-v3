@@ -32,7 +32,12 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using reference = detail::as_cref_t<range_reference_t<Iterable>>;
+            using base_reference = range_reference_t<Iterable>;
+            using reference =
+                detail::conditional_t<
+                    std::is_lvalue_reference<base_reference>::value,
+                    typename std::remove_reference<base_reference>::type const &,
+                    base_reference>;
             using base_cursor_t = base_cursor_t<const_iterable_view>;
             struct adaptor : adaptor_defaults
             {

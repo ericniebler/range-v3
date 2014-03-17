@@ -30,9 +30,7 @@ namespace ranges
     {
         template<typename InputIterable, typename UnaryFunction>
         struct transform_iterable_view
-          : range_adaptor<
-                transform_iterable_view<InputIterable, UnaryFunction>,
-                InputIterable>
+          : range_adaptor<transform_iterable_view<InputIterable, UnaryFunction>, InputIterable>
         {
         private:
             friend range_core_access;

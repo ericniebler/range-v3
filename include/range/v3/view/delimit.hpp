@@ -34,7 +34,9 @@ namespace ranges
             using base_sentinel_t    = base_sentinel_t<delimit_iterable_view>;
             struct end_adaptor : adaptor_defaults
             {
+            private:
                 Value const *value_;
+            public:
                 end_adaptor() = default;
                 end_adaptor(Value const *value) : value_(value) {}
                 bool empty(base_cursor_t const &pos, base_sentinel_t const &end) const

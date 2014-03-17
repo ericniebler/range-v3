@@ -34,8 +34,8 @@ namespace ranges
         {
         private:
             friend range_core_access;
+            using single_pass = std::true_type;
             using base_cursor_t = base_cursor_t<move_iterable_view>;
-            // BUGBUG defines a forward cursor, but should be input.
             struct adaptor : adaptor_defaults
             {
             private:

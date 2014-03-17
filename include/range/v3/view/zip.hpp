@@ -28,6 +28,7 @@
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
+#include <range/v3/utility/debug_iterator.hpp>
 
 namespace ranges
 {

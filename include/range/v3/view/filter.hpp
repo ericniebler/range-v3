@@ -30,9 +30,7 @@ namespace ranges
     {
         template<typename InputIterable, typename UnaryPredicate>
         struct filter_iterable_view
-          : range_adaptor<
-                filter_iterable_view<InputIterable, UnaryPredicate>,
-                InputIterable>
+          : range_adaptor<filter_iterable_view<InputIterable, UnaryPredicate>, InputIterable>
         {
         private:
             friend range_core_access;
@@ -43,10 +41,11 @@ namespace ranges
             {
             private:
                 filter_iterable_view const *rng_;
+                using adaptor_defaults::advance;
                 void satisfy(base_cursor_t &pos) const
                 {
-                    auto const e = rng_->base_end();
-                    while (!e.equal(pos) && !rng_->pred_(pos.current()))
+                    auto const end = adaptor_defaults::end(*rng_);
+                    while(!end.equal(pos) && !rng_->pred_(pos.current()))
                         pos.next();
                 }
             public:
