@@ -17,40 +17,42 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        template<typename Rng>
-        struct const_range_view : private range_base
+        template<typename Iterable>
+        struct const_iterable_view
+          : range_adaptor<const_iterable_view<Iterable>, Iterable>
         {
         private:
-            Rng rng_;
+            friend range_core_access;
+            using reference = detail::as_cref_t<range_reference_t<Iterable>>;
+            using base_cursor_t = base_cursor_t<const_iterable_view>;
+            struct adaptor : adaptor_defaults
+            {
+                reference current(base_cursor_t const &pos) const
+                {
+                    return pos.current();
+                }
+            };
+            adaptor get_adaptor(begin_end_tag) const
+            {
+                return {};
+            }
         public:
-            using iterator = range_iterator_t<typename std::remove_reference<Rng>::type const &>;
-            using const_iterator = iterator;
-
-            explicit const_range_view(Rng && rng)
-              : rng_(std::forward<Rng>(rng))
+            explicit const_iterable_view(Iterable && rng)
+              : range_adaptor_t<const_iterable_view>(std::forward<Iterable>(rng))
             {}
-            iterator begin() const
+            CONCEPT_REQUIRES(SizedIterable<Iterable>())
+            range_size_t<Iterable> size() const
             {
-                return ranges::cbegin(rng_);
-            }
-            iterator end() const
-            {
-                return ranges::cend(rng_);
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
+                return this->base_size();
             }
         };
 
@@ -58,10 +60,11 @@ namespace ranges
         {
             struct conster : bindable<conster>, pipeable<conster>
             {
-                template<typename Rng>
-                static const_range_view<Rng> invoke(conster, Rng && rng)
+                template<typename Iterable>
+                static const_iterable_view<Iterable> invoke(conster, Iterable && rng)
                 {
-                    return const_range_view<Rng>{std::forward<Rng>(rng)};
+                    CONCEPT_ASSERT(ranges::Iterable<Iterable>());
+                    return const_iterable_view<Iterable>{std::forward<Iterable>(rng)};
                 }
             };
 

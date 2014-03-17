@@ -34,27 +34,17 @@ namespace ranges
             friend range_core_access;
             compressed_pair<ForwardRange, invokable_t<BinaryPredicate>> rng_and_pred_;
 
-            template<bool Const>
-            struct basic_impl
+            struct cursor
             {
-                using base_range = detail::add_const_if_t<ForwardRange, Const>;
+                using base_range = ForwardRange;
                 using base_range_iterator = range_iterator_t<base_range>;
-                using adjacent_filter_range_view_ =
-                    detail::add_const_if_t<adjacent_filter_range_view, Const>;
 
-                adjacent_filter_range_view_ *rng_;
+                adjacent_filter_range_view const *rng_;
                 base_range_iterator it_;
 
-                constexpr basic_impl()
-                  : rng_{}, it_{}
-                {}
-                basic_impl(adjacent_filter_range_view_ &rng, base_range_iterator it)
+                constexpr cursor() = default;
+                cursor(adjacent_filter_range_view const &rng, base_range_iterator it)
                   : rng_(&rng), it_(std::move(it))
-                {}
-                // For iterator -> const_iterator conversion
-                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-                basic_impl(basic_impl<OtherConst> that)
-                  : rng_(that.rng_), it_(std::move(that).it_)
                 {}
                 void next()
                 {
@@ -65,8 +55,7 @@ namespace ranges
                     for(; it_ != e && !pred(*prev, *it_); ++it_)
                         ;
                 }
-                template<bool OtherConst>
-                bool equal(basic_impl<OtherConst> const &that) const
+                bool equal(cursor const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);
                     return it_ == that.it_;
@@ -77,26 +66,17 @@ namespace ranges
                     return *it_;
                 }
             };
-            basic_impl<false> begin_impl()
+            cursor get_begin() const
             {
                 return {*this, ranges::begin(base())};
             }
-            basic_impl<true> begin_impl() const
-            {
-                return {*this, ranges::begin(base())};
-            }
-            basic_impl<false> end_impl()
-            {
-                return {*this, ranges::end(base())};
-            }
-            basic_impl<true> end_impl() const
+            cursor get_end() const
             {
                 return {*this, ranges::end(base())};
             }
         public:
             adjacent_filter_range_view(ForwardRange && rng, BinaryPredicate pred)
-              : rng_and_pred_{std::forward<ForwardRange>(rng),
-                              make_invokable(std::move(pred))}
+              : rng_and_pred_{std::forward<ForwardRange>(rng), make_invokable(std::move(pred))}
             {}
             ForwardRange & base()
             {
@@ -116,7 +96,8 @@ namespace ranges
                 static adjacent_filter_range_view<ForwardRange, BinaryPredicate>
                 invoke(adjacent_filterer, ForwardRange && rng, BinaryPredicate pred)
                 {
-                    CONCEPT_ASSERT(ranges::ForwardRange<ForwardRange>());
+                    CONCEPT_ASSERT(ranges::Range<ForwardRange>());
+                    CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardRange>>());
                     CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
                                                            range_reference_t<ForwardRange>,
                                                            range_reference_t<ForwardRange>>());

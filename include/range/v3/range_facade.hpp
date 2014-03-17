@@ -24,12 +24,10 @@ namespace ranges
 
         struct range_core_access
         {
-            range_core_access() = delete;
-
             //
-            // Concepts that the range impl must model
+            // Concepts that the range cursor must model
             //
-            struct InputImplConcept
+            struct InputCursorConcept
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -39,8 +37,8 @@ namespace ranges
                         (t.next(), concepts::void_)
                     ));
             };
-            struct ForwardImplConcept
-              : concepts::refines<InputImplConcept>
+            struct ForwardCursorConcept
+              : concepts::refines<InputCursorConcept>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -48,8 +46,8 @@ namespace ranges
                         concepts::convertible_to<bool>(t.equal(t))
                     ));
             };
-            struct BidirectionalImplConcept
-              : concepts::refines<ForwardImplConcept>
+            struct BidirectionalCursorConcept
+              : concepts::refines<ForwardCursorConcept>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -57,8 +55,8 @@ namespace ranges
                         (t.prev(), concepts::void_)
                     ));
             };
-            struct RandomAccessImplConcept
-              : concepts::refines<BidirectionalImplConcept>
+            struct RandomAccessCursorConcept
+              : concepts::refines<BidirectionalCursorConcept>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -67,7 +65,7 @@ namespace ranges
                         (t.advance(t.distance_to(t)), concepts::void_)
                     ));
             };
-            struct InfiniteImplConcept
+            struct InfiniteCursorConcept
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -75,8 +73,8 @@ namespace ranges
                         concepts::is_true(typename T::is_infinite{})
                     ));
             };
-            struct CountedImplConcept
-              : concepts::refines<InputImplConcept>
+            struct CountedCursorConcept
+              : concepts::refines<InputCursorConcept>
             {
                 template<typename T>
                 using base_iterator_t = decltype(std::declval<T>().base());
@@ -98,118 +96,135 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::same_type(t.begin_impl(), t.end_impl())
+                        concepts::same_type(t.get_begin(), t.get_end())
                     ));
             };
 
             template<typename Range>
-            static auto begin_impl(Range & rng) -> decltype(rng.begin_impl())
+            static auto get_begin(Range & rng) -> decltype(rng.get_begin())
             {
-                return rng.begin_impl();
+                return rng.get_begin();
             }
             template<typename Range>
-            static auto end_impl(Range & rng) -> decltype(rng.end_impl())
+            static auto get_end(Range & rng) -> decltype(rng.get_end())
             {
-                return rng.end_impl();
+                return rng.get_end();
             }
 
-            template<typename Impl>
-            static auto current(Impl const &impl) -> decltype(impl.current())
+            template<typename Range>
+            static auto begin_adaptor(Range & rng) -> decltype(rng.get_adaptor(begin_tag{}))
             {
-                return impl.current();
+                return rng.get_adaptor(begin_tag{});
             }
-            template<typename Impl>
-            static auto next(Impl & impl) -> decltype(impl.next())
+            template<typename Range>
+            static auto end_adaptor(Range & rng) -> decltype(rng.get_adaptor(end_tag{}))
             {
-                impl.next();
+                return rng.get_adaptor(end_tag{});
             }
-            template<typename Impl>
-            static constexpr auto done(Impl const & impl) -> decltype(impl.done())
+
+            template<typename Cursor>
+            static auto current(Cursor const &pos) -> decltype(pos.current())
             {
-                return impl.done();
+                return pos.current();
             }
-            template<typename Impl0, typename Impl1>
-            static constexpr auto equal(Impl0 const &impl0, Impl1 const &impl1) ->
-                decltype(impl0.equal(impl1))
+            template<typename Cursor>
+            static auto next(Cursor & pos) -> decltype(pos.next())
             {
-                return impl0.equal(impl1);
+                pos.next();
             }
-            template<typename Impl>
-            static auto prev(Impl & impl) -> decltype(impl.prev())
+            template<typename Cursor>
+            static constexpr auto done(Cursor const & pos) -> decltype(pos.done())
             {
-                impl.prev();
+                return pos.done();
             }
-            template<typename Impl, typename Difference>
-            static auto advance(Impl & impl, Difference n) ->
-                decltype(impl.advance(n))
+            template<typename Cursor>
+            static constexpr auto equal(Cursor const &pos0, Cursor const &pos1) ->
+                decltype(pos0.equal(pos1))
             {
-                impl.advance(n);
+                return pos0.equal(pos1);
             }
-            template<typename Impl0, typename Impl1>
-            static auto distance_to(Impl0 const &impl0, Impl1 const &impl1) ->
-                decltype(impl0.distance_to(impl1))
+            template<typename Cursor, typename Sentinel>
+            static constexpr auto empty(Cursor const &pos, Sentinel const &end) ->
+                decltype(end.equal(pos))
             {
-                return impl0.distance_to(impl1);
+                return end.equal(pos);
             }
-            template<typename Impl>
-            static auto base(Impl const &impl) ->
-                decltype(impl.base())
+            template<typename Cursor>
+            static auto prev(Cursor & pos) -> decltype(pos.prev())
             {
-                return impl.base();
+                pos.prev();
             }
-            template<typename Impl>
-            static auto count(Impl const &impl) ->
-                decltype(impl.count())
+            template<typename Cursor, typename Difference>
+            static auto advance(Cursor & pos, Difference n) ->
+                decltype(pos.advance(n))
             {
-                return impl.count();
+                pos.advance(n);
+            }
+            template<typename Cursor>
+            static auto distance_to(Cursor const &pos0, Cursor const &pos1) ->
+                decltype(pos0.distance_to(pos1))
+            {
+                return pos0.distance_to(pos1);
+            }
+            template<typename Cursor>
+            static auto base(Cursor const &pos) ->
+                decltype(pos.base())
+            {
+                return pos.base();
+            }
+            template<typename Cursor>
+            static auto count(Cursor const &pos) ->
+                decltype(pos.count())
+            {
+                return pos.count();
             }
         };
 
         namespace detail
         {
             template<typename T>
-            using InputImpl =
-                concepts::models<range_core_access::InputImplConcept, T>;
+            using InputCursor =
+                concepts::models<range_core_access::InputCursorConcept, T>;
 
             template<typename T>
-            using ForwardImpl =
-                concepts::models<range_core_access::ForwardImplConcept, T>;
+            using ForwardCursor =
+                concepts::models<range_core_access::ForwardCursorConcept, T>;
 
             template<typename T>
-            using BidirectionalImpl =
-                concepts::models<range_core_access::BidirectionalImplConcept, T>;
+            using BidirectionalCursor =
+                concepts::models<range_core_access::BidirectionalCursorConcept, T>;
 
             template<typename T>
-            using RandomAccessImpl =
-                concepts::models<range_core_access::RandomAccessImplConcept, T>;
+            using RandomAccessCursor =
+                concepts::models<range_core_access::RandomAccessCursorConcept, T>;
 
             template<typename T>
-            using InfiniteImpl =
-                concepts::models<range_core_access::InfiniteImplConcept, T>;
+            using InfiniteCursor =
+                concepts::models<range_core_access::InfiniteCursorConcept, T>;
 
             template<typename T>
-            using CountedImpl =
-                concepts::models<range_core_access::CountedImplConcept, T>;
+            using CountedCursor =
+                concepts::models<range_core_access::CountedCursorConcept, T>;
 
             template<typename T>
-            using impl_concept_t =
-                concepts::most_refined_t<range_core_access::RandomAccessImplConcept, T>;
+            using cursor_concept_t =
+                concepts::most_refined_t<range_core_access::RandomAccessCursorConcept, T>;
 
             template<typename T>
             using RangeFacade =
                 concepts::models<range_core_access::RangeFacadeConcept, T>;
 
-            static auto iter_cat(range_core_access::InputImplConcept) ->
+            static auto iter_cat(range_core_access::InputCursorConcept) ->
                 std::input_iterator_tag;
-            static auto iter_cat(range_core_access::ForwardImplConcept) ->
+            static auto iter_cat(range_core_access::ForwardCursorConcept) ->
                 std::forward_iterator_tag;
-            static auto iter_cat(range_core_access::BidirectionalImplConcept) ->
+            static auto iter_cat(range_core_access::BidirectionalCursorConcept) ->
                 std::bidirectional_iterator_tag;
-            static auto iter_cat(range_core_access::RandomAccessImplConcept) ->
+            static auto iter_cat(range_core_access::RandomAccessCursorConcept) ->
                 std::random_access_iterator_tag;
         }
 
-        template<typename Iterable, bool Const /*= true*/>
+        template<typename Iterable>
         struct basic_range_sentinel
         {
         private:
@@ -217,106 +232,88 @@ namespace ranges
             friend range_core_access;
             friend struct range_facade<Iterable, true>;
             friend struct range_facade<Iterable, false>;
-            friend struct basic_range_iterator<Iterable, true>;
-            friend struct basic_range_iterator<Iterable, false>;
-            friend struct basic_range_sentinel<Iterable, !Const>;
-            using iterable_t = detail::add_const_if_t<Iterable, Const>;
-            using impl_t = decltype(range_core_access::end_impl(std::declval<iterable_t &>()));
-            impl_t impl_;
-            basic_range_sentinel(impl_t impl)
-              : impl_(std::move(impl))
+            friend struct basic_range_iterator<Iterable>;
+            using sentinel_t = decltype(range_core_access::get_end(std::declval<Iterable &>()));
+            sentinel_t end_;
+            basic_range_sentinel(sentinel_t end)
+              : end_(std::move(end))
             {}
         public:
             basic_range_sentinel() = default;
-            // For sentinel -> const_sentinel conversion
-            template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-            basic_range_sentinel(basic_range_sentinel<Iterable, OtherConst> that)
-              : impl_(std::move(that.impl_))
-            {}
             template<typename...Ts,
-                CONCEPT_REQUIRES_(Constructible<impl_t, public_t, Ts...>())>
+                CONCEPT_REQUIRES_(Constructible<sentinel_t, public_t, Ts...>())>
             basic_range_sentinel(Ts &&... ts)
-              : impl_{public_t{}, std::forward<Ts>(ts)...}
+              : end_{public_t{}, std::forward<Ts>(ts)...}
             {}
-            template<bool OtherConst>
-            constexpr bool operator==(basic_range_sentinel<Iterable, OtherConst> const &) const
+            constexpr bool operator==(basic_range_sentinel<Iterable> const &) const
             {
                 return true;
             }
-            template<bool OtherConst>
-            constexpr bool operator!=(basic_range_sentinel<Iterable, OtherConst> const &) const
+            constexpr bool operator!=(basic_range_sentinel<Iterable> const &) const
             {
                 return false;
             }
-            template<typename Impl = impl_t>
-            auto count() const -> decltype(range_core_access::count(std::declval<Impl>()))
+            template<typename Cursor = sentinel_t>
+            auto count() const -> decltype(range_core_access::count(std::declval<Cursor>()))
             {
-                return range_core_access::count(impl_);
+                return range_core_access::count(end_);
             }
         };
 
-        template<typename Iterable, bool Const>
+        template<typename Iterable>
         struct basic_range_iterator
         {
         private:
-            using iterable_t = detail::add_const_if_t<Iterable, Const>;
-            using impl_t = decltype(range_core_access::begin_impl(std::declval<iterable_t &>()));
-            CONCEPT_ASSERT(detail::InputImpl<impl_t>());
-            using impl_concept_t = detail::impl_concept_t<impl_t>;
-            impl_t impl_;
-            static auto iter_diff(range_core_access::InputImplConcept) ->
+            using cursor_t = decltype(range_core_access::get_begin(std::declval<Iterable &>()));
+            CONCEPT_ASSERT(detail::InputCursor<cursor_t>());
+            using cursor_concept_t = detail::cursor_concept_t<cursor_t>;
+            cursor_t pos_;
+
+            static auto iter_diff(range_core_access::InputCursorConcept) ->
                 std::ptrdiff_t;
-            template<typename Impl = impl_t>
-            static auto iter_diff(range_core_access::RandomAccessImplConcept) ->
-                decltype(std::declval<Impl const&>().distance_to(
-                    std::declval<Impl const&>()));
-            template<bool OtherConst>
-            constexpr bool equal_(basic_range_iterator<Iterable, OtherConst> const&,
-                range_core_access::InputImplConcept *) const
+            template<typename Cursor = cursor_t>
+            static auto iter_diff(range_core_access::RandomAccessCursorConcept) ->
+                decltype(std::declval<Cursor const&>().distance_to(std::declval<Cursor const&>()));
+
+            constexpr bool equal_(basic_range_iterator<Iterable> const&,
+                range_core_access::InputCursorConcept *) const
             {
                 return true;
             }
-            template<bool OtherConst>
-            constexpr bool equal_(basic_range_iterator<Iterable, OtherConst> const& that,
-                range_core_access::ForwardImplConcept *) const
+            constexpr bool equal_(basic_range_iterator<Iterable> const& that,
+                range_core_access::ForwardCursorConcept *) const
             {
-                return range_core_access::equal(impl_, that.impl_);
+                return range_core_access::equal(pos_, that.pos_);
             }
         public:
             using reference =
-                decltype(range_core_access::current(std::declval<impl_t const&>()));
+                decltype(range_core_access::current(std::declval<cursor_t const &>()));
             using value_type = detail::uncvref_t<reference>;
-            using iterator_category = decltype(detail::iter_cat(impl_concept_t{}));
-            using difference_type = decltype(basic_range_iterator::iter_diff(impl_concept_t{}));
+            using iterator_category = decltype(detail::iter_cat(cursor_concept_t{}));
+            using difference_type = decltype(basic_range_iterator::iter_diff(cursor_concept_t{}));
             using pointer = typename detail::operator_arrow_dispatch<reference>::type;
         private:
             friend Iterable;
             friend struct range_facade<Iterable, true>;
             friend struct range_facade<Iterable, false>;
-            friend struct basic_range_iterator<Iterable, !Const>;
             using postfix_increment_result_t =
                 detail::postfix_increment_result<
                     basic_range_iterator, value_type, reference, iterator_category>;
             using operator_brackets_dispatch_t =
                 detail::operator_brackets_dispatch<basic_range_iterator, value_type, reference>;
-            basic_range_iterator(impl_t data)
-              : impl_(std::move(data))
+            basic_range_iterator(cursor_t pos)
+              : pos_(std::move(pos))
             {}
         public:
             constexpr basic_range_iterator() = default;
-            // For iterator -> const_iterator conversion
-            template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-            basic_range_iterator(basic_range_iterator<Iterable, OtherConst> that)
-              : impl_(std::move(that.impl_))
-            {}
             template<typename...Ts,
-                CONCEPT_REQUIRES_(Constructible<impl_t, public_t, Ts...>())>
+                CONCEPT_REQUIRES_(Constructible<cursor_t, public_t, Ts...>())>
             basic_range_iterator(Ts &&... ts)
-              : impl_{public_t{}, std::forward<Ts>(ts)...}
+              : pos_{public_t{}, std::forward<Ts>(ts)...}
             {}
             reference operator*() const
             {
-                return range_core_access::current(impl_);
+                return range_core_access::current(pos_);
             }
             pointer operator->() const
             {
@@ -324,7 +321,7 @@ namespace ranges
             }
             basic_range_iterator& operator++()
             {
-                range_core_access::next(impl_);
+                range_core_access::next(pos_);
                 return *this;
             }
             postfix_increment_result_t operator++(int)
@@ -333,188 +330,169 @@ namespace ranges
                 ++*this;
                 return tmp;
             }
-            template<bool OtherConst>
-            constexpr bool operator==(basic_range_iterator<Iterable, OtherConst> const &that) const
+            constexpr bool operator==(basic_range_iterator<Iterable> const &that) const
             {
-                return equal_(that, static_cast<impl_concept_t *>(nullptr));
+                return equal_(that, static_cast<cursor_concept_t *>(nullptr));
             }
-            template<bool OtherConst>
-            constexpr bool operator!=(basic_range_iterator<Iterable, OtherConst> const &that) const
+            constexpr bool operator!=(basic_range_iterator<Iterable> const &that) const
             {
                 return !(*this == that);
             }
-            template<bool OtherConst>
             friend constexpr bool operator==(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
-                return range_core_access::equal(right.impl_, left.impl_);
+                return range_core_access::empty(left.pos_, right.end_);
             }
-            template<bool OtherConst>
             friend constexpr bool operator!=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return !(left == right);
             }
-            template<bool OtherConst>
-            friend constexpr bool operator==(basic_range_sentinel<Iterable, OtherConst> const & left,
+            friend constexpr bool operator==(basic_range_sentinel<Iterable> const & left,
                 basic_range_iterator const &right)
             {
-                return range_core_access::equal(left.impl_, right.impl_);
+                return range_core_access::empty(right.pos_, left.end_);
             }
-            template<bool OtherConst>
-            friend constexpr bool operator!=(basic_range_sentinel<Iterable, OtherConst> const &left,
+            friend constexpr bool operator!=(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
                 return !(left == right);
             }
-            CONCEPT_REQUIRES(detail::BidirectionalImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::BidirectionalCursor<cursor_t>())
             basic_range_iterator& operator--()
             {
-                range_core_access::prev(impl_);
+                range_core_access::prev(pos_);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::BidirectionalImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::BidirectionalCursor<cursor_t>())
             basic_range_iterator operator--(int)
             {
                 auto tmp{*this};
                 --*this;
                 return tmp;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             basic_range_iterator& operator+=(difference_type n)
             {
-                range_core_access::advance(impl_, n);
+                range_core_access::advance(pos_, n);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             friend basic_range_iterator operator+(basic_range_iterator left, difference_type n)
             {
                 left += n;
                 return left;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             friend basic_range_iterator operator+(difference_type n, basic_range_iterator right)
             {
                 right += n;
                 return right;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             basic_range_iterator& operator-=(difference_type n)
             {
-                range_core_access::advance(impl_, -n);
+                range_core_access::advance(pos_, -n);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             friend basic_range_iterator operator-(basic_range_iterator left, difference_type n)
             {
                 left -= n;
                 return left;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            difference_type operator-(basic_range_iterator<Iterable, OtherConst> const &right) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            difference_type operator-(basic_range_iterator<Iterable> const &right) const
             {
-                return range_core_access::distance_to(right.impl_, impl_);
+                return range_core_access::distance_to(right.pos_, pos_);
             }
             // symmetric comparisons
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            bool operator<(basic_range_iterator<Iterable, OtherConst> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            bool operator<(basic_range_iterator<Iterable> const &that) const
             {
                 return 0 < (that - *this);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            bool operator<=(basic_range_iterator<Iterable, OtherConst> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            bool operator<=(basic_range_iterator<Iterable> const &that) const
             {
                 return 0 <= (that - *this);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            bool operator>(basic_range_iterator<Iterable, OtherConst> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            bool operator>(basic_range_iterator<Iterable> const &that) const
             {
                 return (that - *this) < 0;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            bool operator>=(basic_range_iterator<Iterable, OtherConst> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            bool operator>=(basic_range_iterator<Iterable> const &that) const
             {
                 return (that - *this) <= 0;
             }
             // asymmetric comparisons
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             friend constexpr bool operator<(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
-                return !range_core_access::equal(right.impl_, left.impl_);
+                return !range_core_access::empty(left.pos_, right.end_);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             friend constexpr bool operator<=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return true;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             friend constexpr bool operator>(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
                 return false;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             friend constexpr bool operator>=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable, OtherConst> const &right)
+                basic_range_sentinel<Iterable> const &right)
             {
-                return range_core_access::equal(right.impl_, left.impl_);
+                return range_core_access::empty(left.pos_, right.end_);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            friend constexpr bool operator<(basic_range_sentinel<Iterable, OtherConst> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            friend constexpr bool operator<(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
                 return false;
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            friend constexpr bool operator<=(basic_range_sentinel<Iterable, OtherConst> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            friend constexpr bool operator<=(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
-                return range_core_access::equal(left.impl_, right.impl_);
+                return range_core_access::empty(right.pos_, left.end_);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            friend constexpr bool operator>(basic_range_sentinel<Iterable, OtherConst> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            friend constexpr bool operator>(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
-                return !range_core_access::equal(left.impl_, right.impl_);
+                return !range_core_access::empty(right.pos_, left.end_);
             }
-            template<bool OtherConst,
-                     CONCEPT_REQUIRES_(detail::RandomAccessImpl<impl_t>())>
-            friend constexpr bool operator>=(basic_range_sentinel<Iterable, OtherConst> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            friend constexpr bool operator>=(basic_range_sentinel<Iterable> const &left,
                 basic_range_iterator const &right)
             {
                 return true;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
             typename operator_brackets_dispatch_t::type
             operator[](difference_type n) const
             {
                 return operator_brackets_dispatch_t::apply(*this + n);
             }
             // For counted_iterator
-            template<typename Impl = impl_t,
-                CONCEPT_REQUIRES_(detail::CountedImpl<Impl>())>
-            auto base() const -> range_core_access::CountedImplConcept::base_iterator_t<Impl>
+            template<typename Cursor = cursor_t,
+                CONCEPT_REQUIRES_(detail::CountedCursor<Cursor>())>
+            auto base() const -> range_core_access::CountedCursorConcept::base_iterator_t<Cursor>
             {
-                return range_core_access::base(impl_);
+                return range_core_access::base(pos_);
             }
-            CONCEPT_REQUIRES(detail::CountedImpl<impl_t>())
+            CONCEPT_REQUIRES(detail::CountedCursor<cursor_t>())
             auto count() const -> difference_type
             {
-                return range_core_access::count(impl_);
+                return range_core_access::count(pos_);
             }
         };
 
@@ -538,64 +516,36 @@ namespace ranges
             friend range_core_access;
 
             // Default implementations
-            struct default_sentinel_impl
+            struct default_sentinel
             {
-                template<typename Impl>
-                static constexpr bool equal(Impl const &impl)
+                template<typename Cursor>
+                static constexpr bool equal(Cursor const &pos)
                 {
-                    return range_core_access::done(impl);
+                    return range_core_access::done(pos);
                 }
             };
 
-            Derived begin_impl() const
+            Derived get_begin() const
             {
                 return derived();
             }
-            default_sentinel_impl end_impl() const
+            default_sentinel get_end() const
             {
                 return {};
             }
-
-            template<typename D, bool Const>
-            using iterator_t = detail::conditional_t<
-                std::is_same<
-                    decltype(range_core_access::begin_impl(std::declval<D &>())),
-                    decltype(range_core_access::begin_impl(std::declval<D const &>()))
-                >::value,
-                basic_range_iterator<D, true>,
-                basic_range_iterator<D, Const>
-            >;
-            template<typename D, bool Const>
-            using sentinel_t = detail::conditional_t<
-                std::is_same<
-                    decltype(range_core_access::end_impl(std::declval<D &>())),
-                    decltype(range_core_access::end_impl(std::declval<D const &>()))
-                >::value,
-                basic_range_sentinel<D, true>,
-                basic_range_sentinel<D, Const>
-            >;
         public:
-            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
-            iterator_t<D, false> begin()
+            basic_range_iterator<Derived> begin() const
             {
-                return {range_core_access::begin_impl(derived())};
-            };
-            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
-            iterator_t<D, true> begin() const
-            {
-                return {range_core_access::begin_impl(derived())};
-            };
-            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
-            detail::conditional_t<(detail::RangeFacade<D>()), iterator_t<D, false>, sentinel_t<D, false>>
-            end()
-            {
-                return {range_core_access::end_impl(derived())};
+                return {range_core_access::get_begin(derived())};
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(SameType<D, Derived>())>
-            detail::conditional_t<(detail::RangeFacade<D>()), iterator_t<D, true>, sentinel_t<D, true>>
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            detail::conditional_t<
+                (detail::RangeFacade<D>()),
+                basic_range_iterator<D>,
+                basic_range_sentinel<D>>
             end() const
             {
-                return {range_core_access::end_impl(derived())};
+                return {range_core_access::get_end(derived())};
             }
             constexpr bool operator!() const
             {

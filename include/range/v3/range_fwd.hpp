@@ -46,10 +46,7 @@ namespace ranges
             struct cender;
         }
 
-        namespace adl_size_detail
-        {
-            struct sizer;
-        }
+        struct sizer;
 
         template<typename ...Ts>
         struct common_type;
@@ -84,7 +81,7 @@ namespace ranges
         struct distance_;
         extern distance_ const distance;
 
-        extern adl_size_detail::sizer const size;
+        extern sizer const size;
 
         namespace detail
         {
@@ -208,6 +205,11 @@ namespace ranges
 
         struct begin_tag {};
         struct end_tag {};
+        struct begin_end_tag
+        {
+            begin_end_tag(begin_tag) {}
+            begin_end_tag(end_tag) {}
+        };
 
         struct use_default;
 
@@ -217,10 +219,10 @@ namespace ranges
         struct range_base
         {};
 
-        template<typename Derived, bool Const = true>
+        template<typename Derived>
         struct basic_range_iterator;
 
-        template<typename Derived, bool Const = true>
+        template<typename Derived>
         struct basic_range_sentinel;
 
         template<typename Derived, bool Infinite = false>
@@ -268,13 +270,16 @@ namespace ranges
         using invokable_t = decltype(make_invokable(std::declval<T>()));
 
         template<typename T>
-        struct istream_range;
+        struct istream_iterable;
 
         template<typename T>
-        istream_range<T> istream(std::istream & sin);
+        istream_iterable<T> istream(std::istream & sin);
 
         template<typename Iterator, typename Sentinel = Iterator>
         struct iterator_range;
+
+        template<typename Iterator, typename Sentinel = Iterator>
+        struct sized_iterator_range;
 
         struct ranger;
         extern ranger const range;
@@ -323,8 +328,8 @@ namespace ranges
             extern as_ranger const as_range;
         }
 
-        template<typename Rng>
-        struct const_range_view;
+        template<typename Iterable>
+        struct const_iterable_view;
 
         namespace view
         {
@@ -348,7 +353,7 @@ namespace ranges
         using counted_sentinel = basic_range_sentinel<counted_iterable_view<InputIterator>>;
 
         template<typename Rng, typename Pred>
-        struct filter_range_view;
+        struct filter_iterable_view;
 
         namespace view
         {
@@ -357,7 +362,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct indirect_range_view;
+        struct indirect_iterable_view;
 
         namespace view
         {
@@ -384,7 +389,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct move_range_view;
+        struct move_iterable_view;
 
         namespace view
         {

@@ -12,10 +12,11 @@
 
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/range_facade.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -26,43 +27,48 @@ namespace ranges
     {
         template<typename Iterable>
         struct as_range_view
-          : range_adaptor<as_range_view<Iterable>, Iterable>
+          : range_facade<as_range_view<Iterable>, is_infinite<Iterable>::value>
         {
         private:
             friend range_core_access;
+            Iterable rng_;
 
-            template<bool Const>
-            struct impl
+            struct cursor
             {
-                using base_iterable_t = detail::add_const_if_t<Iterable, Const>;
-                using base_iterator_t = range_iterator_t<base_iterable_t>;
-                using base_sentinel_t = range_sentinel_t<base_iterable_t>;
+            private:
+                using base_iterator_t = range_iterator_t<Iterable const>;
+                using base_sentinel_t = range_sentinel_t<Iterable const>;
 
                 base_iterator_t it_;
                 base_sentinel_t se_;
                 bool is_sentinel_;
 
-                // For iterator->const_iterator conversions
-                CONCEPT_REQUIRES(!Const)
-                operator impl<!Const>() const
+                void clean()
                 {
-                    return {it_, se_, is_sentinel_};
+                    if(is_sentinel_)
+                    {
+                        while(it_ != se_)
+                            ++it_;
+                        is_sentinel_ = false;
+                    }
                 }
+            public:
+                cursor() = default;
+                cursor(base_iterator_t it, base_sentinel_t se, bool is_sentinel)
+                  : it_(std::move(it)), se_(std::move(se)), is_sentinel_(is_sentinel)
+                {}
                 auto current() const -> decltype(*it_)
                 {
                     RANGES_ASSERT(!is_sentinel_ && it_ != se_);
                     return *it_;
                 }
-                template<bool OtherConst>
-                bool equal(impl<OtherConst> const &that) const
+                bool equal(cursor const &that) const
                 {
-                    if(is_sentinel_ && that.is_sentinel_)
-                        return true;
-                    if(is_sentinel_ && !that.is_sentinel_)
-                        return that.it_ == se_;
-                    if(that.is_sentinel_ && !is_sentinel_)
-                        return it_ == that.se_;
-                    return it_ == that.it_;
+                    return is_sentinel_ ?
+                        that.is_sentinel_ || that.it_ == se_ :
+                        that.is_sentinel_ ?
+                            it_ == that.se_ :
+                            it_ == that.it_;
                 }
                 void next()
                 {
@@ -81,44 +87,31 @@ namespace ranges
                     clean();
                     it_ += n;
                 }
-                template<bool OtherConst,
-                    CONCEPT_REQUIRES_(RandomAccessIterator<base_iterator_t>())>
-                range_difference_t<Iterable> distance_to(impl<OtherConst> const &that) const
+                CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
+                range_difference_t<Iterable> distance_to(cursor const &that) const
                 {
                     clean();
                     that.clean();
                     return that.it_ - it_;
                 }
-                void clean()
-                {
-                    if(is_sentinel_)
-                    {
-                        while(it_ != se_)
-                            ++it_;
-                        is_sentinel_ = false;
-                    }
-                }
             };
-            impl<false> begin_impl()
+            cursor get_begin() const
             {
-                return {ranges::begin(this->base()), ranges::end(this->base()), false};
+                return {ranges::begin(rng_), ranges::end(rng_), false};
             }
-            impl<true> begin_impl() const
+            cursor get_end() const
             {
-                return {ranges::begin(this->base()), ranges::end(this->base()), false};
-            }
-            impl<false> end_impl()
-            {
-                return {ranges::begin(this->base()), ranges::end(this->base()), true};
-            }
-            impl<true> end_impl() const
-            {
-                return {ranges::begin(this->base()), ranges::end(this->base()), true};
+                return {ranges::begin(rng_), ranges::end(rng_), true};
             }
         public:
             explicit as_range_view(Iterable && rng)
-              : range_adaptor_t<as_range_view>(std::forward<Iterable>(rng))
+              : rng_(std::forward<Iterable>(rng))
             {}
+            CONCEPT_REQUIRES(SizedIterable<Iterable>())
+            range_size_t<Iterable> size() const
+            {
+                return ranges::size(rng_);
+            }
         };
 
         namespace view
@@ -129,7 +122,8 @@ namespace ranges
                 static as_range_view<InputIterable>
                 invoke(as_ranger, InputIterable && rng)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
                     CONCEPT_ASSERT(!ranges::Range<InputIterable>());
                     return as_range_view<InputIterable>{std::forward<InputIterable>(rng)};
                 }

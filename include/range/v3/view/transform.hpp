@@ -36,62 +36,33 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using base_t = range_adaptor_t<transform_iterable_view>;
-            template<bool Const>
-            using impl_base_t = basic_adaptor_impl<InputIterable, Const>;
-            template<bool Const>
-            using sentinel_base_t = basic_adaptor_sentinel<InputIterable, Const>;
-
+            using base_cursor_t = base_cursor_t<transform_iterable_view>;
             invokable_t<UnaryFunction> fun_;
 
-            template<bool Const>
-            struct basic_impl : impl_base_t<Const>
+            struct adaptor : adaptor_defaults
             {
-                using transform_iterable_view_ = detail::add_const_if_t<transform_iterable_view, Const>;
-                transform_iterable_view_ *rng_;
-                using impl_base_t<Const>::impl_base_t;
-                basic_impl(impl_base_t<Const> base, transform_iterable_view_ &rng)
-                  : impl_base_t<Const>(std::move(base)), rng_(&rng)
+            private:
+                transform_iterable_view const *rng_;
+            public:
+                adaptor() = default;
+                adaptor(transform_iterable_view const &rng)
+                  : rng_(&rng)
                 {}
-                auto current() const -> decltype(rng_->fun_(this->base().current()))
+                auto current(base_cursor_t const &pos) const ->
+                    decltype(rng_->fun_(pos.current()))
                 {
-                    return rng_->fun_(this->base().current());
+                    return rng_->fun_(pos.current());
                 }
             };
-
-            template<bool Const>
-            struct basic_sentinel : sentinel_base_t<Const>
+            // TODO: if end is a sentinel, it hold an unnecessary pointer back to
+            // this range.
+            adaptor get_adaptor(begin_end_tag) const
             {
-                using sentinel_base_t<Const>::sentinel_base_t;
-                basic_sentinel(sentinel_base_t<Const> base, transform_iterable_view const &)
-                  : sentinel_base_t<Const>(std::move(base))
-                {}
-            };
-
-            template<bool Const>
-            using basic_sentinel_t =
-                detail::conditional_t<
-                    (Range<InputIterable>()), basic_impl<Const>, basic_sentinel<Const>>;
-
-            basic_impl<false> begin_impl()
-            {
-                return {this->adaptor().begin_impl(), *this};
-            }
-            basic_impl<true> begin_impl() const
-            {
-                return {this->adaptor().begin_impl(), *this};
-            }
-            basic_sentinel_t<false> end_impl()
-            {
-                return {this->adaptor().end_impl(), *this};
-            }
-            basic_sentinel_t<false> end_impl() const
-            {
-                return {this->adaptor().end_impl(), *this};
+                return {*this};
             }
         public:
             transform_iterable_view(InputIterable && rng, UnaryFunction fun)
-              : base_t(std::forward<InputIterable>(rng))
+              : range_adaptor_t<transform_iterable_view>(std::forward<InputIterable>(rng))
               , fun_(ranges::make_invokable(std::move(fun)))
             {}
         };
@@ -123,7 +94,8 @@ namespace ranges
                 static transform_iterable_view<InputRange1, UnaryFunction>
                 invoke(transformer, InputRange1 && rng, UnaryFunction fun)
                 {
-                    CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
+                    CONCEPT_ASSERT(ranges::Range<InputRange1>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange1>>());
                     CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
                                                     range_reference_t<InputRange1>>());
                     return {std::forward<InputRange1>(rng), std::move(fun)};

@@ -19,8 +19,9 @@
 #include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -406,6 +407,12 @@ namespace ranges
             {
                 return rng1_;
             }
+            CONCEPT_REQUIRES(SizedIterable<InputRange0>() &&
+                             SizedIterable<InputRange1>())
+            range_size_t<InputRange0> size() const
+            {
+                return ranges::size(rng0_) + ranges::size(rng1_);
+            }
         };
 
         namespace view
@@ -417,8 +424,10 @@ namespace ranges
                 invoke(joiner, InputRange0 && rng0, InputRange1 && rng1)
                 {
                     // TODO Make join_range_view work with Iterables instead of Ranges
-                    CONCEPT_ASSERT(ranges::InputRange<InputRange0>());
-                    CONCEPT_ASSERT(ranges::InputRange<InputRange1>());
+                    CONCEPT_ASSERT(ranges::Range<InputRange0>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange0>>());
+                    CONCEPT_ASSERT(ranges::Range<InputRange1>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange1>>());
                     return {std::forward<InputRange0>(rng0), std::forward<InputRange1>(rng1)};
                 }
             };

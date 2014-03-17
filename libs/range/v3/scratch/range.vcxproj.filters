@@ -409,9 +409,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\unbounded.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\as_iterable.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
@@ -420,6 +417,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_type.hpp">
       <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp">
+      <Filter>Header Files\detail</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

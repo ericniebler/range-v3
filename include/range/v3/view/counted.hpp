@@ -29,11 +29,11 @@ namespace ranges
             friend range_core_access;
             InputIterator it_;
             iterator_difference_t<InputIterator> n_;
-            struct impl
+            struct cursor
             {
                 InputIterator it_;
                 iterator_difference_t<InputIterator> n_;
-                impl(public_t, InputIterator it, iterator_difference_t<InputIterator> n)
+                cursor(public_t, InputIterator it, iterator_difference_t<InputIterator> n)
                   : it_(it), n_(n)
                 {}
                 InputIterator base() const
@@ -79,7 +79,7 @@ namespace ranges
             struct sentinel
             {
                 iterator_difference_t<InputIterator> n_;
-                bool equal(impl const &that) const
+                bool equal(cursor const &that) const
                 {
                     return n_ == that.n_;
                 }
@@ -88,18 +88,24 @@ namespace ranges
                     return n_;
                 }
             };
-            impl begin_impl() const
+            cursor get_begin() const
             {
                 return {{}, it_, 0};
             }
-            sentinel end_impl() const
+            sentinel get_end() const
             {
                 return {n_};
             }
+            using size_type =
+                typename std::make_unsigned<iterator_difference_t<InputIterator>>::type;
         public:
             counted_iterable_view(InputIterator it, iterator_difference_t<InputIterator> n)
               : it_(it), n_(n)
             {}
+            size_type size() const
+            {
+                return static_cast<size_type>(n_);
+            }
         };
 
         namespace view
@@ -116,6 +122,13 @@ namespace ranges
             };
 
             RANGES_CONSTEXPR counted_maker counted {};
+        }
+
+        template<typename InputIterator>
+        iterator_difference_t<InputIterator>
+        range_size(counted_iterable_view<InputIterator> const &rng)
+        {
+            return rng.end().count();
         }
     }
 }
