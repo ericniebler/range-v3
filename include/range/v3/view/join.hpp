@@ -19,8 +19,9 @@
 #include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_facade.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -405,6 +406,12 @@ namespace ranges
             InputRange1 const & second() const
             {
                 return rng1_;
+            }
+            CONCEPT_REQUIRES(SizedIterable<InputRange0>() &&
+                             SizedIterable<InputRange1>())
+            range_size_t<InputRange0> size() const
+            {
+                return ranges::size(rng0_) + ranges::size(rng1_);
             }
         };
 

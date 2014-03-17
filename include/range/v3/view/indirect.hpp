@@ -50,6 +50,11 @@ namespace ranges
             explicit indirect_iterable_view(InputIterable && rng)
               : range_adaptor_t<indirect_iterable_view>(std::forward<InputIterable>(rng))
             {}
+            CONCEPT_REQUIRES(SizedIterable<InputIterable>())
+            range_size_t<InputIterable> size() const
+            {
+                return this->base_size();
+            }
         };
 
         namespace view

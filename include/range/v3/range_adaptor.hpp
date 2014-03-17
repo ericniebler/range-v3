@@ -145,6 +145,9 @@ namespace ranges
                     return *this;
                 }
             public:
+                using single_pass = std::integral_constant<bool,
+                    range_core_access::single_pass_t<Adaptor>::value ||
+                        range_core_access::single_pass_t<BaseCursorOrSentinel>::value>;
                 cursor_or_sentinel() = default;
                 template<typename A = Adaptor,
                          typename R = decltype(std::declval<A>().current(base_))>
@@ -190,7 +193,7 @@ namespace ranges
                 range_difference_t<BaseIterable>
                 distance_to(cursor_or_sentinel const &that) const
                 {
-                    adaptor().distance_to(base_, that.base_);
+                    return adaptor().distance_to(base_, that.base_);
                 }
             };
 
@@ -206,6 +209,11 @@ namespace ranges
             base_sentinel_t base_end() const
             {
                 return {ranges::end(rng_)};
+            }
+            CONCEPT_REQUIRES(SizedIterable<BaseIterable>())
+            range_size_t<BaseIterable> base_size() const
+            {
+                return ranges::size(rng_);
             }
 
             template<typename D = Derived>
