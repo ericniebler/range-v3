@@ -14,25 +14,6 @@
 #include <iostream>
 #include <range/v3/range.hpp>
 
-void test_filter()
-{
-    using namespace ranges;
-    std::cout << "\ntest filter\n";
-    std::stringstream sin("1 2 3 4 5 6 7 8 9");
-    auto ints = istream<int>(sin);
-    auto evens = ints | view::filter([](int i){return i % 2 == 0; });
-    using evens_t = decltype(evens);
-    range_iterator_t<evens_t> i = evens.begin();
-    range_iterator_t<evens_t const> j = evens.begin();
-    j = i;
-    range_sentinel_t<evens_t> k = evens.end();
-    range_sentinel_t<evens_t const> l = evens.end();
-    l = k;
-    for (; j != evens.end(); ++j)
-        std::cout << *j << ' ';
-    std::cout << '\n';
-}
-
 int main()
 {
     using namespace ranges;
