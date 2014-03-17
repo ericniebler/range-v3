@@ -358,7 +358,10 @@ void test_move_view()
         "'allo",
         "???"
     };
-    move_range_view<std::vector<std::string>&> x = vs | view::move;
+    auto x = vs | view::move;
+    CONCEPT_ASSERT(Same<range_concept_t<decltype(x)>, concepts::SizedRange>());
+    // BUGBUG this should be Input
+    CONCEPT_ASSERT(Same<iterator_concept_t<decltype(x.begin())>, concepts::ForwardIterator>());
     if(0) std::cout << x.begin()->c_str() << std::endl;
     std::vector<std::string> vs2(x.begin(), x.end());
     static_assert(std::is_same<std::string&&, decltype(*x.begin())>::value, "");

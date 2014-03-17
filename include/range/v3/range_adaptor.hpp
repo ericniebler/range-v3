@@ -207,6 +207,11 @@ namespace ranges
             {
                 return {ranges::end(rng_)};
             }
+            CONCEPT_REQUIRES(SizedIterable<BaseIterable>())
+            range_size_t<BaseIterable> base_size() const
+            {
+                return ranges::size(rng_);
+            }
 
             template<typename D = Derived>
             cursor_or_sentinel<detail::begin_adaptor_t<D>, base_cursor_t>

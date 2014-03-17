@@ -15,136 +15,55 @@
 #define RANGES_V3_VIEW_MOVE_HPP
 
 #include <utility>
-#include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_traits.hpp>
+#include <range/v3/range_adaptor.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/iterator_adaptor.hpp>
-#include <range/v3/utility/debug_iterator.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename Reference>
-            struct move_iterator_reference
-            {
-                using type = Reference;
-            };
-
-            template<typename T>
-            struct move_iterator_reference<T &>
-            {
-                using type = T &&;
-            };
-
-            template<typename T>
-            using move_iterator_reference_t = typename move_iterator_reference<T>::type;
-        }
-
-        template<typename InputRange>
-        struct move_range_view : private range_base
+        template<typename InputIterable>
+        struct move_iterable_view
+          : range_adaptor<move_iterable_view<InputIterable>, InputIterable>
         {
         private:
-            InputRange rng_;
-
-            template<bool Const>
-            struct basic_iterator;
-
-            template<bool Const>
-            struct basic_iterator
-              : ranges::iterator_adaptor<
-                    basic_iterator<Const>
-                  , range_iterator_t<detail::add_const_if_t<InputRange, Const>>
-                  , use_default
-                  , std::input_iterator_tag
-                  , detail::move_iterator_reference_t<
-                        range_reference_t<detail::add_const_if_t<InputRange, Const>>
-                    >
-                  , use_default
-                  , range_iterator_t<detail::add_const_if_t<InputRange, Const>>
-                >
+            friend range_core_access;
+            using base_cursor_t = base_cursor_t<move_iterable_view>;
+            // BUGBUG defines a forward cursor, but should be input.
+            struct adaptor : adaptor_defaults
             {
             private:
-                template<bool OtherConst>
-                friend struct basic_iterator;
-                friend struct move_range_view;
-                friend struct ranges::iterator_core_access;
-                using move_range_view_    = detail::add_const_if_t<move_range_view, Const>;
-                using iterator_adaptor_   = typename basic_iterator::iterator_adaptor_;
-                using base_range          = detail::add_const_if_t<InputRange, Const>;
-                using base_range_iterator = range_iterator_t<base_range>;
-
-                explicit basic_iterator(base_range_iterator it)
-                  : iterator_adaptor_(std::move(it))
-                {}
-                typename iterator_adaptor_::reference dereference() const
-                {
-                    return std::move(*this->base());
-                }
-                typename iterator_adaptor_::pointer arrow() const
-                {
-                    return this->base();
-                }
+                using base_reference = range_reference_t<InputIterable>;
+                using reference =
+                    detail::conditional_t<
+                        std::is_lvalue_reference<base_reference>::value,
+                        typename std::remove_reference<base_reference>::type &&,
+                        base_reference>;
+                using adaptor_defaults::prev;
             public:
-                constexpr basic_iterator()
-                  : iterator_adaptor_{}
-                {}
-                // For iterator -> const_iterator conversion
-                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-                basic_iterator(basic_iterator<OtherConst> that)
-                  : iterator_adaptor_(std::move(that).base_reference())
-                {}
+                reference current(base_cursor_t const &pos) const
+                {
+                    return std::move(pos.current());
+                }
             };
-
+            adaptor get_adaptor(begin_end_tag) const
+            {
+                return {};
+            }
         public:
-            using iterator =
-                RANGES_DEBUG_ITERATOR(move_range_view, basic_iterator<false>);
-            using const_iterator =
-                RANGES_DEBUG_ITERATOR(move_range_view const, basic_iterator<true>);
-
-            explicit move_range_view(InputRange && rng)
-              : rng_(std::forward<InputRange>(rng))
+            move_iterable_view(InputIterable &&rng)
+              : range_adaptor_t<move_iterable_view>(std::forward<InputIterable>(rng))
             {}
-            iterator begin()
+            CONCEPT_REQUIRES(SizedIterable<InputIterable>())
+            range_size_t<InputIterable> size() const
             {
-                return RANGES_MAKE_DEBUG_ITERATOR(*this,
-                    basic_iterator<false>{ranges::begin(rng_)});
-            }
-            const_iterator begin() const
-            {
-                return RANGES_MAKE_DEBUG_ITERATOR(*this,
-                    basic_iterator<true>{ranges::begin(rng_)});
-            }
-            iterator end()
-            {
-                return RANGES_MAKE_DEBUG_ITERATOR(*this,
-                    basic_iterator<false>{ranges::end(rng_)});
-            }
-            const_iterator end() const
-            {
-                return RANGES_MAKE_DEBUG_ITERATOR(*this,
-                    basic_iterator<true>{ranges::end(rng_)});
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
-            }
-            InputRange & base()
-            {
-                return rng_;
-            }
-            InputRange const & base() const
-            {
-                return rng_;
+                return this->base_size();
             }
         };
 
@@ -152,13 +71,13 @@ namespace ranges
         {
             struct mover : bindable<mover>, pipeable<mover>
             {
-                template<typename InputRange>
-                static move_range_view<InputRange>
-                invoke(mover, InputRange && rng)
+                template<typename InputIterable>
+                static move_iterable_view<InputIterable>
+                invoke(mover, InputIterable && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Range<InputRange>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
-                    return move_range_view<InputRange>{std::forward<InputRange>(rng)};
+                    CONCEPT_ASSERT(ranges::Range<InputIterable>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
+                    return move_iterable_view<InputIterable>{std::forward<InputIterable>(rng)};
                 }
             };
 

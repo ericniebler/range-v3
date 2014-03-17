@@ -17,6 +17,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
@@ -48,6 +49,11 @@ namespace ranges
             explicit const_iterable_view(Iterable && rng)
               : range_adaptor_t<const_iterable_view>(std::forward<Iterable>(rng))
             {}
+            CONCEPT_REQUIRES(SizedIterable<Iterable>())
+            range_size_t<Iterable> size() const
+            {
+                return this->base_size();
+            }
         };
 
         namespace view

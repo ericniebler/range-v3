@@ -96,10 +96,16 @@ namespace ranges
             {
                 return {n_};
             }
+            using size_type =
+                typename std::make_unsigned<iterator_difference_t<InputIterator>>::type;
         public:
             counted_iterable_view(InputIterator it, iterator_difference_t<InputIterator> n)
               : it_(it), n_(n)
             {}
+            size_type size() const
+            {
+                return static_cast<size_type>(n_);
+            }
         };
 
         namespace view

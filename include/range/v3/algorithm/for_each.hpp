@@ -26,11 +26,11 @@ namespace ranges
         namespace detail
         {
             template<typename InputIterator, typename Sentinel, typename UnaryFunction>
-            UnaryFunction for_each(InputIterator begin, Sentinel end, UnaryFunction fun)
+            InputIterator for_each(InputIterator begin, Sentinel end, UnaryFunction fun)
             {
                 for(; begin != end; ++begin)
                     fun(*begin);
-                return fun;
+                return begin;
             }
         }
 
@@ -43,7 +43,8 @@ namespace ranges
             /// \pre \c InputIterable is a model of the InputIterable concept
             /// \pre \c UnaryFunction is a model of the UnaryFunction concept
             template<typename InputIterable, typename UnaryFunction>
-            static UnaryFunction invoke(for_eacher, InputIterable && rng, UnaryFunction fun)
+            static range_iterator_t<InputIterable>
+            invoke(for_eacher, InputIterable && rng, UnaryFunction fun)
             {
                 CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());

@@ -598,7 +598,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct move_range_view;
+        struct move_iterable_view;
 
         namespace view
         {
