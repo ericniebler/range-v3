@@ -71,11 +71,10 @@ namespace ranges
                 CONCEPT_REQUIRES(ranges::RandomAccessIterator<ranges::range_iterator_t<BidirectionalRange>>())
                 void advance(base_cursor_t &pos, ranges::range_difference_t<BidirectionalRange> n) const
                 {
-                    if(n != 0)
-                    {
-                        pos.advance(-n+1);
-                        n > 0 ? next(pos) : prev(pos);
-                    }
+                    if(n > 0)
+                        pos.advance(-n + 1), next(pos);
+                    else if(n < 0)
+                        prev(pos), pos.advance(-n - 1);
                 }
                 CONCEPT_REQUIRES(ranges::RandomAccessIterator<ranges::range_iterator_t<BidirectionalRange>>())
                 ranges::range_difference_t<BidirectionalRange>
