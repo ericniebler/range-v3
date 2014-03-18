@@ -91,7 +91,18 @@ namespace ranges
                     ));
             };
 
+            struct IterableFacadeConcept
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        t.get_begin(),
+                        t.get_end()
+                    ));
+            };
+
             struct RangeFacadeConcept
+              : concepts::refines<IterableFacadeConcept>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -257,8 +268,15 @@ namespace ranges
                 concepts::most_refined_t<range_core_access::RandomAccessCursorConcept, T>;
 
             template<typename T>
+            using IterableFacade =
+                concepts::models<range_core_access::IterableFacadeConcept, T>;
+
+            template<typename T>
             using RangeFacade =
                 concepts::models<range_core_access::RangeFacadeConcept, T>;
+
+            template<typename T>
+            using facade_concept_t = concepts::most_refined_t<range_core_access::RangeFacadeConcept, T>;
 
             static auto iter_cat(range_core_access::InputCursorConcept) ->
                 std::input_iterator_tag;
@@ -320,13 +338,27 @@ namespace ranges
                     detail::cursor_concept_t<cursor_t>>;
             cursor_t pos_;
 
-            constexpr bool equal_(basic_range_iterator<Iterable> const&,
+            // If Iterable models RangeFacade or if the cursor models
+            // ForwardCursor, then positions must be equality comparable.
+            // Otherwise, it's an InputCursor in an IterableRange, so
+            // all cursors are trivially equal.
+            constexpr bool equal2_(basic_range_iterator const&,
                 range_core_access::InputCursorConcept *) const
             {
                 return true;
             }
-            constexpr bool equal_(basic_range_iterator<Iterable> const& that,
+            constexpr bool equal2_(basic_range_iterator const &that,
                 range_core_access::ForwardCursorConcept *) const
+            {
+                return range_core_access::equal(pos_, that.pos_);
+            }
+            constexpr bool equal_(basic_range_iterator const &that,
+                range_core_access::IterableFacadeConcept *) const
+            {
+                return basic_range_iterator::equal2_(that, (cursor_concept_t *)nullptr);
+            }
+            constexpr bool equal_(basic_range_iterator const &that,
+                range_core_access::RangeFacadeConcept *) const
             {
                 return range_core_access::equal(pos_, that.pos_);
             }
@@ -377,7 +409,7 @@ namespace ranges
             }
             constexpr bool operator==(basic_range_iterator<Iterable> const &that) const
             {
-                return equal_(that, static_cast<cursor_concept_t *>(nullptr));
+                return basic_range_iterator::equal_(that, (detail::facade_concept_t<Iterable> *)nullptr);
             }
             constexpr bool operator!=(basic_range_iterator<Iterable> const &that) const
             {
@@ -543,11 +575,11 @@ namespace ranges
 
         template<typename Derived, bool Infinite>
         struct range_facade
-          : private detail::is_infinite<Infinite>,
-            private range_base
+          : private detail::is_infinite<Infinite>
+          , private range_base
         {
         protected:
-            using range_facade_ = range_facade;
+            using range_facade_t = range_facade;
             Derived & derived()
             {
                 return static_cast<Derived &>(*this);
@@ -601,6 +633,41 @@ namespace ranges
                 return !!*this;
             }
         };
+
+        // The necessity of cursor algorithms is pretty annoying. Maybe an adaptor that turns it into
+        // and iterator for the sake of using iterator algorithms on it would be preferable.
+        namespace detail
+        {
+            template<typename Cursor, typename Distance>
+            void advance_cursor_(Cursor &pos, Distance d, range_core_access::InputCursorConcept)
+            {
+                for(; d != 0; --d)
+                    pos.next();
+            }
+
+            template<typename Cursor, typename Distance>
+            void advance_cursor_(Cursor &pos, Distance d, range_core_access::BidirectionalCursorConcept)
+            {
+                if(d > 0)
+                    for(; d != 0; --d)
+                        pos.next();
+                else
+                    for(; d != 0; ++d)
+                        pos.prev();
+            }
+
+            template<typename Cursor, typename Distance>
+            void advance_cursor_(Cursor &pos, Distance d, range_core_access::RandomAccessCursorConcept)
+            {
+                pos.advance(d);
+            }
+        }
+
+        template<typename Cursor, typename Distance>
+        void advance_cursor(Cursor &pos, Distance d)
+        {
+            detail::advance_cursor_(pos, d, detail::cursor_concept_t<Cursor>{});
+        }
     }
 }
 

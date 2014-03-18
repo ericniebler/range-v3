@@ -425,7 +425,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct slice_range_view;
+        struct slice_iterable_view;
 
         namespace view
         {
