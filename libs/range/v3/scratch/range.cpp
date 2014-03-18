@@ -193,27 +193,25 @@ void test_view_replace_if()
 void test_slicer()
 {
     using namespace ranges;
-
     std::cout << "\ntest slice\n";
-    int rgi[] = {0,1,2,3,4,5,6,7,8,9,10};
-    auto sl = rgi | view::slice(3,9);
+
+    int rgi[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     for(int& i : rgi | view::slice(3,9))
         std::cout << i << ' ';
     std::cout << '\n';
+
+    auto sl = rgi | view::slice(3, 9);
     for(int& i : sl | view::reverse)
         std::cout << i << ' ';
     std::cout << '\n';
-    for(int i : std::vector<int>{0,1,2,3,4,5,6,7,8,9,10} | view::slice(3,9) | view::reverse)
+
+    std::vector<int> v{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    for(int i : v | view::slice(3, 9) | view::reverse)
         std::cout << i << ' ';
     std::cout << '\n';
 
-    std::stringstream sin("0 1 2 3 4 5 6 7 8 9 10");
-    for(int i : istream<int>(sin) | view::slice(3,9))
-        std::cout << i << ' ';
-    std::cout << '\n';
-
-    std::list<int> li {0,1,2,3,4,5,6,7,8,9,10};
-    for(int i : li | view::slice(3,9) | view::reverse)
+    std::list<int> li{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    for(int i : li | view::slice(3, 9) | view::reverse)
         std::cout << i << ' ';
     std::cout << '\n';
 }
@@ -600,7 +598,7 @@ struct my_delimited_range
         my_delimited_range
       , ranges::delimit_iterable_view<ranges::istream_iterable<int>, int>>
 {
-    using range_adaptor_::range_adaptor_;
+    using range_adaptor_t::range_adaptor_t;
 };
 
 void test_range_adaptor()
