@@ -22,30 +22,30 @@ namespace ranges
         namespace detail
         {
             template<typename Iterator, typename Sentinel>
-            struct common_impl
+            struct common_cursor
             {
-                // BUGBUG relate to basic_range_iterator whether this is an
-                // input or forward iterator.
+            private:
                 static_assert(!std::is_same<Iterator, Sentinel>::value,
                               "Error: iterator and sentinel types are the same");
                 Iterator it_;
                 Sentinel se_;
                 bool is_sentinel_;
-
-                common_impl() = default;
-                common_impl(public_t, Iterator it)
+            public:
+                using single_pass = Same<iterator_category_t<Iterator>, std::input_iterator_tag>;
+                common_cursor() = default;
+                common_cursor(public_t, Iterator it)
                   : it_(std::move(it)), se_{}, is_sentinel_(false)
                 {}
-                common_impl(public_t, Sentinel se)
+                common_cursor(public_t, Sentinel se)
                   : it_{}, se_(std::move(se)), is_sentinel_(true)
                 {}
-                common_impl(Iterator it, Sentinel se, bool is_sentinel)
+                common_cursor(Iterator it, Sentinel se, bool is_sentinel)
                   : it_(std::move(it)), se_(std::move(se)), is_sentinel_(is_sentinel)
                 {}
                 template<typename OtherIterator, typename OtherSentinel,
                     CONCEPT_REQUIRES_(Convertible<Iterator, OtherIterator>() &&
                                       Convertible<Sentinel, OtherSentinel>())>
-                operator common_impl<OtherIterator, OtherSentinel>() const
+                operator common_cursor<OtherIterator, OtherSentinel>() const
                 {
                     return {it_, se_, is_sentinel_};
                 }
@@ -57,7 +57,7 @@ namespace ranges
                 template<typename OtherIterator, typename OtherSentinel,
                     CONCEPT_REQUIRES_(Common<Iterator, OtherIterator>() &&
                                       Common<Sentinel, OtherSentinel>())>
-                bool equal(common_impl<OtherIterator, OtherSentinel> const &that) const
+                bool equal(common_cursor<OtherIterator, OtherSentinel> const &that) const
                 {
                     return is_sentinel_ ?
                         that.is_sentinel_ || that.it_ == se_ :
@@ -71,31 +71,24 @@ namespace ranges
                     ++it_;
                 }
             };
-
-            // A bit of a hack, needed since basic_range_iterator is parameterized
-            // on an Iterable
-            template<typename Iterator, typename Sentinel>
-            struct common_range
-            {
-                common_impl<Iterator, Sentinel> get_begin() const;
-                common_impl<Iterator, Sentinel> get_end() const;
-            };
         }
 
-        template<typename Iterable>
-        struct common_type<basic_range_iterator<Iterable>, basic_range_sentinel<Iterable>>
+        template<typename Cursor, typename Sentinel>
+        struct common_type<basic_range_iterator<Cursor, Sentinel>, basic_range_sentinel<Sentinel>>
         {
-            using type = common_range_iterator<
-                basic_range_iterator<Iterable>,
-                basic_range_sentinel<Iterable>>;
+            using type =
+                common_range_iterator<
+                    basic_range_iterator<Cursor, Sentinel>,
+                    basic_range_sentinel<Sentinel>>;
         };
 
-        template<typename Iterable>
-        struct common_type<basic_range_sentinel<Iterable>, basic_range_iterator<Iterable>>
+        template<typename Cursor, typename Sentinel>
+        struct common_type<basic_range_sentinel<Sentinel>, basic_range_iterator<Cursor, Sentinel>>
         {
-            using type = common_range_iterator<
-                basic_range_iterator<Iterable>,
-                basic_range_sentinel<Iterable>>;
+            using type =
+                common_range_iterator<
+                    basic_range_iterator<Cursor, Sentinel>,
+                    basic_range_sentinel<Sentinel>>;
         };
     }
 }

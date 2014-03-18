@@ -235,6 +235,18 @@ namespace ranges
 
             template<typename Cursor>
             using single_pass_t = typename single_pass<Cursor>::type;
+
+            template<typename Cursor, typename Sentinel>
+            Cursor get_cursor(basic_range_iterator<Cursor, Sentinel> it)
+            {
+                return std::move(it.pos_);
+            }
+
+            template<typename Sentinel>
+            Sentinel get_sentinel(basic_range_sentinel<Sentinel> s)
+            {
+                return std::move(s.end_);
+            }
         };
 
         namespace detail
@@ -286,61 +298,76 @@ namespace ranges
                 std::bidirectional_iterator_tag;
             static auto iter_cat(range_core_access::RandomAccessCursorConcept) ->
                 std::random_access_iterator_tag;
+
+            template<typename Derived>
+            using facade_cursor_t =
+                decltype(range_core_access::get_begin(std::declval<Derived &>()));
+
+            template<typename Derived>
+            using facade_sentinel2_t =
+                decltype(range_core_access::get_end(std::declval<Derived &>()));
+
+            template<typename Derived>
+            using facade_iterator_t =
+                basic_range_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>;
+
+            template<typename Derived>
+            using facade_sentinel_t =
+                conditional_t<
+                    (Same<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>()),
+                    basic_range_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
+                    basic_range_sentinel<facade_sentinel2_t<Derived>>>;
         }
 
-        template<typename Iterable>
+        template<typename Sentinel>
         struct basic_range_sentinel
         {
         private:
-            friend Iterable;
             friend range_core_access;
-            friend struct range_facade<Iterable, true>;
-            friend struct range_facade<Iterable, false>;
-            friend struct basic_range_iterator<Iterable>;
-            using sentinel_t = decltype(range_core_access::get_end(std::declval<Iterable &>()));
-            sentinel_t end_;
-            basic_range_sentinel(sentinel_t end)
-              : end_(std::move(end))
-            {}
+            template<typename Iterator, typename OtherSentinel> friend struct basic_range_iterator;
+            Sentinel end_;
         public:
             basic_range_sentinel() = default;
+            basic_range_sentinel(Sentinel end)
+              : end_(std::move(end))
+            {}
             template<typename...Ts,
-                CONCEPT_REQUIRES_(Constructible<sentinel_t, public_t, Ts...>())>
+                CONCEPT_REQUIRES_(Constructible<Sentinel, public_t, Ts...>())>
             basic_range_sentinel(Ts &&... ts)
               : end_{public_t{}, std::forward<Ts>(ts)...}
             {}
-            constexpr bool operator==(basic_range_sentinel<Iterable> const &) const
+            constexpr bool operator==(basic_range_sentinel<Sentinel> const &) const
             {
                 return true;
             }
-            constexpr bool operator!=(basic_range_sentinel<Iterable> const &) const
+            constexpr bool operator!=(basic_range_sentinel<Sentinel> const &) const
             {
                 return false;
             }
-            template<typename Cursor = sentinel_t>
-            auto count() const -> decltype(range_core_access::count(std::declval<Cursor>()))
+            template<typename S = Sentinel, CONCEPT_REQUIRES_(Same<S, Sentinel>())>
+            auto count() const -> decltype(range_core_access::count(std::declval<S>()))
             {
                 return range_core_access::count(end_);
             }
         };
 
-        template<typename Iterable>
+        template<typename Cursor, typename Sentinel>
         struct basic_range_iterator
         {
         private:
-            using cursor_t = decltype(range_core_access::get_begin(std::declval<Iterable &>()));
-            CONCEPT_ASSERT(detail::InputCursor<cursor_t>());
+            friend range_core_access;
+            CONCEPT_ASSERT(detail::InputCursor<Cursor>());
+            using single_pass = range_core_access::single_pass_t<Cursor>;
             using cursor_concept_t =
                 detail::conditional_t<
-                    range_core_access::single_pass_t<Iterable>::value ||
-                        range_core_access::single_pass_t<cursor_t>::value,
+                    single_pass::value,
                     range_core_access::InputCursorConcept,
-                    detail::cursor_concept_t<cursor_t>>;
-            cursor_t pos_;
+                    detail::cursor_concept_t<Cursor>>;
+            Cursor pos_;
 
             // If Iterable models RangeFacade or if the cursor models
             // ForwardCursor, then positions must be equality comparable.
-            // Otherwise, it's an InputCursor in an IterableRange, so
+            // Otherwise, it's an InputCursor in an IterableFacade, so
             // all cursors are trivially equal.
             constexpr bool equal2_(basic_range_iterator const&,
                 range_core_access::InputCursorConcept *) const
@@ -353,38 +380,35 @@ namespace ranges
                 return range_core_access::equal(pos_, that.pos_);
             }
             constexpr bool equal_(basic_range_iterator const &that,
-                range_core_access::IterableFacadeConcept *) const
+                std::false_type *) const
             {
                 return basic_range_iterator::equal2_(that, (cursor_concept_t *)nullptr);
             }
             constexpr bool equal_(basic_range_iterator const &that,
-                range_core_access::RangeFacadeConcept *) const
+                std::true_type *) const
             {
                 return range_core_access::equal(pos_, that.pos_);
             }
         public:
             using reference =
-                decltype(range_core_access::current(std::declval<cursor_t const &>()));
+                decltype(range_core_access::current(std::declval<Cursor const &>()));
             using value_type = detail::uncvref_t<reference>;
             using iterator_category = decltype(detail::iter_cat(cursor_concept_t{}));
-            using difference_type = range_core_access::cursor_difference_t<cursor_t>;
+            using difference_type = range_core_access::cursor_difference_t<Cursor>;
             using pointer = typename detail::operator_arrow_dispatch<reference>::type;
         private:
-            friend Iterable;
-            friend struct range_facade<Iterable, true>;
-            friend struct range_facade<Iterable, false>;
             using postfix_increment_result_t =
                 detail::postfix_increment_result<
                     basic_range_iterator, value_type, reference, iterator_category>;
             using operator_brackets_dispatch_t =
                 detail::operator_brackets_dispatch<basic_range_iterator, value_type, reference>;
-            basic_range_iterator(cursor_t pos)
-              : pos_(std::move(pos))
-            {}
         public:
             constexpr basic_range_iterator() = default;
+            basic_range_iterator(Cursor pos)
+              : pos_(std::move(pos))
+            {}
             template<typename...Ts,
-                CONCEPT_REQUIRES_(Constructible<cursor_t, public_t, Ts...>())>
+                CONCEPT_REQUIRES_(Constructible<Cursor, public_t, Ts...>())>
             basic_range_iterator(Ts &&... ts)
               : pos_{public_t{}, std::forward<Ts>(ts)...}
             {}
@@ -407,166 +431,167 @@ namespace ranges
                 ++*this;
                 return tmp;
             }
-            constexpr bool operator==(basic_range_iterator<Iterable> const &that) const
+            constexpr bool operator==(basic_range_iterator const &that) const
             {
-                return basic_range_iterator::equal_(that, (detail::facade_concept_t<Iterable> *)nullptr);
+                return basic_range_iterator::equal_(that, (std::is_same<Cursor, Sentinel> *)nullptr);
             }
-            constexpr bool operator!=(basic_range_iterator<Iterable> const &that) const
+            constexpr bool operator!=(basic_range_iterator const &that) const
             {
                 return !(*this == that);
             }
             friend constexpr bool operator==(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable> const &right)
+                basic_range_sentinel<Sentinel> const &right)
             {
                 return range_core_access::empty(left.pos_, right.end_);
             }
             friend constexpr bool operator!=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable> const &right)
+                basic_range_sentinel<Sentinel> const &right)
             {
                 return !(left == right);
             }
-            friend constexpr bool operator==(basic_range_sentinel<Iterable> const & left,
+            friend constexpr bool operator==(basic_range_sentinel<Sentinel> const & left,
                 basic_range_iterator const &right)
             {
                 return range_core_access::empty(right.pos_, left.end_);
             }
-            friend constexpr bool operator!=(basic_range_sentinel<Iterable> const &left,
+            friend constexpr bool operator!=(basic_range_sentinel<Sentinel> const &left,
                 basic_range_iterator const &right)
             {
                 return !(left == right);
             }
-            CONCEPT_REQUIRES(detail::BidirectionalCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::BidirectionalCursor<Cursor>())
             basic_range_iterator& operator--()
             {
                 range_core_access::prev(pos_);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::BidirectionalCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::BidirectionalCursor<Cursor>())
             basic_range_iterator operator--(int)
             {
                 auto tmp{*this};
                 --*this;
                 return tmp;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             basic_range_iterator& operator+=(difference_type n)
             {
                 range_core_access::advance(pos_, n);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend basic_range_iterator operator+(basic_range_iterator left, difference_type n)
             {
                 left += n;
                 return left;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend basic_range_iterator operator+(difference_type n, basic_range_iterator right)
             {
                 right += n;
                 return right;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             basic_range_iterator& operator-=(difference_type n)
             {
                 range_core_access::advance(pos_, -n);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend basic_range_iterator operator-(basic_range_iterator left, difference_type n)
             {
                 left -= n;
                 return left;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            difference_type operator-(basic_range_iterator<Iterable> const &right) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            difference_type operator-(basic_range_iterator const &right) const
             {
                 return range_core_access::distance_to(right.pos_, pos_);
             }
             // symmetric comparisons
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            bool operator<(basic_range_iterator<Iterable> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            bool operator<(basic_range_iterator const &that) const
             {
                 return 0 < (that - *this);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            bool operator<=(basic_range_iterator<Iterable> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            bool operator<=(basic_range_iterator const &that) const
             {
                 return 0 <= (that - *this);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            bool operator>(basic_range_iterator<Iterable> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            bool operator>(basic_range_iterator const &that) const
             {
                 return (that - *this) < 0;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            bool operator>=(basic_range_iterator<Iterable> const &that) const
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            bool operator>=(basic_range_iterator const &that) const
             {
                 return (that - *this) <= 0;
             }
             // asymmetric comparisons
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend constexpr bool operator<(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable> const &right)
+                basic_range_sentinel<Sentinel> const &right)
             {
                 return !range_core_access::empty(left.pos_, right.end_);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend constexpr bool operator<=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable> const &right)
+                basic_range_sentinel<Sentinel> const &right)
             {
                 return true;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend constexpr bool operator>(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable> const &right)
+                basic_range_sentinel<Sentinel> const &right)
             {
                 return false;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend constexpr bool operator>=(basic_range_iterator const &left,
-                basic_range_sentinel<Iterable> const &right)
+                basic_range_sentinel<Sentinel> const &right)
             {
                 return range_core_access::empty(left.pos_, right.end_);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            friend constexpr bool operator<(basic_range_sentinel<Iterable> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            friend constexpr bool operator<(basic_range_sentinel<Sentinel> const &left,
                 basic_range_iterator const &right)
             {
                 return false;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            friend constexpr bool operator<=(basic_range_sentinel<Iterable> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            friend constexpr bool operator<=(basic_range_sentinel<Sentinel> const &left,
                 basic_range_iterator const &right)
             {
                 return range_core_access::empty(right.pos_, left.end_);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            friend constexpr bool operator>(basic_range_sentinel<Iterable> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            friend constexpr bool operator>(basic_range_sentinel<Sentinel> const &left,
                 basic_range_iterator const &right)
             {
                 return !range_core_access::empty(right.pos_, left.end_);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
-            friend constexpr bool operator>=(basic_range_sentinel<Iterable> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            friend constexpr bool operator>=(basic_range_sentinel<Sentinel> const &left,
                 basic_range_iterator const &right)
             {
                 return true;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             typename operator_brackets_dispatch_t::type
             operator[](difference_type n) const
             {
                 return operator_brackets_dispatch_t::apply(*this + n);
             }
-            // For counted_iterator
-            template<typename Cursor = cursor_t,
-                CONCEPT_REQUIRES_(detail::CountedCursor<Cursor>())>
-            auto base() const -> range_core_access::CountedCursorConcept::base_iterator_t<Cursor>
+            // For counted_iterator. TODO find a more general way for cursors to inject
+            // behaviors into the iterator.
+            template<typename C = Cursor,
+                CONCEPT_REQUIRES_(Same<C, Cursor>() && detail::CountedCursor<C>())>
+            auto base() const -> range_core_access::CountedCursorConcept::base_iterator_t<C>
             {
                 return range_core_access::base(pos_);
             }
-            CONCEPT_REQUIRES(detail::CountedCursor<cursor_t>())
+            CONCEPT_REQUIRES(detail::CountedCursor<Cursor>())
             auto count() const -> difference_type
             {
                 return range_core_access::count(pos_);
@@ -611,16 +636,13 @@ namespace ranges
                 return {};
             }
         public:
-            basic_range_iterator<Derived> begin() const
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            detail::facade_iterator_t<D> begin() const
             {
                 return {range_core_access::get_begin(derived())};
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
-            detail::conditional_t<
-                (detail::RangeFacade<D>()),
-                basic_range_iterator<D>,
-                basic_range_sentinel<D>>
-            end() const
+            detail::facade_sentinel_t<D> end() const
             {
                 return {range_core_access::get_end(derived())};
             }
@@ -633,41 +655,6 @@ namespace ranges
                 return !!*this;
             }
         };
-
-        // The necessity of cursor algorithms is pretty annoying. Maybe an adaptor that turns it into
-        // and iterator for the sake of using iterator algorithms on it would be preferable.
-        namespace detail
-        {
-            template<typename Cursor, typename Distance>
-            void advance_cursor_(Cursor &pos, Distance d, range_core_access::InputCursorConcept)
-            {
-                for(; d != 0; --d)
-                    pos.next();
-            }
-
-            template<typename Cursor, typename Distance>
-            void advance_cursor_(Cursor &pos, Distance d, range_core_access::BidirectionalCursorConcept)
-            {
-                if(d > 0)
-                    for(; d != 0; --d)
-                        pos.next();
-                else
-                    for(; d != 0; ++d)
-                        pos.prev();
-            }
-
-            template<typename Cursor, typename Distance>
-            void advance_cursor_(Cursor &pos, Distance d, range_core_access::RandomAccessCursorConcept)
-            {
-                pos.advance(d);
-            }
-        }
-
-        template<typename Cursor, typename Distance>
-        void advance_cursor(Cursor &pos, Distance d)
-        {
-            detail::advance_cursor_(pos, d, detail::cursor_concept_t<Cursor>{});
-        }
     }
 }
 

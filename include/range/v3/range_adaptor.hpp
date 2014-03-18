@@ -26,6 +26,18 @@ namespace ranges
             template<typename Iterable>
             using sentinel_adaptor_t = decltype(range_core_access::end_adaptor(std::declval<Iterable const &>()));
 
+            template<typename Iterator, bool IsIterator = ranges::Iterator<Iterator>()>
+            struct is_single_pass
+            {
+                using type = Same<iterator_category_t<Iterator>, std::input_iterator_tag>;
+            };
+
+            template<typename Sentinel>
+            struct is_single_pass<Sentinel, false>
+            {
+                using type = std::false_type;
+            };
+
             // Give Iterable::iterator a simple interface for passing to Derived
             template<typename IteratorOrSentinel>
             struct basic_adaptor
@@ -35,6 +47,7 @@ namespace ranges
                 friend struct basic_adaptor;
                 IteratorOrSentinel it_;
             public:
+                using single_pass = typename is_single_pass<IteratorOrSentinel>::type;
                 basic_adaptor() = default;
                 constexpr basic_adaptor(IteratorOrSentinel it)
                   : it_(detail::move(it))

@@ -54,14 +54,12 @@ namespace ranges
         template<typename T>
         struct common_type<T, unreachable>
         {
-            using type =
-                basic_range_iterator<detail::common_range<T, unreachable>>;
+            using type = common_range_iterator<T, unreachable>;
         };
         template<typename T>
         struct common_type<unreachable, T>
         {
-            using type =
-                basic_range_iterator<detail::common_range<T, unreachable>>;
+            using type = common_range_iterator<T, unreachable>;
         };
         template<>
         struct common_type<unreachable, unreachable>

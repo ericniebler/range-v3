@@ -21,19 +21,17 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename InputIterator>
-        struct counted_iterable_view
-          : range_facade<counted_iterable_view<InputIterator>>
+        namespace detail
         {
-        private:
-            friend range_core_access;
-            InputIterator it_;
-            iterator_difference_t<InputIterator> n_;
-            struct cursor
+            template<typename InputIterator>
+            struct counted_cursor
             {
+            private:
+                friend struct counted_sentinel<InputIterator>;
                 InputIterator it_;
                 iterator_difference_t<InputIterator> n_;
-                cursor(public_t, InputIterator it, iterator_difference_t<InputIterator> n)
+            public:
+                counted_cursor(public_t, InputIterator it, iterator_difference_t<InputIterator> n)
                   : it_(std::move(it)), n_(n)
                 {}
                 InputIterator base() const
@@ -48,7 +46,7 @@ namespace ranges
                 {
                     return *it_;
                 }
-                bool equal(counted_iterable_view<InputIterator> const &that) const
+                bool equal(counted_cursor const &that) const
                 {
                     return n_ == that.n_;
                 }
@@ -76,10 +74,18 @@ namespace ranges
                     return that.n_ - n_;
                 }
             };
-            struct sentinel
+
+            template<typename InputIterator>
+            struct counted_sentinel
             {
+            private:
                 iterator_difference_t<InputIterator> n_;
-                bool equal(cursor const &that) const
+            public:
+                counted_sentinel() = default;
+                counted_sentinel(iterator_difference_t<InputIterator> n)
+                  : n_(n)
+                {}
+                bool equal(counted_cursor<InputIterator> const &that) const
                 {
                     return n_ == that.n_;
                 }
@@ -88,11 +94,24 @@ namespace ranges
                     return n_;
                 }
             };
-            cursor get_begin() const
+        }
+
+        template<typename InputIterator>
+        struct counted_iterable_view
+          : range_facade<counted_iterable_view<InputIterator>>
+        {
+        private:
+            friend range_core_access;
+            InputIterator it_;
+            iterator_difference_t<InputIterator> n_;
+            struct cursor
+            {
+            };
+            detail::counted_cursor<InputIterator> get_begin() const
             {
                 return {{}, it_, 0};
             }
-            sentinel get_end() const
+            detail::counted_sentinel<InputIterator> get_end() const
             {
                 return {n_};
             }

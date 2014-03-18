@@ -194,7 +194,13 @@ namespace ranges
             {};
 
             template<typename Iterator, typename Sentinel>
-            struct common_range;
+            struct common_cursor;
+
+            template<typename InputIterator>
+            struct counted_cursor;
+
+            template<typename InputIterator>
+            struct counted_sentinel;
         }
 
         namespace concepts
@@ -219,10 +225,10 @@ namespace ranges
         struct range_base
         {};
 
-        template<typename Derived>
+        template<typename Cursor, typename Sentinel = Cursor>
         struct basic_range_iterator;
 
-        template<typename Derived>
+        template<typename Sentinel>
         struct basic_range_sentinel;
 
         template<typename Derived, bool Infinite = false>
@@ -234,8 +240,8 @@ namespace ranges
         struct range_adaptor;
 
         template<typename Iterator, typename Sentinel>
-        using common_range_iterator
-            = basic_range_iterator<detail::common_range<Iterator, Sentinel>>;
+        using common_range_iterator =
+            basic_range_iterator<detail::common_cursor<Iterator, Sentinel>>;
 
         struct public_t;
 
@@ -347,10 +353,12 @@ namespace ranges
         }
 
         template<typename InputIterator>
-        using counted_iterator = basic_range_iterator<counted_iterable_view<InputIterator>>;
+        using counted_iterator =
+            basic_range_iterator<detail::counted_cursor<InputIterator>, detail::counted_sentinel<InputIterator>>;
 
         template<typename InputIterator>
-        using counted_sentinel = basic_range_sentinel<counted_iterable_view<InputIterator>>;
+        using counted_sentinel =
+            basic_range_sentinel<detail::counted_sentinel<InputIterator>>;
 
         template<typename Rng, typename Pred>
         struct filter_iterable_view;

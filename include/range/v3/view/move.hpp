@@ -34,7 +34,6 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using single_pass = std::true_type;
             using base_cursor_t = base_cursor_t<move_iterable_view>;
             struct adaptor : adaptor_defaults
             {
@@ -47,6 +46,7 @@ namespace ranges
                         base_reference>;
                 using adaptor_defaults::prev;
             public:
+                using single_pass = std::true_type;
                 reference current(base_cursor_t const &pos) const
                 {
                     return std::move(pos.current());
