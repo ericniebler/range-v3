@@ -26,27 +26,29 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename T>
+            T const & cref(T const &);
+
+            struct const_adaptor : adaptor_defaults
+            {
+                template<typename Cursor>
+                auto current(Cursor const &pos) const ->
+                    decltype(true ? pos.current() : detail::cref(pos.current()))
+                {
+                    return pos.current();
+                }
+            };
+        }
+
         template<typename Iterable>
         struct const_iterable_view
           : range_adaptor<const_iterable_view<Iterable>, Iterable>
         {
         private:
             friend range_core_access;
-            using base_reference = range_reference_t<Iterable>;
-            using reference =
-                detail::conditional_t<
-                    std::is_lvalue_reference<base_reference>::value,
-                    typename std::remove_reference<base_reference>::type const &,
-                    base_reference>;
-            using base_cursor_t = base_cursor_t<const_iterable_view>;
-            struct adaptor : adaptor_defaults
-            {
-                reference current(base_cursor_t const &pos) const
-                {
-                    return pos.current();
-                }
-            };
-            adaptor get_adaptor(begin_end_tag) const
+            detail::const_adaptor get_adaptor(begin_end_tag) const
             {
                 return {};
             }

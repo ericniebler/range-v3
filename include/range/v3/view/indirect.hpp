@@ -27,22 +27,25 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            struct indirect_adaptor : adaptor_defaults
+            {
+                template<typename Cursor>
+                auto current(Cursor const &pos) const -> decltype(*pos.current())
+                {
+                    return *pos.current();
+                }
+            };
+        }
+
         template<typename InputIterable>
         struct indirect_iterable_view
           : range_adaptor<indirect_iterable_view<InputIterable>, InputIterable>
         {
         private:
             friend range_core_access;
-            using base_cursor_t = base_cursor_t<indirect_iterable_view>;
-            struct adaptor : adaptor_defaults
-            {
-                auto current(base_cursor_t const &pos) const ->
-                    decltype(*pos.current())
-                {
-                    return *pos.current();
-                }
-            };
-            adaptor get_adaptor(begin_end_tag) const
+            detail::indirect_adaptor get_adaptor(begin_end_tag) const
             {
                 return {};
             }

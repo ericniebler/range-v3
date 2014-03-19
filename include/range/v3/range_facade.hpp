@@ -598,6 +598,15 @@ namespace ranges
             }
         };
 
+        struct default_sentinel
+        {
+            template<typename Cursor>
+            static constexpr bool equal(Cursor const &pos)
+            {
+                return range_core_access::done(pos);
+            }
+        };
+
         template<typename Derived, bool Infinite>
         struct range_facade
           : private detail::is_infinite<Infinite>
@@ -618,15 +627,6 @@ namespace ranges
             friend range_core_access;
 
             // Default implementations
-            struct default_sentinel
-            {
-                template<typename Cursor>
-                static constexpr bool equal(Cursor const &pos)
-                {
-                    return range_core_access::done(pos);
-                }
-            };
-
             Derived get_begin() const
             {
                 return derived();

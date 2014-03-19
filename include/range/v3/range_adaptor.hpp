@@ -20,74 +20,167 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename Iterable>
-            using cursor_adaptor_t = decltype(range_core_access::begin_adaptor(std::declval<Iterable const &>()));
-
-            template<typename Iterable>
-            using sentinel_adaptor_t = decltype(range_core_access::end_adaptor(std::declval<Iterable const &>()));
-
             template<typename Iterator, bool IsIterator = ranges::Iterator<Iterator>()>
-            struct is_single_pass
+            struct basic_cursor_associated_types
+            {};
+
+            template<typename Iterator>
+            struct basic_cursor_associated_types<Iterator, true>
             {
-                using type = Same<iterator_category_t<Iterator>, std::input_iterator_tag>;
+                using single_pass = Same<iterator_category_t<Iterator>, std::input_iterator_tag>;
+                using difference_type = iterator_difference_t<Iterator>;
             };
 
-            template<typename Sentinel>
-            struct is_single_pass<Sentinel, false>
-            {
-                using type = std::false_type;
-            };
-
-            // Give Iterable::iterator a simple interface for passing to Derived
-            template<typename IteratorOrSentinel>
-            struct basic_adaptor
+            // Turns an Iterator (or a sentinel) into a Cursor
+            template<typename Iterator>
+            struct basic_cursor : basic_cursor_associated_types<Iterator>
             {
             private:
                 template<typename Other>
-                friend struct basic_adaptor;
-                IteratorOrSentinel it_;
+                friend struct basic_cursor;
+                Iterator it_;
             public:
-                using single_pass = typename is_single_pass<IteratorOrSentinel>::type;
-                basic_adaptor() = default;
-                constexpr basic_adaptor(IteratorOrSentinel it)
+                basic_cursor() = default;
+                constexpr basic_cursor(Iterator it)
                   : it_(detail::move(it))
                 {}
                 template<typename Other,
-                    CONCEPT_REQUIRES_(EqualityComparable<IteratorOrSentinel, Other>())>
-                constexpr bool equal(basic_adaptor<Other> const &that) const
+                    CONCEPT_REQUIRES_(ranges::EqualityComparable<Iterator, Other>())>
+                constexpr bool equal(basic_cursor<Other> const &that) const
                 {
                     return it_ == that.it_;
                 }
-                CONCEPT_REQUIRES(Iterator<IteratorOrSentinel>())
+                CONCEPT_REQUIRES(ranges::Iterator<Iterator>())
                 void next()
                 {
                     ++it_;
                 }
-                template<typename I = IteratorOrSentinel,
-                    CONCEPT_REQUIRES_(Iterator<IteratorOrSentinel>())>
+                template<typename I = Iterator,
+                    CONCEPT_REQUIRES_(ranges::Iterator<Iterator>())>
                 auto current() const -> decltype(*std::declval<I const &>())
                 {
                     return *it_;
                 }
-                CONCEPT_REQUIRES(BidirectionalIterator<IteratorOrSentinel>())
+                CONCEPT_REQUIRES(ranges::BidirectionalIterator<Iterator>())
                 void prev()
                 {
                     --it_;
                 }
-                template<typename I = IteratorOrSentinel,
-                    CONCEPT_REQUIRES_(RandomAccessIterator<IteratorOrSentinel>())>
+                template<typename I = Iterator,
+                    CONCEPT_REQUIRES_(ranges::RandomAccessIterator<Iterator>())>
                 void advance(iterator_difference_t<I> n)
                 {
                     it_ += n;
                 }
-                template<typename I = IteratorOrSentinel,
-                    CONCEPT_REQUIRES_(RandomAccessIterator<IteratorOrSentinel>())>
+                template<typename I = Iterator,
+                    CONCEPT_REQUIRES_(ranges::RandomAccessIterator<Iterator>())>
                 iterator_difference_t<I>
-                distance_to(basic_adaptor const &that) const
+                distance_to(basic_cursor const &that) const
                 {
                     return that.it_ - it_;
                 }
             };
+
+            // This leads to some strange errors because in some contexts, Adaptor
+            // is not yet complete when the user may want it to be. Rethink this.
+            template<typename BaseCursor, typename Adaptor>
+            struct basic_cursor_and_adaptor : BaseCursor
+            {
+            private:
+                Adaptor adapt_;
+            public:
+                basic_cursor_and_adaptor() = default;
+                basic_cursor_and_adaptor(BaseCursor base, Adaptor adapt)
+                  : BaseCursor(std::move(base)), adapt_(std::move(adapt))
+                {}
+                Adaptor &adaptor()
+                {
+                    return adapt_;
+                }
+                Adaptor const &adaptor() const
+                {
+                    return adapt_;
+                }
+            };
+
+            // A cursor with adapted behaviors
+            template<typename BaseCursor, typename Adaptor>
+            struct basic_adapted_cursor
+            {
+            private:
+                template<typename A, typename I>
+                friend struct basic_adapted_cursor;
+                basic_cursor_and_adaptor<BaseCursor, Adaptor> base_;
+            public:
+                using single_pass = or_t<
+                    range_core_access::single_pass_t<Adaptor>,
+                    range_core_access::single_pass_t<BaseCursor>>;
+                basic_adapted_cursor() = default;
+                basic_adapted_cursor(BaseCursor base, Adaptor adapt)
+                  : base_{std::move(base), std::move(adapt)}
+                {}
+                template<typename A = Adaptor,
+                         typename R = decltype(std::declval<A>().current(base_))>
+                R current() const
+                {
+                    return base_.adaptor().current(base_);
+                }
+                template<typename A = Adaptor,
+                         typename R = decltype(std::declval<A>().next(base_))>
+                void next()
+                {
+                    base_.adaptor().next(base_);
+                }
+                template<typename A = Adaptor,
+                         typename R = decltype(std::declval<A>().equal(base_, base_))>
+                bool equal(basic_adapted_cursor const &that) const
+                {
+                    return base_.adaptor().equal(base_, that.base_);
+                }
+                template<typename A = Adaptor,
+                         typename C2, typename A2,
+                         typename R = decltype(std::declval<A>().empty(std::declval<C2 const &>(), base_))>
+                constexpr bool equal(basic_adapted_cursor<C2, A2> const &that) const
+                {
+                    // "that" is the iterator, "this" is the sentinel
+                    return base_.adaptor().empty(that.base_, base_);
+                }
+                template<typename A = Adaptor,
+                         typename R = decltype(std::declval<A>().prev(base_))>
+                void prev()
+                {
+                    base_.adaptor().prev(base_);
+                }
+                template<typename A = Adaptor,
+                         typename R = decltype(std::declval<A>().advance(base_, 0))>
+                void advance(range_core_access::cursor_difference_t<BaseCursor> n)
+                {
+                    base_.adaptor().advance(base_, n);
+                }
+                template<typename A = Adaptor,
+                         typename R = decltype(std::declval<A>().distance_to(base_, base_))>
+                range_core_access::cursor_difference_t<BaseCursor>
+                distance_to(basic_adapted_cursor const &that) const
+                {
+                    return base_.adaptor().distance_to(base_, that.base_);
+                }
+            };
+
+            template<typename Derived>
+            using cursor_adaptor_t =
+                decltype(range_core_access::begin_adaptor(std::declval<Derived const &>()));
+
+            template<typename Derived>
+            using sentinel_adaptor_t =
+                decltype(range_core_access::end_adaptor(std::declval<Derived const &>()));
+
+            template<typename Derived>
+            using derived_cursor_t =
+                decltype(std::declval<cursor_adaptor_t<Derived>>().begin(std::declval<Derived const &>()));
+
+            template<typename Derived>
+            using derived_sentinel_t =
+                decltype(std::declval<sentinel_adaptor_t<Derived>>().end(std::declval<Derived const &>()));
         }
 
         template<typename Derived>
@@ -98,21 +191,19 @@ namespace ranges
         // sentinel.
         template<typename Derived>
         using base_cursor_t =
-            detail::basic_adaptor<range_iterator_t<typename Derived::base_iterable_t const>>;
+            detail::basic_cursor<range_iterator_t<typename Derived::base_iterable_t const>>;
 
         template<typename Derived>
         using base_sentinel_t =
-            detail::basic_adaptor<range_sentinel_t<typename Derived::base_iterable_t const>>;
+            detail::basic_cursor<range_sentinel_t<typename Derived::base_iterable_t const>>;
 
         template<typename Derived>
         using derived_cursor_t =
-            decltype(range_core_access::begin_adaptor(std::declval<Derived const &>())
-                .begin(std::declval<Derived const &>()));
+            detail::basic_cursor_and_adaptor<detail::derived_cursor_t<Derived>, detail::cursor_adaptor_t<Derived>>;
 
         template<typename Derived>
         using derived_sentinel_t =
-            decltype(range_core_access::end_adaptor(std::declval<Derived const &>())
-                .end(std::declval<Derived const &>()));
+            detail::basic_cursor_and_adaptor<detail::derived_sentinel_t<Derived>, detail::sentinel_adaptor_t<Derived>>;
 
         struct adaptor_defaults : private range_core_access
         {
@@ -148,89 +239,17 @@ namespace ranges
             using range_facade<Derived, Infinite>::derived;
             BaseIterable rng_;
 
-            template<typename Adaptor, typename BaseCursorOrSentinel>
-            struct cursor_or_sentinel : private Adaptor
-            {
-            private:
-                template<typename A, typename I>
-                friend struct cursor_or_sentinel;
-                friend struct range_adaptor;
-                BaseCursorOrSentinel base_;
-                cursor_or_sentinel(Adaptor adaptor, BaseCursorOrSentinel base)
-                  : Adaptor(std::move(adaptor)), base_(std::move(base))
-                {}
-                Adaptor &adaptor()
-                {
-                    return *this;
-                }
-                Adaptor const &adaptor() const
-                {
-                    return *this;
-                }
-            public:
-                using single_pass = std::integral_constant<bool,
-                    range_core_access::single_pass_t<Adaptor>::value ||
-                        range_core_access::single_pass_t<BaseCursorOrSentinel>::value>;
-                cursor_or_sentinel() = default;
-                template<typename A = Adaptor,
-                         typename R = decltype(std::declval<A>().current(base_))>
-                R current() const
-                {
-                    return adaptor().current(base_);
-                }
-                template<typename A = Adaptor,
-                         typename R = decltype(std::declval<A>().next(base_))>
-                void next()
-                {
-                    adaptor().next(base_);
-                }
-                template<typename A = Adaptor,
-                         typename R = decltype(std::declval<A>().equal(base_, base_))>
-                bool equal(cursor_or_sentinel const &that) const
-                {
-                    return adaptor().equal(base_, that.base_);
-                }
-                template<typename A = Adaptor,
-                         typename A2, typename I,
-                         typename R = decltype(std::declval<A>().empty(std::declval<I const &>(), base_))>
-                constexpr bool equal(cursor_or_sentinel<A2, I> const &that) const
-                {
-                    // "that" is the iterator, "this" is the sentinel
-                    CONCEPT_ASSERT(Same<I, derived_cursor_t<Derived>>() &&
-                                   Same<A2, detail::cursor_adaptor_t<Derived>>());
-                    return adaptor().empty(that.base_, base_);
-                }
-                template<typename A = Adaptor,
-                         typename R = decltype(std::declval<A>().prev(base_))>
-                void prev()
-                {
-                    adaptor().prev(base_);
-                }
-                template<typename A = Adaptor,
-                         typename R = decltype(std::declval<A>().advance(base_, 0))>
-                void advance(range_difference_t<BaseIterable> n)
-                {
-                    adaptor().advance(base_, n);
-                }
-                template<typename A = Adaptor,
-                         typename R = decltype(std::declval<A>().distance_to(base_, base_))>
-                range_difference_t<BaseIterable>
-                distance_to(cursor_or_sentinel const &that) const
-                {
-                    return adaptor().distance_to(base_, that.base_);
-                }
-            };
-
             adaptor_defaults get_adaptor(begin_end_tag) const
             {
                 return {};
             }
-
-            base_cursor_t<range_adaptor> base_begin() const
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            base_cursor_t<D> base_begin() const
             {
                 return {ranges::begin(rng_)};
             }
-            base_sentinel_t<range_adaptor> base_end() const
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            base_sentinel_t<D> base_end() const
             {
                 return {ranges::end(rng_)};
             }
@@ -239,23 +258,21 @@ namespace ranges
             {
                 return ranges::size(rng_);
             }
-
-            template<typename D = Derived>
-            cursor_or_sentinel<detail::cursor_adaptor_t<D>, derived_cursor_t<D>>
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            detail::basic_adapted_cursor<detail::derived_cursor_t<D>, detail::cursor_adaptor_t<D>>
             get_begin() const
             {
-                auto adaptor = range_core_access::begin_adaptor(derived());
-                auto pos = adaptor.begin(derived());
-                return {std::move(adaptor), std::move(pos)};
+                auto adapt = range_core_access::begin_adaptor(derived());
+                auto pos = adapt.begin(derived());
+                return {std::move(pos), std::move(adapt)};
             }
-
-            template<typename D = Derived>
-            cursor_or_sentinel<detail::sentinel_adaptor_t<D>, derived_sentinel_t<D>>
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            detail::basic_adapted_cursor<detail::derived_sentinel_t<D>, detail::sentinel_adaptor_t<D>>
             get_end() const
             {
-                auto adaptor = range_core_access::end_adaptor(derived());
-                auto pos = adaptor.end(derived());
-                return {std::move(adaptor), std::move(pos)};
+                auto adapt = range_core_access::end_adaptor(derived());
+                auto pos = adapt.end(derived());
+                return {std::move(pos), std::move(adapt)};
             }
         public:
             constexpr range_adaptor(BaseIterable && rng)
