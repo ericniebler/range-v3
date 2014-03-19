@@ -172,6 +172,12 @@ namespace ranges
             template<typename T>
             using not_t = std::integral_constant<bool, !T::value>;
 
+            template<typename T, typename U>
+            using and_t = std::integral_constant<bool, T::value && U::value>;
+
+            template<typename T, typename U>
+            using or_t = std::integral_constant<bool, T::value || U::value>;
+
             template<typename T>
             using decay_t = typename std::decay<T>::type;
 
