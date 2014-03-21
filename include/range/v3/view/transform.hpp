@@ -18,6 +18,7 @@
 #include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
@@ -67,6 +68,11 @@ namespace ranges
               : range_adaptor_t<transform_iterable_view>(std::forward<InputIterable>(rng))
               , fun_(ranges::make_invokable(std::move(fun)))
             {}
+            CONCEPT_REQUIRES(ranges::SizedIterable<InputIterable>())
+            range_size_t<InputIterable> size() const
+            {
+                return this->base_size();
+            }
         };
 
         namespace view

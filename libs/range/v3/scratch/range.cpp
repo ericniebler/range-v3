@@ -232,8 +232,9 @@ void test_stride_view()
 
     std::stringstream str;
     copy(v, std::ostream_iterator<int>{str, " "});
-    for(int i : istream<int>(str) | view::as_range | view::stride(3))
+    for_each(istream<int>(str) | view::stride(3), [](int i){
         std::cout << i << ' ';
+    });
     std::cout << '\n';
 
     std::list<int> li;
@@ -246,8 +247,12 @@ void test_stride_view()
     std::cout << '\n';
 
     auto x = v | view::stride(3);
-    std::cout << ranges::distance(x) << '\n';
-    std::cout << '\n';
+    std::cout << "Expect 17 : " << ranges::distance(x) << '\n';
+
+    auto it0 = x.begin();
+    auto it1 = std::next(it0, 10);
+    std::cout << "expect 10 : " << (it1 - it0) << '\n';
+    std::cout << "expect -10 : " << (it0 - it1) << '\n';
 }
 
 void test_adjacent_filter()

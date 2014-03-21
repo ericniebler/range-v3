@@ -87,6 +87,7 @@ namespace ranges
             struct basic_cursor_and_adaptor : BaseCursor
             {
             private:
+                // As a base class would be preferable, but it leads to compile errors.
                 Adaptor adapt_;
             public:
                 basic_cursor_and_adaptor() = default;
@@ -104,6 +105,7 @@ namespace ranges
             };
 
             // A cursor with adapted behaviors
+            // The use of decltype to SFINAE-out functions here is a hack. Use concepts.
             template<typename BaseCursor, typename Adaptor>
             struct basic_adapted_cursor
             {
@@ -242,6 +244,14 @@ namespace ranges
             adaptor_defaults get_adaptor(begin_end_tag) const
             {
                 return {};
+            }
+            BaseIterable &base()
+            {
+                return rng_;
+            }
+            BaseIterable const &base() const
+            {
+                return rng_;
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             base_cursor_t<D> base_begin() const
