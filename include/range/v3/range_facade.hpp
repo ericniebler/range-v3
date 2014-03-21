@@ -237,15 +237,14 @@ namespace ranges
             using single_pass_t = typename single_pass<Cursor>::type;
 
             template<typename Cursor, typename Sentinel>
-            Cursor get_cursor(basic_range_iterator<Cursor, Sentinel> it)
+            static Cursor cursor(basic_range_iterator<Cursor, Sentinel> it)
             {
-                return std::move(it.pos_);
+                return std::move(it).pos_;
             }
-
             template<typename Sentinel>
-            Sentinel get_sentinel(basic_range_sentinel<Sentinel> s)
+            static Sentinel sentinel(basic_range_sentinel<Sentinel> s)
             {
-                return std::move(s.end_);
+                return std::move(s).end_;
             }
         };
 
@@ -598,6 +597,20 @@ namespace ranges
             }
         };
 
+        template<typename Cursor>
+        std::pair<basic_range_iterator<Cursor>, basic_range_iterator<Cursor>>
+        as_iterator_pair(Cursor begin, Cursor end)
+        {
+            return {{std::move(begin)}, {std::move(end)}};
+        }
+
+        template<typename Cursor, typename Sentinel>
+        std::pair<basic_range_iterator<Cursor, Sentinel>, basic_range_sentinel<Sentinel>>
+        as_iterator_pair(Cursor begin, Sentinel end)
+        {
+            return {{std::move(begin)}, {std::move(end)}};
+        }
+
         struct default_sentinel
         {
             template<typename Cursor>
@@ -612,8 +625,11 @@ namespace ranges
           : private detail::is_infinite<Infinite>
           , private range_base
         {
-        protected:
+        private:
+            friend Derived;
+            friend range_core_access;
             using range_facade_t = range_facade;
+        protected:
             Derived & derived()
             {
                 return static_cast<Derived &>(*this);
@@ -622,10 +638,6 @@ namespace ranges
             {
                 return static_cast<Derived const &>(*this);
             }
-        private:
-            friend Derived;
-            friend range_core_access;
-
             // Default implementations
             Derived get_begin() const
             {
