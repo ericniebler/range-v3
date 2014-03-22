@@ -332,13 +332,32 @@ void test_zip_view()
       , "hello"
       , "goodbye"
     };
-    std::stringstream str{"john paul george ringo"};
-    for(auto t : view::zip(vi, vs, istream<std::string>(str)|view::as_range))
+
+    std::cout << "All Ranges:\n";
     {
-        std::cout << "{"
-            << std::get<0>(t) << ", "
-            << std::get<1>(t) << ", "
-            << std::get<2>(t) << "}\n";
+        std::stringstream str{"john paul george ringo"};
+        for(auto t : view::zip(vi, vs, istream<std::string>(str) | view::as_range))
+        {
+            std::cout << "{"
+                << std::get<0>(t) << ", "
+                << std::get<1>(t) << ", "
+                << std::get<2>(t) << "}\n";
+        }
+    }
+
+    std::cout << "\nMixed Ranges and Iterables:\n";
+    {
+        std::stringstream str{"john paul george ringo"};
+        for_each(view::zip(vi, vs, istream<std::string>(str)),
+            [](std::tuple<int&, std::string&, std::string const&> t)
+            {
+                std::cout << "{"
+                    << std::get<0>(t) << ", "
+                    << std::get<1>(t) << ", "
+                    << std::get<2>(t) << "}\n";
+            });
+        auto x = view::zip(vi, vs, istream<std::string>(str));
+        static_assert(std::is_same<range_category_t<decltype(x)>, std::input_iterator_tag>::value, "");
     }
 
     auto rnd_rng = view::zip(vi, vs);
@@ -350,6 +369,7 @@ void test_zip_view()
 
     std::cout << rnd_rng.end() - rnd_rng.begin() << "\n";
     std::cout << rnd_rng.begin() - rnd_rng.end() << "\n";
+    std::cout << rnd_rng.size() << "\n";
 }
 
 void test_move_view()
