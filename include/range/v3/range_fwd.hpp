@@ -448,7 +448,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct stride_range_view;
+        struct stride_iterable_view;
 
         namespace view
         {

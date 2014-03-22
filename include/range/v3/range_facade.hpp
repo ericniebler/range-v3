@@ -246,6 +246,12 @@ namespace ranges
             {
                 return std::move(s).end_;
             }
+
+            template<typename RangeAdaptor>
+            struct base_iterable
+            {
+                using type = typename RangeAdaptor::base_iterable_t;
+            };
         };
 
         namespace detail

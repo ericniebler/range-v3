@@ -44,10 +44,12 @@ namespace ranges
 
             // Bidirectional stride iterators need a runtime boolean to keep track
             // of when the offset variable is dirty and needs to be lazily calculated.
+            // Ditto for random-access stride iterators when the end is a sentinel.
+            // If the size of the range is known a priori, then the runtime boolean
+            // is always unnecessary.
             using dirty_t =
                 detail::conditional_t<
                     (ranges::BidirectionalIterator<range_iterator_t<InputIterable>>() &&
-                    !ranges::RandomAccessIterator<range_iterator_t<InputIterable>>() &&
                     !ranges::SizedIterable<InputIterable>()),
                     mutable_<bool>,
                     constant<bool, false>>;
@@ -102,22 +104,27 @@ namespace ranges
                 void next(base_cursor_t &pos)
                 {
                     RANGES_ASSERT(0 == offset());
-                    auto rng = ranges::as_iterator_pair(std::move(pos), adaptor_defaults::end(*rng_));
+                    auto rng = ranges::as_iterator_pair(std::move(pos),
+                        adaptor_defaults::end(*rng_));
                     RANGES_ASSERT(rng.first != rng.second);
-                    offset() = detail::advance_bounded(rng.first, rng_->stride_ + offset(), rng.second);
+                    offset() = detail::advance_bounded(rng.first, rng_->stride_ + offset(),
+                        rng.second);
                     pos = ranges::range_core_access::cursor(std::move(rng.first));
                 }
                 CONCEPT_REQUIRES(ranges::BidirectionalIterator<range_iterator_t<InputIterable>>())
                 void prev(base_cursor_t &pos)
                 {
                     clean();
-                    auto rng = ranges::as_iterator_pair(adaptor_defaults::begin(*rng_), std::move(pos));
-                    offset() = detail::advance_bounded(rng.second, -rng_->stride_ + offset(), rng.first);
+                    auto rng = ranges::as_iterator_pair(adaptor_defaults::begin(*rng_),
+                        std::move(pos));
+                    offset() = detail::advance_bounded(rng.second, -rng_->stride_ + offset(),
+                        rng.first);
                     RANGES_ASSERT(0 == offset());
                     pos = ranges::range_core_access::cursor(std::move(rng.second));
                 }
                 CONCEPT_REQUIRES(ranges::RandomAccessIterator<range_iterator_t<InputIterable>>())
-                difference_type distance_to(derived_cursor_t const &here, derived_cursor_t const &there) const
+                difference_type distance_to(derived_cursor_t const &here,
+                    derived_cursor_t const &there) const
                 {
                     clean();
                     there.adaptor().clean();
@@ -134,14 +141,16 @@ namespace ranges
                     clean();
                     if(0 < n)
                     {
-                        auto rng = ranges::as_iterator_pair(std::move(pos), adaptor_defaults::end(*rng_));
+                        auto rng = ranges::as_iterator_pair(std::move(pos),
+                            adaptor_defaults::end(*rng_));
                         offset() = detail::advance_bounded(rng.first, n * rng_->stride_ + offset(),
                             rng.second);
                         pos = ranges::range_core_access::cursor(std::move(rng.first));
                     }
                     else if(0 > n)
                     {
-                        auto rng = ranges::as_iterator_pair(adaptor_defaults::begin(*rng_), std::move(pos));
+                        auto rng = ranges::as_iterator_pair(adaptor_defaults::begin(*rng_),
+                            std::move(pos));
                         offset() = detail::advance_bounded(rng.second, n * rng_->stride_ + offset(),
                             rng.first);
                         pos = ranges::range_core_access::cursor(std::move(rng.second));
@@ -153,14 +162,15 @@ namespace ranges
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
             // Range, adapt it anyway.
-            adaptor_defaults get_end_adaptor(concepts::Iterable) const
+            auto get_end_adaptor(concepts::Iterable) const -> adaptor_defaults
             {
                 return {};
             }
-            range_adaptor get_end_adaptor(concepts::Range) const
+            auto get_end_adaptor(concepts::Range) const -> range_adaptor
             {
                 return {*this, end_tag{}};
             }
+
             range_adaptor get_adaptor(begin_tag) const
             {
                 return {*this, begin_tag{}};
