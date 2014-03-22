@@ -192,12 +192,15 @@ namespace ranges
         // could simply be the underlying cursor type and base_sentinel_t the underlying
         // sentinel.
         template<typename Derived>
+        using base_iterable_t = typename range_core_access::base_iterable<Derived>::type;
+
+        template<typename Derived>
         using base_cursor_t =
-            detail::basic_cursor<range_iterator_t<typename Derived::base_iterable_t const>>;
+            detail::basic_cursor<range_iterator_t<base_iterable_t<Derived> const>>;
 
         template<typename Derived>
         using base_sentinel_t =
-            detail::basic_cursor<range_sentinel_t<typename Derived::base_iterable_t const>>;
+            detail::basic_cursor<range_sentinel_t<base_iterable_t<Derived> const>>;
 
         template<typename Derived>
         using derived_cursor_t =
