@@ -25,10 +25,6 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 
-#include <iterator>
-#include <range/v3/utility/iterator_facade.hpp>
-#include <range/v3/utility/compressed_tuple.hpp>
-
 namespace ranges
 {
     inline namespace v3

@@ -43,14 +43,14 @@ namespace ranges
 
             template<typename Tuple, typename UnaryFunction, std::size_t...Is>
             static unary_result_t<Tuple, UnaryFunction, Is...>
-            impl(Tuple && tup, UnaryFunction fun, integer_sequence<Is...>)
+            impl1(Tuple && tup, UnaryFunction fun, integer_sequence<Is...>)
             {
                 return unary_result_t<Tuple, UnaryFunction, Is...>{
                     fun(std::get<Is>(std::forward<Tuple>(tup)))...};
             }
             template<typename Tuple0, typename Tuple1, typename BinaryFunction, std::size_t...Is>
             static binary_result_t<Tuple0, Tuple1, BinaryFunction, Is...>
-            impl(Tuple0 && tup0, Tuple1 && tup1, BinaryFunction fun, integer_sequence<Is...>)
+            impl2(Tuple0 && tup0, Tuple1 && tup1, BinaryFunction fun, integer_sequence<Is...>)
             {
                 return binary_result_t<Tuple0, Tuple1, BinaryFunction, Is...>{
                     fun(std::get<Is>(std::forward<Tuple0>(tup0)),
@@ -59,19 +59,19 @@ namespace ranges
         public:
             template<typename Tuple, typename UnaryFunction>
             auto operator()(Tuple && tup, UnaryFunction fun) const ->
-                decltype(tuple_transform_::impl(
+                decltype(tuple_transform_::impl1(
                     std::declval<Tuple>(),
                     std::declval<UnaryFunction>(),
                     tuple_indices_t<Tuple>{}))
             {
-                return tuple_transform_::impl(
+                return tuple_transform_::impl1(
                     std::forward<Tuple>(tup),
                     std::move(fun),
                     tuple_indices_t<Tuple>{});
             }
             template<typename Tuple0, typename Tuple1, typename BinaryFunction>
             auto operator()(Tuple0 && tup0, Tuple1 && tup1, BinaryFunction fun) const ->
-                decltype(tuple_transform_::impl(
+                decltype(tuple_transform_::impl2(
                     std::declval<Tuple0>(),
                     std::declval<Tuple1>(),
                     std::declval<BinaryFunction>(),
@@ -81,7 +81,7 @@ namespace ranges
                     std::tuple_size<typename std::remove_reference<Tuple0>::type>::value ==
                     std::tuple_size<typename std::remove_reference<Tuple1>::type>::value,
                     "tuples must be of the same length");
-                return tuple_transform_::impl(
+                return tuple_transform_::impl2(
                     std::forward<Tuple0>(tup0),
                     std::forward<Tuple1>(tup1),
                     std::move(fun),
@@ -158,16 +158,16 @@ namespace ranges
             template<typename Tuple, typename UnaryFunction, std::size_t...Is>
             static void impl(Tuple && tup, UnaryFunction fun, integer_sequence<Is...>)
             {
-                return tuple_for_each_::ignore(
+                tuple_for_each_::ignore(
                     (static_cast<void>(fun(std::get<Is>(std::forward<Tuple>(tup)))), 42)...);
             }
         public:
             template<typename Tuple, typename UnaryFunction>
             void operator()(Tuple && tup, UnaryFunction fun) const
             {
-                return tuple_for_each_::impl(std::forward<Tuple>(tup),
-                                             std::move(fun),
-                                             tuple_indices_t<Tuple>{});
+                tuple_for_each_::impl(std::forward<Tuple>(tup),
+                                      std::move(fun),
+                                      tuple_indices_t<Tuple>{});
             }
         };
 
