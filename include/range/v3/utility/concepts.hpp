@@ -274,7 +274,7 @@ namespace ranges
                 template<typename T, typename ...Us>
                 auto requires(T &&, Us &&...us) -> decltype(
                     concepts::valid_expr(
-                        T{(Us&&)us...}
+                        T((Us&&)us...)
                     ));
             };
 
