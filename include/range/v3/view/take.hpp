@@ -26,6 +26,13 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename Iterator>
+            using iterator_size_t =
+                typename std::make_unsigned<iterator_difference_t<Iterator>>::type;
+        }
+
         namespace view
         {
             struct taker : bindable<taker>
@@ -33,15 +40,15 @@ namespace ranges
                 template<typename InputIterable,
                     CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
                                       ranges::InputIterator<range_iterator_t<InputIterable>>())>
-                static slice_range_view<InputIterable>
-                invoke(taker, InputIterable && rng, range_difference_t<InputIterable> to)
+                static slice_iterable_view<InputIterable>
+                invoke(taker, InputIterable && rng, range_size_t<InputIterable> to)
                 {
                     return {std::forward<InputIterable>(rng), 0, to};
                 }
                 template<typename InputIterator,
                     CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>())>
                 static counted_iterable_view<InputIterator>
-                invoke(taker, InputIterator it, iterator_difference_t<InputIterator> n)
+                invoke(taker, InputIterator it, detail::iterator_size_t<InputIterator> n)
                 {
                     return {std::move(it),
                             static_cast<iterator_difference_t<InputIterator>>(n)};

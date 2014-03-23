@@ -21,6 +21,26 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename Value>
+            struct delimit_sentinel_adaptor : adaptor_defaults
+            {
+            private:
+                Value value_;
+            public:
+                delimit_sentinel_adaptor() = default;
+                delimit_sentinel_adaptor(Value value)
+                  : value_(std::move(value))
+                {}
+                template<typename Cursor, typename Sentinel>
+                bool empty(Cursor const &pos, Sentinel const &end) const
+                {
+                    return end.equal(pos) || pos.current() == value_;
+                }
+            };
+        }
+
         template<typename InputIterable, typename Value>
         struct delimit_iterable_view
           : range_adaptor<delimit_iterable_view<InputIterable, Value>, InputIterable>
@@ -29,27 +49,15 @@ namespace ranges
             friend range_core_access;
             Value value_;
 
-            using base_t        = range_adaptor_t<delimit_iterable_view>;
-            using base_cursor_t  = base_cursor_t<delimit_iterable_view>;
-            using base_sentinel_t    = base_sentinel_t<delimit_iterable_view>;
-            struct end_adaptor : adaptor_defaults
+            using range_adaptor_t<delimit_iterable_view>::get_adaptor;
+            detail::delimit_sentinel_adaptor<Value> get_adaptor(end_tag) const
             {
-                Value const *value_;
-                end_adaptor() = default;
-                end_adaptor(Value const *value) : value_(value) {}
-                bool empty(base_cursor_t const &pos, base_sentinel_t const &end) const
-                {
-                    return end.equal(pos) || pos.current() == *value_;
-                }
-            };
-            using base_t::get_adaptor;
-            end_adaptor get_adaptor(end_tag) const
-            {
-                return {&value_};
+                return {value_};
             }
         public:
             delimit_iterable_view(InputIterable && rng, Value value)
-              : base_t(std::forward<InputIterable>(rng)), value_(std::move(value))
+              : range_adaptor_t<delimit_iterable_view>(std::forward<InputIterable>(rng))
+              , value_(std::move(value))
             {}
         };
 

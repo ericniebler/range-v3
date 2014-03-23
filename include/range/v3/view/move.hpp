@@ -28,31 +28,33 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename T> T && rref(T &, int);
+            template<typename T> T rref(T, long);
+
+            struct move_adaptor : adaptor_defaults
+            {
+            private:
+                using adaptor_defaults::prev;
+            public:
+                using single_pass = std::true_type;
+                template<typename Cursor>
+                auto current(Cursor const &pos) const ->
+                    decltype(detail::rref(pos.current(), 1))
+                {
+                    return std::move(pos.current());
+                }
+            };
+        }
+
         template<typename InputIterable>
         struct move_iterable_view
           : range_adaptor<move_iterable_view<InputIterable>, InputIterable>
         {
         private:
             friend range_core_access;
-            using base_cursor_t = base_cursor_t<move_iterable_view>;
-            // BUGBUG defines a forward cursor, but should be input.
-            struct adaptor : adaptor_defaults
-            {
-            private:
-                using base_reference = range_reference_t<InputIterable>;
-                using reference =
-                    detail::conditional_t<
-                        std::is_lvalue_reference<base_reference>::value,
-                        typename std::remove_reference<base_reference>::type &&,
-                        base_reference>;
-                using adaptor_defaults::prev;
-            public:
-                reference current(base_cursor_t const &pos) const
-                {
-                    return std::move(pos.current());
-                }
-            };
-            adaptor get_adaptor(begin_end_tag) const
+            detail::move_adaptor get_adaptor(begin_end_tag) const
             {
                 return {};
             }

@@ -18,6 +18,7 @@
 #include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
@@ -28,43 +29,50 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename UnaryFunction>
+            struct transform_adaptor : adaptor_defaults
+            {
+            private:
+                UnaryFunction const *fun_;
+            public:
+                transform_adaptor() = default;
+                transform_adaptor(UnaryFunction const &fun)
+                  : fun_(&fun)
+                {}
+                template<typename Cursor>
+                auto current(Cursor const &pos) const ->
+                    decltype((*fun_)(pos.current()))
+                {
+                    return (*fun_)(pos.current());
+                }
+            };
+        }
+
         template<typename InputIterable, typename UnaryFunction>
         struct transform_iterable_view
-          : range_adaptor<
-                transform_iterable_view<InputIterable, UnaryFunction>,
-                InputIterable>
+          : range_adaptor<transform_iterable_view<InputIterable, UnaryFunction>, InputIterable>
         {
         private:
             friend range_core_access;
-            using base_cursor_t = base_cursor_t<transform_iterable_view>;
             invokable_t<UnaryFunction> fun_;
-
-            struct adaptor : adaptor_defaults
+            // TODO: if end is a sentinel, it holds an unnecessary pointer back to fun_
+            using adaptor_t = detail::transform_adaptor<invokable_t<UnaryFunction>>;
+            adaptor_t get_adaptor(begin_end_tag) const
             {
-            private:
-                transform_iterable_view const *rng_;
-            public:
-                adaptor() = default;
-                adaptor(transform_iterable_view const &rng)
-                  : rng_(&rng)
-                {}
-                auto current(base_cursor_t const &pos) const ->
-                    decltype(rng_->fun_(pos.current()))
-                {
-                    return rng_->fun_(pos.current());
-                }
-            };
-            // TODO: if end is a sentinel, it hold an unnecessary pointer back to
-            // this range.
-            adaptor get_adaptor(begin_end_tag) const
-            {
-                return {*this};
+                return {fun_};
             }
         public:
             transform_iterable_view(InputIterable && rng, UnaryFunction fun)
               : range_adaptor_t<transform_iterable_view>(std::forward<InputIterable>(rng))
               , fun_(ranges::make_invokable(std::move(fun)))
             {}
+            CONCEPT_REQUIRES(ranges::SizedIterable<InputIterable>())
+            range_size_t<InputIterable> size() const
+            {
+                return this->base_size();
+            }
         };
 
         namespace view
