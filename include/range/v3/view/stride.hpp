@@ -65,7 +65,6 @@ namespace ranges
             {
             private:
                 using base_cursor_t = base_cursor_t<stride_iterable_view>;
-                using derived_cursor_t = derived_cursor_t<stride_iterable_view>;
                 stride_iterable_view const *rng_;
                 dirty_t & dirty() { return *this; }
                 dirty_t const & dirty() const { return *this; }
@@ -118,9 +117,10 @@ namespace ranges
                     RANGES_ASSERT(0 == offset());
                     pos = ranges::range_core_access::cursor(std::move(rng.second));
                 }
-                CONCEPT_REQUIRES(ranges::RandomAccessIterator<range_iterator_t<InputIterable>>())
-                difference_type distance_to(derived_cursor_t const &here,
-                    derived_cursor_t const &there) const
+                template<typename Cursor,
+                    CONCEPT_REQUIRES_(ranges::RandomAccessIterator<range_iterator_t<InputIterable>>())>
+                difference_type distance_to(Cursor const &here,
+                    Cursor const &there) const
                 {
                     clean();
                     there.adaptor().clean();
