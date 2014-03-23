@@ -14,302 +14,504 @@
 #define RANGES_V3_UTILITY_VARIANT_HPP
 
 #include <utility>
-#include <typeinfo>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/typelist.hpp>
+#include <range/v3/utility/concepts.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct void_t
-        {};
-
         namespace detail
         {
             template<typename T>
-            using decay_t = typename std::decay<T>::type;
+            using add_ref_t =
+                meta_eval<std::add_lvalue_reference>::apply<T>;
 
-            template<typename T, typename U>
-            struct common_type_or_void
-            {
-                using type = decltype(true? std::declval<T>() : std::declval<U>());
-            };
- 
-            template<typename U>
-            struct common_type_or_void<void, U>
-            {
-                using type = void;
-            };
- 
             template<typename T>
-            struct common_type_or_void<T, void>
-            {
-                using type = void;
-            };
- 
-            template<>
-            struct common_type_or_void<void, void>
-            {
-                using type = void;
-            };
+            using add_cref_t =
+                meta_compose<
+                    meta_eval<std::add_lvalue_reference>::apply,
+                    meta_eval<std::add_const>::apply>::apply<T>;
+        }
 
-            template<typename T, typename U>
-            using common_type_or_void_t = typename common_type_or_void<T, U>::type;
+        template<std::size_t N>
+        using size_t = std::integral_constant<std::size_t, N>;
 
-            template<typename List>
-            union variant_data
+        struct void_t
+        {};
+
+        template<typename...Ts>
+        struct tagged_variant;
+
+        template<std::size_t N, typename Variant>
+        struct tagged_variant_element;
+
+        template<std::size_t N, typename Variant>
+        using tagged_variant_element_t = typename tagged_variant_element<N, Variant>::type;
+
+        template<std::size_t N, typename...Ts>
+        detail::add_ref_t<tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        get(tagged_variant<Ts...> &var);
+
+        template<std::size_t N, typename...Ts>
+        detail::add_cref_t<tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        get(tagged_variant<Ts...> const &var);
+
+        template<std::size_t N, typename...Ts>
+        meta_eval<std::add_rvalue_reference>::
+            apply<tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        get(tagged_variant<Ts...> &&var);
+
+        namespace detail
+        {
+            struct any
             {
-                template<typename Fun>
-                void apply(std::type_info const*, Fun &&) const
+                template<typename T>
+                any(T &&)
                 {}
             };
 
+            template<typename T>
+            struct ref
+            {
+            private:
+                T *t_;
+            public:
+                ref() = default;
+                ref(T &t)
+                  : t_(std::addressof(t))
+                {}
+                T &get() const
+                {
+                    return *t_;
+                }
+            };
+
+            template<typename T>
+            T &unwrap_ref(T &t)
+            {
+                return t;
+            }
+
+            template<typename T>
+            T &unwrap_ref(ref<T> t)
+            {
+                return t.get();
+            }
+
+            template<typename T>
+            struct wrap_ref
+            {
+                using type = T;
+            };
+
+            template<typename T>
+            struct wrap_ref<T &>
+            {
+                using type = ref<T>;
+            };
+
+            template<typename T>
+            using wrap_ref_t = typename wrap_ref<T>::type;
+
+            template<typename BinaryFunction, typename T, std::size_t N,
+                CONCEPT_REQUIRES_(ranges::Callable<BinaryFunction, T, size_t<N>>())>
+            void apply_if(BinaryFunction &&fun, T &t, size_t<N> u)
+            {
+                detail::forward<BinaryFunction>(fun)(t, u);
+            }
+
+            template<typename BinaryFunction, typename T, std::size_t N,
+                CONCEPT_REQUIRES_(!ranges::Callable<BinaryFunction, T, size_t<N>>())>
+            void apply_if(BinaryFunction &&, T &, size_t<N>)
+            {
+                RANGES_ASSERT(false);
+            }
+
+            template<typename...List>
+            union variant_data;
+
+            template<>
+            union variant_data<>
+            {
+                template<typename Fun, std::size_t N>
+                void apply(std::size_t, Fun &&, size_t<N>) const
+                {
+                    RANGES_ASSERT(false);
+                }
+            };
+
             template<typename T, typename ...Ts>
-            union variant_data<typelist<T, Ts...>>
+            union variant_data<T, Ts...>
             {
             private:
                 template<typename U>
-                using enable_if_ok =
-                    typename std::enable_if<
-                        typelist_in<U, typelist<Ts...>>::value, int>::type;
-                using head_t = T;
-                using tail_t = variant_data<typelist<Ts...>>;
+                using enable_if_ok = enable_if_t<typelist_in<U, typelist<Ts...>>::value>;
+                using head_t = decay_t<wrap_ref_t<T>>;
+                using tail_t = variant_data<Ts...>;
 
                 head_t head;
                 tail_t tail;
 
-                template<typename This, typename Fun>
-                static auto
-                apply_(This & this_, std::type_info const* ti, Fun && fun) ->
-                    typename std::enable_if<(ranges::Callable<Fun, decltype((this_.head))>())>::type
+                template<typename This, typename Fun, std::size_t N>
+                static void apply_(This &this_, std::size_t n, Fun &&fun, size_t<N> u)
                 {
-                    if(*ti == typeid(T))
-                        detail::forward<Fun>(fun)(this_.head);
+                    if(0 == n)
+                        detail::apply_if(detail::forward<Fun>(fun), this_.head, u);
                     else
-                        this_.tail.apply(ti, detail::forward<Fun>(fun));
-                }
-                template<typename This, typename Fun>
-                static auto
-                apply_(This & this_, std::type_info const* ti, Fun && fun) ->
-                    typename std::enable_if<!(ranges::Callable<Fun, decltype((this_.head))>())>::type
-                {
-                    assert(*ti != typeid(T));
-                    this_.tail.apply(ti, detail::forward<Fun>(fun));
+                        this_.tail.apply(n - 1, detail::forward<Fun>(fun), size_t<N + 1>{});
                 }
             public:
                 variant_data()
                 {}
-                constexpr variant_data(T const &t)
-                  : head(t)
+                template<typename U,
+                    enable_if_t<std::is_constructible<head_t, U>::value> = 0>
+                variant_data(size_t<0>, U &&u)
+                  : head(std::forward<U>(u))
                 {}
-                constexpr variant_data(T &&t)
-                  : head(std::move(t))
-                {}
-                template<typename U, enable_if_ok<U> = 0>
-                constexpr variant_data(U const &u)
-                  : tail{u}
-                {}
-                template<typename U, enable_if_ok<U> = 0>
-                constexpr variant_data(U &&u)
-                  : tail{detail::forward<U>(u)}
+                template<std::size_t N, typename U,
+                    enable_if_t<0 != N && std::is_constructible<tail_t, size_t<N - 1>, U>::value> = 0>
+                variant_data(size_t<N>, U &&u)
+                  : tail{size_t<N - 1>{}, std::forward<U>(u)}
                 {}
                 ~variant_data()
                 {}
-                template<typename Fun>
-                auto apply(std::type_info const* ti, Fun && fun) ->
-                    decltype(variant_data::apply_(*this, ti, std::declval<Fun>()))
+                template<typename Fun, std::size_t N>
+                void apply(std::size_t n, Fun &&fun, size_t<N> u)
                 {
-                    return variant_data::apply_(*this, ti, std::forward<Fun>(fun));
+                    this->apply_(*this, n, std::forward<Fun>(fun), u);
                 }
-                template<typename Fun>
-                auto apply(std::type_info const* ti, Fun && fun) const ->
-                    decltype(variant_data::apply_(*this, ti, std::declval<Fun>()))
+                template<typename Fun, std::size_t N>
+                void apply(std::size_t n, Fun &&fun, size_t<N> u) const
                 {
-                    return variant_data::apply_(*this, ti, std::forward<Fun>(fun));
+                    this->apply_(*this, n, std::forward<Fun>(fun), u);
                 }
             };
 
-            struct deleter
+            struct delete_fun
             {
                 template<typename T>
-                void operator()(T const & t) const
+                void operator()(T const &t) const
                 {
                     t.T::~T();
                 }
             };
 
+            // Is there a less dangerous way?
             template<typename T>
-            struct setter
+            struct set_fun
             {
-                T && t_;
-                setter(T && t)
+            private:
+                T &&t_;
+            public:
+                set_fun(T &&t)
                   : t_(std::forward<T>(t))
                 {}
-                void operator()(T & t) const
+                template<typename U,
+                    enable_if_t<std::is_constructible<U, T>::value> = 0>
+                void operator()(U &u) const
                 {
-                    ::new(static_cast<void*>(&t)) T(std::forward<T>(t_));
+                    ::new(static_cast<void*>(std::addressof(u))) U(std::forward<T>(t_));
                 }
-                template<typename U>
-                typename std::enable_if<
-                    !std::is_same<decay_t<U>, decay_t<T>>::value
-                >::type
-                operator()(U &) const
-                {}
+                template<typename U,
+                    enable_if_t<!std::is_constructible<U, T>::value> = 0>
+                void operator()(U &u) const
+                {
+                    RANGES_ASSERT(false);
+                }
             };
-
-            template<typename Fun, template<typename> class Tfx = identity>
-            struct make_result_t
-            {
-                template<typename Arg>
-                using apply =
-                    identity<concepts::Callable::result_t<Fun, typename Tfx<Arg>::type>>;
-            };
-
-            template<typename Fun, typename List, template<typename> class Tfx = identity>
-            using result_list_t =
-                typelist_transform_t<List, make_result_t<Fun, Tfx>::template apply>;
 
             template<typename T>
-            using add_const_lvalue_reference =
-                std::add_lvalue_reference<T const>;
+            struct get_fun
+            {
+            private:
+                T *&t_;
+            public:
+                get_fun(T *&t)
+                  : t_(t)
+                {}
+                void operator()(T &t) const
+                {
+                    t_ = std::addressof(t);
+                }
+                void operator()(any) const
+                {
+                    RANGES_ASSERT(false);
+                }
+            };
 
-            template<typename Fun, typename Res>
+            struct move_fun
+            {
+                template<typename T>
+                T &&operator()(T &t) const
+                {
+                    return std::move(t);
+                }
+            };
+
+            struct identity_fun
+            {
+                template<typename T>
+                T &operator()(T &t) const
+                {
+                    return t;
+                }
+            };
+
+            template<typename Fun, typename Variant>
             struct apply_visitor
             {
-                apply_visitor(Fun && fun, Res & res)
-                  : fun_(std::forward<Fun>(fun)), res_(res)
-                {}
-                template<typename T>
-                void operator()(T && t) const
-                {
-                    this->apply_(std::forward<T>(t), std::is_void<result_of_t<Fun(T &&)>>{});
-                }
             private:
-                template<typename T>
-                void apply_(T && t, std::true_type) const
+                Variant &var_;
+                Fun fun_;
+                template<typename T, std::size_t N>
+                void apply_(T &&t, size_t<N>, std::true_type) const
                 {
                     fun_(std::forward<T>(t));
                 }
-                template<typename T>
-                void apply_(T && t, std::false_type) const
+                template<typename T, std::size_t N>
+                void apply_(T &&t, size_t<N>, std::false_type) const
                 {
-                    res_ = fun_(std::forward<T>(t));
+                    var_.template set<N>(fun_(std::forward<T>(t)));
                 }
-                Res & res_;
-                Fun fun_;
+            public:
+                apply_visitor(Fun &&fun, Variant &var)
+                  : fun_(std::forward<Fun>(fun)), var_(var)
+                {}
+                template<typename T, std::size_t N>
+                void operator()(T &&t, size_t<N> u) const
+                {
+                    this->apply_(std::forward<T>(t), u, std::is_void<result_of_t<Fun(T &&)>>{});
+                }
             };
 
-            template<typename Data, typename Fun, typename Res>
-            static Res apply_visitor_(std::type_info const *type, Data && data, Fun && fun,
-                Res & res)
+            template<typename Fun>
+            struct apply_visitor<Fun, void_t>
             {
-                apply_visitor<Fun, Res> vis{std::forward<Fun>(fun), res};
-                std::forward<Data>(data).apply(type, vis);
-                return std::move(res);
+            private:
+                Fun fun_;
+            public:
+                apply_visitor(Fun &&fun, void_t &)
+                  : fun_(std::forward<Fun>(fun))
+                {}
+                template<typename T, std::size_t N>
+                void operator()(T &&t, size_t<N>) const
+                {
+                    fun_(std::forward<T>(t));
+                }
+            };
+
+            template<typename Data, typename Fun, typename Variant>
+            static void apply_visitor_(std::size_t n, Data &data, Fun &&fun, Variant &var)
+            {
+                apply_visitor<Fun, Variant> vis{std::forward<Fun>(fun), var};
+                data.apply(n, vis, size_t<0>{});
             }
             template<typename Data, typename Fun>
-            static void apply_visitor_(std::type_info const *type, Data && data, Fun && fun,
-                ranges::void_t &)
+            static void apply_visitor_(std::size_t n, Data &data, Fun &&fun)
             {
-                std::forward<Data>(data).apply(type, std::forward<Fun>(fun));
+                void_t var;
+                detail::apply_visitor_(n, data, std::forward<Fun>(fun), var);
             }
+
+            template<typename Fun, typename Types>
+            using variant_result_t =
+                typelist_expand_t<
+                    ranges::tagged_variant,
+                    typelist_replace_t<void, void_t,
+                        typelist_transform_t<Types,
+                            meta_bind1st<concepts::Callable::result_t, Fun>::template apply> > >;
+
+            template<typename UnaryFunction>
+            struct unwrap_fun
+            {
+            private:
+                UnaryFunction fun_;
+            public:
+                unwrap_fun(UnaryFunction &&fun)
+                  : fun_(std::forward<UnaryFunction>(fun))
+                {}
+                template<typename T>
+                auto operator()(T &&t) const ->
+                    decltype(fun_(detail::unwrap_ref(std::forward<T>(t))))
+                {
+                    return fun_(detail::unwrap_ref(std::forward<T>(t)));
+                }
+            };
         }
 
         template<typename ...Ts>
-        struct variant
+        struct tagged_variant
         {
         private:
-            using unique_t =
-                typelist_replace_t<
-                    void
-                  , void_t
-                  , typelist_unique_t<typelist<detail::decay_t<Ts>...>>
-                >;
-            using head_t = typelist_front_t<unique_t>;
-            using data_t = detail::variant_data<unique_t>;
-            const std::type_info* type_;
+            using types_t = typelist<Ts...>;
+            using data_t = detail::variant_data<Ts...>;
+            std::size_t which_;
             data_t data_;
 
-            template<typename Fun, template<typename> class Tfx = detail::identity>
-            using result_t =
-                typelist_expand_t<
-                    ranges::variant,
-                    typelist_replace_t<
-                        void
-                      , void_t
-                      , typelist_unique_t<detail::result_list_t<Fun, unique_t, Tfx>>>>;
-            template<typename Fun, typename Or = void,
-                template<typename> class Tfx = detail::identity>
-            using result_or_t =
-                detail::conditional_t<
-                    std::is_same<result_t<Fun, Tfx>, variant<void_t>>::value
-                  , Or
-                  , result_t<Fun, Tfx>
-                >;
             void clear_()
             {
                 if(is_valid())
                 {
-                    // Delete the old value
-                    this->apply(detail::deleter{});
-                    // Set the type to void
-                    type_ = &typeid(void);
+                    void_t res;
+                    detail::apply_visitor_(which_, data_, detail::delete_fun{}, res);
+                    which_ = (std::size_t)-1;
                 }
             }
+
+            template<std::size_t N, typename...Us>
+            friend detail::add_ref_t<tagged_variant_element_t<N, tagged_variant<Us...>>>
+            get(tagged_variant<Us...> &var);
+
+            template<std::size_t N, typename...Us>
+            friend detail::add_cref_t<tagged_variant_element_t<N, tagged_variant<Us...>>>
+            get(tagged_variant<Us...> const &var);
+
+            template<std::size_t N, typename...Us>
+            friend meta_eval<std::add_rvalue_reference>::
+                apply<tagged_variant_element_t<N, tagged_variant<Us...>>>
+            get(tagged_variant<Us...> &&var);
         public:
-            constexpr variant()
-              : type_(&typeid(void))
-              , data_{}
+            tagged_variant()
+              : which_((std::size_t)-1), data_{}
             {}
-            template<typename U,
-                typename = decltype(data_t{std::declval<U>()})>
-            constexpr explicit variant(U && u)
-              : type_(&typeid(detail::decay_t<U>))
-              , data_{detail::forward<U>(u)}
+            template<std::size_t N, typename U,
+                enable_if_t<std::is_constructible<data_t, size_t<N>, U>::value> = 0>
+            tagged_variant(size_t<N> n, U &&u)
+              : which_(N), data_{n, detail::forward<U>(u)}
             {}
-            ~variant()
+            tagged_variant(tagged_variant &&that)
+              : tagged_variant{}
+            {
+                if(that.is_valid())
+                    detail::apply_visitor_(that.which_, that.data_, detail::move_fun{}, *this);
+            }
+            tagged_variant(tagged_variant const &that)
+              : tagged_variant{}
+            {
+                if(that.is_valid())
+                    detail::apply_visitor_(that.which_, that.data_, detail::identity_fun{}, *this);
+            }
+            tagged_variant &operator=(tagged_variant &&that)
+            {
+                clear_();
+                if(that.is_valid())
+                    detail::apply_visitor_(that.which_, that.data_, detail::move_fun{}, *this);
+                return *this;
+            }
+            tagged_variant &operator=(tagged_variant const &that)
+            {
+                clear_();
+                if(that.is_valid())
+                    detail::apply_visitor_(that.which_, that.data_, detail::identity_fun{}, *this);
+                return *this;
+            }
+            ~tagged_variant()
             {
                 clear_();
             }
-            template<typename U,
-                typename = decltype(data_t{std::declval<U>()})>
-            variant& operator=(U && u)
+            static constexpr std::size_t size()
             {
-                std::type_info const *const new_type = &typeid(detail::decay_t<U>);
-                // Delete the old value
+                return sizeof...(Ts);
+            }
+            template<std::size_t N, typename U,
+                enable_if_t<std::is_constructible<data_t, size_t<N>, U>::value> = 0>
+            void set(U &&u)
+            {
                 clear_();
-                // Set the new value (this can throw)
-                void_t res;
-                detail::apply_visitor_(new_type, data_, detail::setter<U>{std::forward<U>(u)}, res);
-                // Success, set the new type
-                type_ = new_type;
-                return *this;
+                detail::apply_visitor_(N, data_, detail::set_fun<U>{std::forward<U>(u)});
+                which_ = N;
             }
             bool is_valid() const
             {
-                return type() != typeid(void);
+                return which() != (std::size_t)-1;
             }
-            std::type_info const & type() const
+            std::size_t which() const
             {
-                return *type_;
+                return which_;
             }
-            template<typename Fun>
-            result_or_t<Fun, void, std::add_lvalue_reference>
-            apply(Fun && fun)
+            template<typename Fun,
+                typename Args = typelist_transform_t<types_t, detail::add_ref_t>,
+                typename Result = detail::variant_result_t<Fun, Args>>
+            Result apply(Fun &&fun)
             {
-                result_or_t<Fun, void_t, std::add_lvalue_reference> res;
-                return detail::apply_visitor_(type_, data_, std::forward<Fun>(fun), res);
+                Result res;
+                detail::unwrap_fun<Fun> ufun{std::forward<Fun>(fun)};
+                detail::apply_visitor_(which_, data_, ufun, res);
+                return res;
             }
-            //template<typename Fun>
-            //result_or_t<Fun, void, detail::add_const_lvalue_reference>
-            //apply(Fun && fun) const
-            //{
-            //    result_or_t<Fun, void_t, detail::add_const_lvalue_reference> res;
-            //    return this->apply_(data_, std::forward<Fun>(fun), res);
-            //}
+            template<typename Fun,
+                typename Args = typelist_transform_t<types_t, detail::add_cref_t>,
+                typename Result = detail::variant_result_t<Fun, Args >>
+            Result apply(Fun &&fun) const
+            {
+                Result res;
+                detail::unwrap_fun<Fun> ufun{std::forward<Fun>(fun)};
+                detail::apply_visitor_(which_, data_, ufun, res);
+                return res;
+            }
         };
+
+        template<std::size_t N, typename...Ts>
+        struct tagged_variant_element<N, tagged_variant<Ts...>>
+        {
+            using type =
+                detail::lazy_conditional_t<
+                    std::is_reference<typelist_element_t<N, typelist<Ts...>>>::value,
+                    typelist_element<N, typelist<Ts...>>,
+                    std::decay<typelist_element_t<N, typelist<Ts...>>>>;
+        };
+
+        // Accessors
+        template<std::size_t N, typename...Ts>
+        detail::add_ref_t<tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        get(tagged_variant<Ts...> &var)
+        {
+            RANGES_ASSERT(N == var.which());
+            using elem_t =
+                meta_eval<std::remove_reference>::apply<
+                    tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+            elem_t *elem = nullptr;
+            detail::unwrap_fun<detail::get_fun<elem_t>> get{elem};
+            detail::apply_visitor_(N, var.data_, get);
+            RANGES_ASSERT(elem != nullptr);
+            return *elem;
+        }
+
+        template<std::size_t N, typename...Ts>
+        detail::add_cref_t<tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        get(tagged_variant<Ts...> const &var)
+        {
+            RANGES_ASSERT(N == var.which());
+            using elem_t =
+                meta_compose<
+                    meta_eval<std::remove_reference>::apply,
+                    meta_eval<std::add_const>::apply>::apply<
+                        tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+            elem_t *elem = nullptr;
+            detail::unwrap_fun<detail::get_fun<elem_t>> get{elem};
+            detail::apply_visitor_(N, var.data_, get);
+            RANGES_ASSERT(elem != nullptr);
+            return *elem;
+        }
+
+        template<std::size_t N, typename...Ts>
+        meta_eval<std::add_rvalue_reference>::
+            apply<tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        get(tagged_variant<Ts...> &&var)
+        {
+            RANGES_ASSERT(N == var.which());
+            using elem_t =
+                meta_eval<std::remove_reference>::apply<
+                    tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+            elem_t *elem = nullptr;
+            detail::unwrap_fun<detail::get_fun<elem_t>> get{elem};
+            detail::apply_visitor_(N, var.data_, get);
+            RANGES_ASSERT(elem != nullptr);
+            return std::forward<tagged_variant_element_t<N, tagged_variant<Ts...>>>(*elem);
+        }
     }
 }
 

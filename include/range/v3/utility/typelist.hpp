@@ -249,27 +249,36 @@ namespace ranges
                 ::has((detail::identity<T>*)nullptr))
         {};
 
+        namespace detail
+        {
+            ////////////////////////////////////////////////////////////////////////////////////
+            // typelist_unique
+            template<typename List, typename Result>
+            struct typelist_unique_
+            {
+                using type = Result;
+            };
+
+            template<typename Head, typename...List, typename Result>
+            struct typelist_unique_<typelist<Head, List...>, Result>
+              : typelist_unique_<
+                    typelist<List...>,
+                    lazy_conditional_t<
+                        typelist_in<Head, Result>::value,
+                        identity<Result>,
+                        typelist_push_back<Head, Result>>>
+            {};
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_unique
         template<typename List>
         struct typelist_unique
-        {
-            using type = List;
-        };
+          : detail::typelist_unique_<List, typelist<>>
+        {};
 
         template<typename List>
         using typelist_unique_t = typename typelist_unique<List>::type;
-
-        template<typename Head, typename...List>
-        struct typelist_unique<typelist<Head, List...>>
-        {
-            using type =
-                detail::lazy_conditional_t<
-                    typelist_in<Head, typelist<List...>>::value
-                  , typelist_unique<typelist<List...>>
-                  , typelist_push_back<Head, typelist_unique_t<typelist<List...>>>
-                >;
-        };
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_replace
@@ -302,17 +311,61 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_transform
-        template<typename List, template<typename> class Fun>
+        template<typename List, template<typename...> class Fun>
         struct typelist_transform;
 
-        template<typename ...List, template<typename> class Fun>
+        template<typename ...List, template<typename...> class Fun>
         struct typelist_transform<typelist<List...>, Fun>
         {
-            using type = typelist<typename Fun<List>::type...>;
+            using type = typelist<Fun<List>...>;
         };
 
-        template<typename List, template<typename> class Fun>
+        template<typename List, template<typename...> class Fun>
         using typelist_transform_t = typename typelist_transform<List, Fun>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_find
+        template<typename T, typename List>
+        struct typelist_find
+        {
+            using type = typelist<>;
+        };
+
+        template<typename T, typename Head, typename ...List>
+        struct typelist_find<T, typelist<Head, List...>>
+          : typelist_find<T, typelist<List...>>
+        {};
+
+        template<typename T, typename ...List>
+        struct typelist_find<T, typelist<T, List...>>
+        {
+            using type = typelist<T, List...>;
+        };
+
+        template<typename T, typename List>
+        using typelist_find_t = typename typelist_find<T, List>::type;
+
+        // General meta-programming utilities
+        template<template<typename...> class C, typename T>
+        struct meta_bind1st
+        {
+            template<typename...Us>
+            using apply = C<T, Us...>;
+        };
+
+        template<template<typename...> class C>
+        struct meta_eval
+        {
+            template<typename...Ts>
+            using apply = typename C<Ts...>::type;
+        };
+
+        template<template<typename...> class C0, template<typename...> class C1>
+        struct meta_compose
+        {
+            template<typename...Ts>
+            using apply = C0<C1<Ts...>>;
+        };
     }
 }
 

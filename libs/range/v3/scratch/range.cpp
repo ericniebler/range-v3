@@ -19,10 +19,12 @@
 #include <utility>
 #include <sstream>
 #include <iostream>
+#include <typeinfo>
 #include <functional>
 #include <initializer_list>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/safe_int.hpp>
+#include <range/v3/utility/variant.hpp>
 
 template<std::size_t>
 struct undef_i;
@@ -772,6 +774,80 @@ void test_filter()
     std::cout << '\n';
 }
 
+struct S
+{
+    S() { std::cout << "S::S()\n"; }
+    S(S &&) { std::cout << "S::S(S&&)\n"; }
+    S(S const &) { std::cout << "S::S(S const &)\n"; }
+    S &operator=(S &&) { std::cout << "S::operator=(S&&)\n"; return *this; }
+    S &operator=(S const &) { std::cout << "S::operator=(S const &)\n"; return *this; }
+    ~S() { std::cout << "S::~S()\n"; }
+    friend std::ostream& operator<<(std::ostream& sout, S const &)
+    {
+        return sout << "S";
+    }
+};
+
+struct disp
+{
+    template<typename T>
+    void operator()(T const & t) const
+    {
+        std::cout << typeid(T).name() << " : " << t << '\n';
+    }
+};
+
+struct my_visitor
+{
+    int& operator()(int& i) const
+    {
+        std::cout << "my_visitor::operator()(int) " << i << "\n";
+        return i;
+    }
+    float operator()(float i) const
+    {
+        std::cout << "my_visitor::operator()(float) " << i << "\n";
+        return i;
+    }
+    template<typename T>
+    void operator()(T) const
+    {
+        std::cout << "my_visitor::operator()(T)\n";
+    }
+};
+
+void test_tagged_variant()
+{
+    using namespace ranges;
+    using x = typelist_unique_t<typelist<int, int, int>>;
+    static_assert(std::is_same<x, typelist<int>>::value, "");
+
+    using y = typelist_unique_t<typelist<int, short, int>>;
+    static_assert(std::is_same<y, typelist<int, short>>::value, "");
+
+    std::cout << "\nTesting tagged_variant\n";
+    tagged_variant<int, char const *, short, char, S, wchar_t, long, float> v(size_t<4>{}, S{});
+
+    auto v2 = std::move(v);
+
+    v.apply(disp{});
+    v.set<7>(3.14);
+    v.apply(disp{});
+    tagged_variant<int&, void_t, void_t, void_t, void_t, void_t, void_t, float> vv = v.apply(my_visitor{});
+    RANGES_ASSERT(7 == vv.which());
+    v.set<4>(S{});
+    v.apply(disp{});
+    v.set<0>(42);
+    v.apply(disp{});
+    vv = v.apply(my_visitor{});
+    RANGES_ASSERT(0 == vv.which());
+    RANGES_ASSERT((&get<0>(v) == &get<0>(vv)));
+    auto const & cvv = vv;
+    int & iref = get<0>(cvv);
+    vv.set<7>(2.56);
+    float const & f = get<7>(cvv);
+}
+
 int main()
 {
     using namespace ranges;
@@ -922,63 +998,7 @@ int main()
     test_as_range();
     test_counted_range();
     test_common_range_iterator();
+
+    test_tagged_variant();
 }
 //*/
-
-
-//#include <typeinfo>
-//#include <iostream>
-//#include <range/v3/utility/typelist.hpp>
-//#include <range/v3/utility/concepts.hpp>
-//#include <range/v3/utility/variant.hpp>
-//
-//struct S
-//{
-//    S() {}
-//    ~S() {std::cout << "S::~S()\n";}
-//    friend std::ostream& operator<<(std::ostream& sout, S)
-//    {
-//        return sout << "S";
-//    }
-//};
-//
-//template<std::size_t N>
-//struct undef;
-//
-//struct disp
-//{
-//    template<typename T>
-//    void operator()(T const & t) const
-//    {
-//        std::cout << typeid(T).name() << " : " << t << '\n';
-//    }
-//};
-//
-//struct my_visitor
-//{
-//    int operator()(int i) const { return i; }
-//    float operator()(float i) const { return i; }
-//    template<typename T>
-//    void operator()(T) const {}
-//};
-//
-//int main()
-//{
-//    using namespace ranges;
-//    using x = typelist_unique_t<typelist<int, int, int>>;
-//    static_assert(std::is_same<x, typelist<int>>::value, "");
-//
-//    using y = typelist_unique_t<typelist<int, short, int>>;
-//    static_assert(std::is_same<y, typelist<int, short>>::value, "");
-//
-//    std::cout << "here1\n";
-//    variant<int, char const *, short, char, S, wchar_t, long, float> v(S{});
-//    v.apply(disp{});
-//    v = 3.14f;
-//    v.apply(disp{});
-//    variant<int, void_, float> vv = v.apply(my_visitor{});
-//    assert(typeid(float)==vv.type());
-//    v = S{};
-//    v.apply(disp{});
-//    std::cout << "here2\n";
-//}
