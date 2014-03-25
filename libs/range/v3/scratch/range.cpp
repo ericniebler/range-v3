@@ -816,6 +816,17 @@ struct my_visitor
     }
 };
 
+namespace ranges
+{
+    inline namespace v3
+    {
+        std::ostream &operator<<(std::ostream &sout, void_t)
+        {
+            return sout << "(void)";
+        }
+    }
+}
+
 void test_tagged_variant()
 {
     using namespace ranges;
@@ -846,6 +857,14 @@ void test_tagged_variant()
     int & iref = get<0>(cvv);
     vv.set<7>(2.56);
     float const & f = get<7>(cvv);
+    tagged_variant<int &, void_t, float> vvv = unique_variant(vv);
+    RANGES_ASSERT(2 == vvv.which());
+    vvv.apply(disp{});
+    int i = 0;
+    vv.set<0>(i);
+    vvv = unique_variant(vv);
+    RANGES_ASSERT(0 == vvv.which());
+    RANGES_ASSERT(&i == &get<0>(vvv));
 }
 
 int main()
@@ -930,8 +949,10 @@ int main()
 
     std::cout << "\n";
     //std::istringstream sin2{"this is his face"};
-    auto joined = view::join(std::vector<std::string>{"this","is","his","face"},
-                             std::vector<std::string>{"another","fine","mess"});
+    std::vector<std::string> his_face{"this", "is", "his", "face"};
+    std::vector<std::string> another_mess{"another", "fine", "mess"};
+    auto joined = view::join(his_face, another_mess);
+    RANGES_ASSERT(joined.size() == 7);
     for(std::string & s : joined | view::reverse)
         std::cout << "> " << s << '\n';
 

@@ -251,21 +251,6 @@ namespace ranges
 
         struct public_t;
 
-        template<
-            typename Derived
-          , typename Value
-          , typename Category
-          , typename Reference   = Value &
-          , typename Difference  = std::ptrdiff_t
-          , typename Pointer     = use_default
-        >
-        struct iterator_facade;
-
-        template<typename Derived, typename It>
-        struct sentinel_facade;
-
-        struct iterator_core_access;
-
         template<typename First, typename Second>
         class compressed_pair;
 
@@ -602,8 +587,8 @@ namespace ranges
             extern iota_maker const iota;
         }
 
-        template<typename Rng0, typename Rng1>
-        struct join_range_view;
+        template<typename...InputIterables>
+        struct join_iterable_view;
 
         namespace view
         {

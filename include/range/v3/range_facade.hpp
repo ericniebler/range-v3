@@ -13,12 +13,285 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/iterator_facade.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename T>
+            struct is_reference_to_const
+              : std::false_type
+            {};
+
+            template<typename T>
+            struct is_reference_to_const<T const&>
+              : std::true_type
+            {};
+
+            template<typename T>
+            struct is_reference_to_const<T const&&>
+              : std::true_type
+            {};
+
+            //
+            // True iff the user has explicitly disabled writability of this
+            // iterator.  Pass the iterator_facade's Value parameter and its
+            // nested ::reference type.
+            //
+            template<typename ValueParam, typename Reference>
+            using iterator_writability_disabled =
+                std::integral_constant<bool,
+                    std::is_const<Reference>::value ||
+                    is_reference_to_const<Reference>::value ||
+                    std::is_const<ValueParam>::value
+                >;
+
+            // operator[] must return a proxy in case iterator destruction invalidates
+            // referents.
+            // To see why, consider the following implementation of operator[]:
+            //   reference operator[](difference_type n) const
+            //   { return *(*this + n); }
+            // The problem here is that operator[] would return a reference created from
+            // a temporary iterator.
+            template<typename Value>
+            struct operator_brackets_value
+            {
+                using type = Value;
+                template<typename Iterator>
+                static type apply(Iterator const & i)
+                {
+                    return *i;
+                }
+            };
+
+            template<typename Iterator, typename Reference>
+            struct operator_brackets_const_proxy
+            {
+                using type = struct proxy
+                {
+                private:
+                    Iterator const it_;
+                    explicit proxy(Iterator i)
+                      : it_(std::move(i))
+                    {}
+                    friend struct operator_brackets_const_proxy;
+                public:
+                    proxy const & operator=(proxy &) const = delete;
+                    operator Reference() const
+                    {
+                        return *it_;
+                    }
+                };
+                static type apply(Iterator i)
+                {
+                    return type{std::move(i)};
+                }
+            };
+
+            template<typename Iterator, typename Reference>
+            struct operator_brackets_proxy
+            {
+                using type = struct proxy
+                {
+                private:
+                    using value_type = iterator_value_t<Iterator>;
+                    Iterator const it_;
+                    explicit proxy(Iterator i)
+                      : it_(std::move(i))
+                    {}
+                    friend struct operator_brackets_proxy;
+                public:
+                    operator Reference() const
+                    {
+                        return *it_;
+                    }
+                    proxy const & operator=(proxy&) const = delete;
+                    proxy const & operator=(value_type const & x) const
+                    {
+                        *it_ = x;
+                        return *this;
+                    }
+                    proxy const & operator=(value_type && x) const
+                    {
+                        *it_ = std::move(x);
+                        return *this;
+                    }
+                };
+                static type apply(Iterator i)
+                {
+                    return type{std::move(i)};
+                }
+            };
+
+            template<typename Iterator, typename ValueType, typename Reference>
+            using operator_brackets_dispatch =
+                detail::conditional_t<
+                    iterator_writability_disabled<ValueType, Reference>::value,
+                    detail::conditional_t<
+                        std::is_pod<ValueType>::value,
+                        operator_brackets_value<typename std::remove_const<ValueType>::type>,
+                        operator_brackets_const_proxy<Iterator, Reference>
+                    >,
+                    operator_brackets_proxy<Iterator, Reference>
+                >;
+
+            // iterators whose dereference operators reference the same value
+            // for all iterators into the same sequence (like many input
+            // iterators) need help with their postfix ++: the referenced
+            // value must be read and stored away before the increment occurs
+            // so that *a++ yields the originally referenced element and not
+            // the next one.
+            template<typename Iterator>
+            struct postfix_increment_proxy
+            {
+            private:
+                using value_type = iterator_value_t<Iterator>;
+                mutable value_type value_;
+            public:
+                explicit postfix_increment_proxy(Iterator const& x)
+                  : value_(*x)
+                {}
+                // Returning a mutable reference allows nonsense like
+                // (*r++).mutate(), but it imposes fewer assumptions about the
+                // behavior of the value_type.  In particular, recall that
+                // (*r).mutate() is legal if operator* returns by value.
+                value_type& operator*() const
+                {
+                    return value_;
+                }
+            };
+
+            //
+            // In general, we can't determine that such an iterator isn't
+            // writable -- we also need to store a copy of the old iterator so
+            // that it can be written into.
+            template<typename Iterator>
+            struct writable_postfix_increment_proxy
+            {
+            private:
+                using value_type = iterator_value_t<Iterator>;
+                mutable value_type value_;
+                Iterator it_;
+            public:
+                explicit writable_postfix_increment_proxy(Iterator x)
+                  : value_(*x)
+                  , it_(std::move(x))
+                {}
+                // Dereferencing must return a proxy so that both *r++ = o and
+                // value_type(*r++) can work.  In this case, *r is the same as
+                // *r++, and the conversion operator below is used to ensure
+                // readability.
+                writable_postfix_increment_proxy const& operator*() const
+                {
+                    return *this;
+                }
+                // Provides readability of *r++
+                operator value_type&() const
+                {
+                    return value_;
+                }
+                // Provides writability of *r++
+                template<typename T>
+                T const& operator=(T const& x) const
+                {
+                    *it_ = x;
+                    return x;
+                }
+                // This overload just in case only non-const objects are writable
+                template<typename T>
+                T& operator=(T& x) const
+                {
+                    *it_ = x;
+                    return x;
+                }
+                // Provides X(r++)
+                operator Iterator const&() const
+                {
+                    return it_;
+                }
+            };
+
+            template<typename Reference, typename Value>
+            using is_non_proxy_reference =
+                std::is_convertible<
+                    typename std::remove_reference<Reference>::type const volatile*
+                  , Value const volatile*
+                >;
+
+            // A metafunction to choose the result type of postfix ++
+            //
+            // Because the C++98 input iterator requirements say that *r++ has
+            // type T (value_type), implementations of some standard
+            // algorithms like lexicographical_compare may use constructions
+            // like:
+            //
+            //          *r++ < *s++
+            //
+            // If *r++ returns a proxy (as required if r is writable but not
+            // multipass), this sort of expression will fail unless the proxy
+            // supports the operator<.  Since there are any number of such
+            // operations, we're not going to try to support them.  Therefore,
+            // even if r++ returns a proxy, *r++ will only return a proxy if
+            // *r also returns a proxy.
+            template<typename Iterator, typename Value, typename Reference, typename Category>
+            using postfix_increment_result =
+                detail::lazy_conditional_t<
+                    // A proxy is only needed for readable iterators
+                    std::is_convertible<Reference, Value const&>::value &&
+                    // No forward iterator can have values that disappear
+                    // before positions can be re-visited
+                    !std::is_convertible<Category, std::forward_iterator_tag>::value
+                  , std::conditional<
+                        is_non_proxy_reference<Reference, Value>::value
+                      , postfix_increment_proxy<Iterator>
+                      , writable_postfix_increment_proxy<Iterator>
+                    >
+                  , detail::identity<Iterator>
+                >;
+
+            // operator->() needs special support for input iterators to strictly meet the
+            // standard's requirements. If *i is not an lvalue reference type, we must still
+            // produce an lvalue to which a pointer can be formed.  We do that by
+            // returning a proxy object containing an instance of the reference object.
+            template<typename Reference, bool B = std::is_reference<Reference>::value>
+            struct operator_arrow_dispatch // proxy references
+            {
+            private:
+                struct proxy
+                {
+                private:
+                    Reference ref_;
+                public:
+                    explicit proxy(Reference x)
+                      : ref_(std::move(x))
+                    {}
+                    Reference* operator->()
+                    {
+                        return std::addressof(ref_);
+                    }
+                };
+            public:
+                using type = proxy;
+                static type apply(Reference x)
+                {
+                    return type{std::move(x)};
+                }
+            };
+
+            // NOTE: Below, Reference could be an rvalue reference or an lvalue reference.
+            template<typename Reference>
+            struct operator_arrow_dispatch<Reference, true>
+            {
+                using type = typename std::remove_reference<Reference>::type *;
+                static type apply(Reference x)
+                {
+                    return std::addressof(x);
+                }
+            };
+        }
+
         struct public_t
         {};
 
