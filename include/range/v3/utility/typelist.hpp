@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/integer_sequence.hpp>
 
 namespace ranges
 {
@@ -324,6 +325,42 @@ namespace ranges
         using typelist_transform_t = typename typelist_transform<List, Fun>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_transform2
+        template<typename List0, typename List1, template<typename...> class Fun>
+        struct typelist_transform2;
+
+        template<typename ...List0, typename ...List1, template<typename...> class Fun>
+        struct typelist_transform2<typelist<List0...>, typelist<List1...>, Fun>
+        {
+            using type = typelist<Fun<List0, List1>...>;
+        };
+
+        template<typename List0, typename List1, template<typename...> class Fun>
+        using typelist_transform2_t = typename typelist_transform2<List0, List1, Fun>::type;
+
+        namespace detail
+        {
+            template<typename IntegerSequence>
+            struct typelist_integer_sequence_;
+
+            template<std::size_t...Is>
+            struct typelist_integer_sequence_<integer_sequence<Is...>>
+            {
+                using type = typelist<size_t<Is>...>;
+            };
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_integer_sequence
+        template<std::size_t N>
+        struct typelist_integer_sequence
+          : detail::typelist_integer_sequence_<integer_sequence_t<N>>
+        {};
+
+        template<std::size_t N>
+        using typelist_integer_sequence_t = typename typelist_integer_sequence<N>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
         // typelist_find
         template<typename T, typename List>
         struct typelist_find
@@ -345,6 +382,7 @@ namespace ranges
         template<typename T, typename List>
         using typelist_find_t = typename typelist_find<T, List>::type;
 
+        ////////////////////////////////////////////////////////////////////////////////////
         // General meta-programming utilities
         template<template<typename...> class C, typename T>
         struct meta_bind1st
@@ -354,7 +392,7 @@ namespace ranges
         };
 
         template<template<typename...> class C>
-        struct meta_eval
+        struct meta_quote
         {
             template<typename...Ts>
             using apply = typename C<Ts...>::type;

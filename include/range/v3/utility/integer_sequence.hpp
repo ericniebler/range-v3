@@ -14,12 +14,18 @@
 #define RANGES_V3_UTILITY_INTEGER_SEQUENCE_HPP
 
 #include <cstddef>
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        ////////////////////////////////////////////////////////////////////////////////////////
+        // size_t
+        template<std::size_t N>
+        using size_t = std::integral_constant<std::size_t, N>;
+
         ////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
         template<std::size_t ...Is>

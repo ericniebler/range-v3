@@ -79,9 +79,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_facade.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\bindable.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
@@ -341,9 +338,6 @@
       <Filter>Header Files\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\tuple_algorithm.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_adaptor.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\move.hpp">

@@ -1,7 +1,6 @@
 // Boost.Range library
 //
-//  Copyright Thorsten Ottosen, Neil Groves 2006 - 2008.
-//  Copyright Eric Niebler 2013.
+//  Copyright Eric Niebler 2013-2014.
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -14,17 +13,17 @@
 #ifndef RANGES_V3_VIEW_JOIN_HPP
 #define RANGES_V3_VIEW_JOIN_HPP
 
-#include <new>
+#include <tuple>
 #include <utility>
-#include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/variant.hpp>
 #include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/iterator_facade.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/detail/advance_bounded.hpp>
 
 namespace ranges
@@ -33,385 +32,251 @@ namespace ranges
     {
         namespace detail
         {
-            enum class which : unsigned short
+            struct real_common_type_
             {
-                neither, first, second
+                template<typename T>
+                static T call(T &&);
+
+                template<typename T, typename...Ts, typename Impl = real_common_type_>
+                static auto call(T &&t, Ts &&...ts) ->
+                    decltype(true ? (T&&) t : Impl::call((Ts&&) ts...));
+            };
+
+            template<typename...Ts>
+            using real_common_type_t = decltype(real_common_type_::call(std::declval<Ts>()...));
+
+            // Dereference the iterator and coerce the return type
+            template<typename Reference>
+            struct deref_fun
+            {
+                template<typename InputIterator>
+                Reference operator()(InputIterator const &it) const
+                {
+                    return *it;
+                }
             };
         }
 
-        template<typename InputRange0, typename InputRange1>
-        struct join_range_view : private range_base
+        template<typename...InputIterables>
+        struct join_iterable_view
+          : range_facade<join_iterable_view<InputIterables...>,
+                logical_or<is_infinite<InputIterables>::value...>::value>
         {
         private:
-            static_assert(std::is_same<range_value_t<InputRange0>,
-                                       range_value_t<InputRange1>>::value,
-                          "Range value types must be the same to join them");
-            InputRange0 rng0_;
-            InputRange1 rng1_;
+            friend range_core_access;
+            using difference_type = common_type_t<range_difference_t<InputIterables>...>;
+            using size_type = meta_quote<std::make_unsigned>::apply<difference_type>;
+            static constexpr std::size_t cranges{sizeof...(InputIterables)};
+            std::tuple<InputIterables...> rngs_;
 
-            template<bool Const>
-            using base_range0_t = detail::add_const_if_t<InputRange0, Const>;
+            struct sentinel;
 
-            template<bool Const>
-            using base_range1_t = detail::add_const_if_t<InputRange1, Const>;
-
-            template<bool Const>
-            struct basic_iterator
-              : ranges::iterator_facade<
-                    basic_iterator<Const>
-                  , range_value_t<InputRange0>
-                  , decltype(true ? range_category_t<InputRange0>{}
-                                  : range_category_t<InputRange1>{})
-                  , decltype(true ? std::declval<range_reference_t<base_range0_t<Const>>>()
-                                  : std::declval<range_reference_t<base_range1_t<Const>>>())
-                  , decltype(true ? range_difference_t<InputRange0>{}
-                                  : range_difference_t<InputRange1>{})
-                >
+            struct cursor
             {
+                using difference_type = common_type_t<range_difference_t<InputIterables>...>;
             private:
-                template<bool OtherConst>
-                friend struct basic_iterator;
-                friend struct join_range_view;
-                friend struct ranges::iterator_core_access;
-                using base_range_iterator0 = range_iterator_t<base_range0_t<Const>>;
-                using base_range_iterator1 = range_iterator_t<base_range1_t<Const>>;
-                using join_range_view_ = detail::add_const_if_t<join_range_view, Const>;
+                friend struct sentinel;
+                join_iterable_view const *rng_;
+                tagged_variant<range_iterator_t<InputIterables const>...> its_;
 
-                join_range_view_ * rng_;
-                union
+                template<std::size_t N>
+                void satisfy(size_t<N>)
                 {
-                    base_range_iterator0 it0_;
-                    base_range_iterator1 it1_;
+                    RANGES_ASSERT(its_.which() == N);
+                    if(ranges::get<N>(its_) == ranges::end(std::get<N>(rng_->rngs_)))
+                    {
+                        ranges::set<N + 1>(its_, ranges::begin(std::get<N + 1>(rng_->rngs_)));
+                        this->satisfy(size_t<N + 1>{});
+                    }
+                }
+                void satisfy(size_t<cranges - 1>)
+                {
+                    RANGES_ASSERT(its_.which() == cranges - 1);
+                }
+                struct next_fun
+                {
+                    cursor *pos;
+                    template<typename InputIterator, std::size_t N>
+                    void operator()(InputIterator &it, size_t<N> which) const
+                    {
+                        ++it;
+                        pos->satisfy(which);
+                    }
                 };
-                detail::which which_;
-
-                basic_iterator(join_range_view_ &rng, begin_tag)
-                  : rng_(&rng), it0_(ranges::begin(rng.rng0_)), which_(detail::which::first)
-                {}
-                basic_iterator(join_range_view_ &rng, end_tag)
-                  : rng_(&rng), it1_(ranges::end(rng.rng1_)), which_(detail::which::second)
-                {}
-                typename basic_iterator::reference dereference() const
+                struct prev_fun
                 {
-                    switch(which_)
+                    cursor *pos;
+                    template<typename InputIterator>
+                    void operator()(InputIterator &it, size_t<0>) const
                     {
-                    case detail::which::first:
-                        return *it0_;
-                    case detail::which::second:
-                        RANGES_ASSERT(it1_ != ranges::end(rng_->rng1_));
-                        return *it1_;
-                    default:
-                        RANGES_ASSERT(!"Attempt to dereference an invalid join_range_view iterator");
-                        return *it1_;
+                        RANGES_ASSERT(it != ranges::begin(std::get<0>(pos->rng_->rngs_)));
+                        --it;
                     }
-                }
-                template<bool OtherConst>
-                bool equal(basic_iterator<OtherConst> const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    if(which_ != that.which_)
-                        return false;
-                    switch(which_)
+                    template<typename InputIterator, std::size_t N>
+                    void operator()(InputIterator &it, size_t<N>) const
                     {
-                    case detail::which::first:
-                        return it0_ == that.it0_;
-                    case detail::which::second:
-                        return it1_ == that.it1_;
-                    default:
-                        RANGES_ASSERT(!"Attempt to compare invalid join_range_view iterators");
-                        return true;
-                    }
-                }
-                void increment()
-                {
-                    switch(which_)
-                    {
-                    case detail::which::first:
-                        if(++it0_ == ranges::end(rng_->rng0_))
+                        if(it == ranges::begin(std::get<N>(pos->rng_->rngs_)))
                         {
-                            it0_.~base_range_iterator0();
-                            which_ = detail::which::neither;
-                            ::new((void*)&it1_) base_range_iterator1(ranges::begin(rng_->rng1_));
-                            which_ = detail::which::second;
-                        }
-                        break;
-                    case detail::which::second:
-                        RANGES_ASSERT(it1_ != ranges::end(rng_->rng1_));
-                        ++it1_;
-                        break;
-                    default:
-                        RANGES_ASSERT(!"Attempt to advance an invalid join_range_view iterator");
-                        break;
-                    }
-                }
-                void decrement()
-                {
-                    switch(which_)
-                    {
-                    case detail::which::first:
-                        RANGES_ASSERT(it0_ != ranges::begin(rng_->rng0_));
-                        --it0_;
-                        break;
-                    case detail::which::second:
-                        if(it1_ != ranges::begin(rng_->rng1_))
-                            --it1_;
-                        else
-                        {
-                            it1_.~base_range_iterator1();
-                            which_ = detail::which::neither;
-                            ::new((void*)&it0_) base_range_iterator0(std::prev(ranges::end(rng_->rng0_)));
-                            which_ = detail::which::first;
-                        }
-                        break;
-                    default:
-                        RANGES_ASSERT(!"Attempt to decrement an invalid join_range_view iterator");
-                        break;
-                    }
-                }
-                void advance(typename basic_iterator::difference_type n)
-                {
-                    switch(which_)
-                    {
-                    case detail::which::first:
-                        if(n > 0)
-                        {
-                            n = detail::advance_bounded(it0_, n, ranges::end(rng_->rng0_));
-                            if(it0_ == ranges::end(rng_->rng0_))
-                            {
-                                it0_.~base_range_iterator0();
-                                which_ = detail::which::neither;
-                                ::new((void*)&it1_) base_range_iterator1(ranges::begin(rng_->rng1_));
-                                which_ = detail::which::second;
-                                std::advance(it1_, n);
-                            }
+                            ranges::set<N - 1>(pos->its_, ranges::end(std::get<N - 1>(pos->rng_->rngs_)));
+                            (*this)(ranges::get<N - 1>(pos->its_), size_t<N - 1>{});
                         }
                         else
-                            std::advance(it0_, n);
-                        break;
-                    case detail::which::second:
-                        if(n < 0)
+                            --it;
+                    }
+                };
+                struct advance_fwd_fun
+                {
+                    cursor *pos;
+                    difference_type n;
+                    template<typename Iterator>
+                    void operator()(Iterator &it, size_t<cranges - 1>) const
+                    {
+                        std::advance(it, n);
+                    }
+                    template<typename Iterator, std::size_t N>
+                    void operator()(Iterator &it, size_t<N> which) const
+                    {
+                        auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
+                        auto rest = detail::advance_bounded(it, n, std::move(end));
+                        pos->satisfy(which);
+                        if(rest != 0)
+                            pos->its_.apply_i(advance_fwd_fun{pos, rest});
+                    }
+                };
+                struct advance_rev_fun
+                {
+                    cursor *pos;
+                    difference_type n;
+                    template<typename Iterator>
+                    void operator()(Iterator &it, size_t<0>) const
+                    {
+                        std::advance(it, n);
+                    }
+                    template<typename Iterator, std::size_t N>
+                    void operator()(Iterator &it, size_t<N>) const
+                    {
+                        auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
+                        if(it == begin)
                         {
-                            n = detail::advance_bounded(it1_, n, ranges::begin(rng_->rng1_));
-                            if(n < 0)
-                            {
-                                it1_.~base_range_iterator1();
-                                which_ = detail::which::neither;
-                                ::new((void*)&it0_) base_range_iterator0(ranges::end(rng_->rng0_));
-                                which_ = detail::which::first;
-                                std::advance(it0_, n);
-                            }
+                            ranges::set<N - 1>(pos->its_, ranges::end(std::get<N - 1>(pos->rng_->rngs_)));
+                            (*this)(ranges::get<N - 1>(pos->its_), size_t<N - 1>{});
                         }
                         else
-                            std::advance(it1_, n);
-                        break;
-                    default:
-                        RANGES_ASSERT(!"Attempt to advance an invalid join_range_view iterator");
-                        break;
-                    }
-                }
-                template<bool OtherConst>
-                typename basic_iterator::difference_type
-                distance_to(basic_iterator<OtherConst> const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    switch(which_)
-                    {
-                    case detail::which::first:
-                        switch(that.which_)
                         {
-                        case detail::which::first:
-                            return that.it0_ - it0_;
-                        case detail::which::second:
-                            return (ranges::end(rng_->rng0_) - it0_) +
-                                   (that.it1_ - ranges::begin(rng_->rng1_));
-                        default:
-                            RANGES_ASSERT(!"Attempt to use an invalid join_range_view iterator");
-                            return 0;
+                            auto rest = detail::advance_bounded(it, n, std::move(begin));
+                            if(rest != 0)
+                                pos->its_.apply_i(advance_rev_fun{pos, rest});
                         }
-                    case detail::which::second:
-                        switch(that.which_)
-                        {
-                        case detail::which::first:
-                            return (ranges::begin(rng_->rng1_) - it1_) +
-                                   (that.it0_ - ranges::end(rng_->rng0_));
-                            return 0;
-                        case detail::which::second:
-                            return that.it1_ - it1_;
-                        default:
-                            RANGES_ASSERT(!"Attempt to use an invalid join_range_view iterator");
-                            return 0;
-                        }
-                    default:
-                        RANGES_ASSERT(!"Attempt to use an invalid join_range_view iterator");
-                        return 0;
                     }
-                }
-                void clean()
-                    //noexcept(std::is_nothrow_destructible<base_range_iterator0>::value &&
-                    //         std::is_nothrow_destructible<base_range_iterator1>::value)
+                };
+                static difference_type distance_to_(size_t<cranges>, cursor const &, cursor const &)
                 {
-                    switch(which_)
+                    RANGES_ASSERT(false);
+                    return 0;
+                }
+                template<std::size_t N>
+                static difference_type distance_to_(size_t<N>, cursor const &from, cursor const &to)
+                {
+                    if(from.its_.which() > N)
+                        return cursor::distance_to_(size_t<N + 1>{}, from, to);
+                    if(from.its_.which() == N)
                     {
-                    case detail::which::first:
-                        it0_.~base_range_iterator0();
-                        which_ = detail::which::neither;
-                        break;
-                    case detail::which::second:
-                        it1_.~base_range_iterator1();
-                        which_ = detail::which::neither;
-                        break;
-                    default:
-                        break;
+                        if(to.its_.which() == N)
+                            return std::distance(ranges::get<N>(from.its_), ranges::get<N>(to.its_));
+                        return std::distance(ranges::get<N>(from.its_), ranges::end(std::get<N>(from.rng_->rngs_))) +
+                            cursor::distance_to_(size_t<N + 1>{}, from, to);
                     }
+                    if(from.its_.which() < N && to.its_.which() > N)
+                        return ranges::distance(std::get<N>(from.rng_->rngs_)) +
+                            cursor::distance_to_(size_t<N + 1>{}, from, to);
+                    RANGES_ASSERT(to.its_.which() == N);
+                    return std::distance(ranges::begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
             public:
-                constexpr basic_iterator()
-                    noexcept(std::is_nothrow_default_constructible<base_range_iterator0>::value)
-                  : rng_{}, it0_{}, which_(detail::which::first)
+                using reference = detail::real_common_type_t<range_reference_t<InputIterables const>...>;
+                using single_pass =
+                    logical_or<std::is_same<range_category_t<InputIterables>,
+                        std::input_iterator_tag>::value...>;
+                cursor() = default;
+                cursor(join_iterable_view const &rng, begin_tag)
+                  : rng_(&rng), its_{size_t<0>{}, ranges::begin(std::get<0>(rng.rngs_))}
+                {
+                    this->satisfy(size_t<0>{});
+                }
+                cursor(join_iterable_view const &rng, end_tag)
+                  : rng_(&rng), its_{size_t<cranges-1>{}, ranges::end(std::get<cranges-1>(rng.rngs_))}
                 {}
-                basic_iterator(basic_iterator const &that)
-                  : basic_iterator{}
+                reference current() const
                 {
-                    *this = that;
+                    // Kind of a dumb implementation. Surely there's a better way.
+                    return ranges::get<0>(ranges::unique_variant(its_.apply(detail::deref_fun<reference>{})));
                 }
-                basic_iterator(basic_iterator &&that)
-                    noexcept(std::is_nothrow_default_constructible<base_range_iterator0>::value &&
-                             //std::is_nothrow_destructible<base_range_iterator0>::value &&
-                             //std::is_nothrow_destructible<base_range_iterator1>::value &&
-                             std::is_nothrow_move_constructible<base_range_iterator0>::value &&
-                             std::is_nothrow_move_constructible<base_range_iterator1>::value)
-                  : basic_iterator{}
+                void next()
                 {
-                    *this = std::move(that);
+                    its_.apply_i(next_fun{this});
                 }
-                ~basic_iterator()
-                    //noexcept(std::is_nothrow_destructible<base_range_iterator0>::value &&
-                    //         std::is_nothrow_destructible<base_range_iterator1>::value)
+                bool equal(cursor const &pos) const
                 {
-                    clean();
+                    return its_ == pos.its_;
                 }
-                basic_iterator & operator=(basic_iterator const &that)
+                CONCEPT_REQUIRES(logical_and<(ranges::BidirectionalIterator<range_iterator_t<InputIterables>>())...>::value)
+                void prev()
                 {
-                    clean();
-                    rng_ = that.rng_;
-                    switch(that.which_)
-                    {
-                    case detail::which::first:
-                        ::new((void*)&it0_) base_range_iterator0(that.it0_);
-                        which_ = detail::which::first;
-                        break;
-                    case detail::which::second:
-                        ::new((void*)&it1_) base_range_iterator1(that.it1_);
-                        which_ = detail::which::second;
-                        break;
-                    default:
-                        RANGES_ASSERT(!"Copying invalid join_range_view iterator");
-                        which_ = detail::which::neither;
-                        break;
-                    }
-                    return *this;
+                    its_.apply_i(prev_fun{this});
                 }
-                basic_iterator & operator=(basic_iterator &&that)
-                    noexcept(//std::is_nothrow_destructible<base_range_iterator0>::value &&
-                             //std::is_nothrow_destructible<base_range_iterator1>::value &&
-                             std::is_nothrow_move_constructible<base_range_iterator0>::value &&
-                             std::is_nothrow_move_constructible<base_range_iterator1>::value)
+                CONCEPT_REQUIRES(logical_and<(ranges::RandomAccessIterator<range_iterator_t<InputIterables>>())...>::value)
+                void advance(difference_type n)
                 {
-                    clean();
-                    rng_ = that.rng_;
-                    switch(that.which_)
-                    {
-                    case detail::which::first:
-                        ::new((void*)&it0_) base_range_iterator0(std::move(that).it0_);
-                        which_ = detail::which::first;
-                        break;
-                    case detail::which::second:
-                        ::new((void*)&it1_) base_range_iterator1(std::move(that).it1_);
-                        which_ = detail::which::second;
-                        break;
-                    default:
-                        RANGES_ASSERT(!"Copying invalid join_range_view iterator");
-                        which_ = detail::which::neither;
-                        break;
-                    }
-                    return *this;
+                    if(n > 0)
+                        its_.apply_i(advance_fwd_fun{this, n});
+                    else if(n < 0)
+                        its_.apply_i(advance_rev_fun{this, n});
                 }
-                // For iterator -> const_iterator conversion
-                template<bool OtherConst, enable_if_t<!OtherConst> = 0>
-                basic_iterator(basic_iterator<OtherConst> that)
-                  : basic_iterator{}
+                CONCEPT_REQUIRES(logical_and<(ranges::RandomAccessIterator<range_iterator_t<InputIterables>>())...>::value)
+                difference_type distance_to(cursor const &that) const
                 {
-                    clean();
-                    rng_ = that.rng_;
-                    switch(that.which_)
-                    {
-                    case detail::which::first:
-                        ::new((void*)&it0_) base_range_iterator0(std::move(that).it0_);
-                        which_ = detail::which::first;
-                        break;
-                    case detail::which::second:
-                        ::new((void*)&it1_) base_range_iterator1(std::move(that).it1_);
-                        which_ = detail::which::second;
-                        break;
-                    default:
-                        RANGES_ASSERT(!"Copying invalid join_range_view iterator");
-                        which_ = detail::which::neither;
-                        break;
-                    }
+                    if(its_.which() <= that.its_.which())
+                        return cursor::distance_to_(size_t<0>{}, *this, that);
+                    return -cursor::distance_to_(size_t<0>{}, that, *this);
                 }
             };
+            struct sentinel
+            {
+            private:
+                range_sentinel_t<typelist_back_t<typelist<InputIterables...>> const> end_;
+            public:
+                sentinel() = default;
+                sentinel(join_iterable_view const &rng, end_tag)
+                  : end_(ranges::end(std::get<cranges - 1>(rng.rngs_)))
+                {}
+                bool equal(cursor const &pos) const
+                {
+                    return pos.its_.which() == cranges - 1 && 
+                        ranges::get<cranges - 1>(pos.its_) == end_;
+                }
+            };
+            cursor get_begin() const
+            {
+                return {*this, begin_tag{}};
+            }
+            detail::conditional_t<
+                logical_and<(ranges::Range<InputIterables>())...>::value, cursor, sentinel>
+            get_end() const
+            {
+                return {*this, end_tag{}};
+            }
         public:
-            using iterator       = basic_iterator<false>;
-            using const_iterator = basic_iterator<true>;
-
-            join_range_view(InputRange0 && rng0, InputRange1 && rng1)
-              : rng0_(rng0), rng1_(rng1)
+            join_iterable_view() = default;
+            explicit join_iterable_view(InputIterables &&...rngs)
+              : rngs_(std::forward<InputIterables>(rngs)...)
             {}
-            iterator begin()
+            CONCEPT_REQUIRES(logical_and<(ranges::SizedIterable<InputIterables>())...>::value)
+            size_type size() const
             {
-                return {*this, begin_tag{}};
-            }
-            const_iterator begin() const
-            {
-                return {*this, begin_tag{}};
-            }
-            iterator end()
-            {
-                return {*this, end_tag{}};
-            }
-            const_iterator end() const
-            {
-                return {*this, end_tag{}};
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
-            }
-            InputRange0 & first()
-            {
-                return rng0_;
-            }
-            InputRange0 const & first() const
-            {
-                return rng0_;
-            }
-            InputRange1 & second()
-            {
-                return rng1_;
-            }
-            InputRange1 const & second() const
-            {
-                return rng1_;
-            }
-            CONCEPT_REQUIRES(SizedIterable<InputRange0>() &&
-                             SizedIterable<InputRange1>())
-            range_size_t<InputRange0> size() const
-            {
-                return ranges::size(rng0_) + ranges::size(rng1_);
+                return ranges::tuple_foldl(
+                    ranges::tuple_transform(rngs_, ranges::size),
+                    0,
+                    [](size_type i, size_type j) { return i + j; });
             }
         };
 
@@ -419,16 +284,15 @@ namespace ranges
         {
             struct joiner : bindable<joiner>
             {
-                template<typename InputRange0, typename InputRange1>
-                static join_range_view<InputRange0, InputRange1>
-                invoke(joiner, InputRange0 && rng0, InputRange1 && rng1)
+                template<typename...InputIterables>
+                static join_iterable_view<InputIterables...>
+                invoke(joiner, InputIterables &&... rngs)
                 {
-                    // TODO Make join_range_view work with Iterables instead of Ranges
-                    CONCEPT_ASSERT(ranges::Range<InputRange0>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange0>>());
-                    CONCEPT_ASSERT(ranges::Range<InputRange1>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange1>>());
-                    return {std::forward<InputRange0>(rng0), std::forward<InputRange1>(rng1)};
+                    static_assert(logical_and<(ranges::Iterable<InputIterables>())...>::value,
+                        "Expecting Iterables");
+                    static_assert(logical_and<(ranges::InputIterator<range_iterator_t<InputIterables>>())...>::value,
+                        "Expecting Input Iterables");
+                    return join_iterable_view<InputIterables...>{std::forward<InputIterables>(rngs)...};
                 }
             };
 
