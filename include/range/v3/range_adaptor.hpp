@@ -202,15 +202,15 @@ namespace ranges
         using base_sentinel_t =
             detail::basic_cursor<range_sentinel_t<base_iterable_t<Derived> const>>;
 
-        template<typename Derived>
+        template<typename Cursor, typename Adaptor>
         using derived_cursor_t =
-            detail::basic_cursor_and_adaptor<detail::derived_cursor_t<Derived>, detail::cursor_adaptor_t<Derived>>;
+            detail::basic_cursor_and_adaptor<Cursor, Adaptor>;
 
-        template<typename Derived>
+        template<typename Sentinel, typename Adaptor>
         using derived_sentinel_t =
-            detail::basic_cursor_and_adaptor<detail::derived_sentinel_t<Derived>, detail::sentinel_adaptor_t<Derived>>;
+            detail::basic_cursor_and_adaptor<Sentinel, Adaptor>;
 
-        struct adaptor_defaults : private range_core_access
+        struct default_adaptor : private range_core_access
         {
             using range_core_access::equal;
             using range_core_access::empty;
@@ -238,13 +238,17 @@ namespace ranges
         private:
             friend Derived;
             friend range_core_access;
-            friend adaptor_defaults;
+            friend default_adaptor;
             using range_adaptor_t = range_adaptor;
             using base_iterable_t = BaseIterable;
             using range_facade<Derived, Infinite>::derived;
             BaseIterable rng_;
 
-            adaptor_defaults get_adaptor(begin_end_tag) const
+            default_adaptor begin_adaptor() const
+            {
+                return {};
+            }
+            default_adaptor end_adaptor() const
             {
                 return {};
             }
@@ -273,7 +277,7 @@ namespace ranges
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::basic_adapted_cursor<detail::derived_cursor_t<D>, detail::cursor_adaptor_t<D>>
-            get_begin() const
+            begin_cursor() const
             {
                 auto adapt = range_core_access::begin_adaptor(derived());
                 auto pos = adapt.begin(derived());
@@ -281,7 +285,7 @@ namespace ranges
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::basic_adapted_cursor<detail::derived_sentinel_t<D>, detail::sentinel_adaptor_t<D>>
-            get_end() const
+            end_cursor() const
             {
                 auto adapt = range_core_access::end_adaptor(derived());
                 auto pos = adapt.end(derived());

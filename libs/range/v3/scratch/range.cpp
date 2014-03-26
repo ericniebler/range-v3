@@ -418,8 +418,8 @@ void test_delimit_iota()
     view::iota(10) | view::delimit(50) | for_each([](int i) {
         std::cout << i << ' ';
     });
-    CONCEPT_ASSERT(Iterable<delimit_iterable_view<std::vector<int>, int>>());
-    CONCEPT_ASSERT(RandomAccessIterator<range_iterator_t<delimit_iterable_view<std::vector<int>, int>>>());
+    CONCEPT_ASSERT(Iterable<delimited_view<std::vector<int>, int>>());
+    CONCEPT_ASSERT(RandomAccessIterator<range_iterator_t<delimited_view<std::vector<int>, int>>>());
     std::cout << '\n';
 }
 
@@ -518,15 +518,15 @@ void test_find_end_iterable()
 void test_sentinel()
 {
     using namespace ranges;
-    using It = range_iterator_t<iota_iterable_view<int>>;
-    using S = range_sentinel_t<iota_iterable_view<int>>;
-    static_assert(is_infinite<iota_iterable_view<int>>::value, "");
+    using It = range_iterator_t<iota_view<int>>;
+    using S = range_sentinel_t<iota_view<int>>;
+    static_assert(is_infinite<iota_view<int>>::value, "");
     static_assert(!is_infinite<std::vector<int>>::value, "");
 }
 
 static_assert(!ranges::is_infinite<std::vector<int>>::value, "");
 static_assert(!ranges::is_infinite<ranges::istream_iterable<int>>::value, "");
-static_assert(ranges::is_infinite<ranges::iota_iterable_view<int>>::value, "");
+static_assert(ranges::is_infinite<ranges::iota_view<int>>::value, "");
 
 struct MyRange
   : ranges::range_facade<MyRange>
@@ -542,11 +542,11 @@ private:
         void next() { ++iter; }
         bool equal(cursor const &that) const { return iter == that.iter; }
     };
-    cursor get_begin() const
+    cursor begin_cursor() const
     {
         return {ints_.begin()};
     }
-    cursor get_end() const
+    cursor end_cursor() const
     {
         return {ints_.end()};
     }
@@ -576,16 +576,16 @@ private:
     friend ranges::range_core_access;
     using base_cursor_t = ranges::base_cursor_t<my_reverse_view>;
 
-    struct adaptor : ranges::adaptor_defaults
+    struct adaptor : ranges::default_adaptor
     {
         // Cross-wire begin and end.
         base_cursor_t begin(my_reverse_view const &rng) const
         {
-            return adaptor_defaults::end(rng);
+            return default_adaptor::end(rng);
         }
         base_cursor_t end(my_reverse_view const &rng) const
         {
-            return adaptor_defaults::begin(rng);
+            return default_adaptor::begin(rng);
         }
         void next(base_cursor_t &pos)
         {
@@ -612,7 +612,11 @@ private:
             return there.distance_to(here);
         }
     };
-    adaptor get_adaptor(ranges::begin_end_tag) const
+    adaptor begin_adaptor() const
+    {
+        return {};
+    }
+    adaptor end_adaptor() const
     {
         return {};
     }
@@ -623,7 +627,7 @@ public:
 struct my_delimited_range
   : ranges::range_adaptor<
         my_delimited_range
-      , ranges::delimit_iterable_view<ranges::istream_iterable<int>, int>>
+      , ranges::delimited_view<ranges::istream_iterable<int>, int>>
 {
     using range_adaptor_t::range_adaptor_t;
 };
@@ -694,14 +698,14 @@ void test_unbounded()
     using namespace ranges;
     std::cout << "\nTesting unbounded\n";
     static constexpr int rgi[] = {1,2,3,4,5,6,7,8,9,10};
-    constexpr unbounded_iterable_view<int const*> rng{&rgi[0]};
+    constexpr unbounded_view<int const*> rng{&rgi[0]};
     constexpr auto i = rng.begin();
     constexpr auto e = rng.end();
     constexpr bool b = i == e;
     static_assert(!b,"");
-    CONCEPT_ASSERT(Iterable<unbounded_iterable_view<int const*>>());
-    CONCEPT_ASSERT(RandomAccessIterator<range_iterator_t<unbounded_iterable_view<int const*>>>());
-    static_assert(is_infinite<unbounded_iterable_view<int const*>>::value, "");
+    CONCEPT_ASSERT(Iterable<unbounded_view<int const*>>());
+    CONCEPT_ASSERT(RandomAccessIterator<range_iterator_t<unbounded_view<int const*>>>());
+    static_assert(is_infinite<unbounded_view<int const*>>::value, "");
 }
 
 void test_view_all()
@@ -719,7 +723,7 @@ void test_view_all()
     static_assert(is_iterable<decltype(cli)>::value, "");
     auto cliter = view::all(cli);
     CONCEPT_ASSERT(Same<decltype(cliter),
-                            counted_iterable_view<std::list<int>::iterator>>());
+                            counted_view<std::list<int>::iterator>>());
 
     // This triggers a static assert. It's unsafe to get a view of a temporary container.
     //view::all(std::vector<int>{});

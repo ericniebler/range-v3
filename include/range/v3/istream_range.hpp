@@ -46,7 +46,7 @@ namespace ranges
                     return !*rng_->sin_;
                 }
             };
-            cursor get_begin() const
+            cursor begin_cursor() const
             {
                 return {this};
             }

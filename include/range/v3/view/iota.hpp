@@ -84,8 +84,8 @@ namespace ranges
         }
 
         template<typename Value>
-        struct iota_iterable_view
-          : range_facade<iota_iterable_view<Value>, true>
+        struct iota_view
+          : range_facade<iota_view<Value>, true>
         {
         private:
             using iota_concept_t = ranges::iota_concept_t<Value>;
@@ -107,7 +107,7 @@ namespace ranges
                 return false;
             }
             CONCEPT_REQUIRES(ForwardIota<Value>())
-            bool equal(iota_iterable_view const &that) const
+            bool equal(iota_view const &that) const
             {
                 return that.value_ == value_;
             }
@@ -122,15 +122,15 @@ namespace ranges
                 value_ += n;
             }
             CONCEPT_REQUIRES(RandomAccessIota<Value>())
-            difference_type distance_to(iota_iterable_view const &that) const
+            difference_type distance_to(iota_view const &that) const
             {
                 return that.value_ - value_;
             }
         public:
-            constexpr iota_iterable_view()
+            constexpr iota_view()
               : value_{}
             {}
-            constexpr explicit iota_iterable_view(Value value)
+            constexpr explicit iota_view(Value value)
               : value_(std::move(value))
             {}
         };
@@ -140,10 +140,10 @@ namespace ranges
             struct iota_maker : bindable<iota_maker>, pipeable<iota_maker>
             {
                 template<typename Value>
-                static iota_iterable_view<Value> invoke(iota_maker, Value value)
+                static iota_view<Value> invoke(iota_maker, Value value)
                 {
                     CONCEPT_ASSERT(ranges::InputIota<Value>());
-                    return iota_iterable_view<Value>{std::move(value)};
+                    return iota_view<Value>{std::move(value)};
                 }
             };
 

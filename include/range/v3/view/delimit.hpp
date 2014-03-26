@@ -24,7 +24,7 @@ namespace ranges
         namespace detail
         {
             template<typename Value>
-            struct delimit_sentinel_adaptor : adaptor_defaults
+            struct delimit_sentinel_adaptor : default_adaptor
             {
             private:
                 Value value_;
@@ -42,21 +42,24 @@ namespace ranges
         }
 
         template<typename InputIterable, typename Value>
-        struct delimit_iterable_view
-          : range_adaptor<delimit_iterable_view<InputIterable, Value>, InputIterable>
+        struct delimited_view
+          : range_adaptor<delimited_view<InputIterable, Value>, InputIterable>
         {
         private:
             friend range_core_access;
             Value value_;
 
-            using range_adaptor_t<delimit_iterable_view>::get_adaptor;
-            detail::delimit_sentinel_adaptor<Value> get_adaptor(end_tag) const
+            default_adaptor begin_adaptor() const
+            {
+                return {};
+            }
+            detail::delimit_sentinel_adaptor<Value> end_adaptor() const
             {
                 return {value_};
             }
         public:
-            delimit_iterable_view(InputIterable && rng, Value value)
-              : range_adaptor_t<delimit_iterable_view>(std::forward<InputIterable>(rng))
+            delimited_view(InputIterable && rng, Value value)
+              : range_adaptor_t<delimited_view>(std::forward<InputIterable>(rng))
               , value_(std::move(value))
             {}
         };
@@ -66,7 +69,7 @@ namespace ranges
             struct delimiter : bindable<delimiter>
             {
                 template<typename InputIterable, typename Value>
-                static delimit_iterable_view<InputIterable, Value>
+                static delimited_view<InputIterable, Value>
                 invoke(delimiter, InputIterable && rng, Value value)
                 {
                     return {std::forward<InputIterable>(rng), std::move(value)};

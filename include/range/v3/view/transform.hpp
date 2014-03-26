@@ -32,7 +32,7 @@ namespace ranges
         namespace detail
         {
             template<typename UnaryFunction>
-            struct transform_adaptor : adaptor_defaults
+            struct transform_adaptor : default_adaptor
             {
             private:
                 UnaryFunction const *fun_;
@@ -51,21 +51,25 @@ namespace ranges
         }
 
         template<typename InputIterable, typename UnaryFunction>
-        struct transform_iterable_view
-          : range_adaptor<transform_iterable_view<InputIterable, UnaryFunction>, InputIterable>
+        struct transformed_view
+          : range_adaptor<transformed_view<InputIterable, UnaryFunction>, InputIterable>
         {
         private:
             friend range_core_access;
             invokable_t<UnaryFunction> fun_;
             // TODO: if end is a sentinel, it holds an unnecessary pointer back to fun_
             using adaptor_t = detail::transform_adaptor<invokable_t<UnaryFunction>>;
-            adaptor_t get_adaptor(begin_end_tag) const
+            adaptor_t begin_adaptor() const
+            {
+                return {fun_};
+            }
+            adaptor_t end_adaptor() const
             {
                 return {fun_};
             }
         public:
-            transform_iterable_view(InputIterable && rng, UnaryFunction fun)
-              : range_adaptor_t<transform_iterable_view>(std::forward<InputIterable>(rng))
+            transformed_view(InputIterable && rng, UnaryFunction fun)
+              : range_adaptor_t<transformed_view>(std::forward<InputIterable>(rng))
               , fun_(ranges::make_invokable(std::move(fun)))
             {}
             CONCEPT_REQUIRES(ranges::SizedIterable<InputIterable>())
@@ -90,7 +94,7 @@ namespace ranges
                       : fun_(std::move(fun))
                     {}
                     template<typename InputRange, typename This>
-                    static transform_iterable_view<InputRange, UnaryFunction>
+                    static transformed_view<InputRange, UnaryFunction>
                     pipe(InputRange && rng, This && this_)
                     {
                         return {std::forward<InputRange>(rng), std::forward<This>(this_).fun_};
@@ -99,7 +103,7 @@ namespace ranges
             public:
                 ///
                 template<typename InputRange1, typename UnaryFunction>
-                static transform_iterable_view<InputRange1, UnaryFunction>
+                static transformed_view<InputRange1, UnaryFunction>
                 invoke(transformer, InputRange1 && rng, UnaryFunction fun)
                 {
                     CONCEPT_ASSERT(ranges::Range<InputRange1>());

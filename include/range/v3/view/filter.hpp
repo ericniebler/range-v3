@@ -29,33 +29,33 @@ namespace ranges
     inline namespace v3
     {
         template<typename InputIterable, typename UnaryPredicate>
-        struct filter_iterable_view
-          : range_adaptor<filter_iterable_view<InputIterable, UnaryPredicate>, InputIterable>
+        struct filtered_view
+          : range_adaptor<filtered_view<InputIterable, UnaryPredicate>, InputIterable>
         {
         private:
             friend range_core_access;
-            using base_cursor_t = base_cursor_t<filter_iterable_view>;
+            using base_cursor_t = base_cursor_t<filtered_view>;
             invokable_t<UnaryPredicate> pred_;
 
-            struct adaptor : adaptor_defaults
+            struct adaptor : default_adaptor
             {
             private:
-                filter_iterable_view const *rng_;
-                using adaptor_defaults::advance;
+                filtered_view const *rng_;
+                using default_adaptor::advance;
                 void satisfy(base_cursor_t &pos) const
                 {
-                    auto const end = adaptor_defaults::end(*rng_);
+                    auto const end = default_adaptor::end(*rng_);
                     while(!end.equal(pos) && !rng_->pred_(pos.current()))
                         pos.next();
                 }
             public:
                 adaptor() = default;
-                adaptor(filter_iterable_view const &rng)
+                adaptor(filtered_view const &rng)
                   : rng_(&rng)
                 {}
-                base_cursor_t begin(filter_iterable_view const &rng) const
+                base_cursor_t begin(filtered_view const &rng) const
                 {
-                    auto pos = adaptor_defaults::begin(rng);
+                    auto pos = default_adaptor::begin(rng);
                     this->satisfy(pos);
                     return pos;
                 }
@@ -73,15 +73,19 @@ namespace ranges
                     } while (!rng_->pred_(pos.current()));
                 }
             };
+            adaptor begin_adaptor() const
+            {
+                return {*this};
+            }
             // TODO: if end is a sentinel, it hold an unnecessary pointer back to
             // this range.
-            adaptor get_adaptor(begin_end_tag) const
+            adaptor end_adaptor() const
             {
                 return {*this};
             }
         public:
-            filter_iterable_view(InputIterable && rng, UnaryPredicate pred)
-              : range_adaptor_t<filter_iterable_view>(std::forward<InputIterable>(rng))
+            filtered_view(InputIterable && rng, UnaryPredicate pred)
+              : range_adaptor_t<filtered_view>(std::forward<InputIterable>(rng))
               , pred_(ranges::make_invokable(std::move(pred)))
             {}
         };
@@ -101,14 +105,14 @@ namespace ranges
                       : pred_(std::move(pred))
                     {}
                     template<typename InputIterable, typename This>
-                    static filter_iterable_view<InputIterable, UnaryPredicate> pipe(InputIterable && rng, This && this_)
+                    static filtered_view<InputIterable, UnaryPredicate> pipe(InputIterable && rng, This && this_)
                     {
                         return {std::forward<InputIterable>(rng), std::forward<This>(this_).pred_};
                     }
                 };
             public:
                 template<typename InputIterable, typename UnaryPredicate>
-                static filter_iterable_view<InputIterable, UnaryPredicate>
+                static filtered_view<InputIterable, UnaryPredicate>
                 invoke(filterer, InputIterable && rng, UnaryPredicate pred)
                 {
                     return {std::forward<InputIterable>(rng), std::move(pred)};

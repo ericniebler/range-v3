@@ -33,10 +33,10 @@ namespace ranges
             template<typename T> T && rref(T &, int);
             template<typename T> T rref(T, long);
 
-            struct move_adaptor : adaptor_defaults
+            struct move_adaptor : default_adaptor
             {
             private:
-                using adaptor_defaults::prev;
+                using default_adaptor::prev;
             public:
                 using single_pass = std::true_type;
                 template<typename Cursor>
@@ -49,18 +49,22 @@ namespace ranges
         }
 
         template<typename InputIterable>
-        struct move_iterable_view
-          : range_adaptor<move_iterable_view<InputIterable>, InputIterable>
+        struct move_view
+          : range_adaptor<move_view<InputIterable>, InputIterable>
         {
         private:
             friend range_core_access;
-            detail::move_adaptor get_adaptor(begin_end_tag) const
+            detail::move_adaptor begin_adaptor() const
+            {
+                return {};
+            }
+            detail::move_adaptor end_adaptor() const
             {
                 return {};
             }
         public:
-            move_iterable_view(InputIterable &&rng)
-              : range_adaptor_t<move_iterable_view>(std::forward<InputIterable>(rng))
+            move_view(InputIterable &&rng)
+              : range_adaptor_t<move_view>(std::forward<InputIterable>(rng))
             {}
             CONCEPT_REQUIRES(SizedIterable<InputIterable>())
             range_size_t<InputIterable> size() const
@@ -74,12 +78,12 @@ namespace ranges
             struct mover : bindable<mover>, pipeable<mover>
             {
                 template<typename InputIterable>
-                static move_iterable_view<InputIterable>
+                static move_view<InputIterable>
                 invoke(mover, InputIterable && rng)
                 {
                     CONCEPT_ASSERT(ranges::Range<InputIterable>());
                     CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                    return move_iterable_view<InputIterable>{std::forward<InputIterable>(rng)};
+                    return move_view<InputIterable>{std::forward<InputIterable>(rng)};
                 }
             };
 
