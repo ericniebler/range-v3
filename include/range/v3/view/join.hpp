@@ -58,8 +58,8 @@ namespace ranges
         }
 
         template<typename...InputIterables>
-        struct join_iterable_view
-          : range_facade<join_iterable_view<InputIterables...>,
+        struct joined_view
+          : range_facade<joined_view<InputIterables...>,
                 logical_or<is_infinite<InputIterables>::value...>::value>
         {
         private:
@@ -76,7 +76,7 @@ namespace ranges
                 using difference_type = common_type_t<range_difference_t<InputIterables>...>;
             private:
                 friend struct sentinel;
-                join_iterable_view const *rng_;
+                joined_view const *rng_;
                 tagged_variant<range_iterator_t<InputIterables const>...> its_;
 
                 template<std::size_t N>
@@ -198,12 +198,12 @@ namespace ranges
                     logical_or<std::is_same<range_category_t<InputIterables>,
                         std::input_iterator_tag>::value...>;
                 cursor() = default;
-                cursor(join_iterable_view const &rng, begin_tag)
+                cursor(joined_view const &rng, begin_tag)
                   : rng_(&rng), its_{size_t<0>{}, ranges::begin(std::get<0>(rng.rngs_))}
                 {
                     this->satisfy(size_t<0>{});
                 }
-                cursor(join_iterable_view const &rng, end_tag)
+                cursor(joined_view const &rng, end_tag)
                   : rng_(&rng), its_{size_t<cranges-1>{}, ranges::end(std::get<cranges-1>(rng.rngs_))}
                 {}
                 reference current() const
@@ -246,7 +246,7 @@ namespace ranges
                 range_sentinel_t<typelist_back_t<typelist<InputIterables...>> const> end_;
             public:
                 sentinel() = default;
-                sentinel(join_iterable_view const &rng, end_tag)
+                sentinel(joined_view const &rng, end_tag)
                   : end_(ranges::end(std::get<cranges - 1>(rng.rngs_)))
                 {}
                 bool equal(cursor const &pos) const
@@ -255,19 +255,19 @@ namespace ranges
                         ranges::get<cranges - 1>(pos.its_) == end_;
                 }
             };
-            cursor get_begin() const
+            cursor begin_cursor() const
             {
                 return {*this, begin_tag{}};
             }
             detail::conditional_t<
                 logical_and<(ranges::Range<InputIterables>())...>::value, cursor, sentinel>
-            get_end() const
+            end_cursor() const
             {
                 return {*this, end_tag{}};
             }
         public:
-            join_iterable_view() = default;
-            explicit join_iterable_view(InputIterables &&...rngs)
+            joined_view() = default;
+            explicit joined_view(InputIterables &&...rngs)
               : rngs_(std::forward<InputIterables>(rngs)...)
             {}
             CONCEPT_REQUIRES(logical_and<(ranges::SizedIterable<InputIterables>())...>::value)
@@ -285,14 +285,14 @@ namespace ranges
             struct joiner : bindable<joiner>
             {
                 template<typename...InputIterables>
-                static join_iterable_view<InputIterables...>
+                static joined_view<InputIterables...>
                 invoke(joiner, InputIterables &&... rngs)
                 {
                     static_assert(logical_and<(ranges::Iterable<InputIterables>())...>::value,
                         "Expecting Iterables");
                     static_assert(logical_and<(ranges::InputIterator<range_iterator_t<InputIterables>>())...>::value,
                         "Expecting Input Iterables");
-                    return join_iterable_view<InputIterables...>{std::forward<InputIterables>(rngs)...};
+                    return joined_view<InputIterables...>{std::forward<InputIterables>(rngs)...};
                 }
             };
 

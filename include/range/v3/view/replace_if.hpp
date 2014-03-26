@@ -42,7 +42,6 @@ namespace ranges
                       : fun_and_new_value_{make_invokable(std::move(pred)),
                                            std::forward<Value2>(new_value)}
                     {}
-
                 public:
                     template<typename Other>
                     Other operator()(Other && other) const
@@ -53,7 +52,7 @@ namespace ranges
                 };
             public:
                 template<typename InputIterable, typename UnaryPredicate, typename Value>
-                static transform_iterable_view<InputIterable,
+                static transformed_view<InputIterable,
                                                replacer_if_fun<UnaryPredicate,
                                                     typename std::decay<Value>::type>>
                 invoke(replacer_if, InputIterable && rng, UnaryPredicate pred, Value && new_value)

@@ -22,8 +22,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Value>
-        struct repeat_iterable_view
-          : range_facade<repeat_iterable_view<Value>, true>
+        struct repeated_view
+          : range_facade<repeated_view<Value>, true>
         {
         private:
             Value value_;
@@ -43,13 +43,13 @@ namespace ranges
                 void next() const
                 {}
             };
-            cursor get_begin() const
+            cursor begin_cursor() const
             {
                 return {&value_};
             }
         public:
-            repeat_iterable_view() = default;
-            constexpr explicit repeat_iterable_view(Value value)
+            repeated_view() = default;
+            constexpr explicit repeated_view(Value value)
               : value_(detail::move(value))
             {}
         };
@@ -59,9 +59,9 @@ namespace ranges
             struct repeater : bindable<repeater>, pipeable<repeater>
             {
                 template<typename Value>
-                static repeat_iterable_view<Value> invoke(repeater, Value value)
+                static repeated_view<Value> invoke(repeater, Value value)
                 {
-                    return repeat_iterable_view<Value>{std::move(value)};
+                    return repeated_view<Value>{std::move(value)};
                 }
             };
 

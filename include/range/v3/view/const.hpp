@@ -31,7 +31,7 @@ namespace ranges
             template<typename T>
             T const & cref(T const &);
 
-            struct const_adaptor : adaptor_defaults
+            struct const_adaptor : default_adaptor
             {
                 template<typename Cursor>
                 auto current(Cursor const &pos) const ->
@@ -43,18 +43,22 @@ namespace ranges
         }
 
         template<typename Iterable>
-        struct const_iterable_view
-          : range_adaptor<const_iterable_view<Iterable>, Iterable>
+        struct const_view
+          : range_adaptor<const_view<Iterable>, Iterable>
         {
         private:
             friend range_core_access;
-            detail::const_adaptor get_adaptor(begin_end_tag) const
+            detail::const_adaptor begin_adaptor() const
             {
                 return {};
             }
+            detail::const_adaptor end_adaptor() const
+            {
+                return{};
+            }
         public:
-            explicit const_iterable_view(Iterable && rng)
-              : range_adaptor_t<const_iterable_view>(std::forward<Iterable>(rng))
+            explicit const_view(Iterable && rng)
+              : range_adaptor_t<const_view>(std::forward<Iterable>(rng))
             {}
             CONCEPT_REQUIRES(SizedIterable<Iterable>())
             range_size_t<Iterable> size() const
@@ -68,10 +72,10 @@ namespace ranges
             struct conster : bindable<conster>, pipeable<conster>
             {
                 template<typename Iterable>
-                static const_iterable_view<Iterable> invoke(conster, Iterable && rng)
+                static const_view<Iterable> invoke(conster, Iterable && rng)
                 {
                     CONCEPT_ASSERT(ranges::Iterable<Iterable>());
-                    return const_iterable_view<Iterable>{std::forward<Iterable>(rng)};
+                    return const_view<Iterable>{std::forward<Iterable>(rng)};
                 }
             };
 

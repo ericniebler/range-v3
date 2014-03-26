@@ -95,11 +95,11 @@ namespace ranges
                     return that.it_ - it_;
                 }
             };
-            cursor get_begin() const
+            cursor begin_cursor() const
             {
                 return {ranges::begin(rng_), ranges::end(rng_), false};
             }
-            cursor get_end() const
+            cursor end_cursor() const
             {
                 return {ranges::begin(rng_), ranges::end(rng_), true};
             }

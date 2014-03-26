@@ -27,44 +27,44 @@ namespace ranges
     inline namespace v3
     {
         template<typename BidirectionalRange>
-        struct reverse_range_view
-          : range_adaptor<reverse_range_view<BidirectionalRange>, BidirectionalRange>
+        struct reversed_view
+          : range_adaptor<reversed_view<BidirectionalRange>, BidirectionalRange>
         {
         private:
             CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
             CONCEPT_ASSERT(ranges::BidirectionalIterator<ranges::range_iterator_t<BidirectionalRange>>());
             friend range_core_access;
-            using base_cursor_t = ranges::base_cursor_t<reverse_range_view>;
+            using base_cursor_t = ranges::base_cursor_t<reversed_view>;
 
             // A rather convoluted implementation to avoid the problem std::reverse_iterator
             // has adapting iterators that return references to internal data.
-            struct adaptor : adaptor_defaults
+            struct adaptor : default_adaptor
             {
             private:
-                reverse_range_view const *rng_;
+                reversed_view const *rng_;
             public:
                 adaptor() = default;
-                adaptor(reverse_range_view const &rng)
+                adaptor(reversed_view const &rng)
                   : rng_(&rng)
                 {}
-                base_cursor_t begin(reverse_range_view const &rng) const
+                base_cursor_t begin(reversed_view const &rng) const
                 {
-                    auto pos = adaptor_defaults::end(rng);
-                    if(!pos.equal(adaptor_defaults::begin(rng)))
+                    auto pos = default_adaptor::end(rng);
+                    if(!pos.equal(default_adaptor::begin(rng)))
                         pos.prev();
                     return pos;
                 }
                 void next(base_cursor_t &pos) const
                 {
-                    if(pos.equal(adaptor_defaults::begin(*rng_)))
-                        pos = adaptor_defaults::end(*rng_);
+                    if(pos.equal(default_adaptor::begin(*rng_)))
+                        pos = default_adaptor::end(*rng_);
                     else
                         pos.prev();
                 }
                 void prev(base_cursor_t &pos) const
                 {
-                    if(pos.equal(adaptor_defaults::end(*rng_)))
-                        pos = adaptor_defaults::begin(*rng_);
+                    if(pos.equal(default_adaptor::end(*rng_)))
+                        pos = default_adaptor::begin(*rng_);
                     else
                         pos.next();
                 }
@@ -80,22 +80,26 @@ namespace ranges
                 ranges::range_difference_t<BidirectionalRange>
                 distance_to(base_cursor_t const &here, base_cursor_t const &there) const
                 {
-                    if(there.equal(adaptor_defaults::end(*rng_)))
-                        return here.equal(adaptor_defaults::end(*rng_))
-                            ? 0 : adaptor_defaults::begin(*rng_).distance_to(here) + 1;
-                    else if(here.equal(adaptor_defaults::end(*rng_)))
-                        return there.distance_to(adaptor_defaults::begin(*rng_)) - 1;
+                    if(there.equal(default_adaptor::end(*rng_)))
+                        return here.equal(default_adaptor::end(*rng_))
+                            ? 0 : default_adaptor::begin(*rng_).distance_to(here) + 1;
+                    else if(here.equal(default_adaptor::end(*rng_)))
+                        return there.distance_to(default_adaptor::begin(*rng_)) - 1;
                     return there.distance_to(here);
                 }
             };
-            adaptor get_adaptor(ranges::begin_end_tag) const
+            adaptor begin_adaptor() const
+            {
+                return {*this};
+            }
+            adaptor end_adaptor() const
             {
                 return {*this};
             }
         public:
-            reverse_range_view() = default;
-            reverse_range_view(BidirectionalRange && rng)
-              : range_adaptor_t<reverse_range_view>(std::forward<BidirectionalRange>(rng))
+            reversed_view() = default;
+            reversed_view(BidirectionalRange && rng)
+              : range_adaptor_t<reversed_view>(std::forward<BidirectionalRange>(rng))
             {}
             CONCEPT_REQUIRES(ranges::SizedRange<BidirectionalRange>())
             range_size_t<BidirectionalRange> size() const
@@ -109,12 +113,12 @@ namespace ranges
             struct reverser : bindable<reverser>, pipeable<reverser>
             {
                 template<typename BidirectionalRange>
-                static reverse_range_view<BidirectionalRange>
+                static reversed_view<BidirectionalRange>
                 invoke(reverser, BidirectionalRange && rng)
                 {
                     CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
                     CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
-                    return reverse_range_view<BidirectionalRange>{
+                    return reversed_view<BidirectionalRange>{
                         std::forward<BidirectionalRange>(rng)};
                 }
             };

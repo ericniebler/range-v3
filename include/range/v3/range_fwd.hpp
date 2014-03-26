@@ -217,11 +217,6 @@ namespace ranges
 
         struct begin_tag {};
         struct end_tag {};
-        struct begin_end_tag
-        {
-            begin_end_tag(begin_tag) {}
-            begin_end_tag(end_tag) {}
-        };
 
         struct use_default;
 
@@ -302,7 +297,7 @@ namespace ranges
         // Views
         //
         template<typename ForwardRange, typename BinaryPredicate>
-        struct adjacent_filter_range_view;
+        struct adjacent_filtered_view;
 
         namespace view
         {
@@ -326,7 +321,7 @@ namespace ranges
         }
 
         template<typename Iterable>
-        struct const_iterable_view;
+        struct const_view;
 
         namespace view
         {
@@ -335,7 +330,7 @@ namespace ranges
         }
 
         template<typename InputIterator>
-        struct counted_iterable_view;
+        struct counted_view;
 
         namespace view
         {
@@ -352,7 +347,7 @@ namespace ranges
             basic_range_sentinel<detail::counted_sentinel<InputIterator>>;
 
         template<typename Rng, typename Pred>
-        struct filter_iterable_view;
+        struct filtered_view;
 
         namespace view
         {
@@ -361,7 +356,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct indirect_iterable_view;
+        struct indirect_view;
 
         namespace view
         {
@@ -370,7 +365,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct iota_iterable_view;
+        struct iota_view;
 
         namespace view
         {
@@ -379,7 +374,7 @@ namespace ranges
         }
 
         template<typename...InputIterables>
-        struct join_iterable_view;
+        struct joined_view;
 
         namespace view
         {
@@ -388,7 +383,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct move_iterable_view;
+        struct move_view;
 
         namespace view
         {
@@ -397,7 +392,7 @@ namespace ranges
         }
 
         template<typename Value>
-        struct repeat_iterable_view;
+        struct repeated_view;
 
         namespace view
         {
@@ -415,7 +410,7 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct reverse_range_view;
+        struct reversed_view;
 
         namespace view
         {
@@ -424,7 +419,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct slice_iterable_view;
+        struct sliced_view;
 
         namespace view
         {
@@ -433,7 +428,7 @@ namespace ranges
         }
 
         template<typename InputRange>
-        struct stride_iterable_view;
+        struct strided_view;
 
         namespace view
         {
@@ -448,7 +443,7 @@ namespace ranges
         }
 
         template<typename BidirectionalRange, typename Regex, typename SubMatchRange>
-        struct tokenize_range_view;
+        struct tokenized_view;
 
         namespace view
         {
@@ -457,7 +452,7 @@ namespace ranges
         }
 
         template<typename Rng, typename Fun>
-        struct transform_iterable_view;
+        struct transformed_view;
 
         namespace view
         {
@@ -466,7 +461,7 @@ namespace ranges
         }
 
         template<typename InputIterator>
-        struct unbounded_iterable_view;
+        struct unbounded_view;
 
         namespace view
         {
@@ -475,7 +470,7 @@ namespace ranges
         }
 
         template<typename ForwardRange>
-        using unique_range_view = adjacent_filter_range_view<ForwardRange, detail::not_equal_to>;
+        using uniqued_view = adjacent_filtered_view<ForwardRange, detail::not_equal_to>;
 
         namespace view
         {
@@ -484,10 +479,10 @@ namespace ranges
         }
 
         template<typename InputRange>
-        using keys_range_view = transform_iterable_view<InputRange, detail::get_first>;
+        using keys_range_view = transformed_view<InputRange, detail::get_first>;
 
         template<typename InputRange>
-        using values_range_view = transform_iterable_view<InputRange, detail::get_second>;
+        using values_range_view = transformed_view<InputRange, detail::get_second>;
 
         namespace view
         {

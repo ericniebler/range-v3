@@ -29,7 +29,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename BidirectionalRange, typename Regex, typename SubMatchRange>
-        struct tokenize_range_view : private range_base
+        struct tokenized_view : private range_base
         {
         private:
             BidirectionalRange rng_;
@@ -42,7 +42,7 @@ namespace ranges
             using const_iterator =
                 std::regex_token_iterator<range_iterator_t<BidirectionalRange const>>;
 
-            tokenize_range_view(BidirectionalRange &&rng, Regex && rex, SubMatchRange subs,
+            tokenized_view(BidirectionalRange &&rng, Regex && rex, SubMatchRange subs,
                 std::regex_constants::match_flag_type flags)
               : rng_(std::forward<BidirectionalRange>(rng))
               , rex_(std::forward<Regex>(rex)), subs_(std::move(subs)), flags_(flags)
@@ -86,7 +86,7 @@ namespace ranges
             struct tokenizer_ : bindable<tokenizer_>
             {
                 template<typename BidirectionalRange, typename Regex>
-                static tokenize_range_view<BidirectionalRange, Regex, int>
+                static tokenized_view<BidirectionalRange, Regex, int>
                 invoke(tokenizer_, BidirectionalRange && rng, Regex && rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
@@ -101,7 +101,7 @@ namespace ranges
                 }
 
                 template<typename BidirectionalRange, typename Regex>
-                static tokenize_range_view<BidirectionalRange, Regex, std::vector<int>>
+                static tokenized_view<BidirectionalRange, Regex, std::vector<int>>
                 invoke(tokenizer_, BidirectionalRange && rng, Regex && rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
@@ -116,7 +116,7 @@ namespace ranges
                 }
 
                 template<typename BidirectionalRange, typename Regex>
-                static tokenize_range_view<BidirectionalRange, Regex, std::initializer_list<int>>
+                static tokenized_view<BidirectionalRange, Regex, std::initializer_list<int>>
                 invoke(tokenizer_, BidirectionalRange && rng, Regex && rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)

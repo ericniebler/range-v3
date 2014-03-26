@@ -111,9 +111,9 @@ namespace ranges
         } // namespace detail
 
         template<typename ...InputIterables>
-        struct zip_iterable_view
+        struct zipped_view
           : range_facade<
-                zip_iterable_view<InputIterables...>,
+                zipped_view<InputIterables...>,
                 logical_and<is_infinite<InputIterables>::value...>::value>
         {
         private:
@@ -211,7 +211,7 @@ namespace ranges
                 }
             };
 
-            cursor get_begin() const
+            cursor begin_cursor() const
             {
                 return {ranges::tuple_transform(rngs_, ranges::begin)};
             }
@@ -219,13 +219,13 @@ namespace ranges
                 logical_and<(ranges::Range<InputIterables>())...>::value,
                 cursor,
                 sentinel>
-            get_end() const
+            end_cursor() const
             {
                 return {ranges::tuple_transform(rngs_, ranges::end)};
             }
         public:
-            zip_iterable_view() = default;
-            explicit zip_iterable_view(InputIterables &&...rngs)
+            zipped_view() = default;
+            explicit zipped_view(InputIterables &&...rngs)
                 : rngs_{std::forward<InputIterables>(rngs)...}
             {}
             CONCEPT_REQUIRES(logical_and<(ranges::SizedIterable<InputIterables>())...>::value)
@@ -243,10 +243,10 @@ namespace ranges
             struct zipper : bindable<zipper>
             {
                 template<typename...InputIterables>
-                static zip_iterable_view<InputIterables...> invoke(zipper, InputIterables &&... rngs)
+                static zipped_view<InputIterables...> invoke(zipper, InputIterables &&... rngs)
                 {
                     CONCEPT_ASSERT(logical_and<(ranges::Iterable<InputIterables>())...>::value);
-                    return zip_iterable_view<InputIterables...>{std::forward<InputIterables>(rngs)...};
+                    return zipped_view<InputIterables...>{std::forward<InputIterables>(rngs)...};
                 }
             };
 

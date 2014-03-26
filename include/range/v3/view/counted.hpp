@@ -69,7 +69,7 @@ namespace ranges
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<InputIterator>())
                 iterator_difference_t<InputIterator>
-                distance_to(counted_iterable_view<InputIterator> const &that) const
+                distance_to(counted_view<InputIterator> const &that) const
                 {
                     return that.n_ - n_;
                 }
@@ -97,8 +97,8 @@ namespace ranges
         }
 
         template<typename InputIterator>
-        struct counted_iterable_view
-          : range_facade<counted_iterable_view<InputIterator>>
+        struct counted_view
+          : range_facade<counted_view<InputIterator>>
         {
         private:
             friend range_core_access;
@@ -107,16 +107,16 @@ namespace ranges
             InputIterator it_;
             iterator_difference_t<InputIterator> n_;
 
-            detail::counted_cursor<InputIterator> get_begin() const
+            detail::counted_cursor<InputIterator> begin_cursor() const
             {
                 return {{}, it_, 0};
             }
-            detail::counted_sentinel<InputIterator> get_end() const
+            detail::counted_sentinel<InputIterator> end_cursor() const
             {
                 return {n_};
             }
         public:
-            counted_iterable_view(InputIterator it, iterator_difference_t<InputIterator> n)
+            counted_view(InputIterator it, iterator_difference_t<InputIterator> n)
               : it_(it), n_(n)
             {}
             size_type size() const
@@ -130,7 +130,7 @@ namespace ranges
             struct counted_maker : bindable<counted_maker>
             {
                 template<typename InputIterator>
-                static counted_iterable_view<InputIterator>
+                static counted_view<InputIterator>
                 invoke(counted_maker, InputIterator it, iterator_difference_t<InputIterator> n)
                 {
                     CONCEPT_ASSERT(ranges::InputIterator<InputIterator>());

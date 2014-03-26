@@ -33,8 +33,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename ForwardIterable>
-        struct slice_iterable_view
-          : range_facade<slice_iterable_view<ForwardIterable>>
+        struct sliced_view
+          : range_facade<sliced_view<ForwardIterable>>
         {
         private:
             friend range_core_access;
@@ -50,17 +50,17 @@ namespace ranges
             struct cursor : private dirty_t
             {
             private:
-                slice_iterable_view const *rng_;
+                sliced_view const *rng_;
                 range_iterator_t<ForwardIterable> it_;
                 size_type n_;
 
                 dirty_t & dirty() { return *this; }
                 dirty_t const & dirty() const { return *this; }
             public:
-                cursor(slice_iterable_view const &rng, begin_tag)
+                cursor(sliced_view const &rng, begin_tag)
                   : dirty_t{false}, rng_(&rng), n_(rng.from_), it_(ranges::next(ranges::begin(rng.rng_), rng.from_))
                 {}
-                cursor(slice_iterable_view const &rng, end_tag)
+                cursor(sliced_view const &rng, end_tag)
                   : dirty_t{true}, rng_(&rng), n_(rng.to_), it_(ranges::begin(rng.rng_))
                 {
                     if(Rand())
@@ -117,17 +117,17 @@ namespace ranges
                     it_ = ranges::next(ranges::begin(rng_->rng_), rng_->to_);
                 }
             };
-            cursor get_begin() const
+            cursor begin_cursor() const
             {
                 return {*this, begin_tag{}};
             }
-            cursor get_end() const
+            cursor end_cursor() const
             {
                 return {*this, end_tag{}};
             }
         public:
-            slice_iterable_view() = default;
-            slice_iterable_view(ForwardIterable && rng, size_type from, size_type to)
+            sliced_view() = default;
+            sliced_view(ForwardIterable && rng, size_type from, size_type to)
               : rng_(std::forward<ForwardIterable>(rng))
               , from_(from)
               , to_(to)
@@ -141,7 +141,7 @@ namespace ranges
             struct slicer : bindable<slicer>
             {
                 template<typename ForwardIterable>
-                static slice_iterable_view<ForwardIterable>
+                static sliced_view<ForwardIterable>
                 invoke(slicer, ForwardIterable && rng, range_size_t<ForwardIterable> from,
                     range_size_t<ForwardIterable> to)
                 {

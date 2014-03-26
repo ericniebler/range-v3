@@ -30,8 +30,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename InputIterable>
-        struct stride_iterable_view
-          : range_adaptor<stride_iterable_view<InputIterable>, InputIterable>
+        struct strided_view
+          : range_adaptor<strided_view<InputIterable>, InputIterable>
         {
         private:
             friend range_core_access;
@@ -61,11 +61,12 @@ namespace ranges
 
             difference_type stride_;
 
-            struct range_adaptor : adaptor_defaults, private dirty_t, private offset_t
+            struct adaptor : default_adaptor, private dirty_t, private offset_t
             {
             private:
-                using base_cursor_t = base_cursor_t<stride_iterable_view>;
-                stride_iterable_view const *rng_;
+                using base_cursor_t = base_cursor_t<strided_view>;
+                using derived_cursor_t = derived_cursor_t<base_cursor_t, adaptor>;
+                strided_view const *rng_;
                 dirty_t & dirty() { return *this; }
                 dirty_t const & dirty() const { return *this; }
                 offset_t & offset() { return *this; }
@@ -84,11 +85,11 @@ namespace ranges
                     offset() = 0 != tmp ? rng_->stride_ - tmp : tmp;
                 }
             public:
-                range_adaptor() = default;
-                range_adaptor(stride_iterable_view const &rng, begin_tag)
+                adaptor() = default;
+                adaptor(strided_view const &rng, begin_tag)
                   : dirty_t(false), offset_t(0), rng_(&rng)
                 {}
-                range_adaptor(stride_iterable_view const &rng, end_tag)
+                adaptor(strided_view const &rng, end_tag)
                   : dirty_t(true), offset_t(0), rng_(&rng)
                 {
                     // Opportunistic eager cleaning when we can do so in O(1)
@@ -100,7 +101,7 @@ namespace ranges
                 {
                     RANGES_ASSERT(0 == offset());
                     auto rng = ranges::as_iterator_pair(std::move(pos),
-                        adaptor_defaults::end(*rng_));
+                        default_adaptor::end(*rng_));
                     RANGES_ASSERT(rng.first != rng.second);
                     offset() = detail::advance_bounded(rng.first, rng_->stride_ + offset(),
                         rng.second);
@@ -110,17 +111,16 @@ namespace ranges
                 void prev(base_cursor_t &pos)
                 {
                     clean();
-                    auto rng = ranges::as_iterator_pair(adaptor_defaults::begin(*rng_),
+                    auto rng = ranges::as_iterator_pair(default_adaptor::begin(*rng_),
                         std::move(pos));
                     offset() = detail::advance_bounded(rng.second, -rng_->stride_ + offset(),
                         rng.first);
                     RANGES_ASSERT(0 == offset());
                     pos = ranges::range_core_access::cursor(std::move(rng.second));
                 }
-                template<typename Cursor,
-                    CONCEPT_REQUIRES_(ranges::RandomAccessIterator<range_iterator_t<InputIterable>>())>
-                difference_type distance_to(Cursor const &here,
-                    Cursor const &there) const
+                CONCEPT_REQUIRES(ranges::RandomAccessIterator<range_iterator_t<InputIterable>>())
+                difference_type distance_to(derived_cursor_t const &here,
+                    derived_cursor_t const &there) const
                 {
                     clean();
                     there.adaptor().clean();
@@ -138,14 +138,14 @@ namespace ranges
                     if(0 < n)
                     {
                         auto rng = ranges::as_iterator_pair(std::move(pos),
-                            adaptor_defaults::end(*rng_));
+                            default_adaptor::end(*rng_));
                         offset() = detail::advance_bounded(rng.first, n * rng_->stride_ + offset(),
                             rng.second);
                         pos = ranges::range_core_access::cursor(std::move(rng.first));
                     }
                     else if(0 > n)
                     {
-                        auto rng = ranges::as_iterator_pair(adaptor_defaults::begin(*rng_),
+                        auto rng = ranges::as_iterator_pair(default_adaptor::begin(*rng_),
                             std::move(pos));
                         offset() = detail::advance_bounded(rng.second, n * rng_->stride_ + offset(),
                             rng.first);
@@ -158,28 +158,28 @@ namespace ranges
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
             // Range, adapt it anyway.
-            auto get_end_adaptor(concepts::Iterable) const -> adaptor_defaults
+            auto end_adaptor_(concepts::Iterable) const -> default_adaptor
             {
                 return {};
             }
-            auto get_end_adaptor(concepts::Range) const -> range_adaptor
+            auto end_adaptor_(concepts::Range) const -> adaptor
             {
                 return {*this, end_tag{}};
             }
 
-            range_adaptor get_adaptor(begin_tag) const
+            adaptor begin_adaptor() const
             {
                 return {*this, begin_tag{}};
             }
-            detail::conditional_t<(ranges::Range<InputIterable>()), range_adaptor, adaptor_defaults>
-            get_adaptor(end_tag) const
+            detail::conditional_t<(ranges::Range<InputIterable>()), adaptor, default_adaptor>
+            end_adaptor() const
             {
-                return stride_iterable_view::get_end_adaptor(range_concept_t<InputIterable>{});
+                return strided_view::end_adaptor_(range_concept_t<InputIterable>{});
             }
         public:
-            stride_iterable_view() = default;
-            stride_iterable_view(InputIterable &&rng, difference_type stride)
-              : range_adaptor_t<stride_iterable_view>{std::forward<InputIterable>(rng)}
+            strided_view() = default;
+            strided_view(InputIterable &&rng, difference_type stride)
+              : range_adaptor_t<strided_view>{std::forward<InputIterable>(rng)}
               , stride_(stride)
             {
                 RANGES_ASSERT(0 < stride_);
@@ -197,7 +197,7 @@ namespace ranges
             struct strider : bindable<strider>
             {
                 template<typename InputIterable>
-                static stride_iterable_view<InputIterable>
+                static strided_view<InputIterable>
                 invoke(strider, InputIterable && rng, range_difference_t<InputIterable> step)
                 {
                     CONCEPT_ASSERT(ranges::Iterable<InputIterable>());

@@ -369,8 +369,8 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        t.get_begin(),
-                        t.get_end()
+                        t.begin_cursor(),
+                        t.end_cursor()
                     ));
             };
 
@@ -380,30 +380,30 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::same_type(t.get_begin(), t.get_end())
+                        concepts::same_type(t.begin_cursor(), t.end_cursor())
                     ));
             };
 
             template<typename Range>
-            static auto get_begin(Range & rng) -> decltype(rng.get_begin())
+            static auto begin_cursor(Range & rng) -> decltype(rng.begin_cursor())
             {
-                return rng.get_begin();
+                return rng.begin_cursor();
             }
             template<typename Range>
-            static auto get_end(Range & rng) -> decltype(rng.get_end())
+            static auto end_cursor(Range & rng) -> decltype(rng.end_cursor())
             {
-                return rng.get_end();
+                return rng.end_cursor();
             }
 
             template<typename Range>
-            static auto begin_adaptor(Range & rng) -> decltype(rng.get_adaptor(begin_tag{}))
+            static auto begin_adaptor(Range & rng) -> decltype(rng.begin_adaptor())
             {
-                return rng.get_adaptor(begin_tag{});
+                return rng.begin_adaptor();
             }
             template<typename Range>
-            static auto end_adaptor(Range & rng) -> decltype(rng.get_adaptor(end_tag{}))
+            static auto end_adaptor(Range & rng) -> decltype(rng.end_adaptor())
             {
-                return rng.get_adaptor(end_tag{});
+                return rng.end_adaptor();
             }
 
             template<typename Cursor>
@@ -579,11 +579,11 @@ namespace ranges
 
             template<typename Derived>
             using facade_cursor_t =
-                decltype(range_core_access::get_begin(std::declval<Derived &>()));
+                decltype(range_core_access::begin_cursor(std::declval<Derived &>()));
 
             template<typename Derived>
             using facade_sentinel2_t =
-                decltype(range_core_access::get_end(std::declval<Derived &>()));
+                decltype(range_core_access::end_cursor(std::declval<Derived &>()));
 
             template<typename Derived>
             using facade_iterator_t =
@@ -918,11 +918,11 @@ namespace ranges
                 return static_cast<Derived const &>(*this);
             }
             // Default implementations
-            Derived get_begin() const
+            Derived begin_cursor() const
             {
                 return derived();
             }
-            default_sentinel get_end() const
+            default_sentinel end_cursor() const
             {
                 return {};
             }
@@ -930,12 +930,12 @@ namespace ranges
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::facade_iterator_t<D> begin() const
             {
-                return {range_core_access::get_begin(derived())};
+                return {range_core_access::begin_cursor(derived())};
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::facade_sentinel_t<D> end() const
             {
-                return {range_core_access::get_end(derived())};
+                return {range_core_access::end_cursor(derived())};
             }
             constexpr bool operator!() const
             {

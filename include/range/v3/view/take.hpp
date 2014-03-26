@@ -40,14 +40,14 @@ namespace ranges
                 template<typename InputIterable,
                     CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
                                       ranges::InputIterator<range_iterator_t<InputIterable>>())>
-                static slice_iterable_view<InputIterable>
+                static sliced_view<InputIterable>
                 invoke(taker, InputIterable && rng, range_size_t<InputIterable> to)
                 {
                     return {std::forward<InputIterable>(rng), 0, to};
                 }
                 template<typename InputIterator,
                     CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>())>
-                static counted_iterable_view<InputIterator>
+                static counted_view<InputIterator>
                 invoke(taker, InputIterator it, detail::iterator_size_t<InputIterator> n)
                 {
                     return {std::move(it),
