@@ -579,11 +579,11 @@ namespace ranges
 
             template<typename Derived>
             using facade_cursor_t =
-                decltype(range_core_access::begin_cursor(std::declval<Derived &>()));
+                decltype(range_core_access::begin_cursor(std::declval<Derived const &>()));
 
             template<typename Derived>
             using facade_sentinel2_t =
-                decltype(range_core_access::end_cursor(std::declval<Derived &>()));
+                decltype(range_core_access::end_cursor(std::declval<Derived const &>()));
 
             template<typename Derived>
             using facade_iterator_t =

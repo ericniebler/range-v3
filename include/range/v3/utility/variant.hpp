@@ -52,13 +52,6 @@ namespace ranges
 
         namespace detail
         {
-            struct any
-            {
-                template<typename T>
-                any(T &&)
-                {}
-            };
-
             template<typename T>
             struct ref
             {

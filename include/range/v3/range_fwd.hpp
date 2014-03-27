@@ -57,9 +57,9 @@ namespace ranges
         template<typename Sig>
         using result_of_t = typename std::result_of<Sig>::type;
 
-        template<bool Condition>
+        template<bool Condition, typename T = int>
         using enable_if_t =
-            typename std::enable_if<Condition, int>::type;
+            typename std::enable_if<Condition, T>::type;
 
         template<typename Derived>
         struct bindable;
@@ -91,6 +91,23 @@ namespace ranges
                 empty(Ts &&...)
                 {}
             };
+
+            template<typename T = void>
+            struct any_
+            {
+                any_(T &&)
+                {}
+            };
+
+            template<>
+            struct any_<void>
+            {
+                template<typename T>
+                any_(T &&)
+                {}
+            };
+
+            using any = any_<>;
 
             template<typename T>
             using uncvref_t =
