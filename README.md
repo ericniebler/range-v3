@@ -12,5 +12,3 @@ To Do:
 * Rip out algorithm piping.
 * Survey the algorithms for return types.
 * Migrate to EoP formulations of the algorithms.
-* Support Iterable in the adaptors where it's possible.
-* Extend `join_range_view` to support joining N ranges.
