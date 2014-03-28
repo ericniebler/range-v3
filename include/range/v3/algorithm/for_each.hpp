@@ -21,30 +21,34 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename InputIterator, typename Sentinel, typename Fun,
-            CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
-                              ranges::EqualityComparable<InputIterator, Sentinel>() &&
-                              ranges::Callable<Fun, iterator_reference_t<InputIterator>>())>
-        InputIterator
-        for_each(InputIterator begin, Sentinel end, Fun fun)
+        struct for_each_fun
         {
-            for(; begin != end; ++begin)
+            template<typename InputIterator, typename Sentinel, typename Fun,
+                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
+                                  ranges::EqualityComparable<InputIterator, Sentinel>() &&
+                                  ranges::Callable<Fun, iterator_reference_t<InputIterator>>())>
+            InputIterator
+            operator()(InputIterator begin, Sentinel end, Fun fun) const
             {
-                fun(*begin);
+                for(; begin != end; ++begin)
+                {
+                    fun(*begin);
+                }
+                return begin;
             }
-            return begin;
-        }
 
-        template<typename InputIterable, typename Fun,
-            CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
-                              ranges::InputIterator<range_iterator_t<InputIterable>>() &&
-                              ranges::Callable<Fun, range_reference_t<InputIterable>>())>
-        range_iterator_t<InputIterable>
-        for_each(InputIterable &rng, Fun fun)
-        {
-            return ranges::for_each(ranges::begin(rng), ranges::end(rng), fun);
-        }
+            template<typename InputIterable, typename Fun,
+                CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
+                                  ranges::InputIterator<range_iterator_t<InputIterable>>() &&
+                                  ranges::Callable<Fun, range_reference_t<InputIterable>>())>
+            range_iterator_t<InputIterable>
+            operator()(InputIterable &rng, Fun fun) const
+            {
+                return (*this)(ranges::begin(rng), ranges::end(rng), fun);
+            }
+        };
 
+        RANGES_CONSTEXPR for_each_fun for_each{};
     } // namespace v3
 } // namespace ranges
 
