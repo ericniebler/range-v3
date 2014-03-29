@@ -76,9 +76,9 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
                 CONCEPT_ASSERT(ranges::Iterable<ForwardIterable2 const>());
                 CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable2 const>>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<BinaryPredicate,
-                                                       range_reference_t<InputIterable1>,
-                                                       range_reference_t<ForwardIterable2 const>>());
+                CONCEPT_ASSERT(ranges::Predicate<BinaryPredicate,
+                                                 range_reference_t<InputIterable1>,
+                                                 range_reference_t<ForwardIterable2 const>>());
                 return detail::find_first_of(ranges::begin(rng1), ranges::end(rng1),
                                              ranges::begin(rng2), ranges::end(rng2),
                                              ranges::make_invokable(std::move(pred)));

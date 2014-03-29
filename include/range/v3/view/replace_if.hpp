@@ -59,8 +59,8 @@ namespace ranges
                 {
                     CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
                     CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                    CONCEPT_ASSERT(ranges::UnaryPredicate<invokable_t<UnaryPredicate>,
-                                                          range_reference_t<InputIterable>>());
+                    CONCEPT_ASSERT(ranges::Predicate<invokable_t<UnaryPredicate>,
+                                                     range_reference_t<InputIterable>>());
                     CONCEPT_ASSERT(ranges::Convertible<typename std::decay<Value>::type const &,
                                                        range_reference_t<InputIterable>>());
                     return {std::forward<InputIterable>(rng),

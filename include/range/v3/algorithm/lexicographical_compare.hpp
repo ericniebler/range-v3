@@ -76,9 +76,9 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputIterable1 const>,
-                                                       range_reference_t<InputIterable2 const>>());
+                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
+                                                 range_reference_t<InputIterable1 const>,
+                                                 range_reference_t<InputIterable2 const>>());
                 return detail::lexicographical_compare(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),

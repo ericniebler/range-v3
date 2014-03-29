@@ -179,9 +179,9 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::Iterable<InputIterable2 const>());
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2 const>>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputIterable1 const>,
-                                                       range_reference_t<InputIterable2 const>>());
+                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
+                                                 range_reference_t<InputIterable1 const>,
+                                                 range_reference_t<InputIterable2 const>>());
                 return detail::includes(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),
@@ -214,9 +214,9 @@ namespace ranges
                                                       range_reference_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable2 const>>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputIterable1 const>,
-                                                       range_reference_t<InputIterable2 const>>());
+                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
+                                                 range_reference_t<InputIterable1 const>,
+                                                 range_reference_t<InputIterable2 const>>());
                 return detail::set_union(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2), std::move(out),
@@ -249,9 +249,9 @@ namespace ranges
                                                       range_reference_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable2 const>>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputIterable1 const>,
-                                                       range_reference_t<InputIterable2 const>>());
+                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
+                                                 range_reference_t<InputIterable1 const>,
+                                                 range_reference_t<InputIterable2 const>>());
                 return detail::set_intersection(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2), std::move(out),
@@ -284,9 +284,9 @@ namespace ranges
                                                       range_reference_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable2 const>>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputIterable1 const>,
-                                                       range_reference_t<InputIterable2 const>>());
+                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
+                                                 range_reference_t<InputIterable1 const>,
+                                                 range_reference_t<InputIterable2 const>>());
                 return detail::set_difference(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2), std::move(out),
@@ -319,9 +319,9 @@ namespace ranges
                                                       range_reference_t<InputIterable1 const>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable2 const>>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputIterable1 const>,
-                                                       range_reference_t<InputIterable2 const>>());
+                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
+                                                 range_reference_t<InputIterable1 const>,
+                                                 range_reference_t<InputIterable2 const>>());
                 return detail::set_symmetric_difference(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2), std::move(out),

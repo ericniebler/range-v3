@@ -134,9 +134,9 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
                 CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
-                CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                       range_reference_t<InputRange>,
-                                                       range_reference_t<InputRange>>());
+                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
+                                                 range_reference_t<InputRange>,
+                                                 range_reference_t<InputRange>>());
                 return {std::forward<RandomAccessRange>(rng2),
                         std::partial_sort_copy(ranges::begin(rng1), ranges::end(rng1),
                                                ranges::begin(rng2), ranges::end(rng2),

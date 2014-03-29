@@ -79,9 +79,9 @@ namespace ranges
                 {
                     CONCEPT_ASSERT(ranges::Range<ForwardIterable>());
                     CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                    CONCEPT_ASSERT(ranges::BinaryPredicate<invokable_t<BinaryPredicate>,
-                                                           range_reference_t<ForwardIterable>,
-                                                           range_reference_t<ForwardIterable>>());
+                    CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
+                                                     range_reference_t<ForwardIterable>,
+                                                     range_reference_t<ForwardIterable>>());
                     return {std::forward<ForwardIterable>(rng), std::move(pred)};
                 }
                 template<typename BinaryPredicate>

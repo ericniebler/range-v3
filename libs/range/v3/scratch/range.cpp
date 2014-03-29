@@ -71,8 +71,8 @@ static_assert(ranges::Range<std::vector<int> const &>(), "");
 static_assert(ranges::RandomAccessIterator<ranges::range_iterator_t<std::vector<int> const &>>(), "");
 static_assert(!ranges::Range<ranges::istream_iterable<int>>(), "");
 
-static_assert(ranges::BinaryPredicate<std::less<int>, int, int>(), "");
-static_assert(!ranges::BinaryPredicate<std::less<int>, char*, int>(), "");
+static_assert(ranges::Predicate<std::less<int>, int, int>(), "");
+static_assert(!ranges::Predicate<std::less<int>, char*, int>(), "");
 
 static_assert(ranges::OutputIterator<int *, int>(), "");
 static_assert(!ranges::OutputIterator<int const *, int>(), "");
@@ -87,12 +87,33 @@ static_assert(!ranges::Destructible<NotDestructible>(), "");
 
 struct IntComparable
 {
+    explicit operator int() const;
+
+    friend bool operator<(IntComparable, IntComparable);
+    friend bool operator>(IntComparable, IntComparable);
+    friend bool operator<=(IntComparable, IntComparable);
+    friend bool operator>=(IntComparable, IntComparable);
+
     friend bool operator<(int, IntComparable);
+    friend bool operator<(IntComparable, int);
+    friend bool operator>(int, IntComparable);
+    friend bool operator>(IntComparable, int);
+    friend bool operator<=(int, IntComparable);
+    friend bool operator<=(IntComparable, int);
+    friend bool operator>=(int, IntComparable);
+    friend bool operator>=(IntComparable, int);
 };
 
+namespace ranges
+{
+    template<> struct common_type<int, IntComparable> { using type = int; };
+    template<> struct common_type<IntComparable, int> { using type = int; };
+}
+
 static_assert(ranges::LessThanComparable<int>(), "");
+static_assert(ranges::Common<int, IntComparable>(), "");
 static_assert(ranges::LessThanComparable<int, IntComparable>(), "");
-static_assert(!ranges::LessThanComparable<IntComparable, int>(), "");
+static_assert(ranges::LessThanComparable<IntComparable, int>(), "");
 
 static_assert(
     std::is_same<
