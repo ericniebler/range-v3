@@ -36,10 +36,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>C:\MinGW\msys\1.0\bin\make.exe all</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>make.cmd all</NMakeBuildCommandLine>
     <NMakeOutput>range.exe</NMakeOutput>
-    <NMakeCleanCommandLine>C:\MinGW\msys\1.0\bin\make.exe clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>C:\MinGW\msys\1.0\bin\make.exe -B all</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>make.cmd clean</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>make.cmd -B all</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>..\..\..\..\include;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <ExecutablePath>C:\cygwin\bin;$(ExecutablePath)</ExecutablePath>
