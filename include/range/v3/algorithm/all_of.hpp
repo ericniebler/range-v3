@@ -36,7 +36,7 @@ namespace ranges
             template<typename I, typename S, typename P,
                 CONCEPT_REQUIRES_(ranges::InputIterator<I>() &&
                                   ranges::Sentinel<S, I>() &&
-                                  ranges::Adaptable_predicate<P, iterator_value_t<I>>())>
+                                  ranges::AdaptablePredicate<P, iterator_value_t<I>>())>
             bool operator()(I first, S last, P pred) const
             {
                 return (*this)(first, last, predicate<P>(pred));
@@ -45,14 +45,14 @@ namespace ranges
             template<typename I, typename P,
                 CONCEPT_REQUIRES_(ranges::Iterable<I>() &&
                                   ranges::InputIterator<range_iterator_t<I>>() &&
-                                  ranges::Adaptable_predicate<P, range_value_t<I>>())>
+                                  ranges::AdaptablePredicate<P, range_value_t<I>>())>
             bool operator()(const I& rng, P pred) const
             {
                 return (*this)(ranges::begin(rng), ranges::end(rng), pred);
             }
 
             template<typename T, typename P,
-                CONCEPT_REQUIRES_(ranges::Adaptable_predicate<P, T>())>
+                CONCEPT_REQUIRES_(ranges::AdaptablePredicate<P, T>())>
             bool operator()(std::initializer_list<T> list, P pred) const
             {
                 return (*this)(ranges::begin(list), ranges::end(list), pred);

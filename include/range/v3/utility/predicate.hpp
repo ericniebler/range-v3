@@ -56,7 +56,7 @@ namespace ranges
 
         namespace concepts
         {
-            struct Adaptable_predicate
+            struct AdaptablePredicate
             {
                 template<typename P, typename... Args>
                 auto requires(P pred, Args&&... args) -> decltype(
@@ -68,7 +68,7 @@ namespace ranges
         } // namespace concepts
 
         template<typename P, typename ...Args>
-        using Adaptable_predicate = concepts::models<concepts::Adaptable_predicate, P, Args...>;
+        using AdaptablePredicate = concepts::models<concepts::AdaptablePredicate, P, Args...>;
  
     } // inline namespace v3
 
