@@ -272,9 +272,18 @@ namespace ranges
             struct Constructible
             {
                 template<typename T, typename ...Us>
-                auto requires(T &&, Us &&...us) -> decltype(
+                auto requires(T t, Us &&...us) -> decltype(
                     concepts::valid_expr(
                         T((Us&&)us...)
+                    ));
+            };
+
+            struct Assignable
+            {
+                template<typename T, typename U>
+                auto requires(T & t, U u) -> decltype(
+                    concepts::valid_expr(
+                        t = u
                     ));
             };
 
@@ -287,21 +296,41 @@ namespace ranges
                     ));
             };
 
-            struct CopyConstructible
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        T(t)
-                    ));
-            };
-
             struct MoveConstructible
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires(T t) -> decltype(
                     concepts::valid_expr(
                         T(std::move(t))
+                    ));
+            };
+
+            struct MoveAssignable
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        t = std::move(t)
+                    ));
+            };
+
+            struct Movable
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<MoveConstructible>(t),
+                        concepts::model_of<MoveAssignable>(t)
+                    ));
+            };
+
+            struct CopyConstructible
+                : refines<MoveConstructible>
+            {
+                template<typename T>
+                auto requires(T t) -> decltype(
+                    concepts::valid_expr(
+                        T(t)
                     ));
             };
 
@@ -314,12 +343,14 @@ namespace ranges
                     ));
             };
 
-            struct MoveAssignable
+            struct Copyable
+                : refines<Movable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        t = std::move(t)
+                        concepts::model_of<CopyConstructible>(t),
+                        concepts::model_of<CopyAssignable>(t)
                     ));
             };
 
@@ -451,26 +482,35 @@ namespace ranges
         template<typename T>
         using SignedIntegral = concepts::models<concepts::SignedIntegral, T>;
 
+        template<typename T>
+        using Destructible = concepts::models<concepts::Destructible, T>;
+
         template<typename T, typename...Us>
         using Constructible = concepts::models<concepts::Constructible, T, Us...>;
+
+        template<typename T, typename U>
+        using Assignable = concepts::models<concepts::Assignable, T, U>;
 
         template<typename T>
         using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
 
         template<typename T>
-        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
-
-        template<typename T>
         using MoveConstructible = concepts::models<concepts::MoveConstructible, T>;
 
         template<typename T>
-        using Destructible = concepts::models<concepts::Destructible, T>;
+        using MoveAssignable = concepts::models<concepts::MoveAssignable, T>;
+
+        template<typename T>
+        using Movable = concepts::models<concepts::Movable, T>;
+
+        template<typename T>
+        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
 
         template<typename T>
         using CopyAssignable = concepts::models<concepts::CopyAssignable, T>;
 
         template<typename T>
-        using MoveAssignable = concepts::models<concepts::MoveAssignable, T>;
+        using Copyable = concepts::models<concepts::Copyable, T>;
 
         template<typename T, typename U = T>
         using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;
@@ -507,5 +547,7 @@ namespace ranges
     /**/
 
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
+
+#include <range/v3/utility/predicate.hpp>
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP
