@@ -68,21 +68,21 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     ranges::Iterable<InputIterable1>() &&
                     ranges::InputIterator<range_iterator_t<InputIterable1>>() &&
-                    ranges::Callable<invokable_t<UnaryFunction>,
-                                                 range_reference_t<InputIterable1>>() &&
+                    ranges::Invokable<UnaryFunction,
+                                      range_reference_t<InputIterable1>>() &&
                     ranges::OutputIterator<OutputIterator,
-                        concepts::Callable::result_t<invokable_t<UnaryFunction>,
-                                                     range_reference_t<InputIterable1>>>())>
+                        concepts::Invokable::result_t<UnaryFunction,
+                                                      range_reference_t<InputIterable1>>>())>
             static OutputIterator
             invoke(transformer, InputIterable1 && rng, OutputIterator out, UnaryFunction fun)
             {
                 CONCEPT_ASSERT(ranges::Iterable<InputIterable1>());
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
-                CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
-                                                range_reference_t<InputIterable1>>());
+                CONCEPT_ASSERT(ranges::Invokable<UnaryFunction,
+                                                 range_reference_t<InputIterable1>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
-                    concepts::Callable::result_t<invokable_t<UnaryFunction>,
-                                                 range_reference_t<InputIterable1>>>());
+                    concepts::Invokable::result_t<UnaryFunction,
+                                                  range_reference_t<InputIterable1>>>());
                 return detail::transform(
                     ranges::begin(rng), ranges::end(rng),
                     std::move(out), ranges::make_invokable(std::move(fun)));
@@ -99,13 +99,13 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
                 CONCEPT_ASSERT(ranges::Iterable<InputIterable2>());
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable2>>());
-                CONCEPT_ASSERT(ranges::Callable<invokable_t<BinaryFunction>,
-                                                range_reference_t<InputIterable1>,
-                                                range_reference_t<InputIterable2>>());
-                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
-                    concepts::Callable::result_t<invokable_t<BinaryFunction>,
+                CONCEPT_ASSERT(ranges::Invokable<BinaryFunction,
                                                  range_reference_t<InputIterable1>,
-                                                 range_reference_t<InputIterable2>>>());
+                                                 range_reference_t<InputIterable2>>());
+                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
+                    concepts::Invokable::result_t<BinaryFunction,
+                                                  range_reference_t<InputIterable1>,
+                                                  range_reference_t<InputIterable2>>>());
                 return detail::transform(
                     ranges::begin(rng1), ranges::end(rng1),
                     ranges::begin(rng2), ranges::end(rng2),
@@ -128,11 +128,11 @@ namespace ranges
                 CONCEPT_REQUIRES_(!(
                     ranges::Iterable<InputIterable2>() &&
                     ranges::InputIterator<range_iterator_t<InputIterable2>>() &&
-                    ranges::Callable<invokable_t<BinaryFunction>,
-                                                 range_reference_t<InputIterable2>>() &&
+                    ranges::Invokable<BinaryFunction,
+                                      range_reference_t<InputIterable2>>() &&
                     ranges::OutputIterator<OutputIterator,
-                        concepts::Callable::result_t<invokable_t<BinaryFunction>,
-                                                     range_reference_t<InputIterable2>>>()))>
+                        concepts::Invokable::result_t<BinaryFunction,
+                                                      range_reference_t<InputIterable2>>>()))>
             static auto
             invoke(transformer transform, InputIterable2 && rng2, OutputIterator out,
                    BinaryFunction fun) ->

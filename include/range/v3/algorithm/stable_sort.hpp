@@ -50,9 +50,9 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::Range<RandomAccessRange>());
                 CONCEPT_ASSERT(ranges::RandomAccessIterator<range_iterator_t<RandomAccessRange>>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
-                                                 range_reference_t<RandomAccessRange>,
-                                                 range_reference_t<RandomAccessRange>>());
+                CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
+                                                          range_reference_t<RandomAccessRange>,
+                                                          range_reference_t<RandomAccessRange>>());
                 std::stable_sort(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
                 return std::forward<RandomAccessRange>(rng);

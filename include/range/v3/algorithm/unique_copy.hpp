@@ -131,9 +131,9 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
-                                                 range_reference_t<InputIterable>,
-                                                 range_reference_t<InputIterable>>());
+                CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
+                                                          range_reference_t<InputIterable>,
+                                                          range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<InputIterable>>());
                 CONCEPT_ASSERT(

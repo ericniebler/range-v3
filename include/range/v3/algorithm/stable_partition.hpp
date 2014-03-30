@@ -37,8 +37,8 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<UnaryPredicate>,
-                                                 range_reference_t<BidirectionalRange>>());
+                CONCEPT_ASSERT(ranges::InvokablePredicate<UnaryPredicate,
+                                                          range_reference_t<BidirectionalRange>>());
                 return std::stable_partition(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }

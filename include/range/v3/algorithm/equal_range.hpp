@@ -77,9 +77,9 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
-                                                 range_reference_t<ForwardIterable>,
-                                                 Value const &>());
+                CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
+                                                          range_reference_t<ForwardIterable>,
+                                                          Value const &>());
                 static_assert(!ranges::is_infinite<ForwardIterable>::value,
                     "Trying to binary search an infinite range");
                 return detail::equal_range(ranges::begin(rng), ranges::end(rng), val,

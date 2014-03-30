@@ -68,9 +68,9 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
                 CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
-                                                 range_reference_t<ForwardIterable>,
-                                                 range_reference_t<ForwardIterable>>());
+                CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
+                                                          range_reference_t<ForwardIterable>,
+                                                          range_reference_t<ForwardIterable>>());
                 return detail::adjacent_find(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(pred)));
             }

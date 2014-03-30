@@ -41,9 +41,9 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::Range<InputRange>());
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange>>());
-                CONCEPT_ASSERT(ranges::Callable<invokable_t<BinaryOperation>,
-                                                Value,
-                                                range_reference_t<InputRange>>());
+                CONCEPT_ASSERT(ranges::Invokable<BinaryOperation,
+                                                 Value,
+                                                 range_reference_t<InputRange>>());
                 return std::accumulate(ranges::begin(rng), ranges::end(rng),
                     std::move(init), make_invokable(std::move(op)));
             }

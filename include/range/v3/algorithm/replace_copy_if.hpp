@@ -60,8 +60,8 @@ namespace ranges
                 CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
                 CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
                                                       range_reference_t<ForwardIterable>>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<UnaryPredicate>,
-                                                 range_reference_t<ForwardIterable>>());
+                CONCEPT_ASSERT(ranges::InvokablePredicate<UnaryPredicate,
+                                                          range_reference_t<ForwardIterable>>());
                 return detail::replace_copy_if(ranges::begin(rng), ranges::end(rng),
                     std::move(out), ranges::make_invokable(std::move(pred)), new_value);
             }

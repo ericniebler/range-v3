@@ -55,9 +55,9 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
-                                                 range_reference_t<BidirectionalRange>,
-                                                 range_reference_t<BidirectionalRange>>());
+                CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
+                                                          range_reference_t<BidirectionalRange>,
+                                                          range_reference_t<BidirectionalRange>>());
                 std::inplace_merge(ranges::begin(rng), std::move(middle),
                                    ranges::end(rng), ranges::make_invokable(std::move(pred)));
                 return std::forward<BidirectionalRange>(rng);
@@ -87,9 +87,9 @@ namespace ranges
                                           std::move(pred)))
             {
                 CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<BinaryPredicate>,
-                                                 iterator_reference_t<BidirectionalIterator>,
-                                                 iterator_reference_t<BidirectionalIterator>>());
+                CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
+                                                          iterator_reference_t<BidirectionalIterator>,
+                                                          iterator_reference_t<BidirectionalIterator>>());
                 return inplace_merge.move_bind(std::placeholders::_1, std::move(middle),
                                      std::move(pred));
             }

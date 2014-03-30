@@ -48,8 +48,8 @@ namespace ranges
             {
                 CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
                 CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
-                                                range_reference_t<InputIterable>>());
+                CONCEPT_ASSERT(ranges::Invokable<UnaryFunction,
+                                                 range_reference_t<InputIterable>>());
                 return detail::for_each(ranges::begin(rng), ranges::end(rng),
                     ranges::make_invokable(std::move(fun)));
             }
