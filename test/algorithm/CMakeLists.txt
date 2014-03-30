@@ -1,3 +1,5 @@
+add_executable(adjacent_find adjacent_find.cpp)
+add_test(test.adjacent_find adjacent_find)
 
 add_executable(all_of all_of.cpp)
 add_test(test.all_of all_of)

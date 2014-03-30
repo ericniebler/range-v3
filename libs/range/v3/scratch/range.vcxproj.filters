@@ -68,6 +68,12 @@
     <ClCompile Include="..\..\..\..\test\utility\predicate.cpp">
       <Filter>Test Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\adjacent_find.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -447,6 +453,9 @@
     </Text>
     <Text Include="..\..\..\..\test\utility\CMakeLists.txt">
       <Filter>Test Files\utility</Filter>
+    </Text>
+    <Text Include="CMakeLists.txt">
+      <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -11,6 +10,7 @@
 #ifndef RANGES_V3_ALGORITHM_FOR_EACH_HPP
 #define RANGES_V3_ALGORITHM_FOR_EACH_HPP
 
+#include <functional>
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -26,13 +26,18 @@ namespace ranges
         struct for_each_fn
         {
             template<typename InputIterator, typename Sentinel, typename Fun,
-                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
-                                  ranges::Sentinel<Sentinel, InputIterator>() &&
-                                  ranges::Invokable<Fun, iterator_value_t<InputIterator>>())>
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(
+                    ranges::InputIterator<InputIterator>() &&
+                    ranges::Sentinel<Sentinel, InputIterator>() &&
+                    ranges::Invokable<Projection, iterator_value_t<InputIterator>>() &&
+                    ranges::Invokable<Fun,
+                        concepts::Invokable::result_t<Projection, iterator_value_t<InputIterator>>>())>
             InputIterator
-            operator()(InputIterator begin, Sentinel end, Fun fun) const
+            operator()(InputIterator begin, Sentinel end, Fun fun, Projection proj = Projection{}) const
             {
-                auto &&ifun = ranges::make_invokable(fun);
+                using namespace std::placeholders;
+                auto &&ifun = std::bind(fun, std::bind(proj, _1));
                 for(; begin != end; ++begin)
                 {
                     ifun(*begin);
@@ -41,21 +46,28 @@ namespace ranges
             }
 
             template<typename InputIterable, typename Fun,
-                CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
-                                  ranges::InputIterator<range_iterator_t<InputIterable>>() &&
-                                  ranges::Invokable<Fun, range_value_t<InputIterable>>())>
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(
+                    ranges::Iterable<InputIterable>() &&
+                    ranges::InputIterator<range_iterator_t<InputIterable>>() &&
+                    ranges::Invokable<Projection, range_value_t<InputIterable>>() &&
+                    ranges::Invokable<Fun,
+                        concepts::Invokable::result_t<Projection, range_value_t<InputIterable>>>())>
             range_iterator_t<InputIterable>
-            operator()(InputIterable &rng, Fun fun) const
+            operator()(InputIterable &rng, Fun fun, Projection proj = Projection{}) const
             {
-                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(fun));
+                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(fun), std::move(proj));
             }
 
-            template<typename T, typename Fun,
-                CONCEPT_REQUIRES_(ranges::Invokable<Fun, T>())>
-            T const *
-            operator()(std::initializer_list<T> const &rng, Fun fun) const
+            template<typename Value, typename Fun,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(
+                    ranges::Invokable<Projection, Value>() &&
+                    ranges::Invokable<Fun, concepts::Invokable::result_t<Projection, Value>>())>
+            Value const *
+            operator()(std::initializer_list<Value> const &rng, Fun fun, Projection proj = Projection{}) const
             {
-                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(fun));
+                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(fun), std::move(proj));
             }
         };
 
