@@ -61,8 +61,8 @@ namespace ranges
                         concepts::model_of<Iterator>(ranges::cbegin(t)),
                         concepts::convertible_to<CI>(ranges::begin(t)),
                         concepts::convertible_to<CS>(ranges::end(t)),
-                        concepts::model_of<EqualityComparable>(ranges::begin(t), ranges::end(t)),
-                        concepts::model_of<EqualityComparable>(ranges::cbegin(t), ranges::cend(t))
+                        concepts::model_of<Sentinel>(ranges::end(t), ranges::begin(t)),
+                        concepts::model_of<Sentinel>(ranges::cend(t), ranges::cbegin(t))
                     ));
             };
 

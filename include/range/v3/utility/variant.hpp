@@ -35,7 +35,8 @@ namespace ranges
             using add_cref_t =
                 meta_compose<
                     meta_quote<std::add_lvalue_reference>::apply,
-                    meta_quote<std::add_const>::apply>::apply<T>;
+                    meta_quote<std::add_const>::apply
+                >::apply<T>;
         }
 
         struct void_t
@@ -236,32 +237,36 @@ namespace ranges
                 }
             };
 
+            struct assert_otherwise
+            {
+                static void assert_false(any) { RANGES_ASSERT(false); }
+                using fun_t = void(*)(any);
+                operator fun_t() const
+                {
+                    return &assert_false;
+                }
+            };
+
             // Is there a less dangerous way?
             template<typename T>
-            struct set_fun
+            struct construct_fun : assert_otherwise
             {
             private:
                 T &&t_;
             public:
-                set_fun(T &&t)
+                construct_fun(T &&t)
                   : t_(std::forward<T>(t))
                 {}
                 template<typename U,
                     enable_if_t<std::is_constructible<U, T>::value> = 0>
                 void operator()(U &u) const
                 {
-                    ::new(static_cast<void*>(std::addressof(u))) U(std::forward<T>(t_));
-                }
-                template<typename U,
-                    enable_if_t<!std::is_constructible<U, T>::value> = 0>
-                void operator()(U &u) const
-                {
-                    RANGES_ASSERT(false);
+                    ::new((void*)std::addressof(u)) U(std::forward<T>(t_));
                 }
             };
 
             template<typename T>
-            struct get_fun
+            struct get_fun : assert_otherwise
             {
             private:
                 T *&t_;
@@ -272,10 +277,6 @@ namespace ranges
                 void operator()(T &t) const
                 {
                     t_ = std::addressof(t);
-                }
-                void operator()(any) const
-                {
-                    RANGES_ASSERT(false);
                 }
             };
 
@@ -401,12 +402,12 @@ namespace ranges
                             meta_bind1st<concepts::Callable::result_t, BinaryFunction>::template apply> > >;
 
             template<typename Function>
-            struct unwrap_fun
+            struct unwrap_ref_fun
             {
             private:
                 Function fun_;
             public:
-                unwrap_fun(Function &&fun)
+                unwrap_ref_fun(Function &&fun)
                   : fun_(std::forward<Function>(fun))
                 {}
                 template<typename T>
@@ -504,7 +505,7 @@ namespace ranges
             void set(U &&u)
             {
                 clear_();
-                data_.apply(N, detail::make_unary_visitor(detail::set_fun<U>{std::forward<U>(u)}));
+                data_.apply(N, detail::make_unary_visitor(detail::construct_fun<U>{std::forward<U>(u)}));
                 which_ = N;
             }
             bool is_valid() const
@@ -521,7 +522,7 @@ namespace ranges
             Result apply(Fun &&fun)
             {
                 Result res;
-                data_.apply(which_, detail::make_unary_visitor(detail::unwrap_fun<Fun>{std::forward<Fun>(fun)}, res));
+                data_.apply(which_, detail::make_unary_visitor(detail::unwrap_ref_fun<Fun>{std::forward<Fun>(fun)}, res));
                 return res;
             }
             template<typename Fun,
@@ -530,7 +531,7 @@ namespace ranges
             Result apply(Fun &&fun) const
             {
                 Result res;
-                data_.apply(which_, detail::make_unary_visitor(detail::unwrap_fun<Fun>{std::forward<Fun>(fun)}, res));
+                data_.apply(which_, detail::make_unary_visitor(detail::unwrap_ref_fun<Fun>{std::forward<Fun>(fun)}, res));
                 return res;
             }
 
@@ -540,7 +541,7 @@ namespace ranges
             Result apply_i(Fun &&fun)
             {
                 Result res;
-                data_.apply(which_, detail::make_binary_visitor(detail::unwrap_fun<Fun>{std::forward<Fun>(fun)}, res));
+                data_.apply(which_, detail::make_binary_visitor(detail::unwrap_ref_fun<Fun>{std::forward<Fun>(fun)}, res));
                 return res;
             }
             template<typename Fun,
@@ -549,7 +550,7 @@ namespace ranges
             Result apply_i(Fun &&fun) const
             {
                 Result res;
-                data_.apply(which_, detail::make_binary_visitor(detail::unwrap_fun<Fun>{std::forward<Fun>(fun)}, res));
+                data_.apply(which_, detail::make_binary_visitor(detail::unwrap_ref_fun<Fun>{std::forward<Fun>(fun)}, res));
                 return res;
             }
         };
@@ -593,7 +594,7 @@ namespace ranges
                     tagged_variant_element_t<N, tagged_variant<Ts...>>>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
-            data.apply(N, detail::make_unary_visitor(detail::unwrap_fun<detail::get_fun<elem_t>>{elem}));
+            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<detail::get_fun<elem_t>>{elem}));
             RANGES_ASSERT(elem != nullptr);
             return *elem;
         }
@@ -610,7 +611,7 @@ namespace ranges
                         tagged_variant_element_t<N, tagged_variant<Ts...>>>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
-            data.apply(N, detail::make_unary_visitor(detail::unwrap_fun<detail::get_fun<elem_t>>{elem}));
+            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<detail::get_fun<elem_t>>{elem}));
             RANGES_ASSERT(elem != nullptr);
             return *elem;
         }
@@ -626,7 +627,7 @@ namespace ranges
                     tagged_variant_element_t<N, tagged_variant<Ts...>>>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
-            data.apply(N, detail::make_unary_visitor(detail::unwrap_fun<detail::get_fun<elem_t>>{elem}));
+            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<detail::get_fun<elem_t>>{elem}));
             RANGES_ASSERT(elem != nullptr);
             return std::forward<tagged_variant_element_t<N, tagged_variant<Ts...>>>(*elem);
         }

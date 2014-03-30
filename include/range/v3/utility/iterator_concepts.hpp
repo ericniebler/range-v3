@@ -151,7 +151,16 @@ namespace ranges
                         t += (t-t),
                         t -= (t-t),
                         concepts::convertible_to<R>(t[t-t]),
-                        concepts::model_of<Orderable>(t)
+                        concepts::model_of<LessThanComparable>(t)
+                    ));
+            };
+
+            struct Sentinel
+            {
+                template<typename S, typename I>
+                auto requires(S && s, I && i) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<EqualityComparable>(s, i)
                     ));
             };
         }
@@ -173,6 +182,9 @@ namespace ranges
 
         template<typename T>
         using RandomAccessIterator = concepts::models<concepts::RandomAccessIterator, T>;
+
+        template<typename S, typename I>
+        using Sentinel = concepts::models<concepts::Sentinel, S, I>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator_concept

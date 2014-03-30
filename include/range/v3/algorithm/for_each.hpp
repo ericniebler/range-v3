@@ -21,12 +21,12 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct for_each_fun
+        struct for_each_fn
         {
             template<typename InputIterator, typename Sentinel, typename Fun,
                 CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
-                                  ranges::EqualityComparable<InputIterator, Sentinel>() &&
-                                  ranges::Callable<Fun, iterator_reference_t<InputIterator>>())>
+                                  ranges::Sentinel<Sentinel, InputIterator>() &&
+                                  ranges::Callable<Fun, iterator_value_t<InputIterator>>())>
             InputIterator
             operator()(InputIterator begin, Sentinel end, Fun fun) const
             {
@@ -40,7 +40,7 @@ namespace ranges
             template<typename InputIterable, typename Fun,
                 CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
                                   ranges::InputIterator<range_iterator_t<InputIterable>>() &&
-                                  ranges::Callable<Fun, range_reference_t<InputIterable>>())>
+                                  ranges::Callable<Fun, range_value_t<InputIterable>>())>
             range_iterator_t<InputIterable>
             operator()(InputIterable &rng, Fun fun) const
             {
@@ -48,7 +48,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR for_each_fun for_each{};
+        RANGES_CONSTEXPR for_each_fn for_each{};
     } // namespace v3
 } // namespace ranges
 

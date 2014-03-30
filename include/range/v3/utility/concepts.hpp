@@ -353,25 +353,27 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<bool>(t < t)
-                    ));
-
-                template<typename T, typename U>
-                auto requires(T && t, U && u) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<bool>(t < u)
-                    ));
-            };
-
-            struct Orderable
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
                         concepts::convertible_to<bool>(t < t),
                         concepts::convertible_to<bool>(t > t),
                         concepts::convertible_to<bool>(t <= t),
                         concepts::convertible_to<bool>(t >= t)
+                    ));
+
+                template<typename T, typename U, typename C = common_type_t<T, U>>
+                auto requires(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<LessThanComparable>(t),
+                        concepts::model_of<LessThanComparable>(u),
+                        concepts::model_of<Common>(t, u),
+                        concepts::model_of<LessThanComparable>(static_cast<C>(t)),
+                        concepts::convertible_to<bool>(t < u),
+                        concepts::convertible_to<bool>(u < t),
+                        concepts::convertible_to<bool>(t > u),
+                        concepts::convertible_to<bool>(u > t),
+                        concepts::convertible_to<bool>(t <= u),
+                        concepts::convertible_to<bool>(u <= t),
+                        concepts::convertible_to<bool>(t >= u),
+                        concepts::convertible_to<bool>(u >= t)
                     ));
             };
 
@@ -412,27 +414,6 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(
                             std::forward<Fun>(fun)(std::forward<Args>(args)...))
-                    ));
-            };
-
-            struct UnaryPredicate
-              : refines<Predicate>
-            {
-                template<typename Fun, typename Arg>
-                auto requires(Fun && fun, Arg && arg) -> decltype(
-                    concepts::valid_expr(
-                        std::forward<Fun>(fun)(std::forward<Arg>(arg))
-                    ));
-            };
-
-            struct BinaryPredicate
-              : refines<Predicate>
-            {
-                template<typename Fun, typename Arg0, typename Arg1>
-                auto requires(Fun && fun, Arg0 && arg0, Arg1 && arg1) -> decltype(
-                    concepts::valid_expr(
-                        std::forward<Fun>(fun)(std::forward<Arg0>(arg0),
-                                                  std::forward<Arg1>(arg1))
                     ));
             };
 
@@ -497,9 +478,6 @@ namespace ranges
         template<typename T, typename U = T>
         using LessThanComparable = concepts::models<concepts::LessThanComparable, T, U>;
 
-        template<typename T>
-        using Orderable = concepts::models<concepts::Orderable, T>;
-
         template<typename T, typename U = T>
         using Swappable = concepts::models<concepts::Swappable, T, U>;
 
@@ -508,12 +486,6 @@ namespace ranges
 
         template<typename Fun, typename ...Args>
         using Predicate = concepts::models<concepts::Predicate, Fun, Args...>;
-
-        template<typename Fun, typename Arg>
-        using UnaryPredicate = concepts::models<concepts::UnaryPredicate, Fun, Arg>;
-
-        template<typename Fun, typename Arg0, typename Arg1>
-        using BinaryPredicate = concepts::models<concepts::BinaryPredicate, Fun, Arg0, Arg1>;
 
         template<typename T, typename U = T>
         using Addable = concepts::models<concepts::Addable, T, U>;
