@@ -272,10 +272,20 @@ namespace ranges
             struct Constructible
             {
                 template<typename T, typename ...Us>
-                auto requires(T && t, Us &&...us) -> decltype(
-                    concepts::model_of<Destructible>(t),
+                auto requires(T t, Us &&...us) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Destructible>(t),
                         T((Us&&)us...)
+                    ));
+            };
+
+            struct Assignable
+            {
+                template<typename T, typename U>
+                auto requires(T & t, U u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Destructible>(t),
+                        t = u
                     ));
             };
 
@@ -458,26 +468,29 @@ namespace ranges
         template<typename T>
         using SignedIntegral = concepts::models<concepts::SignedIntegral, T>;
 
+        template<typename T>
+        using Destructible = concepts::models<concepts::Destructible, T>;
+
         template<typename T, typename...Us>
         using Constructible = concepts::models<concepts::Constructible, T, Us...>;
+
+        template<typename T, typename U>
+        using Assignable = concepts::models<concepts::Assignable, T, U>;
 
         template<typename T>
         using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
 
         template<typename T>
-        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
-
-        template<typename T>
         using MoveConstructible = concepts::models<concepts::MoveConstructible, T>;
 
         template<typename T>
-        using Destructible = concepts::models<concepts::Destructible, T>;
+        using MoveAssignable = concepts::models<concepts::MoveAssignable, T>;
+
+        template<typename T>
+        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
 
         template<typename T>
         using CopyAssignable = concepts::models<concepts::CopyAssignable, T>;
-
-        template<typename T>
-        using MoveAssignable = concepts::models<concepts::MoveAssignable, T>;
 
         template<typename T, typename U = T>
         using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;
