@@ -8,62 +8,47 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_ALGORITHM_FOR_EACH_HPP
-#define RANGES_V3_ALGORITHM_FOR_EACH_HPP
+#ifndef RANGES_V3_ALGORITHM_ALL_OF_HPP
+#define RANGES_V3_ALGORITHM_ALL_OF_HPP
 
 #include <utility>
 #include <functional>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
+        struct all_of_fn
         {
-            // requires I is an InputIterator, S is a sentinel for
-            // I and P is a predicate accepting an argument of type
-            // value_type_t<I>.
             template<typename I, typename S, typename P>
-            I all_of(I begin, S end, P pred)
+            I operator()(I first, S last, predicate<P> pred) const
             {
-                while(begin != end && pred(*begin))
-                    ++begin;
-                return begin == end;
-            }
-        }
-
-        struct all_of_fn : bindable<all_of_fn>
-        {
-            /// \brief template function \c all_of_fn::operator()
-            ///
-            /// range-based version of the \c all_of std algorithm
-            ///
-            /// \pre \c I is a model of InputIterable
-            /// \pre \c P is a model of Predicate, accepting a single
-            /// argument of type value_type_t<I>.
-            template<typename I, typename P>
-            static range_iterator_t<I>
-            invoke(all_of_fn, I && rng, P pred)
-            {
-                CONCEPT_ASSERT(ranges::Iterable<I>());
-                CONCEPT_ASSERT(ranges::InputItator<range_iterator_t<I>>());
-                CONCEPT_ASSERT(ranges::Predicate<invokable_t<P>, range_value_t<I>>());
-                return detail::all_of(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(std::move(pred)));
+                while (first != last && pred(*first))
+                    ++first;
+                return first == last;
             }
 
-            /// \overload
-            /// for rng | all_of(pred)
-            template<typename P>
-            static auto invoke(all_of_fn f, P pred) ->
-                decltype(f.move_bind(std::placeholders::_1, std::move(pred)))
+            template<typename I, typename S, typename P,
+                CONCEPT_REQUIRES_(ranges::InputIterator<I>() &&
+                                  ranges::Sentinel<S, I>() &&
+                                  ranges::Adaptable_predicate<P, iterator_value_t<I>>())>
+            I operator()(I first, S last, P pred) const
             {
-                return f.move_bind(std::placeholders::_1, std::move(pred));
+                return (*this)(first, last, predicate<P>(pred));
+            }
+
+            template<typename I, typename P,
+                CONCEPT_REQUIRES_(ranges::Iterable<I>() &&
+                                  ranges::InputIterator<range_iterator_t<I>>() &&
+                                  ranges::Adaptable_predicate<P, range_value_t<I>>())>
+            range_iterator_t<I> operator()(I&& rng, P pred) const
+            {
+                return (*this)(ranges::begin(rng), ranges::end(rng), pred);
             }
         };
 

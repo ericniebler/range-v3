@@ -7,9 +7,14 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 
-#include <range/v3/algorithm.hpp>
+#include <cassert>
+#include <vector>
+#include <range/v3/algorithm/all_of.hpp>
+
+bool even(int n) { return n % 2 == 0; }
 
 int main() 
 {
-
+  std::vector<int> v { 0, 2, 4, 6 };
+  // assert(ranges::all_of(v, even));
 }

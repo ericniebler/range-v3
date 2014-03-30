@@ -548,4 +548,6 @@ namespace ranges
 
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
 
+#include <range/v3/utility/predicate.hpp>
+
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP
