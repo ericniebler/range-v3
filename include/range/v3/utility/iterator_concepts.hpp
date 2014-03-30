@@ -155,10 +155,11 @@ namespace ranges
                     ));
             };
 
+            // FIXME: The CopyConstructible concept is failing.
             struct Sentinel
             {
                 template<typename S, typename I>
-                auto requires(S && s, I && i) -> decltype(
+                auto requires(S s, I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<CopyConstructible>(s),
                         concepts::model_of<EqualityComparable>(s, i)

@@ -299,7 +299,7 @@ namespace ranges
             struct MoveConstructible
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires(T t) -> decltype(
                     concepts::valid_expr(
                         T(std::move(t))
                     ));
@@ -328,7 +328,7 @@ namespace ranges
                 : refines<MoveConstructible>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires(T t) -> decltype(
                     concepts::valid_expr(
                         T(t)
                     ));

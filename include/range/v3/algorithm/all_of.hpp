@@ -26,7 +26,7 @@ namespace ranges
         struct all_of_fn
         {
             template<typename I, typename S, typename P>
-            I operator()(I first, S last, predicate<P> pred) const
+            bool operator()(I first, S last, predicate<P> pred) const
             {
                 while (first != last && pred(*first))
                     ++first;
@@ -37,7 +37,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(ranges::InputIterator<I>() &&
                                   ranges::Sentinel<S, I>() &&
                                   ranges::Adaptable_predicate<P, iterator_value_t<I>>())>
-            I operator()(I first, S last, P pred) const
+            bool operator()(I first, S last, P pred) const
             {
                 return (*this)(first, last, predicate<P>(pred));
             }
@@ -46,10 +46,17 @@ namespace ranges
                 CONCEPT_REQUIRES_(ranges::Iterable<I>() &&
                                   ranges::InputIterator<range_iterator_t<I>>() &&
                                   ranges::Adaptable_predicate<P, range_value_t<I>>())>
-            range_iterator_t<I> operator()(I&& rng, P pred) const
+            bool operator()(const I& rng, P pred) const
             {
                 return (*this)(ranges::begin(rng), ranges::end(rng), pred);
             }
+
+            template<typename T, typename P,
+                CONCEPT_REQUIRES_(ranges::Adaptable_predicate<P, T>())>
+            bool operator()(std::initializer_list<T> list, P pred) const
+            {
+                return (*this)(ranges::begin(list), ranges::end(list), pred);
+            }        
         };
 
         RANGES_CONSTEXPR all_of_fn all_of {};
