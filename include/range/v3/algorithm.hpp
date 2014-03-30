@@ -14,6 +14,7 @@
 #define RANGES_V3_ALGORITHM_HPP
 
 #include <range/v3/algorithm/adjacent_find.hpp>
+#include <range/v3/algorithm/all_of.hpp>
 #include <range/v3/algorithm/binary_search.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>

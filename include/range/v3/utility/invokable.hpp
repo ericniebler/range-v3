@@ -17,27 +17,43 @@
 #include <functional>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/concepts.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        RANGES_CONSTEXPR struct invokable_maker
+        struct make_invokable_fn
         {
             template<typename R, typename T>
-            auto operator()(R T::* p) const ->
-                decltype(std::mem_fn(p))
+            auto operator()(R T::* p) const -> decltype(std::mem_fn(p))
             {
                 return std::mem_fn(p);
             }
 
-            template<typename T, typename U = typename std::decay<T>::type>
-            auto operator()(T && t) const ->
-                typename std::enable_if<!std::is_member_pointer<U>::value, T>::type
+            template<typename T, typename U = detail::decay_t<T>>
+            auto operator()(T && t) const -> enable_if_t<!std::is_member_pointer<U>::value, T>
             {
                 return std::forward<T>(t);
             }
-        } make_invokable{};
+        };
+
+        RANGES_CONSTEXPR make_invokable_fn make_invokable {};
+
+        namespace concepts
+        {
+            struct Invokable
+            {
+                template<typename T, typename...Args>
+                auto requires(T &&t, Args &&...args) -> decltype(
+                    concepts::valid_expr(
+                        (ranges::make_invokable((T &&) t)((Args &&) args...), 42)
+                    ));
+            };
+        }
+
+        template<typename T, typename...Args>
+        using Invokable = concepts::models<concepts::Invokable, T, Args...>;
     }
 }
 

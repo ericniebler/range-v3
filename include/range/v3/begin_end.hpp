@@ -15,6 +15,7 @@
 #define RANGES_V3_BEGIN_END_HPP
 
 #include <iterator>
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/bindable.hpp>
 
