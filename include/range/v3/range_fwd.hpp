@@ -267,10 +267,10 @@ namespace ranges
         class compressed_pair;
 
         template<typename...Ts>
-        class compressed_tuple;
+        struct compressed_tuple;
 
-        struct invokable_maker;
-        extern invokable_maker const make_invokable;
+        struct make_invokable_fn;
+        extern make_invokable_fn const make_invokable;
 
         struct bind_maker;
         extern bind_maker const bind;

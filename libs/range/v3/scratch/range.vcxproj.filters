@@ -28,6 +28,15 @@
     <Filter Include="Header Files\detail">
       <UniqueIdentifier>{66529b85-f87c-4a81-9969-20ddd8e909fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test Files">
+      <UniqueIdentifier>{9a4f9301-d571-4f84-b014-c091b7b12f56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Files\algorithm">
+      <UniqueIdentifier>{eb8a4ce2-02a7-4890-b180-6e98d60feffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Files\utility">
+      <UniqueIdentifier>{bc20a12e-16d2-47f0-912b-1ae5a7ccc86c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
@@ -52,6 +61,12 @@
   <ItemGroup>
     <ClCompile Include="range.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\utility\predicate.cpp">
+      <Filter>Test Files\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -415,5 +430,23 @@
     <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\predicate.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\..\CMakeLists.txt" />
+    <Text Include="..\..\..\..\test\CMakeLists.txt">
+      <Filter>Test Files</Filter>
+    </Text>
+    <Text Include="..\..\..\..\test\algorithm\CMakeLists.txt">
+      <Filter>Test Files\algorithm</Filter>
+    </Text>
+    <Text Include="..\..\..\..\test\utility\CMakeLists.txt">
+      <Filter>Test Files\utility</Filter>
+    </Text>
   </ItemGroup>
 </Project>

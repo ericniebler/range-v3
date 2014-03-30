@@ -36,10 +36,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>make.cmd all</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build"</NMakeBuildCommandLine>
     <NMakeOutput>range.exe</NMakeOutput>
-    <NMakeCleanCommandLine>make.cmd clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>make.cmd -B all</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build clean"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build -B"</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>..\..\..\..\include;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <ExecutablePath>C:\cygwin\bin;$(ExecutablePath)</ExecutablePath>
@@ -70,11 +70,14 @@
     <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp" />
+    <ClCompile Include="..\..\..\..\test\utility\predicate.cpp" />
     <ClCompile Include="range.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\binary_search.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_backward.hpp" />
@@ -162,6 +165,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\predicate.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\tuple_algorithm.hpp" />
@@ -193,6 +197,12 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\unbounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\..\CMakeLists.txt" />
+    <Text Include="..\..\..\..\test\algorithm\CMakeLists.txt" />
+    <Text Include="..\..\..\..\test\CMakeLists.txt" />
+    <Text Include="..\..\..\..\test\utility\CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
