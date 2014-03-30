@@ -274,7 +274,6 @@ namespace ranges
                 template<typename T, typename ...Us>
                 auto requires(T t, Us &&...us) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Destructible>(t),
                         T((Us&&)us...)
                     ));
             };
@@ -284,7 +283,6 @@ namespace ranges
                 template<typename T, typename U>
                 auto requires(T & t, U u) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Destructible>(t),
                         t = u
                     ));
             };
@@ -294,7 +292,6 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Destructible>(t),
                         T{}
                     ));
             };
@@ -304,7 +301,6 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Destructible>(t),
                         T(std::move(t))
                     ));
             };
@@ -314,8 +310,17 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<MoveConstructible>(std::move(t)),
                         t = std::move(t)
+                    ));
+            };
+
+            struct Movable
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<MoveConstructible>(t),
+                        concepts::model_of<MoveAssignable>(t)
                     ));
             };
 
@@ -330,13 +335,22 @@ namespace ranges
             };
 
             struct CopyAssignable
-                : refines<MoveAssignable>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        t = t
+                    ));
+            };
+
+            struct Copyable
+                : refines<Movable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<CopyConstructible>(t),
-                        t = t
+                        concepts::model_of<CopyAssignable>(t)
                     ));
             };
 
@@ -487,10 +501,16 @@ namespace ranges
         using MoveAssignable = concepts::models<concepts::MoveAssignable, T>;
 
         template<typename T>
+        using Movable = concepts::models<concepts::Movable, T>;
+
+        template<typename T>
         using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
 
         template<typename T>
         using CopyAssignable = concepts::models<concepts::CopyAssignable, T>;
+
+        template<typename T>
+        using Copyable = concepts::models<concepts::Copyable, T>;
 
         template<typename T, typename U = T>
         using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;
