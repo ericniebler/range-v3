@@ -283,16 +283,8 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Destructible>(t),
                         T{}
-                    ));
-            };
-
-            struct CopyConstructible
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        T(t)
                     ));
             };
 
@@ -301,16 +293,8 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Destructible>(t),
                         T(std::move(t))
-                    ));
-            };
-
-            struct CopyAssignable
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        t = t
                     ));
             };
 
@@ -319,7 +303,29 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<MoveConstructible>(std::move(t)),
                         t = std::move(t)
+                    ));
+            };
+
+            struct CopyConstructible
+                : refines<MoveConstructible>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        T(t)
+                    ));
+            };
+
+            struct CopyAssignable
+                : refines<MoveAssignable>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<CopyConstructible>(t),
+                        t = t
                     ));
             };
 
