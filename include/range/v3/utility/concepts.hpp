@@ -272,7 +272,8 @@ namespace ranges
             struct Constructible
             {
                 template<typename T, typename ...Us>
-                auto requires(T &&, Us &&...us) -> decltype(
+                auto requires(T && t, Us &&...us) -> decltype(
+                    concepts::model_of<Destructible>(t),
                     concepts::valid_expr(
                         T((Us&&)us...)
                     ));
