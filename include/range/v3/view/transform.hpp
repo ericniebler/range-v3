@@ -93,24 +93,24 @@ namespace ranges
                     transformer1(UnaryFunction fun)
                       : fun_(std::move(fun))
                     {}
-                    template<typename InputRange, typename This>
-                    static transformed_view<InputRange, UnaryFunction>
-                    pipe(InputRange && rng, This && this_)
+                    template<typename InputIterable, typename This>
+                    static transformed_view<InputIterable, UnaryFunction>
+                    pipe(InputIterable && rng, This && this_)
                     {
-                        return {std::forward<InputRange>(rng), std::forward<This>(this_).fun_};
+                        return {std::forward<InputIterable>(rng), std::forward<This>(this_).fun_};
                     }
                 };
             public:
                 ///
-                template<typename InputRange1, typename UnaryFunction>
-                static transformed_view<InputRange1, UnaryFunction>
-                invoke(transformer, InputRange1 && rng, UnaryFunction fun)
+                template<typename InputIterable1, typename UnaryFunction>
+                static transformed_view<InputIterable1, UnaryFunction>
+                invoke(transformer, InputIterable1 && rng, UnaryFunction fun)
                 {
-                    CONCEPT_ASSERT(ranges::Range<InputRange1>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputRange1>>());
-                    CONCEPT_ASSERT(ranges::Callable<invokable_t<UnaryFunction>,
-                                                    range_reference_t<InputRange1>>());
-                    return {std::forward<InputRange1>(rng), std::move(fun)};
+                    CONCEPT_ASSERT(ranges::Iterable<InputIterable1>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable1>>());
+                    CONCEPT_ASSERT(ranges::Invokable<UnaryFunction,
+                                                     range_value_t<InputIterable1>>());
+                    return {std::forward<InputIterable1>(rng), std::move(fun)};
                 }
 
                 /// \overload

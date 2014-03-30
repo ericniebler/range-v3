@@ -1,8 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// \file algorithm.hpp
+/// \file numeric.hpp
 ///   Contains range-based versions of the std algorithms
 //
-// Copyright 2014 Eric Niebler.
+// Copyright 2004 Eric Niebler.
+// Copyright 2006 Thorsten Ottosen.
+// Copyright 2009 Neil Groves.
 //
 // Distributed under the Boost Software License, Version 1.0.(See
 // accompanying file LICENSE_1_0.txt or copy at

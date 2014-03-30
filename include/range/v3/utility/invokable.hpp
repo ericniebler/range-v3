@@ -45,15 +45,32 @@ namespace ranges
             struct Invokable
             {
                 template<typename T, typename...Args>
+                using result_t = decltype(ranges::make_invokable(std::declval<T>())(std::declval<Args>()...));
+
+                template<typename T, typename...Args>
                 auto requires(T &&t, Args &&...args) -> decltype(
                     concepts::valid_expr(
                         (ranges::make_invokable((T &&) t)((Args &&) args...), 42)
+                    ));
+            };
+
+            struct InvokablePredicate
+              : refines<Invokable>
+            {
+                template<typename T, typename...Args>
+                auto requires(T &&t, Args &&...args) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<bool>(
+                            ranges::make_invokable((T &&) t)((Args &&) args...))
                     ));
             };
         }
 
         template<typename T, typename...Args>
         using Invokable = concepts::models<concepts::Invokable, T, Args...>;
+
+        template<typename T, typename...Args>
+        using InvokablePredicate = concepts::models<concepts::InvokablePredicate, T, Args...>;
     }
 }
 
