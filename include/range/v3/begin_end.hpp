@@ -30,47 +30,47 @@ namespace ranges
 
             // Handle char*, std::pair<iterator, iterator>, std::pair<interator, int> ?
 
-            struct beginner : bindable<beginner>
+            struct begin_fn : bindable<begin_fn>
             {
                 template<typename Rng>
-                static auto invoke(beginner, Rng && rng) -> decltype(begin(rng))
+                static auto invoke(begin_fn, Rng && rng) -> decltype(begin(rng))
                 {
                     return begin(rng);
                 }
             };
 
-            struct ender : bindable<ender>
+            struct end_fn : bindable<end_fn>
             {
                 template<typename Rng>
-                static auto invoke(ender, Rng && rng) -> decltype(end(rng))
+                static auto invoke(end_fn, Rng && rng) -> decltype(end(rng))
                 {
                     return end(rng);
                 }
             };
 
-            struct cbeginner : bindable<cbeginner>
+            struct cbegin_fn : bindable<cbegin_fn>
             {
                 template<typename Rng>
-                static auto invoke(cbeginner, Rng const & rng) -> decltype(begin(rng))
+                static auto invoke(cbegin_fn, Rng const & rng) -> decltype(begin(rng))
                 {
                     return begin(rng);
                 }
             };
 
-            struct cender : bindable<cender>
+            struct cend_fn : bindable<cend_fn>
             {
                 template<typename Rng>
-                static auto invoke(cender, Rng const & rng) -> decltype(end(rng))
+                static auto invoke(cend_fn, Rng const & rng) -> decltype(end(rng))
                 {
                     return end(rng);
                 }
             };
         }
 
-        RANGES_CONSTEXPR adl_begin_end_detail::beginner begin {};
-        RANGES_CONSTEXPR adl_begin_end_detail::ender end {};
-        RANGES_CONSTEXPR adl_begin_end_detail::cbeginner cbegin {};
-        RANGES_CONSTEXPR adl_begin_end_detail::cender cend {};
+        RANGES_CONSTEXPR adl_begin_end_detail::begin_fn begin {};
+        RANGES_CONSTEXPR adl_begin_end_detail::end_fn end {};
+        RANGES_CONSTEXPR adl_begin_end_detail::cbegin_fn cbegin {};
+        RANGES_CONSTEXPR adl_begin_end_detail::cend_fn cend {};
     }
 }
 

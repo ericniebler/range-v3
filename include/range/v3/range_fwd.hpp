@@ -40,13 +40,13 @@ namespace ranges
     {
         namespace adl_begin_end_detail
         {
-            struct beginner;
-            struct ender;
-            struct cbeginner;
-            struct cender;
+            struct begin_fn;
+            struct end_fn;
+            struct cbegin_fn;
+            struct cend_fn;
         }
 
-        struct sizer;
+        struct size_fn;
 
         template<typename ...Ts>
         struct common_type;
@@ -67,10 +67,10 @@ namespace ranges
         template<typename Derived>
         struct pipeable;
 
-        extern adl_begin_end_detail::beginner const begin;
-        extern adl_begin_end_detail::ender const end;
-        extern adl_begin_end_detail::cbeginner const cbegin;
-        extern adl_begin_end_detail::cender const cend;
+        extern adl_begin_end_detail::begin_fn const begin;
+        extern adl_begin_end_detail::end_fn const end;
+        extern adl_begin_end_detail::cbegin_fn const cbegin;
+        extern adl_begin_end_detail::cend_fn const cend;
 
         struct nexter;
         extern nexter const next;
@@ -78,10 +78,10 @@ namespace ranges
         struct prever;
         extern prever const prev;
 
-        struct distance_;
-        extern distance_ const distance;
+        struct distance_fn;
+        extern distance_fn const distance;
 
-        extern sizer const size;
+        extern size_fn const size;
 
         namespace detail
         {

@@ -73,6 +73,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\adjacent_find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\predicate.cpp" />
     <ClCompile Include="range.cpp" />
   </ItemGroup>

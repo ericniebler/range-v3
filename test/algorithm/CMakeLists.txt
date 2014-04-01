@@ -6,3 +6,6 @@ add_test(test.all_of all_of)
 
 add_executable(for_each for_each.cpp)
 add_test(test.for_each for_each)
+
+add_executable(lower_bound lower_bound.cpp)
+add_test(test.lower_bound lower_bound)
