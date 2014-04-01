@@ -200,6 +200,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\unbounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp" />
+    <ClInclude Include="..\..\..\..\test\simple_test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
