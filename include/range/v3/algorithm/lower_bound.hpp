@@ -22,25 +22,27 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            struct dummy_count
+            {
+                template<typename T>
+                void operator+=(T const &)
+                {}
+            };
+        }
+
         struct lower_bound_n_fn
         {
-            template<typename ForwardIterator, typename Value,
-                typename BinaryPredicate = ranges::less,
-                typename Projection = ranges::ident,
-                CONCEPT_REQUIRES_(ranges::ForwardIterator<ForwardIterator>() &&
-                    ranges::Invokable<Projection, iterator_value_t<ForwardIterator>>() &&
-                    ranges::Invokable<BinaryPredicate,
-                        concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>,
-                        Value>())>
-            std::pair<ForwardIterator, iterator_difference_t<ForwardIterator>>
+        private:
+            template<typename ForwardIterator, typename Value, typename BinaryPredicate,
+                typename Projection, typename Count>
+            std::pair<ForwardIterator, Count>
             operator()(ForwardIterator begin, iterator_difference_t<ForwardIterator> dist,
-                Value const& value,
-                BinaryPredicate pred = BinaryPredicate{},
-                Projection proj = Projection{}) const
+                Value const& value, BinaryPredicate pred, Projection proj, Count c) const
             {
                 RANGES_ASSERT(0 <= dist);
                 using namespace std::placeholders;
-                iterator_difference_t<ForwardIterator> n = 0;
                 auto &&ipred = std::bind(pred, std::bind(proj, _1), _2);
                 while(0 != dist)
                 {
@@ -50,12 +52,30 @@ namespace ranges
                     {
                         begin = std::move(++middle);
                         dist -= half + 1;
-                        n += half + 1;
+                        c += half + 1;
                     }
                     else
                         dist = half;
                 }
-                return {begin, n};
+                return {begin, c};
+            }
+
+        public:
+            template<typename ForwardIterator, typename Value,
+                typename BinaryPredicate = ranges::less,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::ForwardIterator<ForwardIterator>() &&
+                    ranges::Invokable<Projection, iterator_value_t<ForwardIterator>>() &&
+                    ranges::Invokable<BinaryPredicate,
+                        concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>,
+                        Value>())>
+            ForwardIterator
+            operator()(ForwardIterator begin, iterator_difference_t<ForwardIterator> dist,
+                Value const& value, BinaryPredicate pred = BinaryPredicate{},
+                Projection proj = Projection{}) const
+            {
+                return (*this)(std::move(begin), dist, value, std::move(pred), std::move(proj),
+                    detail::dummy_count{}).first;
             }
 
             /// \cond
@@ -68,15 +88,15 @@ namespace ranges
                     ranges::Invokable<BinaryPredicate,
                         concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>,
                         Value>())>
-            std::pair<counted_iterator<ForwardIterator>, iterator_difference_t<ForwardIterator>>
-            operator()(counted_iterator<ForwardIterator> begin, iterator_difference_t<ForwardIterator> dist,
-                Value const& value,
-                BinaryPredicate pred = BinaryPredicate{},
-                Projection proj = Projection{}) const
+            counted_iterator<ForwardIterator>
+            operator()(counted_iterator<ForwardIterator> begin,
+                iterator_difference_t<ForwardIterator> dist, Value const& value,
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
                 RANGES_ASSERT(0 <= dist);
-                auto &&p = (*this)(begin.base(), dist, std::move(pred), std::move(proj));
-                return {{p.first, begin.count() + p.second}, p.second};
+                auto &&p = (*this)(begin.base(), dist, std::move(pred), std::move(proj),
+                    iterator_difference_t<ForwardIterator>{0});
+                return {p.first, begin.count() + p.second};
             }
             /// \endcond
 
@@ -90,10 +110,9 @@ namespace ranges
                     ranges::Invokable<BinaryPredicate,
                         concepts::Invokable::result_t<Projection, range_value_t<ForwardIterable>>,
                         Value>())>
-            std::pair<range_iterator_t<ForwardIterable>, range_difference_t<ForwardIterable>>
+            range_iterator_t<ForwardIterable>
             operator()(ForwardIterable &rng, range_difference_t<ForwardIterable> dist,
-                Value const& value,
-                BinaryPredicate pred = BinaryPredicate{},
+                Value const& value, BinaryPredicate pred = BinaryPredicate{},
                 Projection proj = Projection{}) const
             {
                 RANGES_ASSERT(0 <= dist);
@@ -110,10 +129,9 @@ namespace ranges
                     ranges::Invokable<BinaryPredicate,
                         concepts::Invokable::result_t<Projection, Value>,
                         Value2>())>
-            std::pair<Value const *, std::ptrdiff_t>
+            Value const *
             operator()(std::initializer_list<Value> const &rng, std::ptrdiff_t dist,
-                Value2 const& value,
-                BinaryPredicate pred = BinaryPredicate{},
+                Value2 const& value, BinaryPredicate pred = BinaryPredicate{},
                 Projection proj = Projection{}) const
             {
                 RANGES_ASSERT(0 <= dist);
@@ -137,11 +155,10 @@ namespace ranges
                         Value>())>
             ForwardIterator
             operator()(ForwardIterator begin, Sentinel end, Value const& value,
-                BinaryPredicate pred = BinaryPredicate{},
-                Projection proj = Projection{}) const
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
                 return ranges::lower_bound_n(begin, ranges::distance(begin, end), value,
-                    std::move(pred), std::move(proj)).first;
+                    std::move(pred), std::move(proj));
             }
 
             /// \overload
@@ -156,11 +173,10 @@ namespace ranges
                         Value>())>
             range_iterator_t<ForwardIterable>
             operator()(ForwardIterable &rng, Value const& value,
-                BinaryPredicate pred = BinaryPredicate{},
-                Projection proj = Projection{}) const
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
                 return ranges::lower_bound_n(ranges::begin(rng), ranges::distance(rng), value,
-                    std::move(pred), std::move(proj)).first;
+                    std::move(pred), std::move(proj));
             }
 
             /// \overload
@@ -174,11 +190,10 @@ namespace ranges
                         Value2>())>
             Value const *
             operator()(std::initializer_list<Value> const &rng, Value2 const& value,
-                BinaryPredicate pred = BinaryPredicate{},
-                Projection proj = Projection{}) const
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
                 return ranges::lower_bound_n(rng.begin(), (std::ptrdiff_t)rng.size(), value,
-                    std::move(pred), std::move(proj)).first;
+                    std::move(pred), std::move(proj));
             }
         };
 
