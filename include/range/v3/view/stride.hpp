@@ -64,8 +64,8 @@ namespace ranges
             struct adaptor : default_adaptor, private dirty_t, private offset_t
             {
             private:
-                using base_cursor_t = base_cursor_t<strided_view>;
-                using derived_cursor_t = derived_cursor_t<base_cursor_t, adaptor>;
+                using base_cursor_t = ranges::base_cursor_t<strided_view>;
+                using derived_cursor_t = ranges::derived_cursor_t<base_cursor_t, adaptor>;
                 strided_view const *rng_;
                 dirty_t & dirty() { return *this; }
                 dirty_t const & dirty() const { return *this; }

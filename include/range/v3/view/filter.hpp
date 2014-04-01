@@ -34,7 +34,7 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using base_cursor_t = base_cursor_t<filtered_view>;
+            using base_cursor_t = ranges::base_cursor_t<filtered_view>;
             invokable_t<UnaryPredicate> pred_;
 
             struct adaptor : default_adaptor

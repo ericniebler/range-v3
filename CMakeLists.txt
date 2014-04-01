@@ -2,6 +2,11 @@
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
+# set(CMAKE_C_COMPILER /bin/gcc.exe)
+# set(CMAKE_CXX_COMPILER /bin/g++.exe)
+# set(CMAKE_C_COMPILER /usr/local/clang-trunk/bin/clang.exe)
+# set(CMAKE_CXX_COMPILER /usr/local/clang-trunk/bin/clang++.exe)
+
 project(range_v3 CXX)
 enable_testing()
 

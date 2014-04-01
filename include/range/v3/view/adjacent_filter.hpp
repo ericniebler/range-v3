@@ -33,7 +33,7 @@ namespace ranges
         private:
             friend range_core_access;
             invokable_t<BinaryPredicate> pred_;
-            using base_cursor_t = base_cursor_t<adjacent_filtered_view>;
+            using base_cursor_t = ranges::base_cursor_t<adjacent_filtered_view>;
 
             struct adaptor : default_adaptor
             {
