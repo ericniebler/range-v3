@@ -209,12 +209,6 @@
     <Text Include="..\..\..\..\test\utility\CMakeLists.txt" />
     <Text Include="CMakeLists.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\..\..\CMakeLists.txt" />
-    <Text Include="..\..\..\..\test\algorithm\CMakeLists.txt" />
-    <Text Include="..\..\..\..\test\CMakeLists.txt" />
-    <Text Include="..\..\..\..\test\utility\CMakeLists.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
