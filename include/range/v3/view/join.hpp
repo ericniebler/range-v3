@@ -23,8 +23,8 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/variant.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
-#include <range/v3/detail/advance_bounded.hpp>
 
 namespace ranges
 {
@@ -131,13 +131,13 @@ namespace ranges
                     template<typename Iterator>
                     void operator()(Iterator &it, size_t<cranges - 1>) const
                     {
-                        std::advance(it, n);
+                        ranges::advance(it, n);
                     }
                     template<typename Iterator, std::size_t N>
                     void operator()(Iterator &it, size_t<N> which) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
-                        auto rest = detail::advance_bounded(it, n, std::move(end));
+                        auto rest = ranges::advance_bounded(it, n, std::move(end));
                         pos->satisfy(which);
                         if(rest != 0)
                             pos->its_.apply_i(advance_fwd_fun{pos, rest});
@@ -150,7 +150,7 @@ namespace ranges
                     template<typename Iterator>
                     void operator()(Iterator &it, size_t<0>) const
                     {
-                        std::advance(it, n);
+                        ranges::advance(it, n);
                     }
                     template<typename Iterator, std::size_t N>
                     void operator()(Iterator &it, size_t<N>) const
@@ -163,7 +163,7 @@ namespace ranges
                         }
                         else
                         {
-                            auto rest = detail::advance_bounded(it, n, std::move(begin));
+                            auto rest = ranges::advance_bounded(it, n, std::move(begin));
                             if(rest != 0)
                                 pos->its_.apply_i(advance_rev_fun{pos, rest});
                         }

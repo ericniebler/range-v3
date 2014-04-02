@@ -19,11 +19,11 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/distance.hpp>
-#include <range/v3/next_prev.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator.hpp>
 
 namespace ranges
 {
@@ -103,7 +103,7 @@ namespace ranges
                     auto rng = ranges::as_iterator_pair(std::move(pos),
                         default_adaptor::end(*rng_));
                     RANGES_ASSERT(rng.first != rng.second);
-                    offset() = detail::advance_bounded(rng.first, rng_->stride_ + offset(),
+                    offset() = ranges::advance_bounded(rng.first, rng_->stride_ + offset(),
                         rng.second);
                     pos = ranges::range_core_access::cursor(std::move(rng.first));
                 }
@@ -113,7 +113,7 @@ namespace ranges
                     clean();
                     auto rng = ranges::as_iterator_pair(default_adaptor::begin(*rng_),
                         std::move(pos));
-                    offset() = detail::advance_bounded(rng.second, -rng_->stride_ + offset(),
+                    offset() = ranges::advance_bounded(rng.second, -rng_->stride_ + offset(),
                         rng.first);
                     RANGES_ASSERT(0 == offset());
                     pos = ranges::range_core_access::cursor(std::move(rng.second));
@@ -139,7 +139,7 @@ namespace ranges
                     {
                         auto rng = ranges::as_iterator_pair(std::move(pos),
                             default_adaptor::end(*rng_));
-                        offset() = detail::advance_bounded(rng.first, n * rng_->stride_ + offset(),
+                        offset() = ranges::advance_bounded(rng.first, n * rng_->stride_ + offset(),
                             rng.second);
                         pos = ranges::range_core_access::cursor(std::move(rng.first));
                     }
@@ -147,7 +147,7 @@ namespace ranges
                     {
                         auto rng = ranges::as_iterator_pair(default_adaptor::begin(*rng_),
                             std::move(pos));
-                        offset() = detail::advance_bounded(rng.second, n * rng_->stride_ + offset(),
+                        offset() = ranges::advance_bounded(rng.second, n * rng_->stride_ + offset(),
                             rng.first);
                         pos = ranges::range_core_access::cursor(std::move(rng.second));
                     }

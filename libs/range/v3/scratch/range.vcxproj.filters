@@ -343,9 +343,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\stride.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\advance_bounded.hpp">
-      <Filter>Header Files\detail</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>

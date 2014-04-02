@@ -20,6 +20,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/compressed_tuple.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -112,13 +113,13 @@ namespace ranges
             }
             iterator_range & advance_begin(iterator_difference_t<Iterator> n)
             {
-                std::advance(begin_end_.first(), n);
+                ranges::advance(begin_end_.first(), n);
                 return *this;
             }
             CONCEPT_REQUIRES(Same<Iterator, Sentinel>())
             iterator_range & advance_end(iterator_difference_t<Iterator> n)
             {
-                std::advance(begin_end_.second(), n);
+                ranges::advance(begin_end_.second(), n);
                 return *this;
             }
         };
@@ -162,13 +163,13 @@ namespace ranges
             }
             sized_iterator_range & advance_begin(iterator_difference_t<Iterator> n)
             {
-                std::advance(ranges::get<0>(begin_end_size_), n);
+                ranges::advance(ranges::get<0>(begin_end_size_), n);
                 return *this;
             }
             CONCEPT_REQUIRES(Same<Iterator, Sentinel>())
             sized_iterator_range & advance_end(iterator_difference_t<Iterator> n)
             {
-                std::advance(ranges::get<1>(begin_end_size_), n);
+                ranges::advance(ranges::get<1>(begin_end_size_), n);
                 return *this;
             }
         };

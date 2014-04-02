@@ -72,11 +72,17 @@ namespace ranges
         extern adl_begin_end_detail::cbegin_fn const cbegin;
         extern adl_begin_end_detail::cend_fn const cend;
 
-        struct nexter;
-        extern nexter const next;
+        struct advance_fn;
+        extern advance_fn const advance;
 
-        struct prever;
-        extern prever const prev;
+        struct advance_bounded_fn;
+        extern advance_bounded_fn const advance_bounded;
+
+        struct next_fn;
+        extern next_fn const next;
+
+        struct prev_fn;
+        extern prev_fn const prev;
 
         struct distance_fn;
         extern distance_fn const distance;
