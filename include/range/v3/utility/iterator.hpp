@@ -30,6 +30,7 @@ namespace ranges
             impl(InputIterator &it, iterator_difference_t<InputIterator> n,
                 concepts::InputIterator)
             {
+                RANGES_ASSERT(0 <= n);
                 for(; n != 0; --n)
                     ++it;
             }
@@ -61,13 +62,8 @@ namespace ranges
             }
             /// \cond
             template<typename InputIterator>
-            void
-            operator()(counted_iterator<InputIterator> &it, iterator_difference_t<InputIterator> n) const
-            {
-                auto tmp = it.base();
-                (*this)(tmp, n);
-                it = counted_iterator<InputIterator>{std::move(tmp), it.count() + n};
-            }
+            void operator()(counted_iterator<InputIterator> &it,
+                iterator_difference_t<InputIterator> n) const;
             /// \endcond
         };
 
@@ -208,6 +204,15 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR prev_fn prev {};
+
+        /// \cond
+        template<typename InputIterator>
+        void advance_fn::operator()(counted_iterator<InputIterator> &it,
+            iterator_difference_t<InputIterator> n) const
+        {
+            it = counted_iterator<InputIterator>{ranges::next(it.base(), n), it.count() + n};
+        }
+        /// \endcond
     }
 }
 

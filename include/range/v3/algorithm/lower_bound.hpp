@@ -22,45 +22,8 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            struct dummy_count
-            {
-                template<typename T>
-                void operator+=(T const &)
-                {}
-            };
-        }
-
         struct lower_bound_n_fn
         {
-        private:
-            template<typename ForwardIterator, typename Value, typename BinaryPredicate,
-                typename Projection, typename Count>
-            std::pair<ForwardIterator, Count>
-            operator()(ForwardIterator begin, iterator_difference_t<ForwardIterator> dist,
-                Value const& value, BinaryPredicate pred, Projection proj, Count c) const
-            {
-                RANGES_ASSERT(0 <= dist);
-                using namespace std::placeholders;
-                auto &&ipred = std::bind(pred, std::bind(proj, _1), _2);
-                while(0 != dist)
-                {
-                    auto half = dist / 2;
-                    auto middle = ranges::next(begin, half);
-                    if(ipred(*middle, value))
-                    {
-                        begin = std::move(++middle);
-                        dist -= half + 1;
-                        c += half + 1;
-                    }
-                    else
-                        dist = half;
-                }
-                return {begin, c};
-            }
-
-        public:
             template<typename ForwardIterator, typename Value,
                 typename BinaryPredicate = ranges::less,
                 typename Projection = ranges::ident,
@@ -74,38 +37,30 @@ namespace ranges
                 Value const& value, BinaryPredicate pred = BinaryPredicate{},
                 Projection proj = Projection{}) const
             {
-                return (*this)(std::move(begin), dist, value, std::move(pred), std::move(proj),
-                    detail::dummy_count{}).first;
-            }
-
-            /// \cond
-            // Optimization for counted_iterators
-            template<typename ForwardIterator, typename Value,
-                typename BinaryPredicate = ranges::less,
-                typename Projection = ranges::ident,
-                CONCEPT_REQUIRES_(ranges::ForwardIterator<ForwardIterator>() &&
-                    ranges::Invokable<Projection, iterator_value_t<ForwardIterator>>() &&
-                    ranges::Invokable<BinaryPredicate,
-                        concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>,
-                        Value>())>
-            counted_iterator<ForwardIterator>
-            operator()(counted_iterator<ForwardIterator> begin,
-                iterator_difference_t<ForwardIterator> dist, Value const& value,
-                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
-            {
                 RANGES_ASSERT(0 <= dist);
-                auto &&p = (*this)(begin.base(), dist, std::move(pred), std::move(proj),
-                    iterator_difference_t<ForwardIterator>{0});
-                return {p.first, begin.count() + p.second};
+                using namespace std::placeholders;
+                auto &&ipred = std::bind(pred, std::bind(proj, _1), _2);
+                while(0 != dist)
+                {
+                    auto half = dist / 2;
+                    auto middle = ranges::next(begin, half);
+                    if(ipred(*middle, value))
+                    {
+                        begin = std::move(++middle);
+                        dist -= half + 1;
+                    }
+                    else
+                        dist = half;
+                }
+                return begin;
             }
-            /// \endcond
 
             /// \overload
             template<typename ForwardIterable, typename Value,
                 typename BinaryPredicate = ranges::less,
                 typename Projection = ranges::ident,
                 CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>() &&
-                    ranges::ForwardIterator<range_iterator_t<ForwardIterable>>()&&
+                    ranges::ForwardIterator<range_iterator_t<ForwardIterable>>() &&
                     ranges::Invokable<Projection, range_value_t<ForwardIterable>>() &&
                     ranges::Invokable<BinaryPredicate,
                         concepts::Invokable::result_t<Projection, range_value_t<ForwardIterable>>,
