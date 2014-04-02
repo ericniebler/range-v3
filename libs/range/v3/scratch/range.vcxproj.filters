@@ -334,9 +334,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\stride.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\advance_bounded.hpp">
-      <Filter>Header Files\detail</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
@@ -435,6 +432,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp">
       <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator.hpp">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

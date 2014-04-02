@@ -13,8 +13,8 @@
 
 #include <utility>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/next_prev.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>

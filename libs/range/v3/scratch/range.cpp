@@ -920,14 +920,13 @@ int main()
 
     // Range placeholder expressions.
     std::cout << "\n";
-    for (int i : vi | range(adjacent_find(_1), prev(end(_1))))
+    for (int i : vi | range(adjacent_find(_1), end(_1)))
         std::cout << "> " << i << '\n';
 
     // A pipeline where some algorithms return iterators into rvalue ranges. It's ok!
     std::cout << "\n";
     vi | view::filter([](int) {return true;})
-       | range(adjacent_find(_1), prev(end(_1)))
-       | range(begin(_1), next(end(_1)))
+       | range(adjacent_find(_1), end(_1))
        | for_each([](int i)
          {
              std::cout << "> " << i << '\n';

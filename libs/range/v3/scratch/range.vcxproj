@@ -134,7 +134,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\unique_copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\advance_bounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
@@ -162,6 +161,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\is_infinity.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />

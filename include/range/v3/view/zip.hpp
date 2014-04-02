@@ -25,6 +25,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 
@@ -75,7 +76,7 @@ namespace ranges
                 template<typename T, typename D>
                 void operator()(T & t, D d) const
                 {
-                    std::advance(t, d);
+                    ranges::advance(t, d);
                 }
             } advance {};
 
