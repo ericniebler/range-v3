@@ -17,6 +17,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
@@ -29,7 +30,7 @@ namespace ranges
         {
             template<typename T>
             using add_ref_t =
-                meta_quote<std::add_lvalue_reference>::apply<T>;
+                meta_apply<std::add_lvalue_reference, T>;
 
             template<typename T>
             using add_cref_t =
@@ -590,7 +591,7 @@ namespace ranges
         {
             RANGES_ASSERT(N == var.which());
             using elem_t =
-                meta_quote<std::remove_reference>::apply<
+                meta_apply<std::remove_reference,
                     tagged_variant_element_t<N, tagged_variant<Ts...>>>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
@@ -607,8 +608,8 @@ namespace ranges
             using elem_t =
                 meta_compose<
                     meta_quote<std::remove_reference>::apply,
-                    meta_quote<std::add_const>::apply>::apply<
-                        tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+                    meta_quote<std::add_const>::apply
+                >::apply<tagged_variant_element_t<N, tagged_variant<Ts...>>>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
             data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<detail::get_fun<elem_t>>{elem}));
@@ -617,13 +618,12 @@ namespace ranges
         }
 
         template<std::size_t N, typename...Ts>
-        meta_quote<std::add_rvalue_reference>::
-            apply<tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        meta_apply<std::add_rvalue_reference, tagged_variant_element_t<N, tagged_variant<Ts...>>>
         get(tagged_variant<Ts...> &&var)
         {
             RANGES_ASSERT(N == var.which());
             using elem_t =
-                meta_quote<std::remove_reference>::apply<
+                meta_apply<std::remove_reference,
                     tagged_variant_element_t<N, tagged_variant<Ts...>>>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);

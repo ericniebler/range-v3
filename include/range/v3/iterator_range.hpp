@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
@@ -32,7 +33,7 @@ namespace ranges
         namespace detail
         {
             template<typename RandomAccessIterator,
-                typename Size = typename std::make_unsigned<iterator_difference_t<RandomAccessIterator>>::type,
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<RandomAccessIterator>>,
                 CONCEPT_REQUIRES_(ranges::RandomAccessIterator<RandomAccessIterator>())>
             Size
             iterator_range_size(RandomAccessIterator begin, RandomAccessIterator end)
@@ -41,7 +42,7 @@ namespace ranges
             }
 
             template<typename Iterator,
-                typename Size = typename std::make_unsigned<iterator_difference_t<Iterator>>::type>
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>>
             Size
             iterator_range_size(counted_iterator<Iterator> begin, counted_sentinel<Iterator> end)
             {
@@ -49,7 +50,7 @@ namespace ranges
             }
 
             template<typename Iterator,
-                typename Size = typename std::make_unsigned<iterator_difference_t<Iterator>>::type>
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>>
             Size
             iterator_range_size(counted_iterator<Iterator> begin, counted_iterator<Iterator> end)
             {
@@ -76,7 +77,7 @@ namespace ranges
         template<typename Iterator, typename Sentinel /* = Iterator */>
         struct iterator_range : private range_base
         {
-            using size_type = typename std::make_unsigned<iterator_difference_t<Iterator>>::type;
+            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
         private:
             compressed_pair<Iterator, Sentinel> begin_end_;
         public:
@@ -127,7 +128,7 @@ namespace ranges
         template<typename Iterator, typename Sentinel /* = Iterator */>
         struct sized_iterator_range : private range_base
         {
-            using size_type = typename std::make_unsigned<iterator_difference_t<Iterator>>::type;
+            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
         private:
             compressed_tuple<Iterator, Sentinel, size_type> begin_end_size_;
         public:

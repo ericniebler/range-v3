@@ -24,6 +24,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/common_type.hpp>
@@ -121,7 +122,7 @@ namespace ranges
             friend range_core_access;
             std::tuple<InputIterables...> rngs_;
             using difference_type = common_type_t<range_difference_t<InputIterables>...>;
-            using size_type = typename std::make_unsigned<difference_type>::type;
+            using size_type = meta_apply<std::make_unsigned, difference_type>;
 
             struct sentinel;
             struct cursor

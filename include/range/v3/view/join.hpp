@@ -21,9 +21,11 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/variant.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 
 namespace ranges
@@ -65,7 +67,7 @@ namespace ranges
         private:
             friend range_core_access;
             using difference_type = common_type_t<range_difference_t<InputIterables>...>;
-            using size_type = meta_quote<std::make_unsigned>::apply<difference_type>;
+            using size_type = meta_apply<std::make_unsigned, difference_type>;
             static constexpr std::size_t cranges{sizeof...(InputIterables)};
             std::tuple<InputIterables...> rngs_;
 

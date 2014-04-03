@@ -14,6 +14,7 @@
 #define RANGES_V3_SIZE_HPP
 
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/range_concepts.hpp> // defines range_size
 
 namespace ranges
@@ -21,7 +22,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename Iterable>
-        using range_size_t = typename std::make_unsigned<range_difference_t<Iterable>>::type;
+        using range_size_t = meta_apply<std::make_unsigned, range_difference_t<Iterable>>;
 
         struct size_fn
         {

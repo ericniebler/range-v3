@@ -19,6 +19,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view/slice.hpp>
 #include <range/v3/view/counted.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 
@@ -29,8 +30,7 @@ namespace ranges
         namespace detail
         {
             template<typename Iterator>
-            using iterator_size_t =
-                typename std::make_unsigned<iterator_difference_t<Iterator>>::type;
+            using iterator_size_t = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
         }
 
         namespace view

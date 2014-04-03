@@ -381,29 +381,6 @@ namespace ranges
 
         template<typename T, typename List>
         using typelist_find_t = typename typelist_find<T, List>::type;
-
-        ////////////////////////////////////////////////////////////////////////////////////
-        // General meta-programming utilities
-        template<template<typename...> class C, typename T>
-        struct meta_bind1st
-        {
-            template<typename...Us>
-            using apply = C<T, Us...>;
-        };
-
-        template<template<typename...> class C>
-        struct meta_quote
-        {
-            template<typename...Ts>
-            using apply = typename C<Ts...>::type;
-        };
-
-        template<template<typename...> class C0, template<typename...> class C1>
-        struct meta_compose
-        {
-            template<typename...Ts>
-            using apply = C0<C1<Ts...>>;
-        };
     }
 }
 
