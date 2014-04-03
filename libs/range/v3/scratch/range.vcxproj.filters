@@ -77,6 +77,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\binary_search.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -444,6 +447,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\simple_test.hpp">
       <Filter>Test Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

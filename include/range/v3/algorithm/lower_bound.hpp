@@ -34,7 +34,7 @@ namespace ranges
                         Value>())>
             ForwardIterator
             operator()(ForwardIterator begin, iterator_difference_t<ForwardIterator> dist,
-                Value const& value, BinaryPredicate pred = BinaryPredicate{},
+                Value const &value, BinaryPredicate pred = BinaryPredicate{},
                 Projection proj = Projection{}) const
             {
                 RANGES_ASSERT(0 <= dist);
@@ -67,9 +67,11 @@ namespace ranges
                         Value>())>
             range_iterator_t<ForwardIterable>
             operator()(ForwardIterable &rng, range_difference_t<ForwardIterable> dist,
-                Value const& value, BinaryPredicate pred = BinaryPredicate{},
+                Value const &value, BinaryPredicate pred = BinaryPredicate{},
                 Projection proj = Projection{}) const
             {
+                static_assert(!ranges::is_infinite<ForwardIterable>::value,
+                    "Trying to binary search an infinite range");
                 RANGES_ASSERT(0 <= dist);
                 RANGES_ASSERT(dist <= ranges::distance(rng));
                 return (*this)(ranges::begin(rng), dist, std::move(pred), std::move(proj));
@@ -86,7 +88,7 @@ namespace ranges
                         Value2>())>
             Value const *
             operator()(std::initializer_list<Value> const &rng, std::ptrdiff_t dist,
-                Value2 const& value, BinaryPredicate pred = BinaryPredicate{},
+                Value2 const &value, BinaryPredicate pred = BinaryPredicate{},
                 Projection proj = Projection{}) const
             {
                 RANGES_ASSERT(0 <= dist);
@@ -109,7 +111,7 @@ namespace ranges
                         concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>,
                         Value>())>
             ForwardIterator
-            operator()(ForwardIterator begin, Sentinel end, Value const& value,
+            operator()(ForwardIterator begin, Sentinel end, Value const &value,
                 BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
                 return ranges::lower_bound_n(begin, ranges::distance(begin, end), value,
@@ -121,15 +123,17 @@ namespace ranges
                 typename BinaryPredicate = ranges::less,
                 typename Projection = ranges::ident,
                 CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>() &&
-                    ranges::ForwardIterator<range_iterator_t<ForwardIterable>>()&&
+                    ranges::ForwardIterator<range_iterator_t<ForwardIterable>>() &&
                     ranges::Invokable<Projection, range_value_t<ForwardIterable>>() &&
                     ranges::Invokable<BinaryPredicate,
                         concepts::Invokable::result_t<Projection, range_value_t<ForwardIterable>>,
                         Value>())>
             range_iterator_t<ForwardIterable>
-            operator()(ForwardIterable &rng, Value const& value,
+            operator()(ForwardIterable &rng, Value const &value,
                 BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
+                static_assert(!ranges::is_infinite<ForwardIterable>::value,
+                    "Trying to binary search an infinite range");
                 return ranges::lower_bound_n(ranges::begin(rng), ranges::distance(rng), value,
                     std::move(pred), std::move(proj));
             }
@@ -144,7 +148,7 @@ namespace ranges
                         concepts::Invokable::result_t<Projection, Value>,
                         Value2>())>
             Value const *
-            operator()(std::initializer_list<Value> const &rng, Value2 const& value,
+            operator()(std::initializer_list<Value> const &rng, Value2 const &value,
                 BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
                 return ranges::lower_bound_n(rng.begin(), (std::ptrdiff_t)rng.size(), value,
