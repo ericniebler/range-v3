@@ -7,7 +7,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 
-#include <range/v3/range.hpp>
+#include <range/v3/core.hpp>
+#include <range/v3/algorithm/adjacent_find.hpp>
 #include "../simple_test.hpp"
 
 int main()

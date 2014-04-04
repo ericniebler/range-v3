@@ -8,6 +8,7 @@
 // For more information, see http://www.boost.org/libs/range/
 
 #include <vector>
+#include <range/v3/core.hpp>
 #include <range/v3/algorithm/all_of.hpp>
 #include "../simple_test.hpp"
 

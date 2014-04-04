@@ -16,6 +16,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/range_concepts.hpp> // defines range_size
+#include <range/v3/range_traits.hpp>
 
 namespace ranges
 {
@@ -28,7 +29,7 @@ namespace ranges
         {
             template<typename Iterable,
                 CONCEPT_REQUIRES_(ranges::SizedIterable<Iterable>())>
-            auto operator()(Iterable const &rng) const -> decltype(range_size(rng))
+            constexpr auto operator()(Iterable const &rng) const -> decltype(range_size(rng))
             {
                 return range_size(rng);
             }

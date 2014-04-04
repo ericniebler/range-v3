@@ -12,7 +12,8 @@
 //  or a copy at http://stlab.adobe.com/licenses.html)
 
 #include <utility>
-#include <range/v3/range.hpp>
+#include <range/v3/core.hpp>
+#include <range/v3/algorithm/binary_search.hpp>
 #include "../simple_test.hpp"
 
 int main()

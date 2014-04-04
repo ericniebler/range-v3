@@ -72,7 +72,7 @@ namespace ranges
         }
 
         // Intentionally resisting the urge to fatten this interface to make
-        // it look like a container, like iterator_range. It's a range,
+        // it look like a container, like boost::iterator_range. It's a range,
         // not a container.
         template<typename Iterator, typename Sentinel /* = Iterator */>
         struct iterator_range : private range_base

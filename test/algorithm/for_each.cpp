@@ -8,7 +8,8 @@
 // For more information, see http://www.boost.org/libs/range/
 
 #include <vector>
-#include <range/v3/range.hpp>
+#include <range/v3/core.hpp>
+#include <range/v3/algorithm/for_each.hpp>
 #include "../simple_test.hpp"
 
 struct S

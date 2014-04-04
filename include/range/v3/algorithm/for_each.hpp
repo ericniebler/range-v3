@@ -17,6 +17,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
@@ -36,8 +37,7 @@ namespace ranges
             InputIterator
             operator()(InputIterator begin, Sentinel end, Fun fun, Projection proj = Projection{}) const
             {
-                using namespace std::placeholders;
-                auto &&ifun = std::bind(fun, std::bind(proj, _1));
+                auto &&ifun = std::bind(fun, std::bind(proj, std::placeholders::_1));
                 for(; begin != end; ++begin)
                 {
                     ifun(*begin);
