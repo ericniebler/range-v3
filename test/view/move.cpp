@@ -34,8 +34,8 @@ int main()
 
     std::vector<std::string> vs2(x.begin(), x.end());
     static_assert(std::is_same<std::string&&, decltype(*x.begin())>::value, "");
-    CHECK(::range_equal(vs2, {"'allo", "'allo", "???"}));
-    CHECK(::range_equal(vs, {"", "", ""}));
+    ::check_equal(vs2, {"'allo", "'allo", "???"});
+    ::check_equal(vs, {"", "", ""});
 
     return test_result();
 }

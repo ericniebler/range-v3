@@ -35,10 +35,10 @@ int main()
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected(begin(rng), end(rng));
-        CHECK(::range_equal(expected, {V{0, "hello", "john"},
-                                       V{1, "goodbye", "paul"},
-                                       V{2, "hello", "george"},
-                                       V{3, "goodbye", "ringo"}}));
+        ::check_equal(expected, {V{0, "hello", "john"},
+                                 V{1, "goodbye", "paul"},
+                                 V{2, "hello", "george"},
+                                 V{3, "goodbye", "ringo"}});
     }
 
     // Mixed ranges and iterables
@@ -53,10 +53,10 @@ int main()
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected;
         copy(rng, ranges::back_inserter(expected));
-        CHECK(::range_equal(expected, {V{0, "hello", "john"},
-                                       V{1, "goodbye", "paul"},
-                                       V{2, "hello", "george"},
-                                       V{3, "goodbye", "ringo"}}));
+        ::check_equal(expected, {V{0, "hello", "john"},
+                                 V{1, "goodbye", "paul"},
+                                 V{2, "hello", "george"},
+                                 V{3, "goodbye", "ringo"}});
     }
 
     auto rnd_rng = view::zip(vi, vs);

@@ -26,14 +26,14 @@ int main()
     models<concepts::SizedRange>(keys);
     models<concepts::BidirectionalIterator>(begin(keys));
     CHECK(&*begin(keys) == &m.begin()->first);
-    CHECK(range_equal(keys, {"other", "that", "this"}));
+    ::check_equal(keys, {"other", "that", "this"});
 
     auto && values = m | view::values;
     has_type<int &>(*begin(values));
     models<concepts::SizedRange>(values);
     models<concepts::BidirectionalIterator>(begin(values));
     CHECK(&*begin(values) == &m.begin()->second);
-    CHECK(range_equal(values, {2, 1, 0}));
+    ::check_equal(values, {2, 1, 0});
 
     return test_result();
 }

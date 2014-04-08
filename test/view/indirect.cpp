@@ -22,7 +22,7 @@ int main()
         vp.push_back(std::make_shared<int>(i));
     auto && rng = vp | view::indirect;
     CHECK(&*begin(rng) == vp[0].get());
-    CHECK(range_equal(rng, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+    ::check_equal(rng, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
     return test_result();
 }

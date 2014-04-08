@@ -32,7 +32,7 @@ int main()
     models_not<concepts::BidirectionalIterator>(begin(rng));
     CONCEPT_ASSERT(WeakOutputIterator<decltype(ranges::back_inserter(out)), int>());
     copy(rng, ranges::back_inserter(out));
-    CHECK(range_equal(out, {1, 2, 3, 4}));
+    ::check_equal(out, {1, 2, 3, 4});
 
     return test_result();
 }

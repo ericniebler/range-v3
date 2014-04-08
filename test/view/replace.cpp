@@ -41,7 +41,7 @@ int main()
     models<concepts::InputIterator>(begin(tmp));
     models_not<concepts::ForwardIterator>(begin(tmp));
     std::vector<int> actual{begin(tmp), end(tmp)};
-    CHECK(range_equal(actual, {42, 2, 3, 4, 5, 6, 7, 8, 9, 42, 2, 3, 4, 5, 6, 7, 8, 9, 42, 2, 3, 4, 5, 6, 7, 8, 9}));
+    ::check_equal(actual, {42, 2, 3, 4, 5, 6, 7, 8, 9, 42, 2, 3, 4, 5, 6, 7, 8, 9, 42, 2, 3, 4, 5, 6, 7, 8, 9});
 
     return test_result();
 }

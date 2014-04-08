@@ -116,6 +116,9 @@
     <ClCompile Include="..\..\..\..\test\view\move.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\delimit.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">

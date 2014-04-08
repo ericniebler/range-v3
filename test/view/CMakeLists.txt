@@ -25,3 +25,6 @@ add_test(test.zip zip)
 
 add_executable(move move.cpp)
 add_test(test.move move)
+
+add_executable(delimit delimit.cpp)
+add_test(test.delimit delimit)
