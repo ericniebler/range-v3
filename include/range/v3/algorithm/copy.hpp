@@ -33,16 +33,16 @@ namespace ranges
                 CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
                     ranges::Sentinel<Sentinel, InputIterator>() &&
                     ranges::Invokable<Projection, iterator_value_t<InputIterator>>() &&
-                    ranges::OutputIterator<OutputIterator,
+                    ranges::WeakOutputIterator<OutputIterator,
                         concepts::Invokable::result_t<Projection, iterator_value_t<InputIterator>>>())>
-            std::pair<OutputIterator, InputIterator>
+            std::pair<InputIterator, OutputIterator>
             operator()(InputIterator begin, Sentinel end, OutputIterator out,
                 Projection proj = Projection{}) const
             {
                 auto &&iproj = make_invokable(proj);
                 for(; begin != end; ++begin, ++out)
                     *out = iproj(*begin);
-                return {out, begin};
+                return {begin, out};
             }
 
             template<typename InputIterable, typename OutputIterator,
@@ -50,9 +50,9 @@ namespace ranges
                 CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
                     ranges::InputIterator<range_iterator_t<InputIterable>>() &&
                     ranges::Invokable<Projection, range_value_t<InputIterable>>() &&
-                    ranges::OutputIterator<OutputIterator,
+                    ranges::WeakOutputIterator<OutputIterator,
                         concepts::Invokable::result_t<Projection, range_value_t<InputIterable>>>())>
-            std::pair<OutputIterator, range_iterator_t<InputIterable>>
+            std::pair<range_iterator_t<InputIterable>, OutputIterator>
             operator()(InputIterable &rng, OutputIterator out, Projection proj = Projection{}) const
             {
                 return (*this)(ranges::begin(rng), ranges::end(rng), std::move(out), std::move(proj));
@@ -60,9 +60,9 @@ namespace ranges
 
             template<typename Value, typename OutputIterator, typename Projection = ranges::ident,
                 CONCEPT_REQUIRES_(ranges::Invokable<Projection, Value>() &&
-                    ranges::OutputIterator<OutputIterator,
+                    ranges::WeakOutputIterator<OutputIterator,
                         concepts::Invokable::result_t<Projection, Value>>())>
-            std::pair<OutputIterator, Value const *>
+            std::pair<Value const *, OutputIterator>
             operator()(std::initializer_list<Value> const &rng, OutputIterator out,
                 Projection proj = Projection{}) const
             {

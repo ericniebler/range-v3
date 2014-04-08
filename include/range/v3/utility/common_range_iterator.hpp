@@ -31,7 +31,7 @@ namespace ranges
                 Sentinel se_;
                 bool is_sentinel_;
             public:
-                using single_pass = Same<iterator_category_t<Iterator>, std::input_iterator_tag>;
+                using single_pass = Derived<ranges::input_iterator_tag, iterator_category_t<Iterator>>;
                 common_cursor() = default;
                 common_cursor(public_t, Iterator it)
                   : it_(std::move(it)), se_{}, is_sentinel_(false)

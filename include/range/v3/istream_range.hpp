@@ -32,7 +32,13 @@ namespace ranges
             mutable Value obj_;
             struct cursor
             {
+            private:
                 istream_iterable const *rng_;
+            public:
+                cursor() = default;
+                explicit cursor(istream_iterable const &rng)
+                  : rng_(&rng)
+                {}
                 void next()
                 {
                     *rng_->sin_ >> rng_->obj_;
@@ -48,7 +54,7 @@ namespace ranges
             };
             cursor begin_cursor() const
             {
-                return {this};
+                return cursor{*this};
             }
         public:
             istream_iterable(std::istream &sin)

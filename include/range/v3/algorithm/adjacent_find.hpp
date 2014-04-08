@@ -46,13 +46,13 @@ namespace ranges
             operator()(ForwardIterator begin, Sentinel end,
                 BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
-                using namespace std::placeholders;
-                auto &&ipred = std::bind(pred, std::bind(proj, _1), std::bind(proj, _2));
+                auto &&ipred = make_invokable(pred);
+                auto &&iproj = make_invokable(proj);
                 if(begin == end)
                     return begin;
                 auto next = begin;
                 for(; ++next != end; begin = next)
-                    if(ipred(*begin, *next))
+                    if(ipred(iproj(*begin), iproj(*next)))
                         return begin;
                 return next;
             }

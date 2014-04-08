@@ -197,8 +197,8 @@ namespace ranges
             public:
                 using reference = detail::real_common_type_t<range_reference_t<InputIterables const>...>;
                 using single_pass =
-                    logical_or<std::is_same<range_category_t<InputIterables>,
-                        std::input_iterator_tag>::value...>;
+                    logical_or<(bool) ranges::Derived<ranges::input_iterator_tag,
+                        range_category_t<InputIterables>>()...>;
                 cursor() = default;
                 cursor(joined_view const &rng, begin_tag)
                   : rng_(&rng), its_{size_t<0>{}, ranges::begin(std::get<0>(rng.rngs_))}

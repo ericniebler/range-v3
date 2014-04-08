@@ -68,6 +68,7 @@ namespace ranges
                 return {fun_};
             }
         public:
+            transformed_view() = default;
             transformed_view(InputIterable && rng, UnaryFunction fun)
               : range_adaptor_t<transformed_view>(std::forward<InputIterable>(rng))
               , fun_(ranges::make_invokable(std::move(fun)))

@@ -25,14 +25,14 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename Iterator, bool IsIterator = ranges::Iterator<Iterator>()>
+            template<typename Iterator, bool IsIterator = ranges::WeakInputIterator<Iterator>()>
             struct basic_cursor_associated_types
             {};
 
             template<typename Iterator>
             struct basic_cursor_associated_types<Iterator, true>
             {
-                using single_pass = Same<iterator_category_t<Iterator>, std::input_iterator_tag>;
+                using single_pass = Derived<ranges::input_iterator_tag, iterator_category_t<Iterator>>;
                 using difference_type = iterator_difference_t<Iterator>;
             };
 
@@ -55,13 +55,13 @@ namespace ranges
                 {
                     return it_ == that.it_;
                 }
-                CONCEPT_REQUIRES(ranges::Iterator<Iterator>())
+                CONCEPT_REQUIRES(ranges::WeakInputIterator<Iterator>())
                 void next()
                 {
                     ++it_;
                 }
                 template<typename I = Iterator,
-                    CONCEPT_REQUIRES_(ranges::Iterator<Iterator>())>
+                    CONCEPT_REQUIRES_(ranges::WeakInputIterator<Iterator>())>
                 auto current() const -> decltype(*std::declval<I const &>())
                 {
                     return *it_;
@@ -362,7 +362,7 @@ namespace ranges
             using range_adaptor_t = range_adaptor;
             using base_iterable_t = BaseIterable;
             using range_facade<Derived, Infinite>::derived;
-            BaseIterable rng_;
+            detail::base_iterable_holder<BaseIterable> rng_;
 
             default_adaptor begin_adaptor() const
             {
@@ -375,21 +375,21 @@ namespace ranges
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             base_cursor_t<D> base_begin() const
             {
-                return detail::base_cursor_helper<BaseIterable>::begin_cursor(rng_);
+                return detail::base_cursor_helper<BaseIterable>::begin_cursor(rng_.get());
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             base_sentinel_t<D> base_end() const
             {
-                return detail::base_cursor_helper<BaseIterable>::end_cursor(rng_);
+                return detail::base_cursor_helper<BaseIterable>::end_cursor(rng_.get());
             }
             range_difference_t<BaseIterable> base_distance() const
             {
-                return ranges::distance(rng_);
+                return ranges::distance(rng_.get());
             }
             CONCEPT_REQUIRES(SizedIterable<BaseIterable>())
             range_size_t<BaseIterable> base_size() const
             {
-                return ranges::size(rng_);
+                return ranges::size(rng_.get());
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::basic_adapted_cursor<detail::derived_cursor_t<D>, detail::cursor_adaptor_t<D>>

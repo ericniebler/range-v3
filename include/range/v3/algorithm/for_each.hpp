@@ -37,10 +37,11 @@ namespace ranges
             InputIterator
             operator()(InputIterator begin, Sentinel end, Fun fun, Projection proj = Projection{}) const
             {
-                auto &&ifun = std::bind(fun, std::bind(proj, std::placeholders::_1));
+                auto &&ifun = make_invokable(fun);
+                auto &&iproj = make_invokable(proj);
                 for(; begin != end; ++begin)
                 {
-                    ifun(*begin);
+                    ifun(iproj(*begin));
                 }
                 return begin;
             }

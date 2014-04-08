@@ -26,16 +26,16 @@ int main()
     std::pair<int, int> out[size(a)] = {};
 
     auto res = ranges::copy(begin(a), end(a), out);
-    CHECK(res.first == out + size(out));
-    CHECK(res.second == end(a));
+    CHECK(res.first == end(a));
+    CHECK(res.second == out + size(out));
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
     CHECK(!std::equal(a, a + size(a), out));
 
     res = ranges::copy(a, out);
-    CHECK(res.first == out + size(out));
-    CHECK(res.second == a + size(a));
+    CHECK(res.first == a + size(a));
+    CHECK(res.second == out + size(out));
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
@@ -44,16 +44,16 @@ int main()
     int const expected[] = {0, 0, 1, 1, 3, 3};
 
     auto res2 = ranges::copy(begin(a), end(a), out2, &std::pair<int,int>::first);
-    CHECK(res2.first == out2 + size(out2));
-    CHECK(res2.second == end(a));
+    CHECK(res2.first == end(a));
+    CHECK(res2.second == out2 + size(out2));
     CHECK(std::equal(begin(expected), end(expected), out2));
 
-    std::fill_n(out2, out2 + size(out2), 0);
+    std::fill_n(out2, size(out2), 0);
     CHECK(!std::equal(begin(expected), end(expected), out2));
 
     res2 = ranges::copy(a, out2, &std::pair<int, int>::first);
-    CHECK(res2.first == out2 + size(out2));
-    CHECK(res2.second == a + size(a));
+    CHECK(res2.first == a + size(a));
+    CHECK(res2.second == out2 + size(out2));
     CHECK(std::equal(begin(expected), end(expected), out2));
 
     std::fill_n(out2, size(out2), 0);
@@ -63,9 +63,9 @@ int main()
     char buf[50];
     auto str = delimit(sz, '\0');
     auto res3 = ranges::copy(str, buf);
-    *res3.first = '\0';
-    CHECK(res3.first == buf + std::strlen(sz));
-    CHECK(res3.second == std::next(begin(str), std::strlen(sz)));
+    *res3.second = '\0';
+    CHECK(res3.first == std::next(begin(str), std::strlen(sz)));
+    CHECK(res3.second == buf + std::strlen(sz));
     CHECK(std::strcmp(sz, buf) == 0);
 
     return test_result();

@@ -38,13 +38,13 @@ namespace ranges
                 Projection proj = Projection{}) const
             {
                 RANGES_ASSERT(0 <= dist);
-                using namespace std::placeholders;
-                auto &&ipred = std::bind(pred, std::bind(proj, _1), _2);
+                auto &&ipred = make_invokable(pred);
+                auto &&iproj = make_invokable(proj);
                 while(0 != dist)
                 {
                     auto half = dist / 2;
                     auto middle = ranges::next(begin, half);
-                    if(ipred(*middle, value))
+                    if(ipred(iproj(*middle), value))
                     {
                         begin = std::move(++middle);
                         dist -= half + 1;

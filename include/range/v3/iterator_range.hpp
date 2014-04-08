@@ -15,15 +15,14 @@
 #define RANGES_V3_ITERATOR_RANGE_HPP
 
 #include <utility>
-#include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/compressed_tuple.hpp>
+#include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
@@ -180,7 +179,7 @@ namespace ranges
             template<typename Iterator, typename Sentinel>
             static iterator_range<Iterator, Sentinel> invoke(ranger, Iterator begin, Sentinel end)
             {
-                CONCEPT_ASSERT(ranges::Iterator<Iterator>());
+                CONCEPT_ASSERT(ranges::WeakInputIterator<Iterator>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<Iterator, Sentinel>());
                 return {std::move(begin), std::move(end)};
             }
@@ -189,7 +188,7 @@ namespace ranges
             static sized_iterator_range<Iterator, Sentinel> invoke(ranger, Iterator begin, Sentinel end, Size size)
             {
                 CONCEPT_ASSERT(ranges::Integral<Size>());
-                CONCEPT_ASSERT(ranges::Iterator<Iterator>());
+                CONCEPT_ASSERT(ranges::WeakInputIterator<Iterator>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<Iterator, Sentinel>());
                 return {std::move(begin), std::move(end), size};
             }

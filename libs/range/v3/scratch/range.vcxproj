@@ -76,7 +76,16 @@
     <ClCompile Include="..\..\..\..\test\algorithm\copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
+    <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\predicate.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\indirect.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\keys_value.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\replace.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\replace_if.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\slice.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\unique.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\zip.cpp" />
     <ClCompile Include="range.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +149,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\as_iterable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
@@ -205,12 +215,14 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp" />
     <ClInclude Include="..\..\..\..\test\simple_test.hpp" />
+    <ClInclude Include="..\..\..\..\test\test_utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\algorithm\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\utility\CMakeLists.txt" />
+    <Text Include="..\..\..\..\test\view\CMakeLists.txt" />
     <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

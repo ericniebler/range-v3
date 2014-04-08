@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_UTILITY_ITERATOR_TRAITS_HPP
 #define RANGES_V3_UTILITY_ITERATOR_TRAITS_HPP
 
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
@@ -22,19 +23,19 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator traits
         template<typename It>
-        using iterator_value_t = concepts::Iterator::value_t<It>;
+        using iterator_value_t = concepts::Readable::value_t<It>;
 
         template<typename It>
-        using iterator_reference_t = concepts::Iterator::reference_t<It>;
+        using iterator_reference_t = concepts::Readable::reference_t<It>;
 
         template<typename It>
-        using iterator_category_t = concepts::Iterator::category_t<It>;
+        using iterator_category_t = concepts::WeakInputIterator::category_t<It>;
 
         template<typename It>
-        using iterator_difference_t = concepts::Iterator::difference_t<It>;
+        using iterator_difference_t = concepts::WeaklyIncrementable::difference_t<It>;
 
         template<typename It>
-        using iterator_pointer_t = concepts::Iterator::pointer_t<It>;
+        using iterator_pointer_t = concepts::Readable::pointer_t<It>;
 
         // Metafunctions
         template<typename It>

@@ -133,8 +133,9 @@ namespace ranges
             public:
                 using difference_type = common_type_t<range_difference_t<InputIterables>...>;
                 using single_pass =
-                    logical_or<std::is_same<range_category_t<InputIterables>,
-                                            std::input_iterator_tag>::value...>;
+                    logical_or<(bool) ranges::Derived<ranges::input_iterator_tag,
+                        range_category_t<InputIterables>>()...>;
+                using value_type = std::tuple<range_value_t<InputIterables>...>;
                 cursor() = default;
                 cursor(std::tuple<range_iterator_t<InputIterables>...> its)
                   : its_(std::move(its))

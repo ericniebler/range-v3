@@ -14,161 +14,311 @@
 #define RANGES_V3_UTILITY_ITERATOR_CONCEPTS_HPP
 
 #include <iterator>
+#include <type_traits>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        struct weak_input_iterator_tag
+        {};
+
+        struct input_iterator_tag
+          : weak_input_iterator_tag
+          , virtual std::input_iterator_tag
+        {};
+
+        struct forward_iterator_tag
+          : input_iterator_tag
+          , virtual std::forward_iterator_tag
+        {};
+
+        struct bidirectional_iterator_tag
+          : forward_iterator_tag
+          , virtual std::bidirectional_iterator_tag
+        {};
+
+        struct random_access_iterator_tag
+          : bidirectional_iterator_tag
+          , virtual std::random_access_iterator_tag
+        {};
+
         namespace detail
         {
-            ////////////////////////////////////////////////////////////////////////////////////
-            // iterator_traits_impl
+            ////////////////////////////////////////////////////////////////////////////////////////
+            template<typename T>
+            struct as_iterator_category
+            {
+                using type = T;
+            };
+
+            template<>
+            struct as_iterator_category<std::input_iterator_tag>
+            {
+                using type = ranges::input_iterator_tag;
+            };
+
+            template<>
+            struct as_iterator_category<std::forward_iterator_tag>
+            {
+                using type = ranges::forward_iterator_tag;
+            };
+
+            template<>
+            struct as_iterator_category<std::bidirectional_iterator_tag>
+            {
+                using type = ranges::bidirectional_iterator_tag;
+            };
+
+            template<>
+            struct as_iterator_category<std::random_access_iterator_tag>
+            {
+                using type = ranges::random_access_iterator_tag;
+            };
+
+            ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T, typename Enable = void>
-            struct iterator_traits_impl
+            struct pointer_type
             {};
 
             template<typename T>
-            struct iterator_traits_impl<
-                T,
-                detail::always_t<
-                    void,
-                    typename T::iterator_category,
-                    typename T::value_type,
-                    typename T::difference_type,
-                    typename T::reference,
-                    typename T::pointer>>
+            struct pointer_type<T *, void>
             {
-                using iterator_category = typename T::iterator_category;
-                using value_type = typename T::value_type;
-                using difference_type = typename T::difference_type;
-                using reference = typename T::reference;
-                using pointer = typename T::pointer;
+                using type = T *;
             };
 
             template<typename T>
-            struct iterator_traits_impl<T *>
+            struct pointer_type<T, enable_if_t<std::is_class<T>::value, void>>
             {
-                using iterator_category = std::random_access_iterator_tag;
-                using value_type = typename std::remove_const<T>::type;
-                using difference_type = std::ptrdiff_t;
-                using reference = T &;
-                using pointer = T *;
+                using type = decltype(std::declval<T>().operator->());
             };
+
+            ////////////////////////////////////////////////////////////////////////////////////////
+            template<typename T, typename Enable = void>
+            struct iterator_category_type
+            {};
+
+            template<typename T>
+            struct iterator_category_type<T *, void>
+            {
+                using type = ranges::random_access_iterator_tag;
+            };
+
+            template<typename T>
+            struct iterator_category_type<T, always_t<void, typename T::iterator_category>>
+              : as_iterator_category<typename T::iterator_category>
+            {};
         }
+
+        template<typename T>
+        struct pointer_type
+          : detail::pointer_type<detail::uncvref_t<T>>
+        {};
+
+        template<typename T>
+        struct iterator_category_type
+          : detail::iterator_category_type<detail::uncvref_t<T>>
+        {};
 
         namespace concepts
         {
-            struct Iterator
-              : refines<CopyConstructible, CopyAssignable, Destructible>
+            struct Readable
+              : refines<SemiRegular>
             {
-                // Users should specialize this to hook the traits mechanism
-                // until std gets a SFINAE-friendly std::iterator_traits
-                template<typename T>
-                struct traits
-                  : detail::iterator_traits_impl<T>
-                {};
-
                 // Associated types
-                template<typename T>
-                using category_t = typename traits<T>::iterator_category;
+                template<typename I>
+                using value_t = meta_apply<ranges::value_type, I>;
 
-                template<typename T>
-                using value_t = typename traits<T>::value_type;
+                template<typename I>
+                using reference_t = decltype(*std::declval<I>());
 
-                template<typename T>
-                using difference_t = typename traits<T>::difference_type;
+                template<typename I>
+                using pointer_t = meta_apply<ranges::pointer_type, I>;
 
-                template<typename T>
-                using reference_t = typename traits<T>::reference;
-
-                template<typename T>
-                using pointer_t = typename traits<T>::pointer;
-
-                // Valid expressions
-                template<typename T>
-                auto requires(T && t) -> decltype(
+                template<typename I>
+                auto requires(I i) -> decltype(
                     concepts::valid_expr(
-                        *t,
-                        concepts::has_type<T &>(++t)
+                        concepts::convertible_to<value_t<I> const &>(*i)
                     ));
             };
+
+            struct MoveWritable
+              : refines<SemiRegular(_1)>
+            {
+                template<typename Out, typename T>
+                auto requires(Out o, T && value) -> decltype(
+                    concepts::valid_expr(
+                        *o = std::move(value)
+                    ));
+            };
+
+            struct Writable
+              : refines<MoveWritable>
+            {
+                template<typename Out, typename T>
+                auto requires(Out o, T const &value) -> decltype(
+                    concepts::valid_expr(
+                        *o = value
+                    ));
+            };
+
+            struct IndirectlyMovable
+            {
+                template<typename I, typename O>
+                auto requires(I i, O o) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Readable>(i),
+                        concepts::model_of<SemiRegular>(o),
+                        concepts::model_of<MoveWritable>(*i, o)
+                    ));
+            };
+
+            struct IndirectlyCopyable
+            {
+                template<typename I, typename O>
+                auto requires(I i, O o) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Readable>(i),
+                        concepts::model_of<SemiRegular>(o),
+                        concepts::model_of<Writable>(*i, o)
+                    ));
+            };
+
+            struct WeaklyIncrementable
+              : refines<SemiRegular>
+            {
+                // Associated types
+                template<typename I>
+                using difference_t = meta_apply<ranges::difference_type, I>;
+
+                template<typename I>
+                auto requires(I i) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(std::is_integral<difference_t<I>>{}),
+                        concepts::has_type<I &>(++i),
+                        ((i++), 42)
+                    ));
+            };
+
+            struct Incrementable
+              : refines<Regular, WeaklyIncrementable>
+            {
+                template<typename I>
+                auto requires(I i) -> decltype(
+                    concepts::valid_expr(
+                        concepts::has_type<I>(i++)
+                    ));
+            };
+
+            struct WeakInputIterator
+              : refines<WeaklyIncrementable, Readable>
+            {
+                // Associated types
+                // value_t from readable
+                // distance_t from WeaklyIncrementable
+                template<typename I>
+                using category_t = meta_apply<ranges::iterator_category_type, I>;
+
+                template<typename I>
+                auto requires(I i) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Derived>(category_t<I>{}, ranges::weak_input_iterator_tag{}),
+                        concepts::model_of<Readable>(i++)
+                    ));
+            };
+
+            struct WeakOutputIterator
+              : refines<WeaklyIncrementable(_1), Writable>
+            {};
 
             struct OutputIterator
-              : refines<Iterator(_1)> // OutputIterator<T,U> refines Iterator<T>
-            {
-                template<typename T, typename O>
-                auto requires(T && t, O && o) -> decltype(
-                    concepts::valid_expr(
-                        t++,
-                        *t = o,
-                        *t++ = o
-                    ));
-            };
+              : refines<WeakOutputIterator, EqualityComparable(_1)>
+            {};
 
             struct InputIterator
-              : refines<Iterator, EqualityComparable>
+              : refines<WeakInputIterator, EqualityComparable>
             {
-                template<typename T>
-                auto requires(T && t) -> decltype(
+                template<typename I>
+                auto requires(I i) -> decltype(
                     concepts::valid_expr(
-                        t++,
-                        concepts::model_of<Common>(*t, *t++)
+                        concepts::model_of<Derived>(category_t<I>{}, ranges::input_iterator_tag{})
                     ));
             };
 
             struct ForwardIterator
-              : refines<InputIterator>
+              : refines<InputIterator, Incrementable>
             {
-                template<typename T>
-                auto requires(T && t) -> decltype(
+                template<typename I>
+                auto requires(I) -> decltype(
                     concepts::valid_expr(
-                        concepts::same_type(*t, *t++)
+                        concepts::model_of<Derived>(category_t<I>{}, ranges::forward_iterator_tag{})
                     ));
             };
 
             struct BidirectionalIterator
               : refines<ForwardIterator>
             {
-                template<typename T>
-                auto requires(T && t) -> decltype(
+                template<typename I>
+                auto requires(I i) -> decltype(
                     concepts::valid_expr(
-                        concepts::has_type<T &>(--t),
-                        concepts::same_type(*t, *t--)
+                        concepts::model_of<Derived>(category_t<I>{}, ranges::bidirectional_iterator_tag{}),
+                        concepts::has_type<I &>(--i),
+                        concepts::has_type<I>(i--),
+                        concepts::same_type(*i, *i--)
                     ));
             };
 
             struct RandomAccessIterator
-              : refines<BidirectionalIterator>
+              : refines<BidirectionalIterator, TotallyOrdered>
             {
-                template<typename T, typename R = reference_t<T>>
-                auto requires(T && t) -> decltype(
+                template<typename I, typename V = value_t<I>>
+                auto requires(I i) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<SignedIntegral>(t-t),
-                        t = t + (t-t),
-                        t = (t-t) + t,
-                        t = t - (t-t),
-                        t += (t-t),
-                        t -= (t-t),
-                        concepts::convertible_to<R>(t[t-t]),
-                        concepts::model_of<LessThanComparable>(t)
+                        concepts::model_of<Derived>(category_t<I>{}, ranges::random_access_iterator_tag{}),
+                        concepts::model_of<SignedIntegral>(i - i),
+                        concepts::has_type<difference_t<I>>(i - i),
+                        concepts::has_type<I>(i + (i - i)),
+                        concepts::has_type<I>((i - i) + i),
+                        concepts::has_type<I>(i - (i - i)),
+                        concepts::has_type<I &>(i += (i-i)),
+                        concepts::has_type<I &>(i -= (i - i)),
+                        concepts::convertible_to<V>(i[i - i])
                     ));
             };
 
-            // FIXME: The CopyConstructible concept is failing.
             struct Sentinel
-            {
-                template<typename S, typename I>
-                auto requires(S s, I i) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<CopyConstructible>(s),
-                        concepts::model_of<EqualityComparable>(s, i)
-                    ));
-            };
+              : refines<CopyConstructible(_1), WeakInputIterator(_2), EqualityComparable>
+            {};
         }
 
         template<typename T>
-        using Iterator = concepts::models<concepts::Iterator, T>;
+        using Readable = concepts::models<concepts::Readable, T>;
+
+        template<typename T, typename O>
+        using MoveWritable = concepts::models<concepts::MoveWritable, T, O>;
+
+        template<typename T, typename O>
+        using Writable = concepts::models<concepts::Writable, T, O>;
+
+        template<typename I, typename O>
+        using IndirectlyMovable = concepts::models<concepts::IndirectlyMovable, I, O>;
+
+        template<typename I, typename O>
+        using IndirectlyCopyable = concepts::models<concepts::IndirectlyCopyable, I, O>;
+
+        template<typename T>
+        using WeaklyIncrementable = concepts::models<concepts::WeaklyIncrementable, T>;
+
+        template<typename T>
+        using Incrementable = concepts::models<concepts::Incrementable, T>;
+
+        template<typename T>
+        using WeakInputIterator = concepts::models<concepts::WeakInputIterator, T>;
+
+        template<typename T, typename O>
+        using WeakOutputIterator = concepts::models<concepts::WeakOutputIterator, T, O>;
 
         template<typename T, typename O>
         using OutputIterator = concepts::models<concepts::OutputIterator, T, O>;

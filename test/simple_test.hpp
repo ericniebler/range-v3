@@ -157,7 +157,7 @@ inline int test_result()
 }
 
 #define CHECK(...)                                                                                  \
-    (void)(::test_impl::S{__FILE__, __LINE__, #__VA_ARGS__} ->* __VA_ARGS__);                       \
+    (void)(::test_impl::S{__FILE__, __LINE__, #__VA_ARGS__} ->* __VA_ARGS__)                        \
     /**/
 
 #endif

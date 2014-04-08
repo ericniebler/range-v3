@@ -213,6 +213,47 @@ namespace ranges
             it = counted_iterator<InputIterator>{ranges::next(it.base(), n), it.count() + n};
         }
         /// \endcond
+
+        template<typename Cont>
+        struct back_insert_iterator
+        {
+        private:
+            Cont *cont_;
+        public:
+            using difference_type = std::ptrdiff_t;
+            back_insert_iterator() = default;
+            explicit back_insert_iterator(Cont &cont) noexcept
+              : cont_(&cont)
+            {}
+            back_insert_iterator &operator=(typename Cont::value_type v)
+            {
+                cont_->push_back(std::move(v));
+                return *this;
+            }
+            back_insert_iterator &operator*()
+            {
+                return *this;
+            }
+            back_insert_iterator &operator++()
+            {
+                return *this;
+            }
+            back_insert_iterator &operator++(int)
+            {
+                return *this;
+            }
+        };
+
+        struct back_inserter_fn
+        {
+            template<typename Cont>
+            back_insert_iterator<Cont> operator()(Cont &cont) const
+            {
+                return back_insert_iterator<Cont>{cont};
+            }
+        };
+
+        RANGES_CONSTEXPR back_inserter_fn back_inserter {};
     }
 }
 

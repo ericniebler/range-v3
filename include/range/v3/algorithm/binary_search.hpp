@@ -49,10 +49,10 @@ namespace ranges
             bool operator()(ForwardIterator begin, Sentinel end, Value const &val,
                 BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
-                using namespace std::placeholders;
                 begin = ranges::lower_bound(std::move(begin), end, val, pred, proj);
-                auto &&ipred = std::bind(pred, _1, std::bind(proj, _2));
-                return begin != end && !ipred(val, *begin);
+                auto &&ipred = make_invokable(pred);
+                auto &&iproj = make_invokable(proj);
+                return begin != end && !ipred(val, iproj(*begin));
             }
 
             /// \overload

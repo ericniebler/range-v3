@@ -330,8 +330,8 @@ namespace ranges
 
         namespace view
         {
-            struct all_getter;
-            extern all_getter const all;
+            struct all_fn;
+            extern all_fn const all;
         }
 
         template<typename Iterable>
