@@ -381,6 +381,25 @@ namespace ranges
 
         template<typename T, typename List>
         using typelist_find_t = typename typelist_find<T, List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_find
+        template<template<typename...> class Fun, typename List>
+        struct typelist_find_if
+        {
+            using type = typelist<>;
+        };
+
+        template<template<typename...> class Fun, typename Head, typename ...List>
+        struct typelist_find_if<Fun, typelist<Head, List...>>
+          : detail::conditional_t<
+                Fun<Head>::value,
+                detail::identity<typelist<Head, List...>>,
+                typelist_find_if<Fun, typelist<List...>>>
+        {};
+
+        template<template<typename...> class Fun, typename List>
+        using typelist_find_if_t = typename typelist_find_if<Fun, List>::type;
     }
 }
 

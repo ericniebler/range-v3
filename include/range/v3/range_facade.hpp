@@ -156,10 +156,6 @@ namespace ranges
             struct postfix_increment_proxy
             {
                 using value_type = iterator_value_t<Iterator>;
-                using reference = iterator_reference_t<Iterator>;
-                using pointer = iterator_pointer_t<Iterator>;
-                using iterator_category = iterator_category_t<Iterator>;
-                using difference_type = iterator_difference_t<Iterator>;
             private:
                 mutable value_type value_;
             public:
@@ -185,10 +181,6 @@ namespace ranges
             struct writable_postfix_increment_proxy
             {
                 using value_type = iterator_value_t<Iterator>;
-                using reference = iterator_reference_t<Iterator>;
-                using pointer = iterator_pointer_t<Iterator>;
-                using iterator_category = iterator_category_t<Iterator>;
-                using difference_type = iterator_difference_t<Iterator>;
             private:
                 mutable value_type value_;
                 Iterator it_;
@@ -625,7 +617,12 @@ namespace ranges
 
             template<typename T>
             using cursor_concept_t =
-                concepts::most_refined_t<range_core_access::RandomAccessCursorConcept, T>;
+                concepts::most_refined_t<
+                    typelist<
+                        range_core_access::RandomAccessCursorConcept,
+                        range_core_access::BidirectionalCursorConcept,
+                        range_core_access::ForwardCursorConcept,
+                        range_core_access::InputCursorConcept>, T>;
 
             template<typename T>
             using IterableFacade =
@@ -636,7 +633,11 @@ namespace ranges
                 concepts::models<range_core_access::RangeFacadeConcept, T>;
 
             template<typename T>
-            using facade_concept_t = concepts::most_refined_t<range_core_access::RangeFacadeConcept, T>;
+            using facade_concept_t =
+                concepts::most_refined_t<
+                    typelist<
+                        range_core_access::RangeFacadeConcept,
+                        range_core_access::IterableFacadeConcept>, T>;
 
             static auto iter_cat(range_core_access::InputCursorConcept) ->
                 ranges::input_iterator_tag;

@@ -296,11 +296,11 @@ namespace ranges
         template<typename T>
         using Readable = concepts::models<concepts::Readable, T>;
 
-        template<typename T, typename O>
-        using MoveWritable = concepts::models<concepts::MoveWritable, T, O>;
+        template<typename Out, typename T>
+        using MoveWritable = concepts::models<concepts::MoveWritable, Out, T>;
 
-        template<typename T, typename O>
-        using Writable = concepts::models<concepts::Writable, T, O>;
+        template<typename Out, typename T>
+        using Writable = concepts::models<concepts::Writable, Out, T>;
 
         template<typename I, typename O>
         using IndirectlyMovable = concepts::models<concepts::IndirectlyMovable, I, O>;
@@ -317,11 +317,11 @@ namespace ranges
         template<typename T>
         using WeakInputIterator = concepts::models<concepts::WeakInputIterator, T>;
 
-        template<typename T, typename O>
-        using WeakOutputIterator = concepts::models<concepts::WeakOutputIterator, T, O>;
+        template<typename Out, typename T>
+        using WeakOutputIterator = concepts::models<concepts::WeakOutputIterator, Out, T>;
 
-        template<typename T, typename O>
-        using OutputIterator = concepts::models<concepts::OutputIterator, T, O>;
+        template<typename Out, typename T>
+        using OutputIterator = concepts::models<concepts::OutputIterator, Out, T>;
 
         template<typename T>
         using InputIterator = concepts::models<concepts::InputIterator, T>;
@@ -341,14 +341,17 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator_concept
         template<typename T>
-        using iterator_concept_t =
-            concepts::most_refined_t<concepts::RandomAccessIterator, T>;
+        using iterator_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::RandomAccessIterator,
+                    concepts::BidirectionalIterator,
+                    concepts::ForwardIterator,
+                    concepts::InputIterator,
+                    concepts::WeakInputIterator>, T>;
 
         template<typename T>
-        struct iterator_concept
-        {
-            using type = iterator_concept_t<T>;
-        };
+        using iterator_concept_t = meta_apply<iterator_concept, T>;
     }
 }
 

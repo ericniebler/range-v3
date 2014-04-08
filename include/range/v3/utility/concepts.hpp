@@ -19,6 +19,7 @@
 #include <iosfwd>
 #include <utility>
 #include <type_traits>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/logical_ops.hpp>
@@ -176,40 +177,27 @@ namespace ranges
               : models_<Concept, typelist_element_t<Args::value, typelist<Ts...>>...>
             {};
 
-            struct not_a_concept
+            template<typename Concept, typename...Ts>
+            struct models_hack_for_clang
+              : concepts::models<Concept, Ts...>
             {};
-
-            template<typename...Ts>
-            struct most_refined_impl_
-            {
-                static not_a_concept invoke(typelist<> *);
-
-                template<typename Head, typename...Tail, typename Impl = most_refined_impl_>
-                static auto invoke(typelist<Head, Tail...> *) ->
-                    detail::conditional_t<
-                        (concepts::models<Head, Ts...>()),
-                        Head,
-                        decltype(Impl::invoke(
-                            (typelist_concat_t<typelist<Tail...>, base_concepts_of_t<Head>> *)nullptr))
-                    >;
-            };
         }
 
         namespace concepts
         {
-            using detail::not_a_concept;
-
             ////////////////////////////////////////////////////////////////////////////////////////////
-            // most_refined_t
-            template<typename Concept, typename...Ts>
-            using most_refined_t =
-                decltype(detail::most_refined_impl_<Ts...>::invoke((typelist<Concept> *)nullptr));
-
-            template<typename Concept, typename...Ts>
+            // most_refined
+            // Find the first concept in a list of concepts that is modeled by the Args
+            template<typename Concepts, typename...Ts>
             struct most_refined
-            {
-                using type = most_refined_t<Concept, Ts...>;
-            };
+              : typelist_front<
+                    typelist_find_if_t<
+                        meta_bind_back<detail::models_hack_for_clang, Ts...>::template apply,
+                        Concepts>>
+            {};
+
+            template<typename Concepts, typename...Ts>
+            using most_refined_t = meta_apply<most_refined, Concepts, Ts...>;
 
             struct Same
             {

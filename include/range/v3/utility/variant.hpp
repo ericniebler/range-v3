@@ -392,7 +392,7 @@ namespace ranges
                     ranges::tagged_variant,
                     typelist_replace_t<void, void_t,
                         typelist_transform_t<Types,
-                            meta_bind1st<concepts::Callable::result_t, UnaryFunction>::template apply> > >;
+                            meta_bind_front<concepts::Callable::result_t, UnaryFunction>::template apply> > >;
 
             template<typename BinaryFunction, typename Types>
             using variant_result_i_t =
@@ -400,7 +400,7 @@ namespace ranges
                     ranges::tagged_variant,
                     typelist_replace_t<void, void_t,
                         typelist_transform2_t<Types, typelist_integer_sequence_t<Types::size()>,
-                            meta_bind1st<concepts::Callable::result_t, BinaryFunction>::template apply> > >;
+                            meta_bind_front<concepts::Callable::result_t, BinaryFunction>::template apply> > >;
 
             template<typename Function>
             struct unwrap_ref_fun

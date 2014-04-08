@@ -22,3 +22,6 @@ add_test(test.unique unique)
 
 add_executable(zip zip.cpp)
 add_test(test.zip zip)
+
+add_executable(move move.cpp)
+add_test(test.move move)

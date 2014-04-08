@@ -19,11 +19,18 @@ namespace ranges
     {
         ////////////////////////////////////////////////////////////////////////////////////
         // General meta-programming utilities
-        template<template<typename...> class C, typename T>
-        struct meta_bind1st
+        template<template<typename...> class C, typename...Ts>
+        struct meta_bind_front
         {
             template<typename...Us>
-            using apply = C<T, Us...>;
+            using apply = C<Ts..., Us...>;
+        };
+
+        template<template<typename...> class C, typename...Us>
+        struct meta_bind_back
+        {
+            template<typename...Ts>
+            using apply = C<Ts..., Us...>;
         };
 
         template<template<typename...> class C>

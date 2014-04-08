@@ -69,7 +69,13 @@ namespace ranges
         using RandomAccessIota = concepts::models<concepts::RandomAccessIota, T>;
 
         template<typename T>
-        using iota_concept_t = concepts::most_refined_t<concepts::RandomAccessIota, T>;
+        using iota_concept_t =
+            concepts::most_refined_t<
+                typelist<
+                    concepts::RandomAccessIota,
+                    concepts::BidirectionalIota,
+                    concepts::ForwardIota,
+                    concepts::InputIota>, T>;
 
         namespace detail
         {

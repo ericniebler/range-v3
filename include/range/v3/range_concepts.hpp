@@ -120,15 +120,18 @@ namespace ranges
         using ConvertibleToSizedRange = concepts::models<concepts::ConvertibleToSizedRange, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // range_concept
+        // convertible_to_range_concept
         template<typename T>
-        using convertible_to_range_concept_t = concepts::most_refined_t<concepts::ConvertibleToSizedRange, T>;
+        using convertible_to_range_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::ConvertibleToSizedRange,
+                    concepts::ConvertibleToRange,
+                    concepts::ConvertibleToSizedIterable,
+                    concepts::ConvertibleToIterable>, T>;
 
         template<typename T>
-        struct convertible_to_range_concept
-        {
-            using type = convertible_to_range_concept_t<T>;
-        };
+        using convertible_to_range_concept_t = meta_apply<convertible_to_range_concept, T>;
 
         #include <range/v3/detail/as_iterable.hpp>
 
@@ -191,13 +194,16 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept
         template<typename T>
-        using range_concept_t = concepts::most_refined_t<concepts::SizedRange, T>;
+        using range_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::SizedRange,
+                    concepts::Range,
+                    concepts::SizedIterable,
+                    concepts::Iterable>, T>;
 
         template<typename T>
-        struct range_concept
-        {
-            using type = range_concept_t<T>;
-        };
+        using range_concept_t = meta_apply<range_concept, T>;
     }
 }
 

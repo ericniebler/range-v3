@@ -81,6 +81,7 @@
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\indirect.cpp" />
     <ClCompile Include="..\..\..\..\test\view\keys_value.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\move.cpp" />
     <ClCompile Include="..\..\..\..\test\view\replace.cpp" />
     <ClCompile Include="..\..\..\..\test\view\replace_if.cpp" />
     <ClCompile Include="..\..\..\..\test\view\slice.cpp" />
