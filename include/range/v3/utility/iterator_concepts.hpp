@@ -213,7 +213,7 @@ namespace ranges
             };
 
             struct WeakInputIterator
-              : refines<WeaklyIncrementable, Readable>
+              : refines<WeaklyIncrementable, Readable, Copyable>
             {
                 // Associated types
                 // value_t from readable
@@ -230,7 +230,7 @@ namespace ranges
             };
 
             struct WeakOutputIterator
-              : refines<WeaklyIncrementable(_1), Writable>
+              : refines<WeaklyIncrementable(_1), Writable, Copyable(_1)>
             {};
 
             struct OutputIterator

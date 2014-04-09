@@ -28,3 +28,9 @@ add_test(test.move move)
 
 add_executable(delimit delimit.cpp)
 add_test(test.delimit delimit)
+
+add_executable(repeat repeat.cpp)
+add_test(test.repeat repeat)
+
+add_executable(as_range as_range.cpp)
+add_test(test.as_range as_range)

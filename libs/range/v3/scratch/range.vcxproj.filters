@@ -119,6 +119,18 @@
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\repeat.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\range_facade.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\range_adaptor.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\as_range.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
