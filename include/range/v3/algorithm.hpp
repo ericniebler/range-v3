@@ -13,6 +13,8 @@
 #ifndef RANGES_V3_ALGORITHM_HPP
 #define RANGES_V3_ALGORITHM_HPP
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/algorithm/all_of.hpp>
 #include <range/v3/algorithm/binary_search.hpp>
@@ -69,5 +71,7 @@
 #include <range/v3/algorithm/unique.hpp>
 #include <range/v3/algorithm/unique_copy.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
+
+#include <range/v3/detail/re_enable_warnings.hpp>
 
 #endif
