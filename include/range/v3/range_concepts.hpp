@@ -17,6 +17,8 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/iterator_range.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -24,10 +26,9 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace concepts
+        namespace detail
         {
-            struct Iterable
-              : refines<CopyConstructible>
+            struct range_traits
             {
                 // Associated types
                 template<typename T>
@@ -37,28 +38,35 @@ namespace ranges
                 using sentinel_t = decltype(ranges::end(std::declval<T>()));
 
                 template<typename T>
-                using category_t = Iterator::category_t<iterator_t<T>>;
+                using category_t = concepts::WeakInputIterator::category_t<iterator_t<T>>;
 
                 template<typename T>
-                using value_t = Iterator::value_t<iterator_t<T>>;
+                using value_t = concepts::Readable::value_t<iterator_t<T>>;
 
                 template<typename T>
-                using difference_t = Iterator::difference_t<iterator_t<T>>;
+                using difference_t = concepts::WeaklyIncrementable::difference_t<iterator_t<T>>;
 
                 template<typename T>
-                using reference_t = Iterator::reference_t<iterator_t<T>>;
+                using reference_t = concepts::Readable::reference_t<iterator_t<T>>;
 
                 template<typename T>
-                using pointer_t = Iterator::pointer_t<iterator_t<T>>;
+                using pointer_t = concepts::Readable::pointer_t<iterator_t<T>>;
+            };
+        }
 
+        namespace concepts
+        {
+            struct ConvertibleToIterable
+              : detail::range_traits
+            {
                 // Valid expressions
                 template<typename T,
                     typename CI = iterator_t<detail::as_cref_t<T>>, // const iterator
                     typename CS = sentinel_t<detail::as_cref_t<T>>> // const sentinel
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Iterator>(ranges::begin(t)),
-                        concepts::model_of<Iterator>(ranges::cbegin(t)),
+                        concepts::model_of<WeakInputIterator>(ranges::begin(t)),
+                        concepts::model_of<WeakInputIterator>(ranges::cbegin(t)),
                         concepts::convertible_to<CI>(ranges::begin(t)),
                         concepts::convertible_to<CS>(ranges::end(t)),
                         concepts::model_of<Sentinel>(ranges::end(t), ranges::begin(t)),
@@ -66,8 +74,8 @@ namespace ranges
                     ));
             };
 
-            struct Range
-              : refines<Iterable>
+            struct ConvertibleToRange
+              : refines<ConvertibleToIterable>
             {
                 // Valid expressions
                 template<typename T>
@@ -80,18 +88,18 @@ namespace ranges
         }
 
         template<typename T>
-        using Iterable = concepts::models<concepts::Iterable, T>;
+        using ConvertibleToIterable = concepts::models<concepts::ConvertibleToIterable, T>;
 
         template<typename T>
-        using Range = concepts::models<concepts::Range, T>;
+        using ConvertibleToRange = concepts::models<concepts::ConvertibleToRange, T>;
 
         // Handle sized iterables here:
         #include <range/v3/detail/range_size.hpp>
 
         namespace concepts
         {
-            struct SizedIterable
-              : refines<Iterable>
+            struct ConvertibleToSizedIterable
+              : refines<ConvertibleToIterable>
             {
                 template<typename T>
                 auto requires(T && t) -> decltype(
@@ -100,10 +108,82 @@ namespace ranges
                     ));
             };
 
-            struct SizedRange
-              : refines<Range, SizedIterable>
+            struct ConvertibleToSizedRange
+              : refines<ConvertibleToRange, ConvertibleToSizedIterable>
             {};
         }
+
+        template<typename T>
+        using ConvertibleToSizedIterable = concepts::models<concepts::ConvertibleToSizedIterable, T>;
+
+        template<typename T>
+        using ConvertibleToSizedRange = concepts::models<concepts::ConvertibleToSizedRange, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // convertible_to_range_concept
+        template<typename T>
+        using convertible_to_range_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::ConvertibleToSizedRange,
+                    concepts::ConvertibleToRange,
+                    concepts::ConvertibleToSizedIterable,
+                    concepts::ConvertibleToIterable>, T>;
+
+        template<typename T>
+        using convertible_to_range_concept_t = meta_apply<convertible_to_range_concept, T>;
+
+        #include <range/v3/detail/as_iterable.hpp>
+
+        namespace concepts
+        {
+            struct Iterable
+              : detail::range_traits
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<ConvertibleToIterable>(t),
+                        concepts::model_of<CopyConstructible>(ranges::as_iterable(t))
+                    ));
+            };
+
+            struct Range
+              : refines<Iterable>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<ConvertibleToRange>(t)
+                    ));
+            };
+
+            struct SizedIterable
+              : refines<Iterable>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<ConvertibleToSizedIterable>(t)
+                    ));
+            };
+
+            struct SizedRange
+              : refines<Range, SizedIterable>
+            {
+                template<typename T>
+                auto requires(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<ConvertibleToSizedRange>(t)
+                    ));
+            };
+        }
+
+        template<typename T>
+        using Iterable = concepts::models<concepts::Iterable, T>;
+
+        template<typename T>
+        using Range = concepts::models<concepts::Range, T>;
 
         template<typename T>
         using SizedIterable = concepts::models<concepts::SizedIterable, T>;
@@ -114,13 +194,16 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept
         template<typename T>
-        using range_concept_t = concepts::most_refined_t<concepts::SizedRange, T>;
+        using range_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::SizedRange,
+                    concepts::Range,
+                    concepts::SizedIterable,
+                    concepts::Iterable>, T>;
 
         template<typename T>
-        struct range_concept
-        {
-            using type = range_concept_t<T>;
-        };
+        using range_concept_t = meta_apply<range_concept, T>;
     }
 }
 

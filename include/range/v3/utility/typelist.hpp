@@ -383,27 +383,39 @@ namespace ranges
         using typelist_find_t = typename typelist_find<T, List>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // General meta-programming utilities
-        template<template<typename...> class C, typename T>
-        struct meta_bind1st
+        // typelist_find
+        template<template<typename...> class Fun, typename List>
+        struct typelist_find_if
         {
-            template<typename...Us>
-            using apply = C<T, Us...>;
+            using type = typelist<>;
         };
 
-        template<template<typename...> class C>
-        struct meta_quote
+        template<template<typename...> class Fun, typename Head, typename ...List>
+        struct typelist_find_if<Fun, typelist<Head, List...>>
+          : detail::conditional_t<
+                Fun<Head>::value,
+                detail::identity<typelist<Head, List...>>,
+                typelist_find_if<Fun, typelist<List...>>>
+        {};
+
+        template<template<typename...> class Fun, typename List>
+        using typelist_find_if_t = typename typelist_find_if<Fun, List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_foldl
+        template<typename List, typename State, template<typename...> class Fun>
+        struct typelist_foldl
         {
-            template<typename...Ts>
-            using apply = typename C<Ts...>::type;
+            using type = State;
         };
 
-        template<template<typename...> class C0, template<typename...> class C1>
-        struct meta_compose
-        {
-            template<typename...Ts>
-            using apply = C0<C1<Ts...>>;
-        };
+        template<typename Head, typename ...List, typename State, template<typename...> class Fun>
+        struct typelist_foldl<typelist<Head, List...>, State, Fun>
+          : typelist_foldl<typelist<List...>, Fun<State, Head>, Fun>
+        {};
+
+        template<typename List, typename State, template<typename...> class Fun>
+        using typelist_foldl_t = typename typelist_foldl<List, State, Fun>::type;
     }
 }
 

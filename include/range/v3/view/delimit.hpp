@@ -16,6 +16,9 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
+#include <range/v3/iterator_range.hpp>
+#include <range/v3/utility/unreachable.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
 {
@@ -68,11 +71,20 @@ namespace ranges
         {
             struct delimiter : bindable<delimiter>
             {
-                template<typename InputIterable, typename Value>
+                template<typename InputIterable, typename Value,
+                    CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>())>
                 static delimited_view<InputIterable, Value>
                 invoke(delimiter, InputIterable && rng, Value value)
                 {
                     return {std::forward<InputIterable>(rng), std::move(value)};
+                }
+
+                template<typename InputIterator, typename Value,
+                    CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>())>
+                static delimited_view<iterator_range<InputIterator, unreachable>, Value>
+                invoke(delimiter, InputIterator begin, Value value)
+                {
+                    return {{std::move(begin), {}}, std::move(value)};
                 }
 
                 template<typename Value>

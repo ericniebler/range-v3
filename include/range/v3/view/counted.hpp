@@ -14,6 +14,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -31,6 +32,7 @@ namespace ranges
                 InputIterator it_;
                 iterator_difference_t<InputIterator> n_;
             public:
+                counted_cursor() = default;
                 counted_cursor(public_t, InputIterator it, iterator_difference_t<InputIterator> n)
                   : it_(std::move(it)), n_(n)
                 {}
@@ -102,8 +104,7 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using size_type =
-                typename std::make_unsigned<iterator_difference_t<InputIterator>>::type;
+            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<InputIterator>>;
             InputIterator it_;
             iterator_difference_t<InputIterator> n_;
 
@@ -116,6 +117,7 @@ namespace ranges
                 return {n_};
             }
         public:
+            counted_view() = default;
             counted_view(InputIterator it, iterator_difference_t<InputIterator> n)
               : it_(it), n_(n)
             {}

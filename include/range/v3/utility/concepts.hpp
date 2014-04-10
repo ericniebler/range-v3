@@ -16,8 +16,10 @@
 #ifndef RANGES_V3_UTILITY_CONCEPTS_HPP
 #define RANGES_V3_UTILITY_CONCEPTS_HPP
 
+#include <iosfwd>
 #include <utility>
 #include <type_traits>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/logical_ops.hpp>
@@ -67,9 +69,6 @@ namespace ranges
                     typename std::enable_if<!Bool::value, int>::type;
             } is_false {};
 
-            template<typename Concept, typename ...Ts>
-            struct models_;
-
             template<typename Concept>
             struct base_concept
             {
@@ -84,6 +83,47 @@ namespace ranges
 
             template<typename Concept>
             using base_concept_t = typename base_concept<Concept>::type;
+
+            template<typename Concept, typename Enable = void>
+            struct base_concepts_of
+            {
+                using type = typelist<>;
+            };
+
+            template<typename Concept>
+            struct base_concepts_of<Concept, always_t<void, typename Concept::base_concepts_t>>
+            {
+                using type = typename Concept::base_concepts_t;
+            };
+
+            template<typename Concept>
+            using base_concepts_of_t = meta_apply<base_concepts_of, Concept>;
+
+            template<typename...Bools>
+            struct lazy_and
+            {
+                static constexpr bool value{true};
+            };
+
+            template<typename Bool, typename...Bools>
+            struct lazy_and<Bool, Bools...>
+            {
+                static constexpr bool value{Bool::value && lazy_and<Bools...>::value};
+            };
+
+            template<typename...Ts>
+            auto models_(any, Ts &&...) ->
+                std::false_type;
+
+            template<typename Concept, typename...Ts>
+            auto models_(Concept c, Ts &&...ts) ->
+                always_t<
+                    typelist_expand_t<
+                        lazy_and,
+                        typelist_transform_t<
+                            base_concepts_of_t<Concept>,
+                            meta_bind_back<concepts::models, Ts...>::template apply>>,
+                    decltype(c.requires(std::forward<Ts>(ts)...))>;
         }
 
         namespace concepts
@@ -116,99 +156,50 @@ namespace ranges
             auto has_type(U &&) ->
                 typename std::enable_if<std::is_same<T,U>::value, int>::type;
 
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // refines
             template<typename ...Concepts>
             struct refines
               : virtual detail::base_concept_t<Concepts>...
             {
+                using base_concepts_t = typelist<Concepts...>;
+
                 template<typename...Ts>
                 void requires(Ts &&...);
             };
 
-            template<typename Concept, typename ...Ts>
-            using models = decltype(detail::models_<Concept, Ts...>{}());
-
-            template<typename Concept, typename ...Ts>
-            auto model_of(Ts &&...) ->
-                typename std::enable_if<(concepts::models<Concept, Ts...>()), int>::type;
-        }
-
-        namespace detail
-        {
-            ////////////////////////////////////////////////////////////////////////////////////
-            // base_concepts
-            typelist<> base_concepts_of_impl_(void *);
-
-            template<typename...BaseConcepts>
-            typelist<BaseConcepts...> base_concepts_of_impl_(concepts::refines<BaseConcepts...> *);
-
-            template<typename Concept>
-            using base_concepts_of_t = decltype(detail::base_concepts_of_impl_((Concept *)nullptr));
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // models_refines_
-            template<typename Concepts, typename...Ts>
-            struct models_refines_;
-
-            template<typename...Ts>
-            struct models_refines_<typelist<>, Ts...>
-              : std::true_type
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // models
+            template<typename Concept, typename...Ts>
+            struct models
+              : std::integral_constant<bool,
+                    decltype(detail::models_(Concept{}, std::declval<Ts>()...))::value>
             {};
 
-            template<typename...Concepts, typename...Ts>
-            struct models_refines_<typelist<Concepts...>, Ts...>
-              : logical_and<concepts::models<Concepts, Ts...>::value...>
+            template<typename Concept, typename...Args, typename...Ts>
+            struct models<Concept(Args...), Ts...>
+              : models<Concept, typelist_element_t<Args::value, typelist<Ts...> >...>
             {};
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // models_
-            template<typename Concept, typename ...Ts>
-            struct models_
-            {
-                auto operator()() const -> std::false_type;
-
-                template<typename C = Concept, typename = decltype(C{}.requires(std::declval<Ts>()...))>
-                auto operator()() -> models_refines_<base_concepts_of_t<C>, Ts...>;
-            };
-
-            template<typename Concept, typename...Args, typename ...Ts>
-            struct models_<Concept(Args...), Ts...>
-              : models_<Concept, typelist_element_t<Args::value, typelist<Ts...>>...>
-            {};
-
-            struct not_a_concept
-            {};
-
-            template<typename...Ts>
-            struct most_refined_impl_
-            {
-                static not_a_concept invoke(typelist<> *);
-
-                template<typename Head, typename...Tail, typename Impl = most_refined_impl_>
-                static auto invoke(typelist<Head, Tail...> *) ->
-                    detail::conditional_t<
-                        (concepts::models<Head, Ts...>()),
-                        Head,
-                        decltype(Impl::invoke(
-                            (typelist_concat_t<typelist<Tail...>, base_concepts_of_t<Head>> *)nullptr))
-                    >;
-            };
-        }
-
-        namespace concepts
-        {
-            using detail::not_a_concept;
 
             ////////////////////////////////////////////////////////////////////////////////////////////
-            // most_refined_t
-            template<typename Concept, typename...Ts>
-            using most_refined_t =
-                decltype(detail::most_refined_impl_<Ts...>::invoke((typelist<Concept> *)nullptr));
+            // model_of
+            template<typename Concept, typename ...Ts, typename C = Concept>
+            auto model_of(Ts &&...) ->
+                enable_if_t<concepts::models<C, Ts...>::value>;
 
-            template<typename Concept, typename...Ts>
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // most_refined
+            // Find the first concept in a list of concepts that is modeled by the Args
+            template<typename Concepts, typename...Ts>
             struct most_refined
-            {
-                using type = most_refined_t<Concept, Ts...>;
-            };
+              : typelist_front<
+                    typelist_find_if_t<
+                        meta_bind_back<models, Ts...>::template apply,
+                        Concepts>>
+            {};
+
+            template<typename Concepts, typename...Ts>
+            using most_refined_t = meta_apply<most_refined, Concepts, Ts...>;
 
             struct Same
             {
@@ -219,32 +210,41 @@ namespace ranges
                     ));
             };
 
+            struct Convertible
+            {
+                template<typename T, typename U>
+                auto requires(T &&t, U &&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<U>(t)
+                    ));
+            };
+
+            struct Derived
+            {
+                template<typename T, typename U>
+                auto requires(T &&, U &&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(std::is_base_of<U, T>{})
+                    ));
+            };
+
             struct Common
             {
                 template<typename T, typename U>
                 using common_t = common_type_t<T, U>;
 
-                template<typename T, typename U>
+                template<typename T, typename U, typename C = common_t<T, U>>
                 auto requires(T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<common_t<T, U>>(t),
-                        concepts::convertible_to<common_t<T, U>>(u)
-                    ));
-            };
-
-            struct Convertible
-            {
-                template<typename T, typename U>
-                auto requires(T && t, U && u) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<U>(t)
+                        concepts::convertible_to<C>((T &&) t),
+                        concepts::convertible_to<C>((U &&) u)
                     ));
             };
 
             struct Integral
             {
                 template<typename T>
-                auto requires(T &&) -> decltype(
+                auto requires(T) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<T>{})
                     ));
@@ -254,7 +254,7 @@ namespace ranges
               : refines<Integral>
             {
                 template<typename T>
-                auto requires(T &&) -> decltype(
+                auto requires(T) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_signed<T>{})
                     ));
@@ -263,96 +263,87 @@ namespace ranges
             struct Destructible
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires(T &&) -> decltype(
                     concepts::valid_expr(
-                        (t.~T(), 42)
+                        concepts::is_true(std::is_destructible<T>{})
                     ));
             };
 
             struct Constructible
+              : refines<Destructible(_1)>
             {
                 template<typename T, typename ...Us>
-                auto requires(T t, Us &&...us) -> decltype(
+                auto requires(T &&, Us &&...) -> decltype(
                     concepts::valid_expr(
-                        T((Us&&)us...)
+                        concepts::is_true(std::is_constructible<T, Us...>{})
+                    ));
+            };
+
+            struct DefaultConstructible
+              : refines<Destructible>
+            {
+                template<typename T>
+                auto requires(T &&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(std::is_default_constructible<T>{})
+                    ));
+            };
+
+            struct MoveConstructible
+              : refines<Destructible>
+            {
+                template<typename T>
+                auto requires(T &&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(std::is_move_constructible<T>{})
+                    ));
+            };
+
+            struct CopyConstructible
+              : refines<MoveConstructible>
+            {
+                template<typename T>
+                auto requires(T &&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(std::is_copy_constructible<T>{})
                     ));
             };
 
             struct Assignable
             {
                 template<typename T, typename U>
-                auto requires(T & t, U u) -> decltype(
+                auto requires(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        t = u
-                    ));
-            };
-
-            struct DefaultConstructible
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        T{}
-                    ));
-            };
-
-            struct MoveConstructible
-            {
-                template<typename T>
-                auto requires(T t) -> decltype(
-                    concepts::valid_expr(
-                        T(std::move(t))
+                        concepts::is_true(std::is_assignable<T, U>{})
                     ));
             };
 
             struct MoveAssignable
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires(T &&) -> decltype(
                     concepts::valid_expr(
-                        t = std::move(t)
-                    ));
-            };
-
-            struct Movable
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<MoveConstructible>(t),
-                        concepts::model_of<MoveAssignable>(t)
-                    ));
-            };
-
-            struct CopyConstructible
-                : refines<MoveConstructible>
-            {
-                template<typename T>
-                auto requires(T t) -> decltype(
-                    concepts::valid_expr(
-                        T(t)
+                        concepts::is_true(std::is_move_assignable<T>{})
                     ));
             };
 
             struct CopyAssignable
+              : refines<MoveAssignable>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires(T &&) -> decltype(
                     concepts::valid_expr(
-                        t = t
+                        concepts::is_true(std::is_copy_assignable<T>{})
                     ));
             };
 
+            struct Movable
+              : refines<MoveConstructible, MoveAssignable>
+            {};
+
             struct Copyable
-                : refines<Movable>
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<CopyConstructible>(t),
-                        concepts::model_of<CopyAssignable>(t)
-                    ));
-            };
+              : refines<CopyConstructible, CopyAssignable>
+            {};
 
             struct EqualityComparable
             {
@@ -379,10 +370,10 @@ namespace ranges
                     ));
             };
 
-            struct LessThanComparable
+            struct WeaklyOrdered
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t < t),
                         concepts::convertible_to<bool>(t > t),
@@ -391,12 +382,12 @@ namespace ranges
                     ));
 
                 template<typename T, typename U, typename C = common_type_t<T, U>>
-                auto requires(T && t, U && u) -> decltype(
+                auto requires(T t, U u) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<LessThanComparable>(t),
-                        concepts::model_of<LessThanComparable>(u),
+                        concepts::model_of<WeaklyOrdered>(t),
+                        concepts::model_of<WeaklyOrdered>(u),
                         concepts::model_of<Common>(t, u),
-                        concepts::model_of<LessThanComparable>(static_cast<C>(t)),
+                        concepts::model_of<WeaklyOrdered>(static_cast<C>(t)),
                         concepts::convertible_to<bool>(t < u),
                         concepts::convertible_to<bool>(u < t),
                         concepts::convertible_to<bool>(t > u),
@@ -407,6 +398,47 @@ namespace ranges
                         concepts::convertible_to<bool>(u >= t)
                     ));
             };
+
+            struct TotallyOrdered
+              : refines<EqualityComparable, WeaklyOrdered>
+            {
+                template<typename T>
+                auto requires(T) -> std::true_type;
+
+                template<typename T, typename U>
+                auto requires(T t, U u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<TotallyOrdered>(t),
+                        concepts::model_of<TotallyOrdered>(u)
+                    ));
+            };
+
+            struct Allocatable
+            {
+                template<typename T>
+                auto requires(T t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::has_type<T *>(new T),
+                        ((delete new T), 42),
+                        concepts::has_type<T *>(new T[42]),
+                        ((delete[] new T[42]), 42)
+                    ));
+            };
+
+            struct SemiRegular
+              : refines<DefaultConstructible, CopyConstructible, Destructible, CopyAssignable,
+                    Allocatable>
+            {
+                template<typename T>
+                auto requires(T t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::has_type<T *>(&t)
+                    ));
+            };
+
+            struct Regular
+              : refines<SemiRegular, EqualityComparable>
+            {};
 
             struct Swappable
             {
@@ -471,10 +503,13 @@ namespace ranges
         using Same = concepts::models<concepts::Same, T, U>;
 
         template<typename T, typename U>
-        using Common = concepts::models<concepts::Common, T, U>;
+        using Convertible = concepts::models<concepts::Convertible, T, U>;
 
         template<typename T, typename U>
-        using Convertible = concepts::models<concepts::Convertible, T, U>;
+        using Derived = concepts::models<concepts::Derived, T, U>;
+
+        template<typename T, typename U>
+        using Common = concepts::models<concepts::Common, T, U>;
 
         template<typename T>
         using Integral = concepts::models<concepts::Integral, T>;
@@ -488,9 +523,6 @@ namespace ranges
         template<typename T, typename...Us>
         using Constructible = concepts::models<concepts::Constructible, T, Us...>;
 
-        template<typename T, typename U>
-        using Assignable = concepts::models<concepts::Assignable, T, U>;
-
         template<typename T>
         using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
 
@@ -498,16 +530,19 @@ namespace ranges
         using MoveConstructible = concepts::models<concepts::MoveConstructible, T>;
 
         template<typename T>
+        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
+
+        template<typename T, typename U>
+        using Assignable = concepts::models<concepts::Assignable, T, U>;
+
+        template<typename T>
         using MoveAssignable = concepts::models<concepts::MoveAssignable, T>;
 
         template<typename T>
-        using Movable = concepts::models<concepts::Movable, T>;
-
-        template<typename T>
-        using CopyConstructible = concepts::models<concepts::CopyConstructible, T>;
-
-        template<typename T>
         using CopyAssignable = concepts::models<concepts::CopyAssignable, T>;
+
+        template<typename T>
+        using Movable = concepts::models<concepts::Movable, T>;
 
         template<typename T>
         using Copyable = concepts::models<concepts::Copyable, T>;
@@ -516,7 +551,19 @@ namespace ranges
         using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;
 
         template<typename T, typename U = T>
-        using LessThanComparable = concepts::models<concepts::LessThanComparable, T, U>;
+        using WeaklyOrdered = concepts::models<concepts::WeaklyOrdered, T, U>;
+
+        template<typename T, typename U = T>
+        using TotallyOrdered = concepts::models<concepts::TotallyOrdered, T, U>;
+
+        template<typename T>
+        using Allocatable = concepts::models<concepts::Allocatable, T>;
+
+        template<typename T>
+        using SemiRegular = concepts::models<concepts::SemiRegular, T>;
+
+        template<typename T>
+        using Regular = concepts::models<concepts::Regular, T>;
 
         template<typename T, typename U = T>
         using Swappable = concepts::models<concepts::Swappable, T, U>;
@@ -529,6 +576,87 @@ namespace ranges
 
         template<typename T, typename U = T>
         using Addable = concepts::models<concepts::Addable, T, U>;
+
+        namespace detail
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////
+            template<typename T, typename Enable = void>
+            struct difference_type
+            {};
+
+            template<typename T>
+            struct difference_type<T *, void>
+            {
+                using type = std::ptrdiff_t;
+            };
+
+            template<typename T>
+            struct difference_type<T[], void>
+            {
+                using type = std::ptrdiff_t;
+            };
+
+            template<typename T, std::size_t N>
+            struct difference_type<T[N], void>
+            {
+                using type = std::ptrdiff_t;
+            };
+
+            template<typename T>
+            struct difference_type<T, always_t<void, typename T::difference_type>>
+            {
+                using type = typename T::difference_type;
+            };
+
+            ////////////////////////////////////////////////////////////////////////////////////////
+            template<typename T, typename Enable = void>
+            struct value_type
+            {};
+
+            template<typename T>
+            struct value_type<T *, void>
+              : std::remove_cv<T>
+            {};
+
+            template<typename T>
+            struct value_type<T[], void>
+              : std::remove_cv<T>
+            {};
+
+            template<typename T, std::size_t N>
+            struct value_type<T[N], void>
+              : std::remove_cv<T>
+            {};
+
+            template<typename T>
+            struct value_type<T, always_t<void, typename T::value_type>>
+            {
+                using type = typename T::value_type;
+            };
+
+            template<typename T>
+            struct value_type<T, enable_if_t<std::is_base_of<std::ios_base, T>::value, void>>
+            {
+                using type = typename T::char_type;
+            };
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        template<typename T>
+        struct difference_type
+          : detail::difference_type<detail::uncvref_t<T>>
+        {};
+
+        template<typename T>
+        struct size_type
+          : std::make_unsigned<meta_apply<difference_type, T>>
+        {};
+
+        template<typename T>
+        struct value_type
+          : detail::value_type<detail::uncvref_t<T>>
+        {};
     }
 }
 

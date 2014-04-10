@@ -13,6 +13,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {
@@ -83,6 +84,10 @@ namespace ranges
                     {
                         return *it_;
                     }
+                    operator iterator_value_t<Iterator>() const volatile
+                    {
+                        return *it_;
+                    }
                 };
                 static type apply(Iterator i)
                 {
@@ -104,6 +109,10 @@ namespace ranges
                     friend struct operator_brackets_proxy;
                 public:
                     operator Reference() const
+                    {
+                        return *it_;
+                    }
+                    operator value_type() const volatile
                     {
                         return *it_;
                     }
@@ -146,10 +155,11 @@ namespace ranges
             template<typename Iterator>
             struct postfix_increment_proxy
             {
-            private:
                 using value_type = iterator_value_t<Iterator>;
+            private:
                 mutable value_type value_;
             public:
+                postfix_increment_proxy() = default;
                 explicit postfix_increment_proxy(Iterator const& x)
                   : value_(*x)
                 {}
@@ -170,11 +180,12 @@ namespace ranges
             template<typename Iterator>
             struct writable_postfix_increment_proxy
             {
-            private:
                 using value_type = iterator_value_t<Iterator>;
+            private:
                 mutable value_type value_;
                 Iterator it_;
             public:
+                writable_postfix_increment_proxy() = default;
                 explicit writable_postfix_increment_proxy(Iterator x)
                   : value_(*x)
                   , it_(std::move(x))
@@ -242,7 +253,7 @@ namespace ranges
                     std::is_convertible<Reference, Value const&>::value &&
                     // No forward iterator can have values that disappear
                     // before positions can be re-visited
-                    !std::is_convertible<Category, std::forward_iterator_tag>::value
+                    (bool) ranges::Derived<ranges::input_iterator_tag, Category>()
                   , std::conditional<
                         is_non_proxy_reference<Reference, Value>::value
                       , postfix_increment_proxy<Iterator>
@@ -288,6 +299,42 @@ namespace ranges
                 static type apply(Reference x)
                 {
                     return std::addressof(x);
+                }
+            };
+
+            template<typename BaseIterable>
+            struct base_iterable_holder
+            {
+            private:
+                BaseIterable rng_;
+            public:
+                base_iterable_holder() = default;
+                base_iterable_holder(BaseIterable &&rng)
+                  : rng_(std::forward<BaseIterable>(rng))
+                {}
+                BaseIterable &get()
+                {
+                    return rng_;
+                }
+                BaseIterable const &get() const
+                {
+                    return rng_;
+                }
+            };
+
+            template<typename BaseIterable>
+            struct base_iterable_holder<BaseIterable &>
+            {
+            private:
+                BaseIterable *rng_;
+            public:
+                base_iterable_holder() = default;
+                base_iterable_holder(BaseIterable &rng)
+                  : rng_(&rng)
+                {}
+                BaseIterable &get() const
+                {
+                    return *rng_;
                 }
             };
         }
@@ -355,12 +402,9 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        t.base(),
-                        t.count(),
+                        concepts::model_of<concepts::WeakInputIterator>(t.base()),
+                        concepts::model_of<concepts::Integral>(t.count()),
                         T{public_t{}, t.base(), t.count()}
-                        // Doesn't work. How strange.
-                        //concepts::model_of<Iterator>(t.base())
-                        //concepts::model_of<Integral>(t.count())
                     ));
             };
 
@@ -491,6 +535,18 @@ namespace ranges
                 using type = typename Cursor::difference_type;
             };
 
+            template<typename Cursor, typename Enable = void>
+            struct cursor_value
+            {
+                using type = detail::uncvref_t<decltype(std::declval<Cursor const &>().current())>;
+            };
+
+            template<typename Cursor>
+            struct cursor_value<Cursor, detail::always_t<void, typename Cursor::value_type>>
+            {
+                using type = typename Cursor::value_type;
+            };
+
             template<typename T, typename Enable = void>
             struct single_pass
             {
@@ -505,6 +561,9 @@ namespace ranges
         public:
             template<typename Cursor>
             using cursor_difference_t = typename cursor_difference<Cursor>::type;
+
+            template<typename Cursor>
+            using cursor_value_t = typename cursor_value<Cursor>::type;
 
             template<typename Cursor>
             using single_pass_t = typename single_pass<Cursor>::type;
@@ -524,6 +583,16 @@ namespace ranges
             struct base_iterable
             {
                 using type = typename RangeAdaptor::base_iterable_t;
+            };
+            template<typename RangeFacade>
+            struct range_facade
+            {
+                using type = typename RangeFacade::range_facade_t;
+            };
+            template<typename RangeAdaptor>
+            struct range_adaptor
+            {
+                using type = typename RangeAdaptor::range_adaptor_t;
             };
         };
 
@@ -555,7 +624,12 @@ namespace ranges
 
             template<typename T>
             using cursor_concept_t =
-                concepts::most_refined_t<range_core_access::RandomAccessCursorConcept, T>;
+                concepts::most_refined_t<
+                    typelist<
+                        range_core_access::RandomAccessCursorConcept,
+                        range_core_access::BidirectionalCursorConcept,
+                        range_core_access::ForwardCursorConcept,
+                        range_core_access::InputCursorConcept>, T>;
 
             template<typename T>
             using IterableFacade =
@@ -566,16 +640,20 @@ namespace ranges
                 concepts::models<range_core_access::RangeFacadeConcept, T>;
 
             template<typename T>
-            using facade_concept_t = concepts::most_refined_t<range_core_access::RangeFacadeConcept, T>;
+            using facade_concept_t =
+                concepts::most_refined_t<
+                    typelist<
+                        range_core_access::RangeFacadeConcept,
+                        range_core_access::IterableFacadeConcept>, T>;
 
             static auto iter_cat(range_core_access::InputCursorConcept) ->
-                std::input_iterator_tag;
+                ranges::input_iterator_tag;
             static auto iter_cat(range_core_access::ForwardCursorConcept) ->
-                std::forward_iterator_tag;
+                ranges::forward_iterator_tag;
             static auto iter_cat(range_core_access::BidirectionalCursorConcept) ->
-                std::bidirectional_iterator_tag;
+                ranges::bidirectional_iterator_tag;
             static auto iter_cat(range_core_access::RandomAccessCursorConcept) ->
-                std::random_access_iterator_tag;
+                ranges::random_access_iterator_tag;
 
             template<typename Derived>
             using facade_cursor_t =
@@ -597,12 +675,19 @@ namespace ranges
                     basic_range_sentinel<facade_sentinel2_t<Derived>>>;
         }
 
+        template<typename Cursor, typename Sentinel>
+        struct basic_range_iterator;
+
         template<typename Sentinel>
         struct basic_range_sentinel
         {
+            // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
+            #ifndef __GNUC__
         private:
+            #endif
             friend range_core_access;
-            template<typename Iterator, typename OtherSentinel> friend struct basic_range_iterator;
+            template<typename Cursor, typename OtherSentinel>
+            friend struct basic_range_iterator;
             Sentinel end_;
         public:
             basic_range_sentinel() = default;
@@ -670,7 +755,7 @@ namespace ranges
         public:
             using reference =
                 decltype(range_core_access::current(std::declval<Cursor const &>()));
-            using value_type = detail::uncvref_t<reference>;
+            using value_type = range_core_access::cursor_value_t<Cursor>;
             using iterator_category = decltype(detail::iter_cat(cursor_concept_t{}));
             using difference_type = range_core_access::cursor_difference_t<Cursor>;
             using pointer = typename detail::operator_arrow_dispatch<reference>::type;
@@ -946,6 +1031,9 @@ namespace ranges
                 return !!*this;
             }
         };
+
+        template<typename RangeFacade>
+        using range_facade_t = meta_apply<range_core_access::range_facade, RangeFacade>;
     }
 }
 

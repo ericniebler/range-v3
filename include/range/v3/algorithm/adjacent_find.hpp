@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -11,72 +10,89 @@
 #ifndef RANGES_V3_ALGORITHM_ADJACENT_FIND_HPP
 #define RANGES_V3_ALGORITHM_ADJACENT_FIND_HPP
 
-#include <functional>
+#include <initializer_list>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
+        struct adjacent_find_fn
         {
-            template<typename ForwardIterator, typename Sentinel,
-                typename BinaryPredicate = ranges::equal_to>
-            ForwardIterator
-            adjacent_find(ForwardIterator begin, Sentinel end,
-                BinaryPredicate pred = BinaryPredicate{})
-            {
-                if(begin == end)
-                    return begin;
-                auto next = begin;
-                for(; ++next != end; begin = next)
-                    if(pred(*begin, *next))
-                        return begin;
-                return next;
-            }
-        }
-
-        struct adjacent_finder : bindable<adjacent_finder>,
-                                 pipeable<adjacent_finder>
-        {
-            /// \brief function template \c adjacent_finder::operator()
+            /// \brief function template \c adjacent_find_fn::operator()
             ///
             /// range-based version of the \c adjacent_find std algorithm
             ///
             /// \pre \c ForwardIterable is a model of the ForwardIterable concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardIterable>
-            static range_iterator_t<ForwardIterable>
-            invoke(adjacent_finder, ForwardIterable && rng)
+            template<typename ForwardIterator, typename Sentinel,
+                typename BinaryPredicate = ranges::equal_to,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(
+                    ranges::ForwardIterator<ForwardIterator>() &&
+                    ranges::Sentinel<Sentinel, ForwardIterator>() &&
+                    ranges::Invokable<Projection, iterator_value_t<ForwardIterator>>() &&
+                    ranges::InvokablePredicate<
+                        BinaryPredicate,
+                        concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>,
+                        concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>>())>
+            ForwardIterator
+            operator()(ForwardIterator begin, Sentinel end,
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
-                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
-                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<ForwardIterable>>());
-                return detail::adjacent_find(ranges::begin(rng), ranges::end(rng));
+                auto &&ipred = make_invokable(pred);
+                auto &&iproj = make_invokable(proj);
+                if(begin == end)
+                    return begin;
+                auto next = begin;
+                for(; ++next != end; begin = next)
+                    if(ipred(iproj(*begin), iproj(*next)))
+                        return begin;
+                return next;
             }
 
             /// \overload
-            template<typename ForwardIterable, typename BinaryPredicate>
-            static range_iterator_t<ForwardIterable>
-            invoke(adjacent_finder, ForwardIterable && rng, BinaryPredicate pred)
+            template<typename ForwardIterable,
+                typename BinaryPredicate = ranges::equal_to,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(
+                    ranges::Iterable<ForwardIterable>() &&
+                    ranges::ForwardIterator<range_iterator_t<ForwardIterable>>() &&
+                    ranges::Invokable<Projection, range_value_t<ForwardIterable>>() &&
+                    ranges::InvokablePredicate<BinaryPredicate,
+                        concepts::Invokable::result_t<Projection, range_value_t<ForwardIterable>>,
+                        concepts::Invokable::result_t<Projection, range_value_t<ForwardIterable>>>())>
+            range_iterator_t<ForwardIterable>
+            operator()(ForwardIterable &rng,
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
-                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
-                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
-                                                          range_reference_t<ForwardIterable>,
-                                                          range_reference_t<ForwardIterable>>());
-                return detail::adjacent_find(ranges::begin(rng), ranges::end(rng),
-                    ranges::make_invokable(std::move(pred)));
+                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(pred), std::move(proj));
+            }
+
+            /// \overload
+            template<typename Value,
+                typename BinaryPredicate = ranges::equal_to,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(
+                    ranges::Invokable<Projection, Value>() &&
+                    ranges::InvokablePredicate<BinaryPredicate,
+                        concepts::Invokable::result_t<Projection, Value>,
+                        concepts::Invokable::result_t<Projection, Value>>())>
+            Value const *
+            operator()(std::initializer_list<Value> const &rng,
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
+            {
+                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(pred), std::move(proj));
             }
         };
 
-        RANGES_CONSTEXPR adjacent_finder adjacent_find {};
+        RANGES_CONSTEXPR adjacent_find_fn adjacent_find {};
 
     } // namespace v3
 } // namespace ranges

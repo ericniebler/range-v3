@@ -33,22 +33,22 @@
 
         // Iterables with a .size() member function, like std::list
         template<typename Iterable,
-            typename Size = typename std::make_unsigned<concepts::Iterable::difference_t<Iterable>>::type,
-            CONCEPT_REQUIRES_(ranges::Iterable<Iterable>() && detail::HasSize<Iterable>())>
+            typename Size = meta_apply<std::make_unsigned, concepts::ConvertibleToIterable::difference_t<Iterable> >,
+            CONCEPT_REQUIRES_(ranges::ConvertibleToIterable<Iterable>() && detail::HasSize<Iterable>())>
         Size
-        range_size(Iterable const &rng)
+        range_size(Iterable &&rng)
         {
             return static_cast<Size>(rng.size());
         }
 
         // Random-access ranges that don't have a .size() member function
         template<typename RandomAccessRange,
-            typename Size = typename std::make_unsigned<concepts::Iterable::difference_t<RandomAccessRange>>::type,
+            typename Size = meta_apply<std::make_unsigned, concepts::ConvertibleToIterable::difference_t<RandomAccessRange>>,
             CONCEPT_REQUIRES_(!detail::HasSize<RandomAccessRange>() &&
-                              ranges::Range<RandomAccessRange>() &&
-                              ranges::RandomAccessIterator<concepts::Iterable::iterator_t<RandomAccessRange>>())>
+                              ranges::ConvertibleToRange<RandomAccessRange>() &&
+                              ranges::RandomAccessIterator<concepts::ConvertibleToIterable::iterator_t<RandomAccessRange>>())>
         Size
-        range_size(RandomAccessRange const &rng)
+        range_size(RandomAccessRange &&rng)
         {
             return static_cast<Size>(ranges::end(rng) - ranges::begin(rng));
         }

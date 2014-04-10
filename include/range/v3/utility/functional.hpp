@@ -34,6 +34,15 @@ namespace ranges
                 return (T&&)t < (U&&)u;
             }
         };
+
+        struct ident
+        {
+            template<typename T>
+            T && operator()(T && t) const
+            {
+                return (T&&) t;
+            }
+        };
     }
 }
 

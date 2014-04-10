@@ -40,13 +40,13 @@ namespace ranges
     {
         namespace adl_begin_end_detail
         {
-            struct beginner;
-            struct ender;
-            struct cbeginner;
-            struct cender;
+            struct begin_fn;
+            struct end_fn;
+            struct cbegin_fn;
+            struct cend_fn;
         }
 
-        struct sizer;
+        struct size_fn;
 
         template<typename ...Ts>
         struct common_type;
@@ -67,10 +67,10 @@ namespace ranges
         template<typename Derived>
         struct pipeable;
 
-        extern adl_begin_end_detail::beginner const begin;
-        extern adl_begin_end_detail::ender const end;
-        extern adl_begin_end_detail::cbeginner const cbegin;
-        extern adl_begin_end_detail::cender const cend;
+        extern adl_begin_end_detail::begin_fn const begin;
+        extern adl_begin_end_detail::end_fn const end;
+        extern adl_begin_end_detail::cbegin_fn const cbegin;
+        extern adl_begin_end_detail::cend_fn const cend;
 
         struct advance_fn;
         extern advance_fn const advance;
@@ -84,10 +84,10 @@ namespace ranges
         struct prev_fn;
         extern prev_fn const prev;
 
-        struct distance_;
-        extern distance_ const distance;
+        struct distance_fn;
+        extern distance_fn const distance;
 
-        extern sizer const size;
+        extern size_fn const size;
 
         namespace detail
         {
@@ -234,6 +234,9 @@ namespace ranges
 
         namespace concepts
         {
+            template<typename Concept, typename...Ts>
+            struct models;
+
             struct Iterable;
             struct Range;
         }
@@ -317,215 +320,6 @@ namespace ranges
         template<typename Rng>
         struct range_pointer;
 
-        struct adjacent_finder;
-        extern adjacent_finder const adjacent_find;
-
-        struct binary_searcher;
-        extern binary_searcher const binary_search;
-
-        struct copier;
-        extern copier const copy;
-
-        struct backward_copier;
-        extern backward_copier const copy_backward;
-
-        struct counter;
-        extern counter const count;
-
-        struct counter_if;
-        extern counter_if const count_if;
-
-        struct equaler;
-        extern equaler const equal;
-
-        struct equal_ranger;
-        extern equal_ranger const equal_range;
-
-        struct filler;
-        extern filler const fill;
-
-        struct filler_n;
-        extern filler_n const fill_n;
-
-        struct finder;
-        extern finder const find;
-
-        struct end_finder;
-        extern end_finder const find_end;
-
-        struct first_of_finder;
-        extern first_of_finder const find_first_of;
-
-        struct finder_if;
-        extern finder_if const find_if;
-
-        struct for_eacher;
-        extern for_eacher const for_each;
-
-        struct generator;
-        extern generator const generate;
-
-        struct generator_n;
-        extern generator_n const generate_n;
-
-        struct heap_pusher;
-        extern heap_pusher const push_heap;
-
-        struct heap_popper;
-        extern heap_popper const pop_heap;
-
-        struct heap_maker;
-        extern heap_maker const make_heap;
-
-        struct heap_sorter;
-        extern heap_sorter const sort_heap;
-
-        struct inplace_merger;
-        extern inplace_merger const inplace_merge;
-
-        struct lexicographical_comparer;
-        extern lexicographical_comparer const lexicographical_compare;
-
-        struct lower_bound_finder;
-        extern lower_bound_finder const lower_bound;
-
-        struct max_element_finder;
-        extern max_element_finder const max_element;
-
-        struct merger;
-        extern merger const merge;
-
-        struct min_element_finder;
-        extern min_element_finder const min_element;
-
-        struct mismatcher;
-        extern mismatcher const mismatch;
-
-        struct mover;
-        extern mover const move;
-
-        struct backward_mover;
-        extern backward_mover const move_backward;
-
-        struct nth_element_finder;
-        extern nth_element_finder const nth_element;
-
-        struct partial_sorter;
-        extern partial_sorter const partial_sort;
-
-        struct partial_sorter_copier;
-        extern partial_sorter_copier const partial_sort_copy;
-
-        struct partitioner;
-        extern partitioner const partition;
-
-        struct next_permutation_finder;
-        extern next_permutation_finder const next_permutation;
-
-        struct prev_permutation_finder;
-        extern prev_permutation_finder const prev_permutation;
-
-        struct random_shuffler;
-        extern random_shuffler const random_shuffle;
-
-        struct remover;
-        extern remover const remove;
-
-        struct remover_copier;
-        extern remover_copier const remove_copy;
-
-        struct remover_copier_if;
-        extern remover_copier_if const remove_copy_if;
-
-        struct remover_if;
-        extern remover_if const remove_if;
-
-        struct replacer;
-        extern replacer const replace;
-
-        struct replacer_copier;
-        extern replacer_copier const replace_copy;
-
-        struct replacer_copier_if;
-        extern replacer_copier_if const replace_copy_if;
-
-        struct replacer_if;
-        extern replacer_if const replace_if;
-
-        struct reverser;
-        extern reverser const reverse;
-
-        struct reverser_copier;
-        extern reverser_copier const reverse_copy;
-
-        struct rotater;
-        extern rotater const rotate;
-
-        struct rotater_copier;
-        extern rotater_copier const rotate_copy;
-
-        struct searcher;
-        extern searcher const search;
-
-        struct searcher_n;
-        extern searcher_n const search_n;
-
-        struct includer;
-        extern includer const includes;
-
-        struct set_unioner;
-        extern set_unioner const set_union;
-
-        struct set_intersecter;
-        extern set_intersecter const set_intersection;
-
-        struct set_differencer;
-        extern set_differencer const set_difference;
-
-        struct set_symmetric_differencer;
-        extern set_symmetric_differencer const set_symmetric_difference;
-
-        struct sorter;
-        extern sorter const sort;
-
-        struct stable_partitioner;
-        extern stable_partitioner const stable_partition;
-
-        struct stable_sorter;
-        extern stable_sorter const stable_sort;
-
-        struct range_swapper;
-        extern range_swapper const swap_ranges;
-
-        struct transformer;
-        extern transformer const transform;
-
-        struct uniquer;
-        extern uniquer const unique;
-
-        struct uniquer_copier;
-        extern uniquer_copier const unique_copy;
-
-        struct upper_bound_finder;
-        extern upper_bound_finder const upper_bound;
-
-        // Numeric algorithms
-        //
-        struct accumulate_;
-        extern accumulate_ const accumulate;
-
-        struct inner_product_;
-        extern inner_product_ const inner_product;
-
-        struct partial_sum_;
-        extern partial_sum_ const partial_sum;
-
-        struct adjacent_difference_;
-        extern adjacent_difference_ const adjacent_difference;
-
-        struct iota_;
-        extern iota_ const iota;
-
         // Views
         //
         template<typename ForwardRange, typename BinaryPredicate>
@@ -539,8 +333,8 @@ namespace ranges
 
         namespace view
         {
-            struct all_getter;
-            extern all_getter const all;
+            struct all_fn;
+            extern all_fn const all;
         }
 
         template<typename Iterable>

@@ -12,59 +12,67 @@
 #define RANGES_V3_ALGORITHM_COPY_HPP
 
 #include <utility>
+#include <functional>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
+        struct copy_fn
         {
-            template<typename InputIterator, typename Sentinel, typename OutputIterator>
-            OutputIterator copy(InputIterator begin, Sentinel end, OutputIterator out)
+            template<typename InputIterator, typename Sentinel, typename OutputIterator,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
+                    ranges::Sentinel<Sentinel, InputIterator>() &&
+                    ranges::Invokable<Projection, iterator_value_t<InputIterator>>() &&
+                    ranges::WeakOutputIterator<OutputIterator,
+                        concepts::Invokable::result_t<Projection, iterator_value_t<InputIterator>>>())>
+            std::pair<InputIterator, OutputIterator>
+            operator()(InputIterator begin, Sentinel end, OutputIterator out,
+                Projection proj = Projection{}) const
             {
+                auto &&iproj = make_invokable(proj);
                 for(; begin != end; ++begin, ++out)
-                    *out = *begin;
-                return out;
-            }
-        }
-
-        struct copier : bindable<copier>
-        {
-            /// \brief template function copier::operator()
-            ///
-            /// range-based version of the \c copy std algorithm
-            ///
-            /// \pre \c InputIterable is a model of the InputIterable concept
-            /// \pre \c OutputIterator is a model of the OutputIterator concept
-            template<typename InputIterable, typename OutputIterator>
-            static OutputIterator invoke(copier, InputIterable && rng, OutputIterator out)
-            {
-                CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
-                CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                CONCEPT_ASSERT(ranges::OutputIterator<OutputIterator,
-                                                      range_reference_t<InputIterable>>());
-                return detail::copy(ranges::begin(rng), ranges::end(rng), std::move(out));
+                    *out = iproj(*begin);
+                return {begin, out};
             }
 
-            /// \overload
-            /// for rng | copy(out)
-            template<typename OutputIterator>
-            static auto invoke(copier copy, OutputIterator out) ->
-                decltype(copy.move_bind(std::placeholders::_1, std::move(out)))
+            template<typename InputIterable, typename OutputIterator,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
+                    ranges::InputIterator<range_iterator_t<InputIterable>>() &&
+                    ranges::Invokable<Projection, range_value_t<InputIterable>>() &&
+                    ranges::WeakOutputIterator<OutputIterator,
+                        concepts::Invokable::result_t<Projection, range_value_t<InputIterable>>>())>
+            std::pair<range_iterator_t<InputIterable>, OutputIterator>
+            operator()(InputIterable &rng, OutputIterator out, Projection proj = Projection{}) const
             {
-                CONCEPT_ASSERT(ranges::Iterator<OutputIterator>());
-                return copy.move_bind(std::placeholders::_1, std::move(out));
+                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(out), std::move(proj));
+            }
+
+            template<typename Value, typename OutputIterator, typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::Invokable<Projection, Value>() &&
+                    ranges::WeakOutputIterator<OutputIterator,
+                        concepts::Invokable::result_t<Projection, Value>>())>
+            std::pair<Value const *, OutputIterator>
+            operator()(std::initializer_list<Value> const &rng, OutputIterator out,
+                Projection proj = Projection{}) const
+            {
+                return (*this)(rng.begin(), rng.end(), std::move(out), std::move(proj));
             }
         };
 
-        RANGES_CONSTEXPR copier copy {};
+        RANGES_CONSTEXPR copy_fn copy{};
 
-    } // inline namespace v3
-
+    } // namespace v3
 } // namespace ranges
 
 #endif // include guard

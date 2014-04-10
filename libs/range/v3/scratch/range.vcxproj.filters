@@ -37,6 +37,9 @@
     <Filter Include="Test Files\utility">
       <UniqueIdentifier>{bc20a12e-16d2-47f0-912b-1ae5a7ccc86c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test Files\view">
+      <UniqueIdentifier>{a71f57e8-040b-4b94-9274-da06b6289cdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
@@ -67,6 +70,69 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\utility\predicate.cpp">
       <Filter>Test Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\adjacent_find.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\binary_search.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\copy.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\utility\concepts.cpp">
+      <Filter>Test Files\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\indirect.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\keys_value.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\replace.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\replace_if.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\slice.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\unique.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\zip.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\move.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\delimit.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\repeat.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\range_facade.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\range_adaptor.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\as_range.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\counted.cpp">
+      <Filter>Test Files\view</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +499,21 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\test\simple_test.hpp">
+      <Filter>Test Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\meta.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\core.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\as_iterable.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\test\test_utils.hpp">
+      <Filter>Test Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
@@ -447,6 +528,12 @@
     </Text>
     <Text Include="..\..\..\..\test\utility\CMakeLists.txt">
       <Filter>Test Files\utility</Filter>
+    </Text>
+    <Text Include="CMakeLists.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="..\..\..\..\test\view\CMakeLists.txt">
+      <Filter>Test Files\view</Filter>
     </Text>
   </ItemGroup>
 </Project>

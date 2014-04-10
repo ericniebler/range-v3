@@ -15,14 +15,14 @@
 #define RANGES_V3_ITERATOR_RANGE_HPP
 
 #include <utility>
-#include <iterator>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/compressed_tuple.hpp>
+#include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
@@ -32,7 +32,7 @@ namespace ranges
         namespace detail
         {
             template<typename RandomAccessIterator,
-                typename Size = typename std::make_unsigned<iterator_difference_t<RandomAccessIterator>>::type,
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<RandomAccessIterator>>,
                 CONCEPT_REQUIRES_(ranges::RandomAccessIterator<RandomAccessIterator>())>
             Size
             iterator_range_size(RandomAccessIterator begin, RandomAccessIterator end)
@@ -41,7 +41,7 @@ namespace ranges
             }
 
             template<typename Iterator,
-                typename Size = typename std::make_unsigned<iterator_difference_t<Iterator>>::type>
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>>
             Size
             iterator_range_size(counted_iterator<Iterator> begin, counted_sentinel<Iterator> end)
             {
@@ -49,7 +49,7 @@ namespace ranges
             }
 
             template<typename Iterator,
-                typename Size = typename std::make_unsigned<iterator_difference_t<Iterator>>::type>
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>>
             Size
             iterator_range_size(counted_iterator<Iterator> begin, counted_iterator<Iterator> end)
             {
@@ -71,12 +71,12 @@ namespace ranges
         }
 
         // Intentionally resisting the urge to fatten this interface to make
-        // it look like a container, like iterator_range. It's a range,
+        // it look like a container, like boost::iterator_range. It's a range,
         // not a container.
         template<typename Iterator, typename Sentinel /* = Iterator */>
         struct iterator_range : private range_base
         {
-            using size_type = typename std::make_unsigned<iterator_difference_t<Iterator>>::type;
+            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
         private:
             compressed_pair<Iterator, Sentinel> begin_end_;
         public:
@@ -127,7 +127,7 @@ namespace ranges
         template<typename Iterator, typename Sentinel /* = Iterator */>
         struct sized_iterator_range : private range_base
         {
-            using size_type = typename std::make_unsigned<iterator_difference_t<Iterator>>::type;
+            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
         private:
             compressed_tuple<Iterator, Sentinel, size_type> begin_end_size_;
         public:
@@ -179,7 +179,7 @@ namespace ranges
             template<typename Iterator, typename Sentinel>
             static iterator_range<Iterator, Sentinel> invoke(ranger, Iterator begin, Sentinel end)
             {
-                CONCEPT_ASSERT(ranges::Iterator<Iterator>());
+                CONCEPT_ASSERT(ranges::WeakInputIterator<Iterator>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<Iterator, Sentinel>());
                 return {std::move(begin), std::move(end)};
             }
@@ -188,7 +188,7 @@ namespace ranges
             static sized_iterator_range<Iterator, Sentinel> invoke(ranger, Iterator begin, Sentinel end, Size size)
             {
                 CONCEPT_ASSERT(ranges::Integral<Size>());
-                CONCEPT_ASSERT(ranges::Iterator<Iterator>());
+                CONCEPT_ASSERT(ranges::WeakInputIterator<Iterator>());
                 CONCEPT_ASSERT(ranges::EqualityComparable<Iterator, Sentinel>());
                 return {std::move(begin), std::move(end), size};
             }

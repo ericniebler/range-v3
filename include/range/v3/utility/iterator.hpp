@@ -30,6 +30,7 @@ namespace ranges
             impl(InputIterator &it, iterator_difference_t<InputIterator> n,
                 concepts::InputIterator)
             {
+                RANGES_ASSERT(0 <= n);
                 for(; n != 0; --n)
                     ++it;
             }
@@ -61,13 +62,8 @@ namespace ranges
             }
             /// \cond
             template<typename InputIterator>
-            void
-            operator()(counted_iterator<InputIterator> &it, iterator_difference_t<InputIterator> n) const
-            {
-                auto tmp = it.base();
-                (*this)(tmp, n);
-                it = counted_iterator<InputIterator>{std::move(tmp), it.count() + n};
-            }
+            void operator()(counted_iterator<InputIterator> &it,
+                iterator_difference_t<InputIterator> n) const;
             /// \endcond
         };
 
@@ -208,6 +204,56 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR prev_fn prev {};
+
+        /// \cond
+        template<typename InputIterator>
+        void advance_fn::operator()(counted_iterator<InputIterator> &it,
+            iterator_difference_t<InputIterator> n) const
+        {
+            it = counted_iterator<InputIterator>{ranges::next(it.base(), n), it.count() + n};
+        }
+        /// \endcond
+
+        template<typename Cont>
+        struct back_insert_iterator
+        {
+        private:
+            Cont *cont_;
+        public:
+            using difference_type = std::ptrdiff_t;
+            back_insert_iterator() = default;
+            explicit back_insert_iterator(Cont &cont) noexcept
+              : cont_(&cont)
+            {}
+            back_insert_iterator &operator=(typename Cont::value_type v)
+            {
+                cont_->push_back(std::move(v));
+                return *this;
+            }
+            back_insert_iterator &operator*()
+            {
+                return *this;
+            }
+            back_insert_iterator &operator++()
+            {
+                return *this;
+            }
+            back_insert_iterator &operator++(int)
+            {
+                return *this;
+            }
+        };
+
+        struct back_inserter_fn
+        {
+            template<typename Cont>
+            back_insert_iterator<Cont> operator()(Cont &cont) const
+            {
+                return back_insert_iterator<Cont>{cont};
+            }
+        };
+
+        RANGES_CONSTEXPR back_inserter_fn back_inserter {};
     }
 }
 

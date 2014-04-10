@@ -11,47 +11,17 @@
 #ifndef RANGES_V3_ALGORITHM_REVERSE_COPY_HPP
 #define RANGES_V3_ALGORITHM_REVERSE_COPY_HPP
 
-#include <utility>
-#include <algorithm>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct reverser_copier : bindable<reverser_copier>
-        {
-            /// \brief template function reverse_copy
-            ///
-            /// range-based version of the reverse_copy std algorithm
-            ///
-            /// \pre BidirectionalRange is a model of the BidirectionalRange concept
-            template<typename BidirectionalRange, typename OutputIterator>
-            static OutputIterator
-            invoke(reverser_copier, BidirectionalRange && rng, OutputIterator out)
-            {
-                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
-                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
-                return std::reverse_copy(ranges::begin(rng), ranges::end(rng), out);
-            }
 
-            /// \overload
-            /// for rng | reverse_copy(out)
-            template<typename OutputIterator>
-            static auto invoke(reverser_copier reverse_copy, OutputIterator out) ->
-                decltype(reverse_copy.move_bind(std::placeholders::_1, std::move(out)))
-            {
-                return reverse_copy.move_bind(std::placeholders::_1, std::move(out));
-            }
-        };
-
-        RANGES_CONSTEXPR reverser_copier reverse_copy{};
-
-    } // inline namespace v3
-
+    } // namespace v3
 } // namespace ranges
 
 #endif // include guard

@@ -11,53 +11,62 @@
 #ifndef RANGES_V3_ALGORITHM_COPY_BACKWARD_HPP
 #define RANGES_V3_ALGORITHM_COPY_BACKWARD_HPP
 
-#include <utility>
-#include <algorithm>
+#include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/bindable.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/range_traits.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct backward_copier : bindable<backward_copier>
+        struct copy_backward_fn
         {
-            /// \brief template function \c backward_copier::operator()
-            ///
-            /// range-based version of the \c copy_backwards std algorithm
-            ///
-            /// \pre \c BidirectionalRange is a model of the BidirectionalRange concept
-            /// \pre \c BidirectionalIterator is a model of the BidirectionalIterator concept
-            /// \pre \c BidirectionalIterator is a model of the Iterator concept
-            template<typename BidirectionalRange, typename BidirectionalIterator>
-            static BidirectionalIterator
-            invoke(backward_copier, BidirectionalRange && rng, BidirectionalIterator out)
+            template<typename BidirectionalIterator, typename OutputIterator,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::BidirectionalIterator<BidirectionalIterator>() &&
+                    ranges::Invokable<Projection, iterator_value_t<BidirectionalIterator>>() &&
+                    ranges::BidirectionalIterator<OutputIterator>() &&
+                    ranges::WeakOutputIterator<OutputIterator,
+                        concepts::Invokable::result_t<Projection, iterator_value_t<BidirectionalIterator>>>())>
+            OutputIterator
+            operator()(BidirectionalIterator begin, BidirectionalIterator end, OutputIterator out,
+                Projection proj = Projection{}) const
             {
-                CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
-                CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
-                CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
-                CONCEPT_ASSERT(ranges::OutputIterator<BidirectionalIterator,
-                                                      range_reference_t<BidirectionalRange>>());
-                return std::copy_backward(ranges::begin(rng), ranges::end(rng), std::move(out));
+                auto &&iproj = make_invokable(proj);
+                for(; begin != end; ++begin, ++out)
+                    *out = iproj(*begin);
+                return {out, begin};
             }
 
-            /// \overload
-            /// for rng | copy_backward(out)
-            template<typename BidirectionalIterator>
-            static auto invoke(backward_copier copy_backward, BidirectionalIterator out) ->
-                decltype(copy_backward.move_bind(std::placeholders::_1, std::move(out)))
+            template<typename InputIterable, typename OutputIterator,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
+                    ranges::InputIterator<range_iterator_t<InputIterable>>() &&
+                    ranges::Invokable<Projection, range_value_t<InputIterable>>() &&
+                    ranges::WeakOutputIterator<OutputIterator,
+                        concepts::Invokable::result_t<Projection, range_value_t<InputIterable>>>())>
+            std::pair<OutputIterator, range_iterator_t<InputIterable>>
+            operator()(InputIterable &rng, OutputIterator out, Projection proj = Projection{}) const
             {
-                CONCEPT_ASSERT(ranges::BidirectionalIterator<BidirectionalIterator>());
-                return copy_backward.move_bind(std::placeholders::_1, std::move(out));
+                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(out), std::move(proj));
+            }
+
+            template<typename Value, typename OutputIterator, typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::Invokable<Projection, Value>() &&
+                    ranges::WeakOutputIterator<OutputIterator,
+                        concepts::Invokable::result_t<Projection, Value>>())>
+            std::pair<OutputIterator, Value const *>
+            operator()(std::initializer_list<Value> const &rng, OutputIterator out,
+                Projection proj = Projection{}) const
+            {
+                return (*this)(rng.begin(), rng.end(), std::move(out), std::move(proj));
             }
         };
 
-        RANGES_CONSTEXPR backward_copier copy_backward {};
+        RANGES_CONSTEXPR copy_backward_fn copy_backward {};
 
-    } // inline namespace v3
-
+    } // namespace v3
 } // namespace ranges
 
 #endif // include guard

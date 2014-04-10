@@ -53,6 +53,8 @@ namespace ranges
                     }
                 }
             public:
+                using single_pass = Derived<ranges::input_iterator_tag, range_category_t<Iterable>>;
+                using difference_type = range_difference_t<Iterable>;
                 cursor() = default;
                 cursor(base_iterator_t it, base_sentinel_t se, bool is_sentinel)
                   : it_(std::move(it)), se_(std::move(se)), is_sentinel_(is_sentinel)

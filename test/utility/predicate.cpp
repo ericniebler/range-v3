@@ -7,8 +7,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 
-#include <cassert>
 #include <range/v3/algorithm/all_of.hpp>
+#include "../simple_test.hpp"
 
 template<typename P, typename T, typename... Args>
 bool check(ranges::predicate<P> pred, const T& t, Args&&... args) 
@@ -33,10 +33,12 @@ struct S {
 
 int main() 
 {
-  assert(check(even, 0));
-  assert(check(&S::p1, S{}));
-  assert(check(&S::p2, S{}, 0));
+  CHECK(check(even, 0));
+  CHECK(check(&S::p1, S{}));
+  CHECK(check(&S::p2, S{}, 0));
   
   // TODO: Should this work?
   // check(&S::b, S{}); 
+
+  return ::test_result();
 }

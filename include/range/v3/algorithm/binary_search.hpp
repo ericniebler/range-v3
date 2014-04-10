@@ -13,70 +13,84 @@
 
 #include <utility>
 #include <functional>
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/algorithm/lower_bound.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/algorithm/lower_bound.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename ForwardIterator, typename Sentinel, typename Value,
-                typename BinaryPredicate = ranges::less>
-            bool
-            binary_search(ForwardIterator begin, Sentinel end, Value const& val,
-                BinaryPredicate pred = BinaryPredicate{})
-            {
-                begin = detail::lower_bound(std::move(begin), end, val, std::ref(pred));
-                return begin != end && !pred(val, *begin);
-            }
-        }
 
-        struct binary_searcher : bindable<binary_searcher>
+        struct binary_search_fn
         {
-            /// \brief function template \c binary_searcher::operator()
+            /// \brief function template \c binary_search_fn::operator()
             ///
             /// range-based version of the \c binary_search std algorithm
             ///
             /// \pre \c ForwardIterable is a model of the ForwardIterable concept
             /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardIterable, typename Value>
-            static bool invoke(binary_searcher, ForwardIterable && rng, Value const & val)
+            template<typename ForwardIterator, typename Sentinel, typename Value,
+                typename BinaryPredicate = ranges::less,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::ForwardIterator<ForwardIterator>() &&
+                    ranges::Sentinel<Sentinel, ForwardIterator>() &&
+                    ranges::Invokable<Projection, iterator_value_t<ForwardIterator>>() &&
+                    ranges::Invokable<BinaryPredicate,
+                        concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>,
+                        Value>())>
+            bool operator()(ForwardIterator begin, Sentinel end, Value const &val,
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
-                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
-                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                static_assert(!ranges::is_infinite<ForwardIterable>::value,
-                    "Trying to binary search an infinite range");
-                return detail::binary_search(ranges::begin(rng), ranges::end(rng), val);
+                begin = ranges::lower_bound(std::move(begin), end, val, pred, proj);
+                auto &&ipred = make_invokable(pred);
+                auto &&iproj = make_invokable(proj);
+                return begin != end && !ipred(val, iproj(*begin));
             }
 
             /// \overload
-            template<typename ForwardIterable, typename Value, typename BinaryPredicate>
-            static bool invoke(binary_searcher, ForwardIterable && rng, Value const & val,
-                BinaryPredicate pred)
+            template<typename ForwardIterable, typename Value,
+                typename BinaryPredicate = ranges::less,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::Iterable<ForwardIterable>() &&
+                    ranges::ForwardIterator<range_iterator_t<ForwardIterable>>() &&
+                    ranges::Invokable<Projection, range_value_t<ForwardIterable>>() &&
+                    ranges::Invokable<BinaryPredicate,
+                        concepts::Invokable::result_t<Projection, range_value_t<ForwardIterable>>,
+                        Value>())>
+            bool operator()(ForwardIterable &&rng, Value const &val,
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
             {
-                CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
-                CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
-                                                          range_reference_t<ForwardIterable>,
-                                                          range_reference_t<ForwardIterable>>());
                 static_assert(!ranges::is_infinite<ForwardIterable>::value,
                     "Trying to binary search an infinite range");
-                return detail::binary_search(ranges::begin(rng), ranges::end(rng), val,
-                    ranges::make_invokable(std::move(pred)));
+                return (*this)(ranges::begin(rng), ranges::end(rng), val, std::move(pred),
+                    std::move(proj));
+            }
+
+            /// \overload
+            template<typename Value, typename Value2, typename BinaryPredicate = ranges::less,
+                typename Projection = ranges::ident,
+                CONCEPT_REQUIRES_(ranges::Invokable<Projection, Value>() &&
+                    ranges::Invokable<BinaryPredicate,
+                        concepts::Invokable::result_t<Projection, Value>,
+                        Value2>())>
+            bool operator()(std::initializer_list<Value> const &rng, Value2 const &val,
+                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
+            {
+                return (*this)(rng.begin(), rng.end(), val, std::move(pred), std::move(proj));
             }
         };
 
-        RANGES_CONSTEXPR binary_searcher binary_search {};
+        RANGES_CONSTEXPR binary_search_fn binary_search{};
 
     } // namespace v3
-
 } // namespace ranges
 
 #endif // include guard

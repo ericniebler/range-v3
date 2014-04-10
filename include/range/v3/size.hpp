@@ -14,27 +14,28 @@
 #define RANGES_V3_SIZE_HPP
 
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/range_concepts.hpp> // defines range_size
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/range_traits.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
         template<typename Iterable>
-        using range_size_t = typename std::make_unsigned<range_difference_t<Iterable>>::type;
+        using range_size_t = meta_apply<std::make_unsigned, range_difference_t<Iterable>>;
 
-        struct sizer : bindable<sizer>
+        struct size_fn
         {
             template<typename Iterable,
                 CONCEPT_REQUIRES_(ranges::SizedIterable<Iterable>())>
-            static auto invoke(sizer, Iterable const &rng) -> decltype(range_size(rng))
+            constexpr range_size_t<Iterable> operator()(Iterable &&rng) const
             {
                 return range_size(rng);
             }
         };
 
-        RANGES_CONSTEXPR sizer size {};
+        RANGES_CONSTEXPR size_fn size {};
     }
 }
 

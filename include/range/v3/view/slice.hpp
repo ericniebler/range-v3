@@ -40,68 +40,24 @@ namespace ranges
             friend range_core_access;
             using size_type = range_size_t<ForwardIterable>;
             using difference_type = range_difference_t<ForwardIterable>;
-            ForwardIterable rng_;
+            detail::base_iterable_holder<ForwardIterable> rng_;
             size_type from_, to_;
 
-            using Bidi = Same<range_category_t<ForwardIterable>, std::bidirectional_iterator_tag>;
-            using Rand = Same<range_category_t<ForwardIterable>, std::random_access_iterator_tag>;
+            using Bidi = Same<range_category_t<ForwardIterable>, ranges::bidirectional_iterator_tag>;
+            using Rand = Same<range_category_t<ForwardIterable>, ranges::random_access_iterator_tag>;
             using dirty_t = detail::conditional_t<(Bidi()), mutable_<bool>, constant<bool, false>>;
 
             struct cursor : private dirty_t
             {
             private:
+                using base_iterator_t = range_iterator_t<ForwardIterable>;
                 sliced_view const *rng_;
-                range_iterator_t<ForwardIterable> it_;
                 size_type n_;
+                base_iterator_t it_;
 
                 dirty_t & dirty() { return *this; }
                 dirty_t const & dirty() const { return *this; }
-            public:
-                cursor(sliced_view const &rng, begin_tag)
-                  : dirty_t{false}, rng_(&rng), n_(rng.from_), it_(ranges::next(ranges::begin(rng.rng_), rng.from_))
-                {}
-                cursor(sliced_view const &rng, end_tag)
-                  : dirty_t{true}, rng_(&rng), n_(rng.to_), it_(ranges::begin(rng.rng_))
-                {
-                    if(Rand())
-                        do_clean();
-                }
-                range_reference_t<ForwardIterable> current() const
-                {
-                    RANGES_ASSERT(n_ < rng_->to_);
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
-                    return *it_;
-                }
-                bool equal(cursor const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    return n_ == that.n_;
-                }
-                void next()
-                {
-                    RANGES_ASSERT(n_ < rng_->to_);
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_));
-                    ++n_;
-                    ++it_;
-                }
-                void prev()
-                {
-                    RANGES_ASSERT(rng_->from_ < n_);
-                    clean();
-                    --n_;
-                    --it_;
-                }
-                void advance(difference_type d)
-                {
-                    RANGES_ASSERT(n_ + d >= rng_->from_ && n_ + d <= rng_->to_);
-                    clean();
-                    n_ += d;
-                    it_ += d;
-                }
-                difference_type distance_to(cursor const & that) const
-                {
-                    return static_cast<difference_type>(that.n_) - static_cast<difference_type>(n_);
-                }
+
                 void clean()
                 {
                     if(dirty())
@@ -114,7 +70,59 @@ namespace ranges
                 }
                 void do_clean()
                 {
-                    it_ = ranges::next(ranges::begin(rng_->rng_), rng_->to_);
+                    it_ = ranges::next(ranges::begin(rng_->rng_.get()), rng_->to_);
+                }
+            public:
+                cursor() = default;
+                cursor(sliced_view const &rng, begin_tag)
+                  : dirty_t{false}, rng_(&rng), n_(rng.from_)
+                  , it_(ranges::next(ranges::begin(rng.rng_.get()), rng.from_))
+                {}
+                cursor(sliced_view const &rng, end_tag)
+                  : dirty_t{true}, rng_(&rng), n_(rng.to_)
+                  , it_(ranges::begin(rng.rng_.get()))
+                {
+                    if(Rand())
+                        do_clean();
+                }
+                range_reference_t<ForwardIterable> current() const
+                {
+                    RANGES_ASSERT(n_ < rng_->to_);
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_.get()));
+                    return *it_;
+                }
+                bool equal(cursor const &that) const
+                {
+                    RANGES_ASSERT(rng_ == that.rng_);
+                    return n_ == that.n_;
+                }
+                void next()
+                {
+                    RANGES_ASSERT(n_ < rng_->to_);
+                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_.get()));
+                    ++n_;
+                    ++it_;
+                }
+                CONCEPT_REQUIRES(ranges::BidirectionalIterator<base_iterator_t>())
+                void prev()
+                {
+                    RANGES_ASSERT(rng_->from_ < n_);
+                    clean();
+                    --n_;
+                    --it_;
+                }
+                CONCEPT_REQUIRES(ranges::RandomAccessIterator<base_iterator_t>())
+                void advance(difference_type d)
+                {
+                    RANGES_ASSERT(n_ + d >= rng_->from_ && n_ + d <= rng_->to_);
+                    clean();
+                    n_ += d;
+                    it_ += d;
+                }
+                CONCEPT_REQUIRES(ranges::RandomAccessIterator<base_iterator_t>())
+                difference_type distance_to(cursor const & that) const
+                {
+                    return static_cast<difference_type>(that.n_) - static_cast<difference_type>(n_);
                 }
             };
             cursor begin_cursor() const
@@ -133,6 +141,10 @@ namespace ranges
               , to_(to)
             {
                 RANGES_ASSERT(from <= to);
+            }
+            size_type size() const
+            {
+                return to_ - from_;
             }
         };
 
