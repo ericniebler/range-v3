@@ -14,6 +14,8 @@
 #ifndef RANGES_V3_VIEW_HPP
 #define RANGES_V3_VIEW_HPP
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 #include <range/v3/view/adjacent_filter.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/as_range.hpp>
@@ -38,5 +40,7 @@
 #include <range/v3/view/unbounded.hpp>
 #include <range/v3/view/unique.hpp>
 #include <range/v3/view/zip.hpp>
+
+#include <range/v3/detail/re_enable_warnings.hpp>
 
 #endif
