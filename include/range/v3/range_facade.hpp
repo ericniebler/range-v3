@@ -402,12 +402,9 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        t.base(),
-                        t.count(),
+                        concepts::model_of<concepts::WeakInputIterator>(t.base()),
+                        concepts::model_of<concepts::Integral>(t.count()),
                         T{public_t{}, t.base(), t.count()}
-                        // Doesn't work. How strange.
-                        //concepts::model_of<Iterator>(t.base())
-                        //concepts::model_of<Integral>(t.count())
                     ));
             };
 
@@ -587,6 +584,16 @@ namespace ranges
             {
                 using type = typename RangeAdaptor::base_iterable_t;
             };
+            template<typename RangeFacade>
+            struct range_facade
+            {
+                using type = typename RangeFacade::range_facade_t;
+            };
+            template<typename RangeAdaptor>
+            struct range_adaptor
+            {
+                using type = typename RangeAdaptor::range_adaptor_t;
+            };
         };
 
         namespace detail
@@ -668,12 +675,19 @@ namespace ranges
                     basic_range_sentinel<facade_sentinel2_t<Derived>>>;
         }
 
+        template<typename Cursor, typename Sentinel>
+        struct basic_range_iterator;
+
         template<typename Sentinel>
         struct basic_range_sentinel
         {
+            // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
+            #ifndef __GNUC__
         private:
+            #endif
             friend range_core_access;
-            template<typename Iterator, typename OtherSentinel> friend struct basic_range_iterator;
+            template<typename Cursor, typename OtherSentinel>
+            friend struct basic_range_iterator;
             Sentinel end_;
         public:
             basic_range_sentinel() = default;
@@ -1017,6 +1031,9 @@ namespace ranges
                 return !!*this;
             }
         };
+
+        template<typename RangeFacade>
+        using range_facade_t = meta_apply<range_core_access::range_facade, RangeFacade>;
     }
 }
 

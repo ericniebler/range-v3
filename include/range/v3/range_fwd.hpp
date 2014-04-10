@@ -234,6 +234,9 @@ namespace ranges
 
         namespace concepts
         {
+            template<typename Concept, typename...Ts>
+            struct models;
+
             struct Iterable;
             struct Range;
         }

@@ -400,6 +400,22 @@ namespace ranges
 
         template<template<typename...> class Fun, typename List>
         using typelist_find_if_t = typename typelist_find_if<Fun, List>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_foldl
+        template<typename List, typename State, template<typename...> class Fun>
+        struct typelist_foldl
+        {
+            using type = State;
+        };
+
+        template<typename Head, typename ...List, typename State, template<typename...> class Fun>
+        struct typelist_foldl<typelist<Head, List...>, State, Fun>
+          : typelist_foldl<typelist<List...>, Fun<State, Head>, Fun>
+        {};
+
+        template<typename List, typename State, template<typename...> class Fun>
+        using typelist_foldl_t = typename typelist_foldl<List, State, Fun>::type;
     }
 }
 

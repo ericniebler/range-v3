@@ -101,20 +101,17 @@ static_assert(ranges::Common<int, IntComparable>(), "");
 static_assert(ranges::WeaklyOrdered<int, IntComparable>(), "");
 static_assert(ranges::WeaklyOrdered<IntComparable, int>(), "");
 
-//static_assert(
-//    std::is_same<
-//        ranges::range_concept_t<std::vector<int>>,
-//        ranges::concepts::SizedRange
-//    >::value, "");
+static_assert(
+    std::is_same<
+        ranges::range_concept_t<std::vector<int>>,
+        ranges::concepts::SizedRange
+    >::value, "");
 
 static_assert(
     std::is_same<
         ranges::range_concept_t<ranges::istream_iterable<int>>,
         ranges::concepts::Iterable
     >::value, "");
-
-template<typename T>
-struct undef_t;
 
 int main()
 {

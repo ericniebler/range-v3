@@ -29,7 +29,7 @@ namespace ranges
         {
             template<typename Iterable,
                 CONCEPT_REQUIRES_(ranges::SizedIterable<Iterable>())>
-            constexpr auto operator()(Iterable const &rng) const -> decltype(range_size(rng))
+            constexpr range_size_t<Iterable> operator()(Iterable &&rng) const
             {
                 return range_size(rng);
             }

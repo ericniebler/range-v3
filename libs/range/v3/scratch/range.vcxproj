@@ -82,6 +82,7 @@
     <ClCompile Include="..\..\..\..\test\utility\predicate.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\as_range.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp" />
     <ClCompile Include="..\..\..\..\test\view\indirect.cpp" />
     <ClCompile Include="..\..\..\..\test\view\keys_value.cpp" />

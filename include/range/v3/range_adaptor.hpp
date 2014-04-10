@@ -309,9 +309,6 @@ namespace ranges
         }
 
         template<typename Derived>
-        using range_adaptor_t = typename Derived::range_adaptor_t;
-
-        template<typename Derived>
         using base_iterable_t = typename range_core_access::base_iterable<Derived>::type;
 
         template<typename Derived>
@@ -412,6 +409,9 @@ namespace ranges
               : rng_(detail::forward<BaseIterable>(rng))
             {}
         };
+
+        template<typename RangeAdaptor>
+        using range_adaptor_t = meta_apply<range_core_access::range_adaptor, RangeAdaptor>;
     }
 }
 

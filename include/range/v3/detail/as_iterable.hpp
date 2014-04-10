@@ -71,18 +71,27 @@
             }
 
             template<typename T>
-            auto container_view_all(T & t, concepts::ConvertibleToSizedIterable)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                detail::container_view_all2(ranges::begin(t), ranges::end(t), ranges::size(t))
-            )
+            auto container_view_all(T & t, concepts::ConvertibleToSizedIterable) ->
+                decltype(detail::container_view_all2(ranges::begin(t), ranges::end(t), 0))
+            {
+                return detail::container_view_all2(ranges::begin(t), ranges::end(t), ranges::size(t));
+            }
 
             template<typename T>
-            auto container_view_all(T & t, concepts::ConvertibleToSizedRange)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                detail::container_view_all2(ranges::begin(t), ranges::end(t), ranges::size(t))
-            )
+            auto container_view_all(T & t, concepts::ConvertibleToSizedRange) ->
+                decltype(detail::container_view_all2(ranges::begin(t), ranges::end(t), 0))
+            {
+                return detail::container_view_all2(ranges::begin(t), ranges::end(t), ranges::size(t));
+            }
+
+            template<typename T, typename C = convertible_to_range_concept_t<T>>
+            struct container_view_all_type
+            {
+                using type = decltype(detail::container_view_all(std::declval<T>(), C{}));
+            };
+
+            template<typename T>
+            using container_view_all_t = meta_apply<container_view_all_type, T>;
         }
 
         template<typename T, typename Enable = void>
@@ -108,11 +117,10 @@
                     !is_iterable<T>::value &&
                     detail::owns_its_elements_t<T>::value &&
                     std::is_lvalue_reference<T>::value)>
-            auto operator()(T && t) const
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                detail::container_view_all(t, convertible_to_range_concept_t<T>{})
-            )
+            detail::container_view_all_t<T> operator()(T && t) const
+            {
+                return detail::container_view_all(t, convertible_to_range_concept_t<T>{});
+            }
 
             // TODO handle char const * by turning it into a delimited range
         };

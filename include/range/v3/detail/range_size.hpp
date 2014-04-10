@@ -36,7 +36,7 @@
             typename Size = meta_apply<std::make_unsigned, concepts::ConvertibleToIterable::difference_t<Iterable> >,
             CONCEPT_REQUIRES_(ranges::ConvertibleToIterable<Iterable>() && detail::HasSize<Iterable>())>
         Size
-        range_size(Iterable const &rng)
+        range_size(Iterable &&rng)
         {
             return static_cast<Size>(rng.size());
         }
@@ -48,7 +48,7 @@
                               ranges::ConvertibleToRange<RandomAccessRange>() &&
                               ranges::RandomAccessIterator<concepts::ConvertibleToIterable::iterator_t<RandomAccessRange>>())>
         Size
-        range_size(RandomAccessRange const &rng)
+        range_size(RandomAccessRange &&rng)
         {
             return static_cast<Size>(ranges::end(rng) - ranges::begin(rng));
         }

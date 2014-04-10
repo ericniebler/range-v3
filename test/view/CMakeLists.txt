@@ -34,3 +34,6 @@ add_test(test.repeat repeat)
 
 add_executable(as_range as_range.cpp)
 add_test(test.as_range as_range)
+
+add_executable(counted counted.cpp)
+add_test(test.counted counted)

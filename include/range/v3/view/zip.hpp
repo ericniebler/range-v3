@@ -229,7 +229,7 @@ namespace ranges
         public:
             zipped_view() = default;
             explicit zipped_view(InputIterables &&...rngs)
-                : rngs_{std::forward<InputIterables>(rngs)...}
+              : rngs_{std::forward<InputIterables>(rngs)...}
             {}
             CONCEPT_REQUIRES(logical_and<(bool) ranges::SizedIterable<InputIterables>()...>::value)
             size_type size() const

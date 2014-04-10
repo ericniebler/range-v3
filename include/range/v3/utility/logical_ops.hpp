@@ -58,6 +58,12 @@ namespace ranges
         struct logical_or<>
           : std::false_type
         {};
+
+        template<typename...Bools>
+        using logical_and_t = logical_and<Bools::value...>;
+
+        template<typename...Bools>
+        using logical_or_t = logical_or<Bools::value...>;
     }
 }
 

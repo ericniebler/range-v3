@@ -69,9 +69,6 @@ namespace ranges
                     typename std::enable_if<!Bool::value, int>::type;
             } is_false {};
 
-            template<typename Concept, typename ...Ts>
-            struct models_;
-
             template<typename Concept>
             struct base_concept
             {
@@ -86,6 +83,47 @@ namespace ranges
 
             template<typename Concept>
             using base_concept_t = typename base_concept<Concept>::type;
+
+            template<typename Concept, typename Enable = void>
+            struct base_concepts_of
+            {
+                using type = typelist<>;
+            };
+
+            template<typename Concept>
+            struct base_concepts_of<Concept, always_t<void, typename Concept::base_concepts_t>>
+            {
+                using type = typename Concept::base_concepts_t;
+            };
+
+            template<typename Concept>
+            using base_concepts_of_t = meta_apply<base_concepts_of, Concept>;
+
+            template<typename...Bools>
+            struct lazy_and
+            {
+                static constexpr bool value{true};
+            };
+
+            template<typename Bool, typename...Bools>
+            struct lazy_and<Bool, Bools...>
+            {
+                static constexpr bool value{Bool::value && lazy_and<Bools...>::value};
+            };
+
+            template<typename...Ts>
+            auto models_(any, Ts &&...) ->
+                std::false_type;
+
+            template<typename Concept, typename...Ts>
+            auto models_(Concept c, Ts &&...ts) ->
+                always_t<
+                    typelist_expand_t<
+                        lazy_and,
+                        typelist_transform_t<
+                            base_concepts_of_t<Concept>,
+                            meta_bind_back<concepts::models, Ts...>::template apply>>,
+                    decltype(c.requires(std::forward<Ts>(ts)...))>;
         }
 
         namespace concepts
@@ -118,73 +156,37 @@ namespace ranges
             auto has_type(U &&) ->
                 typename std::enable_if<std::is_same<T,U>::value, int>::type;
 
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // refines
             template<typename ...Concepts>
             struct refines
               : virtual detail::base_concept_t<Concepts>...
             {
+                using base_concepts_t = typelist<Concepts...>;
+
                 template<typename...Ts>
                 void requires(Ts &&...);
             };
 
-            template<typename Concept, typename ...Ts>
-            using models = decltype(detail::models_<Concept, Ts...>{}());
-
-            template<typename Concept, typename ...Ts>
-            auto model_of(Ts &&...) ->
-                typename std::enable_if<(concepts::models<Concept, Ts...>()), int>::type;
-        }
-
-        namespace detail
-        {
-            ////////////////////////////////////////////////////////////////////////////////////
-            // base_concepts
-            typelist<> base_concepts_of_impl_(void *);
-
-            template<typename...BaseConcepts>
-            typelist<BaseConcepts...> base_concepts_of_impl_(concepts::refines<BaseConcepts...> *);
-
-            template<typename Concept>
-            using base_concepts_of_t = decltype(detail::base_concepts_of_impl_((Concept *)nullptr));
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // models_refines_
-            template<typename Concepts, typename...Ts>
-            struct models_refines_;
-
-            template<typename...Ts>
-            struct models_refines_<typelist<>, Ts...>
-              : std::true_type
-            {};
-
-            template<typename...Concepts, typename...Ts>
-            struct models_refines_<typelist<Concepts...>, Ts...>
-              : logical_and<concepts::models<Concepts, Ts...>::value...>
-            {};
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // models_
-            template<typename Concept, typename ...Ts>
-            struct models_
-            {
-                auto operator()() const -> std::false_type;
-
-                template<typename C = Concept, typename = decltype(C{}.requires(std::declval<Ts>()...))>
-                auto operator()() -> models_refines_<base_concepts_of_t<C>, Ts...>;
-            };
-
-            template<typename Concept, typename...Args, typename ...Ts>
-            struct models_<Concept(Args...), Ts...>
-              : models_<Concept, typelist_element_t<Args::value, typelist<Ts...>>...>
-            {};
-
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // models
             template<typename Concept, typename...Ts>
-            struct models_hack_for_clang
-              : concepts::models<Concept, Ts...>
+            struct models
+              : std::integral_constant<bool,
+                    decltype(detail::models_(Concept{}, std::declval<Ts>()...))::value>
             {};
-        }
 
-        namespace concepts
-        {
+            template<typename Concept, typename...Args, typename...Ts>
+            struct models<Concept(Args...), Ts...>
+              : models<Concept, typelist_element_t<Args::value, typelist<Ts...> >...>
+            {};
+
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // model_of
+            template<typename Concept, typename ...Ts, typename C = Concept>
+            auto model_of(Ts &&...) ->
+                enable_if_t<concepts::models<C, Ts...>::value>;
+
             ////////////////////////////////////////////////////////////////////////////////////////////
             // most_refined
             // Find the first concept in a list of concepts that is modeled by the Args
@@ -192,7 +194,7 @@ namespace ranges
             struct most_refined
               : typelist_front<
                     typelist_find_if_t<
-                        meta_bind_back<detail::models_hack_for_clang, Ts...>::template apply,
+                        meta_bind_back<models, Ts...>::template apply,
                         Concepts>>
             {};
 
@@ -644,6 +646,11 @@ namespace ranges
         template<typename T>
         struct difference_type
           : detail::difference_type<detail::uncvref_t<T>>
+        {};
+
+        template<typename T>
+        struct size_type
+          : std::make_unsigned<meta_apply<difference_type, T>>
         {};
 
         template<typename T>
