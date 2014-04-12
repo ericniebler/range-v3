@@ -12,6 +12,7 @@
 #define RANGES_V3_UTILITY_FUNCTIONAL_HPP
 
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/concepts.hpp>
 
 namespace ranges
 {
@@ -19,19 +20,31 @@ namespace ranges
     {
         struct equal_to
         {
-            template<typename T, typename U>
-            auto operator()(T && t, U && u) const -> decltype((T&&)t == (U&&)u)
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(EqualityComparable<T, U>())>
+            constexpr bool operator()(T && t, U && u) const
             {
-                return (T&&)t == (U&&)u;
+                return (T &&) t == (U &&) u;
             }
         };
 
         struct less
         {
-            template<typename T, typename U>
-            auto operator()(T && t, U && u) const -> decltype((T&&)t < (U&&)u)
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(WeaklyOrdered<T, U>())>
+            constexpr bool operator()(T && t, U && u) const
             {
-                return (T&&)t < (U&&)u;
+                return (T &&) t < (U &&) u;
+            }
+        };
+
+        struct ordered_less
+        {
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(TotallyOrdered<T, U>())>
+            constexpr bool operator()(T && t, U && u) const
+            {
+                return (T &&) t < (U &&) u;
             }
         };
 
@@ -40,7 +53,7 @@ namespace ranges
             template<typename T>
             T && operator()(T && t) const
             {
-                return (T&&) t;
+                return (T &&) t;
             }
         };
     }

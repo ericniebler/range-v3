@@ -23,29 +23,19 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace concepts
+        template<typename I, typename V2, typename R = ordered_less, typename P = ident,
+            typename V = iterator_value_t<I>,
+            typename X = concepts::Invokable::result_t<P, V> >
+        constexpr bool BinarySearchable()
         {
-            struct BinarySearchable
-            {
-                template<typename I, typename V2, typename R = less, typename P = ident,
-                    typename V = iterator_value_t<I>,
-                    typename X = Invokable::result_t<P, V>,
-                    CONCEPT_REQUIRES_(
-                        ranges::ForwardIterator<I>()            &&
-                        ranges::TotallyOrdered<X, V2>()         &&
-                        ranges::Invokable<P, V>()               &&
-                        ranges::InvokableRelation<R, X, V2>()
-                    )>
-                void requires(I i, V2 const &v, R r = R{}, P p = P{});
-            };
+            return ForwardIterator<I>()            &&
+                   Invokable<P, V>()               &&
+                   InvokableRelation<R, X, V2>();
         }
-
-        template<typename I, typename V2, typename R = less, typename P = ident>
-        using BinarySearchable = concepts::models<concepts::BinarySearchable, I, V2, R, P>;
 
         struct lower_bound_n_fn
         {
-            template<typename I, typename V2, typename R = less, typename P = ident,
+            template<typename I, typename V2, typename R = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(
                     BinarySearchable<I, V2, R, P>()
                 )>
@@ -72,7 +62,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Rng, typename V2, typename R = less, typename P = ident,
+            template<typename Rng, typename V2, typename R = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
                     Iterable<Rng>()                 &&
@@ -90,7 +80,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename V, typename V2, typename R = less, typename P = ident,
+            template<typename V, typename V2, typename R = ordered_less, typename P = ident,
                 typename I = V const *,
                 CONCEPT_REQUIRES_(
                     BinarySearchable<I, V2, R, P>()
@@ -109,7 +99,7 @@ namespace ranges
 
         struct lower_bound_fn
         {
-            template<typename I, typename S, typename V2, typename R = less, typename P = ident,
+            template<typename I, typename S, typename V2, typename R = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(
                     Sentinel<S, I>()                &&
                     BinarySearchable<I, V2, R, P>()
@@ -122,7 +112,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Rng, typename V2, typename R = less, typename P = ident,
+            template<typename Rng, typename V2, typename R = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
                     Iterable<Rng>()                 &&
@@ -138,7 +128,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename V, typename V2, typename R = less, typename P = ident,
+            template<typename V, typename V2, typename R = ordered_less, typename P = ident,
                 typename I = V const *,
                 CONCEPT_REQUIRES_(
                     BinarySearchable<I, V2, R, P>()

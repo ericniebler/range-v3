@@ -36,7 +36,7 @@ namespace ranges
             ///
             /// \pre \c Rng is a model of the Rng concept
             /// \pre \c R is a model of the InvokableRelation concept
-            template<typename I, typename S, typename V2, typename R = less, typename P = ident,
+            template<typename I, typename S, typename V2, typename R = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(
                     Sentinel<S, I>()                &&
                     BinarySearchable<I, V2, R, P>()
@@ -51,7 +51,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Rng, typename V2, typename R = less, typename P = ident,
+            template<typename Rng, typename V2, typename R = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
                     Iterable<Rng>()                 &&
@@ -66,7 +66,7 @@ namespace ranges
             }
 
             /// \overload
-            template<typename V, typename V2, typename R = less, typename P = ident,
+            template<typename V, typename V2, typename R = ordered_less, typename P = ident,
                 typename I = V const *,
                 CONCEPT_REQUIRES_(
                     BinarySearchable<I, V2, R, P>()
