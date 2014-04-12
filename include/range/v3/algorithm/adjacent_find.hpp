@@ -29,25 +29,20 @@ namespace ranges
             ///
             /// range-based version of the \c adjacent_find std algorithm
             ///
-            /// \pre \c ForwardIterable is a model of the ForwardIterable concept
-            /// \pre \c BinaryPredicate is a model of the BinaryPredicate concept
-            template<typename ForwardIterator, typename Sentinel,
-                typename BinaryPredicate = ranges::equal_to,
-                typename Projection = ranges::ident,
+            /// \pre \c Rng is a model of the ForwardIterable concept
+            /// \pre \c R is a model of the BinaryPredicate concept
+            template<typename I, typename S, typename R = equal_to, typename P = ident,
+                typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
-                    ranges::ForwardIterator<ForwardIterator>() &&
-                    ranges::Sentinel<Sentinel, ForwardIterator>() &&
-                    ranges::Invokable<Projection, iterator_value_t<ForwardIterator>>() &&
-                    ranges::InvokablePredicate<
-                        BinaryPredicate,
-                        concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>,
-                        concepts::Invokable::result_t<Projection, iterator_value_t<ForwardIterator>>>())>
-            ForwardIterator
-            operator()(ForwardIterator begin, Sentinel end,
-                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
+                    ForwardIterator<I, S>()                                         &&
+                    Invokable<P, V>()                                               &&
+                    InvokableRelation<R, concepts::Invokable::result_t<P, V>>()
+                )>
+            I
+            operator()(I begin, S end, R pred = R{}, P proj = P{}) const
             {
-                auto &&ipred = make_invokable(pred);
-                auto &&iproj = make_invokable(proj);
+                auto &&ipred = invokable(pred);
+                auto &&iproj = invokable(proj);
                 if(begin == end)
                     return begin;
                 auto next = begin;
@@ -58,37 +53,32 @@ namespace ranges
             }
 
             /// \overload
-            template<typename ForwardIterable,
-                typename BinaryPredicate = ranges::equal_to,
-                typename Projection = ranges::ident,
+            template<typename Rng, typename R = equal_to, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
-                    ranges::Iterable<ForwardIterable>() &&
-                    ranges::ForwardIterator<range_iterator_t<ForwardIterable>>() &&
-                    ranges::Invokable<Projection, range_value_t<ForwardIterable>>() &&
-                    ranges::InvokablePredicate<BinaryPredicate,
-                        concepts::Invokable::result_t<Projection, range_value_t<ForwardIterable>>,
-                        concepts::Invokable::result_t<Projection, range_value_t<ForwardIterable>>>())>
-            range_iterator_t<ForwardIterable>
-            operator()(ForwardIterable &rng,
-                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
+                    Iterable<Rng>()                                                 &&
+                    ForwardIterator<I>()                                            &&
+                    Invokable<P, V>()                                               &&
+                    InvokableRelation<R, concepts::Invokable::result_t<P, V>>()
+                )>
+            I
+            operator()(Rng &rng, R pred = R{}, P proj = P{}) const
             {
-                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(pred), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
 
             /// \overload
-            template<typename Value,
-                typename BinaryPredicate = ranges::equal_to,
-                typename Projection = ranges::ident,
+            template<typename V, typename R = equal_to, typename P = ident,
+                typename I = V const *,
                 CONCEPT_REQUIRES_(
-                    ranges::Invokable<Projection, Value>() &&
-                    ranges::InvokablePredicate<BinaryPredicate,
-                        concepts::Invokable::result_t<Projection, Value>,
-                        concepts::Invokable::result_t<Projection, Value>>())>
-            Value const *
-            operator()(std::initializer_list<Value> const &rng,
-                BinaryPredicate pred = BinaryPredicate{}, Projection proj = Projection{}) const
+                    Invokable<P, V>()                                               &&
+                    InvokableRelation<R, concepts::Invokable::result_t<P, V>>()
+                )>
+            I
+            operator()(std::initializer_list<V> rng, R pred = R{}, P proj = P{}) const
             {
-                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(pred), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
         };
 

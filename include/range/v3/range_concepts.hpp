@@ -143,7 +143,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ConvertibleToIterable>(t),
+                        concepts::model_of<ConvertibleToIterable>((T &&) t),
                         concepts::model_of<CopyConstructible>(ranges::as_iterable(t))
                     ));
             };
@@ -154,7 +154,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ConvertibleToRange>(t)
+                        concepts::model_of<ConvertibleToRange>((T &&) t)
                     ));
             };
 
@@ -164,7 +164,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ConvertibleToSizedIterable>(t)
+                        concepts::model_of<ConvertibleToSizedIterable>((T &&) t)
                     ));
             };
 
@@ -174,7 +174,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ConvertibleToSizedRange>(t)
+                        concepts::model_of<ConvertibleToSizedRange>((T &&) t)
                     ));
             };
         }

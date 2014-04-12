@@ -65,7 +65,7 @@ namespace ranges
         public:
             adjacent_filtered_view(ForwardIterable && rng, BinaryPredicate pred)
               : range_adaptor_t<adjacent_filtered_view>{std::forward<ForwardIterable>(rng)}
-              , pred_(make_invokable(std::move(pred)))
+              , pred_(invokable(std::move(pred)))
             {}
         };
 

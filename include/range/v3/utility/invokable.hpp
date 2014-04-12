@@ -38,39 +38,61 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR make_invokable_fn make_invokable {};
+        RANGES_CONSTEXPR make_invokable_fn invokable {};
+
+        template<typename T>
+        using invokable_t = decltype(ranges::invokable(std::declval<T>()));
 
         namespace concepts
         {
             struct Invokable
             {
-                template<typename T, typename...Args>
-                using result_t = decltype(ranges::make_invokable(std::declval<T>())(std::declval<Args>()...));
+                template<typename Fun, typename...Args>
+                using result_t = Function::result_t<invokable_t<Fun>, Args...>;
 
-                template<typename T, typename...Args>
-                auto requires(T &&t, Args &&...args) -> decltype(
+                template<typename Fun, typename...Args>
+                auto requires(Fun &&fun, Args &&...args) -> decltype(
                     concepts::valid_expr(
-                        (ranges::make_invokable((T &&) t)((Args &&) args...), 42)
+                        concepts::model_of<Function>(ranges::invokable((Fun &&) fun), (Args &&) args...)
                     ));
             };
 
-            struct InvokablePredicate
+            struct RegularInvokable
               : refines<Invokable>
+            {};
+
+            struct InvokablePredicate
+              : refines<RegularInvokable>
             {
-                template<typename T, typename...Args>
-                auto requires(T &&t, Args &&...args) -> decltype(
+                template<typename Fun, typename...Args>
+                auto requires(Fun &&fun, Args &&...args) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<bool>(
-                            ranges::make_invokable((T &&) t)((Args &&) args...))
+                        concepts::model_of<Predicate>(ranges::invokable((Fun &&) fun), (Args &&) args...)
+                    ));
+            };
+
+            struct InvokableRelation
+              : refines<InvokablePredicate>
+            {
+                template<typename Fun, typename T, typename U>
+                auto requires(Fun &&fun, T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Relation>(ranges::invokable((Fun &&) fun), (T &&) t, (U &&) u)
                     ));
             };
         }
 
-        template<typename T, typename...Args>
-        using Invokable = concepts::models<concepts::Invokable, T, Args...>;
+        template<typename Fun, typename...Args>
+        using Invokable = concepts::models<concepts::Invokable, Fun, Args...>;
 
-        template<typename T, typename...Args>
-        using InvokablePredicate = concepts::models<concepts::InvokablePredicate, T, Args...>;
+        template<typename Fun, typename...Args>
+        using RegularInvokable = concepts::models<concepts::RegularInvokable, Fun, Args...>;
+
+        template<typename Fun, typename...Args>
+        using InvokablePredicate = concepts::models<concepts::InvokablePredicate, Fun, Args...>;
+
+        template<typename Fun, typename T, typename U = T>
+        using InvokableRelation = concepts::models<concepts::InvokableRelation, Fun, T, U>;
     }
 }
 

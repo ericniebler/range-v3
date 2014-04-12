@@ -48,8 +48,7 @@ namespace ranges
         public:
             template<typename InputIterator, typename Sentinel,
                 typename Distance = iterator_difference_t<InputIterator>,
-                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
-                    ranges::Sentinel<Sentinel, InputIterator>() &&
+                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator, Sentinel>() &&
                     ranges::Integral<Distance>())>
             std::pair<Distance, InputIterator>
             operator()(InputIterator begin, Sentinel end, Distance d = 0) const
@@ -91,8 +90,7 @@ namespace ranges
         public:
             template<typename InputIterator, typename Sentinel,
                 typename Distance = iterator_difference_t<InputIterator>,
-                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>() &&
-                    ranges::Sentinel<Sentinel, InputIterator>() &&
+                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator, Sentinel>() &&
                     ranges::Integral<Distance>())>
             Distance
             operator()(InputIterator begin, Sentinel end, Distance d = 0) const

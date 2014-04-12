@@ -98,14 +98,14 @@ namespace ranges
             using wrap_ref_t = typename wrap_ref<T>::type;
 
             template<typename BinaryFunction, typename T, std::size_t N,
-                CONCEPT_REQUIRES_(ranges::Callable<BinaryFunction, T, size_t<N>>())>
+                CONCEPT_REQUIRES_(ranges::Function<BinaryFunction, T, size_t<N>>())>
             void apply_if(BinaryFunction &&fun, T &t, size_t<N> u)
             {
                 detail::forward<BinaryFunction>(fun)(t, u);
             }
 
             template<typename BinaryFunction, typename T, std::size_t N,
-                CONCEPT_REQUIRES_(!ranges::Callable<BinaryFunction, T, size_t<N>>())>
+                CONCEPT_REQUIRES_(!ranges::Function<BinaryFunction, T, size_t<N>>())>
             void apply_if(BinaryFunction &&, T &, size_t<N>)
             {
                 RANGES_ASSERT(false);
@@ -392,7 +392,7 @@ namespace ranges
                     ranges::tagged_variant,
                     typelist_replace_t<void, void_t,
                         typelist_transform_t<Types,
-                            meta_bind_front<concepts::Callable::result_t, UnaryFunction>::template apply> > >;
+                            meta_bind_front<concepts::Function::result_t, UnaryFunction>::template apply> > >;
 
             template<typename BinaryFunction, typename Types>
             using variant_result_i_t =
@@ -400,7 +400,7 @@ namespace ranges
                     ranges::tagged_variant,
                     typelist_replace_t<void, void_t,
                         typelist_transform2_t<Types, typelist_integer_sequence_t<Types::size()>,
-                            meta_bind_front<concepts::Callable::result_t, BinaryFunction>::template apply> > >;
+                            meta_bind_front<concepts::Function::result_t, BinaryFunction>::template apply> > >;
 
             template<typename Function>
             struct unwrap_ref_fun

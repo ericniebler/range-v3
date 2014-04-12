@@ -22,43 +22,43 @@ namespace ranges
     {
         struct copy_backward_fn
         {
-            template<typename BidirectionalIterator, typename OutputIterator,
-                typename Projection = ranges::ident,
-                CONCEPT_REQUIRES_(ranges::BidirectionalIterator<BidirectionalIterator>() &&
-                    ranges::Invokable<Projection, iterator_value_t<BidirectionalIterator>>() &&
-                    ranges::BidirectionalIterator<OutputIterator>() &&
-                    ranges::WeakOutputIterator<OutputIterator,
-                        concepts::Invokable::result_t<Projection, iterator_value_t<BidirectionalIterator>>>())>
-            OutputIterator
-            operator()(BidirectionalIterator begin, BidirectionalIterator end, OutputIterator out,
-                Projection proj = Projection{}) const
+            template<typename I, typename S, typename O, typename P = ident,
+                CONCEPT_REQUIRES_(
+                    BidirectionalIterator<I, S>()           &&
+                    BidirectionalIterator<O>()              &&
+                    IndirectlyProjectedCopyable<I, P, O>()
+                )>
+            std::pair<O, I>
+            operator()(I begin, S end, O out, P proj = P{}) const
             {
-                auto &&iproj = make_invokable(proj);
-                for(; begin != end; ++begin, ++out)
+                auto &&iproj = invokable(proj);
+                for(; begin != end; ++begin, --out)
                     *out = iproj(*begin);
                 return {out, begin};
             }
 
-            template<typename InputIterable, typename OutputIterator,
-                typename Projection = ranges::ident,
-                CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
-                    ranges::InputIterator<range_iterator_t<InputIterable>>() &&
-                    ranges::Invokable<Projection, range_value_t<InputIterable>>() &&
-                    ranges::WeakOutputIterator<OutputIterator,
-                        concepts::Invokable::result_t<Projection, range_value_t<InputIterable>>>())>
-            std::pair<OutputIterator, range_iterator_t<InputIterable>>
-            operator()(InputIterable &rng, OutputIterator out, Projection proj = Projection{}) const
+            template<typename Rng, typename O, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(
+                    Iterable<Rng>()                         &&
+                    BidirectionalIterator<I>()              &&
+                    BidirectionalIterator<O>()              &&
+                    IndirectlyProjectedCopyable<I, P, O>()
+                )>
+            std::pair<O, I>
+            operator()(Rng &rng, O out, P proj = P{}) const
             {
-                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(out), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
             }
 
-            template<typename Value, typename OutputIterator, typename Projection = ranges::ident,
-                CONCEPT_REQUIRES_(ranges::Invokable<Projection, Value>() &&
-                    ranges::WeakOutputIterator<OutputIterator,
-                        concepts::Invokable::result_t<Projection, Value>>())>
-            std::pair<OutputIterator, Value const *>
-            operator()(std::initializer_list<Value> const &rng, OutputIterator out,
-                Projection proj = Projection{}) const
+            template<typename V, typename O, typename P = ident,
+                typename I = V const *,
+                CONCEPT_REQUIRES_(
+                    BidirectionalIterator<O>()              &&
+                    IndirectlyProjectedCopyable<I, P, O>()
+                )>
+            std::pair<O, I>
+            operator()(std::initializer_list<V> rng, O out, P proj = P{}) const
             {
                 return (*this)(rng.begin(), rng.end(), std::move(out), std::move(proj));
             }

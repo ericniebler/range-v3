@@ -36,10 +36,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeBuildCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build"</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build-clang -j8"</NMakeBuildCommandLine>
     <NMakeOutput>range.exe</NMakeOutput>
-    <NMakeCleanCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build clean"</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build -B"</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build-clang clean"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>C:\cygwin\bin\sh -c "make -C /cygdrive/c/Users/eric/Code/range-build-clang -B  -j8"</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>..\..\..\..\include;C:\boost\org\trunk;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <ExecutablePath>C:\cygwin\bin;$(ExecutablePath)</ExecutablePath>

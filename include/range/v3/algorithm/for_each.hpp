@@ -26,19 +26,18 @@ namespace ranges
     {
         struct for_each_fn
         {
-            template<typename InputIterator, typename Sentinel, typename Fun,
-                typename Projection = ranges::ident,
+            template<typename I, typename S, typename F, typename P = ident,
+                typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
-                    ranges::InputIterator<InputIterator>() &&
-                    ranges::Sentinel<Sentinel, InputIterator>() &&
-                    ranges::Invokable<Projection, iterator_value_t<InputIterator>>() &&
-                    ranges::Invokable<Fun,
-                        concepts::Invokable::result_t<Projection, iterator_value_t<InputIterator>>>())>
-            InputIterator
-            operator()(InputIterator begin, Sentinel end, Fun fun, Projection proj = Projection{}) const
+                    InputIterator<I, S>()                               &&
+                    Invokable<P, V>()                                   &&
+                    Invokable<F, concepts::Invokable::result_t<P, V>>()
+                )>
+            I
+            operator()(I begin, S end, F fun, P proj = P{}) const
             {
-                auto &&ifun = make_invokable(fun);
-                auto &&iproj = make_invokable(proj);
+                auto &&ifun = invokable(fun);
+                auto &&iproj = invokable(proj);
                 for(; begin != end; ++begin)
                 {
                     ifun(iproj(*begin));
@@ -46,29 +45,31 @@ namespace ranges
                 return begin;
             }
 
-            template<typename InputIterable, typename Fun,
-                typename Projection = ranges::ident,
+            template<typename Rng, typename F, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
-                    ranges::Iterable<InputIterable>() &&
-                    ranges::InputIterator<range_iterator_t<InputIterable>>() &&
-                    ranges::Invokable<Projection, range_value_t<InputIterable>>() &&
-                    ranges::Invokable<Fun,
-                        concepts::Invokable::result_t<Projection, range_value_t<InputIterable>>>())>
-            range_iterator_t<InputIterable>
-            operator()(InputIterable &rng, Fun fun, Projection proj = Projection{}) const
+                    Iterable<Rng>()                                     &&
+                    InputIterator<I>()                                  &&
+                    Invokable<P, V>()                                   &&
+                    Invokable<F, concepts::Invokable::result_t<P, V>>()
+                )>
+            I
+            operator()(Rng &rng, F fun, P proj = P{}) const
             {
-                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(fun), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));
             }
 
-            template<typename Value, typename Fun,
-                typename Projection = ranges::ident,
+            template<typename V, typename F, typename P = ident,
+                typename I = V const *,
                 CONCEPT_REQUIRES_(
-                    ranges::Invokable<Projection, Value>() &&
-                    ranges::Invokable<Fun, concepts::Invokable::result_t<Projection, Value>>())>
-            Value const *
-            operator()(std::initializer_list<Value> const &rng, Fun fun, Projection proj = Projection{}) const
+                    Invokable<P, V>()                                   &&
+                    Invokable<F, concepts::Invokable::result_t<P, V>>()
+                )>
+            I
+            operator()(std::initializer_list<V> rng, F fun, P proj = P{}) const
             {
-                return (*this)(ranges::begin(rng), ranges::end(rng), std::move(fun), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));
             }
         };
 

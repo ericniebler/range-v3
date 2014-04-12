@@ -17,6 +17,7 @@
 #include <type_traits>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -169,9 +170,9 @@ namespace ranges
                 template<typename I, typename O>
                 auto requires(I i, O o) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Readable>(i),
-                        concepts::model_of<SemiRegular>(o),
-                        concepts::model_of<MoveWritable>(*i, o)
+                        concepts::model_of<Readable>((I) i),
+                        concepts::model_of<SemiRegular>((O) o),
+                        concepts::model_of<MoveWritable>(*i, (O) o)
                     ));
             };
 
@@ -180,9 +181,33 @@ namespace ranges
                 template<typename I, typename O>
                 auto requires(I i, O o) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Readable>(i),
-                        concepts::model_of<SemiRegular>(o),
-                        concepts::model_of<Writable>(*i, o)
+                        concepts::model_of<Readable>((I) i),
+                        concepts::model_of<SemiRegular>((O) o),
+                        concepts::model_of<Writable>(*i, (O) o)
+                    ));
+            };
+
+            struct IndirectlyProjectedMovable
+            {
+                template<typename I, typename P, typename O>
+                auto requires(I i, P && p, O o) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Readable>((I) i),
+                        concepts::model_of<RegularInvokable>((P &&) p, *i),
+                        concepts::model_of<SemiRegular>((O) o),
+                        concepts::model_of<MoveWritable>(ranges::invokable((P &&) p)(*i), (O) o)
+                    ));
+            };
+
+            struct IndirectlyProjectedCopyable
+            {
+                template<typename I, typename P, typename O>
+                auto requires(I i, P && p, O o) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Readable>((I) i),
+                        concepts::model_of<RegularInvokable>((P &&) p, *i),
+                        concepts::model_of<SemiRegular>((O) o),
+                        concepts::model_of<Writable>((O) o, ranges::invokable((P &&) p)(*i))
                     ));
             };
 
@@ -212,6 +237,8 @@ namespace ranges
                     ));
             };
 
+            struct Sentinel;
+
             struct WeakInputIterator
               : refines<WeaklyIncrementable, Readable, Copyable>
             {
@@ -238,22 +265,35 @@ namespace ranges
             {};
 
             struct InputIterator
-              : refines<WeakInputIterator, EqualityComparable>
+              : refines<WeakInputIterator(_1), EqualityComparable>
             {
                 template<typename I>
                 auto requires(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::input_iterator_tag{})
                     ));
+
+                template<typename I, typename S>
+                auto requires(I i, S s) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<InputIterator>((I) i),
+                        concepts::model_of<Sentinel>((S) s, (I) i)
+                    ));
             };
 
             struct ForwardIterator
-              : refines<InputIterator, Incrementable>
+              : refines<InputIterator, Incrementable(_1)>
             {
                 template<typename I>
                 auto requires(I) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::forward_iterator_tag{})
+                    ));
+
+                template<typename I, typename S>
+                auto requires(I i, S) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<ForwardIterator>((I) i)
                     ));
             };
 
@@ -267,6 +307,12 @@ namespace ranges
                         concepts::has_type<I &>(--i),
                         concepts::has_type<I>(i--),
                         concepts::same_type(*i, *i--)
+                    ));
+
+                template<typename I, typename S>
+                auto requires(I i, S) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<BidirectionalIterator>((I) i)
                     ));
             };
 
@@ -286,11 +332,23 @@ namespace ranges
                         concepts::has_type<I &>(i -= (i - i)),
                         concepts::convertible_to<V>(i[i - i])
                     ));
+
+                template<typename I, typename S>
+                auto requires(I i, S) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<RandomAccessIterator>((I) i)
+                    ));
             };
 
             struct Sentinel
-              : refines<CopyConstructible(_1), WeakInputIterator(_2), EqualityComparable>
-            {};
+              : refines<CopyConstructible(_1), EqualityComparable>
+            {
+                template<typename S, typename I>
+                auto requires(S, I i) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<InputIterator>((I) i)
+                    ));
+            };
         }
 
         template<typename T>
@@ -308,14 +366,20 @@ namespace ranges
         template<typename I, typename O>
         using IndirectlyCopyable = concepts::models<concepts::IndirectlyCopyable, I, O>;
 
+        template<typename I, typename P, typename O>
+        using IndirectlyProjectedMovable = concepts::models<concepts::IndirectlyProjectedMovable, I, P, O>;
+
+        template<typename I, typename P, typename O>
+        using IndirectlyProjectedCopyable = concepts::models<concepts::IndirectlyProjectedCopyable, I, P, O>;
+
         template<typename T>
         using WeaklyIncrementable = concepts::models<concepts::WeaklyIncrementable, T>;
 
         template<typename T>
         using Incrementable = concepts::models<concepts::Incrementable, T>;
 
-        template<typename T>
-        using WeakInputIterator = concepts::models<concepts::WeakInputIterator, T>;
+        template<typename I>
+        using WeakInputIterator = concepts::models<concepts::WeakInputIterator, I>;
 
         template<typename Out, typename T>
         using WeakOutputIterator = concepts::models<concepts::WeakOutputIterator, Out, T>;
@@ -323,17 +387,17 @@ namespace ranges
         template<typename Out, typename T>
         using OutputIterator = concepts::models<concepts::OutputIterator, Out, T>;
 
-        template<typename T>
-        using InputIterator = concepts::models<concepts::InputIterator, T>;
+        template<typename I, typename S = I>
+        using InputIterator = concepts::models<concepts::InputIterator, I, S>;
 
-        template<typename T>
-        using ForwardIterator = concepts::models<concepts::ForwardIterator, T>;
+        template<typename I, typename S = I>
+        using ForwardIterator = concepts::models<concepts::ForwardIterator, I, S>;
 
-        template<typename T>
-        using BidirectionalIterator = concepts::models<concepts::BidirectionalIterator, T>;
+        template<typename I, typename S = I>
+        using BidirectionalIterator = concepts::models<concepts::BidirectionalIterator, I, S>;
 
-        template<typename T>
-        using RandomAccessIterator = concepts::models<concepts::RandomAccessIterator, T>;
+        template<typename I, typename S = I>
+        using RandomAccessIterator = concepts::models<concepts::RandomAccessIterator, I, S>;
 
         template<typename S, typename I>
         using Sentinel = concepts::models<concepts::Sentinel, S, I>;

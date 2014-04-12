@@ -279,13 +279,13 @@ namespace ranges
         struct compressed_tuple;
 
         struct make_invokable_fn;
-        extern make_invokable_fn const make_invokable;
+        extern make_invokable_fn const invokable;
 
         struct bind_maker;
         extern bind_maker const bind;
 
         template<typename T>
-        using invokable_t = decltype(make_invokable(std::declval<T>()));
+        using invokable_t = decltype(invokable(std::declval<T>()));
 
         template<typename T>
         struct istream_iterable;

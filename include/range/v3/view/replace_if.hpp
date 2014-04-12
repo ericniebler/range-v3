@@ -39,7 +39,7 @@ namespace ranges
 
                     template<typename Value2>
                     replacer_if_fun(UnaryPredicate pred, Value2 && new_value)
-                      : fun_and_new_value_{make_invokable(std::move(pred)),
+                      : fun_and_new_value_{invokable(std::move(pred)),
                                            std::forward<Value2>(new_value)}
                     {}
                 public:

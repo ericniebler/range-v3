@@ -112,7 +112,7 @@ namespace ranges
                 friend struct ranges::bind_maker;
 
                 explicit binder(Fn && fn, BoundArgs &&... args)
-                  : fn_(ranges::make_invokable(std::forward<Fn>(fn)))
+                  : fn_(ranges::invokable(std::forward<Fn>(fn)))
                   , bound_args_{std::forward<BoundArgs>(args)...}
                 {}
             public:

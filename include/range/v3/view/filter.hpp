@@ -86,7 +86,7 @@ namespace ranges
         public:
             filtered_view(InputIterable && rng, UnaryPredicate pred)
               : range_adaptor_t<filtered_view>(std::forward<InputIterable>(rng))
-              , pred_(ranges::make_invokable(std::move(pred)))
+              , pred_(ranges::invokable(std::move(pred)))
             {}
         };
 

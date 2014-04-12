@@ -71,7 +71,7 @@ namespace ranges
             transformed_view() = default;
             transformed_view(InputIterable && rng, UnaryFunction fun)
               : range_adaptor_t<transformed_view>(std::forward<InputIterable>(rng))
-              , fun_(ranges::make_invokable(std::move(fun)))
+              , fun_(ranges::invokable(std::move(fun)))
             {}
             CONCEPT_REQUIRES(ranges::SizedIterable<InputIterable>())
             range_size_t<InputIterable> size() const

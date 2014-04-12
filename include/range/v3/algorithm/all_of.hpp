@@ -16,6 +16,8 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
@@ -24,37 +26,45 @@ namespace ranges
     {
         struct all_of_fn
         {
-            template<typename I, typename S, typename P>
-            bool operator()(I first, S last, predicate<P> pred) const
+            template<typename I, typename S, typename F, typename P = ident,
+                typename V = iterator_value_t<I>,
+                CONCEPT_REQUIRES_(
+                    InputIterator<I, S>()                                           &&
+                    InvokablePredicate<F, concepts::Invokable::result_t<P, V>>()
+                )>
+            bool
+            operator()(I first, S last, F pred, P proj = P{}) const
             {
-                while (first != last && pred(*first))
-                    ++first;
+                auto &&ipred = invokable(pred);
+                auto &&iproj = invokable(proj);
+                for(; first != last; ++first)
+                    if(!ipred(iproj(*first)))
+                        break;
                 return first == last;
             }
 
-            template<typename I, typename S, typename P,
-                CONCEPT_REQUIRES_(ranges::InputIterator<I>() &&
-                                  ranges::Sentinel<S, I>() &&
-                                  ranges::AdaptablePredicate<P, iterator_value_t<I>>())>
-            bool operator()(I first, S last, P pred) const
+            template<typename Rng, typename F, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                typename V = iterator_value_t<I>,
+                CONCEPT_REQUIRES_(
+                    Iterable<Rng>()                                                 &&
+                    InputIterator<I>()                                              &&
+                    InvokablePredicate<F, concepts::Invokable::result_t<P, V>>()
+                )>
+            bool
+            operator()(Rng const &rng, F pred, P proj = P{}) const
             {
-                return (*this)(first, last, predicate<P>(pred));
+                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
 
-            template<typename I, typename P,
-                CONCEPT_REQUIRES_(ranges::Iterable<I>() &&
-                                  ranges::InputIterator<range_iterator_t<I>>() &&
-                                  ranges::AdaptablePredicate<P, range_value_t<I>>())>
-            bool operator()(const I& rng, P pred) const
+            template<typename V, typename F, typename P = ident,
+                CONCEPT_REQUIRES_(
+                    InvokablePredicate<F, concepts::Invokable::result_t<P, V>>()
+                )>
+            bool
+            operator()(std::initializer_list<V> rng, F pred, P proj = P{}) const
             {
-                return (*this)(ranges::begin(rng), ranges::end(rng), pred);
-            }
-
-            template<typename T, typename P,
-                CONCEPT_REQUIRES_(ranges::AdaptablePredicate<P, T>())>
-            bool operator()(std::initializer_list<T> list, P pred) const
-            {
-                return (*this)(ranges::begin(list), ranges::end(list), pred);
+                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }        
         };
 
