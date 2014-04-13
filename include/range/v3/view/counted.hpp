@@ -120,7 +120,9 @@ namespace ranges
             counted_view() = default;
             counted_view(InputIterator it, iterator_difference_t<InputIterator> n)
               : it_(it), n_(n)
-            {}
+            {
+                RANGES_ASSERT(0 <= n_);
+            }
             size_type size() const
             {
                 return static_cast<size_type>(n_);

@@ -20,6 +20,7 @@
 #include <range/v3/algorithm/binary_search.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
+#include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/algorithm/count.hpp>
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/algorithm/equal.hpp>
@@ -36,6 +37,7 @@
 #include <range/v3/algorithm/inplace_merge.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
+#include <range/v3/algorithm/lower_bound_n.hpp>
 #include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/min_element.hpp>

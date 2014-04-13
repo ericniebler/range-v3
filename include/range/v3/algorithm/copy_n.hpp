@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -8,13 +7,14 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_ALGORITHM_COPY_HPP
-#define RANGES_V3_ALGORITHM_COPY_HPP
+#ifndef RANGES_V3_ALGORITHM_COPY_N_HPP
+#define RANGES_V3_ALGORITHM_COPY_N_HPP
 
 #include <utility>
 #include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/distance.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
@@ -26,19 +26,20 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct copy_fn
+        struct copy_n_fn
         {
-            template<typename I, typename S, typename O, typename P = ident,
+            template<typename I, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I, S>()                   &&
+                    InputIterator<I>()                      &&
                     WeaklyIncrementable<O>()                &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             std::pair<I, O>
-            operator()(I begin, S end, O out, P proj = P{}) const
+            operator()(I begin, iterator_difference_t<I> n, O out, P proj = P{}) const
             {
+                RANGES_ASSERT(0 <= n);
                 auto &&iproj = invokable(proj);
-                for(; begin != end; ++begin, ++out)
+                for(; n != 0; ++begin, ++out, --n)
                     *out = iproj(*begin);
                 return {begin, out};
             }
@@ -52,9 +53,10 @@ namespace ranges
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             std::pair<I, O>
-            operator()(Rng &rng, O out, P proj = P{}) const
+            operator()(Rng &rng, iterator_difference_t<I> n, O out, P proj = P{}) const
             {
-                return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
+                RANGES_ASSERT(!ForwardIterator<I>() || n <= distance(rng));
+                return (*this)(begin(rng), n, std::move(out), std::move(proj));
             }
 
             template<typename V, typename O, typename P = ident,
@@ -64,13 +66,14 @@ namespace ranges
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             std::pair<I, O>
-            operator()(std::initializer_list<V> rng, O out, P proj = P{}) const
+            operator()(std::initializer_list<V> rng, iterator_difference_t<I> n, O out, P proj = P{}) const
             {
-                return (*this)(rng.begin(), rng.end(), std::move(out), std::move(proj));
+                RANGES_ASSERT(n <= rng.size());
+                return (*this)(rng.begin(), n, std::move(out), std::move(proj));
             }
         };
 
-        RANGES_CONSTEXPR copy_fn copy{};
+        RANGES_CONSTEXPR copy_n_fn copy_n{};
 
     } // namespace v3
 } // namespace ranges

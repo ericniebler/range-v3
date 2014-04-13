@@ -18,6 +18,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -416,6 +417,50 @@ namespace ranges
 
         template<typename T>
         using iterator_concept_t = meta_apply<iterator_concept, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // Composite concepts for use defining algorithms:
+        template<typename I, typename V = concepts::Readable::value_t<I>>
+        constexpr bool Permutable()
+        {
+            return ForwardIterator<I>()     &&
+                   SemiRegular<V>()         &&
+                   IndirectlyMovable<I, I>();
+        }
+
+        template<typename I1, typename I2, typename Out, typename C = ordered_less,
+            typename V1 = concepts::Readable::value_t<I1>,
+            typename V2 = concepts::Readable::value_t<I2>>
+        constexpr bool Mergeable()
+        {
+            return InputIterator<I1>()              &&
+                   InputIterator<I2>()              &&
+                   WeaklyIncrementable<Out>()       &&
+                   InvokableRelation<C, V1, V2>()   &&
+                   IndirectlyCopyable<I1, Out>()    &&
+                   IndirectlyCopyable<I2, Out>();
+        }
+
+        template<typename I, typename C = ordered_less, typename P = ident,
+            typename V = concepts::Readable::value_t<I>,
+            typename X = concepts::Invokable::result_t<P, V>>
+        constexpr bool Sortable()
+        {
+            return ForwardIterator<I>()         &&
+                   Invokable<P, V>()            &&
+                   InvokableRelation<C, X, X>() &&
+                   IndirectlyMovable<I, I>();
+        }
+
+        template<typename I, typename V2, typename R = ordered_less, typename P = ident,
+            typename V = concepts::Readable::value_t<I>,
+            typename X = concepts::Invokable::result_t<P, V> >
+        constexpr bool BinarySearchable()
+        {
+            return ForwardIterator<I>()            &&
+                   Invokable<P, V>()               &&
+                   InvokableRelation<R, X, V2>();
+        }
     }
 }
 

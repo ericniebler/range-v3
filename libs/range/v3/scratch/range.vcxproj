@@ -74,6 +74,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\binary_search.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\copy.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\copy_backward.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\range_adaptor.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\binary_search.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_backward.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\count.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\count_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal.hpp" />
@@ -119,6 +121,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\inplace_merge.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lexicographical_compare.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lower_bound.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lower_bound_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\max_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\min_element.hpp" />
