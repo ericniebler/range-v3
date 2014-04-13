@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2013, 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -11,10 +10,15 @@
 #ifndef RANGES_V3_ALGORITHM_COPY_BACKWARD_HPP
 #define RANGES_V3_ALGORITHM_COPY_BACKWARD_HPP
 
+#include <utility>
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -28,13 +32,12 @@ namespace ranges
                     BidirectionalIterator<O>()              &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
-            std::pair<O, I>
-            operator()(I begin, S end, O out, P proj = P{}) const
+            O operator()(I begin, S end, O out, P proj = P{}) const
             {
                 auto &&iproj = invokable(proj);
-                for(; begin != end; ++begin, --out)
-                    *out = iproj(*begin);
-                return {out, begin};
+                while(begin != end)
+                    *--out = iproj(*--end);
+                return out;
             }
 
             template<typename Rng, typename O, typename P = ident,
@@ -45,8 +48,7 @@ namespace ranges
                     BidirectionalIterator<O>()              &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
-            std::pair<O, I>
-            operator()(Rng &rng, O out, P proj = P{}) const
+            O operator()(Rng &rng, O out, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
             }
@@ -57,8 +59,7 @@ namespace ranges
                     BidirectionalIterator<O>()              &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
-            std::pair<O, I>
-            operator()(std::initializer_list<V> rng, O out, P proj = P{}) const
+            O operator()(std::initializer_list<V> rng, O out, P proj = P{}) const
             {
                 return (*this)(rng.begin(), rng.end(), std::move(out), std::move(proj));
             }

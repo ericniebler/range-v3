@@ -10,6 +10,9 @@ add_test(test.binary_search binary_search)
 add_executable(copy copy.cpp)
 add_test(test.copy copy)
 
+add_executable(copy_backward copy_backward.cpp)
+add_test(test.copy_backward copy_backward)
+
 add_executable(for_each for_each.cpp)
 add_test(test.for_each for_each)
 
