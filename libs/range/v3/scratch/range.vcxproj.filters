@@ -40,6 +40,9 @@
     <Filter Include="Test Files\view">
       <UniqueIdentifier>{a71f57e8-040b-4b94-9274-da06b6289cdb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\algorithm\detail">
+      <UniqueIdentifier>{3d7f6c6a-1c57-4c9d-92b0-14b2e02efd6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
@@ -531,6 +534,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound_n.hpp">
       <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\detail\combine_copy_n.hpp">
+      <Filter>Header Files\algorithm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\detail\combine_copy.hpp">
+      <Filter>Header Files\algorithm\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

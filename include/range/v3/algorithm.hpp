@@ -75,6 +75,10 @@
 #include <range/v3/algorithm/upper_bound.hpp>
 #include <range/v3/algorithm/upper_bound_n.hpp>
 
+// BUGBUG
+#include <range/v3/algorithm/detail/combine_copy.hpp>
+#include <range/v3/algorithm/detail/combine_copy_n.hpp>
+
 #include <range/v3/detail/re_enable_warnings.hpp>
 
 #endif
