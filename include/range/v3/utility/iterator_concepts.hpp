@@ -173,7 +173,7 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<MoveWritable>(*i, (O) o)
+                        concepts::model_of<MoveWritable>((O) o, *i)
                     ));
             };
 
@@ -184,7 +184,7 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<Writable>(*i, (O) o)
+                        concepts::model_of<Writable>((O) o, *i)
                     ));
             };
 
@@ -196,7 +196,7 @@ namespace ranges
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<RegularInvokable>((P &&) p, *i),
                         concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<MoveWritable>(ranges::invokable((P &&) p)(*i), (O) o)
+                        concepts::model_of<MoveWritable>((O) o, ranges::invokable((P &&) p)(*i))
                     ));
             };
 

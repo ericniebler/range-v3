@@ -254,6 +254,41 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR back_inserter_fn back_inserter {};
+
+        struct uncounted_fn
+        {
+            template<typename I>
+            I operator()(I i) const
+            {
+                return i;
+            }
+
+            template<typename I>
+            I operator()(counted_iterator<I> i) const
+            {
+                return i.base();
+            }
+        };
+
+        RANGES_CONSTEXPR uncounted_fn uncounted{};
+
+        struct recounted_fn
+        {
+            template<typename I>
+            I operator()(I const &, I i, iterator_difference_t<I>) const
+            {
+                return i;
+            }
+
+            template<typename I>
+            counted_iterator<I>
+            operator()(counted_iterator<I> const &j, I i, iterator_difference_t<I> n) const
+            {
+                return {i, j.count() + n};
+            }
+        };
+
+        RANGES_CONSTEXPR recounted_fn recounted{};
     }
 }
 

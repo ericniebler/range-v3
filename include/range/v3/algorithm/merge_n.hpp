@@ -22,18 +22,18 @@
 // Elements of Programming
 // by Alexander Stepanov and Paul McJones
 // Addison-Wesley Professional, 2009
-#ifndef RANGES_V3_ALGORITHM_MERGE_HPP
-#define RANGES_V3_ALGORITHM_MERGE_HPP
+#ifndef RANGES_V3_ALGORITHM_MERGE_N_HPP
+#define RANGES_V3_ALGORITHM_MERGE_N_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/algorithm/detail/combine_copy.hpp>
+#include <range/v3/algorithm/detail/combine_copy_n.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        using merge_fn = combine_copy_fn;
-        RANGES_CONSTEXPR merge_fn merge{};
+        using merge_n_fn = combine_copy_n_fn;
+        RANGES_CONSTEXPR merge_n_fn merge_n{};
     } // namespace v3
 } // namespace ranges
 

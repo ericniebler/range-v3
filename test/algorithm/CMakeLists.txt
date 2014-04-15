@@ -21,3 +21,6 @@ add_test(test.lower_bound lower_bound)
 
 add_executable(upper_bound upper_bound.cpp)
 add_test(test.upper_bound upper_bound)
+
+add_executable(merge merge.cpp)
+add_test(test.merge merge)

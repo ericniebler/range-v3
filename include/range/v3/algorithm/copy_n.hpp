@@ -39,9 +39,11 @@ namespace ranges
             {
                 RANGES_ASSERT(0 <= n);
                 auto &&iproj = invokable(proj);
-                for(; n != 0; ++begin, ++out, --n)
-                    *out = iproj(*begin);
-                return {begin, out};
+                auto norig = n;
+                auto b = uncounted(begin);
+                for(; n != 0; ++b, ++out, --n)
+                    *out = iproj(*b);
+                return {recounted(begin, b, norig), out};
             }
 
             template<typename Rng, typename O, typename P = ident,

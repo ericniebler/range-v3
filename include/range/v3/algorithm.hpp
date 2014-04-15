@@ -40,6 +40,7 @@
 #include <range/v3/algorithm/lower_bound_n.hpp>
 #include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/algorithm/merge.hpp>
+#include <range/v3/algorithm/merge_n.hpp>
 #include <range/v3/algorithm/min_element.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
 #include <range/v3/algorithm/move.hpp>

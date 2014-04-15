@@ -25,6 +25,7 @@
 #ifndef RANGES_V3_ALGORITHM_COMBINE_COPY_HPP
 #define RANGES_V3_ALGORITHM_COMBINE_COPY_HPP
 
+#include <tuple>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -39,47 +40,47 @@ namespace ranges
     {
         struct combine_copy_fn
         {
-            template<typename I0, typename S0, typename I1, typename S1, typename O, typename R,
-                typename P0 = ident, typename P1 = ident,
+            template<typename I0, typename S0, typename I1, typename S1, typename O,
+                typename R = ordered_less, typename P0 = ident, typename P1 = ident,
                 typename V0 = concepts::Readable::value_t<I0>,
                 typename V1 = concepts::Readable::value_t<I1>,
                 typename X0 = concepts::Invokable::result_t<P0, V0>,
                 typename X1 = concepts::Invokable::result_t<P1, V1>,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I0, S0>()                     &&
-                    InputIterator<I1, S1>()                     &&
-                    WeaklyIncrementable<O>()                    &&
-                    IndirectlyProjectedCopyable<I0, P0, O>()    &&
-                    IndirectlyProjectedCopyable<I1, P1, O>()    &&
+                    InputIterator<I0, S0>()         &&
+                    InputIterator<I1, S1>()         &&
+                    WeaklyIncrementable<O>()        &&
+                    IndirectlyCopyable<I0, O>()     &&
+                    IndirectlyCopyable<I1, O>()     &&
                     InvokableRelation<R, X1, X0>()
                 )>
             std::tuple<I0, I1, O>
-            operator()(I0 f_i0, S0 l_i0, I1 f_i1, S1 l_i1, O f_o, R r,
+            operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, R r = R{},
                 P0 p0 = P0{}, P1 p1 = P1{}) const
             {
                 auto &&ir = invokable(r);
                 auto &&ip0 = invokable(p0);
                 auto &&ip1 = invokable(p1);
-                while(f_i0 != l_i0 && f_i1 != l_i1)
+                while(begin0 != end0 && begin1 != end1)
                 {
-                    if(ir(ip1(*f_i1), ip0(*f_i0)))
+                    if(ir(ip1(*begin1), ip0(*begin0)))
                     {
-                        *f_o = ip1(*f_i1);
-                        ++f_o; ++f_i1;
+                        *out = *begin1;
+                        ++out; ++begin1;
                     }
                     else
                     {
-                        *f_o = ip0(*f_i0);
-                        ++f_o; ++f_i0;
+                        *out = *begin0;
+                        ++out; ++begin0;
                     }
                 }
-                auto t0 = copy(f_i0, l_i0, f_o, p0);
-                auto t1 = copy(f_i1, l_i1, t0.second, p1);
-                return {t0.first, t1.first, t1.second};
+                auto t0 = copy(begin0, end0, out);
+                auto t1 = copy(begin1, end1, t0.second);
+                return std::tuple<I0, I1, O>{t0.first, t1.first, t1.second};
             }
 
-            template<typename Rng0, typename Rng1, typename O, typename R, typename P0 = ident,
-                typename P1 = ident,
+            template<typename Rng0, typename Rng1, typename O, typename R = ordered_less,
+                typename P0 = ident, typename P1 = ident,
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = range_iterator_t<Rng1>,
                 typename V0 = concepts::Readable::value_t<I0>,
@@ -87,17 +88,17 @@ namespace ranges
                 typename X0 = concepts::Invokable::result_t<P0, V0>,
                 typename X1 = concepts::Invokable::result_t<P1, V1>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng0>()                            &&
-                    Iterable<Rng1>()                            &&
-                    InputIterator<I0>()                         &&
-                    InputIterator<I1>()                         &&
-                    WeaklyIncrementable<O>()                    &&
-                    IndirectlyProjectedCopyable<I0, P0, O>()    &&
-                    IndirectlyProjectedCopyable<I1, P1, O>()    &&
+                    Iterable<Rng0>()                &&
+                    Iterable<Rng1>()                &&
+                    InputIterator<I0>()             &&
+                    InputIterator<I1>()             &&
+                    WeaklyIncrementable<O>()        &&
+                    IndirectlyCopyable<I0, O>()     &&
+                    IndirectlyCopyable<I1, O>()     &&
                     InvokableRelation<R, X1, X0>()
                 )>
             std::tuple<I0, I1, O>
-            operator()(Rng0 &rng0, Rng1 &rng1, O out, R r, P0 p0 = P0{}, P1 p1 = P1{}) const
+            operator()(Rng0 &rng0, Rng1 &rng1, O out, R r = R{}, P0 p0 = P0{}, P1 p1 = P1{}) const
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(out),
                     std::move(r), std::move(p0), std::move(p1));
