@@ -289,6 +289,25 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR recounted_fn recounted{};
+
+        struct advance_to_fn
+        {
+            template<typename I>
+            I operator()(I const &, I i) const
+            {
+                return i;
+            }
+
+            template<typename I, typename S>
+            I operator()(I i, S s) const
+            {
+                while(i != s)
+                    ++i;
+                return i;
+            }
+        };
+
+        RANGES_CONSTEXPR advance_to_fn advance_to{};
     }
 }
 

@@ -5,6 +5,12 @@ Experimental range library for C++11/14/17. This code will eventualy form the ba
 
 **Dislaimer:** This code is undocumented, untested, contantly changing, and generally not fit for *any use whatsoever*.
 
+License:
+--------
+
+I have borrowed from Alex Stepanov's Elements of Programming and from Howard Hinnant's libc++. Please see
+the attached LICENSE file and the CREDITS file for the licensing and acknolwedgements.
+
 To Do:
 ------
 

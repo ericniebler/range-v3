@@ -517,6 +517,16 @@ namespace ranges
                     ));
             };
 
+            struct Transform
+              : refines<RegularFunction>
+            {
+                template<typename F, typename T>
+                auto requires(F && f, T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<T>(((F&&)f)((T&&) t))
+                    ));
+            };
+
             struct Addable
             {
                 template<typename T, typename U>
@@ -616,6 +626,9 @@ namespace ranges
 
         template<typename Fun, typename T, typename U = T>
         using Relation = concepts::models<concepts::Relation, Fun, T, U>;
+
+        template<typename F, typename T>
+        using Transform = concepts::models<concepts::Transform, F, T>;
 
         template<typename T, typename U = T>
         using Addable = concepts::models<concepts::Addable, T, U>;

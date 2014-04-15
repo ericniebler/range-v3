@@ -80,6 +80,16 @@ namespace ranges
                         concepts::model_of<Relation>(ranges::invokable((Fun &&) fun), (T &&) t, (U &&) u)
                     ));
             };
+
+            struct InvokableTransform
+              : refines<RegularInvokable>
+            {
+                template<typename Fun, typename T>
+                auto requires(Fun &&fun, T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Transform>(ranges::invokable((Fun &&) fun), (T &&) t)
+                    ));
+            };
         }
 
         template<typename Fun, typename...Args>
@@ -93,6 +103,9 @@ namespace ranges
 
         template<typename Fun, typename T, typename U = T>
         using InvokableRelation = concepts::models<concepts::InvokableRelation, Fun, T, U>;
+
+        template<typename F, typename T>
+        using InvokableTransform = concepts::models<concepts::InvokableTransform, F, T>;
     }
 }
 
