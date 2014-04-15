@@ -73,6 +73,7 @@
 #include <range/v3/algorithm/unique.hpp>
 #include <range/v3/algorithm/unique_copy.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
+#include <range/v3/algorithm/upper_bound_n.hpp>
 
 #include <range/v3/detail/re_enable_warnings.hpp>
 

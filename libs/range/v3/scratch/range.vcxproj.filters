@@ -137,6 +137,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\copy_backward.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -524,6 +527,9 @@
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lower_bound_n.hpp">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound_n.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>

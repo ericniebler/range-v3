@@ -449,7 +449,7 @@ namespace ranges
             return ForwardIterator<I>()         &&
                    Invokable<P, V>()            &&
                    InvokableRelation<C, X, X>() &&
-                   IndirectlyMovable<I, I>();
+                   Permutable<I>();
         }
 
         template<typename I, typename V2, typename R = ordered_less, typename P = ident,

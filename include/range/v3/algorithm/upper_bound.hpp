@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -13,13 +12,61 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/algorithm/upper_bound_n.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        struct upper_bound_fn
+        {
+            template<typename I, typename S, typename V2, typename C = ordered_less, typename P = ident,
+                CONCEPT_REQUIRES_(
+                    Sentinel<S, I>()                &&
+                    BinarySearchable<I, V2, C, P>()
+                )>
+            I
+            operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
+            {
+                return upper_bound_n(begin, distance(begin, end), val, std::move(pred),
+                    std::move(proj));
+            }
+
+            /// \overload
+            template<typename Rng, typename V2, typename C = ordered_less, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(
+                    Iterable<Rng>()                 &&
+                    BinarySearchable<I, V2, C, P>()
+                )>
+            I
+            operator()(Rng &rng, V2 const &val, C pred = C{}, P proj = P{}) const
+            {
+                static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
+                return upper_bound_n(begin(rng), distance(rng), val, std::move(pred),
+                    std::move(proj));
+            }
+
+            /// \overload
+            template<typename V, typename V2, typename C = ordered_less, typename P = ident,
+                typename I = V const *,
+                CONCEPT_REQUIRES_(
+                    BinarySearchable<I, V2, C, P>()
+                )>
+            I
+            operator()(std::initializer_list<V> rng, V2 const &val, C pred = C{}, P proj = P{}) const
+            {
+                return upper_bound_n(rng.begin(), (std::ptrdiff_t)rng.size(), val, std::move(pred),
+                    std::move(proj));
+            }
+        };
+
+        RANGES_CONSTEXPR upper_bound_fn upper_bound{};
 
     } // namespace v3
 } // namespace ranges

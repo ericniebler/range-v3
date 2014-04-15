@@ -7,8 +7,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_ALGORITHM_LOWER_BOUND_N_HPP
-#define RANGES_V3_ALGORITHM_LOWER_BOUND_N_HPP
+#ifndef RANGES_V3_ALGORITHM_UPPER_BOUND_N_HPP
+#define RANGES_V3_ALGORITHM_UPPER_BOUND_N_HPP
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -22,8 +22,13 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct lower_bound_n_fn
+        struct upper_bound_n_fn
         {
+            /// \brief template function upper_bound
+            ///
+            /// range-based version of the upper_bound std algorithm
+            ///
+            /// \pre ForwardIterable is a model of the ForwardIterable concept
             template<typename I, typename V2, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(
                     BinarySearchable<I, V2, C, P>()
@@ -39,13 +44,13 @@ namespace ranges
                 {
                     auto half = d / 2;
                     auto middle = next(begin, half);
-                    if(ipred(iproj(*middle), val))
+                    if(ipred(val, iproj(*middle)))
+                        d = half;
+                    else
                     {
                         begin = std::move(++middle);
                         d -= half + 1;
                     }
-                    else
-                        d = half;
                 }
                 return begin;
             }
@@ -83,7 +88,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR lower_bound_n_fn lower_bound_n{};
+        RANGES_CONSTEXPR upper_bound_n_fn upper_bound_n {};
 
     } // namespace v3
 } // namespace ranges
