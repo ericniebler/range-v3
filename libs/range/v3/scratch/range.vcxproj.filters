@@ -538,12 +538,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound_n.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\detail\combine_copy_n.hpp">
-      <Filter>Header Files\algorithm\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\detail\combine_copy.hpp">
-      <Filter>Header Files\algorithm\detail</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge_n.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>

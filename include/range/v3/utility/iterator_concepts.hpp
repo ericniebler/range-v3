@@ -428,17 +428,20 @@ namespace ranges
                    IndirectlyMovable<I, I>();
         }
 
-        template<typename I1, typename I2, typename Out, typename C = ordered_less,
+        template<typename I0, typename I1, typename Out, typename C = ordered_less,
+            typename P0 = ident, typename P1 = ident,
+            typename V0 = concepts::Readable::value_t<I0>,
             typename V1 = concepts::Readable::value_t<I1>,
-            typename V2 = concepts::Readable::value_t<I2>>
+            typename X0 = concepts::Invokable::result_t<P0, V0>,
+            typename X1 = concepts::Invokable::result_t<P1, V1>>
         constexpr bool Mergeable()
         {
-            return InputIterator<I1>()              &&
-                   InputIterator<I2>()              &&
+            return InputIterator<I0>()              &&
+                   InputIterator<I1>()              &&
                    WeaklyIncrementable<Out>()       &&
-                   InvokableRelation<C, V1, V2>()   &&
-                   IndirectlyCopyable<I1, Out>()    &&
-                   IndirectlyCopyable<I2, Out>();
+                   InvokableRelation<C, X1, X0>()   &&
+                   IndirectlyCopyable<I0, Out>()    &&
+                   IndirectlyCopyable<I1, Out>();
         }
 
         template<typename I, typename C = ordered_less, typename P = ident,

@@ -108,8 +108,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\count.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\count_if.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\detail\combine_copy.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\detail\combine_copy_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\fill.hpp" />
