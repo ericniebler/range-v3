@@ -76,6 +76,11 @@
 #include <range/v3/algorithm/upper_bound.hpp>
 #include <range/v3/algorithm/upper_bound_n.hpp>
 
+// BUGBUG
+#include <range/v3/algorithm/aux_/merge_n_with_buffer.hpp>
+#include <range/v3/algorithm/aux_/sort_n_with_buffer.hpp>
+
+
 #include <range/v3/detail/re_enable_warnings.hpp>
 
 #endif

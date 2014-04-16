@@ -1,0 +1,67 @@
+//  Copyright Eric Niebler 2014
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
+// Copyright (c) 2009 Alexander Stepanov and Paul McJones
+//
+// Permission to use, copy, modify, distribute and sell this software
+// and its documentation for any purpose is hereby granted without
+// fee, provided that the above copyright notice appear in all copies
+// and that both that copyright notice and this permission notice
+// appear in supporting documentation. The authors make no
+// representations about the suitability of this software for any
+// purpose. It is provided "as is" without express or implied
+// warranty.
+//
+// Algorithms from
+// Elements of Programming
+// by Alexander Stepanov and Paul McJones
+// Addison-Wesley Professional, 2009
+#ifndef RANGES_V3_ALGORITHM_AUX_MERGE_N_WITH_BUFFER_HPP
+#define RANGES_V3_ALGORITHM_AUX_MERGE_N_WITH_BUFFER_HPP
+
+#include <tuple>
+#include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/algorithm/copy_n.hpp>
+#include <range/v3/algorithm/merge_n.hpp>
+
+namespace ranges
+{
+    inline namespace v3
+    {
+        namespace aux
+        {
+            struct merge_n_with_buffer_fn
+            {
+                template<typename I, typename B, typename C = ordered_less, typename P = ident,
+                    typename VI = iterator_value_t<I>,
+                    typename VB = iterator_value_t<B>,
+                    CONCEPT_REQUIRES_(
+                        Same<VI, VB>()                  &&
+                        IndirectlyCopyable<I, B>()      &&
+                        Mergeable<B, I, I, C, P, P>()
+                    )>
+                I operator()(I begin0, iterator_difference_t<I> n0,
+                             I begin1, iterator_difference_t<I> n1,
+                             B buff, C r = C{}, P p = P{}) const
+                {
+                    copy_n(begin0, n0, buff);
+                    return std::get<2>(merge_n(buff, n0, begin1, n1, begin0, r));
+                }
+            };
+
+            RANGES_CONSTEXPR merge_n_with_buffer_fn merge_n_with_buffer{};
+
+        } // namespace aux
+    } // namespace v3
+} // namespace ranges
+
+#endif // include guard

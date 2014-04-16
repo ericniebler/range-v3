@@ -40,8 +40,8 @@
     <Filter Include="Test Files\view">
       <UniqueIdentifier>{a71f57e8-040b-4b94-9274-da06b6289cdb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\algorithm\detail">
-      <UniqueIdentifier>{3d7f6c6a-1c57-4c9d-92b0-14b2e02efd6a}</UniqueIdentifier>
+    <Filter Include="Header Files\algorithm\aux_">
+      <UniqueIdentifier>{21f9047f-a75e-409c-a808-8a11eb973cda}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -337,9 +337,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\next_prev.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
@@ -543,6 +540,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge_n.hpp">
       <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\merge_n_with_buffer.hpp">
+      <Filter>Header Files\algorithm\aux_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\sort_n_with_buffer.hpp">
+      <Filter>Header Files\algorithm\aux_</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

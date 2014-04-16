@@ -103,6 +103,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\merge_n_with_buffer.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\sort_n_with_buffer.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\binary_search.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_backward.hpp" />
@@ -169,7 +171,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\next_prev.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp" />
