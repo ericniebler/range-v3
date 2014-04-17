@@ -76,6 +76,8 @@
     <ClCompile Include="..\..\..\..\test\algorithm\copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\copy_backward.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\find_end.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\find_if.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\merge.cpp" />

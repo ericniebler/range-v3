@@ -70,7 +70,7 @@ namespace test_impl
                 << "> \t" << filename_ << '(' << lineno_ << ')' << '\n';
             if(dismissed_)
                 std::cerr
-                    << "> \tEXPECTED: " << stream(t_) << "\n> \tACTUAL: " << stream(u) << '\n';
+                    << "> \tEXPECTED: " << stream(u) << "\n> \tACTUAL: " << stream(t_) << '\n';
             ++test_failures();
         }
         void dismiss()

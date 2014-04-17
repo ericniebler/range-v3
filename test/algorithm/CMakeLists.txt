@@ -33,3 +33,6 @@ add_test(test.find find)
 
 add_executable(find_if find_if.cpp)
 add_test(test.find_if find_if)
+
+add_executable(find_end find_end.cpp)
+add_test(test.find_end find_end)
