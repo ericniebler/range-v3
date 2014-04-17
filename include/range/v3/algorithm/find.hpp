@@ -11,6 +11,7 @@
 #define RANGES_V3_ALGORITHM_FIND_HPP
 
 #include <utility>
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -65,6 +66,19 @@ namespace ranges
             I operator()(Rng &rng, V1 const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));
+            }
+
+            /// \overload
+            template<typename V0, typename V1, typename P = ident,
+                typename I = V0 const *,
+                typename X = concepts::Invokable::result_t<P, V0>,
+                CONCEPT_REQUIRES_(
+                    Invokable<P, V0>()          &&
+                    EqualityComparable<X, V1>()
+                )>
+            I operator()(std::initializer_list<V0> rng, V1 const &val, P proj = P{}) const
+            {
+                return (*this)(rng.begin(), rng.end(), val, std::move(proj));
             }
         };
 

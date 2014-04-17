@@ -30,3 +30,6 @@ add_test(test.rotate rotate)
 
 add_executable(find find.cpp)
 add_test(test.find find)
+
+add_executable(find_if find_if.cpp)
+add_test(test.find_if find_if)
