@@ -56,6 +56,13 @@
         // Built-in arrays
         template<typename T, std::size_t N>
         constexpr std::size_t
+        range_size(T (&)[N])
+        {
+            return N;
+        }
+
+        template<typename T, std::size_t N>
+        constexpr std::size_t
         range_size(T const (&)[N])
         {
             return N;

@@ -27,3 +27,6 @@ add_test(test.merge merge)
 
 add_executable(rotate rotate.cpp)
 add_test(test.rotate rotate)
+
+add_executable(find find.cpp)
+add_test(test.find find)
