@@ -24,6 +24,7 @@
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/optional.hpp>
 
 namespace ranges
 {
@@ -31,12 +32,13 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename UnaryFunction>
+            template<typename UnaryFunction, typename SinglePass>
             struct transform_adaptor : default_adaptor
             {
             private:
                 UnaryFunction const *fun_;
             public:
+                using single_pass = SinglePass;
                 transform_adaptor() = default;
                 transform_adaptor(UnaryFunction const &fun)
                   : fun_(&fun)
@@ -55,17 +57,33 @@ namespace ranges
           : range_adaptor<transformed_view<InputIterable, UnaryFunction>, InputIterable>
         {
         private:
+            using reference_t = result_of_t<invokable_t<UnaryFunction> const(range_value_t<InputIterable>)>;
             friend range_core_access;
-            invokable_t<UnaryFunction> fun_;
-            // TODO: if end is a sentinel, it holds an unnecessary pointer back to fun_
-            using adaptor_t = detail::transform_adaptor<invokable_t<UnaryFunction>>;
+            // TODO optional is only necessary here for non-SemiRegular types
+            optional<invokable_t<UnaryFunction>> fun_;
+            // Forward ranges must always return references. If the result of calling the function
+            // is not a reference, this range is input-only.
+            using single_pass = detail::or_t<
+                Derived<ranges::input_iterator_tag, range_category_t<InputIterable>>,
+                detail::not_t<std::is_reference<reference_t>>>;
+            using adaptor_t = detail::transform_adaptor<invokable_t<UnaryFunction>, single_pass>;
+            using use_sentinel_t = detail::or_t<detail::not_t<Range<InputIterable>>, single_pass>;
             adaptor_t begin_adaptor() const
             {
-                return {fun_};
+                RANGES_ASSERT(!!fun_);
+                return {*fun_};
             }
+            CONCEPT_REQUIRES(use_sentinel_t())
+            default_adaptor end_adaptor() const
+            {
+                RANGES_ASSERT(!!fun_);
+                return {};
+            }
+            CONCEPT_REQUIRES(!use_sentinel_t())
             adaptor_t end_adaptor() const
             {
-                return {fun_};
+                RANGES_ASSERT(!!fun_);
+                return {*fun_};
             }
         public:
             transformed_view() = default;

@@ -104,6 +104,7 @@ namespace ranges
                 template<typename Other, enable_if_t<!std::is_same<Other, Cursor>::value> = 0>
                 constexpr bool equal(basic_cursor<Other, true> const &that) const
                 {
+                    // BUGBUG which parameter order is correct?
                     return range_core_access::empty(that.pos_, pos_);
                 }
                 template<typename C = Cursor,
@@ -405,6 +406,7 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
         public:
+            range_adaptor() = default;
             constexpr range_adaptor(BaseIterable && rng)
               : rng_(detail::forward<BaseIterable>(rng))
             {}

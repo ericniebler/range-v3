@@ -21,6 +21,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        // BUGBUG a view shouldn't contain its value, right?
         template<typename Value>
         struct repeated_view
           : range_facade<repeated_view<Value>, true>

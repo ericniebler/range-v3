@@ -592,9 +592,10 @@ namespace ranges
             using elem_t =
                 meta_apply<std::remove_reference,
                     tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+            using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
-            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<detail::get_fun<elem_t>>{elem}));
+            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<get_fun>{get_fun(elem)}));
             RANGES_ASSERT(elem != nullptr);
             return *elem;
         }
@@ -609,9 +610,10 @@ namespace ranges
                     meta_quote<std::remove_reference>::apply,
                     meta_quote<std::add_const>::apply
                 >::apply<tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+            using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
-            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<detail::get_fun<elem_t>>{elem}));
+            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<get_fun>{get_fun(elem)}));
             RANGES_ASSERT(elem != nullptr);
             return *elem;
         }
@@ -624,9 +626,10 @@ namespace ranges
             using elem_t =
                 meta_apply<std::remove_reference,
                     tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+            using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
-            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<detail::get_fun<elem_t>>{elem}));
+            data.apply(N, detail::make_unary_visitor(detail::unwrap_ref_fun<get_fun>{get_fun(elem)}));
             RANGES_ASSERT(elem != nullptr);
             return std::forward<tagged_variant_element_t<N, tagged_variant<Ts...>>>(*elem);
         }
