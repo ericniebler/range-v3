@@ -98,15 +98,14 @@ namespace ranges
             using wrap_ref_t = typename wrap_ref<T>::type;
 
             template<typename BinaryFunction, typename T, std::size_t N,
-                CONCEPT_REQUIRES_(ranges::Function<BinaryFunction, T, size_t<N>>())>
+                typename = decltype(std::declval<BinaryFunction>()(std::declval<T &>(), size_t<N>{}))>
             void apply_if(BinaryFunction &&fun, T &t, size_t<N> u)
             {
-                detail::forward<BinaryFunction>(fun)(t, u);
+                std::forward<BinaryFunction>(fun)(t, u);
             }
 
-            template<typename BinaryFunction, typename T, std::size_t N,
-                CONCEPT_REQUIRES_(!ranges::Function<BinaryFunction, T, size_t<N>>())>
-            void apply_if(BinaryFunction &&, T &, size_t<N>)
+            template<typename BinaryFunction, typename T, std::size_t N>
+            void apply_if(any, any, any)
             {
                 RANGES_ASSERT(false);
             }
@@ -300,7 +299,7 @@ namespace ranges
                 }
             public:
                 apply_visitor(BinaryFunction &&fun, Variant &var)
-                  : fun_(std::forward<BinaryFunction>(fun)), var_(var)
+                  : var_(var), fun_(std::forward<BinaryFunction>(fun))
                 {}
                 template<typename T, std::size_t N>
                 void operator()(T &&t, size_t<N> u) const
