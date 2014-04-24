@@ -158,6 +158,12 @@
     <ClCompile Include="..\..\..\..\test\algorithm\find_end.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\count.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\count_if.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">

@@ -75,6 +75,8 @@
     <ClCompile Include="..\..\..\..\test\algorithm\binary_search.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\copy_backward.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\count.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\count_if.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_end.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_if.cpp" />

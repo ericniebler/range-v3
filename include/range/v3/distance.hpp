@@ -26,7 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct count_fn
+        struct enumerate_fn
         {
         private:
             template<typename InputIterator, typename Sentinel, typename Distance>
@@ -53,7 +53,7 @@ namespace ranges
             std::pair<Distance, InputIterator>
             operator()(InputIterator begin, Sentinel end, Distance d = 0) const
             {
-                return count_fn::impl(std::move(begin), std::move(end), d,
+                return enumerate_fn::impl(std::move(begin), std::move(end), d,
                     iterator_concept_t<InputIterator>{});
             }
             template<typename FiniteIterable,
@@ -69,7 +69,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR count_fn count {};
+        RANGES_CONSTEXPR enumerate_fn enumerate{};
 
         struct distance_fn
         {
@@ -79,7 +79,7 @@ namespace ranges
             static Distance
             impl(Iterable &rng, Distance d, concepts::Iterable)
             {
-                return ranges::count(rng, d).first;
+                return enumerate(rng, d).first;
             }
             template<typename Iterable, typename Distance>
             static Distance
@@ -95,7 +95,7 @@ namespace ranges
             Distance
             operator()(InputIterator begin, Sentinel end, Distance d = 0) const
             {
-                return ranges::count(std::move(begin), std::move(end), d).first;
+                return enumerate(std::move(begin), std::move(end), d).first;
             }
             template<typename FiniteIterable,
                 typename Distance = range_difference_t<FiniteIterable>,
