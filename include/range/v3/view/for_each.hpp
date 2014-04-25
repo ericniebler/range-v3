@@ -72,6 +72,17 @@ namespace ranges
 
         struct yield_if_fn
         {
+            template<typename V>
+            sliced_view<repeated_view<V>> operator()(bool b, V v) const
+            {
+                return view::repeat(std::move(v)) | view::take(b ? 1 : 0);
+            }
+        };
+
+        RANGES_CONSTEXPR yield_if_fn yield_if{};
+
+        struct lazy_yield_if_fn
+        {
             template<typename F>
             sliced_view<generate_view<F>> operator()(bool b, F f) const
             {
@@ -80,7 +91,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR yield_if_fn yield_if{};
+        RANGES_CONSTEXPR lazy_yield_if_fn lazy_yield_if{};
     }
 }
 

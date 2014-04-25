@@ -28,10 +28,7 @@ int main()
             {
                 return view::for_each(ints(x, z), [=](int y)
                 {
-                    return yield_if(x*x + y*y == z*z, [=]
-                    {
-                        return std::make_tuple(x, y, z);
-                    });
+                    return yield_if(x*x + y*y == z*z, std::make_tuple(x, y, z));
                 });
             });
         });
