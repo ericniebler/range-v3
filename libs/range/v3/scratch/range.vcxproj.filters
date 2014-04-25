@@ -562,6 +562,15 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\sort_n_with_buffer.hpp">
       <Filter>Header Files\algorithm\aux_</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\flatten.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\generate.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

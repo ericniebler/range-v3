@@ -29,6 +29,12 @@ RANGES_DECLTYPE_AUTO_RETURN(
     view::repeat(v) | view::take(1)
 )
 
+template<typename F>
+auto mguard(bool b, F f)
+RANGES_DECLTYPE_AUTO_RETURN(
+    view::generate(std::move(f)) | view::take(b ? 1 : 0)
+)
+
 auto const intsFrom = view::iota;
 auto const ints = [](int i, int j){ return view::take(intsFrom(i), j); };
 
@@ -40,7 +46,9 @@ int main()
         {
             return mbind(ints(x, z), [x, z](int y)
             {
-                return mreturn(std::make_tuple(x, y, z));
+                return mguard(x*x + y*y == z*z, [x, y, z] {
+                    return std::make_tuple(x, y, z);
+                });
             });
         });
     });

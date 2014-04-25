@@ -203,6 +203,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\meta.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\predicate.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp" />
@@ -218,6 +219,8 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\filter.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\flatten.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\generate.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\indirect.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\iota.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp" />
