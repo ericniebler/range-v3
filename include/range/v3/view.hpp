@@ -24,6 +24,7 @@
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/flatten.hpp>
+#include <range/v3/view/for_each.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/indirect.hpp>

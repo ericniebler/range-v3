@@ -10,48 +10,31 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#include <vector>
 #include <iostream>
-#include <iomanip>
 #include <range/v3/range.hpp>
 
 using namespace ranges;
-
-template<typename Rng, typename F>
-auto mbind(Rng rng, F f)
-RANGES_DECLTYPE_AUTO_RETURN(
-    std::move(rng) | view::transform(f) | view::flatten
-)
-
-template<typename V>
-auto mreturn(V v)
-RANGES_DECLTYPE_AUTO_RETURN(
-    view::repeat(v) | view::take(1)
-)
-
-template<typename F>
-auto mguard(bool b, F f)
-RANGES_DECLTYPE_AUTO_RETURN(
-    view::generate(std::move(f)) | view::take(b ? 1 : 0)
-)
 
 auto const intsFrom = view::iota;
 auto const ints = [](int i, int j){ return view::take(intsFrom(i), j); };
 
 int main()
 {
-    auto all_triples = mbind(intsFrom(1), [](int z)
-    {
-        return mbind(ints(1, z), [z](int x)
+    // Define an infinite range containing all the Pythagorean triples:
+    auto all_triples =
+        view::for_each(intsFrom(1), [](int z)
         {
-            return mbind(ints(x, z), [x, z](int y)
+            return view::for_each(ints(1, z), [=](int x)
             {
-                return mguard(x*x + y*y == z*z, [x, y, z] {
-                    return std::make_tuple(x, y, z);
+                return view::for_each(ints(x, z), [=](int y)
+                {
+                    return yield_if(x*x + y*y == z*z, [=]
+                    {
+                        return std::make_tuple(x, y, z);
+                    });
                 });
             });
         });
-    });
 
     auto triples = view::take(all_triples, 100);
 
