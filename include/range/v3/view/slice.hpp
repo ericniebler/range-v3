@@ -32,145 +32,178 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename ForwardIterable>
-        struct sliced_view
-          : range_facade<sliced_view<ForwardIterable>>
+        namespace detail
         {
-        private:
-            friend range_core_access;
-            using size_type = range_size_t<ForwardIterable>;
-            using difference_type = range_difference_t<ForwardIterable>;
-            detail::base_iterable_holder<ForwardIterable> rng_;
-            size_type from_, to_;
-
-            using Bidi = Same<range_category_t<ForwardIterable>, ranges::bidirectional_iterator_tag>;
-            using Rand = Same<range_category_t<ForwardIterable>, ranges::random_access_iterator_tag>;
-            using dirty_t = detail::conditional_t<(Bidi()), mutable_<bool>, constant<bool, false>>;
-
-            struct cursor : private dirty_t
+            template<typename Rng, bool IsTakeView = false>
+            struct basic_sliced_view
+              : range_facade<basic_sliced_view<Rng, IsTakeView>>
             {
             private:
-                using base_iterator_t = range_iterator_t<ForwardIterable>;
-                sliced_view const *rng_;
-                size_type n_;
-                base_iterator_t it_;
+                CONCEPT_ASSERT(Iterable<Rng>());
+                CONCEPT_ASSERT(InputIterator<range_iterator_t<Rng>>());
+                CONCEPT_ASSERT(IsTakeView || ForwardIterator<range_iterator_t<Rng>>());
+                friend range_core_access;
+                using size_type = range_size_t<Rng>;
+                using difference_type = range_difference_t<Rng>;
+                using from_t = detail::conditional_t<IsTakeView, constant<size_type, 0>, mutable_<size_type>>;
+                detail::base_iterable_holder<Rng> rng_;
+                compressed_pair<from_t, size_type> from_to_;
 
-                dirty_t & dirty() { return *this; }
-                dirty_t const & dirty() const { return *this; }
-
-                void clean()
+                constexpr size_type from() const
                 {
-                    if(dirty())
-                    {
-                        // BUGBUG investigate why this gets called twice
-                        //std::cout << "\ncleaning!!!\n";
-                        do_clean();
-                        dirty() = false;
-                    }
+                    return from_to_.first();
                 }
-                void do_clean()
+                size_type to() const
                 {
-                    it_ = ranges::next(ranges::begin(rng_->rng_.get()), rng_->to_);
+                    return from_to_.second();
+                }
+
+                using Bidi = Same<range_category_t<Rng>, ranges::bidirectional_iterator_tag>;
+                using Rand = Same<range_category_t<Rng>, ranges::random_access_iterator_tag>;
+                using dirty_t = detail::conditional_t<(Bidi()), mutable_<bool>, constant<bool, false>>;
+
+                struct cursor : private dirty_t
+                {
+                private:
+                    using base_iterator_t = range_iterator_t<Rng>;
+                    basic_sliced_view const *rng_;
+                    size_type n_;
+                    base_iterator_t it_;
+
+                    dirty_t & dirty() { return *this; }
+                    dirty_t const & dirty() const { return *this; }
+
+                    void clean()
+                    {
+                        if(dirty())
+                        {
+                            // BUGBUG investigate why this gets called twice
+                            //std::cout << "\ncleaning!!!\n";
+                            do_clean();
+                            dirty() = false;
+                        }
+                    }
+                    void do_clean()
+                    {
+                        it_ = ranges::next(begin(rng_->rng_.get()), rng_->to());
+                    }
+                public:
+                    cursor() = default;
+                    cursor(basic_sliced_view const &rng, begin_tag)
+                      : dirty_t{false}, rng_(&rng), n_(rng.from())
+                      , it_(ranges::next(begin(rng.rng_.get()), rng.from()))
+                    {}
+                    cursor(basic_sliced_view const &rng, end_tag)
+                      : dirty_t{true}, rng_(&rng), n_(rng.to())
+                      , it_(begin(rng.rng_.get()))
+                    {
+                        if(Rand())
+                            do_clean();
+                    }
+                    range_reference_t<Rng> current() const
+                    {
+                        RANGES_ASSERT(n_ < rng_->to());
+                        RANGES_ASSERT(it_ != end(rng_->rng_.get()));
+                        return *it_;
+                    }
+                    bool equal(cursor const &that) const
+                    {
+                        RANGES_ASSERT(rng_ == that.rng_);
+                        return n_ == that.n_;
+                    }
+                    void next()
+                    {
+                        RANGES_ASSERT(n_ < rng_->to());
+                        RANGES_ASSERT(it_ != end(rng_->rng_.get()));
+                        ++n_;
+                        ++it_;
+                    }
+                    CONCEPT_REQUIRES(BidirectionalIterator<base_iterator_t>())
+                    void prev()
+                    {
+                        RANGES_ASSERT(rng_->from() < n_);
+                        clean();
+                        --n_;
+                        --it_;
+                    }
+                    CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
+                    void advance(difference_type d)
+                    {
+                        RANGES_ASSERT(n_ + d >= rng_->from() && n_ + d <= rng_->to());
+                        clean();
+                        n_ += d;
+                        it_ += d;
+                    }
+                    CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
+                    difference_type distance_to(cursor const & that) const
+                    {
+                        return static_cast<difference_type>(that.n_) - static_cast<difference_type>(n_);
+                    }
+                };
+                cursor begin_cursor() const
+                {
+                    return {*this, begin_tag{}};
+                }
+                cursor end_cursor() const
+                {
+                    return {*this, end_tag{}};
                 }
             public:
-                cursor() = default;
-                cursor(sliced_view const &rng, begin_tag)
-                  : dirty_t{false}, rng_(&rng), n_(rng.from_)
-                  , it_(ranges::next(ranges::begin(rng.rng_.get()), rng.from_))
+                basic_sliced_view() = default;
+                CONCEPT_REQUIRES(IsTakeView)
+                basic_sliced_view(Rng && rng, size_type to)
+                  : rng_(std::forward<Rng>(rng)), from_to_(0, to)
                 {}
-                cursor(sliced_view const &rng, end_tag)
-                  : dirty_t{true}, rng_(&rng), n_(rng.to_)
-                  , it_(ranges::begin(rng.rng_.get()))
+                CONCEPT_REQUIRES(!IsTakeView)
+                basic_sliced_view(Rng && rng, size_type from, size_type to)
+                  : rng_(std::forward<Rng>(rng)), from_to_(from, to)
                 {
-                    if(Rand())
-                        do_clean();
+                    RANGES_ASSERT(from <= to);
                 }
-                range_reference_t<ForwardIterable> current() const
+                size_type size() const
                 {
-                    RANGES_ASSERT(n_ < rng_->to_);
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_.get()));
-                    return *it_;
-                }
-                bool equal(cursor const &that) const
-                {
-                    RANGES_ASSERT(rng_ == that.rng_);
-                    return n_ == that.n_;
-                }
-                void next()
-                {
-                    RANGES_ASSERT(n_ < rng_->to_);
-                    RANGES_ASSERT(it_ != ranges::end(rng_->rng_.get()));
-                    ++n_;
-                    ++it_;
-                }
-                CONCEPT_REQUIRES(ranges::BidirectionalIterator<base_iterator_t>())
-                void prev()
-                {
-                    RANGES_ASSERT(rng_->from_ < n_);
-                    clean();
-                    --n_;
-                    --it_;
-                }
-                CONCEPT_REQUIRES(ranges::RandomAccessIterator<base_iterator_t>())
-                void advance(difference_type d)
-                {
-                    RANGES_ASSERT(n_ + d >= rng_->from_ && n_ + d <= rng_->to_);
-                    clean();
-                    n_ += d;
-                    it_ += d;
-                }
-                CONCEPT_REQUIRES(ranges::RandomAccessIterator<base_iterator_t>())
-                difference_type distance_to(cursor const & that) const
-                {
-                    return static_cast<difference_type>(that.n_) - static_cast<difference_type>(n_);
+                    return to() - from();
                 }
             };
-            cursor begin_cursor() const
-            {
-                return {*this, begin_tag{}};
-            }
-            cursor end_cursor() const
-            {
-                return {*this, end_tag{}};
-            }
-        public:
+        }
+
+        template<typename Rng>
+        struct sliced_view
+          : detail::basic_sliced_view<Rng>
+        {
+            CONCEPT_ASSERT(Iterable<Rng>());
+            CONCEPT_ASSERT(ForwardIterator<range_iterator_t<Rng>>());
+
+            using size_type = range_size_t<Rng>;
+
             sliced_view() = default;
-            sliced_view(ForwardIterable && rng, size_type from, size_type to)
-              : rng_(std::forward<ForwardIterable>(rng))
-              , from_(from)
-              , to_(to)
-            {
-                RANGES_ASSERT(from <= to);
-            }
-            size_type size() const
-            {
-                return to_ - from_;
-            }
+            sliced_view(Rng && rng, size_type from, size_type to)
+              : detail::basic_sliced_view<Rng>{std::forward<Rng>(rng), from, to}
+            {}
         };
 
         namespace view
         {
-            struct slicer : bindable<slicer>
+            struct slice_fn : bindable<slice_fn>
             {
-                template<typename ForwardIterable>
-                static sliced_view<ForwardIterable>
-                invoke(slicer, ForwardIterable && rng, range_size_t<ForwardIterable> from,
-                    range_size_t<ForwardIterable> to)
+                template<typename Rng>
+                static sliced_view<Rng>
+                invoke(slice_fn, Rng && rng, range_size_t<Rng> from, range_size_t<Rng> to)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<ForwardIterable>());
-                    CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                    return {std::forward<ForwardIterable>(rng), from, to};
+                    CONCEPT_ASSERT(Iterable<Rng>());
+                    CONCEPT_ASSERT(ForwardIterator<range_iterator_t<Rng>>());
+                    return {std::forward<Rng>(rng), from, to};
                 }
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
                 static auto
-                invoke(slicer slice, Int from, Int to) ->
+                invoke(slice_fn slice, Int from, Int to) ->
                     decltype(slice.move_bind(std::placeholders::_1, (Int)from, (Int)to))
                 {
                     return slice.move_bind(std::placeholders::_1, (Int)from, (Int)to);
                 }
             };
 
-            RANGES_CONSTEXPR slicer slice {};
+            RANGES_CONSTEXPR slice_fn slice {};
         }
     }
 }

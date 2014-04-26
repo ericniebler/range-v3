@@ -31,7 +31,7 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            Iterable rng_;
+            detail::base_iterable_holder<Iterable> rng_;
 
             struct cursor
             {
@@ -99,20 +99,21 @@ namespace ranges
             };
             cursor begin_cursor() const
             {
-                return {ranges::begin(rng_), ranges::end(rng_), false};
+                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), false};
             }
             cursor end_cursor() const
             {
-                return {ranges::begin(rng_), ranges::end(rng_), true};
+                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), true};
             }
         public:
+            as_range_view() = default;
             explicit as_range_view(Iterable && rng)
               : rng_(std::forward<Iterable>(rng))
             {}
             CONCEPT_REQUIRES(SizedIterable<Iterable>())
             range_size_t<Iterable> size() const
             {
-                return ranges::size(rng_);
+                return ranges::size(rng_.get());
             }
         };
 

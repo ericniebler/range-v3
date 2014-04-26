@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_UTILITY_ITERATOR_TRAITS_HPP
 #define RANGES_V3_UTILITY_ITERATOR_TRAITS_HPP
 
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -36,6 +37,9 @@ namespace ranges
 
         template<typename It>
         using iterator_pointer_t = concepts::Readable::pointer_t<It>;
+
+        template<typename Iterator>
+        using iterator_size_t = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
 
         // Metafunctions
         template<typename It>
@@ -66,6 +70,12 @@ namespace ranges
         struct iterator_reference
         {
             using type = iterator_reference_t<It>;
+        };
+
+        template<typename It>
+        struct iterator_size
+        {
+            using type = iterator_size_t<It>;
         };
     }
 }

@@ -444,13 +444,13 @@ namespace ranges
             extern reverser const reverse;
         }
 
-        template<typename InputRange>
+        template<typename ForwardRange>
         struct sliced_view;
 
         namespace view
         {
-            struct slicer;
-            extern slicer const slice;
+            struct slice_fn;
+            extern slice_fn const slice;
         }
 
         template<typename InputRange>
@@ -462,10 +462,13 @@ namespace ranges
             extern strider const stride;
         }
 
+        template<typename InputRange>
+        struct take_view;
+
         namespace view
         {
-            struct taker;
-            extern taker const take;
+            struct take_fn;
+            extern take_fn const take;
         }
 
         template<typename BidirectionalRange, typename Regex, typename SubMatchRange>

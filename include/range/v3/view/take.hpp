@@ -27,42 +27,51 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
+        template<typename Rng>
+        struct take_view
+          : detail::basic_sliced_view<Rng, true>
         {
-            template<typename Iterator>
-            using iterator_size_t = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
-        }
+            CONCEPT_ASSERT(Iterable<Rng>());
+            CONCEPT_ASSERT(InputIterator<range_iterator_t<Rng>>());
+
+            using size_type = range_size_t<Rng>;
+
+            take_view() = default;
+            take_view(Rng && rng, size_type to)
+              : detail::basic_sliced_view<Rng, true>{std::forward<Rng>(rng), to}
+            {}
+        };
 
         namespace view
         {
-            struct taker : bindable<taker>
+            struct take_fn : bindable<take_fn>
             {
-                template<typename InputIterable,
-                    CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>() &&
-                                      ranges::InputIterator<range_iterator_t<InputIterable>>())>
-                static sliced_view<InputIterable>
-                invoke(taker, InputIterable && rng, range_size_t<InputIterable> to)
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(Iterable<Rng>() &&
+                                      InputIterator<range_iterator_t<Rng>>())>
+                static take_view<Rng>
+                invoke(take_fn, Rng && rng, range_size_t<Rng> to)
                 {
-                    return {std::forward<InputIterable>(rng), 0, to};
+                    return {std::forward<Rng>(rng), to};
                 }
-                template<typename InputIterator,
-                    CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>())>
-                static counted_view<InputIterator>
-                invoke(taker, InputIterator it, detail::iterator_size_t<InputIterator> n)
+                template<typename I,
+                    CONCEPT_REQUIRES_(InputIterator<I>())>
+                static counted_view<I>
+                invoke(take_fn, I it, iterator_size_t<I> n)
                 {
                     return {std::move(it),
-                            static_cast<iterator_difference_t<InputIterator>>(n)};
+                            static_cast<iterator_difference_t<I>>(n)};
                 }
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
                 static auto
-                invoke(taker take, Int to) ->
+                invoke(take_fn take, Int to) ->
                     decltype(take.move_bind(std::placeholders::_1, (Int)to))
                 {
                     return take.move_bind(std::placeholders::_1, (Int)to);
                 }
             };
 
-            RANGES_CONSTEXPR taker take {};
+            RANGES_CONSTEXPR take_fn take {};
         }
     }
 }

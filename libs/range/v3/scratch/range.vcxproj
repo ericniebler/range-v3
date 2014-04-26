@@ -220,6 +220,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\flatten.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\for_each.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\generate.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\indirect.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\iota.hpp" />

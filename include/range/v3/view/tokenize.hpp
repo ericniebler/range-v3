@@ -32,7 +32,7 @@ namespace ranges
         struct tokenized_view : private range_base
         {
         private:
-            BidirectionalRange rng_;
+            detail::base_iterable_holder<BidirectionalRange> rng_;
             Regex rex_;
             SubMatchRange subs_;
             std::regex_constants::match_flag_type flags_;
@@ -42,6 +42,7 @@ namespace ranges
             using const_iterator =
                 std::regex_token_iterator<range_iterator_t<BidirectionalRange const>>;
 
+            tokenized_view() = default;
             tokenized_view(BidirectionalRange &&rng, Regex && rex, SubMatchRange subs,
                 std::regex_constants::match_flag_type flags)
               : rng_(std::forward<BidirectionalRange>(rng))
@@ -49,7 +50,7 @@ namespace ranges
             {}
             iterator begin()
             {
-                return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
+                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), rex_, subs_, flags_};
             }
             iterator end()
             {
@@ -57,7 +58,7 @@ namespace ranges
             }
             const_iterator begin() const
             {
-                return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
+                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), rex_, subs_, flags_};
             }
             const_iterator end() const
             {
@@ -73,11 +74,11 @@ namespace ranges
             }
             BidirectionalRange & base()
             {
-                return rng_;
+                return rng_.get();
             }
             BidirectionalRange const & base() const
             {
-                return rng_;
+                return rng_.get();
             }
         };
 

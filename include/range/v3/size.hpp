@@ -22,9 +22,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Iterable>
-        using range_size_t = meta_apply<std::make_unsigned, range_difference_t<Iterable>>;
-
         struct size_fn
         {
             template<typename Iterable,

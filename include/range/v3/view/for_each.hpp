@@ -44,6 +44,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT(Iterable<Rng>());
                     CONCEPT_ASSERT(Invokable<F, range_value_t<Rng>>());
+                    CONCEPT_ASSERT(Iterable<concepts::Invokable::result_t<F, range_value_t<Rng>>>());
                     return {std::forward<Rng>(rng), std::move(f)};
                 }
 
@@ -62,7 +63,7 @@ namespace ranges
         struct yield_fn
         {
             template<typename V>
-            sliced_view<repeated_view<V>> operator()(V v) const
+            take_view<repeated_view<V>> operator()(V v) const
             {
                 return view::repeat(std::move(v)) | view::take(1);
             }
@@ -73,7 +74,7 @@ namespace ranges
         struct yield_if_fn
         {
             template<typename V>
-            sliced_view<repeated_view<V>> operator()(bool b, V v) const
+            take_view<repeated_view<V>> operator()(bool b, V v) const
             {
                 return view::repeat(std::move(v)) | view::take(b ? 1 : 0);
             }
@@ -84,7 +85,7 @@ namespace ranges
         struct lazy_yield_if_fn
         {
             template<typename F>
-            sliced_view<generate_view<F>> operator()(bool b, F f) const
+            take_view<generate_view<F>> operator()(bool b, F f) const
             {
                 CONCEPT_ASSERT(Function<F>());
                 return view::generate(std::move(f)) | view::take(b ? 1 : 0);

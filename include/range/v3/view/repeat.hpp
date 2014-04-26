@@ -32,8 +32,9 @@ namespace ranges
 
             struct cursor
             {
+                using single_pass = std::true_type;
                 Value const *value_;
-                Value const &current() const
+                Value current() const
                 {
                     return *value_;
                 }

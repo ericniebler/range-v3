@@ -16,6 +16,7 @@
 
 #include <utility>
 #include <iterator>
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -45,6 +46,9 @@ namespace ranges
 
         template<typename Rng>
         using range_pointer_t = concepts::Iterable::pointer_t<Rng>;
+
+        template<typename Iterable>
+        using range_size_t = meta_apply<std::make_unsigned, range_difference_t<Iterable>>;
 
         // Metafunctions
         template<typename Rng>
@@ -88,6 +92,13 @@ namespace ranges
         {
             using type = range_reference_t<Rng>;
         };
+
+        // BUGBUG
+        //template<typename Rng>
+        //struct range_size
+        //{
+        //    using type = range_size_t<Rng>;
+        //};
 
         // User customization point for infinite ranges:
         template<typename Iterable, typename Void /*= void*/>

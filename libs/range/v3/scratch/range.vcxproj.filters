@@ -571,6 +571,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\generate.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\for_each.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
