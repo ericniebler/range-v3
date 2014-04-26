@@ -16,7 +16,7 @@
 using namespace ranges;
 
 auto const intsFrom = view::iota;
-auto const ints = [](int i, int j){ return view::take(intsFrom(i), j); };
+auto const ints = [](int i, int j){ return view::take(intsFrom(i), j-i+1); };
 
 int main()
 {
