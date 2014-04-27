@@ -1,4 +1,4 @@
-//  Copyright Eric Niebler 1004
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 0.0. (See accompanying

@@ -14,6 +14,44 @@
 #include <iterator>
 
 template <class It>
+class sentinel;
+
+template <class It>
+class output_iterator;
+
+template <class It>
+class input_iterator;
+
+template <class It>
+class forward_iterator;
+
+template <class It>
+class bidirectional_iterator;
+
+template <class It>
+class random_access_iterator;
+
+
+template <class Iter>
+inline Iter base(output_iterator<Iter> i) { return i.base(); }
+
+template <class Iter>
+inline Iter base(input_iterator<Iter> i) { return i.base(); }
+
+template <class Iter>
+inline Iter base(forward_iterator<Iter> i) { return i.base(); }
+
+template <class Iter>
+inline Iter base(bidirectional_iterator<Iter> i) { return i.base(); }
+
+template <class Iter>
+inline Iter base(random_access_iterator<Iter> i) { return i.base(); }
+
+template <class Iter>    // everything else
+inline Iter base(Iter i) { return i; }
+
+
+template <class It>
 class sentinel
 {
     It it_;
@@ -323,24 +361,6 @@ operator-(const random_access_iterator<T>& x, const random_access_iterator<U>& y
 {
     return x.base() - y.base();
 }
-
-template <class Iter>
-inline Iter base(output_iterator<Iter> i) { return i.base(); }
-
-template <class Iter>
-inline Iter base(input_iterator<Iter> i) { return i.base(); }
-
-template <class Iter>
-inline Iter base(forward_iterator<Iter> i) { return i.base(); }
-
-template <class Iter>
-inline Iter base(bidirectional_iterator<Iter> i) { return i.base(); }
-
-template <class Iter>
-inline Iter base(random_access_iterator<Iter> i) { return i.base(); }
-
-template <class Iter>    // everything else
-inline Iter base(Iter i) { return i; }
 
 namespace ranges
 {

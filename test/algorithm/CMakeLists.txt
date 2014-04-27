@@ -43,5 +43,8 @@ add_test(test.merge merge)
 add_executable(rotate rotate.cpp)
 add_test(test.rotate rotate)
 
+add_executable(transform transform.cpp)
+add_test(test.transform transform)
+
 add_executable(upper_bound upper_bound.cpp)
 add_test(test.upper_bound upper_bound)
