@@ -1,4 +1,4 @@
-//  Copyright Andrew Sutton 2014
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying

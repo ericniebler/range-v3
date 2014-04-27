@@ -13,7 +13,6 @@
 
 #include <utility>
 #include <functional>
-#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -22,6 +21,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 
 namespace ranges
@@ -64,21 +64,9 @@ namespace ranges
                     "Trying to binary search an infinite range");
                 return (*this)(begin(rng), end(rng), val, std::move(pred), std::move(proj));
             }
-
-            /// \overload
-            template<typename V, typename V2, typename C = ordered_less, typename P = ident,
-                typename I = V const *,
-                CONCEPT_REQUIRES_(
-                    BinarySearchable<I, V2, C, P>()
-                )>
-            bool
-            operator()(std::initializer_list<V> rng, V2 const &val, C pred = C{}, P proj = P{}) const
-            {
-                return (*this)(rng.begin(), rng.end(), val, std::move(pred), std::move(proj));
-            }
         };
 
-        RANGES_CONSTEXPR binary_search_fn binary_search{};
+        RANGES_CONSTEXPR range_algorithm<binary_search_fn> binary_search{};
 
     } // namespace v3
 } // namespace ranges

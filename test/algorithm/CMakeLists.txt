@@ -19,6 +19,9 @@ add_test(test.count count)
 add_executable(count_if count_if.cpp)
 add_test(test.count_if count_if)
 
+add_executable(equal equal.cpp)
+add_test(test.equal equal)
+
 add_executable(find find.cpp)
 add_test(test.find find)
 

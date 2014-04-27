@@ -21,6 +21,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -56,21 +57,9 @@ namespace ranges
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
             }
-
-            template<typename V, typename O, typename P = ident,
-                typename I = V const *,
-                CONCEPT_REQUIRES_(
-                    WeaklyIncrementable<O>()                &&
-                    IndirectlyProjectedCopyable<I, P, O>()
-                )>
-            std::pair<I, O>
-            operator()(std::initializer_list<V> rng, O out, P proj = P{}) const
-            {
-                return (*this)(rng.begin(), rng.end(), std::move(out), std::move(proj));
-            }
         };
 
-        RANGES_CONSTEXPR copy_fn copy{};
+        RANGES_CONSTEXPR range_algorithm<copy_fn> copy{};
 
     } // namespace v3
 } // namespace ranges

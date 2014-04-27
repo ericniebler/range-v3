@@ -11,7 +11,6 @@
 #define RANGES_V3_ALGORITHM_FOR_EACH_HPP
 
 #include <functional>
-#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
@@ -19,6 +18,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -59,21 +59,9 @@ namespace ranges
             {
                 return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));
             }
-
-            template<typename V, typename F, typename P = ident,
-                typename I = V const *,
-                CONCEPT_REQUIRES_(
-                    Invokable<P, V>()                                   &&
-                    Invokable<F, concepts::Invokable::result_t<P, V>>()
-                )>
-            I
-            operator()(std::initializer_list<V> rng, F fun, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));
-            }
         };
 
-        RANGES_CONSTEXPR for_each_fn for_each{};
+        RANGES_CONSTEXPR range_algorithm<for_each_fn> for_each{};
     } // namespace v3
 } // namespace ranges
 

@@ -18,6 +18,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/upper_bound_n.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -51,22 +52,9 @@ namespace ranges
                 return upper_bound_n(begin(rng), distance(rng), val, std::move(pred),
                     std::move(proj));
             }
-
-            /// \overload
-            template<typename V, typename V2, typename C = ordered_less, typename P = ident,
-                typename I = V const *,
-                CONCEPT_REQUIRES_(
-                    BinarySearchable<I, V2, C, P>()
-                )>
-            I
-            operator()(std::initializer_list<V> rng, V2 const &val, C pred = C{}, P proj = P{}) const
-            {
-                return upper_bound_n(rng.begin(), (std::ptrdiff_t)rng.size(), val, std::move(pred),
-                    std::move(proj));
-            }
         };
 
-        RANGES_CONSTEXPR upper_bound_fn upper_bound{};
+        RANGES_CONSTEXPR range_algorithm<upper_bound_fn> upper_bound{};
 
     } // namespace v3
 } // namespace ranges

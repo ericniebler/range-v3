@@ -32,6 +32,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 #include <range/v3/algorithm/copy.hpp>
 
 namespace ranges
@@ -87,11 +88,9 @@ namespace ranges
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(out),
                     std::move(r), std::move(p0), std::move(p1));
             }
-
-            // TODO overloads for initializer_lists
         };
 
-        RANGES_CONSTEXPR merge_fn merge{};
+        RANGES_CONSTEXPR range_algorithm<merge_fn> merge{};
 
     } // namespace v3
 } // namespace ranges

@@ -43,6 +43,9 @@
     <Filter Include="Header Files\algorithm\aux_">
       <UniqueIdentifier>{21f9047f-a75e-409c-a808-8a11eb973cda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Example Files">
+      <UniqueIdentifier>{9d51143b-26a0-4529-b451-017ddeb46b48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
@@ -162,6 +165,12 @@
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\algorithm\count_if.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\example\comprehensions.cpp">
+      <Filter>Example Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\equal.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
   </ItemGroup>
@@ -583,6 +592,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\repeat_n.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\range_algorithm.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
@@ -600,6 +612,9 @@
     </Text>
     <Text Include="..\..\..\..\test\view\CMakeLists.txt">
       <Filter>Test Files\view</Filter>
+    </Text>
+    <Text Include="..\..\..\..\example\CMakeLists.txt">
+      <Filter>Example Files</Filter>
     </Text>
   </ItemGroup>
 </Project>

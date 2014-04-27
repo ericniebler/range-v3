@@ -12,7 +12,6 @@
 #define RANGES_V3_ALGORITHM_FIND_IF_HPP
 
 #include <utility>
-#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -20,6 +19,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -71,22 +71,9 @@ namespace ranges
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
-
-            /// \overload
-            template<typename V, typename F, typename P = ident,
-                typename I = V const *,
-                typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(
-                    Invokable<P, V>()           &&
-                    InvokablePredicate<F, X>()
-                )>
-            I operator()(std::initializer_list<V> rng, F pred, P proj = P{}) const
-            {
-                return (*this)(rng.begin(), rng.end(), std::move(pred), std::move(proj));
-            }
         };
 
-        RANGES_CONSTEXPR find_if_fn find_if {};
+        RANGES_CONSTEXPR range_algorithm<find_if_fn> find_if {};
 
     } // namespace v3
 } // namespace ranges

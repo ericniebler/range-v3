@@ -14,4 +14,5 @@ include_directories(include)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -Wno-unused-function")
 
 add_subdirectory(test)
+add_subdirectory(example)
 add_subdirectory(libs/range/v3/scratch)

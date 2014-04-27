@@ -15,6 +15,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/iterator_range.hpp>

@@ -96,7 +96,16 @@
 
         template<typename T, typename Enable = void>
         struct is_iterable
-          : std::is_base_of<range_base, meta_apply<std::remove_reference, T>>
+          : std::conditional<
+                std::is_same<T, detail::uncvref_t<T>>::value,
+                std::is_base_of<range_base, T>,
+                is_iterable<detail::uncvref_t<T>>
+            >::type
+        {};
+
+        template<typename T>
+        struct is_iterable<std::initializer_list<T>>
+          : std::true_type
         {};
 
         struct as_iterable_fn

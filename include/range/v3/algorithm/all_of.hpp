@@ -19,6 +19,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -28,9 +29,11 @@ namespace ranges
         {
             template<typename I, typename S, typename F, typename P = ident,
                 typename V = iterator_value_t<I>,
+                typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I, S>()                                           &&
-                    InvokablePredicate<F, concepts::Invokable::result_t<P, V>>()
+                    InputIterator<I, S>()       &&
+                    Invokable<P, V>()           &&
+                    InvokablePredicate<F, X>()
                 )>
             bool
             operator()(I first, S last, F pred, P proj = P{}) const
@@ -46,29 +49,21 @@ namespace ranges
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 typename V = iterator_value_t<I>,
+                typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng>()                                                 &&
-                    InputIterator<I>()                                              &&
-                    InvokablePredicate<F, concepts::Invokable::result_t<P, V>>()
+                    Iterable<Rng const>()       &&
+                    InputIterator<I>()          &&
+                    Invokable<P, V>()           &&
+                    InvokablePredicate<F, X>()
                 )>
             bool
             operator()(Rng const &rng, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
-
-            template<typename V, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(
-                    InvokablePredicate<F, concepts::Invokable::result_t<P, V>>()
-                )>
-            bool
-            operator()(std::initializer_list<V> rng, F pred, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }        
         };
 
-        RANGES_CONSTEXPR all_of_fn all_of {};
+        RANGES_CONSTEXPR range_algorithm<all_of_fn> all_of {};
 
     } // inline namespace v3
 

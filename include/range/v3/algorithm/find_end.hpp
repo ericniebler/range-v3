@@ -11,7 +11,6 @@
 #define RANGES_V3_ALGORITHM_FIND_END_HPP
 
 #include <utility>
-#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -19,6 +18,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -194,61 +194,9 @@ namespace ranges
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
                     std::move(proj));
             }
-
-            // Initializer list overloads
-            /// \overload
-            template<typename V1, typename Rng2, typename R = equal_to, typename P = ident,
-                typename I1 = V1 const *,
-                typename I2 = range_iterator_t<Rng2 const>,
-                typename V2 = iterator_value_t<I2>,
-                typename X = concepts::Invokable::result_t<P, V1>,
-                CONCEPT_REQUIRES_(
-                    Iterable<Rng2 const>()          &&
-                    ForwardIterator<I2>()           &&
-                    Invokable<P, V1>()              &&
-                    InvokableRelation<R, X, V2>()
-                )>
-            I1 operator()(std::initializer_list<V1> rng1, Rng2 const &rng2, R pred = R{}, P proj = P{}) const
-            {
-                return (*this)(rng1.begin(), rng1.end(), begin(rng2), end(rng2), std::move(pred),
-                    std::move(proj));
-            }
-
-            /// \overload
-            template<typename Rng1, typename V2, typename R = equal_to, typename P = ident,
-                typename I1 = range_iterator_t<Rng1>,
-                typename I2 = V2 const *,
-                typename V1 = iterator_value_t<I1>,
-                typename X = concepts::Invokable::result_t<P, V1>,
-                CONCEPT_REQUIRES_(
-                    Iterable<Rng1>()                &&
-                    ForwardIterator<I1>()           &&
-                    Invokable<P, V1>()              &&
-                    InvokableRelation<R, X, V2>()
-                )>
-            I1 operator()(Rng1 &rng1, std::initializer_list<V2> rng2, R pred = R{}, P proj = P{}) const
-            {
-                return (*this)(begin(rng1), end(rng1), rng2.begin(), rng2.end(), std::move(pred),
-                    std::move(proj));
-            }
-
-            /// \overload
-            template<typename V1, typename V2, typename R = equal_to, typename P = ident,
-                typename I1 = V1 const *,
-                typename I2 = V2 const *,
-                typename X = concepts::Invokable::result_t<P, V1>,
-                CONCEPT_REQUIRES_(
-                    Invokable<P, V1>()              &&
-                    InvokableRelation<R, X, V2>()
-                )>
-            I1 operator()(std::initializer_list<V1> rng1, std::initializer_list<V2> rng2, R pred = R{}, P proj = P{}) const
-            {
-                return (*this)(rng1.begin(), rng1.end(), rng2.begin(), rng2.end(), std::move(pred),
-                    std::move(proj));
-            }
         };
 
-        RANGES_CONSTEXPR find_end_fn find_end{};
+        RANGES_CONSTEXPR range_algorithm<find_end_fn> find_end{};
 
     } // namespace v3
 } // namespace ranges

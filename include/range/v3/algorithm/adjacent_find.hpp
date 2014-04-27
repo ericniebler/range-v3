@@ -10,7 +10,6 @@
 #ifndef RANGES_V3_ALGORITHM_ADJACENT_FIND_HPP
 #define RANGES_V3_ALGORITHM_ADJACENT_FIND_HPP
 
-#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
@@ -18,6 +17,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -67,22 +67,9 @@ namespace ranges
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
-
-            /// \overload
-            template<typename V, typename R = equal_to, typename P = ident,
-                typename I = V const *,
-                CONCEPT_REQUIRES_(
-                    Invokable<P, V>()                                               &&
-                    InvokableRelation<R, concepts::Invokable::result_t<P, V>>()
-                )>
-            I
-            operator()(std::initializer_list<V> rng, R pred = R{}, P proj = P{}) const
-            {
-                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
-            }
         };
 
-        RANGES_CONSTEXPR adjacent_find_fn adjacent_find {};
+        RANGES_CONSTEXPR range_algorithm<adjacent_find_fn> adjacent_find {};
 
     } // namespace v3
 } // namespace ranges

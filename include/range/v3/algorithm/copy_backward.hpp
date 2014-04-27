@@ -11,7 +11,6 @@
 #define RANGES_V3_ALGORITHM_COPY_BACKWARD_HPP
 
 #include <utility>
-#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -19,6 +18,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -52,20 +52,9 @@ namespace ranges
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
             }
-
-            template<typename V, typename O, typename P = ident,
-                typename I = V const *,
-                CONCEPT_REQUIRES_(
-                    BidirectionalIterator<O>()              &&
-                    IndirectlyProjectedCopyable<I, P, O>()
-                )>
-            O operator()(std::initializer_list<V> rng, O out, P proj = P{}) const
-            {
-                return (*this)(rng.begin(), rng.end(), std::move(out), std::move(proj));
-            }
         };
 
-        RANGES_CONSTEXPR copy_backward_fn copy_backward {};
+        RANGES_CONSTEXPR range_algorithm<copy_backward_fn> copy_backward {};
 
     } // namespace v3
 } // namespace ranges
