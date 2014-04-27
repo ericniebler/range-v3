@@ -15,9 +15,10 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/view/take.hpp>
 #include <range/v3/view/flatten.hpp>
-#include <range/v3/view/generate.hpp>
+#include <range/v3/view/generate_n.hpp>
+#include <range/v3/view/repeat_n.hpp>
+#include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
 
 namespace ranges
@@ -63,9 +64,9 @@ namespace ranges
         struct yield_fn
         {
             template<typename V>
-            take_view<repeated_view<V>> operator()(V v) const
+            single_view<V> operator()(V v) const
             {
-                return view::repeat(std::move(v)) | view::take(1);
+                return view::single(std::move(v));
             }
         };
 
@@ -74,9 +75,9 @@ namespace ranges
         struct yield_if_fn
         {
             template<typename V>
-            take_view<repeated_view<V>> operator()(bool b, V v) const
+            repeated_n_view<V> operator()(bool b, V v) const
             {
-                return view::repeat(std::move(v)) | view::take(b ? 1 : 0);
+                return view::repeat_n(std::move(v), b ? 1 : 0);
             }
         };
 
@@ -85,10 +86,10 @@ namespace ranges
         struct lazy_yield_if_fn
         {
             template<typename F>
-            take_view<generate_view<F>> operator()(bool b, F f) const
+            generate_n_view<F> operator()(bool b, F f) const
             {
                 CONCEPT_ASSERT(Function<F>());
-                return view::generate(std::move(f)) | view::take(b ? 1 : 0);
+                return view::generate_n(std::move(f), b ? 1 : 0);
             }
         };
 

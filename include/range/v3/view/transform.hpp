@@ -16,6 +16,7 @@
 
 #include <utility>
 #include <iterator>
+#include <functional>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
@@ -32,22 +33,91 @@ namespace ranges
     {
         namespace detail
         {
+            template<typename T, bool IsSemiRegular = SemiRegular<T>()>
+            struct value_wrapper
+            {
+            private:
+                optional<T> t_;
+            public:
+                value_wrapper() = default;
+                value_wrapper(T f)
+                  : t_(std::move(f))
+                {}
+                T & get()
+                {
+                    RANGES_ASSERT(!!t_);
+                    return *t_;
+                }
+                T const & get() const
+                {
+                    RANGES_ASSERT(!!t_);
+                    return *t_;
+                }
+                operator T &()
+                {
+                    return get();
+                }
+                operator T const &() const
+                {
+                    return get();
+                }
+                template<typename...Args>
+                auto operator()(Args &&...args) ->
+                    decltype(std::declval<T &>()(std::forward<Args>(args)...))
+                {
+                    return get()(std::forward<Args>(args)...);
+                }
+                template<typename...Args>
+                auto operator()(Args &&...args) const ->
+                    decltype(std::declval<T const &>()(std::forward<Args>(args)...))
+                {
+                    return get()(std::forward<Args>(args)...);
+                }
+            };
+
+            template<typename T>
+            struct reference_wrapper
+            {
+            private:
+                T *t_;
+            public:
+                reference_wrapper() = default;
+                reference_wrapper(T &t)
+                  : t_(std::addressof(t))
+                {}
+                T & get() const
+                {
+                    RANGES_ASSERT(nullptr != t_);
+                    return *t_;
+                }
+                operator T &() const
+                {
+                    return get();
+                }
+                template<typename ...Args>
+                auto operator()(Args &&...args) const ->
+                    decltype((*t_)(std::forward<Args>(args)...))
+                {
+                    return (*t_)(std::forward<Args>(args)...);
+                }
+            };
+
             template<typename UnaryFunction, typename SinglePass>
             struct transform_adaptor : default_adaptor
             {
             private:
-                UnaryFunction const *fun_;
+                UnaryFunction fun_;
             public:
                 using single_pass = SinglePass;
                 transform_adaptor() = default;
-                transform_adaptor(UnaryFunction const &fun)
-                  : fun_(&fun)
+                transform_adaptor(UnaryFunction fun)
+                  : fun_(std::move(fun))
                 {}
                 template<typename Cursor>
                 auto current(Cursor const &pos) const ->
-                    decltype((*fun_)(pos.current()))
+                    decltype(fun_(pos.current()))
                 {
-                    return (*fun_)(pos.current());
+                    return fun_(pos.current());
                 }
             };
         }
@@ -59,31 +129,31 @@ namespace ranges
         private:
             using reference_t = result_of_t<invokable_t<UnaryFunction> const(range_value_t<InputIterable>)>;
             friend range_core_access;
-            // TODO optional is only necessary here for non-SemiRegular types
-            optional<invokable_t<UnaryFunction>> fun_;
+            using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<UnaryFunction>>(),
+                invokable_t<UnaryFunction>, detail::value_wrapper<invokable_t<UnaryFunction>>>;
+            using adaptor_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<UnaryFunction>>(),
+                view_fun_t, detail::reference_wrapper<view_fun_t const>>;
+            view_fun_t fun_;
             // Forward ranges must always return references. If the result of calling the function
             // is not a reference, this range is input-only.
             using single_pass = detail::or_t<
                 Derived<ranges::input_iterator_tag, range_category_t<InputIterable>>,
                 detail::not_t<std::is_reference<reference_t>>>;
-            using adaptor_t = detail::transform_adaptor<invokable_t<UnaryFunction>, single_pass>;
+            using adaptor_t = detail::transform_adaptor<adaptor_fun_t, single_pass>;
             using use_sentinel_t = detail::or_t<detail::not_t<Range<InputIterable>>, single_pass>;
             adaptor_t begin_adaptor() const
             {
-                RANGES_ASSERT(!!fun_);
-                return {*fun_};
+                return adaptor_t{fun_};
             }
             CONCEPT_REQUIRES(use_sentinel_t())
             default_adaptor end_adaptor() const
             {
-                RANGES_ASSERT(!!fun_);
                 return {};
             }
             CONCEPT_REQUIRES(!use_sentinel_t())
             adaptor_t end_adaptor() const
             {
-                RANGES_ASSERT(!!fun_);
-                return {*fun_};
+                return adaptor_t{fun_};
             }
         public:
             transformed_view() = default;

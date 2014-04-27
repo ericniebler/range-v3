@@ -453,6 +453,15 @@ namespace ranges
             extern slice_fn const slice;
         }
 
+        template<typename ForwardRange>
+        struct single_view;
+
+        namespace view
+        {
+            struct single_fn;
+            extern single_fn const single;
+        }
+
         template<typename InputRange>
         struct strided_view;
 

@@ -33,7 +33,7 @@ int main()
             ib.get(), ib.get() + N, ic.get());
         CHECK(std::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
-        CHECK(ic[2 * N - 1] == 2 * N - 1);
+        CHECK(ic[2 * N - 1] == (int)(2 * N - 1));
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
     }
 
@@ -51,7 +51,7 @@ int main()
         auto r = ranges::merge(r0, r1, ic.get());
         CHECK(std::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
-        CHECK(ic[2 * N - 1] == 2 * N - 1);
+        CHECK(ic[2 * N - 1] == (int)(2 * N - 1));
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
     }
 
