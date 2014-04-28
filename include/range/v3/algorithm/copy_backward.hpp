@@ -26,13 +26,13 @@ namespace ranges
     {
         struct copy_backward_fn
         {
-            template<typename I, typename S, typename O, typename P = ident,
+            template<typename I, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    BidirectionalIterator<I, S>()           &&
+                    BidirectionalIterator<I>()              &&
                     BidirectionalIterator<O>()              &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
-            O operator()(I begin, S end, O out, P proj = P{}) const
+            O operator()(I begin, I end, O out, P proj = P{}) const
             {
                 auto &&iproj = invokable(proj);
                 while(begin != end)
@@ -43,7 +43,7 @@ namespace ranges
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng>()                         &&
+                    Range<Rng>()                            &&
                     BidirectionalIterator<I>()              &&
                     BidirectionalIterator<O>()              &&
                     IndirectlyProjectedCopyable<I, P, O>()
