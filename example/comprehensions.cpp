@@ -17,12 +17,15 @@
 using namespace ranges;
 
 auto const intsFrom = view::iota;
-auto const ints = [](int i, int j){ return view::take(intsFrom(i), j-i+1); };
+auto const ints = [](int i, int j)
+    {
+        return view::take(intsFrom(i), j-i+1);
+    };
 
 int main()
 {
     // Define an infinite range containing all the Pythagorean triples:
-    auto all_triples =
+    auto triples =
         view::for_each(intsFrom(1), [](int z)
         {
             return view::for_each(ints(1, z), [=](int x)
@@ -34,15 +37,14 @@ int main()
             });
         });
 
-    auto triples = view::take(all_triples, 100);
-
     // Display the first 100 triples
-    for_each(triples, [](std::tuple<int, int, int> triple){
+    for(auto triple : triples | view::take(100))
+    {
         std::cout << '('
             << std::get<0>(triple) << ','
             << std::get<1>(triple) << ','
             << std::get<2>(triple) << ')' << '\n';
-    });
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +78,7 @@ public:
 void benchmark()
 {
     // Define an infinite range containing all the Pythagorean triples:
-    auto all_triples =
+    auto triples =
         view::for_each(intsFrom(1), [](int z)
         {
             return view::for_each(ints(1, z), [=](int x)
@@ -89,15 +91,15 @@ void benchmark()
         });
 
     static constexpr int max_triples = 3000;
-    auto triples = view::take(all_triples, max_triples);
 
     timer t;
     int result = 0;
-    for_each(triples, [&](std::tuple<int, int, int> triple){
+    for(auto triple : triples | view::take(max_triples))
+    {
         int i, j, k;
         std::tie(i, j, k) = triple;
         result += (i + j + k);
-    });
+    }
     std::cout << t << '\n';
     std::cout << result << '\n';
 

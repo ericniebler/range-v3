@@ -111,10 +111,10 @@ test_pred()
     CHECK(count_equal::count <= 7 * (sa - 7 + 1));
     count_equal::count = 0;
     CHECK(find_end(Iter1(ia), Sent1(ia + sa), Iter2(b), Sent2(b), count_equal()) == Iter1(ia + sa));
-    CHECK(count_equal::count <= 0);
+    CHECK(count_equal::count == 0u);
     count_equal::count = 0;
     CHECK(find_end(Iter1(ia), Sent1(ia), Iter2(b), Sent2(b + 1), count_equal()) == Iter1(ia));
-    CHECK(count_equal::count <= 0);
+    CHECK(count_equal::count == 0u);
 
     auto ir = range(Iter1(ia), Sent1(ia + sa));
     count_equal::count = 0;
@@ -140,11 +140,11 @@ test_pred()
     CHECK(count_equal::count <= 7 * (sa - 7 + 1));
     count_equal::count = 0;
     CHECK(find_end(ir, range(Iter2(b), Sent2(b)), count_equal()) == Iter1(ia + sa));
-    CHECK(count_equal::count <= 0);
+    CHECK(count_equal::count == 0u);
     count_equal::count = 0;
     auto er = range(Iter1(ia), Sent1(ia));
     CHECK(find_end(er, range(Iter2(b), Sent2(b + 1)), count_equal()) == Iter1(ia));
-    CHECK(count_equal::count <= 0);
+    CHECK(count_equal::count == 0u);
 
     static_assert(std::is_same<Iter1, decltype(find_end(er, {1, 2, 3}))>::value, "");
     static_assert(std::is_same<int const *, decltype(find_end({1, 2, 3}, er))>::value, "");

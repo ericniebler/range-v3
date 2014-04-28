@@ -276,6 +276,7 @@ int main()
 
     int *p = nullptr;
     static_assert(std::is_same<bool, decltype(ranges::equal({1, 2, 3, 4}, p))>::value, "");
+    static_assert(std::is_same<bool, decltype(ranges::equal({1, 2, 3, 4}, {1, 2, 3, 4}))>::value, "");
     static_assert(std::is_same<bool, decltype(ranges::equal({1, 2, 3, 4}, ranges::view::unbounded(p)))>::value, "");
 
     return ::test_result();

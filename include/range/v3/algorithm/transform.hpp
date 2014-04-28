@@ -61,9 +61,7 @@ namespace ranges
         {
             // Single-range variant
             template<typename I, typename S, typename O, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(
-                    Sentinel<S, I>() && Transformable1<I, O, F, P>()
-                )>
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && Transformable1<I, O, F, P>())>
             std::pair<I, O> operator()(I begin, S end, O out, F fun_, P proj_ = P{}) const
             {
                 auto &&fun = invokable(fun_);

@@ -20,6 +20,7 @@
 #include <range/v3/algorithm/binary_search.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
+#include <range/v3/algorithm/copy_if.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/algorithm/count.hpp>
 #include <range/v3/algorithm/count_if.hpp>
