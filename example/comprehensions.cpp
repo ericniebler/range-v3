@@ -37,6 +37,13 @@ int main()
             });
         });
 
+    //// This alternate syntax also works:
+    //auto triples = intsFrom(1) >>= [=](int z) { return
+    //               ints(1, z)  >>= [=](int x) { return
+    //               ints(x, z)  >>= [=](int y) { return
+    //    yield_if(x*x + y*y == z*z,
+    //        std::make_tuple(x, y, z)); };}; };
+
     // Display the first 100 triples
     for(auto triple : triples | view::take(100))
     {

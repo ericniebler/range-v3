@@ -56,6 +56,17 @@ namespace ranges
                 return (T &&) t;
             }
         };
+
+        struct plus
+        {
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(Addable<T, U>())>
+            auto operator()(T && t, U && u) const ->
+                decltype((T &&) t + (U &&) u)
+            {
+                return (T &&) t + (U &&) u;
+            }
+        };
     }
 }
 

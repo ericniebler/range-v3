@@ -384,6 +384,10 @@ namespace ranges
             {
                 return ranges::distance(rng_.get());
             }
+            BaseIterable const & base() const
+            {
+                return rng_;
+            }
             CONCEPT_REQUIRES(SizedIterable<BaseIterable>())
             range_size_t<BaseIterable> base_size() const
             {

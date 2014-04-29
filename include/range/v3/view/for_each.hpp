@@ -94,6 +94,17 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR lazy_yield_if_fn lazy_yield_if{};
+
+        template<typename Rng, typename Fun,
+            typename Result = concepts::Function::result_t<Fun, range_value_t<Rng>>,
+            CONCEPT_REQUIRES_(Iterable<Rng>() &&
+                              Function<Fun, range_value_t<Rng>>() &&
+                              Iterable<Result>())>
+        auto operator >>= (Rng && rng, Fun fun) ->
+            decltype(view::for_each(std::forward<Rng>(rng), std::move(fun)))
+        {
+            return view::for_each(std::forward<Rng>(rng), std::move(fun));
+        }
     }
 }
 

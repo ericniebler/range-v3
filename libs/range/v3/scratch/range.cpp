@@ -98,25 +98,25 @@ done:
 int main()
 {
     // Define an infinite range containing all the Pythagorean triples:
-    auto all_triples =
+    auto triples =
         view::for_each(intsFrom(1), [](int z)
         {
             return view::for_each(ints(1, z), [=](int x)
             {
                 return view::for_each(ints(x, z), [=](int y)
                 {
-                    return yield_if(x*x + y*y == z*z, std::make_tuple(x, y, z));
+                    return yield_if(x*x + y*y == z*z,
+                        std::make_tuple(x, y, z));
                 });
             });
         });
 
-    auto triples = view::take(all_triples, 100);
-
     // Display the first 100 triples
-    for_each(triples, [](std::tuple<int, int, int> triple){
+    for(auto triple : triples | view::take(100))
+    {
         std::cout << '('
             << std::get<0>(triple) << ','
             << std::get<1>(triple) << ','
             << std::get<2>(triple) << ')' << '\n';
-    });
+    }
 }

@@ -17,9 +17,11 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
+#include <range/v3/numeric.hpp> // for accumulate
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
+#include <range/v3/view/transform.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 
@@ -27,7 +29,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        // TODO: support bidirectional and random-access iteration
         template<typename Rng>
         struct flatten_view
           : range_adaptor<flatten_view<Rng>, Rng,
@@ -36,6 +37,7 @@ namespace ranges
         private:
             CONCEPT_ASSERT(ranges::Iterable<Rng>());
             CONCEPT_ASSERT(ranges::Iterable<range_value_t<Rng>>());
+            using size_type = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
 
             friend range_core_access;
             mutable range_view_all_t<range_value_t<Rng>> cur_;
@@ -63,10 +65,7 @@ namespace ranges
                     }
                 }
             public:
-                using single_pass = detail::or_t<
-                    Derived<ranges::input_iterator_tag, range_category_t<Rng>>,
-                    Derived<ranges::input_iterator_tag, range_category_t<range_value_t<Rng>>>>;
-
+                using single_pass = std::true_type;
                 adaptor() = default;
                 adaptor(flatten_view const &rng)
                   : rng_(&rng), it_{}
@@ -113,6 +112,13 @@ namespace ranges
             explicit flatten_view(Rng &&rng)
               : range_adaptor_t<flatten_view>(std::forward<Rng>(rng)), cur_{}
             {}
+            CONCEPT_REQUIRES(SizedIterable<Rng>() &&
+                             SizedIterable<range_value_t<Rng>>() &&
+                             ForwardIterator<range_iterator_t<Rng>>())
+            size_type size() const
+            {
+                return accumulate(view::transform(this->base(), ranges::size), size_type{});
+            }
         };
 
         namespace view
