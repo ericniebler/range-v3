@@ -35,7 +35,7 @@ namespace ranges
             operator()(I begin, iterator_difference_t<I> dist, V const & val, R pred_ = R{},
                 P proj_ = P{}) const
             {
-                RANGES_ASSERT(0 <= d);
+                RANGES_ASSERT(0 <= dist);
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
                 while(0 != dist)
@@ -65,8 +65,8 @@ namespace ranges
             operator()(Rng & rng, iterator_difference_t<I> dist, V const & val, R pred = R{}, P proj = P{}) const
             {
                 static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
-                RANGES_ASSERT(0 <= d);
-                RANGES_ASSERT(d <= distance(rng));
+                RANGES_ASSERT(0 <= dist);
+                RANGES_ASSERT(dist <= distance(rng));
                 return (*this)(begin(rng), dist, std::move(pred), std::move(proj));
             }
         };
