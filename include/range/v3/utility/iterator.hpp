@@ -255,6 +255,42 @@ namespace ranges
 
         RANGES_CONSTEXPR back_inserter_fn back_inserter {};
 
+        template<typename T, typename Char = char, typename Traits = std::char_traits<Char>>
+        struct ostream_iterator
+        {
+        private:
+            std::basic_ostream<Char, Traits> *sout_;
+            Char const *delim_;
+        public:
+            using difference_type = std::ptrdiff_t;
+            using char_type = Char;
+            using traits_type = Traits;
+            ostream_iterator() = default;
+            ostream_iterator(std::basic_ostream<Char, Traits> &sout, Char const *delim = nullptr)
+              : sout_(&sout), delim_(delim)
+            {}
+            ostream_iterator & operator=(T const &t)
+            {
+                RANGES_ASSERT(sout_);
+                *sout_ << t;
+                if(delim_)
+                    *sout_ << delim_;
+                return *this;
+            }
+            ostream_iterator<T>& operator*()
+            {
+                return *this;
+            }
+            ostream_iterator<T>& operator++()
+            {
+                return *this;
+            }
+            ostream_iterator<T>& operator++(int)
+            {
+                return *this;
+            }
+        };
+
         struct uncounted_fn
         {
             template<typename I>

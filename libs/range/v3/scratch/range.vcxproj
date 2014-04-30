@@ -79,6 +79,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\count.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\count_if.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\equal.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\equal_range.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_end.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_if.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\count_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal_range.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal_range_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\fill.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\fill_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find.hpp" />

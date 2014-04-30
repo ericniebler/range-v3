@@ -54,9 +54,6 @@ void test()
     CHECK(ranges::accumulate(range(Iter(ia), Sent(ia+2)), 10) == 13);
     CHECK(ranges::accumulate(range(Iter(ia), Sent(ia+sc)), 0) == 21);
     CHECK(ranges::accumulate(range(Iter(ia), Sent(ia+sc)), 10) == 31);
-
-    CHECK(ranges::accumulate({1, 2, 3, 4, 5, 6}, 10) == 31);
-    CHECK(ranges::accumulate({1, 2, 3, 4, 5, 6}, S{10}, &S::add).i == 31);
 }
 
 int main()
@@ -71,6 +68,10 @@ int main()
     test<forward_iterator<const int*>, sentinel<const int*> >();
     test<bidirectional_iterator<const int*>, sentinel<const int*> >();
     test<random_access_iterator<const int*>, sentinel<const int*> >();
+
+    CHECK(ranges::accumulate({1, 2, 3, 4, 5, 6}, 10) == 31);
+    CHECK(ranges::accumulate({1, 2, 3, 4, 5, 6}, S{10}, &S::add).i == 31);
+    CHECK(ranges::accumulate({S{1}, S{2}, S{3}, S{4}, S{5}, S{6}}, 10, ranges::plus{}, &S::i) == 31);
 
     return ::test_result();
 }

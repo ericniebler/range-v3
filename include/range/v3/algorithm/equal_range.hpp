@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -13,13 +12,42 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/iterator_range.hpp>
+#include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/algorithm/equal_range_n.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        struct equal_range_fn
+        {
+            template<typename I, typename S, typename V, typename R = ordered_less, typename P = ident,
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && BinarySearchable<I, V, R, P>())>
+            iterator_range<I>
+            operator()(I begin, S end, V const & val, R pred = R{}, P proj = P{}) const
+            {
+                return equal_range_n(std::move(begin), distance(begin, end), val, std::move(pred),
+                    std::move(proj));
+            }
+
+            template<typename Rng, typename V, typename R = ordered_less, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V, R, P>())>
+            iterator_range<I>
+            operator()(Rng & rng, V const & val, R pred = R{}, P proj = P{}) const
+            {
+                static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
+                return equal_range_n(begin(rng), distance(rng), val, std::move(pred),
+                    std::move(proj));
+            }
+        };
+
+        RANGES_CONSTEXPR equal_range_fn equal_range{};
 
     } // namespace v3
 } // namespace ranges

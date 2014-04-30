@@ -29,43 +29,55 @@ namespace ranges
         struct enumerate_fn
         {
         private:
-            template<typename InputIterator, typename Sentinel, typename Distance>
-            static std::pair<Distance, InputIterator>
-            impl(InputIterator begin, Sentinel end, Distance d,
-                concepts::InputIterator)
+            template<typename I, typename S, typename D>
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::InputIterator) const
             {
                 for(; begin != end; ++begin)
                     ++d;
                 return {d, begin};
             }
-            template<typename RandomAccessIterator, typename Distance>
-            static std::pair<Distance, RandomAccessIterator>
-            impl(RandomAccessIterator begin, RandomAccessIterator end, Distance d,
-                concepts::RandomAccessIterator)
+
+            template<typename I, typename D>
+            std::pair<D, I> impl_i(I begin, I end, D d, concepts::RandomAccessIterator) const
             {
                 return {(end - begin) + d, end};
             }
-        public:
-            template<typename InputIterator, typename Sentinel,
-                typename Distance = iterator_difference_t<InputIterator>,
-                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator, Sentinel>() &&
-                    ranges::Integral<Distance>())>
-            std::pair<Distance, InputIterator>
-            operator()(InputIterator begin, Sentinel end, Distance d = 0) const
+
+            template<typename I, typename D, typename C>
+            std::pair<D, counted_iterator<I>>
+            impl_i(counted_iterator<I> begin, counted_iterator<I> end, D d, C) const
             {
-                return enumerate_fn::impl(std::move(begin), std::move(end), d,
-                    iterator_concept_t<InputIterator>{});
+                return {(end.count() - begin.count()) + d, end};
             }
-            template<typename FiniteIterable,
-                typename Distance = range_difference_t<FiniteIterable>,
-                CONCEPT_REQUIRES_(ranges::Integral<Distance>() &&
-                    ranges::Iterable<FiniteIterable>())>
-            std::pair<Distance, range_iterator_t<FiniteIterable>>
-            operator()(FiniteIterable &&rng, Distance d = 0) const
+
+            template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
+            std::pair<D, I> impl_r(Rng &rng, D d, concepts::Iterable) const
             {
-                static_assert(!ranges::is_infinite<FiniteIterable>::value,
+                return (*this)(begin(rng), end(rng), d);
+            }
+
+            template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
+            std::pair<D, I> impl_r(Rng &rng, D d, concepts::SizedRange) const
+            {
+                return {static_cast<D>(size(rng)) + d, end(rng)};
+            }
+        public:
+            template<typename I, typename S, typename D = iterator_difference_t<I>,
+                CONCEPT_REQUIRES_(InputIterator<I, S>() && Integral<D>())>
+            std::pair<D, I> operator()(I begin, S end, D d = 0) const
+            {
+                return this->impl_i(std::move(begin), std::move(end), d,
+                    iterator_concept_t<I>{});
+            }
+
+            template<typename Rng, typename D = range_difference_t<Rng>,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>
+            std::pair<D, I> operator()(Rng &&rng, D d = 0) const
+            {
+                static_assert(!is_infinite<Rng>::value,
                     "Trying to compute the length of an infinite range!");
-                return (*this)(ranges::begin(rng), ranges::end(rng), d);
+                return this->impl_r(rng, d, range_concept_t<Rng>{});
             }
         };
 
@@ -74,39 +86,45 @@ namespace ranges
         struct distance_fn
         {
         private:
-            // Handle SizedIterables
-            template<typename Iterable, typename Distance>
-            static Distance
-            impl(Iterable &rng, Distance d, concepts::Iterable)
-            {
-                return enumerate(rng, d).first;
-            }
-            template<typename Iterable, typename Distance>
-            static Distance
-            impl(Iterable &rng, Distance d, concepts::SizedIterable)
-            {
-                return static_cast<Distance>(ranges::size(rng)) + d;
-            }
-        public:
-            template<typename InputIterator, typename Sentinel,
-                typename Distance = iterator_difference_t<InputIterator>,
-                CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator, Sentinel>() &&
-                    ranges::Integral<Distance>())>
-            Distance
-            operator()(InputIterator begin, Sentinel end, Distance d = 0) const
+            template<typename I, typename S, typename D>
+            D impl_i(I begin, S end, D d) const
             {
                 return enumerate(std::move(begin), std::move(end), d).first;
             }
-            template<typename FiniteIterable,
-                typename Distance = range_difference_t<FiniteIterable>,
-                CONCEPT_REQUIRES_(ranges::Integral<Distance>() &&
-                    ranges::Iterable<FiniteIterable>())>
-            Distance
-            operator()(FiniteIterable &&rng, Distance d = 0) const
+
+            template<typename I, typename D>
+            D impl_i(counted_iterator<I> begin, counted_sentinel<I> end, D d) const
             {
-                static_assert(!ranges::is_infinite<FiniteIterable>::value,
+                return static_cast<D>(end.count() - begin.count()) + d;
+            }
+
+            template<typename Rng, typename D>
+            D impl_r(Rng &rng, D d, concepts::Iterable) const
+            {
+                return enumerate(rng, d).first;
+            }
+
+            template<typename Rng, typename D>
+            D impl_r(Rng &rng, D d, concepts::SizedIterable) const
+            {
+                return static_cast<D>(size(rng)) + d;
+            }
+
+        public:
+            template<typename I, typename S, typename D = iterator_difference_t<I>,
+                CONCEPT_REQUIRES_(InputIterator<I, S>() && Integral<D>())>
+            D operator()(I begin, S end, D d = 0) const
+            {
+                return this->impl_i(std::move(begin), std::move(end), d);
+            }
+
+            template<typename Rng, typename D = range_difference_t<Rng>,
+                CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>
+            D operator()(Rng &&rng, D d = 0) const
+            {
+                static_assert(!is_infinite<Rng>::value,
                     "Trying to compute the length of an infinite range!");
-                return distance_fn::impl(rng, d, range_concept_t<FiniteIterable>{});
+                return this->impl_r(rng, d, range_concept_t<Rng>{});
             }
         };
 

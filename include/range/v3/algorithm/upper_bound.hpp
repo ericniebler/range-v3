@@ -27,26 +27,18 @@ namespace ranges
         struct upper_bound_fn
         {
             template<typename I, typename S, typename V2, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(
-                    Sentinel<S, I>()                &&
-                    BinarySearchable<I, V2, C, P>()
-                )>
-            I
-            operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && BinarySearchable<I, V2, C, P>())>
+            I operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
             {
-                return upper_bound_n(begin, distance(begin, end), val, std::move(pred),
+                return upper_bound_n(std::move(begin), distance(begin, end), val, std::move(pred),
                     std::move(proj));
             }
 
             /// \overload
             template<typename Rng, typename V2, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(
-                    Iterable<Rng>()                 &&
-                    BinarySearchable<I, V2, C, P>()
-                )>
-            I
-            operator()(Rng &rng, V2 const &val, C pred = C{}, P proj = P{}) const
+                CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V2, C, P>())>
+            I operator()(Rng &rng, V2 const &val, C pred = C{}, P proj = P{}) const
             {
                 static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
                 return upper_bound_n(begin(rng), distance(rng), val, std::move(pred),

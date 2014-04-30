@@ -24,6 +24,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {

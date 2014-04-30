@@ -26,6 +26,7 @@
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/equal_range.hpp>
+#include <range/v3/algorithm/equal_range_n.hpp>
 #include <range/v3/algorithm/fill.hpp>
 #include <range/v3/algorithm/find.hpp>
 #include <range/v3/algorithm/find_end.hpp>
