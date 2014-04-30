@@ -23,6 +23,8 @@ int main()
     auto rng0 = istream<int>(sinx) | view::delimit(42) | view::as_range;
     ::models<concepts::Range>(rng0);
     ::models<concepts::InputIterator>(rng0.begin());
+    CONCEPT_ASSERT(Same<typename std::iterator_traits<decltype(rng0.begin())>::iterator_category,
+                        std::input_iterator_tag>());
     ::models_not<concepts::ForwardIterator>(rng0.begin());
     ::check_equal(rng0, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});
 

@@ -51,33 +51,67 @@ namespace ranges
         {
             ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T>
-            struct as_iterator_category
+            struct as_ranges_iterator_category
             {
                 using type = T;
             };
 
             template<>
-            struct as_iterator_category<std::input_iterator_tag>
+            struct as_ranges_iterator_category<std::input_iterator_tag>
             {
                 using type = ranges::input_iterator_tag;
             };
 
             template<>
-            struct as_iterator_category<std::forward_iterator_tag>
+            struct as_ranges_iterator_category<std::forward_iterator_tag>
             {
                 using type = ranges::forward_iterator_tag;
             };
 
             template<>
-            struct as_iterator_category<std::bidirectional_iterator_tag>
+            struct as_ranges_iterator_category<std::bidirectional_iterator_tag>
             {
                 using type = ranges::bidirectional_iterator_tag;
             };
 
             template<>
-            struct as_iterator_category<std::random_access_iterator_tag>
+            struct as_ranges_iterator_category<std::random_access_iterator_tag>
             {
                 using type = ranges::random_access_iterator_tag;
+            };
+
+            ////////////////////////////////////////////////////////////////////////////////////////
+            template<typename T>
+            struct as_std_iterator_category;
+
+            template<>
+            struct as_std_iterator_category<ranges::weak_input_iterator_tag>
+            {
+                using type = std::input_iterator_tag;
+            };
+
+            template<>
+            struct as_std_iterator_category<ranges::input_iterator_tag>
+            {
+                using type = std::input_iterator_tag;
+            };
+
+            template<>
+            struct as_std_iterator_category<ranges::forward_iterator_tag>
+            {
+                using type = std::forward_iterator_tag;
+            };
+
+            template<>
+            struct as_std_iterator_category<ranges::bidirectional_iterator_tag>
+            {
+                using type = std::bidirectional_iterator_tag;
+            };
+
+            template<>
+            struct as_std_iterator_category<ranges::random_access_iterator_tag>
+            {
+                using type = std::random_access_iterator_tag;
             };
 
             ////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +144,7 @@ namespace ranges
 
             template<typename T>
             struct iterator_category_type<T, always_t<void, typename T::iterator_category>>
-              : as_iterator_category<typename T::iterator_category>
+              : as_ranges_iterator_category<typename T::iterator_category>
             {};
         }
 
