@@ -13,6 +13,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+#include <vector>
 
 int main()
 {
