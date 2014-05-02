@@ -82,6 +82,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\equal_range.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_end.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\find_first_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_if.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />

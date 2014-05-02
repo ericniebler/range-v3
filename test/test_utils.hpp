@@ -47,4 +47,10 @@ void models_not(Type &&)
     CONCEPT_ASSERT(!ranges::concepts::models<Concept, Type>());
 }
 
+template<typename T>
+T & as_lvalue(T && t)
+{
+    return t;
+}
+
 #endif
