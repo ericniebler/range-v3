@@ -42,9 +42,9 @@ namespace ranges
             };
         }
 
-        template<typename Iterable>
+        template<typename Rng>
         struct const_view
-          : range_adaptor<const_view<Iterable>, Iterable>
+          : range_adaptor<const_view<Rng>, Rng>
         {
         private:
             friend range_core_access;
@@ -57,11 +57,11 @@ namespace ranges
                 return{};
             }
         public:
-            explicit const_view(Iterable && rng)
-              : range_adaptor_t<const_view>(std::forward<Iterable>(rng))
+            explicit const_view(Rng && rng)
+              : range_adaptor_t<const_view>(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedIterable<Iterable>())
-            range_size_t<Iterable> size() const
+            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            range_size_t<Rng> size() const
             {
                 return this->base_size();
             }
@@ -71,11 +71,11 @@ namespace ranges
         {
             struct conster : bindable<conster>, pipeable<conster>
             {
-                template<typename Iterable>
-                static const_view<Iterable> invoke(conster, Iterable && rng)
+                template<typename Rng>
+                static const_view<Rng> invoke(conster, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<Iterable>());
-                    return const_view<Iterable>{std::forward<Iterable>(rng)};
+                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
+                    return const_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 

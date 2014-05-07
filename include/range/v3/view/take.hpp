@@ -47,8 +47,7 @@ namespace ranges
             struct take_fn : bindable<take_fn>
             {
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() &&
-                                      InputIterator<range_iterator_t<Rng>>())>
+                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
                 static take_view<Rng>
                 invoke(take_fn, Rng && rng, range_size_t<Rng> to)
                 {

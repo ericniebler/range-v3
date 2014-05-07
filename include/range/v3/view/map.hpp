@@ -50,19 +50,19 @@ namespace ranges
         {
             struct map_keys : bindable<map_keys>, pipeable<map_keys>
             {
-                template<typename InputRange>
-                static keys_range_view<InputRange> invoke(map_keys, InputRange && rng)
+                template<typename Rng>
+                static keys_range_view<Rng> invoke(map_keys, Rng && rng)
                 {
-                    return {std::forward<InputRange>(rng), detail::get_first{}};
+                    return {std::forward<Rng>(rng), detail::get_first{}};
                 }
             };
 
             struct map_values : bindable<map_values>, pipeable<map_values>
             {
-                template<typename InputRange>
-                static values_range_view<InputRange> invoke(map_values, InputRange && rng)
+                template<typename Rng>
+                static values_range_view<Rng> invoke(map_values, Rng && rng)
                 {
-                    return {std::forward<InputRange>(rng), detail::get_second{}};
+                    return {std::forward<Rng>(rng), detail::get_second{}};
                 }
             };
 

@@ -51,13 +51,13 @@ namespace ranges
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
-            std::pair<D, I> impl_r(Rng &rng, D d, concepts::Iterable) const
+            std::pair<D, I> impl_r(Rng &rng, D d, concepts::Iterable, concepts::Iterable) const
             {
                 return (*this)(begin(rng), end(rng), d);
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
-            std::pair<D, I> impl_r(Rng &rng, D d, concepts::SizedRange) const
+            std::pair<D, I> impl_r(Rng &rng, D d, concepts::Range, concepts::SizedIterable) const
             {
                 return {static_cast<D>(size(rng)) + d, end(rng)};
             }
@@ -77,7 +77,7 @@ namespace ranges
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to compute the length of an infinite range!");
-                return this->impl_r(rng, d, range_concept_t<Rng>{});
+                return this->impl_r(rng, d, range_concept_t<Rng>{}, sized_iterable_concept_t<Rng>{});
             }
         };
 
@@ -124,7 +124,7 @@ namespace ranges
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to compute the length of an infinite range!");
-                return this->impl_r(rng, d, range_concept_t<Rng>{});
+                return this->impl_r(rng, d, sized_iterable_concept_t<Rng>{});
             }
         };
 

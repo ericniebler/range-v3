@@ -39,11 +39,11 @@ namespace ranges
         {
             struct uniquer : bindable<uniquer>, pipeable<uniquer>
             {
-                template<typename ForwardRange>
-                static uniqued_view<ForwardRange>
-                invoke(uniquer, ForwardRange && rng)
+                template<typename Rng>
+                static uniqued_view<Rng>
+                invoke(uniquer, Rng && rng)
                 {
-                    return {std::forward<ForwardRange>(rng), detail::not_equal_to{}};
+                    return {std::forward<Rng>(rng), detail::not_equal_to{}};
                 }
             };
 

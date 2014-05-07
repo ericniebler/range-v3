@@ -24,33 +24,38 @@ int main()
 
     auto rng0 = rgi | view::slice(3, 9);
     has_type<int &>(*begin(rng0));
-    models<concepts::SizedRange>(rng0);
+    models<concepts::Range>(rng0);
+    models<concepts::SizedIterable>(rng0);
     models<concepts::RandomAccessIterator>(begin(rng0));
     ::check_equal(rng0, {3, 4, 5, 6, 7, 8});
 
     auto rng1 = rng0 | view::reverse;
     has_type<int &>(*begin(rng1));
-    models<concepts::SizedRange>(rng1);
+    models<concepts::Range>(rng1);
+    models<concepts::SizedIterable>(rng1);
     models<concepts::RandomAccessIterator>(begin(rng1));
     ::check_equal(rng1, {8, 7, 6, 5, 4, 3});
 
     std::vector<int> v{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto rng2 = v | view::slice(3, 9) | view::reverse;
     has_type<int &>(*begin(rng2));
-    models<concepts::SizedRange>(rng2);
+    models<concepts::Range>(rng2);
+    models<concepts::SizedIterable>(rng2);
     models<concepts::RandomAccessIterator>(begin(rng2));
     ::check_equal(rng2, {8, 7, 6, 5, 4, 3});
 
     std::list<int> l{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto rng3 = l | view::slice(3, 9) | view::reverse;
     has_type<int &>(*begin(rng3));
-    models<concepts::SizedRange>(rng3);
+    models<concepts::Range>(rng3);
+    models<concepts::SizedIterable>(rng3);
     models<concepts::BidirectionalIterator>(begin(rng3));
     models_not<concepts::RandomAccessIterator>(begin(rng3));
     ::check_equal(rng3, {8, 7, 6, 5, 4, 3});
 
     auto rng4 = view::iota(10) | view::slice(10, 20);
-    ::models<concepts::SizedRange>(rng4);
+    ::models<concepts::Range>(rng4);
+    ::models<concepts::SizedIterable>(rng4);
     static_assert(!ranges::is_infinite<decltype(rng4)>::value, "");
     ::check_equal(rng4, {20, 21, 22, 23, 24, 25, 26, 27, 28, 29});
 

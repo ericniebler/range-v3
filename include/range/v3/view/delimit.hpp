@@ -44,9 +44,9 @@ namespace ranges
             };
         }
 
-        template<typename InputIterable, typename Value>
+        template<typename Rng, typename Value>
         struct delimited_view
-          : range_adaptor<delimited_view<InputIterable, Value>, InputIterable>
+          : range_adaptor<delimited_view<Rng, Value>, Rng>
         {
         private:
             friend range_core_access;
@@ -61,8 +61,8 @@ namespace ranges
                 return {value_};
             }
         public:
-            delimited_view(InputIterable && rng, Value value)
-              : range_adaptor_t<delimited_view>(std::forward<InputIterable>(rng))
+            delimited_view(Rng && rng, Value value)
+              : range_adaptor_t<delimited_view>(std::forward<Rng>(rng))
               , value_(std::move(value))
             {}
         };
@@ -71,12 +71,12 @@ namespace ranges
         {
             struct delimiter : bindable<delimiter>
             {
-                template<typename InputIterable, typename Value,
-                    CONCEPT_REQUIRES_(ranges::Iterable<InputIterable>())>
-                static delimited_view<InputIterable, Value>
-                invoke(delimiter, InputIterable && rng, Value value)
+                template<typename Rng, typename Value,
+                    CONCEPT_REQUIRES_(ranges::Iterable<Rng>())>
+                static delimited_view<Rng, Value>
+                invoke(delimiter, Rng && rng, Value value)
                 {
-                    return {std::forward<InputIterable>(rng), std::move(value)};
+                    return {std::forward<Rng>(rng), std::move(value)};
                 }
 
                 template<typename InputIterator, typename Value,

@@ -29,7 +29,7 @@ namespace ranges
             ///
             /// range-based version of the \c adjacent_find std algorithm
             ///
-            /// \pre \c Rng is a model of the ForwardIterable concept
+            /// \pre \c Rng is a model of the Iterable concept
             /// \pre \c R is a model of the BinaryPredicate concept
             template<typename I, typename S, typename R = equal_to, typename P = ident,
                 typename V = iterator_value_t<I>,
@@ -57,8 +57,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng>()                                                 &&
-                    ForwardIterator<I>()                                            &&
+                    ForwardIterable<Rng>()                                          &&
                     Invokable<P, V>()                                               &&
                     InvokableRelation<R, concepts::Invokable::result_t<P, V>>()
                 )>

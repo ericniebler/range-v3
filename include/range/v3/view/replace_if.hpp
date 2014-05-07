@@ -51,19 +51,19 @@ namespace ranges
                     }
                 };
             public:
-                template<typename InputIterable, typename UnaryPredicate, typename Value>
-                static transformed_view<InputIterable,
+                template<typename Rng, typename UnaryPredicate, typename Value>
+                static transformed_view<Rng,
                                                replacer_if_fun<UnaryPredicate,
                                                     typename std::decay<Value>::type>>
-                invoke(replacer_if, InputIterable && rng, UnaryPredicate pred, Value && new_value)
+                invoke(replacer_if, Rng && rng, UnaryPredicate pred, Value && new_value)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
+                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
                     CONCEPT_ASSERT(ranges::InvokablePredicate<UnaryPredicate,
-                                                              range_value_t<InputIterable>>());
+                                                              range_value_t<Rng>>());
                     CONCEPT_ASSERT(ranges::Convertible<detail::decay_t<Value> const &,
-                                                       range_reference_t<InputIterable>>());
-                    return {std::forward<InputIterable>(rng),
+                                                       range_reference_t<Rng>>());
+                    return {std::forward<Rng>(rng),
                             {std::move(pred), std::forward<Value>(new_value)}};
 
                 }

@@ -27,7 +27,7 @@ int main()
     auto && rng = rgi | view::adjacent_filter(std::not_equal_to<int>{});
     has_type<int &>(*begin(rng));
     models<concepts::Range>(rng);
-    models_not<concepts::SizedRange>(rng);
+    models_not<concepts::SizedIterable>(rng);
     models<concepts::ForwardIterator>(begin(rng));
     models_not<concepts::BidirectionalIterator>(begin(rng));
     CONCEPT_ASSERT(WeakOutputIterator<decltype(ranges::back_inserter(out)), int>());

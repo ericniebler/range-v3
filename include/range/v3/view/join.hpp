@@ -59,27 +59,27 @@ namespace ranges
             };
         }
 
-        template<typename...InputIterables>
+        template<typename...Rngs>
         struct joined_view
-          : range_facade<joined_view<InputIterables...>,
-                logical_or<is_infinite<InputIterables>::value...>::value>
+          : range_facade<joined_view<Rngs...>,
+                logical_or<is_infinite<Rngs>::value...>::value>
         {
         private:
             friend range_core_access;
-            using difference_type = common_type_t<range_difference_t<InputIterables>...>;
+            using difference_type = common_type_t<range_difference_t<Rngs>...>;
             using size_type = meta_apply<std::make_unsigned, difference_type>;
-            static constexpr std::size_t cranges{sizeof...(InputIterables)};
-            std::tuple<InputIterables...> rngs_;
+            static constexpr std::size_t cranges{sizeof...(Rngs)};
+            std::tuple<Rngs...> rngs_;
 
             struct sentinel;
 
             struct cursor
             {
-                using difference_type = common_type_t<range_difference_t<InputIterables>...>;
+                using difference_type = common_type_t<range_difference_t<Rngs>...>;
             private:
                 friend struct sentinel;
                 joined_view const *rng_;
-                tagged_variant<range_iterator_t<InputIterables const>...> its_;
+                tagged_variant<range_iterator_t<Rngs const>...> its_;
 
                 template<std::size_t N>
                 void satisfy(size_t<N>)
@@ -195,10 +195,10 @@ namespace ranges
                     return std::distance(ranges::begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
             public:
-                using reference = detail::real_common_type_t<range_reference_t<InputIterables const>...>;
+                using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
                 using single_pass =
                     logical_or<(bool) ranges::Derived<ranges::input_iterator_tag,
-                        range_category_t<InputIterables>>()...>;
+                        range_category_t<Rngs>>()...>;
                 cursor() = default;
                 cursor(joined_view const &rng, begin_tag)
                   : rng_(&rng), its_{size_t<0>{}, ranges::begin(std::get<0>(rng.rngs_))}
@@ -221,12 +221,12 @@ namespace ranges
                 {
                     return its_ == pos.its_;
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)ranges::BidirectionalIterator<range_iterator_t<InputIterables>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool)ranges::BidirectionalIterator<range_iterator_t<Rngs>>()...>::value)
                 void prev()
                 {
                     its_.apply_i(prev_fun{this});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)ranges::RandomAccessIterator<range_iterator_t<InputIterables>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool)ranges::RandomAccessIterator<range_iterator_t<Rngs>>()...>::value)
                 void advance(difference_type n)
                 {
                     if(n > 0)
@@ -234,7 +234,7 @@ namespace ranges
                     else if(n < 0)
                         its_.apply_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool) ranges::RandomAccessIterator<range_iterator_t<InputIterables>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool) ranges::RandomAccessIterator<range_iterator_t<Rngs>>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.which() <= that.its_.which())
@@ -245,7 +245,7 @@ namespace ranges
             struct sentinel
             {
             private:
-                range_sentinel_t<typelist_back_t<typelist<InputIterables...>> const> end_;
+                range_sentinel_t<typelist_back_t<typelist<Rngs...>> const> end_;
             public:
                 sentinel() = default;
                 sentinel(joined_view const &rng, end_tag)
@@ -262,17 +262,17 @@ namespace ranges
                 return {*this, begin_tag{}};
             }
             detail::conditional_t<
-                logical_and<(bool)ranges::Range<InputIterables>()...>::value, cursor, sentinel>
+                logical_and<(bool)ranges::Range<Rngs>()...>::value, cursor, sentinel>
             end_cursor() const
             {
                 return {*this, end_tag{}};
             }
         public:
             joined_view() = default;
-            explicit joined_view(InputIterables &&...rngs)
-              : rngs_(std::forward<InputIterables>(rngs)...)
+            explicit joined_view(Rngs &&...rngs)
+              : rngs_(std::forward<Rngs>(rngs)...)
             {}
-            CONCEPT_REQUIRES(logical_and<(bool)ranges::SizedIterable<InputIterables>()...>::value)
+            CONCEPT_REQUIRES(logical_and<(bool)ranges::SizedIterable<Rngs>()...>::value)
             size_type size() const
             {
                 return ranges::tuple_foldl(
@@ -286,15 +286,15 @@ namespace ranges
         {
             struct joiner : bindable<joiner>
             {
-                template<typename...InputIterables>
-                static joined_view<InputIterables...>
-                invoke(joiner, InputIterables &&... rngs)
+                template<typename...Rngs>
+                static joined_view<Rngs...>
+                invoke(joiner, Rngs &&... rngs)
                 {
-                    static_assert(logical_and<(bool)ranges::Iterable<InputIterables>()...>::value,
+                    static_assert(logical_and<(bool)ranges::Iterable<Rngs>()...>::value,
                         "Expecting Iterables");
-                    static_assert(logical_and<(bool)ranges::InputIterator<range_iterator_t<InputIterables>>()...>::value,
+                    static_assert(logical_and<(bool)ranges::InputIterator<range_iterator_t<Rngs>>()...>::value,
                         "Expecting Input Iterables");
-                    return joined_view<InputIterables...>{std::forward<InputIterables>(rngs)...};
+                    return joined_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };
 

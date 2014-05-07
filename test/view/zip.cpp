@@ -31,7 +31,7 @@ int main()
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::as_range);
         ::models<concepts::Range>(rng);
-        ::models_not<concepts::SizedRange>(rng);
+        ::models_not<concepts::SizedIterable>(rng);
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected(begin(rng), end(rng));
@@ -60,7 +60,8 @@ int main()
     }
 
     auto rnd_rng = view::zip(vi, vs);
-    ::models<concepts::SizedRange>(rnd_rng);
+    ::models<concepts::Range>(rnd_rng);
+    ::models<concepts::SizedIterable>(rnd_rng);
     ::models<concepts::RandomAccessIterator>(begin(rnd_rng));
     auto tmp = begin(rnd_rng) + 3;
     CHECK(std::get<0>(*tmp) == 3);

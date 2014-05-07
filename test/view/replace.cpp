@@ -37,7 +37,7 @@ int main()
     auto && tmp = rng | view::as_range;
     has_type<int const &>(*begin(tmp));
     models<concepts::Range>(tmp);
-    models_not<concepts::SizedRange>(tmp);
+    models_not<concepts::SizedIterable>(tmp);
     models<concepts::InputIterator>(begin(tmp));
     models_not<concepts::ForwardIterator>(begin(tmp));
     std::vector<int> actual{begin(tmp), end(tmp)};

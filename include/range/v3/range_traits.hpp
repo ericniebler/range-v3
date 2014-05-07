@@ -33,22 +33,22 @@ namespace ranges
         using range_sentinel_t = concepts::Iterable::sentinel_t<Rng>;
 
         template<typename Rng>
-        using range_value_t = concepts::Iterable::value_t<Rng>;
-
-        template<typename Rng>
-        using range_reference_t = concepts::Iterable::reference_t<Rng>;
-
-        template<typename Rng>
-        using range_category_t = concepts::Iterable::category_t<Rng>;
-
-        template<typename Rng>
         using range_difference_t = concepts::Iterable::difference_t<Rng>;
 
         template<typename Rng>
-        using range_pointer_t = concepts::Iterable::pointer_t<Rng>;
+        using range_size_t = meta_apply<std::make_unsigned, range_difference_t<Rng>>;
 
-        template<typename Iterable>
-        using range_size_t = meta_apply<std::make_unsigned, range_difference_t<Iterable>>;
+        template<typename Rng>
+        using range_value_t = concepts::InputIterable::value_t<Rng>;
+
+        template<typename Rng>
+        using range_reference_t = concepts::InputIterable::reference_t<Rng>;
+
+        template<typename Rng>
+        using range_category_t = concepts::InputIterable::category_t<Rng>;
+
+        template<typename Rng>
+        using range_pointer_t = concepts::InputIterable::pointer_t<Rng>;
 
         // Metafunctions
         template<typename Rng>
@@ -101,9 +101,9 @@ namespace ranges
         //};
 
         // User customization point for infinite ranges:
-        template<typename Iterable, typename Void /*= void*/>
+        template<typename Rng, typename Void /*= void*/>
         struct is_infinite
-          : std::is_base_of<detail::is_infinite<true>, Iterable>
+          : std::is_base_of<detail::is_infinite<true>, Rng>
         {};
     }
 }

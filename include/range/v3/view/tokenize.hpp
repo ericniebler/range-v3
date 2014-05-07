@@ -28,24 +28,24 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename BidirectionalRange, typename Regex, typename SubMatchRange>
+        template<typename Rng, typename Regex, typename SubMatchRange>
         struct tokenized_view : private range_base
         {
         private:
-            detail::base_iterable_holder<BidirectionalRange> rng_;
+            detail::base_iterable_holder<Rng> rng_;
             Regex rex_;
             SubMatchRange subs_;
             std::regex_constants::match_flag_type flags_;
         public:
             using iterator =
-                std::regex_token_iterator<range_iterator_t<BidirectionalRange>>;
+                std::regex_token_iterator<range_iterator_t<Rng>>;
             using const_iterator =
-                std::regex_token_iterator<range_iterator_t<BidirectionalRange const>>;
+                std::regex_token_iterator<range_iterator_t<Rng const>>;
 
             tokenized_view() = default;
-            tokenized_view(BidirectionalRange &&rng, Regex && rex, SubMatchRange subs,
+            tokenized_view(Rng &&rng, Regex && rex, SubMatchRange subs,
                 std::regex_constants::match_flag_type flags)
-              : rng_(std::forward<BidirectionalRange>(rng))
+              : rng_(std::forward<Rng>(rng))
               , rex_(std::forward<Regex>(rex)), subs_(std::move(subs)), flags_(flags)
             {}
             iterator begin()
@@ -72,11 +72,11 @@ namespace ranges
             {
                 return begin() != end();
             }
-            BidirectionalRange & base()
+            Rng & base()
             {
                 return rng_.get();
             }
-            BidirectionalRange const & base() const
+            Rng const & base() const
             {
                 return rng_.get();
             }
@@ -86,48 +86,48 @@ namespace ranges
         {
             struct tokenizer_ : bindable<tokenizer_>
             {
-                template<typename BidirectionalRange, typename Regex>
-                static tokenized_view<BidirectionalRange, Regex, int>
-                invoke(tokenizer_, BidirectionalRange && rng, Regex && rex, int sub = 0,
+                template<typename Rng, typename Regex>
+                static tokenized_view<Rng, Regex, int>
+                invoke(tokenizer_, Rng && rng, Regex && rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
-                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
-                    static_assert(std::is_same<range_value_t<BidirectionalRange>,
+                    CONCEPT_ASSERT(ranges::Range<Rng>());
+                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<Rng>>());
+                    static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {std::forward<BidirectionalRange>(rng), std::forward<Regex>(rex), sub,
+                    return {std::forward<Rng>(rng), std::forward<Regex>(rex), sub,
                             flags};
                 }
 
-                template<typename BidirectionalRange, typename Regex>
-                static tokenized_view<BidirectionalRange, Regex, std::vector<int>>
-                invoke(tokenizer_, BidirectionalRange && rng, Regex && rex, std::vector<int> subs,
+                template<typename Rng, typename Regex>
+                static tokenized_view<Rng, Regex, std::vector<int>>
+                invoke(tokenizer_, Rng && rng, Regex && rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
-                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
-                    static_assert(std::is_same<range_value_t<BidirectionalRange>,
+                    CONCEPT_ASSERT(ranges::Range<Rng>());
+                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<Rng>>());
+                    static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {std::forward<BidirectionalRange>(rng), std::forward<Regex>(rex),
+                    return {std::forward<Rng>(rng), std::forward<Regex>(rex),
                             std::move(subs), flags};
                 }
 
-                template<typename BidirectionalRange, typename Regex>
-                static tokenized_view<BidirectionalRange, Regex, std::initializer_list<int>>
-                invoke(tokenizer_, BidirectionalRange && rng, Regex && rex,
+                template<typename Rng, typename Regex>
+                static tokenized_view<Rng, Regex, std::initializer_list<int>>
+                invoke(tokenizer_, Rng && rng, Regex && rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(ranges::Range<BidirectionalRange>());
-                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<BidirectionalRange>>());
-                    static_assert(std::is_same<range_value_t<BidirectionalRange>,
+                    CONCEPT_ASSERT(ranges::Range<Rng>());
+                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<Rng>>());
+                    static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
-                    return {std::forward<BidirectionalRange>(rng), std::forward<Regex>(rex),
+                    return {std::forward<Rng>(rng), std::forward<Regex>(rex),
                             std::move(subs), flags};
                 }
 

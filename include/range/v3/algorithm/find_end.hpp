@@ -182,14 +182,12 @@ namespace ranges
                 typename V2 = iterator_value_t<I2>,
                 typename X = concepts::Invokable::result_t<P, V1>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng1>()                &&
-                    Iterable<Rng2 const>()          &&
-                    ForwardIterator<I1>()           &&
-                    ForwardIterator<I2>()           &&
+                    ForwardIterable<Rng1>()         &&
+                    ForwardIterable<Rng2>()         &&
                     Invokable<P, V1>()              &&
                     InvokableRelation<R, X, V2>()
                 )>
-            I1 operator()(Rng1 &rng1, Rng2 const &rng2, R pred = R{}, P proj = P{}) const
+            I1 operator()(Rng1 &rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
                     std::move(proj));

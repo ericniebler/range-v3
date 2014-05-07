@@ -246,7 +246,7 @@ namespace ranges
 
         struct use_default;
 
-        template<typename Iterable, typename Void = void>
+        template<typename Rng, typename Void = void>
         struct is_infinite;
 
         struct range_base
@@ -322,7 +322,7 @@ namespace ranges
 
         // Views
         //
-        template<typename ForwardRange, typename BinaryPredicate>
+        template<typename Rng, typename BinaryPredicate>
         struct adjacent_filtered_view;
 
         namespace view
@@ -337,7 +337,7 @@ namespace ranges
             extern all_fn const all;
         }
 
-        template<typename Iterable>
+        template<typename Rng>
         struct as_range_view;
 
         namespace view
@@ -346,7 +346,7 @@ namespace ranges
             extern as_ranger const as_range;
         }
 
-        template<typename Iterable>
+        template<typename Rng>
         struct const_view;
 
         namespace view
@@ -381,7 +381,7 @@ namespace ranges
             extern filterer const filter;
         }
 
-        template<typename InputRange>
+        template<typename Rng>
         struct indirect_view;
 
         namespace view
@@ -390,7 +390,7 @@ namespace ranges
             extern indirecter const indirect;
         }
 
-        template<typename InputRange>
+        template<typename Rng>
         struct iota_view;
 
         namespace view
@@ -399,7 +399,7 @@ namespace ranges
             extern iota_maker const iota;
         }
 
-        template<typename...InputIterables>
+        template<typename...Rngs>
         struct joined_view;
 
         namespace view
@@ -408,7 +408,7 @@ namespace ranges
             extern joiner const join;
         }
 
-        template<typename InputRange>
+        template<typename Rng>
         struct move_view;
 
         namespace view
@@ -444,7 +444,7 @@ namespace ranges
             extern reverser const reverse;
         }
 
-        template<typename ForwardRange>
+        template<typename Rng>
         struct sliced_view;
 
         namespace view
@@ -453,7 +453,7 @@ namespace ranges
             extern slice_fn const slice;
         }
 
-        template<typename ForwardRange>
+        template<typename Rng>
         struct single_view;
 
         namespace view
@@ -462,7 +462,7 @@ namespace ranges
             extern single_fn const single;
         }
 
-        template<typename InputRange>
+        template<typename Rng>
         struct strided_view;
 
         namespace view
@@ -471,7 +471,7 @@ namespace ranges
             extern strider const stride;
         }
 
-        template<typename InputRange>
+        template<typename Rng>
         struct take_view;
 
         namespace view
@@ -480,7 +480,7 @@ namespace ranges
             extern take_fn const take;
         }
 
-        template<typename BidirectionalRange, typename Regex, typename SubMatchRange>
+        template<typename Rng, typename Regex, typename SubMatchRange>
         struct tokenized_view;
 
         namespace view
@@ -507,8 +507,8 @@ namespace ranges
             extern unbounded_maker const unbounded;
         }
 
-        template<typename ForwardRange>
-        using uniqued_view = adjacent_filtered_view<ForwardRange, detail::not_equal_to>;
+        template<typename Rng>
+        using uniqued_view = adjacent_filtered_view<Rng, detail::not_equal_to>;
 
         namespace view
         {
@@ -516,11 +516,11 @@ namespace ranges
             extern uniquer const unique;
         }
 
-        template<typename InputRange>
-        using keys_range_view = transformed_view<InputRange, detail::get_first>;
+        template<typename Rng>
+        using keys_range_view = transformed_view<Rng, detail::get_first>;
 
-        template<typename InputRange>
-        using values_range_view = transformed_view<InputRange, detail::get_second>;
+        template<typename Rng>
+        using values_range_view = transformed_view<Rng, detail::get_second>;
 
         namespace view
         {

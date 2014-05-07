@@ -57,15 +57,8 @@
 
             template<typename T>
             ranges::iterator_range<concepts::ConvertibleToIterable::iterator_t<T>,
-                concepts::ConvertibleToIterable::sentinel_t<T >>
+                concepts::ConvertibleToIterable::sentinel_t<T>>
             container_view_all(T & t, concepts::ConvertibleToIterable)
-            {
-                return {ranges::begin(t), ranges::end(t)};
-            }
-
-            template<typename T>
-            ranges::iterator_range<concepts::ConvertibleToIterable::iterator_t<T>>
-            container_view_all(T & t, concepts::ConvertibleToRange)
             {
                 return {ranges::begin(t), ranges::end(t)};
             }
@@ -78,13 +71,12 @@
             }
 
             template<typename T>
-            auto container_view_all(T & t, concepts::ConvertibleToSizedRange) ->
-                decltype(detail::container_view_all2(ranges::begin(t), ranges::end(t), 0))
-            {
-                return detail::container_view_all2(ranges::begin(t), ranges::end(t), ranges::size(t));
-            }
+            using convertible_to_sized_iterable_concept_t =
+                concepts::most_refined_t<
+                    typelist<concepts::ConvertibleToSizedIterable,
+                             concepts::ConvertibleToIterable>, T>;
 
-            template<typename T, typename C = convertible_to_range_concept_t<T>>
+            template<typename T, typename C = convertible_to_sized_iterable_concept_t<T>>
             struct container_view_all_type
             {
                 using type = decltype(detail::container_view_all(std::declval<T>(), C{}));
@@ -128,7 +120,7 @@
                     std::is_lvalue_reference<T>::value)>
             detail::container_view_all_t<T> operator()(T && t) const
             {
-                return detail::container_view_all(t, convertible_to_range_concept_t<T>{});
+                return detail::container_view_all(t, detail::convertible_to_sized_iterable_concept_t<T>{});
             }
 
             // TODO handle char const * by turning it into a delimited range

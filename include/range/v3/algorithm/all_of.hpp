@@ -51,13 +51,12 @@ namespace ranges
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng const>()       &&
-                    InputIterator<I>()          &&
+                    InputIterable<Rng>()        &&
                     Invokable<P, V>()           &&
                     InvokablePredicate<F, X>()
                 )>
             bool
-            operator()(Rng const &rng, F pred, P proj = P{}) const
+            operator()(Rng &&rng, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

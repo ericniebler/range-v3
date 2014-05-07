@@ -52,20 +52,20 @@ namespace ranges
                     }
                 };
             public:
-                template<typename InputIterable, typename Value1, typename Value2,
+                template<typename Rng, typename Value1, typename Value2,
                     CONCEPT_REQUIRES_(ranges::Same<typename std::decay<Value1>::type,
                                                       typename std::decay<Value2>::type>())>
-                static transformed_view<InputIterable,
+                static transformed_view<Rng,
                                             replacer_fun<typename std::decay<Value1>::type>>
-                invoke(replacer, InputIterable && rng, Value1 && old_value, Value2 && new_value)
+                invoke(replacer, Rng && rng, Value1 && old_value, Value2 && new_value)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                    CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<InputIterable>,
+                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<Rng>,
                         typename std::decay<Value1>::type const &>());
                     CONCEPT_ASSERT(ranges::Convertible<typename std::decay<Value1>::type const &,
-                        range_reference_t<InputIterable>>());
-                    return {std::forward<InputIterable>(rng),
+                        range_reference_t<Rng>>());
+                    return {std::forward<Rng>(rng),
                             {std::forward<Value1>(old_value),
                              std::forward<Value2>(new_value)}};
 

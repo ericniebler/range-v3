@@ -48,9 +48,9 @@ namespace ranges
             };
         }
 
-        template<typename InputIterable>
+        template<typename Rng>
         struct move_view
-          : range_adaptor<move_view<InputIterable>, InputIterable>
+          : range_adaptor<move_view<Rng>, Rng>
         {
         private:
             friend range_core_access;
@@ -63,11 +63,11 @@ namespace ranges
                 return {};
             }
         public:
-            move_view(InputIterable &&rng)
-              : range_adaptor_t<move_view>(std::forward<InputIterable>(rng))
+            move_view(Rng &&rng)
+              : range_adaptor_t<move_view>(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedIterable<InputIterable>())
-            range_size_t<InputIterable> size() const
+            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            range_size_t<Rng> size() const
             {
                 return this->base_size();
             }
@@ -77,13 +77,13 @@ namespace ranges
         {
             struct mover : bindable<mover>, pipeable<mover>
             {
-                template<typename InputIterable>
-                static move_view<InputIterable>
-                invoke(mover, InputIterable && rng)
+                template<typename Rng>
+                static move_view<Rng>
+                invoke(mover, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Range<InputIterable>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                    return move_view<InputIterable>{std::forward<InputIterable>(rng)};
+                    CONCEPT_ASSERT(ranges::Range<Rng>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
+                    return move_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 

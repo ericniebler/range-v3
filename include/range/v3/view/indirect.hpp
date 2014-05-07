@@ -39,9 +39,9 @@ namespace ranges
             };
         }
 
-        template<typename InputIterable>
+        template<typename Rng>
         struct indirect_view
-          : range_adaptor<indirect_view<InputIterable>, InputIterable>
+          : range_adaptor<indirect_view<Rng>, Rng>
         {
         private:
             friend range_core_access;
@@ -54,11 +54,11 @@ namespace ranges
                 return{};
             }
         public:
-            explicit indirect_view(InputIterable && rng)
-              : range_adaptor_t<indirect_view>(std::forward<InputIterable>(rng))
+            explicit indirect_view(Rng && rng)
+              : range_adaptor_t<indirect_view>(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedIterable<InputIterable>())
-            range_size_t<InputIterable> size() const
+            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            range_size_t<Rng> size() const
             {
                 return this->base_size();
             }
@@ -68,13 +68,13 @@ namespace ranges
         {
             struct indirecter : bindable<indirecter>, pipeable<indirecter>
             {
-                template<typename InputIterable>
-                static indirect_view<InputIterable>
-                invoke(indirecter, InputIterable && rng)
+                template<typename Rng>
+                static indirect_view<Rng>
+                invoke(indirecter, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Range<InputIterable>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                    return indirect_view<InputIterable>{std::forward<InputIterable>(rng)};
+                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
+                    return indirect_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 

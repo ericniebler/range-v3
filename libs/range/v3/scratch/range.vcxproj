@@ -80,6 +80,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\count_if.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\equal.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\equal_range.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\fill.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_end.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_first_of.cpp" />
@@ -200,7 +201,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_tuple.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\debug_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\functional.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\infinity.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />

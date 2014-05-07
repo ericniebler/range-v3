@@ -49,8 +49,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng>()                                     &&
-                    InputIterator<I>()                                  &&
+                    InputIterable<Rng>()                                &&
                     Invokable<P, V>()                                   &&
                     Invokable<F, concepts::Invokable::result_t<P, V>>()
                 )>

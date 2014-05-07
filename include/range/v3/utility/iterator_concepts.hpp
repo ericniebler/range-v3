@@ -274,8 +274,30 @@ namespace ranges
 
             struct Sentinel;
 
+            struct WeakIterator
+              : refines<WeaklyIncrementable, Copyable>
+            {
+                template<typename I>
+                auto requires(I i) -> decltype(
+                    concepts::valid_expr(
+                        *i
+                    ));
+            };
+
+            struct Iterator
+              : refines<WeakIterator, EqualityComparable>
+            {};
+
+            struct WeakOutputIterator
+              : refines<WeakIterator(_1), Writable>
+            {};
+
+            struct OutputIterator
+              : refines<WeakOutputIterator, EqualityComparable(_1)>
+            {};
+
             struct WeakInputIterator
-              : refines<WeaklyIncrementable, Readable, Copyable>
+              : refines<WeakIterator, Readable>
             {
                 // Associated types
                 // value_t from readable
@@ -290,14 +312,6 @@ namespace ranges
                         concepts::model_of<Readable>(i++)
                     ));
             };
-
-            struct WeakOutputIterator
-              : refines<WeaklyIncrementable(_1), Writable, Copyable(_1)>
-            {};
-
-            struct OutputIterator
-              : refines<WeakOutputIterator, EqualityComparable(_1)>
-            {};
 
             struct InputIterator
               : refines<WeakInputIterator(_1), EqualityComparable>
@@ -379,10 +393,7 @@ namespace ranges
               : refines<CopyConstructible(_1), EqualityComparable>
             {
                 template<typename S, typename I>
-                auto requires(S, I i) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<InputIterator>((I) i)
-                    ));
+                void requires(S, I);
             };
         }
 

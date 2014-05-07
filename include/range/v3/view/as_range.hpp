@@ -25,19 +25,19 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Iterable>
+        template<typename Rng>
         struct as_range_view
-          : range_facade<as_range_view<Iterable>, is_infinite<Iterable>::value>
+          : range_facade<as_range_view<Rng>, is_infinite<Rng>::value>
         {
         private:
             friend range_core_access;
-            detail::base_iterable_holder<Iterable> rng_;
+            detail::base_iterable_holder<Rng> rng_;
 
             struct cursor
             {
             private:
-                using base_iterator_t = range_iterator_t<Iterable const>;
-                using base_sentinel_t = range_sentinel_t<Iterable const>;
+                using base_iterator_t = range_iterator_t<Rng const>;
+                using base_sentinel_t = range_sentinel_t<Rng const>;
 
                 base_iterator_t it_;
                 base_sentinel_t se_;
@@ -53,8 +53,8 @@ namespace ranges
                     }
                 }
             public:
-                using single_pass = Derived<ranges::input_iterator_tag, range_category_t<Iterable>>;
-                using difference_type = range_difference_t<Iterable>;
+                using single_pass = Derived<ranges::input_iterator_tag, range_category_t<Rng>>;
+                using difference_type = range_difference_t<Rng>;
                 cursor() = default;
                 cursor(base_iterator_t it, base_sentinel_t se, bool is_sentinel)
                   : it_(std::move(it)), se_(std::move(se)), is_sentinel_(is_sentinel)
@@ -84,13 +84,13 @@ namespace ranges
                     --it_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                void advance(range_difference_t<Iterable> n)
+                void advance(range_difference_t<Rng> n)
                 {
                     clean();
                     it_ += n;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                range_difference_t<Iterable> distance_to(cursor const &that) const
+                range_difference_t<Rng> distance_to(cursor const &that) const
                 {
                     clean();
                     that.clean();
@@ -107,11 +107,11 @@ namespace ranges
             }
         public:
             as_range_view() = default;
-            explicit as_range_view(Iterable && rng)
-              : rng_(std::forward<Iterable>(rng))
+            explicit as_range_view(Rng && rng)
+              : rng_(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedIterable<Iterable>())
-            range_size_t<Iterable> size() const
+            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            range_size_t<Rng> size() const
             {
                 return ranges::size(rng_.get());
             }
@@ -121,14 +121,14 @@ namespace ranges
         {
             struct as_ranger : bindable<as_ranger>, pipeable<as_ranger>
             {
-                template<typename InputIterable>
-                static as_range_view<InputIterable>
-                invoke(as_ranger, InputIterable && rng)
+                template<typename Rng>
+                static as_range_view<Rng>
+                invoke(as_ranger, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<InputIterable>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<InputIterable>>());
-                    CONCEPT_ASSERT(!ranges::Range<InputIterable>());
-                    return as_range_view<InputIterable>{std::forward<InputIterable>(rng)};
+                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
+                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(!ranges::Range<Rng>());
+                    return as_range_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 

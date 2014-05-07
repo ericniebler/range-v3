@@ -188,6 +188,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\find_first_of.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\fill.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -471,9 +474,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\move.hpp">
       <Filter>Header Files\view</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\debug_iterator.hpp">
-      <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\iota.hpp">
       <Filter>Header Files\view</Filter>

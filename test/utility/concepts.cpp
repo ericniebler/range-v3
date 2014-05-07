@@ -104,12 +104,24 @@ static_assert(ranges::WeaklyOrdered<IntComparable, int>(), "");
 static_assert(
     std::is_same<
         ranges::range_concept_t<std::vector<int>>,
-        ranges::concepts::SizedRange
+        ranges::concepts::Range
+    >::value, "");
+
+static_assert(
+    std::is_same<
+        ranges::sized_iterable_concept_t<std::vector<int>>,
+        ranges::concepts::SizedIterable
     >::value, "");
 
 static_assert(
     std::is_same<
         ranges::range_concept_t<ranges::istream_iterable<int>>,
+        ranges::concepts::Iterable
+    >::value, "");
+
+static_assert(
+    std::is_same<
+        ranges::sized_iterable_concept_t<ranges::istream_iterable<int>>,
         ranges::concepts::Iterable
     >::value, "");
 

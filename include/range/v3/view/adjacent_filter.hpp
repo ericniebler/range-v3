@@ -25,14 +25,13 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename ForwardIterable, typename BinaryPredicate>
+        template<typename Rng, typename F>
         struct adjacent_filtered_view
-          : range_adaptor<adjacent_filtered_view<ForwardIterable, BinaryPredicate>,
-                          ForwardIterable>
+          : range_adaptor<adjacent_filtered_view<Rng, F>, Rng>
         {
         private:
             friend range_core_access;
-            invokable_t<BinaryPredicate> pred_;
+            invokable_t<F> pred_;
             using base_cursor_t = ranges::base_cursor_t<adjacent_filtered_view>;
 
             struct adaptor : default_adaptor
@@ -63,8 +62,8 @@ namespace ranges
                 return{*this};
             }
         public:
-            adjacent_filtered_view(ForwardIterable && rng, BinaryPredicate pred)
-              : range_adaptor_t<adjacent_filtered_view>{std::forward<ForwardIterable>(rng)}
+            adjacent_filtered_view(Rng && rng, F pred)
+              : range_adaptor_t<adjacent_filtered_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))
             {}
         };
@@ -73,19 +72,19 @@ namespace ranges
         {
             struct adjacent_filterer : bindable<adjacent_filterer>
             {
-                template<typename ForwardIterable, typename BinaryPredicate>
-                static adjacent_filtered_view<ForwardIterable, BinaryPredicate>
-                invoke(adjacent_filterer, ForwardIterable && rng, BinaryPredicate pred)
+                template<typename Rng, typename F>
+                static adjacent_filtered_view<Rng, F>
+                invoke(adjacent_filterer, Rng && rng, F pred)
                 {
-                    CONCEPT_ASSERT(ranges::Range<ForwardIterable>());
-                    CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<ForwardIterable>>());
-                    CONCEPT_ASSERT(ranges::InvokablePredicate<BinaryPredicate,
-                                                              range_value_t<ForwardIterable>,
-                                                              range_value_t<ForwardIterable>>());
-                    return {std::forward<ForwardIterable>(rng), std::move(pred)};
+                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
+                    CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(ranges::InvokablePredicate<F,
+                                                              range_value_t<Rng>,
+                                                              range_value_t<Rng>>());
+                    return {std::forward<Rng>(rng), std::move(pred)};
                 }
-                template<typename BinaryPredicate>
-                static auto invoke(adjacent_filterer adjacent_filter, BinaryPredicate pred) ->
+                template<typename F>
+                static auto invoke(adjacent_filterer adjacent_filter, F pred) ->
                     decltype(adjacent_filter.move_bind(std::placeholders::_1, std::move(pred)))
                 {
                     return adjacent_filter.move_bind(std::placeholders::_1, std::move(pred));

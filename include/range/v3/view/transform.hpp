@@ -122,12 +122,12 @@ namespace ranges
             };
         }
 
-        template<typename InputIterable, typename UnaryFunction>
+        template<typename Rng, typename UnaryFunction>
         struct transformed_view
-          : range_adaptor<transformed_view<InputIterable, UnaryFunction>, InputIterable>
+          : range_adaptor<transformed_view<Rng, UnaryFunction>, Rng>
         {
         private:
-            using reference_t = result_of_t<invokable_t<UnaryFunction> const(range_value_t<InputIterable>)>;
+            using reference_t = result_of_t<invokable_t<UnaryFunction> const(range_value_t<Rng>)>;
             friend range_core_access;
             using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<UnaryFunction>>(),
                 invokable_t<UnaryFunction>, detail::value_wrapper<invokable_t<UnaryFunction>>>;
@@ -137,10 +137,10 @@ namespace ranges
             // Forward ranges must always return references. If the result of calling the function
             // is not a reference, this range is input-only.
             using single_pass = detail::or_t<
-                Derived<ranges::input_iterator_tag, range_category_t<InputIterable>>,
+                Derived<ranges::input_iterator_tag, range_category_t<Rng>>,
                 detail::not_t<std::is_reference<reference_t>>>;
             using adaptor_t = detail::transform_adaptor<adaptor_fun_t, single_pass>;
-            using use_sentinel_t = detail::or_t<detail::not_t<Range<InputIterable>>, single_pass>;
+            using use_sentinel_t = detail::or_t<detail::not_t<Range<Rng>>, single_pass>;
             adaptor_t begin_adaptor() const
             {
                 return adaptor_t{fun_};
@@ -157,12 +157,12 @@ namespace ranges
             }
         public:
             transformed_view() = default;
-            transformed_view(InputIterable && rng, UnaryFunction fun)
-              : range_adaptor_t<transformed_view>(std::forward<InputIterable>(rng))
+            transformed_view(Rng && rng, UnaryFunction fun)
+              : range_adaptor_t<transformed_view>(std::forward<Rng>(rng))
               , fun_(ranges::invokable(std::move(fun)))
             {}
-            CONCEPT_REQUIRES(ranges::SizedIterable<InputIterable>())
-            range_size_t<InputIterable> size() const
+            CONCEPT_REQUIRES(ranges::SizedIterable<Rng>())
+            range_size_t<Rng> size() const
             {
                 return this->base_size();
             }
@@ -182,11 +182,11 @@ namespace ranges
                     transformer1(UnaryFunction fun)
                       : fun_(std::move(fun))
                     {}
-                    template<typename InputIterable, typename This>
-                    static transformed_view<InputIterable, UnaryFunction>
-                    pipe(InputIterable && rng, This && this_)
+                    template<typename Rng, typename This>
+                    static transformed_view<Rng, UnaryFunction>
+                    pipe(Rng && rng, This && this_)
                     {
-                        return {std::forward<InputIterable>(rng), std::forward<This>(this_).fun_};
+                        return {std::forward<Rng>(rng), std::forward<This>(this_).fun_};
                     }
                 };
             public:

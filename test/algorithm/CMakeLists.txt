@@ -25,6 +25,9 @@ add_test(test.equal equal)
 add_executable(equal_range equal_range.cpp)
 add_test(test.equal_range equal_range)
 
+add_executable(fill fill.cpp)
+add_test(test.fill fill)
+
 add_executable(find find.cpp)
 add_test(test.find find)
 

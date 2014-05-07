@@ -47,8 +47,7 @@ namespace ranges
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng>()                         &&
-                    InputIterator<I>()                      &&
+                    InputIterable<Rng>()                    &&
                     WeaklyIncrementable<O>()                &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>

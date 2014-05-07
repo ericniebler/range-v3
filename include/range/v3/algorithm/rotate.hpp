@@ -26,10 +26,7 @@ namespace ranges
         {
             // With credit to Howard Hinnant
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(
-                    Permutable<I>()     &&
-                    Sentinel<S, I>()
-                )>
+                CONCEPT_REQUIRES_(Permutable<I>() && Sentinel<S, I>())>
             I operator()(I begin, I middle, S end) const
             {
                 if(begin == middle)
@@ -66,10 +63,7 @@ namespace ranges
             }
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(
-                    Iterable<Rng>() &&
-                    Permutable<I>()
-                )>
+                CONCEPT_REQUIRES_(Iterable<Rng>() && Permutable<I>())>
             I operator()(Rng &rng, I middle) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng));
