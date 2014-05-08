@@ -63,7 +63,7 @@ int main()
     ::models<concepts::Range>(rnd_rng);
     ::models<concepts::SizedIterable>(rnd_rng);
     ::models<concepts::RandomAccessIterator>(begin(rnd_rng));
-    auto tmp = begin(rnd_rng) + 3;
+    auto tmp = cbegin(rnd_rng) + 3;
     CHECK(std::get<0>(*tmp) == 3);
     CHECK(std::get<1>(*tmp) == "goodbye");
 

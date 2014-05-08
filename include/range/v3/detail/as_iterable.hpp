@@ -104,9 +104,9 @@
         {
             /// If it's an iterable already, pass it though.
             template<typename T,
-                CONCEPT_REQUIRES_(ConvertibleToIterable<T>() &&
-                    is_iterable<T>::value &&
-                    !detail::owns_its_elements_t<T>::value)>
+                CONCEPT_REQUIRES_(
+                    ConvertibleToIterable<T>() &&
+                    is_iterable<T>::value)>
             T operator()(T && t) const
             {
                 return std::forward<T>(t);
@@ -114,7 +114,8 @@
 
             /// If it is container-like, turn it into an iterator_range
             template<typename T,
-                CONCEPT_REQUIRES_(ConvertibleToIterable<T>() &&
+                CONCEPT_REQUIRES_(
+                    ConvertibleToIterable<T>() &&
                     !is_iterable<T>::value &&
                     detail::owns_its_elements_t<T>::value &&
                     std::is_lvalue_reference<T>::value)>

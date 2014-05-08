@@ -658,11 +658,11 @@ namespace ranges
 
             template<typename Derived>
             using facade_cursor_t =
-                decltype(range_core_access::begin_cursor(std::declval<Derived const &>()));
+                decltype(range_core_access::begin_cursor(std::declval<Derived &>()));
 
             template<typename Derived>
             using facade_sentinel2_t =
-                decltype(range_core_access::end_cursor(std::declval<Derived const &>()));
+                decltype(range_core_access::end_cursor(std::declval<Derived &>()));
 
             template<typename Derived>
             using facade_iterator_t =
@@ -1014,12 +1014,22 @@ namespace ranges
             }
         public:
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
-            detail::facade_iterator_t<D> begin() const
+            detail::facade_iterator_t<D> begin()
             {
                 return {range_core_access::begin_cursor(derived())};
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
-            detail::facade_sentinel_t<D> end() const
+            detail::facade_sentinel_t<D> end()
+            {
+                return {range_core_access::end_cursor(derived())};
+            }
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            detail::facade_iterator_t<D const> begin() const
+            {
+                return {range_core_access::begin_cursor(derived())};
+            }
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            detail::facade_sentinel_t<D const> end() const
             {
                 return {range_core_access::end_cursor(derived())};
             }

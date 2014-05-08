@@ -39,8 +39,6 @@ namespace ranges
         public:
             using iterator =
                 std::regex_token_iterator<range_iterator_t<Rng>>;
-            using const_iterator =
-                std::regex_token_iterator<range_iterator_t<Rng const>>;
 
             tokenized_view() = default;
             tokenized_view(Rng &&rng, Regex && rex, SubMatchRange subs,
@@ -52,15 +50,12 @@ namespace ranges
             {
                 return {ranges::begin(rng_.get()), ranges::end(rng_.get()), rex_, subs_, flags_};
             }
-            iterator end()
-            {
-                return {};
-            }
-            const_iterator begin() const
+            CONCEPT_REQUIRES(Iterable<Rng const>())
+            iterator begin() const
             {
                 return {ranges::begin(rng_.get()), ranges::end(rng_.get()), rex_, subs_, flags_};
             }
-            const_iterator end() const
+            iterator end() const
             {
                 return {};
             }

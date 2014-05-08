@@ -36,8 +36,8 @@ namespace ranges
             struct cursor
             {
             private:
-                using base_iterator_t = range_iterator_t<Rng const>;
-                using base_sentinel_t = range_sentinel_t<Rng const>;
+                using base_iterator_t = range_iterator_t<Rng>;
+                using base_sentinel_t = range_sentinel_t<Rng>;
 
                 base_iterator_t it_;
                 base_sentinel_t se_;
@@ -97,10 +97,20 @@ namespace ranges
                     return that.it_ - it_;
                 }
             };
+            cursor begin_cursor()
+            {
+                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), false};
+            }
+            cursor end_cursor()
+            {
+                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), true};
+            }
+            CONCEPT_REQUIRES(Iterable<Rng const>())
             cursor begin_cursor() const
             {
                 return {ranges::begin(rng_.get()), ranges::end(rng_.get()), false};
             }
+            CONCEPT_REQUIRES(Iterable<Rng const>())
             cursor end_cursor() const
             {
                 return {ranges::begin(rng_.get()), ranges::end(rng_.get()), true};

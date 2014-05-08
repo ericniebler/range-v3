@@ -65,17 +65,11 @@ namespace ranges
               : virtual detail::writable_range_traits
             {
                 // Valid expressions
-                template<typename T,
-                    typename CI = iterator_t<detail::as_cref_t<T>>, // const iterator
-                    typename CS = sentinel_t<detail::as_cref_t<T>>> // const sentinel
+                template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Iterator>(ranges::begin(t)),
-                        concepts::model_of<Iterator>(ranges::cbegin(t)),
-                        concepts::convertible_to<CI>(ranges::begin(t)),
-                        concepts::convertible_to<CS>(ranges::end(t)),
-                        concepts::model_of<Sentinel>(ranges::end(t), ranges::begin(t)),
-                        concepts::model_of<Sentinel>(ranges::cend(t), ranges::cbegin(t))
+                        concepts::model_of<Sentinel>(ranges::end(t), ranges::begin(t))
                     ));
             };
 
@@ -86,8 +80,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::same_type(ranges::begin(t), ranges::end(t)),
-                        concepts::same_type(ranges::cbegin(t), ranges::cend(t))
+                        concepts::same_type(ranges::begin(t), ranges::end(t))
                     ));
             };
         }
@@ -138,8 +131,7 @@ namespace ranges
                 template<typename T, typename V>
                 auto requires(T && t, V const &v) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<OutputIterator>(ranges::begin(t), v),
-                        concepts::model_of<OutputIterator>(ranges::cbegin(t), v)
+                        concepts::model_of<OutputIterator>(ranges::begin(t), v)
                     ));
             };
 
@@ -149,8 +141,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<InputIterator>(ranges::begin(t)),
-                        concepts::model_of<InputIterator>(ranges::cbegin(t))
+                        concepts::model_of<InputIterator>(ranges::begin(t))
                     ));
             };
 
@@ -160,8 +151,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ForwardIterator>(ranges::begin(t)),
-                        concepts::model_of<ForwardIterator>(ranges::cbegin(t))
+                        concepts::model_of<ForwardIterator>(ranges::begin(t))
                     ));
             };
 
@@ -171,8 +161,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<BidirectionalIterator>(ranges::begin(t)),
-                        concepts::model_of<BidirectionalIterator>(ranges::cbegin(t))
+                        concepts::model_of<BidirectionalIterator>(ranges::begin(t))
                     ));
             };
 
@@ -182,8 +171,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<RandomAccessIterator>(ranges::begin(t)),
-                        concepts::model_of<RandomAccessIterator>(ranges::cbegin(t))
+                        concepts::model_of<RandomAccessIterator>(ranges::begin(t))
                     ));
             };
 

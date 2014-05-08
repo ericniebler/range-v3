@@ -29,14 +29,14 @@ namespace ranges
         private:
             friend range_core_access;
             std::istream *sin_;
-            mutable Value obj_;
+            Value obj_;
             struct cursor
             {
             private:
-                istream_iterable const *rng_;
+                istream_iterable *rng_;
             public:
                 cursor() = default;
-                explicit cursor(istream_iterable const &rng)
+                explicit cursor(istream_iterable &rng)
                   : rng_(&rng)
                 {}
                 void next()
@@ -52,7 +52,7 @@ namespace ranges
                     return !*rng_->sin_;
                 }
             };
-            cursor begin_cursor() const
+            cursor begin_cursor()
             {
                 return cursor{*this};
             }
@@ -65,7 +65,7 @@ namespace ranges
         };
 
         template<typename Value>
-        istream_iterable<Value > istream(std::istream & sin)
+        istream_iterable<Value> istream(std::istream & sin)
         {
             return istream_iterable<Value>{sin};
         }

@@ -41,7 +41,7 @@ namespace ranges
             using size_type = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
 
             friend range_core_access;
-            mutable range_view_all_t<range_value_t<Rng>> cur_;
+            range_view_all_t<range_value_t<Rng>> cur_;
 
             struct adaptor;
             friend struct adaptor;
@@ -50,7 +50,7 @@ namespace ranges
             private:
                 using base_cursor_t = ranges::base_cursor_t<flatten_view>;
                 using derived_cursor_t = ranges::derived_cursor_t<base_cursor_t, adaptor>;
-                flatten_view const *rng_;
+                flatten_view *rng_;
                 range_iterator_t<range_value_t<Rng>> it_;
                 void satisfy(base_cursor_t &pos)
                 {
@@ -68,10 +68,10 @@ namespace ranges
             public:
                 using single_pass = std::true_type;
                 adaptor() = default;
-                adaptor(flatten_view const &rng)
+                adaptor(flatten_view &rng)
                   : rng_(&rng), it_{}
                 {}
-                base_cursor_t begin(flatten_view const &)
+                base_cursor_t begin(flatten_view &)
                 {
                     base_cursor_t pos = default_adaptor::begin(*rng_);
                     auto const end = default_adaptor::end(*rng_);
@@ -100,11 +100,11 @@ namespace ranges
                     return *it_;
                 }
             };
-            adaptor begin_adaptor() const
+            adaptor begin_adaptor()
             {
                 return {*this};
             }
-            adaptor end_adaptor() const
+            adaptor end_adaptor()
             {
                 return {*this};
             }

@@ -46,7 +46,9 @@ namespace ranges
                 using size_type = range_size_t<Rng>;
                 using difference_type = range_difference_t<Rng>;
                 using from_t = detail::conditional_t<IsTakeView, constant<size_type, 0>, mutable_<size_type>>;
-                detail::base_iterable_holder<Rng> rng_;
+                // Mutable here. Const-correctness is enforced below by only conditionally
+                // allowing the const-qualified begin_cursor()/end_cursor() accessors.
+                mutable detail::base_iterable_holder<Rng> rng_;
                 compressed_pair<from_t, size_type> from_to_;
 
                 constexpr size_type from() const
@@ -140,10 +142,20 @@ namespace ranges
                         return static_cast<difference_type>(that.n_) - static_cast<difference_type>(n_);
                     }
                 };
+                cursor begin_cursor()
+                {
+                    return {*this, begin_tag{}};
+                }
+                cursor end_cursor()
+                {
+                    return {*this, end_tag{}};
+                }
+                CONCEPT_REQUIRES(Iterable<Rng const>())
                 cursor begin_cursor() const
                 {
                     return {*this, begin_tag{}};
                 }
+                CONCEPT_REQUIRES(Iterable<Rng const>())
                 cursor end_cursor() const
                 {
                     return {*this, end_tag{}};

@@ -214,15 +214,23 @@ namespace ranges
                 }
             };
 
+            using are_ranges_t = logical_and<(bool) ranges::Range<Rngs>()...>;
+
+            cursor begin_cursor()
+            {
+                return {ranges::tuple_transform(rngs_, ranges::begin)};
+            }
+            detail::conditional_t<are_ranges_t::value, cursor, sentinel> end_cursor()
+            {
+                return {ranges::tuple_transform(rngs_, ranges::end)};
+            }
+            CONCEPT_REQUIRES(logical_and<(bool) ranges::Iterable<Rngs const>()...>::value)
             cursor begin_cursor() const
             {
                 return {ranges::tuple_transform(rngs_, ranges::begin)};
             }
-            detail::conditional_t<
-                logical_and<(bool) ranges::Range<Rngs>()...>::value,
-                cursor,
-                sentinel>
-            end_cursor() const
+            CONCEPT_REQUIRES(logical_and<(bool) ranges::Iterable<Rngs const>()...>::value)
+            detail::conditional_t<are_ranges_t::value, cursor, sentinel> end_cursor() const
             {
                 return {ranges::tuple_transform(rngs_, ranges::end)};
             }

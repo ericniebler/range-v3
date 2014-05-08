@@ -10,6 +10,7 @@
 #ifndef RANGES_V3_ALGORITHM_COPY_N_HPP
 #define RANGES_V3_ALGORITHM_COPY_N_HPP
 
+#include <tuple>
 #include <utility>
 #include <functional>
 #include <range/v3/range_fwd.hpp>
@@ -31,7 +32,7 @@ namespace ranges
         {
             template<typename I, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I>()                      &&
+                    WeakInputIterator<I>()                  &&
                     WeaklyIncrementable<O>()                &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
@@ -47,6 +48,22 @@ namespace ranges
                 return {recounted(begin, b, norig), out};
             }
 
+            template<typename I, typename S, typename O, typename P = ident,
+                CONCEPT_REQUIRES_(
+                    InputIterator<I, S>()                   &&
+                    WeaklyIncrementable<O>()                &&
+                    IndirectlyProjectedCopyable<I, P, O>()
+                )>
+            std::tuple<I, O, iterator_difference_t<I>>
+            operator()(I begin, S end, iterator_difference_t<I> n, O out, P proj = P{}) const
+            {
+                RANGES_ASSERT(0 <= n);
+                auto &&iproj = invokable(proj);
+                for(; n != 0; ++begin, ++out, --n)
+                    *out = iproj(*begin);
+                return std::tuple<I, O, iterator_difference_t<I>>{begin, out, n};
+            }
+
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
@@ -54,11 +71,10 @@ namespace ranges
                     WeaklyIncrementable<O>()                &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
-            std::pair<I, O>
+            std::tuple<I, O, iterator_difference_t<I>>
             operator()(Rng &rng, iterator_difference_t<I> n, O out, P proj = P{}) const
             {
-                RANGES_ASSERT(!ForwardIterator<I>() || n <= distance(rng));
-                return (*this)(begin(rng), n, std::move(out), std::move(proj));
+                return (*this)(begin(rng), end(rng), n, std::move(out), std::move(proj));
             }
         };
 

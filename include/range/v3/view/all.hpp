@@ -28,8 +28,6 @@ namespace ranges
                         is_iterable<T>::value)>
                 static T invoke(all_fn, T && t)
                 {
-                    static_assert(!detail::owns_its_elements_t<T>::value,
-                        "Ranges should have reference semantics.");
                     return std::forward<T>(t);
                 }
 
