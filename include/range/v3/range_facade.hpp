@@ -11,6 +11,7 @@
 #define RANGES_V3_RANGE_FACADE_HPP
 
 #include <utility>
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -204,14 +205,14 @@ namespace ranges
                     return value_;
                 }
                 // Provides writability of *r++
-                template<typename T>
+                template<typename T, enable_if_t<!std::is_same<T, writable_postfix_increment_proxy>::value> = 0>
                 T const& operator=(T const& x) const
                 {
                     *it_ = x;
                     return x;
                 }
                 // This overload just in case only non-const objects are writable
-                template<typename T>
+                template<typename T, enable_if_t<!std::is_same<T, writable_postfix_increment_proxy>::value> = 0>
                 T& operator=(T& x) const
                 {
                     *it_ = x;
