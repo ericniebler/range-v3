@@ -264,8 +264,8 @@ namespace ranges
 
             // Define a trait to tell whether a particular range type was implemented in terms
             // of range_facade, and hence has cursors.
-            template<typename Derived, bool Infinite>
-            std::true_type has_cursor_(range_facade<Derived, Infinite> const &);
+            template<typename Derived, bool Inf>
+            std::true_type has_cursor_(range_facade<Derived, Inf> const &);
             std::false_type has_cursor_(any);
 
             template<typename T>
@@ -276,33 +276,33 @@ namespace ranges
             // If the base Iterable was implemented in terms of range_facade, then
             // it already has a cursor and a sentinel. Just use them. Otherwise, fake them up
             // by wrapping the base Iterable's iterators.
-            template<typename BaseIterable, bool HasCur = has_cursor<BaseIterable>::value>
+            template<typename BaseRng, bool HasCur = has_cursor<BaseRng>::value>
             struct base_cursor_helper
             {
-                using cursor_t = basic_cursor<facade_cursor_t<BaseIterable>, true>;
-                static cursor_t begin_cursor(BaseIterable &rng)
+                using cursor_t = basic_cursor<facade_cursor_t<BaseRng>, true>;
+                static cursor_t begin_cursor(BaseRng &rng)
                 {
                     return range_core_access::begin_cursor(rng);
                 }
 
-                using sentinel_t = basic_cursor<facade_sentinel2_t<BaseIterable>, true>;
-                static sentinel_t end_cursor(BaseIterable &rng)
+                using sentinel_t = basic_cursor<facade_sentinel2_t<BaseRng>, true>;
+                static sentinel_t end_cursor(BaseRng &rng)
                 {
                     return range_core_access::end_cursor(rng);
                 }
             };
 
-            template<typename BaseIterable>
-            struct base_cursor_helper<BaseIterable, false>
+            template<typename BaseRng>
+            struct base_cursor_helper<BaseRng, false>
             {
-                using cursor_t = basic_cursor<range_iterator_t<BaseIterable>, false>;
-                static cursor_t begin_cursor(BaseIterable &rng)
+                using cursor_t = basic_cursor<range_iterator_t<BaseRng>, false>;
+                static cursor_t begin_cursor(BaseRng &rng)
                 {
                     return {begin(rng)};
                 }
 
-                using sentinel_t = basic_cursor<range_sentinel_t<BaseIterable>, false>;
-                static sentinel_t end_cursor(BaseIterable &rng)
+                using sentinel_t = basic_cursor<range_sentinel_t<BaseRng>, false>;
+                static sentinel_t end_cursor(BaseRng &rng)
                 {
                     return {end(rng)};
                 }
@@ -337,33 +337,33 @@ namespace ranges
             using range_core_access::prev;
             using range_core_access::advance;
             using range_core_access::distance_to;
-            template<typename Range>
-            static base_cursor_t<Range> begin(Range &rng)
+            template<typename Rng>
+            static base_cursor_t<Rng> begin(Rng &rng)
             {
                 return rng.base_begin();
             }
-            template<typename Range>
-            static base_sentinel_t<Range> end(Range &rng)
+            template<typename Rng>
+            static base_sentinel_t<Rng> end(Rng &rng)
             {
                 return rng.base_end();
             }
         };
 
-        template<typename Derived, typename BaseIterable, bool Infinite>
+        template<typename Derived, typename BaseRng, bool Inf>
         struct range_adaptor
-          : range_facade<Derived, Infinite>
+          : range_facade<Derived, Inf>
         {
         private:
             friend Derived;
             friend range_core_access;
             friend default_adaptor;
             using range_adaptor_t = range_adaptor;
-            using base_iterable_t = BaseIterable;
-            using range_facade<Derived, Infinite>::derived;
+            using base_iterable_t = BaseRng;
+            using range_facade<Derived, Inf>::derived;
             // Mutable here. Const-correctness is enforced below by disabling
-            // begin_cursor/end_cursor if "BaseIterable const" does not model
+            // begin_cursor/end_cursor if "BaseRng const" does not model
             // the Iterable concept.
-            mutable detail::base_iterable_holder<BaseIterable> rng_;
+            mutable detail::base_iterable_holder<BaseRng> rng_;
 
             default_adaptor begin_adaptor() const
             {
@@ -376,27 +376,32 @@ namespace ranges
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             base_cursor_t<D> base_begin() const
             {
-                return detail::base_cursor_helper<BaseIterable>::begin_cursor(rng_.get());
+                return detail::base_cursor_helper<BaseRng>::begin_cursor(rng_.get());
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             base_sentinel_t<D> base_end() const
             {
-                return detail::base_cursor_helper<BaseIterable>::end_cursor(rng_.get());
+                return detail::base_cursor_helper<BaseRng>::end_cursor(rng_.get());
             }
-            range_difference_t<BaseIterable> base_distance() const
+            range_difference_t<BaseRng> base_distance() const
             {
                 return distance(rng_.get());
             }
-            BaseIterable & base() const
+            BaseRng & base()
             {
                 return rng_.get();
             }
-            CONCEPT_REQUIRES(SizedIterable<BaseIterable>())
-            range_size_t<BaseIterable> base_size() const
+            BaseRng const & base() const
+            {
+                return rng_.get();
+            }
+            CONCEPT_REQUIRES(SizedIterable<BaseRng>())
+            range_size_t<BaseRng> base_size() const
             {
                 return size(rng_.get());
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::basic_adapted_cursor<detail::derived_cursor_t<D>, detail::cursor_adaptor_t<D>>
             begin_cursor()
             {
@@ -404,7 +409,8 @@ namespace ranges
                 auto pos = adapt.begin(derived());
                 return {std::move(pos), std::move(adapt)};
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::basic_adapted_cursor<detail::derived_sentinel_t<D>, detail::sentinel_adaptor_t<D>>
             end_cursor()
             {
@@ -415,7 +421,8 @@ namespace ranges
             // Const-correctness is enforced here by only allowing these if the base iterable
             // has const begin/end accessors. That disables the const begin()/end() accessors
             // in range_facade, meaning the derived range type only has mutable iterators.
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>() && Iterable<BaseIterable const>())>
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Iterable<BaseRng const>())>
             detail::basic_adapted_cursor<detail::derived_cursor_t<D const>, detail::cursor_adaptor_t<D const>>
             begin_cursor() const
             {
@@ -423,7 +430,8 @@ namespace ranges
                 auto pos = adapt.begin(derived());
                 return {std::move(pos), std::move(adapt)};
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>() && Iterable<BaseIterable const>())>
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Iterable<BaseRng const>())>
             detail::basic_adapted_cursor<detail::derived_sentinel_t<D const>, detail::sentinel_adaptor_t<D const>>
             end_cursor() const
             {
@@ -433,8 +441,8 @@ namespace ranges
             }
         public:
             range_adaptor() = default;
-            constexpr range_adaptor(BaseIterable && rng)
-              : rng_(detail::forward<BaseIterable>(rng))
+            constexpr range_adaptor(BaseRng && rng)
+              : rng_(detail::forward<BaseRng>(rng))
             {}
         };
 

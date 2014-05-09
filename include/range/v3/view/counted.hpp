@@ -44,25 +44,17 @@ namespace ranges
                     {}
                     I base() const
                     {
-                        return this->get().base();
+                        return this->get().it_;
                     }
                     iterator_difference_t<I> count() const
                     {
-                        return this->get().count();
+                        return this->get().n_;
                     }
                 };
                 counted_cursor() = default;
                 counted_cursor(I it, iterator_difference_t<I> n)
                   : it_(std::move(it)), n_(n)
                 {}
-                I base() const
-                {
-                    return it_;
-                }
-                iterator_difference_t<I> count() const
-                {
-                    return n_;
-                }
                 auto current() const -> decltype(*it_)
                 {
                     return *it_;
@@ -113,7 +105,7 @@ namespace ranges
                     {}
                     iterator_difference_t<I> count() const
                     {
-                        return this->get().count();
+                        return this->get().n_;
                     }
                 };
                 counted_sentinel() = default;
@@ -123,10 +115,6 @@ namespace ranges
                 bool equal(counted_cursor<I> const &that) const
                 {
                     return n_ == that.n_;
-                }
-                iterator_difference_t<I> count() const
-                {
-                    return n_;
                 }
             };
         }

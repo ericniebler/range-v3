@@ -303,37 +303,37 @@ namespace ranges
                 }
             };
 
-            template<typename BaseIterable>
+            template<typename BaseRng>
             struct base_iterable_holder
             {
             private:
-                BaseIterable rng_;
+                BaseRng rng_;
             public:
                 base_iterable_holder() = default;
-                base_iterable_holder(BaseIterable &&rng)
-                  : rng_(std::forward<BaseIterable>(rng))
+                base_iterable_holder(BaseRng &&rng)
+                  : rng_(std::forward<BaseRng>(rng))
                 {}
-                BaseIterable &get()
+                BaseRng &get()
                 {
                     return rng_;
                 }
-                BaseIterable const &get() const
+                BaseRng const &get() const
                 {
                     return rng_;
                 }
             };
 
-            template<typename BaseIterable>
-            struct base_iterable_holder<BaseIterable &>
+            template<typename BaseRng>
+            struct base_iterable_holder<BaseRng &>
             {
             private:
-                BaseIterable *rng_;
+                BaseRng *rng_;
             public:
                 base_iterable_holder() = default;
-                base_iterable_holder(BaseIterable &rng)
+                base_iterable_holder(BaseRng &rng)
                   : rng_(&rng)
                 {}
-                BaseIterable &get() const
+                BaseRng &get() const
                 {
                     return *rng_;
                 }
@@ -709,7 +709,6 @@ namespace ranges
             friend range_core_access;
             template<typename Cur, typename OtherSentinel>
             friend struct basic_range_iterator;
-            using detail::mixin_base<S>::get;
             S &end()
             {
                 return this->detail::mixin_base<S>::get();
@@ -718,6 +717,8 @@ namespace ranges
             {
                 return this->detail::mixin_base<S>::get();
             }
+        private:
+            using detail::mixin_base<S>::get;
         public:
             basic_range_sentinel() = default;
             basic_range_sentinel(S end)

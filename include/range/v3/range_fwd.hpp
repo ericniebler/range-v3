@@ -262,8 +262,8 @@ namespace ranges
         struct range_facade;
 
         template<typename Derived,
-                 typename BaseIterable,
-                 bool Inf = is_infinite<BaseIterable>::value>
+                 typename BaseRng,
+                 bool Inf = is_infinite<BaseRng>::value>
         struct range_adaptor;
 
         template<typename I, typename S>
