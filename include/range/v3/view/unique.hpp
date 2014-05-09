@@ -37,17 +37,17 @@ namespace ranges
 
         namespace view
         {
-            struct uniquer : bindable<uniquer>, pipeable<uniquer>
+            struct unique_fn : bindable<unique_fn>, pipeable<unique_fn>
             {
                 template<typename Rng>
                 static uniqued_view<Rng>
-                invoke(uniquer, Rng && rng)
+                invoke(unique_fn, Rng && rng)
                 {
                     return {std::forward<Rng>(rng), detail::not_equal_to{}};
                 }
             };
 
-            RANGES_CONSTEXPR uniquer unique {};
+            RANGES_CONSTEXPR unique_fn unique {};
         }
     }
 }

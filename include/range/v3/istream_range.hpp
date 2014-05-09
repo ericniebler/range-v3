@@ -22,14 +22,14 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Value>
+        template<typename Val>
         struct istream_iterable
-          : range_facade<istream_iterable<Value>>
+          : range_facade<istream_iterable<Val>>
         {
         private:
             friend range_core_access;
             std::istream *sin_;
-            Value obj_;
+            Val obj_;
             struct cursor
             {
             private:
@@ -43,7 +43,7 @@ namespace ranges
                 {
                     *rng_->sin_ >> rng_->obj_;
                 }
-                Value const &current() const
+                Val const &current() const
                 {
                     return rng_->obj_;
                 }
@@ -64,10 +64,10 @@ namespace ranges
             }
         };
 
-        template<typename Value>
-        istream_iterable<Value> istream(std::istream & sin)
+        template<typename Val>
+        istream_iterable<Val> istream(std::istream & sin)
         {
-            return istream_iterable<Value>{sin};
+            return istream_iterable<Val>{sin};
         }
     }
 }

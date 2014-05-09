@@ -48,12 +48,12 @@ namespace ranges
             {}
             iterator begin()
             {
-                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), rex_, subs_, flags_};
+                return {begin(rng_.get()), end(rng_.get()), rex_, subs_, flags_};
             }
             CONCEPT_REQUIRES(Iterable<Rng const>())
             iterator begin() const
             {
-                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), rex_, subs_, flags_};
+                return {begin(rng_.get()), end(rng_.get()), rex_, subs_, flags_};
             }
             iterator end() const
             {
@@ -87,8 +87,7 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(ranges::Range<Rng>());
-                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -102,8 +101,7 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(ranges::Range<Rng>());
-                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -117,8 +115,7 @@ namespace ranges
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(ranges::Range<Rng>());
-                    CONCEPT_ASSERT(ranges::BidirectionalIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -162,7 +159,7 @@ namespace ranges
             };
 
             // Damn C++ and its imperfect forwarding of initializer_list.
-            struct tokenizer : tokenizer_
+            struct tokenize_fn : tokenizer_
             {
             private:
                 tokenizer_ const & base() const
@@ -199,7 +196,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR tokenizer tokenize {};
+            RANGES_CONSTEXPR tokenize_fn tokenize {};
         }
     }
 }

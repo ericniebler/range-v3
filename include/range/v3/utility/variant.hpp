@@ -46,11 +46,11 @@ namespace ranges
         template<typename...Ts>
         struct tagged_variant;
 
-        template<std::size_t N, typename Variant>
+        template<std::size_t N, typename Var>
         struct tagged_variant_element;
 
-        template<std::size_t N, typename Variant>
-        using tagged_variant_element_t = typename tagged_variant_element<N, Variant>::type;
+        template<std::size_t N, typename Var>
+        using tagged_variant_element_t = typename tagged_variant_element<N, Var>::type;
 
         namespace detail
         {
@@ -97,14 +97,14 @@ namespace ranges
             template<typename T>
             using wrap_ref_t = typename wrap_ref<T>::type;
 
-            template<typename BinaryFunction, typename T, std::size_t N,
-                typename = decltype(std::declval<BinaryFunction>()(std::declval<T &>(), size_t<N>{}))>
-            void apply_if(BinaryFunction &&fun, T &t, size_t<N> u)
+            template<typename Fun, typename T, std::size_t N,
+                typename = decltype(std::declval<Fun>()(std::declval<T &>(), size_t<N>{}))>
+            void apply_if(Fun &&fun, T &t, size_t<N> u)
             {
-                std::forward<BinaryFunction>(fun)(t, u);
+                std::forward<Fun>(fun)(t, u);
             }
 
-            template<typename BinaryFunction, typename T, std::size_t N>
+            template<typename Fun, typename T, std::size_t N>
             void apply_if(any, any, any)
             {
                 RANGES_ASSERT(false);
@@ -280,12 +280,12 @@ namespace ranges
                 }
             };
 
-            template<typename BinaryFunction, typename Variant = void_t>
+            template<typename Fun, typename Var = void_t>
             struct apply_visitor
             {
             private:
-                Variant &var_;
-                BinaryFunction fun_;
+                Var &var_;
+                Fun fun_;
                 template<typename T, std::size_t N>
                 void apply_(T &&t, size_t<N> n, std::true_type) const
                 {
@@ -298,25 +298,25 @@ namespace ranges
                     var_.template set<N>(fun_(std::forward<T>(t), n));
                 }
             public:
-                apply_visitor(BinaryFunction &&fun, Variant &var)
-                  : var_(var), fun_(std::forward<BinaryFunction>(fun))
+                apply_visitor(Fun &&fun, Var &var)
+                  : var_(var), fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
                 void operator()(T &&t, size_t<N> u) const
                 {
-                    using result_t = result_of_t<BinaryFunction(T &&, size_t<N>)>;
+                    using result_t = result_of_t<Fun(T &&, size_t<N>)>;
                     this->apply_(std::forward<T>(t), u, std::is_void<result_t>{});
                 }
             };
 
-            template<typename BinaryFunction>
-            struct apply_visitor<BinaryFunction, void_t>
+            template<typename Fun>
+            struct apply_visitor<Fun, void_t>
             {
             private:
-                BinaryFunction fun_;
+                Fun fun_;
             public:
-                apply_visitor(BinaryFunction &&fun)
-                  : fun_(std::forward<BinaryFunction>(fun))
+                apply_visitor(Fun &&fun)
+                  : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
                 void operator()(T &&t, size_t<N> n) const
@@ -325,14 +325,14 @@ namespace ranges
                 }
             };
 
-            template<typename UnaryFunction>
+            template<typename Fun>
             struct ignore2nd
             {
             private:
-                UnaryFunction fun_;
+                Fun fun_;
             public:
-                ignore2nd(UnaryFunction &&fun)
-                  : fun_(std::forward<UnaryFunction>(fun))
+                ignore2nd(Fun &&fun)
+                  : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, typename U>
                 auto operator()(T &&t, U &&) const ->
@@ -342,25 +342,25 @@ namespace ranges
                 }
             };
 
-            template<typename UnaryFunction>
-            apply_visitor<ignore2nd<UnaryFunction>> make_unary_visitor(UnaryFunction &&fun)
+            template<typename Fun>
+            apply_visitor<ignore2nd<Fun>> make_unary_visitor(Fun &&fun)
             {
-                return {std::forward<UnaryFunction>(fun)};
+                return {std::forward<Fun>(fun)};
             }
-            template<typename UnaryFunction, typename Variant>
-            apply_visitor<ignore2nd<UnaryFunction>, Variant> make_unary_visitor(UnaryFunction &&fun, Variant &var)
+            template<typename Fun, typename Var>
+            apply_visitor<ignore2nd<Fun>, Var> make_unary_visitor(Fun &&fun, Var &var)
             {
-                return{std::forward<UnaryFunction>(fun), var};
+                return{std::forward<Fun>(fun), var};
             }
-            template<typename BinaryFunction>
-            apply_visitor<BinaryFunction> make_binary_visitor(BinaryFunction &&fun)
+            template<typename Fun>
+            apply_visitor<Fun> make_binary_visitor(Fun &&fun)
             {
-                return{std::forward<BinaryFunction>(fun)};
+                return{std::forward<Fun>(fun)};
             }
-            template<typename BinaryFunction, typename Variant>
-            apply_visitor<BinaryFunction, Variant> make_binary_visitor(BinaryFunction &&fun, Variant &var)
+            template<typename Fun, typename Var>
+            apply_visitor<Fun, Var> make_binary_visitor(Fun &&fun, Var &var)
             {
-                return{std::forward<BinaryFunction>(fun), var};
+                return{std::forward<Fun>(fun), var};
             }
 
             template<typename To, typename From>
@@ -385,30 +385,30 @@ namespace ranges
                 }
             };
 
-            template<typename UnaryFunction, typename Types>
+            template<typename Fun, typename Types>
             using variant_result_t =
                 typelist_expand_t<
-                    ranges::tagged_variant,
+                    tagged_variant,
                     typelist_replace_t<void, void_t,
                         typelist_transform_t<Types,
-                            meta_bind_front<concepts::Function::result_t, UnaryFunction>::template apply> > >;
+                            meta_bind_front<concepts::Function::result_t, Fun>::template apply> > >;
 
-            template<typename BinaryFunction, typename Types>
+            template<typename Fun, typename Types>
             using variant_result_i_t =
                 typelist_expand_t<
-                    ranges::tagged_variant,
+                    tagged_variant,
                     typelist_replace_t<void, void_t,
                         typelist_transform2_t<Types, typelist_integer_sequence_t<Types::size()>,
-                            meta_bind_front<concepts::Function::result_t, BinaryFunction>::template apply> > >;
+                            meta_bind_front<concepts::Function::result_t, Fun>::template apply> > >;
 
-            template<typename Function>
+            template<typename Fun>
             struct unwrap_ref_fun
             {
             private:
-                Function fun_;
+                Fun fun_;
             public:
-                unwrap_ref_fun(Function &&fun)
-                  : fun_(std::forward<Function>(fun))
+                unwrap_ref_fun(Fun &&fun)
+                  : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T>
                 auto operator()(T &&t) const ->
@@ -556,7 +556,7 @@ namespace ranges
         };
 
         template<typename...Ts, typename...Us,
-            CONCEPT_REQUIRES_(logical_and<(bool)ranges::EqualityComparable<Ts, Us>()...>::value)>
+            CONCEPT_REQUIRES_(logical_and<(bool)EqualityComparable<Ts, Us>()...>::value)>
         bool operator==(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
             RANGES_ASSERT(lhs.which() < sizeof...(Ts));
@@ -566,7 +566,7 @@ namespace ranges
         }
 
         template<typename...Ts, typename...Us,
-            CONCEPT_REQUIRES_(logical_and<(bool)ranges::EqualityComparable<Ts, Us>()...>::value)>
+            CONCEPT_REQUIRES_(logical_and<(bool)EqualityComparable<Ts, Us>()...>::value)>
         bool operator!=(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
             return !(lhs == rhs);
@@ -644,7 +644,7 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // tagged_variant_unique
-        template<typename Variant>
+        template<typename Var>
         struct tagged_variant_unique;
 
         template<typename ...Ts>
@@ -654,8 +654,8 @@ namespace ranges
                 typelist_expand_t<tagged_variant, typelist_unique_t<typelist<Ts...>>>;
         };
 
-        template<typename Variant>
-        using tagged_variant_unique_t = typename tagged_variant_unique<Variant>::type;
+        template<typename Var>
+        using tagged_variant_unique_t = typename tagged_variant_unique<Var>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // unique_variant

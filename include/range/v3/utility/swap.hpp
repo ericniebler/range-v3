@@ -26,7 +26,7 @@ namespace ranges
         namespace adl_swap_detail
         {
             using std::swap;
-            struct swapper
+            struct swap_fn
             {
                 template<typename T, typename U>
                 auto operator()(T && t, U && u) const
@@ -38,7 +38,7 @@ namespace ranges
             };
         }
 
-        RANGES_CONSTEXPR adl_swap_detail::swapper swap {};
+        RANGES_CONSTEXPR adl_swap_detail::swap_fn swap {};
     }
 }
 

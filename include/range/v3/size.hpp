@@ -25,7 +25,7 @@ namespace ranges
         struct size_fn
         {
             template<typename Rng,
-                CONCEPT_REQUIRES_(ranges::SizedIterable<Rng>())>
+                CONCEPT_REQUIRES_(SizedIterable<Rng>())>
             constexpr range_size_t<Rng> operator()(Rng &&rng) const
             {
                 return range_size(rng);

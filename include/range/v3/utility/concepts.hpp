@@ -448,14 +448,14 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        ranges::swap((T&&)t, (T&&)t)
+                        swap((T&&)t, (T&&)t)
                     ));
 
                 template<typename T, typename U>
                 auto requires(T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        ranges::swap((T&&)t, (U&&)u),
-                        ranges::swap((U&&)u, (T&&)t)
+                        swap((T&&)t, (U&&)u),
+                        swap((U&&)u, (T&&)t)
                     ));
             };
 

@@ -31,8 +31,8 @@ namespace ranges
         {
             struct indirect_adaptor : default_adaptor
             {
-                template<typename Cursor>
-                auto current(Cursor const &pos) const -> decltype(*pos.current())
+                template<typename Cur>
+                auto current(Cur const &pos) const -> decltype(*pos.current())
                 {
                     return *pos.current();
                 }
@@ -66,19 +66,18 @@ namespace ranges
 
         namespace view
         {
-            struct indirecter : bindable<indirecter>, pipeable<indirecter>
+            struct indirect_fn : bindable<indirect_fn>, pipeable<indirect_fn>
             {
                 template<typename Rng>
                 static indirect_view<Rng>
-                invoke(indirecter, Rng && rng)
+                invoke(indirect_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(InputIterable<Rng>());
                     return indirect_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
-            RANGES_CONSTEXPR indirecter indirect{};
+            RANGES_CONSTEXPR indirect_fn indirect{};
         }
     }
 }

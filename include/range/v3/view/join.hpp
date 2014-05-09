@@ -51,8 +51,8 @@ namespace ranges
             template<typename Reference>
             struct deref_fun
             {
-                template<typename InputIterator>
-                Reference operator()(InputIterator const &it) const
+                template<typename I>
+                Reference operator()(I const &it) const
                 {
                     return *it;
                 }
@@ -85,9 +85,9 @@ namespace ranges
                 void satisfy(size_t<N>)
                 {
                     RANGES_ASSERT(its_.which() == N);
-                    if(ranges::get<N>(its_) == ranges::end(std::get<N>(rng_->rngs_)))
+                    if(ranges::get<N>(its_) == end(std::get<N>(rng_->rngs_)))
                     {
-                        ranges::set<N + 1>(its_, ranges::begin(std::get<N + 1>(rng_->rngs_)));
+                        ranges::set<N + 1>(its_, begin(std::get<N + 1>(rng_->rngs_)));
                         this->satisfy(size_t<N + 1>{});
                     }
                 }
@@ -98,8 +98,8 @@ namespace ranges
                 struct next_fun
                 {
                     cursor *pos;
-                    template<typename InputIterator, std::size_t N>
-                    void operator()(InputIterator &it, size_t<N> which) const
+                    template<typename I, std::size_t N>
+                    void operator()(I &it, size_t<N> which) const
                     {
                         ++it;
                         pos->satisfy(which);
@@ -108,18 +108,18 @@ namespace ranges
                 struct prev_fun
                 {
                     cursor *pos;
-                    template<typename InputIterator>
-                    void operator()(InputIterator &it, size_t<0>) const
+                    template<typename I>
+                    void operator()(I &it, size_t<0>) const
                     {
-                        RANGES_ASSERT(it != ranges::begin(std::get<0>(pos->rng_->rngs_)));
+                        RANGES_ASSERT(it != begin(std::get<0>(pos->rng_->rngs_)));
                         --it;
                     }
-                    template<typename InputIterator, std::size_t N>
-                    void operator()(InputIterator &it, size_t<N>) const
+                    template<typename I, std::size_t N>
+                    void operator()(I &it, size_t<N>) const
                     {
-                        if(it == ranges::begin(std::get<N>(pos->rng_->rngs_)))
+                        if(it == begin(std::get<N>(pos->rng_->rngs_)))
                         {
-                            ranges::set<N - 1>(pos->its_, ranges::end(std::get<N - 1>(pos->rng_->rngs_)));
+                            ranges::set<N - 1>(pos->its_, end(std::get<N - 1>(pos->rng_->rngs_)));
                             (*this)(ranges::get<N - 1>(pos->its_), size_t<N - 1>{});
                         }
                         else
@@ -139,7 +139,7 @@ namespace ranges
                     void operator()(Iterator &it, size_t<N> which) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
-                        auto rest = ranges::advance_bounded(it, n, std::move(end));
+                        auto rest = advance_bounded(it, n, std::move(end));
                         pos->satisfy(which);
                         if(rest != 0)
                             pos->its_.apply_i(advance_fwd_fun{pos, rest});
@@ -160,12 +160,12 @@ namespace ranges
                         auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
                         if(it == begin)
                         {
-                            ranges::set<N - 1>(pos->its_, ranges::end(std::get<N - 1>(pos->rng_->rngs_)));
+                            ranges::set<N - 1>(pos->its_, end(std::get<N - 1>(pos->rng_->rngs_)));
                             (*this)(ranges::get<N - 1>(pos->its_), size_t<N - 1>{});
                         }
                         else
                         {
-                            auto rest = ranges::advance_bounded(it, n, std::move(begin));
+                            auto rest = advance_bounded(it, n, std::move(begin));
                             if(rest != 0)
                                 pos->its_.apply_i(advance_rev_fun{pos, rest});
                         }
@@ -185,33 +185,33 @@ namespace ranges
                     {
                         if(to.its_.which() == N)
                             return std::distance(ranges::get<N>(from.its_), ranges::get<N>(to.its_));
-                        return std::distance(ranges::get<N>(from.its_), ranges::end(std::get<N>(from.rng_->rngs_))) +
+                        return std::distance(ranges::get<N>(from.its_), end(std::get<N>(from.rng_->rngs_))) +
                             cursor::distance_to_(size_t<N + 1>{}, from, to);
                     }
                     if(from.its_.which() < N && to.its_.which() > N)
-                        return ranges::distance(std::get<N>(from.rng_->rngs_)) +
+                        return distance(std::get<N>(from.rng_->rngs_)) +
                             cursor::distance_to_(size_t<N + 1>{}, from, to);
                     RANGES_ASSERT(to.its_.which() == N);
-                    return std::distance(ranges::begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
+                    return std::distance(begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
             public:
                 using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
                 using single_pass =
-                    logical_or<(bool) ranges::Derived<ranges::input_iterator_tag,
+                    logical_or<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
                 cursor() = default;
                 cursor(joined_view const &rng, begin_tag)
-                  : rng_(&rng), its_{size_t<0>{}, ranges::begin(std::get<0>(rng.rngs_))}
+                  : rng_(&rng), its_{size_t<0>{}, begin(std::get<0>(rng.rngs_))}
                 {
                     this->satisfy(size_t<0>{});
                 }
                 cursor(joined_view const &rng, end_tag)
-                  : rng_(&rng), its_{size_t<cranges-1>{}, ranges::end(std::get<cranges-1>(rng.rngs_))}
+                  : rng_(&rng), its_{size_t<cranges-1>{}, end(std::get<cranges-1>(rng.rngs_))}
                 {}
                 reference current() const
                 {
                     // Kind of a dumb implementation. Surely there's a better way.
-                    return ranges::get<0>(ranges::unique_variant(its_.apply(detail::deref_fun<reference>{})));
+                    return ranges::get<0>(unique_variant(its_.apply(detail::deref_fun<reference>{})));
                 }
                 void next()
                 {
@@ -221,12 +221,12 @@ namespace ranges
                 {
                     return its_ == pos.its_;
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)ranges::BidirectionalIterator<range_iterator_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool)BidirectionalIterable<Rngs>()...>::value)
                 void prev()
                 {
                     its_.apply_i(prev_fun{this});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)ranges::RandomAccessIterator<range_iterator_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool)RandomAccessIterable<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     if(n > 0)
@@ -234,7 +234,7 @@ namespace ranges
                     else if(n < 0)
                         its_.apply_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool) ranges::RandomAccessIterator<range_iterator_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.which() <= that.its_.which())
@@ -249,7 +249,7 @@ namespace ranges
             public:
                 sentinel() = default;
                 sentinel(joined_view const &rng, end_tag)
-                  : end_(ranges::end(std::get<cranges - 1>(rng.rngs_)))
+                  : end_(end(std::get<cranges - 1>(rng.rngs_)))
                 {}
                 bool equal(cursor const &pos) const
                 {
@@ -262,7 +262,7 @@ namespace ranges
                 return {*this, begin_tag{}};
             }
             detail::conditional_t<
-                logical_and<(bool)ranges::Range<Rngs>()...>::value, cursor, sentinel>
+                logical_and<(bool)Range<Rngs>()...>::value, cursor, sentinel>
             end_cursor() const
             {
                 return {*this, end_tag{}};
@@ -272,11 +272,11 @@ namespace ranges
             explicit joined_view(Rngs &&...rngs)
               : rngs_(std::forward<Rngs>(rngs)...)
             {}
-            CONCEPT_REQUIRES(logical_and<(bool)ranges::SizedIterable<Rngs>()...>::value)
+            CONCEPT_REQUIRES(logical_and<(bool)SizedIterable<Rngs>()...>::value)
             size_type size() const
             {
-                return ranges::tuple_foldl(
-                    ranges::tuple_transform(rngs_, ranges::size),
+                return tuple_foldl(
+                    tuple_transform(rngs_, ranges::size),
                     0,
                     [](size_type i, size_type j) { return i + j; });
             }
@@ -284,21 +284,19 @@ namespace ranges
 
         namespace view
         {
-            struct joiner : bindable<joiner>
+            struct join_fn : bindable<join_fn>
             {
                 template<typename...Rngs>
                 static joined_view<Rngs...>
-                invoke(joiner, Rngs &&... rngs)
+                invoke(join_fn, Rngs &&... rngs)
                 {
-                    static_assert(logical_and<(bool)ranges::Iterable<Rngs>()...>::value,
-                        "Expecting Iterables");
-                    static_assert(logical_and<(bool)ranges::InputIterator<range_iterator_t<Rngs>>()...>::value,
+                    static_assert(logical_and<(bool)InputIterable<Rngs>()...>::value,
                         "Expecting Input Iterables");
                     return joined_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };
 
-            RANGES_CONSTEXPR joiner join {};
+            RANGES_CONSTEXPR join_fn join {};
         }
     }
 }

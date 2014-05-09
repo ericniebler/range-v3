@@ -34,25 +34,25 @@ namespace ranges
         }
 
         template<typename Integer,
-            CONCEPT_REQUIRES_(ranges::Integral<Integer>())>
+            CONCEPT_REQUIRES_(Integral<Integer>())>
         constexpr bool operator==(Integer, infinity)
         {
             return false;
         }
         template<typename Integer,
-            CONCEPT_REQUIRES_(ranges::Integral<Integer>())>
+            CONCEPT_REQUIRES_(Integral<Integer>())>
         constexpr bool operator==(infinity, Integer)
         {
             return false;
         }
         template<typename Integer,
-            CONCEPT_REQUIRES_(ranges::Integral<Integer>())>
+            CONCEPT_REQUIRES_(Integral<Integer>())>
         constexpr bool operator!=(Integer, infinity)
         {
             return true;
         }
         template<typename Integer,
-            CONCEPT_REQUIRES_(ranges::Integral<Integer>())>
+            CONCEPT_REQUIRES_(Integral<Integer>())>
         constexpr bool operator!=(infinity, Integer)
         {
             return true;

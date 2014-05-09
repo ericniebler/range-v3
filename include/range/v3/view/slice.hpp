@@ -39,9 +39,8 @@ namespace ranges
               : range_facade<basic_sliced_view<Rng, IsTakeView>>
             {
             private:
-                CONCEPT_ASSERT(Iterable<Rng>());
-                CONCEPT_ASSERT(InputIterator<range_iterator_t<Rng>>());
-                CONCEPT_ASSERT(IsTakeView || ForwardIterator<range_iterator_t<Rng>>());
+                CONCEPT_ASSERT(InputIterable<Rng>());
+                CONCEPT_ASSERT(IsTakeView || ForwardIterable<Rng>());
                 friend range_core_access;
                 using size_type = range_size_t<Rng>;
                 using difference_type = range_difference_t<Rng>;
@@ -183,8 +182,7 @@ namespace ranges
         struct sliced_view
           : detail::basic_sliced_view<Rng>
         {
-            CONCEPT_ASSERT(Iterable<Rng>());
-            CONCEPT_ASSERT(ForwardIterator<range_iterator_t<Rng>>());
+            CONCEPT_ASSERT(ForwardIterable<Rng>());
 
             using size_type = range_size_t<Rng>;
 
@@ -202,8 +200,7 @@ namespace ranges
                 static sliced_view<Rng>
                 invoke(slice_fn, Rng && rng, range_size_t<Rng> from, range_size_t<Rng> to)
                 {
-                    CONCEPT_ASSERT(Iterable<Rng>());
-                    CONCEPT_ASSERT(ForwardIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(ForwardIterable<Rng>());
                     return {std::forward<Rng>(rng), from, to};
                 }
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>

@@ -31,27 +31,27 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename RandomAccessIterator,
-                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<RandomAccessIterator>>,
-                CONCEPT_REQUIRES_(ranges::RandomAccessIterator<RandomAccessIterator>())>
+            template<typename I,
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<I>>,
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
             Size
-            iterator_range_size(RandomAccessIterator begin, RandomAccessIterator end)
+            iterator_range_size(I begin, I end)
             {
                 return static_cast<Size>(end - begin);
             }
 
-            template<typename Iterator,
-                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>>
+            template<typename I,
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<I>>>
             Size
-            iterator_range_size(counted_iterator<Iterator> begin, counted_sentinel<Iterator> end)
+            iterator_range_size(counted_iterator<I> begin, counted_sentinel<I> end)
             {
                 return static_cast<Size>(end.count() - begin.count());
             }
 
-            template<typename Iterator,
-                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>>
+            template<typename I,
+                typename Size = meta_apply<std::make_unsigned, iterator_difference_t<I>>>
             Size
-            iterator_range_size(counted_iterator<Iterator> begin, counted_iterator<Iterator> end)
+            iterator_range_size(counted_iterator<I> begin, counted_iterator<I> end)
             {
                 RANGES_ASSERT(end.count() >= begin.count());
                 return static_cast<Size>(end.count() - begin.count());
@@ -73,21 +73,21 @@ namespace ranges
         // Intentionally resisting the urge to fatten this interface to make
         // it look like a container, like boost::iterator_range. It's a range,
         // not a container.
-        template<typename Iterator, typename Sentinel /* = Iterator */>
+        template<typename I, typename S /* = I */>
         struct iterator_range : private range_base
         {
-            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
+            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<I>>;
         private:
-            compressed_pair<Iterator, Sentinel> begin_end_;
+            compressed_pair<I, S> begin_end_;
         public:
-            using iterator = Iterator;
-            using sentinel = Sentinel;
+            using iterator = I;
+            using sentinel = S;
 
             iterator_range() = default;
-            constexpr iterator_range(Iterator begin, Sentinel end)
+            constexpr iterator_range(I begin, S end)
               : begin_end_(detail::move(begin), detail::move(end))
             {}
-            constexpr iterator_range(std::pair<Iterator, Sentinel> rng)
+            constexpr iterator_range(std::pair<I, S> rng)
               : begin_end_(detail::move(rng.first), detail::move(rng.second))
             {}
             iterator begin() const
@@ -98,7 +98,7 @@ namespace ranges
             {
                 return begin_end_.second();
             }
-            CONCEPT_REQUIRES(detail::O1Distance<Iterator, Sentinel>())
+            CONCEPT_REQUIRES(detail::O1Distance<I, S>())
             size_type size() const
             {
                 return detail::iterator_range_size(begin_end_.first(), begin_end_.second());
@@ -111,34 +111,34 @@ namespace ranges
             {
                 return !!*this;
             }
-            iterator_range & advance_begin(iterator_difference_t<Iterator> n)
+            iterator_range & advance_begin(iterator_difference_t<I> n)
             {
-                ranges::advance(begin_end_.first(), n);
+                advance(begin_end_.first(), n);
                 return *this;
             }
-            CONCEPT_REQUIRES(Same<Iterator, Sentinel>())
-            iterator_range & advance_end(iterator_difference_t<Iterator> n)
+            CONCEPT_REQUIRES(Same<I, S>())
+            iterator_range & advance_end(iterator_difference_t<I> n)
             {
-                ranges::advance(begin_end_.second(), n);
+                advance(begin_end_.second(), n);
                 return *this;
             }
         };
 
-        template<typename Iterator, typename Sentinel /* = Iterator */>
+        template<typename I, typename S /* = I */>
         struct sized_iterator_range : private range_base
         {
-            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<Iterator>>;
+            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<I>>;
         private:
-            compressed_tuple<Iterator, Sentinel, size_type> begin_end_size_;
+            compressed_tuple<I, S, size_type> begin_end_size_;
         public:
-            using iterator = Iterator;
-            using sentinel = Sentinel;
+            using iterator = I;
+            using sentinel = S;
 
             sized_iterator_range() = default;
-            constexpr sized_iterator_range(Iterator begin, Sentinel end, size_type size)
+            constexpr sized_iterator_range(I begin, S end, size_type size)
               : begin_end_size_(detail::move(begin), detail::move(end), size)
             {}
-            constexpr sized_iterator_range(std::pair<Iterator, Sentinel> rng, size_type size)
+            constexpr sized_iterator_range(std::pair<I, S> rng, size_type size)
               : begin_end_size_(detail::move(rng.first), detail::move(rng.second), size)
             {}
             iterator begin() const
@@ -161,40 +161,40 @@ namespace ranges
             {
                 return !!*this;
             }
-            sized_iterator_range & advance_begin(iterator_difference_t<Iterator> n)
+            sized_iterator_range & advance_begin(iterator_difference_t<I> n)
             {
-                ranges::advance(ranges::get<0>(begin_end_size_), n);
+                advance(ranges::get<0>(begin_end_size_), n);
                 return *this;
             }
-            CONCEPT_REQUIRES(Same<Iterator, Sentinel>())
-            sized_iterator_range & advance_end(iterator_difference_t<Iterator> n)
+            CONCEPT_REQUIRES(Same<I, S>())
+            sized_iterator_range & advance_end(iterator_difference_t<I> n)
             {
-                ranges::advance(ranges::get<1>(begin_end_size_), n);
+                advance(ranges::get<1>(begin_end_size_), n);
                 return *this;
             }
         };
 
-        struct ranger : bindable<ranger>
+        struct range_fn : bindable<range_fn>
         {
-            template<typename Iterator, typename Sentinel>
-            static iterator_range<Iterator, Sentinel> invoke(ranger, Iterator begin, Sentinel end)
+            template<typename I, typename S>
+            static iterator_range<I, S> invoke(range_fn, I begin, S end)
             {
-                CONCEPT_ASSERT(ranges::WeakInputIterator<Iterator>());
-                CONCEPT_ASSERT(ranges::EqualityComparable<Iterator, Sentinel>());
+                CONCEPT_ASSERT(InputIterator<I>());
+                CONCEPT_ASSERT(EqualityComparable<I, S>());
                 return {std::move(begin), std::move(end)};
             }
 
-            template<typename Iterator, typename Sentinel, typename Size>
-            static sized_iterator_range<Iterator, Sentinel> invoke(ranger, Iterator begin, Sentinel end, Size size)
+            template<typename I, typename S, typename Size>
+            static sized_iterator_range<I, S> invoke(range_fn, I begin, S end, Size size)
             {
-                CONCEPT_ASSERT(ranges::Integral<Size>());
-                CONCEPT_ASSERT(ranges::WeakInputIterator<Iterator>());
-                CONCEPT_ASSERT(ranges::EqualityComparable<Iterator, Sentinel>());
+                CONCEPT_ASSERT(Integral<Size>());
+                CONCEPT_ASSERT(InputIterator<I>());
+                CONCEPT_ASSERT(EqualityComparable<I, S>());
                 return {std::move(begin), std::move(end), size};
             }
         };
 
-        RANGES_CONSTEXPR ranger range {};
+        RANGES_CONSTEXPR range_fn range {};
 
         // TODO add specialization of is_infinite for when we can determine the range is infinite
     }

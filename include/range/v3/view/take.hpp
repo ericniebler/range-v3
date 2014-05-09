@@ -31,8 +31,7 @@ namespace ranges
         struct take_view
           : detail::basic_sliced_view<Rng, true>
         {
-            CONCEPT_ASSERT(Iterable<Rng>());
-            CONCEPT_ASSERT(InputIterator<range_iterator_t<Rng>>());
+            CONCEPT_ASSERT(InputIterable<Rng>());
 
             using size_type = range_size_t<Rng>;
 

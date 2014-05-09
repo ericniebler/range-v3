@@ -25,19 +25,17 @@ namespace ranges
         struct advance_fn
         {
         private:
-            template<typename InputIterator>
+            template<typename I>
             static void
-            impl(InputIterator &it, iterator_difference_t<InputIterator> n,
-                concepts::InputIterator)
+            impl(I &it, iterator_difference_t<I> n, concepts::InputIterator)
             {
                 RANGES_ASSERT(0 <= n);
                 for(; n != 0; --n)
                     ++it;
             }
-            template<typename BidirectionalIterator>
+            template<typename I>
             static void
-            impl(BidirectionalIterator &it, iterator_difference_t<BidirectionalIterator> n,
-                concepts::BidirectionalIterator)
+            impl(I &it, iterator_difference_t<I> n, concepts::BidirectionalIterator)
             {
                 if(0 <= n)
                     for(; n != 0; --n)
@@ -46,24 +44,22 @@ namespace ranges
                     for(; n != 0; ++n)
                         --it;
             }
-            template<typename RandomAccessIterator>
+            template<typename I>
             static void
-            impl(RandomAccessIterator &it, iterator_difference_t<RandomAccessIterator> n,
-                concepts::RandomAccessIterator)
+            impl(I &it, iterator_difference_t<I> n, concepts::RandomAccessIterator)
             {
                 it += n;
             }
         public:
-            template<typename InputIterator>
+            template<typename I>
             void
-            operator()(InputIterator &it, iterator_difference_t<InputIterator> n) const
+            operator()(I &it, iterator_difference_t<I> n) const
             {
-                advance_fn::impl(it, n, iterator_concept_t<InputIterator>{});
+                advance_fn::impl(it, n, iterator_concept_t<I>{});
             }
             /// \cond
-            template<typename InputIterator>
-            void operator()(counted_iterator<InputIterator> &it,
-                iterator_difference_t<InputIterator> n) const;
+            template<typename I>
+            void operator()(counted_iterator<I> &it, iterator_difference_t<I> n) const;
             /// \endcond
         };
 
@@ -72,10 +68,9 @@ namespace ranges
         struct advance_bounded_fn
         {
         private:
-            template<typename InputIterator, typename Sentinel>
-            static iterator_difference_t<InputIterator>
-            fwd(InputIterator &it, iterator_difference_t<InputIterator> n, Sentinel end,
-                concepts::InputIterator)
+            template<typename I, typename S>
+            static iterator_difference_t<I>
+            fwd(I &it, iterator_difference_t<I> n, S end, concepts::InputIterator)
             {
                 while(n > 0 && it != end)
                 {
@@ -84,10 +79,9 @@ namespace ranges
                 }
                 return n;
             }
-            template<typename RandomAccessIterator, typename Sentinel>
-            static iterator_difference_t<RandomAccessIterator>
-            fwd(RandomAccessIterator &it, iterator_difference_t<RandomAccessIterator> n, Sentinel end,
-                concepts::RandomAccessIterator)
+            template<typename I, typename S>
+            static iterator_difference_t<I>
+            fwd(I &it, iterator_difference_t<I> n, S end, concepts::RandomAccessIterator)
             {
                 auto const room = end - it;
                 if(room < n)
@@ -102,18 +96,16 @@ namespace ranges
                 }
                 return n;
             }
-            template<typename InputIterator, typename Sentinel>
-            static iterator_difference_t<InputIterator>
-            back(InputIterator &, iterator_difference_t<InputIterator> n, Sentinel,
-                concepts::InputIterator)
+            template<typename I, typename S>
+            static iterator_difference_t<I>
+            back(I &, iterator_difference_t<I> n, S, concepts::InputIterator)
             {
                 RANGES_ASSERT(false);
                 return n;
             }
-            template<typename BidirectionalIterator>
-            static iterator_difference_t<BidirectionalIterator>
-            back(BidirectionalIterator &it, iterator_difference_t<BidirectionalIterator> n,
-                BidirectionalIterator begin, concepts::BidirectionalIterator)
+            template<typename I>
+            static iterator_difference_t<I>
+            back(I &it, iterator_difference_t<I> n, I begin, concepts::BidirectionalIterator)
             {
                 while(n < 0 && it != begin)
                 {
@@ -122,10 +114,9 @@ namespace ranges
                 }
                 return n;
             }
-            template<typename RandomAccessIterator>
-            static iterator_difference_t<RandomAccessIterator>
-            back(RandomAccessIterator &it, iterator_difference_t<RandomAccessIterator> n,
-                RandomAccessIterator begin, concepts::RandomAccessIterator)
+            template<typename I>
+            static iterator_difference_t<I>
+            back(I &it, iterator_difference_t<I> n, I begin, concepts::RandomAccessIterator)
             {
                 auto const room = -(it - begin);
                 if(n < room)
@@ -141,39 +132,38 @@ namespace ranges
                 return n;
             }
         public:
-            template<typename InputIterator, typename Sentinel>
-            iterator_difference_t<InputIterator>
-            operator()(InputIterator &it, iterator_difference_t<InputIterator> n,
-                Sentinel bound) const
+            template<typename I, typename S>
+            iterator_difference_t<I>
+            operator()(I &it, iterator_difference_t<I> n, S bound) const
             {
                 using impl = advance_bounded_fn;
                 if(0 <= n)
-                    return impl::fwd(it, n, std::move(bound), iterator_concept_t<InputIterator>{});
+                    return impl::fwd(it, n, std::move(bound), iterator_concept_t<I>{});
                 else
-                    return impl::back(it, n, std::move(bound), iterator_concept_t<InputIterator>{});
+                    return impl::back(it, n, std::move(bound), iterator_concept_t<I>{});
             }
             /// \cond
-            template<typename InputIterator, typename Sentinel>
-            iterator_difference_t<InputIterator>
-            operator()(counted_iterator<InputIterator> &it, iterator_difference_t<InputIterator> n,
-                counted_iterator<InputIterator> bound) const
+            template<typename I, typename S>
+            iterator_difference_t<I>
+            operator()(counted_iterator<I> &it, iterator_difference_t<I> n,
+                counted_iterator<I> bound) const
             {
                 auto const dist = bound.count() - it.count();
                 if(0 <= n ? n >= dist : n <= dist)
                     return (it = bound), n - dist;
                 else
-                    return ranges::advance(it, n), 0;
+                    return advance(it, n), 0;
             }
-            template<typename InputIterator, typename Sentinel>
-            iterator_difference_t<InputIterator>
-            operator()(counted_iterator<InputIterator> &it, iterator_difference_t<InputIterator> n,
-                counted_sentinel<InputIterator> bound) const
+            template<typename I, typename S>
+            iterator_difference_t<I>
+            operator()(counted_iterator<I> &it, iterator_difference_t<I> n,
+                counted_sentinel<I> bound) const
             {
                 auto const dist = bound.count() - it.count();
                 if(0 <= n ? n >= dist : n <= dist)
-                    return ranges::advance(it, dist), n - dist;
+                    return advance(it, dist), n - dist;
                 else
-                    return ranges::advance(it, n), 0;
+                    return advance(it, n), 0;
             }
             /// \endcond
         };
@@ -182,10 +172,10 @@ namespace ranges
 
         struct next_fn
         {
-            template<typename InputIterator>
-            InputIterator operator()(InputIterator it, iterator_difference_t<InputIterator> n = 1) const
+            template<typename I>
+            I operator()(I it, iterator_difference_t<I> n = 1) const
             {
-                ranges::advance(it, n);
+                advance(it, n);
                 return it;
             }
         };
@@ -194,11 +184,10 @@ namespace ranges
 
         struct prev_fn
         {
-            template<typename BidirectionalIterator>
-            BidirectionalIterator operator()(BidirectionalIterator it,
-                iterator_difference_t<BidirectionalIterator> n = 1) const
+            template<typename I>
+            I operator()(I it, iterator_difference_t<I> n = 1) const
             {
-                ranges::advance(it, -n);
+                advance(it, -n);
                 return it;
             }
         };
@@ -206,11 +195,10 @@ namespace ranges
         RANGES_CONSTEXPR prev_fn prev {};
 
         /// \cond
-        template<typename InputIterator>
-        void advance_fn::operator()(counted_iterator<InputIterator> &it,
-            iterator_difference_t<InputIterator> n) const
+        template<typename I>
+        void advance_fn::operator()(counted_iterator<I> &it, iterator_difference_t<I> n) const
         {
-            it = counted_iterator<InputIterator>{ranges::next(it.base(), n), it.count() + n};
+            it = counted_iterator<I>{next(it.base(), n), it.count() + n};
         }
         /// \endcond
 

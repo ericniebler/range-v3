@@ -35,7 +35,7 @@ namespace ranges
                     return begin;
                 for(auto i = middle;;)
                 {
-                    ranges::swap(*begin, *i);
+                    swap(*begin, *i);
                     ++begin;
                     if(++i == end)
                         break;
@@ -47,7 +47,7 @@ namespace ranges
                 {
                     for(auto i = middle;;)
                     {
-                        ranges::swap(*begin, *i);
+                        swap(*begin, *i);
                         ++begin;
                         if(++i == end)
                         {

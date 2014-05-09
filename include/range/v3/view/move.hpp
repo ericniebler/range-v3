@@ -39,8 +39,8 @@ namespace ranges
                 using default_adaptor::prev;
             public:
                 using single_pass = std::true_type;
-                template<typename Cursor>
-                auto current(Cursor const &pos) const ->
+                template<typename Cur>
+                auto current(Cur const &pos) const ->
                     decltype(detail::rref(pos.current(), 1))
                 {
                     return std::move(pos.current());
@@ -75,19 +75,18 @@ namespace ranges
 
         namespace view
         {
-            struct mover : bindable<mover>, pipeable<mover>
+            struct move_fn : bindable<move_fn>, pipeable<move_fn>
             {
                 template<typename Rng>
                 static move_view<Rng>
-                invoke(mover, Rng && rng)
+                invoke(move_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Range<Rng>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(InputRange<Rng>());
                     return move_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
-            RANGES_CONSTEXPR mover move {};
+            RANGES_CONSTEXPR move_fn move {};
         }
     }
 }

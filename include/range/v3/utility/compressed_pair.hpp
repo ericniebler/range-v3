@@ -71,7 +71,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR struct compressed_pair_maker
+        RANGES_CONSTEXPR struct make_compressed_pair_fn
         {
             template<typename First, typename Second>
             constexpr auto operator()(First && f, Second && s) const ->

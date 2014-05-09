@@ -165,13 +165,13 @@ namespace ranges
             {
                 // Associated types
                 template<typename I>
-                using value_t = meta_apply<ranges::value_type, I>;
+                using value_t = meta_apply<value_type, I>;
 
                 template<typename I>
                 using reference_t = decltype(*std::declval<I>());
 
                 template<typename I>
-                using pointer_t = meta_apply<ranges::pointer_type, I>;
+                using pointer_t = meta_apply<pointer_type, I>;
 
                 template<typename I>
                 auto requires(I i) -> decltype(
@@ -230,7 +230,7 @@ namespace ranges
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<RegularInvokable>((P &&) p, *i),
                         concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<MoveWritable>((O) o, ranges::invokable((P &&) p)(*i))
+                        concepts::model_of<MoveWritable>((O) o, invokable((P &&) p)(*i))
                     ));
             };
 
@@ -242,7 +242,7 @@ namespace ranges
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<RegularInvokable>((P &&) p, *i),
                         concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<Writable>((O) o, ranges::invokable((P &&) p)(*i))
+                        concepts::model_of<Writable>((O) o, invokable((P &&) p)(*i))
                     ));
             };
 
@@ -251,7 +251,7 @@ namespace ranges
             {
                 // Associated types
                 template<typename I>
-                using difference_t = meta_apply<ranges::difference_type, I>;
+                using difference_t = meta_apply<difference_type, I>;
 
                 template<typename I>
                 auto requires(I i) -> decltype(

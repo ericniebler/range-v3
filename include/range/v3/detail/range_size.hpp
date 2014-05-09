@@ -34,7 +34,7 @@
         // Iterables with a .size() member function, like std::list
         template<typename Rng,
             typename Size = meta_apply<std::make_unsigned, concepts::ConvertibleToIterable::difference_t<Rng> >,
-            CONCEPT_REQUIRES_(ranges::ConvertibleToIterable<Rng>() && detail::HasSize<Rng>())>
+            CONCEPT_REQUIRES_(ConvertibleToIterable<Rng>() && detail::HasSize<Rng>())>
         Size
         range_size(Rng &&rng)
         {
@@ -45,12 +45,12 @@
         template<typename Rng,
             typename Size = meta_apply<std::make_unsigned, concepts::ConvertibleToIterable::difference_t<Rng>>,
             CONCEPT_REQUIRES_(!detail::HasSize<Rng>() &&
-                              ranges::ConvertibleToRange<Rng>() &&
-                              ranges::RandomAccessIterator<concepts::ConvertibleToIterable::iterator_t<Rng>>())>
+                              ConvertibleToRange<Rng>() &&
+                              RandomAccessIterator<concepts::ConvertibleToIterable::iterator_t<Rng>>())>
         Size
         range_size(Rng &&rng)
         {
-            return static_cast<Size>(ranges::end(rng) - ranges::begin(rng));
+            return static_cast<Size>(end(rng) - begin(rng));
         }
 
         // Built-in arrays

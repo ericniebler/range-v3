@@ -22,27 +22,27 @@ namespace ranges
     inline namespace v3
     {
         // BUGBUG a view shouldn't contain its value, right?
-        template<typename Value>
+        template<typename Val>
         struct repeated_n_view
-          : range_facade<repeated_n_view<Value>, true>
+          : range_facade<repeated_n_view<Val>, true>
         {
         private:
             friend range_core_access;
-            Value value_;
+            Val value_;
             std::size_t n_;
 
             struct cursor
             {
             private:
-                Value value_;
+                Val value_;
                 std::size_t n_;
             public:
                 using single_pass = std::true_type;
                 cursor() = default;
-                cursor(Value value, std::size_t n)
+                cursor(Val value, std::size_t n)
                   : value_(std::move(value)), n_(n)
                 {}
-                Value current() const
+                Val current() const
                 {
                     return value_;
                 }
@@ -62,7 +62,7 @@ namespace ranges
             }
         public:
             repeated_n_view() = default;
-            constexpr repeated_n_view(Value value, std::size_t n)
+            constexpr repeated_n_view(Val value, std::size_t n)
               : value_(detail::move(value)), n_(n)
             {}
             constexpr std::size_t size() const
@@ -75,11 +75,11 @@ namespace ranges
         {
             struct repeat_n_fn : bindable<repeat_n_fn>, pipeable<repeat_n_fn>
             {
-                template<typename Value>
-                static repeated_n_view<Value> invoke(repeat_n_fn, Value value, std::size_t n)
+                template<typename Val>
+                static repeated_n_view<Val> invoke(repeat_n_fn, Val value, std::size_t n)
                 {
-                    CONCEPT_ASSERT(SemiRegular<Value>());
-                    return repeated_n_view<Value>{std::move(value), n};
+                    CONCEPT_ASSERT(SemiRegular<Val>());
+                    return repeated_n_view<Val>{std::move(value), n};
                 }
             };
 

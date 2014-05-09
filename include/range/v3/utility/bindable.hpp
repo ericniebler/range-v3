@@ -55,21 +55,21 @@ namespace ranges
             {};
 
             template<typename...Args>
-            using ranges_binder_t = decltype(ranges::bind(std::declval<Args>()...));
+            using ranges_binder_t = decltype(bind(std::declval<Args>()...));
 
-            RANGES_CONSTEXPR struct bind_wrapper_maker
+            RANGES_CONSTEXPR struct wrap_bind_fn
             {
                 template<typename ...Args>
                 binder_wrapper<ranges_binder_t<Args...>> operator()(Args &&... args) const
                 {
-                    return {ranges::bind(std::forward<Args>(args)...)};
+                    return {bind(std::forward<Args>(args)...)};
                 }
             } wrap_bind {};
 
             template<typename...Args>
             using bind_t = decltype(detail::wrap_bind(std::declval<Args>()...));
 
-            RANGES_CONSTEXPR struct unwrap_binder
+            RANGES_CONSTEXPR struct unwrap_bind_fn
             {
                 template<typename T,
                     CONCEPT_REQUIRES_(!is_bind_wrapper<uncvref_t<T>>())>

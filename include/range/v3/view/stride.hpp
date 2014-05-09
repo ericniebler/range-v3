@@ -45,8 +45,7 @@ namespace ranges
             // is always unnecessary.
             using dirty_t =
                 detail::conditional_t<
-                    (ranges::BidirectionalIterator<range_iterator_t<Rng>>() &&
-                    !ranges::SizedIterable<Rng>()),
+                    (BidirectionalIterable<Rng>() && !SizedIterable<Rng>()),
                     mutable_<bool>,
                     constant<bool, false>>;
 
@@ -55,7 +54,7 @@ namespace ranges
             // visit the correct elements.
             using offset_t =
                 detail::conditional_t<
-                    (ranges::BidirectionalIterator<range_iterator_t<Rng>>()),
+                    (BidirectionalIterable<Rng>()),
                     mutable_<difference_type>,
                     constant<difference_type, 0>>;
 
@@ -93,32 +92,31 @@ namespace ranges
                   : dirty_t(true), offset_t(0), rng_(&rng)
                 {
                     // Opportunistic eager cleaning when we can do so in O(1)
-                    if(ranges::SizedIterable<Rng>() &&
-                       ranges::BidirectionalIterator<range_iterator_t<Rng>>())
+                    if(BidirectionalSizedIterable<Rng>())
                         do_clean();
                 }
                 void next(base_cursor_t &pos)
                 {
                     RANGES_ASSERT(0 == offset());
-                    auto rng = ranges::as_iterator_pair(std::move(pos),
+                    auto rng = as_iterator_pair(std::move(pos),
                         default_adaptor::end(*rng_));
                     RANGES_ASSERT(rng.first != rng.second);
-                    offset() = ranges::advance_bounded(rng.first, rng_->stride_ + offset(),
+                    offset() = advance_bounded(rng.first, rng_->stride_ + offset(),
                         rng.second);
                     pos = ranges::range_core_access::cursor(std::move(rng.first));
                 }
-                CONCEPT_REQUIRES(ranges::BidirectionalIterator<range_iterator_t<Rng>>())
+                CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
                 void prev(base_cursor_t &pos)
                 {
                     clean();
-                    auto rng = ranges::as_iterator_pair(default_adaptor::begin(*rng_),
+                    auto rng = as_iterator_pair(default_adaptor::begin(*rng_),
                         std::move(pos));
-                    offset() = ranges::advance_bounded(rng.second, -rng_->stride_ + offset(),
+                    offset() = advance_bounded(rng.second, -rng_->stride_ + offset(),
                         rng.first);
                     RANGES_ASSERT(0 == offset());
                     pos = ranges::range_core_access::cursor(std::move(rng.second));
                 }
-                CONCEPT_REQUIRES(ranges::RandomAccessIterator<range_iterator_t<Rng>>())
+                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 difference_type distance_to(derived_cursor_t const &here,
                     derived_cursor_t const &there) const
                 {
@@ -131,23 +129,23 @@ namespace ranges
                     return (here.distance_to(there) +
                         (there.adaptor().offset() - offset())) / rng_->stride_;
                 }
-                CONCEPT_REQUIRES(ranges::RandomAccessIterator<range_iterator_t<Rng>>())
+                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 void advance(base_cursor_t &pos, difference_type n)
                 {
                     clean();
                     if(0 < n)
                     {
-                        auto rng = ranges::as_iterator_pair(std::move(pos),
+                        auto rng = as_iterator_pair(std::move(pos),
                             default_adaptor::end(*rng_));
-                        offset() = ranges::advance_bounded(rng.first, n * rng_->stride_ + offset(),
+                        offset() = advance_bounded(rng.first, n * rng_->stride_ + offset(),
                             rng.second);
                         pos = ranges::range_core_access::cursor(std::move(rng.first));
                     }
                     else if(0 > n)
                     {
-                        auto rng = ranges::as_iterator_pair(default_adaptor::begin(*rng_),
+                        auto rng = as_iterator_pair(default_adaptor::begin(*rng_),
                             std::move(pos));
-                        offset() = ranges::advance_bounded(rng.second, n * rng_->stride_ + offset(),
+                        offset() = advance_bounded(rng.second, n * rng_->stride_ + offset(),
                             rng.first);
                         pos = ranges::range_core_access::cursor(std::move(rng.second));
                     }
@@ -171,7 +169,7 @@ namespace ranges
             {
                 return {*this, begin_tag{}};
             }
-            detail::conditional_t<(ranges::Range<Rng>()), adaptor, default_adaptor>
+            detail::conditional_t<(Range<Rng>()), adaptor, default_adaptor>
             end_adaptor() const
             {
                 return strided_view::end_adaptor_(range_concept_t<Rng>{});
@@ -184,7 +182,7 @@ namespace ranges
             {
                 RANGES_ASSERT(0 < stride_);
             }
-            CONCEPT_REQUIRES(ranges::SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedIterable<Rng>())
             size_type size() const
             {
                 return (this->base_size() + static_cast<size_type>(stride_) - 1) /
@@ -194,27 +192,26 @@ namespace ranges
 
         namespace view
         {
-            struct strider : bindable<strider>
+            struct stride_fn : bindable<stride_fn>
             {
                 template<typename Rng>
                 static strided_view<Rng>
-                invoke(strider, Rng && rng, range_difference_t<Rng> step)
+                invoke(stride_fn, Rng && rng, range_difference_t<Rng> step)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
+                    CONCEPT_ASSERT(InputIterable<Rng>());
                     return {std::forward<Rng>(rng), step};
                 }
 
                 template<typename Difference>
-                static auto invoke(strider stride, Difference step) ->
+                static auto invoke(stride_fn stride, Difference step) ->
                     decltype(stride.move_bind(std::placeholders::_1, std::move(step)))
                 {
-                    CONCEPT_ASSERT(ranges::Integral<Difference>());
+                    CONCEPT_ASSERT(Integral<Difference>());
                     return stride.move_bind(std::placeholders::_1, std::move(step));
                 }
             };
 
-            RANGES_CONSTEXPR strider stride{};
+            RANGES_CONSTEXPR stride_fn stride{};
         }
     }
 }

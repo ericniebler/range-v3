@@ -43,7 +43,7 @@ namespace ranges
         {
             ////////////////////////////////////////////////////////////////////////////////////////
             // mu
-            RANGES_CONSTEXPR struct mu_
+            RANGES_CONSTEXPR struct mu_fn
             {
             private:
                 template<typename T, typename Args, std::size_t...Is>
@@ -75,17 +75,17 @@ namespace ranges
                     typename Tt = uncvref_t<T>,
                     typename std::enable_if<is_bind_expression<Tt>::value, int>::type = 0>
                 auto operator()(T && t, Args && args) const
-                    -> decltype(mu_::apply_(std::declval<T>(), std::declval<Args>(),
+                    -> decltype(mu_fn::apply_(std::declval<T>(), std::declval<Args>(),
                             integer_sequence_t<std::tuple_size<uncvref_t<Args>>::value>{}))
                 {
-                    return mu_::apply_(std::forward<T>(t), std::forward<Args>(args),
+                    return mu_fn::apply_(std::forward<T>(t), std::forward<Args>(args),
                         integer_sequence_t<std::tuple_size<uncvref_t<Args>>::value>{});
                 }
             } mu {};
 
             ////////////////////////////////////////////////////////////////////////////////////////
             // bind_apply
-            RANGES_CONSTEXPR struct bind_applier
+            RANGES_CONSTEXPR struct bind_apply_fn
             {
                 template<typename Fn, typename BoundArgs, typename Args, std::size_t...Is>
                 auto operator()(Fn && fn, BoundArgs && bound_args, Args && args,
@@ -109,10 +109,10 @@ namespace ranges
                 invokable_t<Fn> fn_;
                 std::tuple<BoundArgs...> bound_args_;
                 using bound_arg_indices = integer_sequence_t<sizeof...(BoundArgs)>;
-                friend struct ranges::bind_maker;
+                friend struct ranges::bind_fn;
 
                 explicit binder(Fn && fn, BoundArgs &&... args)
-                  : fn_(ranges::invokable(std::forward<Fn>(fn)))
+                  : fn_(invokable(std::forward<Fn>(fn)))
                   , bound_args_{std::forward<BoundArgs>(args)...}
                 {}
             public:
@@ -162,7 +162,7 @@ namespace ranges
             {};
         }
 
-        struct bind_maker
+        struct bind_fn
         {
             template<typename Fn, typename... BoundArgs>
             detail::binder<Fn, BoundArgs...> operator()(Fn && fn, BoundArgs &&... args) const
@@ -174,7 +174,7 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // A version of std::bind that does perfect forwarding instead of relying on std::ref
-        RANGES_CONSTEXPR bind_maker bind {};
+        RANGES_CONSTEXPR bind_fn bind {};
     }
 }
 

@@ -41,7 +41,7 @@ namespace ranges
         RANGES_CONSTEXPR make_invokable_fn invokable {};
 
         template<typename T>
-        using invokable_t = decltype(ranges::invokable(std::declval<T>()));
+        using invokable_t = decltype(invokable(std::declval<T>()));
 
         namespace concepts
         {
@@ -53,7 +53,7 @@ namespace ranges
                 template<typename Fun, typename...Args>
                 auto requires(Fun &&fun, Args &&...args) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Function>(ranges::invokable((Fun &&) fun), (Args &&) args...)
+                        concepts::model_of<Function>(invokable((Fun &&) fun), (Args &&) args...)
                     ));
             };
 
@@ -67,7 +67,7 @@ namespace ranges
                 template<typename Fun, typename...Args>
                 auto requires(Fun &&fun, Args &&...args) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Predicate>(ranges::invokable((Fun &&) fun), (Args &&) args...)
+                        concepts::model_of<Predicate>(invokable((Fun &&) fun), (Args &&) args...)
                     ));
             };
 
@@ -77,7 +77,7 @@ namespace ranges
                 template<typename Fun, typename T, typename U>
                 auto requires(Fun &&fun, T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Relation>(ranges::invokable((Fun &&) fun), (T &&) t, (U &&) u)
+                        concepts::model_of<Relation>(invokable((Fun &&) fun), (T &&) t, (U &&) u)
                     ));
             };
 
@@ -87,7 +87,7 @@ namespace ranges
                 template<typename Fun, typename T>
                 auto requires(Fun &&fun, T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Transform>(ranges::invokable((Fun &&) fun), (T &&) t)
+                        concepts::model_of<Transform>(invokable((Fun &&) fun), (T &&) t)
                     ));
             };
         }

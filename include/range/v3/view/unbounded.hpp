@@ -20,18 +20,18 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename InputIterator>
+        template<typename I>
         struct unbounded_view
           : private detail::is_infinite<true>
           , private range_base
         {
         private:
-            InputIterator it_;
+            I it_;
         public:
-            constexpr explicit unbounded_view(InputIterator it)
+            constexpr explicit unbounded_view(I it)
               : it_(detail::move(it))
             {}
-            constexpr InputIterator begin() const
+            constexpr I begin() const
             {
                 return it_;
             }
@@ -43,18 +43,18 @@ namespace ranges
 
         namespace view
         {
-            struct unbounded_maker : bindable<unbounded_maker>
+            struct unbounded_fn : bindable<unbounded_fn>
             {
-                template<typename InputIterator>
-                static constexpr unbounded_view<InputIterator>
-                invoke(unbounded_maker, InputIterator it)
+                template<typename I>
+                static constexpr unbounded_view<I>
+                invoke(unbounded_fn, I it)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterator<InputIterator>());
-                    return unbounded_view<InputIterator>{detail::move(it)};
+                    CONCEPT_ASSERT(InputIterator<I>());
+                    return unbounded_view<I>{detail::move(it)};
                 }
             };
 
-            RANGES_CONSTEXPR unbounded_maker unbounded {};
+            RANGES_CONSTEXPR unbounded_fn unbounded {};
         }
     }
 }

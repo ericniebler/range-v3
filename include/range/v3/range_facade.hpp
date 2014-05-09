@@ -39,14 +39,14 @@ namespace ranges
 
             //
             // True iff the user has explicitly disabled writability of this
-            // iterator.  Pass the iterator_facade's Value parameter and its
+            // iterator.  Pass the iterator_facade's Val parameter and its
             // nested ::reference type.
             //
-            template<typename ValueParam, typename Reference>
+            template<typename ValueParam, typename Ref>
             using iterator_writability_disabled =
                 std::integral_constant<bool,
-                    std::is_const<Reference>::value ||
-                    is_reference_to_const<Reference>::value ||
+                    std::is_const<Ref>::value ||
+                    is_reference_to_const<Ref>::value ||
                     std::is_const<ValueParam>::value
                 >;
 
@@ -57,59 +57,59 @@ namespace ranges
             //   { return *(*this + n); }
             // The problem here is that operator[] would return a reference created from
             // a temporary iterator.
-            template<typename Value>
+            template<typename Val>
             struct operator_brackets_value
             {
-                using type = Value;
-                template<typename Iterator>
-                static type apply(Iterator const & i)
+                using type = Val;
+                template<typename I>
+                static type apply(I const & i)
                 {
                     return *i;
                 }
             };
 
-            template<typename Iterator, typename Reference>
+            template<typename I, typename Ref>
             struct operator_brackets_const_proxy
             {
                 using type = struct proxy
                 {
                 private:
-                    Iterator const it_;
-                    explicit proxy(Iterator i)
+                    I const it_;
+                    explicit proxy(I i)
                       : it_(std::move(i))
                     {}
                     friend struct operator_brackets_const_proxy;
                 public:
                     proxy const & operator=(proxy &) const = delete;
-                    operator Reference() const
+                    operator Ref() const
                     {
                         return *it_;
                     }
-                    operator iterator_value_t<Iterator>() const volatile
+                    operator iterator_value_t<I>() const volatile
                     {
                         return *it_;
                     }
                 };
-                static type apply(Iterator i)
+                static type apply(I i)
                 {
                     return type{std::move(i)};
                 }
             };
 
-            template<typename Iterator, typename Reference>
+            template<typename I, typename Ref>
             struct operator_brackets_proxy
             {
                 using type = struct proxy
                 {
                 private:
-                    using value_type = iterator_value_t<Iterator>;
-                    Iterator const it_;
-                    explicit proxy(Iterator i)
+                    using value_type = iterator_value_t<I>;
+                    I const it_;
+                    explicit proxy(I i)
                       : it_(std::move(i))
                     {}
                     friend struct operator_brackets_proxy;
                 public:
-                    operator Reference() const
+                    operator Ref() const
                     {
                         return *it_;
                     }
@@ -129,22 +129,22 @@ namespace ranges
                         return *this;
                     }
                 };
-                static type apply(Iterator i)
+                static type apply(I i)
                 {
                     return type{std::move(i)};
                 }
             };
 
-            template<typename Iterator, typename ValueType, typename Reference>
+            template<typename I, typename Val, typename Ref>
             using operator_brackets_dispatch =
                 detail::conditional_t<
-                    iterator_writability_disabled<ValueType, Reference>::value,
+                    iterator_writability_disabled<Val, Ref>::value,
                     detail::conditional_t<
-                        std::is_pod<ValueType>::value,
-                        operator_brackets_value<typename std::remove_const<ValueType>::type>,
-                        operator_brackets_const_proxy<Iterator, Reference>
+                        std::is_pod<Val>::value,
+                        operator_brackets_value<typename std::remove_const<Val>::type>,
+                        operator_brackets_const_proxy<I, Ref>
                     >,
-                    operator_brackets_proxy<Iterator, Reference>
+                    operator_brackets_proxy<I, Ref>
                 >;
 
             // iterators whose dereference operators reference the same value
@@ -153,15 +153,15 @@ namespace ranges
             // value must be read and stored away before the increment occurs
             // so that *a++ yields the originally referenced element and not
             // the next one.
-            template<typename Iterator>
+            template<typename I>
             struct postfix_increment_proxy
             {
-                using value_type = iterator_value_t<Iterator>;
+                using value_type = iterator_value_t<I>;
             private:
                 mutable value_type value_;
             public:
                 postfix_increment_proxy() = default;
-                explicit postfix_increment_proxy(Iterator const& x)
+                explicit postfix_increment_proxy(I const& x)
                   : value_(*x)
                 {}
                 // Returning a mutable reference allows nonsense like
@@ -178,16 +178,16 @@ namespace ranges
             // In general, we can't determine that such an iterator isn't
             // writable -- we also need to store a copy of the old iterator so
             // that it can be written into.
-            template<typename Iterator>
+            template<typename I>
             struct writable_postfix_increment_proxy
             {
-                using value_type = iterator_value_t<Iterator>;
+                using value_type = iterator_value_t<I>;
             private:
                 mutable value_type value_;
-                Iterator it_;
+                I it_;
             public:
                 writable_postfix_increment_proxy() = default;
-                explicit writable_postfix_increment_proxy(Iterator x)
+                explicit writable_postfix_increment_proxy(I x)
                   : value_(*x)
                   , it_(std::move(x))
                 {}
@@ -219,17 +219,17 @@ namespace ranges
                     return x;
                 }
                 // Provides X(r++)
-                operator Iterator const&() const
+                operator I const&() const
                 {
                     return it_;
                 }
             };
 
-            template<typename Reference, typename Value>
+            template<typename Ref, typename Val>
             using is_non_proxy_reference =
                 std::is_convertible<
-                    typename std::remove_reference<Reference>::type const volatile*
-                  , Value const volatile*
+                    typename std::remove_reference<Ref>::type const volatile*
+                  , Val const volatile*
                 >;
 
             // A metafunction to choose the result type of postfix ++
@@ -247,57 +247,57 @@ namespace ranges
             // operations, we're not going to try to support them.  Therefore,
             // even if r++ returns a proxy, *r++ will only return a proxy if
             // *r also returns a proxy.
-            template<typename Iterator, typename Value, typename Reference, typename Category>
+            template<typename I, typename Val, typename Ref, typename Cat>
             using postfix_increment_result =
                 detail::lazy_conditional_t<
                     // A proxy is only needed for readable iterators
-                    std::is_convertible<Reference, Value const&>::value &&
+                    std::is_convertible<Ref, Val const&>::value &&
                     // No forward iterator can have values that disappear
                     // before positions can be re-visited
-                    (bool) ranges::Derived<ranges::input_iterator_tag, Category>()
+                    (bool) ranges::Derived<ranges::input_iterator_tag, Cat>()
                   , std::conditional<
-                        is_non_proxy_reference<Reference, Value>::value
-                      , postfix_increment_proxy<Iterator>
-                      , writable_postfix_increment_proxy<Iterator>
+                        is_non_proxy_reference<Ref, Val>::value
+                      , postfix_increment_proxy<I>
+                      , writable_postfix_increment_proxy<I>
                     >
-                  , detail::identity<Iterator>
+                  , detail::identity<I>
                 >;
 
             // operator->() needs special support for input iterators to strictly meet the
             // standard's requirements. If *i is not an lvalue reference type, we must still
             // produce an lvalue to which a pointer can be formed.  We do that by
             // returning a proxy object containing an instance of the reference object.
-            template<typename Reference, bool B = std::is_reference<Reference>::value>
+            template<typename Ref, bool B = std::is_reference<Ref>::value>
             struct operator_arrow_dispatch // proxy references
             {
             private:
                 struct proxy
                 {
                 private:
-                    Reference ref_;
+                    Ref ref_;
                 public:
-                    explicit proxy(Reference x)
+                    explicit proxy(Ref x)
                       : ref_(std::move(x))
                     {}
-                    Reference* operator->()
+                    Ref* operator->()
                     {
                         return std::addressof(ref_);
                     }
                 };
             public:
                 using type = proxy;
-                static type apply(Reference x)
+                static type apply(Ref x)
                 {
                     return type{std::move(x)};
                 }
             };
 
-            // NOTE: Below, Reference could be an rvalue reference or an lvalue reference.
-            template<typename Reference>
-            struct operator_arrow_dispatch<Reference, true>
+            // NOTE: Below, Ref could be an rvalue reference or an lvalue reference.
+            template<typename Ref>
+            struct operator_arrow_dispatch<Ref, true>
             {
-                using type = typename std::remove_reference<Reference>::type *;
-                static type apply(Reference x)
+                using type = typename std::remove_reference<Ref>::type *;
+                static type apply(Ref x)
                 {
                     return std::addressof(x);
                 }
@@ -412,123 +412,123 @@ namespace ranges
                     ));
             };
 
-            template<typename Range>
-            static auto begin_cursor(Range & rng) -> decltype(rng.begin_cursor())
+            template<typename Rng>
+            static auto begin_cursor(Rng & rng) -> decltype(rng.begin_cursor())
             {
                 return rng.begin_cursor();
             }
-            template<typename Range>
-            static auto end_cursor(Range & rng) -> decltype(rng.end_cursor())
+            template<typename Rng>
+            static auto end_cursor(Rng & rng) -> decltype(rng.end_cursor())
             {
                 return rng.end_cursor();
             }
 
-            template<typename Range>
-            static auto begin_adaptor(Range & rng) -> decltype(rng.begin_adaptor())
+            template<typename Rng>
+            static auto begin_adaptor(Rng & rng) -> decltype(rng.begin_adaptor())
             {
                 return rng.begin_adaptor();
             }
-            template<typename Range>
-            static auto end_adaptor(Range & rng) -> decltype(rng.end_adaptor())
+            template<typename Rng>
+            static auto end_adaptor(Rng & rng) -> decltype(rng.end_adaptor())
             {
                 return rng.end_adaptor();
             }
 
-            template<typename Cursor>
-            static auto current(Cursor const &pos) -> decltype(pos.current())
+            template<typename Cur>
+            static auto current(Cur const &pos) -> decltype(pos.current())
             {
                 return pos.current();
             }
-            template<typename Cursor>
-            static auto next(Cursor & pos) -> decltype(pos.next())
+            template<typename Cur>
+            static auto next(Cur & pos) -> decltype(pos.next())
             {
                 pos.next();
             }
-            template<typename Cursor>
-            static constexpr auto done(Cursor const & pos) -> decltype(pos.done())
+            template<typename Cur>
+            static constexpr auto done(Cur const & pos) -> decltype(pos.done())
             {
                 return pos.done();
             }
-            template<typename Cursor>
-            static auto equal(Cursor const &pos0, Cursor const &pos1) ->
+            template<typename Cur>
+            static auto equal(Cur const &pos0, Cur const &pos1) ->
                 decltype(pos0.equal(pos1))
             {
                 return pos0.equal(pos1);
             }
-            template<typename Cursor, typename Sentinel>
-            static constexpr auto empty(Cursor const &pos, Sentinel const &end) ->
+            template<typename Cur, typename S>
+            static constexpr auto empty(Cur const &pos, S const &end) ->
                 decltype(end.equal(pos))
             {
                 return end.equal(pos);
             }
-            template<typename Cursor>
-            static auto prev(Cursor & pos) -> decltype(pos.prev())
+            template<typename Cur>
+            static auto prev(Cur & pos) -> decltype(pos.prev())
             {
                 pos.prev();
             }
-            template<typename Cursor, typename Difference>
-            static auto advance(Cursor & pos, Difference n) ->
+            template<typename Cur, typename D>
+            static auto advance(Cur & pos, D n) ->
                 decltype(pos.advance(n))
             {
                 pos.advance(n);
             }
-            template<typename Cursor>
-            static auto distance_to(Cursor const &pos0, Cursor const &pos1) ->
+            template<typename Cur>
+            static auto distance_to(Cur const &pos0, Cur const &pos1) ->
                 decltype(pos0.distance_to(pos1))
             {
                 return pos0.distance_to(pos1);
             }
-            template<typename Cursor>
-            static auto base(Cursor const &pos) ->
+            template<typename Cur>
+            static auto base(Cur const &pos) ->
                 decltype(pos.base())
             {
                 return pos.base();
             }
-            template<typename Cursor>
-            static auto count(Cursor const &pos) ->
+            template<typename Cur>
+            static auto count(Cur const &pos) ->
                 decltype(pos.count())
             {
                 return pos.count();
             }
 
         private:
-            template<typename Cursor>
+            template<typename Cur>
             using random_access_cursor_difference_t =
-                decltype(range_core_access::distance_to(std::declval<Cursor>(), std::declval<Cursor>()));
+                decltype(range_core_access::distance_to(std::declval<Cur>(), std::declval<Cur>()));
 
-            template<typename Cursor, typename Enable = void>
+            template<typename Cur, typename Enable = void>
             struct cursor_difference2
             {
                 using type = std::ptrdiff_t;
             };
 
-            template<typename Cursor>
-            struct cursor_difference2<Cursor, detail::always_t<void, random_access_cursor_difference_t<Cursor>>>
+            template<typename Cur>
+            struct cursor_difference2<Cur, detail::always_t<void, random_access_cursor_difference_t<Cur>>>
             {
-                using type = random_access_cursor_difference_t<Cursor>;
+                using type = random_access_cursor_difference_t<Cur>;
             };
 
-            template<typename Cursor, typename Enable = void>
+            template<typename Cur, typename Enable = void>
             struct cursor_difference
-              : cursor_difference2<Cursor>
+              : cursor_difference2<Cur>
             {};
 
-            template<typename Cursor>
-            struct cursor_difference<Cursor, detail::always_t<void, typename Cursor::difference_type>>
+            template<typename Cur>
+            struct cursor_difference<Cur, detail::always_t<void, typename Cur::difference_type>>
             {
-                using type = typename Cursor::difference_type;
+                using type = typename Cur::difference_type;
             };
 
-            template<typename Cursor, typename Enable = void>
+            template<typename Cur, typename Enable = void>
             struct cursor_value
             {
-                using type = detail::uncvref_t<decltype(std::declval<Cursor const &>().current())>;
+                using type = detail::uncvref_t<decltype(std::declval<Cur const &>().current())>;
             };
 
-            template<typename Cursor>
-            struct cursor_value<Cursor, detail::always_t<void, typename Cursor::value_type>>
+            template<typename Cur>
+            struct cursor_value<Cur, detail::always_t<void, typename Cur::value_type>>
             {
-                using type = typename Cursor::value_type;
+                using type = typename Cur::value_type;
             };
 
             template<typename T, typename Enable = void>
@@ -543,22 +543,22 @@ namespace ranges
                 using type = typename T::single_pass;
             };
         public:
-            template<typename Cursor>
-            using cursor_difference_t = typename cursor_difference<Cursor>::type;
+            template<typename Cur>
+            using cursor_difference_t = typename cursor_difference<Cur>::type;
 
-            template<typename Cursor>
-            using cursor_value_t = typename cursor_value<Cursor>::type;
+            template<typename Cur>
+            using cursor_value_t = typename cursor_value<Cur>::type;
 
-            template<typename Cursor>
-            using single_pass_t = typename single_pass<Cursor>::type;
+            template<typename Cur>
+            using single_pass_t = typename single_pass<Cur>::type;
 
-            template<typename Cursor, typename Sentinel>
-            static Cursor cursor(basic_range_iterator<Cursor, Sentinel> it)
+            template<typename Cur, typename S>
+            static Cur cursor(basic_range_iterator<Cur, S> it)
             {
                 return std::move(it.pos());
             }
-            template<typename Sentinel>
-            static Sentinel sentinel(basic_range_sentinel<Sentinel> s)
+            template<typename S>
+            static S sentinel(basic_range_sentinel<S> s)
             {
                 return std::move(s.end());
             }
@@ -674,88 +674,88 @@ namespace ranges
                 }
             };
 
-            template<typename Cursor, typename Enable = void>
+            template<typename Cur, typename Enable = void>
             struct has_mixin
               : std::false_type
             {};
 
-            template<typename Cursor>
-            struct has_mixin<Cursor, always_t<void, typename Cursor::mixin>>
+            template<typename Cur>
+            struct has_mixin<Cur, always_t<void, typename Cur::mixin>>
               : std::true_type
             {};
 
-            template<typename Cursor>
+            template<typename Cur>
             struct get_mixin
             {
-                using type = typename Cursor::mixin;
+                using type = typename Cur::mixin;
             };
 
-            template<typename Cursor>
+            template<typename Cur>
             using mixin_base =
                 lazy_conditional_t<
-                    has_mixin<Cursor>::value, get_mixin<Cursor>, identity<basic_mixin<Cursor>>>;
+                    has_mixin<Cur>::value, get_mixin<Cur>, identity<basic_mixin<Cur>>>;
         }
 
-        template<typename Cursor, typename Sentinel>
+        template<typename Cur, typename S>
         struct basic_range_iterator;
 
-        template<typename Sentinel>
-        struct basic_range_sentinel : detail::mixin_base<Sentinel>
+        template<typename S>
+        struct basic_range_sentinel : detail::mixin_base<S>
         {
             // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
             #ifndef __GNUC__
         private:
             #endif
             friend range_core_access;
-            template<typename Cursor, typename OtherSentinel>
+            template<typename Cur, typename OtherSentinel>
             friend struct basic_range_iterator;
-            using detail::mixin_base<Sentinel>::get;
-            Sentinel &end()
+            using detail::mixin_base<S>::get;
+            S &end()
             {
-                return this->detail::mixin_base<Sentinel>::get();
+                return this->detail::mixin_base<S>::get();
             }
-            Sentinel const &end() const
+            S const &end() const
             {
-                return this->detail::mixin_base<Sentinel>::get();
+                return this->detail::mixin_base<S>::get();
             }
         public:
             basic_range_sentinel() = default;
-            basic_range_sentinel(Sentinel end)
-              : detail::mixin_base<Sentinel>(std::move(end))
+            basic_range_sentinel(S end)
+              : detail::mixin_base<S>(std::move(end))
             {}
-            using detail::mixin_base<Sentinel>::mixin_base;
-            constexpr bool operator==(basic_range_sentinel<Sentinel> const &) const
+            using detail::mixin_base<S>::mixin_base;
+            constexpr bool operator==(basic_range_sentinel<S> const &) const
             {
                 return true;
             }
-            constexpr bool operator!=(basic_range_sentinel<Sentinel> const &) const
+            constexpr bool operator!=(basic_range_sentinel<S> const &) const
             {
                 return false;
             }
         };
 
-        template<typename Cursor, typename Sentinel>
+        template<typename Cur, typename S>
         struct basic_range_iterator
-          : detail::mixin_base<Cursor>
+          : detail::mixin_base<Cur>
         {
         private:
             friend range_core_access;
-            CONCEPT_ASSERT(detail::InputCursor<Cursor>());
-            using single_pass = range_core_access::single_pass_t<Cursor>;
+            CONCEPT_ASSERT(detail::InputCursor<Cur>());
+            using single_pass = range_core_access::single_pass_t<Cur>;
             using cursor_concept_t =
                 detail::conditional_t<
                     single_pass::value,
                     range_core_access::InputCursorConcept,
-                    detail::cursor_concept_t<Cursor>>;
+                    detail::cursor_concept_t<Cur>>;
 
-            using detail::mixin_base<Cursor>::get;
-            Cursor &pos()
+            using detail::mixin_base<Cur>::get;
+            Cur &pos()
             {
-                return this->detail::mixin_base<Cursor>::get();
+                return this->detail::mixin_base<Cur>::get();
             }
-            Cursor const &pos() const
+            Cur const &pos() const
             {
-                return this->detail::mixin_base<Cursor>::get();
+                return this->detail::mixin_base<Cur>::get();
             }
 
             // If Iterable models RangeFacade or if the cursor models
@@ -784,10 +784,10 @@ namespace ranges
             }
         public:
             using reference =
-                decltype(range_core_access::current(std::declval<Cursor const &>()));
-            using value_type = range_core_access::cursor_value_t<Cursor>;
+                decltype(range_core_access::current(std::declval<Cur const &>()));
+            using value_type = range_core_access::cursor_value_t<Cur>;
             using iterator_category = decltype(detail::iter_cat(cursor_concept_t{}));
-            using difference_type = range_core_access::cursor_difference_t<Cursor>;
+            using difference_type = range_core_access::cursor_difference_t<Cur>;
             using pointer = typename detail::operator_arrow_dispatch<reference>::type;
         private:
             using postfix_increment_result_t =
@@ -797,11 +797,11 @@ namespace ranges
                 detail::operator_brackets_dispatch<basic_range_iterator, value_type, reference>;
         public:
             constexpr basic_range_iterator() = default;
-            basic_range_iterator(Cursor pos)
-              : detail::mixin_base<Cursor>{std::move(pos)}
+            basic_range_iterator(Cur pos)
+              : detail::mixin_base<Cur>{std::move(pos)}
             {}
             // Mix in any additional constructors defined and exported by the cursor
-            using detail::mixin_base<Cursor>::mixin_base;
+            using detail::mixin_base<Cur>::mixin_base;
             reference operator*() const
             {
                 return range_core_access::current(pos());
@@ -823,151 +823,151 @@ namespace ranges
             }
             constexpr bool operator==(basic_range_iterator const &that) const
             {
-                return basic_range_iterator::equal_(that, (std::is_same<Cursor, Sentinel> *)nullptr);
+                return basic_range_iterator::equal_(that, (std::is_same<Cur, S> *)nullptr);
             }
             constexpr bool operator!=(basic_range_iterator const &that) const
             {
                 return !(*this == that);
             }
             friend constexpr bool operator==(basic_range_iterator const &left,
-                basic_range_sentinel<Sentinel> const &right)
+                basic_range_sentinel<S> const &right)
             {
                 return range_core_access::empty(left.pos(), right.end());
             }
             friend constexpr bool operator!=(basic_range_iterator const &left,
-                basic_range_sentinel<Sentinel> const &right)
+                basic_range_sentinel<S> const &right)
             {
                 return !(left == right);
             }
-            friend constexpr bool operator==(basic_range_sentinel<Sentinel> const & left,
+            friend constexpr bool operator==(basic_range_sentinel<S> const & left,
                 basic_range_iterator const &right)
             {
                 return range_core_access::empty(right.pos(), left.end());
             }
-            friend constexpr bool operator!=(basic_range_sentinel<Sentinel> const &left,
+            friend constexpr bool operator!=(basic_range_sentinel<S> const &left,
                 basic_range_iterator const &right)
             {
                 return !(left == right);
             }
-            CONCEPT_REQUIRES(detail::BidirectionalCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::BidirectionalCursor<Cur>())
             basic_range_iterator& operator--()
             {
                 range_core_access::prev(pos());
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::BidirectionalCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::BidirectionalCursor<Cur>())
             basic_range_iterator operator--(int)
             {
                 auto tmp{*this};
                 --*this;
                 return tmp;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             basic_range_iterator& operator+=(difference_type n)
             {
                 range_core_access::advance(pos(), n);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             friend basic_range_iterator operator+(basic_range_iterator left, difference_type n)
             {
                 left += n;
                 return left;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             friend basic_range_iterator operator+(difference_type n, basic_range_iterator right)
             {
                 right += n;
                 return right;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             basic_range_iterator& operator-=(difference_type n)
             {
                 range_core_access::advance(pos(), -n);
                 return *this;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             friend basic_range_iterator operator-(basic_range_iterator left, difference_type n)
             {
                 left -= n;
                 return left;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             difference_type operator-(basic_range_iterator const &right) const
             {
                 return range_core_access::distance_to(right.pos(), pos());
             }
             // symmetric comparisons
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             bool operator<(basic_range_iterator const &that) const
             {
                 return 0 < (that - *this);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             bool operator<=(basic_range_iterator const &that) const
             {
                 return 0 <= (that - *this);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             bool operator>(basic_range_iterator const &that) const
             {
                 return (that - *this) < 0;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             bool operator>=(basic_range_iterator const &that) const
             {
                 return (that - *this) <= 0;
             }
             // asymmetric comparisons
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             friend constexpr bool operator<(basic_range_iterator const &left,
-                basic_range_sentinel<Sentinel> const &right)
+                basic_range_sentinel<S> const &right)
             {
                 return !range_core_access::empty(left.pos(), right.end());
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             friend constexpr bool operator<=(basic_range_iterator const &left,
-                basic_range_sentinel<Sentinel> const &right)
+                basic_range_sentinel<S> const &right)
             {
                 return true;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             friend constexpr bool operator>(basic_range_iterator const &left,
-                basic_range_sentinel<Sentinel> const &right)
+                basic_range_sentinel<S> const &right)
             {
                 return false;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             friend constexpr bool operator>=(basic_range_iterator const &left,
-                basic_range_sentinel<Sentinel> const &right)
+                basic_range_sentinel<S> const &right)
             {
                 return range_core_access::empty(left.pos(), right.end());
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
-            friend constexpr bool operator<(basic_range_sentinel<Sentinel> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            friend constexpr bool operator<(basic_range_sentinel<S> const &left,
                 basic_range_iterator const &right)
             {
                 return false;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
-            friend constexpr bool operator<=(basic_range_sentinel<Sentinel> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            friend constexpr bool operator<=(basic_range_sentinel<S> const &left,
                 basic_range_iterator const &right)
             {
                 return range_core_access::empty(right.pos(), left.end());
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
-            friend constexpr bool operator>(basic_range_sentinel<Sentinel> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            friend constexpr bool operator>(basic_range_sentinel<S> const &left,
                 basic_range_iterator const &right)
             {
                 return !range_core_access::empty(right.pos(), left.end());
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
-            friend constexpr bool operator>=(basic_range_sentinel<Sentinel> const &left,
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            friend constexpr bool operator>=(basic_range_sentinel<S> const &left,
                 basic_range_iterator const &right)
             {
                 return true;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
+            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             typename operator_brackets_dispatch_t::type
             operator[](difference_type n) const
             {
@@ -975,24 +975,24 @@ namespace ranges
             }
         };
 
-        template<typename Cursor>
-        std::pair<basic_range_iterator<Cursor>, basic_range_iterator<Cursor>>
-        as_iterator_pair(Cursor begin, Cursor end)
+        template<typename Cur>
+        std::pair<basic_range_iterator<Cur>, basic_range_iterator<Cur>>
+        as_iterator_pair(Cur begin, Cur end)
         {
             return {{std::move(begin)}, {std::move(end)}};
         }
 
-        template<typename Cursor, typename Sentinel>
-        std::pair<basic_range_iterator<Cursor, Sentinel>, basic_range_sentinel<Sentinel>>
-        as_iterator_pair(Cursor begin, Sentinel end)
+        template<typename Cur, typename S>
+        std::pair<basic_range_iterator<Cur, S>, basic_range_sentinel<S>>
+        as_iterator_pair(Cur begin, S end)
         {
             return {{std::move(begin)}, {std::move(end)}};
         }
 
         struct default_sentinel
         {
-            template<typename Cursor>
-            static constexpr bool equal(Cursor const &pos)
+            template<typename Cur>
+            static constexpr bool equal(Cur const &pos)
             {
                 return range_core_access::done(pos);
             }
@@ -1063,11 +1063,11 @@ namespace ranges
 
 namespace std
 {
-    template<typename Cursor, typename Sentinel>
-    struct iterator_traits< ::ranges::basic_range_iterator<Cursor, Sentinel>>
+    template<typename Cur, typename S>
+    struct iterator_traits< ::ranges::basic_range_iterator<Cur, S>>
     {
     private:
-        using iterator = ::ranges::basic_range_iterator<Cursor, Sentinel>;
+        using iterator = ::ranges::basic_range_iterator<Cur, S>;
     public:
         using difference_type = typename iterator::difference_type;
         using value_type = typename iterator::value_type;

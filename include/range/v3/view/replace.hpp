@@ -27,21 +27,21 @@ namespace ranges
     {
         namespace view
         {
-            struct replacer : bindable<replacer>
+            struct replace_fn : bindable<replace_fn>
             {
             private:
-                template<typename Value>
+                template<typename Val>
                 struct replacer_fun
                 {
                 private:
-                    friend struct replacer;
-                    Value old_value_;
-                    Value new_value_;
+                    friend struct replace_fn;
+                    Val old_value_;
+                    Val new_value_;
 
-                    template<typename Value1, typename Value2>
-                    replacer_fun(Value1 && old_value, Value2 && new_value)
-                      : old_value_(std::forward<Value1>(old_value)),
-                        new_value_(std::forward<Value2>(new_value))
+                    template<typename Val1, typename Val2>
+                    replacer_fun(Val1 && old_value, Val2 && new_value)
+                      : old_value_(std::forward<Val1>(old_value)),
+                        new_value_(std::forward<Val2>(new_value))
                     {}
 
                 public:
@@ -52,39 +52,37 @@ namespace ranges
                     }
                 };
             public:
-                template<typename Rng, typename Value1, typename Value2,
-                    CONCEPT_REQUIRES_(ranges::Same<typename std::decay<Value1>::type,
-                                                      typename std::decay<Value2>::type>())>
-                static transformed_view<Rng,
-                                            replacer_fun<typename std::decay<Value1>::type>>
-                invoke(replacer, Rng && rng, Value1 && old_value, Value2 && new_value)
+                template<typename Rng, typename Val1, typename Val2,
+                    CONCEPT_REQUIRES_(Same<detail::decay_t<Val1>,
+                                           detail::decay_t<Val2>>())>
+                static transformed_view<Rng, replacer_fun<detail::decay_t<Val1>>>
+                invoke(replace_fn, Rng && rng, Val1 && old_value, Val2 && new_value)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
-                    CONCEPT_ASSERT(ranges::EqualityComparable<range_reference_t<Rng>,
-                        typename std::decay<Value1>::type const &>());
-                    CONCEPT_ASSERT(ranges::Convertible<typename std::decay<Value1>::type const &,
+                    CONCEPT_ASSERT(InputIterable<Rng>());
+                    CONCEPT_ASSERT(EqualityComparable<range_reference_t<Rng>,
+                        detail::decay_t<Val1> const &>());
+                    CONCEPT_ASSERT(Convertible<detail::decay_t<Val1> const &,
                         range_reference_t<Rng>>());
                     return {std::forward<Rng>(rng),
-                            {std::forward<Value1>(old_value),
-                             std::forward<Value2>(new_value)}};
+                            {std::forward<Val1>(old_value),
+                             std::forward<Val2>(new_value)}};
 
                 }
 
                 /// \overload
-                template<typename Value1, typename Value2,
-                    CONCEPT_REQUIRES_(ranges::Same<typename std::decay<Value1>::type,
-                                                      typename std::decay<Value2>::type>())>
-                static auto invoke(replacer replace, Value1 && old_value, Value2 && new_value) ->
-                    decltype(replace.move_bind(std::placeholders::_1, std::forward<Value1>(old_value),
-                        std::forward<Value2>(new_value)))
+                template<typename Val1, typename Val2,
+                    CONCEPT_REQUIRES_(Same<detail::decay_t<Val1>,
+                                           detail::decay_t<Val2>>())>
+                static auto invoke(replace_fn replace, Val1 && old_value, Val2 && new_value) ->
+                    decltype(replace.move_bind(std::placeholders::_1, std::forward<Val1>(old_value),
+                        std::forward<Val2>(new_value)))
                 {
-                    return replace.move_bind(std::placeholders::_1, std::forward<Value1>(old_value),
-                        std::forward<Value2>(new_value));
+                    return replace.move_bind(std::placeholders::_1, std::forward<Val1>(old_value),
+                        std::forward<Val2>(new_value));
                 }
             };
 
-            RANGES_CONSTEXPR replacer replace {};
+            RANGES_CONSTEXPR replace_fn replace {};
         }
     }
 }

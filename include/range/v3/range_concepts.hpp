@@ -33,10 +33,10 @@ namespace ranges
             {
                 // Associated types
                 template<typename T>
-                using iterator_t = decltype(ranges::begin(std::declval<T>()));
+                using iterator_t = decltype(begin(std::declval<T>()));
 
                 template<typename T>
-                using sentinel_t = decltype(ranges::end(std::declval<T>()));
+                using sentinel_t = decltype(end(std::declval<T>()));
 
                 template<typename T>
                 using difference_t = concepts::WeaklyIncrementable::difference_t<iterator_t<T>>;
@@ -68,8 +68,8 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Iterator>(ranges::begin(t)),
-                        concepts::model_of<Sentinel>(ranges::end(t), ranges::begin(t))
+                        concepts::model_of<Iterator>(begin(t)),
+                        concepts::model_of<Sentinel>(end(t), begin(t))
                     ));
             };
 
@@ -80,7 +80,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::same_type(ranges::begin(t), ranges::end(t))
+                        concepts::same_type(begin(t), end(t))
                     ));
             };
         }
@@ -121,7 +121,7 @@ namespace ranges
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ConvertibleToIterable>((T &&) t),
-                        concepts::model_of<CopyConstructible>(ranges::as_iterable(t))
+                        concepts::model_of<CopyConstructible>(as_iterable(t))
                     ));
             };
 
@@ -131,7 +131,7 @@ namespace ranges
                 template<typename T, typename V>
                 auto requires(T && t, V const &v) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<OutputIterator>(ranges::begin(t), v)
+                        concepts::model_of<OutputIterator>(begin(t), v)
                     ));
             };
 
@@ -141,7 +141,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<InputIterator>(ranges::begin(t))
+                        concepts::model_of<InputIterator>(begin(t))
                     ));
             };
 
@@ -151,7 +151,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ForwardIterator>(ranges::begin(t))
+                        concepts::model_of<ForwardIterator>(begin(t))
                     ));
             };
 
@@ -161,7 +161,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<BidirectionalIterator>(ranges::begin(t))
+                        concepts::model_of<BidirectionalIterator>(begin(t))
                     ));
             };
 
@@ -171,7 +171,7 @@ namespace ranges
                 template<typename T>
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<RandomAccessIterator>(ranges::begin(t))
+                        concepts::model_of<RandomAccessIterator>(begin(t))
                     ));
             };
 

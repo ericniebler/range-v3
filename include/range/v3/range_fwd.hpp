@@ -119,8 +119,8 @@ namespace ranges
             using uncvref_t =
                 typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
-            struct compressed_pair_maker;
-            extern compressed_pair_maker const make_compressed_pair;
+            struct make_compressed_pair_fn;
+            extern make_compressed_pair_fn const make_compressed_pair;
 
             template<typename Ret, typename PMFN>
             struct member_function_wrapper;
@@ -131,14 +131,14 @@ namespace ranges
             template<typename T>
             struct is_binder;
 
-            struct bind_wrapper_maker;
-            extern bind_wrapper_maker const wrap_bind;
+            struct wrap_bind_fn;
+            extern wrap_bind_fn const wrap_bind;
 
             template<typename Bind>
             struct bind_wrapper;
 
-            struct unwrap_binder;
-            extern unwrap_binder const unwrap_bind;
+            struct unwrap_bind_fn;
+            extern unwrap_bind_fn const unwrap_bind;
 
             template<typename T>
             struct identity
@@ -218,17 +218,17 @@ namespace ranges
             template<typename...Ts>
             void valid_exprs(Ts &&...);
 
-            template<bool Infinite>
+            template<bool Inf>
             struct is_infinite
             {};
 
-            template<typename Iterator, typename Sentinel>
+            template<typename I, typename S>
             struct common_cursor;
 
-            template<typename InputIterator>
+            template<typename I>
             struct counted_cursor;
 
-            template<typename InputIterator>
+            template<typename I>
             struct counted_sentinel;
         }
 
@@ -252,23 +252,23 @@ namespace ranges
         struct range_base
         {};
 
-        template<typename Cursor, typename Sentinel = Cursor>
+        template<typename Cur, typename S = Cur>
         struct basic_range_iterator;
 
-        template<typename Sentinel>
+        template<typename S>
         struct basic_range_sentinel;
 
-        template<typename Derived, bool Infinite = false>
+        template<typename Derived, bool Inf = false>
         struct range_facade;
 
         template<typename Derived,
                  typename BaseIterable,
-                 bool Infinite = is_infinite<BaseIterable>::value>
+                 bool Inf = is_infinite<BaseIterable>::value>
         struct range_adaptor;
 
-        template<typename Iterator, typename Sentinel>
+        template<typename I, typename S>
         using common_range_iterator =
-            basic_range_iterator<detail::common_cursor<Iterator, Sentinel>>;
+            basic_range_iterator<detail::common_cursor<I, S>>;
 
         template<typename First, typename Second>
         class compressed_pair;
@@ -279,8 +279,8 @@ namespace ranges
         struct make_invokable_fn;
         extern make_invokable_fn const invokable;
 
-        struct bind_maker;
-        extern bind_maker const bind;
+        struct bind_fn;
+        extern bind_fn const bind;
 
         template<typename T>
         using invokable_t = decltype(invokable(std::declval<T>()));
@@ -291,14 +291,14 @@ namespace ranges
         template<typename T>
         istream_iterable<T> istream(std::istream & sin);
 
-        template<typename Iterator, typename Sentinel = Iterator>
+        template<typename I, typename S = I>
         struct iterator_range;
 
-        template<typename Iterator, typename Sentinel = Iterator>
+        template<typename I, typename S = I>
         struct sized_iterator_range;
 
-        struct ranger;
-        extern ranger const range;
+        struct range_fn;
+        extern range_fn const range;
 
         template<typename Rng>
         struct range_iterator;
@@ -325,8 +325,8 @@ namespace ranges
 
         namespace view
         {
-            struct adjacent_filterer;
-            extern adjacent_filterer const adjacent_filter;
+            struct adjacent_filter_fn;
+            extern adjacent_filter_fn const adjacent_filter;
         }
 
         namespace view
@@ -340,8 +340,8 @@ namespace ranges
 
         namespace view
         {
-            struct as_ranger;
-            extern as_ranger const as_range;
+            struct as_range_fn;
+            extern as_range_fn const as_range;
         }
 
         template<typename Rng>
@@ -349,34 +349,34 @@ namespace ranges
 
         namespace view
         {
-            struct conster;
-            extern conster const const_;
+            struct const_fn;
+            extern const_fn const const_;
         }
 
-        template<typename InputIterator>
+        template<typename I>
         struct counted_view;
 
         namespace view
         {
-            struct counted_maker;
-            extern counted_maker const counted;
+            struct counted_fn;
+            extern counted_fn const counted;
         }
 
-        template<typename InputIterator>
+        template<typename I>
         using counted_iterator =
-            basic_range_iterator<detail::counted_cursor<InputIterator>, detail::counted_sentinel<InputIterator>>;
+            basic_range_iterator<detail::counted_cursor<I>, detail::counted_sentinel<I>>;
 
-        template<typename InputIterator>
+        template<typename I>
         using counted_sentinel =
-            basic_range_sentinel<detail::counted_sentinel<InputIterator>>;
+            basic_range_sentinel<detail::counted_sentinel<I>>;
 
         template<typename Rng, typename Pred>
         struct filtered_view;
 
         namespace view
         {
-            struct filterer;
-            extern filterer const filter;
+            struct filter_fn;
+            extern filter_fn const filter;
         }
 
         template<typename Rng>
@@ -384,8 +384,8 @@ namespace ranges
 
         namespace view
         {
-            struct indirecter;
-            extern indirecter const indirect;
+            struct indirect_fn;
+            extern indirect_fn const indirect;
         }
 
         template<typename Rng>
@@ -393,8 +393,8 @@ namespace ranges
 
         namespace view
         {
-            struct iota_maker;
-            extern iota_maker const iota;
+            struct iota_fn;
+            extern iota_fn const iota;
         }
 
         template<typename...Rngs>
@@ -402,8 +402,8 @@ namespace ranges
 
         namespace view
         {
-            struct joiner;
-            extern joiner const join;
+            struct join_fn;
+            extern join_fn const join;
         }
 
         template<typename Rng>
@@ -411,26 +411,26 @@ namespace ranges
 
         namespace view
         {
-            struct mover;
-            extern mover const move;
+            struct move_fn;
+            extern move_fn const move;
         }
 
-        template<typename Value>
+        template<typename Val>
         struct repeated_view;
 
         namespace view
         {
-            struct repeater;
-            extern repeater const repeat;
+            struct repeat_fn;
+            extern repeat_fn const repeat;
         }
 
         namespace view
         {
-            struct replacer;
-            extern replacer const replace;
+            struct replace_fn;
+            extern replace_fn const replace;
 
-            struct replacer_if;
-            extern replacer_if const replace_if;
+            struct replace_if_fn;
+            extern replace_if_fn const replace_if;
         }
 
         template<typename Rng>
@@ -438,8 +438,8 @@ namespace ranges
 
         namespace view
         {
-            struct reverser;
-            extern reverser const reverse;
+            struct reverse_fn;
+            extern reverse_fn const reverse;
         }
 
         template<typename Rng>
@@ -465,8 +465,8 @@ namespace ranges
 
         namespace view
         {
-            struct strider;
-            extern strider const stride;
+            struct stride_fn;
+            extern stride_fn const stride;
         }
 
         template<typename Rng>
@@ -483,8 +483,8 @@ namespace ranges
 
         namespace view
         {
-            struct tokenizer;
-            extern tokenizer const tokenize;
+            struct tokenize_fn;
+            extern tokenize_fn const tokenize;
         }
 
         template<typename Rng, typename Fun>
@@ -492,17 +492,17 @@ namespace ranges
 
         namespace view
         {
-            struct transformer;
-            extern transformer const transform;
+            struct transform_fn;
+            extern transform_fn const transform;
         }
 
-        template<typename InputIterator>
+        template<typename I>
         struct unbounded_view;
 
         namespace view
         {
-            struct unbounded_maker;
-            extern unbounded_maker const unbounded;
+            struct unbounded_fn;
+            extern unbounded_fn const unbounded;
         }
 
         template<typename Rng>
@@ -510,8 +510,8 @@ namespace ranges
 
         namespace view
         {
-            struct uniquer;
-            extern uniquer const unique;
+            struct unique_fn;
+            extern unique_fn const unique;
         }
 
         template<typename Rng>
@@ -522,11 +522,11 @@ namespace ranges
 
         namespace view
         {
-            struct map_keys;
-            extern map_keys const keys;
+            struct keys_fn;
+            extern keys_fn const keys;
 
-            struct map_values;
-            extern map_values const values;
+            struct values_fn;
+            extern values_fn const values;
         }
 
         template<typename...InputRanges>
@@ -534,8 +534,8 @@ namespace ranges
 
         namespace view
         {
-            struct zipper;
-            extern zipper const zip;
+            struct zip_fn;
+            extern zip_fn const zip;
         }
     }
 }

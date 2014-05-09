@@ -164,17 +164,17 @@ namespace ranges
 
         namespace view
         {
-            struct counted_maker : bindable<counted_maker>
+            struct counted_fn : bindable<counted_fn>
             {
                 template<typename I>
-                static counted_view<I> invoke(counted_maker, I it, iterator_difference_t<I> n)
+                static counted_view<I> invoke(counted_fn, I it, iterator_difference_t<I> n)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterator<I>());
+                    CONCEPT_ASSERT(InputIterator<I>());
                     return {std::move(it), n};
                 }
             };
 
-            RANGES_CONSTEXPR counted_maker counted {};
+            RANGES_CONSTEXPR counted_fn counted {};
         }
     }
 }

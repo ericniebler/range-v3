@@ -26,42 +26,42 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename Value>
+            template<typename Val>
             struct delimit_sentinel_adaptor : default_adaptor
             {
             private:
-                Value value_;
+                Val value_;
             public:
                 delimit_sentinel_adaptor() = default;
-                delimit_sentinel_adaptor(Value value)
+                delimit_sentinel_adaptor(Val value)
                   : value_(std::move(value))
                 {}
-                template<typename Cursor, typename Sentinel>
-                bool empty(Cursor const &pos, Sentinel const &end) const
+                template<typename Cur, typename S>
+                bool empty(Cur const &pos, S const &end) const
                 {
                     return end.equal(pos) || pos.current() == value_;
                 }
             };
         }
 
-        template<typename Rng, typename Value>
+        template<typename Rng, typename Val>
         struct delimited_view
-          : range_adaptor<delimited_view<Rng, Value>, Rng>
+          : range_adaptor<delimited_view<Rng, Val>, Rng>
         {
         private:
             friend range_core_access;
-            Value value_;
+            Val value_;
 
             default_adaptor begin_adaptor() const
             {
                 return {};
             }
-            detail::delimit_sentinel_adaptor<Value> end_adaptor() const
+            detail::delimit_sentinel_adaptor<Val> end_adaptor() const
             {
                 return {value_};
             }
         public:
-            delimited_view(Rng && rng, Value value)
+            delimited_view(Rng && rng, Val value)
               : range_adaptor_t<delimited_view>(std::forward<Rng>(rng))
               , value_(std::move(value))
             {}
@@ -69,34 +69,34 @@ namespace ranges
 
         namespace view
         {
-            struct delimiter : bindable<delimiter>
+            struct delimit_fn : bindable<delimit_fn>
             {
-                template<typename Rng, typename Value,
-                    CONCEPT_REQUIRES_(ranges::Iterable<Rng>())>
-                static delimited_view<Rng, Value>
-                invoke(delimiter, Rng && rng, Value value)
+                template<typename Rng, typename Val,
+                    CONCEPT_REQUIRES_(Iterable<Rng>())>
+                static delimited_view<Rng, Val>
+                invoke(delimit_fn, Rng && rng, Val value)
                 {
                     return {std::forward<Rng>(rng), std::move(value)};
                 }
 
-                template<typename InputIterator, typename Value,
-                    CONCEPT_REQUIRES_(ranges::InputIterator<InputIterator>())>
-                static delimited_view<iterator_range<InputIterator, unreachable>, Value>
-                invoke(delimiter, InputIterator begin, Value value)
+                template<typename I, typename Val,
+                    CONCEPT_REQUIRES_(InputIterator<I>())>
+                static delimited_view<iterator_range<I, unreachable>, Val>
+                invoke(delimit_fn, I begin, Val value)
                 {
                     return {{std::move(begin), {}}, std::move(value)};
                 }
 
-                template<typename Value>
+                template<typename Val>
                 static auto
-                invoke(delimiter delimit, Value value) ->
+                invoke(delimit_fn delimit, Val value) ->
                     decltype(delimit.move_bind(std::placeholders::_1, std::move(value)))
                 {
                     return delimit.move_bind(std::placeholders::_1, std::move(value));
                 }
             };
 
-            RANGES_CONSTEXPR delimiter delimit{};
+            RANGES_CONSTEXPR delimit_fn delimit{};
         }
     }
 }

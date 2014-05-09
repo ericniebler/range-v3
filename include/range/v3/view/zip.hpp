@@ -77,7 +77,7 @@ namespace ranges
                 template<typename T, typename D>
                 void operator()(T & t, D d) const
                 {
-                    ranges::advance(t, d);
+                    advance(t, d);
                 }
             } advance {};
 
@@ -133,7 +133,7 @@ namespace ranges
             public:
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
                 using single_pass =
-                    logical_or<(bool) ranges::Derived<ranges::input_iterator_tag,
+                    logical_or<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
                 using value_type = std::tuple<range_value_t<Rngs>...>;
                 cursor() = default;
@@ -142,52 +142,46 @@ namespace ranges
                 {}
                 std::tuple<range_reference_t<Rngs>...> current() const
                 {
-                    return ranges::tuple_transform(its_, detail::deref);
+                    return tuple_transform(its_, detail::deref);
                 }
                 void next()
                 {
-                    ranges::tuple_for_each(its_, detail::inc);
+                    tuple_for_each(its_, detail::inc);
                 }
                 bool equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
                     // one reaches the end.
-                    return ranges::tuple_foldl(
-                        ranges::tuple_transform(its_, that.its_, detail::equal_to),
+                    return tuple_foldl(
+                        tuple_transform(its_, that.its_, detail::equal_to),
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
-                CONCEPT_REQUIRES(
-                    logical_and<(bool) ranges::BidirectionalIterator<
-                        range_iterator_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool) BidirectionalIterable<Rngs>()...>::value)
                 void prev()
                 {
-                    ranges::tuple_for_each(its_, detail::dec);
+                    tuple_for_each(its_, detail::dec);
                 }
-                CONCEPT_REQUIRES(
-                    logical_and<(bool) ranges::RandomAccessIterator<
-                        range_iterator_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     using std::placeholders::_1;
-                    ranges::tuple_for_each(its_, std::bind(detail::advance, _1, n));
+                    tuple_for_each(its_, std::bind(detail::advance, _1, n));
                 }
-                CONCEPT_REQUIRES(
-                    logical_and<(bool) ranges::RandomAccessIterator<
-                        range_iterator_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accomodate zippers of sequences of different length.
                     if(0 < std::get<0>(that.its_) - std::get<0>(its_))
-                        return ranges::tuple_foldl(
-                            ranges::tuple_transform(its_, that.its_, detail::distance_to),
+                        return tuple_foldl(
+                            tuple_transform(its_, that.its_, detail::distance_to),
                             (std::numeric_limits<difference_type>::max)(),
                             detail::min_);
                     else
-                        return ranges::tuple_foldl(
-                            ranges::tuple_transform(its_, that.its_, detail::distance_to),
+                        return tuple_foldl(
+                            tuple_transform(its_, that.its_, detail::distance_to),
                             (std::numeric_limits<difference_type>::min)(),
                             detail::max_);
                 }
@@ -207,43 +201,43 @@ namespace ranges
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
                     // one reaches the end.
-                    return ranges::tuple_foldl(
-                        ranges::tuple_transform(pos.its_, ends_, detail::equal_to),
+                    return tuple_foldl(
+                        tuple_transform(pos.its_, ends_, detail::equal_to),
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
             };
 
-            using are_ranges_t = logical_and<(bool) ranges::Range<Rngs>()...>;
+            using are_ranges_t = logical_and<(bool) Range<Rngs>()...>;
 
             cursor begin_cursor()
             {
-                return {ranges::tuple_transform(rngs_, ranges::begin)};
+                return {tuple_transform(rngs_, begin)};
             }
             detail::conditional_t<are_ranges_t::value, cursor, sentinel> end_cursor()
             {
-                return {ranges::tuple_transform(rngs_, ranges::end)};
+                return {tuple_transform(rngs_, end)};
             }
-            CONCEPT_REQUIRES(logical_and<(bool) ranges::Iterable<Rngs const>()...>::value)
+            CONCEPT_REQUIRES(logical_and<(bool) Iterable<Rngs const>()...>::value)
             cursor begin_cursor() const
             {
-                return {ranges::tuple_transform(rngs_, ranges::begin)};
+                return {tuple_transform(rngs_, begin)};
             }
-            CONCEPT_REQUIRES(logical_and<(bool) ranges::Iterable<Rngs const>()...>::value)
+            CONCEPT_REQUIRES(logical_and<(bool) Iterable<Rngs const>()...>::value)
             detail::conditional_t<are_ranges_t::value, cursor, sentinel> end_cursor() const
             {
-                return {ranges::tuple_transform(rngs_, ranges::end)};
+                return {tuple_transform(rngs_, end)};
             }
         public:
             zipped_view() = default;
             explicit zipped_view(Rngs &&...rngs)
               : rngs_{std::forward<Rngs>(rngs)...}
             {}
-            CONCEPT_REQUIRES(logical_and<(bool) ranges::SizedIterable<Rngs>()...>::value)
+            CONCEPT_REQUIRES(logical_and<(bool) SizedIterable<Rngs>()...>::value)
             size_type size() const
             {
-                return ranges::tuple_foldl(
-                    ranges::tuple_transform(rngs_, ranges::size),
+                return tuple_foldl(
+                    tuple_transform(rngs_, ranges::size),
                     (std::numeric_limits<size_type>::max)(),
                     detail::min_);
             }
@@ -251,17 +245,17 @@ namespace ranges
 
         namespace view
         {
-            struct zipper : bindable<zipper>
+            struct zip_fn : bindable<zip_fn>
             {
                 template<typename...Rngs>
-                static zipped_view<Rngs...> invoke(zipper, Rngs &&... rngs)
+                static zipped_view<Rngs...> invoke(zip_fn, Rngs &&... rngs)
                 {
-                    CONCEPT_ASSERT(logical_and<(bool) ranges::Iterable<Rngs>()...>::value);
+                    CONCEPT_ASSERT(logical_and<(bool) Iterable<Rngs>()...>::value);
                     return zipped_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };
 
-            RANGES_CONSTEXPR zipper zip {};
+            RANGES_CONSTEXPR zip_fn zip {};
         }
     }
 }

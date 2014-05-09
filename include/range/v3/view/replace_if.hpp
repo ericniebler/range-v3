@@ -27,20 +27,20 @@ namespace ranges
     {
         namespace view
         {
-            struct replacer_if : bindable<replacer_if>
+            struct replace_if_fn : bindable<replace_if_fn>
             {
             private:
-                template<typename UnaryPredicate, typename Value>
+                template<typename Pred, typename Val>
                 struct replacer_if_fun
                 {
                 private:
-                    friend struct replacer_if;
-                    compressed_pair<invokable_t<UnaryPredicate>, Value> fun_and_new_value_;
+                    friend struct replace_if_fn;
+                    compressed_pair<invokable_t<Pred>, Val> fun_and_new_value_;
 
-                    template<typename Value2>
-                    replacer_if_fun(UnaryPredicate pred, Value2 && new_value)
+                    template<typename Val2>
+                    replacer_if_fun(Pred pred, Val2 && new_value)
                       : fun_and_new_value_{invokable(std::move(pred)),
-                                           std::forward<Value2>(new_value)}
+                                           std::forward<Val2>(new_value)}
                     {}
                 public:
                     template<typename Other>
@@ -51,36 +51,35 @@ namespace ranges
                     }
                 };
             public:
-                template<typename Rng, typename UnaryPredicate, typename Value>
+                template<typename Rng, typename Pred, typename Val>
                 static transformed_view<Rng,
-                                               replacer_if_fun<UnaryPredicate,
-                                                    typename std::decay<Value>::type>>
-                invoke(replacer_if, Rng && rng, UnaryPredicate pred, Value && new_value)
+                                        replacer_if_fun<Pred,
+                                                        detail::decay_t<Val>>>
+                invoke(replace_if_fn, Rng && rng, Pred pred, Val && new_value)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
-                    CONCEPT_ASSERT(ranges::InvokablePredicate<UnaryPredicate,
-                                                              range_value_t<Rng>>());
-                    CONCEPT_ASSERT(ranges::Convertible<detail::decay_t<Value> const &,
-                                                       range_reference_t<Rng>>());
+                    CONCEPT_ASSERT(InputIterable<Rng>());
+                    CONCEPT_ASSERT(InvokablePredicate<Pred,
+                                                      range_value_t<Rng>>());
+                    CONCEPT_ASSERT(Convertible<detail::decay_t<Val> const &,
+                                               range_reference_t<Rng>>());
                     return {std::forward<Rng>(rng),
-                            {std::move(pred), std::forward<Value>(new_value)}};
+                            {std::move(pred), std::forward<Val>(new_value)}};
 
                 }
 
                 /// \overload
-                template<typename UnaryPredicate, typename Value>
+                template<typename Pred, typename Val>
                 static auto
-                invoke(replacer_if replace_if, UnaryPredicate pred, Value && new_value) ->
+                invoke(replace_if_fn replace_if, Pred pred, Val && new_value) ->
                     decltype(replace_if.move_bind(std::placeholders::_1, std::move(pred),
-                        std::forward<Value>(new_value)))
+                        std::forward<Val>(new_value)))
                 {
                     return replace_if.move_bind(std::placeholders::_1, std::move(pred),
-                        std::forward<Value>(new_value));
+                        std::forward<Val>(new_value));
                 }
             };
 
-            RANGES_CONSTEXPR replacer_if replace_if {};
+            RANGES_CONSTEXPR replace_if_fn replace_if {};
         }
     }
 }

@@ -24,154 +24,154 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Tuple>
+        template<typename Tup>
         using tuple_indices_t =
             integer_sequence_t<
-                std::tuple_size<typename std::remove_reference<Tuple>::type>::value>;
+                std::tuple_size<typename std::remove_reference<Tup>::type>::value>;
 
-        struct tuple_transform_
+        struct tuple_transform_fn
         {
         private:
-            template<typename Tuple, typename UnaryFunction, std::size_t...Is>
+            template<typename Tup, typename Fun, std::size_t...Is>
             using unary_result_t = std::tuple<
-                result_of_t<UnaryFunction(decltype(std::get<Is>(std::declval<Tuple>())))>...>;
-            template<typename Tuple0, typename Tuple1, typename BinaryFunction, std::size_t...Is>
+                result_of_t<Fun(decltype(std::get<Is>(std::declval<Tup>())))>...>;
+            template<typename Tup0, typename Tup1, typename Fun, std::size_t...Is>
             using binary_result_t = std::tuple<
-                result_of_t<BinaryFunction(
-                    decltype(std::get<Is>(std::declval<Tuple0>())),
-                    decltype(std::get<Is>(std::declval<Tuple1>())))>...>;
+                result_of_t<Fun(
+                    decltype(std::get<Is>(std::declval<Tup0>())),
+                    decltype(std::get<Is>(std::declval<Tup1>())))>...>;
 
-            template<typename Tuple, typename UnaryFunction, std::size_t...Is>
-            static unary_result_t<Tuple, UnaryFunction, Is...>
-            impl1(Tuple && tup, UnaryFunction fun, integer_sequence<Is...>)
+            template<typename Tup, typename Fun, std::size_t...Is>
+            static unary_result_t<Tup, Fun, Is...>
+            impl1(Tup && tup, Fun fun, integer_sequence<Is...>)
             {
-                return unary_result_t<Tuple, UnaryFunction, Is...>{
-                    fun(std::get<Is>(std::forward<Tuple>(tup)))...};
+                return unary_result_t<Tup, Fun, Is...>{
+                    fun(std::get<Is>(std::forward<Tup>(tup)))...};
             }
-            template<typename Tuple0, typename Tuple1, typename BinaryFunction, std::size_t...Is>
-            static binary_result_t<Tuple0, Tuple1, BinaryFunction, Is...>
-            impl2(Tuple0 && tup0, Tuple1 && tup1, BinaryFunction fun, integer_sequence<Is...>)
+            template<typename Tup0, typename Tup1, typename Fun, std::size_t...Is>
+            static binary_result_t<Tup0, Tup1, Fun, Is...>
+            impl2(Tup0 && tup0, Tup1 && tup1, Fun fun, integer_sequence<Is...>)
             {
-                return binary_result_t<Tuple0, Tuple1, BinaryFunction, Is...>{
-                    fun(std::get<Is>(std::forward<Tuple0>(tup0)),
-                        std::get<Is>(std::forward<Tuple1>(tup1)))...};
+                return binary_result_t<Tup0, Tup1, Fun, Is...>{
+                    fun(std::get<Is>(std::forward<Tup0>(tup0)),
+                        std::get<Is>(std::forward<Tup1>(tup1)))...};
             }
         public:
-            template<typename Tuple, typename UnaryFunction>
-            auto operator()(Tuple && tup, UnaryFunction fun) const ->
-                decltype(tuple_transform_::impl1(
-                    std::declval<Tuple>(),
-                    std::declval<UnaryFunction>(),
-                    tuple_indices_t<Tuple>{}))
+            template<typename Tup, typename Fun>
+            auto operator()(Tup && tup, Fun fun) const ->
+                decltype(tuple_transform_fn::impl1(
+                    std::declval<Tup>(),
+                    std::declval<Fun>(),
+                    tuple_indices_t<Tup>{}))
             {
-                return tuple_transform_::impl1(
-                    std::forward<Tuple>(tup),
+                return tuple_transform_fn::impl1(
+                    std::forward<Tup>(tup),
                     std::move(fun),
-                    tuple_indices_t<Tuple>{});
+                    tuple_indices_t<Tup>{});
             }
-            template<typename Tuple0, typename Tuple1, typename BinaryFunction>
-            auto operator()(Tuple0 && tup0, Tuple1 && tup1, BinaryFunction fun) const ->
-                decltype(tuple_transform_::impl2(
-                    std::declval<Tuple0>(),
-                    std::declval<Tuple1>(),
-                    std::declval<BinaryFunction>(),
-                    tuple_indices_t<Tuple0>{}))
+            template<typename Tup0, typename Tup1, typename Fun>
+            auto operator()(Tup0 && tup0, Tup1 && tup1, Fun fun) const ->
+                decltype(tuple_transform_fn::impl2(
+                    std::declval<Tup0>(),
+                    std::declval<Tup1>(),
+                    std::declval<Fun>(),
+                    tuple_indices_t<Tup0>{}))
             {
                 static_assert(
-                    std::tuple_size<typename std::remove_reference<Tuple0>::type>::value ==
-                    std::tuple_size<typename std::remove_reference<Tuple1>::type>::value,
+                    std::tuple_size<typename std::remove_reference<Tup0>::type>::value ==
+                    std::tuple_size<typename std::remove_reference<Tup1>::type>::value,
                     "tuples must be of the same length");
-                return tuple_transform_::impl2(
-                    std::forward<Tuple0>(tup0),
-                    std::forward<Tuple1>(tup1),
+                return tuple_transform_fn::impl2(
+                    std::forward<Tup0>(tup0),
+                    std::forward<Tup1>(tup1),
                     std::move(fun),
-                    tuple_indices_t<Tuple0>{});
+                    tuple_indices_t<Tup0>{});
             }
         };
 
-        RANGES_CONSTEXPR tuple_transform_ tuple_transform {};
+        RANGES_CONSTEXPR tuple_transform_fn tuple_transform {};
 
-        struct tuple_foldl_
+        struct tuple_foldl_fn
         {
         private:
-            template<typename Tuple, typename Value, typename BinaryFunction>
-            static Value impl(Tuple &&, Value val, BinaryFunction)
+            template<typename Tup, typename Val, typename Fun>
+            static Val impl(Tup &&, Val val, Fun)
             {
                 return val;
             }
             template<std::size_t I0, std::size_t...Is,
-                     typename Tuple, typename Value, typename BinaryFunction,
-                     typename Impl = tuple_foldl_>
-            static auto impl(Tuple && tup, Value val, BinaryFunction fun) ->
+                     typename Tup, typename Val, typename Fun,
+                     typename Impl = tuple_foldl_fn>
+            static auto impl(Tup && tup, Val val, Fun fun) ->
                 decltype(Impl::template impl<Is...>(
-                    std::forward<Tuple>(tup),
-                    fun(val, std::get<I0>(std::forward<Tuple>(tup))),
+                    std::forward<Tup>(tup),
+                    fun(val, std::get<I0>(std::forward<Tup>(tup))),
                     std::move(fun)))
             {
-                auto next_val = fun(std::move(val), std::get<I0>(std::forward<Tuple>(tup)));
+                auto next_val = fun(std::move(val), std::get<I0>(std::forward<Tup>(tup)));
                 return Impl::template impl<Is...>(
-                    std::forward<Tuple>(tup),
+                    std::forward<Tup>(tup),
                     std::move(next_val),
                     std::move(fun));
             }
-            template<typename Tuple, typename Value, typename BinaryFunction, std::size_t...Is>
-            static auto impl2(Tuple && tup, Value val, BinaryFunction fun,
+            template<typename Tup, typename Val, typename Fun, std::size_t...Is>
+            static auto impl2(Tup && tup, Val val, Fun fun,
                 integer_sequence<Is...>) ->
-                decltype(tuple_foldl_::impl<Is...>(
-                    std::forward<Tuple>(tup),
+                decltype(tuple_foldl_fn::impl<Is...>(
+                    std::forward<Tup>(tup),
                     std::move(val),
                     std::move(fun)))
             {
-                return tuple_foldl_::impl<Is...>(
-                    std::forward<Tuple>(tup),
+                return tuple_foldl_fn::impl<Is...>(
+                    std::forward<Tup>(tup),
                     std::move(val),
                     std::move(fun));
             }
         public:
-            template<typename Tuple, typename Value, typename BinaryFunction>
-            auto operator()(Tuple && tup, Value val, BinaryFunction fun) const ->
-                decltype(tuple_foldl_::impl2(
-                    std::forward<Tuple>(tup),
+            template<typename Tup, typename Val, typename Fun>
+            auto operator()(Tup && tup, Val val, Fun fun) const ->
+                decltype(tuple_foldl_fn::impl2(
+                    std::forward<Tup>(tup),
                     std::move(val),
                     std::move(fun),
-                    tuple_indices_t<Tuple>{}))
+                    tuple_indices_t<Tup>{}))
             {
-                return tuple_foldl_::impl2(
-                    std::forward<Tuple>(tup),
+                return tuple_foldl_fn::impl2(
+                    std::forward<Tup>(tup),
                     std::move(val),
                     std::move(fun),
-                    tuple_indices_t<Tuple>{});
+                    tuple_indices_t<Tup>{});
             }
         };
 
-        RANGES_CONSTEXPR tuple_foldl_ tuple_foldl {};
+        RANGES_CONSTEXPR tuple_foldl_fn tuple_foldl {};
 
         // NOTE: This does *not* guarantee order of evaluation, nor does
         // it return the function after it is done. Not to be used with
         // stateful function objects.
-        struct tuple_for_each_
+        struct tuple_for_each_fn
         {
         private:
             template<typename...Ts>
             static void ignore(Ts &&...)
             {}
-            template<typename Tuple, typename UnaryFunction, std::size_t...Is>
-            static void impl(Tuple && tup, UnaryFunction fun, integer_sequence<Is...>)
+            template<typename Tup, typename Fun, std::size_t...Is>
+            static void impl(Tup && tup, Fun fun, integer_sequence<Is...>)
             {
-                tuple_for_each_::ignore(
-                    (static_cast<void>(fun(std::get<Is>(std::forward<Tuple>(tup)))), 42)...);
+                tuple_for_each_fn::ignore(
+                    (static_cast<void>(fun(std::get<Is>(std::forward<Tup>(tup)))), 42)...);
             }
         public:
-            template<typename Tuple, typename UnaryFunction>
-            void operator()(Tuple && tup, UnaryFunction fun) const
+            template<typename Tup, typename Fun>
+            void operator()(Tup && tup, Fun fun) const
             {
-                tuple_for_each_::impl(std::forward<Tuple>(tup),
+                tuple_for_each_fn::impl(std::forward<Tup>(tup),
                                       std::move(fun),
-                                      tuple_indices_t<Tuple>{});
+                                      tuple_indices_t<Tup>{});
             }
         };
 
-        RANGES_CONSTEXPR tuple_for_each_ tuple_for_each {};
+        RANGES_CONSTEXPR tuple_for_each_fn tuple_for_each {};
     }
 }
 

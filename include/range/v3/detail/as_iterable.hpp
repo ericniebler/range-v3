@@ -20,54 +20,54 @@
             template<typename T>
             using owns_its_elements_t = not_t<
                 std::is_same<
-                    decltype(*ranges::begin(std::declval<as_ref_t<T>>())),
-                    decltype(*ranges::begin(std::declval<as_cref_t<T>>()))>>;
+                    decltype(*begin(std::declval<as_ref_t<T>>())),
+                    decltype(*begin(std::declval<as_cref_t<T>>()))>>;
 
-            template<typename RandomAccessIterator, typename Size,
-                CONCEPT_REQUIRES_(ranges::RandomAccessIterator<RandomAccessIterator>())>
-            ranges::iterator_range<RandomAccessIterator>
-            container_view_all2(RandomAccessIterator begin, RandomAccessIterator end, Size size)
+            template<typename I, typename Size,
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+            iterator_range<I>
+            container_view_all2(I begin, I end, Size size)
             {
                 RANGES_ASSERT(size == static_cast<Size>(end - begin));
                 return {begin, end};
             }
 
-            template<typename Iterator, typename Sentinel, typename Size>
-            ranges::sized_iterator_range<Iterator, Sentinel>
-            container_view_all2(Iterator begin, Sentinel end, Size size)
+            template<typename I, typename S, typename Size>
+            sized_iterator_range<I, S>
+            container_view_all2(I begin, S end, Size size)
             {
                 return {begin, end, size};
             }
 
-            template<typename Iterator, typename Size>
-            ranges::iterator_range<counted_iterator<Iterator>, counted_sentinel<Iterator>>
-            container_view_all2(counted_iterator<Iterator> begin, counted_sentinel<Iterator> end, Size size)
+            template<typename I, typename Size>
+            iterator_range<counted_iterator<I>, counted_sentinel<I>>
+            container_view_all2(counted_iterator<I> begin, counted_sentinel<I> end, Size size)
             {
                 RANGES_ASSERT(size == static_cast<Size>(end.count() - begin.count()));
                 return {begin, end};
             }
 
-            template<typename Iterator, typename Size>
-            ranges::iterator_range<counted_iterator<Iterator>, counted_iterator<Iterator>>
-            container_view_all2(counted_iterator<Iterator> begin, counted_iterator<Iterator> end, Size size)
+            template<typename I, typename Size>
+            iterator_range<counted_iterator<I>, counted_iterator<I>>
+            container_view_all2(counted_iterator<I> begin, counted_iterator<I> end, Size size)
             {
                 RANGES_ASSERT(size == static_cast<Size>(end.count() - begin.count()));
                 return {begin, end};
             }
 
             template<typename T>
-            ranges::iterator_range<concepts::ConvertibleToIterable::iterator_t<T>,
+            iterator_range<concepts::ConvertibleToIterable::iterator_t<T>,
                 concepts::ConvertibleToIterable::sentinel_t<T>>
             container_view_all(T & t, concepts::ConvertibleToIterable)
             {
-                return {ranges::begin(t), ranges::end(t)};
+                return {begin(t), end(t)};
             }
 
             template<typename T>
             auto container_view_all(T & t, concepts::ConvertibleToSizedIterable) ->
-                decltype(detail::container_view_all2(ranges::begin(t), ranges::end(t), 0))
+                decltype(detail::container_view_all2(begin(t), end(t), 0))
             {
-                return detail::container_view_all2(ranges::begin(t), ranges::end(t), ranges::size(t));
+                return detail::container_view_all2(begin(t), end(t), size(t));
             }
 
             template<typename T>

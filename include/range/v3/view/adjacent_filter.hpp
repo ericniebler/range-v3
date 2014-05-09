@@ -70,28 +70,26 @@ namespace ranges
 
         namespace view
         {
-            struct adjacent_filterer : bindable<adjacent_filterer>
+            struct adjacent_filter_fn : bindable<adjacent_filter_fn>
             {
                 template<typename Rng, typename F>
                 static adjacent_filtered_view<Rng, F>
-                invoke(adjacent_filterer, Rng && rng, F pred)
+                invoke(adjacent_filter_fn, Rng && rng, F pred)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
-                    CONCEPT_ASSERT(ranges::ForwardIterator<range_iterator_t<Rng>>());
-                    CONCEPT_ASSERT(ranges::InvokablePredicate<F,
-                                                              range_value_t<Rng>,
-                                                              range_value_t<Rng>>());
+                    CONCEPT_ASSERT(ForwardIterable<Rng>());
+                    CONCEPT_ASSERT(InvokablePredicate<F, range_value_t<Rng>,
+                                                         range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
                 template<typename F>
-                static auto invoke(adjacent_filterer adjacent_filter, F pred) ->
+                static auto invoke(adjacent_filter_fn adjacent_filter, F pred) ->
                     decltype(adjacent_filter.move_bind(std::placeholders::_1, std::move(pred)))
                 {
                     return adjacent_filter.move_bind(std::placeholders::_1, std::move(pred));
                 }
             };
 
-            RANGES_CONSTEXPR adjacent_filterer adjacent_filter {};
+            RANGES_CONSTEXPR adjacent_filter_fn adjacent_filter {};
         }
     }
 }

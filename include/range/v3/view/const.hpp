@@ -33,8 +33,8 @@ namespace ranges
 
             struct const_adaptor : default_adaptor
             {
-                template<typename Cursor>
-                auto current(Cursor const &pos) const ->
+                template<typename Cur>
+                auto current(Cur const &pos) const ->
                     decltype(true ? pos.current() : detail::cref(pos.current()))
                 {
                     return pos.current();
@@ -69,17 +69,17 @@ namespace ranges
 
         namespace view
         {
-            struct conster : bindable<conster>, pipeable<conster>
+            struct const_fn : bindable<const_fn>, pipeable<const_fn>
             {
                 template<typename Rng>
-                static const_view<Rng> invoke(conster, Rng && rng)
+                static const_view<Rng> invoke(const_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
+                    CONCEPT_ASSERT(Iterable<Rng>());
                     return const_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
-            RANGES_CONSTEXPR conster const_ {};
+            RANGES_CONSTEXPR const_fn const_ {};
         }
     }
 }

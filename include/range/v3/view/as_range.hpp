@@ -99,21 +99,21 @@ namespace ranges
             };
             cursor begin_cursor()
             {
-                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), false};
+                return {begin(rng_.get()), end(rng_.get()), false};
             }
             cursor end_cursor()
             {
-                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), true};
+                return {begin(rng_.get()), end(rng_.get()), true};
             }
             CONCEPT_REQUIRES(Iterable<Rng const>())
             cursor begin_cursor() const
             {
-                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), false};
+                return {begin(rng_.get()), end(rng_.get()), false};
             }
             CONCEPT_REQUIRES(Iterable<Rng const>())
             cursor end_cursor() const
             {
-                return {ranges::begin(rng_.get()), ranges::end(rng_.get()), true};
+                return {begin(rng_.get()), end(rng_.get()), true};
             }
         public:
             as_range_view() = default;
@@ -129,20 +129,19 @@ namespace ranges
 
         namespace view
         {
-            struct as_ranger : bindable<as_ranger>, pipeable<as_ranger>
+            struct as_range_fn : bindable<as_range_fn>, pipeable<as_range_fn>
             {
                 template<typename Rng>
                 static as_range_view<Rng>
-                invoke(as_ranger, Rng && rng)
+                invoke(as_range_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ranges::Iterable<Rng>());
-                    CONCEPT_ASSERT(ranges::InputIterator<range_iterator_t<Rng>>());
-                    CONCEPT_ASSERT(!ranges::Range<Rng>());
+                    CONCEPT_ASSERT(InputIterable<Rng>());
+                    CONCEPT_ASSERT(!Range<Rng>());
                     return as_range_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
-            RANGES_CONSTEXPR as_ranger as_range{};
+            RANGES_CONSTEXPR as_range_fn as_range{};
         }
     }
 }

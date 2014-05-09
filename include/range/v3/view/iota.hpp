@@ -79,28 +79,28 @@ namespace ranges
 
         namespace detail
         {
-            template<typename Value>
+            template<typename Val>
             auto iota_difference(concepts::InputIota) -> std::ptrdiff_t;
 
-            template<typename Value>
+            template<typename Val>
             auto iota_difference(concepts::RandomAccessIota) ->
                 typename std::make_signed<
-                    decltype(std::declval<Value>() - std::declval<Value>())
+                    decltype(std::declval<Val>() - std::declval<Val>())
                 >::type;
         }
 
-        template<typename Value>
+        template<typename Val>
         struct iota_view
-          : range_facade<iota_view<Value>, true>
+          : range_facade<iota_view<Val>, true>
         {
         private:
-            using iota_concept_t = ranges::iota_concept_t<Value>;
+            using iota_concept_t = ranges::iota_concept_t<Val>;
             friend range_core_access;
         public:
-            using difference_type = decltype(detail::iota_difference<Value>(iota_concept_t{}));
+            using difference_type = decltype(detail::iota_difference<Val>(iota_concept_t{}));
         private:
-            Value value_;
-            Value current() const
+            Val value_;
+            Val current() const
             {
                 return value_;
             }
@@ -112,22 +112,22 @@ namespace ranges
             {
                 return false;
             }
-            CONCEPT_REQUIRES(ForwardIota<Value>())
+            CONCEPT_REQUIRES(ForwardIota<Val>())
             bool equal(iota_view const &that) const
             {
                 return that.value_ == value_;
             }
-            CONCEPT_REQUIRES(BidirectionalIota<Value>())
+            CONCEPT_REQUIRES(BidirectionalIota<Val>())
             void prev()
             {
                 --value_;
             }
-            CONCEPT_REQUIRES(RandomAccessIota<Value>())
+            CONCEPT_REQUIRES(RandomAccessIota<Val>())
             void advance(difference_type n)
             {
                 value_ += n;
             }
-            CONCEPT_REQUIRES(RandomAccessIota<Value>())
+            CONCEPT_REQUIRES(RandomAccessIota<Val>())
             difference_type distance_to(iota_view const &that) const
             {
                 return that.value_ - value_;
@@ -136,24 +136,24 @@ namespace ranges
             constexpr iota_view()
               : value_{}
             {}
-            constexpr explicit iota_view(Value value)
+            constexpr explicit iota_view(Val value)
               : value_(std::move(value))
             {}
         };
 
         namespace view
         {
-            struct iota_maker : bindable<iota_maker>, pipeable<iota_maker>
+            struct iota_fn : bindable<iota_fn>, pipeable<iota_fn>
             {
-                template<typename Value>
-                static iota_view<Value> invoke(iota_maker, Value value)
+                template<typename Val>
+                static iota_view<Val> invoke(iota_fn, Val value)
                 {
-                    CONCEPT_ASSERT(ranges::InputIota<Value>());
-                    return iota_view<Value>{std::move(value)};
+                    CONCEPT_ASSERT(InputIota<Val>());
+                    return iota_view<Val>{std::move(value)};
                 }
             };
 
-            RANGES_CONSTEXPR iota_maker iota{};
+            RANGES_CONSTEXPR iota_fn iota{};
         }
     }
 }

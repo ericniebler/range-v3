@@ -31,8 +31,7 @@ namespace ranges
           : range_adaptor<reversed_view<Rng>, Rng>
         {
         private:
-            CONCEPT_ASSERT(Range<Rng>());
-            CONCEPT_ASSERT(BidirectionalIterator<range_iterator_t<Rng>>());
+            CONCEPT_ASSERT(BidirectionalRange<Rng>());
             friend range_core_access;
             using base_cursor_t = ranges::base_cursor_t<reversed_view>;
 
@@ -68,7 +67,7 @@ namespace ranges
                     else
                         pos.next();
                 }
-                CONCEPT_REQUIRES(RandomAccessIterator<range_iterator_t<Rng>>())
+                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 void advance(base_cursor_t &pos, range_difference_t<Rng> n) const
                 {
                     if(n > 0)
@@ -76,7 +75,7 @@ namespace ranges
                     else if(n < 0)
                         prev(pos), pos.advance(-n - 1);
                 }
-                CONCEPT_REQUIRES(RandomAccessIterator<range_iterator_t<Rng>>())
+                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 range_difference_t<Rng>
                 distance_to(base_cursor_t const &here, base_cursor_t const &there) const
                 {
@@ -110,20 +109,18 @@ namespace ranges
 
         namespace view
         {
-            struct reverser : bindable<reverser>, pipeable<reverser>
+            struct reverse_fn : bindable<reverse_fn>, pipeable<reverse_fn>
             {
                 template<typename Rng>
                 static reversed_view<Rng>
-                invoke(reverser, Rng && rng)
+                invoke(reverse_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(Range<Rng>());
-                    CONCEPT_ASSERT(BidirectionalIterator<range_iterator_t<Rng>>());
-                    return reversed_view<Rng>{
-                        std::forward<Rng>(rng)};
+                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
+                    return reversed_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
-            RANGES_CONSTEXPR reverser reverse {};
+            RANGES_CONSTEXPR reverse_fn reverse {};
         }
     }
 }

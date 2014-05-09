@@ -29,22 +29,22 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Value>
+        template<typename Val>
         struct single_view
-          : range_facade<single_view<Value>>
+          : range_facade<single_view<Val>>
         {
         private:
             friend struct range_core_access;
-            Value value_;
+            Val value_;
             struct cursor
             {
             private:
-                Value value_;
+                Val value_;
                 bool done_;
             public:
                 using single_pass = std::true_type;
                 cursor() = default;
-                cursor(Value value)
+                cursor(Val value)
                   : value_(std::move(value)), done_(false)
                 {}
                 bool done() const
@@ -55,7 +55,7 @@ namespace ranges
                 {
                     done_ = true;
                 }
-                Value current() const
+                Val current() const
                 {
                     return value_;
                 }
@@ -66,7 +66,7 @@ namespace ranges
             }
         public:
             single_view() = default;
-            constexpr explicit single_view(Value value)
+            constexpr explicit single_view(Val value)
               : value_(detail::move(value))
             {}
             constexpr std::size_t size() const
@@ -79,11 +79,11 @@ namespace ranges
         {
             struct single_fn : bindable<single_fn>
             {
-                template<typename Value>
-                static single_view<Value>
-                invoke(single_fn, Value value)
+                template<typename Val>
+                static single_view<Val>
+                invoke(single_fn, Val value)
                 {
-                    return single_view<Value>{std::move(value)};
+                    return single_view<Val>{std::move(value)};
                 }
             };
 

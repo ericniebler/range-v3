@@ -48,26 +48,26 @@ namespace ranges
 
         namespace view
         {
-            struct map_keys : bindable<map_keys>, pipeable<map_keys>
+            struct keys_fn : bindable<keys_fn>, pipeable<keys_fn>
             {
                 template<typename Rng>
-                static keys_range_view<Rng> invoke(map_keys, Rng && rng)
+                static keys_range_view<Rng> invoke(keys_fn, Rng && rng)
                 {
                     return {std::forward<Rng>(rng), detail::get_first{}};
                 }
             };
 
-            struct map_values : bindable<map_values>, pipeable<map_values>
+            struct values_fn : bindable<values_fn>, pipeable<values_fn>
             {
                 template<typename Rng>
-                static values_range_view<Rng> invoke(map_values, Rng && rng)
+                static values_range_view<Rng> invoke(values_fn, Rng && rng)
                 {
                     return {std::forward<Rng>(rng), detail::get_second{}};
                 }
             };
 
-            RANGES_CONSTEXPR map_keys keys {};
-            RANGES_CONSTEXPR map_values values {};
+            RANGES_CONSTEXPR keys_fn keys {};
+            RANGES_CONSTEXPR values_fn values {};
         }
     }
 }

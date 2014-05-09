@@ -87,7 +87,7 @@ namespace ranges
             return ranges::get<I>(detail::compressed_tuple_core_access::get_data(detail::move(tup)));
         }
 
-        RANGES_CONSTEXPR struct compressed_tuple_maker
+        RANGES_CONSTEXPR struct make_compressed_tuple_fn
         {
             template<typename...Ts>
             constexpr auto operator()(Ts &&... ts) const ->

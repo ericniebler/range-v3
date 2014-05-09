@@ -25,7 +25,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename I0, typename I1, typename R = ranges::equal_to,
+        template<typename I0, typename I1, typename R = equal_to,
                  typename P0 = ident, typename P1 = ident,
                  typename V0 = iterator_value_t<I0>,
                  typename V1 = iterator_value_t<I1>,
@@ -48,7 +48,7 @@ namespace ranges
             // If we returned pair<I0,I1>, we would need to do an O(N) scan to find the
             // end position.
             template<typename I0, typename S0, typename I1, typename S1,
-                     typename R = ranges::equal_to, typename P0 = ident, typename P1 = ident,
+                     typename R = equal_to, typename P0 = ident, typename P1 = ident,
                      CONCEPT_REQUIRES_(Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
                         FindFirstOf<I0, I1, R, P0, P1>())>
             I0 operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, R pred_ = R{}, P0 proj0_ = P0{},
@@ -64,7 +64,7 @@ namespace ranges
                 return begin0;
             }
 
-            template<typename Rng0, typename Rng1, typename R = ranges::equal_to,
+            template<typename Rng0, typename Rng1, typename R = equal_to,
                      typename P0 = ident, typename P1 = ident,
                      typename I0 = range_iterator_t<Rng0>,
                      typename I1 = range_iterator_t<Rng1>,

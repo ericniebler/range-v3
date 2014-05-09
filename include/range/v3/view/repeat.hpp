@@ -22,25 +22,25 @@ namespace ranges
     inline namespace v3
     {
         // BUGBUG a view shouldn't contain its value, right?
-        template<typename Value>
+        template<typename Val>
         struct repeated_view
-          : range_facade<repeated_view<Value>, true>
+          : range_facade<repeated_view<Val>, true>
         {
         private:
-            Value value_;
+            Val value_;
             friend range_core_access;
 
             struct cursor
             {
             private:
-                Value value_;
+                Val value_;
             public:
                 using single_pass = std::true_type;
                 cursor() = default;
-                cursor(Value value)
+                cursor(Val value)
                   : value_(value)
                 {}
-                Value current() const
+                Val current() const
                 {
                     return value_;
                 }
@@ -57,24 +57,24 @@ namespace ranges
             }
         public:
             repeated_view() = default;
-            constexpr explicit repeated_view(Value value)
+            constexpr explicit repeated_view(Val value)
               : value_(detail::move(value))
             {}
         };
 
         namespace view
         {
-            struct repeater : bindable<repeater>, pipeable<repeater>
+            struct repeat_fn : bindable<repeat_fn>, pipeable<repeat_fn>
             {
-                template<typename Value>
-                static repeated_view<Value> invoke(repeater, Value value)
+                template<typename Val>
+                static repeated_view<Val> invoke(repeat_fn, Val value)
                 {
-                    CONCEPT_ASSERT(SemiRegular<Value>());
-                    return repeated_view<Value>{std::move(value)};
+                    CONCEPT_ASSERT(SemiRegular<Val>());
+                    return repeated_view<Val>{std::move(value)};
                 }
             };
 
-            RANGES_CONSTEXPR repeater repeat{};
+            RANGES_CONSTEXPR repeat_fn repeat{};
         }
     }
 }

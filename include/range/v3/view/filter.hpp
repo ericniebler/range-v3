@@ -28,14 +28,14 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename Rng, typename UnaryPredicate>
+        template<typename Rng, typename Pred>
         struct filtered_view
-          : range_adaptor<filtered_view<Rng, UnaryPredicate>, Rng>
+          : range_adaptor<filtered_view<Rng, Pred>, Rng>
         {
         private:
             friend range_core_access;
             using base_cursor_t = ranges::base_cursor_t<filtered_view>;
-            invokable_t<UnaryPredicate> pred_;
+            invokable_t<Pred> pred_;
 
             struct adaptor : default_adaptor
             {
@@ -64,7 +64,7 @@ namespace ranges
                     pos.next();
                     this->satisfy(pos);
                 }
-                CONCEPT_REQUIRES(BidirectionalIterator<range_iterator_t<Rng>>())
+                CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
                 void prev(base_cursor_t &pos) const
                 {
                     do
@@ -84,47 +84,51 @@ namespace ranges
                 return {*this};
             }
         public:
-            filtered_view(Rng && rng, UnaryPredicate pred)
+            filtered_view(Rng && rng, Pred pred)
               : range_adaptor_t<filtered_view>(std::forward<Rng>(rng))
-              , pred_(ranges::invokable(std::move(pred)))
+              , pred_(invokable(std::move(pred)))
             {}
         };
 
         namespace view
         {
-            struct filterer : bindable<filterer>
+            struct filter_fn : bindable<filter_fn>
             {
             private:
-                template<typename UnaryPredicate>
-                struct filterer1 : pipeable<filterer1<UnaryPredicate>>
+                template<typename Pred>
+                struct filterer1 : pipeable<filterer1<Pred>>
                 {
                 private:
-                    UnaryPredicate pred_;
+                    Pred pred_;
                 public:
-                    filterer1(UnaryPredicate pred)
+                    filterer1(Pred pred)
                       : pred_(std::move(pred))
                     {}
                     template<typename Rng, typename This>
-                    static filtered_view<Rng, UnaryPredicate> pipe(Rng && rng, This && this_)
+                    static filtered_view<Rng, Pred> pipe(Rng && rng, This && this_)
                     {
+                        CONCEPT_ASSERT(Iterable<Rng>());
+                        CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
                         return {std::forward<Rng>(rng), std::forward<This>(this_).pred_};
                     }
                 };
             public:
-                template<typename Rng, typename UnaryPredicate>
-                static filtered_view<Rng, UnaryPredicate>
-                invoke(filterer, Rng && rng, UnaryPredicate pred)
+                template<typename Rng, typename Pred>
+                static filtered_view<Rng, Pred>
+                invoke(filter_fn, Rng && rng, Pred pred)
                 {
+                    CONCEPT_ASSERT(Iterable<Rng>());
+                    CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
-                template<typename UnaryPredicate>
-                static filterer1<UnaryPredicate> invoke(filterer, UnaryPredicate pred)
+                template<typename Pred>
+                static filterer1<Pred> invoke(filter_fn, Pred pred)
                 {
                     return {std::move(pred)};
                 }
             };
 
-            RANGES_CONSTEXPR filterer filter {};
+            RANGES_CONSTEXPR filter_fn filter {};
         }
     }
 }
