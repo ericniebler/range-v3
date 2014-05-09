@@ -24,23 +24,42 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename InputIterator>
+            template<typename I>
             struct counted_cursor
             {
             private:
-                friend struct counted_sentinel<InputIterator>;
-                InputIterator it_;
-                iterator_difference_t<InputIterator> n_;
+                friend struct counted_sentinel<I>;
+                I it_;
+                iterator_difference_t<I> n_;
+
             public:
+                struct mixin : basic_mixin<counted_cursor>
+                {
+                    mixin() = default;
+                    mixin(counted_cursor pos)
+                      : basic_mixin<counted_cursor>{std::move(pos)}
+                    {}
+                    mixin(I it, iterator_difference_t<I> n)
+                      : mixin(counted_cursor{it, n})
+                    {}
+                    I base() const
+                    {
+                        return this->get().base();
+                    }
+                    iterator_difference_t<I> count() const
+                    {
+                        return this->get().count();
+                    }
+                };
                 counted_cursor() = default;
-                counted_cursor(public_t, InputIterator it, iterator_difference_t<InputIterator> n)
+                counted_cursor(I it, iterator_difference_t<I> n)
                   : it_(std::move(it)), n_(n)
                 {}
-                InputIterator base() const
+                I base() const
                 {
                     return it_;
                 }
-                iterator_difference_t<InputIterator> count() const
+                iterator_difference_t<I> count() const
                 {
                     return n_;
                 }
@@ -57,68 +76,82 @@ namespace ranges
                     ++it_;
                     ++n_;
                 }
-                CONCEPT_REQUIRES(BidirectionalIterator<InputIterator>())
+                CONCEPT_REQUIRES(BidirectionalIterator<I>())
                 void prev()
                 {
                     --it_;
                     --n_;
                 }
-                CONCEPT_REQUIRES(RandomAccessIterator<InputIterator>())
-                void advance(iterator_difference_t<InputIterator> n)
+                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                void advance(iterator_difference_t<I> n)
                 {
                     it_ += n;
                     n_ += n;
                 }
-                CONCEPT_REQUIRES(RandomAccessIterator<InputIterator>())
-                iterator_difference_t<InputIterator>
-                distance_to(counted_view<InputIterator> const &that) const
+                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                iterator_difference_t<I>
+                distance_to(counted_view<I> const &that) const
                 {
                     return that.n_ - n_;
                 }
             };
 
-            template<typename InputIterator>
+            template<typename I>
             struct counted_sentinel
             {
             private:
-                iterator_difference_t<InputIterator> n_;
+                iterator_difference_t<I> n_;
             public:
+                struct mixin : basic_mixin<counted_sentinel>
+                {
+                    mixin() = default;
+                    mixin(counted_sentinel pos)
+                      : basic_mixin<counted_sentinel>{std::move(pos)}
+                    {}
+                    explicit mixin(iterator_difference_t<I> n)
+                      : mixin(counted_sentinel{n})
+                    {}
+                    iterator_difference_t<I> count() const
+                    {
+                        return this->get().count();
+                    }
+                };
                 counted_sentinel() = default;
-                counted_sentinel(iterator_difference_t<InputIterator> n)
+                counted_sentinel(iterator_difference_t<I> n)
                   : n_(n)
                 {}
-                bool equal(counted_cursor<InputIterator> const &that) const
+                bool equal(counted_cursor<I> const &that) const
                 {
                     return n_ == that.n_;
                 }
-                iterator_difference_t<InputIterator> count() const
+                iterator_difference_t<I> count() const
                 {
                     return n_;
                 }
             };
         }
 
-        template<typename InputIterator>
+        template<typename I>
         struct counted_view
-          : range_facade<counted_view<InputIterator>>
+          : range_facade<counted_view<I>>
         {
         private:
             friend range_core_access;
-            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<InputIterator>>;
-            InputIterator it_;
-            iterator_difference_t<InputIterator> n_;
+            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<I>>;
+            I it_;
+            iterator_difference_t<I> n_;
 
-            detail::counted_cursor<InputIterator> begin_cursor() const
+            detail::counted_cursor<I> begin_cursor() const
             {
-                return {{}, it_, 0};
+                return {it_, 0};
             }
-            detail::counted_sentinel<InputIterator> end_cursor() const
+            detail::counted_sentinel<I> end_cursor() const
             {
                 return {n_};
             }
         public:
             counted_view() = default;
-            counted_view(InputIterator it, iterator_difference_t<InputIterator> n)
+            counted_view(I it, iterator_difference_t<I> n)
               : it_(it), n_(n)
             {
                 RANGES_ASSERT(0 <= n_);
@@ -133,11 +166,10 @@ namespace ranges
         {
             struct counted_maker : bindable<counted_maker>
             {
-                template<typename InputIterator>
-                static counted_view<InputIterator>
-                invoke(counted_maker, InputIterator it, iterator_difference_t<InputIterator> n)
+                template<typename I>
+                static counted_view<I> invoke(counted_maker, I it, iterator_difference_t<I> n)
                 {
-                    CONCEPT_ASSERT(ranges::InputIterator<InputIterator>());
+                    CONCEPT_ASSERT(ranges::InputIterator<I>());
                     return {std::move(it), n};
                 }
             };

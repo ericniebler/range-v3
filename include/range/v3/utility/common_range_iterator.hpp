@@ -30,13 +30,28 @@ namespace ranges
                 Iterator it_;
                 Sentinel se_;
                 bool is_sentinel_;
+
             public:
                 using single_pass = Derived<ranges::input_iterator_tag, iterator_category_t<Iterator>>;
+                struct mixin
+                  : basic_mixin<common_cursor>
+                {
+                    mixin() = default;
+                    mixin(common_cursor pos)
+                      : basic_mixin<common_cursor>{std::move(pos)}
+                    {}
+                    explicit mixin(Iterator it)
+                      : mixin(common_cursor{std::move(it)})
+                    {}
+                    explicit mixin(Sentinel se)
+                      : mixin(common_cursor{std::move(se)})
+                    {}
+                };
                 common_cursor() = default;
-                common_cursor(public_t, Iterator it)
+                explicit common_cursor(Iterator it)
                   : it_(std::move(it)), se_{}, is_sentinel_(false)
                 {}
-                common_cursor(public_t, Sentinel se)
+                explicit common_cursor(Sentinel se)
                   : it_{}, se_(std::move(se)), is_sentinel_(true)
                 {}
                 common_cursor(Iterator it, Sentinel se, bool is_sentinel)

@@ -340,9 +340,6 @@ namespace ranges
             };
         }
 
-        struct public_t
-        {};
-
         struct range_core_access
         {
             //
@@ -392,20 +389,6 @@ namespace ranges
                 auto requires(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(typename T::is_infinite{})
-                    ));
-            };
-            struct CountedCursorConcept
-              : concepts::refines<InputCursorConcept>
-            {
-                template<typename T>
-                using base_iterator_t = decltype(std::declval<T>().base());
-
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<concepts::WeakInputIterator>(t.base()),
-                        concepts::model_of<concepts::Integral>(t.count()),
-                        T{public_t{}, t.base(), t.count()}
                     ));
             };
 
@@ -572,12 +555,12 @@ namespace ranges
             template<typename Cursor, typename Sentinel>
             static Cursor cursor(basic_range_iterator<Cursor, Sentinel> it)
             {
-                return std::move(it).pos_;
+                return std::move(it.pos());
             }
             template<typename Sentinel>
             static Sentinel sentinel(basic_range_sentinel<Sentinel> s)
             {
-                return std::move(s).end_;
+                return std::move(s.end());
             }
 
             template<typename RangeAdaptor>
@@ -618,10 +601,6 @@ namespace ranges
             template<typename T>
             using InfiniteCursor =
                 concepts::models<range_core_access::InfiniteCursorConcept, T>;
-
-            template<typename T>
-            using CountedCursor =
-                concepts::models<range_core_access::CountedCursorConcept, T>;
 
             template<typename T>
             using cursor_concept_t =
@@ -674,13 +653,54 @@ namespace ranges
                     (Same<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>()),
                     basic_range_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
                     basic_range_sentinel<facade_sentinel2_t<Derived>>>;
+
+            template<typename T>
+            struct basic_mixin
+            {
+            private:
+                T t_;
+            public:
+                constexpr basic_mixin() = default;
+                basic_mixin(T t)
+                  : t_(std::move(t))
+                {}
+                T &get()
+                {
+                    return t_;
+                }
+                T const &get() const
+                {
+                    return t_;
+                }
+            };
+
+            template<typename Cursor, typename Enable = void>
+            struct has_mixin
+              : std::false_type
+            {};
+
+            template<typename Cursor>
+            struct has_mixin<Cursor, always_t<void, typename Cursor::mixin>>
+              : std::true_type
+            {};
+
+            template<typename Cursor>
+            struct get_mixin
+            {
+                using type = typename Cursor::mixin;
+            };
+
+            template<typename Cursor>
+            using mixin_base =
+                lazy_conditional_t<
+                    has_mixin<Cursor>::value, get_mixin<Cursor>, identity<basic_mixin<Cursor>>>;
         }
 
         template<typename Cursor, typename Sentinel>
         struct basic_range_iterator;
 
         template<typename Sentinel>
-        struct basic_range_sentinel
+        struct basic_range_sentinel : detail::mixin_base<Sentinel>
         {
             // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
             #ifndef __GNUC__
@@ -689,17 +709,21 @@ namespace ranges
             friend range_core_access;
             template<typename Cursor, typename OtherSentinel>
             friend struct basic_range_iterator;
-            Sentinel end_;
+            using detail::mixin_base<Sentinel>::get;
+            Sentinel &end()
+            {
+                return this->detail::mixin_base<Sentinel>::get();
+            }
+            Sentinel const &end() const
+            {
+                return this->detail::mixin_base<Sentinel>::get();
+            }
         public:
             basic_range_sentinel() = default;
             basic_range_sentinel(Sentinel end)
-              : end_(std::move(end))
+              : detail::mixin_base<Sentinel>(std::move(end))
             {}
-            template<typename...Ts,
-                CONCEPT_REQUIRES_(Constructible<Sentinel, public_t, Ts...>())>
-            basic_range_sentinel(Ts &&... ts)
-              : end_{public_t{}, std::forward<Ts>(ts)...}
-            {}
+            using detail::mixin_base<Sentinel>::mixin_base;
             constexpr bool operator==(basic_range_sentinel<Sentinel> const &) const
             {
                 return true;
@@ -708,15 +732,11 @@ namespace ranges
             {
                 return false;
             }
-            template<typename S = Sentinel, CONCEPT_REQUIRES_(Same<S, Sentinel>())>
-            auto count() const -> decltype(range_core_access::count(std::declval<S>()))
-            {
-                return range_core_access::count(end_);
-            }
         };
 
         template<typename Cursor, typename Sentinel>
         struct basic_range_iterator
+          : detail::mixin_base<Cursor>
         {
         private:
             friend range_core_access;
@@ -727,7 +747,16 @@ namespace ranges
                     single_pass::value,
                     range_core_access::InputCursorConcept,
                     detail::cursor_concept_t<Cursor>>;
-            Cursor pos_;
+
+            using detail::mixin_base<Cursor>::get;
+            Cursor &pos()
+            {
+                return this->detail::mixin_base<Cursor>::get();
+            }
+            Cursor const &pos() const
+            {
+                return this->detail::mixin_base<Cursor>::get();
+            }
 
             // If Iterable models RangeFacade or if the cursor models
             // ForwardCursor, then positions must be equality comparable.
@@ -741,7 +770,7 @@ namespace ranges
             constexpr bool equal2_(basic_range_iterator const &that,
                 range_core_access::ForwardCursorConcept *) const
             {
-                return range_core_access::equal(pos_, that.pos_);
+                return range_core_access::equal(pos(), that.pos());
             }
             constexpr bool equal_(basic_range_iterator const &that,
                 std::false_type *) const
@@ -751,7 +780,7 @@ namespace ranges
             constexpr bool equal_(basic_range_iterator const &that,
                 std::true_type *) const
             {
-                return range_core_access::equal(pos_, that.pos_);
+                return range_core_access::equal(pos(), that.pos());
             }
         public:
             using reference =
@@ -769,16 +798,13 @@ namespace ranges
         public:
             constexpr basic_range_iterator() = default;
             basic_range_iterator(Cursor pos)
-              : pos_(std::move(pos))
+              : detail::mixin_base<Cursor>{std::move(pos)}
             {}
-            template<typename...Ts,
-                CONCEPT_REQUIRES_(Constructible<Cursor, public_t, Ts...>())>
-            basic_range_iterator(Ts &&... ts)
-              : pos_{public_t{}, std::forward<Ts>(ts)...}
-            {}
+            // Mix in any additional constructors defined and exported by the cursor
+            using detail::mixin_base<Cursor>::mixin_base;
             reference operator*() const
             {
-                return range_core_access::current(pos_);
+                return range_core_access::current(pos());
             }
             pointer operator->() const
             {
@@ -786,7 +812,7 @@ namespace ranges
             }
             basic_range_iterator& operator++()
             {
-                range_core_access::next(pos_);
+                range_core_access::next(pos());
                 return *this;
             }
             postfix_increment_result_t operator++(int)
@@ -806,7 +832,7 @@ namespace ranges
             friend constexpr bool operator==(basic_range_iterator const &left,
                 basic_range_sentinel<Sentinel> const &right)
             {
-                return range_core_access::empty(left.pos_, right.end_);
+                return range_core_access::empty(left.pos(), right.end());
             }
             friend constexpr bool operator!=(basic_range_iterator const &left,
                 basic_range_sentinel<Sentinel> const &right)
@@ -816,7 +842,7 @@ namespace ranges
             friend constexpr bool operator==(basic_range_sentinel<Sentinel> const & left,
                 basic_range_iterator const &right)
             {
-                return range_core_access::empty(right.pos_, left.end_);
+                return range_core_access::empty(right.pos(), left.end());
             }
             friend constexpr bool operator!=(basic_range_sentinel<Sentinel> const &left,
                 basic_range_iterator const &right)
@@ -826,7 +852,7 @@ namespace ranges
             CONCEPT_REQUIRES(detail::BidirectionalCursor<Cursor>())
             basic_range_iterator& operator--()
             {
-                range_core_access::prev(pos_);
+                range_core_access::prev(pos());
                 return *this;
             }
             CONCEPT_REQUIRES(detail::BidirectionalCursor<Cursor>())
@@ -839,7 +865,7 @@ namespace ranges
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             basic_range_iterator& operator+=(difference_type n)
             {
-                range_core_access::advance(pos_, n);
+                range_core_access::advance(pos(), n);
                 return *this;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
@@ -857,7 +883,7 @@ namespace ranges
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             basic_range_iterator& operator-=(difference_type n)
             {
-                range_core_access::advance(pos_, -n);
+                range_core_access::advance(pos(), -n);
                 return *this;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
@@ -869,7 +895,7 @@ namespace ranges
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             difference_type operator-(basic_range_iterator const &right) const
             {
-                return range_core_access::distance_to(right.pos_, pos_);
+                return range_core_access::distance_to(right.pos(), pos());
             }
             // symmetric comparisons
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
@@ -897,7 +923,7 @@ namespace ranges
             friend constexpr bool operator<(basic_range_iterator const &left,
                 basic_range_sentinel<Sentinel> const &right)
             {
-                return !range_core_access::empty(left.pos_, right.end_);
+                return !range_core_access::empty(left.pos(), right.end());
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend constexpr bool operator<=(basic_range_iterator const &left,
@@ -915,7 +941,7 @@ namespace ranges
             friend constexpr bool operator>=(basic_range_iterator const &left,
                 basic_range_sentinel<Sentinel> const &right)
             {
-                return range_core_access::empty(left.pos_, right.end_);
+                return range_core_access::empty(left.pos(), right.end());
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend constexpr bool operator<(basic_range_sentinel<Sentinel> const &left,
@@ -927,13 +953,13 @@ namespace ranges
             friend constexpr bool operator<=(basic_range_sentinel<Sentinel> const &left,
                 basic_range_iterator const &right)
             {
-                return range_core_access::empty(right.pos_, left.end_);
+                return range_core_access::empty(right.pos(), left.end());
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend constexpr bool operator>(basic_range_sentinel<Sentinel> const &left,
                 basic_range_iterator const &right)
             {
-                return !range_core_access::empty(right.pos_, left.end_);
+                return !range_core_access::empty(right.pos(), left.end());
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cursor>())
             friend constexpr bool operator>=(basic_range_sentinel<Sentinel> const &left,
@@ -946,19 +972,6 @@ namespace ranges
             operator[](difference_type n) const
             {
                 return operator_brackets_dispatch_t::apply(*this + n);
-            }
-            // For counted_iterator. TODO find a more general way for cursors to inject
-            // behaviors into the iterator.
-            template<typename C = Cursor,
-                CONCEPT_REQUIRES_(Same<C, Cursor>() && detail::CountedCursor<C>())>
-            auto base() const -> range_core_access::CountedCursorConcept::base_iterator_t<C>
-            {
-                return range_core_access::base(pos_);
-            }
-            CONCEPT_REQUIRES(detail::CountedCursor<Cursor>())
-            auto count() const -> difference_type
-            {
-                return range_core_access::count(pos_);
             }
         };
 

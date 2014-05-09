@@ -270,8 +270,6 @@ namespace ranges
         using common_range_iterator =
             basic_range_iterator<detail::common_cursor<Iterator, Sentinel>>;
 
-        struct public_t;
-
         template<typename First, typename Second>
         class compressed_pair;
 

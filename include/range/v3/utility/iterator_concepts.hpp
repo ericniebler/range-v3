@@ -390,7 +390,7 @@ namespace ranges
             };
 
             struct Sentinel
-              : refines<CopyConstructible(_1), EqualityComparable>
+              : refines<Regular(_1)>
             {
                 template<typename S, typename I>
                 void requires(S, I);
@@ -425,13 +425,19 @@ namespace ranges
         using Incrementable = concepts::models<concepts::Incrementable, T>;
 
         template<typename I>
-        using WeakInputIterator = concepts::models<concepts::WeakInputIterator, I>;
+        using WeakIterator = concepts::models<concepts::WeakIterator, I>;
+
+        template<typename I, typename S = I>
+        using Iterator = concepts::models<concepts::Iterator, I, S>;
 
         template<typename Out, typename T>
         using WeakOutputIterator = concepts::models<concepts::WeakOutputIterator, Out, T>;
 
         template<typename Out, typename T>
         using OutputIterator = concepts::models<concepts::OutputIterator, Out, T>;
+
+        template<typename I>
+        using WeakInputIterator = concepts::models<concepts::WeakInputIterator, I>;
 
         template<typename I, typename S = I>
         using InputIterator = concepts::models<concepts::InputIterator, I, S>;
