@@ -43,6 +43,12 @@ add_test(test.find_first_of find_first_of)
 add_executable(for_each for_each.cpp)
 add_test(test.for_each for_each)
 
+add_executable(generate generate.cpp)
+add_test(test.generate generate)
+
+add_executable(generate_n generate_n.cpp)
+add_test(test.generate_n generate_n)
+
 add_executable(lower_bound lower_bound.cpp)
 add_test(test.lower_bound lower_bound)
 

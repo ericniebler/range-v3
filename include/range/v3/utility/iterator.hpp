@@ -213,12 +213,12 @@ namespace ranges
             explicit back_insert_iterator(Cont &cont) noexcept
               : cont_(&cont)
             {}
-            back_insert_iterator &operator=(typename Cont::value_type v)
+            back_insert_iterator const &operator=(typename Cont::value_type v) const
             {
                 cont_->push_back(std::move(v));
                 return *this;
             }
-            back_insert_iterator &operator*()
+            back_insert_iterator const &operator*() const
             {
                 return *this;
             }
@@ -257,7 +257,7 @@ namespace ranges
             ostream_iterator(std::basic_ostream<Char, Traits> &sout, Char const *delim = nullptr)
               : sout_(&sout), delim_(delim)
             {}
-            ostream_iterator & operator=(T const &t)
+            ostream_iterator const &operator=(T const &t) const
             {
                 RANGES_ASSERT(sout_);
                 *sout_ << t;
@@ -265,15 +265,15 @@ namespace ranges
                     *sout_ << delim_;
                 return *this;
             }
-            ostream_iterator<T>& operator*()
+            ostream_iterator<T> const &operator*() const
             {
                 return *this;
             }
-            ostream_iterator<T>& operator++()
+            ostream_iterator<T> &operator++()
             {
                 return *this;
             }
-            ostream_iterator<T>& operator++(int)
+            ostream_iterator<T> &operator++(int)
             {
                 return *this;
             }

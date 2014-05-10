@@ -86,6 +86,8 @@
     <ClCompile Include="..\..\..\..\test\algorithm\find_first_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\find_if.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\generate.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\generate_n.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\merge.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\rotate.cpp" />

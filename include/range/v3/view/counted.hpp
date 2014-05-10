@@ -157,7 +157,8 @@ namespace ranges
                 template<typename I>
                 static counted_view<I> invoke(counted_fn, I it, iterator_difference_t<I> n)
                 {
-                    CONCEPT_ASSERT(InputIterator<I>());
+                    // Nothing wrong with a weak counted output iterator!
+                    CONCEPT_ASSERT(WeakIterator<I>());
                     return {std::move(it), n};
                 }
             };
