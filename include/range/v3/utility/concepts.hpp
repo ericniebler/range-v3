@@ -115,14 +115,14 @@ namespace ranges
                 std::false_type;
 
             template<typename Concept, typename...Ts>
-            auto models_(Concept c, Ts &&...ts) ->
+            auto models_(Concept *c, Ts &&...ts) ->
                 always_t<
                     typelist_expand_t<
                         lazy_and,
                         typelist_transform_t<
                             base_concepts_of_t<Concept>,
                             meta_bind_back<concepts::models, Ts...>::template apply>>,
-                    decltype(c.requires(std::forward<Ts>(ts)...))>;
+                    decltype(c->requires(std::forward<Ts>(ts)...))>;
         }
 
         namespace concepts
@@ -161,6 +161,9 @@ namespace ranges
             struct refines
               : virtual detail::base_concept_t<Concepts>...
             {
+                // BUGBUG
+                refines() = delete;
+
                 using base_concepts_t = typelist<Concepts...>;
 
                 template<typename...Ts>
@@ -172,7 +175,7 @@ namespace ranges
             template<typename Concept, typename...Ts>
             struct models
               : std::integral_constant<bool,
-                    decltype(detail::models_(Concept{}, std::declval<Ts>()...))::value>
+                    decltype(detail::models_((Concept*)nullptr, std::declval<Ts>()...))::value>
             {};
 
             template<typename Concept, typename...Args, typename...Ts>
@@ -195,7 +198,16 @@ namespace ranges
                     typelist_find_if_t<
                         meta_bind_back<models, Ts...>::template apply,
                         Concepts>>
-            {};
+            {
+                constexpr operator typename most_refined::type *() const
+                {
+                    return nullptr;
+                }
+                constexpr typename most_refined::type *operator()() const
+                {
+                    return nullptr;
+                }
+            };
 
             template<typename Concepts, typename...Ts>
             using most_refined_t = meta_apply<most_refined, Concepts, Ts...>;

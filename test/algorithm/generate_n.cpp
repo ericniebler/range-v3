@@ -71,7 +71,7 @@ void test2()
     // Test ranges::generate with a genuine output range
     std::vector<int> v;
     ranges::generate_n(ranges::back_inserter(v), 5, gen_test(1));
-    CHECK(v.size() == 5);
+    CHECK(v.size() == 5u);
     CHECK(v[0] == 1);
     CHECK(v[1] == 2);
     CHECK(v[2] == 3);

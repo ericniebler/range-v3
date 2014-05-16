@@ -156,11 +156,11 @@ namespace ranges
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
             // Range, adapt it anyway.
-            auto end_adaptor_(concepts::Iterable) const -> default_adaptor
+            auto end_adaptor_(concepts::Iterable*) const -> default_adaptor
             {
                 return {};
             }
-            auto end_adaptor_(concepts::Range) const -> adaptor
+            auto end_adaptor_(concepts::Range*) const -> adaptor
             {
                 return {*this, end_tag{}};
             }
@@ -172,7 +172,7 @@ namespace ranges
             detail::conditional_t<(Range<Rng>()), adaptor, default_adaptor>
             end_adaptor() const
             {
-                return strided_view::end_adaptor_(range_concept_t<Rng>{});
+                return strided_view::end_adaptor_(range_concept<Rng>());
             }
         public:
             strided_view() = default;

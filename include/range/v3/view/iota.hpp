@@ -69,8 +69,8 @@ namespace ranges
         using RandomAccessIota = concepts::models<concepts::RandomAccessIota, T>;
 
         template<typename T>
-        using iota_concept_t =
-            concepts::most_refined_t<
+        using iota_concept =
+            concepts::most_refined<
                 typelist<
                     concepts::RandomAccessIota,
                     concepts::BidirectionalIota,
@@ -80,10 +80,10 @@ namespace ranges
         namespace detail
         {
             template<typename Val>
-            auto iota_difference(concepts::InputIota) -> std::ptrdiff_t;
+            auto iota_difference(concepts::InputIota*) -> std::ptrdiff_t;
 
             template<typename Val>
-            auto iota_difference(concepts::RandomAccessIota) ->
+            auto iota_difference(concepts::RandomAccessIota*) ->
                 typename std::make_signed<
                     decltype(std::declval<Val>() - std::declval<Val>())
                 >::type;
@@ -94,10 +94,10 @@ namespace ranges
           : range_facade<iota_view<Val>, true>
         {
         private:
-            using iota_concept_t = ranges::iota_concept_t<Val>;
+            using iota_concept = ranges::iota_concept<Val>;
             friend range_core_access;
         public:
-            using difference_type = decltype(detail::iota_difference<Val>(iota_concept_t{}));
+            using difference_type = decltype(detail::iota_difference<Val>(iota_concept()));
         private:
             Val value_;
             Val current() const

@@ -392,26 +392,6 @@ namespace ranges
                     ));
             };
 
-            struct IterableFacadeConcept
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        t.begin_cursor(),
-                        t.end_cursor()
-                    ));
-            };
-
-            struct RangeFacadeConcept
-              : concepts::refines<IterableFacadeConcept>
-            {
-                template<typename T>
-                auto requires(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::same_type(t.begin_cursor(), t.end_cursor())
-                    ));
-            };
-
             template<typename Rng>
             static auto begin_cursor(Rng & rng) -> decltype(rng.begin_cursor())
             {
@@ -603,8 +583,8 @@ namespace ranges
                 concepts::models<range_core_access::InfiniteCursorConcept, T>;
 
             template<typename T>
-            using cursor_concept_t =
-                concepts::most_refined_t<
+            using cursor_concept =
+                concepts::most_refined<
                     typelist<
                         range_core_access::RandomAccessCursorConcept,
                         range_core_access::BidirectionalCursorConcept,
@@ -612,27 +592,15 @@ namespace ranges
                         range_core_access::InputCursorConcept>, T>;
 
             template<typename T>
-            using IterableFacade =
-                concepts::models<range_core_access::IterableFacadeConcept, T>;
+            using cursor_concept_t = meta_apply<cursor_concept, T>;
 
-            template<typename T>
-            using RangeFacade =
-                concepts::models<range_core_access::RangeFacadeConcept, T>;
-
-            template<typename T>
-            using facade_concept_t =
-                concepts::most_refined_t<
-                    typelist<
-                        range_core_access::RangeFacadeConcept,
-                        range_core_access::IterableFacadeConcept>, T>;
-
-            static auto iter_cat(range_core_access::InputCursorConcept) ->
+            static auto iter_cat(range_core_access::InputCursorConcept*) ->
                 ranges::input_iterator_tag;
-            static auto iter_cat(range_core_access::ForwardCursorConcept) ->
+            static auto iter_cat(range_core_access::ForwardCursorConcept*) ->
                 ranges::forward_iterator_tag;
-            static auto iter_cat(range_core_access::BidirectionalCursorConcept) ->
+            static auto iter_cat(range_core_access::BidirectionalCursorConcept*) ->
                 ranges::bidirectional_iterator_tag;
-            static auto iter_cat(range_core_access::RandomAccessCursorConcept) ->
+            static auto iter_cat(range_core_access::RandomAccessCursorConcept*) ->
                 ranges::random_access_iterator_tag;
 
             template<typename Derived>
@@ -787,7 +755,7 @@ namespace ranges
             using reference =
                 decltype(range_core_access::current(std::declval<Cur const &>()));
             using value_type = range_core_access::cursor_value_t<Cur>;
-            using iterator_category = decltype(detail::iter_cat(cursor_concept_t{}));
+            using iterator_category = decltype(detail::iter_cat((cursor_concept_t *)nullptr));
             using difference_type = range_core_access::cursor_difference_t<Cur>;
             using pointer = typename detail::operator_arrow_dispatch<reference>::type;
         private:

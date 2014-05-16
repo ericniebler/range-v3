@@ -58,28 +58,32 @@
             template<typename T>
             iterator_range<concepts::ConvertibleToIterable::iterator_t<T>,
                 concepts::ConvertibleToIterable::sentinel_t<T>>
-            container_view_all(T & t, concepts::ConvertibleToIterable)
+            container_view_all(T & t, concepts::ConvertibleToIterable*)
             {
                 return {begin(t), end(t)};
             }
 
             template<typename T>
-            auto container_view_all(T & t, concepts::ConvertibleToSizedIterable) ->
+            auto container_view_all(T & t, concepts::ConvertibleToSizedIterable*) ->
                 decltype(detail::container_view_all2(begin(t), end(t), 0))
             {
                 return detail::container_view_all2(begin(t), end(t), size(t));
             }
 
             template<typename T>
-            using convertible_to_sized_iterable_concept_t =
-                concepts::most_refined_t<
+            using convertible_to_sized_iterable_concept =
+                concepts::most_refined<
                     typelist<concepts::ConvertibleToSizedIterable,
                              concepts::ConvertibleToIterable>, T>;
 
-            template<typename T, typename C = convertible_to_sized_iterable_concept_t<T>>
+            template<typename T>
+            using convertible_to_sized_iterable_concept_t =
+                meta_apply<convertible_to_sized_iterable_concept, T>;
+
+            template<typename T, typename C = convertible_to_sized_iterable_concept<T>>
             struct container_view_all_type
             {
-                using type = decltype(detail::container_view_all(std::declval<T>(), C{}));
+                using type = decltype(detail::container_view_all(std::declval<T>(), C()));
             };
 
             template<typename T>
@@ -121,7 +125,7 @@
                     std::is_lvalue_reference<T>::value)>
             detail::container_view_all_t<T> operator()(T && t) const
             {
-                return detail::container_view_all(t, detail::convertible_to_sized_iterable_concept_t<T>{});
+                return detail::container_view_all(t, detail::convertible_to_sized_iterable_concept<T>());
             }
 
             // TODO handle char const * by turning it into a delimited range

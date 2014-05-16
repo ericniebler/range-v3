@@ -52,7 +52,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename R, typename P>
             static I1
             impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred_, P proj_,
-                 concepts::ForwardIterator, concepts::ForwardIterator)
+                 concepts::ForwardIterator*, concepts::ForwardIterator*)
             {
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
@@ -94,7 +94,7 @@ namespace ranges
             template<typename I1, typename I2, typename R, typename P>
             static I1
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred_, P proj_,
-                 concepts::BidirectionalIterator, concepts::BidirectionalIterator)
+                 concepts::BidirectionalIterator*, concepts::BidirectionalIterator*)
             {
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
@@ -126,7 +126,7 @@ namespace ranges
             template<typename I1, typename I2, typename R, typename P>
             static I1
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred_, P proj_,
-                 concepts::RandomAccessIterator, concepts::RandomAccessIterator)
+                 concepts::RandomAccessIterator*, concepts::RandomAccessIterator*)
             {
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
@@ -172,7 +172,7 @@ namespace ranges
                     begin1, detail::advance_to_if<Bidi>(begin1, end1),
                     begin2, detail::advance_to_if<Bidi>(begin2, end2),
                     std::move(pred), std::move(proj),
-                    iterator_concept_t<I1>{}, iterator_concept_t<I2>{});
+                    iterator_concept<I1>(), iterator_concept<I2>());
             }
 
             template<typename Rng1, typename Rng2, typename R = equal_to, typename P = ident,

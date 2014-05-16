@@ -27,7 +27,7 @@ namespace ranges
         private:
             template<typename I>
             static void
-            impl(I &it, iterator_difference_t<I> n, concepts::InputIterator)
+            impl(I &it, iterator_difference_t<I> n, concepts::InputIterator*)
             {
                 RANGES_ASSERT(0 <= n);
                 for(; n != 0; --n)
@@ -35,7 +35,7 @@ namespace ranges
             }
             template<typename I>
             static void
-            impl(I &it, iterator_difference_t<I> n, concepts::BidirectionalIterator)
+            impl(I &it, iterator_difference_t<I> n, concepts::BidirectionalIterator*)
             {
                 if(0 <= n)
                     for(; n != 0; --n)
@@ -46,7 +46,7 @@ namespace ranges
             }
             template<typename I>
             static void
-            impl(I &it, iterator_difference_t<I> n, concepts::RandomAccessIterator)
+            impl(I &it, iterator_difference_t<I> n, concepts::RandomAccessIterator*)
             {
                 it += n;
             }
@@ -55,7 +55,7 @@ namespace ranges
             void
             operator()(I &it, iterator_difference_t<I> n) const
             {
-                advance_fn::impl(it, n, iterator_concept_t<I>{});
+                advance_fn::impl(it, n, iterator_concept<I>());
             }
             /// \cond
             template<typename I>
@@ -70,7 +70,7 @@ namespace ranges
         private:
             template<typename I, typename S>
             static iterator_difference_t<I>
-            fwd(I &it, iterator_difference_t<I> n, S end, concepts::InputIterator)
+            fwd(I &it, iterator_difference_t<I> n, S end, concepts::InputIterator*)
             {
                 while(n > 0 && it != end)
                 {
@@ -81,7 +81,7 @@ namespace ranges
             }
             template<typename I, typename S>
             static iterator_difference_t<I>
-            fwd(I &it, iterator_difference_t<I> n, S end, concepts::RandomAccessIterator)
+            fwd(I &it, iterator_difference_t<I> n, S end, concepts::RandomAccessIterator*)
             {
                 auto const room = end - it;
                 if(room < n)
@@ -98,14 +98,14 @@ namespace ranges
             }
             template<typename I, typename S>
             static iterator_difference_t<I>
-            back(I &, iterator_difference_t<I> n, S, concepts::InputIterator)
+            back(I &, iterator_difference_t<I> n, S, concepts::InputIterator*)
             {
                 RANGES_ASSERT(false);
                 return n;
             }
             template<typename I>
             static iterator_difference_t<I>
-            back(I &it, iterator_difference_t<I> n, I begin, concepts::BidirectionalIterator)
+            back(I &it, iterator_difference_t<I> n, I begin, concepts::BidirectionalIterator*)
             {
                 while(n < 0 && it != begin)
                 {
@@ -116,7 +116,7 @@ namespace ranges
             }
             template<typename I>
             static iterator_difference_t<I>
-            back(I &it, iterator_difference_t<I> n, I begin, concepts::RandomAccessIterator)
+            back(I &it, iterator_difference_t<I> n, I begin, concepts::RandomAccessIterator*)
             {
                 auto const room = -(it - begin);
                 if(n < room)
@@ -138,9 +138,9 @@ namespace ranges
             {
                 using impl = advance_bounded_fn;
                 if(0 <= n)
-                    return impl::fwd(it, n, std::move(bound), iterator_concept_t<I>{});
+                    return impl::fwd(it, n, std::move(bound), iterator_concept<I>());
                 else
-                    return impl::back(it, n, std::move(bound), iterator_concept_t<I>{});
+                    return impl::back(it, n, std::move(bound), iterator_concept<I>());
             }
             /// \cond
             template<typename I, typename S>

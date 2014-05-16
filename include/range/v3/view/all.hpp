@@ -36,11 +36,11 @@ namespace ranges
                     CONCEPT_REQUIRES_(ConvertibleToIterable<T>() &&
                         !is_iterable<T>::value)>
                 static auto invoke(all_fn, T && t) ->
-                    decltype(detail::container_view_all(t, detail::convertible_to_sized_iterable_concept_t<T>{}))
+                    decltype(detail::container_view_all(t, detail::convertible_to_sized_iterable_concept<T>()))
                 {
                     static_assert(!std::is_lvalue_reference<T>::value,
                         "Cannot get a view of a temporary container");
-                    return detail::container_view_all(t, detail::convertible_to_sized_iterable_concept_t<T>{});
+                    return detail::container_view_all(t, detail::convertible_to_sized_iterable_concept<T>());
                 }
 
                 // TODO handle char const * by turning it into a delimited range
