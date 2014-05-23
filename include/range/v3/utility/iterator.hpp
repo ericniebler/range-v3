@@ -79,9 +79,9 @@ namespace ranges
                 }
                 return n;
             }
-            template<typename I, typename S>
+            template<typename I>
             static iterator_difference_t<I>
-            fwd(I &it, iterator_difference_t<I> n, S end, concepts::RandomAccessIterator*)
+            fwd(I &it, iterator_difference_t<I> n, I end, concepts::RandomAccessIterator*)
             {
                 auto const room = end - it;
                 if(room < n)

@@ -49,6 +49,9 @@ add_test(test.generate generate)
 add_executable(generate_n generate_n.cpp)
 add_test(test.generate_n generate_n)
 
+add_executable(lexicographical_compare lexicographical_compare.cpp)
+add_test(test.lexicographical_compare lexicographical_compare)
+
 add_executable(lower_bound lower_bound.cpp)
 add_test(test.lower_bound lower_bound)
 
