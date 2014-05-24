@@ -200,6 +200,15 @@
     <ClCompile Include="..\..\..\..\test\algorithm\lexicographical_compare.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\max_element.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\min_element.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\minmax_element.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -623,6 +632,9 @@
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal_range_n.hpp">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\minmax_element.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>

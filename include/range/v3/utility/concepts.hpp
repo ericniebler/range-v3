@@ -511,6 +511,12 @@ namespace ranges
               : refines<RegularFunction>
             {
                 template<typename Fun, typename T>
+                auto requires(Fun && fun, T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Predicate>((Fun &&) fun, (T &&) t, (T &&) t)
+                    ));
+
+                template<typename Fun, typename T>
                 auto requires(Fun && fun, T && t, T && u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Predicate>((Fun &&) fun, (T &&) t, (T &&) u)

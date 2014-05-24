@@ -90,7 +90,10 @@
     <ClCompile Include="..\..\..\..\test\algorithm\generate_n.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lexicographical_compare.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\max_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\merge.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\minmax_element.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\min_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\rotate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
@@ -147,6 +150,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\max_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge_n.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\minmax_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\min_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\mismatch.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move.hpp" />

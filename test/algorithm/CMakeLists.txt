@@ -55,8 +55,17 @@ add_test(test.lexicographical_compare lexicographical_compare)
 add_executable(lower_bound lower_bound.cpp)
 add_test(test.lower_bound lower_bound)
 
+add_executable(max_element max_element.cpp)
+add_test(test.max_element max_element)
+
 add_executable(merge merge.cpp)
 add_test(test.merge merge)
+
+add_executable(min_element min_element.cpp)
+add_test(test.min_element min_element)
+
+add_executable(minmax_element minmax_element.cpp)
+add_test(test.minmax_element minmax_element)
 
 add_executable(rotate rotate.cpp)
 add_test(test.rotate rotate)
