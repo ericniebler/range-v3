@@ -67,6 +67,9 @@ add_test(test.min_element min_element)
 add_executable(minmax_element minmax_element.cpp)
 add_test(test.minmax_element minmax_element)
 
+add_executable(mismatch mismatch.cpp)
+add_test(test.mismatch mismatch)
+
 add_executable(rotate rotate.cpp)
 add_test(test.rotate rotate)
 
