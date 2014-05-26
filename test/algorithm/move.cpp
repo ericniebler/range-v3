@@ -29,30 +29,30 @@ void
 test()
 {
     {
-        const unsigned N = 1000;
+        const int N = 1000;
         int ia[N];
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ia[i] = i;
         int ib[N] = {0};
 
         std::pair<InIter, OutIter> r = ranges::move(InIter(ia), Sent(ia+N), OutIter(ib));
         CHECK(base(r.first) == ia+N);
         CHECK(base(r.second) == ib+N);
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             CHECK(ia[i] == ib[i]);
     }
 
     {
-        const unsigned N = 1000;
+        const int N = 1000;
         int ia[N];
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ia[i] = i;
         int ib[N] = {0};
 
         std::pair<InIter, OutIter> r = ranges::move(as_lvalue(ranges::range(InIter(ia), Sent(ia+N))), OutIter(ib));
         CHECK(base(r.first) == ia+N);
         CHECK(base(r.second) == ib+N);
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             CHECK(ia[i] == ib[i]);
     }
 }
@@ -67,16 +67,16 @@ void
 test1()
 {
     {
-        const unsigned N = 100;
+        const int N = 100;
         std::unique_ptr<int> ia[N];
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ia[i].reset(new int(i));
         std::unique_ptr<int> ib[N];
 
         std::pair<InIter, OutIter> r = ranges::move(InIter(ia), Sent(ia+N), OutIter(ib));
         CHECK(base(r.first) == ia+N);
         CHECK(base(r.second) == ib+N);
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
         {
             CHECK(ia[i].get() == nullptr);
             CHECK(*ib[i] == i);
@@ -84,16 +84,16 @@ test1()
     }
 
     {
-        const unsigned N = 100;
+        const int N = 100;
         std::unique_ptr<int> ia[N];
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ia[i].reset(new int(i));
         std::unique_ptr<int> ib[N];
 
         std::pair<InIter, OutIter> r = ranges::move(as_lvalue(ranges::range(InIter(ia), Sent(ia+N))), OutIter(ib));
         CHECK(base(r.first) == ia+N);
         CHECK(base(r.second) == ib+N);
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
         {
             CHECK(ia[i].get() == nullptr);
             CHECK(*ib[i] == i);
@@ -225,16 +225,16 @@ int main()
     test1<random_access_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
 
     // Works with projections?
-    const unsigned N = 100;
+    const int N = 100;
     S ia[N];
-    for(unsigned i = 0; i < N; ++i)
+    for(int i = 0; i < N; ++i)
         ia[i].p.reset(new int(i));
     std::unique_ptr<int> ib[N];
 
     std::pair<S*, std::unique_ptr<int>*> r = ranges::move(ia, ib, &S::p);
     CHECK(r.first == ia+N);
     CHECK(r.second == ib+N);
-    for(unsigned i = 0; i < N; ++i)
+    for(int i = 0; i < N; ++i)
     {
         CHECK(ia[i].p.get() == nullptr);
         CHECK(*ib[i] == i);
