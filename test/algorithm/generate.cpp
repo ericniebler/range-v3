@@ -62,7 +62,7 @@ void test2()
     std::vector<int> v;
     auto rng = ranges::view::counted(ranges::back_inserter(v), 5);
     ranges::generate(rng, gen_test(1));
-    CHECK(v.size() == 5);
+    CHECK(v.size() == 5u);
     CHECK(v[0] == 1);
     CHECK(v[1] == 2);
     CHECK(v[2] == 3);
