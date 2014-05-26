@@ -70,6 +70,9 @@ add_test(test.minmax_element minmax_element)
 add_executable(mismatch mismatch.cpp)
 add_test(test.mismatch mismatch)
 
+add_executable(alg.move move.cpp)
+add_test(test.alg.move alg.move)
+
 add_executable(rotate rotate.cpp)
 add_test(test.rotate rotate)
 

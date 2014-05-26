@@ -94,6 +94,8 @@
     <ClCompile Include="..\..\..\..\test\algorithm\merge.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\minmax_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\min_element.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\mismatch.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\move.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\rotate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />

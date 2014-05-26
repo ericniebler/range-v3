@@ -10,6 +10,7 @@
 #ifndef RANGES_V3_ALGORITHM_MISMATCH_HPP
 #define RANGES_V3_ALGORITHM_MISMATCH_HPP
 
+#include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
