@@ -97,6 +97,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\mismatch.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\move.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\move_backward.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\nth_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\rotate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />

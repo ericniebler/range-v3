@@ -77,6 +77,9 @@ add_test(test.alg.move alg.move)
 add_executable(alg.move_backward move_backward.cpp)
 add_test(test.alg.move_backward alg.move_backward)
 
+add_executable(alg.nth_element nth_element.cpp)
+add_test(test.alg.nth_element alg.nth_element)
+
 add_executable(alg.rotate rotate.cpp)
 add_test(test.alg.rotate, alg.rotate)
 
