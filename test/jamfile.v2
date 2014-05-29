@@ -1,0 +1,92 @@
+
+
+# Copyright Vicente J. Botet Escriba 2014.
+
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+import testing ;
+  
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+project expected
+    : requirements
+      <include>. # .cpp files in expected/test.
+      <include>../include/ # expected .hpp files.    
+    ;
+
+test-suite general
+    : 
+      [ run range_adaptor.cpp  ]
+      [ run range_facade.cpp  ]
+    ;
+
+test-suite utility
+    : 
+      [ run utility/concepts.cpp  ]
+      [ run utility/predicate.cpp  ]
+    ;
+
+test-suite algorithm
+    : 
+      [ run algorithm/adjacent_find.cpp  ]
+      [ run algorithm/all_of.cpp  ]
+      [ run algorithm/binary_search.cpp  ]
+      [ run algorithm/copy.cpp  ]
+      [ run algorithm/copy_backward.cpp  ]
+      [ run algorithm/count.cpp  ]
+      [ run algorithm/count_if.cpp  ]
+      [ run algorithm/equal.cpp  ]
+      [ run algorithm/equal_range.cpp  ]
+      [ run algorithm/fill.cpp  ]
+      [ run algorithm/find.cpp  ]
+      [ run algorithm/find_end.cpp  ]
+      [ run algorithm/find_first_of.cpp  ]
+      [ run algorithm/find_if.cpp  ]
+      [ run algorithm/for_each.cpp  ]
+      [ run algorithm/generate.cpp  ]
+      [ run algorithm/generate_n.cpp  ]
+      [ run algorithm/lexicographical_compare.cpp  ]
+      [ run algorithm/lower_bound.cpp  ]
+      [ run algorithm/max_element.cpp  ]
+      [ run algorithm/merge.cpp  ]
+      [ run algorithm/min_element.cpp  ]
+      [ run algorithm/minmax_element.cpp  ]
+      [ run algorithm/mismatch.cpp  ]
+      [ run algorithm/move.cpp : : : : algo_move  ]
+      [ run algorithm/move_backward.cpp  ]
+      [ run algorithm/nth_element.cpp  ]
+      [ run algorithm/rotate.cpp  ]
+      [ run algorithm/transform.cpp  ]
+      [ run algorithm/upper_bound.cpp  ]
+    ;
+
+test-suite numeric
+    : 
+      [ run numeric/accumulate.cpp  ]
+    ;
+
+test-suite view
+    : 
+      [ run view/adjacent_filter.cpp  ]
+      [ run view/as_range.cpp  ]
+      [ run view/counted.cpp  ]
+      [ run view/delimit.cpp  ]
+      [ run view/indirect.cpp  ]
+      [ run view/keys_value.cpp  ]
+      [ run view/move.cpp  : : : : view_move ]
+      [ run view/repeat.cpp  ]
+      [ run view/replace_if.cpp  ]
+      [ run view/replace.cpp  ]
+      [ run view/slice.cpp  ]
+      [ run view/unique.cpp  ]
+      [ run view/zip.cpp  ]
+    ;
+
+explicit fix ;
+test-suite fix
+    : 
+    ;
