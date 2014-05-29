@@ -1,13 +1,11 @@
 
-#  Tests using Unit Test Library
 
-# Copyright Pierre Talbot 2013.
+# Copyright Vicente J. Botet Escriba 2014.
 
-# From Copyright 2005: Eric Niebler
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-import testing ;  # Bring in rules for testing
+import testing ;
   
 if ! $(BOOST_ROOT)
 {
@@ -17,34 +15,13 @@ if ! $(BOOST_ROOT)
 project expected
     : requirements
       <include>. # .cpp files in expected/test.
-      <include>../include/ # expected .hpp files.
-      
-      <link>static
-      <toolset>gcc:<cxxflags>-std=c++11
-      <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
-      #<toolset>clang-3.5xl:<cxxflags>-Wunused-function
-      #<toolset>clang-3.5xl:<cxxflags>-Wunneeded-internal-declaration
-      <toolset>msvc:<asynch-exceptions>on # Needed for Boost.Test
-      <toolset>msvc:<warnings>all
-      <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
-      <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
-      <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
-      <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
-
-      # Warning suppression:
-      <toolset>msvc:<cxxflags>/wd4100 # unreferenced formal parameter.
-
-      <toolset>msvc:<iterator_debugging>off
-      <toolset>intel-win:<iterator_debugging>off
+      <include>../include/ # expected .hpp files.    
     ;
 
 test-suite general
     : 
       [ run range_adaptor.cpp  ]
       [ run range_facade.cpp  ]
-      #[ run simple_test.cpp  ]
-      #[ run test_iterarors.cpp  ]
-      #[ run test_utils.cpp  ]
     ;
 
 test-suite utility
