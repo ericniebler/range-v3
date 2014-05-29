@@ -594,13 +594,13 @@ namespace ranges
             template<typename T>
             using cursor_concept_t = meta_apply<cursor_concept, T>;
 
-            static auto iter_cat(range_core_access::InputCursorConcept*) ->
+            static inline auto iter_cat(range_core_access::InputCursorConcept*) ->
                 ranges::input_iterator_tag;
-            static auto iter_cat(range_core_access::ForwardCursorConcept*) ->
+            static inline auto iter_cat(range_core_access::ForwardCursorConcept*) ->
                 ranges::forward_iterator_tag;
-            static auto iter_cat(range_core_access::BidirectionalCursorConcept*) ->
+            static inline auto iter_cat(range_core_access::BidirectionalCursorConcept*) ->
                 ranges::bidirectional_iterator_tag;
-            static auto iter_cat(range_core_access::RandomAccessCursorConcept*) ->
+            static inline auto iter_cat(range_core_access::RandomAccessCursorConcept*) ->
                 ranges::random_access_iterator_tag;
 
             template<typename Derived>
