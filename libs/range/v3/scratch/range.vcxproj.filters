@@ -221,6 +221,12 @@
     <ClCompile Include="..\..\..\..\test\algorithm\nth_element.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\remove.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\remove_if.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">

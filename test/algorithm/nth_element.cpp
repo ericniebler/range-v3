@@ -31,14 +31,14 @@ test_one(unsigned N, unsigned M)
     assert(N != 0);
     assert(M < N);
     std::unique_ptr<int[]> array{new int[N]};
-    for (int i = 0; i < N; ++i)
+    for (int i = 0; (unsigned)i < N; ++i)
         array[i] = i;
     std::random_shuffle(array.get(), array.get()+N);
     ranges::nth_element(array.get(), array.get()+M, array.get()+N);
-    CHECK(array[M] == M);
+    CHECK((unsigned)array[M] == M);
     std::random_shuffle(array.get(), array.get()+N);
     ranges::nth_element(ranges::range(array.get(), array.get()+N), array.get()+M);
-    CHECK(array[M] == M);
+    CHECK((unsigned)array[M] == M);
     ranges::nth_element(array.get(), array.get()+N, array.get()+N); // begin, end, end
 }
 

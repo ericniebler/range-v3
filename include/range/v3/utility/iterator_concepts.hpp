@@ -475,7 +475,7 @@ namespace ranges
         constexpr bool Permutable()
         {
             return ForwardIterator<I>()     &&
-                   SemiRegular<V>()         &&
+                   Movable<V>()             &&
                    IndirectlyMovable<I, I>();
         }
 

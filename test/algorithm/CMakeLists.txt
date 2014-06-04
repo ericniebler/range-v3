@@ -80,6 +80,12 @@ add_test(test.alg.move_backward alg.move_backward)
 add_executable(alg.nth_element nth_element.cpp)
 add_test(test.alg.nth_element alg.nth_element)
 
+add_executable(alg.remove remove.cpp)
+add_test(test.alg.remove, alg.remove)
+
+add_executable(alg.remove_if remove_if.cpp)
+add_test(test.alg.remove_if, alg.remove_if)
+
 add_executable(alg.rotate rotate.cpp)
 add_test(test.alg.rotate, alg.rotate)
 

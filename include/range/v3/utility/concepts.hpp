@@ -149,7 +149,7 @@ namespace ranges
 
             template<typename T, typename U>
             auto convertible_to(U && u) ->
-                decltype(concepts::returns_<int>(static_cast<T>(u)));
+                decltype(concepts::returns_<int>(static_cast<T>((U &&) u)));
 
             template<typename T, typename U>
             auto has_type(U &&) ->
@@ -221,7 +221,7 @@ namespace ranges
                 template<typename T, typename U>
                 auto requires(T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        concepts::same_type(t, u)
+                        concepts::same_type((T &&) t, (U &&) u)
                     ));
             };
 
@@ -230,7 +230,7 @@ namespace ranges
                 template<typename T, typename U>
                 auto requires(T &&t, U &&) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<U>(t)
+                        concepts::convertible_to<U>((T &&) t)
                     ));
             };
 
@@ -247,6 +247,9 @@ namespace ranges
             {
                 template<typename T, typename U>
                 using common_t = common_type_t<T, U>;
+
+                template<typename T>
+                auto requires(T &&, T &&) -> void;
 
                 template<typename T, typename U, typename C = common_t<T, U>>
                 auto requires(T && t, U && u) -> decltype(
@@ -369,15 +372,24 @@ namespace ranges
                         concepts::convertible_to<bool>(t != t)
                     ));
 
+                template<typename T>
+                auto requires(T && t, T && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<bool>(t == u),
+                        concepts::convertible_to<bool>(u == t),
+                        concepts::convertible_to<bool>(t != u),
+                        concepts::convertible_to<bool>(u != t)
+                    ));
+
                 // Cross-type equality comparison from N3351:
                 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf
                 template<typename T, typename U, typename C = common_type_t<T, U>>
                 auto requires(T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<EqualityComparable>(t),
-                        concepts::model_of<EqualityComparable>(u),
-                        concepts::model_of<Common>(t, u),
-                        concepts::model_of<EqualityComparable>(static_cast<C>(t)),
+                        concepts::model_of<EqualityComparable>((T &&) t),
+                        concepts::model_of<EqualityComparable>((U &&) u),
+                        concepts::model_of<Common>((T &&) t, (U &&) u),
+                        concepts::model_of<EqualityComparable>(static_cast<C>((T &&) t)),
                         concepts::convertible_to<bool>(t == u),
                         concepts::convertible_to<bool>(u == t),
                         concepts::convertible_to<bool>(t != u),
