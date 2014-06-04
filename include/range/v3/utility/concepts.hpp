@@ -122,7 +122,7 @@ namespace ranges
                         typelist_transform_t<
                             base_concepts_of_t<Concept>,
                             meta_bind_back<concepts::models, Ts...>::template apply>>,
-                    decltype(c->requires(std::forward<Ts>(ts)...))>;
+                    decltype(c->requires_(std::forward<Ts>(ts)...))>;
         }
 
         namespace concepts
@@ -167,7 +167,7 @@ namespace ranges
                 using base_concepts_t = typelist<Concepts...>;
 
                 template<typename...Ts>
-                void requires(Ts &&...);
+                void requires_(Ts &&...);
             };
 
             ////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,7 +219,7 @@ namespace ranges
             struct Same
             {
                 template<typename T, typename U>
-                auto requires(T && t, U && u) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         concepts::same_type((T &&) t, (U &&) u)
                     ));
@@ -228,7 +228,7 @@ namespace ranges
             struct Convertible
             {
                 template<typename T, typename U>
-                auto requires(T &&t, U &&) -> decltype(
+                auto requires_(T &&t, U &&) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<U>((T &&) t)
                     ));
@@ -237,7 +237,7 @@ namespace ranges
             struct Derived
             {
                 template<typename T, typename U>
-                auto requires(T &&, U &&) -> decltype(
+                auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_base_of<U, T>{})
                     ));
@@ -249,10 +249,10 @@ namespace ranges
                 using common_t = common_type_t<T, U>;
 
                 template<typename T>
-                auto requires(T &&, T &&) -> void;
+                auto requires_(T &&, T &&) -> void;
 
                 template<typename T, typename U, typename C = common_t<T, U>>
-                auto requires(T && t, U && u) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<C>((T &&) t),
                         concepts::convertible_to<C>((U &&) u)
@@ -262,7 +262,7 @@ namespace ranges
             struct Integral
             {
                 template<typename T>
-                auto requires(T) -> decltype(
+                auto requires_(T) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<T>{})
                     ));
@@ -272,7 +272,7 @@ namespace ranges
               : refines<Integral>
             {
                 template<typename T>
-                auto requires(T) -> decltype(
+                auto requires_(T) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_signed<T>{})
                     ));
@@ -281,7 +281,7 @@ namespace ranges
             struct Destructible
             {
                 template<typename T>
-                auto requires(T &&) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_destructible<T>{})
                     ));
@@ -291,7 +291,7 @@ namespace ranges
               : refines<Destructible(_1)>
             {
                 template<typename T, typename ...Us>
-                auto requires(T &&, Us &&...) -> decltype(
+                auto requires_(T &&, Us &&...) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_constructible<T, Us...>{})
                     ));
@@ -301,7 +301,7 @@ namespace ranges
               : refines<Destructible>
             {
                 template<typename T>
-                auto requires(T &&) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_default_constructible<T>{})
                     ));
@@ -311,7 +311,7 @@ namespace ranges
               : refines<Destructible>
             {
                 template<typename T>
-                auto requires(T &&) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_move_constructible<T>{})
                     ));
@@ -321,7 +321,7 @@ namespace ranges
               : refines<MoveConstructible>
             {
                 template<typename T>
-                auto requires(T &&) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_copy_constructible<T>{})
                     ));
@@ -330,7 +330,7 @@ namespace ranges
             struct Assignable
             {
                 template<typename T, typename U>
-                auto requires(T &&, U &&) -> decltype(
+                auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_assignable<T, U>{})
                     ));
@@ -339,7 +339,7 @@ namespace ranges
             struct MoveAssignable
             {
                 template<typename T>
-                auto requires(T &&) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_move_assignable<T>{})
                     ));
@@ -349,7 +349,7 @@ namespace ranges
               : refines<MoveAssignable>
             {
                 template<typename T>
-                auto requires(T &&) -> decltype(
+                auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_copy_assignable<T>{})
                     ));
@@ -366,14 +366,14 @@ namespace ranges
             struct EqualityComparable
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t == t),
                         concepts::convertible_to<bool>(t != t)
                     ));
 
                 template<typename T>
-                auto requires(T && t, T && u) -> decltype(
+                auto requires_(T && t, T && u) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t == u),
                         concepts::convertible_to<bool>(u == t),
@@ -384,7 +384,7 @@ namespace ranges
                 // Cross-type equality comparison from N3351:
                 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf
                 template<typename T, typename U, typename C = common_type_t<T, U>>
-                auto requires(T && t, U && u) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<EqualityComparable>((T &&) t),
                         concepts::model_of<EqualityComparable>((U &&) u),
@@ -400,7 +400,7 @@ namespace ranges
             struct WeaklyOrdered
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t < t),
                         concepts::convertible_to<bool>(t > t),
@@ -409,7 +409,7 @@ namespace ranges
                     ));
 
                 template<typename T, typename U, typename C = common_type_t<T, U>>
-                auto requires(T && t, U && u) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<WeaklyOrdered>((T &&) t),
                         concepts::model_of<WeaklyOrdered>((U &&) u),
@@ -430,10 +430,10 @@ namespace ranges
               : refines<EqualityComparable, WeaklyOrdered>
             {
                 template<typename T>
-                void requires(T &&);
+                void requires_(T &&);
 
                 template<typename T, typename U>
-                auto requires(T && t, U && u) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<TotallyOrdered>((T &&) t),
                         concepts::model_of<TotallyOrdered>((U &&) u)
@@ -443,7 +443,7 @@ namespace ranges
             struct Allocatable
             {
                 template<typename T>
-                auto requires(T t) -> decltype(
+                auto requires_(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T *>(new T),
                         ((delete new T), 42),
@@ -457,7 +457,7 @@ namespace ranges
                     Allocatable>
             {
                 template<typename T>
-                auto requires(T t) -> decltype(
+                auto requires_(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T *>(&t)
                     ));
@@ -470,13 +470,13 @@ namespace ranges
             struct Swappable
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         swap((T&&)t, (T&&)t)
                     ));
 
                 template<typename T, typename U>
-                auto requires(T && t, U && u) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         swap((T&&)t, (U&&)u),
                         swap((U&&)u, (T&&)t)
@@ -492,7 +492,7 @@ namespace ranges
                 template<typename Fun, typename ...Args,
                     typename UnRefFun = meta_apply<std::remove_reference, Fun>,
                     typename UnCvRefFun = meta_apply<std::remove_cv, UnRefFun>>
-                auto requires(Fun && fun, Args &&... args) -> decltype(
+                auto requires_(Fun && fun, Args &&... args) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<UnRefFun *>(&fun),
                         concepts::has_type<UnCvRefFun *>(new UnCvRefFun(fun)),
@@ -512,7 +512,7 @@ namespace ranges
               : refines<RegularFunction>
             {
                 template<typename Fun, typename ...Args>
-                auto requires(Fun && fun, Args &&... args) -> decltype(
+                auto requires_(Fun && fun, Args &&... args) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(
                             std::forward<Fun>(fun)(std::forward<Args>(args)...))
@@ -523,20 +523,20 @@ namespace ranges
               : refines<RegularFunction>
             {
                 template<typename Fun, typename T>
-                auto requires(Fun && fun, T && t) -> decltype(
+                auto requires_(Fun && fun, T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Predicate>((Fun &&) fun, (T &&) t, (T &&) t)
                     ));
 
                 template<typename Fun, typename T>
-                auto requires(Fun && fun, T && t, T && u) -> decltype(
+                auto requires_(Fun && fun, T && t, T && u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Predicate>((Fun &&) fun, (T &&) t, (T &&) u)
                     ));
 
                 template<typename Fun, typename T, typename U,
                     typename C = common_type_t<T, U>>
-                auto requires(Fun && fun, T && t, U && u) -> decltype(
+                auto requires_(Fun && fun, T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Relation>((Fun &&) fun, (T &&) t, (T &&) t),
                         concepts::model_of<Relation>((Fun &&) fun, (U &&) u, (U &&) u),
@@ -551,7 +551,7 @@ namespace ranges
               : refines<RegularFunction>
             {
                 template<typename F, typename T>
-                auto requires(F && f, T && t) -> decltype(
+                auto requires_(F && f, T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<T>(((F&&)f)((T&&) t))
                     ));
@@ -563,13 +563,13 @@ namespace ranges
                 using result_t = decltype(std::declval<T>() + std::declval<U>());
 
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         t + t
                     ));
 
                 template<typename T, typename U>
-                auto requires(T && t, U && u) -> decltype(
+                auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         t + u
                     ));

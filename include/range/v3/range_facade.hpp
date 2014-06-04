@@ -348,7 +348,7 @@ namespace ranges
             struct InputCursorConcept
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         //t.done(),
                         t.current(),
@@ -359,7 +359,7 @@ namespace ranges
               : concepts::refines<InputCursorConcept>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t.equal(t))
                     ));
@@ -368,7 +368,7 @@ namespace ranges
               : concepts::refines<ForwardCursorConcept>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         (t.prev(), concepts::void_)
                     ));
@@ -377,7 +377,7 @@ namespace ranges
               : concepts::refines<BidirectionalCursorConcept>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<concepts::SignedIntegral>(t.distance_to(t)),
                         (t.advance(t.distance_to(t)), concepts::void_)
@@ -386,7 +386,7 @@ namespace ranges
             struct InfiniteCursorConcept
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(typename T::is_infinite{})
                     ));

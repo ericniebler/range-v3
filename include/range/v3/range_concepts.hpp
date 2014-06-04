@@ -66,7 +66,7 @@ namespace ranges
             {
                 // Valid expressions
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Iterator>(begin(t)),
                         concepts::model_of<Sentinel>(end(t), begin(t))
@@ -78,7 +78,7 @@ namespace ranges
             {
                 // Valid expressions
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::same_type(begin(t), end(t))
                     ));
@@ -100,7 +100,7 @@ namespace ranges
               : refines<ConvertibleToIterable>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(range_size(t))
                     ));
@@ -118,7 +118,7 @@ namespace ranges
               : virtual detail::writable_range_traits
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ConvertibleToIterable>((T &&) t),
                         concepts::model_of<CopyConstructible>(as_iterable(t))
@@ -129,7 +129,7 @@ namespace ranges
               : refines<Iterable(_1)>
             {
                 template<typename T, typename V>
-                auto requires(T && t, V const &v) -> decltype(
+                auto requires_(T && t, V const &v) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<OutputIterator>(begin(t), v)
                     ));
@@ -139,7 +139,7 @@ namespace ranges
               : refines<Iterable>, detail::readable_range_traits
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<InputIterator>(begin(t))
                     ));
@@ -149,7 +149,7 @@ namespace ranges
               : refines<InputIterable>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ForwardIterator>(begin(t))
                     ));
@@ -159,7 +159,7 @@ namespace ranges
               : refines<ForwardIterable>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<BidirectionalIterator>(begin(t))
                     ));
@@ -169,7 +169,7 @@ namespace ranges
               : refines<BidirectionalIterable>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<RandomAccessIterator>(begin(t))
                     ));
@@ -180,7 +180,7 @@ namespace ranges
               : refines<Iterable>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ConvertibleToRange>((T &&) t)
                     ));
@@ -190,7 +190,7 @@ namespace ranges
               : refines<Iterable>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ConvertibleToSizedIterable>((T &&) t)
                     ));

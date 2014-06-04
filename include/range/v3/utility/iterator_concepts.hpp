@@ -174,7 +174,7 @@ namespace ranges
                 using pointer_t = meta_apply<pointer_type, I>;
 
                 template<typename I>
-                auto requires(I i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<value_t<I> const &>(*i)
                     ));
@@ -184,7 +184,7 @@ namespace ranges
               : refines<SemiRegular(_1)>
             {
                 template<typename Out, typename T>
-                auto requires(Out o, T && value) -> decltype(
+                auto requires_(Out o, T && value) -> decltype(
                     concepts::valid_expr(
                         *o = std::move(value)
                     ));
@@ -194,7 +194,7 @@ namespace ranges
               : refines<MoveWritable>
             {
                 template<typename Out, typename T>
-                auto requires(Out o, T const &value) -> decltype(
+                auto requires_(Out o, T const &value) -> decltype(
                     concepts::valid_expr(
                         *o = value
                     ));
@@ -203,7 +203,7 @@ namespace ranges
             struct IndirectlyMovable
             {
                 template<typename I, typename O>
-                auto requires(I i, O o) -> decltype(
+                auto requires_(I i, O o) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<SemiRegular>((O) o),
@@ -214,7 +214,7 @@ namespace ranges
             struct IndirectlyCopyable
             {
                 template<typename I, typename O>
-                auto requires(I i, O o) -> decltype(
+                auto requires_(I i, O o) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<SemiRegular>((O) o),
@@ -225,7 +225,7 @@ namespace ranges
             struct IndirectlyProjectedMovable
             {
                 template<typename I, typename P, typename O>
-                auto requires(I i, P && p, O o) -> decltype(
+                auto requires_(I i, P && p, O o) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<RegularInvokable>((P &&) p, *i),
@@ -237,7 +237,7 @@ namespace ranges
             struct IndirectlyProjectedCopyable
             {
                 template<typename I, typename P, typename O>
-                auto requires(I i, P && p, O o) -> decltype(
+                auto requires_(I i, P && p, O o) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<RegularInvokable>((P &&) p, *i),
@@ -254,7 +254,7 @@ namespace ranges
                 using difference_t = meta_apply<difference_type, I>;
 
                 template<typename I>
-                auto requires(I i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<difference_t<I>>{}),
                         concepts::has_type<I &>(++i),
@@ -266,7 +266,7 @@ namespace ranges
               : refines<Regular, WeaklyIncrementable>
             {
                 template<typename I>
-                auto requires(I i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<I>(i++)
                     ));
@@ -278,7 +278,7 @@ namespace ranges
               : refines<WeaklyIncrementable, Copyable>
             {
                 template<typename I>
-                auto requires(I i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         *i
                     ));
@@ -306,7 +306,7 @@ namespace ranges
                 using category_t = meta_apply<ranges::iterator_category_type, I>;
 
                 template<typename I>
-                auto requires(I i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::weak_input_iterator_tag{}),
                         concepts::model_of<Readable>(i++)
@@ -317,13 +317,13 @@ namespace ranges
               : refines<WeakInputIterator(_1), EqualityComparable>
             {
                 template<typename I>
-                auto requires(I i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::input_iterator_tag{})
                     ));
 
                 template<typename I, typename S>
-                auto requires(I i, S s) -> decltype(
+                auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<InputIterator>((I) i),
                         concepts::model_of<Sentinel>((S) s, (I) i)
@@ -334,13 +334,13 @@ namespace ranges
               : refines<InputIterator, Incrementable(_1)>
             {
                 template<typename I>
-                auto requires(I) -> decltype(
+                auto requires_(I) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::forward_iterator_tag{})
                     ));
 
                 template<typename I, typename S>
-                auto requires(I i, S) -> decltype(
+                auto requires_(I i, S) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ForwardIterator>((I) i)
                     ));
@@ -350,7 +350,7 @@ namespace ranges
               : refines<ForwardIterator>
             {
                 template<typename I>
-                auto requires(I i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::bidirectional_iterator_tag{}),
                         concepts::has_type<I &>(--i),
@@ -359,7 +359,7 @@ namespace ranges
                     ));
 
                 template<typename I, typename S>
-                auto requires(I i, S) -> decltype(
+                auto requires_(I i, S) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<BidirectionalIterator>((I) i)
                     ));
@@ -369,7 +369,7 @@ namespace ranges
               : refines<BidirectionalIterator, TotallyOrdered>
             {
                 template<typename I, typename V = value_t<I>>
-                auto requires(I i) -> decltype(
+                auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::random_access_iterator_tag{}),
                         concepts::model_of<SignedIntegral>(i - i),
@@ -383,7 +383,7 @@ namespace ranges
                     ));
 
                 template<typename I, typename S>
-                auto requires(I i, S) -> decltype(
+                auto requires_(I i, S) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<RandomAccessIterator>((I) i)
                     ));
@@ -393,7 +393,7 @@ namespace ranges
               : refines<Regular(_1)>
             {
                 template<typename S, typename I>
-                void requires(S, I);
+                void requires_(S, I);
             };
         }
 

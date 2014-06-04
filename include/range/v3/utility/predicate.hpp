@@ -59,7 +59,7 @@ namespace ranges
             struct AdaptablePredicate
             {
                 template<typename P, typename... Args>
-                auto requires(P pred, Args&&... args) -> decltype(
+                auto requires_(P pred, Args&&... args) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Predicate>(
                             predicate<P>(pred), std::forward<Args>(args)...)

@@ -28,7 +28,7 @@ namespace ranges
               : refines<DefaultConstructible>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T &>(++t)
                     ));
@@ -42,7 +42,7 @@ namespace ranges
               : refines<ForwardIota>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T &>(--t)
                     ));
@@ -52,7 +52,7 @@ namespace ranges
               : refines<BidirectionalIota>
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T &>(t += (t - t))
                     ));

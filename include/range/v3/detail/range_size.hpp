@@ -21,7 +21,7 @@
             struct HasSizeConcept
             {
                 template<typename T>
-                auto requires(T && t) -> decltype(
+                auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<std::size_t>(t.size())
                     ));
