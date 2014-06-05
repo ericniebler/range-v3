@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -15,11 +14,57 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        template<typename I, typename O, typename C, typename P = ident,
+            typename V = iterator_value_t<I>,
+            typename X = concepts::Invokable::result_t<P, V>>
+        constexpr bool RemoveCopyableIf()
+        {
+            return InputIterator<I>() &&
+                   WeaklyIncrementable<O>() &&
+                   InvokablePredicate<C, X>() &&
+                   IndirectlyProjectedCopyable<I, P, O>();
+        }
+
+        struct remove_copy_if_fn
+        {
+            template<typename I, typename S, typename O, typename C, typename P = ident,
+                CONCEPT_REQUIRES_(RemoveCopyableIf<I, O, C, P>() && Sentinel<S, I>())>
+            std::pair<I, O> operator()(I begin, S end, O out, C pred_, P proj_ = P{}) const
+            {
+                auto &&pred = invokable(pred_);
+                auto &&proj = invokable(proj_);
+                for(; begin != end; ++begin)
+                {
+                    auto &&v = proj(*begin);
+                    if(!(pred(v)))
+                    {
+                        *out = v;
+                        ++out;
+                    }
+                }
+                return {begin, out};
+            }
+
+            template<typename Rng, typename O, typename C, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(RemoveCopyableIf<I, O, C, P>() && InputIterable<Rng>())>
+            std::pair<I, O> operator()(Rng &rng, O out, C pred, P proj = P{}) const
+            {
+                return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));
+            }
+        };
+
+        RANGES_CONSTEXPR range_algorithm<remove_copy_if_fn> remove_copy_if{};
 
     } // namespace v3
 } // namespace ranges
