@@ -37,6 +37,7 @@
 #include <range/v3/algorithm/generate_n.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
+#include <range/v3/algorithm/is_partitioned.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/algorithm/lower_bound_n.hpp>
@@ -51,6 +52,7 @@
 #include <range/v3/algorithm/partial_sort.hpp>
 #include <range/v3/algorithm/partial_sort_copy.hpp>
 #include <range/v3/algorithm/partition.hpp>
+#include <range/v3/algorithm/partition_point.hpp>
 #include <range/v3/algorithm/permutation.hpp>
 #include <range/v3/algorithm/random_shuffle.hpp>
 #include <range/v3/algorithm/remove.hpp>

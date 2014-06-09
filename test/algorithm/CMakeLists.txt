@@ -50,6 +50,9 @@ add_test(test.alg.generate, alg.generate)
 add_executable(alg.generate_n generate_n.cpp)
 add_test(test.alg.generate_n, alg.generate_n)
 
+add_executable(alg.is_partitioned is_partitioned.cpp)
+add_test(test.alg.is_partitioned, alg.is_partitioned)
+
 add_executable(alg.lexicographical_compare lexicographical_compare.cpp)
 add_test(test.alg.lexicographical_compare, alg.lexicographical_compare)
 
@@ -80,6 +83,12 @@ add_test(test.alg.move_backward alg.move_backward)
 add_executable(alg.nth_element nth_element.cpp)
 add_test(test.alg.nth_element alg.nth_element)
 
+add_executable(alg.partition partition.cpp)
+add_test(test.alg.partition, alg.partition)
+
+add_executable(alg.partition_point partition_point.cpp)
+add_test(test.alg.partition_point, alg.partition_point)
+
 add_executable(alg.remove remove.cpp)
 add_test(test.alg.remove, alg.remove)
 
@@ -94,6 +103,9 @@ add_test(test.alg.remove_if, alg.remove_if)
 
 add_executable(alg.rotate rotate.cpp)
 add_test(test.alg.rotate, alg.rotate)
+
+add_executable(alg.stable_partition stable_partition.cpp)
+add_test(test.alg.stable_partition, alg.stable_partition)
 
 add_executable(alg.transform transform.cpp)
 add_test(test.alg.transform, alg.transform)
