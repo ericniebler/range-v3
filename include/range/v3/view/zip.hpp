@@ -27,6 +27,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 
@@ -112,14 +113,15 @@ namespace ranges
             } max_ {};
         } // namespace detail
 
-        template<typename ...Rngs>
-        struct zipped_view
+        template<typename Fun, typename ...Rngs>
+        struct zipped_with_view
           : range_facade<
-                zipped_view<Rngs...>,
+                zipped_with_view<Fun, Rngs...>,
                 logical_and<is_infinite<Rngs>::value...>::value>
         {
         private:
             friend range_core_access;
+            optional<invokable_t<Fun>> fun_;
             std::tuple<Rngs...> rngs_;
             using difference_type = common_type_t<range_difference_t<Rngs>...>;
             using size_type = meta_apply<std::make_unsigned, difference_type>;
@@ -129,20 +131,23 @@ namespace ranges
             {
             private:
                 friend struct sentinel;
+                invokable_t<Fun> const *fun_;
                 std::tuple<range_iterator_t<Rngs>...> its_;
             public:
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
                 using single_pass =
                     logical_or<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
-                using value_type = std::tuple<range_value_t<Rngs>...>;
+                using value_type =
+                    detail::uncvref_t<result_of_t<invokable_t<Fun>(range_value_t<Rngs>...)>>;
                 cursor() = default;
-                cursor(std::tuple<range_iterator_t<Rngs>...> its)
-                  : its_(std::move(its))
+                cursor(invokable_t<Fun> const &fun, std::tuple<range_iterator_t<Rngs>...> its)
+                  : fun_(&fun), its_(std::move(its))
                 {}
-                std::tuple<range_reference_t<Rngs>...> current() const
+                auto current() const ->
+                    decltype(tuple_apply(*fun_, tuple_transform(its_, detail::deref)))
                 {
-                    return tuple_transform(its_, detail::deref);
+                    return tuple_apply(*fun_, tuple_transform(its_, detail::deref));
                 }
                 void next()
                 {
@@ -193,7 +198,7 @@ namespace ranges
                 std::tuple<range_sentinel_t<Rngs>...> ends_;
             public:
                 sentinel() = default;
-                sentinel(std::tuple<range_sentinel_t<Rngs>...> ends)
+                sentinel(invokable_t<Fun> const &, std::tuple<range_sentinel_t<Rngs>...> ends)
                   : ends_(std::move(ends))
                 {}
                 bool equal(cursor const &pos) const
@@ -212,26 +217,27 @@ namespace ranges
 
             cursor begin_cursor()
             {
-                return {tuple_transform(rngs_, begin)};
+                return {*fun_, tuple_transform(rngs_, begin)};
             }
             detail::conditional_t<are_ranges_t::value, cursor, sentinel> end_cursor()
             {
-                return {tuple_transform(rngs_, end)};
+                return {*fun_, tuple_transform(rngs_, end)};
             }
             CONCEPT_REQUIRES(logical_and<(bool) Iterable<Rngs const>()...>::value)
             cursor begin_cursor() const
             {
-                return {tuple_transform(rngs_, begin)};
+                return {*fun_, tuple_transform(rngs_, begin)};
             }
             CONCEPT_REQUIRES(logical_and<(bool) Iterable<Rngs const>()...>::value)
             detail::conditional_t<are_ranges_t::value, cursor, sentinel> end_cursor() const
             {
-                return {tuple_transform(rngs_, end)};
+                return {*fun_, tuple_transform(rngs_, end)};
             }
         public:
-            zipped_view() = default;
-            explicit zipped_view(Rngs &&...rngs)
-              : rngs_{std::forward<Rngs>(rngs)...}
+            zipped_with_view() = default;
+            explicit zipped_with_view(Fun fun, Rngs &&...rngs)
+              : fun_{invokable(std::move(fun))}
+              , rngs_{std::forward<Rngs>(rngs)...}
             {}
             CONCEPT_REQUIRES(logical_and<(bool) SizedIterable<Rngs>()...>::value)
             size_type size() const
@@ -241,6 +247,16 @@ namespace ranges
                     (std::numeric_limits<size_type>::max)(),
                     detail::min_);
             }
+        };
+
+        template<typename ...Rngs>
+        struct zipped_view
+          : zipped_with_view<make_tuple_fn, Rngs...>
+        {
+            zipped_view() = default;
+            zipped_view(Rngs &&...rngs)
+              : zipped_with_view<make_tuple_fn, Rngs...>{make_tuple, std::forward<Rngs>(rngs)...}
+            {}
         };
 
         namespace view
@@ -256,6 +272,19 @@ namespace ranges
             };
 
             RANGES_CONSTEXPR zip_fn zip {};
+
+            struct zip_with_fn : bindable<zip_with_fn>
+            {
+                template<typename Fun, typename...Rngs>
+                static zipped_with_view<Fun, Rngs...> invoke(zip_with_fn, Fun fun, Rngs &&... rngs)
+                {
+                    CONCEPT_ASSERT(logical_and<(bool) Iterable<Rngs>()...>::value);
+                    CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rngs>...>());
+                    return zipped_with_view<Fun, Rngs...>{std::move(fun), std::forward<Rngs>(rngs)...};
+                }
+            };
+
+            RANGES_CONSTEXPR zip_with_fn zip_with {};
         }
     }
 }

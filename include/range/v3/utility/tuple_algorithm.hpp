@@ -172,6 +172,41 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR tuple_for_each_fn tuple_for_each {};
+
+        struct tuple_apply_fn
+        {
+        private:
+            template<typename Fun, typename Tup, std::size_t...Is>
+            static auto impl(Fun &&fun, Tup &&tup, integer_sequence<Is...>) ->
+                decltype(std::forward<Fun>(fun)(std::get<Is>(std::forward<Tup>(tup))...))
+            {
+                return std::forward<Fun>(fun)(std::get<Is>(std::forward<Tup>(tup))...);
+            }
+        public:
+            template<typename Fun, typename Tup>
+            auto operator()(Fun &&fun, Tup &&tup) const ->
+                decltype(tuple_apply_fn::impl(std::forward<Fun>(fun),
+                                              std::forward<Tup>(tup),
+                                              tuple_indices_t<Tup>{}))
+            {
+                return tuple_apply_fn::impl(std::forward<Fun>(fun),
+                                            std::forward<Tup>(tup),
+                                            tuple_indices_t<Tup>{});
+            }
+        };
+
+        RANGES_CONSTEXPR tuple_apply_fn tuple_apply {};
+
+        struct make_tuple_fn
+        {
+            template<typename ...Ts>
+            std::tuple<Ts...> operator()(Ts &&...ts) const
+            {
+                return std::tuple<Ts...>{std::forward<Ts>(ts)...};
+            }
+        };
+
+        RANGES_CONSTEXPR make_tuple_fn make_tuple {};
     }
 }
 

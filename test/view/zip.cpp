@@ -71,5 +71,16 @@ int main()
     CHECK((rnd_rng.begin() - rnd_rng.end()) == -4);
     CHECK(rnd_rng.size() == 4u);
 
+    // zip_with
+    {
+        std::vector<std::string> v0{"a","b","c"};
+        std::vector<std::string> v1{"x","y","z"};
+
+        auto rng = view::zip_with(std::plus<std::string>{}, v0, v1);
+        std::vector<std::string> expected;
+        copy(rng, ranges::back_inserter(expected));
+        ::check_equal(expected, {"ax","by","cz"});
+    }
+
     return test_result();
 }

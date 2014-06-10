@@ -529,13 +529,19 @@ namespace ranges
             extern values_fn const values;
         }
 
-        template<typename...InputRanges>
-        struct zip_range_view;
+        template<typename Fun, typename...Rngs>
+        struct zipped_with_view;
+
+        template<typename...Rngs>
+        struct zipped_view;
 
         namespace view
         {
             struct zip_fn;
             extern zip_fn const zip;
+
+            struct zip_with_fn;
+            extern zip_with_fn const zip_with;
         }
     }
 }
