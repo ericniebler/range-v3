@@ -21,6 +21,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_facade.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/variant.hpp>
 #include <range/v3/utility/bindable.hpp>

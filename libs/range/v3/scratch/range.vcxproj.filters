@@ -679,6 +679,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_point.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

@@ -244,6 +244,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\as_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp" />
