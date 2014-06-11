@@ -6,7 +6,7 @@
 // Copyright 2006 Thorsten Ottosen.
 // Copyright 2009 Neil Groves.
 //
-// Distributed under the Boost Software License, Version 1.0.(See
+// Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
