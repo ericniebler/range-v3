@@ -52,6 +52,7 @@
 #include <range/v3/algorithm/partial_sort.hpp>
 #include <range/v3/algorithm/partial_sort_copy.hpp>
 #include <range/v3/algorithm/partition.hpp>
+#include <range/v3/algorithm/partition_copy.hpp>
 #include <range/v3/algorithm/partition_point.hpp>
 #include <range/v3/algorithm/permutation.hpp>
 #include <range/v3/algorithm/random_shuffle.hpp>

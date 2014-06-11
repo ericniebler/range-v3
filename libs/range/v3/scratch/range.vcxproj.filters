@@ -245,6 +245,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\stable_partition.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\partition_copy.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -681,6 +684,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp">
       <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_copy.hpp">
+      <Filter>Header Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

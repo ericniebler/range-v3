@@ -100,6 +100,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\move_backward.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\nth_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\partition_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_point.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove_copy.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partial_sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partial_sort_copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_point.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\permutation.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\random_shuffle.hpp" />

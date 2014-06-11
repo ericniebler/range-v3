@@ -86,6 +86,9 @@ add_test(test.alg.nth_element alg.nth_element)
 add_executable(alg.partition partition.cpp)
 add_test(test.alg.partition, alg.partition)
 
+add_executable(alg.partition_copy partition_copy.cpp)
+add_test(test.alg.partition_copy, alg.partition_copy)
+
 add_executable(alg.partition_point partition_point.cpp)
 add_test(test.alg.partition_point, alg.partition_point)
 

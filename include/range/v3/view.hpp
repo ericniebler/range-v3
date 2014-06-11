@@ -18,6 +18,7 @@
 
 #include <range/v3/view/adjacent_filter.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/any_range.hpp>
 #include <range/v3/view/as_range.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/counted.hpp>
