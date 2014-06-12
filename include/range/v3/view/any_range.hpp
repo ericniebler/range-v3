@@ -212,7 +212,7 @@ namespace ranges
                 }
                 any_input_range_impl *clone() const override
                 {
-                    return new any_input_range_impl<Rng>{rng_.get()};
+                    return new any_input_range_impl<Rng>{static_cast<Rng>(rng_.get())};
                 }
             };
         }

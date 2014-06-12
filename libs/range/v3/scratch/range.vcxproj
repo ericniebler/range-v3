@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\example\comprehensions.cpp" />
+    <ClCompile Include="..\..\..\..\example\fibonacci.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\adjacent_find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\binary_search.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\detail\as_iterable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\empty.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp" />
@@ -261,6 +263,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\map.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\move.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\recursive_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\repeat.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\repeat_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp" />
@@ -269,6 +272,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\single.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\slice.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\stride.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\tail.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\take.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\tokenize.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />

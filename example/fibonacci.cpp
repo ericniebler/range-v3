@@ -1,0 +1,39 @@
+// Boost.Range library
+//
+//  Copyright Eric Niebler 2014.
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
+
+// This example shows how to define a range that is implemented
+// in terms of itself. The example is generating the Fibonacci
+// sequence using self-reference and zip_with.
+//
+// Note: don't use recursive_range_fn in performance sensitive
+// code. Self-reference comes with indirection and dynamic
+// allocation overhead.
+
+#include <iostream>
+#include <range/v3/range.hpp>
+
+int main()
+{
+    using namespace ranges::view;
+
+    // Define a nullary function fibs that returns an infinite range
+    // that generates the Fibonacci sequence.
+    ranges::recursive_range_fn<int> const fibs {[&]{
+        return take(iota(0), 2) + zip_with(std::plus<int>{}, fibs(), tail(fibs()));
+    }};
+
+    auto x = take(fibs(), 20);
+    ranges::for_each(x, [](int i)
+    {
+        std::cout << i << std::endl;
+    });
+}

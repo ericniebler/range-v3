@@ -33,6 +33,7 @@
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
+#include <range/v3/view/recursive_range.hpp>
 #include <range/v3/view/repeat.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/replace.hpp>
@@ -41,6 +42,7 @@
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/slice.hpp>
 #include <range/v3/view/stride.hpp>
+#include <range/v3/view/tail.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/tokenize.hpp>
