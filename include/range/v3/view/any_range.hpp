@@ -119,11 +119,11 @@ namespace ranges
             public:
                 using single_pass = std::true_type;
                 any_input_cursor() = default;
-                template<typename I,
-                    CONCEPT_REQUIRES_(InputIterator<I>() &&
-                                      Same<Ref, iterator_reference_t<I>>())>
-                any_input_cursor(I it)
-                  : ptr_{new any_input_cursor_impl<I>{std::move(it)}}
+                template<typename Rng,
+                         CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                                           Same<Ref, range_reference_t<Rng>>())>
+                any_input_cursor(Rng &&rng, begin_tag)
+                  : ptr_{new any_input_cursor_impl<range_iterator_t<Rng>>{begin(rng)}}
                 {}
                 any_input_cursor(any_input_cursor &&) = default;
                 any_input_cursor(any_input_cursor const &that)
@@ -156,11 +156,11 @@ namespace ranges
                 std::unique_ptr<any_input_sentinel_interface<Ref>> ptr_;
             public:
                 any_input_sentinel() = default;
-                template<typename I, typename S,
-                    CONCEPT_REQUIRES_(Sentinel<S, I>() &&
-                                      Same<Ref, iterator_reference_t<I>>())>
-                any_input_sentinel(S s, I)
-                  : ptr_{new any_input_sentinel_impl<S, I>{std::move(s)}}
+                template<typename Rng,
+                         CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                                           Same<Ref, range_reference_t<Rng>>())>
+                any_input_sentinel(Rng &&rng, end_tag)
+                  : ptr_{new any_input_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{end(rng)}}
                 {}
                 any_input_sentinel(any_input_sentinel &&) = default;
                 any_input_sentinel(any_input_sentinel const &that)
@@ -204,11 +204,11 @@ namespace ranges
                 {}
                 any_input_cursor<range_reference_t<Rng>> begin_cursor() const override
                 {
-                    return {begin(rng_.get())};
+                    return {rng_.get(), begin_tag{}};
                 }
                 any_input_sentinel<range_reference_t<Rng>> end_cursor() const override
                 {
-                    return {end(rng_.get()), begin(rng_.get())};
+                    return {rng_.get(), end_tag{}};
                 }
                 any_input_range_impl *clone() const override
                 {

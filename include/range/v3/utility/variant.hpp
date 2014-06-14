@@ -104,8 +104,7 @@ namespace ranges
                 std::forward<Fun>(fun)(t, u);
             }
 
-            template<typename Fun, typename T, std::size_t N>
-            void apply_if(any, any, any)
+            inline void apply_if(any, any, any)
             {
                 RANGES_ASSERT(false);
             }
@@ -161,6 +160,7 @@ namespace ranges
             public:
                 variant_data()
                 {}
+                // BUGBUG in-place construction?
                 template<typename U,
                     enable_if_t<std::is_constructible<head_t, U>::value> = 0>
                 variant_data(size_t<0>, U &&u)
