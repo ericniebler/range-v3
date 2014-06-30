@@ -104,6 +104,12 @@ add_test(test.alg.remove_copy_if, alg.remove_copy_if)
 add_executable(alg.remove_if remove_if.cpp)
 add_test(test.alg.remove_if, alg.remove_if)
 
+add_executable(alg.reverse reverse.cpp)
+add_test(test.alg.reverse, alg.reverse)
+
+add_executable(alg.reverse_copy reverse_copy.cpp)
+add_test(test.alg.reverse_copy, alg.reverse_copy)
+
 add_executable(alg.rotate rotate.cpp)
 add_test(test.alg.rotate, alg.rotate)
 

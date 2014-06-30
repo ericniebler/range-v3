@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -15,11 +14,45 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        template<typename I, typename O>
+        constexpr bool ReverseCopyable()
+        {
+            return BidirectionalIterator<I>() &&
+                   WeaklyIncrementable<O>() &&
+                   IndirectlyCopyable<I, O>();
+        }
+
+        struct reverse_copy_fn
+        {
+            template<typename I, typename S, typename O,
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && ReverseCopyable<I, O>())>
+            std::pair<I, O> operator()(I begin, S end_, O out) const
+            {
+                I end = advance_to(begin, end_), res = end;
+                for (; begin != end; ++out)
+                    *out = *--end;
+                return {res, out};
+            }
+
+            template<typename Rng, typename O,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(Iterable<Rng>() && ReverseCopyable<I, O>())>
+            std::pair<I, O> operator()(Rng && rng, O out) const
+            {
+                return (*this)(begin(rng), end(rng), std::move(out));
+            }
+        };
+
+        RANGES_CONSTEXPR range_algorithm<reverse_copy_fn> reverse_copy{};
 
     } // namespace v3
 } // namespace ranges
