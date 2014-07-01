@@ -17,7 +17,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 
-template<typename Rng, typename Val>
+template<typename Val, typename Rng>
 void check_equal(Rng && actual, std::initializer_list<Val> expected)
 {
     auto begin0 = ranges::begin(actual);

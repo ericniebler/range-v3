@@ -80,6 +80,9 @@ add_test(test.alg.move alg.move)
 add_executable(alg.move_backward move_backward.cpp)
 add_test(test.alg.move_backward alg.move_backward)
 
+add_executable(alg.next_permutation next_permutation.cpp)
+add_test(test.alg.next_permutation alg.next_permutation)
+
 add_executable(alg.nth_element nth_element.cpp)
 add_test(test.alg.nth_element alg.nth_element)
 
@@ -91,6 +94,9 @@ add_test(test.alg.partition_copy, alg.partition_copy)
 
 add_executable(alg.partition_point partition_point.cpp)
 add_test(test.alg.partition_point, alg.partition_point)
+
+add_executable(alg.prev_permutation prev_permutation.cpp)
+add_test(test.alg.prev_permutation alg.prev_permutation)
 
 add_executable(alg.remove remove.cpp)
 add_test(test.alg.remove, alg.remove)
