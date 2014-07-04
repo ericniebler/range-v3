@@ -37,10 +37,10 @@ namespace ranges
                 return {d, begin};
             }
 
-            template<typename I, typename D>
-            std::pair<D, I> impl_i(I begin, I end, D d, concepts::SizedIteratorRange*) const
+            template<typename I, typename S, typename D>
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
             {
-                return {iterator_range_size(begin, end) + d, end};
+                return {(end - begin) + d, end};
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
@@ -87,7 +87,7 @@ namespace ranges
             template<typename I, typename S, typename D>
             D impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
             {
-                return D(iterator_range_size(begin, end)) + d;
+                return static_cast<D>(end - begin) + d;
             }
 
             template<typename Rng, typename D>

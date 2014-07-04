@@ -544,36 +544,6 @@ namespace ranges
                    InvokableRelation<R, X, V2>();
         }
 
-        // Like distance(b,e), but guaranteed to be O(1)
-        struct iterator_range_size_fn
-        {
-        private:
-            template<typename I>
-            using size_t = meta_apply<std::make_unsigned, concepts::WeaklyIncrementable::difference_t<I>>;
-
-        public:
-            template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-            size_t<I> operator()(I begin, I end) const
-            {
-                return static_cast<size_t<I>>(end - begin);
-            }
-
-            template<typename I>
-            size_t<I> operator()(counted_iterator<I> begin, counted_sentinel<I> end) const
-            {
-                return static_cast<size_t<I>>(end.count() - begin.count());
-            }
-
-            template<typename I>
-            size_t<I> operator()(counted_iterator<I> begin, counted_iterator<I> end) const
-            {
-                RANGES_ASSERT(end.count() >= begin.count());
-                return static_cast<size_t<I>>(end.count() - begin.count());
-            }
-        };
-
-        RANGES_CONSTEXPR iterator_range_size_fn iterator_range_size {};
-
         namespace concepts
         {
             struct IteratorRange
@@ -591,7 +561,7 @@ namespace ranges
                 template<typename I, typename S>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
-                        iterator_range_size(i, s)
+                        concepts::model_of<Integral>(s - i)
                     ));
             };
         }

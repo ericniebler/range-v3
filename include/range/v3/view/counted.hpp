@@ -82,7 +82,7 @@ namespace ranges
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<I>())
                 iterator_difference_t<I>
-                distance_to(counted_view<I> const &that) const
+                distance_to(counted_cursor<I> const &that) const
                 {
                     return that.n_ - n_;
                 }
@@ -117,6 +117,19 @@ namespace ranges
                     return n_ == that.n_;
                 }
             };
+        }
+
+        // For RandomAccessIterator, operator- will be defined by basic_range_iterator
+        template<typename I, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
+        iterator_difference_t<I> operator-(counted_iterator<I> const &end, counted_iterator<I> const &begin)
+        {
+            return end.count() - begin.count();
+        }
+
+        template<typename I>
+        iterator_difference_t<I> operator-(counted_sentinel<I> const &end, counted_iterator<I> const &begin)
+        {
+            return end.count() - begin.count();
         }
 
         template<typename I>
