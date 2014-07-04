@@ -12,6 +12,7 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges

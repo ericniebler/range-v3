@@ -33,11 +33,17 @@ namespace ranges
             using apply = C<Ts..., Us...>;
         };
 
+        template<typename T>
+        using meta_eval = typename T::type;
+
+        template<template<typename...> class C, typename...As>
+        using meta_apply = meta_eval<C<As...>>;
+
         template<template<typename...> class C>
         struct meta_quote
         {
             template<typename...Ts>
-            using apply = typename C<Ts...>::type;
+            using apply = meta_apply<C, Ts...>;
         };
 
         template<template<typename...> class C0, template<typename...> class C1>
@@ -46,9 +52,6 @@ namespace ranges
             template<typename...Ts>
             using apply = C0<C1<Ts...>>;
         };
-
-        template<template<typename...> class C, typename...As>
-        using meta_apply = typename C<As...>::type;
     }
 }
 

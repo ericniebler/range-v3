@@ -43,9 +43,8 @@ namespace ranges
         struct lexicographical_compare_fn
         {
             template<typename I0, typename S0, typename I1, typename S1,
-                typename C = ordered_less, typename P0 = ident, typename P1 = ident
-                ,
-                CONCEPT_REQUIRES_(Sentinel<S0, I1>() && Sentinel<S1, I1>() &&
+                typename C = ordered_less, typename P0 = ident, typename P1 = ident,
+                CONCEPT_REQUIRES_(Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
                     LexicographicalComparable<I0, I1, C, P0, P1>())
             >
             bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_ = C{}, P0 proj0_ = P0{},

@@ -16,7 +16,6 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -95,9 +94,7 @@ namespace ranges
             bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
-                using R0 = iterator_range<I0, S0>;
-                using R1 = iterator_range<I1, S1>;
-                if(SizedIterable<R0>() && SizedIterable<R1>())
+                if(SizedIteratorRange<I0, S0>() && SizedIteratorRange<I1, S1>())
                     if(distance(begin0, end0) != distance(begin1, end1))
                         return false;
                 return this->nocheck(std::move(begin0), std::move(end0), std::move(begin1),

@@ -18,6 +18,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
+// TODO Much of this can be cleaned up with the SizedIteratorRange concept.
+
 namespace ranges
 {
     inline namespace v3

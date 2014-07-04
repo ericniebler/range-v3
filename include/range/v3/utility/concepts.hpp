@@ -161,7 +161,8 @@ namespace ranges
             struct refines
               : virtual detail::base_concept_t<Concepts>...
             {
-                // BUGBUG
+                // So that we don't create these by accident, since it's surprisingly expensive to set
+                // up the vtable, given all the virtual bases.
                 refines() = delete;
 
                 using base_concepts_t = typelist<Concepts...>;

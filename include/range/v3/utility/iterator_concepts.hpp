@@ -285,16 +285,41 @@ namespace ranges
             };
 
             struct Iterator
-              : refines<WeakIterator, EqualityComparable>
-            {};
+              : refines<WeakIterator(_1), EqualityComparable>
+            {
+                template<typename I>
+                void requires_(I i);
+
+                template<typename I, typename S>
+                auto requires_(I i, S s) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Sentinel>((S) s, (I) i)
+                    ));
+            };
 
             struct WeakOutputIterator
               : refines<WeakIterator(_1), Writable>
             {};
 
+            // BUGBUG OutputIterator refines Iterator, but OutputIterator<A,B,C> should
+            // refine Iterator<A,C>, where C is an optional parameter. The concept checking
+            // code makes that impossible to express currently.
             struct OutputIterator
-              : refines<WeakOutputIterator, EqualityComparable(_1)>
-            {};
+              : refines<WeakOutputIterator(_1, _2), Iterator(_1)>
+            {
+                template<typename O, typename T>
+                auto requires_(O o, T const &) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<EqualityComparable>((O) o)
+                    ));
+
+                template<typename O, typename T, typename S>
+                auto requires_(O o, T const &t, S s) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<OutputIterator>((O) o, t),
+                        concepts::model_of<Sentinel>((S) s, (O) o)
+                    ));
+            };
 
             struct WeakInputIterator
               : refines<WeakIterator, Readable>
@@ -314,7 +339,7 @@ namespace ranges
             };
 
             struct InputIterator
-              : refines<WeakInputIterator(_1), EqualityComparable>
+              : refines<WeakInputIterator(_1), Iterator(_1), EqualityComparable>
             {
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -390,10 +415,13 @@ namespace ranges
             };
 
             struct Sentinel
-              : refines<Regular(_1)>
+              : refines<Regular(_1), EqualityComparable(_2, _1)>
             {
                 template<typename S, typename I>
-                void requires_(S, I);
+                auto requires_(S, I i) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Iterator>((I) i)
+                    ));
             };
         }
 
@@ -433,8 +461,8 @@ namespace ranges
         template<typename Out, typename T>
         using WeakOutputIterator = concepts::models<concepts::WeakOutputIterator, Out, T>;
 
-        template<typename Out, typename T>
-        using OutputIterator = concepts::models<concepts::OutputIterator, Out, T>;
+        template<typename Out, typename T, typename S = Out>
+        using OutputIterator = concepts::models<concepts::OutputIterator, Out, T, S>;
 
         template<typename I>
         using WeakInputIterator = concepts::models<concepts::WeakInputIterator, I>;
@@ -515,6 +543,72 @@ namespace ranges
                    Invokable<P, V>()               &&
                    InvokableRelation<R, X, V2>();
         }
+
+        // Like distance(b,e), but guaranteed to be O(1)
+        struct iterator_range_size_fn
+        {
+        private:
+            template<typename I>
+            using size_t = meta_apply<std::make_unsigned, concepts::WeaklyIncrementable::difference_t<I>>;
+
+        public:
+            template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+            size_t<I> operator()(I begin, I end) const
+            {
+                return static_cast<size_t<I>>(end - begin);
+            }
+
+            template<typename I>
+            size_t<I> operator()(counted_iterator<I> begin, counted_sentinel<I> end) const
+            {
+                return static_cast<size_t<I>>(end.count() - begin.count());
+            }
+
+            template<typename I>
+            size_t<I> operator()(counted_iterator<I> begin, counted_iterator<I> end) const
+            {
+                RANGES_ASSERT(end.count() >= begin.count());
+                return static_cast<size_t<I>>(end.count() - begin.count());
+            }
+        };
+
+        RANGES_CONSTEXPR iterator_range_size_fn iterator_range_size {};
+
+        namespace concepts
+        {
+            struct IteratorRange
+            {
+                template<typename I, typename S>
+                auto requires_(I i, S s) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Iterator>((I) i, (S) s)
+                    ));
+            };
+
+            struct SizedIteratorRange
+              : refines<IteratorRange>
+            {
+                template<typename I, typename S>
+                auto requires_(I i, S s) -> decltype(
+                    concepts::valid_expr(
+                        iterator_range_size(i, s)
+                    ));
+            };
+        }
+
+        template<typename I, typename S = I>
+        using SizedIteratorRange = concepts::models<concepts::SizedIteratorRange, I, S>;
+
+        template<typename I, typename S = I>
+        using sized_iterator_range_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::SizedIteratorRange,
+                    concepts::IteratorRange>, I, S>;
+
+        template<typename I, typename S = I>
+        using sized_iterator_range_concept_t = meta_apply<sized_iterator_range_concept, I, S>;
+
     }
 }
 

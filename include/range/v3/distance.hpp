@@ -30,7 +30,7 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename D>
-            std::pair<D, I> impl_i(I begin, S end, D d, concepts::InputIterator*) const
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::IteratorRange*) const
             {
                 for(; begin != end; ++begin)
                     ++d;
@@ -38,16 +38,9 @@ namespace ranges
             }
 
             template<typename I, typename D>
-            std::pair<D, I> impl_i(I begin, I end, D d, concepts::RandomAccessIterator*) const
+            std::pair<D, I> impl_i(I begin, I end, D d, concepts::SizedIteratorRange*) const
             {
-                return {(end - begin) + d, end};
-            }
-
-            template<typename I, typename D, typename C>
-            std::pair<D, counted_iterator<I>>
-            impl_i(counted_iterator<I> begin, counted_iterator<I> end, D d, C) const
-            {
-                return {(end.count() - begin.count()) + d, end};
+                return {iterator_range_size(begin, end) + d, end};
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
@@ -66,8 +59,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I, S>() && Integral<D>())>
             std::pair<D, I> operator()(I begin, S end, D d = 0) const
             {
-                return this->impl_i(std::move(begin), std::move(end), d,
-                    iterator_concept<I>());
+                return this->impl_i(std::move(begin), std::move(end), d, sized_iterator_range_concept<I, S>());
             }
 
             template<typename Rng, typename D = range_difference_t<Rng>,
@@ -87,15 +79,15 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename D>
-            D impl_i(I begin, S end, D d) const
+            D impl_i(I begin, S end, D d, concepts::IteratorRange*) const
             {
                 return enumerate(std::move(begin), std::move(end), d).first;
             }
 
-            template<typename I, typename D>
-            D impl_i(counted_iterator<I> begin, counted_sentinel<I> end, D d) const
+            template<typename I, typename S, typename D>
+            D impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
             {
-                return static_cast<D>(end.count() - begin.count()) + d;
+                return D(iterator_range_size(begin, end)) + d;
             }
 
             template<typename Rng, typename D>
@@ -115,7 +107,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I, S>() && Integral<D>())>
             D operator()(I begin, S end, D d = 0) const
             {
-                return this->impl_i(std::move(begin), std::move(end), d);
+                return this->impl_i(std::move(begin), std::move(end), d, sized_iterator_range_concept<I, S>());
             }
 
             template<typename Rng, typename D = range_difference_t<Rng>,

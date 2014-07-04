@@ -46,8 +46,6 @@ namespace ranges
             struct cend_fn;
         }
 
-        struct size_fn;
-
         template<typename ...Ts>
         struct common_type;
 
@@ -87,6 +85,10 @@ namespace ranges
         struct distance_fn;
         extern distance_fn const distance;
 
+        struct iterator_range_size_fn;
+        extern iterator_range_size_fn const iterator_range_size;
+
+        struct size_fn;
         extern size_fn const size;
 
         namespace detail
@@ -239,6 +241,7 @@ namespace ranges
 
             struct Iterable;
             struct Range;
+            struct SizedIteratorRange;
         }
 
         struct begin_tag {};

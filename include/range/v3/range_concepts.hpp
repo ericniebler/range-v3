@@ -18,10 +18,9 @@
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -112,6 +111,27 @@ namespace ranges
 
         #include <range/v3/detail/as_iterable.hpp>
 
+        namespace detail
+        {
+            // Ugly hack to avoid circular include problem with iterator_range.hpp
+            template<typename T>
+            struct models_copy_constructible
+              : concepts::models<concepts::CopyConstructible, T>
+            {};
+
+            template<typename I, typename S>
+            struct models_copy_constructible<iterator_range<I, S>>
+              : logical_and_t<concepts::models<concepts::CopyConstructible, I>,
+                              concepts::models<concepts::CopyConstructible, S>>
+            {};
+
+            template<typename I, typename S>
+            struct models_copy_constructible<sized_iterator_range<I, S>>
+              : logical_and_t<concepts::models<concepts::CopyConstructible, I>,
+                              concepts::models<concepts::CopyConstructible, S>>
+            {};
+        }
+
         namespace concepts
         {
             struct Iterable
@@ -121,7 +141,7 @@ namespace ranges
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ConvertibleToIterable>((T &&) t),
-                        concepts::model_of<CopyConstructible>(as_iterable(t))
+                        concepts::is_true(detail::models_copy_constructible<decltype(as_iterable(t))>())
                     ));
             };
 
