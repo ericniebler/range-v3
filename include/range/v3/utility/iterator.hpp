@@ -26,16 +26,14 @@ namespace ranges
         {
         private:
             template<typename I>
-            static void
-            impl(I &it, iterator_difference_t<I> n, concepts::InputIterator*)
+            static void impl(I &it, iterator_difference_t<I> n, concepts::InputIterator*)
             {
                 RANGES_ASSERT(0 <= n);
                 for(; n != 0; --n)
                     ++it;
             }
             template<typename I>
-            static void
-            impl(I &it, iterator_difference_t<I> n, concepts::BidirectionalIterator*)
+            static void impl(I &it, iterator_difference_t<I> n, concepts::BidirectionalIterator*)
             {
                 if(0 <= n)
                     for(; n != 0; --n)
@@ -45,15 +43,13 @@ namespace ranges
                         --it;
             }
             template<typename I>
-            static void
-            impl(I &it, iterator_difference_t<I> n, concepts::RandomAccessIterator*)
+            static void impl(I &it, iterator_difference_t<I> n, concepts::RandomAccessIterator*)
             {
                 it += n;
             }
         public:
             template<typename I>
-            void
-            operator()(I &it, iterator_difference_t<I> n) const
+            void operator()(I &it, iterator_difference_t<I> n) const
             {
                 advance_fn::impl(it, n, iterator_concept<I>());
             }
@@ -69,30 +65,28 @@ namespace ranges
         {
         private:
             template<typename I, typename S>
-            static I impl(I i, S s, concepts::IteratorRange*)
+            static void impl(I &i, S s, concepts::IteratorRange*)
             {
                 while(i != s)
                     ++i;
-                return i;
             }
 
             template<typename I, typename S>
-            static I impl(I i, S s, concepts::SizedIteratorRange*)
+            static void impl(I &i, S s, concepts::SizedIteratorRange*)
             {
                 advance(i, s - i);
-                return i;
             }
         public:
             template<typename I>
-            I operator()(I const &, I i) const
+            void operator()(I &i, I s) const
             {
-                return i;
+                i = std::move(s);
             }
 
             template<typename I, typename S>
-            I operator()(I i, S s) const
+            void operator()(I &i, S s) const
             {
-                return advance_to_fn::impl(std::move(i), std::move(s), sized_iterator_range_concept<I, S>());
+                advance_to_fn::impl(i, std::move(s), sized_iterator_range_concept<I, S>());
             }
         };
 
@@ -112,11 +106,8 @@ namespace ranges
             static iterator_difference_t<I>
             impl_back(I &it, iterator_difference_t<I> n, I begin, concepts::BidirectionalIterator*)
             {
-                while(0 > n && it != begin)
-                {
+                for(; 0 > n && it != begin; ++n)
                     --it;
-                    ++n;
-                }
                 return n;
             }
             template<typename I, typename S>
@@ -125,11 +116,8 @@ namespace ranges
             {
                 if(0 > n)
                     return advance_bounded_fn::impl_back(it, n, std::move(bound), iterator_concept<I>());
-                while(0 < n && it != end)
-                {
+                for(; 0 < n && it != end; --n)
                     ++it;
-                    --n;
-                }
                 return n;
             }
             template<typename I, typename S>
@@ -138,9 +126,12 @@ namespace ranges
             {
                 auto const dist = bound - it;
                 if(0 <= n ? n >= dist : n <= dist)
-                    return advance_to(it, bound), n - dist;
-                else
-                    return advance(it, n), 0;
+                {
+                    advance_to(it, bound);
+                    return n - dist;
+                }
+                advance(it, n);
+                return 0;
             }
         public:
             template<typename I, typename S>
@@ -176,6 +167,18 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR prev_fn prev {};
+
+        struct next_to_fn
+        {
+            template<typename I, typename S>
+            I operator()(I it, S s) const
+            {
+                advance_to(it, std::move(s));
+                return it;
+            }
+        };
+
+        RANGES_CONSTEXPR next_to_fn next_to{};
 
         /// \internal
         template<typename I>

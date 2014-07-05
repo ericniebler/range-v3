@@ -30,7 +30,7 @@ namespace ranges
             I operator()(I begin, I middle, S end) const
             {
                 if(begin == middle)
-                    return advance_to(begin, end);
+                    return next_to(begin, end);
                 if(middle == end)
                     return begin;
                 for(auto i = middle;;)

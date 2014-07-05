@@ -21,6 +21,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/optional.hpp>
+#include <range/v3/utility/nullptr_v.hpp>
 #include <range/v3/view/any_range.hpp>
 #include <range/v3/view/join.hpp>
 
@@ -32,7 +33,7 @@ namespace ranges
         struct recursive_range_fn
         {
         private:
-            using pointer = meta_apply<std::remove_reference, Ref> *;
+            using value_type = meta_apply<std::remove_reference, Ref>;
             std::function<any_input_range<int>()> fun_;
 
             struct impl : private range_base
@@ -98,7 +99,7 @@ namespace ranges
                                     any_input_range<Ref>
                                   >())>
             explicit recursive_range_fn(Fun fun)
-              : fun_{[=](){return fun() + range((pointer)nullptr, (pointer)nullptr);}}
+              : fun_{[=](){return fun() + range(nullptr_v<value_type>(), nullptr_v<value_type>());}}
             {}
             recursive_range_fn(recursive_range_fn const &) = delete;
             recursive_range_fn &operator=(recursive_range_fn const &) = delete;

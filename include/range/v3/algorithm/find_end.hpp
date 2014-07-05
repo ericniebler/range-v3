@@ -27,21 +27,21 @@ namespace ranges
         namespace detail
         {
             template<typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I, S>())>
-            I advance_to_if(I i, S s, std::true_type)
+            I next_to_if(I i, S s, std::true_type)
             {
-                return advance_to(i, s);
+                return next_to(i, s);
             }
 
             template<typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I, S>())>
-            S advance_to_if(I, S s, std::false_type)
+            S next_to_if(I, S s, std::false_type)
             {
                 return s;
             }
 
             template<bool B, typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I, S>())>
-            conditional_t<B, I, S> advance_to_if(I i, S s)
+            conditional_t<B, I, S> next_to_if(I i, S s)
             {
-                return detail::advance_to_if(std::move(i), std::move(s),
+                return detail::next_to_if(std::move(i), std::move(s),
                     std::integral_constant<bool, B>{});
             }
         }
@@ -59,7 +59,7 @@ namespace ranges
                 bool found = false;
                 I1 res;
                 if(begin2 == end2)
-                    return advance_to(begin1, end1);
+                    return next_to(begin1, end1);
                 while(true)
                 {
                     while(true)
@@ -169,8 +169,8 @@ namespace ranges
             {
                 constexpr bool Bidi = BidirectionalIterator<I1>() && BidirectionalIterator<I2>();
                 return find_end_fn::impl(
-                    begin1, detail::advance_to_if<Bidi>(begin1, end1),
-                    begin2, detail::advance_to_if<Bidi>(begin2, end2),
+                    begin1, detail::next_to_if<Bidi>(begin1, end1),
+                    begin2, detail::next_to_if<Bidi>(begin2, end2),
                     std::move(pred), std::move(proj),
                     iterator_concept<I1>(), iterator_concept<I2>());
             }
