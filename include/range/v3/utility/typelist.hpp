@@ -16,7 +16,7 @@
 #include <cstddef>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/nullptr_v.hpp>
+#include <range/v3/utility/nullval.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
 
 namespace ranges
@@ -99,7 +99,7 @@ namespace ranges
         template<std::size_t N, typename ...Ts>
         struct typelist_element<N, typelist<Ts...>>
           : decltype(detail::typelist_element_<make_typelist_t<N, void *>>
-                ::eval(nullptr_v<detail::identity<Ts>>()...))
+                ::eval(nullval<detail::identity<Ts>>()...))
         {};
 
         template<std::size_t N, typename List>
@@ -130,7 +130,7 @@ namespace ranges
         template<std::size_t N, typename ...Ts>
         struct typelist_drop<N, typelist<Ts...>>
           : decltype(detail::typelist_drop_<make_typelist_t<N, void *>>
-                ::eval(nullptr_v<detail::identity<Ts>>()...))
+                ::eval(nullval<detail::identity<Ts>>()...))
         {};
 
         template<std::size_t N, typename List>
@@ -248,7 +248,7 @@ namespace ranges
         template<typename T, typename ...List>
         struct typelist_in<T, typelist<List...>>
           : decltype(detail::typelist_in_<T, typelist<List...>>
-                ::has(nullptr_v<detail::identity<T>>()))
+                ::has(nullval<detail::identity<T>>()))
         {};
 
         namespace detail

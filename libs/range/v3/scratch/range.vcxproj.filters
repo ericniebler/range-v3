@@ -712,7 +712,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\recursive_range.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\nullptr_v.hpp">
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\nullval.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>

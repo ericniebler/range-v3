@@ -14,7 +14,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/nullptr_v.hpp>
+#include <range/v3/utility/nullval.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 
 namespace ranges
@@ -756,7 +756,7 @@ namespace ranges
             constexpr bool equal_(basic_range_iterator const &that,
                 std::false_type *) const
             {
-                return basic_range_iterator::equal2_(that, nullptr_v<cursor_concept_t>());
+                return basic_range_iterator::equal2_(that, nullval<cursor_concept_t>());
             }
             constexpr bool equal_(basic_range_iterator const &that,
                 std::true_type *) const
@@ -767,7 +767,7 @@ namespace ranges
             using reference =
                 decltype(range_core_access::current(std::declval<Cur const &>()));
             using value_type = range_core_access::cursor_value_t<Cur>;
-            using iterator_category = decltype(detail::iter_cat(nullptr_v<cursor_concept_t>()));
+            using iterator_category = decltype(detail::iter_cat(nullval<cursor_concept_t>()));
             using difference_type = range_core_access::cursor_difference_t<Cur>;
             using pointer = typename detail::operator_arrow_dispatch<reference>::type;
         private:
@@ -804,7 +804,7 @@ namespace ranges
             }
             constexpr bool operator==(basic_range_iterator const &that) const
             {
-                return basic_range_iterator::equal_(that, nullptr_v<std::is_same<Cur, S>>());
+                return basic_range_iterator::equal_(that, nullval<std::is_same<Cur, S>>());
             }
             constexpr bool operator!=(basic_range_iterator const &that) const
             {

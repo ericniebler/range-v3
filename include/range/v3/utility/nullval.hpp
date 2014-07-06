@@ -10,15 +10,15 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGES_V3_UTILITY_NULLPTR_V_HPP
-#define RANGES_V3_UTILITY_NULLPTR_V_HPP
+#ifndef RANGES_V3_UTILITY_NULLVAL_HPP
+#define RANGES_V3_UTILITY_NULLVAL_HPP
 
 namespace ranges
 {
     inline namespace v3
     {
         template<typename T>
-        constexpr T *nullptr_v()
+        constexpr T *nullval()
         {
             return nullptr;
         }

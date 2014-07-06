@@ -23,7 +23,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/common_type.hpp>
-#include <range/v3/utility/nullptr_v.hpp>
+#include <range/v3/utility/nullval.hpp>
 
 namespace ranges
 {
@@ -177,7 +177,7 @@ namespace ranges
             template<typename Concept, typename...Ts>
             struct models
               : std::integral_constant<bool,
-                    decltype(detail::models_(nullptr_v<Concept>(), std::declval<Ts>()...))::value>
+                    decltype(detail::models_(nullval<Concept>(), std::declval<Ts>()...))::value>
             {};
 
             template<typename Concept, typename...Args, typename...Ts>
