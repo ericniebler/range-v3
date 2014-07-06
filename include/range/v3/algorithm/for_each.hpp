@@ -28,13 +28,9 @@ namespace ranges
         {
             template<typename I, typename S, typename F, typename P = ident,
                 typename V = iterator_value_t<I>,
-                CONCEPT_REQUIRES_(
-                    InputIterator<I, S>()                               &&
-                    Invokable<P, V>()                                   &&
-                    Invokable<F, concepts::Invokable::result_t<P, V>>()
-                )>
-            I
-            operator()(I begin, S end, F fun, P proj = P{}) const
+                typename X = concepts::Invokable::result_t<P, V>,
+                CONCEPT_REQUIRES_(InputIterator<I, S>() && Invokable<P, V>() && Invokable<F, X>())>
+            I operator()(I begin, S end, F fun, P proj = P{}) const
             {
                 auto &&ifun = invokable(fun);
                 auto &&iproj = invokable(proj);
@@ -48,13 +44,9 @@ namespace ranges
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 typename V = iterator_value_t<I>,
-                CONCEPT_REQUIRES_(
-                    InputIterable<Rng>()                                &&
-                    Invokable<P, V>()                                   &&
-                    Invokable<F, concepts::Invokable::result_t<P, V>>()
-                )>
-            I
-            operator()(Rng &rng, F fun, P proj = P{}) const
+                typename X = concepts::Invokable::result_t<P, V>,
+                CONCEPT_REQUIRES_(InputIterable<Rng>() && Invokable<P, V>() && Invokable<F, X>())>
+            I operator()(Rng &rng, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));
             }

@@ -254,7 +254,7 @@ namespace ranges
                 {}
                 bool equal(cursor const &pos) const
                 {
-                    return pos.its_.which() == cranges - 1 && 
+                    return pos.its_.which() == cranges - 1 &&
                         ranges::get<cranges - 1>(pos.its_) == end_;
                 }
             };

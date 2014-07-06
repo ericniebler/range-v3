@@ -35,8 +35,8 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using size_type = range_size_t<Rng const>;
-            using difference_type = range_difference_t<Rng const>;
+            using size_type = range_size_t<Rng>;
+            using difference_type = range_difference_t<Rng>;
 
             // Bidirectional stride iterators need a runtime boolean to keep track
             // of when the offset variable is dirty and needs to be lazily calculated.

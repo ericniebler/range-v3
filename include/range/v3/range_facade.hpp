@@ -75,6 +75,12 @@ namespace ranges
                 using type = struct proxy
                 {
                 private:
+                    struct private_ {};
+                    using value_t =
+                        detail::conditional_t<
+                            !Same<detail::uncvref_t<Ref>, iterator_value_t<I>>(),
+                            iterator_value_t<I>,
+                            private_>;
                     I const it_;
                     explicit proxy(I i)
                       : it_(std::move(i))
@@ -86,7 +92,7 @@ namespace ranges
                     {
                         return *it_;
                     }
-                    operator iterator_value_t<I>() const volatile
+                    operator value_t() const
                     {
                         return *it_;
                     }
@@ -103,7 +109,12 @@ namespace ranges
                 using type = struct proxy
                 {
                 private:
-                    using value_type = iterator_value_t<I>;
+                    struct private_ {};
+                    using value_t =
+                        detail::conditional_t<
+                            !Same<detail::uncvref_t<Ref>, iterator_value_t<I>>(),
+                            iterator_value_t<I>,
+                            private_>;
                     I const it_;
                     explicit proxy(I i)
                       : it_(std::move(i))
@@ -114,17 +125,17 @@ namespace ranges
                     {
                         return *it_;
                     }
-                    operator value_type() const volatile
+                    operator value_t() const
                     {
                         return *it_;
                     }
                     proxy const & operator=(proxy&) const = delete;
-                    proxy const & operator=(value_type const & x) const
+                    proxy const & operator=(iterator_value_t<I> const & x) const
                     {
                         *it_ = x;
                         return *this;
                     }
-                    proxy const & operator=(value_type && x) const
+                    proxy const & operator=(iterator_value_t<I> && x) const
                     {
                         *it_ = std::move(x);
                         return *this;

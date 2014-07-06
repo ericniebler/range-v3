@@ -696,6 +696,12 @@ namespace ranges
                 using type = typename T::difference_type;
             };
 
+            template<typename T>
+            struct difference_type<T, typename std::enable_if<std::is_integral<T>::value>::type>
+            {
+                using type = decltype(std::declval<T>() - std::declval<T>());
+            };
+
             ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T, typename Enable = void>
             struct value_type

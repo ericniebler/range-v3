@@ -63,6 +63,27 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR range_algorithm<accumulate_fn> accumulate{};
+
+        struct iota_fn
+        {
+            template<typename O, typename S, class T,
+                CONCEPT_REQUIRES_(OutputIterator<O, T, S>() && WeaklyIncrementable<T>())>
+            O operator()(O begin, S end, T val) const
+            {
+                for(; begin != end; ++begin, ++val)
+                    *begin = val;
+                return begin;
+            }
+
+            template<typename Rng, class T, typename O = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(OutputIterable<Rng, T>() && WeaklyIncrementable<T>())>
+            O operator()(Rng &rng, T val) const
+            {
+                return (*this)(begin(rng), end(rng), std::move(val));
+            }
+        };
+
+        RANGES_CONSTEXPR iota_fn iota{};
     }
 }
 

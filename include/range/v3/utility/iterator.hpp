@@ -116,7 +116,7 @@ namespace ranges
             {
                 if(0 > n)
                     return advance_bounded_fn::impl_back(it, n, std::move(bound), iterator_concept<I>());
-                for(; 0 < n && it != end; --n)
+                for(; 0 < n && it != bound; --n)
                     ++it;
                 return n;
             }
