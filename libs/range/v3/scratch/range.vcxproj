@@ -90,6 +90,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate_n.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_partitioned.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\is_permutation.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lexicographical_compare.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\max_element.cpp" />
