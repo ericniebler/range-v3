@@ -149,6 +149,9 @@ namespace ranges
             };
 
             template<typename T>
+            using identity_t = typename identity<T>::type;
+
+            template<typename T>
             constexpr T && forward(typename std::remove_reference<T>::type & t) noexcept
             {
                 return static_cast<T &&>(t);

@@ -95,34 +95,29 @@ namespace ranges
         struct advance_bounded_fn
         {
         private:
-            template<typename I, typename S>
-            static iterator_difference_t<I>
-            impl_back(I &, iterator_difference_t<I> n, S, concepts::InputIterator*)
+            template<typename I, typename D, typename S>
+            static D impl(I &it, D n, S bound, concepts::IteratorRange*,
+                concepts::InputIterator*)
             {
-                RANGES_ASSERT(false);
-                return n;
-            }
-            template<typename I>
-            static iterator_difference_t<I>
-            impl_back(I &it, iterator_difference_t<I> n, I begin, concepts::BidirectionalIterator*)
-            {
-                for(; 0 > n && it != begin; ++n)
-                    --it;
-                return n;
-            }
-            template<typename I, typename S>
-            static iterator_difference_t<I>
-            impl(I &it, iterator_difference_t<I> n, S bound, concepts::IteratorRange*)
-            {
-                if(0 > n)
-                    return advance_bounded_fn::impl_back(it, n, std::move(bound), iterator_concept<I>());
+                RANGES_ASSERT(0 <= n);
                 for(; 0 < n && it != bound; --n)
                     ++it;
                 return n;
             }
-            template<typename I, typename S>
-            static iterator_difference_t<I>
-            impl(I &it, iterator_difference_t<I> n, S bound, concepts::SizedIteratorRange*)
+            template<typename I, typename D, typename S>
+            static D impl(I &it, D n, S bound, concepts::IteratorRange*,
+                concepts::BidirectionalIterator*)
+            {
+                if(0 <= n)
+                    for(; 0 < n && it != bound; --n)
+                        ++it;
+                else
+                    for(; 0 > n && it != bound; ++n)
+                        --it;
+                return n;
+            }
+            template<typename I, typename D, typename S, typename Concept>
+            static D impl(I &it, D n, S bound, concepts::SizedIteratorRange*, Concept)
             {
                 auto const dist = bound - it;
                 if(0 <= n ? n >= dist : n <= dist)
@@ -135,10 +130,10 @@ namespace ranges
             }
         public:
             template<typename I, typename S>
-            iterator_difference_t<I>
-            operator()(I &it, iterator_difference_t<I> n, S bound) const
+            iterator_difference_t<I> operator()(I &it, iterator_difference_t<I> n, S bound) const
             {
-                return advance_bounded_fn::impl(it, n, std::move(bound), sized_iterator_range_concept<I, S>());
+                return advance_bounded_fn::impl(it, n, std::move(bound),
+                    sized_iterator_range_concept<I, S>(), iterator_concept<I>());
             }
         };
 
