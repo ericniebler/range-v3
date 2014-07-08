@@ -55,7 +55,10 @@ namespace ranges
             }
             /// \internal
             template<typename I>
-            void operator()(counted_iterator<I> &it, iterator_difference_t<I> n) const;
+            void operator()(counted_iterator<I> &it, iterator_difference_t<I> n) const
+            {
+                it = counted_iterator<I>{next(std::move(it.base_reference()), n), it.count() + n};
+            }
             /// \endinternal
         };
 
@@ -70,7 +73,6 @@ namespace ranges
                 while(i != s)
                     ++i;
             }
-
             template<typename I, typename S>
             static void impl(I &i, S s, concepts::SizedIteratorRange*)
             {
@@ -82,7 +84,6 @@ namespace ranges
             {
                 i = std::move(s);
             }
-
             template<typename I, typename S>
             void operator()(I &i, S s) const
             {
@@ -96,11 +97,10 @@ namespace ranges
         {
         private:
             template<typename I, typename D, typename S>
-            static D impl(I &it, D n, S bound, concepts::IteratorRange*,
-                concepts::InputIterator*)
+            static D impl(I &it, D n, S bound, concepts::IteratorRange*, concepts::InputIterator*)
             {
                 RANGES_ASSERT(0 <= n);
-                for(; 0 < n && it != bound; --n)
+                for(; 0 != n && it != bound; --n)
                     ++it;
                 return n;
             }
@@ -109,17 +109,17 @@ namespace ranges
                 concepts::BidirectionalIterator*)
             {
                 if(0 <= n)
-                    for(; 0 < n && it != bound; --n)
+                    for(; 0 != n && it != bound; --n)
                         ++it;
                 else
-                    for(; 0 > n && it != bound; ++n)
+                    for(; 0 != n && it != bound; ++n)
                         --it;
                 return n;
             }
             template<typename I, typename D, typename S, typename Concept>
             static D impl(I &it, D n, S bound, concepts::SizedIteratorRange*, Concept)
             {
-                auto const dist = bound - it;
+                D dist = bound - it;
                 if(0 <= n ? n >= dist : n <= dist)
                 {
                     advance_to(it, bound);
@@ -174,14 +174,6 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR next_to_fn next_to{};
-
-        /// \internal
-        template<typename I>
-        void advance_fn::operator()(counted_iterator<I> &it, iterator_difference_t<I> n) const
-        {
-            it = counted_iterator<I>{next(it.base(), n), it.count() + n};
-        }
-        /// \endinternal
 
         // Like distance(b,e), but guaranteed to be O(1)
         struct iterator_range_size_fn

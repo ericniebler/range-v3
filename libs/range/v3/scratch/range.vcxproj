@@ -106,6 +106,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\partition_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_point.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\prev_permutation.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\random_shuffle.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove_copy_if.cpp" />
@@ -113,6 +114,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\reverse.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\reverse_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\rotate.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\shuffle.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\stable_partition.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
@@ -198,6 +200,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\search.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\search_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\set_algorithm.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\shuffle.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\stable_partition.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\stable_sort.hpp" />

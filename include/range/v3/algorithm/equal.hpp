@@ -101,17 +101,18 @@ namespace ranges
                     std::move(end1), std::move(pred_), std::move(proj0_), std::move(proj1_));
             }
 
-            template<typename Rng0, typename I1,
+            template<typename Rng0, typename I1Ref,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 typename I0 = range_iterator_t<Rng0>,
+                typename I1 = detail::uncvref_t<I1Ref>,
                 CONCEPT_REQUIRES_(
                     Iterable<Rng0>() &&
                     WeakRangeEqualityComparable<I0, I1, C, P0, P1>()
                 )>
-            bool operator()(Rng0 && rng0, I1 begin1, C pred_ = C{}, P0 proj0_ = P0{},
+            bool operator()(Rng0 && rng0, I1Ref && begin1, C pred_ = C{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const
             {
-                return (*this)(begin(rng0), end(rng0), std::move(begin1), std::move(pred_),
+                return (*this)(begin(rng0), end(rng0), (I1Ref &&) begin1, std::move(pred_),
                     std::move(proj0_), std::move(proj1_));
             }
 

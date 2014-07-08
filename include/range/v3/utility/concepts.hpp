@@ -280,6 +280,16 @@ namespace ranges
                     ));
             };
 
+            struct UnsignedIntegral
+              : refines<Integral>
+            {
+                template<typename T>
+                auto requires_(T) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(std::is_unsigned<T>{})
+                    ));
+            };
+
             struct Destructible
             {
                 template<typename T>

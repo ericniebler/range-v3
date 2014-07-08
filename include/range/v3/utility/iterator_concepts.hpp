@@ -391,7 +391,7 @@ namespace ranges
             };
 
             struct RandomAccessIterator
-              : refines<BidirectionalIterator, TotallyOrdered>
+              : refines<BidirectionalIterator, TotallyOrdered(_1)>
             {
                 template<typename I, typename V = value_t<I>>
                 auto requires_(I i) -> decltype(

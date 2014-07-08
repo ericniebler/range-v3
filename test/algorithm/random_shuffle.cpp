@@ -1,0 +1,75 @@
+//  Copyright Eric Niebler 2014
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
+//  Copyright 2005 - 2007 Adobe Systems Incorporated
+//  Distributed under the MIT License(see accompanying file LICENSE_1_0_0.txt
+//  or a copy at http://stlab.adobe.com/licenses.html)
+
+//===----------------------------------------------------------------------===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is dual licensed under the MIT and the University of Illinois Open
+// Source Licenses. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+
+#include <range/v3/core.hpp>
+#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/algorithm/random_shuffle.hpp>
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
+#include "../test_iterators.hpp"
+
+struct gen
+{
+    int operator()(int n)
+    {
+        return n-1;
+    }
+};
+
+int main()
+{
+    {
+        int ia[] = {1, 2, 3, 4};
+        int ib[] = {1, 2, 3, 4};
+        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
+        ranges::random_shuffle(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
+        CHECK(!ranges::equal(ia, {1,2,3,4}));
+        ranges::random_shuffle(ib, ranges::end(ib));
+        CHECK(!ranges::equal(ib, {1,2,3,4}));
+        CHECK(!ranges::equal(ia, ib));
+    }
+
+    {
+        int ia[] = {1, 2, 3, 4};
+        ranges::random_shuffle(ia);
+        CHECK(!ranges::equal(ia, {1,2,3,4}));
+    }
+
+    {
+        int ia[] = {1, 2, 3, 4};
+        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
+        gen r;
+        ranges::random_shuffle(ia, ia+sa, r);
+        check_equal(ia, {3, 1, 2, 4});
+    }
+
+    {
+        int ia[] = {1, 2, 3, 4};
+        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
+        gen r;
+        auto rng = ranges::range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
+        ranges::random_shuffle(rng, r);
+        check_equal(ia, {3, 1, 2, 4});
+    }
+
+    return ::test_result();
+}

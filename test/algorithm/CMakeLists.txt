@@ -101,6 +101,9 @@ add_test(test.alg.partition_point, alg.partition_point)
 add_executable(alg.prev_permutation prev_permutation.cpp)
 add_test(test.alg.prev_permutation alg.prev_permutation)
 
+add_executable(alg.random_shuffle random_shuffle.cpp)
+add_test(test.alg.random_shuffle, alg.random_shuffle)
+
 add_executable(alg.remove remove.cpp)
 add_test(test.alg.remove, alg.remove)
 
@@ -121,6 +124,9 @@ add_test(test.alg.reverse_copy, alg.reverse_copy)
 
 add_executable(alg.rotate rotate.cpp)
 add_test(test.alg.rotate, alg.rotate)
+
+add_executable(alg.shuffle shuffle.cpp)
+add_test(test.alg.shuffle, alg.shuffle)
 
 add_executable(alg.stable_partition stable_partition.cpp)
 add_test(test.alg.stable_partition, alg.stable_partition)

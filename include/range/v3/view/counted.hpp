@@ -42,6 +42,14 @@ namespace ranges
                     mixin(I it, iterator_difference_t<I> n)
                       : mixin(counted_cursor{it, n})
                     {}
+                    I &base_reference()
+                    {
+                        return this->get().it_;
+                    }
+                    I const &base_reference() const
+                    {
+                        return this->get().it_;
+                    }
                     I base() const
                     {
                         return this->get().it_;
