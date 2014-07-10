@@ -33,7 +33,7 @@ namespace ranges
                 auto requires_(Gen && rand, D d) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(d),
-                        concepts::same_type((D) d, ((Gen &&) rand)(d))
+                        concepts::convertible_to<D>(((Gen &&) rand)(d))
                     ));
             };
         }
