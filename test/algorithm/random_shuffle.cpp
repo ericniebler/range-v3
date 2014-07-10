@@ -23,6 +23,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/random_shuffle.hpp>
+#include <range/v3/numeric.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -38,13 +39,17 @@ struct gen
 int main()
 {
     {
-        int ia[] = {1, 2, 3, 4};
-        int ib[] = {1, 2, 3, 4};
+        int ia[100];
+        int ib[100];
+        int orig[100];
+        ranges::iota(ia, 0);
+        ranges::iota(ib, 0);
+        ranges::iota(orig, 0);
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
         ranges::random_shuffle(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
-        CHECK(!ranges::equal(ia, {1,2,3,4}));
+        CHECK(!ranges::equal(ia, orig));
         ranges::random_shuffle(ib, ranges::end(ib));
-        CHECK(!ranges::equal(ib, {1,2,3,4}));
+        CHECK(!ranges::equal(ib, orig));
         CHECK(!ranges::equal(ia, ib));
     }
 

@@ -119,14 +119,10 @@ namespace ranges
             template<typename I, typename D, typename S, typename Concept>
             static D impl(I &it, D n, S bound, concepts::SizedIteratorRange*, Concept)
             {
-                D dist = bound - it;
-                if(0 <= n ? n >= dist : n <= dist)
-                {
-                    advance_to(it, bound);
-                    return n - dist;
-                }
-                advance(it, n);
-                return 0;
+                D d = bound - it;
+                D m = 0 <= n ? std::min(n, d) : std::max(n, d);
+                advance(it, m);
+                return n - m;
             }
         public:
             template<typename I, typename S>
