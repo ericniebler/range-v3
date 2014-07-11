@@ -41,5 +41,8 @@ add_test(test.view.stride, view.stride)
 add_executable(view.unique unique.cpp)
 add_test(test.view.unique, view.unique)
 
+add_executable(view.while_true while_true.cpp)
+add_test(test.view.while_true, view.while_true)
+
 add_executable(view.zip zip.cpp)
 add_test(test.view.zip, view.zip)
