@@ -1,4 +1,5 @@
 //  Copyright Andrew Sutton 2014
+//  Copyright Gonzalo Brito Gadeschi 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -7,8 +8,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_ALGORITHM_ALL_OF_HPP
-#define RANGES_V3_ALGORITHM_ALL_OF_HPP
+#ifndef RANGES_V3_ALGORITHM_ANY_OF_HPP
+#define RANGES_V3_ALGORITHM_ANY_OF_HPP
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
@@ -24,7 +25,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct all_of_fn
+        struct any_of_fn
         {
             template<typename I, typename S, typename F, typename P = ident,
                 typename V = iterator_value_t<I>,
@@ -40,9 +41,9 @@ namespace ranges
                 auto &&ipred = invokable(pred);
                 auto &&iproj = invokable(proj);
                 for(; first != last; ++first)
-                    if(!ipred(iproj(*first)))
-                        break;
-                return first == last;
+                    if(ipred(iproj(*first)))
+                        return true;
+                return false;
             }
 
             template<typename Rng, typename F, typename P = ident,
@@ -61,7 +62,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<all_of_fn> all_of {};
+        RANGES_CONSTEXPR range_algorithm<any_of_fn> any_of {};
 
     } // inline namespace v3
 
