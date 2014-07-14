@@ -38,11 +38,11 @@ add_test(test.view.slice, view.slice)
 add_executable(view.stride stride.cpp)
 add_test(test.view.stride, view.stride)
 
+add_executable(view.take_while take_while.cpp)
+add_test(test.view.take_while, view.take_while)
+
 add_executable(view.unique unique.cpp)
 add_test(test.view.unique, view.unique)
-
-add_executable(view.while_true while_true.cpp)
-add_test(test.view.while_true, view.while_true)
 
 add_executable(view.zip zip.cpp)
 add_test(test.view.zip, view.zip)
