@@ -22,41 +22,47 @@
 
 #include <random>
 #include <range/v3/core.hpp>
-#include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/shuffle.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-struct gen
-{
-    int operator()(int n)
-    {
-        return n-1;
-    }
-};
-
 int main()
 {
     {
-        int ia[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-        std::minstd_rand g;
-        ranges::shuffle(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa), g);
-        check_equal(ia, {1,2,7,10,4,6,9,3,8,5});
-        ranges::shuffle(ia, ia+sa, g);
-        check_equal(ia, {3,2,9,1,8,10,4,5,6,7});
+        static const constexpr unsigned N = 10;
+        int a[N] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int a_ref[N] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        std::minstd_rand g_a;
+        std::minstd_rand g_a_ref;
+
+        ranges::shuffle(random_access_iterator<int*>(a), sentinel<int*>(a+N), g_a);
+        std::shuffle(std::begin(a_ref), std::end(a_ref), g_a_ref);
+        check_equal(a, a_ref);
+
+        ranges::shuffle(random_access_iterator<int*>(a), sentinel<int*>(a+N), g_a);
+        std::shuffle(std::begin(a_ref), std::end(a_ref), g_a_ref);
+        check_equal(a, a_ref);
     }
 
     {
-        int ia[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-        std::minstd_rand g;
-        auto rng = ranges::range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
-        ranges::shuffle(rng, g);
-        check_equal(ia, {1,2,7,10,4,6,9,3,8,5});
-        ranges::shuffle(ia, g);
-        check_equal(ia, {3,2,9,1,8,10,4,5,6,7});
+        static const constexpr unsigned N = 10;
+        int a[N] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int a_ref[N] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+        std::minstd_rand g_a;
+        std::minstd_rand g_a_ref;
+
+        auto rng = ranges::range(random_access_iterator<int*>(a), sentinel<int*>(a+N));
+
+        ranges::shuffle(rng, g_a);
+        std::shuffle(std::begin(a_ref), std::end(a_ref), g_a_ref);
+        check_equal(a, a_ref);
+
+        ranges::shuffle(rng, g_a);
+        std::shuffle(std::begin(a_ref), std::end(a_ref), g_a_ref);
+        check_equal(a, a_ref);
     }
 
     return ::test_result();
