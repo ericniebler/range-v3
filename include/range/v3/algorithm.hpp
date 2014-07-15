@@ -17,6 +17,7 @@
 
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/algorithm/all_of.hpp>
+#include <range/v3/algorithm/any_of.hpp>
 #include <range/v3/algorithm/binary_search.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
@@ -48,6 +49,7 @@
 #include <range/v3/algorithm/mismatch.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/move_backward.hpp>
+#include <range/v3/algorithm/none_of.hpp>
 #include <range/v3/algorithm/nth_element.hpp>
 #include <range/v3/algorithm/partial_sort.hpp>
 #include <range/v3/algorithm/partial_sort_copy.hpp>

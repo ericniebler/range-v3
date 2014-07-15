@@ -24,15 +24,35 @@ struct S {
 
 int main() 
 {
-  std::vector<int> v1 { 0, 2, 4, 6 };
-  CHECK(ranges::all_of(v1.begin(), v1.end(), even));
-  CHECK(ranges::all_of(v1, even));
-  CHECK(ranges::all_of({0, 2, 4, 6}, even));
+  std::vector<int> all_even { 0, 2, 4, 6 };
+  std::vector<int> one_even { 1, 3, 4, 7 };
+  std::vector<int> none_even { 1, 3, 5, 7 };
+  CHECK(ranges::all_of(all_even.begin(), all_even.end(), even));
+  CHECK(!ranges::all_of(one_even.begin(), one_even.end(), even));
+  CHECK(!ranges::all_of(none_even.begin(), none_even.end(), even));
 
-  std::vector<S> v2 { true, true, true };
-  CHECK(ranges::all_of(v2.begin(), v2.end(), &S::p));
-  CHECK(ranges::all_of(v2, &S::p));
-  CHECK(ranges::all_of({S(true)}, &S::p));
+  CHECK(ranges::all_of(all_even, even));
+  CHECK(!ranges::all_of(one_even, even));
+  CHECK(!ranges::all_of(none_even, even));
+
+  CHECK(ranges::all_of({0, 2, 4, 6}, [](int n) { return n % 2 == 0; }));
+  CHECK(!ranges::all_of({1, 3, 4, 7}, [](int n) { return n % 2 == 0; }));
+  CHECK(!ranges::all_of({1, 3, 5, 7}, [](int n) { return n % 2 == 0; }));
+
+  std::vector<S> all_true { true, true, true };
+  std::vector<S> one_true { false, false, true };
+  std::vector<S> none_true { false, false, false };
+  CHECK(ranges::all_of(all_true.begin(), all_true.end(), &S::p));
+  CHECK(!ranges::all_of(one_true.begin(), all_true.end(), &S::p));
+  CHECK(!ranges::all_of(none_true.begin(), all_true.end(), &S::p));
+
+  CHECK(ranges::all_of(all_true, &S::p));
+  CHECK(!ranges::all_of(one_true, &S::p));
+  CHECK(!ranges::all_of(none_true, &S::p));
+
+  CHECK(ranges::all_of({S(true), S(true), S(true)}, &S::p));
+  CHECK(!ranges::all_of({S(false), S(true), S(false)}, &S::p));
+  CHECK(!ranges::all_of({S(false), S(false), S(false)}, &S::p));
 
   return ::test_result();
 }
