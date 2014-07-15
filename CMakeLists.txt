@@ -1,17 +1,23 @@
-
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
-
-# set(CMAKE_C_COMPILER /bin/gcc.exe)
-# set(CMAKE_CXX_COMPILER /bin/g++.exe)
-# set(CMAKE_C_COMPILER /usr/local/clang-trunk/bin/clang.exe)
-# set(CMAKE_CXX_COMPILER /usr/local/clang-trunk/bin/clang++.exe)
 
 project(range_v3 CXX)
 enable_testing()
 
 include_directories(include)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -Wall -std=c++11 -Wno-unused-function")
+
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y -Wno-unused-function")
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
+  set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG -fvectorize -fslp-vectorize-aggressive")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lc++")
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y -Wno-unused-function")
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
+  set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")
+else()
+  message(FATAL_ERROR "Unknown compiler.")
+endif()
 
 add_subdirectory(test)
 add_subdirectory(example)

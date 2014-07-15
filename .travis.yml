@@ -1,0 +1,50 @@
+language: cpp
+
+script: cmake
+
+compiler:
+ - clang
+# - gcc
+
+env:
+  - BUILD_TYPE=Debug
+  - BUILD_TYPE=Release
+  - ASAN=On
+
+# Install dependencies
+before_install:
+  - export CHECKOUT_PATH=`pwd`;
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+
+  # Install libc++ if tests are run with clang++
+  - if [ "$CXX" == "clang++" ]; then export LIBCXX=On; fi
+  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
+  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd libcxx/lib && bash buildit; fi
+  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo cp ./libc++.so.1.0 /usr/lib/; fi
+  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo mkdir /usr/include/c++/v1; fi
+  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd .. && sudo cp -r include/* /usr/include/c++/v1/; fi
+  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
+  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
+
+install:
+  - cd $CHECKOUT_PATH
+  - if [ ! -d build ]; then mkdir build; fi
+  - cd build
+  - export CXX_FLAGS=""
+  - if [ -z "$BUILD_TYPE" ]; then export BUILD_TYPE=Release; fi
+  - if [ -n "$ASAN" ]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address"; fi
+  - if [ -n "$ASAN" -a "$CXX" = "g++-4.8" ]; then exit 0; fi
+  - if [ -n "$LIBCXX" -a "$CXX" = "g++-4.8" ]; then exit 0; fi
+  - if [ "$CXX" == "clang++" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
+  - if [ -n "$LIBCXX" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/ -L/usr/lib/"; fi
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}"
+  - make VERBOSE=1
+
+script:
+  - ctest -VV
+
+notifications:
+  email: false
