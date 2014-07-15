@@ -134,8 +134,7 @@ namespace ranges
             template<typename I, typename S>
             static iterator_range<I, S> invoke(range_fn, I begin, S end)
             {
-                CONCEPT_ASSERT(InputIterator<I>());
-                CONCEPT_ASSERT(EqualityComparable<I, S>());
+                CONCEPT_ASSERT(IteratorRange<I, S>());
                 return {std::move(begin), std::move(end)};
             }
 
@@ -143,8 +142,7 @@ namespace ranges
             static sized_iterator_range<I, S> invoke(range_fn, I begin, S end, Size size)
             {
                 CONCEPT_ASSERT(Integral<Size>());
-                CONCEPT_ASSERT(InputIterator<I>());
-                CONCEPT_ASSERT(EqualityComparable<I, S>());
+                CONCEPT_ASSERT(IteratorRange<I, S>());
                 return {std::move(begin), std::move(end), size};
             }
         };

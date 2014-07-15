@@ -41,16 +41,21 @@
             return static_cast<Size>(rng.size());
         }
 
-        // Random-access ranges that don't have a .size() member function
+        // Iterables that don't have a .size() member function, but that
+        // has a SizedIteratorRange iterator/sentinel pair, such that (end-begin)
+        // yields distance in O(1); e.g. random-access iterators, or a
+        // counted iterator/sentinel pair.
         template<typename Rng,
             typename Size = meta_apply<std::make_unsigned, concepts::ConvertibleToIterable::difference_t<Rng>>,
             CONCEPT_REQUIRES_(!detail::HasSize<Rng>() &&
-                              ConvertibleToRange<Rng>() &&
-                              RandomAccessIterator<concepts::ConvertibleToIterable::iterator_t<Rng>>())>
+                              ConvertibleToIterable<Rng>() &&
+                              SizedIteratorRange<
+                                  concepts::ConvertibleToIterable::iterator_t<Rng>,
+                                  concepts::ConvertibleToIterable::sentinel_t<Rng>>())>
         Size
         range_size(Rng &&rng)
         {
-            return static_cast<Size>(end(rng) - begin(rng));
+            return ranges::iterator_range_size(begin(rng), end(rng));
         }
 
         // Built-in arrays
