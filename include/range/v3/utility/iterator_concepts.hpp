@@ -567,6 +567,9 @@ namespace ranges
         }
 
         template<typename I, typename S = I>
+        using IteratorRange = concepts::models<concepts::IteratorRange, I, S>;
+
+        template<typename I, typename S = I>
         using SizedIteratorRange = concepts::models<concepts::SizedIteratorRange, I, S>;
 
         template<typename I, typename S = I>
