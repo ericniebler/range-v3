@@ -74,6 +74,7 @@
     <ClCompile Include="..\..\..\..\example\fibonacci.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\adjacent_find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\any_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\binary_search.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\copy_backward.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\move.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\move_backward.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\next_permutation.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\none_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\nth_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_copy.cpp" />
@@ -111,6 +113,8 @@
     <ClCompile Include="..\..\..\..\test\algorithm\remove_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove_copy_if.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove_if.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\replace.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\replace_if.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\reverse.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\reverse_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\rotate.cpp" />
@@ -145,6 +149,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\any_of.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\merge_n_with_buffer.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\sort_n_with_buffer.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\binary_search.hpp" />
@@ -180,6 +185,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\mismatch.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move_backward.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\none_of.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\nth_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partial_sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partial_sort_copy.hpp" />

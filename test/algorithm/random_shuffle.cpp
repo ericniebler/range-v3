@@ -54,9 +54,12 @@ int main()
     }
 
     {
-        int ia[] = {1, 2, 3, 4};
+        int ia[100];
+        int orig[100];
+        ranges::iota(ia, 0);
+        ranges::iota(orig, 0);
         ranges::random_shuffle(ia);
-        CHECK(!ranges::equal(ia, {1,2,3,4}));
+        CHECK(!ranges::equal(ia, orig));
     }
 
     {

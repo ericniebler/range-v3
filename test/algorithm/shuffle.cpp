@@ -28,35 +28,37 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-struct gen
-{
-    int operator()(int n)
-    {
-        return n-1;
-    }
-};
-
 int main()
 {
     {
-        int ia[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int ia[100];
+        int ib[100];
+        int orig[100];
+        ranges::iota(ia, 0);
+        ranges::iota(ib, 0);
+        ranges::iota(orig, 0);
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
         std::minstd_rand g;
         ranges::shuffle(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa), g);
-        check_equal(ia, {1,2,7,10,4,6,9,3,8,5});
-        ranges::shuffle(ia, ia+sa, g);
-        check_equal(ia, {3,2,9,1,8,10,4,5,6,7});
+        CHECK(!ranges::equal(ia, orig));
+        ranges::shuffle(ib, ib+sa, g);
+        CHECK(!ranges::equal(ia, ib));
     }
 
     {
-        int ia[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int ia[100];
+        int ib[100];
+        int orig[100];
+        ranges::iota(ia, 0);
+        ranges::iota(ib, 0);
+        ranges::iota(orig, 0);
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
         std::minstd_rand g;
         auto rng = ranges::range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
         ranges::shuffle(rng, g);
-        check_equal(ia, {1,2,7,10,4,6,9,3,8,5});
-        ranges::shuffle(ia, g);
-        check_equal(ia, {3,2,9,1,8,10,4,5,6,7});
+        CHECK(!ranges::equal(ia, orig));
+        ranges::shuffle(ib, g);
+        CHECK(!ranges::equal(ia, ib));
     }
 
     return ::test_result();

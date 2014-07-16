@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -15,11 +14,46 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        template<typename I, typename T0, typename T1, typename P = ident,
+            typename V = iterator_value_t<I>,
+            typename X = concepts::Invokable::result_t<P, V>>
+        constexpr bool Replaceable()
+        {
+            return InputIterator<I>() && EqualityComparable<X, T0>() && Writable<I, T1>();
+        }
+
+        struct replace_fn
+        {
+            template<typename I, typename S, typename T0, typename T1, typename P = ident,
+                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Sentinel<S, I>())>
+            I operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj_ = {}) const
+            {
+                auto &&proj = invokable(proj_);
+                for(; begin != end; ++begin)
+                    if(proj(*begin) == old_value)
+                        *begin = new_value;
+                return begin;
+            }
+
+            template<typename Rng, typename T0, typename T1, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Iterable<Rng>())>
+            I operator()(Rng & rng, T0 const & old_value, T1 const & new_value, P proj = {}) const
+            {
+                return (*this)(begin(rng), end(rng), old_value, new_value, std::move(proj));
+            }
+        };
+
+        RANGES_CONSTEXPR replace_fn replace{};
 
     } // namespace v3
 } // namespace ranges
