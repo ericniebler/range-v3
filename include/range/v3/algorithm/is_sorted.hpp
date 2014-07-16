@@ -1,5 +1,6 @@
 //  Copyright Neil Groves 2009.
 //  Copyright Eric Niebler 2013
+//  Copyright Gonzalo Brito Gadeschi 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying

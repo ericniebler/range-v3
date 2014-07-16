@@ -381,4 +381,6 @@ int main()
     test<const int *, bidirectional_iterator, range_call>();
     test<const int *, random_access_iterator, range_call>();
     test<const int *, identity_t, range_call>();
+
+    return ::test_result();
 }
