@@ -66,10 +66,18 @@ namespace ranges
                       CONCEPT_REQUIRES_(
                        ForwardIterable<Rng>() && Permutable<I>() && Invokable<P, V>() &&
                        InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
-            I operator()(Rng &rng, R pred = R{}, P proj = P{}) const
+            I operator()(Rng && rng, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
+
+            template <typename Rng, typename R = equal_to, typename P = ident,
+                      typename I = range_iterator_t<Rng>,
+                      typename V = iterator_value_t<I>,
+                      CONCEPT_REQUIRES_(
+                       ForwardIterable<Rng>() && Permutable<I>() && Invokable<P, V>() &&
+                       InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
+            I operator()(Rng const& rng, R pred = R{}, P proj = P{}) const = delete;
         };
 
         RANGES_CONSTEXPR unique_fn unique{};
