@@ -362,6 +362,18 @@ operator-(const random_access_iterator<T>& x, const random_access_iterator<U>& y
     return x.base() - y.base();
 }
 
+template<typename It>
+struct sentinel_type
+{
+    using type = It;
+};
+
+template<template<typename> class I, typename It>
+struct sentinel_type<I<It> >
+{
+    using type = sentinel<It>;
+};
+
 namespace ranges
 {
     template<typename I0, typename I1>
