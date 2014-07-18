@@ -43,9 +43,9 @@ namespace ranges
                 I middle = partition(begin, end, [&](auto v) {
                     return cmp(proj(v), proj(*begin));
                 });
-                (*this)(begin, middle, std::ref(cmp), std::ref(proj));
                 I new_middle = begin;
-                (*this)(++new_middle, end, std::ref(cmp), std::ref(proj));
+                (*this)(std::move(begin), std::move(middle), std::ref(cmp), std::ref(proj));
+                (*this)(++new_middle, std::move(end), std::ref(cmp), std::ref(proj));
               }
             }
 
