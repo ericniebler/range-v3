@@ -235,6 +235,16 @@ namespace ranges
 
             template<typename I>
             struct counted_sentinel;
+
+#if !defined(__GLIBCXX__) || __GLIBCXX__ > 20140522
+            template<typename T>
+            using is_trivially_move_assignable = std::is_trivially_move_assignable<T>;
+#else
+            template<typename T>
+            struct is_trivially_move_assignable
+              : std::false_type
+            {};
+#endif
         }
 
         namespace concepts

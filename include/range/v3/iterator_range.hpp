@@ -67,17 +67,6 @@ namespace ranges
             {
                 return !!*this;
             }
-            iterator_range & advance_begin(iterator_difference_t<I> n)
-            {
-                advance(begin_end_.first(), n);
-                return *this;
-            }
-            CONCEPT_REQUIRES(Same<I, S>())
-            iterator_range & advance_end(iterator_difference_t<I> n)
-            {
-                advance(begin_end_.second(), n);
-                return *this;
-            }
         };
 
         template<typename I, typename S /* = I */>
@@ -115,17 +104,6 @@ namespace ranges
             explicit operator bool() const
             {
                 return !!*this;
-            }
-            sized_iterator_range & advance_begin(iterator_difference_t<I> n)
-            {
-                advance(ranges::get<0>(begin_end_size_), n);
-                return *this;
-            }
-            CONCEPT_REQUIRES(Same<I, S>())
-            sized_iterator_range & advance_end(iterator_difference_t<I> n)
-            {
-                advance(ranges::get<1>(begin_end_size_), n);
-                return *this;
             }
         };
 

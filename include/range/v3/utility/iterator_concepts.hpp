@@ -16,6 +16,7 @@
 #include <iterator>
 #include <type_traits>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -219,6 +220,18 @@ namespace ranges
                         concepts::model_of<Readable>((I) i),
                         concepts::model_of<SemiRegular>((O) o),
                         concepts::model_of<Writable>((O) o, *i)
+                    ));
+            };
+
+            struct IndirectlySwappable
+            {
+                template<typename I1, typename I2>
+                auto requires_(I1 i1, I2 i2) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Readable>((I1) i1),
+                        concepts::model_of<Readable>((I2) i2),
+                        (ranges::swap(*i1, *i2), 42),
+                        (ranges::swap(*i2, *i1), 42)
                     ));
             };
 
@@ -439,6 +452,9 @@ namespace ranges
 
         template<typename I, typename O>
         using IndirectlyCopyable = concepts::models<concepts::IndirectlyCopyable, I, O>;
+
+        template<typename I1, typename I2>
+        using IndirectlySwappable = concepts::models<concepts::IndirectlySwappable, I1, I2>;
 
         template<typename I, typename P, typename O>
         using IndirectlyProjectedMovable = concepts::models<concepts::IndirectlyProjectedMovable, I, P, O>;

@@ -158,7 +158,7 @@ namespace ranges
                 while(pred(proj(*m1)))
                 {
                     if(++m1 == end)
-                        return ranges::rotate(begin_false, middle, end);
+                        return ranges::rotate(begin_false, middle, end).begin();
                     --len_half;
                 }
                 // TTTFFFFFTTTF??????
@@ -166,7 +166,7 @@ namespace ranges
                 I end_false = stable_partition_fn::impl(m1, end, pred, proj, len_half, p, fi);
                 // TTTFFFFFTTTTTFFFFF
                 // f  ff   m    sf   l
-                return ranges::rotate(begin_false, middle, end_false);
+                return ranges::rotate(begin_false, middle, end_false).begin();
                 // TTTTTTTTFFFFFFFFFF
                 //         |
             }
@@ -287,7 +287,7 @@ namespace ranges
                 while(pred(proj(*m1)))
                 {
                     if(++m1 == end)
-                        return ranges::rotate(begin_false, middle, ++end);
+                        return ranges::rotate(begin_false, middle, ++end).begin();
                     --len_half;
                 }
                 // TTTFFFFFTTTF?????T
@@ -295,7 +295,7 @@ namespace ranges
                 I end_false = stable_partition_fn::impl(m1, end, pred, proj, len_half, p, bi);
                 // TTTFFFFFTTTTTFFFFF
                 // f  ff   m    sf  l
-                return ranges::rotate(begin_false, middle, end_false);
+                return ranges::rotate(begin_false, middle, end_false).begin();
                 // TTTTTTTTFFFFFFFFFF
                 //         |
             }

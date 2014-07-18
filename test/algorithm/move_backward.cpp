@@ -35,8 +35,9 @@ test()
             ia[i] = i;
         int ib[N] = {0};
 
-        OutIter r = ranges::move_backward(InIter(ia), InIter(ia+N), OutIter(ib+N));
-        CHECK(base(r) == ib);
+        std::pair<InIter, OutIter> r = ranges::move_backward(InIter(ia), InIter(ia+N), OutIter(ib+N));
+        CHECK(base(r.first) == ia+N);
+        CHECK(base(r.second) == ib);
         for(int i = 0; i < N; ++i)
             CHECK(ia[i] == ib[i]);
     }
@@ -48,8 +49,9 @@ test()
             ia[i] = i;
         int ib[N] = {0};
 
-        OutIter r = ranges::move_backward(as_lvalue(ranges::range(InIter(ia), InIter(ia+N))), OutIter(ib+N));
-        CHECK(base(r) == ib);
+        std::pair<InIter, OutIter> r = ranges::move_backward(as_lvalue(ranges::range(InIter(ia), InIter(ia+N))), OutIter(ib+N));
+        CHECK(base(r.first) == ia+N);
+        CHECK(base(r.second) == ib);
         for(int i = 0; i < N; ++i)
             CHECK(ia[i] == ib[i]);
     }
@@ -71,8 +73,9 @@ test1()
             ia[i].reset(new int(i));
         std::unique_ptr<int> ib[N];
 
-        OutIter r = ranges::move_backward(InIter(ia), InIter(ia+N), OutIter(ib+N));
-        CHECK(base(r) == ib);
+        std::pair<InIter, OutIter> r = ranges::move_backward(InIter(ia), InIter(ia+N), OutIter(ib+N));
+        CHECK(base(r.first) == ia+N);
+        CHECK(base(r.second) == ib);
         for(int i = 0; i < N; ++i)
         {
             CHECK(ia[i].get() == nullptr);
@@ -87,8 +90,9 @@ test1()
             ia[i].reset(new int(i));
         std::unique_ptr<int> ib[N];
 
-        OutIter r = ranges::move_backward(as_lvalue(ranges::range(InIter(ia), InIter(ia+N))), OutIter(ib+N));
-        CHECK(base(r) == ib);
+        std::pair<InIter, OutIter> r = ranges::move_backward(as_lvalue(ranges::range(InIter(ia), InIter(ia+N))), OutIter(ib+N));
+        CHECK(base(r.first) == ia+N);
+        CHECK(base(r.second) == ib);
         for(int i = 0; i < N; ++i)
         {
             CHECK(ia[i].get() == nullptr);
@@ -130,8 +134,9 @@ int main()
         ia[i].p.reset(new int(i));
     std::unique_ptr<int> ib[N];
 
-    std::unique_ptr<int>* r = ranges::move_backward(ia, ib+N, &S::p);
-    CHECK(r == ib);
+    std::pair<S*, std::unique_ptr<int>*> r = ranges::move_backward(ia, ib+N, &S::p);
+    CHECK(r.first == ia+N);
+    CHECK(r.second == ib);
     for(int i = 0; i < N; ++i)
     {
         CHECK(ia[i].p.get() == nullptr);

@@ -15,6 +15,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/invokable.hpp>
@@ -26,22 +27,23 @@ namespace ranges
     {
         struct move_backward_fn
         {
-            template<typename I, typename O, typename P = ident,
-                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && BidirectionalIterator<O>() &&
+            template<typename I, typename S, typename O, typename P = ident,
+                CONCEPT_REQUIRES_(BidirectionalIterator<I, S>() && BidirectionalIterator<O>() &&
                     IndirectlyProjectedMovable<I, P, O>())>
-            O operator()(I begin, I end, O out, P proj_ = P{}) const
+            std::pair<I, O> operator()(I begin, S end_, O out, P proj_ = P{}) const
             {
                 auto &&proj = invokable(proj_);
-                while(begin != end)
-                    *--out = std::move(proj(*--end));
-                return out;
+                I i = next_to(begin, end_), end = i;
+                while(begin != i)
+                    *--out = std::move(proj(*--i));
+                return {end, out};
             }
 
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && BidirectionalIterator<O>() &&
                     IndirectlyProjectedMovable<I, P, O>())>
-            O operator()(Rng &rng, O out, P proj = P{}) const
+            std::pair<I, O> operator()(Rng &rng, O out, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
             }
