@@ -9,6 +9,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
+// Adapted from:
+// http://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Quicksort#C.2B.2B
 #ifndef RANGES_V3_ALGORITHM_SORT_HPP
 #define RANGES_V3_ALGORITHM_SORT_HPP
 
