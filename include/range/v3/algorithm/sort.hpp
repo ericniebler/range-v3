@@ -1,5 +1,6 @@
 //  Copyright Neil Groves 2009.
 //  Copyright Eric Niebler 2013
+//  Copyright Gonzalo Brito Gadeschi 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -11,13 +12,7 @@
 #ifndef RANGES_V3_ALGORITHM_SORT_HPP
 #define RANGES_V3_ALGORITHM_SORT_HPP
 
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/functional.hpp>
+#include <range/v3/algorithm/partition.hpp>
 
 namespace ranges
 {
@@ -31,7 +26,6 @@ namespace ranges
                 )>
             void operator()(I begin, iterator_difference_t<I> n, C cmp = C{}, P proj = P{})
             {
-
             }
         };
 
@@ -43,9 +37,24 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     Sortable<I, C, P>()
                 )>
-            void operator()(I begin, I end, C cmp = C{}, P proj = P{})
+            void operator()(I begin, I end, C cmp = C{}, P proj = P{}) const
             {
+              if (begin != end) {
+                I middle = partition(begin, end, [&](auto v) {
+                    return cmp(proj(v), proj(*begin));
+                });
+                (*this)(begin, middle, std::ref(cmp), std::ref(proj));
+                I new_middle = begin;
+                (*this)(++new_middle, end, std::ref(cmp), std::ref(proj));
+              }
+            }
 
+          template<typename Rng, typename C = ordered_less, typename P = ident,
+                   typename I = range_iterator_t<Rng>,
+                   CONCEPT_REQUIRES_(Sortable<I, C, P>())>
+            void operator()(Rng & rng, C && cmp = C{}) const
+            {
+                (*this)(begin(rng), end(rng), std::forward<C>(cmp));
             }
         };
 

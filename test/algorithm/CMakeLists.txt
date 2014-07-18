@@ -146,6 +146,9 @@ add_test(test.alg.rotate, alg.rotate)
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
 
+add_executable(alg.sort sort.cpp)
+add_test(test.alg.sort, alg.sort)
+
 add_executable(alg.stable_partition stable_partition.cpp)
 add_test(test.alg.stable_partition, alg.stable_partition)
 
