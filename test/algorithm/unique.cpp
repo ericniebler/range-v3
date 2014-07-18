@@ -30,7 +30,7 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-/// Calls the iterator interface of the algorithm 
+/// Calls the iterator interface of the algorithm
 template <class T, template <class> class Iter> struct iter_call
 {
     using begin_t = Iter<T>;
@@ -38,15 +38,13 @@ template <class T, template <class> class Iter> struct iter_call
 
     template <class B, class E, class... Args>
     auto operator()(B &&b, E &&e, Args &&... args) const
-     -> decltype(ranges::unique(begin_t{b}, sentinel_t{e},
-                                         std::forward<Args>(args)...))
+     -> decltype(ranges::unique(begin_t{b}, sentinel_t{e}, std::forward<Args>(args)...))
     {
-        return ranges::unique(begin_t{b}, sentinel_t{e},
-                                       std::forward<Args>(args)...);
+        return ranges::unique(begin_t{b}, sentinel_t{e}, std::forward<Args>(args)...);
     }
 };
 
-/// Calls the range interface of the algorithm 
+/// Calls the range interface of the algorithm
 template <class T, template <class> class Iter> struct range_call
 {
     using begin_t = Iter<T>;
@@ -54,11 +52,10 @@ template <class T, template <class> class Iter> struct range_call
 
     template <class B, class E, class... Args>
     auto operator()(B &&b, E &&e, Args &&... args) const
-     -> decltype(ranges::unique(ranges::range(begin_t{b}, sentinel_t{e}),
-                                         std::forward<Args>(args)...))
+     -> ranges::range_iterator_t<decltype(ranges::range(begin_t{b}, sentinel_t{e}))>
     {
-        return ranges::unique(ranges::range(begin_t{b}, sentinel_t{e}),
-                                       std::forward<Args>(args)...);
+        auto rng = ranges::range(begin_t{b}, sentinel_t{e});
+        return ranges::unique(rng, std::forward<Args>(args)...);
     }
 };
 
