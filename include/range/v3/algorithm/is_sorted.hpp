@@ -40,7 +40,7 @@ namespace ranges
                        InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
             bool operator()(I begin, S end, R rel = R{}, P proj_ = P{}) const
             {
-                return is_sorted_until(std::move(begin), end, std::move(rel),
+              return is_sorted_until(std::move(begin), end, std::move(rel),
                                        std::move(proj_)) == end;
             }
 
@@ -56,7 +56,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR is_sorted_fn is_sorted{};
+        RANGES_CONSTEXPR range_algorithm<is_sorted_fn> is_sorted{};
 
     } // namespace v3
 } // namespace ranges

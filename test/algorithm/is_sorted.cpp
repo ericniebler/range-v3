@@ -382,5 +382,11 @@ int main()
     test<const int *, random_access_iterator, range_call>();
     test<const int *, identity_t, range_call>();
 
+    /// Initializer list test:
+    {
+      CHECK(ranges::is_sorted({0,1,2,3,4,5,6,7,8,9,10}));
+      CHECK(!ranges::is_sorted({0,1,2,3,5,4,6,7,8,9,10}));
+    }
+
     return ::test_result();
 }

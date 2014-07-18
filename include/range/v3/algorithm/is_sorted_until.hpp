@@ -41,16 +41,13 @@ namespace ranges
                       CONCEPT_REQUIRES_(
                        ForwardIterator<I, S>() && Invokable<P, V>() &&
                        InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
-            I operator()(I begin, S end_, R rel = R{}, P proj_ = P{}) const
+            I operator()(I begin, S end, R rel = R{}, P proj_ = P{}) const
             {
-                auto end = next_to(begin, end_);
-
                 auto &&irel = invokable(rel);
                 auto &&iproj = invokable(proj_);
-
+                auto i = begin;
                 if(begin != end)
                 {
-                    auto i = begin;
                     while(++i != end)
                     {
                         if(irel(iproj(*i), iproj(*begin)))
@@ -58,7 +55,7 @@ namespace ranges
                         begin = i;
                     }
                 }
-                return I{end};
+                return i;
             }
 
             template <typename Rng, typename R = ordered_less, typename P = ident,
