@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <range/v3/range.hpp>
+#include "./recursive_range.hpp"
 
 int main()
 {
@@ -27,7 +28,7 @@ int main()
 
     // Define a nullary function fibs that returns an infinite range
     // that generates the Fibonacci sequence.
-    ranges::recursive_range_fn<int> const fibs {[&]{
+    ranges::ext::recursive_range_fn<int> const fibs {[&]{
         return take(iota(0), 2) + zip_with(std::plus<int>{}, fibs(), tail(fibs()));
     }};
 

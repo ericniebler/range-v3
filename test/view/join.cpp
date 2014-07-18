@@ -23,7 +23,7 @@ int main()
     auto joined = view::join(his_face, another_mess);
     ::models<concepts::RandomAccessIterable>(joined);
     static_assert(std::is_same<range_reference_t<decltype(joined)>, std::string &>::value, "");
-    CHECK(joined.size() == 7);
+    CHECK(joined.size() == 7u);
     CHECK((joined.end() - joined.begin()) == 7);
     ::check_equal(joined | view::reverse, {"mess", "fine", "another", "face", "his", "is", "this"});
 

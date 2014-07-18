@@ -242,7 +242,7 @@ namespace ranges
 #else
             template<typename T>
             struct is_trivially_move_assignable
-              : std::false_type
+              : std::is_scalar<T>
             {};
 #endif
         }

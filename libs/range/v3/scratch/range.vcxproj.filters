@@ -293,6 +293,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\replace_if.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\swap_ranges.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -739,9 +742,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\empty.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\view\recursive_range.hpp">
-      <Filter>Header Files\view</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\nullval.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
@@ -756,6 +756,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\none_of.hpp">
       <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\example\recursive_range.hpp">
+      <Filter>Example Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

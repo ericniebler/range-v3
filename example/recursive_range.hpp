@@ -10,8 +10,15 @@
 // For more information, see http://www.boost.org/libs/range/
 //
 
-#ifndef RANGES_V3_VIEW_RECURSIVE_RANGE_HPP
-#define RANGES_V3_VIEW_RECURSIVE_RANGE_HPP
+// DISCLAIMER: This code is incredibly dumb, slow, inefficient
+// and probably causes tooth decay, hair loss, and love handles.
+//
+//            DO NOT USE THIS CODE FOR ANYTHING REAL
+//
+// (Can't say you weren't warned.)
+
+#ifndef RANGES_V3_EXT_VIEW_RECURSIVE_RANGE_HPP
+#define RANGES_V3_EXT_VIEW_RECURSIVE_RANGE_HPP
 
 #include <mutex>
 #include <functional>
@@ -30,6 +37,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace ext
+        {
         template<typename Ref>
         struct recursive_range_fn
         {
@@ -110,6 +119,7 @@ namespace ranges
                 return {fun_};
             }
         };
+        }
     }
 }
 

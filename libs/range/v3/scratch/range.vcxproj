@@ -120,6 +120,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\rotate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\shuffle.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\stable_partition.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\swap_ranges.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="range.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\example\recursive_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp" />
@@ -281,7 +283,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\map.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\move.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\view\recursive_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\repeat.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\repeat_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp" />
