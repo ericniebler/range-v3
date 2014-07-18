@@ -29,18 +29,6 @@ void check_equal(Rng && actual, std::initializer_list<Val> expected)
     CHECK(begin1 == end1);
 }
 
-template<typename Rng>
-void check_equal(Rng && actual, Rng&& expected)
-{
-    auto begin0 = ranges::begin(actual);
-    auto end0 = ranges::end(actual);
-    auto begin1 = ranges::begin(expected), end1 = ranges::end(expected);
-    for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1)
-        CHECK(*begin0 == *begin1);
-    CHECK(begin0 == end0);
-    CHECK(begin1 == end1);
-}
-
 template<typename Expected, typename Actual>
 void has_type(Actual &&)
 {
