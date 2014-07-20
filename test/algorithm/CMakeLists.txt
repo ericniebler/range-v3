@@ -155,5 +155,8 @@ add_test(test.alg.swap_ranges, alg.swap_ranges)
 add_executable(alg.transform transform.cpp)
 add_test(test.alg.transform, alg.transform)
 
+add_executable(alg.unique unique.cpp)
+add_test(test.alg.unique, alg.unique)
+
 add_executable(alg.upper_bound upper_bound.cpp)
 add_test(test.alg.upper_bound, alg.upper_bound)
