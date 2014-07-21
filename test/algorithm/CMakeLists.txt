@@ -143,6 +143,9 @@ add_test(test.alg.reverse_copy, alg.reverse_copy)
 add_executable(alg.rotate rotate.cpp)
 add_test(test.alg.rotate, alg.rotate)
 
+add_executable(alg.rotate_copy rotate_copy.cpp)
+add_test(test.alg.rotate_copy, alg.rotate_copy)
+
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
 

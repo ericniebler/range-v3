@@ -69,6 +69,7 @@
     <None Include="..\doc\Jamfile">
       <Filter>Doc Files</Filter>
     </None>
+    <None Include="..\..\..\..\.travis.yml" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="range.cpp">
@@ -297,6 +298,9 @@
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\algorithm\unique.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\rotate_copy.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
   </ItemGroup>

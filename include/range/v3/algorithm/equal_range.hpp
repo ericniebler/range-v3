@@ -26,20 +26,20 @@ namespace ranges
     {
         struct equal_range_fn
         {
-            template<typename I, typename S, typename V, typename R = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() && BinarySearchable<I, V, R, P>())>
+            template<typename I, typename S, typename V, typename C = ordered_less, typename P = ident,
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && BinarySearchable<I, V, C, P>())>
             iterator_range<I>
-            operator()(I begin, S end, V const & val, R pred = R{}, P proj = P{}) const
+            operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
             {
                 return equal_range_n(std::move(begin), distance(begin, end), val, std::move(pred),
                     std::move(proj));
             }
 
-            template<typename Rng, typename V, typename R = ordered_less, typename P = ident,
+            template<typename Rng, typename V, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V, R, P>())>
+                CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V, C, P>())>
             iterator_range<I>
-            operator()(Rng & rng, V const & val, R pred = R{}, P proj = P{}) const
+            operator()(Rng & rng, V const & val, C pred = C{}, P proj = P{}) const
             {
                 static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
                 return equal_range_n(begin(rng), distance(rng), val, std::move(pred),

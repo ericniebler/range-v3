@@ -33,39 +33,32 @@ namespace ranges
             ///
             /// \pre \c Rng is a model of the ForwardIterable concept
             /// \pre \c I is a model of the ForwardIterator concept
-            /// \pre \c S is a model of the Sentinel<I> concept
-            /// \pre \c R is a model of the BinaryPredicate concept
+            /// \pre \c S is a model of the Sentinel concept
+            /// \pre \c C is a model of the InvokableRelation concept
             ///
-            template <typename I, typename S, typename R = equal_to, typename P = ident,
-                      typename V = iterator_value_t<I>,
-                      CONCEPT_REQUIRES_(
-                       ForwardIterator<I, S>() && Permutable<I>() && Invokable<P, V>() &&
-                       InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
-            I operator()(I begin, S end, R pred = R{}, P proj_ = P{}) const
+            template<typename I, typename S, typename C = equal_to, typename P = ident,
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && Sentinel<S, I>())>
+            I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&ipred = invokable(pred);
-                auto &&iproj = invokable(proj_);
+                auto &&pred = invokable(pred_);
+                auto &&proj = invokable(proj_);
 
-                begin = adjacent_find(begin, end, std::ref(pred), std::ref(proj_));
+                begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
 
                 if(begin != end)
                 {
-                    auto i = begin;
-                    for(++i; ++i != end;)
-                        if(!ipred(iproj(*begin), iproj(*i)))
+                    for(I i = next(begin); ++i != end;)
+                        if(!pred(proj(*begin), proj(*i)))
                             *++begin = std::move(*i);
                     ++begin;
                 }
                 return begin;
             }
 
-            template <typename Rng, typename R = equal_to, typename P = ident,
-                      typename I = range_iterator_t<Rng>,
-                      typename V = iterator_value_t<I>,
-                      CONCEPT_REQUIRES_(
-                       ForwardIterable<Rng>() && Permutable<I>() && Invokable<P, V>() &&
-                       InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
-            I operator()(Rng & rng, R pred = R{}, P proj = P{}) const
+            template<typename Rng, typename C = equal_to, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && Iterable<Rng>())>
+            I operator()(Rng & rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

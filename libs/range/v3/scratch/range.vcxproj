@@ -59,6 +59,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
+    <None Include="..\..\..\..\.travis.yml" />
     <None Include="..\..\..\..\boost-build.jam" />
     <None Include="..\..\..\..\Jamfile" />
     <None Include="..\..\..\..\Jamroot" />
@@ -118,6 +119,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\reverse.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\reverse_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\rotate.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\rotate_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\shuffle.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\stable_partition.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\swap_ranges.cpp" />

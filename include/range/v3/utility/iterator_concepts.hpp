@@ -550,14 +550,14 @@ namespace ranges
                    Permutable<I>();
         }
 
-        template<typename I, typename V2, typename R = ordered_less, typename P = ident,
+        template<typename I, typename V2, typename C = ordered_less, typename P = ident,
             typename V = concepts::Readable::value_t<I>,
             typename X = concepts::Invokable::result_t<P, V> >
         constexpr bool BinarySearchable()
         {
             return ForwardIterator<I>()            &&
                    Invokable<P, V>()               &&
-                   InvokableRelation<R, X, V2>();
+                   InvokableRelation<C, X, V2>();
         }
 
         namespace concepts
