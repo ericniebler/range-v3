@@ -22,4 +22,3 @@ To Do:
 ------
 
 * Survey the algorithms for return types.
-* Migrate to EoP formulations of the algorithms.
