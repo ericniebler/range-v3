@@ -62,6 +62,12 @@ add_test(test.alg.is_partitioned, alg.is_partitioned)
 add_executable(alg.is_permutation is_permutation.cpp)
 add_test(test.alg.is_permutation, alg.is_permutation)
 
+add_executable(alg.is_sorted_until is_sorted_until.cpp)
+add_test(test.alg.is_sorted_until, alg.is_sorted_until)
+
+add_executable(alg.is_sorted is_sorted.cpp)
+add_test(test.alg.is_sorted, alg.is_sorted)
+
 add_executable(alg.lexicographical_compare lexicographical_compare.cpp)
 add_test(test.alg.lexicographical_compare, alg.lexicographical_compare)
 
