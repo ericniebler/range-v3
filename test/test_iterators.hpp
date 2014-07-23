@@ -13,7 +13,7 @@
 #include <cassert>
 #include <iterator>
 
-template <class It>
+template <class It, bool Sized = false>
 class sentinel;
 
 template <class It>
@@ -31,6 +31,9 @@ class bidirectional_iterator;
 template <class It>
 class random_access_iterator;
 
+
+template <class Iter, bool Sized>
+inline Iter base(sentinel<Iter, Sized> i) { return i.base(); }
 
 template <class Iter>
 inline Iter base(output_iterator<Iter> i) { return i.base(); }
@@ -51,13 +54,14 @@ template <class Iter>    // everything else
 inline Iter base(Iter i) { return i; }
 
 
-template <class It>
+template <class It, bool Sized>
 class sentinel
 {
     It it_;
 public:
     sentinel() : it_() {}
     explicit sentinel(It it) : it_(it) {}
+    It base() const { return it_; }
     friend bool operator==(const sentinel& x, const sentinel& y)
     {
         assert(x.it_ == y.it_);
@@ -71,6 +75,7 @@ public:
     template<typename I>
     friend bool operator==(const I& x, const sentinel& y)
     {
+        using ::base;
         return base(x) == y.it_;
     }
     template<typename I>
@@ -81,6 +86,7 @@ public:
     template<typename I>
     friend bool operator==(const sentinel& x, const I& y)
     {
+        using ::base;
         return x.it_ == base(y);
     }
     template<typename I>
@@ -89,6 +95,13 @@ public:
         return !(x == y);
     }
 };
+
+// For making sized iterator ranges:
+template<template<typename> class I, typename It>
+std::ptrdiff_t operator-(sentinel<It, true> end, I<It> begin)
+{
+    return base(end) - base(begin);
+}
 
 template <class It>
 class output_iterator
@@ -362,32 +375,32 @@ operator-(const random_access_iterator<T>& x, const random_access_iterator<U>& y
     return x.base() - y.base();
 }
 
-template<typename It>
+template<typename It, bool Sized = false>
 struct sentinel_type
 {
     using type = It;
 };
 
-template<template<typename> class I, typename It>
-struct sentinel_type<I<It> >
+template<template<typename> class I, typename It, bool Sized>
+struct sentinel_type<I<It>, Sized>
 {
-    using type = sentinel<It>;
+    using type = sentinel<It, Sized>;
 };
 
 namespace ranges
 {
-    template<typename I0, typename I1>
-    struct common_type<sentinel<I0>, I1>
+    template<typename I0, bool S, typename I1>
+    struct common_type<sentinel<I0, S>, I1>
     {
-        using type = common_range_iterator<I1, sentinel<I0>>;
+        using type = common_range_iterator<I1, sentinel<I0, S>>;
     };
-    template<typename I0, typename I1>
-    struct common_type<I0, sentinel<I1>>
+    template<typename I0, typename I1, bool S>
+    struct common_type<I0, sentinel<I1, S>>
     {
-        using type = common_range_iterator<I0, sentinel<I1>>;
+        using type = common_range_iterator<I0, sentinel<I1, S>>;
     };
-    template<typename I>
-    struct common_type<sentinel<I>, sentinel<I>>
+    template<typename I, bool B>
+    struct common_type<sentinel<I, B>, sentinel<I, B>>
     {
         using type = sentinel<I>;
     };

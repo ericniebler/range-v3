@@ -19,6 +19,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -40,7 +41,7 @@ namespace ranges
             template<typename I, typename S, typename D>
             std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
             {
-                return {(end - begin) + d, end};
+                return {(end - begin) + d, next_to(begin, end)};
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
