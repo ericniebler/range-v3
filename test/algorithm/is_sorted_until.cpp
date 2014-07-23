@@ -374,6 +374,8 @@ void test()
 
 template <class T> using identity_t = T;
 
+struct A { int a; };
+
 int main()
 {
     test<const int *, forward_iterator, iter_call>();
@@ -386,13 +388,19 @@ int main()
     test<const int *, random_access_iterator, range_call>();
     test<const int *, identity_t, range_call>();
 
-
     /// Initializer list test:
     {
       std::initializer_list<int> r = {0,1,2,3,4,5,6,7,8,9,10};
       std::initializer_list<int> r2 = {0,1,2,4,3,5,6,7,8,9,10};
       CHECK(ranges::is_sorted_until(r) == ranges::end(r));
       CHECK(ranges::is_sorted_until(r2) == ranges::next(ranges::begin(r2), 4));
+    }
+
+    /// Projection test:
+    {
+      A as[] = {{0}, {1}, {2}, {3}, {4}};
+      CHECK(ranges::is_sorted_until(as, std::less<>{}, &A::a) == ranges::end(as));
+      CHECK(ranges::is_sorted_until(as, std::greater<>{}, &A::a) == ranges::next(ranges::begin(as),1)); 
     }
 
     return ::test_result();
