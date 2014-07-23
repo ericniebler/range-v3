@@ -294,7 +294,21 @@ namespace ranges
             counted_iterator<I>
             operator()(counted_iterator<I> const &j, I i, iterator_difference_t<I> n) const
             {
+                RANGES_ASSERT(next(j.base(), n) == i);
                 return {i, j.count() + n};
+            }
+
+            template<typename I>
+            I operator()(I const &, I i) const
+            {
+                return i;
+            }
+
+            template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+            counted_iterator<I>
+            operator()(counted_iterator<I> const &j, I i) const
+            {
+                return {i, j.count() + (i - j.base())};
             }
         };
 

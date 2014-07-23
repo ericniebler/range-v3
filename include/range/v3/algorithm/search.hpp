@@ -20,10 +20,14 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/range_traits.hpp>
 #include <range/v3/empty.hpp>
 #include <range/v3/distance.hpp>
+#include <range/v3/range_concepts.hpp>
+#include <range/v3/range_traits.hpp>
+#include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -50,12 +54,13 @@ namespace ranges
             template<typename I1, typename D1, typename I2, typename S2, typename D2,
                 typename C, typename P1, typename P2,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I1>())>
-            static I1 sized_impl(I1 begin1, I1 end1, D1 d1, I2 begin2, S2 end2, D2 d2,
+            static I1 sized_impl(I1 const begin1_, I1 end1, D1 d1, I2 begin2, S2 end2, D2 d2,
                 C &pred, P1 &proj1, P2 &proj2)
             {
                 if(d1 < d2)
                     return end1;
-                const I1 s = end1 - (d2 - 1); // Start of pattern match can't go beyond here
+                auto begin1 = uncounted(begin1_);
+                auto const s = uncounted(end1 - (d2 - 1)); // Start of pattern match can't go beyond here
                 while(true)
                 {
                     // Find begin element in sequence 1 that matches *begin2, with a mininum of loop checks
@@ -68,12 +73,12 @@ namespace ranges
                         ++begin1;
                     }
                     // *begin1 matches *begin2, now match elements after here
-                    I1 m1 = begin1;
+                    auto m1 = begin1;
                     I2 m2 = begin2;
                     while(true)
                     {
                         if(++m2 == end2)  // If pattern exhausted, begin1 is the answer (works for 1 element pattern)
-                            return begin1;
+                            return recounted(begin1_, std::move(begin1));
                         ++m1;  // No need to check, we know we have room to match successfully
                         if(!pred(proj1(*m1), proj2(*m2)))  // if there is a mismatch, restart with a new begin1
                         {
@@ -86,28 +91,30 @@ namespace ranges
 
             template<typename I1, typename S1, typename D1, typename I2, typename S2, typename D2,
                 typename C, typename P1, typename P2>
-            static I1 sized_impl(I1 begin1, S1 end1, D1 d1, I2 begin2, S2 end2, D2 d2,
+            static I1 sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2, S2 end2, D2 d2,
                 C &pred, P1 &proj1, P2 &proj2)
             {
+                D1 d1 = d1_;
+                auto begin1 = uncounted(begin1_);
                 while(true)
                 {
                     // Find begin element in sequence 1 that matches *begin2, with a mininum of loop checks
                     while(true)
                     {
                         if(d1 < d2)  // return the end if we've run out of room
-                            return next_to(std::move(begin1), std::move(end1));
+                            return next_to(recounted(begin1_, std::move(begin1), d1_ - d1), std::move(end1));
                         if(pred(proj1(*begin1), proj2(*begin2)))
                             break;
                         ++begin1;
                         --d1;
                     }
                     // *begin1 matches *begin2, now match elements after here
-                    I1 m1 = begin1;
+                    auto m1 = begin1;
                     I2 m2 = begin2;
                     while(true)
                     {
                         if(++m2 == end2)  // If pattern exhausted, begin1 is the answer (works for 1 element pattern)
-                            return begin1;
+                            return recounted(begin1_, std::move(begin1), d1_ - d1);
                         ++m1;  // No need to check, we know we have room to match successfully
                         if(!pred(proj1(*m1), proj2(*m2)))  // if there is a mismatch, restart with a new begin1
                         {
@@ -119,16 +126,7 @@ namespace ranges
                 }
             }
 
-            template<typename I1, typename S1, typename I2, typename S2, typename C, typename P1, typename P2,
-                CONCEPT_REQUIRES_(SizedIteratorRange<I1, S1>() && SizedIteratorRange<I2, S2>())>
-            static I1 impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C &pred, P1 &proj1, P2 &proj2)
-            {
-                return search_fn::sized_impl(std::move(begin1), std::move(end1), distance(begin1, end1),
-                    std::move(begin2), std::move(end2), distance(begin2, end2), pred, proj1, proj2);
-            }
-
-            template<typename I1, typename S1, typename I2, typename S2, typename C, typename P1, typename P2,
-                CONCEPT_REQUIRES_(!SizedIteratorRange<I1, S1>() || !SizedIteratorRange<I2, S2>())>
+            template<typename I1, typename S1, typename I2, typename S2, typename C, typename P1, typename P2>
             static I1 impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C &pred, P1 &proj1, P2 &proj2)
             {
                 while(true)
@@ -175,8 +173,12 @@ namespace ranges
                 auto &&pred = invokable(pred_);
                 auto &&proj1 = invokable(proj1_);
                 auto &&proj2 = invokable(proj2_);
-                return search_fn::impl(std::move(begin1), std::move(end1),
-                    std::move(begin2), std::move(end2), pred, proj1, proj2);
+                if(SizedIteratorRange<I1, S1>() && SizedIteratorRange<I2, S2>())
+                    return search_fn::sized_impl(std::move(begin1), std::move(end1), distance(begin1, end1),
+                        std::move(begin2), std::move(end2), distance(begin2, end2), pred, proj1, proj2);
+                else
+                    return search_fn::impl(std::move(begin1), std::move(end1),
+                        std::move(begin2), std::move(end2), pred, proj1, proj2);
             }
 
             template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,

@@ -20,13 +20,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-
-#include <iostream>
-
-
-
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/search.hpp>
+#include <range/v3/view/counted.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -172,18 +168,33 @@ int main()
     test<random_access_iterator<const int*>, random_access_iterator<const int*> >();
 
     // Test projections:
-    S const in[] = {{0}, {1}, {2}, {3}, {4}, {5}};
-    T const pat[] = {{2}, {3}};
+    {
+        S const in[] = {{0}, {1}, {2}, {3}, {4}, {5}};
+        T const pat[] = {{2}, {3}};
 
-    S const *p = ranges::search(in, pat, std::equal_to<int>{}, &S::i, &T::i);
-    CHECK(p == in+2);
+        S const *p = ranges::search(in, pat, std::equal_to<int>{}, &S::i, &T::i);
+        CHECK(p == in+2);
 
-    // Test initializer_list
-    p = ranges::search(
-        {S{0}, S{1}, S{2}, S{3}, S{4}, S{5}},
-        {T{2}, T{3}},
-        std::equal_to<int>{}, &S::i, &T::i);
-    CHECK(p->i == 2);
+        // Test initializer_list
+        p = ranges::search(
+            {S{0}, S{1}, S{2}, S{3}, S{4}, S{5}},
+            {T{2}, T{3}},
+            std::equal_to<int>{}, &S::i, &T::i);
+        CHECK(p->i == 2);
+    }
+
+    // Test counted ranges
+    {
+        int in[] = {0,1,2,3,4,5};
+        auto rng = ranges::view::counted(bidirectional_iterator<int*>(in), 6);
+        auto it = ranges::search(rng, {2,3});
+        CHECK(base(it.base()) == in+2);
+        CHECK(it.count() == 2);
+
+        it = ranges::search(rng, {5,6});
+        CHECK(base(it.base()) == in+6);
+        CHECK(it.count() == 6);
+    }
 
     return ::test_result();
 }
