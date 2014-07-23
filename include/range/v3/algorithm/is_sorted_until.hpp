@@ -70,7 +70,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR is_sorted_until_fn is_sorted_until{};
+        RANGES_CONSTEXPR range_algorithm<is_sorted_until_fn> is_sorted_until{};
 
     } // namespace v3
 } // namespace ranges
