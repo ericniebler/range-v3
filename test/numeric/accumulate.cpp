@@ -18,7 +18,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <range/v3/core.hpp>
-#include <range/v3/numeric.hpp>
+#include <range/v3/numeric/accumulate.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 

@@ -1,0 +1,69 @@
+//  Copyright Eric Niebler 2014.
+//  Copyright Gonzalo Brito Gadeschi 2014.
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
+
+//===----------------------------------------------------------------------===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is dual licensed under the MIT and the University of Illinois Open
+// Source Licenses. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+
+#include <range/v3/core.hpp>
+#include <range/v3/numeric/iota.hpp>
+#include <range/v3/algorithm/equal.hpp>
+#include "../simple_test.hpp"
+#include "../test_iterators.hpp"
+
+struct S
+{
+    int i;
+    S add(int j) const
+    {
+        return S{i + j};
+    }
+};
+
+template <class Iter, class Sent = Iter>
+void test()
+{
+    int ir[] = {5, 6, 7, 8, 9};
+    constexpr unsigned s = ranges::size(ir);
+    {
+    int ia[] = {1, 2, 3, 4, 5};
+    ranges::iota(Iter(ia), Sent(ia + s), 5);
+    CHECK(ranges::equal(ia, ir));
+    }
+
+    {
+    int ia[] = {1, 2, 3, 4, 5};
+    auto rng = ranges::range(Iter(ia), Sent(ia + s));
+    ranges::iota(rng, 5);
+    CHECK(ranges::equal(ia, ir));
+    }
+}
+
+int main()
+{
+    test<input_iterator<int*> >();
+    test<forward_iterator<int*> >();
+    test<bidirectional_iterator<int*> >();
+    test<random_access_iterator<int*> >();
+    test<int*>();
+
+    test<input_iterator<int*>, sentinel<int*> >();
+    test<forward_iterator<int*>, sentinel<int*> >();
+    test<bidirectional_iterator<int*>, sentinel<int*> >();
+    test<random_access_iterator<int*>, sentinel<int*> >();
+
+    return ::test_result();
+}
