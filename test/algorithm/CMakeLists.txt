@@ -155,6 +155,9 @@ add_test(test.alg.rotate_copy, alg.rotate_copy)
 add_executable(alg.search search.cpp)
 add_test(test.alg.search, alg.search)
 
+add_executable(alg.search_n search_n.cpp)
+add_test(test.alg.search_n, alg.search_n)
+
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
 
