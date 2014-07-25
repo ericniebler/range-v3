@@ -35,14 +35,16 @@ namespace ranges
         private:
             friend struct range_core_access;
             optional<G> gen_;
+            template<bool IsConst>
             struct cursor
             {
             private:
-                G const *gen_;
+                using gen_t = detail::add_const_if_t<G, IsConst>;
+                gen_t *gen_;
             public:
                 using single_pass = std::true_type;
                 cursor() = default;
-                cursor(G const &g)
+                cursor(gen_t &g)
                   : gen_(&g)
                 {}
                 constexpr bool done() const
@@ -56,7 +58,14 @@ namespace ranges
                 void next() const
                 {}
             };
-            cursor begin_cursor() const
+            CONCEPT_REQUIRES(!Function<G const>())
+            cursor<false> begin_cursor()
+            {
+                RANGES_ASSERT(!!gen_);
+                return {*gen_};
+            }
+            CONCEPT_REQUIRES(Function<G const>())
+            cursor<true> begin_cursor() const
             {
                 RANGES_ASSERT(!!gen_);
                 return {*gen_};
@@ -72,8 +81,7 @@ namespace ranges
         {
             struct generate_fn : bindable<generate_fn>
             {
-                template<typename G,
-                    CONCEPT_REQUIRES_(Function<G>())>
+                template<typename G, CONCEPT_REQUIRES_(Function<G>())>
                 static generate_view<G> invoke(generate_fn, G g)
                 {
                     return generate_view<G>{std::move(g)};

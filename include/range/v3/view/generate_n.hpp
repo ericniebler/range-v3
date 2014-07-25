@@ -36,15 +36,17 @@ namespace ranges
             friend struct range_core_access;
             optional<G> gen_;
             std::size_t n_;
+            template<bool IsConst>
             struct cursor
             {
             private:
-                G const *gen_;
+                using gen_t = detail::add_const_if_t<G, IsConst>;
+                gen_t *gen_;
                 std::size_t n_;
             public:
                 using single_pass = std::true_type;
                 cursor() = default;
-                cursor(G const &g, std::size_t n)
+                cursor(gen_t &g, std::size_t n)
                   : gen_(&g), n_(n)
                 {}
                 constexpr bool done() const
@@ -61,7 +63,14 @@ namespace ranges
                     --n_;
                 }
             };
-            cursor begin_cursor() const
+            CONCEPT_REQUIRES(!Function<G const>())
+            cursor<false> begin_cursor()
+            {
+                RANGES_ASSERT(!!gen_);
+                return {*gen_, n_};
+            }
+            CONCEPT_REQUIRES(Function<G const>())
+            cursor<true> begin_cursor() const
             {
                 RANGES_ASSERT(!!gen_);
                 return {*gen_, n_};

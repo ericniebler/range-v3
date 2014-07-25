@@ -11,6 +11,12 @@ add_test(test.view.counted, view.counted)
 add_executable(view.delimit delimit.cpp)
 add_test(test.view.delimit, view.delimit)
 
+add_executable(view.generate generate.cpp)
+add_test(test.view.generate, view.generate)
+
+add_executable(view.generate_n generate_n.cpp)
+add_test(test.view.generate_n, view.generate_n)
+
 add_executable(view.indirect indirect.cpp)
 add_test(test.view.indirect, view.indirect)
 
