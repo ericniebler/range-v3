@@ -87,11 +87,11 @@ namespace ranges
             static I sized_impl(I const begin_, S end, D const d_, D count,
                 V const &val, C &pred, P &proj)
             {
-                D d = d_;
+                D d = d_; // always the distance from begin to end
                 auto begin = uncounted(begin_);
                 while(true)
                 {
-                    // Find begin element in sequence 1 that matches *begin2, with a mininum of loop checks
+                    // Find begin element in sequence 1 that matches val, with a mininum of loop checks
                     while(true)
                     {
                         if(d < count)  // return the end if we've run out of room
@@ -101,43 +101,41 @@ namespace ranges
                         ++begin;
                         --d;
                     }
-                    // *begin matches *begin2, now match elements after here
+                    // *begin matches val, now match elements after here
                     auto m = begin;
-                    D c = 0, b = 1;
+                    D c = 0;
                     while(true)
                     {
                         if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
                             return recounted(begin_, std::move(begin), d_ - d);
                         ++m;  // No need to check, we know we have room to match successfully
-                        ++b;
                         if(!pred(proj(*m), val))  // if there is a mismatch, restart with a new begin
                         {
                             begin = next(std::move(m));
-                            d -= b;
+                            d -= (c+1);
                             break;
                         }  // else there is a match, check next elements
                     }
                 }
             }
 
-            template<typename I, typename S, typename V, typename C, typename P>
-            static I impl(I begin, S end, iterator_difference_t<I> count, V const &val,
-                C &pred, P &proj)
+            template<typename I, typename S, typename D, typename V, typename C, typename P>
+            static I impl(I begin, S end, D count, V const &val, C &pred, P &proj)
             {
                 while(true)
                 {
-                    // Find begin element in sequence 1 that matches *begin2, with a mininum of loop checks
+                    // Find begin element in sequence 1 that matches val, with a mininum of loop checks
                     while(true)
                     {
-                        if(begin == end)  // return end if no element matches *begin2
+                        if(begin == end)  // return end if no element matches val
                             return begin;
                         if(pred(proj(*begin), val))
                             break;
                         ++begin;
                     }
-                    // *begin matches *begin2, now match elements after here
+                    // *begin matches val, now match elements after here
                     I m = begin;
-                    iterator_difference_t<I> c = 0;
+                    D c = 0;
                     while(true)
                     {
                         if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
