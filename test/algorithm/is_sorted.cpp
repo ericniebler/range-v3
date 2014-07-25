@@ -387,15 +387,15 @@ int main()
 
     /// Initializer list test:
     {
-      CHECK(ranges::is_sorted({0,1,2,3,4,5,6,7,8,9,10}));
-      CHECK(!ranges::is_sorted({0,1,2,3,5,4,6,7,8,9,10}));
+        CHECK(ranges::is_sorted({0,1,2,3,4,5,6,7,8,9,10}));
+        CHECK(!ranges::is_sorted({0,1,2,3,5,4,6,7,8,9,10}));
     }
 
     /// Projection test:
     {
-      A as[] = {{0}, {1}, {2}, {3}, {4}};
-      CHECK(ranges::is_sorted(as, std::less<>{}, &A::a));
-      CHECK(!ranges::is_sorted(as, std::greater<>{}, &A::a)); 
+        A as[] = {{0}, {1}, {2}, {3}, {4}};
+        CHECK(ranges::is_sorted(as, std::less<int>{}, &A::a));
+        CHECK(!ranges::is_sorted(as, std::greater<int>{}, &A::a));
     }
 
     return ::test_result();

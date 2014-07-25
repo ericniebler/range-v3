@@ -73,6 +73,9 @@ namespace ranges
         struct advance_fn;
         extern advance_fn const advance;
 
+        struct advance_to_fn;
+        extern advance_to_fn const advance_to;
+
         struct advance_bounded_fn;
         extern advance_bounded_fn const advance_bounded;
 

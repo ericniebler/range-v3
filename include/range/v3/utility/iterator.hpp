@@ -308,7 +308,7 @@ namespace ranges
             counted_iterator<I>
             operator()(counted_iterator<I> const &j, I i) const
             {
-                return {i, j.count() + (i - j.base())};
+                return {i, j.count() + (i - j.base_reference())};
             }
         };
 
