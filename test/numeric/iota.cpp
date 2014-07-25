@@ -8,6 +8,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
+// Implementation based on the code in libc++
+//   http://http://libcxx.llvm.org/
 
 //===----------------------------------------------------------------------===//
 //
@@ -23,15 +25,6 @@
 #include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
-
-struct S
-{
-    int i;
-    S add(int j) const
-    {
-        return S{i + j};
-    }
-};
 
 template <class Iter, class Sent = Iter>
 void test()
