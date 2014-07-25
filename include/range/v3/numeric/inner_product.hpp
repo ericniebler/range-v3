@@ -33,12 +33,12 @@ namespace ranges
     {
        template<typename I1, typename I2, typename T,
                 typename BOp1 = plus, typename BOp2 = multiplies,
-                typename P1 = ident, typename P2 = P1,
+                typename P1 = ident, typename P2 = ident,
             typename V1 = iterator_value_t<I1>,
             typename V2 = iterator_value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>,
-            typename Y2 = concepts::Invokable::result_t<BOp2, V1, V2>,
+            typename Y2 = concepts::Invokable::result_t<BOp2, X1, X2>,
             typename Y1 = concepts::Invokable::result_t<BOp1, T, Y2>
                 >
         constexpr bool Inner_Productable()
@@ -47,7 +47,7 @@ namespace ranges
                 InputIterator<I2>() &&
                 Invokable<P1, V1>() &&
                 Invokable<P2, V2>() &&
-                Invokable<BOp2, V1, V2>() &&
+                Invokable<BOp2, X1, X2>() &&
                 Invokable<BOp1, T, Y2>() &&
                 Assignable<T &, Y2>();
         }
@@ -68,8 +68,9 @@ namespace ranges
                 auto &&proj1 = invokable(proj1_);
                 auto &&proj2 = invokable(proj2_);
 
-                for (; begin1 != end1; ++begin1, ++begin2)
+                for (; begin1 != end1; ++begin1, ++begin2) {
                   init = bop1(init, bop2(proj1(*begin1), proj2(*begin2)));
+                }
                 return init;
             }
 

@@ -29,53 +29,56 @@
 struct S
 {
     int i;
-    S add(int j) const
-    {
-        return S{i + j};
-    }
 };
-
-template <class Iter1, class Iter2, class T, class Sent1 = Iter1>
-bool test(Iter1 first1, Sent1 last1, Iter2 first2, T init, T x)
-{
-    return ranges::inner_product(first1, last1, first2, init) == x;
-}
-
-template <class Rng1, class Rng2, class T>
-bool test(Rng1 rng1, Rng2 rng2, T init, T x)
-{
-    return ranges::inner_product(rng1, rng2, init) == x;
-}
 
 template <class Iter1, class Iter2, class Sent1 = Iter1>
 void test()
 {
-  using ranges::inner_product;
     int a[] = {1, 2, 3, 4, 5, 6};
     int b[] = {6, 5, 4, 3, 2, 1};
     unsigned sa = sizeof(a) / sizeof(a[0]);
 
     // iterator test:
-    CHECK(inner_product(Iter1(a), Iter1(a), Iter2(b), 0) == 0);
-    CHECK(inner_product(Iter1(a), Iter1(a), Iter2(b), 10) == 10);
-    CHECK(inner_product(Iter1(a), Iter1(a+1), Iter2(b), 0) == 6);
-    CHECK(inner_product(Iter1(a), Iter1(a+1), Iter2(b), 10) == 16);
-    CHECK(inner_product(Iter1(a), Iter1(a+2), Iter2(b), 0) == 16);
-    CHECK(inner_product(Iter1(a), Iter1(a+2), Iter2(b), 10) == 26);
-    CHECK(inner_product(Iter1(a), Iter1(a+sa), Iter2(b), 0) == 56);
-    CHECK(inner_product(Iter1(a), Iter1(a+sa), Iter2(b), 10) ==  66);
+    auto it = [&](auto b1, auto l1, auto b2, auto i) {
+      return ranges::inner_product(Iter1(b1), Sent1(b1+l1), Iter2(b2), i);
+    };
+    CHECK(it(a, 0, b, 0) == 0);
+    CHECK(it(a, 0, b, 10) == 10);
+    CHECK(it(a, 1, b, 0) == 6);
+    CHECK(it(a, 1, b, 10) == 16);
+    CHECK(it(a, 2, b, 0) == 16);
+    CHECK(it(a, 2, b, 10) == 26);
+    CHECK(it(a, sa, b, 0) == 56);
+    CHECK(it(a, sa, b, 10) == 66);
 
     // rng test:
-    using ranges::range;
-    CHECK(inner_product(range(Iter1(a), Sent1(a)), range(Iter2(b), Iter2(b)), 0) == 0);
-    CHECK(inner_product(range(Iter1(a), Sent1(a)), range(Iter2(b), Iter2(b)), 10) == 10);
-    CHECK(inner_product(range(Iter1(a), Sent1(a+1)), range(Iter2(b), Iter2(b+1)), 0) == 6);
-    CHECK(inner_product(range(Iter1(a), Sent1(a+1)), range(Iter2(b), Iter2(b+1)), 10) == 16);
-    CHECK(inner_product(range(Iter1(a), Sent1(a+2)), range(Iter2(b), Iter2(b+2)), 0) == 16);
-    CHECK(inner_product(range(Iter1(a), Sent1(a+2)), range(Iter2(b), Iter2(b+2)), 10) == 26);
-    CHECK(inner_product(range(Iter1(a), Sent1(a+sa)), range(Iter2(b), Iter2(b+sa)), 0) == 56);
-    CHECK(inner_product(range(Iter1(a), Sent1(a+sa)), range(Iter2(b), Iter2(b+sa)), 10) == 66);
+    auto rng = [&](auto b1, auto l1, auto b2, auto i) {
+      return ranges::inner_product(ranges::range(Iter1(b1), Sent1(b1+l1)),
+                                   ranges::range(Iter2(b2), Iter2(b2+l1)), i);
+    };
+    CHECK(rng(a, 0, b, 0) == 0);
+    CHECK(rng(a, 0, b, 10)  == 10);
+    CHECK(rng(a, 1, b, 0) == 6);
+    CHECK(rng(a, 1, b, 10) == 16);
+    CHECK(rng(a, 2, b, 0) == 16);
+    CHECK(rng(a, 2, b, 10) == 26);
+    CHECK(rng(a, sa, b, 0) == 56);
+    CHECK(rng(a, sa, b, 10) == 66);
 
+    // rng + bops:
+    auto bops = [&](auto b1, auto l1, auto b2, auto i) {
+      return ranges::inner_product(ranges::range(Iter1(b1), Sent1(b1+l1)),
+                                   ranges::range(Iter2(b2), Iter2(b2+l1)), i,
+                                   std::multiplies<>(), std::plus<>());
+    };
+    CHECK(bops(a, 0, b, 1) == 1);
+    CHECK(bops(a, 0, b, 10) == 10);
+    CHECK(bops(a, 1, b, 1) == 7);
+    CHECK(bops(a, 1, b, 10) == 70);
+    CHECK(bops(a, 2, b, 1) == 49);
+    CHECK(bops(a, 2, b, 10) == 490);
+    CHECK(bops(a, sa, b, 1) == 117649);
+    CHECK(bops(a, sa, b, 10) == 1176490);
 }
 
 
@@ -113,6 +116,34 @@ int main()
 
 
     // Test initializer lists:
-    CHECK(ranges::inner_product({1,2,3}, {4,5,6}, 0) == 32);   
+    CHECK(ranges::inner_product({1,2,3}, {4,5,6}, 0) == 32);
     return ::test_result();
+
+    // test projections:
+    {
+      S a[] = {{1}, {2}, {3}, {4}, {5}, {6}};
+      S b[] = {{6}, {5}, {4}, {3}, {2}, {1}};
+      unsigned sa = sizeof(a) / sizeof(a[0]);
+
+      using Iter1 = input_iterator<const S*>;
+      using Sent1 = input_iterator<const S*>;
+      using Iter2 = Iter1;
+
+      // rng + bops:
+      auto bops = [&](auto b1, auto l1, auto b2, auto i) {
+        return ranges::inner_product(ranges::range(Iter1(b1), Sent1(b1+l1)),
+                                     ranges::range(Iter2(b2), Iter2(b2+l1)), i,
+                                     std::multiplies<>(), std::plus<>(),
+                                     &S::i, &S::i);
+      };
+
+      CHECK(bops(a, 0, b, 1) == 1);
+      CHECK(bops(a, 0, b, 10) == 10);
+      CHECK(bops(a, 1, b, 1) == 7);
+      CHECK(bops(a, 1, b, 10) == 70);
+      CHECK(bops(a, 2, b, 1) == 49);
+      CHECK(bops(a, 2, b, 10) == 490);
+      CHECK(bops(a, sa, b, 1) == 117649);
+      CHECK(bops(a, sa, b, 10) == 1176490);
+    }
 }
