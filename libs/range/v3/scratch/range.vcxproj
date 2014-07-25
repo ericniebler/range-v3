@@ -133,7 +133,6 @@
     <ClCompile Include="..\..\..\..\test\range_adaptor.cpp" />
     <ClCompile Include="..\..\..\..\test\range_facade.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
-    <ClCompile Include="..\..\..\..\test\utility\predicate.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\as_range.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
@@ -265,7 +264,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\meta.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\nullval.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\predicate.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\range_algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp" />

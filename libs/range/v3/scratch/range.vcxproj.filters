@@ -78,9 +78,6 @@
     <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\utility\predicate.cpp">
-      <Filter>Test Files\utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
@@ -664,9 +661,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp">
       <Filter>Header Files\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\predicate.hpp">
-      <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp">
       <Filter>Header Files\algorithm</Filter>

@@ -17,7 +17,7 @@ struct S
     int i;
 };
 
-int main() 
+int main()
 {
     using namespace ranges;
 
