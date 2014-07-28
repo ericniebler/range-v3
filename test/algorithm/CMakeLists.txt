@@ -173,5 +173,8 @@ add_test(test.alg.transform, alg.transform)
 add_executable(alg.unique unique.cpp)
 add_test(test.alg.unique, alg.unique)
 
+add_executable(alg.unique_copy unique_copy.cpp)
+add_test(test.alg.unique_copy, alg.unique_copy)
+
 add_executable(alg.upper_bound upper_bound.cpp)
 add_test(test.alg.upper_bound, alg.upper_bound)

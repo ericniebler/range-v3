@@ -70,6 +70,9 @@
       <Filter>Doc Files</Filter>
     </None>
     <None Include="..\..\..\..\.travis.yml" />
+    <None Include="..\..\..\..\doc\NXXXX.md">
+      <Filter>Doc Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="range.cpp">
@@ -317,6 +320,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\generate_n.cpp">
       <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp">
+      <Filter>Test Files\algorithm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

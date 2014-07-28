@@ -22,6 +22,9 @@ To Do:
 ------
 
 * Survey the algorithms for return types.
+* Survey the _n algorithms for handling of Iterable arguments and termination conditions
+* Survey the use of projections. Do they only apply when evaluating predicates, or are they
+  like full input transformations? (E.g, does `copy` get a projection parameter or not?)
 
 Design Decisions, Guidelines, and Rationale:
 --------------------------------------------

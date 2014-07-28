@@ -61,6 +61,7 @@
     <None Include="..\..\..\..\.gitignore" />
     <None Include="..\..\..\..\.travis.yml" />
     <None Include="..\..\..\..\boost-build.jam" />
+    <None Include="..\..\..\..\doc\NXXXX.md" />
     <None Include="..\..\..\..\Jamfile" />
     <None Include="..\..\..\..\Jamroot" />
     <None Include="..\..\..\..\LICENSE" />
@@ -129,6 +130,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\swap_ranges.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\unique.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
     <ClCompile Include="..\..\..\..\test\range_adaptor.cpp" />
