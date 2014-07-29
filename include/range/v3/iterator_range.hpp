@@ -81,7 +81,11 @@ namespace ranges
             sized_iterator_range() = default;
             constexpr sized_iterator_range(I begin, S end, iterator_size_t<I> size)
               : begin_end_size_(detail::move(begin), detail::move(end), size)
-            {}
+            {
+                #if __cplusplus > 201103L
+                RANGES_ASSERT(iterator_range_size(this->begin(), this->end()) == size);
+                #endif
+            }
             constexpr sized_iterator_range(std::pair<I, S> rng, iterator_size_t<I> size)
               : begin_end_size_(detail::move(rng.first), detail::move(rng.second), size)
             {}
@@ -99,7 +103,7 @@ namespace ranges
             }
             bool operator!() const
             {
-                return begin() == end();
+                return 0 == size();
             }
             explicit operator bool() const
             {
