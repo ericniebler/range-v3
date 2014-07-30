@@ -69,7 +69,7 @@ namespace ranges
                         ++pp;
                         c = 2 * p + 1;
                     }
-                    return begin + n_;
+                    return begin_ + n_;
                 }
             };
 

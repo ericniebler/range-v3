@@ -61,7 +61,9 @@
     <None Include="..\..\..\..\.gitignore" />
     <None Include="..\..\..\..\.travis.yml" />
     <None Include="..\..\..\..\boost-build.jam" />
-    <None Include="..\..\..\..\doc\NXXXX.md" />
+    <None Include="..\..\..\..\doc\D4128.md">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="..\..\..\..\Jamfile" />
     <None Include="..\..\..\..\Jamroot" />
     <None Include="..\..\..\..\LICENSE" />
@@ -92,6 +94,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate_n.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\is_heap_until.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_partitioned.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_permutation.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_sorted.cpp" />
