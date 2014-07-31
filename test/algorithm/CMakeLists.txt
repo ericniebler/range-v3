@@ -119,6 +119,9 @@ add_test(test.alg.partition_point, alg.partition_point)
 add_executable(alg.prev_permutation prev_permutation.cpp)
 add_test(test.alg.prev_permutation alg.prev_permutation)
 
+add_executable(alg.push_heap push_heap.cpp)
+add_test(test.alg.push_heap alg.push_heap)
+
 add_executable(alg.random_shuffle random_shuffle.cpp)
 add_test(test.alg.random_shuffle, alg.random_shuffle)
 

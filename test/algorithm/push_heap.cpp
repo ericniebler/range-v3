@@ -1,0 +1,126 @@
+//  Copyright Eric Niebler 2014
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see http://www.boost.org/libs/range/
+//
+//  Copyright 2005 - 2007 Adobe Systems Incorporated
+//  Distributed under the MIT License(see accompanying file LICENSE_1_0_0.txt
+//  or a copy at http://stlab.adobe.com/licenses.html)
+
+//===----------------------------------------------------------------------===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is dual licensed under the MIT and the University of Illinois Open
+// Source Licenses. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+
+// <algorithm>
+
+// template<RandomAccessIterator Iter>
+//   requires ShuffleIterator<Iter>
+//         && LessThanComparable<Iter::value_type>
+//   void
+//   push_heap(Iter first, Iter last);
+
+#include <memory>
+#include <algorithm>
+#include <functional>
+#include <range/v3/core.hpp>
+#include <range/v3/algorithm/heap_algorithm.hpp>
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
+#include "../test_iterators.hpp"
+
+void test(int N)
+{
+    auto push_heap = make_testable_1(ranges::push_heap);
+
+    int* ia = new int [N];
+    for (int i = 0; i < N; ++i)
+        ia[i] = i;
+    std::random_shuffle(ia, ia+N);
+    for (int i = 0; i <= N; ++i)
+    {
+        push_heap(ia, ia+i).check([&](int *r){CHECK(r == ia + i);});
+        CHECK(std::is_heap(ia, ia+i));
+    }
+    delete [] ia;
+}
+
+void test_comp(int N)
+{
+    auto push_heap = make_testable_1(ranges::push_heap);
+
+    int* ia = new int [N];
+    for (int i = 0; i < N; ++i)
+        ia[i] = i;
+    std::random_shuffle(ia, ia+N);
+    for (int i = 0; i <= N; ++i)
+    {
+        push_heap(ia, ia+i, std::greater<int>()).check([&](int *r){CHECK(r == ia+i);});
+        CHECK(std::is_heap(ia, ia+i, std::greater<int>()));
+    }
+    delete [] ia;
+}
+
+struct S
+{
+    int i;
+};
+
+void test_proj(int N)
+{
+    auto push_heap = make_testable_1(ranges::push_heap);
+
+    S* ia = new S [N];
+    int* ib = new int [N];
+    for (int i = 0; i < N; ++i)
+        ia[i].i = i;
+    std::random_shuffle(ia, ia+N);
+    for (int i = 0; i <= N; ++i)
+    {
+        push_heap(ia, ia+i, std::greater<int>(), &S::i).check([&](S *r){CHECK(r == ia+i);});
+        std::transform(ia, ia+i, ib, std::mem_fn(&S::i));
+        CHECK(std::is_heap(ib, ib+i, std::greater<int>()));
+    }
+    delete [] ia;
+    delete [] ib;
+}
+
+struct indirect_less
+{
+    template <class P>
+    bool operator()(const P& x, const P& y)
+        {return *x < *y;}
+};
+
+void test_move_only(int N)
+{
+    auto const push_heap = make_testable_1(ranges::push_heap);
+    std::unique_ptr<int>* ia = new std::unique_ptr<int> [N];
+    for (int i = 0; i < N; ++i)
+        ia[i].reset(new int(i));
+    std::random_shuffle(ia, ia+N);
+    for (int i = 0; i <= N; ++i)
+    {
+        push_heap(ia, ia+i, indirect_less()).check([&](std::unique_ptr<int> *r){CHECK(r == ia+i);});
+        CHECK(std::is_heap(ia, ia+i, indirect_less()));
+    }
+    delete [] ia;
+}
+
+int main()
+{
+    test(1000);
+    test_comp(1000);
+    test_proj(1000);
+    test_move_only(1000);
+
+    return test_result();
+}

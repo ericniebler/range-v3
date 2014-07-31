@@ -417,7 +417,7 @@ namespace ranges
                         concepts::has_type<I>(i - (i - i)),
                         concepts::has_type<I &>(i += (i-i)),
                         concepts::has_type<I &>(i -= (i - i)),
-                        concepts::convertible_to<V>(i[i - i])
+                        concepts::convertible_to<V const &>(i[i - i])
                     ));
 
                 template<typename I, typename S>

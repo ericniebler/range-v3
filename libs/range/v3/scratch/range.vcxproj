@@ -94,6 +94,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate_n.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\is_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_heap_until.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_partitioned.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_permutation.cpp" />
@@ -115,6 +116,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\partition_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_point.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\prev_permutation.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\push_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\random_shuffle.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\remove_copy.cpp" />
