@@ -115,7 +115,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Sentinel<S, I>())>
             bool operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
-                return is_heap_n(std::move(begin), distance(begin, end), std::move(pred),
+                return detail::is_heap_n(std::move(begin), distance(begin, end), std::move(pred),
                     std::move(proj));
             }
 
@@ -124,7 +124,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Iterable<Rng>())>
             bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
-                return is_heap_n(begin(rng), distance(rng), std::move(pred), std::move(proj));
+                return detail::is_heap_n(begin(rng), distance(rng), std::move(pred), std::move(proj));
             }
         };
 

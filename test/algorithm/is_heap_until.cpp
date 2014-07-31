@@ -23,7 +23,6 @@
 // Implementation based on the code in libc++
 //   http://http://libcxx.llvm.org/
 
-#include <iostream>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
 #include "../simple_test.hpp"

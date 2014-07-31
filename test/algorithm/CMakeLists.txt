@@ -56,6 +56,9 @@ add_test(test.alg.generate, alg.generate)
 add_executable(alg.generate_n generate_n.cpp)
 add_test(test.alg.generate_n, alg.generate_n)
 
+add_executable(alg.is_heap is_heap.cpp)
+add_test(test.alg.is_heap, alg.is_heap)
+
 add_executable(alg.is_heap_until is_heap_until.cpp)
 add_test(test.alg.is_heap_until, alg.is_heap_until)
 
