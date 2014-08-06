@@ -102,6 +102,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\is_sorted_until.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lexicographical_compare.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\make_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\max_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\merge.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\minmax_element.cpp" />

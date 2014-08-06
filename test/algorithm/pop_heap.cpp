@@ -25,7 +25,6 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
-#include <range/v3/algorithm/copy.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"

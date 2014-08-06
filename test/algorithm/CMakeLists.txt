@@ -80,6 +80,9 @@ add_test(test.alg.lexicographical_compare, alg.lexicographical_compare)
 add_executable(alg.lower_bound lower_bound.cpp)
 add_test(test.alg.lower_bound, alg.lower_bound)
 
+add_executable(alg.make_heap make_heap.cpp)
+add_test(test.alg.make_heap, alg.make_heap)
+
 add_executable(alg.max_element max_element.cpp)
 add_test(test.alg.max_element, alg.max_element)
 
