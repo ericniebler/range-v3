@@ -176,6 +176,9 @@ add_test(test.alg.search_n, alg.search_n)
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
 
+add_executable(alg.sort_heap sort_heap.cpp)
+add_test(test.alg.sort_heap, alg.sort_heap)
+
 add_executable(alg.stable_partition stable_partition.cpp)
 add_test(test.alg.stable_partition, alg.stable_partition)
 
