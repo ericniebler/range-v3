@@ -115,6 +115,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\partition.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_point.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\pop_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\prev_permutation.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\push_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\random_shuffle.cpp" />
