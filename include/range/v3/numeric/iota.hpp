@@ -1,6 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// \file numeric.hpp
-///   Contains range-based versions of the std algorithms
+/// \file accumulate.hpp
+///   Contains range-based versions of the std generic numeric operation:
+///     iota.
 //
 // Copyright 2004 Eric Niebler.
 // Copyright 2006 Thorsten Ottosen.
