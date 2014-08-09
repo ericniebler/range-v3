@@ -5,6 +5,8 @@ Experimental range library for C++11/14/17. This code will eventualy form the ba
 
 **Dislaimer:** This code is undocumented, untested, constantly changing, and generally not fit for *any use whatsoever*.
 
+**Build status (on Travis-CI):** [![Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
+
 License:
 --------
 
