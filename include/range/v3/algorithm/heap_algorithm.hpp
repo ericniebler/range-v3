@@ -132,83 +132,96 @@ namespace ranges
 
         namespace detail
         {
-            struct push_heap_front_n_fn
+            struct sift_up_n_fn
             {
-                template<typename I, typename C = ordered_less, typename P = ident,
-                    CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sortable<I, C, P>())>
-                void operator()(I begin, iterator_difference_t<I> len, C pred_ = C{},
-                    P proj_ = P{}) const
+                template<typename I, typename C = ordered_less, typename P = ident>
+                void operator()(I begin, iterator_difference_t<I> len, C pred_ = C{}, P proj_ = P{}) const
                 {
-                    auto &&pred = invokable(pred_);
-                    auto &&proj = invokable(proj_);
                     if(len > 1)
                     {
-                        iterator_difference_t<I> p = 0, c = 2;
-                        I pp = begin, cp = begin + c;
-                        if(c == len || pred(proj(*cp), proj(*(cp - 1))))
-                        {
-                            --c;
-                            --cp;
-                        }
-                        if(pred(proj(*pp), proj(*cp)))
-                        {
-                            iterator_value_t<I> t(std::move(*pp));
-                            do
-                            {
-                                *pp = std::move(*cp);
-                                pp = cp;
-                                p = c;
-                                c = (p + 1) * 2;
-                                if(c > len)
-                                    break;
-                                cp = begin + c;
-                                if(c == len || pred(proj(*cp), proj(*(cp - 1))))
-                                {
-                                    --c;
-                                    --cp;
-                                }
-                            } while(pred(proj(t), proj(*cp)));
-                            *pp = std::move(t);
-                        }
-                    }
-                }
-            };
-
-            RANGES_CONSTEXPR push_heap_front_n_fn push_heap_front_n{};
-
-            struct push_heap_back_n_fn
-            {
-                template<typename I, typename C = ordered_less, typename P = ident,
-                    CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sortable<I, C, P>())>
-                void operator()(I begin, iterator_difference_t<I> len, C pred_ = C{},
-                    P proj_ = P{}) const
-                {
-                    auto &&pred = invokable(pred_);
-                    auto &&proj = invokable(proj_);
-                    I end = begin + len;
-                    if(len > 1)
-                    {
+                        auto &&pred = invokable(pred_);
+                        auto &&proj = invokable(proj_);
+                        I end = begin + len;
                         len = (len - 2) / 2;
-                        I ptr = begin + len;
-                        if(pred(proj(*ptr), proj(*--end)))
+                        I i = begin + len;
+                        if(pred(proj(*i), proj(*--end)))
                         {
-                            auto t(std::move(*end));
+                            iterator_value_t<I> v(std::move(*end));
                             do
                             {
-                                *end = std::move(*ptr);
-                                end = ptr;
+                                *end = std::move(*i);
+                                end = i;
                                 if(len == 0)
                                     break;
                                 len = (len - 1) / 2;
-                                ptr = begin + len;
-                            } while(pred(proj(*ptr), proj(t)));
-                            *end = std::move(t);
+                                i = begin + len;
+                            } while(pred(proj(*i), proj(v)));
+                            *end = std::move(v);
                         }
                     }
                 }
             };
 
-            RANGES_CONSTEXPR push_heap_back_n_fn push_heap_back_n{};
+            RANGES_CONSTEXPR sift_up_n_fn sift_up_n{};
+
+            struct sift_down_n_fn
+            {
+                template<typename I, typename C = ordered_less, typename P = ident>
+                void operator()(I begin, iterator_difference_t<I> len, I start, C pred_ = C {}, P proj_ = P{}) const
+                {
+                    // left-child of start is at 2 * start + 1
+                    // right-child of start is at 2 * start + 2
+                    auto child = start - begin;
+
+                    if(len < 2 || (len - 2) / 2 < child)
+                        return;
+
+                    child = 2 * child + 1;
+                    I child_i = begin + child;
+
+                    auto &&pred = invokable(pred_);
+                    auto &&proj = invokable(proj_);
+
+                    if((child + 1) < len && pred(proj(*child_i), proj(*(child_i + 1))))
+                    {
+                        // right-child exists and is greater than left-child
+                        ++child_i;
+                        ++child;
+                    }
+
+                    // check if we are in heap-order
+                    if(pred(proj(*child_i), proj(*start)))
+                        // we are, start is larger than it's largest child
+                        return;
+
+                    iterator_value_t<I> top(std::move(*start));
+                    do
+                    {
+                        // we are not in heap-order, swap the parent with it's largest child
+                        *start = std::move(*child_i);
+                        start = child_i;
+
+                        if((len - 2) / 2 < child)
+                            break;
+
+                        // recompute the child based off of the updated parent
+                        child = 2 * child + 1;
+                        child_i = begin + child;
+
+                        if((child + 1) < len && pred(proj(*child_i), proj(*(child_i + 1))))
+                        {
+                            // right-child exists and is greater than left-child
+                            ++child_i;
+                            ++child;
+                        }
+
+                        // check if we are in heap-order
+                    } while (!pred(proj(*child_i), proj(top)));
+                    *start = std::move(top);
+                }
+            };
+
+            RANGES_CONSTEXPR sift_down_n_fn sift_down_n{};
         }
 
         struct push_heap_fn
@@ -218,7 +231,7 @@ namespace ranges
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 auto n = distance(begin, end);
-                detail::push_heap_back_n(begin, n, std::move(pred), std::move(proj));
+                detail::sift_up_n(begin, n, std::move(pred), std::move(proj));
                 return begin + n;
             }
 
@@ -229,7 +242,7 @@ namespace ranges
             {
                 I begin = ranges::begin(rng);
                 auto n = distance(rng);
-                detail::push_heap_back_n(begin, n, std::move(pred), std::move(proj));
+                detail::sift_up_n(begin, n, std::move(pred), std::move(proj));
                 return begin + n;
             }
         };
@@ -248,8 +261,7 @@ namespace ranges
                     if(len > 1)
                     {
                         ranges::swap(*begin, *(begin + (len-1)));
-                        detail::push_heap_front_n(std::move(begin), len-1, std::move(pred),
-                            std::move(proj));
+                        detail::sift_down_n(begin, len-1, begin, std::move(pred), std::move(proj));
                     }
                 }
             };
@@ -291,8 +303,10 @@ namespace ranges
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
                 iterator_difference_t<I> const n = distance(begin, end);
-                for(iterator_difference_t<I> i = 1; i < n;)
-                    detail::push_heap_back_n(begin, ++i, std::ref(pred), std::ref(proj));
+                if(n > 1)
+                    // start from the first parent, there is no need to consider children
+                    for(auto start = (n - 2) / 2; start >= 0; --start)
+                        detail::sift_down_n(begin, n, begin + start, std::ref(pred), std::ref(proj));
                 return begin + n;
             }
 
@@ -305,8 +319,10 @@ namespace ranges
                 auto &&proj = invokable(proj_);
                 I begin = ranges::begin(rng);
                 iterator_difference_t<I> const n = distance(rng);
-                for(iterator_difference_t<I> i = 1; i < n;)
-                    detail::push_heap_back_n(begin, ++i, std::ref(pred), std::ref(proj));
+                if(n > 1)
+                    // start from the first parent, there is no need to consider children
+                    for(auto start = (n - 2) / 2; start >= 0; --start)
+                        detail::sift_down_n(begin, n, begin + start, std::ref(pred), std::ref(proj));
                 return begin + n;
             }
         };
