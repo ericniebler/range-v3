@@ -94,6 +94,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate_n.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\inplace_merge.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_heap_until.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_partitioned.cpp" />
@@ -244,7 +245,10 @@
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\as_iterable.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\memory.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\re_enable_warnings.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\empty.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />

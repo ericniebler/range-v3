@@ -49,16 +49,16 @@ void has_type(Actual &&)
     static_assert(std::is_same<Expected, Actual>::value, "Not the same");
 }
 
-template<typename Concept, typename Type>
-void models(Type &&)
+template<typename Concept, typename ...Types>
+void models(Types &&...)
 {
-    CONCEPT_ASSERT(ranges::concepts::models<Concept, Type>());
+    CONCEPT_ASSERT(ranges::concepts::models<Concept, Types...>());
 }
 
-template<typename Concept, typename Type>
-void models_not(Type &&)
+template<typename Concept, typename ...Types>
+void models_not(Types &&...)
 {
-    CONCEPT_ASSERT(!ranges::concepts::models<Concept, Type>());
+    CONCEPT_ASSERT(!ranges::concepts::models<Concept, Types...>());
 }
 
 template<typename T>

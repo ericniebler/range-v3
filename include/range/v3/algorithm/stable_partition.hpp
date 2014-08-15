@@ -25,6 +25,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/detail/memory.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -37,47 +38,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename T, bool B = std::is_trivially_destructible<T>::value>
-            struct destroy_n
-            {
-                destroy_n const &operator++() const noexcept
-                {
-                    return *this;
-                }
-                void operator()(T const *) const noexcept
-                {}
-            };
-
-            template<typename T>
-            struct destroy_n<T, false>
-            {
-            private:
-                std::size_t n_ = 0;
-            public:
-                destroy_n &operator++() noexcept
-                {
-                    ++n_;
-                    return *this;
-                }
-                void operator()(T const *p) noexcept
-                {
-                    for(std::size_t n = 0; n < n_; ++n, ++p)
-                        p->~T();
-                }
-            };
-
-            struct return_temporary_buffer
-            {
-                template<typename T>
-                void operator()(T *p) const
-                {
-                    std::return_temporary_buffer(p);
-                }
-            };
-        }
-
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>

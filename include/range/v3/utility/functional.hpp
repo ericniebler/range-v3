@@ -1,5 +1,4 @@
-//  Copyright Neil Groves 2009.
-//  Copyright Eric Niebler 2013
+//  Copyright Eric Niebler 2013-2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -67,6 +66,44 @@ namespace ranges
                 return (T &&) t + (U &&) u;
             }
         };
+
+        template<typename Pred>
+        struct logical_negate
+        {
+        private:
+            Pred pred_;
+        public:
+            logical_negate() = default;
+
+            explicit constexpr logical_negate(Pred pred)
+              : pred_((Pred &&) pred)
+            {}
+
+            template<typename T,
+                CONCEPT_REQUIRES_(Predicate<Pred, T>())>
+            constexpr bool operator()(T && t) const
+            {
+                return !pred_((T &&) t);
+            }
+
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(Predicate<Pred, T, U>())>
+            constexpr bool operator()(T && t, U && u) const
+            {
+                return !pred_((T &&) t, (U &&) u);
+            }
+        };
+
+        struct not_fn
+        {
+            template<typename Pred>
+            constexpr logical_negate<Pred> operator()(Pred pred) const
+            {
+                return logical_negate<Pred>{(Pred &&) pred};
+            }
+        };
+
+        RANGES_CONSTEXPR not_fn not_ {};
     }
 }
 

@@ -241,8 +241,16 @@ namespace ranges
 
 #if !defined(__GLIBCXX__) || __GLIBCXX__ > 20140522
             template<typename T>
+            using is_trivially_copy_assignable = std::is_trivially_copy_assignable<T>;
+
+            template<typename T>
             using is_trivially_move_assignable = std::is_trivially_move_assignable<T>;
 #else
+            template<typename T>
+            struct is_trivially_copy_assignable
+              : std::is_scalar<T>
+            {};
+
             template<typename T>
             struct is_trivially_move_assignable
               : std::is_scalar<T>
