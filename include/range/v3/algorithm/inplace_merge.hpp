@@ -55,7 +55,6 @@ namespace ranges
                 iterator_value_t<I> *buf)
             {
                 using value_type = iterator_value_t<I>;
-                using difference_type = iterator_difference_t<I>;
                 detail::destroy_n<value_type> d;
                 std::unique_ptr<value_type, detail::destroy_n<value_type>&> h2{buf, d};
                 if(len1 <= len2)
@@ -90,7 +89,6 @@ namespace ranges
                 iterator_difference_t<I> len1, iterator_difference_t<I> len2,
                 iterator_value_t<I> *buf, std::ptrdiff_t buf_size)
             {
-                using value_type = iterator_value_t<I>;
                 using difference_type = iterator_difference_t<I>;
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);

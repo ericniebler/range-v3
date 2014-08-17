@@ -40,7 +40,7 @@ test_one_iter(unsigned N, unsigned M)
     if(N > 0)
     {
         CHECK(ia[0] == 0);
-        CHECK(ia[N-1] == N-1);
+        CHECK(ia[N-1] == (int)N-1);
         CHECK(std::is_sorted(ia, ia+N));
     }
     delete [] ia;
@@ -62,7 +62,7 @@ test_one_rng(unsigned N, unsigned M)
     if(N > 0)
     {
         CHECK(ia[0] == 0);
-        CHECK(ia[N-1] == N-1);
+        CHECK(ia[N-1] == (int)N-1);
         CHECK(std::is_sorted(ia, ia+N));
     }
     delete [] ia;
