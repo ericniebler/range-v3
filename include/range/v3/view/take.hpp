@@ -31,7 +31,7 @@ namespace ranges
         struct take_view
           : detail::basic_sliced_view<Rng, true>
         {
-            CONCEPT_ASSERT(InputIterable<Rng>());
+            CONCEPT_ASSERT(InputRange<Rng>());
 
             using size_type = range_size_t<Rng>;
 
@@ -46,7 +46,7 @@ namespace ranges
             struct take_fn : bindable<take_fn>
             {
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                    CONCEPT_REQUIRES_(InputRange<Rng>())>
                 static take_view<Rng>
                 invoke(take_fn, Rng && rng, range_size_t<Rng> to)
                 {

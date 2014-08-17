@@ -43,9 +43,9 @@ namespace ranges
                 static for_each_view<Rng, F>
                 invoke(for_each_fn, Rng && rng, F f)
                 {
-                    CONCEPT_ASSERT(Iterable<Rng>());
+                    CONCEPT_ASSERT(Range<Rng>());
                     CONCEPT_ASSERT(Invokable<F, range_value_t<Rng>>());
-                    CONCEPT_ASSERT(Iterable<concepts::Invokable::result_t<F, range_value_t<Rng>>>());
+                    CONCEPT_ASSERT(Range<concepts::Invokable::result_t<F, range_value_t<Rng>>>());
                     return {std::forward<Rng>(rng), std::move(f)};
                 }
 
@@ -97,9 +97,9 @@ namespace ranges
 
         template<typename Rng, typename Fun,
             typename Result = concepts::Function::result_t<Fun, range_value_t<Rng>>,
-            CONCEPT_REQUIRES_(Iterable<Rng>() &&
+            CONCEPT_REQUIRES_(Range<Rng>() &&
                               Function<Fun, range_value_t<Rng>>() &&
-                              Iterable<Result>())>
+                              Range<Result>())>
         auto operator >>= (Rng && rng, Fun fun) ->
             decltype(view::for_each(std::forward<Rng>(rng), std::move(fun)))
         {

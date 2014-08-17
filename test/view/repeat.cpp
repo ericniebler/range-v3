@@ -18,8 +18,8 @@ int main()
 {
     using namespace ranges;
     auto rng = view::repeat(9) | view::take(10);
-    ::models<concepts::SizedIterable>(rng);
-    ::models<concepts::Range>(rng);
+    ::models<concepts::SizedRange>(rng);
+    ::models<concepts::BoundedRange>(rng);
     ::models<concepts::InputIterator>(rng.begin());
     ::check_equal(rng, {9, 9, 9, 9, 9, 9, 9, 9, 9, 9});
 

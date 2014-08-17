@@ -58,7 +58,7 @@ namespace ranges
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
-                    InputIterable<Rng>()                    &&
+                    InputRange<Rng>()                    &&
                     WeaklyIncrementable<O>()                &&
                     InvokablePredicate<F, X>()              &&
                     IndirectlyProjectedCopyable<I, P, O>()

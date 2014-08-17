@@ -51,7 +51,7 @@ namespace ranges
             /// \overload
             template<typename Rng, typename V2, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V2, C, P>())>
+                CONCEPT_REQUIRES_(Range<Rng>() && BinarySearchable<I, V2, C, P>())>
             I operator()(Rng &rng, iterator_difference_t<I> d, V2 const &val, C pred = C{},
                 P proj = P{}) const
             {

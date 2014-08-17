@@ -54,7 +54,7 @@ namespace ranges
             template<typename Rng, typename V2, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng>()                 &&
+                    Range<Rng>()                 &&
                     BinarySearchable<I, V2, C, P>()
                 )>
             bool

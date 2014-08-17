@@ -316,13 +316,13 @@ namespace ranges
             };
 
             template<typename BaseRng>
-            struct base_iterable_holder
+            struct base_range_holder
             {
             private:
                 BaseRng rng_;
             public:
-                base_iterable_holder() = default;
-                base_iterable_holder(BaseRng &&rng)
+                base_range_holder() = default;
+                base_range_holder(BaseRng &&rng)
                   : rng_(std::forward<BaseRng>(rng))
                 {}
                 BaseRng &get()
@@ -336,13 +336,13 @@ namespace ranges
             };
 
             template<typename BaseRng>
-            struct base_iterable_holder<BaseRng &>
+            struct base_range_holder<BaseRng &>
             {
             private:
                 BaseRng *rng_;
             public:
-                base_iterable_holder() = default;
-                base_iterable_holder(BaseRng &rng)
+                base_range_holder() = default;
+                base_range_holder(BaseRng &rng)
                   : rng_(&rng)
                 {}
                 BaseRng &get() const
@@ -556,9 +556,9 @@ namespace ranges
             }
 
             template<typename RangeAdaptor>
-            struct base_iterable
+            struct base_range
             {
-                using type = typename RangeAdaptor::base_iterable_t;
+                using type = typename RangeAdaptor::base_range_t;
             };
             template<typename RangeFacade>
             struct range_facade
@@ -739,9 +739,9 @@ namespace ranges
                 return this->detail::mixin_base<Cur>::get();
             }
 
-            // If Iterable models RangeFacade or if the cursor models
+            // If Range models RangeFacade or if the cursor models
             // ForwardCursor, then positions must be equality comparable.
-            // Otherwise, it's an InputCursor in an IterableFacade, so
+            // Otherwise, it's an InputCursor in an RangeFacade, so
             // all cursors are trivially equal.
             constexpr bool equal2_(basic_range_iterator const&,
                 range_core_access::InputCursorConcept *) const

@@ -21,7 +21,7 @@ int main()
     {
         int i = 0, j = 1;
         auto fib = view::generate([&]()->int{int tmp = i; i += j; std::swap(i, j); return tmp;});
-        CONCEPT_ASSERT(ranges::InputIterable<decltype(fib)>());
+        CONCEPT_ASSERT(ranges::InputRange<decltype(fib)>());
         check_equal(fib | view::take(10), {0,1,1,2,3,5,8,13,21,34});
         auto const &cfib = fib;
         auto it = fib.begin();
@@ -33,11 +33,11 @@ int main()
     {
         int i = 0, j = 1;
         auto fib = view::generate([=]()mutable->int{int tmp = i; i += j; std::swap(i, j); return tmp;});
-        CONCEPT_ASSERT(ranges::InputIterable<decltype(fib)>());
+        CONCEPT_ASSERT(ranges::InputRange<decltype(fib)>());
         check_equal(fib | view::take(10), {0,1,1,2,3,5,8,13,21,34});
         // The generator cannot be called when it's const-qualifies, so "fib const"
-        // does not model Iterable.
-        CONCEPT_ASSERT(!ranges::Iterable<decltype(fib) const>());
+        // does not model Range.
+        CONCEPT_ASSERT(!ranges::Range<decltype(fib) const>());
     }
 
     return test_result();

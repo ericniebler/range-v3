@@ -222,12 +222,12 @@ namespace ranges
                 {
                     return its_ == pos.its_;
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)BidirectionalIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool)BidirectionalRange<Rngs>()...>::value)
                 void prev()
                 {
                     its_.apply_i(prev_fun{this});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool)RandomAccessRange<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     if(n > 0)
@@ -235,7 +235,7 @@ namespace ranges
                     else if(n < 0)
                         its_.apply_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessRange<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.which() <= that.its_.which())
@@ -263,7 +263,7 @@ namespace ranges
                 return {*this, begin_tag{}};
             }
             detail::conditional_t<
-                logical_and<(bool)Range<Rngs>()...>::value, cursor, sentinel>
+                logical_and<(bool)BoundedRange<Rngs>()...>::value, cursor, sentinel>
             end_cursor() const
             {
                 return {*this, end_tag{}};
@@ -273,7 +273,7 @@ namespace ranges
             explicit joined_view(Rngs &&...rngs)
               : rngs_(std::forward<Rngs>(rngs)...)
             {}
-            CONCEPT_REQUIRES(logical_and<(bool)SizedIterable<Rngs>()...>::value)
+            CONCEPT_REQUIRES(logical_and<(bool)SizedRange<Rngs>()...>::value)
             size_type size() const
             {
                 return tuple_foldl(
@@ -291,8 +291,8 @@ namespace ranges
                 static joined_view<Rngs...>
                 invoke(join_fn, Rngs &&... rngs)
                 {
-                    static_assert(logical_and<(bool)InputIterable<Rngs>()...>::value,
-                        "Expecting Input Iterables");
+                    static_assert(logical_and<(bool)InputRange<Rngs>()...>::value,
+                        "Expecting Input Ranges");
                     return joined_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };
@@ -303,7 +303,7 @@ namespace ranges
         // Binary range concatenation. Is there a better operator for this? Should this
         // even be an operator?
         template<typename Rng0, typename Rng1,
-            CONCEPT_REQUIRES_(InputIterable<Rng0>() && InputIterable<Rng1>())>
+            CONCEPT_REQUIRES_(InputRange<Rng0>() && InputRange<Rng1>())>
         joined_view<Rng0, Rng1> operator + (Rng0 && rng0, Rng1 && rng1)
         {
             return joined_view<Rng0, Rng1>{std::forward<Rng0>(rng0), std::forward<Rng1>(rng1)};

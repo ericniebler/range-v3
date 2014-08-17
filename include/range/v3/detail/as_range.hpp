@@ -15,8 +15,8 @@
 
         namespace detail
         {
-            // An Iterable is container-like if the constness of its reference type
-            // is sensitive to the constness of the Iterable
+            // An Range is container-like if the constness of its reference type
+            // is sensitive to the constness of the Range
             template<typename T>
             using owns_its_elements_t = not_t<
                 std::is_same<
@@ -56,31 +56,31 @@
             }
 
             template<typename T>
-            iterator_range<concepts::ConvertibleToIterable::iterator_t<T>,
-                concepts::ConvertibleToIterable::sentinel_t<T>>
-            container_view_all(T & t, concepts::ConvertibleToIterable*)
+            iterator_range<concepts::ConvertibleToRange::iterator_t<T>,
+                concepts::ConvertibleToRange::sentinel_t<T>>
+            container_view_all(T & t, concepts::ConvertibleToRange*)
             {
                 return {begin(t), end(t)};
             }
 
             template<typename T>
-            auto container_view_all(T & t, concepts::ConvertibleToSizedIterable*) ->
+            auto container_view_all(T & t, concepts::ConvertibleToSizedRange*) ->
                 decltype(detail::container_view_all2(begin(t), end(t), 0))
             {
                 return detail::container_view_all2(begin(t), end(t), size(t));
             }
 
             template<typename T>
-            using convertible_to_sized_iterable_concept =
+            using convertible_to_sized_range_concept =
                 concepts::most_refined<
-                    typelist<concepts::ConvertibleToSizedIterable,
-                             concepts::ConvertibleToIterable>, T>;
+                    typelist<concepts::ConvertibleToSizedRange,
+                             concepts::ConvertibleToRange>, T>;
 
             template<typename T>
-            using convertible_to_sized_iterable_concept_t =
-                meta_apply<convertible_to_sized_iterable_concept, T>;
+            using convertible_to_sized_range_concept_t =
+                meta_apply<convertible_to_sized_range_concept, T>;
 
-            template<typename T, typename C = convertible_to_sized_iterable_concept<T>>
+            template<typename T, typename C = convertible_to_sized_range_concept<T>>
             struct container_view_all_type
             {
                 using type = decltype(detail::container_view_all(std::declval<T>(), C()));
@@ -91,26 +91,26 @@
         }
 
         template<typename T, typename Enable = void>
-        struct is_iterable
+        struct is_range
           : std::conditional<
                 std::is_same<T, detail::uncvref_t<T>>::value,
                 std::is_base_of<range_base, T>,
-                is_iterable<detail::uncvref_t<T>>
+                is_range<detail::uncvref_t<T>>
             >::type
         {};
 
         template<typename T>
-        struct is_iterable<std::initializer_list<T>>
+        struct is_range<std::initializer_list<T>>
           : std::true_type
         {};
 
-        struct as_iterable_fn
+        struct as_range_fn
         {
-            /// If it's an iterable already, pass it though.
+            /// If it's a range already, pass it though.
             template<typename T,
                 CONCEPT_REQUIRES_(
-                    ConvertibleToIterable<T>() &&
-                    is_iterable<T>::value)>
+                    ConvertibleToRange<T>() &&
+                    is_range<T>::value)>
             T operator()(T && t) const
             {
                 return std::forward<T>(t);
@@ -119,19 +119,19 @@
             /// If it is container-like, turn it into an iterator_range
             template<typename T,
                 CONCEPT_REQUIRES_(
-                    ConvertibleToIterable<T>() &&
-                    !is_iterable<T>::value &&
+                    ConvertibleToRange<T>() &&
+                    !is_range<T>::value &&
                     detail::owns_its_elements_t<T>::value &&
                     std::is_lvalue_reference<T>::value)>
             detail::container_view_all_t<T> operator()(T && t) const
             {
-                return detail::container_view_all(t, detail::convertible_to_sized_iterable_concept<T>());
+                return detail::container_view_all(t, detail::convertible_to_sized_range_concept<T>());
             }
 
             // TODO handle char const * by turning it into a delimited range
         };
 
-        RANGES_CONSTEXPR as_iterable_fn as_iterable {};
+        RANGES_CONSTEXPR as_range_fn as_range {};
 
-        template<typename ConvertibleToIterable>
-        using as_iterable_t = decltype(as_iterable(std::declval<ConvertibleToIterable>()));
+        template<typename ConvertibleToRange>
+        using as_range_t = decltype(as_range(std::declval<ConvertibleToRange>()));

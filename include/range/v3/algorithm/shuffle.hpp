@@ -65,7 +65,7 @@ namespace ranges
             }
 
             template<typename Rng, typename Gen, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
+                CONCEPT_REQUIRES_(RandomAccessRange<Rng>() &&
                                   Permutable<I>() &&
                                   UniformRandomNumberGenerator<Gen>())>
             I operator()(Rng & rng, Gen && rand) const

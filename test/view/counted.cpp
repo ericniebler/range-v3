@@ -19,7 +19,7 @@ int main()
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto rng = view::counted(rgi, 10);
     rng.size();
-    CONCEPT_ASSERT(SizedIterable<decltype(rng)>());
+    CONCEPT_ASSERT(SizedRange<decltype(rng)>());
     auto i = rng.begin();
     auto b = i.base();
     auto c = i.count();

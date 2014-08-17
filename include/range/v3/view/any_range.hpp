@@ -120,7 +120,7 @@ namespace ranges
                 using single_pass = std::true_type;
                 any_input_cursor() = default;
                 template<typename Rng,
-                         CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                         CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                            Same<Ref, range_reference_t<Rng>>())>
                 any_input_cursor(Rng &&rng, begin_tag)
                   : ptr_{new any_input_cursor_impl<range_iterator_t<Rng>>{begin(rng)}}
@@ -157,7 +157,7 @@ namespace ranges
             public:
                 any_input_sentinel() = default;
                 template<typename Rng,
-                         CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                         CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                            Same<Ref, range_reference_t<Rng>>())>
                 any_input_sentinel(Rng &&rng, end_tag)
                   : ptr_{new any_input_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{end(rng)}}
@@ -196,7 +196,7 @@ namespace ranges
               : any_input_range_interface<range_reference_t<Rng>>
             {
             private:
-                detail::base_iterable_holder<Rng> rng_;
+                detail::base_range_holder<Rng> rng_;
             public:
                 any_input_range_impl() = default;
                 any_input_range_impl(Rng && rng)
@@ -217,7 +217,7 @@ namespace ranges
             };
         }
 
-        /// \brief A type-erased InputIterable
+        /// \brief A type-erased InputRange
         template<typename Ref, bool Inf = false>
         struct any_input_range
           : range_facade<any_input_range<Ref>, Inf>
@@ -236,7 +236,7 @@ namespace ranges
         public:
             any_input_range() = default;
             template<typename Rng,
-                CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                   Same<Ref, range_reference_t<Rng>>())>
             any_input_range(Rng && rng)
               : ptr_{new detail::any_input_range_impl<Rng>{std::forward<Rng>(rng)}}

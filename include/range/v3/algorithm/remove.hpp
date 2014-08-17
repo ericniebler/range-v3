@@ -60,7 +60,7 @@ namespace ranges
 
             template<typename Rng, typename T, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Removable<I, T, P>() && ForwardIterable<Rng>())>
+                CONCEPT_REQUIRES_(Removable<I, T, P>() && ForwardRange<Rng>())>
             I operator()(Rng &rng, T const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));

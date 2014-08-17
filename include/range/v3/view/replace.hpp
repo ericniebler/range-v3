@@ -58,7 +58,7 @@ namespace ranges
                 static transformed_view<Rng, replacer_fun<detail::decay_t<Val1>>>
                 invoke(replace_fn, Rng && rng, Val1 && old_value, Val2 && new_value)
                 {
-                    CONCEPT_ASSERT(InputIterable<Rng>());
+                    CONCEPT_ASSERT(InputRange<Rng>());
                     CONCEPT_ASSERT(EqualityComparable<range_reference_t<Rng>,
                         detail::decay_t<Val1> const &>());
                     CONCEPT_ASSERT(Convertible<detail::decay_t<Val1> const &,

@@ -72,7 +72,7 @@ namespace ranges
             struct delimit_fn : bindable<delimit_fn>
             {
                 template<typename Rng, typename Val,
-                    CONCEPT_REQUIRES_(Iterable<Rng>())>
+                    CONCEPT_REQUIRES_(Range<Rng>())>
                 static delimited_view<Rng, Val>
                 invoke(delimit_fn, Rng && rng, Val value)
                 {

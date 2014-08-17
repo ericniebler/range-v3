@@ -36,8 +36,8 @@ namespace ranges
                 is_infinite<Rng>::value || is_infinite<range_value_t<Rng>>::value>
         {
         private:
-            CONCEPT_ASSERT(Iterable<Rng>());
-            CONCEPT_ASSERT(Iterable<range_value_t<Rng>>());
+            CONCEPT_ASSERT(Range<Rng>());
+            CONCEPT_ASSERT(Range<range_value_t<Rng>>());
             using size_type = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
 
             friend range_core_access;
@@ -113,8 +113,8 @@ namespace ranges
             explicit flatten_view(Rng &&rng)
               : range_adaptor_t<flatten_view>(std::forward<Rng>(rng)), cur_{}
             {}
-            CONCEPT_REQUIRES(ForwardSizedIterable<Rng>() &&
-                             SizedIterable<range_value_t<Rng>>())
+            CONCEPT_REQUIRES(ForwardSizedRange<Rng>() &&
+                             SizedRange<range_value_t<Rng>>())
             size_type size() const
             {
                 return accumulate(view::transform(this->base(), ranges::size), size_type{});
@@ -129,8 +129,8 @@ namespace ranges
                 static flatten_view<Rng> invoke(flatten_fn, Rng && rng)
                 {
                     // Must be a range of ranges
-                    CONCEPT_ASSERT(Iterable<Rng>());
-                    CONCEPT_ASSERT(Iterable<range_value_t<Rng>>());
+                    CONCEPT_ASSERT(Range<Rng>());
+                    CONCEPT_ASSERT(Range<range_value_t<Rng>>());
                     return flatten_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

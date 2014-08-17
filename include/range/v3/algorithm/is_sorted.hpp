@@ -26,9 +26,9 @@ namespace ranges
             ///
             /// range-based version of the \c is_sorted std algorithm
             ///
-            /// Works on ForwardIterables
+            /// Works on ForwardRanges
             ///
-            /// \pre \c Rng is a model of the ForwardIterable concept
+            /// \pre \c Rng is a model of the ForwardRange concept
             /// \pre \c I is a model of the ForwardIterator concept
             /// \pre \c S is a model of the Sentinel<I> concept
             /// \pre \c R is a model of the Relation<Value_Type<I>> concept
@@ -48,7 +48,7 @@ namespace ranges
                       typename I = range_iterator_t<Rng>,
                       typename V = iterator_value_t<I>,
                       CONCEPT_REQUIRES_(
-                       ForwardIterable<Rng>() && Invokable<P, V>() &&
+                       ForwardRange<Rng>() && Invokable<P, V>() &&
                        InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
             bool operator()(Rng &&rng, R rel = R{}, P proj = P{}) const
             {

@@ -10,7 +10,7 @@
 #include <vector>
 #include <sstream>
 #include <range/v3/core.hpp>
-#include <range/v3/view/as_range.hpp>
+#include <range/v3/view/as_bounded_range.hpp>
 #include <range/v3/view/delimit.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -20,8 +20,8 @@ int main()
     using namespace ranges;
 
     std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
-    auto rng0 = istream<int>(sinx) | view::delimit(42) | view::as_range;
-    ::models<concepts::Range>(rng0);
+    auto rng0 = istream<int>(sinx) | view::delimit(42) | view::as_bounded_range;
+    ::models<concepts::BoundedRange>(rng0);
     ::models<concepts::InputIterator>(rng0.begin());
     CONCEPT_ASSERT(Same<typename std::iterator_traits<decltype(rng0.begin())>::iterator_category,
                         std::input_iterator_tag>());
@@ -29,8 +29,8 @@ int main()
     ::check_equal(rng0, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});
 
     std::vector<int> v;
-    auto rng1 = v | view::delimit(42) | view::as_range;
-    ::models<concepts::Range>(rng1);
+    auto rng1 = v | view::delimit(42) | view::as_bounded_range;
+    ::models<concepts::BoundedRange>(rng1);
     ::models<concepts::RandomAccessIterator>(rng1.begin());
     auto const & crng1 = rng1;
     auto i = rng1.begin(); // non-const

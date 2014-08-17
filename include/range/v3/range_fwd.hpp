@@ -263,8 +263,8 @@ namespace ranges
             template<typename Concept, typename...Ts>
             struct models;
 
-            struct Iterable;
             struct Range;
+            struct BoundedRange;
             struct SizedIteratorRange;
         }
 
@@ -313,10 +313,10 @@ namespace ranges
         using invokable_t = decltype(invokable(std::declval<T>()));
 
         template<typename T>
-        struct istream_iterable;
+        struct istream_range;
 
         template<typename T>
-        istream_iterable<T> istream(std::istream & sin);
+        istream_range<T> istream(std::istream & sin);
 
         template<typename I, typename S = I>
         struct iterator_range;
@@ -363,12 +363,12 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct as_range_view;
+        struct as_bounded_range_view;
 
         namespace view
         {
-            struct as_range_fn;
-            extern as_range_fn const as_range;
+            struct as_bounded_range_fn;
+            extern as_bounded_range_fn const as_bounded_range;
         }
 
         template<typename Rng>

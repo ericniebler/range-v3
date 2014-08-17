@@ -146,7 +146,7 @@
     <ClCompile Include="..\..\..\..\test\range_facade.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
-    <ClCompile Include="..\..\..\..\test\view\as_range.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\as_bounded_range.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate.cpp" />
@@ -244,7 +244,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound_n.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\as_iterable.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\as_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\memory.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp" />
@@ -292,7 +292,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\view\as_range.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\as_bounded_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp" />

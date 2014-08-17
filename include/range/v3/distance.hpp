@@ -45,13 +45,13 @@ namespace ranges
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
-            std::pair<D, I> impl_r(Rng &rng, D d, concepts::Iterable*, concepts::Iterable*) const
+            std::pair<D, I> impl_r(Rng &rng, D d, concepts::Range*, concepts::Range*) const
             {
                 return (*this)(begin(rng), end(rng), d);
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
-            std::pair<D, I> impl_r(Rng &rng, D d, concepts::Range*, concepts::SizedIterable*) const
+            std::pair<D, I> impl_r(Rng &rng, D d, concepts::BoundedRange*, concepts::SizedRange*) const
             {
                 return {static_cast<D>(size(rng)) + d, end(rng)};
             }
@@ -65,12 +65,12 @@ namespace ranges
 
             template<typename Rng, typename D = range_difference_t<Rng>,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(Integral<D>() && Range<Rng>())>
             std::pair<D, I> operator()(Rng &&rng, D d = 0) const
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to compute the length of an infinite range!");
-                return this->impl_r(rng, d, range_concept<Rng>(), sized_iterable_concept<Rng>());
+                return this->impl_r(rng, d, bounded_range_concept<Rng>(), sized_range_concept<Rng>());
             }
         };
 
@@ -92,13 +92,13 @@ namespace ranges
             }
 
             template<typename Rng, typename D>
-            D impl_r(Rng &rng, D d, concepts::Iterable*) const
+            D impl_r(Rng &rng, D d, concepts::Range*) const
             {
                 return enumerate(rng, d).first;
             }
 
             template<typename Rng, typename D>
-            D impl_r(Rng &rng, D d, concepts::SizedIterable*) const
+            D impl_r(Rng &rng, D d, concepts::SizedRange*) const
             {
                 return static_cast<D>(size(rng)) + d;
             }
@@ -112,12 +112,12 @@ namespace ranges
             }
 
             template<typename Rng, typename D = range_difference_t<Rng>,
-                CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(Integral<D>() && Range<Rng>())>
             D operator()(Rng &&rng, D d = 0) const
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to compute the length of an infinite range!");
-                return this->impl_r(rng, d, sized_iterable_concept<Rng>());
+                return this->impl_r(rng, d, sized_range_concept<Rng>());
             }
         };
 

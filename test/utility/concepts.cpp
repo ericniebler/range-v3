@@ -49,13 +49,13 @@ static_assert(!ranges::BidirectionalIterator<int>(), "");
 static_assert(ranges::RandomAccessIterator<int*>(), "");
 static_assert(!ranges::RandomAccessIterator<int>(), "");
 
-static_assert(ranges::Iterable<ranges::istream_iterable<int>>(), "");
-static_assert(ranges::InputIterator<ranges::range_iterator_t<ranges::istream_iterable<int>>>(), "");
-static_assert(!ranges::Iterable<int>(), "");
+static_assert(ranges::Range<ranges::istream_range<int>>(), "");
+static_assert(ranges::InputIterator<ranges::range_iterator_t<ranges::istream_range<int>>>(), "");
+static_assert(!ranges::Range<int>(), "");
 
-static_assert(ranges::Range<std::vector<int> const &>(), "");
+static_assert(ranges::BoundedRange<std::vector<int> const &>(), "");
 static_assert(ranges::RandomAccessIterator<ranges::range_iterator_t<std::vector<int> const &>>(), "");
-static_assert(!ranges::Range<ranges::istream_iterable<int>>(), "");
+static_assert(!ranges::BoundedRange<ranges::istream_range<int>>(), "");
 
 static_assert(ranges::Predicate<std::less<int>, int, int>(), "");
 static_assert(!ranges::Predicate<std::less<int>, char*, int>(), "");
@@ -103,26 +103,26 @@ static_assert(ranges::WeaklyOrdered<IntComparable, int>(), "");
 
 static_assert(
     std::is_same<
-        ranges::range_concept_t<std::vector<int>>,
+        ranges::bounded_range_concept_t<std::vector<int>>,
+        ranges::concepts::BoundedRange
+    >::value, "");
+
+static_assert(
+    std::is_same<
+        ranges::sized_range_concept_t<std::vector<int>>,
+        ranges::concepts::SizedRange
+    >::value, "");
+
+static_assert(
+    std::is_same<
+        ranges::bounded_range_concept_t<ranges::istream_range<int>>,
         ranges::concepts::Range
     >::value, "");
 
 static_assert(
     std::is_same<
-        ranges::sized_iterable_concept_t<std::vector<int>>,
-        ranges::concepts::SizedIterable
-    >::value, "");
-
-static_assert(
-    std::is_same<
-        ranges::range_concept_t<ranges::istream_iterable<int>>,
-        ranges::concepts::Iterable
-    >::value, "");
-
-static_assert(
-    std::is_same<
-        ranges::sized_iterable_concept_t<ranges::istream_iterable<int>>,
-        ranges::concepts::Iterable
+        ranges::sized_range_concept_t<ranges::istream_range<int>>,
+        ranges::concepts::Range
     >::value, "");
 
 int main()

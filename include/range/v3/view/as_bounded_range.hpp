@@ -7,8 +7,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_VIEW_AS_RANGE_HPP
-#define RANGES_V3_VIEW_AS_RANGE_HPP
+#ifndef RANGES_V3_VIEW_AS_BOUNDED_RANGE_HPP
+#define RANGES_V3_VIEW_AS_BOUNDED_RANGE_HPP
 
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
@@ -25,12 +25,12 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng>
-        struct as_range_view
-          : range_facade<as_range_view<Rng>, is_infinite<Rng>::value>
+        struct as_bounded_range_view
+          : range_facade<as_bounded_range_view<Rng>, is_infinite<Rng>::value>
         {
         private:
             friend range_core_access;
-            detail::base_iterable_holder<Rng> rng_;
+            detail::base_range_holder<Rng> rng_;
 
             struct cursor
             {
@@ -104,22 +104,22 @@ namespace ranges
             {
                 return {begin(rng_.get()), end(rng_.get()), true};
             }
-            CONCEPT_REQUIRES(Iterable<Rng const>())
+            CONCEPT_REQUIRES(Range<Rng const>())
             cursor begin_cursor() const
             {
                 return {begin(rng_.get()), end(rng_.get()), false};
             }
-            CONCEPT_REQUIRES(Iterable<Rng const>())
+            CONCEPT_REQUIRES(Range<Rng const>())
             cursor end_cursor() const
             {
                 return {begin(rng_.get()), end(rng_.get()), true};
             }
         public:
-            as_range_view() = default;
-            explicit as_range_view(Rng && rng)
+            as_bounded_range_view() = default;
+            explicit as_bounded_range_view(Rng && rng)
               : rng_(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(rng_.get());
@@ -128,19 +128,19 @@ namespace ranges
 
         namespace view
         {
-            struct as_range_fn : bindable<as_range_fn>, pipeable<as_range_fn>
+            struct as_bounded_range_fn : bindable<as_bounded_range_fn>, pipeable<as_bounded_range_fn>
             {
                 template<typename Rng>
-                static as_range_view<Rng>
-                invoke(as_range_fn, Rng && rng)
+                static as_bounded_range_view<Rng>
+                invoke(as_bounded_range_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(InputIterable<Rng>());
-                    CONCEPT_ASSERT(!Range<Rng>());
-                    return as_range_view<Rng>{std::forward<Rng>(rng)};
+                    CONCEPT_ASSERT(InputRange<Rng>());
+                    CONCEPT_ASSERT(!BoundedRange<Rng>());
+                    return as_bounded_range_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
-            RANGES_CONSTEXPR as_range_fn as_range{};
+            RANGES_CONSTEXPR as_bounded_range_fn as_bounded_range{};
         }
     }
 }

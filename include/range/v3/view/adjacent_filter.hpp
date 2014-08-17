@@ -76,7 +76,7 @@ namespace ranges
                 static adjacent_filtered_view<Rng, F>
                 invoke(adjacent_filter_fn, Rng && rng, F pred)
                 {
-                    CONCEPT_ASSERT(ForwardIterable<Rng>());
+                    CONCEPT_ASSERT(ForwardRange<Rng>());
                     CONCEPT_ASSERT(InvokablePredicate<F, range_value_t<Rng>,
                                                          range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};

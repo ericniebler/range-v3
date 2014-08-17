@@ -45,7 +45,7 @@ namespace ranges
             // is always unnecessary.
             using dirty_t =
                 detail::conditional_t<
-                    (BidirectionalIterable<Rng>() && !SizedIterable<Rng>()),
+                    (BidirectionalRange<Rng>() && !SizedRange<Rng>()),
                     mutable_<bool>,
                     constant<bool, false>>;
 
@@ -54,7 +54,7 @@ namespace ranges
             // visit the correct elements.
             using offset_t =
                 detail::conditional_t<
-                    (BidirectionalIterable<Rng>()),
+                    (BidirectionalRange<Rng>()),
                     mutable_<difference_type>,
                     constant<difference_type, 0>>;
 
@@ -92,7 +92,7 @@ namespace ranges
                   : dirty_t(true), offset_t(0), rng_(&rng)
                 {
                     // Opportunistic eager cleaning when we can do so in O(1)
-                    if(BidirectionalSizedIterable<Rng>())
+                    if(BidirectionalSizedRange<Rng>())
                         do_clean();
                 }
                 void next(base_cursor_t &pos)
@@ -105,7 +105,7 @@ namespace ranges
                         rng.second);
                     pos = ranges::range_core_access::cursor(std::move(rng.first));
                 }
-                CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
+                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
                 void prev(base_cursor_t &pos)
                 {
                     clean();
@@ -116,7 +116,7 @@ namespace ranges
                     RANGES_ASSERT(0 == offset());
                     pos = ranges::range_core_access::cursor(std::move(rng.second));
                 }
-                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 difference_type distance_to(derived_cursor_t const &here,
                     derived_cursor_t const &there) const
                 {
@@ -129,7 +129,7 @@ namespace ranges
                     return (here.distance_to(there) +
                         (there.adaptor().offset() - offset())) / rng_->stride_;
                 }
-                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 void advance(base_cursor_t &pos, difference_type n)
                 {
                     clean();
@@ -151,16 +151,16 @@ namespace ranges
                     }
                 }
             };
-            // If the underlying sequence object doesn't model Range, then we can't
+            // If the underlying sequence object doesn't model BoundedRange, then we can't
             // decrement the end and there's no reason to adapt the sentinel. Strictly
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
-            // Range, adapt it anyway.
-            auto end_adaptor_(concepts::Iterable*) const -> default_adaptor
+            // BoundedRange, adapt it anyway.
+            auto end_adaptor_(concepts::Range*) const -> default_adaptor
             {
                 return {};
             }
-            auto end_adaptor_(concepts::Range*) const -> adaptor
+            auto end_adaptor_(concepts::BoundedRange*) const -> adaptor
             {
                 return {*this, end_tag{}};
             }
@@ -169,10 +169,10 @@ namespace ranges
             {
                 return {*this, begin_tag{}};
             }
-            detail::conditional_t<(Range<Rng>()), adaptor, default_adaptor>
+            detail::conditional_t<(BoundedRange<Rng>()), adaptor, default_adaptor>
             end_adaptor() const
             {
-                return strided_view::end_adaptor_(range_concept<Rng>());
+                return strided_view::end_adaptor_(bounded_range_concept<Rng>());
             }
         public:
             strided_view() = default;
@@ -182,7 +182,7 @@ namespace ranges
             {
                 RANGES_ASSERT(0 < stride_);
             }
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             size_type size() const
             {
                 return (this->base_size() + static_cast<size_type>(stride_) - 1) /
@@ -198,7 +198,7 @@ namespace ranges
                 static strided_view<Rng>
                 invoke(stride_fn, Rng && rng, range_difference_t<Rng> step)
                 {
-                    CONCEPT_ASSERT(InputIterable<Rng>());
+                    CONCEPT_ASSERT(InputRange<Rng>());
                     return {std::forward<Rng>(rng), step};
                 }
 

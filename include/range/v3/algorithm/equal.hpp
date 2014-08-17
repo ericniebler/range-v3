@@ -106,7 +106,7 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = detail::uncvref_t<I1Ref>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng0>() &&
+                    Range<Rng0>() &&
                     WeakRangeEqualityComparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(Rng0 && rng0, I1Ref && begin1, C pred_ = C{}, P0 proj0_ = P0{},
@@ -121,13 +121,13 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng0>() && Iterable<Rng1>() &&
+                    Range<Rng0>() && Range<Rng1>() &&
                     RangeEqualityComparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(Rng0 && rng0, Rng1 && rng1, C pred_ = C{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const
             {
-                if(SizedIterable<Rng0>() && SizedIterable<Rng1>())
+                if(SizedRange<Rng0>() && SizedRange<Rng1>())
                     if(distance(rng0) != distance(rng1))
                         return false;
                 return this->nocheck(begin(rng0), end(rng0), begin(rng1), end(rng1),

@@ -39,15 +39,15 @@ namespace ranges
               : range_facade<basic_sliced_view<Rng, IsTakeView>>
             {
             private:
-                CONCEPT_ASSERT(InputIterable<Rng>());
-                CONCEPT_ASSERT(IsTakeView || ForwardIterable<Rng>());
+                CONCEPT_ASSERT(InputRange<Rng>());
+                CONCEPT_ASSERT(IsTakeView || ForwardRange<Rng>());
                 friend range_core_access;
                 using size_type = range_size_t<Rng>;
                 using difference_type = range_difference_t<Rng>;
                 using from_t = detail::conditional_t<IsTakeView, constant<size_type, 0>, mutable_<size_type>>;
                 // Mutable here. Const-correctness is enforced below by only conditionally
                 // allowing the const-qualified begin_cursor()/end_cursor() accessors.
-                mutable detail::base_iterable_holder<Rng> rng_;
+                mutable detail::base_range_holder<Rng> rng_;
                 compressed_pair<from_t, size_type> from_to_;
 
                 constexpr size_type from() const
@@ -149,12 +149,12 @@ namespace ranges
                 {
                     return {*this, end_tag{}};
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
+                CONCEPT_REQUIRES(Range<Rng const>())
                 cursor begin_cursor() const
                 {
                     return {*this, begin_tag{}};
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
+                CONCEPT_REQUIRES(Range<Rng const>())
                 cursor end_cursor() const
                 {
                     return {*this, end_tag{}};
@@ -182,7 +182,7 @@ namespace ranges
         struct sliced_view
           : detail::basic_sliced_view<Rng>
         {
-            CONCEPT_ASSERT(ForwardIterable<Rng>());
+            CONCEPT_ASSERT(ForwardRange<Rng>());
 
             using size_type = range_size_t<Rng>;
 
@@ -200,7 +200,7 @@ namespace ranges
                 static sliced_view<Rng>
                 invoke(slice_fn, Rng && rng, range_size_t<Rng> from, range_size_t<Rng> to)
                 {
-                    CONCEPT_ASSERT(ForwardIterable<Rng>());
+                    CONCEPT_ASSERT(ForwardRange<Rng>());
                     return {std::forward<Rng>(rng), from, to};
                 }
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>

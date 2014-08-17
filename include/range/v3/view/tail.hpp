@@ -34,7 +34,7 @@ namespace ranges
           : private range_base
         {
         private:
-            detail::base_iterable_holder<Rng> rng_;
+            detail::base_range_holder<Rng> rng_;
         public:
             using iterator = range_iterator_t<Rng>;
             using sentinel = range_sentinel_t<Rng>;
@@ -43,8 +43,8 @@ namespace ranges
             tail_view(Rng &&rng)
               : rng_(std::forward<Rng>(rng))
             {
-                CONCEPT_ASSERT(InputIterable<Rng>());
-                RANGES_ASSERT(!ForwardIterable<Rng>() || !empty(rng_.get()));
+                CONCEPT_ASSERT(InputRange<Rng>());
+                RANGES_ASSERT(!ForwardRange<Rng>() || !empty(rng_.get()));
             }
             iterator begin() const
             {
@@ -70,7 +70,7 @@ namespace ranges
             {
                 return rng_.get();
             }
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(rng_.get()) - 1;
@@ -84,7 +84,7 @@ namespace ranges
                 template<typename Rng>
                 static tail_view<Rng> invoke(tail_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(Iterable<Rng>());
+                    CONCEPT_ASSERT(Range<Rng>());
                     return tail_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

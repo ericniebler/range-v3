@@ -12,7 +12,7 @@
 #include <sstream>
 #include <range/v3/core.hpp>
 #include <range/v3/view/zip.hpp>
-#include <range/v3/view/as_range.hpp>
+#include <range/v3/view/as_bounded_range.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"
@@ -29,9 +29,9 @@ int main()
     {
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
-        auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::as_range);
-        ::models<concepts::Range>(rng);
-        ::models_not<concepts::SizedIterable>(rng);
+        auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::as_bounded_range);
+        ::models<concepts::BoundedRange>(rng);
+        ::models_not<concepts::SizedRange>(rng);
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected(begin(rng), end(rng));
@@ -41,14 +41,14 @@ int main()
                                  V{3, "goodbye", "ringo"}});
     }
 
-    // Mixed ranges and iterables
+    // Mixed ranges and bounded ranges
     {
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str));
-        ::models<concepts::Iterable>(rng);
-        ::models_not<concepts::SizedIterable>(rng);
-        ::models_not<concepts::Range>(rng);
+        ::models<concepts::Range>(rng);
+        ::models_not<concepts::SizedRange>(rng);
+        ::models_not<concepts::BoundedRange>(rng);
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected;
@@ -60,8 +60,8 @@ int main()
     }
 
     auto rnd_rng = view::zip(vi, vs);
-    ::models<concepts::Range>(rnd_rng);
-    ::models<concepts::SizedIterable>(rnd_rng);
+    ::models<concepts::BoundedRange>(rnd_rng);
+    ::models<concepts::SizedRange>(rnd_rng);
     ::models<concepts::RandomAccessIterator>(begin(rnd_rng));
     auto tmp = cbegin(rnd_rng) + 3;
     CHECK(std::get<0>(*tmp) == 3);

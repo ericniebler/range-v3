@@ -750,7 +750,7 @@ int main()
                                    sentinel<const int*>(ib + sa - 1)) == false);
     }
 
-    // Range tests, with sentinels:
+    // BoundedRange tests, with sentinels:
     {
         const int ia[] = {0, 1, 2, 3, 0, 5, 6, 2, 4, 4};
         const int ib[] = {4, 2, 3, 0, 1, 4, 0, 5, 6, 2};
@@ -773,7 +773,7 @@ int main()
                                    sentinel<const int*>(ib + sa - 1))) == false);
     }
 
-    // Range tests, with sentinels, with predicate:
+    // BoundedRange tests, with sentinels, with predicate:
     {
         const int ia[] = {0, 1, 2, 3, 0, 5, 6, 2, 4, 4};
         const int ib[] = {4, 2, 3, 0, 1, 4, 0, 5, 6, 2};
@@ -800,7 +800,7 @@ int main()
                                    std::equal_to<int const>()) == false);
     }
 
-    // Range tests, with sentinels, with predicate and projections:
+    // BoundedRange tests, with sentinels, with predicate and projections:
     {
         const S ia[] = {{0}, {1}, {2}, {3}, {0}, {5}, {6}, {2}, {4}, {4}};
         const T ib[] = {{4}, {2}, {3}, {0}, {1}, {4}, {0}, {5}, {6}, {2}};

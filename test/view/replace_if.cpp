@@ -13,7 +13,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/istream_range.hpp>
 #include <range/v3/view/replace_if.hpp>
-#include <range/v3/view/as_range.hpp>
+#include <range/v3/view/as_bounded_range.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -28,16 +28,16 @@ int main()
 
     auto && rng = istream<int>(sin) | view::replace_if([](int i){return i == 1; }, 42);
     has_type<int const &>(*begin(rng));
-    models<concepts::Iterable>(rng);
-    models_not<concepts::SizedIterable>(rng);
-    models_not<concepts::Range>(rng);
+    models<concepts::Range>(rng);
+    models_not<concepts::SizedRange>(rng);
+    models_not<concepts::BoundedRange>(rng);
     models<concepts::InputIterator>(begin(rng));
     models_not<concepts::ForwardIterator>(begin(rng));
 
-    auto && tmp = rng | view::as_range;
+    auto && tmp = rng | view::as_bounded_range;
     has_type<int const &>(*begin(tmp));
-    models<concepts::Range>(tmp);
-    models_not<concepts::SizedIterable>(tmp);
+    models<concepts::BoundedRange>(tmp);
+    models_not<concepts::SizedRange>(tmp);
     models<concepts::InputIterator>(begin(tmp));
     models_not<concepts::ForwardIterator>(begin(tmp));
     std::vector<int> actual{begin(tmp), end(tmp)};

@@ -138,9 +138,6 @@
     <ClCompile Include="..\..\..\..\test\range_adaptor.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\view\as_range.cpp">
-      <Filter>Test Files\view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\counted.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -344,6 +341,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\algorithm\inplace_merge.cpp">
       <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\as_bounded_range.cpp">
+      <Filter>Test Files\view</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -677,9 +677,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\view\as_range.hpp">
-      <Filter>Header Files\view</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\unreachable.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
@@ -709,9 +706,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\as_iterable.hpp">
-      <Filter>Header Files\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\test_utils.hpp">
       <Filter>Test Files</Filter>
@@ -819,6 +813,12 @@
       <Filter>Header Files\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\detail\memory.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\as_bounded_range.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\as_range.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
   </ItemGroup>
