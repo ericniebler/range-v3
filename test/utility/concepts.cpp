@@ -53,7 +53,9 @@ static_assert(ranges::Range<ranges::istream_range<int>>(), "");
 static_assert(ranges::InputIterator<ranges::range_iterator_t<ranges::istream_range<int>>>(), "");
 static_assert(!ranges::Range<int>(), "");
 
-static_assert(ranges::BoundedRange<std::vector<int> const &>(), "");
+static_assert(ranges::ConvertibleToBoundedRange<std::vector<int> >(), "");
+static_assert(!ranges::BoundedRange<std::vector<int>>(), "");
+static_assert(!ranges::BoundedRange<std::vector<int> &>(), "");
 static_assert(ranges::RandomAccessIterator<ranges::range_iterator_t<std::vector<int> const &>>(), "");
 static_assert(!ranges::BoundedRange<ranges::istream_range<int>>(), "");
 
@@ -103,14 +105,14 @@ static_assert(ranges::WeaklyOrdered<IntComparable, int>(), "");
 
 static_assert(
     std::is_same<
-        ranges::bounded_range_concept_t<std::vector<int>>,
-        ranges::concepts::BoundedRange
+        ranges::convertible_to_bounded_range_concept_t<std::vector<int>>,
+        ranges::concepts::ConvertibleToBoundedRange
     >::value, "");
 
 static_assert(
     std::is_same<
-        ranges::sized_range_concept_t<std::vector<int>>,
-        ranges::concepts::SizedRange
+        ranges::convertible_to_sized_range_concept_t<std::vector<int>>,
+        ranges::concepts::ConvertibleToSizedRange
     >::value, "");
 
 static_assert(

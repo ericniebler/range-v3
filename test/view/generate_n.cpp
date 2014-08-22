@@ -34,7 +34,7 @@ int main()
         auto fib = view::generate_n([=]()mutable->int{int tmp = i; i += j; std::swap(i, j); return tmp;}, 10);
         CONCEPT_ASSERT(ranges::InputRange<decltype(fib)>());
         check_equal(fib, {0,1,1,2,3,5,8,13,21,34});
-        // The generator cannot be called when it's const-qualifies, so "fib const"
+        // The generator cannot be called when it's const-qualified, so "fib const"
         // does not model Range.
         CONCEPT_ASSERT(!ranges::Range<decltype(fib) const>());
     }

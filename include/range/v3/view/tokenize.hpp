@@ -21,8 +21,9 @@
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/utility/bindable.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/bindable.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -32,28 +33,29 @@ namespace ranges
         struct tokenized_view : private range_base
         {
         private:
-            detail::base_range_holder<Rng> rng_;
+            using base_range_t = range_view_all_t<Rng>;
+            base_range_t rng_;
             Regex rex_;
             SubMatchRange subs_;
             std::regex_constants::match_flag_type flags_;
         public:
             using iterator =
-                std::regex_token_iterator<range_iterator_t<Rng>>;
+                std::regex_token_iterator<range_iterator_t<base_range_t>>;
 
             tokenized_view() = default;
             tokenized_view(Rng &&rng, Regex && rex, SubMatchRange subs,
                 std::regex_constants::match_flag_type flags)
-              : rng_(std::forward<Rng>(rng))
+              : rng_(view::all(std::forward<Rng>(rng)))
               , rex_(std::forward<Regex>(rex)), subs_(std::move(subs)), flags_(flags)
             {}
             iterator begin()
             {
-                return {begin(rng_.get()), end(rng_.get()), rex_, subs_, flags_};
+                return {begin(rng_), end(rng_), rex_, subs_, flags_};
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_REQUIRES(Range<base_range_t const>())
             iterator begin() const
             {
-                return {begin(rng_.get()), end(rng_.get()), rex_, subs_, flags_};
+                return {begin(rng_), end(rng_), rex_, subs_, flags_};
             }
             iterator end() const
             {
@@ -67,14 +69,6 @@ namespace ranges
             {
                 return begin() != end();
             }
-            Rng & base()
-            {
-                return rng_.get();
-            }
-            Rng const & base() const
-            {
-                return rng_.get();
-            }
         };
 
         namespace view
@@ -87,7 +81,7 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(BidirectionalBoundedRange<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToBidirectionalBoundedRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -101,7 +95,7 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(BidirectionalBoundedRange<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToBidirectionalBoundedRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -115,7 +109,7 @@ namespace ranges
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(BidirectionalBoundedRange<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToBidirectionalBoundedRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");

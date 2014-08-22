@@ -46,7 +46,7 @@ namespace ranges
 
             template<typename Rng, typename T0, typename T1, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Range<Rng>())>
+                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && ConvertibleToRange<Rng>())>
             I operator()(Rng & rng, T0 const & old_value, T1 const & new_value, P proj = {}) const
             {
                 return (*this)(begin(rng), end(rng), old_value, new_value, std::move(proj));

@@ -45,13 +45,13 @@ namespace ranges
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
-            std::pair<D, I> impl_r(Rng &rng, D d, concepts::Range*, concepts::Range*) const
+            std::pair<D, I> impl_r(Rng &rng, D d, concepts::ConvertibleToRange*, concepts::ConvertibleToRange*) const
             {
                 return (*this)(begin(rng), end(rng), d);
             }
 
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
-            std::pair<D, I> impl_r(Rng &rng, D d, concepts::BoundedRange*, concepts::SizedRange*) const
+            std::pair<D, I> impl_r(Rng &rng, D d, concepts::ConvertibleToBoundedRange*, concepts::ConvertibleToSizedRange*) const
             {
                 return {static_cast<D>(size(rng)) + d, end(rng)};
             }
@@ -65,12 +65,13 @@ namespace ranges
 
             template<typename Rng, typename D = range_difference_t<Rng>,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Integral<D>() && Range<Rng>())>
+                CONCEPT_REQUIRES_(Integral<D>() && ConvertibleToRange<Rng>())>
             std::pair<D, I> operator()(Rng &&rng, D d = 0) const
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to compute the length of an infinite range!");
-                return this->impl_r(rng, d, bounded_range_concept<Rng>(), sized_range_concept<Rng>());
+                return this->impl_r(rng, d, convertible_to_bounded_range_concept<Rng>(),
+                    convertible_to_sized_range_concept<Rng>());
             }
         };
 
@@ -92,13 +93,13 @@ namespace ranges
             }
 
             template<typename Rng, typename D>
-            D impl_r(Rng &rng, D d, concepts::Range*) const
+            D impl_r(Rng &rng, D d, concepts::ConvertibleToRange*) const
             {
                 return enumerate(rng, d).first;
             }
 
             template<typename Rng, typename D>
-            D impl_r(Rng &rng, D d, concepts::SizedRange*) const
+            D impl_r(Rng &rng, D d, concepts::ConvertibleToSizedRange*) const
             {
                 return static_cast<D>(size(rng)) + d;
             }
@@ -108,16 +109,17 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I, S>() && Integral<D>())>
             D operator()(I begin, S end, D d = 0) const
             {
-                return this->impl_i(std::move(begin), std::move(end), d, sized_iterator_range_concept<I, S>());
+                return this->impl_i(std::move(begin), std::move(end), d,
+                    sized_iterator_range_concept<I, S>());
             }
 
             template<typename Rng, typename D = range_difference_t<Rng>,
-                CONCEPT_REQUIRES_(Integral<D>() && Range<Rng>())>
+                CONCEPT_REQUIRES_(Integral<D>() && ConvertibleToRange<Rng>())>
             D operator()(Rng &&rng, D d = 0) const
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to compute the length of an infinite range!");
-                return this->impl_r(rng, d, sized_range_concept<Rng>());
+                return this->impl_r(rng, d, convertible_to_sized_range_concept<Rng>());
             }
         };
 

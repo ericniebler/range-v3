@@ -64,7 +64,7 @@ namespace ranges
                     pos.next();
                     this->satisfy(pos);
                 }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
+                CONCEPT_REQUIRES(ConvertibleToBidirectionalRange<Rng>())
                 void prev(base_cursor_t &pos) const
                 {
                     do
@@ -107,7 +107,7 @@ namespace ranges
                     template<typename Rng, typename This>
                     static filtered_view<Rng, Pred> pipe(Rng && rng, This && this_)
                     {
-                        CONCEPT_ASSERT(Range<Rng>());
+                        CONCEPT_ASSERT(ConvertibleToRange<Rng>());
                         CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
                         return {std::forward<Rng>(rng), std::forward<This>(this_).pred_};
                     }
@@ -117,7 +117,7 @@ namespace ranges
                 static filtered_view<Rng, Pred>
                 invoke(filter_fn, Rng && rng, Pred pred)
                 {
-                    CONCEPT_ASSERT(Range<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToRange<Rng>());
                     CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }

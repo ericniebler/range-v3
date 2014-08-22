@@ -70,16 +70,6 @@
                 return detail::container_view_all2(begin(t), end(t), size(t));
             }
 
-            template<typename T>
-            using convertible_to_sized_range_concept =
-                concepts::most_refined<
-                    typelist<concepts::ConvertibleToSizedRange,
-                             concepts::ConvertibleToRange>, T>;
-
-            template<typename T>
-            using convertible_to_sized_range_concept_t =
-                meta_apply<convertible_to_sized_range_concept, T>;
-
             template<typename T, typename C = convertible_to_sized_range_concept<T>>
             struct container_view_all_type
             {
@@ -110,7 +100,7 @@
             template<typename T,
                 CONCEPT_REQUIRES_(
                     ConvertibleToRange<T>() &&
-                    is_range<T>::value)>
+                    is_range<T>())>
             T operator()(T && t) const
             {
                 return std::forward<T>(t);
@@ -120,12 +110,12 @@
             template<typename T,
                 CONCEPT_REQUIRES_(
                     ConvertibleToRange<T>() &&
-                    !is_range<T>::value &&
-                    detail::owns_its_elements_t<T>::value &&
-                    std::is_lvalue_reference<T>::value)>
+                    !is_range<T>() &&
+                    detail::owns_its_elements_t<T>() &&
+                    std::is_lvalue_reference<T>())>
             detail::container_view_all_t<T> operator()(T && t) const
             {
-                return detail::container_view_all(t, detail::convertible_to_sized_range_concept<T>());
+                return detail::container_view_all(t, convertible_to_sized_range_concept<T>());
             }
 
             // TODO handle char const * by turning it into a delimited range
@@ -133,5 +123,5 @@
 
         RANGES_CONSTEXPR as_range_fn as_range {};
 
-        template<typename ConvertibleToRange>
-        using as_range_t = decltype(as_range(std::declval<ConvertibleToRange>()));
+        template<typename Rng>
+        using as_range_t = decltype(as_range(std::declval<Rng>()));

@@ -21,6 +21,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -120,7 +121,7 @@ namespace ranges
                 using single_pass = std::true_type;
                 any_input_cursor() = default;
                 template<typename Rng,
-                         CONCEPT_REQUIRES_(InputRange<Rng>() &&
+                         CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng>() &&
                                            Same<Ref, range_reference_t<Rng>>())>
                 any_input_cursor(Rng &&rng, begin_tag)
                   : ptr_{new any_input_cursor_impl<range_iterator_t<Rng>>{begin(rng)}}
@@ -157,7 +158,7 @@ namespace ranges
             public:
                 any_input_sentinel() = default;
                 template<typename Rng,
-                         CONCEPT_REQUIRES_(InputRange<Rng>() &&
+                         CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng>() &&
                                            Same<Ref, range_reference_t<Rng>>())>
                 any_input_sentinel(Rng &&rng, end_tag)
                   : ptr_{new any_input_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{end(rng)}}
@@ -196,23 +197,23 @@ namespace ranges
               : any_input_range_interface<range_reference_t<Rng>>
             {
             private:
-                detail::base_range_holder<Rng> rng_;
+                range_view_all_t<Rng> rng_;
             public:
                 any_input_range_impl() = default;
                 any_input_range_impl(Rng && rng)
-                  : rng_{std::forward<Rng>(rng)}
+                  : rng_{view::all(std::forward<Rng>(rng))}
                 {}
                 any_input_cursor<range_reference_t<Rng>> begin_cursor() const override
                 {
-                    return {rng_.get(), begin_tag{}};
+                    return {rng_, begin_tag{}};
                 }
                 any_input_sentinel<range_reference_t<Rng>> end_cursor() const override
                 {
-                    return {rng_.get(), end_tag{}};
+                    return {rng_, end_tag{}};
                 }
-                any_input_range_impl *clone() const override
+                any_input_range_interface<range_reference_t<Rng>> *clone() const override
                 {
-                    return new any_input_range_impl<Rng>{static_cast<Rng>(rng_.get())};
+                    return new any_input_range_impl<range_view_all_t<Rng>>{static_cast<range_view_all_t<Rng>>(rng_)};
                 }
             };
         }
@@ -236,7 +237,7 @@ namespace ranges
         public:
             any_input_range() = default;
             template<typename Rng,
-                CONCEPT_REQUIRES_(InputRange<Rng>() &&
+                CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng>() &&
                                   Same<Ref, range_reference_t<Rng>>())>
             any_input_range(Rng && rng)
               : ptr_{new detail::any_input_range_impl<Rng>{std::forward<Rng>(rng)}}

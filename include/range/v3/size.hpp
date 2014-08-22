@@ -25,7 +25,7 @@ namespace ranges
         struct size_fn
         {
             template<typename Rng,
-                CONCEPT_REQUIRES_(SizedRange<Rng>())>
+                CONCEPT_REQUIRES_(ConvertibleToSizedRange<Rng>())>
             constexpr range_size_t<Rng> operator()(Rng &&rng) const
             {
                 return range_size(rng);

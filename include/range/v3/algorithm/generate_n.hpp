@@ -53,7 +53,7 @@ namespace ranges
             template<typename Rng, typename F,
                 typename O = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Function<F>() &&
-                    OutputRange<Rng, concepts::Function::result_t<F>>())>
+                    ConvertibleToOutputRange<Rng, concepts::Function::result_t<F>>())>
             std::tuple<O, F, iterator_difference_t<O>>
             operator()(Rng & rng, iterator_difference_t<O> n, F fun) const
             {

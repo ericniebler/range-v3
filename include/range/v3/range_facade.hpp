@@ -314,42 +314,6 @@ namespace ranges
                     return std::addressof(x);
                 }
             };
-
-            template<typename BaseRng>
-            struct base_range_holder
-            {
-            private:
-                BaseRng rng_;
-            public:
-                base_range_holder() = default;
-                base_range_holder(BaseRng &&rng)
-                  : rng_(std::forward<BaseRng>(rng))
-                {}
-                BaseRng &get()
-                {
-                    return rng_;
-                }
-                BaseRng const &get() const
-                {
-                    return rng_;
-                }
-            };
-
-            template<typename BaseRng>
-            struct base_range_holder<BaseRng &>
-            {
-            private:
-                BaseRng *rng_;
-            public:
-                base_range_holder() = default;
-                base_range_holder(BaseRng &rng)
-                  : rng_(&rng)
-                {}
-                BaseRng &get() const
-                {
-                    return *rng_;
-                }
-            };
         }
 
         struct range_core_access

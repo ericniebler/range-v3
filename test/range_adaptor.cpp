@@ -20,7 +20,7 @@ struct my_reverse_view
   : ranges::range_adaptor<my_reverse_view<BidiRange>, BidiRange>
 {
 private:
-    CONCEPT_ASSERT(ranges::BidirectionalBoundedRange<BidiRange>());
+    CONCEPT_ASSERT(ranges::ConvertibleToBidirectionalBoundedRange<BidiRange>());
     friend ranges::range_core_access;
     using base_cursor_t = ranges::base_cursor_t<my_reverse_view>;
 
@@ -48,12 +48,12 @@ private:
             tmp.prev();
             return tmp.current();
         }
-        CONCEPT_REQUIRES(ranges::RandomAccessBoundedRange<BidiRange>())
+        CONCEPT_REQUIRES(ranges::ConvertibleToRandomAccessBoundedRange<BidiRange>())
         void advance(base_cursor_t &pos, ranges::range_difference_t<BidiRange> n)
         {
             pos.advance(-n);
         }
-        CONCEPT_REQUIRES(ranges::RandomAccessBoundedRange<BidiRange>())
+        CONCEPT_REQUIRES(ranges::ConvertibleToRandomAccessBoundedRange<BidiRange>())
         ranges::range_difference_t<BidiRange>
         distance_to(base_cursor_t const &here, base_cursor_t const &there)
         {

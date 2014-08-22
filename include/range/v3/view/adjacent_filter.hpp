@@ -62,6 +62,7 @@ namespace ranges
                 return{*this};
             }
         public:
+            adjacent_filtered_view() = default;
             adjacent_filtered_view(Rng && rng, F pred)
               : range_adaptor_t<adjacent_filtered_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))
@@ -76,7 +77,7 @@ namespace ranges
                 static adjacent_filtered_view<Rng, F>
                 invoke(adjacent_filter_fn, Rng && rng, F pred)
                 {
-                    CONCEPT_ASSERT(ForwardRange<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToForwardRange<Rng>());
                     CONCEPT_ASSERT(InvokablePredicate<F, range_value_t<Rng>,
                                                          range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};

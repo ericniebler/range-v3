@@ -14,6 +14,8 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/meta.hpp>
+#include <range/v3/size.hpp>
 
 namespace ranges
 {
@@ -37,11 +39,11 @@ namespace ranges
                     CONCEPT_REQUIRES_(ConvertibleToRange<T>() &&
                         !is_range<T>::value)>
                 static auto invoke(all_fn, T && t) ->
-                    decltype(detail::container_view_all(t, detail::convertible_to_sized_range_concept<T>()))
+                    decltype(detail::container_view_all(t, convertible_to_sized_range_concept<T>()))
                 {
-                    static_assert(!std::is_lvalue_reference<T>::value,
+                    static_assert(std::is_lvalue_reference<T>::value,
                         "Cannot get a view of a temporary container");
-                    return detail::container_view_all(t, detail::convertible_to_sized_range_concept<T>());
+                    return detail::container_view_all(t, convertible_to_sized_range_concept<T>());
                 }
 
                 // TODO handle char const * by turning it into a delimited range
@@ -51,7 +53,8 @@ namespace ranges
         }
 
         template<typename ConvertibleToRange>
-        using range_view_all_t = decltype(view::all(std::declval<ConvertibleToRange>()));
+        using range_view_all_t =
+            meta_apply<std::decay, decltype(view::all(std::declval<ConvertibleToRange>()))>;
     }
 }
 

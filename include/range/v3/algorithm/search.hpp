@@ -185,8 +185,8 @@ namespace ranges
                 typename P2 = ident, typename I1 = range_iterator_t<Rng1>, typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(
                     Searchable<I1, I2, C, P1, P2>() &&
-                    Range<Rng1>() &&
-                    Range<Rng2>()
+                    ConvertibleToRange<Rng1>() &&
+                    ConvertibleToRange<Rng2>()
                 )>
             I1 operator()(Rng1 & rng1, Rng2 && rng2, C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -195,7 +195,7 @@ namespace ranges
                 auto &&pred = invokable(pred_);
                 auto &&proj1 = invokable(proj1_);
                 auto &&proj2 = invokable(proj2_);
-                if(SizedRange<Rng1>() && SizedRange<Rng2>())
+                if(ConvertibleToSizedRange<Rng1>() && ConvertibleToSizedRange<Rng2>())
                     return search_fn::sized_impl(begin(rng1), end(rng1), distance(rng1),
                         begin(rng2), end(rng2), distance(rng2), pred, proj1, proj2);
                 else

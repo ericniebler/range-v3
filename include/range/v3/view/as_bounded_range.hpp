@@ -19,6 +19,7 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -30,13 +31,14 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            detail::base_range_holder<Rng> rng_;
+            using base_range_t = range_view_all_t<Rng>;
+            base_range_t rng_;
 
             struct cursor
             {
             private:
-                using base_iterator_t = range_iterator_t<Rng>;
-                using base_sentinel_t = range_sentinel_t<Rng>;
+                using base_iterator_t = range_iterator_t<base_range_t>;
+                using base_sentinel_t = range_sentinel_t<base_range_t>;
 
                 base_iterator_t it_;
                 base_sentinel_t se_;
@@ -89,7 +91,7 @@ namespace ranges
                     it_ += n;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                range_difference_t<Rng> distance_to(cursor const &that) const
+                range_difference_t<base_range_t> distance_to(cursor const &that) const
                 {
                     clean();
                     that.clean();
@@ -98,31 +100,31 @@ namespace ranges
             };
             cursor begin_cursor()
             {
-                return {begin(rng_.get()), end(rng_.get()), false};
+                return {begin(rng_), end(rng_), false};
             }
             cursor end_cursor()
             {
-                return {begin(rng_.get()), end(rng_.get()), true};
+                return {begin(rng_), end(rng_), true};
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_REQUIRES(Range<base_range_t const>())
             cursor begin_cursor() const
             {
-                return {begin(rng_.get()), end(rng_.get()), false};
+                return {begin(rng_), end(rng_), false};
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_REQUIRES(Range<base_range_t const>())
             cursor end_cursor() const
             {
-                return {begin(rng_.get()), end(rng_.get()), true};
+                return {begin(rng_), end(rng_), true};
             }
         public:
             as_bounded_range_view() = default;
             explicit as_bounded_range_view(Rng && rng)
-              : rng_(std::forward<Rng>(rng))
+              : rng_(view::all(std::forward<Rng>(rng)))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_t<Rng> size() const
+            CONCEPT_REQUIRES(SizedRange<base_range_t>())
+            range_size_t<base_range_t> size() const
             {
-                return ranges::size(rng_.get());
+                return ranges::size(rng_);
             }
         };
 
@@ -134,8 +136,8 @@ namespace ranges
                 static as_bounded_range_view<Rng>
                 invoke(as_bounded_range_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(InputRange<Rng>());
-                    CONCEPT_ASSERT(!BoundedRange<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToInputRange<Rng>());
+                    CONCEPT_ASSERT(!ConvertibleToBoundedRange<Rng>());
                     return as_bounded_range_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

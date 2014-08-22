@@ -60,7 +60,7 @@ namespace ranges
             explicit const_view(Rng && rng)
               : range_adaptor_t<const_view>(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(ConvertibleToSizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return this->base_size();
@@ -74,7 +74,7 @@ namespace ranges
                 template<typename Rng>
                 static const_view<Rng> invoke(const_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(Range<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToRange<Rng>());
                     return const_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

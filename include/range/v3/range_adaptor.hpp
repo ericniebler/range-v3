@@ -18,6 +18,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -358,12 +359,12 @@ namespace ranges
             friend range_core_access;
             friend default_adaptor;
             using range_adaptor_t = range_adaptor;
-            using base_range_t = BaseRng;
+            using base_range_t = range_view_all_t<BaseRng>;
             using range_facade<Derived, Inf>::derived;
             // Mutable here. Const-correctness is enforced below by disabling
             // begin_cursor/end_cursor if "BaseRng const" does not model
             // the Range concept.
-            mutable detail::base_range_holder<BaseRng> rng_;
+            mutable base_range_t rng_;
 
             default_adaptor begin_adaptor() const
             {
@@ -376,29 +377,21 @@ namespace ranges
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             base_cursor_t<D> base_begin() const
             {
-                return detail::base_cursor_helper<BaseRng>::begin_cursor(rng_.get());
+                return detail::base_cursor_helper<base_range_t>::begin_cursor(rng_);
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             base_sentinel_t<D> base_end() const
             {
-                return detail::base_cursor_helper<BaseRng>::end_cursor(rng_.get());
+                return detail::base_cursor_helper<base_range_t>::end_cursor(rng_);
             }
-            range_difference_t<BaseRng> base_distance() const
+            range_difference_t<base_range_t> base_distance() const
             {
-                return distance(rng_.get());
+                return distance(rng_);
             }
-            BaseRng & base()
+            CONCEPT_REQUIRES(SizedRange<base_range_t>())
+            range_size_t<base_range_t> base_size() const
             {
-                return rng_.get();
-            }
-            BaseRng const & base() const
-            {
-                return rng_.get();
-            }
-            CONCEPT_REQUIRES(SizedRange<BaseRng>())
-            range_size_t<BaseRng> base_size() const
-            {
-                return size(rng_.get());
+                return size(rng_);
             }
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
@@ -422,7 +415,7 @@ namespace ranges
             // has const begin/end accessors. That disables the const begin()/end() accessors
             // in range_facade, meaning the derived range type only has mutable iterators.
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<BaseRng const>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
             detail::basic_adapted_cursor<detail::derived_cursor_t<D const>, detail::cursor_adaptor_t<D const>>
             begin_cursor() const
             {
@@ -431,7 +424,7 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<BaseRng const>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
             detail::basic_adapted_cursor<detail::derived_sentinel_t<D const>, detail::sentinel_adaptor_t<D const>>
             end_cursor() const
             {
@@ -442,7 +435,7 @@ namespace ranges
         public:
             range_adaptor() = default;
             constexpr range_adaptor(BaseRng && rng)
-              : rng_(detail::forward<BaseRng>(rng))
+              : rng_(view::all(detail::forward<BaseRng>(rng)))
             {}
         };
 

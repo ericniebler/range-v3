@@ -23,7 +23,7 @@ int main()
     ::models<concepts::Range>(rng0);
     ::models_not<concepts::BoundedRange>(rng0);
     ::models<concepts::RandomAccessIterator>(rng0.begin());
-    CONCEPT_ASSERT(RandomAccessRange<take_while_view<std::vector<int>, std::function<bool(int)>>>());
+    CONCEPT_ASSERT(RandomAccessRange<take_while_view<std::vector<int> &, std::function<bool(int)>>>());
 
     std::vector<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto rng1 = vi | view::take_while([](int i) { return i != 50; });

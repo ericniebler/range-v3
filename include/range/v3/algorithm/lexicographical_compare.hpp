@@ -67,7 +67,7 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident,
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = range_iterator_t<Rng1>,
-                CONCEPT_REQUIRES_(InputRange<Rng0>() && InputRange<Rng1>() &&
+                CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng0>() && ConvertibleToInputRange<Rng1>() &&
                     LexicographicalComparable<I0, I1, C, P0, P1>())>
             bool operator()(Rng0 &&rng0, Rng1 &&rng1, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const

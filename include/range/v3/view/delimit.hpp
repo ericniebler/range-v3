@@ -61,6 +61,7 @@ namespace ranges
                 return {value_};
             }
         public:
+            delimited_view() = default;
             delimited_view(Rng && rng, Val value)
               : range_adaptor_t<delimited_view>(std::forward<Rng>(rng))
               , value_(std::move(value))
@@ -71,8 +72,8 @@ namespace ranges
         {
             struct delimit_fn : bindable<delimit_fn>
             {
-                template<typename Rng, typename Val,
-                    CONCEPT_REQUIRES_(Range<Rng>())>
+                template<typename Rng, typename Val ,
+                    CONCEPT_REQUIRES_(ConvertibleToRange<Rng>())>
                 static delimited_view<Rng, Val>
                 invoke(delimit_fn, Rng && rng, Val value)
                 {

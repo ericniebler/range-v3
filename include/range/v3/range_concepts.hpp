@@ -73,6 +73,56 @@ namespace ranges
                     ));
             };
 
+            struct ConvertibleToOutputRange
+              : refines<ConvertibleToRange(_1)>
+            {
+                template<typename T, typename V>
+                auto requires_(T && t, V const &v) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<OutputIterator>(begin(t), v)
+                    ));
+            };
+
+            struct ConvertibleToInputRange
+              : refines<ConvertibleToRange>, detail::readable_range_traits
+            {
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<InputIterator>(begin(t))
+                    ));
+            };
+
+            struct ConvertibleToForwardRange
+              : refines<ConvertibleToInputRange>
+            {
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<ForwardIterator>(begin(t))
+                    ));
+            };
+
+            struct ConvertibleToBidirectionalRange
+              : refines<ConvertibleToForwardRange>
+            {
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<BidirectionalIterator>(begin(t))
+                    ));
+            };
+
+            struct ConvertibleToRandomAccessRange
+              : refines<ConvertibleToBidirectionalRange>
+            {
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<RandomAccessIterator>(begin(t))
+                    ));
+            };
+
             struct ConvertibleToBoundedRange
               : refines<ConvertibleToRange>
             {
@@ -88,8 +138,20 @@ namespace ranges
         template<typename T>
         using ConvertibleToRange = concepts::models<concepts::ConvertibleToRange, T>;
 
+        template<typename T, typename V>
+        using ConvertibleToOutputRange = concepts::models<concepts::ConvertibleToOutputRange, T, V>;
+
         template<typename T>
-        using ConvertibleToBoundedRange = concepts::models<concepts::ConvertibleToBoundedRange, T>;
+        using ConvertibleToInputRange = concepts::models<concepts::ConvertibleToInputRange, T>;
+
+        template<typename T>
+        using ConvertibleToForwardRange = concepts::models<concepts::ConvertibleToForwardRange, T>;
+
+        template<typename T>
+        using ConvertibleToBidirectionalRange = concepts::models<concepts::ConvertibleToBidirectionalRange, T>;
+
+        template<typename T>
+        using ConvertibleToRandomAccessRange = concepts::models<concepts::ConvertibleToRandomAccessRange, T>;
 
         // Handle sized ranges here:
         #include <range/v3/detail/range_size.hpp>
@@ -108,42 +170,50 @@ namespace ranges
         }
 
         template<typename T>
+        using ConvertibleToBoundedRange = concepts::models<concepts::ConvertibleToBoundedRange, T>;
+
+        template<typename T>
         using ConvertibleToSizedRange = concepts::models<concepts::ConvertibleToSizedRange, T>;
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // convertible_to_bounded_range_concept
+        template<typename T>
+        using convertible_to_bounded_range_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::ConvertibleToBoundedRange,
+                    concepts::ConvertibleToRange>, T>;
+
+        template<typename T>
+        using convertible_to_bounded_range_concept_t =
+            meta_apply<convertible_to_bounded_range_concept, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // convertible_to_sized_range_concept
+        template<typename T>
+        using convertible_to_sized_range_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::ConvertibleToSizedRange,
+                    concepts::ConvertibleToRange>, T>;
+
+        template<typename T>
+        using convertible_to_sized_range_concept_t =
+            meta_apply<convertible_to_sized_range_concept, T>;
+
         #include <range/v3/detail/as_range.hpp>
-
-        namespace detail
-        {
-            // Ugly hack to avoid circular include problem with iterator_range.hpp
-            template<typename T>
-            struct models_copy_constructible
-              : concepts::models<concepts::CopyConstructible, T>
-            {};
-
-            template<typename I, typename S>
-            struct models_copy_constructible<iterator_range<I, S>>
-              : logical_and_t<concepts::models<concepts::CopyConstructible, I>,
-                              concepts::models<concepts::CopyConstructible, S>>
-            {};
-
-            template<typename I, typename S>
-            struct models_copy_constructible<sized_iterator_range<I, S>>
-              : logical_and_t<concepts::models<concepts::CopyConstructible, I>,
-                              concepts::models<concepts::CopyConstructible, S>,
-                              concepts::models<concepts::CopyConstructible, iterator_size_t<I>>>
-            {};
-        }
 
         namespace concepts
         {
             struct Range
               : virtual detail::writable_range_traits
             {
-                template<typename T>
+                template<typename T, typename R = as_range_t<detail::uncvref_t<T>>>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ConvertibleToRange>((T &&) t),
-                        concepts::is_true(detail::models_copy_constructible<decltype(as_range(t))>())
+                        concepts::model_of<SemiRegular>((detail::uncvref_t<T>) t),
+                        concepts::is_true(std::is_same<detail::uncvref_t<T>, R>())
                     ));
             };
 
@@ -271,6 +341,30 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Some helpers for requirements checking
         template<typename T>
+        constexpr bool ConvertibleToSizedBoundedRange()
+        {
+            return ConvertibleToSizedRange<T>() && ConvertibleToBoundedRange<T>();
+        }
+
+        template<typename T, typename V>
+        constexpr bool ConvertibleToOutputBoundedRange()
+        {
+            return ConvertibleToOutputRange<T, V>() && ConvertibleToBoundedRange<T>();
+        }
+
+        template<typename T, typename V>
+        constexpr bool ConvertibleToOutputSizedRange()
+        {
+            return ConvertibleToOutputRange<T, V>() && ConvertibleToSizedRange<T>();
+        }
+
+        template<typename T, typename V>
+        constexpr bool ConvertibleToOutputSizedBoundedRange()
+        {
+            return ConvertibleToOutputBoundedRange<T, V>() && ConvertibleToSizedBoundedRange<T>();
+        }
+
+        template<typename T>
         constexpr bool SizedBoundedRange()
         {
             return SizedRange<T>() && BoundedRange<T>();
@@ -296,19 +390,37 @@ namespace ranges
 
     #define RANGES_RANGE_CONCEPTS_DEF(Category)                         \
         template<typename T>                                            \
-        constexpr bool Category ## BoundedRange()                       \
+        constexpr bool ConvertibleTo ## Category ## BoundedRange()      \
         {                                                               \
-            return Category ## Range<T>() && BoundedRange<T>();      \
+            return ConvertibleTo ## Category ## Range<T>() &&           \
+                   ConvertibleTo ## BoundedRange<T>();                  \
         }                                                               \
         template<typename T>                                            \
-        constexpr bool Category ## SizedRange()                      \
+        constexpr bool ConvertibleTo ## Category ## SizedRange()        \
         {                                                               \
-            return Category ## Range<T>() && SizedRange<T>();     \
+            return ConvertibleTo ## Category ## Range<T>() &&           \
+                   ConvertibleTo ## SizedRange<T>();                    \
+        }                                                               \
+        template<typename T>                                            \
+        constexpr bool ConvertibleTo ## Category ## SizedBoundedRange() \
+        {                                                               \
+            return ConvertibleTo ## Category ## SizedRange<T>() &&      \
+                   ConvertibleTo ## BoundedRange<T>();                  \
+        }                                                               \
+        template<typename T>                                            \
+        constexpr bool Category ## BoundedRange()                       \
+        {                                                               \
+            return Category ## Range<T>() && BoundedRange<T>();         \
+        }                                                               \
+        template<typename T>                                            \
+        constexpr bool Category ## SizedRange()                         \
+        {                                                               \
+            return Category ## Range<T>() && SizedRange<T>();           \
         }                                                               \
         template<typename T>                                            \
         constexpr bool Category ## SizedBoundedRange()                  \
         {                                                               \
-            return Category ## SizedRange<T>() && BoundedRange<T>(); \
+            return Category ## SizedRange<T>() && BoundedRange<T>();    \
         }                                                               \
         /**/
 

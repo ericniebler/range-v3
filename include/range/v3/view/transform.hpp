@@ -140,7 +140,7 @@ namespace ranges
                 Derived<ranges::input_iterator_tag, range_category_t<Rng>>,
                 detail::not_t<std::is_reference<reference_t>>>;
             using adaptor_t = detail::transform_adaptor<adaptor_fun_t, single_pass>;
-            using use_sentinel_t = detail::or_t<detail::not_t<BoundedRange<Rng>>, single_pass>;
+            using use_sentinel_t = detail::or_t<detail::not_t<ConvertibleToBoundedRange<Rng>>, single_pass>;
             adaptor_t begin_adaptor() const
             {
                 return adaptor_t{fun_};
@@ -161,7 +161,7 @@ namespace ranges
               : range_adaptor_t<transformed_view>(std::forward<Rng>(rng))
               , fun_(invokable(std::move(fun)))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(ConvertibleToSizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return this->base_size();
@@ -195,7 +195,7 @@ namespace ranges
                 static transformed_view<Rng, Fun>
                 invoke(transform_fn, Rng && rng, Fun fun)
                 {
-                    CONCEPT_ASSERT(InputRange<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToInputRange<Rng>());
                     CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(fun)};
                 }

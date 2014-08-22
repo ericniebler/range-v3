@@ -36,7 +36,7 @@ namespace ranges
             template<typename Rng, typename F,
                 typename O = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Function<F>() &&
-                    OutputRange<Rng, concepts::Function::result_t<F>>())>
+                    ConvertibleToOutputRange<Rng, concepts::Function::result_t<F>>())>
             std::pair<O, F> operator()(Rng & rng, F fun) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun));

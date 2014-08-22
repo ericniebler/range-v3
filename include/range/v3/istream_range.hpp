@@ -57,6 +57,7 @@ namespace ranges
                 return cursor{*this};
             }
         public:
+            istream_range() = default;
             istream_range(std::istream &sin)
               : sin_(&sin), obj_{}
             {

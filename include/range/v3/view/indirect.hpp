@@ -57,7 +57,7 @@ namespace ranges
             explicit indirect_view(Rng && rng)
               : range_adaptor_t<indirect_view>(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(ConvertibleToSizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return this->base_size();
@@ -72,7 +72,7 @@ namespace ranges
                 static indirect_view<Rng>
                 invoke(indirect_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(InputRange<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToInputRange<Rng>());
                     return indirect_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

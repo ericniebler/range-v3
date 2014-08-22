@@ -57,7 +57,7 @@ namespace ranges
 
             template<typename Rng, typename O, typename C, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RemoveCopyableIf<I, O, C, P>() && InputRange<Rng>())>
+                CONCEPT_REQUIRES_(RemoveCopyableIf<I, O, C, P>() && ConvertibleToInputRange<Rng>())>
             std::pair<I, O> operator()(Rng &rng, O out, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));

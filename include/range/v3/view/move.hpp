@@ -63,10 +63,11 @@ namespace ranges
                 return {};
             }
         public:
+            move_view() = default;
             move_view(Rng &&rng)
               : range_adaptor_t<move_view>(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(ConvertibleToSizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return this->base_size();
@@ -81,7 +82,7 @@ namespace ranges
                 static move_view<Rng>
                 invoke(move_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(InputBoundedRange<Rng>());
+                    CONCEPT_ASSERT(ConvertibleToInputBoundedRange<Rng>());
                     return move_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

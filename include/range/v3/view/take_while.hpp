@@ -64,7 +64,7 @@ namespace ranges
                 Derived<ranges::input_iterator_tag, range_category_t<Rng>>,
                 detail::not_t<std::is_reference<reference_t>>>;
             using end_adaptor_t = detail::take_while_sentinel_adaptor<adaptor_fun_t, single_pass>;
-            using use_sentinel_t = detail::or_t<detail::not_t<BoundedRange<Rng>>, single_pass>;
+            using use_sentinel_t = detail::or_t<detail::not_t<ConvertibleToBoundedRange<Rng>>, single_pass>;
 
             default_adaptor begin_adaptor() const
             {
@@ -76,6 +76,7 @@ namespace ranges
                 return {pred_};
             }
         public:
+            take_while_view() = default;
             take_while_view(Rng && rng, Pred pred)
               : range_adaptor_t<take_while_view>(std::forward<Rng>(rng))
               , pred_(invokable(std::move(pred)))
@@ -87,7 +88,7 @@ namespace ranges
             struct take_while_fn : bindable<take_while_fn>
             {
                 template<typename Rng, typename Pred,
-                    CONCEPT_REQUIRES_(Range<Rng>())>
+                    CONCEPT_REQUIRES_(ConvertibleToRange<Rng>())>
                 static take_while_view<Rng, Pred>
                 invoke(take_while_fn, Rng && rng, Pred pred)
                 {
