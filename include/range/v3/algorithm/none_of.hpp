@@ -31,8 +31,8 @@ namespace ranges
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I, S>()       &&
-                    Invokable<P, V>()           &&
+                    InputIterator<I, S>() &&
+                    Invokable<P, V>() &&
                     InvokablePredicate<F, X>()
                 )>
             bool
@@ -51,8 +51,8 @@ namespace ranges
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
-                    ConvertibleToInputRange<Rng>()        &&
-                    Invokable<P, V>()           &&
+                    InputIterable<Rng>() &&
+                    Invokable<P, V>() &&
                     InvokablePredicate<F, X>()
                 )>
             bool

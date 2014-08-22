@@ -518,8 +518,8 @@ namespace ranges
         template<typename I, typename V = concepts::Readable::value_t<I>>
         constexpr bool Permutable()
         {
-            return ForwardIterator<I>()     &&
-                   Movable<V>()             &&
+            return ForwardIterator<I>() &&
+                   Movable<V>() &&
                    IndirectlyMovable<I, I>();
         }
 
@@ -531,11 +531,11 @@ namespace ranges
             typename X1 = concepts::Invokable::result_t<P1, V1>>
         constexpr bool Mergeable()
         {
-            return InputIterator<I0>()              &&
-                   InputIterator<I1>()              &&
-                   WeaklyIncrementable<Out>()       &&
-                   InvokableRelation<C, X1, X0>()   &&
-                   IndirectlyCopyable<I0, Out>()    &&
+            return InputIterator<I0>() &&
+                   InputIterator<I1>() &&
+                   WeaklyIncrementable<Out>() &&
+                   InvokableRelation<C, X1, X0>() &&
+                   IndirectlyCopyable<I0, Out>() &&
                    IndirectlyCopyable<I1, Out>();
         }
 
@@ -544,8 +544,8 @@ namespace ranges
             typename X = concepts::Invokable::result_t<P, V>>
         constexpr bool Sortable()
         {
-            return ForwardIterator<I>()         &&
-                   Invokable<P, V>()            &&
+            return ForwardIterator<I>() &&
+                   Invokable<P, V>() &&
                    InvokableRelation<C, X, X>() &&
                    Permutable<I>();
         }
@@ -555,8 +555,8 @@ namespace ranges
             typename X = concepts::Invokable::result_t<P, V> >
         constexpr bool BinarySearchable()
         {
-            return ForwardIterator<I>()            &&
-                   Invokable<P, V>()               &&
+            return ForwardIterator<I>() &&
+                   Invokable<P, V>() &&
                    InvokableRelation<C, X, V2>();
         }
 

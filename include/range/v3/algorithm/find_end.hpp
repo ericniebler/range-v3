@@ -160,9 +160,9 @@ namespace ranges
                 typename V2 = iterator_value_t<I2>,
                 typename X = concepts::Invokable::result_t<P, V1>,
                 CONCEPT_REQUIRES_(
-                    ForwardIterator<I1, S1>()       &&
-                    ForwardIterator<I2, S2>()       &&
-                    Invokable<P, V1>()              &&
+                    ForwardIterator<I1, S1>() &&
+                    ForwardIterator<I2, S2>() &&
+                    Invokable<P, V1>() &&
                     InvokableRelation<R, X, V2>()
                 )>
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const
@@ -182,9 +182,9 @@ namespace ranges
                 typename V2 = iterator_value_t<I2>,
                 typename X = concepts::Invokable::result_t<P, V1>,
                 CONCEPT_REQUIRES_(
-                    ConvertibleToForwardRange<Rng1>()         &&
-                    ConvertibleToForwardRange<Rng2>()         &&
-                    Invokable<P, V1>()              &&
+                    ForwardIterable<Rng1>() &&
+                    ForwardIterable<Rng2>() &&
+                    Invokable<P, V1>() &&
                     InvokableRelation<R, X, V2>()
                 )>
             I1 operator()(Rng1 &rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const

@@ -61,7 +61,7 @@ namespace ranges
 
         namespace concepts
         {
-            struct ConvertibleToRange
+            struct Iterable
               : virtual detail::writable_range_traits
             {
                 // Valid expressions
@@ -73,8 +73,8 @@ namespace ranges
                     ));
             };
 
-            struct ConvertibleToOutputRange
-              : refines<ConvertibleToRange(_1)>
+            struct OutputIterable
+              : refines<Iterable(_1)>
             {
                 template<typename T, typename V>
                 auto requires_(T && t, V const &v) -> decltype(
@@ -83,8 +83,8 @@ namespace ranges
                     ));
             };
 
-            struct ConvertibleToInputRange
-              : refines<ConvertibleToRange>, detail::readable_range_traits
+            struct InputIterable
+              : refines<Iterable>, detail::readable_range_traits
             {
                 template<typename T>
                 auto requires_(T && t) -> decltype(
@@ -93,8 +93,8 @@ namespace ranges
                     ));
             };
 
-            struct ConvertibleToForwardRange
-              : refines<ConvertibleToInputRange>
+            struct ForwardIterable
+              : refines<InputIterable>
             {
                 template<typename T>
                 auto requires_(T && t) -> decltype(
@@ -103,8 +103,8 @@ namespace ranges
                     ));
             };
 
-            struct ConvertibleToBidirectionalRange
-              : refines<ConvertibleToForwardRange>
+            struct BidirectionalIterable
+              : refines<ForwardIterable>
             {
                 template<typename T>
                 auto requires_(T && t) -> decltype(
@@ -113,8 +113,8 @@ namespace ranges
                     ));
             };
 
-            struct ConvertibleToRandomAccessRange
-              : refines<ConvertibleToBidirectionalRange>
+            struct RandomAccessIterable
+              : refines<BidirectionalIterable>
             {
                 template<typename T>
                 auto requires_(T && t) -> decltype(
@@ -123,8 +123,8 @@ namespace ranges
                     ));
             };
 
-            struct ConvertibleToBoundedRange
-              : refines<ConvertibleToRange>
+            struct BoundedIterable
+              : refines<Iterable>
             {
                 // Valid expressions
                 template<typename T>
@@ -136,30 +136,30 @@ namespace ranges
         }
 
         template<typename T>
-        using ConvertibleToRange = concepts::models<concepts::ConvertibleToRange, T>;
+        using Iterable = concepts::models<concepts::Iterable, T>;
 
         template<typename T, typename V>
-        using ConvertibleToOutputRange = concepts::models<concepts::ConvertibleToOutputRange, T, V>;
+        using OutputIterable = concepts::models<concepts::OutputIterable, T, V>;
 
         template<typename T>
-        using ConvertibleToInputRange = concepts::models<concepts::ConvertibleToInputRange, T>;
+        using InputIterable = concepts::models<concepts::InputIterable, T>;
 
         template<typename T>
-        using ConvertibleToForwardRange = concepts::models<concepts::ConvertibleToForwardRange, T>;
+        using ForwardIterable = concepts::models<concepts::ForwardIterable, T>;
 
         template<typename T>
-        using ConvertibleToBidirectionalRange = concepts::models<concepts::ConvertibleToBidirectionalRange, T>;
+        using BidirectionalIterable = concepts::models<concepts::BidirectionalIterable, T>;
 
         template<typename T>
-        using ConvertibleToRandomAccessRange = concepts::models<concepts::ConvertibleToRandomAccessRange, T>;
+        using RandomAccessIterable = concepts::models<concepts::RandomAccessIterable, T>;
 
         // Handle sized ranges here:
         #include <range/v3/detail/range_size.hpp>
 
         namespace concepts
         {
-            struct ConvertibleToSizedRange
-              : refines<ConvertibleToRange>
+            struct SizedIterable
+              : refines<Iterable>
             {
                 template<typename T>
                 auto requires_(T && t) -> decltype(
@@ -170,36 +170,36 @@ namespace ranges
         }
 
         template<typename T>
-        using ConvertibleToBoundedRange = concepts::models<concepts::ConvertibleToBoundedRange, T>;
+        using BoundedIterable = concepts::models<concepts::BoundedIterable, T>;
 
         template<typename T>
-        using ConvertibleToSizedRange = concepts::models<concepts::ConvertibleToSizedRange, T>;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // convertible_to_bounded_range_concept
-        template<typename T>
-        using convertible_to_bounded_range_concept =
-            concepts::most_refined<
-                typelist<
-                    concepts::ConvertibleToBoundedRange,
-                    concepts::ConvertibleToRange>, T>;
-
-        template<typename T>
-        using convertible_to_bounded_range_concept_t =
-            meta_apply<convertible_to_bounded_range_concept, T>;
+        using SizedIterable = concepts::models<concepts::SizedIterable, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // convertible_to_sized_range_concept
+        // bounded_iterable_concept
         template<typename T>
-        using convertible_to_sized_range_concept =
+        using bounded_iterable_concept =
             concepts::most_refined<
                 typelist<
-                    concepts::ConvertibleToSizedRange,
-                    concepts::ConvertibleToRange>, T>;
+                    concepts::BoundedIterable,
+                    concepts::Iterable>, T>;
 
         template<typename T>
-        using convertible_to_sized_range_concept_t =
-            meta_apply<convertible_to_sized_range_concept, T>;
+        using bounded_iterable_concept_t =
+            meta_apply<bounded_iterable_concept, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // sized_iterable_concept
+        template<typename T>
+        using sized_iterable_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::SizedIterable,
+                    concepts::Iterable>, T>;
+
+        template<typename T>
+        using sized_iterable_concept_t =
+            meta_apply<sized_iterable_concept, T>;
 
         #include <range/v3/detail/as_range.hpp>
 
@@ -211,7 +211,7 @@ namespace ranges
                 template<typename T, typename R = as_range_t<detail::uncvref_t<T>>>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ConvertibleToRange>((T &&) t),
+                        concepts::model_of<Iterable>((T &&) t),
                         concepts::model_of<SemiRegular>((detail::uncvref_t<T>) t),
                         concepts::is_true(std::is_same<detail::uncvref_t<T>, R>())
                     ));
@@ -274,7 +274,7 @@ namespace ranges
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ConvertibleToBoundedRange>((T &&) t)
+                        concepts::model_of<BoundedIterable>((T &&) t)
                     ));
             };
 
@@ -284,7 +284,7 @@ namespace ranges
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<ConvertibleToSizedRange>((T &&) t)
+                        concepts::model_of<SizedIterable>((T &&) t)
                     ));
             };
         }
@@ -341,27 +341,27 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Some helpers for requirements checking
         template<typename T>
-        constexpr bool ConvertibleToSizedBoundedRange()
+        constexpr bool SizedBoundedIterable()
         {
-            return ConvertibleToSizedRange<T>() && ConvertibleToBoundedRange<T>();
+            return SizedIterable<T>() && BoundedIterable<T>();
         }
 
         template<typename T, typename V>
-        constexpr bool ConvertibleToOutputBoundedRange()
+        constexpr bool OutputBoundedIterable()
         {
-            return ConvertibleToOutputRange<T, V>() && ConvertibleToBoundedRange<T>();
+            return OutputIterable<T, V>() && BoundedIterable<T>();
         }
 
         template<typename T, typename V>
-        constexpr bool ConvertibleToOutputSizedRange()
+        constexpr bool OutputSizedIterable()
         {
-            return ConvertibleToOutputRange<T, V>() && ConvertibleToSizedRange<T>();
+            return OutputIterable<T, V>() && SizedIterable<T>();
         }
 
         template<typename T, typename V>
-        constexpr bool ConvertibleToOutputSizedBoundedRange()
+        constexpr bool OutputSizedBoundedIterable()
         {
-            return ConvertibleToOutputBoundedRange<T, V>() && ConvertibleToSizedBoundedRange<T>();
+            return OutputBoundedIterable<T, V>() && SizedBoundedIterable<T>();
         }
 
         template<typename T>
@@ -390,22 +390,22 @@ namespace ranges
 
     #define RANGES_RANGE_CONCEPTS_DEF(Category)                         \
         template<typename T>                                            \
-        constexpr bool ConvertibleTo ## Category ## BoundedRange()      \
+        constexpr bool Category ## BoundedIterable()                    \
         {                                                               \
-            return ConvertibleTo ## Category ## Range<T>() &&           \
-                   ConvertibleTo ## BoundedRange<T>();                  \
+            return Category ## Iterable<T>() &&                         \
+                   BoundedIterable<T>();                                \
         }                                                               \
         template<typename T>                                            \
-        constexpr bool ConvertibleTo ## Category ## SizedRange()        \
+        constexpr bool Category ## SizedIterable()                      \
         {                                                               \
-            return ConvertibleTo ## Category ## Range<T>() &&           \
-                   ConvertibleTo ## SizedRange<T>();                    \
+            return Category ## Iterable<T>() &&                         \
+                   SizedIterable<T>();                                  \
         }                                                               \
         template<typename T>                                            \
-        constexpr bool ConvertibleTo ## Category ## SizedBoundedRange() \
+        constexpr bool Category ## SizedBoundedIterable()               \
         {                                                               \
-            return ConvertibleTo ## Category ## SizedRange<T>() &&      \
-                   ConvertibleTo ## BoundedRange<T>();                  \
+            return Category ## SizedIterable<T>() &&                    \
+                   BoundedIterable<T>();                                \
         }                                                               \
         template<typename T>                                            \
         constexpr bool Category ## BoundedRange()                       \

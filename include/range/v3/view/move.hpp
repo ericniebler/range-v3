@@ -67,7 +67,7 @@ namespace ranges
             move_view(Rng &&rng)
               : range_adaptor_t<move_view>(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(ConvertibleToSizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
             {
                 return this->base_size();
@@ -82,7 +82,7 @@ namespace ranges
                 static move_view<Rng>
                 invoke(move_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ConvertibleToInputBoundedRange<Rng>());
+                    CONCEPT_ASSERT(InputBoundedIterable<Rng>());
                     return move_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

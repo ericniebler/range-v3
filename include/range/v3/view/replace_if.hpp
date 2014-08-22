@@ -57,7 +57,7 @@ namespace ranges
                                                         detail::decay_t<Val>>>
                 invoke(replace_if_fn, Rng && rng, Pred pred, Val && new_value)
                 {
-                    CONCEPT_ASSERT(ConvertibleToInputRange<Rng>());
+                    CONCEPT_ASSERT(InputIterable<Rng>());
                     CONCEPT_ASSERT(InvokablePredicate<Pred,
                                                       range_value_t<Rng>>());
                     CONCEPT_ASSERT(Convertible<detail::decay_t<Val> const &,

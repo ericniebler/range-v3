@@ -85,7 +85,7 @@ namespace ranges
             template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = ident, typename P2 = ident,
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = detail::decay_t<I2Ref>, // [*] See below
-                CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng1>() && Mismatchable1<I1, I2, C, P1, P2>())>
+                CONCEPT_REQUIRES_(InputIterable<Rng1>() && Mismatchable1<I1, I2, C, P1, P2>())>
             std::pair<I1, I2> operator()(Rng1 & rng1, I2Ref &&begin2,
                                          C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -96,7 +96,7 @@ namespace ranges
             template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident, typename P2 = ident,
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng1>() && ConvertibleToInputRange<Rng2>() &&
+                CONCEPT_REQUIRES_(InputIterable<Rng1>() && InputIterable<Rng2>() &&
                     Mismatchable2<I1, I2, C, P1, P2>())>
             std::pair<I1, I2> operator()(Rng1 &rng1, Rng2 &rng2,
                                          C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const

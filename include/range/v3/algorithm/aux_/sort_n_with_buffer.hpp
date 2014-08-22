@@ -45,8 +45,8 @@ namespace ranges
                     typename VI = iterator_value_t<I>,
                     typename VB = iterator_value_t<B>,
                     CONCEPT_REQUIRES_(
-                        Same<VI, VB>()                  &&
-                        IndirectlyCopyable<I, B>()      &&
+                        Same<VI, VB>() &&
+                        IndirectlyCopyable<I, B>() &&
                         Mergeable<B, I, I, C, P, P>()
                     )>
                 I operator()(I begin, iterator_difference_t<I> n, B buff, C r = C{}, P p = P{}) const

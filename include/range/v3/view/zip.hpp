@@ -267,7 +267,7 @@ namespace ranges
                 template<typename...Rngs>
                 static zipped_view<Rngs...> invoke(zip_fn, Rngs &&... rngs)
                 {
-                    CONCEPT_ASSERT(logical_and<(bool) ConvertibleToRange<Rngs>()...>::value);
+                    CONCEPT_ASSERT(logical_and<(bool) Iterable<Rngs>()...>::value);
                     return zipped_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };
@@ -279,7 +279,7 @@ namespace ranges
                 template<typename Fun, typename...Rngs>
                 static zipped_with_view<Fun, Rngs...> invoke(zip_with_fn, Fun fun, Rngs &&... rngs)
                 {
-                    CONCEPT_ASSERT(logical_and<(bool) ConvertibleToRange<Rngs>()...>::value);
+                    CONCEPT_ASSERT(logical_and<(bool) Iterable<Rngs>()...>::value);
                     CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rngs>...>());
                     return zipped_with_view<Fun, Rngs...>{std::move(fun), std::forward<Rngs>(rngs)...};
                 }

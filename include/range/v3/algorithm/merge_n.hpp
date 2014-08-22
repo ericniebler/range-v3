@@ -95,8 +95,8 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(
-                    ConvertibleToRange<Rng0>()                &&
-                    ConvertibleToRange<Rng1>()                &&
+                    Iterable<Rng0>() &&
+                    Iterable<Rng1>() &&
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
             std::tuple<I0, I1, O>

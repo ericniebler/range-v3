@@ -58,7 +58,7 @@ namespace ranges
             }
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ConvertibleToBidirectionalRange<Rng>() && Permutable<I>())>
+                CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && Permutable<I>())>
             I operator()(Rng & rng) const
             {
                 return (*this)(begin(rng), end(rng));

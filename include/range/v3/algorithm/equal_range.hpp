@@ -37,7 +37,7 @@ namespace ranges
 
             template<typename Rng, typename V, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ConvertibleToRange<Rng>() && BinarySearchable<I, V, C, P>())>
+                CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V, C, P>())>
             iterator_range<I>
             operator()(Rng & rng, V const & val, C pred = C{}, P proj = P{}) const
             {

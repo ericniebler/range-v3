@@ -38,7 +38,7 @@ namespace ranges
             /// \pre \c C is a model of the InvokableRelation concept
             template<typename I, typename S, typename V2, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    Sentinel<S, I>()                &&
+                    Sentinel<S, I>() &&
                     BinarySearchable<I, V2, C, P>()
                 )>
             bool
@@ -54,7 +54,7 @@ namespace ranges
             template<typename Rng, typename V2, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    ConvertibleToRange<Rng>()                 &&
+                    Iterable<Rng>() &&
                     BinarySearchable<I, V2, C, P>()
                 )>
             bool

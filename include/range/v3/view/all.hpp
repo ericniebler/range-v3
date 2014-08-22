@@ -27,7 +27,7 @@ namespace ranges
             {
                 /// If it's a range already, pass it though.
                 template<typename T,
-                    CONCEPT_REQUIRES_(ConvertibleToRange<T>() &&
+                    CONCEPT_REQUIRES_(Iterable<T>() &&
                         is_range<T>::value)>
                 static T invoke(all_fn, T && t)
                 {
@@ -36,14 +36,14 @@ namespace ranges
 
                 /// If it is container-like, turn it into an iterator_range
                 template<typename T,
-                    CONCEPT_REQUIRES_(ConvertibleToRange<T>() &&
+                    CONCEPT_REQUIRES_(Iterable<T>() &&
                         !is_range<T>::value)>
                 static auto invoke(all_fn, T && t) ->
-                    decltype(detail::container_view_all(t, convertible_to_sized_range_concept<T>()))
+                    decltype(detail::container_view_all(t, sized_iterable_concept<T>()))
                 {
                     static_assert(std::is_lvalue_reference<T>::value,
                         "Cannot get a view of a temporary container");
-                    return detail::container_view_all(t, convertible_to_sized_range_concept<T>());
+                    return detail::container_view_all(t, sized_iterable_concept<T>());
                 }
 
                 // TODO handle char const * by turning it into a delimited range
@@ -52,9 +52,9 @@ namespace ranges
             RANGES_CONSTEXPR all_fn all{};
         }
 
-        template<typename ConvertibleToRange>
+        template<typename Iterable>
         using range_view_all_t =
-            meta_apply<std::decay, decltype(view::all(std::declval<ConvertibleToRange>()))>;
+            meta_apply<std::decay, decltype(view::all(std::declval<Iterable>()))>;
     }
 }
 

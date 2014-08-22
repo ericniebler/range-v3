@@ -40,7 +40,7 @@ namespace ranges
 
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ConvertibleToRange<Rng>() && WeaklyIncrementable<O>() &&
+                CONCEPT_REQUIRES_(Iterable<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>())>
             std::pair<I, O> operator()(Rng & rng, I middle, O out, P proj = P{}) const
             {

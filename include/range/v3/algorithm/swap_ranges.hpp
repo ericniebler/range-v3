@@ -49,7 +49,7 @@ namespace ranges
 
             template<typename Rng1, typename I2,
                 typename I1 = range_iterator_t<Rng1>,
-                CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng1>() &&
+                CONCEPT_REQUIRES_(InputIterable<Rng1>() &&
                                   WeakInputIterator<I2>() &&
                                   IndirectlySwappable<I1, I2>())>
             std::pair<I1, I2> operator()(Rng1 & rng1, I2 begin2) const
@@ -60,8 +60,8 @@ namespace ranges
             template<typename Rng1, typename Rng2,
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng1>() &&
-                                  ConvertibleToInputRange<Rng2>() &&
+                CONCEPT_REQUIRES_(InputIterable<Rng1>() &&
+                                  InputIterable<Rng2>() &&
                                   IndirectlySwappable<I1, I2>())>
             std::pair<I1, I2> operator()(Rng1 & rng1, Rng2 & rng2) const
             {

@@ -33,8 +33,8 @@
 
         // Ranges with a .size() member function, like std::list
         template<typename Rng,
-            typename Size = meta_apply<std::make_unsigned, concepts::ConvertibleToRange::difference_t<Rng> >,
-            CONCEPT_REQUIRES_(ConvertibleToRange<Rng>() && detail::HasSize<Rng>())>
+            typename Size = meta_apply<std::make_unsigned, concepts::Iterable::difference_t<Rng> >,
+            CONCEPT_REQUIRES_(Iterable<Rng>() && detail::HasSize<Rng>())>
         Size
         range_size(Rng &&rng)
         {
@@ -46,12 +46,12 @@
         // yields distance in O(1); e.g. random-access iterators, or a
         // counted iterator/sentinel pair.
         template<typename Rng,
-            typename Size = meta_apply<std::make_unsigned, concepts::ConvertibleToRange::difference_t<Rng>>,
+            typename Size = meta_apply<std::make_unsigned, concepts::Iterable::difference_t<Rng>>,
             CONCEPT_REQUIRES_(!detail::HasSize<Rng>() &&
-                              ConvertibleToRange<Rng>() &&
+                              Iterable<Rng>() &&
                               SizedIteratorRange<
-                                  concepts::ConvertibleToRange::iterator_t<Rng>,
-                                  concepts::ConvertibleToRange::sentinel_t<Rng>>())>
+                                  concepts::Iterable::iterator_t<Rng>,
+                                  concepts::Iterable::sentinel_t<Rng>>())>
         Size
         range_size(Rng &&rng)
         {

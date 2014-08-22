@@ -85,7 +85,7 @@ namespace ranges
             }
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ConvertibleToRandomAccessRange<Rng>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
                                   Permutable<I>())>
             I operator()(Rng & rng) const
             {
@@ -93,7 +93,7 @@ namespace ranges
             }
 
             template<typename Rng, typename Gen, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ConvertibleToRandomAccessRange<Rng>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
                                   Permutable<I>() &&
                                   RandomNumberGenerator<Gen, iterator_difference_t<I>>())>
             I operator()(Rng & rng, Gen && rand) const

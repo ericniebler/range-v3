@@ -28,8 +28,8 @@ namespace ranges
         {
             template<typename I, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    BidirectionalIterator<I>()              &&
-                    BidirectionalIterator<O>()              &&
+                    BidirectionalIterator<I>() &&
+                    BidirectionalIterator<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             O operator()(I begin, I end, O out, P proj = P{}) const
@@ -43,9 +43,8 @@ namespace ranges
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    ConvertibleToBoundedRange<Rng>()                            &&
-                    BidirectionalIterator<I>()              &&
-                    BidirectionalIterator<O>()              &&
+                    BidirectionalBoundedIterable<Rng>() &&
+                    BidirectionalIterator<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             O operator()(Rng &rng, O out, P proj = P{}) const

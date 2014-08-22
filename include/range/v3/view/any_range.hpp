@@ -121,7 +121,7 @@ namespace ranges
                 using single_pass = std::true_type;
                 any_input_cursor() = default;
                 template<typename Rng,
-                         CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng>() &&
+                         CONCEPT_REQUIRES_(InputIterable<Rng>() &&
                                            Same<Ref, range_reference_t<Rng>>())>
                 any_input_cursor(Rng &&rng, begin_tag)
                   : ptr_{new any_input_cursor_impl<range_iterator_t<Rng>>{begin(rng)}}
@@ -158,7 +158,7 @@ namespace ranges
             public:
                 any_input_sentinel() = default;
                 template<typename Rng,
-                         CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng>() &&
+                         CONCEPT_REQUIRES_(InputIterable<Rng>() &&
                                            Same<Ref, range_reference_t<Rng>>())>
                 any_input_sentinel(Rng &&rng, end_tag)
                   : ptr_{new any_input_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{end(rng)}}
@@ -237,7 +237,7 @@ namespace ranges
         public:
             any_input_range() = default;
             template<typename Rng,
-                CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng>() &&
+                CONCEPT_REQUIRES_(InputIterable<Rng>() &&
                                   Same<Ref, range_reference_t<Rng>>())>
             any_input_range(Rng && rng)
               : ptr_{new detail::any_input_range_impl<Rng>{std::forward<Rng>(rng)}}

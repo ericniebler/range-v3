@@ -45,8 +45,8 @@ namespace ranges
             tail_view(Rng &&rng)
               : rng_(view::all(std::forward<Rng>(rng)))
             {
-                CONCEPT_ASSERT(ConvertibleToInputRange<Rng>());
-                RANGES_ASSERT(!ConvertibleToForwardRange<Rng>() || !empty(rng_));
+                CONCEPT_ASSERT(InputIterable<Rng>());
+                RANGES_ASSERT(!ForwardIterable<Rng>() || !empty(rng_));
             }
             iterator begin() const
             {
@@ -78,7 +78,7 @@ namespace ranges
                 template<typename Rng>
                 static tail_view<Rng> invoke(tail_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ConvertibleToRange<Rng>());
+                    CONCEPT_ASSERT(Iterable<Rng>());
                     return tail_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

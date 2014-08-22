@@ -32,8 +32,8 @@ namespace ranges
         {
             template<typename I, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    WeakInputIterator<I>()                  &&
-                    WeaklyIncrementable<O>()                &&
+                    WeakInputIterator<I>() &&
+                    WeaklyIncrementable<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             std::pair<I, O>
@@ -50,8 +50,8 @@ namespace ranges
 
             template<typename I, typename S, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I, S>()                   &&
-                    WeaklyIncrementable<O>()                &&
+                    InputIterator<I, S>() &&
+                    WeaklyIncrementable<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             std::tuple<I, O, iterator_difference_t<I>>
@@ -67,8 +67,8 @@ namespace ranges
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    ConvertibleToInputRange<Rng>()                    &&
-                    WeaklyIncrementable<O>()                &&
+                    InputIterable<Rng>() &&
+                    WeaklyIncrementable<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             std::tuple<I, O, iterator_difference_t<I>>

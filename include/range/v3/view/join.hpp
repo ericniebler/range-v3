@@ -292,7 +292,7 @@ namespace ranges
                 static joined_view<Rngs...>
                 invoke(join_fn, Rngs &&... rngs)
                 {
-                    static_assert(logical_and<(bool)ConvertibleToInputRange<Rngs>()...>::value,
+                    static_assert(logical_and<(bool)InputIterable<Rngs>()...>::value,
                         "Expecting Input Ranges");
                     return joined_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
@@ -304,7 +304,7 @@ namespace ranges
         // Binary range concatenation. Is there a better operator for this? Should this
         // even be an operator?
         template<typename Rng0, typename Rng1,
-            CONCEPT_REQUIRES_(ConvertibleToInputRange<Rng0>() && ConvertibleToInputRange<Rng1>())>
+            CONCEPT_REQUIRES_(InputIterable<Rng0>() && InputIterable<Rng1>())>
         joined_view<Rng0, Rng1> operator + (Rng0 && rng0, Rng1 && rng1)
         {
             return joined_view<Rng0, Rng1>{std::forward<Rng0>(rng0), std::forward<Rng1>(rng1)};

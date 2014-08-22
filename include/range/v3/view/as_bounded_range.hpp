@@ -136,8 +136,8 @@ namespace ranges
                 static as_bounded_range_view<Rng>
                 invoke(as_bounded_range_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(ConvertibleToInputRange<Rng>());
-                    CONCEPT_ASSERT(!ConvertibleToBoundedRange<Rng>());
+                    CONCEPT_ASSERT(InputIterable<Rng>());
+                    CONCEPT_ASSERT(!BoundedIterable<Rng>());
                     return as_bounded_range_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

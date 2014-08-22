@@ -50,7 +50,7 @@ namespace ranges
 
             template<typename Rng, typename V,
                 typename O = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ConvertibleToOutputRange<Rng, V>())>
+                CONCEPT_REQUIRES_(OutputIterable<Rng, V>())>
             std::pair<O, iterator_difference_t<O>>
             operator()(Rng & rng, range_difference_t<O> n, V const & val) const
             {
