@@ -345,6 +345,9 @@
     <ClCompile Include="..\..\..\..\test\view\as_bounded_range.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\all.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -692,9 +695,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_type.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\range_size.hpp">
-      <Filter>Header Files\detail</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
@@ -817,9 +817,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\as_bounded_range.hpp">
       <Filter>Header Files\view</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\as_range.hpp">
-      <Filter>Header Files\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

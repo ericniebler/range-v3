@@ -46,6 +46,11 @@ namespace ranges
             struct cend_fn;
         }
 
+        namespace adl_size_detail
+        {
+            struct size_fn;
+        }
+
         template<typename ...Ts>
         struct common_type;
 
@@ -70,6 +75,8 @@ namespace ranges
         extern adl_begin_end_detail::cbegin_fn const cbegin;
         extern adl_begin_end_detail::cend_fn const cend;
 
+        extern adl_size_detail::size_fn const size;
+
         struct advance_fn;
         extern advance_fn const advance;
 
@@ -90,9 +97,6 @@ namespace ranges
 
         struct iterator_range_size_fn;
         extern iterator_range_size_fn const iterator_range_size;
-
-        struct size_fn;
-        extern size_fn const size;
 
         namespace detail
         {

@@ -2,6 +2,9 @@
 add_executable(view.adjacent_filter adjacent_filter.cpp)
 add_test(test.view.adjacent_filter, view.adjacent_filter)
 
+add_executable(view.all all.cpp)
+add_test(test.view.all, view.all)
+
 add_executable(view.as_bounded_range as_bounded_range.cpp)
 add_test(test.view.as_bounded_range, view.as_bounded_range)
 

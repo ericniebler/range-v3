@@ -18,18 +18,18 @@
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
+        namespace concepts
         {
-            struct writable_range_traits
+            struct Iterable
             {
                 // Associated types
                 template<typename T>
@@ -40,30 +40,7 @@ namespace ranges
 
                 template<typename T>
                 using difference_t = concepts::WeaklyIncrementable::difference_t<iterator_t<T>>;
-            };
 
-            struct readable_range_traits : virtual writable_range_traits
-            {
-                // Associated types
-                template<typename T>
-                using category_t = concepts::WeakInputIterator::category_t<iterator_t<T>>;
-
-                template<typename T>
-                using value_t = concepts::Readable::value_t<iterator_t<T>>;
-
-                template<typename T>
-                using reference_t = concepts::Readable::reference_t<iterator_t<T>>;
-
-                template<typename T>
-                using pointer_t = concepts::Readable::pointer_t<iterator_t<T>>;
-            };
-        }
-
-        namespace concepts
-        {
-            struct Iterable
-              : virtual detail::writable_range_traits
-            {
                 // Valid expressions
                 template<typename T>
                 auto requires_(T && t) -> decltype(
@@ -84,8 +61,21 @@ namespace ranges
             };
 
             struct InputIterable
-              : refines<Iterable>, detail::readable_range_traits
+              : refines<Iterable>
             {
+                // Associated types
+                template<typename T>
+                using category_t = concepts::WeakInputIterator::category_t<iterator_t<T>>;
+
+                template<typename T>
+                using value_t = concepts::Readable::value_t<iterator_t<T>>;
+
+                template<typename T>
+                using reference_t = concepts::Readable::reference_t<iterator_t<T>>;
+
+                template<typename T>
+                using pointer_t = concepts::Readable::pointer_t<iterator_t<T>>;
+
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
@@ -133,6 +123,31 @@ namespace ranges
                         concepts::same_type(begin(t), end(t))
                     ));
             };
+
+            struct SizedIterable
+              : refines<Iterable>
+            {
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Integral>(size(t))
+                    ));
+            };
+
+            /// INTERNAL ONLY
+            /// A type is ContainerLike_ if it is Iterable and the const-ness of its
+            /// reference type is sensitive to the const-ness of the Container
+            struct ContainerLike_
+              : refines<InputIterable>
+            {
+                template<typename T>
+                auto requires_(T &&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_false(
+                            std::is_same<reference_t<detail::as_ref_t<T>>,
+                                         reference_t<detail::as_cref_t<T>>>())
+                    ));
+            };
         }
 
         template<typename T>
@@ -153,27 +168,15 @@ namespace ranges
         template<typename T>
         using RandomAccessIterable = concepts::models<concepts::RandomAccessIterable, T>;
 
-        // Handle sized ranges here:
-        #include <range/v3/detail/range_size.hpp>
-
-        namespace concepts
-        {
-            struct SizedIterable
-              : refines<Iterable>
-            {
-                template<typename T>
-                auto requires_(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Integral>(range_size(t))
-                    ));
-            };
-        }
-
         template<typename T>
         using BoundedIterable = concepts::models<concepts::BoundedIterable, T>;
 
         template<typename T>
         using SizedIterable = concepts::models<concepts::SizedIterable, T>;
+
+        /// INTERNAL ONLY
+        template<typename T>
+        using ContainerLike_ = concepts::models<concepts::ContainerLike_, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_iterable_concept
@@ -201,92 +204,71 @@ namespace ranges
         using sized_iterable_concept_t =
             meta_apply<sized_iterable_concept, T>;
 
-        #include <range/v3/detail/as_range.hpp>
+        namespace detail
+        {
+            // Something is a range if it's an Iterable and either:
+            //  - It doesn't look like a container, or
+            //  - It's derived from range_base
+            template<typename T>
+            struct is_range_impl_
+              : std::integral_constant<
+                    bool,
+                    Iterable<T>() && (!ContainerLike_<T>() || Derived<T, range_base>())
+                >
+            {};
+        }
+
+        // Specialize this if the default is wrong.
+        template<typename T, typename Enable = void>
+        struct is_range
+          : std::conditional<
+                std::is_same<T, detail::uncvref_t<T>>::value,
+                detail::is_range_impl_<T>,
+                is_range<detail::uncvref_t<T>>
+            >::type
+        {};
 
         namespace concepts
         {
             struct Range
-              : virtual detail::writable_range_traits
+              : refines<Iterable>
             {
-                template<typename T, typename R = as_range_t<detail::uncvref_t<T>>>
+                template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Iterable>((T &&) t),
                         concepts::model_of<SemiRegular>((detail::uncvref_t<T>) t),
-                        concepts::is_true(std::is_same<detail::uncvref_t<T>, R>())
+                        concepts::is_true(is_range<T>())
                     ));
             };
 
             struct OutputRange
-              : refines<Range(_1)>
-            {
-                template<typename T, typename V>
-                auto requires_(T && t, V const &v) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<OutputIterator>(begin(t), v)
-                    ));
-            };
+              : refines<Range(_1), OutputIterable>
+            {};
 
             struct InputRange
-              : refines<Range>, detail::readable_range_traits
-            {
-                template<typename T>
-                auto requires_(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<InputIterator>(begin(t))
-                    ));
-            };
+              : refines<Range, InputIterable>
+            {};
 
             struct ForwardRange
-              : refines<InputRange>
-            {
-                template<typename T>
-                auto requires_(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<ForwardIterator>(begin(t))
-                    ));
-            };
+              : refines<InputRange, ForwardIterable>
+            {};
 
             struct BidirectionalRange
-              : refines<ForwardRange>
-            {
-                template<typename T>
-                auto requires_(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<BidirectionalIterator>(begin(t))
-                    ));
-            };
+              : refines<ForwardRange, BidirectionalIterable>
+            {};
 
             struct RandomAccessRange
-              : refines<BidirectionalRange>
-            {
-                template<typename T>
-                auto requires_(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<RandomAccessIterator>(begin(t))
-                    ));
-            };
+              : refines<BidirectionalRange, RandomAccessIterable>
+            {};
 
             // Additional concepts for checking additional orthogonal properties
             struct BoundedRange
-              : refines<Range>
-            {
-                template<typename T>
-                auto requires_(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<BoundedIterable>((T &&) t)
-                    ));
-            };
+              : refines<Range, BoundedIterable>
+            {};
 
             struct SizedRange
-              : refines<Range>
-            {
-                template<typename T>
-                auto requires_(T && t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<SizedIterable>((T &&) t)
-                    ));
-            };
+              : refines<Range, SizedIterable>
+            {};
         }
 
         template<typename T>
