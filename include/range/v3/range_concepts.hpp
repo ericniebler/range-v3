@@ -29,6 +29,10 @@ namespace ranges
     {
         namespace concepts
         {
+            ///
+            /// Iterable concepts below
+            ///
+
             struct Iterable
             {
                 // Associated types
@@ -41,7 +45,6 @@ namespace ranges
                 template<typename T>
                 using difference_t = concepts::WeaklyIncrementable::difference_t<iterator_t<T>>;
 
-                // Valid expressions
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
@@ -116,7 +119,6 @@ namespace ranges
             struct BoundedIterable
               : refines<Iterable>
             {
-                // Valid expressions
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
@@ -125,6 +127,19 @@ namespace ranges
             };
 
             struct SizedIterable
+              : refines<Iterable>
+            {
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_true(is_sized_iterable<T>())
+                    ));
+            };
+
+            /// INTERNAL ONLY
+            /// A type is SizedIterableLike_ if it is Iterable and ranges::size
+            /// can be called on it and it returns an Integral
+            struct SizedIterableLike_
               : refines<Iterable>
             {
                 template<typename T>
@@ -148,88 +163,11 @@ namespace ranges
                                          reference_t<detail::as_cref_t<T>>>())
                     ));
             };
-        }
 
-        template<typename T>
-        using Iterable = concepts::models<concepts::Iterable, T>;
+            ///
+            /// Range concepts below
+            ///
 
-        template<typename T, typename V>
-        using OutputIterable = concepts::models<concepts::OutputIterable, T, V>;
-
-        template<typename T>
-        using InputIterable = concepts::models<concepts::InputIterable, T>;
-
-        template<typename T>
-        using ForwardIterable = concepts::models<concepts::ForwardIterable, T>;
-
-        template<typename T>
-        using BidirectionalIterable = concepts::models<concepts::BidirectionalIterable, T>;
-
-        template<typename T>
-        using RandomAccessIterable = concepts::models<concepts::RandomAccessIterable, T>;
-
-        template<typename T>
-        using BoundedIterable = concepts::models<concepts::BoundedIterable, T>;
-
-        template<typename T>
-        using SizedIterable = concepts::models<concepts::SizedIterable, T>;
-
-        /// INTERNAL ONLY
-        template<typename T>
-        using ContainerLike_ = concepts::models<concepts::ContainerLike_, T>;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // bounded_iterable_concept
-        template<typename T>
-        using bounded_iterable_concept =
-            concepts::most_refined<
-                typelist<
-                    concepts::BoundedIterable,
-                    concepts::Iterable>, T>;
-
-        template<typename T>
-        using bounded_iterable_concept_t =
-            meta_apply<bounded_iterable_concept, T>;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // sized_iterable_concept
-        template<typename T>
-        using sized_iterable_concept =
-            concepts::most_refined<
-                typelist<
-                    concepts::SizedIterable,
-                    concepts::Iterable>, T>;
-
-        template<typename T>
-        using sized_iterable_concept_t =
-            meta_apply<sized_iterable_concept, T>;
-
-        namespace detail
-        {
-            // Something is a range if it's an Iterable and either:
-            //  - It doesn't look like a container, or
-            //  - It's derived from range_base
-            template<typename T>
-            struct is_range_impl_
-              : std::integral_constant<
-                    bool,
-                    Iterable<T>() && (!ContainerLike_<T>() || Derived<T, range_base>())
-                >
-            {};
-        }
-
-        // Specialize this if the default is wrong.
-        template<typename T, typename Enable = void>
-        struct is_range
-          : std::conditional<
-                std::is_same<T, detail::uncvref_t<T>>::value,
-                detail::is_range_impl_<T>,
-                is_range<detail::uncvref_t<T>>
-            >::type
-        {};
-
-        namespace concepts
-        {
             struct Range
               : refines<Iterable>
             {
@@ -272,6 +210,38 @@ namespace ranges
         }
 
         template<typename T>
+        using Iterable = concepts::models<concepts::Iterable, T>;
+
+        template<typename T, typename V>
+        using OutputIterable = concepts::models<concepts::OutputIterable, T, V>;
+
+        template<typename T>
+        using InputIterable = concepts::models<concepts::InputIterable, T>;
+
+        template<typename T>
+        using ForwardIterable = concepts::models<concepts::ForwardIterable, T>;
+
+        template<typename T>
+        using BidirectionalIterable = concepts::models<concepts::BidirectionalIterable, T>;
+
+        template<typename T>
+        using RandomAccessIterable = concepts::models<concepts::RandomAccessIterable, T>;
+
+        template<typename T>
+        using BoundedIterable = concepts::models<concepts::BoundedIterable, T>;
+
+        template<typename T>
+        using SizedIterable = concepts::models<concepts::SizedIterable, T>;
+
+        /// INTERNAL ONLY
+        template<typename T>
+        using SizedIterableLike_ = concepts::models<concepts::SizedIterableLike_, T>;
+
+        /// INTERNAL ONLY
+        template<typename T>
+        using ContainerLike_ = concepts::models<concepts::ContainerLike_, T>;
+
+        template<typename T>
         using Range = concepts::models<concepts::Range, T>;
 
         template<typename T, typename V>
@@ -295,6 +265,32 @@ namespace ranges
 
         template<typename T>
         using SizedRange = concepts::models<concepts::SizedRange, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // bounded_iterable_concept
+        template<typename T>
+        using bounded_iterable_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::BoundedIterable,
+                    concepts::Iterable>, T>;
+
+        template<typename T>
+        using bounded_iterable_concept_t =
+            meta_apply<bounded_iterable_concept, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // sized_iterable_concept
+        template<typename T>
+        using sized_iterable_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::SizedIterable,
+                    concepts::Iterable>, T>;
+
+        template<typename T>
+        using sized_iterable_concept_t =
+            meta_apply<sized_iterable_concept, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_range_concept
@@ -410,6 +406,50 @@ namespace ranges
         RANGES_RANGE_CONCEPTS_DEF(Forward)
         RANGES_RANGE_CONCEPTS_DEF(Bidirectional)
         RANGES_RANGE_CONCEPTS_DEF(RandomAccess)
+
+        namespace detail
+        {
+            // Something is a range if it's an Iterable and either:
+            //  - It doesn't look like a container, or
+            //  - It's derived from range_base
+            template<typename T>
+            struct is_range_impl_
+              : std::integral_constant<
+                    bool,
+                    Iterable<T>() && (!ContainerLike_<T>() || Derived<T, range_base>())
+                >
+            {};
+
+            // Something is a sized iterable if it looks like a sized iterable; i.e.,
+            // if size(rng) compiles and returns an Integral
+            template<typename T>
+            struct is_sized_iterable_impl_
+              : std::integral_constant<
+                    bool,
+                    (SizedIterableLike_<T>())
+                >
+            {};
+        }
+
+        // Specialize this if the default is wrong.
+        template<typename T, typename Enable>
+        struct is_sized_iterable
+          : std::conditional<
+                std::is_same<T, detail::uncvref_t<T>>::value,
+                detail::is_sized_iterable_impl_<T>,
+                is_sized_iterable<detail::uncvref_t<T>>
+            >::type
+        {};
+
+        // Specialize this if the default is wrong.
+        template<typename T, typename Enable>
+        struct is_range
+          : std::conditional<
+                std::is_same<T, detail::uncvref_t<T>>::value,
+                detail::is_range_impl_<T>,
+                is_range<detail::uncvref_t<T>>
+            >::type
+        {};
     }
 }
 

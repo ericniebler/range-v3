@@ -266,10 +266,6 @@ namespace ranges
         {
             template<typename Concept, typename...Ts>
             struct models;
-
-            struct Range;
-            struct BoundedRange;
-            struct SizedIteratorRange;
         }
 
         struct begin_tag {};
@@ -279,6 +275,12 @@ namespace ranges
 
         template<typename Rng, typename Void = void>
         struct is_infinite;
+
+        template<typename T, typename Enable = void>
+        struct is_range;
+
+        template<typename T, typename Enable = void>
+        struct is_sized_iterable;
 
         struct range_base
         {};
