@@ -23,64 +23,64 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename T>
-            iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
-            view_all(T & t, concepts::Iterable*, concepts::IteratorRange*)
-            {
-                return {begin(t), end(t)};
-            }
-
-            template<typename T>
-            iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
-            view_all(T & t, concepts::Iterable*, concepts::SizedIteratorRange*)
-            {
-                return {begin(t), end(t)};
-            }
-
-            template<typename T>
-            sized_iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
-            view_all(T & t, concepts::SizedIterable*, concepts::IteratorRange*)
-            {
-                return {begin(t), end(t), size(t)};
-            }
-
-            template<typename T>
-            iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
-            view_all(T & t, concepts::SizedIterable*, concepts::SizedIteratorRange*)
-            {
-                RANGES_ASSERT(size(t) == iterator_range_size(begin(t), end(t)));
-                return {begin(t), end(t)};
-            }
-        }
-
         namespace view
         {
             struct all_fn : bindable<all_fn>
             {
+            private:
+                template<typename T>
+                static iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
+                from_container(T & t, concepts::Iterable*, concepts::IteratorRange*)
+                {
+                    return {begin(t), end(t)};
+                }
+
+                template<typename T>
+                static sized_iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
+                from_container(T & t, concepts::SizedIterable*, concepts::IteratorRange*)
+                {
+                    return {begin(t), end(t), size(t)};
+                }
+
+                template<typename T>
+                static iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
+                from_container(T & t, concepts::SizedIterable*, concepts::SizedIteratorRange*)
+                {
+                    RANGES_ASSERT(size(t) == iterator_range_size(begin(t), end(t)));
+                    return {begin(t), end(t)};
+                }
+
                 /// If it's a range already, pass it though.
-                template<typename T,
-                    CONCEPT_REQUIRES_(Range<T>())>
-                static T invoke(all_fn, T && t)
+                template<typename T>
+                static T from_iterable(T && t, concepts::Range*)
                 {
                     return std::forward<T>(t);
                 }
 
-                /// If it is container-like, turn it into an iterator_range
+                /// If it is container-like, turn it into an iterator_range, being careful
+                /// to preserve the Sized-ness of the iterable.
                 template<typename T,
                     typename I = range_iterator_t<T>,
                     typename S = range_sentinel_t<T>,
-                    CONCEPT_REQUIRES_(Iterable<T>() && !Range<T>())>
-                static auto invoke(all_fn, T && t) ->
-                    decltype(detail::view_all(t, sized_iterable_concept<T>(), sized_iterator_range_concept<I, S>()))
+                    typename SIC = sized_iterable_concept<T>,
+                    typename SIRC = sized_iterator_range_concept<I, S>>
+                static auto from_iterable(T && t, concepts::Iterable*) ->
+                    decltype(all_fn::from_container(t, SIC(), SIRC()))
                 {
-                    static_assert(std::is_lvalue_reference<T>::value,
-                        "Cannot get a view of a temporary container");
-                    return detail::view_all(t, sized_iterable_concept<T>(), sized_iterator_range_concept<I, S>());
+                    static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
+                    return all_fn::from_container(t, SIC(), SIRC());
                 }
 
                 // TODO handle char const * by turning it into a delimited range?
+
+            public:
+                template<typename T,
+                    CONCEPT_REQUIRES_(Iterable<T>())>
+                static auto invoke(all_fn, T && t) ->
+                    decltype(all_fn::from_iterable(std::forward<T>(t), range_concept<T>()))
+                {
+                    return all_fn::from_iterable(std::forward<T>(t), range_concept<T>());
+                }
             };
 
             RANGES_CONSTEXPR all_fn all{};

@@ -132,6 +132,7 @@ namespace ranges
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Integral>(size(t)),
                         concepts::is_true(is_sized_iterable<T>())
                     ));
             };
@@ -315,6 +316,18 @@ namespace ranges
 
         template<typename T>
         using sized_range_concept_t = meta_apply<sized_range_concept, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // range_concept
+        template<typename T>
+        using range_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::Range,
+                    concepts::Iterable>, T>;
+
+        template<typename T>
+        using range_concept_t = meta_apply<range_concept, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Some helpers for requirements checking

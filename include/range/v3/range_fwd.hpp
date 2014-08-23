@@ -271,8 +271,6 @@ namespace ranges
         struct begin_tag {};
         struct end_tag {};
 
-        struct use_default;
-
         template<typename Rng, typename Void = void>
         struct is_infinite;
 
