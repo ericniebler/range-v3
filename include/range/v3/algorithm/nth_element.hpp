@@ -97,12 +97,13 @@ namespace ranges
 
         struct nth_element_fn
         {
-            template<typename I, typename C = ordered_less, typename P = ident,
+            template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sortable<I, C, P>())>
-            void operator()(I begin, I nth, I end, C pred_ = C{}, P proj_ = P{}) const
+            I operator()(I begin, I nth, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
+                I end = next_to(nth, end_), end_orig = end;
                 // C is known to be a reference type
                 using difference_type = iterator_difference_t<I>;
                 difference_type const limit = 7;
@@ -110,28 +111,28 @@ namespace ranges
                 {
                 restart:
                     if(nth == end)
-                        return;
+                        return end_orig;
                     difference_type len = end - begin;
                     switch(len)
                     {
                     case 0:
                     case 1:
-                        return;
+                        return end_orig;
                     case 2:
                         if(pred(proj(*--end), proj(*begin)))
                             ranges::swap(*begin, *end);
-                        return;
+                        return end_orig;
                     case 3:
                         {
                         I m = begin;
                         detail::sort3(begin, ++m, --end, pred, proj);
-                        return;
+                        return end_orig;
                         }
                     }
                     if(len <= limit)
                     {
                         detail::selection_sort(begin, end, pred, proj);
-                        return;
+                        return end_orig;
                     }
                     // len > limit >= 3
                     I m = begin + len/2;
@@ -162,7 +163,7 @@ namespace ranges
                                     while(true)
                                     {
                                         if(i == j)
-                                            return;  // [begin, end) all equivalent elements
+                                            return end_orig;  // [begin, end) all equivalent elements
                                         if(pred(proj(*begin), proj(*i)))
                                         {
                                             ranges::swap(*i, *j);
@@ -175,7 +176,7 @@ namespace ranges
                                 }
                                 // [begin, i) == *begin and *begin < [j, end) and j == end - 1
                                 if(i == j)
-                                    return;
+                                    return end_orig;
                                 while(true)
                                 {
                                     while(!pred(proj(*begin), proj(*i)))
@@ -191,7 +192,7 @@ namespace ranges
                                 // [begin, i) == *begin and *begin < [i, end)
                                 // The begin part is sorted,
                                 if(nth < i)
-                                    return;
+                                    return end_orig;
                                 // nth_element the secod part
                                 // nth_element<C>(i, nth, end, pred);
                                 begin = i;
@@ -238,7 +239,7 @@ namespace ranges
                     }
                     // [begin, i) < *i and *i <= [i+1, end)
                     if(nth == i)
-                        return;
+                        return end_orig;
                     if(n_swaps == 0)
                     {
                         // We were given a perfectly partitioned sequence.  Coincidence?
@@ -254,7 +255,7 @@ namespace ranges
                                 m = j;
                             }
                             // [begin, i) sorted
-                            return;
+                            return end_orig;
                         }
                         else
                         {
@@ -268,7 +269,7 @@ namespace ranges
                                 m = j;
                             }
                             // [i, end) sorted
-                            return;
+                            return end_orig;
                         }
                     }
             not_sorted:
@@ -284,14 +285,18 @@ namespace ranges
                         begin = ++i;
                     }
                 }
+                return end_orig;
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessBoundedIterable<Rng>() && Sortable<I, C, P>())>
-            void operator()(Rng &&rng, I nth, C pred = C{}, P proj = P{}) const
+                CONCEPT_REQUIRES_(
+                    RandomAccessIterable<Rng>() &&
+                    Sortable<I, C, P>()
+                )>
+            I operator()(Rng &&rng, I nth, C pred = C{}, P proj = P{}) const
             {
-                (*this)(begin(rng), std::move(nth), end(rng), std::move(pred), std::move(proj));
+                return (*this)(begin(rng), std::move(nth), end(rng), std::move(pred), std::move(proj));
             }
         };
 

@@ -92,7 +92,7 @@ namespace ranges
                   : dirty_t(true), offset_t(0), rng_(&rng)
                 {
                     // Opportunistic eager cleaning when we can do so in O(1)
-                    if(BidirectionalSizedIterable<Rng>())
+                    if(BidirectionalIterable<Rng>() && SizedIterable<Rng>())
                         do_clean();
                 }
                 void next(base_cursor_t &pos)

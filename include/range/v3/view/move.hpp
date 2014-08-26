@@ -82,7 +82,7 @@ namespace ranges
                 static move_view<Rng>
                 invoke(move_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(InputBoundedIterable<Rng>());
+                    CONCEPT_ASSERT(InputIterable<Rng>());
                     return move_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

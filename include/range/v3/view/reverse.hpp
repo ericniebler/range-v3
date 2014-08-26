@@ -31,7 +31,8 @@ namespace ranges
           : range_adaptor<reversed_view<Rng>, Rng>
         {
         private:
-            CONCEPT_ASSERT(BidirectionalBoundedRange<Rng>());
+            CONCEPT_ASSERT(BidirectionalIterable<Rng>());
+            CONCEPT_ASSERT(BoundedIterable<Rng>());
             friend range_core_access;
             using base_cursor_t = ranges::base_cursor_t<reversed_view>;
 
@@ -67,7 +68,7 @@ namespace ranges
                     else
                         pos.next();
                 }
-                CONCEPT_REQUIRES(RandomAccessBoundedRange<Rng>())
+                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 void advance(base_cursor_t &pos, range_difference_t<Rng> n) const
                 {
                     if(n > 0)
@@ -75,7 +76,7 @@ namespace ranges
                     else if(n < 0)
                         prev(pos), pos.advance(-n - 1);
                 }
-                CONCEPT_REQUIRES(RandomAccessBoundedRange<Rng>())
+                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 range_difference_t<Rng>
                 distance_to(base_cursor_t const &here, base_cursor_t const &there) const
                 {
@@ -100,7 +101,7 @@ namespace ranges
             reversed_view(Rng && rng)
               : range_adaptor_t<reversed_view>(std::forward<Rng>(rng))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
             {
                 return this->base_size();
@@ -115,7 +116,8 @@ namespace ranges
                 static reversed_view<Rng>
                 invoke(reverse_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(BidirectionalBoundedRange<Rng>());
+                    CONCEPT_ASSERT(BidirectionalIterable<Rng>());
+                    CONCEPT_ASSERT(BoundedIterable<Rng>());
                     return reversed_view<Rng>{std::forward<Rng>(rng)};
                 }
             };

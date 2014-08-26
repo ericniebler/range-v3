@@ -81,7 +81,8 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(BidirectionalBoundedIterable<Rng>());
+                    CONCEPT_ASSERT(BidirectionalIterable<Rng>());
+                    CONCEPT_ASSERT(BoundedIterable<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -95,7 +96,8 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(BidirectionalBoundedIterable<Rng>());
+                    CONCEPT_ASSERT(BidirectionalIterable<Rng>());
+                    CONCEPT_ASSERT(BoundedIterable<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -109,7 +111,8 @@ namespace ranges
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default)
                 {
-                    CONCEPT_ASSERT(BidirectionalBoundedIterable<Rng>());
+                    CONCEPT_ASSERT(BidirectionalIterable<Rng>());
+                    CONCEPT_ASSERT(BoundedIterable<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");

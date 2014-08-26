@@ -223,12 +223,12 @@ namespace ranges
                 {
                     return its_ == pos.its_;
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)BidirectionalRange<range_view_all_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool)BidirectionalIterable<Rngs>()...>::value)
                 void prev()
                 {
                     its_.apply_i(prev_fun{this});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)RandomAccessRange<range_view_all_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool)RandomAccessIterable<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     if(n > 0)
@@ -236,7 +236,7 @@ namespace ranges
                     else if(n < 0)
                         its_.apply_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessRange<range_view_all_t<Rngs>>()...>::value)
+                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.which() <= that.its_.which())
@@ -264,7 +264,7 @@ namespace ranges
                 return {*this, begin_tag{}};
             }
             detail::conditional_t<
-                logical_and<(bool)BoundedRange<range_view_all_t<Rngs>>()...>::value, cursor, sentinel>
+                logical_and<(bool)BoundedIterable<Rngs>()...>::value, cursor, sentinel>
             end_cursor() const
             {
                 return {*this, end_tag{}};
@@ -274,7 +274,7 @@ namespace ranges
             explicit joined_view(Rngs &&...rngs)
               : rngs_(view::all(std::forward<Rngs>(rngs))...)
             {}
-            CONCEPT_REQUIRES(logical_and<(bool)SizedRange<range_view_all_t<Rngs>>()...>::value)
+            CONCEPT_REQUIRES(logical_and<(bool)SizedIterable<Rngs>()...>::value)
             size_type size() const
             {
                 return tuple_foldl(
@@ -293,7 +293,7 @@ namespace ranges
                 invoke(join_fn, Rngs &&... rngs)
                 {
                     static_assert(logical_and<(bool)InputIterable<Rngs>()...>::value,
-                        "Expecting Input Ranges");
+                        "Expecting Input Iterables");
                     return joined_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };

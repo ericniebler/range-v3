@@ -26,28 +26,29 @@ namespace ranges
     {
         struct copy_backward_fn
         {
-            template<typename I, typename O, typename P = ident,
+            template<typename I, typename S, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    BidirectionalIterator<I>() &&
+                    BidirectionalIterator<I, S>() &&
                     BidirectionalIterator<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
-            O operator()(I begin, I end, O out, P proj = P{}) const
+            std::pair<I, O> operator()(I begin, S end_, O out, P proj = P{}) const
             {
                 auto &&iproj = invokable(proj);
-                while(begin != end)
-                    *--out = iproj(*--end);
-                return out;
+                I i = next_to(begin, end_), end = i;
+                while(begin != i)
+                    *--out = iproj(*--i);
+                return {end, out};
             }
 
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    BidirectionalBoundedIterable<Rng>() &&
+                    BidirectionalIterable<Rng>() &&
                     BidirectionalIterator<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
-            O operator()(Rng &rng, O out, P proj = P{}) const
+            std::pair<I, O> operator()(Rng &rng, O out, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
             }
