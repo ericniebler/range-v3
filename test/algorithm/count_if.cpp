@@ -23,7 +23,7 @@ struct T
     bool m() { return b; }
 };
 
-int main() 
+int main()
 {
     using namespace ranges;
     auto equals = [](int i){ return std::bind(equal_to{}, i, std::placeholders::_1); };

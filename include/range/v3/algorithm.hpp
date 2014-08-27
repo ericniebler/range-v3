@@ -27,7 +27,6 @@
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/equal_range.hpp>
-#include <range/v3/algorithm/equal_range_n.hpp>
 #include <range/v3/algorithm/fill.hpp>
 #include <range/v3/algorithm/find.hpp>
 #include <range/v3/algorithm/find_end.hpp>
@@ -41,10 +40,8 @@
 #include <range/v3/algorithm/is_partitioned.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
-#include <range/v3/algorithm/lower_bound_n.hpp>
 #include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/algorithm/merge.hpp>
-#include <range/v3/algorithm/merge_n.hpp>
 #include <range/v3/algorithm/min_element.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
 #include <range/v3/algorithm/move.hpp>
@@ -82,12 +79,14 @@
 #include <range/v3/algorithm/unique.hpp>
 #include <range/v3/algorithm/unique_copy.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
-#include <range/v3/algorithm/upper_bound_n.hpp>
 
 // BUGBUG
+#include <range/v3/algorithm/aux_/equal_range_n.hpp>
+#include <range/v3/algorithm/aux_/lower_bound_n.hpp>
+#include <range/v3/algorithm/aux_/merge_n.hpp>
 #include <range/v3/algorithm/aux_/merge_n_with_buffer.hpp>
 #include <range/v3/algorithm/aux_/sort_n_with_buffer.hpp>
-
+#include <range/v3/algorithm/aux_/upper_bound_n.hpp>
 
 #include <range/v3/detail/re_enable_warnings.hpp>
 

@@ -140,7 +140,7 @@ namespace ranges
                 Derived<ranges::input_iterator_tag, range_category_t<Rng>>,
                 detail::not_t<std::is_reference<reference_t>>>;
             using adaptor_t = detail::transform_adaptor<adaptor_fun_t, single_pass>;
-            using use_sentinel_t = detail::or_t<detail::not_t<Range<Rng>>, single_pass>;
+            using use_sentinel_t = detail::or_t<detail::not_t<BoundedIterable<Rng>>, single_pass>;
             adaptor_t begin_adaptor() const
             {
                 return adaptor_t{fun_};

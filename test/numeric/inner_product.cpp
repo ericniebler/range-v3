@@ -39,37 +39,66 @@ void test()
     unsigned sa = sizeof(a) / sizeof(a[0]);
 
     // iterator test:
-    auto it = [&](auto b1, auto l1, auto b2, auto i) {
+    auto it3 = [](int* b1, int l1, int* b2, int i)
+    {
       return ranges::inner_product(Iter1(b1), Sent1(b1+l1), Iter2(b2), i);
     };
-    CHECK(it(a, 0, b, 0) == 0);
-    CHECK(it(a, 0, b, 10) == 10);
-    CHECK(it(a, 1, b, 0) == 6);
-    CHECK(it(a, 1, b, 10) == 16);
-    CHECK(it(a, 2, b, 0) == 16);
-    CHECK(it(a, 2, b, 10) == 26);
-    CHECK(it(a, sa, b, 0) == 56);
-    CHECK(it(a, sa, b, 10) == 66);
+    CHECK(it3(a, 0, b, 0) == 0);
+    CHECK(it3(a, 0, b, 10) == 10);
+    CHECK(it3(a, 1, b, 0) == 6);
+    CHECK(it3(a, 1, b, 10) == 16);
+    CHECK(it3(a, 2, b, 0) == 16);
+    CHECK(it3(a, 2, b, 10) == 26);
+    CHECK(it3(a, sa, b, 0) == 56);
+    CHECK(it3(a, sa, b, 10) == 66);
+
+    auto it4 = [](int* b1, int l1, int* b2, int i)
+    {
+      return ranges::inner_product(Iter1(b1), Sent1(b1+l1), Iter2(b2), Iter2(b2+l1), i);
+    };
+    CHECK(it4(a, 0, b, 0) == 0);
+    CHECK(it4(a, 0, b, 10) == 10);
+    CHECK(it4(a, 1, b, 0) == 6);
+    CHECK(it4(a, 1, b, 10) == 16);
+    CHECK(it4(a, 2, b, 0) == 16);
+    CHECK(it4(a, 2, b, 10) == 26);
+    CHECK(it4(a, sa, b, 0) == 56);
+    CHECK(it4(a, sa, b, 10) == 66);
 
     // rng test:
-    auto rng = [&](auto b1, auto l1, auto b2, auto i) {
+    auto rng3 = [](int* b1, int l1, int* b2, int i)
+    {
+      return ranges::inner_product(ranges::range(Iter1(b1), Sent1(b1+l1)), Iter2(b2), i);
+    };
+    CHECK(rng3(a, 0, b, 0) == 0);
+    CHECK(rng3(a, 0, b, 10)  == 10);
+    CHECK(rng3(a, 1, b, 0) == 6);
+    CHECK(rng3(a, 1, b, 10) == 16);
+    CHECK(rng3(a, 2, b, 0) == 16);
+    CHECK(rng3(a, 2, b, 10) == 26);
+    CHECK(rng3(a, sa, b, 0) == 56);
+    CHECK(rng3(a, sa, b, 10) == 66);
+
+    auto rng4 = [](int* b1, int l1, int* b2, int i)
+    {
       return ranges::inner_product(ranges::range(Iter1(b1), Sent1(b1+l1)),
                                    ranges::range(Iter2(b2), Iter2(b2+l1)), i);
     };
-    CHECK(rng(a, 0, b, 0) == 0);
-    CHECK(rng(a, 0, b, 10)  == 10);
-    CHECK(rng(a, 1, b, 0) == 6);
-    CHECK(rng(a, 1, b, 10) == 16);
-    CHECK(rng(a, 2, b, 0) == 16);
-    CHECK(rng(a, 2, b, 10) == 26);
-    CHECK(rng(a, sa, b, 0) == 56);
-    CHECK(rng(a, sa, b, 10) == 66);
+    CHECK(rng4(a, 0, b, 0) == 0);
+    CHECK(rng4(a, 0, b, 10)  == 10);
+    CHECK(rng4(a, 1, b, 0) == 6);
+    CHECK(rng4(a, 1, b, 10) == 16);
+    CHECK(rng4(a, 2, b, 0) == 16);
+    CHECK(rng4(a, 2, b, 10) == 26);
+    CHECK(rng4(a, sa, b, 0) == 56);
+    CHECK(rng4(a, sa, b, 10) == 66);
 
     // rng + bops:
-    auto bops = [&](auto b1, auto l1, auto b2, auto i) {
+    auto bops = [](int* b1, int l1, int* b2, int i)
+    {
       return ranges::inner_product(ranges::range(Iter1(b1), Sent1(b1+l1)),
                                    ranges::range(Iter2(b2), Iter2(b2+l1)), i,
-                                   std::multiplies<>(), std::plus<>());
+                                   std::multiplies<int>(), std::plus<int>());
     };
     CHECK(bops(a, 0, b, 1) == 1);
     CHECK(bops(a, 0, b, 10) == 10);
@@ -129,10 +158,11 @@ int main()
       using Iter2 = Iter1;
 
       // rng + bops:
-      auto bops = [&](auto b1, auto l1, auto b2, auto i) {
+      auto bops = [&](S* b1, int l1, S* b2, int i)
+      {
         return ranges::inner_product(ranges::range(Iter1(b1), Sent1(b1+l1)),
                                      ranges::range(Iter2(b2), Iter2(b2+l1)), i,
-                                     std::multiplies<>(), std::plus<>(),
+                                     std::multiplies<int>(), std::plus<int>(),
                                      &S::i, &S::i);
       };
 
@@ -144,5 +174,14 @@ int main()
       CHECK(bops(a, 2, b, 10) == 490);
       CHECK(bops(a, sa, b, 1) == 117649);
       CHECK(bops(a, sa, b, 10) == 1176490);
+    }
+
+    {
+        int a[] = {1, 2, 3, 4, 5, 6};
+        int b[] = {6, 5, 4, 3, 2, 1};
+
+        // raw array test:
+        CHECK(ranges::inner_product(a, b, 0) == 56);
+        CHECK(ranges::inner_product(a, b, 10) == 66);
     }
 }

@@ -31,7 +31,7 @@ namespace ranges
             ///
             /// range-based version of the \c unique std algorithm
             ///
-            /// \pre \c Rng is a model of the ForwardIterable concept
+            /// \pre \c Rng is a model of the ForwardRange concept
             /// \pre \c I is a model of the ForwardIterator concept
             /// \pre \c S is a model of the Sentinel concept
             /// \pre \c C is a model of the InvokableRelation concept

@@ -29,9 +29,9 @@ namespace ranges
             ///
             /// range-based version of the \c is_sorted_until std algorithm
             ///
-            /// Works on ForwardIterables
+            /// Works on ForwardRanges
             ///
-            /// \pre \c Rng is a model of the ForwardIterable concept
+            /// \pre \c Rng is a model of the ForwardRange concept
             /// \pre \c I is a model of the ForwardIterator concept
             /// \pre \c S is a model of the Sentinel<I> concept
             /// \pre \c R is a model of the Relation<Value_Type<I>> concept

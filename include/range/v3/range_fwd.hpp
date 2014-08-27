@@ -46,6 +46,11 @@ namespace ranges
             struct cend_fn;
         }
 
+        namespace adl_size_detail
+        {
+            struct size_fn;
+        }
+
         template<typename ...Ts>
         struct common_type;
 
@@ -70,8 +75,13 @@ namespace ranges
         extern adl_begin_end_detail::cbegin_fn const cbegin;
         extern adl_begin_end_detail::cend_fn const cend;
 
+        extern adl_size_detail::size_fn const size;
+
         struct advance_fn;
         extern advance_fn const advance;
+
+        struct advance_to_fn;
+        extern advance_to_fn const advance_to;
 
         struct advance_bounded_fn;
         extern advance_bounded_fn const advance_bounded;
@@ -87,9 +97,6 @@ namespace ranges
 
         struct iterator_range_size_fn;
         extern iterator_range_size_fn const iterator_range_size;
-
-        struct size_fn;
-        extern size_fn const size;
 
         namespace detail
         {
@@ -238,8 +245,16 @@ namespace ranges
 
 #if !defined(__GLIBCXX__) || __GLIBCXX__ > 20140522
             template<typename T>
+            using is_trivially_copy_assignable = std::is_trivially_copy_assignable<T>;
+
+            template<typename T>
             using is_trivially_move_assignable = std::is_trivially_move_assignable<T>;
 #else
+            template<typename T>
+            struct is_trivially_copy_assignable
+              : std::is_scalar<T>
+            {};
+
             template<typename T>
             struct is_trivially_move_assignable
               : std::is_scalar<T>
@@ -251,19 +266,19 @@ namespace ranges
         {
             template<typename Concept, typename...Ts>
             struct models;
-
-            struct Iterable;
-            struct Range;
-            struct SizedIteratorRange;
         }
 
         struct begin_tag {};
         struct end_tag {};
 
-        struct use_default;
-
         template<typename Rng, typename Void = void>
         struct is_infinite;
+
+        template<typename T, typename Enable = void>
+        struct is_range;
+
+        template<typename T, typename Enable = void>
+        struct is_sized_iterable;
 
         struct range_base
         {};
@@ -302,10 +317,10 @@ namespace ranges
         using invokable_t = decltype(invokable(std::declval<T>()));
 
         template<typename T>
-        struct istream_iterable;
+        struct istream_range;
 
         template<typename T>
-        istream_iterable<T> istream(std::istream & sin);
+        istream_range<T> istream(std::istream & sin);
 
         template<typename I, typename S = I>
         struct iterator_range;
@@ -352,12 +367,12 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct as_range_view;
+        struct as_bounded_range_view;
 
         namespace view
         {
-            struct as_range_fn;
-            extern as_range_fn const as_range;
+            struct as_bounded_range_fn;
+            extern as_bounded_range_fn const as_bounded_range;
         }
 
         template<typename Rng>

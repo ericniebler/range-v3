@@ -21,6 +21,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -196,28 +197,28 @@ namespace ranges
               : any_input_range_interface<range_reference_t<Rng>>
             {
             private:
-                detail::base_iterable_holder<Rng> rng_;
+                range_view_all_t<Rng> rng_;
             public:
                 any_input_range_impl() = default;
                 any_input_range_impl(Rng && rng)
-                  : rng_{std::forward<Rng>(rng)}
+                  : rng_{view::all(std::forward<Rng>(rng))}
                 {}
                 any_input_cursor<range_reference_t<Rng>> begin_cursor() const override
                 {
-                    return {rng_.get(), begin_tag{}};
+                    return {rng_, begin_tag{}};
                 }
                 any_input_sentinel<range_reference_t<Rng>> end_cursor() const override
                 {
-                    return {rng_.get(), end_tag{}};
+                    return {rng_, end_tag{}};
                 }
-                any_input_range_impl *clone() const override
+                any_input_range_interface<range_reference_t<Rng>> *clone() const override
                 {
-                    return new any_input_range_impl<Rng>{static_cast<Rng>(rng_.get())};
+                    return new any_input_range_impl<range_view_all_t<Rng>>{static_cast<range_view_all_t<Rng>>(rng_)};
                 }
             };
         }
 
-        /// \brief A type-erased InputIterable
+        /// \brief A type-erased InputRange
         template<typename Ref, bool Inf = false>
         struct any_input_range
           : range_facade<any_input_range<Ref>, Inf>

@@ -113,7 +113,7 @@ namespace ranges
             explicit flatten_view(Rng &&rng)
               : range_adaptor_t<flatten_view>(std::forward<Rng>(rng)), cur_{}
             {}
-            CONCEPT_REQUIRES(ForwardSizedIterable<Rng>() &&
+            CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardIterable<Rng>() &&
                              SizedIterable<range_value_t<Rng>>())
             size_type size() const
             {

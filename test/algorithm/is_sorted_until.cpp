@@ -390,16 +390,16 @@ int main()
 
     /// Initializer list test:
     {
-      std::initializer_list<int> r = {0,1,2,3,4,5,6,7,8,9,10};
-      CHECK(ranges::is_sorted_until(r) == ranges::end(r));
-      CHECK(*ranges::is_sorted_until({0,1,2,4,3,5,6,7,8,9,10}) == 3);
+        std::initializer_list<int> r = {0,1,2,3,4,5,6,7,8,9,10};
+        CHECK(ranges::is_sorted_until(r) == ranges::end(r));
+        CHECK(*ranges::is_sorted_until({0,1,2,4,3,5,6,7,8,9,10}) == 3);
     }
 
     /// Projection test:
     {
-      A as[] = {{0}, {1}, {2}, {3}, {4}};
-      CHECK(ranges::is_sorted_until(as, std::less<>{}, &A::a) == ranges::end(as));
-      CHECK(ranges::is_sorted_until(as, std::greater<>{}, &A::a) == ranges::next(ranges::begin(as),1)); 
+        A as[] = {{0}, {1}, {2}, {3}, {4}};
+        CHECK(ranges::is_sorted_until(as, std::less<int>{}, &A::a) == ranges::end(as));
+        CHECK(ranges::is_sorted_until(as, std::greater<int>{}, &A::a) == ranges::next(ranges::begin(as),1));
     }
 
     return ::test_result();

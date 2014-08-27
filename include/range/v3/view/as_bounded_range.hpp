@@ -7,8 +7,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_VIEW_AS_RANGE_HPP
-#define RANGES_V3_VIEW_AS_RANGE_HPP
+#ifndef RANGES_V3_VIEW_AS_BOUNDED_RANGE_HPP
+#define RANGES_V3_VIEW_AS_BOUNDED_RANGE_HPP
 
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
@@ -19,24 +19,26 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
         template<typename Rng>
-        struct as_range_view
-          : range_facade<as_range_view<Rng>, is_infinite<Rng>::value>
+        struct as_bounded_range_view
+          : range_facade<as_bounded_range_view<Rng>, is_infinite<Rng>::value>
         {
         private:
             friend range_core_access;
-            detail::base_iterable_holder<Rng> rng_;
+            using base_range_t = range_view_all_t<Rng>;
+            base_range_t rng_;
 
             struct cursor
             {
             private:
-                using base_iterator_t = range_iterator_t<Rng>;
-                using base_sentinel_t = range_sentinel_t<Rng>;
+                using base_iterator_t = range_iterator_t<base_range_t>;
+                using base_sentinel_t = range_sentinel_t<base_range_t>;
 
                 base_iterator_t it_;
                 base_sentinel_t se_;
@@ -89,7 +91,7 @@ namespace ranges
                     it_ += n;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                range_difference_t<Rng> distance_to(cursor const &that) const
+                range_difference_t<base_range_t> distance_to(cursor const &that) const
                 {
                     clean();
                     that.clean();
@@ -98,49 +100,49 @@ namespace ranges
             };
             cursor begin_cursor()
             {
-                return {begin(rng_.get()), end(rng_.get()), false};
+                return {begin(rng_), end(rng_), false};
             }
             cursor end_cursor()
             {
-                return {begin(rng_.get()), end(rng_.get()), true};
+                return {begin(rng_), end(rng_), true};
             }
-            CONCEPT_REQUIRES(Iterable<Rng const>())
+            CONCEPT_REQUIRES(Range<base_range_t const>())
             cursor begin_cursor() const
             {
-                return {begin(rng_.get()), end(rng_.get()), false};
+                return {begin(rng_), end(rng_), false};
             }
-            CONCEPT_REQUIRES(Iterable<Rng const>())
+            CONCEPT_REQUIRES(Range<base_range_t const>())
             cursor end_cursor() const
             {
-                return {begin(rng_.get()), end(rng_.get()), true};
+                return {begin(rng_), end(rng_), true};
             }
         public:
-            as_range_view() = default;
-            explicit as_range_view(Rng && rng)
-              : rng_(std::forward<Rng>(rng))
+            as_bounded_range_view() = default;
+            explicit as_bounded_range_view(Rng && rng)
+              : rng_(view::all(std::forward<Rng>(rng)))
             {}
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
-            range_size_t<Rng> size() const
+            CONCEPT_REQUIRES(SizedRange<base_range_t>())
+            range_size_t<base_range_t> size() const
             {
-                return ranges::size(rng_.get());
+                return ranges::size(rng_);
             }
         };
 
         namespace view
         {
-            struct as_range_fn : bindable<as_range_fn>, pipeable<as_range_fn>
+            struct as_bounded_range_fn : bindable<as_bounded_range_fn>, pipeable<as_bounded_range_fn>
             {
                 template<typename Rng>
-                static as_range_view<Rng>
-                invoke(as_range_fn, Rng && rng)
+                static as_bounded_range_view<Rng>
+                invoke(as_bounded_range_fn, Rng && rng)
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
-                    CONCEPT_ASSERT(!Range<Rng>());
-                    return as_range_view<Rng>{std::forward<Rng>(rng)};
+                    CONCEPT_ASSERT(!BoundedIterable<Rng>());
+                    return as_bounded_range_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
-            RANGES_CONSTEXPR as_range_fn as_range{};
+            RANGES_CONSTEXPR as_bounded_range_fn as_bounded_range{};
         }
     }
 }

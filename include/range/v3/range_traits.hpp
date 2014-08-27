@@ -27,28 +27,28 @@ namespace ranges
     {
         // Aliases (SFINAE-able)
         template<typename Rng>
-        using range_iterator_t = concepts::Iterable::iterator_t<Rng>;
+        using range_iterator_t = concepts::Range::iterator_t<Rng>;
 
         template<typename Rng>
-        using range_sentinel_t = concepts::Iterable::sentinel_t<Rng>;
+        using range_sentinel_t = concepts::Range::sentinel_t<Rng>;
 
         template<typename Rng>
-        using range_difference_t = concepts::Iterable::difference_t<Rng>;
+        using range_difference_t = concepts::Range::difference_t<Rng>;
 
         template<typename Rng>
         using range_size_t = meta_apply<std::make_unsigned, range_difference_t<Rng>>;
 
         template<typename Rng>
-        using range_value_t = concepts::InputIterable::value_t<Rng>;
+        using range_value_t = concepts::InputRange::value_t<Rng>;
 
         template<typename Rng>
-        using range_reference_t = concepts::InputIterable::reference_t<Rng>;
+        using range_reference_t = concepts::InputRange::reference_t<Rng>;
 
         template<typename Rng>
-        using range_category_t = concepts::InputIterable::category_t<Rng>;
+        using range_category_t = concepts::InputRange::category_t<Rng>;
 
         template<typename Rng>
-        using range_pointer_t = concepts::InputIterable::pointer_t<Rng>;
+        using range_pointer_t = concepts::InputRange::pointer_t<Rng>;
 
         // Metafunctions
         template<typename Rng>

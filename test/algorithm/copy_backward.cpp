@@ -26,14 +26,16 @@ int main()
     std::pair<int, int> out[size(a)] = {};
 
     auto res = ranges::copy_backward(begin(a), end(a), end(out));
-    CHECK(res == begin(out));
+    CHECK(res.first == end(a));
+    CHECK(res.second == begin(out));
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
     CHECK(!std::equal(a, a + size(a), out));
 
     res = ranges::copy_backward(a, end(out));
-    CHECK(res == begin(out));
+    CHECK(res.first == end(a));
+    CHECK(res.second == begin(out));
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
@@ -42,14 +44,16 @@ int main()
     int const expected[] = {0, 0, 1, 1, 3, 3};
 
     auto res2 = ranges::copy_backward(begin(a), end(a), end(out2), &std::pair<int, int>::first);
-    CHECK(res2 == begin(out2));
+    CHECK(res2.first == end(a));
+    CHECK(res2.second == begin(out2));
     CHECK(std::equal(begin(expected), end(expected), out2));
 
     std::fill_n(out2, size(out2), 0);
     CHECK(!std::equal(begin(expected), end(expected), out2));
 
     res2 = ranges::copy_backward(a, end(out2), &std::pair<int, int>::first);
-    CHECK(res2 == begin(out2));
+    CHECK(res2.first == end(a));
+    CHECK(res2.second == begin(out2));
     CHECK(std::equal(begin(expected), end(expected), out2));
 
     return test_result();

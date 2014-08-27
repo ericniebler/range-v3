@@ -30,7 +30,7 @@ namespace ranges
             ///
             /// range-based version of the \c find std algorithm
             ///
-            /// \pre \c Rng is a model of the Iterable concept
+            /// \pre \c Rng is a model of the Range concept
             /// \pre \c I is a model of the InputIterator concept
             /// \pre \c S is a model of the Sentinel<I> concept
             /// \pre \c P is a model of the Invokable<iterator_value_t<I>> concept
@@ -39,8 +39,8 @@ namespace ranges
                 typename V0 = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V0>,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I, S>()       &&
-                    Invokable<P, V0>()          &&
+                    InputIterator<I, S>() &&
+                    Invokable<P, V0>() &&
                     EqualityComparable<X, V1>()
                 )>
             I operator()(I begin, S end, V1 const &val, P proj_ = P{}) const
@@ -58,8 +58,8 @@ namespace ranges
                 typename V0 = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V0>,
                 CONCEPT_REQUIRES_(
-                    InputIterable<Rng>()        &&
-                    Invokable<P, V0>()          &&
+                    InputIterable<Rng>() &&
+                    Invokable<P, V0>() &&
                     EqualityComparable<X, V1>()
                 )>
             I operator()(Rng &rng, V1 const &val, P proj = P{}) const

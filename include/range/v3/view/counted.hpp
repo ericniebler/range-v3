@@ -141,12 +141,18 @@ namespace ranges
         }
 
         template<typename I>
+        iterator_difference_t<I> operator-(counted_iterator<I> const &begin, counted_sentinel<I> const &end)
+        {
+            return begin.count() - end.count();
+        }
+
+        template<typename I>
         struct counted_view
           : range_facade<counted_view<I>>
         {
         private:
             friend range_core_access;
-            using size_type = meta_apply<std::make_unsigned, iterator_difference_t<I>>;
+            using size_type = iterator_size_t<I>;
             I it_;
             iterator_difference_t<I> n_;
 

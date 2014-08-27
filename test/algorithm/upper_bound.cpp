@@ -26,9 +26,9 @@ int main()
     std::pair<int, int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
     const std::pair<int, int> c[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
 
-    CHECK(ranges::upper_bound_n(begin(a), size(a), a[0]) == &a[1]);
-    CHECK(ranges::upper_bound_n(begin(a), size(a), a[1], less()) == &a[2]);
-    CHECK(ranges::upper_bound_n(begin(a), size(a), 1, less(), &std::pair<int, int>::first) == &a[4]);
+    CHECK(ranges::aux::upper_bound_n(begin(a), size(a), a[0]) == &a[1]);
+    CHECK(ranges::aux::upper_bound_n(begin(a), size(a), a[1], less()) == &a[2]);
+    CHECK(ranges::aux::upper_bound_n(begin(a), size(a), 1, less(), &std::pair<int, int>::first) == &a[4]);
 
     CHECK(ranges::upper_bound(begin(a), end(a), a[0]) == &a[1]);
     CHECK(ranges::upper_bound(begin(a), end(a), a[1], less()) == &a[2]);

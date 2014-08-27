@@ -484,14 +484,14 @@ namespace ranges
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        swap((T&&)t, (T&&)t)
+                        (swap((T&&)t, (T&&)t), 42)
                     ));
 
                 template<typename T, typename U>
                 auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
-                        swap((T&&)t, (U&&)u),
-                        swap((U&&)u, (T&&)t)
+                        (swap((T&&)t, (U&&)u), 42),
+                        (swap((U&&)u, (T&&)t), 42)
                     ));
             };
 
@@ -801,7 +801,5 @@ namespace ranges
     /**/
 
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
-
-#include <range/v3/utility/predicate.hpp>
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

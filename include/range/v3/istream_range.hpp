@@ -23,8 +23,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Val>
-        struct istream_iterable
-          : range_facade<istream_iterable<Val>>
+        struct istream_range
+          : range_facade<istream_range<Val>>
         {
         private:
             friend range_core_access;
@@ -33,10 +33,10 @@ namespace ranges
             struct cursor
             {
             private:
-                istream_iterable *rng_;
+                istream_range *rng_;
             public:
                 cursor() = default;
-                explicit cursor(istream_iterable &rng)
+                explicit cursor(istream_range &rng)
                   : rng_(&rng)
                 {}
                 void next()
@@ -57,7 +57,8 @@ namespace ranges
                 return cursor{*this};
             }
         public:
-            istream_iterable(std::istream &sin)
+            istream_range() = default;
+            istream_range(std::istream &sin)
               : sin_(&sin), obj_{}
             {
                 *sin_ >> obj_; // prime the pump
@@ -65,9 +66,9 @@ namespace ranges
         };
 
         template<typename Val>
-        istream_iterable<Val> istream(std::istream & sin)
+        istream_range<Val> istream(std::istream & sin)
         {
-            return istream_iterable<Val>{sin};
+            return istream_range<Val>{sin};
         }
     }
 }

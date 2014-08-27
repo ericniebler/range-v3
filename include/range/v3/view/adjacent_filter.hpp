@@ -62,6 +62,7 @@ namespace ranges
                 return{*this};
             }
         public:
+            adjacent_filtered_view() = default;
             adjacent_filtered_view(Rng && rng, F pred)
               : range_adaptor_t<adjacent_filtered_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))

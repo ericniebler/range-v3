@@ -314,42 +314,6 @@ namespace ranges
                     return std::addressof(x);
                 }
             };
-
-            template<typename BaseRng>
-            struct base_iterable_holder
-            {
-            private:
-                BaseRng rng_;
-            public:
-                base_iterable_holder() = default;
-                base_iterable_holder(BaseRng &&rng)
-                  : rng_(std::forward<BaseRng>(rng))
-                {}
-                BaseRng &get()
-                {
-                    return rng_;
-                }
-                BaseRng const &get() const
-                {
-                    return rng_;
-                }
-            };
-
-            template<typename BaseRng>
-            struct base_iterable_holder<BaseRng &>
-            {
-            private:
-                BaseRng *rng_;
-            public:
-                base_iterable_holder() = default;
-                base_iterable_holder(BaseRng &rng)
-                  : rng_(&rng)
-                {}
-                BaseRng &get() const
-                {
-                    return *rng_;
-                }
-            };
         }
 
         struct range_core_access
@@ -556,9 +520,9 @@ namespace ranges
             }
 
             template<typename RangeAdaptor>
-            struct base_iterable
+            struct base_range
             {
-                using type = typename RangeAdaptor::base_iterable_t;
+                using type = typename RangeAdaptor::base_range_t;
             };
             template<typename RangeFacade>
             struct range_facade
@@ -739,9 +703,9 @@ namespace ranges
                 return this->detail::mixin_base<Cur>::get();
             }
 
-            // If Iterable models RangeFacade or if the cursor models
+            // If Range models RangeFacade or if the cursor models
             // ForwardCursor, then positions must be equality comparable.
-            // Otherwise, it's an InputCursor in an IterableFacade, so
+            // Otherwise, it's an InputCursor in an RangeFacade, so
             // all cursors are trivially equal.
             constexpr bool equal2_(basic_range_iterator const&,
                 range_core_access::InputCursorConcept *) const

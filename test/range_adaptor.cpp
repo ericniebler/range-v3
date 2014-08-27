@@ -20,7 +20,8 @@ struct my_reverse_view
   : ranges::range_adaptor<my_reverse_view<BidiRange>, BidiRange>
 {
 private:
-    CONCEPT_ASSERT(ranges::BidirectionalRange<BidiRange>());
+    CONCEPT_ASSERT(ranges::BidirectionalIterable<BidiRange>());
+    CONCEPT_ASSERT(ranges::BoundedIterable<BidiRange>());
     friend ranges::range_core_access;
     using base_cursor_t = ranges::base_cursor_t<my_reverse_view>;
 
@@ -48,12 +49,12 @@ private:
             tmp.prev();
             return tmp.current();
         }
-        CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
+        CONCEPT_REQUIRES(ranges::RandomAccessIterable<BidiRange>())
         void advance(base_cursor_t &pos, ranges::range_difference_t<BidiRange> n)
         {
             pos.advance(-n);
         }
-        CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
+        CONCEPT_REQUIRES(ranges::RandomAccessIterable<BidiRange>())
         ranges::range_difference_t<BidiRange>
         distance_to(base_cursor_t const &here, base_cursor_t const &there)
         {
@@ -75,7 +76,7 @@ public:
 struct my_delimited_range
   : ranges::range_adaptor<
         my_delimited_range,
-        ranges::delimited_view<ranges::istream_iterable<int>, int>>
+        ranges::delimited_view<ranges::istream_range<int>, int>>
 {
     using range_adaptor_t::range_adaptor_t;
 };
@@ -85,21 +86,21 @@ int main()
     using namespace ranges;
     std::vector<int> v{1, 2, 3, 4};
     my_reverse_view<std::vector<int>& > retro{v};
-    ::models<concepts::Range>(retro);
+    ::models<concepts::BoundedRange>(retro);
     ::models<concepts::RandomAccessIterator>(retro.begin());
     ::check_equal(retro, {4, 3, 2, 1});
 
     std::list<int> l{1, 2, 3, 4};
     my_reverse_view<std::list<int>& > retro2{l};
-    ::models<concepts::Range>(retro2);
+    ::models<concepts::BoundedRange>(retro2);
     ::models<concepts::BidirectionalIterator>(retro2.begin());
     ::models_not<concepts::RandomAccessIterator>(retro2.begin());
     ::check_equal(retro2, {4, 3, 2, 1});
 
     std::stringstream sinx("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 42 6 7 8 9 ");
     my_delimited_range r{view::delimit(istream<int>(sinx), 42)};
-    ::models<concepts::Iterable>(r);
-    ::models_not<concepts::Range>(r);
+    ::models<concepts::Range>(r);
+    ::models_not<concepts::BoundedRange>(r);
     ::models<concepts::InputIterator>(r.begin());
     ::models_not<concepts::ForwardIterator>(r.begin());
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4});

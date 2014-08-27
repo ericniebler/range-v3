@@ -58,7 +58,7 @@ int main()
 {
     using namespace ranges;
     auto r = MyRange{};
-    ::models<concepts::Range>(r);
+    ::models<concepts::BoundedRange>(r);
     ::models<concepts::ForwardIterator>(r.begin());
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
 

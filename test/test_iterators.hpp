@@ -381,6 +381,12 @@ struct sentinel_type
     using type = It;
 };
 
+template<typename T, bool Sized>
+struct sentinel_type<T*, Sized>
+{
+    using type = sentinel<T*, Sized>;
+};
+
 template<template<typename> class I, typename It, bool Sized>
 struct sentinel_type<I<It>, Sized>
 {

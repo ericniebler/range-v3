@@ -18,7 +18,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/range_algorithm.hpp>
-#include <range/v3/algorithm/lower_bound_n.hpp>
+#include <range/v3/algorithm/aux_/lower_bound_n.hpp>
 
 namespace ranges
 {
@@ -30,7 +30,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Sentinel<S, I>() && BinarySearchable<I, V, C, P>())>
             I operator()(I begin, S end, V const &val, C pred = C{}, P proj = P{}) const
             {
-                return lower_bound_n(std::move(begin), distance(begin, end), val, std::move(pred),
+                return aux::lower_bound_n(std::move(begin), distance(begin, end), val, std::move(pred),
                     std::move(proj));
             }
 
@@ -40,7 +40,7 @@ namespace ranges
             I operator()(Rng &rng, V const &val, C pred = C{}, P proj = P{}) const
             {
                 static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
-                return lower_bound_n(begin(rng), distance(rng), val, std::move(pred),
+                return aux::lower_bound_n(begin(rng), distance(rng), val, std::move(pred),
                     std::move(proj));
             }
         };

@@ -2,14 +2,23 @@
 add_executable(view.adjacent_filter adjacent_filter.cpp)
 add_test(test.view.adjacent_filter, view.adjacent_filter)
 
-add_executable(view.as_range as_range.cpp)
-add_test(test.view.as_range, view.as_range)
+add_executable(view.all all.cpp)
+add_test(test.view.all, view.all)
+
+add_executable(view.as_bounded_range as_bounded_range.cpp)
+add_test(test.view.as_bounded_range, view.as_bounded_range)
 
 add_executable(view.counted counted.cpp)
 add_test(test.view.counted, view.counted)
 
 add_executable(view.delimit delimit.cpp)
 add_test(test.view.delimit, view.delimit)
+
+add_executable(view.generate generate.cpp)
+add_test(test.view.generate, view.generate)
+
+add_executable(view.generate_n generate_n.cpp)
+add_test(test.view.generate_n, view.generate_n)
 
 add_executable(view.indirect indirect.cpp)
 add_test(test.view.indirect, view.indirect)

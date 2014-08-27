@@ -125,7 +125,7 @@ namespace ranges
                 {
                     return bind_apply(fn_,
                                       bound_args_,
-                                      std::tuple<Args2 &&...>{std::forward<Args2>(args2)...},
+                                      std::forward_as_tuple(std::forward<Args2>(args2)...),
                                       bound_arg_indices{});
                 }
 
@@ -138,7 +138,7 @@ namespace ranges
                 {
                     return bind_apply(fn_,
                                       bound_args_,
-                                      std::tuple<Args2 &&...>{std::forward<Args2>(args2)...},
+                                      std::forward_as_tuple(std::forward<Args2>(args2)...),
                                       bound_arg_indices{});
                 }
 
@@ -151,7 +151,7 @@ namespace ranges
                 {
                     return bind_apply(std::move(*this).fn_,
                                       std::move(*this).bound_args_,
-                                      std::tuple<Args2 &&...>{std::forward<Args2>(args2)...},
+                                      std::forward_as_tuple(std::forward<Args2>(args2)...),
                                       bound_arg_indices{});
                 }
             };

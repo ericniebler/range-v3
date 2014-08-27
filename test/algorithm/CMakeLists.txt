@@ -56,6 +56,15 @@ add_test(test.alg.generate, alg.generate)
 add_executable(alg.generate_n generate_n.cpp)
 add_test(test.alg.generate_n, alg.generate_n)
 
+add_executable(alg.inplace_merge inplace_merge.cpp)
+add_test(test.alg.inplace_merge, alg.inplace_merge)
+
+add_executable(alg.is_heap is_heap.cpp)
+add_test(test.alg.is_heap, alg.is_heap)
+
+add_executable(alg.is_heap_until is_heap_until.cpp)
+add_test(test.alg.is_heap_until, alg.is_heap_until)
+
 add_executable(alg.is_partitioned is_partitioned.cpp)
 add_test(test.alg.is_partitioned, alg.is_partitioned)
 
@@ -73,6 +82,9 @@ add_test(test.alg.lexicographical_compare, alg.lexicographical_compare)
 
 add_executable(alg.lower_bound lower_bound.cpp)
 add_test(test.alg.lower_bound, alg.lower_bound)
+
+add_executable(alg.make_heap make_heap.cpp)
+add_test(test.alg.make_heap, alg.make_heap)
 
 add_executable(alg.max_element max_element.cpp)
 add_test(test.alg.max_element, alg.max_element)
@@ -110,8 +122,14 @@ add_test(test.alg.partition_copy, alg.partition_copy)
 add_executable(alg.partition_point partition_point.cpp)
 add_test(test.alg.partition_point, alg.partition_point)
 
+add_executable(alg.pop_heap pop_heap.cpp)
+add_test(test.alg.pop_heap alg.pop_heap)
+
 add_executable(alg.prev_permutation prev_permutation.cpp)
 add_test(test.alg.prev_permutation alg.prev_permutation)
+
+add_executable(alg.push_heap push_heap.cpp)
+add_test(test.alg.push_heap alg.push_heap)
 
 add_executable(alg.random_shuffle random_shuffle.cpp)
 add_test(test.alg.random_shuffle, alg.random_shuffle)
@@ -155,8 +173,14 @@ add_test(test.alg.rotate_copy, alg.rotate_copy)
 add_executable(alg.search search.cpp)
 add_test(test.alg.search, alg.search)
 
+add_executable(alg.search_n search_n.cpp)
+add_test(test.alg.search_n, alg.search_n)
+
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
+
+add_executable(alg.sort_heap sort_heap.cpp)
+add_test(test.alg.sort_heap, alg.sort_heap)
 
 add_executable(alg.stable_partition stable_partition.cpp)
 add_test(test.alg.stable_partition, alg.stable_partition)
@@ -169,6 +193,9 @@ add_test(test.alg.transform, alg.transform)
 
 add_executable(alg.unique unique.cpp)
 add_test(test.alg.unique, alg.unique)
+
+add_executable(alg.unique_copy unique_copy.cpp)
+add_test(test.alg.unique_copy, alg.unique_copy)
 
 add_executable(alg.upper_bound upper_bound.cpp)
 add_test(test.alg.upper_bound, alg.upper_bound)

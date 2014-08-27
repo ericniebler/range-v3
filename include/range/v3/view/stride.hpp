@@ -92,7 +92,7 @@ namespace ranges
                   : dirty_t(true), offset_t(0), rng_(&rng)
                 {
                     // Opportunistic eager cleaning when we can do so in O(1)
-                    if(BidirectionalSizedIterable<Rng>())
+                    if(BidirectionalIterable<Rng>() && SizedIterable<Rng>())
                         do_clean();
                 }
                 void next(base_cursor_t &pos)
@@ -151,16 +151,16 @@ namespace ranges
                     }
                 }
             };
-            // If the underlying sequence object doesn't model Range, then we can't
+            // If the underlying sequence object doesn't model BoundedRange, then we can't
             // decrement the end and there's no reason to adapt the sentinel. Strictly
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Ranges, but in the interests of making the resulting stride view model
-            // Range, adapt it anyway.
+            // BoundedRange, adapt it anyway.
             auto end_adaptor_(concepts::Iterable*) const -> default_adaptor
             {
                 return {};
             }
-            auto end_adaptor_(concepts::Range*) const -> adaptor
+            auto end_adaptor_(concepts::BoundedIterable*) const -> adaptor
             {
                 return {*this, end_tag{}};
             }
@@ -169,10 +169,10 @@ namespace ranges
             {
                 return {*this, begin_tag{}};
             }
-            detail::conditional_t<(Range<Rng>()), adaptor, default_adaptor>
+            detail::conditional_t<(BoundedIterable<Rng>()), adaptor, default_adaptor>
             end_adaptor() const
             {
-                return strided_view::end_adaptor_(range_concept<Rng>());
+                return strided_view::end_adaptor_(bounded_iterable_concept<Rng>());
             }
         public:
             strided_view() = default;

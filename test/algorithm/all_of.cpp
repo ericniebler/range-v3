@@ -22,7 +22,7 @@ struct S {
   bool test;
 };
 
-int main() 
+int main()
 {
   std::vector<int> all_even { 0, 2, 4, 6 };
   std::vector<int> one_even { 1, 3, 4, 7 };

@@ -32,16 +32,16 @@ void test()
     int ir[] = {5, 6, 7, 8, 9};
     constexpr unsigned s = ranges::size(ir);
     {
-    int ia[] = {1, 2, 3, 4, 5};
-    ranges::iota(Iter(ia), Sent(ia + s), 5);
-    CHECK(ranges::equal(ia, ir));
+        int ia[] = {1, 2, 3, 4, 5};
+        ranges::iota(Iter(ia), Sent(ia + s), 5);
+        CHECK(ranges::equal(ia, ir));
     }
 
     {
-    int ia[] = {1, 2, 3, 4, 5};
-    auto rng = ranges::range(Iter(ia), Sent(ia + s));
-    ranges::iota(rng, 5);
-    CHECK(ranges::equal(ia, ir));
+        int ia[] = {1, 2, 3, 4, 5};
+        auto rng = ranges::range(Iter(ia), Sent(ia + s));
+        ranges::iota(rng, 5);
+        CHECK(ranges::equal(ia, ir));
     }
 }
 

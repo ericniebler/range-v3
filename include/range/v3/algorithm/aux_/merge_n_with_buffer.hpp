@@ -31,7 +31,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
-#include <range/v3/algorithm/merge_n.hpp>
+#include <range/v3/algorithm/aux_/merge_n.hpp>
 
 namespace ranges
 {
@@ -45,8 +45,8 @@ namespace ranges
                     typename VI = iterator_value_t<I>,
                     typename VB = iterator_value_t<B>,
                     CONCEPT_REQUIRES_(
-                        Same<VI, VB>()                  &&
-                        IndirectlyCopyable<I, B>()      &&
+                        Same<VI, VB>() &&
+                        IndirectlyCopyable<I, B>() &&
                         Mergeable<B, I, I, C, P, P>()
                     )>
                 I operator()(I begin0, iterator_difference_t<I> n0,

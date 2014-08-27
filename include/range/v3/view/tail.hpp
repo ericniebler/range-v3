@@ -24,6 +24,7 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/bindable.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -34,25 +35,26 @@ namespace ranges
           : private range_base
         {
         private:
-            detail::base_iterable_holder<Rng> rng_;
+            using base_range_t = range_view_all_t<Rng>;
+            base_range_t rng_;
         public:
-            using iterator = range_iterator_t<Rng>;
-            using sentinel = range_sentinel_t<Rng>;
+            using iterator = range_iterator_t<base_range_t>;
+            using sentinel = range_sentinel_t<base_range_t>;
 
             tail_view() = default;
             tail_view(Rng &&rng)
-              : rng_(std::forward<Rng>(rng))
+              : rng_(view::all(std::forward<Rng>(rng)))
             {
                 CONCEPT_ASSERT(InputIterable<Rng>());
-                RANGES_ASSERT(!ForwardIterable<Rng>() || !empty(rng_.get()));
+                RANGES_ASSERT(!ForwardIterable<Rng>() || !empty(rng_));
             }
             iterator begin() const
             {
-                return next(ranges::begin(rng_.get()));
+                return next(ranges::begin(rng_));
             }
             sentinel end() const
             {
-                return ranges::end(rng_.get());
+                return ranges::end(rng_);
             }
             bool operator!() const
             {
@@ -62,18 +64,10 @@ namespace ranges
             {
                 return begin() != end();
             }
-            Rng & base()
+            CONCEPT_REQUIRES(SizedRange<base_range_t>())
+            range_size_t<base_range_t> size() const
             {
-                return rng_.get();
-            }
-            Rng const & base() const
-            {
-                return rng_.get();
-            }
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
-            range_size_t<Rng> size() const
-            {
-                return ranges::size(rng_.get()) - 1;
+                return ranges::size(rng_) - 1;
             }
         };
 

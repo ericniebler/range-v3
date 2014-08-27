@@ -44,8 +44,8 @@ namespace ranges
             template<typename I0, typename S0, typename I1, typename S1, typename O,
                 typename C = ordered_less, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
-                    Sentinel<S0, I0>()                  &&
-                    Sentinel<S1, I1>()                  &&
+                    Sentinel<S0, I0>() &&
+                    Sentinel<S1, I1>() &&
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
             std::tuple<I0, I1, O>
@@ -78,8 +78,8 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng0>()                &&
-                    Iterable<Rng1>()                &&
+                    Iterable<Rng0>() &&
+                    Iterable<Rng1>() &&
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
             std::tuple<I0, I1, O>

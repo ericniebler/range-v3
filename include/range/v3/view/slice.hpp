@@ -27,6 +27,7 @@
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -45,9 +46,10 @@ namespace ranges
                 using size_type = range_size_t<Rng>;
                 using difference_type = range_difference_t<Rng>;
                 using from_t = detail::conditional_t<IsTakeView, constant<size_type, 0>, mutable_<size_type>>;
+                using base_range_t = range_view_all_t<Rng>;
                 // Mutable here. Const-correctness is enforced below by only conditionally
                 // allowing the const-qualified begin_cursor()/end_cursor() accessors.
-                mutable detail::base_iterable_holder<Rng> rng_;
+                mutable base_range_t rng_;
                 compressed_pair<from_t, size_type> from_to_;
 
                 constexpr size_type from() const
@@ -66,7 +68,7 @@ namespace ranges
                 struct cursor : private dirty_t
                 {
                 private:
-                    using base_iterator_t = range_iterator_t<Rng>;
+                    using base_iterator_t = range_iterator_t<base_range_t>;
                     basic_sliced_view const *rng_;
                     size_type n_;
                     base_iterator_t it_;
@@ -86,25 +88,25 @@ namespace ranges
                     }
                     void do_clean()
                     {
-                        it_ = ranges::next(begin(rng_->rng_.get()), rng_->to());
+                        it_ = ranges::next(begin(rng_->rng_), rng_->to());
                     }
                 public:
                     cursor() = default;
                     cursor(basic_sliced_view const &rng, begin_tag)
                       : dirty_t{false}, rng_(&rng), n_(rng.from())
-                      , it_(ranges::next(begin(rng.rng_.get()), rng.from()))
+                      , it_(ranges::next(begin(rng.rng_), rng.from()))
                     {}
                     cursor(basic_sliced_view const &rng, end_tag)
                       : dirty_t{true}, rng_(&rng), n_(rng.to())
-                      , it_(begin(rng.rng_.get()))
+                      , it_(begin(rng.rng_))
                     {
                         if(Rand())
                             do_clean();
                     }
-                    range_reference_t<Rng> current() const
+                    range_reference_t<base_range_t> current() const
                     {
                         RANGES_ASSERT(n_ < rng_->to());
-                        RANGES_ASSERT(it_ != end(rng_->rng_.get()));
+                        RANGES_ASSERT(it_ != end(rng_->rng_));
                         return *it_;
                     }
                     bool equal(cursor const &that) const
@@ -115,7 +117,7 @@ namespace ranges
                     void next()
                     {
                         RANGES_ASSERT(n_ < rng_->to());
-                        RANGES_ASSERT(it_ != end(rng_->rng_.get()));
+                        RANGES_ASSERT(it_ != end(rng_->rng_));
                         ++n_;
                         ++it_;
                     }
@@ -149,12 +151,12 @@ namespace ranges
                 {
                     return {*this, end_tag{}};
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
+                CONCEPT_REQUIRES(Range<base_range_t const>())
                 cursor begin_cursor() const
                 {
                     return {*this, begin_tag{}};
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
+                CONCEPT_REQUIRES(Range<base_range_t const>())
                 cursor end_cursor() const
                 {
                     return {*this, end_tag{}};
@@ -163,11 +165,11 @@ namespace ranges
                 basic_sliced_view() = default;
                 CONCEPT_REQUIRES(IsTakeView)
                 basic_sliced_view(Rng && rng, size_type to)
-                  : rng_(std::forward<Rng>(rng)), from_to_(0, to)
+                  : rng_(view::all(std::forward<Rng>(rng))), from_to_(0, to)
                 {}
                 CONCEPT_REQUIRES(!IsTakeView)
                 basic_sliced_view(Rng && rng, size_type from, size_type to)
-                  : rng_(std::forward<Rng>(rng)), from_to_(from, to)
+                  : rng_(view::all(std::forward<Rng>(rng))), from_to_(from, to)
                 {
                     RANGES_ASSERT(from <= to);
                 }
