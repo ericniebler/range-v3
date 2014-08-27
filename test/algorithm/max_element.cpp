@@ -17,6 +17,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <memory>
+#include <numeric>
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/max_element.hpp>
