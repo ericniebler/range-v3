@@ -35,7 +35,6 @@ To Do:
   - `stable_sort`
   - The numeric algorithms
 * Make `inplace_merge` work with forward iterators
-* Make `upper_bound_n`, `lower_bound_n` and `merge_n` implementation details
 
 Design Decisions, Guidelines, and Rationale:
 --------------------------------------------

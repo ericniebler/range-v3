@@ -716,15 +716,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_n.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lower_bound_n.hpp">
-      <Filter>Header Files\algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound_n.hpp">
-      <Filter>Header Files\algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge_n.hpp">
-      <Filter>Header Files\algorithm</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\merge_n_with_buffer.hpp">
       <Filter>Header Files\algorithm\aux_</Filter>
     </ClInclude>
@@ -756,9 +747,6 @@
       <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_if.hpp">
-      <Filter>Header Files\algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal_range_n.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\minmax_element.hpp">
@@ -817,6 +805,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\as_bounded_range.hpp">
       <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\merge_n.hpp">
+      <Filter>Header Files\algorithm\aux_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\lower_bound_n.hpp">
+      <Filter>Header Files\algorithm\aux_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\upper_bound_n.hpp">
+      <Filter>Header Files\algorithm\aux_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\equal_range_n.hpp">
+      <Filter>Header Files\algorithm\aux_</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

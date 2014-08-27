@@ -31,7 +31,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
-#include <range/v3/algorithm/merge_n.hpp>
+#include <range/v3/algorithm/aux_/merge_n.hpp>
 
 namespace ranges
 {

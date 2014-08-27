@@ -18,7 +18,7 @@
 #include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/algorithm/equal_range_n.hpp>
+#include <range/v3/algorithm/aux_/equal_range_n.hpp>
 
 namespace ranges
 {
@@ -31,7 +31,7 @@ namespace ranges
             iterator_range<I>
             operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
             {
-                return equal_range_n(std::move(begin), distance(begin, end), val, std::move(pred),
+                return aux::equal_range_n(std::move(begin), distance(begin, end), val, std::move(pred),
                     std::move(proj));
             }
 
@@ -42,7 +42,7 @@ namespace ranges
             operator()(Rng & rng, V const & val, C pred = C{}, P proj = P{}) const
             {
                 static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
-                return equal_range_n(begin(rng), distance(rng), val, std::move(pred),
+                return aux::equal_range_n(begin(rng), distance(rng), val, std::move(pred),
                     std::move(proj));
             }
         };
