@@ -36,7 +36,7 @@ install:
   - export CXX_FLAGS=""
   - export CXX_LINKER_FLAGS=""
   - if [ -z "$BUILD_TYPE" ]; then export BUILD_TYPE=Release; fi
-  - if [ -n "$ASAN" ]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address"; fi
+  - if [ -n "$ASAN" ]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
   - if [ -n "$ASAN" -a "$CXX" = "g++-4.8" ]; then exit 0; fi
   - if [ -n "$LIBCXX" -a "$CXX" = "g++-4.8" ]; then exit 0; fi
   - if [ "$CXX" == "clang++" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
