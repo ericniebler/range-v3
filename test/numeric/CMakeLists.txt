@@ -6,3 +6,6 @@ add_test(test.num.inner_product num.inner_product)
 
 add_executable(num.iota iota.cpp)
 add_test(test.num.iota num.iota)
+
+add_executable(num.partial_sum partial_sum.cpp)
+add_test(test.num.partial_sum num.partial_sum)
