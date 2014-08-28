@@ -18,6 +18,8 @@ else()
   message(FATAL_ERROR "Unknown compiler.")
 endif()
 
+include(aux/coverage.cmake)
+
 add_subdirectory(test)
 add_subdirectory(example)
 add_subdirectory(libs/range/v3/scratch)
