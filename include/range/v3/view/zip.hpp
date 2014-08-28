@@ -123,7 +123,7 @@ namespace ranges
         private:
             friend range_core_access;
             optional<invokable_t<Fun>> fun_;
-            std::tuple<range_view_all_t<Rngs>...> rngs_;
+            std::tuple<view::all_t<Rngs>...> rngs_;
             using difference_type = common_type_t<range_difference_t<Rngs>...>;
             using size_type = meta_apply<std::make_unsigned, difference_type>;
 
@@ -133,7 +133,7 @@ namespace ranges
             private:
                 friend struct sentinel;
                 invokable_t<Fun> const *fun_;
-                std::tuple<range_iterator_t<range_view_all_t<Rngs>>...> its_;
+                std::tuple<range_iterator_t<view::all_t<Rngs>>...> its_;
             public:
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
                 using single_pass =
@@ -142,7 +142,7 @@ namespace ranges
                 using value_type =
                     detail::uncvref_t<result_of_t<invokable_t<Fun>(range_value_t<Rngs>...)>>;
                 cursor() = default;
-                cursor(invokable_t<Fun> const &fun, std::tuple<range_iterator_t<range_view_all_t<Rngs>>...> its)
+                cursor(invokable_t<Fun> const &fun, std::tuple<range_iterator_t<view::all_t<Rngs>>...> its)
                   : fun_(&fun), its_(std::move(its))
                 {}
                 auto current() const ->
@@ -196,10 +196,10 @@ namespace ranges
             struct sentinel
             {
             private:
-                std::tuple<range_sentinel_t<range_view_all_t<Rngs>>...> ends_;
+                std::tuple<range_sentinel_t<view::all_t<Rngs>>...> ends_;
             public:
                 sentinel() = default;
-                sentinel(invokable_t<Fun> const &, std::tuple<range_sentinel_t<range_view_all_t<Rngs>>...> ends)
+                sentinel(invokable_t<Fun> const &, std::tuple<range_sentinel_t<view::all_t<Rngs>>...> ends)
                   : ends_(std::move(ends))
                 {}
                 bool equal(cursor const &pos) const

@@ -71,7 +71,7 @@ namespace ranges
             using difference_type = common_type_t<range_difference_t<Rngs>...>;
             using size_type = meta_apply<std::make_unsigned, difference_type>;
             static constexpr std::size_t cranges{sizeof...(Rngs)};
-            std::tuple<range_view_all_t<Rngs>...> rngs_;
+            std::tuple<view::all_t<Rngs>...> rngs_;
 
             struct sentinel;
 
@@ -81,7 +81,7 @@ namespace ranges
             private:
                 friend struct sentinel;
                 joined_view const *rng_;
-                tagged_variant<range_iterator_t<range_view_all_t<Rngs> const>...> its_;
+                tagged_variant<range_iterator_t<view::all_t<Rngs> const>...> its_;
 
                 template<std::size_t N>
                 void satisfy(size_t<N>)
@@ -141,6 +141,10 @@ namespace ranges
                     void operator()(Iterator &it, size_t<N> which) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
+                        // BUGBUG If distance(it, end) > n, then using advance_bounded
+                        // is O(n) when it need not be since the end iterator position
+                        // is actually not interesting. Only the "rest" is needed, which
+                        // can sometimes be O(1).
                         auto rest = advance_bounded(it, n, std::move(end));
                         pos->satisfy(which);
                         if(rest != 0)
@@ -247,7 +251,7 @@ namespace ranges
             struct sentinel
             {
             private:
-                range_sentinel_t<typelist_back_t<typelist<range_view_all_t<Rngs>...>> const> end_;
+                range_sentinel_t<typelist_back_t<typelist<view::all_t<Rngs>...>> const> end_;
             public:
                 sentinel() = default;
                 sentinel(joined_view const &rng, end_tag)

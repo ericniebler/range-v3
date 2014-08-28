@@ -12,7 +12,7 @@
 #include <sstream>
 #include <range/v3/core.hpp>
 #include <range/v3/view/zip.hpp>
-#include <range/v3/view/as_bounded_range.hpp>
+#include <range/v3/view/bounded.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"
@@ -29,7 +29,7 @@ int main()
     {
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
-        auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::as_bounded_range);
+        auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
         ::models<concepts::BoundedRange>(rng);
         ::models_not<concepts::SizedRange>(rng);
         ::models<concepts::InputIterator>(begin(rng));

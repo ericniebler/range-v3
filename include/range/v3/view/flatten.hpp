@@ -41,7 +41,7 @@ namespace ranges
             using size_type = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
 
             friend range_core_access;
-            range_view_all_t<range_value_t<Rng>> cur_;
+            view::all_t<range_value_t<Rng>> cur_;
 
             struct adaptor;
             friend struct adaptor;

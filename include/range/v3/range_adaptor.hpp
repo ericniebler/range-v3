@@ -359,7 +359,7 @@ namespace ranges
             friend range_core_access;
             friend default_adaptor;
             using range_adaptor_t = range_adaptor;
-            using base_range_t = range_view_all_t<BaseRng>;
+            using base_range_t = view::all_t<BaseRng>;
             using range_facade<Derived, Inf>::derived;
             // Mutable here. Const-correctness is enforced below by disabling
             // begin_cursor/end_cursor if "BaseRng const" does not model

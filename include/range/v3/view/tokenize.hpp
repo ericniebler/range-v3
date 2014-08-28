@@ -33,7 +33,7 @@ namespace ranges
         struct tokenized_view : private range_base
         {
         private:
-            using base_range_t = range_view_all_t<Rng>;
+            using base_range_t = view::all_t<Rng>;
             base_range_t rng_;
             Regex rex_;
             SubMatchRange subs_;

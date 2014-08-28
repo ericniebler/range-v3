@@ -367,12 +367,12 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct as_bounded_range_view;
+        struct bounded_view;
 
         namespace view
         {
-            struct as_bounded_range_fn;
-            extern as_bounded_range_fn const as_bounded_range;
+            struct bounded_fn;
+            extern bounded_fn const bounded;
         }
 
         template<typename Rng>

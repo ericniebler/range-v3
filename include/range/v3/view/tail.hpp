@@ -35,7 +35,7 @@ namespace ranges
           : private range_base
         {
         private:
-            using base_range_t = range_view_all_t<Rng>;
+            using base_range_t = view::all_t<Rng>;
             base_range_t rng_;
         public:
             using iterator = range_iterator_t<base_range_t>;

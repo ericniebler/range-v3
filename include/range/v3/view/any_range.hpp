@@ -197,7 +197,7 @@ namespace ranges
               : any_input_range_interface<range_reference_t<Rng>>
             {
             private:
-                range_view_all_t<Rng> rng_;
+                view::all_t<Rng> rng_;
             public:
                 any_input_range_impl() = default;
                 any_input_range_impl(Rng && rng)
@@ -213,7 +213,7 @@ namespace ranges
                 }
                 any_input_range_interface<range_reference_t<Rng>> *clone() const override
                 {
-                    return new any_input_range_impl<range_view_all_t<Rng>>{static_cast<range_view_all_t<Rng>>(rng_)};
+                    return new any_input_range_impl<view::all_t<Rng>>{static_cast<view::all_t<Rng>>(rng_)};
                 }
             };
         }

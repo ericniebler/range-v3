@@ -46,7 +46,7 @@ namespace ranges
                 using size_type = range_size_t<Rng>;
                 using difference_type = range_difference_t<Rng>;
                 using from_t = detail::conditional_t<IsTakeView, constant<size_type, 0>, mutable_<size_type>>;
-                using base_range_t = range_view_all_t<Rng>;
+                using base_range_t = view::all_t<Rng>;
                 // Mutable here. Const-correctness is enforced below by only conditionally
                 // allowing the const-qualified begin_cursor()/end_cursor() accessors.
                 mutable base_range_t rng_;

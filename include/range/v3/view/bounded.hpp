@@ -7,8 +7,8 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 //
-#ifndef RANGES_V3_VIEW_AS_BOUNDED_RANGE_HPP
-#define RANGES_V3_VIEW_AS_BOUNDED_RANGE_HPP
+#ifndef RANGES_V3_VIEW_BOUNDED_HPP
+#define RANGES_V3_VIEW_BOUNDED_HPP
 
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
@@ -26,12 +26,12 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng>
-        struct as_bounded_range_view
-          : range_facade<as_bounded_range_view<Rng>, is_infinite<Rng>::value>
+        struct bounded_view
+          : range_facade<bounded_view<Rng>, is_infinite<Rng>::value>
         {
         private:
             friend range_core_access;
-            using base_range_t = range_view_all_t<Rng>;
+            using base_range_t = view::all_t<Rng>;
             base_range_t rng_;
 
             struct cursor
@@ -117,8 +117,8 @@ namespace ranges
                 return {begin(rng_), end(rng_), true};
             }
         public:
-            as_bounded_range_view() = default;
-            explicit as_bounded_range_view(Rng && rng)
+            bounded_view() = default;
+            explicit bounded_view(Rng && rng)
               : rng_(view::all(std::forward<Rng>(rng)))
             {}
             CONCEPT_REQUIRES(SizedRange<base_range_t>())
@@ -130,19 +130,19 @@ namespace ranges
 
         namespace view
         {
-            struct as_bounded_range_fn : bindable<as_bounded_range_fn>, pipeable<as_bounded_range_fn>
+            struct bounded_fn : bindable<bounded_fn>, pipeable<bounded_fn>
             {
                 template<typename Rng>
-                static as_bounded_range_view<Rng>
-                invoke(as_bounded_range_fn, Rng && rng)
+                static bounded_view<Rng>
+                invoke(bounded_fn, Rng && rng)
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     CONCEPT_ASSERT(!BoundedIterable<Rng>());
-                    return as_bounded_range_view<Rng>{std::forward<Rng>(rng)};
+                    return bounded_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
-            RANGES_CONSTEXPR as_bounded_range_fn as_bounded_range{};
+            RANGES_CONSTEXPR bounded_fn bounded{};
         }
     }
 }

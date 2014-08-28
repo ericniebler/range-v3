@@ -13,7 +13,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/istream_range.hpp>
 #include <range/v3/view/replace_if.hpp>
-#include <range/v3/view/as_bounded_range.hpp>
+#include <range/v3/view/bounded.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -34,7 +34,7 @@ int main()
     models<concepts::InputIterator>(begin(rng));
     models_not<concepts::ForwardIterator>(begin(rng));
 
-    auto && tmp = rng | view::as_bounded_range;
+    auto && tmp = rng | view::bounded;
     has_type<int const &>(*begin(tmp));
     models<concepts::BoundedRange>(tmp);
     models_not<concepts::SizedRange>(tmp);

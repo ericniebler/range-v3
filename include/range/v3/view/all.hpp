@@ -84,11 +84,11 @@ namespace ranges
             };
 
             RANGES_CONSTEXPR all_fn all{};
-        }
 
-        template<typename Iterable>
-        using range_view_all_t =
-            meta_apply<std::decay, decltype(view::all(std::declval<Iterable>()))>;
+            template<typename Rng>
+            using all_t =
+                meta_apply<std::decay, decltype(all(std::declval<Rng>()))>;
+        }
     }
 }
 
