@@ -287,15 +287,5 @@ int main()
     CHECK(r.second == ib + 7);
     check_equal(ranges::range(ib, ib+7), {S{1,1},S{2,2},S{3,3},S{4,5},S{5,6},S{6,9},S{7,10}});
 
-    std::memset(ib, 0, sizeof(ib));
-
-    // Test initializer_list:
-    r = ranges::unique_copy(
-        {S{1,1},S{2,2},S{3,3},S{3,4},S{4,5},S{5,6},S{5,7},S{5,8},S{6,9},S{7,10}},
-        ib, ranges::equal_to(), &S::i);
-    CHECK(*(r.first-1) == S{7,10});
-    CHECK(r.second == ib + 7);
-    check_equal(ranges::range(ib, ib+7), {S{1,1},S{2,2},S{3,3},S{4,5},S{5,6},S{6,9},S{7,10}});
-
     return ::test_result();
 }

@@ -49,13 +49,13 @@ namespace ranges
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(ForwardIterable<Rng>() && Invokable<P, V>() &&
                     InvokableRelation<C, X>())>
-            I operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
+            I operator()(Rng &rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<min_element_fn> min_element{};
+        RANGES_CONSTEXPR min_element_fn min_element{};
 
     } // namespace v3
 } // namespace ranges

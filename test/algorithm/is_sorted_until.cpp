@@ -54,10 +54,10 @@ template <class T, template <class> class Iter> struct range_call
 
     template <class B, class E, class... Args>
     auto operator()(B &&b, E &&e, Args &&... args)
-     -> decltype(ranges::is_sorted_until(ranges::range(begin_t{b}, sentinel_t{e}),
+     -> decltype(ranges::is_sorted_until(::as_lvalue(ranges::range(begin_t{b}, sentinel_t{e})),
                                          std::forward<Args>(args)...))
     {
-        return ranges::is_sorted_until(ranges::range(begin_t{b}, sentinel_t{e}),
+        return ranges::is_sorted_until(::as_lvalue(ranges::range(begin_t{b}, sentinel_t{e})),
                                        std::forward<Args>(args)...);
     }
 };
@@ -392,7 +392,6 @@ int main()
     {
         std::initializer_list<int> r = {0,1,2,3,4,5,6,7,8,9,10};
         CHECK(ranges::is_sorted_until(r) == ranges::end(r));
-        CHECK(*ranges::is_sorted_until({0,1,2,4,3,5,6,7,8,9,10}) == 3);
     }
 
     /// Projection test:

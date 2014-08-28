@@ -148,11 +148,5 @@ int main()
     test<const int*, random_access_iterator<int*>, sentinel<const int *> >();
     test<const int*, int*>();
 
-    // Test initializer_list
-    int j[5] = {-1};
-    std::pair<const int *, int *> p = ranges::reverse_copy({0,1,2,3,4}, j);
-    ::check_equal(j, {4,3,2,1,0});
-    CHECK(p.second == j+5);
-
     return ::test_result();
 }

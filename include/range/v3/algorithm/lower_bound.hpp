@@ -45,7 +45,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<lower_bound_fn> lower_bound{};
+        RANGES_CONSTEXPR lower_bound_fn lower_bound{};
 
     } // namespace v3
 } // namespace ranges

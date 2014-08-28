@@ -140,10 +140,6 @@ int main()
     test_iter_comp<bidirectional_iterator<const int*>, sentinel<const int*>>();
     test_iter_comp<random_access_iterator<const int*>, sentinel<const int*>>();
 
-    // works with initializer_lists?
-    int const *pi = ranges::max_element({1,2,3,4,40,5,6,7,8,9});
-    CHECK(*pi == 40);
-
     // Works with projections?
     S s[] = {S{1},S{2},S{3},S{4},S{40},S{5},S{6},S{7},S{8},S{9}};
     S const *ps = ranges::max_element(s, std::less<int>{}, &S::i);

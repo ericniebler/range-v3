@@ -63,7 +63,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<remove_copy_fn> remove_copy{};
+        RANGES_CONSTEXPR remove_copy_fn remove_copy{};
 
     } // namespace v3
 } // namespace ranges

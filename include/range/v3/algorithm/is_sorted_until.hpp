@@ -64,13 +64,13 @@ namespace ranges
                       CONCEPT_REQUIRES_(
                        ForwardIterable<Rng>() && Invokable<P, V>() &&
                        InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
-            I operator()(Rng &&rng, R rel = R{}, P proj = P{}) const
+            I operator()(Rng &rng, R rel = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<is_sorted_until_fn> is_sorted_until{};
+        RANGES_CONSTEXPR is_sorted_until_fn is_sorted_until{};
 
     } // namespace v3
 } // namespace ranges

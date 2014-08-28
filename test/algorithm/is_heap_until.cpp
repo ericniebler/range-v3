@@ -1046,10 +1046,5 @@ int main()
     ::make_testable_1(ranges::is_heap_until)(i185, i185+7, std::greater<int>(), &S::i)
         .check([&](S *r){ CHECK(r == i185+1); });
 
-    // Test initializer_list
-    S const * r = ranges::is_heap_until({S{1}, S{0}, S{0}, S{0}, S{0}, S{0}, S{1}}, std::greater<int>(), &S::i);
-    CHECK((r-1)->i == 1);
-    CHECK(r->i == 0);
-
     return ::test_result();
 }

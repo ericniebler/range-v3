@@ -185,7 +185,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<search_n_fn> search_n{};
+        RANGES_CONSTEXPR search_n_fn search_n{};
 
     } // namespace v3
 } // namespace ranges

@@ -61,7 +61,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<replace_copy_if_fn> replace_copy_if{};
+        RANGES_CONSTEXPR replace_copy_if_fn replace_copy_if{};
 
     } // namespace v3
 } // namespace ranges

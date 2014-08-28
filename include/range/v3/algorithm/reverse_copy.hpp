@@ -46,13 +46,13 @@ namespace ranges
             template<typename Rng, typename O,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Iterable<Rng>() && ReverseCopyable<I, O>())>
-            std::pair<I, O> operator()(Rng && rng, O out) const
+            std::pair<I, O> operator()(Rng &rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<reverse_copy_fn> reverse_copy{};
+        RANGES_CONSTEXPR reverse_copy_fn reverse_copy{};
 
     } // namespace v3
 } // namespace ranges

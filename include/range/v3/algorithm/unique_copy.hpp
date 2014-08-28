@@ -131,7 +131,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<unique_copy_fn> unique_copy{};
+        RANGES_CONSTEXPR unique_copy_fn unique_copy{};
     } // namespace v3
 } // namespace ranges
 

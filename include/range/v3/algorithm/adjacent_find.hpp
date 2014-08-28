@@ -68,7 +68,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<adjacent_find_fn> adjacent_find {};
+        RANGES_CONSTEXPR adjacent_find_fn adjacent_find {};
 
     } // namespace v3
 } // namespace ranges

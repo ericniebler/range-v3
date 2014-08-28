@@ -26,8 +26,7 @@ int main()
     std::vector<int> v1 { 0, 2, 4, 6 };
     CHECK(ranges::for_each(v1.begin(), v1.end(), fun) == v1.end());
     CHECK(ranges::for_each(v1, fun) == v1.end());
-    ranges::for_each({0, 2, 4, 6}, fun);
-    CHECK(sum == 36);
+    CHECK(sum == 24);
 
     sum = 0;
     std::vector<S> v2{{&sum, 0}, {&sum, 2}, {&sum, 4}, {&sum, 6}};

@@ -120,20 +120,5 @@ int main()
         CHECK(out[4] == P{4, "4"});
     }
 
-    // Test initializer_list
-    {
-        using P = std::pair<int, std::string>;
-        P out[5] = {};
-        std::pair<P  const *, P *> r = ranges::replace_copy_if(
-            {P{0, "0"}, P{1, "1"}, P{2, "2"}, P{3, "3"}, P{4, "4"}},
-            out, [](int i){return 2==i;}, P{5, "5"}, &std::pair<int, std::string>::first);
-        CHECK(r.second == ranges::end(out));
-        CHECK(out[0] == P{0, "0"});
-        CHECK(out[1] == P{1, "1"});
-        CHECK(out[2] == P{5, "5"});
-        CHECK(out[3] == P{3, "3"});
-        CHECK(out[4] == P{4, "4"});
-    }
-
     return ::test_result();
 }

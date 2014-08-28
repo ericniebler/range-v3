@@ -75,7 +75,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<partition_copy_fn> partition_copy{};
+        RANGES_CONSTEXPR partition_copy_fn partition_copy{};
 
     } // namespace v3
 } // namespace ranges

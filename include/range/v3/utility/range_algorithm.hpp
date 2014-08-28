@@ -32,24 +32,24 @@ namespace ranges
             using ImplFn::operator();
 
             template<typename V0, typename...Args>
-            auto operator()(std::initializer_list<V0> rng0, Args &&...args) const ->
-                decltype(std::declval<ImplFn const &>()(rng0, std::declval<Args>()...))
+            auto operator()(std::initializer_list<V0> &&rng0, Args &&...args) const ->
+                decltype(std::declval<ImplFn const &>()(std::move(rng0), std::declval<Args>()...))
             {
-                return base()(rng0, std::forward<Args>(args)...);
+                return base()(std::move(rng0), std::forward<Args>(args)...);
             }
 
             template<typename Rng0, typename V1, typename...Args>
-            auto operator()(Rng0 && rng0, std::initializer_list<V1> rng1, Args &&...args) const ->
-                decltype(std::declval<ImplFn const &>()(std::declval<Rng0>(), rng1, std::declval<Args>()...))
+            auto operator()(Rng0 && rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
+                decltype(std::declval<ImplFn const &>()(std::declval<Rng0>(), std::move(rng1), std::declval<Args>()...))
             {
-                return base()(std::forward<Rng0>(rng0), rng1, std::forward<Args>(args)...);
+                return base()(std::forward<Rng0>(rng0), std::move(rng1), std::forward<Args>(args)...);
             }
 
             template<typename V0, typename V1, typename...Args>
-            auto operator()(std::initializer_list<V0> rng0, std::initializer_list<V1> rng1, Args &&...args) const ->
-                decltype(std::declval<ImplFn const &>()(rng0, rng1, std::declval<Args>()...))
+            auto operator()(std::initializer_list<V0> rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
+                decltype(std::declval<ImplFn const &>()(std::move(rng0), std::move(rng1), std::declval<Args>()...))
             {
-                return base()(rng0, rng1, std::forward<Args>(args)...);
+                return base()(std::move(rng0), std::move(rng1), std::forward<Args>(args)...);
             }
         };
     }

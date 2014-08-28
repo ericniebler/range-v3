@@ -149,19 +149,5 @@ int main()
         CHECK(ib[5] == 4);
     }
 
-    // Check initializer lists
-    {
-        constexpr unsigned sa = 9;
-        int ib[sa];
-        std::pair<const S*, int*> r = ranges::remove_copy({S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}}, ib, 2, &S::i);
-        CHECK(r.second == ib + sa-3);
-        CHECK(ib[0] == 0);
-        CHECK(ib[1] == 1);
-        CHECK(ib[2] == 3);
-        CHECK(ib[3] == 4);
-        CHECK(ib[4] == 3);
-        CHECK(ib[5] == 4);
-    }
-
     return ::test_result();
 }

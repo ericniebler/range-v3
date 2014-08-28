@@ -78,7 +78,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<partition_point_fn> partition_point{};
+        RANGES_CONSTEXPR partition_point_fn partition_point{};
 
     } // namespace v3
 } // namespace ranges

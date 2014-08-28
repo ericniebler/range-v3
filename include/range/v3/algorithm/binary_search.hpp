@@ -58,7 +58,7 @@ namespace ranges
                     BinarySearchable<I, V2, C, P>()
                 )>
             bool
-            operator()(Rng const &rng, V2 const &val, C pred = C{}, P proj = P{}) const
+            operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const
             {
                 static_assert(!is_infinite<Rng>::value,
                     "Trying to binary search an infinite range");

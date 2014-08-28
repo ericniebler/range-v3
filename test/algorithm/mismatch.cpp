@@ -105,16 +105,11 @@ int main()
     test_range<bidirectional_iterator<const int*>, sentinel<const int*>>();
     test_range<random_access_iterator<const int*>, sentinel<const int*>>();
 
-    // works with initializer_lists?
-    std::pair<int const *, int const *> pi =
-        ranges::mismatch({1,2,3,4,-4,5,6,40,7,8,9}, {1,2,3,4,5,6,7,8,9});
-    CHECK(*pi.first == -4);
-    CHECK(*pi.second == 5);
-
     // Works with projections?
     S s1[] = {S{1},S{2},S{3},S{4},S{-4},S{5},S{6},S{40},S{7},S{8},S{9}};
+    int const i1[] = {1,2,3,4,5,6,7,8,9};
     std::pair<S const *, int const *> ps1
-        = ranges::mismatch(s1, {1,2,3,4,5,6,7,8,9}, std::equal_to<int>(), &S::i);
+        = ranges::mismatch(s1, i1, std::equal_to<int>(), &S::i);
     CHECK(ps1.first->i == -4);
     CHECK(*ps1.second == 5);
 

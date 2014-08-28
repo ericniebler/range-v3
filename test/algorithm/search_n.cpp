@@ -174,12 +174,6 @@ int main()
 
         S const *p = ranges::search_n(in, 2, 2, std::equal_to<int>{}, &S::i);
         CHECK(p == in+2);
-
-        // Test initializer_list
-        p = ranges::search_n(
-            {S{0}, S{1}, S{2}, S{2}, S{4}, S{5}},
-            2, 2, std::equal_to<int>{}, &S::i);
-        CHECK((p-1)->i == 1);
     }
 
     // Test counted ranges

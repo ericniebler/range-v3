@@ -106,7 +106,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<mismatch_fn> mismatch{};
+        RANGES_CONSTEXPR mismatch_fn mismatch{};
 
         // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So
         // that we can properly distinguish this case:

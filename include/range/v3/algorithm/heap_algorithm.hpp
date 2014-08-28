@@ -73,7 +73,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR range_algorithm<is_heap_until_n_fn> is_heap_until_n {};
+            RANGES_CONSTEXPR is_heap_until_n_fn is_heap_until_n {};
 
             struct is_heap_n_fn
             {
@@ -85,7 +85,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR range_algorithm<is_heap_n_fn> is_heap_n {};
+            RANGES_CONSTEXPR is_heap_n_fn is_heap_n {};
         }
 
         struct is_heap_until_fn
@@ -107,7 +107,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<is_heap_until_fn> is_heap_until {};
+        RANGES_CONSTEXPR is_heap_until_fn is_heap_until {};
 
         struct is_heap_fn
         {

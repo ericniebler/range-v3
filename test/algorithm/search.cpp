@@ -176,8 +176,9 @@ int main()
         CHECK(p == in+2);
 
         // Test initializer_list
+        S const in2[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{5}};
         p = ranges::search(
-            {S{0}, S{1}, S{2}, S{3}, S{4}, S{5}},
+            in2,
             {T{2}, T{3}},
             std::equal_to<int>{}, &S::i, &T::i);
         CHECK(p->i == 2);

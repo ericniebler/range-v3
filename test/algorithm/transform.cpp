@@ -356,22 +356,16 @@ int main()
     test2<const int*, const int*, int*>();
 
     int *p = nullptr;
-    auto u = ranges::view::unbounded(p);
     auto unary = [](int i){return i + 1; };
     auto binary = [](int i, int j){return i + j; };
-    static_assert(std::is_same<std::pair<int const*, int*>,
-        decltype(ranges::transform({1, 2, 3, 4}, p, unary))>::value, "");
-    static_assert(std::is_same<std::tuple<int const*, int *, int*>,
-        decltype(ranges::transform({1, 2, 3, 4}, p, p, binary))>::value, "");
-    static_assert(std::is_same<std::tuple<int const*, int *, int*>,
-        decltype(ranges::transform({1, 2, 3, 4}, u, p, binary))>::value, "");
-    static_assert(std::is_same<std::tuple<int const*, int const *, int*>,
-        decltype(ranges::transform({1, 2, 3, 4}, {1, 2, 3, 4}, p, binary))>::value, "");
-
+    S const s[] = {S{1}, S{2}, S{3}, S{4}};
+    int const i[] = {1, 2, 3, 4};
+    static_assert(std::is_same<std::pair<S const*, int*>,
+        decltype(ranges::transform(s, p, unary, &S::i))>::value, "");
     static_assert(std::is_same<std::tuple<S const*, int const *, int*>,
-        decltype(ranges::transform({S{1}, S{2}, S{3}, S{4}}, {1, 2, 3, 4}, p, binary, &S::i))>::value, "");
+        decltype(ranges::transform(s, i, p, binary, &S::i))>::value, "");
     static_assert(std::is_same<std::tuple<S const*, S const *, int*>,
-        decltype(ranges::transform({S{1}, S{2}, S{3}, S{4}}, {S{1}, S{2}, S{3}, S{4}}, p, binary, &S::i, &S::i))>::value, "");
+        decltype(ranges::transform(s, s, p, binary, &S::i, &S::i))>::value, "");
 
     return ::test_result();
 }

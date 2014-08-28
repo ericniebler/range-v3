@@ -186,11 +186,6 @@ int main()
     test_iter<bidirectional_iterator<const int*>, sentinel<const int*>>();
     test_iter<random_access_iterator<const int*>, sentinel<const int*>>();
 
-    // works with initializer_lists?
-    std::pair<int const *, int const *> pi = ranges::minmax_element({1,2,3,4,-4,5,6,40,7,8,9});
-    CHECK(*pi.first == -4);
-    CHECK(*pi.second == 40);
-
     // Works with projections?
     S s[] = {S{1},S{2},S{3},S{4},S{-4},S{5},S{6},S{40},S{7},S{8},S{9}};
     std::pair<S const *, S const *> ps = ranges::minmax_element(s, std::less<int>{}, &S::i);

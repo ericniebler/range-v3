@@ -90,7 +90,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<merge_fn> merge{};
+        RANGES_CONSTEXPR merge_fn merge{};
 
     } // namespace v3
 } // namespace ranges

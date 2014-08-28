@@ -147,8 +147,6 @@ test_pred()
     CHECK(count_equal::count == 0u);
 
     static_assert(std::is_same<Iter1, decltype(find_end(er, {1, 2, 3}))>::value, "");
-    static_assert(std::is_same<int const *, decltype(find_end({1, 2, 3}, er))>::value, "");
-    static_assert(std::is_same<int const *, decltype(find_end({1, 2, 3}, {1, 2, 3}))>::value, "");
 }
 
 struct S

@@ -117,19 +117,19 @@ namespace ranges
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
             }
 
-            template<typename Rng0, typename I1, typename O, typename F,
-                typename P0 = ident, typename P1 = ident,
+            template<typename Rng0, typename I1Ref, typename O, typename F,
+                typename P0 = ident, typename P1 = ident, typename I1 = detail::uncvref_t<I1Ref>,
                 typename I0 = range_iterator_t<Rng0>,
                 CONCEPT_REQUIRES_(Iterable<Rng0>() && Transformable2<I0, I1, O, F, P0, P1>())>
-            std::tuple<I0, I1, O> operator()(Rng0 & rng0, I1 begin1, O out, F fun,
+            std::tuple<I0, I1, O> operator()(Rng0 & rng0, I1Ref &&begin1, O out, F fun,
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
-                return (*this)(begin(rng0), end(rng0), std::move(begin1), unreachable{},
+                return (*this)(begin(rng0), end(rng0), std::forward<I1Ref>(begin1), unreachable{},
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<transform_fn> transform{};
+        RANGES_CONSTEXPR transform_fn transform{};
 
     } // namespace v3
 } // namespace ranges

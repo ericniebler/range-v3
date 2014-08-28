@@ -69,7 +69,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR range_algorithm<upper_bound_n_fn> upper_bound_n {};
+            RANGES_CONSTEXPR upper_bound_n_fn upper_bound_n {};
         }
     } // namespace v3
 } // namespace ranges
