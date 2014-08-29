@@ -152,7 +152,7 @@ namespace ranges
                 }
             };
 
-            // This leads to some strange errors because in some contexts, Adapt
+            // BUGBUG This leads to some strange errors because in some contexts, Adapt
             // is not yet complete when the user may want it to be. Rethink this.
             template<typename BaseCursor, typename Adapt>
             struct basic_cursor_and_adaptor : BaseCursor
@@ -176,7 +176,7 @@ namespace ranges
             };
 
             // A cursor with adapted behaviors
-            // The use of decltype to SFINAE-out functions here is a hack. Use concepts.
+            // BUGBUG The use of decltype to SFINAE-out functions here is a hack. Use concepts.
             template<typename BaseCursor, typename Adapt>
             struct basic_adapted_cursor
             {

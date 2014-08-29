@@ -142,8 +142,10 @@
     <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
+    <ClCompile Include="..\..\..\..\test\numeric\adjacent_difference.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\inner_product.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\iota.cpp" />
+    <ClCompile Include="..\..\..\..\test\numeric\partial_sum.cpp" />
     <ClCompile Include="..\..\..\..\test\range_adaptor.cpp" />
     <ClCompile Include="..\..\..\..\test\range_facade.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
@@ -256,8 +258,10 @@
     <ClInclude Include="..\..\..\..\include\range\v3\iterator_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\accumulate.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\numeric\adjacent_difference.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\inner_product.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\iota.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\numeric\partial_sum.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_concepts.hpp" />

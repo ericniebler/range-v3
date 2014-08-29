@@ -357,6 +357,12 @@
     <ClCompile Include="..\..\..\..\test\numeric\iota.cpp">
       <Filter>Test Files\numeric</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\numeric\partial_sum.cpp">
+      <Filter>Test Files\numeric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\numeric\adjacent_difference.cpp">
+      <Filter>Test Files\numeric</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -834,6 +840,12 @@
       <Filter>Header Files\numeric</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\iota.hpp">
+      <Filter>Header Files\numeric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\numeric\partial_sum.hpp">
+      <Filter>Header Files\numeric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\numeric\adjacent_difference.hpp">
       <Filter>Header Files\numeric</Filter>
     </ClInclude>
   </ItemGroup>
