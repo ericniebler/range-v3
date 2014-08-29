@@ -33,7 +33,6 @@ To Do:
   - `sort`
   - the set algorithms
   - `stable_sort`
-  - The numeric algorithms
 * Make `inplace_merge` work with forward iterators
 
 Design Decisions, Guidelines, and Rationale:

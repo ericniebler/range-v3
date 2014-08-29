@@ -86,6 +86,42 @@ namespace ranges
             }
         };
 
+        template<typename T>
+        struct coerce
+        {
+            T & operator()(T & t) const
+            {
+                return t;
+            }
+
+            T const & operator()(T const & t) const
+            {
+                return t;
+            }
+
+            T operator()(T && t) const
+            {
+                return (T &&) t;
+            }
+
+            T operator()(T const &&) const = delete;
+        };
+
+        template<typename T>
+        struct coerce<T const>
+          : coerce<T>
+        {};
+
+        template<typename T>
+        struct coerce<T &>
+          : coerce<T>
+        {};
+
+        template<typename T>
+        struct coerce<T &&>
+          : coerce<T>
+        {};
+
         template<typename Pred>
         struct logical_negate
         {

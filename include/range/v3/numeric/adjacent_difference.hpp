@@ -52,14 +52,18 @@ namespace ranges
             {
                 auto &&bop = invokable(bop_);
                 auto &&proj = invokable(proj_);
+                using V = iterator_value_t<I>;
+                using X = concepts::Invokable::result_t<P, V>;
+                coerce<V> v;
+                coerce<X> x;
 
                 if(begin != end)
                 {
-                    auto t1(proj(*begin));
+                    auto t1(x(proj(v(*begin))));
                     *result = t1;
                     for(++begin, ++result; begin != end; ++begin, ++result)
                     {
-                        auto t2(proj(*begin));
+                        auto t2(x(proj(v(*begin))));
                         *result = bop(t2, t1);
                         t1 = std::move(t2);
                     }
@@ -77,15 +81,19 @@ namespace ranges
             {
                 auto &&bop = invokable(bop_);
                 auto &&proj = invokable(proj_);
+                using V = iterator_value_t<I>;
+                using X = concepts::Invokable::result_t<P, V>;
+                coerce<V> v;
+                coerce<X> x;
 
                 if(begin != end && result != end_result)
                 {
-                    auto t1(proj(*begin));
+                    auto t1(x(proj(v(*begin))));
                     *result = t1;
                     for(++begin, ++result; begin != end && result != end_result;
                         ++begin, ++result)
                     {
-                        auto t2(proj(*begin));
+                        auto t2(x(proj(v(*begin))));
                         *result = bop(t2, t1);
                         t1 = std::move(t2);
                     }

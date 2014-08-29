@@ -1,10 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// \file numeric.hpp
-///   Contains range-based versions of the std algorithms
+///   Contains range-based versions of the numeric algorithms
 //
-// Copyright 2004 Eric Niebler.
-// Copyright 2006 Thorsten Ottosen.
-// Copyright 2009 Neil Groves.
+// Copyright 2014 Eric Niebler.
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -14,8 +12,9 @@
 #define RANGES_V3_NUMERIC_HPP
 
 #include <range/v3/numeric/accumulate.hpp>
+#include <range/v3/numeric/adjacent_difference.hpp>
 #include <range/v3/numeric/iota.hpp>
-//#include <range/v3/numeric/inner_product.hpp>
-//#include <range/v3/numeric/partial_sum.hpp>
-//#include <range/v3/numeric/adjacent_difference.hpp>
+#include <range/v3/numeric/inner_product.hpp>
+#include <range/v3/numeric/partial_sum.hpp>
+
 #endif

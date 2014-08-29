@@ -52,10 +52,14 @@ namespace ranges
             {
                 auto &&bop = invokable(bop_);
                 auto &&proj = invokable(proj_);
+                using V = iterator_value_t<I>;
+                using X = concepts::Invokable::result_t<P, V>;
+                coerce<V> v;
+                coerce<X> x;
 
                 if(begin != end)
                 {
-                    auto t(proj(*begin));
+                    auto t(x(proj(v(*begin))));
                     *result = t;
                     for(++begin, ++result; begin != end; ++begin, ++result)
                     {
@@ -76,10 +80,14 @@ namespace ranges
             {
                 auto &&bop = invokable(bop_);
                 auto &&proj = invokable(proj_);
+                using V = iterator_value_t<I>;
+                using X = concepts::Invokable::result_t<P, V>;
+                coerce<V> v;
+                coerce<X> x;
 
                 if(begin != end && result != end_result)
                 {
-                    auto t(proj(*begin));
+                    auto t(x(proj(v(*begin))));
                     *result = t;
                     for(++begin, ++result; begin != end && result != end_result;
                         ++begin, ++result)
