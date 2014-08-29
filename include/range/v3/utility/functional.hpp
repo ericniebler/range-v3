@@ -67,6 +67,17 @@ namespace ranges
             }
         };
 
+        struct minus
+        {
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(Subtractable<T, U>())>
+            auto operator()(T && t, U && u) const ->
+                decltype((T &&) t - (U &&) u)
+            {
+                return (T &&) t - (U &&) u;
+            }
+        };
+
         struct multiplies
         {
             template<typename T, typename U,

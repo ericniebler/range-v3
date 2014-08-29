@@ -587,6 +587,24 @@ namespace ranges
                     ));
             };
 
+            struct Subtractable
+            {
+                template<typename T, typename U>
+                using result_t = decltype(std::declval<T>() - std::declval<U>());
+
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        t - t
+                    ));
+
+                template<typename T, typename U>
+                auto requires_(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        t - u
+                    ));
+            };
+
             struct Multiplicable
             {
                 template<typename T, typename U>
@@ -693,6 +711,9 @@ namespace ranges
 
         template<typename T, typename U = T>
         using Addable = concepts::models<concepts::Addable, T, U>;
+
+        template<typename T, typename U = T>
+        using Subtractable = concepts::models<concepts::Subtractable, T, U>;
 
         template<typename T, typename U = T>
         using Multiplicable = concepts::models<concepts::Multiplicable, T, U>;
