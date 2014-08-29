@@ -17,7 +17,7 @@ BreakConstructorInitializersBeforeComma: true
 ColumnLimit: 90
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: 1
-ContinuationIndentWidth: 1
+ContinuationIndentWidth: 2
 Cpp11BracedListStyle: true
 DerivePointerBinding: false
 ExperimentalAutoDetectBinPacking: false
