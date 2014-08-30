@@ -57,7 +57,7 @@ namespace ranges
             }
         public:
             template<typename I, typename S, typename D = iterator_difference_t<I>,
-                CONCEPT_REQUIRES_(InputIterator<I, S>() && Integral<D>())>
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
             std::pair<D, I> operator()(I begin, S end, D d = 0) const
             {
                 return this->impl_i(std::move(begin), std::move(end), d, sized_iterator_range_concept<I, S>());
@@ -106,7 +106,7 @@ namespace ranges
 
         public:
             template<typename I, typename S, typename D = iterator_difference_t<I>,
-                CONCEPT_REQUIRES_(InputIterator<I, S>() && Integral<D>())>
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
             D operator()(I begin, S end, D d = 0) const
             {
                 return this->impl_i(std::move(begin), std::move(end), d,

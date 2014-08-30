@@ -30,7 +30,7 @@ namespace ranges
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I, S>() &&
+                    InputIterator<I>() && IteratorRange<I, S>() &&
                     Invokable<P, V>() &&
                     InvokablePredicate<F, X>()
                 )>

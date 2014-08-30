@@ -34,7 +34,7 @@ namespace ranges
         struct reverse_copy_fn
         {
             template<typename I, typename S, typename O,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() && ReverseCopyable<I, O>())>
+                CONCEPT_REQUIRES_(IteratorRange<I, S>() && ReverseCopyable<I, O>())>
             std::pair<I, O> operator()(I begin, S end_, O out) const
             {
                 I end = next_to(begin, end_), res = end;

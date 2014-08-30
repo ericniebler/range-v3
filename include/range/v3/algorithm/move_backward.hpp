@@ -28,7 +28,7 @@ namespace ranges
         struct move_backward_fn
         {
             template<typename I, typename S, typename O, typename P = ident,
-                CONCEPT_REQUIRES_(BidirectionalIterator<I, S>() && BidirectionalIterator<O>() &&
+                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && BidirectionalIterator<O>() &&
                     IndirectlyProjectedMovable<I, P, O>())>
             std::pair<I, O> operator()(I begin, S end_, O out, P proj_ = P{}) const
             {

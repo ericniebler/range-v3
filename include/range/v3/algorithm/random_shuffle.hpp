@@ -44,7 +44,7 @@ namespace ranges
         struct random_shuffle_fn
         {
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I, S>() && Permutable<I>())>
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Permutable<I>())>
             I operator()(I begin, S end_) const
             {
                 I end = next_to(begin, end_);
@@ -66,7 +66,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename Gen,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I, S>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
                                   Permutable<I>() &&
                                   RandomNumberGenerator<Gen, iterator_difference_t<I>>())>
             I operator()(I begin, S end_, Gen && rand) const

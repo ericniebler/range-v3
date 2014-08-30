@@ -162,8 +162,8 @@ namespace ranges
                 typename C = equal_to, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(
                     Searchable<I1, I2, C, P1, P2>() &&
-                    Sentinel<S1, I1>() &&
-                    Sentinel<S2, I2>()
+                    IteratorRange<I1, S1>() &&
+                    IteratorRange<I2, S2>()
                 )>
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const

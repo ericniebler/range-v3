@@ -184,7 +184,7 @@ namespace ranges
 
         public:
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(Permutable<I>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(Permutable<I>() && IteratorRange<I, S>())>
             iterator_range<I> operator()(I begin, I middle, S end) const
             {
                 if(begin == middle)

@@ -70,7 +70,7 @@ namespace ranges
             template<typename I0, typename S0, typename I1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
-                    Sentinel<S0, I0>() &&
+                    IteratorRange<I0, S0>() &&
                     WeakRangeEqualityComparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(I0 begin0, S0 end0, I1 begin1, C pred_ = C{},
@@ -88,7 +88,7 @@ namespace ranges
             template<typename I0, typename S0, typename I1, typename S1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
-                    Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
+                    IteratorRange<I0, S0>() && IteratorRange<I1, S1>() &&
                     RangeEqualityComparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_ = C{},

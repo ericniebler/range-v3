@@ -25,7 +25,8 @@ namespace ranges
         {
             template<typename O, typename S, typename F,
                 CONCEPT_REQUIRES_(Function<F>() &&
-                    OutputIterator<O, concepts::Function::result_t<F>, S>())>
+                    OutputIterator<O, concepts::Function::result_t<F>>() &&
+                    IteratorRange<O, S>())>
             std::pair<O, F> operator()(O begin, S end, F fun) const
             {
                 for(; begin != end; ++begin)

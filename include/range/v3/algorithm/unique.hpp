@@ -37,7 +37,7 @@ namespace ranges
             /// \pre \c C is a model of the InvokableRelation concept
             ///
             template<typename I, typename S, typename C = equal_to, typename P = ident,
-                CONCEPT_REQUIRES_(Sortable<I, C, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);

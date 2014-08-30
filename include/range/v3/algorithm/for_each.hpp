@@ -29,7 +29,7 @@ namespace ranges
             template<typename I, typename S, typename F, typename P = ident,
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(InputIterator<I, S>() && Invokable<P, V>() && Invokable<F, X>())>
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Invokable<P, V>() && Invokable<F, X>())>
             I operator()(I begin, S end, F fun, P proj = P{}) const
             {
                 auto &&ifun = invokable(fun);

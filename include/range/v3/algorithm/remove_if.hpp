@@ -39,7 +39,7 @@ namespace ranges
         struct remove_if_fn
         {
             template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(RemovableIf<I, C, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(RemovableIf<I, C, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred_, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);

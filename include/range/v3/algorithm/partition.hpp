@@ -97,7 +97,7 @@ namespace ranges
             }
         public:
             template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),

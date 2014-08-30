@@ -34,7 +34,7 @@ namespace ranges
             template<typename I, typename S, typename R = equal_to, typename P = ident,
                 typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
-                    ForwardIterator<I, S>() &&
+                    ForwardIterator<I>() && IteratorRange<I, S>() &&
                     Invokable<P, V>() &&
                     InvokableRelation<R, concepts::Invokable::result_t<P, V>>()
                 )>

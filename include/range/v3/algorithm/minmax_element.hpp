@@ -33,7 +33,7 @@ namespace ranges
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(ForwardIterator<I, S>() && Invokable<P, V>() &&
+                CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() && Invokable<P, V>() &&
                     InvokableRelation<C, X>())>
             std::pair<I, I> operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {

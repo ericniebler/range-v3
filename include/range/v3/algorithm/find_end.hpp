@@ -26,19 +26,19 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I, S>())>
+            template<typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
             I next_to_if(I i, S s, std::true_type)
             {
                 return next_to(i, s);
             }
 
-            template<typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I, S>())>
+            template<typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
             S next_to_if(I, S s, std::false_type)
             {
                 return s;
             }
 
-            template<bool B, typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I, S>())>
+            template<bool B, typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
             conditional_t<B, I, S> next_to_if(I i, S s)
             {
                 return detail::next_to_if(std::move(i), std::move(s),
@@ -160,8 +160,8 @@ namespace ranges
                 typename V2 = iterator_value_t<I2>,
                 typename X = concepts::Invokable::result_t<P, V1>,
                 CONCEPT_REQUIRES_(
-                    ForwardIterator<I1, S1>() &&
-                    ForwardIterator<I2, S2>() &&
+                    ForwardIterator<I1>() && IteratorRange<I1, S1>() &&
+                    ForwardIterator<I2>() && IteratorRange<I2, S2>() &&
                     Invokable<P, V1>() &&
                     InvokableRelation<R, X, V2>()
                 )>

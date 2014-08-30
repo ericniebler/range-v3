@@ -298,41 +298,16 @@ namespace ranges
             };
 
             struct Iterator
-              : refines<WeakIterator(_1), EqualityComparable>
-            {
-                template<typename I>
-                void requires_(I i);
-
-                template<typename I, typename S>
-                auto requires_(I i, S s) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Sentinel>((S) s, (I) i)
-                    ));
-            };
+              : refines<WeakIterator, EqualityComparable>
+            {};
 
             struct WeakOutputIterator
               : refines<WeakIterator(_1), Writable>
             {};
 
-            // BUGBUG OutputIterator refines Iterator, but OutputIterator<A,B,C> should
-            // refine Iterator<A,C>, where C is an optional parameter. The concept checking
-            // code makes that impossible to express currently.
             struct OutputIterator
-              : refines<WeakOutputIterator(_1, _2), Iterator(_1)>
-            {
-                template<typename O, typename T>
-                auto requires_(O o, T const &) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<EqualityComparable>((O) o)
-                    ));
-
-                template<typename O, typename T, typename S>
-                auto requires_(O o, T const &t, S s) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<OutputIterator>((O) o, t),
-                        concepts::model_of<Sentinel>((S) s, (O) o)
-                    ));
-            };
+              : refines<WeakOutputIterator, Iterator(_1)>
+            {};
 
             struct WeakInputIterator
               : refines<WeakIterator, Readable>
@@ -352,35 +327,22 @@ namespace ranges
             };
 
             struct InputIterator
-              : refines<WeakInputIterator(_1), Iterator(_1), EqualityComparable>
+              : refines<WeakInputIterator, Iterator, EqualityComparable>
             {
                 template<typename I>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::input_iterator_tag{})
                     ));
-
-                template<typename I, typename S>
-                auto requires_(I i, S s) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<InputIterator>((I) i),
-                        concepts::model_of<Sentinel>((S) s, (I) i)
-                    ));
             };
 
             struct ForwardIterator
-              : refines<InputIterator, Incrementable(_1)>
+              : refines<InputIterator, Incrementable>
             {
                 template<typename I>
                 auto requires_(I) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived>(category_t<I>{}, ranges::forward_iterator_tag{})
-                    ));
-
-                template<typename I, typename S>
-                auto requires_(I i, S) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<ForwardIterator>((I) i)
                     ));
             };
 
@@ -395,16 +357,10 @@ namespace ranges
                         concepts::has_type<I>(i--),
                         concepts::same_type(*i, *i--)
                     ));
-
-                template<typename I, typename S>
-                auto requires_(I i, S) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<BidirectionalIterator>((I) i)
-                    ));
             };
 
             struct RandomAccessIterator
-              : refines<BidirectionalIterator, TotallyOrdered(_1)>
+              : refines<BidirectionalIterator, TotallyOrdered>
             {
                 template<typename I, typename V = value_t<I>>
                 auto requires_(I i) -> decltype(
@@ -418,22 +374,6 @@ namespace ranges
                         concepts::has_type<I &>(i += (i-i)),
                         concepts::has_type<I &>(i -= (i - i)),
                         concepts::convertible_to<V const &>(i[i - i])
-                    ));
-
-                template<typename I, typename S>
-                auto requires_(I i, S) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<RandomAccessIterator>((I) i)
-                    ));
-            };
-
-            struct Sentinel
-              : refines<Regular(_1), EqualityComparable(_2, _1)>
-            {
-                template<typename S, typename I>
-                auto requires_(S, I i) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Iterator>((I) i)
                     ));
             };
         }
@@ -471,32 +411,29 @@ namespace ranges
         template<typename I>
         using WeakIterator = concepts::models<concepts::WeakIterator, I>;
 
-        template<typename I, typename S = I>
-        using Iterator = concepts::models<concepts::Iterator, I, S>;
+        template<typename I>
+        using Iterator = concepts::models<concepts::Iterator, I>;
 
         template<typename Out, typename T>
         using WeakOutputIterator = concepts::models<concepts::WeakOutputIterator, Out, T>;
 
-        template<typename Out, typename T, typename S = Out>
-        using OutputIterator = concepts::models<concepts::OutputIterator, Out, T, S>;
+        template<typename Out, typename T>
+        using OutputIterator = concepts::models<concepts::OutputIterator, Out, T>;
 
         template<typename I>
         using WeakInputIterator = concepts::models<concepts::WeakInputIterator, I>;
 
-        template<typename I, typename S = I>
-        using InputIterator = concepts::models<concepts::InputIterator, I, S>;
+        template<typename I>
+        using InputIterator = concepts::models<concepts::InputIterator, I>;
 
-        template<typename I, typename S = I>
-        using ForwardIterator = concepts::models<concepts::ForwardIterator, I, S>;
+        template<typename I>
+        using ForwardIterator = concepts::models<concepts::ForwardIterator, I>;
 
-        template<typename I, typename S = I>
-        using BidirectionalIterator = concepts::models<concepts::BidirectionalIterator, I, S>;
+        template<typename I>
+        using BidirectionalIterator = concepts::models<concepts::BidirectionalIterator, I>;
 
-        template<typename I, typename S = I>
-        using RandomAccessIterator = concepts::models<concepts::RandomAccessIterator, I, S>;
-
-        template<typename S, typename I>
-        using Sentinel = concepts::models<concepts::Sentinel, S, I>;
+        template<typename I>
+        using RandomAccessIterator = concepts::models<concepts::RandomAccessIterator, I>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator_concept
@@ -567,7 +504,9 @@ namespace ranges
                 template<typename I, typename S>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Iterator>((I) i, (S) s)
+                        concepts::model_of<Iterator>((I) i),
+                        concepts::model_of<Regular>((S) s),
+                        concepts::model_of<EqualityComparable>((I) i, (S) s)
                     ));
             };
 
@@ -582,10 +521,10 @@ namespace ranges
             };
         }
 
-        template<typename I, typename S = I>
+        template<typename I, typename S>
         using IteratorRange = concepts::models<concepts::IteratorRange, I, S>;
 
-        template<typename I, typename S = I>
+        template<typename I, typename S>
         using SizedIteratorRange = concepts::models<concepts::SizedIteratorRange, I, S>;
 
         template<typename I, typename S = I>

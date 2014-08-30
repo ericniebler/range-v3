@@ -36,7 +36,7 @@ namespace ranges
             template <typename I, typename S, typename R = ordered_less,
                       typename P = ident, typename V = iterator_value_t<I>,
                       CONCEPT_REQUIRES_(
-                       ForwardIterator<I, S>() && Invokable<P, V>() &&
+                       ForwardIterator<I>() && IteratorRange<I, S>() && Invokable<P, V>() &&
                        InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
             bool operator()(I begin, S end, R rel = R{}, P proj_ = P{}) const
             {

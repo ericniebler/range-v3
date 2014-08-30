@@ -31,7 +31,7 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I, S>() &&
+                    InputIterator<I>() && IteratorRange<I, S>() &&
                     WeaklyIncrementable<O>() &&
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>

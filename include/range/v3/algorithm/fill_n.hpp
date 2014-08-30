@@ -38,7 +38,7 @@ namespace ranges
             }
 
             template<typename O, typename S, typename V,
-                CONCEPT_REQUIRES_(OutputIterator<O, V, S>())>
+                CONCEPT_REQUIRES_(OutputIterator<O, V>() && IteratorRange<O, S>())>
             std::pair<O, iterator_difference_t<O>>
             operator()(O begin, S end, iterator_difference_t<O> n, V const & val) const
             {

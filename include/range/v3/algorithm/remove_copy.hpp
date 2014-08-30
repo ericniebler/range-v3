@@ -38,7 +38,7 @@ namespace ranges
         struct remove_copy_fn
         {
             template<typename I, typename S, typename O, typename T, typename P = ident,
-                CONCEPT_REQUIRES_(RemoveCopyable<I, O, T, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(RemoveCopyable<I, O, T, P>() && IteratorRange<I, S>())>
             std::pair<I, O> operator()(I begin, S end, O out, T const &val, P proj_ = P{}) const
             {
                 auto &&proj = invokable(proj_);

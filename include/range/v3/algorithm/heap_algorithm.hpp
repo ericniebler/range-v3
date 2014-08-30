@@ -91,7 +91,7 @@ namespace ranges
         struct is_heap_until_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 return detail::is_heap_until_n(std::move(begin), distance(begin, end), std::move(pred),
@@ -112,7 +112,7 @@ namespace ranges
         struct is_heap_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && IteratorRange<I, S>())>
             bool operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 return detail::is_heap_n(std::move(begin), distance(begin, end), std::move(pred),
@@ -227,7 +227,7 @@ namespace ranges
         struct push_heap_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I, S>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 auto n = distance(begin, end);
@@ -272,7 +272,7 @@ namespace ranges
         struct pop_heap_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I, S>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 auto n = distance(begin, end);
@@ -297,7 +297,7 @@ namespace ranges
         struct make_heap_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I, S>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);
@@ -332,7 +332,7 @@ namespace ranges
         struct sort_heap_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I, S>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);

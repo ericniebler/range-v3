@@ -39,7 +39,7 @@ namespace ranges
         struct replace_copy_fn
         {
             template<typename I, typename S, typename O, typename T0, typename T1, typename P = ident,
-                CONCEPT_REQUIRES_(ReplaceCopyable<I, O, T0, T1, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(ReplaceCopyable<I, O, T0, T1, P>() && IteratorRange<I, S>())>
             std::pair<I, O> operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value, P proj_ = {}) const
             {
                 auto &&proj = invokable(proj_);

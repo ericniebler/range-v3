@@ -27,7 +27,7 @@ namespace ranges
         struct move_fn
         {
             template<typename I, typename S, typename O, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I, S>() && WeaklyIncrementable<O>() &&
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && WeaklyIncrementable<O>() &&
                     IndirectlyProjectedMovable<I, P, O>())>
             std::pair<I, O> operator()(I begin, S end, O out, P proj_ = P{}) const
             {

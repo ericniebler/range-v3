@@ -43,7 +43,7 @@ namespace ranges
         struct shuffle_fn
         {
             template<typename I, typename S, typename Gen,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I, S>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
                                   Permutable<I>() &&
                                   UniformRandomNumberGenerator<Gen>())>
             I operator()(I begin, S end_, Gen && gen) const

@@ -113,7 +113,7 @@ namespace ranges
             /// \pre O is a model of the OutputIterator concept
             /// \pre C is a model of the InvokableRelation concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
-                CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && IteratorRange<I, S>())>
             std::pair<I, O> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),

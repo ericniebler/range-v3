@@ -27,7 +27,7 @@ namespace ranges
         struct equal_range_fn
         {
             template<typename I, typename S, typename V, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(Sentinel<S, I>() && BinarySearchable<I, V, C, P>())>
+                CONCEPT_REQUIRES_(IteratorRange<I, S>() && BinarySearchable<I, V, C, P>())>
             iterator_range<I>
             operator()(I begin, S end, V const & val, C pred = C{}, P proj = P{}) const
             {

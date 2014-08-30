@@ -26,7 +26,7 @@ namespace ranges
         {
             template<typename I1Ref, typename S1, typename I2,
                 typename I1 = detail::uncvref_t<I1Ref>,
-                CONCEPT_REQUIRES_(InputIterator<I1, S1>() &&
+                CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
                                   WeakInputIterator<I2>() &&
                                   IndirectlySwappable<I1, I2>())>
             std::pair<I1, I2> operator()(I1Ref&& begin1, S1 end1, I2 begin2) const
@@ -37,8 +37,8 @@ namespace ranges
             }
 
             template<typename I1, typename S1, typename I2, typename S2,
-                CONCEPT_REQUIRES_(InputIterator<I1, S1>() &&
-                                  InputIterator<I2, S2>() &&
+                CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
+                                  InputIterator<I2>() && IteratorRange<I2, S2>() &&
                                   IndirectlySwappable<I1, I2>())>
             std::pair<I1, I2> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
             {

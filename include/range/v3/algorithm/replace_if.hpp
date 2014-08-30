@@ -37,7 +37,7 @@ namespace ranges
         struct replace_if_fn
         {
             template<typename I, typename S, typename C, typename T, typename P = ident,
-                CONCEPT_REQUIRES_(ReplaceIfable<I, C, T, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(ReplaceIfable<I, C, T, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred_, T const & new_value, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);

@@ -44,7 +44,7 @@ namespace ranges
         struct partition_copy_fn
         {
             template<typename I, typename S, typename O0, typename O1, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(PartitionCopyable<I, O0, O1, C, P>() && Sentinel<S, I>())>
+                CONCEPT_REQUIRES_(PartitionCopyable<I, O0, O1, C, P>() && IteratorRange<I, S>())>
             std::tuple<I, O0, O1> operator()(I begin, S end, O0 o0, O1 o1, C pred_, P proj_ = P{}) const
             {
                 auto && pred = invokable(pred_);
