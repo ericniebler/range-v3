@@ -46,7 +46,7 @@ namespace ranges
                 static iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
                 from_container(T & t, concepts::SizedIterable*, concepts::SizedIteratorRange*)
                 {
-                    RANGES_ASSERT(size(t) == iterator_range_size(begin(t), end(t)));
+                    RANGES_ASSERT(size(t) == size(begin(t), end(t)));
                     return {begin(t), end(t)};
                 }
 

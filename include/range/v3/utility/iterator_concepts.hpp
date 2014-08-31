@@ -285,8 +285,6 @@ namespace ranges
                     ));
             };
 
-            struct Sentinel;
-
             struct WeakIterator
               : refines<WeaklyIncrementable, Copyable>
             {
@@ -516,7 +514,8 @@ namespace ranges
                 template<typename I, typename S>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Integral>(s - i)
+                        concepts::model_of<Integral>(s - i),
+                        concepts::same_type(s - i, i - s)
                     ));
             };
         }
@@ -536,7 +535,6 @@ namespace ranges
 
         template<typename I, typename S = I>
         using sized_iterator_range_concept_t = meta_apply<sized_iterator_range_concept, I, S>;
-
     }
 }
 

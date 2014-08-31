@@ -58,13 +58,15 @@ namespace ranges
                 return N;
             }
 
-            struct size_fn
+            struct size_fn : iterator_range_size_fn
             {
+                using iterator_range_size_fn::operator();
+
                 template<typename Rng>
                 constexpr auto operator()(Rng &&rng) const ->
                     decltype(size(std::forward<Rng>(rng)))
                 {
-                    return size(rng);
+                    return size(std::forward<Rng>(rng));
                 }
             };
         }

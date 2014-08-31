@@ -151,10 +151,10 @@ namespace ranges
                     }
                 }
             };
-            // If the underlying sequence object doesn't model BoundedRange, then we can't
+            // If the underlying sequence object doesn't model BoundedIterable, then we can't
             // decrement the end and there's no reason to adapt the sentinel. Strictly
             // speaking, we don't have to adapt the end iterator of Input and Forward
-            // Ranges, but in the interests of making the resulting stride view model
+            // Iterables, but in the interests of making the resulting stride view model
             // BoundedRange, adapt it anyway.
             auto end_adaptor_(concepts::Iterable*) const -> default_adaptor
             {
