@@ -64,9 +64,9 @@ namespace ranges
 
                 template<typename Rng>
                 constexpr auto operator()(Rng &&rng) const ->
-                    decltype(size(std::forward<Rng>(rng)))
+                    decltype(size(detail::forward<Rng>(rng)))
                 {
-                    return size(std::forward<Rng>(rng));
+                    return size(detail::forward<Rng>(rng));
                 }
             };
         }
