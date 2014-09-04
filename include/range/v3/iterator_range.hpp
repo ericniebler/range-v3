@@ -113,19 +113,40 @@ namespace ranges
 
         struct range_fn : bindable<range_fn>
         {
-            template<typename I, typename S>
+            template<typename I, typename S,
+                     CONCEPT_REQUIRES_(IteratorRange<I, S>{} && !RandomAccessIterator<I>{})>
             static iterator_range<I, S> invoke(range_fn, I begin, S end)
             {
-                CONCEPT_ASSERT(IteratorRange<I, S>());
                 return {std::move(begin), std::move(end)};
             }
 
-            template<typename I, typename S, typename Size>
+            template<typename I, typename S,
+                     CONCEPT_REQUIRES_(IteratorRange<I, S>{} && RandomAccessIterator<I>{})>
+            static sized_iterator_range<I, S> invoke(range_fn, I begin, S end)
+            {
+                const auto s = static_cast<iterator_size_t<I>>(distance(begin, end));
+                return {std::move(begin), std::move(end), s};
+            }
+
+            template<typename I, typename S, typename Size,
+                     CONCEPT_REQUIRES_(Integral<Size>{} && IteratorRange<I, S>{})>
             static sized_iterator_range<I, S> invoke(range_fn, I begin, S end, Size size)
             {
-                CONCEPT_ASSERT(Integral<Size>());
-                CONCEPT_ASSERT(IteratorRange<I, S>());
                 return {std::move(begin), std::move(end), size};
+            }
+
+            template<typename I, CONCEPT_REQUIRES_(Iterable<I>{} && !SizedIterable<I>{}),
+                     typename It = range_iterator_t<I>, typename S = range_sentinel_t<I>>
+            static iterator_range<It, S> invoke(range_fn, I& iterable)
+            {
+              return invoke(range_fn{}, begin(iterable), end(iterable));
+            }
+
+            template<typename I, CONCEPT_REQUIRES_(SizedIterable<I>{}),
+                     typename It = range_iterator_t<I>, typename S = range_sentinel_t<I>>
+            static sized_iterator_range<It, S> invoke(range_fn, I& iterable)
+            {
+                return invoke(range_fn{}, begin(iterable), end(iterable), size(iterable));
             }
         };
 
