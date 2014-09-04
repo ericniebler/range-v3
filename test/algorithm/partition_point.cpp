@@ -150,43 +150,43 @@ test_counted()
         const int ia[] = {2, 4, 6, 8, 10};
         CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
-                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia), 0));
+                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia), ranges::size(ia)));
     }
     {
         const int ia[] = {1, 2, 4, 6, 8};
         CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
-                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 1), 1));
+                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 1), ranges::size(ia) - 1));
     }
     {
         const int ia[] = {1, 3, 2, 4, 6};
         CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
-                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 2), 2));
+                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 2), ranges::size(ia) - 2));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6};
         CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
-                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 3), 3));
+                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 3), ranges::size(ia) - 3));
     }
     {
         const int ia[] = {1, 3, 5, 7, 2, 4};
         CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
-                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 4), 4));
+                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 4), ranges::size(ia) - 4));
     }
     {
         const int ia[] = {1, 3, 5, 7, 9, 2};
         CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
-                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 5), 5));
+                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 5), ranges::size(ia) - 5));
     }
     {
         const int ia[] = {1, 3, 5, 7, 9, 11};
         CHECK(ranges::partition_point(::as_lvalue(ranges::view::counted(Iter(ranges::begin(ia)),
                                                                         ranges::size(ia))),
-                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 6), 6));
+                                      is_odd()) == ranges::counted_iterator<Iter>(Iter(ia + 6), ranges::size(ia) - 6));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6, 7};

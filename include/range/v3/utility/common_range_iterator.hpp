@@ -31,6 +31,7 @@ namespace ranges
                 tagged_variant<I, S> data_;
                 bool is_sentinel() const
                 {
+                    RANGES_ASSERT(data_.is_valid());
                     return data_.which() == 1u;
                 }
                 I & it()
@@ -101,7 +102,6 @@ namespace ranges
                 }
                 auto current() const -> decltype(*std::declval<I const &>())
                 {
-                    RANGES_ASSERT(!is_sentinel());
                     return *it();
                 }
                 template<typename I2, typename S2,
@@ -116,7 +116,6 @@ namespace ranges
                 }
                 void next()
                 {
-                    RANGES_ASSERT(!is_sentinel());
                     ++it();
                 }
             };

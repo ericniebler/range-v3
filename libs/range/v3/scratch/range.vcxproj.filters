@@ -848,6 +848,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\adjacent_difference.hpp">
       <Filter>Header Files\numeric</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\test\test_iterators.hpp">
+      <Filter>Test Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

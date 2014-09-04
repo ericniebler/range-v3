@@ -57,7 +57,7 @@ namespace ranges
             template<typename I>
             void operator()(counted_iterator<I> &it, iterator_difference_t<I> n) const
             {
-                it = counted_iterator<I>{next(std::move(it.base_reference()), n), it.count() + n};
+                it = counted_iterator<I>{next(std::move(it.base_reference()), n), it.count() - n};
             }
             /// \endinternal
         };
@@ -295,7 +295,7 @@ namespace ranges
             operator()(counted_iterator<I> const &j, I i, iterator_difference_t<I> n) const
             {
                 RANGES_ASSERT(next(j.base(), n) == i);
-                return {i, j.count() + n};
+                return {i, j.count() - n};
             }
 
             template<typename I>
@@ -308,7 +308,7 @@ namespace ranges
             counted_iterator<I>
             operator()(counted_iterator<I> const &j, I i) const
             {
-                return {i, j.count() + (i - j.base_reference())};
+                return {i, j.count() - (i - j.base_reference())};
             }
         };
 

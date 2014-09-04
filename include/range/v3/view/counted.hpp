@@ -28,7 +28,7 @@ namespace ranges
             struct counted_cursor
             {
             private:
-                friend struct counted_sentinel<I>;
+                friend struct counted_sentinel;
                 I it_;
                 iterator_difference_t<I> n_;
 
@@ -74,55 +74,34 @@ namespace ranges
                 void next()
                 {
                     ++it_;
-                    ++n_;
+                    --n_;
                 }
                 CONCEPT_REQUIRES(BidirectionalIterator<I>())
                 void prev()
                 {
                     --it_;
-                    --n_;
+                    ++n_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<I>())
                 void advance(iterator_difference_t<I> n)
                 {
                     it_ += n;
-                    n_ += n;
+                    n_ -= n;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterator<I>())
                 iterator_difference_t<I>
                 distance_to(counted_cursor<I> const &that) const
                 {
-                    return that.n_ - n_;
+                    return n_ - that.n_;
                 }
             };
 
-            template<typename I>
             struct counted_sentinel
             {
-            private:
-                iterator_difference_t<I> n_;
-            public:
-                struct mixin : basic_mixin<counted_sentinel>
-                {
-                    mixin() = default;
-                    mixin(counted_sentinel pos)
-                      : basic_mixin<counted_sentinel>{std::move(pos)}
-                    {}
-                    explicit mixin(iterator_difference_t<I> n)
-                      : mixin(counted_sentinel{n})
-                    {}
-                    iterator_difference_t<I> count() const
-                    {
-                        return this->get().n_;
-                    }
-                };
-                counted_sentinel() = default;
-                counted_sentinel(iterator_difference_t<I> n)
-                  : n_(n)
-                {}
+                template<typename I>
                 bool equal(counted_cursor<I> const &that) const
                 {
-                    return n_ == that.n_;
+                    return that.n_ == 0;
                 }
             };
         }
@@ -131,23 +110,23 @@ namespace ranges
         template<typename I, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
         iterator_difference_t<I> operator-(counted_iterator<I> const &end, counted_iterator<I> const &begin)
         {
-            return end.count() - begin.count();
-        }
-
-        template<typename I>
-        iterator_difference_t<I> operator-(counted_sentinel<I> const &end, counted_iterator<I> const &begin)
-        {
-            return end.count() - begin.count();
-        }
-
-        template<typename I>
-        iterator_difference_t<I> operator-(counted_iterator<I> const &begin, counted_sentinel<I> const &end)
-        {
             return begin.count() - end.count();
         }
 
         template<typename I>
-        iterator_difference_t<I> operator-(counted_sentinel<I> const &, counted_sentinel<I> const &)
+        iterator_difference_t<I> operator-(counted_sentinel const &end, counted_iterator<I> const &begin)
+        {
+            return begin.count();
+        }
+
+        template<typename I>
+        iterator_difference_t<I> operator-(counted_iterator<I> const &begin, counted_sentinel const &end)
+        {
+            return -begin.count();
+        }
+
+        template<typename I>
+        iterator_difference_t<I> operator-(counted_sentinel const &, counted_sentinel const &)
         {
             return 0;
         }
@@ -164,11 +143,11 @@ namespace ranges
 
             detail::counted_cursor<I> begin_cursor() const
             {
-                return {it_, 0};
+                return {it_, n_};
             }
-            detail::counted_sentinel<I> end_cursor() const
+            detail::counted_sentinel end_cursor() const
             {
-                return {n_};
+                return {};
             }
         public:
             counted_view() = default;
