@@ -283,6 +283,9 @@ namespace ranges
         struct range_base
         {};
 
+        template<typename Cur>
+        struct basic_mixin;
+
         template<typename Cur, typename S = Cur>
         struct basic_range_iterator;
 

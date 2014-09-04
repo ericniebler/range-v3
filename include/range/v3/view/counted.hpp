@@ -147,6 +147,12 @@ namespace ranges
         }
 
         template<typename I>
+        iterator_difference_t<I> operator-(counted_sentinel<I> const &, counted_sentinel<I> const &)
+        {
+            return 0;
+        }
+
+        template<typename I>
         struct counted_view
           : range_facade<counted_view<I>>
         {

@@ -598,26 +598,6 @@ namespace ranges
                     basic_range_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
                     basic_range_sentinel<facade_sentinel2_t<Derived>>>;
 
-            template<typename T>
-            struct basic_mixin
-            {
-            private:
-                T t_;
-            public:
-                constexpr basic_mixin() = default;
-                basic_mixin(T t)
-                  : t_(std::move(t))
-                {}
-                T &get()
-                {
-                    return t_;
-                }
-                T const &get() const
-                {
-                    return t_;
-                }
-            };
-
             template<typename Cur, typename Enable = void>
             struct has_mixin
               : std::false_type
@@ -639,6 +619,26 @@ namespace ranges
                 lazy_conditional_t<
                     has_mixin<Cur>::value, get_mixin<Cur>, identity<basic_mixin<Cur>>>;
         }
+
+        template<typename T>
+        struct basic_mixin
+        {
+        private:
+            T t_;
+        public:
+            constexpr basic_mixin() = default;
+            basic_mixin(T t)
+              : t_(std::move(t))
+            {}
+            T &get()
+            {
+                return t_;
+            }
+            T const &get() const
+            {
+                return t_;
+            }
+        };
 
         template<typename Cur, typename S>
         struct basic_range_iterator;

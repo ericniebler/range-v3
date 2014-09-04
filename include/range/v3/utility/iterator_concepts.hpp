@@ -508,12 +508,34 @@ namespace ranges
                     ));
             };
 
+            // Detail, used only to constrain common_range_iterator::operator-, which
+            // is used by SizedIteratorRange
+            struct SizedIteratorRangeLike_
+              : refines<IteratorRange>
+            {
+              template<typename I, typename S>
+                auto requires_(I i, S s) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Integral>(s - i),
+                        concepts::same_type(s - i, i - s)
+                    ));
+            };
+
             struct SizedIteratorRange
               : refines<IteratorRange>
             {
-                template<typename I, typename S>
+                template<typename I>
+                auto requires_(I i, I s) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Integral>(s - i)
+                    ));
+
+              template<typename I, typename S, typename C = common_type_t<I, S>>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<SizedIteratorRange>(i, i),
+                        concepts::model_of<Common>(i, s),
+                        concepts::model_of<SizedIteratorRange>(static_cast<C>(i), static_cast<C>(s)),
                         concepts::model_of<Integral>(s - i),
                         concepts::same_type(s - i, i - s)
                     ));
@@ -522,6 +544,9 @@ namespace ranges
 
         template<typename I, typename S>
         using IteratorRange = concepts::models<concepts::IteratorRange, I, S>;
+
+        template<typename I, typename S>
+        using SizedIteratorRangeLike_ = concepts::models<concepts::SizedIteratorRangeLike_, I, S>;
 
         template<typename I, typename S>
         using SizedIteratorRange = concepts::models<concepts::SizedIteratorRange, I, S>;
