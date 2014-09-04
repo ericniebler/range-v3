@@ -245,7 +245,7 @@ void test_rng_pred()
                  range(random_access_iterator<const int*>(ia),
                  sentinel<const int*>(ia + s - 1)),
                  counting_equals<int>));
-    CHECK(comparison_count > 0);
+    CHECK(comparison_count == 0);
     CHECK(!equal(range(input_iterator<const int*>(ia),
                   sentinel<const int*>(ia+s)),
                   input_iterator<const int*>(ib),
