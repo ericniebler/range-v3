@@ -202,9 +202,7 @@ namespace ranges
                 }
             public:
                 using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
-                using single_pass =
-                    logical_or<(bool) Derived<ranges::input_iterator_tag,
-                        range_category_t<Rngs>>()...>;
+                using single_pass = logical_or<SinglePass<range_iterator_t<Rngs>>()...>;
                 cursor() = default;
                 cursor(joined_view const &rng, begin_tag)
                   : rng_(&rng), its_{size_t<0>{}, begin(std::get<0>(rng.rngs_))}

@@ -448,6 +448,13 @@ namespace ranges
         template<typename T>
         using iterator_concept_t = meta_apply<iterator_concept, T>;
 
+        // Generally useful to know if an iterator is single-pass or not:
+        template<typename I>
+        constexpr bool SinglePass()
+        {
+            return WeakInputIterator<I>() && !ForwardIterator<I>();
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
         template<typename I, typename V = concepts::Readable::value_t<I>>

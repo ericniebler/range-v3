@@ -61,7 +61,7 @@ namespace ranges
             view_fun_t pred_;
 
             using single_pass = detail::or_t<
-                Derived<ranges::input_iterator_tag, range_category_t<Rng>>,
+                std::integral_constant<bool, SinglePass<range_iterator_t<Rng>>()>,
                 detail::not_t<std::is_reference<reference_t>>>;
             using end_adaptor_t = detail::take_while_sentinel_adaptor<adaptor_fun_t, single_pass>;
             using use_sentinel_t = detail::or_t<detail::not_t<BoundedIterable<Rng>>, single_pass>;

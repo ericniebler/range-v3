@@ -52,6 +52,9 @@
     <Filter Include="Header Files\numeric">
       <UniqueIdentifier>{03fb638e-a787-4e62-993a-26df0f4b37f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Perf Files">
+      <UniqueIdentifier>{bc20ee0b-7da9-4870-b4cb-f5ce78da09d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
@@ -345,9 +348,6 @@
     <ClCompile Include="..\..\..\..\test\algorithm\inplace_merge.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\view\as_bounded_range.cpp">
-      <Filter>Test Files\view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\all.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -362,6 +362,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\numeric\adjacent_difference.cpp">
       <Filter>Test Files\numeric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\perf\counted_insertion_sort.cpp">
+      <Filter>Perf Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\bounded.cpp">
+      <Filter>Test Files\view</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -874,6 +880,9 @@
     </Text>
     <Text Include="..\..\..\..\test\numeric\CMakeLists.txt">
       <Filter>Test Files\numeric</Filter>
+    </Text>
+    <Text Include="..\..\..\..\perf\CMakeLists.txt">
+      <Filter>Perf Files</Filter>
     </Text>
   </ItemGroup>
 </Project>

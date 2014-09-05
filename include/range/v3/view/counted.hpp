@@ -15,6 +15,7 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -32,8 +33,19 @@ namespace ranges
                 I it_;
                 iterator_difference_t<I> n_;
 
+                // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
+                #ifdef __GNUC__
+             public:
+                #endif
+                void advance_(iterator_difference_t<I> n)
+                {
+                    n_ -= n;
+                    ranges::advance(it_, n);
+                }
             public:
-                struct mixin : basic_mixin<counted_cursor>
+                using single_pass = std::integral_constant<bool, SinglePass<I>()>;
+                struct mixin
+                  : basic_mixin<counted_cursor>
                 {
                     mixin() = default;
                     mixin(counted_cursor pos)
@@ -57,6 +69,13 @@ namespace ranges
                     iterator_difference_t<I> count() const
                     {
                         return this->get().n_;
+                    }
+                    // Overload the advance algorithm for counted_iterators.
+                    // This is much faster. This gets found by ADL because
+                    // counted_iterator inherits from counted_cursor::mixin.
+                    friend void advance(counted_iterator<I> &it, iterator_difference_t<I> n)
+                    {
+                        it.counted_cursor::mixin::get().advance_(n);
                     }
                 };
                 counted_cursor() = default;

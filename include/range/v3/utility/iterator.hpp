@@ -24,42 +24,14 @@ namespace ranges
     {
         struct advance_fn
         {
-        private:
             template<typename I>
-            static void impl(I &it, iterator_difference_t<I> n, concepts::InputIterator*)
+            void operator()(I &i, iterator_difference_t<I> n) const
             {
-                RANGES_ASSERT(0 <= n);
-                for(; n != 0; --n)
-                    ++it;
+                // Use ADL here to give custom iterator types (like counted_iterator)
+                // a chance to optimize it (see view/counted.hpp)
+                using std::advance;
+                advance(i, n);
             }
-            template<typename I>
-            static void impl(I &it, iterator_difference_t<I> n, concepts::BidirectionalIterator*)
-            {
-                if(0 <= n)
-                    for(; n != 0; --n)
-                        ++it;
-                else
-                    for(; n != 0; ++n)
-                        --it;
-            }
-            template<typename I>
-            static void impl(I &it, iterator_difference_t<I> n, concepts::RandomAccessIterator*)
-            {
-                it += n;
-            }
-        public:
-            template<typename I>
-            void operator()(I &it, iterator_difference_t<I> n) const
-            {
-                advance_fn::impl(it, n, iterator_concept<I>());
-            }
-            /// \internal
-            template<typename I>
-            void operator()(counted_iterator<I> &it, iterator_difference_t<I> n) const
-            {
-                it = counted_iterator<I>{next(std::move(it.base_reference()), n), it.count() - n};
-            }
-            /// \endinternal
         };
 
         RANGES_CONSTEXPR advance_fn advance{};

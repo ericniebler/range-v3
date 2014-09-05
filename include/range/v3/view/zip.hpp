@@ -81,7 +81,7 @@ namespace ranges
                 {
                     advance(t, d);
                 }
-            } advance {};
+            } advance_ {};
 
             constexpr struct
             {
@@ -173,7 +173,7 @@ namespace ranges
                 void advance(difference_type n)
                 {
                     using std::placeholders::_1;
-                    tuple_for_each(its_, std::bind(detail::advance, _1, n));
+                    tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
                 CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const

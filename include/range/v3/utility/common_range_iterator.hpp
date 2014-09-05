@@ -16,6 +16,13 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/variant.hpp>
 
+#ifdef __GNUC__
+// Apparantly the code below confuses GCC's static analyzer and it
+// generatess a bogus warning for valid code.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#endif
+
 namespace ranges
 {
     inline namespace v3
@@ -63,7 +70,7 @@ namespace ranges
                 }
 
             public:
-                using single_pass = Derived<ranges::input_iterator_tag, iterator_category_t<I>>;
+                using single_pass = std::integral_constant<bool, SinglePass<I>()>;
                 struct mixin
                   : basic_mixin<common_cursor>
                 {
@@ -77,11 +84,19 @@ namespace ranges
                     explicit mixin(S se)
                       : mixin(common_cursor{std::move(se)})
                     {}
+                    // The iterators of view::bounded are sized if I and S are
+                    // sized. This operator makes it so. It's templatized because
+                    // SizedIteratorRangeLike_ is expressed in terms of operator-.
+                    // The template breaks an cycle where templates are instantiated
+                    // before their definitions are available.
                     template<typename I_ = I, typename S_ = S,
                         CONCEPT_REQUIRES_(SizedIteratorRangeLike_<I_, S_>())>
-                    friend iterator_difference_t<I> operator-(mixin const &this_, mixin const &that)
+                    friend iterator_difference_t<I>
+                    operator-(common_range_iterator<I, S> const &end,
+                              common_range_iterator<I, S> const &begin)
                     {
-                        return that.get().distance_to_(this_.get());
+                        return begin.common_cursor::mixin::get().distance_to_(
+                                 end.common_cursor::mixin::get());
                     }
                 };
                 common_cursor() = default;
@@ -140,5 +155,9 @@ namespace ranges
         };
     }
 }
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 #endif

@@ -76,6 +76,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\example\comprehensions.cpp" />
     <ClCompile Include="..\..\..\..\example\fibonacci.cpp" />
+    <ClCompile Include="..\..\..\..\perf\counted_insertion_sort.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\adjacent_find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\any_of.cpp" />
@@ -151,7 +152,7 @@
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
-    <ClCompile Include="..\..\..\..\test\view\as_bounded_range.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\bounded.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate.cpp" />
@@ -337,6 +338,7 @@
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
     <Text Include="..\..\..\..\example\CMakeLists.txt" />
+    <Text Include="..\..\..\..\perf\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\algorithm\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\numeric\CMakeLists.txt" />
