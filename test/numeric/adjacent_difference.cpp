@@ -172,4 +172,6 @@ int main()
             CHECK(ib[i] == ir[i]);
         }
     }
+
+    return ::test_result();
 }
