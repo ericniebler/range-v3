@@ -77,6 +77,23 @@ namespace ranges
                     {
                         it.counted_cursor::mixin::get().advance_(n);
                     }
+                    // Overload uncounted and recounted for packing and unpacking
+                    // counted iterators
+                    friend I uncounted(counted_iterator<I> i)
+                    {
+                        return i.base();
+                    }
+                    friend counted_iterator<I>
+                    recounted(counted_iterator<I> const &j, I i, iterator_difference_t<I> n)
+                    {
+                        RANGES_ASSERT(next(j.base(), n) == i);
+                        return {i, j.count() - n};
+                    }
+                    CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                    friend counted_iterator<I> recounted(counted_iterator<I> const &j, I i)
+                    {
+                        return {i, j.count() - (i - j.base_reference())};
+                    }
                 };
                 counted_cursor() = default;
                 counted_cursor(I it, iterator_difference_t<I> n)

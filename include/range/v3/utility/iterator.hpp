@@ -237,54 +237,56 @@ namespace ranges
             }
         };
 
-        struct uncounted_fn
+        namespace adl_uncounted_recounted_detail
         {
             template<typename I>
-            I operator()(I i) const
+            I uncounted(I i)
             {
                 return i;
             }
 
             template<typename I>
-            I operator()(counted_iterator<I> i) const
-            {
-                return i.base();
-            }
-        };
-
-        RANGES_CONSTEXPR uncounted_fn uncounted{};
-
-        struct recounted_fn
-        {
-            template<typename I>
-            I operator()(I const &, I i, iterator_difference_t<I>) const
+            I recounted(I const &, I i, iterator_difference_t<I>)
             {
                 return i;
             }
 
             template<typename I>
-            counted_iterator<I>
-            operator()(counted_iterator<I> const &j, I i, iterator_difference_t<I> n) const
-            {
-                RANGES_ASSERT(next(j.base(), n) == i);
-                return {i, j.count() - n};
-            }
-
-            template<typename I>
-            I operator()(I const &, I i) const
+            I recounted(I const &, I i)
             {
                 return i;
             }
 
-            template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-            counted_iterator<I>
-            operator()(counted_iterator<I> const &j, I i) const
+            struct uncounted_fn
             {
-                return {i, j.count() - (i - j.base_reference())};
-            }
-        };
+                template<typename I>
+                auto operator()(I i) const ->
+                    decltype(uncounted((I&&)i))
+                {
+                    return uncounted((I&&)i);
+                }
+            };
 
-        RANGES_CONSTEXPR recounted_fn recounted{};
+            struct recounted_fn
+            {
+                template<typename I, typename J>
+                auto operator()(I i, J j, iterator_difference_t<J> n) const ->
+                    decltype(recounted((I&&)i, (J&&)j, n))
+                {
+                    return recounted((I&&)i, (J&&)j, n);
+                }
+
+                template<typename I, typename J>
+                auto operator()(I i, J j) const ->
+                    decltype(recounted((I&&)i, (J&&)j))
+                {
+                    return recounted((I&&)i, (J&&)j);
+                }
+            };
+        }
+
+        RANGES_CONSTEXPR adl_uncounted_recounted_detail::uncounted_fn uncounted{};
+        RANGES_CONSTEXPR adl_uncounted_recounted_detail::recounted_fn recounted{};
     }
 }
 
