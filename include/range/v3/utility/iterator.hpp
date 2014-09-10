@@ -147,6 +147,57 @@ namespace ranges
 
         RANGES_CONSTEXPR next_to_fn next_to{};
 
+        struct iterator_range_enumerate_fn
+        {
+        private:
+            template<typename I, typename S, typename D>
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::IteratorRange*) const
+            {
+                for(; begin != end; ++begin)
+                    ++d;
+                return {d, begin};
+            }
+            template<typename I, typename S, typename D>
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
+            {
+                return {(end - begin) + d, next_to(begin, end)};
+            }
+        public:
+            template<typename I, typename S, typename D = iterator_difference_t<I>,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
+            std::pair<D, I> operator()(I begin, S end, D d = 0) const
+            {
+                return this->impl_i(std::move(begin), std::move(end), d, sized_iterator_range_concept<I, S>());
+            }
+        };
+
+        RANGES_CONSTEXPR iterator_range_enumerate_fn iterator_range_enumerate {};
+
+        struct iterator_range_distance_fn
+        {
+        private:
+            template<typename I, typename S, typename D>
+            D impl_i(I begin, S end, D d, concepts::IteratorRange*) const
+            {
+                return iterator_range_enumerate(std::move(begin), std::move(end), d).first;
+            }
+            template<typename I, typename S, typename D>
+            D impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
+            {
+                return static_cast<D>(end - begin) + d;
+            }
+        public:
+            template<typename I, typename S, typename D = iterator_difference_t<I>,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
+            D operator()(I begin, S end, D d = 0) const
+            {
+                return this->impl_i(std::move(begin), std::move(end), d,
+                    sized_iterator_range_concept<I, S>());
+            }
+        };
+
+        RANGES_CONSTEXPR iterator_range_distance_fn iterator_range_distance {};
+
         // Like distance(b,e), but guaranteed to be O(1)
         struct iterator_range_size_fn
         {

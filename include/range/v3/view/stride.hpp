@@ -35,8 +35,8 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using size_type = range_size_t<Rng>;
-            using difference_type = range_difference_t<Rng>;
+            using size_type_ = range_size_t<Rng>;
+            using difference_type_ = range_difference_t<Rng>;
 
             // Bidirectional stride iterators need a runtime boolean to keep track
             // of when the offset variable is dirty and needs to be lazily calculated.
@@ -55,10 +55,10 @@ namespace ranges
             using offset_t =
                 detail::conditional_t<
                     (BidirectionalIterable<Rng>()),
-                    mutable_<difference_type>,
-                    constant<difference_type, 0>>;
+                    mutable_<difference_type_>,
+                    constant<difference_type_, 0>>;
 
-            difference_type stride_;
+            difference_type_ stride_;
 
             struct adaptor : default_adaptor, private dirty_t, private offset_t
             {
@@ -117,7 +117,7 @@ namespace ranges
                     pos = ranges::range_core_access::cursor(std::move(rng.second));
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
-                difference_type distance_to(derived_cursor_t const &here,
+                difference_type_ distance_to(derived_cursor_t const &here,
                     derived_cursor_t const &there) const
                 {
                     clean();
@@ -130,7 +130,7 @@ namespace ranges
                         (there.adaptor().offset() - offset())) / rng_->stride_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
-                void advance(base_cursor_t &pos, difference_type n)
+                void advance(base_cursor_t &pos, difference_type_ n)
                 {
                     clean();
                     if(0 < n)
@@ -176,17 +176,17 @@ namespace ranges
             }
         public:
             strided_view() = default;
-            strided_view(Rng &&rng, difference_type stride)
+            strided_view(Rng &&rng, difference_type_ stride)
               : range_adaptor_t<strided_view>{std::forward<Rng>(rng)}
               , stride_(stride)
             {
                 RANGES_ASSERT(0 < stride_);
             }
             CONCEPT_REQUIRES(SizedIterable<Rng>())
-            size_type size() const
+            size_type_ size() const
             {
-                return (this->base_size() + static_cast<size_type>(stride_) - 1) /
-                    static_cast<size_type>(stride_);
+                return (this->base_size() + static_cast<size_type_>(stride_) - 1) /
+                    static_cast<size_type_>(stride_);
             }
         };
 

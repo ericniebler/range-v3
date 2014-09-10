@@ -27,41 +27,21 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct enumerate_fn
+        struct enumerate_fn : iterator_range_enumerate_fn
         {
         private:
-            template<typename I, typename S, typename D>
-            std::pair<D, I> impl_i(I begin, S end, D d, concepts::IteratorRange*) const
-            {
-                for(; begin != end; ++begin)
-                    ++d;
-                return {d, begin};
-            }
-
-            template<typename I, typename S, typename D>
-            std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
-            {
-                return {(end - begin) + d, next_to(begin, end)};
-            }
-
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
             std::pair<D, I> impl_r(Rng &rng, D d, concepts::Iterable*, concepts::Iterable*) const
             {
-                return (*this)(begin(rng), end(rng), d);
+                return iterator_range_enumerate(begin(rng), end(rng), d);
             }
-
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
             std::pair<D, I> impl_r(Rng &rng, D d, concepts::BoundedIterable*, concepts::SizedIterable*) const
             {
                 return {static_cast<D>(size(rng)) + d, end(rng)};
             }
         public:
-            template<typename I, typename S, typename D = iterator_difference_t<I>,
-                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
-            std::pair<D, I> operator()(I begin, S end, D d = 0) const
-            {
-                return this->impl_i(std::move(begin), std::move(end), d, sized_iterator_range_concept<I, S>());
-            }
+            using iterator_range_enumerate_fn::operator();
 
             template<typename Rng, typename D = range_difference_t<Rng>,
                 typename I = range_iterator_t<Rng>,
@@ -77,41 +57,21 @@ namespace ranges
 
         RANGES_CONSTEXPR enumerate_fn enumerate{};
 
-        struct distance_fn
+        struct distance_fn : iterator_range_distance_fn
         {
         private:
-            template<typename I, typename S, typename D>
-            D impl_i(I begin, S end, D d, concepts::IteratorRange*) const
-            {
-                return enumerate(std::move(begin), std::move(end), d).first;
-            }
-
-            template<typename I, typename S, typename D>
-            D impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
-            {
-                return static_cast<D>(end - begin) + d;
-            }
-
             template<typename Rng, typename D>
             D impl_r(Rng &rng, D d, concepts::Iterable*) const
             {
                 return enumerate(rng, d).first;
             }
-
             template<typename Rng, typename D>
             D impl_r(Rng &rng, D d, concepts::SizedIterable*) const
             {
                 return static_cast<D>(size(rng)) + d;
             }
-
         public:
-            template<typename I, typename S, typename D = iterator_difference_t<I>,
-                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
-            D operator()(I begin, S end, D d = 0) const
-            {
-                return this->impl_i(std::move(begin), std::move(end), d,
-                    sized_iterator_range_concept<I, S>());
-            }
+            using iterator_range_distance_fn::operator();
 
             template<typename Rng, typename D = range_difference_t<Rng>,
                 CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>

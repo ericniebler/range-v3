@@ -824,9 +824,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\detail\memory.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\view\as_bounded_range.hpp">
-      <Filter>Header Files\view</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\merge_n.hpp">
       <Filter>Header Files\algorithm\aux_</Filter>
     </ClInclude>
@@ -856,6 +853,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\test_iterators.hpp">
       <Filter>Test Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\bounded.hpp">
+      <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
