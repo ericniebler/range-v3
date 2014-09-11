@@ -56,6 +56,9 @@ add_test(test.alg.generate, alg.generate)
 add_executable(alg.generate_n generate_n.cpp)
 add_test(test.alg.generate_n, alg.generate_n)
 
+add_executable(alg.includes includes.cpp)
+add_test(test.alg.includes, alg.includes)
+
 add_executable(alg.inplace_merge inplace_merge.cpp)
 add_test(test.alg.inplace_merge, alg.inplace_merge)
 

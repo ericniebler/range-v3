@@ -95,6 +95,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate_n.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\includes.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\inplace_merge.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_heap_until.cpp" />

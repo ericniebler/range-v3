@@ -19,6 +19,7 @@
 #define RANGES_V3_ALGORITHM_SET_ALGORITHM_HPP
 
 #include <tuple>
+#include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -34,6 +35,57 @@ namespace ranges
 {
     inline namespace v3
     {
+        template<typename I1, typename I2, typename C = ordered_less,
+            typename P1 = ident, typename P2 = ident,
+            typename V1 = iterator_value_t<I1>,
+            typename V2 = iterator_value_t<I2>,
+            typename X1 = concepts::Invokable::result_t<P1, V1>,
+            typename X2 = concepts::Invokable::result_t<P2, V2>>
+        constexpr bool RangeComparable()
+        {
+            return InputIterator<I1>() && InputIterator<I2>() &&
+                   Invokable<P1, V1>() && Invokable<P2, V2>() &&
+                   InvokableRelation<C, X1, X2>();
+        }
+
+        struct includes_fn
+        {
+            template<typename I1, typename S1, typename I2, typename S2,
+                typename C = ordered_less, typename P1 = ident, typename P2 = ident,
+                CONCEPT_REQUIRES_(RangeComparable<I1, I2, C, P1, P2>() &&
+                    IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+            bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
+                C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
+            {
+                auto &&pred = invokable(pred_);
+                auto &&proj1 = invokable(proj1_);
+                auto &&proj2 = invokable(proj2_);
+                for(; begin2 != end2; ++begin1)
+                {
+                    if(begin1 == end1 || pred(proj2(*begin2), proj1(*begin1)))
+                        return false;
+                    if(!pred(proj1(*begin1), proj2(*begin2)))
+                        ++begin2;
+                }
+                return true;
+            }
+
+            template<typename Rng1, typename Rng2, typename C = ordered_less,
+                typename P1 = ident, typename P2 = ident,
+                typename I1 = range_iterator_t<Rng1>,
+                typename I2 = range_iterator_t<Rng2>,
+                CONCEPT_REQUIRES_(RangeComparable<I1, I2, C, P1, P2>() &&
+                    Iterable<Rng1>() && Iterable<Rng2>())>
+            bool operator()(Rng1 && rng1, Rng2 && rng2,
+                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+            {
+                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
+                    std::move(proj1), std::move(proj2));
+            }
+        };
+
+        RANGES_CONSTEXPR range_algorithm<includes_fn> includes{};
+
         struct set_union_fn
         {
             template<typename I1, typename S1, typename I2, typename S2, typename O,
@@ -51,7 +103,7 @@ namespace ranges
                     if(begin2 == end2)
                     {
                         auto tmp = copy(begin1, end1, out);
-                        return std::tuple<I1, I2, O>{tmp.first, begin2, tmp.second};
+                        return std::tuple<I1, I2, O>{tmp.begin, begin2, tmp.second};
                     }
                     if(pred(proj2(*begin2), proj1(*begin1)))
                     {
@@ -67,7 +119,7 @@ namespace ranges
                     }
                 }
                 auto tmp = copy(begin2, end2, out);
-                return std::tuple<I1, I2, O>{begin1, tmp.first, tmp.second};
+                return std::tuple<I1, I2, O>{begin1, tmp.begin, tmp.second};
             }
 
             template<typename Rng1, typename Rng2, typename O,
@@ -197,7 +249,7 @@ namespace ranges
                     if(begin2 == end2)
                     {
                         auto tmp = copy(begin1, end1, out);
-                        return std::tuple<I1, I2, O>{tmp.first, begin2, tmp.second};
+                        return std::tuple<I1, I2, O>{tmp.begin, begin2, tmp.second};
                     }
                     if(pred(proj1(*begin1), proj2(*begin2)))
                     {
@@ -218,7 +270,7 @@ namespace ranges
                     }
                 }
                 auto tmp = copy(begin2, end2, out);
-                return std::tuple<I1, I2, O>{begin1, tmp.first, tmp.second};
+                return std::tuple<I1, I2, O>{begin1, tmp.begin, tmp.second};
             }
 
             template<typename Rng1, typename Rng2, typename O,
