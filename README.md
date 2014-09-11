@@ -31,8 +31,8 @@ To Do:
   - `partial_sort`
   - `partial_sort_copy`
   - `sort`
-  - the set algorithms
   - `stable_sort`
+  - Tests for the set algorithms
 * Make `inplace_merge` work with forward iterators
 
 Design Decisions, Guidelines, and Rationale:

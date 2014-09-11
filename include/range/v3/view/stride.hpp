@@ -46,7 +46,7 @@ namespace ranges
             using dirty_t =
                 detail::conditional_t<
                     (BidirectionalIterable<Rng>() && !SizedIterable<Rng>()),
-                    mutable_<bool>,
+                    mutable_<std::atomic<bool>>,
                     constant<bool, false>>;
 
             // Bidirectional and random-access stride iterators need to remember how
@@ -55,7 +55,7 @@ namespace ranges
             using offset_t =
                 detail::conditional_t<
                     (BidirectionalIterable<Rng>()),
-                    mutable_<difference_type_>,
+                    mutable_<std::atomic<difference_type_>>,
                     constant<difference_type_, 0>>;
 
             difference_type_ stride_;
@@ -72,11 +72,13 @@ namespace ranges
                 offset_t const & offset() const { return *this; }
                 void clean() const
                 {
-                    // Possible race on dirty(), but it's harmless I think. Two threads
-                    // might compute offset and set it independently, but the result should
-                    // be the same.
+                    // Harmless race here. Two threads might compute offset and set it
+                    // independently, but the result would be the same.
                     if(dirty())
-                        dirty() = (do_clean(), false);
+                    {
+                        do_clean();
+                        dirty() = false;
+                    }
                 }
                 void do_clean() const
                 {

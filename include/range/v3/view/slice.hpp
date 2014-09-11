@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_VIEW_SLICE_HPP
 #define RANGES_V3_VIEW_SLICE_HPP
 
+#include <atomic>
 #include <utility>
 #include <iterator>
 #include <type_traits>
@@ -45,7 +46,11 @@ namespace ranges
                 friend range_core_access;
                 using size_type_ = range_size_t<Rng>;
                 using difference_type_ = range_difference_t<Rng>;
-                using from_t = detail::conditional_t<IsTakeView, constant<size_type_, 0>, mutable_<size_type_>>;
+                using from_t =
+                    detail::conditional_t<
+                        IsTakeView,
+                        constant<size_type_, 0>,
+                        mutable_<std::atomic<size_type_>>>;
                 using base_range_t = view::all_t<Rng>;
                 // Mutable here. Const-correctness is enforced below by only conditionally
                 // allowing the const-qualified begin_cursor()/end_cursor() accessors.
@@ -63,7 +68,11 @@ namespace ranges
 
                 using Bidi = Same<range_category_t<Rng>, ranges::bidirectional_iterator_tag>;
                 using Rand = Same<range_category_t<Rng>, ranges::random_access_iterator_tag>;
-                using dirty_t = detail::conditional_t<(Bidi()), mutable_<bool>, constant<bool, false>>;
+                using dirty_t =
+                    detail::conditional_t<
+                        (Bidi()),
+                        mutable_<std::atomic<bool>>,
+                        constant<bool, false>>;
 
                 struct cursor : private dirty_t
                 {
