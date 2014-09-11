@@ -179,6 +179,9 @@ add_test(test.alg.search, alg.search)
 add_executable(alg.search_n search_n.cpp)
 add_test(test.alg.search_n, alg.search_n)
 
+add_executable(alg.set_difference set_difference.cpp)
+add_test(test.alg.set_difference, alg.set_difference)
+
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
 

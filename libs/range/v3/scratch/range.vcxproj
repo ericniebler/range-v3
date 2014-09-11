@@ -135,6 +135,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\rotate_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\search.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\search_n.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\set_difference.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\shuffle.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\sort_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\stable_partition.cpp" />

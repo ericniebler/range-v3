@@ -25,6 +25,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        // TODO this looks like RangeComparable from the includes algorithm.
         template<typename I0, typename I1, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident,
             typename V0 = iterator_value_t<I0>,
@@ -57,7 +58,7 @@ namespace ranges
                 {
                     if(begin0 == end0 || pred(proj0(*begin0), proj1(*begin1)))
                         return true;
-                    if(pred(proj1(*begin1), proj1(*begin0)))
+                    if(pred(proj1(*begin1), proj0(*begin0)))
                         return false;
                 }
                 return false;
