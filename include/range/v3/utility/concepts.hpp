@@ -715,7 +715,12 @@ namespace ranges
             template<typename T>
             struct value_type<T, always_t<void, typename T::value_type>>
               : std::enable_if<!std::is_void<typename T::value_type>::value, typename T::value_type>
-            {};
+            {
+                // The use of enable_if is to accomodate output iterators that are
+                // allowed to use void as their value type. We want treat output
+                // iterators as non-Readable. value_type<OutIt> should be
+                // SFINAE-friendly.
+            };
 
             template<typename T>
             struct value_type<T, enable_if_t<std::is_base_of<std::ios_base, T>::value, void>>

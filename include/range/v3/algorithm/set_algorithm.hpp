@@ -77,9 +77,10 @@ namespace ranges
         {
             template<typename I1, typename S1, typename I2, typename S2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
+                typename Tup = std::tuple<I1, I2, O>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
-            std::tuple<I1, I2, O> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
+            Tup operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
                 auto &&pred = invokable(pred_);
@@ -90,7 +91,7 @@ namespace ranges
                     if(begin2 == end2)
                     {
                         auto tmp = copy(begin1, end1, out);
-                        return std::tuple<I1, I2, O>{tmp.begin, begin2, tmp.second};
+                        return Tup{tmp.first, begin2, tmp.second};
                     }
                     if(pred(proj2(*begin2), proj1(*begin1)))
                     {
@@ -106,16 +107,17 @@ namespace ranges
                     }
                 }
                 auto tmp = copy(begin2, end2, out);
-                return std::tuple<I1, I2, O>{begin1, tmp.begin, tmp.second};
+                return Tup{begin1, tmp.first, tmp.second};
             }
 
             template<typename Rng1, typename Rng2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
+                typename Tup = std::tuple<I1, I2, O>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Iterable<Rng1>() && Iterable<Rng2>())>
-            std::tuple<I1, I2, O> operator()(Rng1 & rng1, Rng2 & rng2, O out,
+            Tup operator()(Rng1 & rng1, Rng2 & rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
