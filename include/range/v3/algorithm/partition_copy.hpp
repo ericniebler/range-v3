@@ -30,16 +30,14 @@ namespace ranges
         template<typename I, typename O0, typename O1, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool PartitionCopyable()
-        {
-            return InputIterator<I>() &&
-                   WeaklyIncrementable<O0>() &&
-                   WeaklyIncrementable<O1>() &&
-                   IndirectlyCopyable<I, O0>() &&
-                   IndirectlyCopyable<I, O1>() &&
-                   Invokable<P, V>() &&
-                   InvokablePredicate<C, X>();
-        }
+        using PartitionCopyable = logical_and_t<
+            InputIterator<I>,
+            WeaklyIncrementable<O0>,
+            WeaklyIncrementable<O1>,
+            IndirectlyCopyable<I, O0>,
+            IndirectlyCopyable<I, O1>,
+            Invokable<P, V>,
+            InvokablePredicate<C, X>>;
 
         struct partition_copy_fn
         {

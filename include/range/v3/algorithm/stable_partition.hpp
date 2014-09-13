@@ -41,13 +41,11 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool StablePartitionable()
-        {
-            return ForwardIterator<I>() &&
-                   Permutable<I>() &&
-                   Invokable<P, V>() &&
-                   InvokablePredicate<C, X>();
-        }
+        using StablePartitionable = logical_and_t<
+            ForwardIterator<I>,
+            Permutable<I>,
+            Invokable<P, V>,
+            InvokablePredicate<C, X>>;
 
         struct stable_partition_fn
         {

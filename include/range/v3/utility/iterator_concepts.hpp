@@ -20,6 +20,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -450,20 +451,15 @@ namespace ranges
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
-        constexpr bool SinglePass()
-        {
-            return WeakInputIterator<I>() && !ForwardIterator<I>();
-        }
+        using SinglePass = logical_and_t<WeakInputIterator<I>, logical_not_t<ForwardIterator<I>>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
         template<typename I, typename V = concepts::Readable::value_t<I>>
-        constexpr bool Permutable()
-        {
-            return ForwardIterator<I>() &&
-                   Movable<V>() &&
-                   IndirectlyMovable<I, I>();
-        }
+        using Permutable = logical_and_t<
+            ForwardIterator<I>,
+            Movable<V>,
+            IndirectlyMovable<I, I>>;
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident,
@@ -471,36 +467,49 @@ namespace ranges
             typename V1 = concepts::Readable::value_t<I1>,
             typename X0 = concepts::Invokable::result_t<P0, V0>,
             typename X1 = concepts::Invokable::result_t<P1, V1>>
-        constexpr bool Mergeable()
-        {
-            return InputIterator<I0>() &&
-                   InputIterator<I1>() &&
-                   WeaklyIncrementable<Out>() &&
-                   InvokableRelation<C, X1, X0>() &&
-                   IndirectlyCopyable<I0, Out>() &&
-                   IndirectlyCopyable<I1, Out>();
-        }
+        using Mergeable = logical_and_t<
+            InputIterator<I0>,
+            InputIterator<I1>,
+            WeaklyIncrementable<Out>,
+            InvokableRelation<C, X1, X0>,
+            IndirectlyCopyable<I0, Out>,
+            IndirectlyCopyable<I1, Out>>;
 
         template<typename I, typename C = ordered_less, typename P = ident,
             typename V = concepts::Readable::value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool Sortable()
-        {
-            return ForwardIterator<I>() &&
-                   Invokable<P, V>() &&
-                   InvokableRelation<C, X, X>() &&
-                   Permutable<I>();
-        }
+        using Sortable = logical_and_t<
+            ForwardIterator<I>,
+            Invokable<P, V>,
+            InvokableRelation<C, X, X>,
+            Permutable<I>>;
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident,
             typename V = concepts::Readable::value_t<I>,
             typename X = concepts::Invokable::result_t<P, V> >
-        constexpr bool BinarySearchable()
-        {
-            return ForwardIterator<I>() &&
-                   Invokable<P, V>() &&
-                   InvokableRelation<C, X, V2>();
-        }
+        using BinarySearchable = logical_and_t<
+            ForwardIterator<I>,
+            Invokable<P, V>,
+            InvokableRelation<C, X, V2>>;
+
+        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
+            typename P2 = ident,
+            typename V1 = concepts::Readable::value_t<I1>,
+            typename V2 = concepts::Readable::value_t<I2>,
+            typename X1 = concepts::Invokable::result_t<P1, V1>,
+            typename X2 = concepts::Invokable::result_t<P2, V2>>
+        using WeaklyComparable = logical_and_t<
+            InputIterator<I1>,
+            WeakInputIterator<I2>,
+            Invokable<P1, V1>,
+            Invokable<P2, V2>,
+            InvokableRelation<C, X1, X2>>;
+
+        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
+            typename P2 = ident>
+        using Comparable = logical_and_t<
+            WeaklyComparable<I1, I2, C, P1, P2>,
+            InputIterator<I2>>;
 
         namespace concepts
         {

@@ -36,12 +36,10 @@ namespace ranges
         template<typename I, typename V, typename C = equal_to, typename P = ident,
             typename IV = iterator_value_t<I>,
             typename X1 = concepts::Invokable::result_t<P, IV>>
-        constexpr bool Searchnable()
-        {
-            return ForwardIterator<I>() &&
-                   Invokable<P, IV>() &&
-                   InvokableRelation<C, X1, V>();
-        }
+        using Searchnable = logical_and_t<
+            ForwardIterator<I>,
+            Invokable<P, IV>,
+            InvokableRelation<C, X1, V>>;
 
         struct search_n_fn
         {

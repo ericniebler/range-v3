@@ -37,12 +37,10 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool PartitionPointable()
-        {
-            return ForwardIterator<I>() &&
-                   Invokable<P, V>() &&
-                   InvokablePredicate<C, X>();
-        }
+        using PartitionPointable = logical_and_t<
+            ForwardIterator<I>,
+            Invokable<P, V>,
+            InvokablePredicate<C, X>>;
 
         // BUGBUG should partition_point also return the end iterator?
         struct partition_point_fn

@@ -26,13 +26,11 @@ namespace ranges
         template<typename I, typename C, typename T, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool ReplaceIfable()
-        {
-            return InputIterator<I>() &&
-                   Invokable<P, V>() &&
-                   InvokablePredicate<C, X>() &&
-                   Writable<I, T>();
-        }
+        using ReplaceIfable = logical_and_t<
+            InputIterator<I>,
+            Invokable<P, V>,
+            InvokablePredicate<C, X>,
+            Writable<I, T>>;
 
         struct replace_if_fn
         {

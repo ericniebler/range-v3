@@ -25,17 +25,20 @@ namespace ranges
 {
     inline namespace v3
     {
+        // TODO Would be nice to use WeaklyComparable here, but that uses Relation instead
+        // of Predicate. Relation requires symmetry: is_valid(pred(a,b)) => is_valid(pred(b,a))
         template<typename I1, typename I2, typename C = equal_to,
             typename P1 = ident, typename P2 = ident,
             typename V1 = iterator_value_t<I1>,
             typename V2 = iterator_value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        constexpr bool Mismatchable1()
-        {
-            return InputIterator<I1>() && WeakInputIterator<I2>() && Invokable<P1, V1>() &&
-                Invokable<P2, V2>() && InvokablePredicate<C, X1, X2>();
-        }
+        using Mismatchable1 = logical_and_t<
+            InputIterator<I1>,
+            WeakInputIterator<I2>,
+            Invokable<P1, V1>,
+            Invokable<P2, V2>,
+            InvokablePredicate<C, X1, X2>>;
 
         template<typename I1, typename I2, typename C = equal_to,
             typename P1 = ident, typename P2 = ident,
@@ -43,11 +46,12 @@ namespace ranges
             typename V2 = iterator_value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        constexpr bool Mismatchable2()
-        {
-            return InputIterator<I1>() && InputIterator<I2>() && Invokable<P1, V1>() &&
-                Invokable<P2, V2>() && InvokablePredicate<C, X1, X2>();
-        }
+        using Mismatchable2 = logical_and_t<
+            InputIterator<I1>,
+            InputIterator<I2>,
+            Invokable<P1, V1>,
+            Invokable<P2, V2>,
+            InvokablePredicate<C, X1, X2>>;
 
         struct mismatch_fn
         {

@@ -24,11 +24,15 @@ namespace ranges
         {
             // Thanks to  Louis Dionne for this clever hack for a quick-to-compile
             // implementation of logical_and and logical_or
+            std::true_type logical_and_impl_();
+
             template<typename ...T>
             std::true_type logical_and_impl_(T*...);
 
             template<typename ...T>
             std::false_type logical_and_impl_(T...);
+
+            std::false_type logical_or_impl_();
 
             template<typename ...T>
             std::false_type logical_or_impl_(T*...);
@@ -38,32 +42,24 @@ namespace ranges
         }
 
         template<bool ...Bools>
-        struct logical_and
-          : decltype(detail::logical_and_impl_(
-                detail::conditional_t<Bools, int*, int>{}...))
-        {};
-
-        template<>
-        struct logical_and<>
-          : std::true_type
-        {};
+        using logical_and =
+            decltype(detail::logical_and_impl_(detail::conditional_t<Bools, int*, int>{}...));
 
         template<bool ...Bools>
-        struct logical_or
-          : decltype(detail::logical_or_impl_(
-                detail::conditional_t<Bools, int, int*>{}...))
-        {};
+        using logical_or =
+            decltype(detail::logical_or_impl_(detail::conditional_t<Bools, int, int*>{}...));
 
-        template<>
-        struct logical_or<>
-          : std::false_type
-        {};
+        template<bool Bool>
+        using logical_not = std::integral_constant<bool, !Bool>;
 
         template<typename...Bools>
         using logical_and_t = logical_and<Bools::value...>;
 
         template<typename...Bools>
         using logical_or_t = logical_or<Bools::value...>;
+
+        template<typename Bool>
+        using logical_not_t = logical_not<Bool::value>;
     }
 }
 

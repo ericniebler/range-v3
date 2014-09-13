@@ -27,14 +27,12 @@ namespace ranges
         template<typename I, typename O, typename C, typename T, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool ReplaceCopyIfable()
-        {
-            return InputIterator<I>() &&
-                   WeakOutputIterator<O, T>() &&
-                   IndirectlyCopyable<I, O>() &&
-                   Invokable<P, V>() &&
-                   InvokablePredicate<C, X>();
-        }
+        using ReplaceCopyIfable = logical_and_t<
+            InputIterator<I>,
+            WeakOutputIterator<O, T>,
+            IndirectlyCopyable<I, O>,
+            Invokable<P, V>,
+            InvokablePredicate<C, X>>;
 
         struct replace_copy_if_fn
         {

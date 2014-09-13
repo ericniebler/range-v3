@@ -28,13 +28,11 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool RemovableIf()
-        {
-            return ForwardIterator<I>() &&
-                   Invokable<P, V>() &&
-                   InvokablePredicate<C, X>() &&
-                   Permutable<I>();
-        }
+        using RemovableIf = logical_and_t<
+            ForwardIterator<I>,
+            Invokable<P, V>,
+            InvokablePredicate<C, X>,
+            Permutable<I>>;
 
         struct remove_if_fn
         {

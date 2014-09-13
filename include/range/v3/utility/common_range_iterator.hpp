@@ -70,7 +70,7 @@ namespace ranges
                 }
 
             public:
-                using single_pass = std::integral_constant<bool, SinglePass<I>()>;
+                using single_pass = SinglePass<I>;
                 struct mixin
                   : basic_mixin<common_cursor>
                 {

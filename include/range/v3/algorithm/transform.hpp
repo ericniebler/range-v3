@@ -30,14 +30,12 @@ namespace ranges
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>,
             typename Y = concepts::Invokable::result_t<F, X>>
-        constexpr bool Transformable1()
-        {
-            return InputIterator<I>() &&
-                WeaklyIncrementable<O>() &&
-                Invokable<P, V>() &&
-                Invokable<F, X>() &&
-                Writable<O, Y>();
-        }
+        using Transformable1 = logical_and_t<
+            InputIterator<I>,
+            WeaklyIncrementable<O>,
+            Invokable<P, V>,
+            Invokable<F, X>,
+            Writable<O, Y>>;
 
         template<typename I0, typename I1, typename O, typename F,
             typename P0 = ident, typename P1 = ident,
@@ -46,16 +44,14 @@ namespace ranges
             typename V1 = iterator_value_t<I1>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename Y = concepts::Invokable::result_t<F, X0, X1>>
-        constexpr bool Transformable2()
-        {
-            return InputIterator<I0>() &&
-                WeakInputIterator<I1>() &&
-                WeaklyIncrementable<O>() &&
-                Invokable<P0, V0>() &&
-                Invokable<P1, V1>() &&
-                Invokable<F, X0, X1>() &&
-                Writable<O, Y>();
-        }
+        using Transformable2 = logical_and_t<
+            InputIterator<I0>,
+            WeakInputIterator<I1>,
+            WeaklyIncrementable<O>,
+            Invokable<P0, V0>,
+            Invokable<P1, V1>,
+            Invokable<F, X0, X1>,
+            Writable<O, Y>>;
 
         struct transform_fn
         {

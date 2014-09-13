@@ -35,24 +35,11 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename I1, typename I2, typename C = ordered_less,
-            typename P1 = ident, typename P2 = ident,
-            typename V1 = iterator_value_t<I1>,
-            typename V2 = iterator_value_t<I2>,
-            typename X1 = concepts::Invokable::result_t<P1, V1>,
-            typename X2 = concepts::Invokable::result_t<P2, V2>>
-        constexpr bool RangeComparable()
-        {
-            return InputIterator<I1>() && InputIterator<I2>() &&
-                   Invokable<P1, V1>() && Invokable<P2, V2>() &&
-                   InvokableRelation<C, X1, X2>();
-        }
-
         struct includes_fn
         {
             template<typename I1, typename S1, typename I2, typename S2,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(RangeComparable<I1, I2, C, P1, P2>() &&
+                CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
             bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
@@ -74,7 +61,7 @@ namespace ranges
                 typename P1 = ident, typename P2 = ident,
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(RangeComparable<I1, I2, C, P1, P2>() &&
+                CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
                     Iterable<Rng1>() && Iterable<Rng2>())>
             bool operator()(Rng1 && rng1, Rng2 && rng2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const

@@ -35,12 +35,10 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool IsPartitionedable()
-        {
-            return InputIterator<I>() &&
-                   Invokable<P, V>() &&
-                   InvokablePredicate<C, X>();
-        }
+        using IsPartitionedable = logical_and_t<
+            InputIterator<I>,
+            Invokable<P, V>,
+            InvokablePredicate<C, X>>;
 
         struct is_partitioned_fn
         {
