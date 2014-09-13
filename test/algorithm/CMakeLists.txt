@@ -182,6 +182,9 @@ add_test(test.alg.search_n, alg.search_n)
 add_executable(alg.set_difference set_difference.cpp)
 add_test(test.alg.set_difference, alg.set_difference)
 
+add_executable(alg.set_intersection set_intersection.cpp)
+add_test(test.alg.set_intersection, alg.set_intersection)
+
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
 

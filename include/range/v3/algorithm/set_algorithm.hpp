@@ -131,8 +131,8 @@ namespace ranges
             std::tuple<I1, I2, O> operator()(Rng1 & rng1, Rng2 & rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
-                    std::move(proj1), std::move(proj2));
+                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
+                    std::move(pred), std::move(proj1), std::move(proj2));
             }
         };
 
@@ -177,8 +177,8 @@ namespace ranges
             O operator()(Rng1 && rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
-                    std::move(proj1), std::move(proj2));
+                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
+                    std::move(pred), std::move(proj1), std::move(proj2));
             }
         };
 
@@ -282,8 +282,8 @@ namespace ranges
             std::tuple<I1, I2, O> operator()(Rng1 & rng1, Rng2 & rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
-                    std::move(proj1), std::move(proj2));
+                return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
+                    std::move(pred), std::move(proj1), std::move(proj2));
             }
         };
 
