@@ -7,15 +7,6 @@
 //
 // For more information, see http://www.boost.org/libs/range/
 
-//===----------------------------------------------------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-
 #include <vector>
 #include <list>
 #include <deque>

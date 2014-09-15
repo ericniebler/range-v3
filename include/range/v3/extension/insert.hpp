@@ -10,15 +10,12 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// Implementation based on the code in libc++
-//   http://http://libcxx.llvm.org/
 
 #ifndef RANGES_V3_EXTENSION_INSERT_HPP
 #define RANGES_V3_EXTENSION_INSERT_HPP
 
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/returns.hpp>
 
 namespace ranges
 {
@@ -76,14 +73,14 @@ namespace ranges
             template <typename I, typename S, typename O, typename OIt,
                       CONCEPT_REQUIRES_(Insertable<O, OIt, I, S>())>
             auto operator()(O &to, OIt &&before, I &&from_begin, S &&from_end) const
-                RANGE_RETURNS(to.insert(std::forward<OIt>(before),
+                RANGES_DECLTYPE_AUTO_RETURN(to.insert(std::forward<OIt>(before),
                                         std::forward<I>(from_begin),
                                         std::forward<S>(from_end)));
 
             template <typename I, typename O, typename OIt,
                       CONCEPT_REQUIRES_(Insertable<O, OIt, I>())>
             auto operator()(O &to, OIt &&before, I &&from) const
-                RANGE_RETURNS((*this)(to, std::forward<OIt>(before),
+                RANGES_DECLTYPE_AUTO_RETURN((*this)(to, std::forward<OIt>(before),
                                       begin(std::forward<I>(from)),
                                       end(std::forward<I>(from))));
         };
