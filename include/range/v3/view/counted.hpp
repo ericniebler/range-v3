@@ -86,7 +86,7 @@ namespace ranges
                     friend counted_iterator<I>
                     recounted(counted_iterator<I> const &j, I i, iterator_difference_t<I> n)
                     {
-                        RANGES_ASSERT(next(j.base(), n) == i);
+                        RANGES_ASSERT(ranges::next(j.base(), n) == i);
                         return {i, j.count() - n};
                     }
                     CONCEPT_REQUIRES(RandomAccessIterator<I>())
