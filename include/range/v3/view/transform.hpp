@@ -137,7 +137,7 @@ namespace ranges
             // Forward ranges must always return references. If the result of calling the function
             // is not a reference, this range is input-only.
             using single_pass = detail::or_t<
-                Derived<ranges::input_iterator_tag, range_category_t<Rng>>,
+                SinglePass<range_iterator_t<Rng>>,
                 detail::not_t<std::is_reference<reference_t>>>;
             using adaptor_t = detail::transform_adaptor<adaptor_fun_t, single_pass>;
             using use_sentinel_t = detail::or_t<detail::not_t<BoundedIterable<Rng>>, single_pass>;

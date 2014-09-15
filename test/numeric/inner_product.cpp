@@ -184,4 +184,6 @@ int main()
         CHECK(ranges::inner_product(a, b, 0) == 56);
         CHECK(ranges::inner_product(a, b, 10) == 66);
     }
+
+    return ::test_result();
 }

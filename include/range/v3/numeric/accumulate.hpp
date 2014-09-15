@@ -31,13 +31,11 @@ namespace ranges
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>,
             typename Y = concepts::Invokable::result_t<Op, T, X>>
-        constexpr bool Accumulateable()
-        {
-            return InputIterator<I>() &&
-                Invokable<P, V>() &&
-                Invokable<Op, T, X>() &&
-                Assignable<T &, Y>();
-        }
+        using Accumulateable = logical_and_t<
+            InputIterator<I>,
+            Invokable<P, V>,
+            Invokable<Op, T, X>,
+            Assignable<T &, Y>>;
 
         struct accumulate_fn
         {

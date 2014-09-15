@@ -56,6 +56,9 @@ add_test(test.alg.generate, alg.generate)
 add_executable(alg.generate_n generate_n.cpp)
 add_test(test.alg.generate_n, alg.generate_n)
 
+add_executable(alg.includes includes.cpp)
+add_test(test.alg.includes, alg.includes)
+
 add_executable(alg.inplace_merge inplace_merge.cpp)
 add_test(test.alg.inplace_merge, alg.inplace_merge)
 
@@ -175,6 +178,15 @@ add_test(test.alg.search, alg.search)
 
 add_executable(alg.search_n search_n.cpp)
 add_test(test.alg.search_n, alg.search_n)
+
+add_executable(alg.set_difference set_difference.cpp)
+add_test(test.alg.set_difference, alg.set_difference)
+
+add_executable(alg.set_intersection set_intersection.cpp)
+add_test(test.alg.set_intersection, alg.set_intersection)
+
+add_executable(alg.set_union set_union.cpp)
+add_test(test.alg.set_union, alg.set_union)
 
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)

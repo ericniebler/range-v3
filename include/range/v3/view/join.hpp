@@ -68,8 +68,8 @@ namespace ranges
         {
         private:
             friend range_core_access;
-            using difference_type = common_type_t<range_difference_t<Rngs>...>;
-            using size_type = meta_apply<std::make_unsigned, difference_type>;
+            using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
+            using size_type_ = meta_apply<std::make_unsigned, difference_type_>;
             static constexpr std::size_t cranges{sizeof...(Rngs)};
             std::tuple<view::all_t<Rngs>...> rngs_;
 
@@ -202,9 +202,7 @@ namespace ranges
                 }
             public:
                 using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
-                using single_pass =
-                    logical_or<(bool) Derived<ranges::input_iterator_tag,
-                        range_category_t<Rngs>>()...>;
+                using single_pass = logical_or_t<SinglePass<range_iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(joined_view const &rng, begin_tag)
                   : rng_(&rng), its_{size_t<0>{}, begin(std::get<0>(rng.rngs_))}
@@ -279,12 +277,12 @@ namespace ranges
               : rngs_(view::all(std::forward<Rngs>(rngs))...)
             {}
             CONCEPT_REQUIRES(logical_and<(bool)SizedIterable<Rngs>()...>::value)
-            size_type size() const
+            size_type_ size() const
             {
                 return tuple_foldl(
                     tuple_transform(rngs_, ranges::size),
                     0,
-                    [](size_type i, size_type j) { return i + j; });
+                    [](size_type_ i, size_type_ j) { return i + j; });
             }
         };
 

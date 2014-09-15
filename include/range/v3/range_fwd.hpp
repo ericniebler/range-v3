@@ -240,7 +240,6 @@ namespace ranges
             template<typename I>
             struct counted_cursor;
 
-            template<typename I>
             struct counted_sentinel;
 
 #if !defined(__GLIBCXX__) || __GLIBCXX__ > 20140522
@@ -282,6 +281,9 @@ namespace ranges
 
         struct range_base
         {};
+
+        template<typename Cur>
+        struct basic_mixin;
 
         template<typename Cur, typename S = Cur>
         struct basic_range_iterator;
@@ -395,11 +397,10 @@ namespace ranges
 
         template<typename I>
         using counted_iterator =
-            basic_range_iterator<detail::counted_cursor<I>, detail::counted_sentinel<I>>;
+            basic_range_iterator<detail::counted_cursor<I>, detail::counted_sentinel>;
 
-        template<typename I>
         using counted_sentinel =
-            basic_range_sentinel<detail::counted_sentinel<I>>;
+            basic_range_sentinel<detail::counted_sentinel>;
 
         template<typename Rng, typename Pred>
         struct filtered_view;

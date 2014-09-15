@@ -33,12 +33,13 @@ namespace ranges
                   typename V = iterator_value_t<I>,
                   typename X = concepts::Invokable::result_t<P, V>,
                   typename Y = concepts::Invokable::result_t<BOp, X, X>>
-        constexpr bool PartialSummable()
-        {
-            return InputIterator<I>() && WeakOutputIterator<O, X>() &&
-                   Invokable<P, V>() && CopyConstructible<X>() &&
-                   Invokable<BOp, X, X>() && Assignable<X &, Y>();
-        }
+        using PartialSummable = logical_and_t<
+            InputIterator<I>,
+            WeakOutputIterator<O, X>,
+            Invokable<P, V>,
+            CopyConstructible<X>,
+            Invokable<BOp, X, X>,
+            Assignable<X &, Y>>;
 
         struct partial_sum_fn
         {

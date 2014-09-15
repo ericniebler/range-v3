@@ -24,6 +24,7 @@
 #include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/nullval.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -108,7 +109,7 @@ namespace ranges
             template<typename Bool, typename...Bools>
             struct lazy_and<Bool, Bools...>
             {
-                static constexpr bool value{Bool::value && lazy_and<Bools...>::value};
+                static constexpr bool value{logical_and_t<Bool, Bools...>::value};
             };
 
             template<typename...Ts>
@@ -713,8 +714,12 @@ namespace ranges
 
             template<typename T>
             struct value_type<T, always_t<void, typename T::value_type>>
+              : std::enable_if<!std::is_void<typename T::value_type>::value, typename T::value_type>
             {
-                using type = typename T::value_type;
+                // The use of enable_if is to accomodate output iterators that are
+                // allowed to use void as their value type. We want treat output
+                // iterators as non-Readable. value_type<OutIt> should be
+                // SFINAE-friendly.
             };
 
             template<typename T>

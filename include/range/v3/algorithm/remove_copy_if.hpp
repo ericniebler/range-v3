@@ -27,13 +27,11 @@ namespace ranges
         template<typename I, typename O, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool RemoveCopyableIf()
-        {
-            return InputIterator<I>() &&
-                   WeaklyIncrementable<O>() &&
-                   InvokablePredicate<C, X>() &&
-                   IndirectlyProjectedCopyable<I, P, O>();
-        }
+        using RemoveCopyableIf = logical_and_t<
+            InputIterator<I>,
+            WeaklyIncrementable<O>,
+            InvokablePredicate<C, X>,
+            IndirectlyProjectedCopyable<I, P, O>>;
 
         struct remove_copy_if_fn
         {

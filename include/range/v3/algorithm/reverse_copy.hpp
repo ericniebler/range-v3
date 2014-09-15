@@ -24,12 +24,10 @@ namespace ranges
     inline namespace v3
     {
         template<typename I, typename O>
-        constexpr bool ReverseCopyable()
-        {
-            return BidirectionalIterator<I>() &&
-                   WeaklyIncrementable<O>() &&
-                   IndirectlyCopyable<I, O>();
-        }
+        using ReverseCopyable = logical_and_t<
+            BidirectionalIterator<I>,
+            WeaklyIncrementable<O>,
+            IndirectlyCopyable<I, O>>;
 
         struct reverse_copy_fn
         {

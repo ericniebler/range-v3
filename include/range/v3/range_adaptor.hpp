@@ -33,7 +33,7 @@ namespace ranges
             template<typename I>
             struct basic_cursor_associated_types<I, true>
             {
-                using single_pass = Derived<ranges::input_iterator_tag, iterator_category_t<I>>;
+                using single_pass = SinglePass<I>;
                 using difference_type = iterator_difference_t<I>;
             };
 

@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_VIEW_SLICE_HPP
 #define RANGES_V3_VIEW_SLICE_HPP
 
+#include <atomic>
 #include <utility>
 #include <iterator>
 #include <type_traits>
@@ -43,34 +44,42 @@ namespace ranges
                 CONCEPT_ASSERT(InputIterable<Rng>());
                 CONCEPT_ASSERT(IsTakeView || ForwardIterable<Rng>());
                 friend range_core_access;
-                using size_type = range_size_t<Rng>;
-                using difference_type = range_difference_t<Rng>;
-                using from_t = detail::conditional_t<IsTakeView, constant<size_type, 0>, mutable_<size_type>>;
+                using size_type_ = range_size_t<Rng>;
+                using difference_type_ = range_difference_t<Rng>;
+                using from_t =
+                    detail::conditional_t<
+                        IsTakeView,
+                        constant<size_type_, 0>,
+                        mutable_<std::atomic<size_type_>>>;
                 using base_range_t = view::all_t<Rng>;
                 // Mutable here. Const-correctness is enforced below by only conditionally
                 // allowing the const-qualified begin_cursor()/end_cursor() accessors.
                 mutable base_range_t rng_;
-                compressed_pair<from_t, size_type> from_to_;
+                compressed_pair<from_t, size_type_> from_to_;
 
-                constexpr size_type from() const
+                constexpr size_type_ from() const
                 {
                     return from_to_.first();
                 }
-                size_type to() const
+                size_type_ to() const
                 {
                     return from_to_.second();
                 }
 
                 using Bidi = Same<range_category_t<Rng>, ranges::bidirectional_iterator_tag>;
                 using Rand = Same<range_category_t<Rng>, ranges::random_access_iterator_tag>;
-                using dirty_t = detail::conditional_t<(Bidi()), mutable_<bool>, constant<bool, false>>;
+                using dirty_t =
+                    detail::conditional_t<
+                        (Bidi()),
+                        mutable_<std::atomic<bool>>,
+                        constant<bool, false>>;
 
                 struct cursor : private dirty_t
                 {
                 private:
                     using base_iterator_t = range_iterator_t<base_range_t>;
                     basic_sliced_view const *rng_;
-                    size_type n_;
+                    size_type_ n_;
                     base_iterator_t it_;
 
                     dirty_t & dirty() { return *this; }
@@ -130,7 +139,7 @@ namespace ranges
                         --it_;
                     }
                     CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                    void advance(difference_type d)
+                    void advance(difference_type_ d)
                     {
                         RANGES_ASSERT(n_ + d >= rng_->from() && n_ + d <= rng_->to());
                         clean();
@@ -138,9 +147,9 @@ namespace ranges
                         it_ += d;
                     }
                     CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                    difference_type distance_to(cursor const & that) const
+                    difference_type_ distance_to(cursor const & that) const
                     {
-                        return static_cast<difference_type>(that.n_) - static_cast<difference_type>(n_);
+                        return static_cast<difference_type_>(that.n_) - static_cast<difference_type_>(n_);
                     }
                 };
                 cursor begin_cursor()
@@ -164,16 +173,16 @@ namespace ranges
             public:
                 basic_sliced_view() = default;
                 CONCEPT_REQUIRES(IsTakeView)
-                basic_sliced_view(Rng && rng, size_type to)
+                basic_sliced_view(Rng && rng, size_type_ to)
                   : rng_(view::all(std::forward<Rng>(rng))), from_to_(0, to)
                 {}
                 CONCEPT_REQUIRES(!IsTakeView)
-                basic_sliced_view(Rng && rng, size_type from, size_type to)
+                basic_sliced_view(Rng && rng, size_type_ from, size_type_ to)
                   : rng_(view::all(std::forward<Rng>(rng))), from_to_(from, to)
                 {
                     RANGES_ASSERT(from <= to);
                 }
-                size_type size() const
+                size_type_ size() const
                 {
                     return to() - from();
                 }
@@ -186,10 +195,10 @@ namespace ranges
         {
             CONCEPT_ASSERT(ForwardIterable<Rng>());
 
-            using size_type = range_size_t<Rng>;
+            using size_type_ = range_size_t<Rng>;
 
             sliced_view() = default;
-            sliced_view(Rng && rng, size_type from, size_type to)
+            sliced_view(Rng && rng, size_type_ from, size_type_ to)
               : detail::basic_sliced_view<Rng>{std::forward<Rng>(rng), from, to}
             {}
         };

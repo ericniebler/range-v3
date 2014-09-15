@@ -81,7 +81,7 @@ namespace ranges
                 {
                     advance(t, d);
                 }
-            } advance {};
+            } advance_ {};
 
             constexpr struct
             {
@@ -124,8 +124,8 @@ namespace ranges
             friend range_core_access;
             optional<invokable_t<Fun>> fun_;
             std::tuple<view::all_t<Rngs>...> rngs_;
-            using difference_type = common_type_t<range_difference_t<Rngs>...>;
-            using size_type = meta_apply<std::make_unsigned, difference_type>;
+            using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
+            using size_type_ = meta_apply<std::make_unsigned, difference_type_>;
 
             struct sentinel;
             struct cursor
@@ -173,7 +173,7 @@ namespace ranges
                 void advance(difference_type n)
                 {
                     using std::placeholders::_1;
-                    tuple_for_each(its_, std::bind(detail::advance, _1, n));
+                    tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
                 CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
@@ -241,11 +241,11 @@ namespace ranges
               , rngs_{view::all(std::forward<Rngs>(rngs))...}
             {}
             CONCEPT_REQUIRES(logical_and<(bool) SizedIterable<Rngs>()...>::value)
-            size_type size() const
+            size_type_ size() const
             {
                 return tuple_foldl(
                     tuple_transform(rngs_, ranges::size),
-                    (std::numeric_limits<size_type>::max)(),
+                    (std::numeric_limits<size_type_>::max)(),
                     detail::min_);
             }
         };

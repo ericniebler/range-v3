@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_UTILITY_BOX_HPP
 #define RANGES_V3_UTILITY_BOX_HPP
 
+#include <atomic>
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
@@ -26,22 +27,88 @@ namespace ranges
         struct mutable_
         {
             mutable T value;
-            constexpr mutable_() : value{} {}
-            constexpr explicit mutable_(T const &t) : value(t) {}
-            constexpr explicit mutable_(T &&t) : value(detail::move(t)) {}
-            mutable_ const &operator=(T const &t) const { value = t; return *this; }
-            mutable_ const &operator=(T &&t) const { value = detail::move(t); return *this; }
-            constexpr operator T &() const & { return value; }
+            constexpr mutable_()
+              : value{}
+            {}
+            constexpr explicit mutable_(T const &t)
+              : value(t)
+            {}
+            constexpr explicit mutable_(T &&t)
+              : value(detail::move(t))
+            {}
+            mutable_ const &operator=(T const &t) const
+            {
+                value = t;
+                return *this;
+            }
+            mutable_ const &operator=(T &&t) const
+            {
+                value = detail::move(t);
+                return *this;
+            }
+            constexpr operator T &() const &
+            {
+                return value;
+            }
+        };
+
+        template<typename T>
+        struct mutable_<std::atomic<T>>
+        {
+            mutable std::atomic<T> value;
+            mutable_() = default;
+            mutable_(mutable_ const &that)
+              : value(static_cast<T>(that.value))
+            {}
+            constexpr explicit mutable_(T &&t)
+              : value(detail::move(t))
+            {}
+            constexpr explicit mutable_(T const &t)
+              : value(t)
+            {}
+            mutable_ const &operator=(mutable_ const &that) const
+            {
+                value = static_cast<T>(that.value);
+                return *this;
+            }
+            mutable_ const &operator=(T &&t) const
+            {
+                value = std::move(t);
+                return *this;
+            }
+            mutable_ const &operator=(T const &t) const
+            {
+                value = t;
+                return *this;
+            }
+            operator T() const
+            {
+                return value;
+            }
+            operator std::atomic<T> &() const &
+            {
+                return value;
+            }
         };
 
         template<typename T, T v>
         struct constant
         {
             constant() = default;
-            constexpr explicit constant(T const &) {}
-            constant &operator=(T const &) { return *this; }
-            constant const &operator=(T const &) const { return *this; }
-            constexpr operator T() const { return v; }
+            constexpr explicit constant(T const &)
+            {}
+            constant &operator=(T const &)
+            {
+                return *this;
+            }
+            constant const &operator=(T const &) const
+            {
+                return *this;
+            }
+            constexpr operator T() const
+            {
+                return v;
+            }
         };
 
         template<typename Element, typename Tag, bool Empty = std::is_empty<Element>::value>
@@ -49,7 +116,9 @@ namespace ranges
         {
             Element value;
 
-            box() : value{} {}
+            box()
+              : value{}
+            {}
 
             template<typename E,
                      typename std::enable_if<

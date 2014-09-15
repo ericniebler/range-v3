@@ -26,13 +26,13 @@ To Do:
 * Survey the algorithms for return types.
 * Survey the _n algorithms for handling of (non-bounded) Range arguments and termination conditions
 * Survey the use of projections. Do they only apply when evaluating predicates, or are they
-  like full input transformations? (E.g, does `copy` get a projection parameter or not?)
+  like full input transformations? (E.g, does `copy` get a projection parameter or not? Does the projection get applied by e.g. `set_difference`?)
 * Implement
   - `partial_sort`
   - `partial_sort_copy`
   - `sort`
-  - the set algorithms
   - `stable_sort`
+  - Tests for the set algorithms
 * Make `inplace_merge` work with forward iterators
 
 Design Decisions, Guidelines, and Rationale:

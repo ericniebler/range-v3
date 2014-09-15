@@ -28,13 +28,11 @@ namespace ranges
         template<typename I, typename O, typename C = equal_to, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool UniqueCopyable()
-        {
-            return InputIterator<I>() &&
-                   Invokable<P, V>() &&
-                   InvokableRelation<C, X>() &&
-                   WeakOutputIterator<O, V>(); // V or X?
-        }
+        using UniqueCopyable = logical_and_t<
+            InputIterator<I>,
+            Invokable<P, V>,
+            InvokableRelation<C, X>,
+            WeakOutputIterator<O, V>>; // BUGBUG V or X?
 
         struct unique_copy_fn
         {

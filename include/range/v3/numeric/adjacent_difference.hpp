@@ -33,13 +33,14 @@ namespace ranges
                   typename V = iterator_value_t<I>,
                   typename X = concepts::Invokable::result_t<P, V>,
                   typename Y = concepts::Invokable::result_t<BOp, X, X>>
-        constexpr bool AdjacentDifferentiable()
-        {
-            return InputIterator<I>() && WeakOutputIterator<O, X>() &&
-                   WeakOutputIterator<O, Y>() && Invokable<P, V>() &&
-                   Invokable<BOp, X, X>() && CopyConstructible<X>() &&
-                   MoveAssignable<X>();
-        }
+        using AdjacentDifferentiable = logical_and_t<
+            InputIterator<I>,
+            WeakOutputIterator<O, X>,
+            WeakOutputIterator<O, Y>,
+            Invokable<P, V>,
+            Invokable<BOp, X, X>,
+            CopyConstructible<X>,
+            MoveAssignable<X>>;
 
         struct adjacent_difference_fn
         {

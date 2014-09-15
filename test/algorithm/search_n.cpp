@@ -182,11 +182,11 @@ int main()
         auto rng = ranges::view::counted(bidirectional_iterator<int*>(in), 6);
         auto it = ranges::search_n(rng, 2, 2);
         CHECK(base(it.base()) == in+2);
-        CHECK(it.count() == 2);
+        CHECK(it.count() == 4);
 
         auto it2 = ranges::search_n(rng, 3, 2);
         CHECK(base(it2.base()) == in+6);
-        CHECK(it2.count() == 6);
+        CHECK(it2.count() == 0);
     }
 
     return ::test_result();

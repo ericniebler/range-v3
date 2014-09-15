@@ -190,11 +190,11 @@ int main()
         auto rng = ranges::view::counted(bidirectional_iterator<int*>(in), 6);
         auto it = ranges::search(rng, {2,3});
         CHECK(base(it.base()) == in+2);
-        CHECK(it.count() == 2);
+        CHECK(it.count() == 4);
 
         it = ranges::search(rng, {5,6});
         CHECK(base(it.base()) == in+6);
-        CHECK(it.count() == 6);
+        CHECK(it.count() == 0);
     }
 
     return ::test_result();

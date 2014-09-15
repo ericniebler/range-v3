@@ -26,10 +26,10 @@ namespace ranges
         template<typename I, typename T0, typename T1, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        constexpr bool Replaceable()
-        {
-            return InputIterator<I>() && EqualityComparable<X, T0>() && Writable<I, T1>();
-        }
+        using Replaceable = logical_and_t<
+            InputIterator<I>,
+            EqualityComparable<X, T0>,
+            Writable<I, T1>>;
 
         struct replace_fn
         {

@@ -26,29 +26,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename I0, typename I1,
-            typename C = equal_to, typename P0 = ident, typename P1 = ident,
-            typename V0 = iterator_value_t<I0>,
-            typename V1 = iterator_value_t<I1>,
-            typename X0 = concepts::Invokable::result_t<P0, V0>,
-            typename X1 = concepts::Invokable::result_t<P1, V1>>
-        constexpr bool WeakRangeEqualityComparable()
-        {
-            return InputIterator<I0>() &&
-                   WeakInputIterator<I1>() &&
-                   Invokable<P0, V0>() &&
-                   Invokable<P1, V1>() &&
-                   InvokableRelation<C, X0, X1>();
-        }
-
-        template<typename I0, typename I1,
-            typename C = equal_to, typename P0 = ident, typename P1 = ident>
-        constexpr bool RangeEqualityComparable()
-        {
-            return InputIterator<I1>() &&
-                WeakRangeEqualityComparable<I0, I1, C, P0, P1>();
-        }
-
         struct equal_fn
         {
         private:
@@ -71,7 +48,7 @@ namespace ranges
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
                     IteratorRange<I0, S0>() &&
-                    WeakRangeEqualityComparable<I0, I1, C, P0, P1>()
+                    WeaklyComparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(I0 begin0, S0 end0, I1 begin1, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
@@ -89,7 +66,7 @@ namespace ranges
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
                     IteratorRange<I0, S0>() && IteratorRange<I1, S1>() &&
-                    RangeEqualityComparable<I0, I1, C, P0, P1>()
+                    Comparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
@@ -107,7 +84,7 @@ namespace ranges
                 typename I1 = detail::uncvref_t<I1Ref>,
                 CONCEPT_REQUIRES_(
                     Iterable<Rng0>() &&
-                    WeakRangeEqualityComparable<I0, I1, C, P0, P1>()
+                    WeaklyComparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(Rng0 && rng0, I1Ref && begin1, C pred_ = C{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const
@@ -122,7 +99,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(
                     Iterable<Rng0>() && Iterable<Rng1>() &&
-                    RangeEqualityComparable<I0, I1, C, P0, P1>()
+                    Comparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(Rng0 && rng0, Rng1 && rng1, C pred_ = C{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const

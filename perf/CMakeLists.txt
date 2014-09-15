@@ -1,0 +1,1 @@
+add_executable(counted_insertion_sort counted_insertion_sort.cpp)

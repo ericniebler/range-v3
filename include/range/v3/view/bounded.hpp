@@ -19,6 +19,7 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/common_range_iterator.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -27,100 +28,40 @@ namespace ranges
     {
         template<typename Rng>
         struct bounded_view
-          : range_facade<bounded_view<Rng>, is_infinite<Rng>::value>
+          : range_base
         {
         private:
             friend range_core_access;
             using base_range_t = view::all_t<Rng>;
+            using base_iterator_t = range_iterator_t<base_range_t>;
+            using base_sentinel_t = range_sentinel_t<base_range_t>;
             base_range_t rng_;
 
-            struct cursor
-            {
-            private:
-                using base_iterator_t = range_iterator_t<base_range_t>;
-                using base_sentinel_t = range_sentinel_t<base_range_t>;
-
-                base_iterator_t it_;
-                base_sentinel_t se_;
-                bool is_sentinel_;
-
-                void clean()
-                {
-                    if(is_sentinel_)
-                    {
-                        while(it_ != se_)
-                            ++it_;
-                        is_sentinel_ = false;
-                    }
-                }
-            public:
-                using single_pass = Derived<ranges::input_iterator_tag, range_category_t<Rng>>;
-                using difference_type = range_difference_t<Rng>;
-                cursor() = default;
-                cursor(base_iterator_t it, base_sentinel_t se, bool is_sentinel)
-                  : it_(std::move(it)), se_(std::move(se)), is_sentinel_(is_sentinel)
-                {}
-                auto current() const -> decltype(*it_)
-                {
-                    RANGES_ASSERT(!is_sentinel_ && it_ != se_);
-                    return *it_;
-                }
-                bool equal(cursor const &that) const
-                {
-                    return is_sentinel_ ?
-                        that.is_sentinel_ || that.it_ == se_ :
-                        that.is_sentinel_ ?
-                            it_ == that.se_ :
-                            it_ == that.it_;
-                }
-                void next()
-                {
-                    RANGES_ASSERT(!is_sentinel_ && it_ != se_);
-                    ++it_;
-                }
-                CONCEPT_REQUIRES(BidirectionalIterator<base_iterator_t>())
-                void prev()
-                {
-                    clean();
-                    --it_;
-                }
-                CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                void advance(range_difference_t<Rng> n)
-                {
-                    clean();
-                    it_ += n;
-                }
-                CONCEPT_REQUIRES(RandomAccessIterator<base_iterator_t>())
-                range_difference_t<base_range_t> distance_to(cursor const &that) const
-                {
-                    clean();
-                    that.clean();
-                    return that.it_ - it_;
-                }
-            };
-            cursor begin_cursor()
-            {
-                return {begin(rng_), end(rng_), false};
-            }
-            cursor end_cursor()
-            {
-                return {begin(rng_), end(rng_), true};
-            }
-            CONCEPT_REQUIRES(Range<base_range_t const>())
-            cursor begin_cursor() const
-            {
-                return {begin(rng_), end(rng_), false};
-            }
-            CONCEPT_REQUIRES(Range<base_range_t const>())
-            cursor end_cursor() const
-            {
-                return {begin(rng_), end(rng_), true};
-            }
         public:
+            using iterator = common_range_iterator<base_iterator_t, base_sentinel_t>;
+
             bounded_view() = default;
             explicit bounded_view(Rng && rng)
               : rng_(view::all(std::forward<Rng>(rng)))
             {}
+            iterator begin()
+            {
+                return iterator{ranges::begin(rng_)};
+            }
+            iterator end()
+            {
+                return iterator{ranges::end(rng_)};
+            }
+            CONCEPT_REQUIRES(Range<base_range_t const>())
+            iterator begin() const
+            {
+                return iterator{ranges::begin(rng_)};
+            }
+            CONCEPT_REQUIRES(Range<base_range_t const>())
+            iterator end() const
+            {
+                return iterator{ranges::end(rng_)};
+            }
             CONCEPT_REQUIRES(SizedRange<base_range_t>())
             range_size_t<base_range_t> size() const
             {

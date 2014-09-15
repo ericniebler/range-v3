@@ -35,21 +35,12 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<
-            typename I1, typename I2,
-            typename C = equal_to, typename P1 = ident, typename P2 = ident,
-            typename V1 = iterator_value_t<I1>,
-            typename V2 = iterator_value_t<I2>,
-            typename X1 = concepts::Invokable::result_t<P1, V1>,
-            typename X2 = concepts::Invokable::result_t<P2, V2>>
-        constexpr bool IsPermutationable()
-        {
-            return ForwardIterator<I1>() &&
-                   ForwardIterator<I2>() &&
-                   Invokable<P1, V1>() &&
-                   Invokable<P2, V2>() &&
-                   InvokableRelation<C, X1, X2>();
-        }
+        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
+            typename P2 = ident>
+        using IsPermutationable = logical_and_t<
+            ForwardIterator<I1>,
+            ForwardIterator<I2>,
+            Comparable<I1, I2, C, P1, P2>>;
 
         struct is_permutation_fn
         {

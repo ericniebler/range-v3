@@ -76,6 +76,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\example\comprehensions.cpp" />
     <ClCompile Include="..\..\..\..\example\fibonacci.cpp" />
+    <ClCompile Include="..\..\..\..\perf\counted_insertion_sort.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\adjacent_find.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\all_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\any_of.cpp" />
@@ -94,6 +95,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\for_each.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\generate_n.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\includes.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\inplace_merge.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\is_heap_until.cpp" />
@@ -133,6 +135,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\rotate_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\search.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\search_n.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\set_difference.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\set_intersection.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\set_union.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\shuffle.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\sort_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\stable_partition.cpp" />
@@ -151,7 +156,7 @@
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
-    <ClCompile Include="..\..\..\..\test\view\as_bounded_range.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\bounded.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate.cpp" />
@@ -300,7 +305,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\view\as_bounded_range.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\bounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp" />
@@ -331,11 +336,13 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp" />
     <ClInclude Include="..\..\..\..\test\simple_test.hpp" />
+    <ClInclude Include="..\..\..\..\test\test_iterators.hpp" />
     <ClInclude Include="..\..\..\..\test\test_utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
     <Text Include="..\..\..\..\example\CMakeLists.txt" />
+    <Text Include="..\..\..\..\perf\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\algorithm\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\numeric\CMakeLists.txt" />

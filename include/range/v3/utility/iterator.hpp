@@ -24,42 +24,14 @@ namespace ranges
     {
         struct advance_fn
         {
-        private:
             template<typename I>
-            static void impl(I &it, iterator_difference_t<I> n, concepts::InputIterator*)
+            void operator()(I &i, iterator_difference_t<I> n) const
             {
-                RANGES_ASSERT(0 <= n);
-                for(; n != 0; --n)
-                    ++it;
+                // Use ADL here to give custom iterator types (like counted_iterator)
+                // a chance to optimize it (see view/counted.hpp)
+                using std::advance;
+                advance(i, n);
             }
-            template<typename I>
-            static void impl(I &it, iterator_difference_t<I> n, concepts::BidirectionalIterator*)
-            {
-                if(0 <= n)
-                    for(; n != 0; --n)
-                        ++it;
-                else
-                    for(; n != 0; ++n)
-                        --it;
-            }
-            template<typename I>
-            static void impl(I &it, iterator_difference_t<I> n, concepts::RandomAccessIterator*)
-            {
-                it += n;
-            }
-        public:
-            template<typename I>
-            void operator()(I &it, iterator_difference_t<I> n) const
-            {
-                advance_fn::impl(it, n, iterator_concept<I>());
-            }
-            /// \internal
-            template<typename I>
-            void operator()(counted_iterator<I> &it, iterator_difference_t<I> n) const
-            {
-                it = counted_iterator<I>{next(std::move(it.base_reference()), n), it.count() + n};
-            }
-            /// \endinternal
         };
 
         RANGES_CONSTEXPR advance_fn advance{};
@@ -175,6 +147,57 @@ namespace ranges
 
         RANGES_CONSTEXPR next_to_fn next_to{};
 
+        struct iterator_range_enumerate_fn
+        {
+        private:
+            template<typename I, typename S, typename D>
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::IteratorRange*) const
+            {
+                for(; begin != end; ++begin)
+                    ++d;
+                return {d, begin};
+            }
+            template<typename I, typename S, typename D>
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
+            {
+                return {(end - begin) + d, next_to(begin, end)};
+            }
+        public:
+            template<typename I, typename S, typename D = iterator_difference_t<I>,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
+            std::pair<D, I> operator()(I begin, S end, D d = 0) const
+            {
+                return this->impl_i(std::move(begin), std::move(end), d, sized_iterator_range_concept<I, S>());
+            }
+        };
+
+        RANGES_CONSTEXPR iterator_range_enumerate_fn iterator_range_enumerate {};
+
+        struct iterator_range_distance_fn
+        {
+        private:
+            template<typename I, typename S, typename D>
+            D impl_i(I begin, S end, D d, concepts::IteratorRange*) const
+            {
+                return iterator_range_enumerate(std::move(begin), std::move(end), d).first;
+            }
+            template<typename I, typename S, typename D>
+            D impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
+            {
+                return static_cast<D>(end - begin) + d;
+            }
+        public:
+            template<typename I, typename S, typename D = iterator_difference_t<I>,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
+            D operator()(I begin, S end, D d = 0) const
+            {
+                return this->impl_i(std::move(begin), std::move(end), d,
+                    sized_iterator_range_concept<I, S>());
+            }
+        };
+
+        RANGES_CONSTEXPR iterator_range_distance_fn iterator_range_distance {};
+
         // Like distance(b,e), but guaranteed to be O(1)
         struct iterator_range_size_fn
         {
@@ -265,54 +288,56 @@ namespace ranges
             }
         };
 
-        struct uncounted_fn
+        namespace adl_uncounted_recounted_detail
         {
             template<typename I>
-            I operator()(I i) const
+            I uncounted(I i)
             {
                 return i;
             }
 
             template<typename I>
-            I operator()(counted_iterator<I> i) const
-            {
-                return i.base();
-            }
-        };
-
-        RANGES_CONSTEXPR uncounted_fn uncounted{};
-
-        struct recounted_fn
-        {
-            template<typename I>
-            I operator()(I const &, I i, iterator_difference_t<I>) const
+            I recounted(I const &, I i, iterator_difference_t<I>)
             {
                 return i;
             }
 
             template<typename I>
-            counted_iterator<I>
-            operator()(counted_iterator<I> const &j, I i, iterator_difference_t<I> n) const
-            {
-                RANGES_ASSERT(next(j.base(), n) == i);
-                return {i, j.count() + n};
-            }
-
-            template<typename I>
-            I operator()(I const &, I i) const
+            I recounted(I const &, I i)
             {
                 return i;
             }
 
-            template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-            counted_iterator<I>
-            operator()(counted_iterator<I> const &j, I i) const
+            struct uncounted_fn
             {
-                return {i, j.count() + (i - j.base_reference())};
-            }
-        };
+                template<typename I>
+                auto operator()(I i) const ->
+                    decltype(uncounted((I&&)i))
+                {
+                    return uncounted((I&&)i);
+                }
+            };
 
-        RANGES_CONSTEXPR recounted_fn recounted{};
+            struct recounted_fn
+            {
+                template<typename I, typename J>
+                auto operator()(I i, J j, iterator_difference_t<J> n) const ->
+                    decltype(recounted((I&&)i, (J&&)j, n))
+                {
+                    return recounted((I&&)i, (J&&)j, n);
+                }
+
+                template<typename I, typename J>
+                auto operator()(I i, J j) const ->
+                    decltype(recounted((I&&)i, (J&&)j))
+                {
+                    return recounted((I&&)i, (J&&)j);
+                }
+            };
+        }
+
+        RANGES_CONSTEXPR adl_uncounted_recounted_detail::uncounted_fn uncounted{};
+        RANGES_CONSTEXPR adl_uncounted_recounted_detail::recounted_fn recounted{};
     }
 }
 
