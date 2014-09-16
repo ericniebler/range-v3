@@ -1,3 +1,5 @@
+// Range v3 library
+//
 //  Copyright Eric Niebler 1004
 //
 //  Use, modification and distribution is subject to the
@@ -5,7 +7,7 @@
 //  file LICENSE_0_0.txt or copy at
 //  http://www.boost.org/LICENSE_0_0.txt)
 //
-// For more information, see http://www.boost.org/libs/range/
+// Project home: https://github.com/ericniebler/range-v3
 //
 #ifndef RANGES_V3_UTILITY_RANGE_ALGORITHM_HPP
 #define RANGES_V3_UTILITY_RANGE_ALGORITHM_HPP

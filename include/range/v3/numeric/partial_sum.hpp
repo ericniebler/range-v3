@@ -1,18 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////
-/// \file partial_sum.hpp
-///   Contains range-based versions of the std generic numeric operation:
-///     partial_sum.
+// Range v3 library
 //
-// Copyright 2004 Eric Niebler.
-// Copyright 2014 Gonzalo Brito Gadeschi.
+//  Copyright Eric Niebler 2013-2014
+//  Copyright Gonzalo Brito Gadeschi 2014
 //
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
 //
-// Implementation based on the code in libc++
-//   http://http://libcxx.llvm.org/
-
+// Project home: https://github.com/ericniebler/range-v3
+//
 #ifndef RANGES_V3_NUMERIC_PARTIAL_SUM_HPP
 #define RANGES_V3_NUMERIC_PARTIAL_SUM_HPP
 

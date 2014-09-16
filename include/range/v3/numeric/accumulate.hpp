@@ -1,16 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-/// \file accumulate.hpp
-///   Contains range-based versions of the std generic numeric operation:
-///     accumulate.
+// Range v3 library
 //
-// Copyright 2004 Eric Niebler.
-// Copyright 2006 Thorsten Ottosen.
-// Copyright 2009 Neil Groves.
+//  Copyright Eric Niebler 2013-2014
 //
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// Project home: https://github.com/ericniebler/range-v3
+//
 #ifndef RANGES_V3_NUMERIC_ACCUMULATE_HPP
 #define RANGES_V3_NUMERIC_ACCUMULATE_HPP
 

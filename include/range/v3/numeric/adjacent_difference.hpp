@@ -1,14 +1,14 @@
-///////////////////////////////////////////////////////////////////////////////
-/// \file adjacent_difference.hpp
-///   Contains range-based versions of the std generic numeric operation:
-///     adjacent_difference.
+// Range v3 library
 //
-// Copyright 2004 Eric Niebler.
-// Copyright 2014 Gonzalo Brito Gadeschi.
+// Copyright Eric Niebler 2004
+// Copyright Gonzalo Brito Gadeschi 2014
 //
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// Project home: https://github.com/ericniebler/range-v3
 //
 // Implementation based on the code in libc++
 //   http://http://libcxx.llvm.org/

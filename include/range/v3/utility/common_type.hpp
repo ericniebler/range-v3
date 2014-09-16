@@ -1,6 +1,6 @@
-// Boost.Range library
+// Range v3 library
 //
-//  Copyright Eric Niebler 2013.
+//  Copyright Eric Niebler 2013-2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -10,7 +10,7 @@
 // Acknowledgements: Thanks for Paul Fultz for the suggestions that
 //                   concepts can be ordinary Boolean metafunctions.
 //
-// For more information, see http://www.boost.org/libs/range/
+// Project home: https://github.com/ericniebler/range-v3
 //
 
 #ifndef RANGES_V3_UTILITY_COMMON_TYPE_HPP

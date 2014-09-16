@@ -1,3 +1,5 @@
+// Range v3 library
+//
 //  Copyright Andrew Sutton 2014
 //  Copyright Gonzalo Brito Gadeschi 2014
 //
@@ -6,7 +8,7 @@
 //  file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
-// For more information, see http://www.boost.org/libs/range/
+// Project home: https://github.com/ericniebler/range-v3
 //
 #ifndef RANGES_V3_ALGORITHM_NONE_OF_HPP
 #define RANGES_V3_ALGORITHM_NONE_OF_HPP

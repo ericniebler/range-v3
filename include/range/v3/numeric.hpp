@@ -2,7 +2,7 @@
 /// \file numeric.hpp
 ///   Contains range-based versions of the numeric algorithms
 //
-// Copyright 2014 Eric Niebler.
+// Copyright Eric Niebler 2014
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at

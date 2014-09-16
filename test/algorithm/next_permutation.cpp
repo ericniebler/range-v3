@@ -1,3 +1,5 @@
+// Range v3 library
+//
 //  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
@@ -5,7 +7,7 @@
 //  file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
-// For more information, see http://www.boost.org/libs/range/
+// Project home: https://github.com/ericniebler/range-v3
 //
 //  Copyright 2005 - 2007 Adobe Systems Incorporated
 //  Distributed under the MIT License(see accompanying file LICENSE_1_0_0.txt

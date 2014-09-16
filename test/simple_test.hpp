@@ -1,3 +1,5 @@
+// Range v3 library
+//
 //  Copyright Eric Niebler 2014
 //
 //  Use, modification and distribution is subject to the
