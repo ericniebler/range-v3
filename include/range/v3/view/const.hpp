@@ -32,6 +32,9 @@ namespace ranges
 
             struct const_adaptor : default_adaptor
             {
+                // The conditional operator used to deduce the return type here is
+                // a clever way of keeping rvalues as rvalues, but const-ifying
+                // lvalue references.
                 template<typename Cur>
                 auto current(Cur const &pos) const ->
                     decltype(true ? pos.current() : detail::cref(pos.current()))
