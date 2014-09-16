@@ -1,9 +1,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
-/// Range v3 library
-//
-// Copyright Gonzalo Brito Gadeschi 2014
+//  Copyright Gonzalo Brito Gadeschi 2014
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
