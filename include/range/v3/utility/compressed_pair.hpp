@@ -25,49 +25,92 @@ namespace ranges
     {
         namespace detail
         {
-            struct first_tag {};
-            struct second_tag {};
+            template<typename T, typename Enable = void>
+            struct first_base
+            {
+                T first;
+                first_base() = default;
+                template<typename U,
+                    typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
+                constexpr explicit first_base(U && u)
+                  : first((U &&) u)
+                {}
+            };
+
+            template<typename T>
+            struct first_base<T, typename std::enable_if<std::is_empty<T>::value &&
+                std::is_trivial<T>::value>::type>
+            {
+                static T first; // Can there be a data race "mutating" an empty object?
+                first_base() = default;
+                template<typename U,
+                    typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
+                constexpr explicit first_base(U &&)
+                {}
+            };
+
+            template<typename T>
+            T first_base<T, typename std::enable_if<std::is_empty<T>::value &&
+                std::is_trivial<T>::value>::type>::first{};
+
+            template<typename T, typename Enable = void>
+            struct second_base
+            {
+                T second;
+                second_base() = default;
+                template<typename U,
+                    typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
+                constexpr explicit second_base(U && u)
+                  : second((U &&) u)
+                {}
+            };
+
+            template<typename T>
+            struct second_base<T, typename std::enable_if<std::is_empty<T>::value &&
+                std::is_trivial<T>::value>::type>
+            {
+                static T second;
+                second_base() = default;
+                template<typename U,
+                    typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
+                constexpr explicit second_base(U && u)
+                {}
+            };
+
+            template<typename T>
+            T second_base<T, typename std::enable_if<std::is_empty<T>::value &&
+                std::is_trivial<T>::value>::type>::second{};
         }
 
         template<typename First, typename Second>
-        class compressed_pair : box<First, detail::first_tag>
-                              , box<Second, detail::second_tag>
+        struct compressed_pair
+          : private detail::first_base<First>
+          , private detail::second_base<Second>
         {
-        public:
+            using detail::first_base<First>::first;
+            using detail::second_base<Second>::second;
+
             compressed_pair() = default;
+
+            constexpr compressed_pair(First f, Second s)
+              : detail::first_base<First>{(First &&) f}
+              , detail::second_base<Second>{(Second &&) s}
+            {}
 
             template<typename F, typename S,
                 typename std::enable_if<std::is_constructible<First, F &&>::value &&
                                         std::is_constructible<Second, S &&>::value, int>::type = 0>
             constexpr compressed_pair(F && f, S && s)
-              : box<First, detail::first_tag>(detail::forward<F>(f)),
-                box<Second, detail::second_tag>(detail::forward<S>(s))
+              : detail::first_base<First>{(F &&) f}
+              , detail::second_base<Second>{(S &&) s}
             {}
 
-            auto first() & -> First &
+            template<typename F, typename S,
+                typename std::enable_if<std::is_constructible<F, First const &>::value &&
+                                        std::is_constructible<S, Second const &>::value, int>::type = 0>
+            constexpr operator std::pair<F, S> () const
             {
-                return ranges::get<detail::first_tag>(*this);
-            }
-            constexpr auto first() const & -> First const &
-            {
-                return ranges::get<detail::first_tag>(*this);
-            }
-            constexpr auto first() const && -> First &&
-            {
-                return ranges::get<detail::first_tag>(const_cast<compressed_pair &&>(*this));
-            }
-
-            auto second() & -> Second &
-            {
-                return ranges::get<detail::second_tag>(*this);
-            }
-            constexpr auto second() const & -> Second const &
-            {
-                return ranges::get<detail::second_tag>(*this);
-            }
-            constexpr auto second() const && -> Second &&
-            {
-                return ranges::get<detail::second_tag>(const_cast<compressed_pair &&>(*this));
+                return std::pair<F, S>{first, second};
             }
         };
 
@@ -85,13 +128,13 @@ namespace ranges
         //{
         //    inline void test_compressed_pair()
         //    {
-        //        constexpr int i = compressed_pair<int, int>{4,5}.first();
+        //        constexpr int i = compressed_pair<int, int>{4,5}.first;
         //        compressed_pair<int, int> p{4,5};
-        //        int & j = p.first();
+        //        int & j = p.first;
         //        compressed_pair<int, int> const pc{4,5};
-        //        int const & k = pc.first();
-        //        int & l = make_compressed_pair(j, 42).first();
-        //        static_assert(std::is_same<decltype(make_compressed_pair(j, 42).second()), int &&>::value, "");
+        //        int const & k = pc.first;
+        //        int & l = make_compressed_pair(j, 42).first;
+        //        static_assert(std::is_same<decltype((make_compressed_pair(j, 42).second)), int>::value, "");
         //    }
         //}
     }

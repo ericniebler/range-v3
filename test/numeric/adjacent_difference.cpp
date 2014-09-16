@@ -33,7 +33,7 @@ struct S
 template <class InIter, class OutIter, class InSent = InIter> void test()
 {
     using ranges::adjacent_difference;
-    using ranges::range;
+    using ranges::make_range;
     { // iterator
         int ia[] = {15, 10, 6, 3, 1};
         int ir[] = {15, -5, -4, -3, -2};
@@ -53,7 +53,7 @@ template <class InIter, class OutIter, class InSent = InIter> void test()
         int ir[] = {15, -5, -4, -3, -2};
         const unsigned s = sizeof(ia) / sizeof(ia[0]);
         int ib[s] = {0};
-        auto rng = range(InIter(ia), InSent(ia + s));
+        auto rng = make_range(InIter(ia), InSent(ia + s));
         auto r = adjacent_difference(rng, OutIter(ib));
         CHECK(base(std::get<0>(r)) == ia + s);
         CHECK(base(std::get<1>(r)) == ib + s);
@@ -68,8 +68,8 @@ template <class InIter, class OutIter, class InSent = InIter> void test()
         int ir[] = {15, -5, -4, -3, -2};
         const unsigned s = sizeof(ia) / sizeof(ia[0]);
         int ib[s] = {0};
-        auto rng = range(InIter(ia), InSent(ia + s));
-        auto orng = range(OutIter(ib), OutIter(ib + s));
+        auto rng = make_range(InIter(ia), InSent(ia + s));
+        auto orng = make_range(OutIter(ib), OutIter(ib + s));
         auto r = adjacent_difference(rng, orng);
         CHECK(base(std::get<0>(r)) == ia + s);
         CHECK(base(std::get<1>(r)) == ib + s);
@@ -84,8 +84,8 @@ template <class InIter, class OutIter, class InSent = InIter> void test()
         int ir[] = {15, 25, 16, 9, 4};
         const unsigned s = sizeof(ia) / sizeof(ia[0]);
         int ib[s] = {0};
-        auto rng = range(InIter(ia), InSent(ia + s));
-        auto orng = range(OutIter(ib), OutIter(ib + s));
+        auto rng = make_range(InIter(ia), InSent(ia + s));
+        auto orng = make_range(OutIter(ib), OutIter(ib + s));
         auto r = adjacent_difference(rng, orng, std::plus<int>());
         CHECK(base(std::get<0>(r)) == ia + s);
         CHECK(base(std::get<1>(r)) == ib + s);

@@ -1,1 +1,1 @@
-add_executable(range range.cpp)
+add_executable(scratch range.cpp)

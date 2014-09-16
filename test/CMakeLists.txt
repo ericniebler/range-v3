@@ -15,3 +15,6 @@ add_test(test.range_facade range_facade)
 
 add_executable(range_adaptor range_adaptor.cpp)
 add_test(test.range_adaptor range_adaptor)
+
+add_executable(range range.cpp)
+add_test(test.range range)

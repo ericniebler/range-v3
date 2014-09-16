@@ -75,11 +75,11 @@ void test()
         const int ia[] = {0};
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
         int ja[sa] = {-1};
-        P p0 = ranges::reverse_copy(::as_lvalue(ranges::range(Iter(ia), Sent(ia))), OutIter(ja));
+        P p0 = ranges::reverse_copy(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia))), OutIter(ja));
         ::check_equal(ja, {-1});
         CHECK(p0.first == Iter(ia));
         CHECK(base(p0.second) == ja);
-        P p1 = ranges::reverse_copy(::as_lvalue(ranges::range(Iter(ia), Sent(ia+sa))), OutIter(ja));
+        P p1 = ranges::reverse_copy(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia+sa))), OutIter(ja));
         ::check_equal(ja, {0});
         CHECK(p1.first == Iter(ia+sa));
         CHECK(base(p1.second) == ja+sa);
@@ -87,7 +87,7 @@ void test()
         const int ib[] = {0, 1};
         const unsigned sb = sizeof(ib)/sizeof(ib[0]);
         int jb[sb] = {-1};
-        P p2 = ranges::reverse_copy(::as_lvalue(ranges::range(Iter(ib), Sent(ib+sb))), OutIter(jb));
+        P p2 = ranges::reverse_copy(::as_lvalue(ranges::make_range(Iter(ib), Sent(ib+sb))), OutIter(jb));
         ::check_equal(jb, {1, 0});
         CHECK(p2.first == Iter(ib+sb));
         CHECK(base(p2.second) == jb+sb);
@@ -95,7 +95,7 @@ void test()
         const int ic[] = {0, 1, 2};
         const unsigned sc = sizeof(ic)/sizeof(ic[0]);
         int jc[sc] = {-1};
-        P p3 = ranges::reverse_copy(::as_lvalue(ranges::range(Iter(ic), Sent(ic+sc))), OutIter(jc));
+        P p3 = ranges::reverse_copy(::as_lvalue(ranges::make_range(Iter(ic), Sent(ic+sc))), OutIter(jc));
         ::check_equal(jc, {2, 1, 0});
         CHECK(p3.first == Iter(ic+sc));
         CHECK(base(p3.second) == jc+sc);
@@ -103,7 +103,7 @@ void test()
         const int id[] = {0, 1, 2, 3};
         const unsigned sd = sizeof(id)/sizeof(id[0]);
         int jd[sd] = {-1};
-        P p4 = ranges::reverse_copy(::as_lvalue(ranges::range(Iter(id), Sent(id+sd))), OutIter(jd));
+        P p4 = ranges::reverse_copy(::as_lvalue(ranges::make_range(Iter(id), Sent(id+sd))), OutIter(jd));
         ::check_equal(jd, {3, 2, 1, 0});
         CHECK(p4.first == Iter(id+sd));
         CHECK(base(p4.second) == jd+sd);

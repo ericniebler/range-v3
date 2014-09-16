@@ -46,7 +46,7 @@ test()
     CHECK(res.first == Iter(ia + n));
     CHECK(res.second.i_ == 5);
 
-    auto rng = ranges::range(Iter(ia), Sent(ia + n));
+    auto rng = ranges::make_range(Iter(ia), Sent(ia + n));
     res = ranges::generate(rng, res.second);
     CHECK(ia[0] == 5);
     CHECK(ia[1] == 6);

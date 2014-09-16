@@ -57,7 +57,7 @@ test_one_rng(unsigned N, unsigned M)
     std::random_shuffle(ia, ia+N);
     std::sort(ia, ia+M);
     std::sort(ia+M, ia+N);
-    auto res = ranges::inplace_merge(::as_lvalue(ranges::range(Iter(ia), Sent(ia+N))), Iter(ia+M));
+    auto res = ranges::inplace_merge(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia+N))), Iter(ia+M));
     CHECK(res == Iter(ia+N));
     if(N > 0)
     {

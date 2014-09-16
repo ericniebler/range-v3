@@ -12,7 +12,7 @@
 #include <initializer_list>
 #include <range/v3/distance.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
+#include <range/v3/range.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/range_concepts.hpp>
@@ -107,8 +107,8 @@ public:
             using S = typename sentinel_type<I>::type;
             check(algo_(begin, end, rest...));
             check(algo_(begin, S{base(end)}, rest...));
-            check(algo_(::rvalue_if<RvalueOK>(ranges::range(begin, end)), rest...));
-            check(algo_(::rvalue_if<RvalueOK>(ranges::range(begin, S{base(end)})), rest...));
+            check(algo_(::rvalue_if<RvalueOK>(ranges::make_range(begin, end)), rest...));
+            check(algo_(::rvalue_if<RvalueOK>(ranges::make_range(begin, S{base(end)})), rest...));
         }};
     }
 };
@@ -139,11 +139,11 @@ public:
             using S2 = typename sentinel_type<I2>::type;
             check(algo_(begin1, end1, begin2, end2, rest...));
             check(algo_(begin1, S1{base(end1)}, begin2, S2{base(end2)}, rest...));
-            check(algo_(::rvalue_if<RvalueOK1>(ranges::range(begin1, end1)),
-                        ::rvalue_if<RvalueOK2>(ranges::range(begin2, end2)),
+            check(algo_(::rvalue_if<RvalueOK1>(ranges::make_range(begin1, end1)),
+                        ::rvalue_if<RvalueOK2>(ranges::make_range(begin2, end2)),
                         rest...));
-            check(algo_(::rvalue_if<RvalueOK1>(ranges::range(begin1, S1{base(end1)})),
-                        ::rvalue_if<RvalueOK2>(ranges::range(begin2, S2{base(end2)})),
+            check(algo_(::rvalue_if<RvalueOK1>(ranges::make_range(begin1, S1{base(end1)})),
+                        ::rvalue_if<RvalueOK2>(ranges::make_range(begin2, S2{base(end2)})),
                         rest...));
         }};
     }

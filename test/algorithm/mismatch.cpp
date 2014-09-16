@@ -53,27 +53,27 @@ void test_range()
     constexpr unsigned sa = ranges::size(ia);
     int ib[] = {0, 1, 2, 3, 0, 1, 2, 3};
     using Pair = std::pair<Iter, Iter>;
-    auto rng1 = ranges::range(Iter(ia), Sent(ia + sa));
+    auto rng1 = ranges::make_range(Iter(ia), Sent(ia + sa));
     CHECK(ranges::mismatch(rng1, Iter(ib)) ==
                            Pair{Iter(ia+3),Iter(ib+3)});
-    auto rng2 = ranges::range(Iter(ia),Sent(ia + sa));
-    auto rng3 = ranges::range(Iter(ib),Sent(ib + sa));
+    auto rng2 = ranges::make_range(Iter(ia),Sent(ia + sa));
+    auto rng3 = ranges::make_range(Iter(ib),Sent(ib + sa));
     CHECK(ranges::mismatch(rng2,rng3) ==
                            Pair{Iter(ia+3),Iter(ib+3)});
-    auto rng4 = ranges::range(Iter(ia),Sent(ia + sa));
-    auto rng5 = ranges::range(Iter(ib),Sent(ib + 2));
+    auto rng4 = ranges::make_range(Iter(ia),Sent(ia + sa));
+    auto rng5 = ranges::make_range(Iter(ib),Sent(ib + 2));
     CHECK(ranges::mismatch(rng4,rng5) ==
                            Pair{Iter(ia+2),Iter(ib+2)});
 
-    auto rng6 = ranges::range(Iter(ia),Sent(ia + sa));
+    auto rng6 = ranges::make_range(Iter(ia),Sent(ia + sa));
     CHECK(ranges::mismatch(rng6,Iter(ib),std::equal_to<int>()) ==
                            Pair{Iter(ia+3),Iter(ib+3)});
-    auto rng7 = ranges::range(Iter(ia),Sent(ia + sa));
-    auto rng8 = ranges::range(Iter(ib),Sent(ib + sa));
+    auto rng7 = ranges::make_range(Iter(ia),Sent(ia + sa));
+    auto rng8 = ranges::make_range(Iter(ib),Sent(ib + sa));
     CHECK(ranges::mismatch(rng7,rng8,std::equal_to<int>()) ==
                            Pair{Iter(ia+3),Iter(ib+3)});
-    auto rng9 = ranges::range(Iter(ia), Sent(ia + sa));
-    auto rng10 = ranges::range(Iter(ib), Sent(ib + 2));
+    auto rng9 = ranges::make_range(Iter(ia), Sent(ia + sa));
+    auto rng10 = ranges::make_range(Iter(ib), Sent(ib + 2));
     CHECK(ranges::mismatch(rng9,rng10,std::equal_to<int>()) ==
                            Pair{Iter(ia+2),Iter(ib+2)});
 }

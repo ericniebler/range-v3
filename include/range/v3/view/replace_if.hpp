@@ -46,8 +46,8 @@ namespace ranges
                     template<typename Other>
                     Other operator()(Other && other) const
                     {
-                        return (fun_and_new_value_.first()(other)) ?
-                            fun_and_new_value_.second() : std::forward<Other>(other);
+                        return (fun_and_new_value_.first(other)) ?
+                            fun_and_new_value_.second : std::forward<Other>(other);
                     }
                 };
             public:

@@ -44,7 +44,7 @@ test_iter(Iter first, Sent last)
         CHECK(p.second == last);
     }
 
-    auto rng = ranges::range(first, last);
+    auto rng = ranges::make_range(first, last);
     p = ranges::minmax_element(rng);
     if (first != last)
     {
@@ -113,7 +113,7 @@ test_iter_comp(Iter first, Sent last)
         CHECK(p.second == last);
     }
 
-    auto rng = ranges::range(first, last);
+    auto rng = ranges::make_range(first, last);
     p = ranges::minmax_element(rng, comp);
     if (first != last)
     {

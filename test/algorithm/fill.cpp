@@ -37,7 +37,7 @@ test_char()
     CHECK(ca[2] == 1);
     CHECK(ca[3] == 1);
 
-    auto rng = ranges::range(Iter(ca), Sent(ca+n));
+    auto rng = ranges::make_range(Iter(ca), Sent(ca+n));
     ranges::fill(rng, char(2));
     CHECK(ca[0] == 2);
     CHECK(ca[2] == 2);
@@ -57,7 +57,7 @@ test_int()
     CHECK(ia[2] == 1);
     CHECK(ia[3] == 1);
 
-    auto rng = ranges::range(Iter(ia), Sent(ia+n));
+    auto rng = ranges::make_range(Iter(ia), Sent(ia+n));
     ranges::fill(rng, 2);
     CHECK(ia[0] == 2);
     CHECK(ia[2] == 2);

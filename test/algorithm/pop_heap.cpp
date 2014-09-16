@@ -70,7 +70,7 @@ void test_3(int N)
     std::make_heap(ia, ia+N);
     for (int i = N; i > 0; --i)
     {
-        CHECK(ranges::pop_heap(::as_lvalue(ranges::range(ia, ia+i))) == ia+i);
+        CHECK(ranges::pop_heap(::as_lvalue(ranges::make_range(ia, ia+i))) == ia+i);
         CHECK(std::is_heap(ia, ia+i-1));
     }
     CHECK(ranges::pop_heap(ia, ia) == ia);
@@ -86,7 +86,7 @@ void test_4(int N)
     std::make_heap(ia, ia+N);
     for (int i = N; i > 0; --i)
     {
-        CHECK(ranges::pop_heap(::as_lvalue(ranges::range(ia, sentinel<int*>(ia+i)))) == ia+i);
+        CHECK(ranges::pop_heap(::as_lvalue(ranges::make_range(ia, sentinel<int*>(ia+i)))) == ia+i);
         CHECK(std::is_heap(ia, ia+i-1));
     }
     CHECK(ranges::pop_heap(ia, ia) == ia);
@@ -134,7 +134,7 @@ void test_7(int N)
     std::make_heap(ia, ia+N, std::greater<int>());
     for (int i = N; i > 0; --i)
     {
-        CHECK(ranges::pop_heap(::as_lvalue(ranges::range(ia, ia+i)), std::greater<int>()) == ia+i);
+        CHECK(ranges::pop_heap(::as_lvalue(ranges::make_range(ia, ia+i)), std::greater<int>()) == ia+i);
         CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
     }
     CHECK(ranges::pop_heap(ia, ia, std::greater<int>()) == ia);
@@ -150,7 +150,7 @@ void test_8(int N)
     std::make_heap(ia, ia+N, std::greater<int>());
     for (int i = N; i > 0; --i)
     {
-        CHECK(ranges::pop_heap(::as_lvalue(ranges::range(ia, sentinel<int*>(ia+i))), std::greater<int>()) == ia+i);
+        CHECK(ranges::pop_heap(::as_lvalue(ranges::make_range(ia, sentinel<int*>(ia+i))), std::greater<int>()) == ia+i);
         CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
     }
     CHECK(ranges::pop_heap(ia, sentinel<int*>(ia), std::greater<int>()) == ia);

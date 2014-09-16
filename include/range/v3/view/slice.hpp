@@ -59,11 +59,11 @@ namespace ranges
 
                 constexpr size_type_ from() const
                 {
-                    return from_to_.first();
+                    return from_to_.first;
                 }
                 size_type_ to() const
                 {
-                    return from_to_.second();
+                    return from_to_.second;
                 }
 
                 using Bidi = Same<range_category_t<Rng>, ranges::bidirectional_iterator_tag>;
@@ -174,11 +174,11 @@ namespace ranges
                 basic_sliced_view() = default;
                 CONCEPT_REQUIRES(IsTakeView)
                 basic_sliced_view(Rng && rng, size_type_ to)
-                  : rng_(view::all(std::forward<Rng>(rng))), from_to_(0, to)
+                  : rng_(view::all(std::forward<Rng>(rng))), from_to_{0, to}
                 {}
                 CONCEPT_REQUIRES(!IsTakeView)
                 basic_sliced_view(Rng && rng, size_type_ from, size_type_ to)
-                  : rng_(view::all(std::forward<Rng>(rng))), from_to_(from, to)
+                  : rng_(view::all(std::forward<Rng>(rng))), from_to_{from, to}
                 {
                     RANGES_ASSERT(from <= to);
                 }

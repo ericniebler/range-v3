@@ -13,7 +13,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/iterator_range.hpp>
+#include <range/v3/range.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/utility/bindable.hpp>
@@ -29,21 +29,21 @@ namespace ranges
             {
             private:
                 template<typename T>
-                static iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
+                static range<range_iterator_t<T>, range_sentinel_t<T>>
                 from_container(T & t, concepts::Iterable*, concepts::IteratorRange*)
                 {
                     return {begin(t), end(t)};
                 }
 
                 template<typename T>
-                static sized_iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
+                static sized_range<range_iterator_t<T>, range_sentinel_t<T>>
                 from_container(T & t, concepts::SizedIterable*, concepts::IteratorRange*)
                 {
                     return {begin(t), end(t), size(t)};
                 }
 
                 template<typename T>
-                static iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
+                static range<range_iterator_t<T>, range_sentinel_t<T>>
                 from_container(T & t, concepts::SizedIterable*, concepts::SizedIteratorRange*)
                 {
                     RANGES_ASSERT(size(t) == size(begin(t), end(t)));
@@ -57,7 +57,7 @@ namespace ranges
                     return std::forward<T>(t);
                 }
 
-                /// If it is container-like, turn it into an iterator_range, being careful
+                /// If it is container-like, turn it into an range, being careful
                 /// to preserve the Sized-ness of the iterable.
                 template<typename T,
                     typename I = range_iterator_t<T>,

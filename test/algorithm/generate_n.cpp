@@ -45,7 +45,7 @@ test()
     CHECK(res.first == Iter(ia + n));
     CHECK(res.second.i_ == 5);
 
-    auto rng = ranges::range(Iter(ia), Sent(ia + n - 1));
+    auto rng = ranges::make_range(Iter(ia), Sent(ia + n - 1));
     std::tuple<Iter, gen_test, std::ptrdiff_t> res2 = ranges::generate_n(rng, n, res.second);
     CHECK(ia[0] == 5);
     CHECK(ia[1] == 6);
@@ -55,7 +55,7 @@ test()
     CHECK(std::get<1>(res2).i_ == 8);
     CHECK(std::get<2>(res2) == 1);
 
-    rng = ranges::range(Iter(ia), Sent(ia + n));
+    rng = ranges::make_range(Iter(ia), Sent(ia + n));
     res2 = ranges::generate_n(rng, n - 1, std::get<1>(res2));
     CHECK(ia[0] == 8);
     CHECK(ia[1] == 9);

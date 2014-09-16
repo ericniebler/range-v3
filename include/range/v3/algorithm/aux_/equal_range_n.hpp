@@ -16,7 +16,7 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/iterator_range.hpp>
+#include <range/v3/range.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -33,7 +33,7 @@ namespace ranges
             {
                 template<typename I, typename V, typename R = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V, R, P>())>
-                iterator_range<I>
+                range<I>
                 operator()(I begin, iterator_difference_t<I> dist, V const & val, R pred_ = R{},
                     P proj_ = P{}) const
                 {
@@ -63,7 +63,7 @@ namespace ranges
                 template<typename Rng, typename V, typename R = ordered_less, typename P = ident,
                     typename I = range_iterator_t<Rng>,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V, R, P>())>
-                iterator_range<I>
+                range<I>
                 operator()(Rng & rng, iterator_difference_t<I> dist, V const & val, R pred = R{}, P proj = P{}) const
                 {
                     static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");

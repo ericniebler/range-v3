@@ -22,7 +22,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/iterator_range.hpp>
+#include <range/v3/range.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/swap.hpp>
@@ -40,7 +40,7 @@ namespace ranges
         {
         private:
             template<typename I> // Forward
-            static iterator_range<I> rotate_left(I begin, I end)
+            static range<I> rotate_left(I begin, I end)
             {
                 auto tmp = std::move(*begin);
                 I lm1 = move(next(begin), end, begin).second;
@@ -49,7 +49,7 @@ namespace ranges
             }
 
             template<typename I> // Bidirectional
-            static iterator_range<I> rotate_right(I begin, I end)
+            static range<I> rotate_right(I begin, I end)
             {
                 I lm1 = prev(end);
                 auto tmp = std::move(*lm1);
@@ -59,7 +59,7 @@ namespace ranges
             }
 
             template<typename I, typename S> // Forward
-            static iterator_range<I> rotate_forward(I begin, I middle, S end)
+            static range<I> rotate_forward(I begin, I middle, S end)
             {
                 I i = middle;
                 while(true)
@@ -105,7 +105,7 @@ namespace ranges
             }
 
             template<typename I> // Random
-            static iterator_range<I> rotate_gcd(I begin, I middle, I end)
+            static range<I> rotate_gcd(I begin, I middle, I end)
             {
                 auto const m1 = middle - begin;
                 auto const m2 = end - middle;
@@ -136,13 +136,13 @@ namespace ranges
             }
 
             template<typename I, typename S>
-            static iterator_range<I> rotate_(I begin, I middle, S end, concepts::ForwardIterator*)
+            static range<I> rotate_(I begin, I middle, S end, concepts::ForwardIterator*)
             {
                 return rotate_fn::rotate_forward(begin, middle, end);
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end, concepts::ForwardIterator*)
+            static range<I> rotate_(I begin, I middle, I end, concepts::ForwardIterator*)
             {
                 using value_type = iterator_value_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
@@ -154,7 +154,7 @@ namespace ranges
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end, concepts::BidirectionalIterator*)
+            static range<I> rotate_(I begin, I middle, I end, concepts::BidirectionalIterator*)
             {
                 using value_type = iterator_value_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
@@ -168,7 +168,7 @@ namespace ranges
             }
 
             template<typename I>
-            static iterator_range<I> rotate_(I begin, I middle, I end, concepts::RandomAccessIterator*)
+            static range<I> rotate_(I begin, I middle, I end, concepts::RandomAccessIterator*)
             {
                 using value_type = iterator_value_t<I>;
                 if(detail::is_trivially_move_assignable<value_type>::value)
@@ -185,7 +185,7 @@ namespace ranges
         public:
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(Permutable<I>() && IteratorRange<I, S>())>
-            iterator_range<I> operator()(I begin, I middle, S end) const
+            range<I> operator()(I begin, I middle, S end) const
             {
                 if(begin == middle)
                 {
@@ -201,7 +201,7 @@ namespace ranges
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Iterable<Rng>() && Permutable<I>())>
-            iterator_range<I> operator()(Rng &rng, I middle) const
+            range<I> operator()(Rng &rng, I middle) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng));
             }

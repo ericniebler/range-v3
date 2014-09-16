@@ -238,7 +238,7 @@ namespace ranges
                     if(begin2 == end2)
                     {
                         auto tmp = copy(begin1, end1, out);
-                        return std::tuple<I1, I2, O>{tmp.begin, begin2, tmp.second};
+                        return std::tuple<I1, I2, O>{tmp.first, begin2, tmp.second};
                     }
                     if(pred(proj1(*begin1), proj2(*begin2)))
                     {
@@ -259,7 +259,7 @@ namespace ranges
                     }
                 }
                 auto tmp = copy(begin2, end2, out);
-                return std::tuple<I1, I2, O>{begin1, tmp.begin, tmp.second};
+                return std::tuple<I1, I2, O>{begin1, tmp.first, tmp.second};
             }
 
             template<typename Rng1, typename Rng2, typename O,

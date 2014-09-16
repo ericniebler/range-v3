@@ -38,7 +38,7 @@ test_iter(Iter first, Sent last)
     else
         CHECK(i == last);
 
-    auto rng = ranges::range(first, last);
+    auto rng = ranges::make_range(first, last);
     i = ranges::min_element(rng);
     if (first != last)
     {
@@ -84,7 +84,7 @@ test_iter_comp(Iter first, Sent last)
     else
         CHECK(i == last);
 
-    auto rng = ranges::range(first, last);
+    auto rng = ranges::make_range(first, last);
     i = ranges::min_element(rng, std::greater<int>());
     if (first != last)
     {

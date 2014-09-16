@@ -12,7 +12,7 @@
 
 #include <chrono>
 #include <iostream>
-#include <range/v3/range.hpp>
+#include <range/v3/all.hpp>
 
 using namespace ranges;
 

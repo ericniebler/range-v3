@@ -19,7 +19,7 @@
 // allocation overhead.
 
 #include <iostream>
-#include <range/v3/range.hpp>
+#include <range/v3/all.hpp>
 #include "./recursive_range.hpp"
 
 int main()

@@ -74,7 +74,7 @@ int main()
         int ia[] = {1, 2, 3, 4};
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
         gen r;
-        auto rng = ranges::range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
+        auto rng = ranges::make_range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
         ranges::random_shuffle(rng, r);
         check_equal(ia, {3, 1, 2, 4});
     }

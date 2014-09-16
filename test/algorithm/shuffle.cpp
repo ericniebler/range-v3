@@ -54,7 +54,7 @@ int main()
         ranges::iota(orig, 0);
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
         std::minstd_rand g;
-        auto rng = ranges::range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
+        auto rng = ranges::make_range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
         ranges::shuffle(rng, g);
         CHECK(!ranges::equal(ia, orig));
         ranges::shuffle(ib, g);

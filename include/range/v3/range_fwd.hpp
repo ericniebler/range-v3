@@ -101,15 +101,12 @@ namespace ranges
         namespace detail
         {
             struct empty
-            {
-                template<typename ...Ts>
-                empty(Ts &&...)
-                {}
-            };
+            {};
 
             template<typename T = void>
             struct any_
             {
+                any_() = default;
                 any_(T &&)
                 {}
             };
@@ -117,6 +114,7 @@ namespace ranges
             template<>
             struct any_<void>
             {
+                any_() = default;
                 template<typename T>
                 any_(T &&)
                 {}
@@ -130,9 +128,6 @@ namespace ranges
 
             struct make_compressed_pair_fn;
             extern make_compressed_pair_fn const make_compressed_pair;
-
-            template<typename Ret, typename PMFN>
-            struct member_function_wrapper;
 
             template<typename ...T>
             struct is_placeholder;
@@ -304,7 +299,7 @@ namespace ranges
             basic_range_iterator<detail::common_cursor<I, S>>;
 
         template<typename First, typename Second>
-        class compressed_pair;
+        struct compressed_pair;
 
         template<typename...Ts>
         struct compressed_tuple;
@@ -325,13 +320,13 @@ namespace ranges
         istream_range<T> istream(std::istream & sin);
 
         template<typename I, typename S = I>
-        struct iterator_range;
+        struct range;
 
         template<typename I, typename S = I>
-        struct sized_iterator_range;
+        struct sized_range;
 
-        struct range_fn;
-        extern range_fn const range;
+        struct make_range_fn;
+        extern make_range_fn const make_range;
 
         template<typename Rng>
         struct range_iterator;

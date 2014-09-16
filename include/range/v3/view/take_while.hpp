@@ -16,7 +16,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/iterator_range.hpp>
+#include <range/v3/range.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -96,7 +96,7 @@ namespace ranges
 
                 template<typename I, typename Pred,
                     CONCEPT_REQUIRES_(InputIterator<I>())>
-                static take_while_view<iterator_range<I, unreachable>, Pred>
+                static take_while_view<range<I, unreachable>, Pred>
                 invoke(take_while_fn, I begin, Pred pred)
                 {
                     return {{std::move(begin), {}}, std::move(pred)};

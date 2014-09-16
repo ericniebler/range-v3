@@ -49,7 +49,7 @@ test()
             ia[i] = i;
         int ib[N] = {0};
 
-        std::pair<InIter, OutIter> r = ranges::move_backward(as_lvalue(ranges::range(InIter(ia), InIter(ia+N))), OutIter(ib+N));
+        std::pair<InIter, OutIter> r = ranges::move_backward(as_lvalue(ranges::make_range(InIter(ia), InIter(ia+N))), OutIter(ib+N));
         CHECK(base(r.first) == ia+N);
         CHECK(base(r.second) == ib);
         for(int i = 0; i < N; ++i)
@@ -90,7 +90,7 @@ test1()
             ia[i].reset(new int(i));
         std::unique_ptr<int> ib[N];
 
-        std::pair<InIter, OutIter> r = ranges::move_backward(as_lvalue(ranges::range(InIter(ia), InIter(ia+N))), OutIter(ib+N));
+        std::pair<InIter, OutIter> r = ranges::move_backward(as_lvalue(ranges::make_range(InIter(ia), InIter(ia+N))), OutIter(ib+N));
         CHECK(base(r.first) == ia+N);
         CHECK(base(r.second) == ib);
         for(int i = 0; i < N; ++i)

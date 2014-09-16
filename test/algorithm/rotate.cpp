@@ -30,7 +30,7 @@ template <class Iter, class Sent = Iter>
 void test()
 {
     using namespace ranges;
-    using Res = iterator_range<Iter>;
+    using Res = range<Iter>;
 
     int ia[] = {0};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);

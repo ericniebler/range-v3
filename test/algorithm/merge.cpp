@@ -46,8 +46,8 @@ int main()
             ia[i] = 2 * i;
         for(unsigned i = 0; i < N; ++i)
             ib[i] = 2 * i + 1;
-        auto r0 = ranges::range(ia.get(), ia.get() + N);
-        auto r1 = ranges::range(ib.get(), ib.get() + N);
+        auto r0 = ranges::make_range(ia.get(), ia.get() + N);
+        auto r1 = ranges::make_range(ib.get(), ib.get() + N);
         auto r = ranges::merge(r0, r1, ic.get());
         CHECK(std::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);

@@ -47,7 +47,7 @@ test1()
         int ia[] = {0, 1, 2, 3, 4};
         constexpr unsigned sa = ranges::size(ia);
         int ib[sa] = {0};
-        auto rng = ranges::range(InIter(ia), sentinel<int const *>(ia + sa));
+        auto rng = ranges::make_range(InIter(ia), sentinel<int const *>(ia + sa));
         std::pair<InIter, OutIter> r =
             ranges::transform(rng, OutIter(ib),
                               std::bind2nd(std::plus<int>(), 1));
@@ -104,7 +104,7 @@ test2()
         int ia[] = {0, 1, 2, 3, 4};
         constexpr unsigned sa = ranges::size(ia);
         int ib[sa] = {1, 2, 3, 4, 5};
-        auto rng0 = ranges::range(InIter1(ib), sentinel<int const *>(ib + sa));
+        auto rng0 = ranges::make_range(InIter1(ib), sentinel<int const *>(ib + sa));
         std::tuple<InIter1, InIter2, OutIter> r =
             ranges::transform(rng0, InIter2(ia),
                               OutIter(ib), std::minus<int>());
@@ -122,8 +122,8 @@ test2()
         int ia[] = {0, 1, 2, 3, 4};
         constexpr unsigned sa = ranges::size(ia);
         int ib[sa] = {1, 2, 3, 4, 5};
-        auto rng0 = ranges::range(InIter1(ib), sentinel<int const *>(ib + sa));
-        auto rng1 = ranges::range(InIter2(ia), sentinel<int const *>(ia + sa));
+        auto rng0 = ranges::make_range(InIter1(ib), sentinel<int const *>(ib + sa));
+        auto rng1 = ranges::make_range(InIter2(ia), sentinel<int const *>(ia + sa));
         std::tuple<InIter1, InIter2, OutIter> r =
             ranges::transform(rng0, rng1, OutIter(ib), std::minus<int>());
         CHECK(base(std::get<0>(r)) == ib + sa);
