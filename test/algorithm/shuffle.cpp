@@ -26,6 +26,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/shuffle.hpp>
+#include <range/v3/numeric/iota.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"

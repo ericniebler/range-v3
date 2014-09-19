@@ -16,6 +16,7 @@
 #define RANGES_V3_ALGORITHM_IS_SORTED_HPP
 
 #include <range/v3/algorithm/is_sorted_until.hpp>
+#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {

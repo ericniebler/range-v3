@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_VIEW_STRIDE_HPP
 #define RANGES_V3_VIEW_STRIDE_HPP
 
+#include <atomic>
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
@@ -21,6 +22,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/box.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 

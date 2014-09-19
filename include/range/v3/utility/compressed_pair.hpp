@@ -16,7 +16,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/box.hpp>
+#include <range/v3/utility/meta.hpp>
 
 namespace ranges
 {
@@ -40,7 +40,7 @@ namespace ranges
             struct first_base<T, typename std::enable_if<std::is_empty<T>::value &&
                 std::is_trivial<T>::value>::type>
             {
-                static T first; // Can there be a data race "mutating" an empty object?
+                static T first;
                 first_base() = default;
                 template<typename U,
                     typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
@@ -79,6 +79,24 @@ namespace ranges
             template<typename T>
             T second_base<T, typename std::enable_if<std::is_empty<T>::value &&
                 std::is_trivial<T>::value>::type>::second{};
+
+            template<typename T>
+            struct pair_element
+              : std::conditional<
+                    std::is_same<detail::decay_t<T>, T>::value,
+                    identity<T>,
+                    pair_element<detail::decay_t<T>>
+                >
+            {};
+
+            template<typename T>
+            struct pair_element<std::reference_wrapper<T>>
+            {
+                using type = T &;
+            };
+
+            template<typename T>
+            using pair_element_t = meta_apply<pair_element, T>;
         }
 
         template<typename First, typename Second>
@@ -86,6 +104,8 @@ namespace ranges
           : private detail::first_base<First>
           , private detail::second_base<Second>
         {
+            using first_type = First;
+            using second_type = Second;
             using detail::first_base<First>::first;
             using detail::second_base<Second>::second;
 
@@ -113,30 +133,87 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR struct make_compressed_pair_fn
+        struct make_compressed_pair_fn
         {
             template<typename First, typename Second>
             constexpr auto operator()(First && f, Second && s) const ->
-                compressed_pair<First, Second>
+                compressed_pair<detail::pair_element_t<First>, detail::pair_element_t<Second>>
             {
                 return {detail::forward<First>(f), detail::forward<Second>(s)};
             }
-        } make_compressed_pair {};
+        };
 
-        //namespace
-        //{
-        //    inline void test_compressed_pair()
-        //    {
-        //        constexpr int i = compressed_pair<int, int>{4,5}.first;
-        //        compressed_pair<int, int> p{4,5};
-        //        int & j = p.first;
-        //        compressed_pair<int, int> const pc{4,5};
-        //        int const & k = pc.first;
-        //        int & l = make_compressed_pair(j, 42).first;
-        //        static_assert(std::is_same<decltype((make_compressed_pair(j, 42).second)), int>::value, "");
-        //    }
-        //}
+        RANGES_CONSTEXPR make_compressed_pair_fn make_compressed_pair {};
+
+        // Tuple-like access
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(compressed_pair<First, Second> & p) ->
+            typename std::enable_if<I == 0, decltype((p.first))>::type
+        {
+            return p.first;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(compressed_pair<First, Second> const & p) ->
+            typename std::enable_if<I == 0, decltype((p.first))>::type
+        {
+            return p.first;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(compressed_pair<First, Second> && p) ->
+            typename std::enable_if<I == 0, decltype((detail::move(p).first))>::type
+        {
+            return detail::move(p).first;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(compressed_pair<First, Second> & p) ->
+            typename std::enable_if<I == 1, decltype((p.second))>::type
+        {
+            return p.second;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(compressed_pair<First, Second> const & p) ->
+            typename std::enable_if<I == 1, decltype((p.second))>::type
+        {
+            return p.second;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(compressed_pair<First, Second> && p) ->
+            typename std::enable_if<I == 1, decltype((detail::move(p).second))>::type
+        {
+            return detail::move(p).second;
+        }
     }
 }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wmismatched-tags"
+
+namespace std
+{
+    template<typename First, typename Second>
+    struct tuple_size< ::ranges::v3::compressed_pair<First, Second>>
+      : std::integral_constant<size_t, 2>
+    {};
+
+    template<typename First, typename Second>
+    struct tuple_element<0, ::ranges::v3::compressed_pair<First, Second>>
+    {
+        using type = First;
+    };
+
+    template<typename First, typename Second>
+    struct tuple_element<1, ::ranges::v3::compressed_pair<First, Second>>
+    {
+        using type = Second;
+    };
+}
+
+#pragma GCC diagnostic pop
 
 #endif

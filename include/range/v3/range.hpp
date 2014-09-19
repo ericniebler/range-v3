@@ -25,15 +25,15 @@ namespace ranges
 {
     inline namespace v3
     {
-        // Intentionally resisting the urge to fatten this interface to make
-        // it look like a container, like boost::range. It's a range,
-        // not a container.
+        // Like boost::iterator_range.
         template<typename I, typename S /* = I */>
         struct range
-          : compressed_pair<I, S>
+          : private compressed_pair<I, S>
         {
             using iterator = I;
             using sentinel = S;
+            using compressed_pair<I, S>::first;
+            using compressed_pair<I, S>::second;
 
             range() = default;
             constexpr range(I begin, S end)
@@ -42,26 +42,65 @@ namespace ranges
             constexpr range(std::pair<I, S> rng)
               : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
             {}
-            iterator begin() const
+            I begin() const
             {
-                return this->first;
+                return first;
             }
-            sentinel end() const
+            S end() const
             {
-                return this->second;
+                return second;
+            }
+            bool empty() const
+            {
+                return first == second;
+            }
+            bool operator!() const
+            {
+                return empty();
+            }
+            explicit operator bool() const
+            {
+                return !empty();
             }
             CONCEPT_REQUIRES(SizedIteratorRange<I, S>())
             iterator_size_t<I> size() const
             {
-                return iterator_range_size(this->first, this->second);
+                return iterator_range_size(first, second);
             }
-            bool operator!() const
+            template<typename X, typename Y,
+                CONCEPT_REQUIRES_(Constructible<X, I const &>() &&
+                                  Constructible<Y, S const &>())>
+            constexpr operator std::pair<X, Y>() const
             {
-                return this->first == this->second;
+                return std::pair<X, Y>{first, second};
             }
-            explicit operator bool() const
+            iterator_reference_t<I> front() const
             {
-                return !!*this;
+                RANGES_ASSERT(!empty());
+                return *first;
+            }
+            void pop_front()
+            {
+                ++first;
+            }
+            CONCEPT_REQUIRES(BidirectionalIterator<S>())
+            iterator_reference_t<I> back() const
+            {
+                RANGES_ASSERT(!empty());
+                return *prev(second);
+            }
+            CONCEPT_REQUIRES(BidirectionalIterator<S>())
+            void pop_back()
+            {
+                --second;
+            }
+            // The requirements on the return type of I::operator[] are different
+            // than for I::operator*, so respect that here.
+            template<typename F = I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+            auto operator[](iterator_difference_t<I> n) const ->
+                decltype(std::declval<F>()[n])
+            {
+                return first[n];
             }
         };
 
@@ -80,7 +119,7 @@ namespace ranges
               : range<I, S>{detail::move(begin), detail::move(end)}, third(size)
             {}
             constexpr sized_range(std::pair<I, S> rng, iterator_size_t<I> size)
-              : range<I, S>{detail::move(rng.first), detail::move(rng.second)}, third(size)
+              : range<I, S>{detail::move(rng)}, third(size)
             {}
             constexpr sized_range(range<I, S> rng, iterator_size_t<I> size)
               : range<I, S>{detail::move(rng)}, third(size)
@@ -91,6 +130,11 @@ namespace ranges
                     static_cast<iterator_size_t<I>>(iterator_range_distance(this->first, this->second)) == third);
                 return third;
             }
+
+            // It's just too easy to use these without knowing you're invaliding
+            // the size() function.
+            void pop_front() = delete;
+            void pop_back() = delete;
         };
 
         struct make_range_fn : bindable<make_range_fn>
@@ -113,8 +157,95 @@ namespace ranges
 
         RANGES_CONSTEXPR make_range_fn make_range {};
 
+        // Tuple-like access
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(range<First, Second> & p) ->
+            typename std::enable_if<I == 0, decltype((p.first))>::type
+        {
+            return p.first;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(range<First, Second> const & p) ->
+            typename std::enable_if<I == 0, decltype((p.first))>::type
+        {
+            return p.first;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(range<First, Second> && p) ->
+            typename std::enable_if<I == 0, decltype((detail::move(p).first))>::type
+        {
+            return detail::move(p).first;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(range<First, Second> & p) ->
+            typename std::enable_if<I == 1, decltype((p.second))>::type
+        {
+            return p.second;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(range<First, Second> const & p) ->
+            typename std::enable_if<I == 1, decltype((p.second))>::type
+        {
+            return p.second;
+        }
+
+        template<std::size_t I, typename First, typename Second>
+        constexpr auto get(range<First, Second> && p) ->
+            typename std::enable_if<I == 1, decltype((detail::move(p).second))>::type
+        {
+            return detail::move(p).second;
+        }
+
         // TODO add specialization of is_infinite for when we can determine the range is infinite
     }
 }
+
+// The standard is inconsistent about whether these are classes or structs
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wmismatched-tags"
+
+namespace std
+{
+    template<typename First, typename Second>
+    struct tuple_size< ::ranges::v3::range<First, Second>>
+      : std::integral_constant<size_t, 2>
+    {};
+
+    template<typename First, typename Second>
+    struct tuple_element<0, ::ranges::v3::range<First, Second>>
+    {
+        using type = First;
+    };
+
+    template<typename First, typename Second>
+    struct tuple_element<1, ::ranges::v3::range<First, Second>>
+    {
+        using type = Second;
+    };
+
+    template<typename First, typename Second>
+    struct tuple_size< ::ranges::v3::sized_range<First, Second>>
+      : std::integral_constant<size_t, 2>
+    {};
+
+    template<typename First, typename Second>
+    struct tuple_element<0, ::ranges::v3::sized_range<First, Second>>
+    {
+        using type = First;
+    };
+
+    template<typename First, typename Second>
+    struct tuple_element<1, ::ranges::v3::sized_range<First, Second>>
+    {
+        using type = Second;
+    };
+}
+
+#pragma GCC diagnostic pop
 
 #endif

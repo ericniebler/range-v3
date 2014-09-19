@@ -16,5 +16,6 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm.hpp>
 #include <range/v3/view.hpp>
+#include <range/v3/numeric.hpp>
 
 #endif

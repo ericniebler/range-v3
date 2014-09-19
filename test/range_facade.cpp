@@ -33,13 +33,25 @@ private:
         {
             return *iter;
         }
+        bool equal(cursor const &that) const
+        {
+            return iter == that.iter;
+        }
         void next()
         {
             ++iter;
         }
-        bool equal(cursor const &that) const
+        void prev()
         {
-            return iter == that.iter;
+            --iter;
+        }
+        std::ptrdiff_t distance_to(cursor const &that) const
+        {
+            return that.iter - iter;
+        }
+        void advance(std::ptrdiff_t n)
+        {
+            iter += n;
         }
     };
     cursor begin_cursor() const
@@ -61,8 +73,15 @@ int main()
     using namespace ranges;
     auto r = MyRange{};
     ::models<concepts::BoundedRange>(r);
-    ::models<concepts::ForwardIterator>(r.begin());
+    ::models<concepts::SizedRange>(r);
+    ::models<concepts::RandomAccessRange>(r);
     ::check_equal(r, {1, 2, 3, 4, 5, 6, 7});
+
+    CHECK(7u == r.size());
+    CHECK(1 == r.front());
+    CHECK(7 == r.back());
+    CHECK(r[1] == 2);
+    CHECK(r[5] == 6);
 
     return test_result();
 }

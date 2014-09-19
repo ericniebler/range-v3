@@ -993,13 +993,62 @@ namespace ranges
             {
                 return {range_core_access::end_cursor(derived())};
             }
-            constexpr bool operator!() const
+            bool empty() const
             {
                 return begin() == end();
             }
-            constexpr explicit operator bool() const
+            bool operator!() const
             {
-                return !!*this;
+                return empty();
+            }
+            explicit operator bool() const
+            {
+                return !empty();
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() &&
+                    SizedIteratorRange<range_iterator_t<D>, range_sentinel_t<D>>())>
+            range_size_t<D> size() const
+            {
+                return iterator_range_size(begin(), end());
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>())>
+            range_reference_t<D> front()
+            {
+                return *begin();
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>())>
+            range_reference_t<D const> front() const
+            {
+                return *begin();
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D>() && BidirectionalRange<D>())>
+            range_reference_t<D> back()
+            {
+                return *prev(end());
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D const>() && BidirectionalRange<D const>())>
+            range_reference_t<D const> back() const
+            {
+                return *prev(end());
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>())>
+            auto operator[](range_difference_t<D> n) ->
+                decltype(std::declval<D &>().begin()[n])
+            {
+                return begin()[n];
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D const>())>
+            auto operator[](range_difference_t<D> n) const ->
+                decltype(std::declval<D const &>().begin()[n])
+            {
+                return begin()[n];
             }
         };
 
