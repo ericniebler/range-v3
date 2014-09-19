@@ -82,7 +82,7 @@ namespace ranges
 
             template<typename T>
             struct pair_element
-              : std::conditional<
+              : conditional_t<
                     std::is_same<detail::decay_t<T>, T>::value,
                     identity<T>,
                     pair_element<detail::decay_t<T>>
