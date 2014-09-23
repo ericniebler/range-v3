@@ -16,6 +16,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
@@ -27,10 +28,10 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename T>
-            constexpr T && unsafe_move(T const &t)
+            template<typename T, typename U = meta_apply<std::remove_const, T>>
+            constexpr U && unsafe_move(T &t)
             {
-                return static_cast<T &&>(const_cast<T &>(t));
+                return static_cast<U &&>(const_cast<U &>(t));
             }
         }
 
@@ -158,6 +159,11 @@ namespace ranges
             {}
             constexpr sized_range(sized_range<I, S> &&rng)
               : base{rng.move_first(), rng.move_second()}, third(rng.third)
+            {}
+            template<typename X, typename Y,
+                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
+            constexpr sized_range(X begin, Y end, iterator_size_t<I> size)
+              : base{detail::move(begin), detail::move(end)}, third(size)
             {}
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
