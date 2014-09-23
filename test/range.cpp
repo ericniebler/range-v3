@@ -9,9 +9,11 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <list>
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/utility/unreachable.hpp>
+#include <range/v3/view/all.hpp>
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
 
@@ -20,6 +22,17 @@ static_assert(sizeof(ranges::range<int*, ranges::detail::empty>) == sizeof(int*)
 
 static_assert(sizeof(ranges::sized_range<int*, ranges::detail::empty>) == sizeof(int*) + sizeof(int),
     "Expected sized_range to be compressed");
+
+template<typename T, typename U = decltype(std::declval<T>().pop_front())>
+int test_pop_front(T & t)
+{
+    return 0;
+}
+
+char* test_pop_front(ranges::detail::any)
+{
+    return nullptr;
+}
 
 int main()
 {
@@ -39,11 +52,20 @@ int main()
 
     ranges::range<std::vector<int>::iterator, ranges::unreachable> r1 { r0.begin(), {} };
     static_assert(sizeof(r1) == sizeof(vi.begin()), "");
-    ::models<ranges::concepts::Range>(r0);
+    ::models<ranges::concepts::Range>(r1);
     ::models_not<ranges::concepts::SizedRange>(r1);
     CHECK(r1.first == vi.begin()+1);
     CHECK(r1.second == ranges::unreachable{});
     r1.second = ranges::unreachable{};
+
+    r0.pop_front();
+    CHECK(r0.begin() == vi.begin()+2);
+    CHECK(r0.size() == 2u);
+    r0.pop_back();
+    CHECK(r0.end() == vi.end()-1);
+    CHECK(r0.size() == 1u);
+    CHECK(r0.front() == 3);
+    CHECK(r0.back() == 3);
 
     std::pair<std::vector<int>::iterator, ranges::unreachable> p1 = r1;
     CHECK(p1.first == vi.begin()+1);
@@ -53,6 +75,21 @@ int main()
     ranges::range<std::vector<int>::iterator, ranges::unreachable> r2 { p1 };
     CHECK(r1.first == vi.begin()+1);
     CHECK(r1.second == ranges::unreachable{});
+
+    std::list<int> li{1,2,3,4};
+    ranges::sized_range<std::list<int>::iterator> l0 {li.begin(), li.end(), li.size()};
+    ::models<ranges::concepts::SizedRange>(l0);
+    char* sz = test_pop_front(l0); (void) sz;
+    CHECK(l0.first == li.begin());
+    CHECK(l0.second == li.end());
+    CHECK(l0.third == li.size());
+    //++l0.first; // disallowed since it would violate the class invariant
+
+    l0 = ranges::view::all(li);
+
+    ranges::range<std::list<int>::iterator> l1 = l0;
+    CHECK(l1.first == li.begin());
+    CHECK(l1.second == li.end());
 
     return ::test_result();
 }
