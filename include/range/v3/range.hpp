@@ -46,16 +46,16 @@ namespace ranges
             using compressed_pair<I, S>::second;
 
             range() = default;
-            constexpr range(I begin, S end)
+            constexpr range(iterator begin, sentinel end)
               : compressed_pair<I, S>{detail::move(begin), detail::move(end)}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
+                CONCEPT_REQUIRES_(Convertible<X, iterator>() && Convertible<Y, sentinel>())>
             constexpr range(range<X, Y> rng)
               : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
+                CONCEPT_REQUIRES_(Convertible<X, iterator>() && Convertible<Y, sentinel>())>
             constexpr range(std::pair<X, Y> rng)
               : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
             {}
@@ -79,32 +79,32 @@ namespace ranges
             {
                 return !empty();
             }
-            CONCEPT_REQUIRES(SizedIteratorRange<I, S>())
-            iterator_size_t<I> size() const
+            CONCEPT_REQUIRES(SizedIteratorRange<iterator, sentinel>())
+            iterator_size_t<iterator> size() const
             {
                 return iterator_range_size(first, second);
             }
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<X, I const &>() && Constructible<Y, S const &>())>
+                CONCEPT_REQUIRES_(Convertible<I, X>() && Convertible<S, Y>())>
             constexpr operator std::pair<X, Y>() const
             {
-                return std::pair<X, Y>{first, second};
+                return {first, second};
             }
-            iterator_reference_t<I> front() const
+            iterator_reference_t<iterator> front() const
             {
                 RANGES_ASSERT(!empty());
                 return *first;
             }
-            CONCEPT_REQUIRES(BidirectionalIterator<S>())
-            iterator_reference_t<I> back() const
+            CONCEPT_REQUIRES(BidirectionalIterator<sentinel>())
+            iterator_reference_t<iterator> back() const
             {
                 RANGES_ASSERT(!empty());
                 return *prev(second);
             }
             // The requirements on the return type of I::operator[] are different
             // than for I::operator*, so respect that here.
-            template<typename F = I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-            auto operator[](iterator_difference_t<I> n) const ->
+            template<typename F = iterator, CONCEPT_REQUIRES_(RandomAccessIterator<iterator>())>
+            auto operator[](iterator_difference_t<iterator> n) const ->
                 decltype(std::declval<F>()[n])
             {
                 return first[n];
@@ -114,7 +114,7 @@ namespace ranges
             {
                 ++first;
             }
-            CONCEPT_REQUIRES(!std::is_const<S>() && BidirectionalIterator<S>())
+            CONCEPT_REQUIRES(!std::is_const<S>() && BidirectionalIterator<sentinel>())
             void pop_back()
             {
                 --second;
@@ -134,7 +134,8 @@ namespace ranges
           : range<I const, S const>
         {
         private:
-            using base = range<I const, S const>;
+            template<typename X, typename Y>
+            friend struct sized_range;
             I && move_first()
             {
                 return detail::unsafe_move(this->first);
@@ -143,42 +144,44 @@ namespace ranges
             {
                 return detail::unsafe_move(this->second);
             }
+            void check() const
+            {
+                RANGES_ASSERT(!ForwardIterator<I>() ||
+                    static_cast<iterator_size_t<I>>(iterator_range_distance(first, second)) == third);
+            }
         public:
-            using base::first;
-            using base::second;
+            using range<I const, S const>::first;
+            using range<I const, S const>::second;
             iterator_size_t<I> const third;
 
             constexpr sized_range()
-              : base{}, third{}
+              : range<I const, S const>{}, third{}
             {}
-            constexpr sized_range(I begin, S end, iterator_size_t<I> size)
-              : base{detail::move(begin), detail::move(end)}, third(size)
+            sized_range(I begin, S end, iterator_size_t<I> size)
+              : range<I const, S const>{std::move(begin), std::move(end)}, third(size)
+            {
+                check();
+            }
+            sized_range(sized_range<I, S> const &rng)
+              : range<I const, S const>{rng.first, rng.second}, third(rng.third)
             {}
-            constexpr sized_range(sized_range<I, S> const &rng)
-              : base{rng.first, rng.second}, third(rng.third)
-            {}
-            constexpr sized_range(sized_range<I, S> &&rng)
-              : base{rng.move_first(), rng.move_second()}, third(rng.third)
-            {}
-            template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
-            constexpr sized_range(X begin, Y end, iterator_size_t<I> size)
-              : base{detail::move(begin), detail::move(end)}, third(size)
+            sized_range(sized_range<I, S> &&rng)
+              : range<I const, S const>{rng.move_first(), rng.move_second()}, third(rng.third)
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
-            constexpr sized_range(std::pair<X, Y> rng, iterator_size_t<I> size)
-              : base{detail::move(rng)}, third(size)
+                CONCEPT_REQUIRES_(Convertible<X, I>() && Convertible<Y, S>())>
+            sized_range(std::pair<X, Y> rng, iterator_size_t<I> size)
+              : sized_range{std::move(rng).first, std::move(rng).second, size}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
-            constexpr sized_range(range<X, Y> rng, iterator_size_t<I> size)
-              : base{detail::move(rng.first), detail::move(rng.second)}, third(size)
+                CONCEPT_REQUIRES_(Convertible<X, I>() && Convertible<Y, S>())>
+            sized_range(range<X, Y> rng, iterator_size_t<I> size)
+              : sized_range{std::move(rng).first, std::move(rng).second, size}
             {}
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<I, X &&>() && Constructible<S, Y &&>())>
-            constexpr sized_range(sized_range<X, Y> rng)
-              : base{detail::move(rng.first), detail::move(rng.second)}, third(rng.third)
+                CONCEPT_REQUIRES_(Convertible<X, I>() && Convertible<Y, S>())>
+            sized_range(sized_range<X, Y> rng)
+              : sized_range{rng.move_first(), rng.move_second(), rng.third}
             {}
             sized_range &operator=(sized_range<I, S> const &rng)
             {
@@ -205,21 +208,19 @@ namespace ranges
             }
             iterator_size_t<I> size() const
             {
-                RANGES_ASSERT(!ForwardIterator<I>() ||
-                    static_cast<iterator_size_t<I>>(iterator_range_distance(first, second)) == third);
                 return third;
             }
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<X, I const &>() && Constructible<Y, S const &>())>
+                CONCEPT_REQUIRES_(Convertible<I, X>() && Convertible<S, Y>())>
             constexpr operator std::pair<X, Y>() const
             {
-                return std::pair<X, Y>{first, second};
+                return {first, second};
             }
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Constructible<X, I const &>() && Constructible<Y, S const &>())>
+                CONCEPT_REQUIRES_(Convertible<I, X>() && Convertible<S, Y>())>
             constexpr operator range<X, Y>() const
             {
-                return range<X, Y>{first, second};
+                return {first, second};
             }
         };
 
