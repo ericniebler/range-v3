@@ -213,7 +213,7 @@ namespace ranges
                         I j = end;
                         while(!pred(proj(*i), proj(*--j)))
                             ;
-                        ranges::swap(*i, *j);
+                        ranges::iter_swap(i, j);
                         ranges::reverse(ip1, end);
                         return true;
                     }
@@ -257,7 +257,7 @@ namespace ranges
                         I j = end;
                         while(!pred(proj(*--j), proj(*i)))
                             ;
-                        ranges::swap(*i, *j);
+                        ranges::iter_swap(i, j);
                         ranges::reverse(ip1, end);
                         return true;
                     }

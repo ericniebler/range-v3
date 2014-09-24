@@ -66,7 +66,7 @@ namespace ranges
                 I i = middle;
                 while(true)
                 {
-                    ranges::swap(*begin, *i);
+                    ranges::iter_swap(begin, i);
                     ++begin;
                     if(++i == end)
                         break;
@@ -79,7 +79,7 @@ namespace ranges
                     I j = middle;
                     while(true)
                     {
-                        ranges::swap(*begin, *j);
+                        ranges::iter_swap(begin, j);
                         ++begin;
                         if(++j == end)
                         {

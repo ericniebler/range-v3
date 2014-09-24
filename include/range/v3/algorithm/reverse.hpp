@@ -35,7 +35,7 @@ namespace ranges
                 {
                     if(begin == --end)
                         break;
-                    ranges::swap(*begin, *end);
+                    ranges::iter_swap(begin, end);
                     ++begin;
                 }
             }
@@ -45,7 +45,7 @@ namespace ranges
             {
                 if(begin != end)
                     for(; begin < --end; ++begin)
-                        ranges::swap(*begin, *end);
+                        ranges::iter_swap(begin, end);
             }
 
         public:

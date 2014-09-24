@@ -138,7 +138,7 @@ namespace ranges
                         if(len1 == 1)
                         {   // len1 >= len2 && len2 > 0, therefore len2 == 1
                             // It is known *begin > *middle
-                            ranges::swap(*begin, *middle);
+                            ranges::iter_swap(begin, middle);
                             return;
                         }
                         // len1 >= 2, len2 >= 1

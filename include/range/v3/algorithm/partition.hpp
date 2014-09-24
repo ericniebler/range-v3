@@ -63,7 +63,7 @@ namespace ranges
                 {
                     if(pred(proj(*p)))
                     {
-                        ranges::swap(*begin, *p);
+                        ranges::iter_swap(begin, p);
                         ++begin;
                     }
                 }
@@ -91,7 +91,7 @@ namespace ranges
                         if(begin == --end)
                             return begin;
                     } while(!pred(proj(*end)));
-                    ranges::swap(*begin, *end);
+                    ranges::iter_swap(begin, end);
                     ++begin;
                 }
             }

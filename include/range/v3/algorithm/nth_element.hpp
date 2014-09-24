@@ -55,26 +55,26 @@ namespace ranges
                     if(!pred(proj(*z), proj(*y)))       // if y <= z
                         return r;                       // x <= y && y <= z
                                                         // x <= y && y > z
-                    ranges::swap(*y, *z);               // x <= z && y < z
+                    ranges::iter_swap(y, z);            // x <= z && y < z
                     r = 1;
                     if(pred(proj(*y), proj(*x)))        // if x > y
                     {
-                        ranges::swap(*x, *y);           // x < y && y <= z
+                        ranges::iter_swap(x, y);        // x < y && y <= z
                         r = 2;
                     }
                     return r;                           // x <= y && y < z
                 }
                 if(pred(proj(*z), proj(*y)))            // x > y, if y > z
                 {
-                    ranges::swap(*x, *z);               // x < y && y < z
+                    ranges::iter_swap(x, z);            // x < y && y < z
                     r = 1;
                     return r;
                 }
-                ranges::swap(*x, *y);                   // x > y && y <= z
+                ranges::iter_swap(x, y);                // x > y && y <= z
                 r = 1;                                  // x < y && x <= z
                 if(pred(proj(*z), proj(*y)))            // if y > z
                 {
-                    ranges::swap(*y, *z);               // x <= y && y < z
+                    ranges::iter_swap(y, z);            // x <= y && y < z
                     r = 2;
                 }
                 return r;
@@ -92,7 +92,7 @@ namespace ranges
                 {
                     I i = ranges::min_element(begin, end, std::ref(pred), std::ref(proj));
                     if(i != begin)
-                        ranges::swap(*begin, *i);
+                        ranges::iter_swap(begin, i);
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace ranges
                         return end_orig;
                     case 2:
                         if(pred(proj(*--end), proj(*begin)))
-                            ranges::swap(*begin, *end);
+                            ranges::iter_swap(begin, end);
                         return end_orig;
                     case 3:
                         {
@@ -168,7 +168,7 @@ namespace ranges
                                             return end_orig;  // [begin, end) all equivalent elements
                                         if(pred(proj(*begin), proj(*i)))
                                         {
-                                            ranges::swap(*i, *j);
+                                            ranges::iter_swap(i, j);
                                             ++n_swaps;
                                             ++i;
                                             break;
@@ -187,7 +187,7 @@ namespace ranges
                                         ;
                                     if(i >= j)
                                         break;
-                                    ranges::swap(*i, *j);
+                                    ranges::iter_swap(i, j);
                                     ++n_swaps;
                                     ++i;
                                 }
@@ -202,7 +202,7 @@ namespace ranges
                             }
                             if(pred(proj(*j), proj(*m)))
                             {
-                                ranges::swap(*i, *j);
+                                ranges::iter_swap(i, j);
                                 ++n_swaps;
                                 break;  // found guard for downward moving j, now use unguarded partition
                             }
@@ -224,7 +224,7 @@ namespace ranges
                                 ;
                             if(i >= j)
                                 break;
-                            ranges::swap(*i, *j);
+                            ranges::iter_swap(i, j);
                             ++n_swaps;
                             // It is known that m != j
                             // If m just moved, follow it
@@ -236,7 +236,7 @@ namespace ranges
                     // [begin, i) < *m and *m <= [i, end)
                     if(i != m && pred(proj(*m), proj(*i)))
                     {
-                        ranges::swap(*i, *m);
+                        ranges::iter_swap(i, m);
                         ++n_swaps;
                     }
                     // [begin, i) < *i and *i <= [i+1, end)
