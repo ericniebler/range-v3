@@ -16,37 +16,34 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/algorithm/heap_algorithm.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct sort_n_fn
-        {
-            template<typename I, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(
-                    Sortable<I, C, P>()
-                )>
-            void operator()(I begin, iterator_difference_t<I> n, C cmp = C{}, P proj = P{})
-            {
-
-            }
-        };
-
-        RANGES_CONSTEXPR sort_n_fn sort_n {};
-
+        // TODO implement Introsort
+        // TODO Forward iterators, like EoP?
         struct sort_fn
         {
-            template<typename I, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(
-                    Sortable<I, C, P>()
-                )>
-            void operator()(I begin, I end, C cmp = C{}, P proj = P{})
+            template<typename I, typename S, typename C = ordered_less, typename P = ident,
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() &&
+                    IteratorRange<I, S>())> // BUGBUG could be Forward
+            I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
+                return sort_heap(begin, make_heap(begin, end, pred, proj), pred, proj);
+            }
 
+            template<typename Rng, typename C = ordered_less, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterable<Rng>())> // BUGBUG could be Forward
+            I operator()(Rng & rng, C pred = C{}, P proj = P{}) const
+            {
+                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
         };
 

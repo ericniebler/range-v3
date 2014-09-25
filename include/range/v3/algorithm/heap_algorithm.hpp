@@ -262,7 +262,7 @@ namespace ranges
                 {
                     if(len > 1)
                     {
-                        ranges::swap(*begin, *(begin + (len-1)));
+                        ranges::iter_swap(begin, begin + (len-1));
                         detail::sift_down_n(begin, len-1, begin, std::move(pred), std::move(proj));
                     }
                 }

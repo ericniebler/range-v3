@@ -64,7 +64,7 @@ namespace ranges
                     I tmp = begin;
                     if(pred(proj(*++tmp)))
                     {
-                        ranges::swap(*begin, *tmp);
+                        ranges::iter_swap(begin, tmp);
                         return tmp;
                     }
                     return begin;
@@ -167,7 +167,7 @@ namespace ranges
                 // len >= 2
                 if(len == 2)
                 {
-                    ranges::swap(*begin, *end);
+                    ranges::iter_swap(begin, end);
                     return end;
                 }
                 if(len == 3)
@@ -175,12 +175,12 @@ namespace ranges
                     I tmp = begin;
                     if(pred(proj(*++tmp)))
                     {
-                        ranges::swap(*begin, *tmp);
-                        ranges::swap(*tmp, *end);
+                        ranges::iter_swap(begin, tmp);
+                        ranges::iter_swap(tmp, end);
                         return end;
                     }
-                    ranges::swap(*tmp, *end);
-                    ranges::swap(*begin, *tmp);
+                    ranges::iter_swap(tmp, end);
+                    ranges::iter_swap(begin, tmp);
                     return tmp;
                 }
                 if(len <= p.second)

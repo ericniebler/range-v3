@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_UTILITY_ITERATOR_HPP
 #define RANGES_V3_UTILITY_ITERATOR_HPP
 
+#include <algorithm> // for iter_swap
 #include <iterator>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -210,6 +211,25 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR iterator_range_size_fn iterator_range_size {};
+
+        namespace adl_iter_swap_detail
+        {
+            using std::iter_swap;
+            struct iter_swap_fn
+            {
+                template<typename T, typename U,
+                    CONCEPT_REQUIRES_(
+                        ForwardIterator<T>() &&
+                        ForwardIterator<U>() &&
+                        Swappable<iterator_reference_t<T>, iterator_reference_t<U>>())>
+                void operator()(T t, U u) const
+                {
+                    iter_swap(std::forward<T>(t), std::forward<U>(u));
+                }
+            };
+        }
+
+        RANGES_CONSTEXPR adl_iter_swap_detail::iter_swap_fn iter_swap {};
 
         template<typename Cont>
         struct back_insert_iterator

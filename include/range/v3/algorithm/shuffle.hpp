@@ -60,7 +60,7 @@ namespace ranges
                     {
                         auto i = uid(gen, param_t{0, d});
                         if(i != 0)
-                            ranges::swap(*begin, *(begin + i));
+                            ranges::iter_swap(begin, begin + i);
                     }
                 }
                 return end;

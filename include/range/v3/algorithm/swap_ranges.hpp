@@ -33,7 +33,7 @@ namespace ranges
             std::pair<I1, I2> operator()(I1Ref&& begin1, S1 end1, I2 begin2) const
             {
                 for(; begin1 != end1; ++begin1, ++begin2)
-                    ranges::swap(*begin1, *begin2);
+                    ranges::iter_swap(begin1, begin2);
                 return {begin1, begin2};
             }
 
@@ -44,7 +44,7 @@ namespace ranges
             std::pair<I1, I2> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
             {
                 for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
-                    ranges::swap(*begin1, *begin2);
+                    ranges::iter_swap(begin1, begin2);
                 return {begin1, begin2};
             }
 
