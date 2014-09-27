@@ -116,6 +116,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\next_permutation.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\none_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\nth_element.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\partial_sort.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_point.cpp" />
@@ -140,6 +141,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\set_symmetric_difference.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\set_union.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\shuffle.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\sort.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\sort_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\stable_partition.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\swap_ranges.cpp" />

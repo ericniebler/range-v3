@@ -116,6 +116,9 @@ add_test(test.alg.next_permutation alg.next_permutation)
 add_executable(alg.nth_element nth_element.cpp)
 add_test(test.alg.nth_element alg.nth_element)
 
+add_executable(alg.partial_sort partial_sort.cpp)
+add_test(test.alg.partial_sort, alg.partial_sort)
+
 add_executable(alg.partition partition.cpp)
 add_test(test.alg.partition, alg.partition)
 
@@ -193,6 +196,9 @@ add_test(test.alg.set_union, alg.set_union)
 
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
+
+# add_executable(alg.sort sort.cpp)
+# add_test(test.alg.sort, alg.sort)
 
 add_executable(alg.sort_heap sort_heap.cpp)
 add_test(test.alg.sort_heap, alg.sort_heap)
