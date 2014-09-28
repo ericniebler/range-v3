@@ -117,6 +117,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\none_of.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\nth_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partial_sort.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\partial_sort_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\partition_point.cpp" />

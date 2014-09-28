@@ -28,12 +28,10 @@ To Do:
 * Survey the use of projections. Do they only apply when evaluating predicates, or are they
   like full input transformations? (E.g, does `copy` get a projection parameter or not? Does the projection get applied by e.g. `set_difference`?)
 * Implement
-  - `partial_sort`
-  - `partial_sort_copy`
-  - `sort`
   - `stable_sort`
-  - Tests for the set algorithms
-* Make `inplace_merge` work with forward iterators
+* Longer-term goals:
+  - Make `inplace_merge` work with forward iterators
+  - Make the sorting algorithms work with forward iterators
 
 Design Decisions, Guidelines, and Rationale:
 --------------------------------------------

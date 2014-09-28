@@ -119,6 +119,9 @@ add_test(test.alg.nth_element alg.nth_element)
 add_executable(alg.partial_sort partial_sort.cpp)
 add_test(test.alg.partial_sort, alg.partial_sort)
 
+add_executable(alg.partial_sort_copy partial_sort_copy.cpp)
+add_test(test.alg.partial_sort_copy, alg.partial_sort_copy)
+
 add_executable(alg.partition partition.cpp)
 add_test(test.alg.partition, alg.partition)
 
