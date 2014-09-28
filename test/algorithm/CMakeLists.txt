@@ -197,8 +197,8 @@ add_test(test.alg.set_union, alg.set_union)
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
 
-# add_executable(alg.sort sort.cpp)
-# add_test(test.alg.sort, alg.sort)
+add_executable(alg.sort sort.cpp)
+add_test(test.alg.sort, alg.sort)
 
 add_executable(alg.sort_heap sort_heap.cpp)
 add_test(test.alg.sort_heap, alg.sort_heap)

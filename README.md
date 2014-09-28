@@ -10,7 +10,7 @@ Experimental range library for C++11/14/17. This code will eventualy form the ba
 License:
 --------
 
-Most of the source code in this project are mine, and those are under the Boost Software License. Parts are taken from Alex Stepanov's Elements of Programming and from Howard Hinnant's libc++.  Please see the attached LICENSE file and the CREDITS file for the licensing and acknolwedgements.
+Most of the source code in this project are mine, and those are under the Boost Software License. Parts are taken from Alex Stepanov's Elements of Programming, Howard Hinnant's libc++, and from the SGI STL. Please see the attached LICENSE file and the CREDITS file for the licensing and acknolwedgements.
 
 Supported Compilers
 -------------------

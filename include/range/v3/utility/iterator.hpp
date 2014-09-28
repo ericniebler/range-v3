@@ -152,14 +152,20 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename D>
-            std::pair<D, I> impl_i(I begin, S end, D d, concepts::IteratorRange*) const
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::IteratorRange*, concepts::IteratorRange*) const
             {
                 for(; begin != end; ++begin)
                     ++d;
                 return {d, begin};
             }
             template<typename I, typename S, typename D>
-            std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
+            std::pair<D, I> impl_i(I begin, S end_, D d, concepts::IteratorRange*, concepts::SizedIteratorRange*) const
+            {
+                I end = next_to(begin, end_);
+                return {(end - begin) + d, end};
+            }
+            template<typename I, typename S, typename D, typename Concept>
+            std::pair<D, I> impl_i(I begin, S end, D d, concepts::SizedIteratorRange*, Concept) const
             {
                 return {(end - begin) + d, next_to(begin, end)};
             }
@@ -168,7 +174,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && Integral<D>())>
             std::pair<D, I> operator()(I begin, S end, D d = 0) const
             {
-                return this->impl_i(std::move(begin), std::move(end), d, sized_iterator_range_concept<I, S>());
+                return this->impl_i(std::move(begin), std::move(end), d,
+                    sized_iterator_range_concept<I, S>(), sized_iterator_range_concept<I, I>());
             }
         };
 
