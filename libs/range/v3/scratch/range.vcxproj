@@ -145,6 +145,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\sort.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\sort_heap.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\stable_partition.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\stable_sort.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\swap_ranges.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\unique.cpp" />

@@ -31,17 +31,17 @@ namespace ranges
             {
                 template<typename I, typename V2, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V2, C, P>())>
-                I operator()(I begin, iterator_difference_t<I> d, V2 const &val, C pred = C{},
-                    P proj = P{}) const
+                I operator()(I begin, iterator_difference_t<I> d, V2 const &val, C pred_ = C{},
+                    P proj_ = P{}) const
                 {
                     RANGES_ASSERT(0 <= d);
-                    auto &&ipred = invokable(pred);
-                    auto &&iproj = invokable(proj);
+                    auto &&pred = invokable(pred_);
+                    auto &&proj = invokable(proj_);
                     while(0 != d)
                     {
                         auto half = d / 2;
                         auto middle = next(begin, half);
-                        if(ipred(iproj(*middle), val))
+                        if(pred(proj(*middle), val))
                         {
                             begin = std::move(++middle);
                             d -= half + 1;
@@ -50,19 +50,6 @@ namespace ranges
                             d = half;
                     }
                     return begin;
-                }
-
-                /// \overload
-                template<typename Rng, typename V2, typename C = ordered_less, typename P = ident,
-                    typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V2, C, P>())>
-                I operator()(Rng &rng, iterator_difference_t<I> d, V2 const &val, C pred = C{},
-                    P proj = P{}) const
-                {
-                    static_assert(!is_infinite<Rng>::val, "Trying to binary search an infinite range");
-                    RANGES_ASSERT(0 <= d);
-                    RANGES_ASSERT(d <= distance(rng));
-                    return (*this)(begin(rng), d, std::move(pred), std::move(proj));
                 }
             };
 

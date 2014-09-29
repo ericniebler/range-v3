@@ -45,10 +45,10 @@ namespace ranges
                 auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin)
                 {
-                    auto &&v = proj(*begin);
+                    auto &&v = save(proj(*begin));
                     if(!(pred(v)))
                     {
-                        *out = v;
+                        *out = (decltype(v)) v;
                         ++out;
                     }
                 }

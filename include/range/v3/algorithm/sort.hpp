@@ -52,16 +52,10 @@ namespace ranges
 {
     inline namespace v3
     {
-        // Introsort: Quicksort to a certain depth, then Heapsort. Insertion
-        // sort below a certain threshold.
-        // TODO Forward iterators, like EoP?
-        struct sort_fn
+        namespace detail
         {
-        private:
-            static constexpr int threshold = 16;
-
             template<typename Val, typename C>
-            static const Val& median(Val const &a, Val const &b, Val const &c, C &pred)
+            inline Val const &median(Val const &a, Val const &b, Val const &c, C &pred)
             {
                 if(pred(a, b))
                     if(pred(b, c))
@@ -79,7 +73,7 @@ namespace ranges
             }
 
             template<typename I, typename Val, typename C, typename P>
-            static I unguarded_partition(I begin, I end, Val const &pivot, C &pred, P &proj) 
+            inline I unguarded_partition(I begin, I end, Val const &pivot, C &pred, P &proj)
             {
                 while(true)
                 {
@@ -90,13 +84,13 @@ namespace ranges
                         --end;
                     if(!(begin < end))
                         return begin;
-                    iter_swap(begin, end);
+                    ranges::iter_swap(begin, end);
                     ++begin;
                 }
             }
 
             template<typename I, typename Val, typename C, typename P>
-            static void unguarded_linear_insert(I end, Val val, C &pred, P &proj)
+            inline void unguarded_linear_insert(I end, Val val, C &pred, P &proj)
             {
                 I next = prev(end);
                 while(pred(proj(val), proj(*next)))
@@ -109,7 +103,7 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P>
-            static void linear_insert(I begin, I end, C &pred, P &proj)
+            inline void linear_insert(I begin, I end, C &pred, P &proj)
             {
                 auto val = std::move(*end);
                 if(pred(proj(val), proj(*begin)))
@@ -118,41 +112,44 @@ namespace ranges
                     *begin = std::move(val);
                 }
                 else
-                    sort_fn::unguarded_linear_insert(end, std::move(val), pred, proj);
+                    detail::unguarded_linear_insert(end, std::move(val), pred, proj);
             }
 
             template<typename I, typename C, typename P>
-            static void insertion_sort(I begin, I end, C &pred, P &proj)
+            inline void insertion_sort(I begin, I end, C &pred, P &proj)
             {
                 if(begin == end)
                     return;
                 for(I i = next(begin); i != end; ++i)
-                    sort_fn::linear_insert(begin, i, pred, proj);
+                    detail::linear_insert(begin, i, pred, proj);
             }
 
             template<typename I, typename C, typename P>
-            static void unguarded_insertion_sort_aux(I begin, I end, C &pred, P &proj)
+            inline void unguarded_insertion_sort(I begin, I end, C &pred, P &proj)
             {
                 for(I i = begin; i != end; ++i)
-                    sort_fn::unguarded_linear_insert(i, std::move(*i), pred, proj);
+                    detail::unguarded_linear_insert(i, std::move(*i), pred, proj);
             }
+        }
 
-            template<typename I, typename C, typename P>
-            static void unguarded_insertion_sort(I begin, I end, C &pred, P &proj)
-            {
-                sort_fn::unguarded_insertion_sort_aux(begin, end, pred, proj);
-            }
+        // Introsort: Quicksort to a certain depth, then Heapsort. Insertion
+        // sort below a certain threshold.
+        // TODO Forward iterators, like EoP?
+        struct sort_fn
+        {
+        private:
+            static constexpr int introsort_threshold = 16;
 
             template<typename I, typename C, typename P>
             static void final_insertion_sort(I begin, I end, C &pred, P &proj)
             {
-                if(end - begin > sort_fn::threshold)
+                if(end - begin > sort_fn::introsort_threshold)
                 {
-                    sort_fn::insertion_sort(begin, begin + sort_fn::threshold, pred, proj);
-                    sort_fn::unguarded_insertion_sort(begin + sort_fn::threshold, end, pred, proj);
+                    detail::insertion_sort(begin, begin + sort_fn::introsort_threshold, pred, proj);
+                    detail::unguarded_insertion_sort(begin + sort_fn::introsort_threshold, end, pred, proj);
                 }
                 else
-                    sort_fn::insertion_sort(begin, end, pred, proj);
+                    detail::insertion_sort(begin, end, pred, proj);
             }
 
             template<typename Size>
@@ -167,17 +164,15 @@ namespace ranges
             template<typename I, typename Size, typename C, typename P>
             static void introsort_loop(I begin, I end, Size depth_limit, C &pred, P &proj)
             {
-                while(end - begin > sort_fn::threshold)
+                while(end - begin > sort_fn::introsort_threshold)
                 {
                     if(depth_limit == 0)
                     {
                         partial_sort(begin, end, end, pred, proj);
                         return;
                     }
-                    I cut = sort_fn::unguarded_partition(begin, end,
-                        sort_fn::median(
-                            proj(*begin),
-                            proj(*(begin + (end - begin) / 2)),
+                    I cut = detail::unguarded_partition(begin, end,
+                        detail::median(proj(*begin), proj(*(begin + (end - begin) / 2)),
                             proj(*(end - 1)), pred),
                         pred, proj);
                     sort_fn::introsort_loop(cut, end, depth_limit - 1, pred, proj);
@@ -196,10 +191,7 @@ namespace ranges
                 if(begin == end_)
                     return begin;
                 I end = next_to(begin, end_);
-                sort_fn::introsort_loop(
-                    begin, end,
-                    sort_fn::log2(end - begin) * 2,
-                    pred, proj);
+                sort_fn::introsort_loop(begin, end, sort_fn::log2(end - begin) * 2, pred, proj);
                 sort_fn::final_insertion_sort(begin, end, pred, proj);
                 return end;
             }
@@ -213,7 +205,7 @@ namespace ranges
             }
         };
 
-        constexpr int sort_fn::threshold;
+        constexpr int sort_fn::introsort_threshold;
 
         RANGES_CONSTEXPR sort_fn sort{};
 

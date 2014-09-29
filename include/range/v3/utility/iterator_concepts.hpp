@@ -196,9 +196,9 @@ namespace ranges
               : refines<MoveWritable>
             {
                 template<typename Out, typename T>
-                auto requires_(Out o, T const &value) -> decltype(
+                auto requires_(Out o, T &&value) -> decltype(
                     concepts::valid_expr(
-                        *o = value
+                        *o = std::forward<T>(value)
                     ));
             };
 

@@ -93,26 +93,6 @@ namespace ranges
                         }
                     }
                 }
-
-                template<typename Rng0, typename Rng1, typename O, typename C = ordered_less,
-                    typename P0 = ident, typename P1 = ident,
-                    typename I0 = range_iterator_t<Rng0>,
-                    typename I1 = range_iterator_t<Rng1>,
-                    CONCEPT_REQUIRES_(
-                        Iterable<Rng0>() &&
-                        Iterable<Rng1>() &&
-                        Mergeable<I0, I1, O, C, P0, P1>()
-                    )>
-                std::tuple<I0, I1, O>
-                operator()(Rng0 &rng0, iterator_difference_t<I0> n0,
-                           Rng1 &rng1, iterator_difference_t<I1> n1,
-                           O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const
-                {
-                    RANGES_ASSERT(!ForwardIterator<I0>() || n0 <= distance(rng0));
-                    RANGES_ASSERT(!ForwardIterator<I1>() || n1 <= distance(rng1));
-                    return (*this)(begin(rng0), n0, begin(rng1), n1, std::move(out),
-                        std::move(r), std::move(p0), std::move(p1));
-                }
             };
 
             RANGES_CONSTEXPR merge_n_fn merge_n{};

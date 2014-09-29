@@ -51,23 +51,23 @@ namespace ranges
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
             std::tuple<I0, I1, O>
-            operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C r = C{},
-                P0 p0 = P0{}, P1 p1 = P1{}) const
+            operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred_ = C{},
+                P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
-                auto &&ir = invokable(r);
-                auto &&ip0 = invokable(p0);
-                auto &&ip1 = invokable(p1);
-                while(begin0 != end0 && begin1 != end1)
+                auto &&pred = invokable(pred_);
+                auto &&proj0 = invokable(proj0_);
+                auto &&proj1 = invokable(proj1_);
+                for(; begin0 != end0 && begin1 != end1; ++out)
                 {
-                    if(ir(ip1(*begin1), ip0(*begin0)))
+                    if(pred(proj1(*begin1), proj0(*begin0)))
                     {
                         *out = *begin1;
-                        ++out; ++begin1;
+                        ++begin1;
                     }
                     else
                     {
                         *out = *begin0;
-                        ++out; ++begin0;
+                        ++begin0;
                     }
                 }
                 auto t0 = copy(begin0, end0, out);
@@ -85,10 +85,10 @@ namespace ranges
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
             std::tuple<I0, I1, O>
-            operator()(Rng0 &rng0, Rng1 &rng1, O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const
+            operator()(Rng0 &rng0, Rng1 &rng1, O out, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(out),
-                    std::move(r), std::move(p0), std::move(p1));
+                    std::move(pred), std::move(proj0), std::move(proj1));
             }
         };
 

@@ -61,18 +61,6 @@ namespace ranges
                     }
                     return {begin, begin};
                 }
-
-                template<typename Rng, typename V, typename R = ordered_less, typename P = ident,
-                    typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V, R, P>())>
-                range<I>
-                operator()(Rng & rng, iterator_difference_t<I> dist, V const & val, R pred = R{}, P proj = P{}) const
-                {
-                    static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
-                    RANGES_ASSERT(0 <= dist);
-                    RANGES_ASSERT(dist <= distance(rng));
-                    return (*this)(begin(rng), dist, std::move(pred), std::move(proj));
-                }
             };
 
             RANGES_CONSTEXPR equal_range_n_fn equal_range_n{};

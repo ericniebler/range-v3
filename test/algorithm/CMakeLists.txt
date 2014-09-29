@@ -209,6 +209,9 @@ add_test(test.alg.sort_heap, alg.sort_heap)
 add_executable(alg.stable_partition stable_partition.cpp)
 add_test(test.alg.stable_partition, alg.stable_partition)
 
+add_executable(alg.stable_sort stable_sort.cpp)
+add_test(test.alg.stable_sort, alg.stable_sort)
+
 add_executable(alg.swap_ranges swap_ranges.cpp)
 add_test(test.alg.swap_ranges, alg.swap_ranges)
 

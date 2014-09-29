@@ -37,11 +37,11 @@ namespace ranges
                     IndirectlyProjectedCopyable<I, P, O>()
                 )>
             std::pair<I, O>
-            operator()(I begin, S end, O out, P proj = P{}) const
+            operator()(I begin, S end, O out, P proj_ = P{}) const
             {
-                auto &&iproj = invokable(proj);
+                auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin, ++out)
-                    *out = iproj(*begin);
+                    *out = proj(*begin);
                 return {begin, out};
             }
 

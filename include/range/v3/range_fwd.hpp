@@ -121,6 +121,15 @@ namespace ranges
 
             using any = any_<>;
 
+            struct value_init
+            {
+                template<typename T>
+                operator T () const
+                {
+                    return T{};
+                }
+            };
+
             template<typename T>
             using uncvref_t =
                 typename std::remove_cv<typename std::remove_reference<T>::type>::type;

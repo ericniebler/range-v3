@@ -52,7 +52,7 @@ namespace ranges
         struct ident
         {
             template<typename T>
-            T operator()(T && t) const
+            T && operator()(T && t) const
             {
                 return (T &&) t;
             }
@@ -87,6 +87,15 @@ namespace ranges
                 return (T &&) t * (U &&) u;
             }
         };
+
+        constexpr struct save_fn
+        {
+            template<typename T>
+            T operator()(T && t) const
+            {
+                return (T &&) t;
+            }
+        } save{};
 
         template<typename T>
         struct coerce
