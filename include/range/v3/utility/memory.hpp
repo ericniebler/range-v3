@@ -73,7 +73,6 @@ namespace ranges
                 destroy_n() = default;
                 void operator()(T const *p) noexcept
                 {
-                    std::cerr << "Destroying " << n_ << ' ' << typeid(T).name() << "'s\n";
                     for(std::ptrdiff_t n = 0; n < n_; ++n, ++p)
                         p->~T();
                 }
