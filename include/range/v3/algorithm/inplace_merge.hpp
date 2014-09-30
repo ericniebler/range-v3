@@ -57,9 +57,8 @@ namespace ranges
                     iterator_difference_t<I> len2, iterator_value_t<I> *buf, C &pred, P &proj)
                 {
                     using value_type = iterator_value_t<I>;
-                    detail::destroy_n<value_type> d{};
-                    std::unique_ptr<value_type, detail::destroy_n<value_type>&> h2{buf, d};
-                    auto p = make_counted_raw_storage_iterator(buf, d);
+                    std::unique_ptr<value_type, detail::destroy_n<value_type>> h{buf, {}};
+                    auto p = ranges::make_counted_raw_storage_iterator(buf, h.get_deleter());
                     if(len1 <= len2)
                     {
                         p = ranges::move(begin, middle, p).second;

@@ -73,11 +73,10 @@ namespace ranges
                 if(len <= p.second)
                 {   // The buffer is big enough to use
                     using value_type = iterator_value_t<I>;
-                    detail::destroy_n<value_type> d{};
-                    std::unique_ptr<value_type, detail::destroy_n<value_type> &> const h{p.first, d};
+                    std::unique_ptr<value_type, detail::destroy_n<value_type>> h{p.first, {}};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
-                    auto buf = make_counted_raw_storage_iterator(p.first, d);
+                    auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
                     using MI = std::move_iterator<I>;
                     *buf = std::move(*begin);
                     ++buf;
@@ -167,13 +166,12 @@ namespace ranges
                 }
                 if(len <= p.second)
                 {   // The buffer is big enough to use
+                    using MI = std::move_iterator<I>;
                     using value_type = iterator_value_t<I>;
-                    detail::destroy_n<value_type> d{};
-                    std::unique_ptr<value_type, detail::destroy_n<value_type> &> const h{p.first, d};
+                    std::unique_ptr<value_type, detail::destroy_n<value_type>> h{p.first, {}};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
-                    using MI = std::move_iterator<I>;
-                    auto buf = make_counted_raw_storage_iterator(p.first, d);
+                    auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
                     *buf = std::move(*begin);
                     ++buf;
                     auto res = partition_copy(MI{next(begin)}, MI{end}, begin, buf, std::ref(pred), std::ref(proj));

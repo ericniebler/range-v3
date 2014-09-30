@@ -41,10 +41,18 @@ namespace ranges
                 I *pi_;
             public:
                 external_count() = default;
-                external_count(I &i) : pi_(&i) {}
-                external_count &operator--() { ++*pi_; return *this; }
-                void operator--(int) { ++*pi_; }
-                operator I() const { return *pi_; }
+                external_count(I &i)
+                  : pi_(&i)
+                {}
+                external_count &operator--()
+                {
+                    ++*pi_;
+                    return *this;
+                }
+                void operator--(int)
+                {
+                    ++*pi_;
+                }
             };
 
             template<typename T, bool B = std::is_trivially_destructible<T>::value>
@@ -58,10 +66,6 @@ namespace ranges
                 }
                 void operator++(int)
                 {}
-                operator std::ptrdiff_t () const
-                {
-                    return 0;
-                }
             };
 
             template<typename T>
@@ -84,10 +88,6 @@ namespace ranges
                 void operator++(int)
                 {
                     ++n_;
-                }
-                operator std::ptrdiff_t () const
-                {
-                    return n_;
                 }
             };
 

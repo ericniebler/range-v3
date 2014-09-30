@@ -78,15 +78,8 @@ namespace ranges
             template<typename I1, typename I2, typename D, typename C, typename P>
             static void merge_sort_loop(I1 begin, I1 end, I2 result, D step_size, C &pred, P &proj)
             {
-                // BUGBUG we have moved objects out of the buffer but we haven't run destructors yet.
                 using MI = std::move_iterator<I1>;
-                // TODO make_counted_raw_storage_iterator and make_destroy_n
-                //using RI = ranges::raw_storage_iterator<I2, iterator_value_t<I2>>;
-                //using CRI = counted_iterator<RI, detail::int_ref<D>>;
                 D two_step = 2 * step_size;
-                //D count = 0;
-                //CRI result{RI{result_}, count};
-                //RI result{result_};
                 while(end - begin >= two_step)
                 {
                     result = std::get<2>(merge(MI{begin}, MI{begin + step_size}, MI{begin + step_size},
@@ -111,35 +104,33 @@ namespace ranges
                 detail::insertion_sort(begin, end, pred, proj);
             }
 
+            // buffer points to raw memory, we create objects, and then restore the buffer to
+            // raw memory by destroying the objects on return.
             template<typename I, typename V, typename C, typename P>
             static void merge_sort_with_buffer(I begin, I end, V *buffer, C &pred, P &proj)
             {
-                using D = iterator_difference_t<I>;
-                D len = end - begin;
-                V *buffer_last = buffer + len;
-                D step_size = stable_sort_fn::merge_sort_chunk_size;
+                iterator_difference_t<I> len = end - begin, step_size = stable_sort_fn::merge_sort_chunk_size;
                 stable_sort_fn::chunk_insertion_sort(begin, end, step_size, pred, proj);
-                detail::destroy_n<V> d{};
-                std::unique_ptr<V, detail::destroy_n<V>&> h{buffer, d};
-                auto raw_buffer = make_counted_raw_storage_iterator(buffer, d);
-                if(step_size < len)
-                {
-                    // First time through, we're moving into raw storage. Construct on-demand and
-                    // keep track of how many objects we need to destroy.
-                    stable_sort_fn::merge_sort_loop(begin, end, raw_buffer, step_size, pred, proj);
-                    step_size *= 2;
-                    stable_sort_fn::merge_sort_loop(buffer, buffer_last, begin, step_size, pred, proj);
-                    step_size *= 2;
-                    while(step_size < len)
-                    {
-                        stable_sort_fn::merge_sort_loop(begin, end, buffer, step_size, pred, proj);
-                        step_size *= 2;
-                        stable_sort_fn::merge_sort_loop(buffer, buffer_last, begin, step_size, pred, proj);
-                        step_size *= 2;
-                    }
-                }
+                if(step_size >= len)
+                    return;
+                // The first call to merge_sort_loop moves into raw storage. Construct on-demand
+                // and keep track of how many objects we need to destroy.
+                V *buffer_end = buffer + len;
+                std::unique_ptr<V, detail::destroy_n<V>> h{buffer, {}};
+                auto raw_buffer = ranges::make_counted_raw_storage_iterator(buffer, h.get_deleter());
+                stable_sort_fn::merge_sort_loop(begin, end, raw_buffer, step_size, pred, proj);
+                step_size *= 2;
+            loop:
+                stable_sort_fn::merge_sort_loop(buffer, buffer_end, begin, step_size, pred, proj);
+                step_size *= 2;
+                if(step_size >= len)
+                    return;
+                stable_sort_fn::merge_sort_loop(begin, end, buffer, step_size, pred, proj);
+                step_size *= 2;
+                goto loop;
             }
 
+            // buffer points to raw memory
             template<typename I, typename V, typename D, typename C, typename P>
             static void stable_sort_adaptive(I begin, I end, V *buffer, D buffer_size, C &pred, P &proj)
             {
