@@ -43,7 +43,7 @@ namespace ranges
           : range_adaptor<indirect_view<Rng>, Rng>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             detail::indirect_adaptor begin_adaptor() const
             {
                 return {};

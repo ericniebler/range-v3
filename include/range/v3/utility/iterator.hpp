@@ -317,48 +317,6 @@ namespace ranges
             }
         };
 
-        template<typename O, typename Val>
-        struct raw_storage_iterator
-        {
-        private:
-            O out_;
-        public:
-            using difference_type = iterator_difference_t<O>;
-            raw_storage_iterator() = default;
-            explicit raw_storage_iterator(O out)
-              : out_(std::move(out))
-            {}
-            raw_storage_iterator const &operator*() const
-            {
-                return *this;
-            }
-            raw_storage_iterator const &operator=(Val const & val) const
-            {
-                ::new(&*out_) Val(val);
-                return *this;
-            }
-            raw_storage_iterator const &operator=(Val && val) const
-            {
-                ::new(&*out_) Val(std::move(val));
-                return *this;
-            }
-            raw_storage_iterator &operator++()
-            {
-                ++out_;
-                return *this;
-            }
-            raw_storage_iterator operator++(int)
-            {
-                auto tmp = *this;
-                ++out_;
-                return tmp;
-            }
-            O base() const
-            {
-                return out_;
-            }
-        };
-
         namespace adl_uncounted_recounted_detail
         {
             template<typename I>

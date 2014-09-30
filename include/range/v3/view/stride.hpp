@@ -35,7 +35,7 @@ namespace ranges
           : range_adaptor<strided_view<Rng>, Rng>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             using size_type_ = range_size_t<Rng>;
             using difference_type_ = range_difference_t<Rng>;
 
@@ -106,7 +106,7 @@ namespace ranges
                     RANGES_ASSERT(rng.first != rng.second);
                     offset() = advance_bounded(rng.first, rng_->stride_ + offset(),
                         rng.second);
-                    pos = ranges::range_core_access::cursor(std::move(rng.first));
+                    pos = ranges::range_access::cursor(std::move(rng.first));
                 }
                 CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
                 void prev(base_cursor_t &pos)
@@ -117,7 +117,7 @@ namespace ranges
                     offset() = advance_bounded(rng.second, -rng_->stride_ + offset(),
                         rng.first);
                     RANGES_ASSERT(0 == offset());
-                    pos = ranges::range_core_access::cursor(std::move(rng.second));
+                    pos = ranges::range_access::cursor(std::move(rng.second));
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 difference_type_ distance_to(derived_cursor_t const &here,
@@ -142,7 +142,7 @@ namespace ranges
                             default_adaptor::end(*rng_));
                         offset() = advance_bounded(rng.first, n * rng_->stride_ + offset(),
                             rng.second);
-                        pos = ranges::range_core_access::cursor(std::move(rng.first));
+                        pos = ranges::range_access::cursor(std::move(rng.first));
                     }
                     else if(0 > n)
                     {
@@ -150,7 +150,7 @@ namespace ranges
                             std::move(pos));
                         offset() = advance_bounded(rng.second, n * rng_->stride_ + offset(),
                             rng.first);
-                        pos = ranges::range_core_access::cursor(std::move(rng.second));
+                        pos = ranges::range_access::cursor(std::move(rng.second));
                     }
                 }
             };

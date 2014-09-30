@@ -30,7 +30,7 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/detail/memory.hpp>
+#include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -39,6 +39,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
+#include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/rotate.hpp>
 
@@ -56,29 +57,26 @@ namespace ranges
                     iterator_difference_t<I> len2, iterator_value_t<I> *buf, C &pred, P &proj)
                 {
                     using value_type = iterator_value_t<I>;
-                    detail::destroy_n<value_type> d;
+                    detail::destroy_n<value_type> d{};
                     std::unique_ptr<value_type, detail::destroy_n<value_type>&> h2{buf, d};
+                    auto p = make_counted_raw_storage_iterator(buf, d);
                     if(len1 <= len2)
                     {
-                        value_type *p = buf;
-                        for(I i = begin; i != middle; ++d, ++i, ++p)
-                            ::new(p) value_type(std::move(*i));
+                        p = ranges::move(begin, middle, p).second;
                         merge(std::move_iterator<value_type*>{buf},
-                              std::move_iterator<value_type*>{p},
+                              std::move_iterator<value_type*>{p.base().base()},
                               std::move_iterator<I>{std::move(middle)},
                               std::move_iterator<I>{std::move(end)},
                               std::move(begin), std::ref(pred), std::ref(proj), std::ref(proj));
                     }
                     else
                     {
-                        value_type *p = buf;
-                        for(I i = middle; i != end; ++d, ++i, ++p)
-                            ::new(p) value_type(std::move(*i));
+                        p = ranges::move(middle, end, p).second;
                         using RBi = std::reverse_iterator<I>;
                         using Rv = std::reverse_iterator<value_type*>;
                         merge(std::move_iterator<RBi>{RBi{std::move(middle)}},
                               std::move_iterator<RBi>{RBi{std::move(begin)}},
-                              std::move_iterator<Rv>{Rv{p}},
+                              std::move_iterator<Rv>{Rv{p.base().base()}},
                               std::move_iterator<Rv>{Rv{buf}},
                               RBi{std::move(end)},
                               not_(std::ref(pred)), std::ref(proj), std::ref(proj));

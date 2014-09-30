@@ -224,7 +224,7 @@ namespace ranges
           : range_facade<any_input_range<Ref>, Inf>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             std::unique_ptr<detail::any_input_range_interface<Ref>> ptr_;
             detail::any_input_cursor<Ref> begin_cursor() const
             {

@@ -24,7 +24,7 @@ struct my_reverse_view
 private:
     CONCEPT_ASSERT(ranges::BidirectionalIterable<BidiRange>());
     CONCEPT_ASSERT(ranges::BoundedIterable<BidiRange>());
-    friend ranges::range_core_access;
+    friend ranges::range_access;
     using base_cursor_t = ranges::base_cursor_t<my_reverse_view>;
 
     struct adaptor : ranges::default_adaptor

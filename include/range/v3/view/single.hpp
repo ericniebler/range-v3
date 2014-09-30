@@ -33,7 +33,7 @@ namespace ranges
           : range_facade<single_view<Val>>
         {
         private:
-            friend struct range_core_access;
+            friend struct range_access;
             Val value_;
             struct cursor
             {

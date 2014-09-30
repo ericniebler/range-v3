@@ -34,7 +34,7 @@ namespace ranges
         {
         private:
             Val value_;
-            friend range_core_access;
+            friend range_access;
 
             struct cursor
             {

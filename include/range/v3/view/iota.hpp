@@ -95,7 +95,7 @@ namespace ranges
         {
         private:
             using iota_concept = ranges::iota_concept<Val>;
-            friend range_core_access;
+            friend range_access;
         public:
             using difference_type = decltype(detail::iota_difference<Val>(iota_concept()));
         private:

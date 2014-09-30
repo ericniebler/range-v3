@@ -52,7 +52,7 @@ namespace ranges
           : range_adaptor<move_view<Rng>, Rng>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             detail::move_adaptor begin_adaptor() const
             {
                 return {};

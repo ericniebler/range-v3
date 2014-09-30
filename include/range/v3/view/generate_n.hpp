@@ -33,7 +33,7 @@ namespace ranges
           : range_facade<generate_n_view<G>>
         {
         private:
-            friend struct range_core_access;
+            friend struct range_access;
             optional<G> gen_;
             std::size_t n_;
             template<bool IsConst>

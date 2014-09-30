@@ -32,7 +32,7 @@ namespace ranges
           : range_adaptor<filtered_view<Rng, Pred>, Rng>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             using base_cursor_t = ranges::base_cursor_t<filtered_view>;
             invokable_t<Pred> pred_;
 

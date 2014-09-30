@@ -97,6 +97,9 @@ namespace ranges
         struct iterator_range_size_fn;
         extern iterator_range_size_fn const iterator_range_size;
 
+        template<typename I>
+        struct iterator_difference;
+
         namespace detail
         {
             struct empty
@@ -240,7 +243,7 @@ namespace ranges
             template<typename I, typename S>
             struct common_cursor;
 
-            template<typename I>
+            template<typename I, typename D = typename iterator_difference<I>::type>
             struct counted_cursor;
 
             struct counted_sentinel;
@@ -289,10 +292,10 @@ namespace ranges
         struct basic_mixin;
 
         template<typename Cur, typename S = Cur>
-        struct basic_range_iterator;
+        struct basic_iterator;
 
         template<typename S>
-        struct basic_range_sentinel;
+        struct basic_sentinel;
 
         template<typename Derived, bool Inf = false>
         struct range_facade;
@@ -304,7 +307,7 @@ namespace ranges
 
         template<typename I, typename S>
         using common_range_iterator =
-            basic_range_iterator<detail::common_cursor<I, S>>;
+            basic_iterator<detail::common_cursor<I, S>>;
 
         template<typename First, typename Second>
         struct compressed_pair;
@@ -335,6 +338,21 @@ namespace ranges
 
         struct make_range_fn;
         extern make_range_fn const make_range;
+
+        template<typename I>
+        struct iterator_value;
+
+        template<typename I>
+        struct iterator_reference;
+
+        template<typename I>
+        struct iterator_category;
+
+        template<typename I>
+        struct iterator_difference;
+
+        template<typename I>
+        struct iterator_pointer;
 
         template<typename Rng>
         struct range_iterator;
@@ -389,7 +407,7 @@ namespace ranges
             extern const_fn const const_;
         }
 
-        template<typename I>
+        template<typename I, typename D = typename iterator_difference<I>::type>
         struct counted_view;
 
         namespace view
@@ -398,12 +416,12 @@ namespace ranges
             extern counted_fn const counted;
         }
 
-        template<typename I>
+        template<typename I, typename D = typename iterator_difference<I>::type>
         using counted_iterator =
-            basic_range_iterator<detail::counted_cursor<I>, detail::counted_sentinel>;
+            basic_iterator<detail::counted_cursor<I, D>, detail::counted_sentinel>;
 
         using counted_sentinel =
-            basic_range_sentinel<detail::counted_sentinel>;
+            basic_sentinel<detail::counted_sentinel>;
 
         template<typename Rng, typename Pred>
         struct filtered_view;

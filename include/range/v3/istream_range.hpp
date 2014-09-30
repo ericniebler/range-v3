@@ -26,7 +26,7 @@ namespace ranges
           : range_facade<istream_range<Val>>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             std::istream *sin_;
             Val obj_;
             struct cursor

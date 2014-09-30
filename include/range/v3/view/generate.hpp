@@ -33,7 +33,7 @@ namespace ranges
           : range_facade<generate_view<G>, true>
         {
         private:
-            friend struct range_core_access;
+            friend struct range_access;
             optional<G> gen_;
             template<bool IsConst>
             struct cursor

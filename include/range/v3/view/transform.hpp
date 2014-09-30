@@ -127,7 +127,7 @@ namespace ranges
         {
         private:
             using reference_t = result_of_t<invokable_t<Fun> const(range_value_t<Rng>)>;
-            friend range_core_access;
+            friend range_access;
             using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Fun>>(),
                 invokable_t<Fun>, detail::value_wrapper<invokable_t<Fun>>>;
             using adaptor_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Fun>>(),

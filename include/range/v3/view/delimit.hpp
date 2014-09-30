@@ -49,7 +49,7 @@ namespace ranges
           : range_adaptor<delimited_view<Rng, Val>, Rng>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             Val value_;
 
             default_adaptor begin_adaptor() const

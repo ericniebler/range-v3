@@ -43,11 +43,13 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
@@ -74,13 +76,17 @@ namespace ranges
             }
 
             template<typename I1, typename I2, typename D, typename C, typename P>
-            static void merge_sort_loop(I1 begin, I1 end, I2 result_, D step_size, C &pred, P &proj)
+            static void merge_sort_loop(I1 begin, I1 end, I2 result, D step_size, C &pred, P &proj)
             {
-                // BUGBUG throwing move constructors really make a mess here.
+                // BUGBUG we have moved objects out of the buffer but we haven't run destructors yet.
                 using MI = std::move_iterator<I1>;
-                using RI = ranges::raw_storage_iterator<I2, iterator_value_t<I2>>;
+                // TODO make_counted_raw_storage_iterator and make_destroy_n
+                //using RI = ranges::raw_storage_iterator<I2, iterator_value_t<I2>>;
+                //using CRI = counted_iterator<RI, detail::int_ref<D>>;
                 D two_step = 2 * step_size;
-                RI result{result_};
+                //D count = 0;
+                //CRI result{RI{result_}, count};
+                //RI result{result_};
                 while(end - begin >= two_step)
                 {
                     result = std::get<2>(merge(MI{begin}, MI{begin + step_size}, MI{begin + step_size},
@@ -113,12 +119,24 @@ namespace ranges
                 V *buffer_last = buffer + len;
                 D step_size = stable_sort_fn::merge_sort_chunk_size;
                 stable_sort_fn::chunk_insertion_sort(begin, end, step_size, pred, proj);
-                while(step_size < len)
+                detail::destroy_n<V> d{};
+                std::unique_ptr<V, detail::destroy_n<V>&> h{buffer, d};
+                auto raw_buffer = make_counted_raw_storage_iterator(buffer, d);
+                if(step_size < len)
                 {
-                    stable_sort_fn::merge_sort_loop(begin, end, buffer, step_size, pred, proj);
+                    // First time through, we're moving into raw storage. Construct on-demand and
+                    // keep track of how many objects we need to destroy.
+                    stable_sort_fn::merge_sort_loop(begin, end, raw_buffer, step_size, pred, proj);
                     step_size *= 2;
                     stable_sort_fn::merge_sort_loop(buffer, buffer_last, begin, step_size, pred, proj);
                     step_size *= 2;
+                    while(step_size < len)
+                    {
+                        stable_sort_fn::merge_sort_loop(begin, end, buffer, step_size, pred, proj);
+                        step_size *= 2;
+                        stable_sort_fn::merge_sort_loop(buffer, buffer_last, begin, step_size, pred, proj);
+                        step_size *= 2;
+                    }
                 }
             }
 
@@ -154,7 +172,7 @@ namespace ranges
                 using V = iterator_value_t<I>;
                 D len = end - begin;
                 auto buf = len > 256 ? std::get_temporary_buffer<V>(end - begin) : detail::value_init{};
-                std::unique_ptr<iterator_value_t<I>, detail::return_temporary_buffer> h{buf.first};
+                std::unique_ptr<V, detail::return_temporary_buffer> h{buf.first};
                 if(buf.first == nullptr)
                     stable_sort_fn::inplace_stable_sort(begin, end, pred, proj);
                 else

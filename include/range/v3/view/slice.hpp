@@ -42,7 +42,7 @@ namespace ranges
             private:
                 CONCEPT_ASSERT(InputIterable<Rng>());
                 CONCEPT_ASSERT(IsTakeView || ForwardIterable<Rng>());
-                friend range_core_access;
+                friend range_access;
                 using size_type_ = range_size_t<Rng>;
                 using difference_type_ = range_difference_t<Rng>;
                 using from_t =

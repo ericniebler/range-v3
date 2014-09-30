@@ -20,6 +20,9 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_access.hpp>
+#include <range/v3/at.hpp>
+#include <range/v3/back.hpp>
+#include <range/v3/front.hpp>
 #include <range/v3/istream_range.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/range_traits.hpp>

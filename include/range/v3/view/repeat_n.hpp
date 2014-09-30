@@ -33,7 +33,7 @@ namespace ranges
           : range_facade<repeated_n_view<Val>, true>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             Val value_;
             std::size_t n_;
 

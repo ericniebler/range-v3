@@ -33,7 +33,7 @@ namespace ranges
         private:
             CONCEPT_ASSERT(BidirectionalIterable<Rng>());
             CONCEPT_ASSERT(BoundedIterable<Rng>());
-            friend range_core_access;
+            friend range_access;
             using base_cursor_t = ranges::base_cursor_t<reversed_view>;
 
             // A rather convoluted implementation to avoid the problem std::reverse_iterator

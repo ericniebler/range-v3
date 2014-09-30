@@ -98,8 +98,8 @@ namespace ranges
                 friend struct basic_cursor;
                 Cur pos_;
             public:
-                using difference_type = range_core_access::cursor_difference_t<Cur>;
-                using single_pass = range_core_access::single_pass_t<Cur>;
+                using difference_type = range_access::cursor_difference_t<Cur>;
+                using single_pass = range_access::single_pass_t<Cur>;
                 basic_cursor() = default;
                 constexpr basic_cursor(Cur pos)
                   : pos_(detail::move(pos))
@@ -108,14 +108,14 @@ namespace ranges
                 constexpr bool equal(basic_cursor<Other, true> const &that) const
                 {
                     // BUGBUG which parameter order is correct?
-                    return range_core_access::empty(that.pos_, pos_);
+                    return range_access::empty(that.pos_, pos_);
                 }
                 template<typename C = Cur,
                     CONCEPT_REQUIRES_(InputCursor<Cur>())>
                 auto equal(basic_cursor const &that) const ->
-                decltype(range_core_access::equal(std::declval<C const &>(), std::declval<C const &>()))
+                decltype(range_access::equal(std::declval<C const &>(), std::declval<C const &>()))
                 {
-                    return range_core_access::equal(that.pos_, pos_);
+                    return range_access::equal(that.pos_, pos_);
                 }
                 CONCEPT_REQUIRES(InputCursor<Cur>())
                 bool equal(any_<basic_cursor>) const
@@ -125,32 +125,32 @@ namespace ranges
                 CONCEPT_REQUIRES(InputCursor<Cur>())
                 void next()
                 {
-                    range_core_access::next(pos_);
+                    range_access::next(pos_);
                 }
                 template<typename C = Cur,
                     CONCEPT_REQUIRES_(InputCursor<Cur>())>
                 auto current() const ->
-                    decltype(range_core_access::current(std::declval<C const &>()))
+                    decltype(range_access::current(std::declval<C const &>()))
                 {
-                    return range_core_access::current(pos_);
+                    return range_access::current(pos_);
                 }
                 CONCEPT_REQUIRES(BidirectionalCursor<Cur>())
                 void prev()
                 {
-                    range_core_access::prev(pos_);
+                    range_access::prev(pos_);
                 }
                 template<typename C = Cur,
                     CONCEPT_REQUIRES_(RandomAccessCursor<Cur>())>
                 void advance(difference_type n)
                 {
-                    range_core_access::advance(pos_, n);
+                    range_access::advance(pos_, n);
                 }
                 template<typename C = Cur,
                     CONCEPT_REQUIRES_(RandomAccessCursor<Cur>())>
                 difference_type
                 distance_to(basic_cursor const &that) const
                 {
-                    return range_core_access::distance_to(pos_, that.pos_);
+                    return range_access::distance_to(pos_, that.pos_);
                 }
             };
 
@@ -188,8 +188,8 @@ namespace ranges
                 basic_cursor_and_adaptor<BaseCursor, Adapt> base_;
             public:
                 using single_pass = or_t<
-                    range_core_access::single_pass_t<Adapt>,
-                    range_core_access::single_pass_t<BaseCursor>>;
+                    range_access::single_pass_t<Adapt>,
+                    range_access::single_pass_t<BaseCursor>>;
                 basic_adapted_cursor() = default;
                 basic_adapted_cursor(BaseCursor base, Adapt adapt)
                   : base_{std::move(base), std::move(adapt)}
@@ -236,13 +236,13 @@ namespace ranges
                 }
                 template<typename A = Adapt,
                          typename R = decltype(std::declval<A>().advance(base_, 0))>
-                void advance(range_core_access::cursor_difference_t<BaseCursor> n)
+                void advance(range_access::cursor_difference_t<BaseCursor> n)
                 {
                     base_.adaptor().advance(base_, n);
                 }
                 template<typename A = Adapt,
                          typename R = decltype(std::declval<A>().distance_to(base_, base_))>
-                range_core_access::cursor_difference_t<BaseCursor>
+                range_access::cursor_difference_t<BaseCursor>
                 distance_to(basic_adapted_cursor const &that) const
                 {
                     return base_.adaptor().distance_to(base_, that.base_);
@@ -251,11 +251,11 @@ namespace ranges
 
             template<typename Derived>
             using cursor_adaptor_t =
-                decltype(range_core_access::begin_adaptor(std::declval<Derived &>()));
+                decltype(range_access::begin_adaptor(std::declval<Derived &>()));
 
             template<typename Derived>
             using sentinel_adaptor_t =
-                decltype(range_core_access::end_adaptor(std::declval<Derived &>()));
+                decltype(range_access::end_adaptor(std::declval<Derived &>()));
 
             template<typename Derived>
             using derived_cursor_t =
@@ -285,13 +285,13 @@ namespace ranges
                 using cursor_t = basic_cursor<facade_cursor_t<BaseRng>, true>;
                 static cursor_t begin_cursor(BaseRng &rng)
                 {
-                    return range_core_access::begin_cursor(rng);
+                    return range_access::begin_cursor(rng);
                 }
 
                 using sentinel_t = basic_cursor<facade_sentinel2_t<BaseRng>, true>;
                 static sentinel_t end_cursor(BaseRng &rng)
                 {
-                    return range_core_access::end_cursor(rng);
+                    return range_access::end_cursor(rng);
                 }
             };
 
@@ -313,7 +313,7 @@ namespace ranges
         }
 
         template<typename Derived>
-        using base_range_t = typename range_core_access::base_range<Derived>::type;
+        using base_range_t = typename range_access::base_range<Derived>::type;
 
         template<typename Derived>
         using base_cursor_t =
@@ -331,15 +331,15 @@ namespace ranges
         using derived_sentinel_t =
             detail::basic_cursor_and_adaptor<S, Adapt>;
 
-        struct default_adaptor : private range_core_access
+        struct default_adaptor : private range_access
         {
-            using range_core_access::equal;
-            using range_core_access::empty;
-            using range_core_access::current;
-            using range_core_access::next;
-            using range_core_access::prev;
-            using range_core_access::advance;
-            using range_core_access::distance_to;
+            using range_access::equal;
+            using range_access::empty;
+            using range_access::current;
+            using range_access::next;
+            using range_access::prev;
+            using range_access::advance;
+            using range_access::distance_to;
             template<typename Rng>
             static base_cursor_t<Rng> begin(Rng &rng)
             {
@@ -358,7 +358,7 @@ namespace ranges
         {
         private:
             friend Derived;
-            friend range_core_access;
+            friend range_access;
             friend default_adaptor;
             using range_adaptor_t = range_adaptor;
             using base_range_t = view::all_t<BaseRng>;
@@ -400,7 +400,7 @@ namespace ranges
             detail::basic_adapted_cursor<detail::derived_cursor_t<D>, detail::cursor_adaptor_t<D>>
             begin_cursor()
             {
-                auto adapt = range_core_access::begin_adaptor(derived());
+                auto adapt = range_access::begin_adaptor(derived());
                 auto pos = adapt.begin(derived());
                 return {std::move(pos), std::move(adapt)};
             }
@@ -409,7 +409,7 @@ namespace ranges
             detail::basic_adapted_cursor<detail::derived_sentinel_t<D>, detail::sentinel_adaptor_t<D>>
             end_cursor()
             {
-                auto adapt = range_core_access::end_adaptor(derived());
+                auto adapt = range_access::end_adaptor(derived());
                 auto pos = adapt.end(derived());
                 return {std::move(pos), std::move(adapt)};
             }
@@ -421,7 +421,7 @@ namespace ranges
             detail::basic_adapted_cursor<detail::derived_cursor_t<D const>, detail::cursor_adaptor_t<D const>>
             begin_cursor() const
             {
-                auto adapt = range_core_access::begin_adaptor(derived());
+                auto adapt = range_access::begin_adaptor(derived());
                 auto pos = adapt.begin(derived());
                 return {std::move(pos), std::move(adapt)};
             }
@@ -430,7 +430,7 @@ namespace ranges
             detail::basic_adapted_cursor<detail::derived_sentinel_t<D const>, detail::sentinel_adaptor_t<D const>>
             end_cursor() const
             {
-                auto adapt = range_core_access::end_adaptor(derived());
+                auto adapt = range_access::end_adaptor(derived());
                 auto pos = adapt.end(derived());
                 return {std::move(pos), std::move(adapt)};
             }
@@ -442,7 +442,7 @@ namespace ranges
         };
 
         template<typename RangeAdaptor>
-        using range_adaptor_t = meta_apply<range_core_access::range_adaptor, RangeAdaptor>;
+        using range_adaptor_t = meta_apply<range_access::range_adaptor, RangeAdaptor>;
     }
 }
 

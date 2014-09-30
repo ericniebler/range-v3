@@ -139,21 +139,21 @@ namespace ranges
         }
 
         template<typename Cur, typename S>
-        struct common_type<basic_range_iterator<Cur, S>, basic_range_sentinel<S>>
+        struct common_type<basic_iterator<Cur, S>, basic_sentinel<S>>
         {
             using type =
                 common_range_iterator<
-                    basic_range_iterator<Cur, S>,
-                    basic_range_sentinel<S>>;
+                    basic_iterator<Cur, S>,
+                    basic_sentinel<S>>;
         };
 
         template<typename Cur, typename S>
-        struct common_type<basic_range_sentinel<S>, basic_range_iterator<Cur, S>>
+        struct common_type<basic_sentinel<S>, basic_iterator<Cur, S>>
         {
             using type =
                 common_range_iterator<
-                    basic_range_iterator<Cur, S>,
-                    basic_range_sentinel<S>>;
+                    basic_iterator<Cur, S>,
+                    basic_sentinel<S>>;
         };
     }
 }

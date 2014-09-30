@@ -120,7 +120,7 @@ namespace ranges
                 logical_and<is_infinite<Rngs>::value...>::value>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             optional<invokable_t<Fun>> fun_;
             std::tuple<view::all_t<Rngs>...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;

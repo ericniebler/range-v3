@@ -259,13 +259,15 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\unique_copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\all.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\at.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\back.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\detail\memory.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\re_enable_warnings.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\empty.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\front.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\accumulate.hpp" />
@@ -281,6 +283,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\size.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\basic_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\bind.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\bindable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp" />
@@ -289,6 +292,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_tuple.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\counted_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\functional.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\infinity.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />
@@ -298,6 +302,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\memory.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\meta.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\nullval.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp" />

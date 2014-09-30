@@ -27,7 +27,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/detail/memory.hpp>
+#include <range/v3/utility/memory.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -35,6 +35,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/rotate.hpp>
+#include <range/v3/algorithm/partition_copy.hpp>
 
 namespace ranges
 {
@@ -72,35 +73,20 @@ namespace ranges
                 if(len <= p.second)
                 {   // The buffer is big enough to use
                     using value_type = iterator_value_t<I>;
-                    detail::destroy_n<value_type> d;
+                    detail::destroy_n<value_type> d{};
                     std::unique_ptr<value_type, detail::destroy_n<value_type> &> const h{p.first, d};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
-                    value_type *buf = p.first;
-                    ::new(buf) value_type(std::move(*begin));
-                    ++d;
+                    auto buf = make_counted_raw_storage_iterator(p.first, d);
+                    using MI = std::move_iterator<I>;
+                    *buf = std::move(*begin);
                     ++buf;
-                    I tmp = begin;
-                    while(++tmp != end)
-                    {
-                        if(pred(proj(*tmp)))
-                        {
-                            *begin = std::move(*tmp);
-                            ++begin;
-                        }
-                        else
-                        {
-                            ::new(buf) value_type(std::move(*tmp));
-                            ++d;
-                            ++buf;
-                        }
-                    }
+                    auto res = partition_copy(MI{next(begin)}, MI{end}, begin, buf, std::ref(pred), std::ref(proj));
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false
-                    tmp = begin;
-                    move(p.first, buf, tmp);
+                    ranges::move(p.first, std::get<2>(res).base().base(), std::get<1>(res));
                     // h destructs moved-from values out of the temp buffer, but doesn't deallocate buffer
-                    return begin;
+                    return std::get<1>(res);
                 }
                 // Else not enough buffer, do in place
                 // len >= 3
@@ -148,14 +134,10 @@ namespace ranges
                 // We now have a reduced range [begin, end)
                 // *begin is known to be false
                 using value_type = iterator_value_t<I>;
-                std::pair<difference_type, I> len_end = enumerate(begin, end);
-                std::pair<value_type *, std::ptrdiff_t> p{nullptr, 0};
-                std::unique_ptr<value_type, detail::return_temporary_buffer> h;
-                if(len_end.first >= alloc_limit)
-                {
-                    p = std::get_temporary_buffer<value_type>(len_end.first);
-                    h.reset(p.first);
-                }
+                auto len_end = enumerate(begin, end);
+                auto p = len_end.first >= alloc_limit ?
+                    std::get_temporary_buffer<value_type>(len_end.first) : detail::value_init{};
+                std::unique_ptr<value_type, detail::return_temporary_buffer> const h{p.first};
                 return stable_partition_fn::impl(begin, len_end.second, pred, proj, len_end.first, p, fi);
             }
 
@@ -186,35 +168,22 @@ namespace ranges
                 if(len <= p.second)
                 {   // The buffer is big enough to use
                     using value_type = iterator_value_t<I>;
-                    detail::destroy_n<value_type> d;
+                    detail::destroy_n<value_type> d{};
                     std::unique_ptr<value_type, detail::destroy_n<value_type> &> const h{p.first, d};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
-                    value_type *buf = p.first;
-                    ::new(buf) value_type(std::move(*begin));
-                    ++d;
+                    using MI = std::move_iterator<I>;
+                    auto buf = make_counted_raw_storage_iterator(p.first, d);
+                    *buf = std::move(*begin);
                     ++buf;
-                    I tmp = begin;
-                    while(++tmp != end)
-                    {
-                        if(pred(proj(*tmp)))
-                        {
-                            *begin = std::move(*tmp);
-                            ++begin;
-                        }
-                        else
-                        {
-                            ::new(buf) value_type(std::move(*tmp));
-                            ++d;
-                            ++buf;
-                        }
-                    }
+                    auto res = partition_copy(MI{next(begin)}, MI{end}, begin, buf, std::ref(pred), std::ref(proj));
+                    begin = std::get<1>(res);
                     // move *end, known to be true
-                    *begin = std::move(*tmp);
-                    tmp = ++begin;
+                    *begin = std::move(*std::get<0>(res));
+                    ++begin;
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false
-                    move(p.first, buf, tmp);
+                    move(p.first, std::get<2>(res).base().base(), begin);
                     // h destructs moved-from values out of the temp buffer, but doesn't deallocate buffer
                     return begin;
                 }

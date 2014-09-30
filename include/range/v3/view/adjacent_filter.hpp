@@ -29,7 +29,7 @@ namespace ranges
           : range_adaptor<adjacent_filtered_view<Rng, F>, Rng>
         {
         private:
-            friend range_core_access;
+            friend range_access;
             invokable_t<F> pred_;
             using base_cursor_t = ranges::base_cursor_t<adjacent_filtered_view>;
 

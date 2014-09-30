@@ -33,7 +33,7 @@ namespace ranges
           : range_base
         {
         private:
-            friend range_core_access;
+            friend range_access;
             using base_range_t = view::all_t<Rng>;
             using base_iterator_t = range_iterator_t<base_range_t>;
             using base_sentinel_t = range_sentinel_t<base_range_t>;
