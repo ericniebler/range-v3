@@ -338,23 +338,34 @@ test_range()
     }
 }
 
-struct is_null
+struct move_only
 {
-    template <class P>
-    bool operator()(const P& p) const
-    {
-        return !p;
-    }
+    static int count;
+    int i;
+    move_only() : i(0) { ++count; }
+    move_only(int j) : i(j) { ++count; }
+    move_only(move_only &&that) : i(that.i) {  ++count; }
+    move_only(move_only const &) = delete;
+    ~move_only() { --count; }
+    move_only &operator=(move_only &&) = default;
+    move_only &operator=(move_only const &) = delete;
 };
+
+int move_only::count = 0;
 
 template <class Iter>
 void
 test_move_only()
 {
     const unsigned size = 5;
-    std::unique_ptr<int> array[size];
-    Iter r = ranges::stable_partition(Iter(array), Iter(array+size), is_null());
-    (void)r;
+    move_only array[size] = { 1, 2, 3, 4, 5 };
+    Iter r = ranges::stable_partition(Iter(array), Iter(array+size), is_odd{}, &move_only::i);
+    CHECK(base(r) == array + 3);
+    CHECK(array[0].i == 1);
+    CHECK(array[1].i == 3);
+    CHECK(array[2].i == 5);
+    CHECK(array[3].i == 2);
+    CHECK(array[4].i == 4);
 }
 
 struct S
@@ -380,8 +391,10 @@ int main()
     test_range<bidirectional_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
     test_range<random_access_iterator<std::pair<int,int>*>, sentinel<std::pair<int,int>*> >();
 
-    test_move_only<forward_iterator<std::unique_ptr<int>*> >();
-    test_move_only<bidirectional_iterator<std::unique_ptr<int>*> >();
+    CHECK(move_only::count == 0);
+    test_move_only<forward_iterator<move_only*> >();
+    test_move_only<bidirectional_iterator<move_only*> >();
+    CHECK(move_only::count == 0);
 
     // Test projections
     using P = std::pair<int, int>;

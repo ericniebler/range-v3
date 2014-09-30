@@ -145,7 +145,7 @@ namespace ranges
         };
 
         // Constructs objects in raw storage, keeps an external count of the
-        // number of 
+        // number of objects created so they can be destroyed later.
         template<typename V, typename I, typename D>
         counted_iterator<raw_storage_iterator<I, V>, detail::external_count<D>>
         make_counted_raw_storage_iterator(I i, D &d)

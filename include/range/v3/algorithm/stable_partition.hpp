@@ -257,13 +257,9 @@ namespace ranges
                 // *end is known to be true
                 // len >= 2
                 auto len = distance(begin, end) + 1;
-                std::pair<value_type *, std::ptrdiff_t> p{nullptr, 0};
-                std::unique_ptr<value_type, detail::return_temporary_buffer> h;
-                if(len >= alloc_limit)
-                {
-                    p = std::get_temporary_buffer<value_type>(len);
-                    h.reset(p.first);
-                }
+                auto p = len >= alloc_limit ?
+                    std::get_temporary_buffer<value_type>(len) : detail::value_init{};
+                std::unique_ptr<value_type, detail::return_temporary_buffer> const h{p.first};
                 return stable_partition_fn::impl(begin, end, pred, proj, len, p, bi);
             }
 
