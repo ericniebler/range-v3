@@ -20,7 +20,7 @@
 static_assert(sizeof(ranges::range<int*, ranges::detail::empty>) == sizeof(int*),
     "Expected range to be compressed");
 
-static_assert(sizeof(ranges::sized_range<int*, ranges::detail::empty>) == sizeof(int*) + sizeof(int),
+static_assert(sizeof(ranges::sized_range<int*, ranges::detail::empty>) == sizeof(int*) + sizeof(std::size_t),
     "Expected sized_range to be compressed");
 
 template<typename T, typename U = decltype(std::declval<T>().pop_front())>

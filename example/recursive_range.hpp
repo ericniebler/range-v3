@@ -25,7 +25,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
-#include <range/v3/all.hpp>
+#include <range/v3/range.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/optional.hpp>
@@ -109,7 +109,7 @@ namespace ranges
                                     any_input_range<Ref>
                                   >())>
             explicit recursive_range_fn(Fun fun)
-              : fun_{[=](){return fun() + range(nullval<value_type>(), nullval<value_type>());}}
+              : fun_{[=](){return fun() + make_range(nullval<value_type>(), nullval<value_type>());}}
             {}
             recursive_range_fn(recursive_range_fn const &) = delete;
             recursive_range_fn &operator=(recursive_range_fn const &) = delete;

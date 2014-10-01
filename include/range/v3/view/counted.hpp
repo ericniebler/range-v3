@@ -28,7 +28,7 @@ namespace ranges
     {
         template<typename I, typename D /* = iterator_difference_t<I>*/>
         struct counted_view
-          : range_facade<counted_view<I>>
+          : range_facade<counted_view<I, D>>
         {
         private:
             friend range_access;
@@ -36,7 +36,7 @@ namespace ranges
             I it_;
             D n_;
 
-            detail::counted_cursor<I> begin_cursor() const
+            detail::counted_cursor<I, D> begin_cursor() const
             {
                 return {it_, n_};
             }
@@ -61,8 +61,8 @@ namespace ranges
         {
             struct counted_fn : bindable<counted_fn>
             {
-                template<typename I, typename D>
-                static counted_view<I, D> invoke(counted_fn, I it, D n)
+                template<typename I>
+                static counted_view<I> invoke(counted_fn, I it, iterator_difference_t<I> n)
                 {
                     // Nothing wrong with a weak counted output iterator!
                     CONCEPT_ASSERT(WeakIterator<I>());

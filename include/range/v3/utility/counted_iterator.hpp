@@ -130,8 +130,8 @@ namespace ranges
 
             struct counted_sentinel
             {
-                template<typename I>
-                bool equal(counted_cursor<I> const &that) const
+                template<typename I, typename D>
+                bool equal(counted_cursor<I, D> const &that) const
                 {
                     return that.n_ == 0;
                 }
