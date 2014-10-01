@@ -32,6 +32,7 @@
 #include <range/v3/algorithm/find_end.hpp>
 #include <range/v3/algorithm/find_first_of.hpp>
 #include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/algorithm/for_each.hpp>
 #include <range/v3/algorithm/generate.hpp>
 #include <range/v3/algorithm/generate_n.hpp>

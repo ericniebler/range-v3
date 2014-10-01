@@ -1,9 +1,9 @@
 range-v3
 ========
 
-Experimental range library for C++11/14/17. This code will eventualy form the basis of a formal proposal to add range support to the C++ standard library.
+Range library for C++11/14/17. This code is the basis of a formal proposal to add range support to the C++ standard library (N4128).
 
-**Dislaimer:** This code is undocumented, poorly tested, constantly changing, and generally not fit for *any use whatsoever*.
+**Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
 **Build status (on Travis-CI):** [![Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
 
@@ -23,12 +23,8 @@ The code is known to work on the following compilers:
 To Do:
 ------
 
-* Survey the algorithms for return types.
-* Survey the _n algorithms for handling of (non-bounded) Range arguments and termination conditions
 * Survey the use of projections. Do they only apply when evaluating predicates, or are they
   like full input transformations? (E.g, does `copy` get a projection parameter or not? Does the projection get applied by e.g. `set_difference`?)
-* Implement
-  - `stable_sort`
 * Longer-term goals:
   - Make `inplace_merge` work with forward iterators
   - Make the sorting algorithms work with forward iterators

@@ -342,7 +342,7 @@ struct move_only
 {
     static int count;
     int i;
-    move_only() : i(0) { ++count; }
+    move_only() = delete;
     move_only(int j) : i(j) { ++count; }
     move_only(move_only &&that) : i(that.i) {  ++count; }
     move_only(move_only const &) = delete;

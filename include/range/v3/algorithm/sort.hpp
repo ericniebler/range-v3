@@ -168,7 +168,7 @@ namespace ranges
                 {
                     if(depth_limit == 0)
                     {
-                        partial_sort(begin, end, end, pred, proj);
+                        partial_sort(begin, end, end, std::ref(pred), std::ref(proj));
                         return;
                     }
                     I cut = detail::unguarded_partition(begin, end,

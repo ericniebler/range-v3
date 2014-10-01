@@ -38,25 +38,25 @@ namespace ranges
                 return recounted(begin, b, norig);
             }
 
-            template<typename O, typename S, typename V,
-                CONCEPT_REQUIRES_(OutputIterator<O, V>() && IteratorRange<O, S>())>
-            std::pair<O, iterator_difference_t<O>>
-            operator()(O begin, S end, iterator_difference_t<O> n, V const & val) const
-            {
-                RANGES_ASSERT(n >= 0);
-                for(; begin != end && n != 0; ++begin, --n)
-                    *begin = val;
-                return {begin, n};
-            }
+            //template<typename O, typename S, typename V,
+            //    CONCEPT_REQUIRES_(OutputIterator<O, V>() && IteratorRange<O, S>())>
+            //std::pair<O, iterator_difference_t<O>>
+            //operator()(O begin, S end, iterator_difference_t<O> n, V const & val) const
+            //{
+            //    RANGES_ASSERT(n >= 0);
+            //    for(; begin != end && n != 0; ++begin, --n)
+            //        *begin = val;
+            //    return {begin, n};
+            //}
 
-            template<typename Rng, typename V,
-                typename O = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(OutputIterable<Rng, V>())>
-            std::pair<O, iterator_difference_t<O>>
-            operator()(Rng & rng, range_difference_t<O> n, V const & val) const
-            {
-                return (*this)(begin(rng), end(n), n, val);
-            }
+            //template<typename Rng, typename V,
+            //    typename O = range_iterator_t<Rng>,
+            //    CONCEPT_REQUIRES_(OutputIterable<Rng, V>())>
+            //std::pair<O, iterator_difference_t<O>>
+            //operator()(Rng & rng, range_difference_t<O> n, V const & val) const
+            //{
+            //    return (*this)(begin(rng), end(n), n, val);
+            //}
         };
 
         RANGES_CONSTEXPR fill_n_fn fill_n{};

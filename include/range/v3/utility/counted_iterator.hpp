@@ -55,14 +55,6 @@ namespace ranges
                     mixin(I it, D n)
                       : mixin(counted_cursor{it, n})
                     {}
-                    I &base_reference()
-                    {
-                        return this->get().it_;
-                    }
-                    I const &base_reference() const
-                    {
-                        return this->get().it_;
-                    }
                     I base() const
                     {
                         return this->get().it_;
@@ -74,26 +66,28 @@ namespace ranges
                     // Overload the advance algorithm for counted_iterators.
                     // This is much faster. This gets found by ADL because
                     // counted_iterator inherits from counted_cursor::mixin.
-                    friend void advance(counted_iterator<I> &it, iterator_difference_t<I> n)
+                    friend void advance(counted_iterator<I, D> &it, iterator_difference_t<I> n)
                     {
+                        // http://llvm.org/bugs/show_bug.cgi?id=21109
+                        // it.mixin::get().advance_(n);
                         it.counted_cursor::mixin::get().advance_(n);
                     }
                     // Overload uncounted and recounted for packing and unpacking
                     // counted iterators
-                    friend I uncounted(counted_iterator<I> i)
+                    friend I uncounted(counted_iterator<I, D> i)
                     {
                         return i.base();
                     }
-                    friend counted_iterator<I>
-                    recounted(counted_iterator<I> const &j, I i, iterator_difference_t<I> n)
+                    friend counted_iterator<I, D>
+                    recounted(counted_iterator<I, D> const &j, I i, iterator_difference_t<I> n)
                     {
-                        RANGES_ASSERT(ranges::next(j.base(), n) == i);
+                        RANGES_ASSERT(!ForwardIterator<I>() || ranges::next(j.base(), n) == i);
                         return {i, j.count() - n};
                     }
                     CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                    friend counted_iterator<I> recounted(counted_iterator<I> const &j, I i)
+                    friend counted_iterator<I, D> recounted(counted_iterator<I, D> const &j, I i)
                     {
-                        return {i, j.count() - (i - j.base_reference())};
+                        return {i, j.count() - (i - j.base())};
                     }
                 };
                 counted_cursor() = default;
@@ -145,20 +139,21 @@ namespace ranges
         }
 
         // For RandomAccessIterator, operator- will be defined by basic_iterator
-        template<typename I, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
-        iterator_difference_t<I> operator-(counted_iterator<I> const &end, counted_iterator<I> const &begin)
+        template<typename I, typename D, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
+        iterator_difference_t<I>
+        operator-(counted_iterator<I, D> const &end, counted_iterator<I, D> const &begin)
         {
             return begin.count() - end.count();
         }
 
-        template<typename I>
-        iterator_difference_t<I> operator-(counted_sentinel const &end, counted_iterator<I> const &begin)
+        template<typename I, typename D>
+        iterator_difference_t<I> operator-(counted_sentinel const &end, counted_iterator<I, D> const &begin)
         {
             return begin.count();
         }
 
-        template<typename I>
-        iterator_difference_t<I> operator-(counted_iterator<I> const &begin, counted_sentinel const &end)
+        template<typename I, typename D>
+        iterator_difference_t<I> operator-(counted_iterator<I, D> const &begin, counted_sentinel const &end)
         {
             return -begin.count();
         }

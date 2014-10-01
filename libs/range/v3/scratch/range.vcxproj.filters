@@ -905,6 +905,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\counted_iterator.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find_if_not.hpp">
+      <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
