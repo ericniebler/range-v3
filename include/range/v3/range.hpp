@@ -293,6 +293,7 @@ namespace ranges
 
 // The standard is inconsistent about whether these are classes or structs
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wmismatched-tags"
 

@@ -17,7 +17,7 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- Clang, svn trunk
+- clang 3.5.0
 - GCC 4.9.0
 
 To Do:
