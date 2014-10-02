@@ -142,18 +142,6 @@ namespace ranges
             {
                 return pos0.distance_to(pos1);
             }
-            template<typename Cur>
-            static auto base(Cur const &pos) ->
-                decltype(pos.base())
-            {
-                return pos.base();
-            }
-            template<typename Cur>
-            static auto count(Cur const &pos) ->
-                decltype(pos.count())
-            {
-                return pos.count();
-            }
 
         private:
             template<typename Cur>

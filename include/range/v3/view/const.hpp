@@ -19,6 +19,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
@@ -28,20 +29,13 @@ namespace ranges
         namespace detail
         {
             template<typename T>
-            T const & cref(T const &);
+            struct cref_t { using type = T; };
 
-            struct const_adaptor : default_adaptor
-            {
-                // The conditional operator used to deduce the return type here is
-                // a clever way of keeping rvalues as rvalues, but const-ifying
-                // lvalue references.
-                template<typename Cur>
-                auto current(Cur const &pos) const ->
-                    decltype(true ? pos.current() : detail::cref(pos.current()))
-                {
-                    return pos.current();
-                }
-            };
+            template<typename T>
+            struct cref_t<T &> { using type = T const &; };
+
+            template<typename T>
+            struct cref_t<T &&> { using type = T const &&; };
         }
 
         template<typename Rng>
@@ -50,22 +44,32 @@ namespace ranges
         {
         private:
             friend range_access;
-            detail::const_adaptor begin_adaptor() const
+            using reference_ = meta_apply<detail::cref_t, range_reference_t<Rng>>;
+            struct adaptor
+              : iterator_adaptor_base
+            {
+                reference_ current(range_iterator_t<Rng> it) const
+                {
+                    return *it;
+                }
+            };
+            adaptor begin_adaptor() const
             {
                 return {};
             }
-            detail::const_adaptor end_adaptor() const
+            adaptor end_adaptor() const
             {
-                return{};
+                return {};
             }
         public:
+            const_view() = default;
             explicit const_view(Rng && rng)
               : range_adaptor_t<const_view>(std::forward<Rng>(rng))
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
             {
-                return this->base_size();
+                return ranges::size(this->base());
             }
         };
 

@@ -45,23 +45,20 @@ namespace ranges
 
             struct adaptor;
             friend struct adaptor;
-            struct adaptor : default_adaptor
+            struct adaptor : iterator_adaptor_base
             {
             private:
-                using base_cursor_t = ranges::base_cursor_t<flatten_view>;
-                using derived_cursor_t = ranges::derived_cursor_t<base_cursor_t, adaptor>;
                 flatten_view *rng_;
                 range_iterator_t<range_value_t<Rng>> it_;
-                void satisfy(base_cursor_t &pos)
+                void satisfy(range_iterator_t<Rng> &it)
                 {
                     auto &cur = rng_->cur_;
-                    auto const end = default_adaptor::end(*rng_);
+                    auto const end = ranges::end(rng_->base());
                     while(it_ == ranges::end(cur))
                     {
-                        pos.next();
-                        if(end.equal(pos))
+                        if(++it == end)
                             break;
-                        cur = view::all(pos.current());
+                        cur = view::all(*it);
                         it_ = ranges::begin(cur);
                     }
                 }
@@ -71,31 +68,30 @@ namespace ranges
                 adaptor(flatten_view &rng)
                   : rng_(&rng), it_{}
                 {}
-                base_cursor_t begin(flatten_view &)
+                range_iterator_t<Rng> begin(flatten_view &)
                 {
-                    base_cursor_t pos = default_adaptor::begin(*rng_);
-                    auto const end = default_adaptor::end(*rng_);
-                    // BUGBUG pos.equal(end) doesn't work. Find out why.
-                    if(!end.equal(pos))
+                    auto it = ranges::begin(rng_->base());
+                    auto const end = ranges::end(rng_->base());
+                    if(it != end)
                     {
-                        rng_->cur_ = pos.current();
+                        rng_->cur_ = view::all(*it);
                         it_ = ranges::begin(rng_->cur_);
-                        satisfy(pos);
+                        satisfy(it);
                     }
-                    return pos;
+                    return it;
                 }
-                bool equal(derived_cursor_t const &pos, derived_cursor_t const &that) const
+                bool equal(range_iterator_t<Rng> const &it,
+                    compressed_pair<range_iterator_t<Rng>, adaptor> const &that) const
                 {
-                    RANGES_ASSERT(this == &pos.adaptor());
-                    RANGES_ASSERT(rng_ == that.adaptor().rng_);
-                    return pos.equal(that) && it_ == that.adaptor().it_;
+                    RANGES_ASSERT(rng_ == that.second.rng_);
+                    return it == that.first && it_ == that.second.it_;
                 }
-                void next(derived_cursor_t &pos)
+                void next(range_iterator_t<Rng> &it)
                 {
                     ++it_;
-                    satisfy(pos);
+                    satisfy(it);
                 }
-                auto current(derived_cursor_t const &) const -> decltype(*it_)
+                auto current(range_iterator_t<Rng> const &) const -> decltype(*it_)
                 {
                     return *it_;
                 }

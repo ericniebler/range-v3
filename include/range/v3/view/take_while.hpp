@@ -26,34 +26,12 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename Pred, typename SinglePass>
-            struct take_while_sentinel_adaptor : default_adaptor
-            {
-            private:
-                Pred pred_;
-            public:
-                using single_pass = SinglePass;
-                take_while_sentinel_adaptor() = default;
-                take_while_sentinel_adaptor(Pred pred)
-                  : pred_(std::move(pred))
-                {}
-                template<typename Cur, typename S>
-                bool empty(Cur const &pos, S const &end) const
-                {
-                    return end.equal(pos) || !pred_(pos.current());
-                }
-            };
-        }
-
         template<typename Rng, typename Pred>
         struct take_while_view
           : range_adaptor<take_while_view<Rng, Pred>, Rng>
         {
         private:
             using reference_t = concepts::Invokable::result_t<Pred, range_value_t<Rng>>;
-            //using reference_t = result_of_t<invokable_t<Pred>(range_value_t<Rng>)>;
             friend range_access;
             using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Pred>>(),
                 invokable_t<Pred>, detail::value_wrapper<invokable_t<Pred>>>;
@@ -64,14 +42,29 @@ namespace ranges
             using single_pass = detail::or_t<
                 SinglePass<range_iterator_t<Rng>>,
                 detail::not_t<std::is_reference<reference_t>>>;
-            using end_adaptor_t = detail::take_while_sentinel_adaptor<adaptor_fun_t, single_pass>;
 
-            default_adaptor begin_adaptor() const
+            struct sentinel_adaptor
+              : sentinel_adaptor_base
+            {
+            private:
+                adaptor_fun_t pred_;
+            public:
+                using single_pass = take_while_view::single_pass;
+                sentinel_adaptor() = default;
+                sentinel_adaptor(adaptor_fun_t pred)
+                  : pred_(std::move(pred))
+                {}
+                bool empty(range_iterator_t<Rng> it, range_sentinel_t<Rng> end) const
+                {
+                    return it == end || !pred_(*it);
+                }
+            };
+
+            iterator_adaptor_base begin_adaptor() const
             {
                 return {};
             }
-
-            end_adaptor_t end_adaptor() const
+            sentinel_adaptor end_adaptor() const
             {
                 return {pred_};
             }

@@ -22,6 +22,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -61,11 +62,11 @@ namespace ranges
 
             difference_type_ stride_;
 
-            struct adaptor : default_adaptor, private dirty_t, private offset_t
+            struct adaptor : iterator_adaptor_base, private dirty_t, private offset_t
             {
             private:
-                using base_cursor_t = ranges::base_cursor_t<strided_view>;
-                using derived_cursor_t = ranges::derived_cursor_t<base_cursor_t, adaptor>;
+                using iterator = ranges::range_iterator_t<Rng>;
+                using adaptor_pair = std::pair<iterator, adaptor>;
                 strided_view const *rng_;
                 dirty_t & dirty() { return *this; }
                 dirty_t const & dirty() const { return *this; }
@@ -83,7 +84,7 @@ namespace ranges
                 }
                 void do_clean() const
                 {
-                    auto tmp = rng_->base_distance() % rng_->stride_;
+                    auto tmp = ranges::distance(rng_->base()) % rng_->stride_;
                     offset() = 0 != tmp ? rng_->stride_ - tmp : tmp;
                 }
             public:
@@ -98,60 +99,43 @@ namespace ranges
                     if(BidirectionalIterable<Rng>() && SizedIterable<Rng>())
                         do_clean();
                 }
-                void next(base_cursor_t &pos)
+                void next(iterator &it)
                 {
                     RANGES_ASSERT(0 == offset());
-                    auto rng = as_iterator_pair(std::move(pos),
-                        default_adaptor::end(*rng_));
-                    RANGES_ASSERT(rng.first != rng.second);
-                    offset() = advance_bounded(rng.first, rng_->stride_ + offset(),
-                        rng.second);
-                    pos = ranges::range_access::cursor(std::move(rng.first));
+                    RANGES_ASSERT(it != ranges::end(rng_->base()));
+                    offset() = advance_bounded(it, rng_->stride_ + offset(),
+                        ranges::end(rng_->base()));
                 }
                 CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
-                void prev(base_cursor_t &pos)
+                void prev(iterator &it)
                 {
                     clean();
-                    auto rng = as_iterator_pair(default_adaptor::begin(*rng_),
-                        std::move(pos));
-                    offset() = advance_bounded(rng.second, -rng_->stride_ + offset(),
-                        rng.first);
+                    offset() = advance_bounded(it, -rng_->stride_ + offset(),
+                        ranges::begin(rng_->base()));
                     RANGES_ASSERT(0 == offset());
-                    pos = ranges::range_access::cursor(std::move(rng.second));
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
-                difference_type_ distance_to(derived_cursor_t const &here,
-                    derived_cursor_t const &there) const
+                difference_type_ distance_to(iterator here, adaptor_pair there) const
                 {
                     clean();
-                    there.adaptor().clean();
-                    RANGES_ASSERT(this == &here.adaptor());
-                    RANGES_ASSERT(rng_ == there.adaptor().rng_);
-                    RANGES_ASSERT(0 == (here.distance_to(there) +
-                        (there.adaptor().offset() - offset())) % rng_->stride_);
-                    return (here.distance_to(there) +
-                        (there.adaptor().offset() - offset())) / rng_->stride_;
+                    there.second.clean();
+                    RANGES_ASSERT(rng_ == there.second.rng_);
+                    RANGES_ASSERT(0 == ((there.first - here) +
+                        (there.second.offset() - offset())) % rng_->stride_);
+                    return ((there.first - here) +
+                        (there.second.offset() - offset())) / rng_->stride_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
-                void advance(base_cursor_t &pos, difference_type_ n)
+                void advance(iterator &it, difference_type_ n)
                 {
-                    clean();
+                    if(n != 0)
+                        clean();
                     if(0 < n)
-                    {
-                        auto rng = as_iterator_pair(std::move(pos),
-                            default_adaptor::end(*rng_));
-                        offset() = advance_bounded(rng.first, n * rng_->stride_ + offset(),
-                            rng.second);
-                        pos = ranges::range_access::cursor(std::move(rng.first));
-                    }
+                        offset() = advance_bounded(it, n * rng_->stride_ + offset(),
+                            ranges::end(rng_->base()));
                     else if(0 > n)
-                    {
-                        auto rng = as_iterator_pair(default_adaptor::begin(*rng_),
-                            std::move(pos));
-                        offset() = advance_bounded(rng.second, n * rng_->stride_ + offset(),
-                            rng.first);
-                        pos = ranges::range_access::cursor(std::move(rng.second));
-                    }
+                        offset() = advance_bounded(it, n * rng_->stride_ + offset(),
+                            ranges::begin(rng_->base()));
                 }
             };
             // If the underlying sequence object doesn't model BoundedIterable, then we can't
@@ -159,7 +143,7 @@ namespace ranges
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Iterables, but in the interests of making the resulting stride view model
             // BoundedRange, adapt it anyway.
-            auto end_adaptor_(concepts::Iterable*) const -> default_adaptor
+            auto end_adaptor_(concepts::Iterable*) const -> sentinel_adaptor_base
             {
                 return {};
             }
@@ -172,7 +156,7 @@ namespace ranges
             {
                 return {*this, begin_tag{}};
             }
-            detail::conditional_t<(BoundedIterable<Rng>()), adaptor, default_adaptor>
+            detail::conditional_t<(BoundedIterable<Rng>()), adaptor, sentinel_adaptor_base>
             end_adaptor() const
             {
                 return strided_view::end_adaptor_(bounded_iterable_concept<Rng>());
@@ -188,7 +172,7 @@ namespace ranges
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             size_type_ size() const
             {
-                return (this->base_size() + static_cast<size_type_>(stride_) - 1) /
+                return (ranges::size(this->base()) + static_cast<size_type_>(stride_) - 1) /
                     static_cast<size_type_>(stride_);
             }
         };

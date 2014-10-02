@@ -31,20 +31,6 @@ namespace ranges
         {
             template<typename T> T && rref(T &, int);
             template<typename T> T rref(T, long);
-
-            struct move_adaptor : default_adaptor
-            {
-            private:
-                using default_adaptor::prev;
-            public:
-                using single_pass = std::true_type;
-                template<typename Cur>
-                auto current(Cur const &pos) const ->
-                    decltype(detail::rref(pos.current(), 1))
-                {
-                    return std::move(pos.current());
-                }
-            };
         }
 
         template<typename Rng>
@@ -53,11 +39,23 @@ namespace ranges
         {
         private:
             friend range_access;
-            detail::move_adaptor begin_adaptor() const
+            struct adaptor : iterator_adaptor_base
+            {
+            private:
+                using iterator_adaptor_base::prev;
+            public:
+                using single_pass = std::true_type;
+                auto current(range_iterator_t<Rng> it) const ->
+                    decltype(detail::rref(*it, 1))
+                {
+                    return std::move(*it);
+                }
+            };
+            adaptor begin_adaptor() const
             {
                 return {};
             }
-            detail::move_adaptor end_adaptor() const
+            adaptor end_adaptor() const
             {
                 return {};
             }
@@ -69,7 +67,7 @@ namespace ranges
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
             {
-                return this->base_size();
+                return ranges::size(this->base());
             }
         };
 

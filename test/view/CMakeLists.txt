@@ -8,11 +8,17 @@ add_test(test.view.all, view.all)
 add_executable(view.bounded bounded.cpp)
 add_test(test.view.bounded, view.bounded)
 
+add_executable(view.const const.cpp)
+add_test(test.view.const, view.const)
+
 add_executable(view.counted counted.cpp)
 add_test(test.view.counted, view.counted)
 
 add_executable(view.delimit delimit.cpp)
 add_test(test.view.delimit, view.delimit)
+
+add_executable(view.filter filter.cpp)
+add_test(test.view.filter, view.filter)
 
 add_executable(view.generate generate.cpp)
 add_test(test.view.generate, view.generate)
@@ -49,6 +55,9 @@ add_test(test.view.stride, view.stride)
 
 add_executable(view.take_while take_while.cpp)
 add_test(test.view.take_while, view.take_while)
+
+add_executable(view.transform transform.cpp)
+add_test(test.view.transform, view.transform)
 
 add_executable(view.unique unique.cpp)
 add_test(test.view.unique, view.unique)

@@ -163,8 +163,10 @@
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
     <ClCompile Include="..\..\..\..\test\view\bounded.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\const.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate_n.cpp" />
     <ClCompile Include="..\..\..\..\test\view\indirect.cpp" />
@@ -177,6 +179,7 @@
     <ClCompile Include="..\..\..\..\test\view\slice.cpp" />
     <ClCompile Include="..\..\..\..\test\view\stride.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take_while.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\view\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\view\zip.cpp" />
     <ClCompile Include="range.cpp" />

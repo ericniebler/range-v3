@@ -100,25 +100,6 @@ namespace ranges
                     return (*t_)(std::forward<Args>(args)...);
                 }
             };
-
-            template<typename Fun, typename SinglePass>
-            struct transform_adaptor : default_adaptor
-            {
-            private:
-                Fun fun_;
-            public:
-                using single_pass = SinglePass;
-                transform_adaptor() = default;
-                transform_adaptor(Fun fun)
-                  : fun_(std::move(fun))
-                {}
-                template<typename Cur>
-                auto current(Cur const &pos) const ->
-                    decltype(fun_(pos.current()))
-                {
-                    return fun_(pos.current());
-                }
-            };
         }
 
         template<typename Rng, typename Fun>
@@ -126,7 +107,7 @@ namespace ranges
           : range_adaptor<transformed_view<Rng, Fun>, Rng>
         {
         private:
-            using reference_t = result_of_t<invokable_t<Fun> const(range_value_t<Rng>)>;
+            using reference_t = concepts::Invokable::result_t<Fun, range_value_t<Rng>>;
             friend range_access;
             using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Fun>>(),
                 invokable_t<Fun>, detail::value_wrapper<invokable_t<Fun>>>;
@@ -138,21 +119,38 @@ namespace ranges
             using single_pass = detail::or_t<
                 SinglePass<range_iterator_t<Rng>>,
                 detail::not_t<std::is_reference<reference_t>>>;
-            using adaptor_t = detail::transform_adaptor<adaptor_fun_t, single_pass>;
             using use_sentinel_t = detail::or_t<detail::not_t<BoundedIterable<Rng>>, single_pass>;
-            adaptor_t begin_adaptor() const
+
+            struct adaptor : iterator_adaptor_base
             {
-                return adaptor_t{fun_};
+            private:
+                adaptor_fun_t fun_;
+            public:
+                using single_pass = transformed_view::single_pass;
+                adaptor() = default;
+                adaptor(adaptor_fun_t fun)
+                  : fun_(std::move(fun))
+                {}
+                auto current(range_iterator_t<Rng> it) const ->
+                    decltype(fun_(*it))
+                {
+                    return fun_(*it);
+                }
+            };
+
+            adaptor begin_adaptor() const
+            {
+                return {fun_};
             }
             CONCEPT_REQUIRES(use_sentinel_t())
-            default_adaptor end_adaptor() const
+            iterator_adaptor_base end_adaptor() const
             {
                 return {};
             }
             CONCEPT_REQUIRES(!use_sentinel_t())
-            adaptor_t end_adaptor() const
+            adaptor end_adaptor() const
             {
-                return adaptor_t{fun_};
+                return {fun_};
             }
         public:
             transformed_view() = default;
@@ -163,7 +161,7 @@ namespace ranges
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
             {
-                return this->base_size();
+                return ranges::size(this->base());
             }
         };
 

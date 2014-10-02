@@ -34,11 +34,10 @@ namespace ranges
             CONCEPT_ASSERT(BidirectionalIterable<Rng>());
             CONCEPT_ASSERT(BoundedIterable<Rng>());
             friend range_access;
-            using base_cursor_t = ranges::base_cursor_t<reversed_view>;
 
             // A rather convoluted implementation to avoid the problem std::reverse_iterator
             // has adapting iterators that return references to internal data.
-            struct adaptor : default_adaptor
+            struct adaptor : iterator_adaptor_base
             {
             private:
                 reversed_view const *rng_;
@@ -47,45 +46,45 @@ namespace ranges
                 adaptor(reversed_view const &rng)
                   : rng_(&rng)
                 {}
-                base_cursor_t begin(reversed_view const &rng) const
+                range_iterator_t<Rng> begin(reversed_view const &rng) const
                 {
-                    auto pos = default_adaptor::end(rng);
-                    if(!pos.equal(default_adaptor::begin(rng)))
-                        pos.prev();
-                    return pos;
+                    auto it = ranges::end(rng.base());
+                    if(it != ranges::begin(rng.base()))
+                        --it;
+                    return it;
                 }
-                void next(base_cursor_t &pos) const
+                void next(range_iterator_t<Rng> &it) const
                 {
-                    if(pos.equal(default_adaptor::begin(*rng_)))
-                        pos = default_adaptor::end(*rng_);
+                    if(it == ranges::begin(rng_->base()))
+                        it = ranges::end(rng_->base());
                     else
-                        pos.prev();
+                        --it;
                 }
-                void prev(base_cursor_t &pos) const
+                void prev(range_iterator_t<Rng> &it) const
                 {
-                    if(pos.equal(default_adaptor::end(*rng_)))
-                        pos = default_adaptor::begin(*rng_);
+                    if(it == ranges::end(rng_->base()))
+                        it = ranges::begin(rng_->base());
                     else
-                        pos.next();
+                        ++it;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
-                void advance(base_cursor_t &pos, range_difference_t<Rng> n) const
+                void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n) const
                 {
                     if(n > 0)
-                        pos.advance(-n + 1), next(pos);
+                        ranges::advance(it, -n + 1), next(it);
                     else if(n < 0)
-                        prev(pos), pos.advance(-n - 1);
+                        prev(it), ranges::advance(it, -n - 1);
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 range_difference_t<Rng>
-                distance_to(base_cursor_t const &here, base_cursor_t const &there) const
+                distance_to(range_iterator_t<Rng> const &here, range_iterator_t<Rng> const &there) const
                 {
-                    if(there.equal(default_adaptor::end(*rng_)))
-                        return here.equal(default_adaptor::end(*rng_))
-                            ? 0 : default_adaptor::begin(*rng_).distance_to(here) + 1;
-                    else if(here.equal(default_adaptor::end(*rng_)))
-                        return there.distance_to(default_adaptor::begin(*rng_)) - 1;
-                    return there.distance_to(here);
+                    if(there == ranges::end(rng_->base()))
+                        return here == ranges::end(rng_->base())
+                            ? 0 : (here - ranges::begin(rng_->base())) + 1;
+                    else if(here == ranges::end(rng_->base()))
+                        return (ranges::begin(rng_->base()) - there) - 1;
+                    return here - there;
                 }
             };
             adaptor begin_adaptor() const
@@ -104,7 +103,7 @@ namespace ranges
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
             {
-                return this->base_size();
+                return ranges::size(this->base());
             }
         };
 

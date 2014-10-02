@@ -25,42 +25,41 @@ private:
     CONCEPT_ASSERT(ranges::BidirectionalIterable<BidiRange>());
     CONCEPT_ASSERT(ranges::BoundedIterable<BidiRange>());
     friend ranges::range_access;
-    using base_cursor_t = ranges::base_cursor_t<my_reverse_view>;
+    using base_iterator_t = ranges::range_iterator_t<BidiRange>;
 
-    struct adaptor : ranges::default_adaptor
+    struct adaptor : ranges::iterator_adaptor_base
     {
         // Cross-wire begin and end.
-        base_cursor_t begin(my_reverse_view const &rng) const
+        base_iterator_t begin(my_reverse_view const &rng) const
         {
-            return default_adaptor::end(rng);
+            return ranges::end(rng.base());
         }
-        base_cursor_t end(my_reverse_view const &rng) const
+        base_iterator_t end(my_reverse_view const &rng) const
         {
-            return default_adaptor::begin(rng);
+            return ranges::begin(rng.base());
         }
-        void next(base_cursor_t &pos)
+        void next(base_iterator_t &it)
         {
-            pos.prev();
+            --it;
         }
-        void prev(base_cursor_t &pos)
+        void prev(base_iterator_t &it)
         {
-            pos.next();
+            ++it;
         }
-        auto current(base_cursor_t tmp) const -> decltype(tmp.current())
+        ranges::range_reference_t<BidiRange> current(base_iterator_t it) const
         {
-            tmp.prev();
-            return tmp.current();
+            return *ranges::prev(it);
         }
         CONCEPT_REQUIRES(ranges::RandomAccessIterable<BidiRange>())
-        void advance(base_cursor_t &pos, ranges::range_difference_t<BidiRange> n)
+        void advance(base_iterator_t &it, ranges::range_difference_t<BidiRange> n)
         {
-            pos.advance(-n);
+            it -= n;
         }
         CONCEPT_REQUIRES(ranges::RandomAccessIterable<BidiRange>())
         ranges::range_difference_t<BidiRange>
-        distance_to(base_cursor_t const &here, base_cursor_t const &there)
+        distance_to(base_iterator_t const &here, base_iterator_t const &there)
         {
-            return there.distance_to(here);
+            return here - there;
         }
     };
     adaptor begin_adaptor() const

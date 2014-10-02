@@ -32,39 +32,39 @@ namespace ranges
             /// range-based version of the \c adjacent_find std algorithm
             ///
             /// \pre \c Rng is a model of the Range concept
-            /// \pre \c R is a model of the BinaryPredicate concept
-            template<typename I, typename S, typename R = equal_to, typename P = ident,
+            /// \pre \c C is a model of the BinaryPredicate concept
+            template<typename I, typename S, typename C = equal_to, typename P = ident,
                 typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
                     ForwardIterator<I>() && IteratorRange<I, S>() &&
                     Invokable<P, V>() &&
-                    InvokableRelation<R, concepts::Invokable::result_t<P, V>>()
+                    InvokableRelation<C, concepts::Invokable::result_t<P, V>>()
                 )>
             I
-            operator()(I begin, S end, R pred = R{}, P proj = P{}) const
+            operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&ipred = invokable(pred);
-                auto &&iproj = invokable(proj);
+                auto &&pred = invokable(pred_);
+                auto &&proj = invokable(proj_);
                 if(begin == end)
                     return begin;
                 auto next = begin;
                 for(; ++next != end; begin = next)
-                    if(ipred(iproj(*begin), iproj(*next)))
+                    if(pred(proj(*begin), proj(*next)))
                         return begin;
                 return next;
             }
 
             /// \overload
-            template<typename Rng, typename R = equal_to, typename P = ident,
+            template<typename Rng, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
                     ForwardIterable<Rng>() &&
                     Invokable<P, V>() &&
-                    InvokableRelation<R, concepts::Invokable::result_t<P, V>>()
+                    InvokableRelation<C, concepts::Invokable::result_t<P, V>>()
                 )>
             I
-            operator()(Rng &rng, R pred = R{}, P proj = P{}) const
+            operator()(Rng &rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }

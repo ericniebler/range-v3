@@ -26,40 +26,37 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            struct indirect_adaptor : default_adaptor
-            {
-                template<typename Cur>
-                auto current(Cur const &pos) const -> decltype(*pos.current())
-                {
-                    return *pos.current();
-                }
-            };
-        }
-
         template<typename Rng>
         struct indirect_view
           : range_adaptor<indirect_view<Rng>, Rng>
         {
         private:
             friend range_access;
-            detail::indirect_adaptor begin_adaptor() const
+            struct adaptor
+              : iterator_adaptor_base
+            {
+                auto current(range_iterator_t<Rng> it) const -> decltype(**it)
+                {
+                    return **it;
+                }
+            };
+            adaptor begin_adaptor() const
             {
                 return {};
             }
-            detail::indirect_adaptor end_adaptor() const
+            adaptor end_adaptor() const
             {
                 return{};
             }
         public:
+            indirect_view() = default;
             explicit indirect_view(Rng && rng)
               : range_adaptor_t<indirect_view>(std::forward<Rng>(rng))
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
             {
-                return this->base_size();
+                return ranges::size(this->base());
             }
         };
 

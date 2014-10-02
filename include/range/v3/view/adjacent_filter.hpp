@@ -19,6 +19,7 @@
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/algorithm/adjacent_find.hpp>
 
 namespace ranges
 {
@@ -31,34 +32,32 @@ namespace ranges
         private:
             friend range_access;
             invokable_t<F> pred_;
-            using base_cursor_t = ranges::base_cursor_t<adjacent_filtered_view>;
 
-            struct adaptor : default_adaptor
+            struct adaptor : iterator_adaptor_base
             {
             private:
                 adjacent_filtered_view const *rng_;
-                using default_adaptor::prev;
+                using iterator_adaptor_base::prev;
             public:
                 adaptor() = default;
                 adaptor(adjacent_filtered_view const &rng)
                   : rng_(&rng)
                 {}
-                void next(base_cursor_t &pos) const
+                void next(range_iterator_t<Rng> &it) const
                 {
-                    auto const end = default_adaptor::end(*rng_);
-                    RANGES_ASSERT(!end.equal(pos));
-                    auto const &pred = rng_->pred_;
-                    auto const prev = pos;
-                    do pos.next(); while (!end.equal(pos) && !pred(prev.current(), pos.current()));
+                    auto const end = ranges::end(rng_->base());
+                    RANGES_ASSERT(it != end);
+                    it = adjacent_find(std::move(it), end, std::ref(rng_->pred_));
+                    advance_bounded(it, 1, end);
                 }
             };
             adaptor begin_adaptor() const
             {
-                return{*this};
+                return {*this};
             }
             adaptor end_adaptor() const
             {
-                return{*this};
+                return {*this};
             }
         public:
             adjacent_filtered_view() = default;

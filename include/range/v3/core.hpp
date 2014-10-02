@@ -19,6 +19,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/range_adaptor.hpp>
+#include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_access.hpp>
 #include <range/v3/at.hpp>
 #include <range/v3/back.hpp>

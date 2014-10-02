@@ -1,0 +1,56 @@
+// Range v3 library
+//
+//  Copyright Eric Niebler 2014
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// Project home: https://github.com/ericniebler/range-v3
+
+#include <iterator>
+#include <functional>
+#include <range/v3/core.hpp>
+#include <range/v3/view/filter.hpp>
+#include <range/v3/view/counted.hpp>
+#include <range/v3/view/reverse.hpp>
+#include "../simple_test.hpp"
+#include "../test_utils.hpp"
+
+struct is_odd
+{
+    bool operator()(int i) const
+    {
+        return (i % 2) == 1;
+    }
+};
+
+int main()
+{
+    using namespace ranges;
+
+    int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    auto && rng = rgi | view::filter(is_odd());
+    has_type<int &>(*begin(rgi));
+    has_type<int &>(*begin(rng));
+    models<concepts::BoundedRange>(rng);
+    models_not<concepts::SizedRange>(rng);
+    models<concepts::BidirectionalRange>(rng);
+    models_not<concepts::RandomAccessRange>(rng);
+    ::check_equal(rng, {1,3,5,7,9});
+    ::check_equal(rng | view::reverse, {9,7,5,3,1});
+    CHECK(&*begin(rng | view::reverse) == &rgi[8]);
+
+    auto && rng2 = view::counted(rgi, 10) | view::filter(is_odd());
+    has_type<int &>(*begin(rng2));
+    models<concepts::BidirectionalRange>(rng2);
+    models_not<concepts::RandomAccessRange>(rng2);
+    models_not<concepts::BoundedRange>(rng2);
+    models_not<concepts::SizedRange>(rng2);
+    ::check_equal(rng2, {1,3,5,7,9});
+    CHECK(&*begin(rng2) == &rgi[0]);
+
+    return test_result();
+}

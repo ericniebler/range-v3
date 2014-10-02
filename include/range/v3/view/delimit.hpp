@@ -24,26 +24,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename Val>
-            struct delimit_sentinel_adaptor : default_adaptor
-            {
-            private:
-                Val value_;
-            public:
-                delimit_sentinel_adaptor() = default;
-                delimit_sentinel_adaptor(Val value)
-                  : value_(std::move(value))
-                {}
-                template<typename Cur, typename S>
-                bool empty(Cur const &pos, S const &end) const
-                {
-                    return end.equal(pos) || pos.current() == value_;
-                }
-            };
-        }
-
         template<typename Rng, typename Val>
         struct delimited_view
           : range_adaptor<delimited_view<Rng, Val>, Rng>
@@ -52,11 +32,20 @@ namespace ranges
             friend range_access;
             Val value_;
 
-            default_adaptor begin_adaptor() const
+            struct sentinel_adaptor : sentinel_adaptor_base
             {
-                return {};
-            }
-            detail::delimit_sentinel_adaptor<Val> end_adaptor() const
+                sentinel_adaptor() = default;
+                sentinel_adaptor(Val value)
+                  : value_(std::move(value))
+                {}
+                bool empty(range_iterator_t<Rng> it, range_sentinel_t<Rng> end) const
+                {
+                    return it == end || *it == value_;
+                }
+                Val value_;
+            };
+
+            sentinel_adaptor end_adaptor() const
             {
                 return {value_};
             }

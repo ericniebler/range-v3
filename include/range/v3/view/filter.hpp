@@ -18,10 +18,11 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 namespace ranges
 {
@@ -33,43 +34,38 @@ namespace ranges
         {
         private:
             friend range_access;
-            using base_cursor_t = ranges::base_cursor_t<filtered_view>;
             invokable_t<Pred> pred_;
 
-            struct adaptor : default_adaptor
+            struct adaptor
+              : iterator_adaptor_base
             {
             private:
                 filtered_view const *rng_;
-                using default_adaptor::advance;
-                void satisfy(base_cursor_t &pos) const
+                using iterator_adaptor_base::advance;
+                void satisfy(range_iterator_t<Rng> &it) const
                 {
-                    auto const end = default_adaptor::end(*rng_);
-                    while(!end.equal(pos) && !rng_->pred_(pos.current()))
-                        pos.next();
+                    it = find_if(std::move(it), ranges::end(rng_->base()), std::ref(rng_->pred_));
                 }
             public:
                 adaptor() = default;
                 adaptor(filtered_view const &rng)
                   : rng_(&rng)
                 {}
-                base_cursor_t begin(filtered_view const &rng) const
+                range_iterator_t<Rng> begin(filtered_view const &rng) const
                 {
-                    auto pos = default_adaptor::begin(rng);
-                    this->satisfy(pos);
-                    return pos;
+                    auto it = ranges::begin(rng.base());
+                    this->satisfy(it);
+                    return it;
                 }
-                void next(base_cursor_t &pos) const
+                void next(range_iterator_t<Rng> &it) const
                 {
-                    pos.next();
-                    this->satisfy(pos);
+                    this->satisfy(++it);
                 }
                 CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
-                void prev(base_cursor_t &pos) const
+                void prev(range_iterator_t<Rng> &it) const
                 {
-                    do
-                    {
-                        pos.prev();
-                    } while (!rng_->pred_(pos.current()));
+                    auto &&pred = rng_->pred_;
+                    do --it; while(!pred(*it));
                 }
             };
             adaptor begin_adaptor() const
@@ -83,6 +79,7 @@ namespace ranges
                 return {*this};
             }
         public:
+            filtered_view() = default;
             filtered_view(Rng && rng, Pred pred)
               : range_adaptor_t<filtered_view>(std::forward<Rng>(rng))
               , pred_(invokable(std::move(pred)))
