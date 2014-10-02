@@ -44,7 +44,7 @@ namespace ranges
                 detail::not_t<std::is_reference<reference_t>>>;
 
             struct sentinel_adaptor
-              : sentinel_adaptor_base
+              : adaptor_base
             {
             private:
                 adaptor_fun_t pred_;
@@ -60,7 +60,7 @@ namespace ranges
                 }
             };
 
-            iterator_adaptor_base begin_adaptor() const
+            adaptor_base begin_adaptor() const
             {
                 return {};
             }

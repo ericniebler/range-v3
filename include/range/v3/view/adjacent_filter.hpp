@@ -33,11 +33,11 @@ namespace ranges
             friend range_access;
             invokable_t<F> pred_;
 
-            struct adaptor : iterator_adaptor_base
+            struct adaptor : adaptor_base
             {
             private:
                 adjacent_filtered_view const *rng_;
-                using iterator_adaptor_base::prev;
+                using adaptor_base::prev;
             public:
                 adaptor() = default;
                 adaptor(adjacent_filtered_view const &rng)

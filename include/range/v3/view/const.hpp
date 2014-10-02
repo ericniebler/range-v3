@@ -46,7 +46,7 @@ namespace ranges
             friend range_access;
             using reference_ = meta_apply<detail::cref_t, range_reference_t<Rng>>;
             struct adaptor
-              : iterator_adaptor_base
+              : adaptor_base
             {
                 reference_ current(range_iterator_t<Rng> it) const
                 {

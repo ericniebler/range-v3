@@ -121,7 +121,7 @@ namespace ranges
                 detail::not_t<std::is_reference<reference_t>>>;
             using use_sentinel_t = detail::or_t<detail::not_t<BoundedIterable<Rng>>, single_pass>;
 
-            struct adaptor : iterator_adaptor_base
+            struct adaptor : adaptor_base
             {
             private:
                 adaptor_fun_t fun_;
@@ -143,7 +143,7 @@ namespace ranges
                 return {fun_};
             }
             CONCEPT_REQUIRES(use_sentinel_t())
-            iterator_adaptor_base end_adaptor() const
+            adaptor_base end_adaptor() const
             {
                 return {};
             }

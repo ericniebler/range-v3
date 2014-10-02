@@ -37,11 +37,11 @@ namespace ranges
             invokable_t<Pred> pred_;
 
             struct adaptor
-              : iterator_adaptor_base
+              : adaptor_base
             {
             private:
                 filtered_view const *rng_;
-                using iterator_adaptor_base::advance;
+                using adaptor_base::advance;
                 void satisfy(range_iterator_t<Rng> &it) const
                 {
                     it = find_if(std::move(it), ranges::end(rng_->base()), std::ref(rng_->pred_));

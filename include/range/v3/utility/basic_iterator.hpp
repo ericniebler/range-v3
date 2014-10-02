@@ -648,20 +648,6 @@ namespace ranges
                 return operator_brackets_dispatch_t::apply(*this + n);
             }
         };
-
-        template<typename Cur>
-        std::pair<basic_iterator<Cur>, basic_iterator<Cur>>
-        as_iterator_pair(Cur begin, Cur end)
-        {
-            return {{std::move(begin)}, {std::move(end)}};
-        }
-
-        template<typename Cur, typename S>
-        std::pair<basic_iterator<Cur, S>, basic_sentinel<S>>
-        as_iterator_pair(Cur begin, S end)
-        {
-            return {{std::move(begin)}, {std::move(end)}};
-        }
     }
 }
 

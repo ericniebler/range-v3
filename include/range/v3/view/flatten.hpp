@@ -45,7 +45,7 @@ namespace ranges
 
             struct adaptor;
             friend struct adaptor;
-            struct adaptor : iterator_adaptor_base
+            struct adaptor : adaptor_base
             {
             private:
                 flatten_view *rng_;
@@ -80,11 +80,11 @@ namespace ranges
                     }
                     return it;
                 }
-                bool equal(range_iterator_t<Rng> const &it,
-                    compressed_pair<range_iterator_t<Rng>, adaptor> const &that) const
+                bool equal(range_iterator_t<Rng> const &it, range_iterator_t<Rng> const &other_it,
+                    adaptor const &other_adapt) const
                 {
-                    RANGES_ASSERT(rng_ == that.second.rng_);
-                    return it == that.first && it_ == that.second.it_;
+                    RANGES_ASSERT(rng_ == other_adapt.rng_);
+                    return it == other_it && it_ == other_adapt.it_;
                 }
                 void next(range_iterator_t<Rng> &it)
                 {

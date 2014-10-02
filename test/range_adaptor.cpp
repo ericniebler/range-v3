@@ -27,7 +27,7 @@ private:
     friend ranges::range_access;
     using base_iterator_t = ranges::range_iterator_t<BidiRange>;
 
-    struct adaptor : ranges::iterator_adaptor_base
+    struct adaptor : ranges::adaptor_base
     {
         // Cross-wire begin and end.
         base_iterator_t begin(my_reverse_view const &rng) const

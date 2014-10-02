@@ -39,10 +39,10 @@ namespace ranges
         {
         private:
             friend range_access;
-            struct adaptor : iterator_adaptor_base
+            struct adaptor : adaptor_base
             {
             private:
-                using iterator_adaptor_base::prev;
+                using adaptor_base::prev;
             public:
                 using single_pass = std::true_type;
                 auto current(range_iterator_t<Rng> it) const ->

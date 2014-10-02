@@ -37,7 +37,7 @@ namespace ranges
 
             // A rather convoluted implementation to avoid the problem std::reverse_iterator
             // has adapting iterators that return references to internal data.
-            struct adaptor : iterator_adaptor_base
+            struct adaptor : adaptor_base
             {
             private:
                 reversed_view const *rng_;
@@ -77,8 +77,10 @@ namespace ranges
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 range_difference_t<Rng>
-                distance_to(range_iterator_t<Rng> const &here, range_iterator_t<Rng> const &there) const
+                distance_to(range_iterator_t<Rng> const &here, range_iterator_t<Rng> const &there,
+                    adaptor const &other_adapt) const
                 {
+                    RANGES_ASSERT(rng_ == other_adapt.rng_);
                     if(there == ranges::end(rng_->base()))
                         return here == ranges::end(rng_->base())
                             ? 0 : (here - ranges::begin(rng_->base())) + 1;

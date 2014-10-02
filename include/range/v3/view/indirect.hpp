@@ -33,7 +33,7 @@ namespace ranges
         private:
             friend range_access;
             struct adaptor
-              : iterator_adaptor_base
+              : adaptor_base
             {
                 auto current(range_iterator_t<Rng> it) const -> decltype(**it)
                 {

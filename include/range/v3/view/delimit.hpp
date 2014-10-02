@@ -32,7 +32,7 @@ namespace ranges
             friend range_access;
             Val value_;
 
-            struct sentinel_adaptor : sentinel_adaptor_base
+            struct sentinel_adaptor : adaptor_base
             {
                 sentinel_adaptor() = default;
                 sentinel_adaptor(Val value)

@@ -62,11 +62,10 @@ namespace ranges
 
             difference_type_ stride_;
 
-            struct adaptor : iterator_adaptor_base, private dirty_t, private offset_t
+            struct adaptor : adaptor_base, private dirty_t, private offset_t
             {
             private:
                 using iterator = ranges::range_iterator_t<Rng>;
-                using adaptor_pair = std::pair<iterator, adaptor>;
                 strided_view const *rng_;
                 dirty_t & dirty() { return *this; }
                 dirty_t const & dirty() const { return *this; }
@@ -115,15 +114,13 @@ namespace ranges
                     RANGES_ASSERT(0 == offset());
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
-                difference_type_ distance_to(iterator here, adaptor_pair there) const
+                difference_type_ distance_to(iterator here, iterator there, adaptor const &that) const
                 {
                     clean();
-                    there.second.clean();
-                    RANGES_ASSERT(rng_ == there.second.rng_);
-                    RANGES_ASSERT(0 == ((there.first - here) +
-                        (there.second.offset() - offset())) % rng_->stride_);
-                    return ((there.first - here) +
-                        (there.second.offset() - offset())) / rng_->stride_;
+                    that.clean();
+                    RANGES_ASSERT(rng_ == that.rng_);
+                    RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % rng_->stride_);
+                    return ((there - here) + that.offset() - offset()) / rng_->stride_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 void advance(iterator &it, difference_type_ n)
@@ -138,28 +135,24 @@ namespace ranges
                             ranges::begin(rng_->base()));
                 }
             };
+            adaptor begin_adaptor() const
+            {
+                return {*this, begin_tag{}};
+            }
             // If the underlying sequence object doesn't model BoundedIterable, then we can't
             // decrement the end and there's no reason to adapt the sentinel. Strictly
             // speaking, we don't have to adapt the end iterator of Input and Forward
             // Iterables, but in the interests of making the resulting stride view model
             // BoundedRange, adapt it anyway.
-            auto end_adaptor_(concepts::Iterable*) const -> sentinel_adaptor_base
+            CONCEPT_REQUIRES(!BoundedIterable<Rng>())
+            adaptor_base end_adaptor() const
             {
                 return {};
             }
-            auto end_adaptor_(concepts::BoundedIterable*) const -> adaptor
+            CONCEPT_REQUIRES(BoundedIterable<Rng>())
+            adaptor end_adaptor() const 
             {
                 return {*this, end_tag{}};
-            }
-
-            adaptor begin_adaptor() const
-            {
-                return {*this, begin_tag{}};
-            }
-            detail::conditional_t<(BoundedIterable<Rng>()), adaptor, sentinel_adaptor_base>
-            end_adaptor() const
-            {
-                return strided_view::end_adaptor_(bounded_iterable_concept<Rng>());
             }
         public:
             strided_view() = default;
