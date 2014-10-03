@@ -126,6 +126,7 @@ struct U
 
 int main()
 {
+#ifdef SET_DIFFERENCE_1
     test<input_iterator<const int*>, input_iterator<const int*>, output_iterator<int*> >();
     test<input_iterator<const int*>, input_iterator<const int*>, forward_iterator<int*> >();
     test<input_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
@@ -197,7 +198,9 @@ int main()
     test<bidirectional_iterator<const int*>, forward_iterator<const int*>, bidirectional_iterator<int*> >();
     test<bidirectional_iterator<const int*>, forward_iterator<const int*>, random_access_iterator<int*> >();
     test<bidirectional_iterator<const int*>, forward_iterator<const int*>, int*>();
+#endif
 
+#ifdef SET_DIFFERENCE_2
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, output_iterator<int*> >();
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, forward_iterator<int*> >();
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
@@ -330,6 +333,7 @@ int main()
         CHECK((res2.second - ic) == srr);
         CHECK(ranges::lexicographical_compare(ic, res2.second, ir, irr+srr, std::less<int>(), &U::k) == 0);
     }
+#endif
 
     return ::test_result();
 }

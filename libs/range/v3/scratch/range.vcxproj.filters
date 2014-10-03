@@ -372,20 +372,8 @@
     <ClCompile Include="..\..\..\..\test\algorithm\includes.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\algorithm\set_difference.cpp">
-      <Filter>Test Files\algorithm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\test\algorithm\set_intersection.cpp">
-      <Filter>Test Files\algorithm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\test\algorithm\set_union.cpp">
-      <Filter>Test Files\algorithm</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\range.cpp">
       <Filter>Test Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\test\algorithm\set_symmetric_difference.cpp">
-      <Filter>Test Files\algorithm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\algorithm\sort.cpp">
       <Filter>Test Files\algorithm</Filter>
@@ -407,6 +395,30 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\transform.cpp">
       <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\set_difference1.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\set_difference2.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\set_intersection1.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\set_intersection2.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\set_symmetric_difference1.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\set_symmetric_difference2.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\set_union1.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\set_union2.cpp">
+      <Filter>Test Files\algorithm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -916,6 +928,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find_if_not.hpp">
       <Filter>Header Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\test\algorithm\set_difference.hpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\test\algorithm\set_intersection.hpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\test\algorithm\set_symmetric_difference.hpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\test\algorithm\set_union.hpp">
+      <Filter>Test Files\algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

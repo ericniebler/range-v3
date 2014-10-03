@@ -257,15 +257,13 @@ namespace ranges
             adaptor_cursor_t<D> begin_cursor()
             {
                 auto adapt = range_access::begin_adaptor(derived());
-                auto pos = adapt.begin(derived());
-                return {std::move(pos), std::move(adapt)};
+                return {adapt.begin(derived()), std::move(adapt)};
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             adaptor_sentinel_t<D> end_cursor()
             {
                 auto adapt = range_access::end_adaptor(derived());
-                auto pos = adapt.end(derived());
-                return {std::move(pos), std::move(adapt)};
+                return {adapt.end(derived()), std::move(adapt)};
             }
             // Const-correctness is enforced here by only allowing these if the base range
             // has const begin/end accessors. That disables the const begin()/end() accessors
@@ -275,16 +273,14 @@ namespace ranges
             adaptor_cursor_t<D const> begin_cursor() const
             {
                 auto adapt = range_access::begin_adaptor(derived());
-                auto pos = adapt.begin(derived());
-                return {std::move(pos), std::move(adapt)};
+                return {adapt.begin(derived()), std::move(adapt)};
             }
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
             adaptor_sentinel_t<D const> end_cursor() const
             {
                 auto adapt = range_access::end_adaptor(derived());
-                auto pos = adapt.end(derived());
-                return {std::move(pos), std::move(adapt)};
+                return {adapt.end(derived()), std::move(adapt)};
             }
         public:
             range_adaptor() = default;

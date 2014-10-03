@@ -185,17 +185,29 @@ add_test(test.alg.search, alg.search)
 add_executable(alg.search_n search_n.cpp)
 add_test(test.alg.search_n, alg.search_n)
 
-add_executable(alg.set_difference set_difference.cpp)
-add_test(test.alg.set_difference, alg.set_difference)
+add_executable(alg.set_difference1 set_difference1.cpp)
+add_test(test.alg.set_difference1, alg.set_difference1)
 
-add_executable(alg.set_intersection set_intersection.cpp)
-add_test(test.alg.set_intersection, alg.set_intersection)
+add_executable(alg.set_difference2 set_difference2.cpp)
+add_test(test.alg.set_difference2, alg.set_difference2)
 
-add_executable(alg.set_symmetric_difference set_symmetric_difference.cpp)
-add_test(test.alg.set_symmetric_difference, alg.set_symmetric_difference)
+add_executable(alg.set_intersection1 set_intersection1.cpp)
+add_test(test.alg.set_intersection1, alg.set_intersection1)
 
-add_executable(alg.set_union set_union.cpp)
-add_test(test.alg.set_union, alg.set_union)
+add_executable(alg.set_intersection2 set_intersection2.cpp)
+add_test(test.alg.set_intersection2, alg.set_intersection2)
+
+add_executable(alg.set_symmetric_difference1 set_symmetric_difference1.cpp)
+add_test(test.alg.set_symmetric_difference1, alg.set_symmetric_difference1)
+
+add_executable(alg.set_symmetric_difference2 set_symmetric_difference2.cpp)
+add_test(test.alg.set_symmetric_difference2, alg.set_symmetric_difference2)
+
+add_executable(alg.set_union1 set_union1.cpp)
+add_test(test.alg.set_union1, alg.set_union1)
+
+add_executable(alg.set_union2 set_union2.cpp)
+add_test(test.alg.set_union2, alg.set_union2)
 
 add_executable(alg.shuffle shuffle.cpp)
 add_test(test.alg.shuffle, alg.shuffle)
