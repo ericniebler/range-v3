@@ -38,21 +38,21 @@ test_iter()
 
     auto includes = make_testable_2<true, true>(ranges::includes);
 
-    includes(Iter1(ia), Iter1(ia), Iter2(ib), Iter2(ib)).check([&](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia), Iter2(ib), Iter2(ib+1)).check([&](bool b){CHECK(!b);});
-    includes(Iter1(ia), Iter1(ia+1), Iter2(ib), Iter2(ib)).check([&](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(ia), Iter2(ia+sa)).check([&](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia), Iter2(ib), Iter2(ib)).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia), Iter2(ib), Iter2(ib+1)).check(+[](bool b){CHECK(!b);});
+    includes(Iter1(ia), Iter1(ia+1), Iter2(ib), Iter2(ib)).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(ia), Iter2(ia+sa)).check(+[](bool b){CHECK(b);});
 
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(ib), Iter2(ib+sb)).check([&](bool b){CHECK(b);});
-    includes(Iter1(ib), Iter1(ib+sb), Iter2(ia), Iter2(ia+sa)).check([&](bool b){CHECK(!b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(ib), Iter2(ib+sb)).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ib), Iter1(ib+sb), Iter2(ia), Iter2(ia+sa)).check(+[](bool b){CHECK(!b);});
 
-    includes(Iter1(ia), Iter1(ia+2), Iter2(ic), Iter2(ic+2)).check([&](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+2), Iter2(ib), Iter2(ib+2)).check([&](bool b){CHECK(!b);});
+    includes(Iter1(ia), Iter1(ia+2), Iter2(ic), Iter2(ic+2)).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+2), Iter2(ib), Iter2(ib+2)).check(+[](bool b){CHECK(!b);});
 
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+1)).check([&](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+2)).check([&](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+3)).check([&](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+4)).check([&](bool b){CHECK(!b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+1)).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+2)).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+3)).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+4)).check(+[](bool b){CHECK(!b);});
 }
 
 template <class Iter1, class Iter2>
@@ -68,21 +68,21 @@ test_comp()
 
     auto includes = make_testable_2<true, true>(ranges::includes);
 
-    includes(Iter1(ia), Iter1(ia), Iter2(ib), Iter2(ib), std::less<int>()).check([](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia), Iter2(ib), Iter2(ib+1), std::less<int>()).check([](bool b){CHECK(!b);});
-    includes(Iter1(ia), Iter1(ia+1), Iter2(ib), Iter2(ib), std::less<int>()).check([](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(ia), Iter2(ia+sa), std::less<int>()).check([](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia), Iter2(ib), Iter2(ib), std::less<int>()).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia), Iter2(ib), Iter2(ib+1), std::less<int>()).check(+[](bool b){CHECK(!b);});
+    includes(Iter1(ia), Iter1(ia+1), Iter2(ib), Iter2(ib), std::less<int>()).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(ia), Iter2(ia+sa), std::less<int>()).check(+[](bool b){CHECK(b);});
 
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(ib), Iter2(ib+sb), std::less<int>()).check([](bool b){CHECK(b);});
-    includes(Iter1(ib), Iter1(ib+sb), Iter2(ia), Iter2(ia+sa), std::less<int>()).check([](bool b){CHECK(!b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(ib), Iter2(ib+sb), std::less<int>()).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ib), Iter1(ib+sb), Iter2(ia), Iter2(ia+sa), std::less<int>()).check(+[](bool b){CHECK(!b);});
 
-    includes(Iter1(ia), Iter1(ia+2), Iter2(ic), Iter2(ic+2), std::less<int>()).check([](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+2), Iter2(ib), Iter2(ib+2), std::less<int>()).check([](bool b){CHECK(!b);});
+    includes(Iter1(ia), Iter1(ia+2), Iter2(ic), Iter2(ic+2), std::less<int>()).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+2), Iter2(ib), Iter2(ib+2), std::less<int>()).check(+[](bool b){CHECK(!b);});
 
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+1), std::less<int>()).check([](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+2), std::less<int>()).check([](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+3), std::less<int>()).check([](bool b){CHECK(b);});
-    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+4), std::less<int>()).check([](bool b){CHECK(!b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+1), std::less<int>()).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+2), std::less<int>()).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+3), std::less<int>()).check(+[](bool b){CHECK(b);});
+    includes(Iter1(ia), Iter1(ia+sa), Iter2(id), Iter2(id+4), std::less<int>()).check(+[](bool b){CHECK(!b);});
 }
 
 template <class Iter1, class Iter2>
