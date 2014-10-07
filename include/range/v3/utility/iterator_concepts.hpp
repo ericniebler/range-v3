@@ -498,11 +498,27 @@ namespace ranges
             typename V2 = concepts::Readable::value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using WeaklyComparable = logical_and_t<
+        using WeaklyAsymmetricallyComparable = logical_and_t<
             InputIterator<I1>,
             WeakInputIterator<I2>,
             Invokable<P1, V1>,
             Invokable<P2, V2>,
+            InvokablePredicate<C, X1, X2>>;
+
+        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
+            typename P2 = ident>
+        using AsymmetricallyComparable = logical_and_t<
+            WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
+            InputIterator<I2>>;
+
+        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
+            typename P2 = ident,
+            typename V1 = concepts::Readable::value_t<I1>,
+            typename V2 = concepts::Readable::value_t<I2>,
+            typename X1 = concepts::Invokable::result_t<P1, V1>,
+            typename X2 = concepts::Invokable::result_t<P2, V2>>
+        using WeaklyComparable = logical_and_t<
+            WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
             InvokableRelation<C, X1, X2>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,

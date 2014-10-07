@@ -72,7 +72,7 @@ namespace ranges
                 second_base() = default;
                 template<typename U,
                     typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
-                constexpr explicit second_base(U && u)
+                constexpr explicit second_base(U &&)
                 {}
             };
 
@@ -83,9 +83,9 @@ namespace ranges
             template<typename T>
             struct pair_element
               : conditional_t<
-                    std::is_same<detail::decay_t<T>, T>::value,
+                    std::is_same<decay_t<T>, T>::value,
                     identity<T>,
-                    pair_element<detail::decay_t<T>>
+                    pair_element<decay_t<T>>
                 >
             {};
 

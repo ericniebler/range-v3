@@ -64,7 +64,7 @@ namespace ranges
         public:
             const_view() = default;
             explicit const_view(Rng && rng)
-              : range_adaptor_t<const_view>(std::forward<Rng>(rng))
+              : range_adaptor_t<const_view>{std::forward<Rng>(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const

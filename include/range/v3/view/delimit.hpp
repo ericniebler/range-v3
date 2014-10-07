@@ -52,7 +52,7 @@ namespace ranges
         public:
             delimited_view() = default;
             delimited_view(Rng && rng, Val value)
-              : range_adaptor_t<delimited_view>(std::forward<Rng>(rng))
+              : range_adaptor_t<delimited_view>{std::forward<Rng>(rng)}
               , value_(std::move(value))
             {}
         };

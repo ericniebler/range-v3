@@ -31,8 +31,8 @@ namespace ranges
           : range_adaptor<take_while_view<Rng, Pred>, Rng>
         {
         private:
-            using reference_t = concepts::Invokable::result_t<Pred, range_value_t<Rng>>;
             friend range_access;
+            using reference_t = concepts::Invokable::result_t<Pred, range_value_t<Rng>>;
             using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Pred>>(),
                 invokable_t<Pred>, detail::value_wrapper<invokable_t<Pred>>>;
             using adaptor_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Pred>>(),
@@ -60,10 +60,6 @@ namespace ranges
                 }
             };
 
-            adaptor_base begin_adaptor() const
-            {
-                return {};
-            }
             sentinel_adaptor end_adaptor() const
             {
                 return {pred_};
@@ -71,7 +67,7 @@ namespace ranges
         public:
             take_while_view() = default;
             take_while_view(Rng && rng, Pred pred)
-              : range_adaptor_t<take_while_view>(std::forward<Rng>(rng))
+              : range_adaptor_t<take_while_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))
             {}
         };

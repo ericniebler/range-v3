@@ -37,7 +37,7 @@ namespace ranges
             template<typename I0, typename S0, typename I1, typename S1,
                      typename R = equal_to, typename P0 = ident, typename P1 = ident,
                      CONCEPT_REQUIRES_(IteratorRange<I0, S0>() && IteratorRange<I1, S1>() &&
-                        ForwardIterator<I1>() && Comparable<I0, I1, R, P0, P1>())>
+                        ForwardIterator<I1>() && AsymmetricallyComparable<I0, I1, R, P0, P1>())>
             I0 operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, R pred_ = R{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const
             {
@@ -56,7 +56,7 @@ namespace ranges
                      typename I0 = range_iterator_t<Rng0>,
                      typename I1 = range_iterator_t<Rng1>,
                      CONCEPT_REQUIRES_(Iterable<Rng0>() && Iterable<Rng1>() &&
-                        ForwardIterator<I1>() && Comparable<I0, I1, R, P0, P1>())>
+                        ForwardIterator<I1>() && AsymmetricallyComparable<I0, I1, R, P0, P1>())>
             I0 operator()(Rng0 & rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {

@@ -34,6 +34,7 @@ namespace ranges
         {
         private:
             friend range_access;
+            // BUGBUG doesn't handle non-Regular Invokables
             invokable_t<Pred> pred_;
 
             struct adaptor
@@ -72,7 +73,7 @@ namespace ranges
             {
                 return {*this};
             }
-            // TODO: if end is a sentinel, it hold an unnecessary pointer back to
+            // TODO: if end is a sentinel, it holds an unnecessary pointer back to
             // this range.
             adaptor end_adaptor() const
             {
@@ -81,7 +82,7 @@ namespace ranges
         public:
             filtered_view() = default;
             filtered_view(Rng && rng, Pred pred)
-              : range_adaptor_t<filtered_view>(std::forward<Rng>(rng))
+              : range_adaptor_t<filtered_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))
             {}
         };

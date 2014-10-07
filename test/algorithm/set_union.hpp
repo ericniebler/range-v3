@@ -43,35 +43,22 @@ test()
     using R = std::tuple<Iter1, Iter2, OutIter>;
     auto set_union = make_testable_2(ranges::set_union);
 
-    set_union(Iter1(ia), Iter1(ia+sa),
-        Iter2(ib), Iter2(ib+sb), OutIter(ic)).check([&](R res)
-        {
-            CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
-            ranges::fill(ic, 0);
-        });
-    set_union(Iter1(ib), Iter1(ib+sb),
-        Iter2(ia), Iter2(ia+sa), OutIter(ic)).check([&](R res)
-        {
-            CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
-            ranges::fill(ic, 0);
-        });
+    auto checker = [&](R res)
+    {
+        CHECK((base(std::get<2>(res)) - ic) == sr);
+        CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
+        ranges::fill(ic, 0);
+    };
 
     set_union(Iter1(ia), Iter1(ia+sa),
-        Iter2(ib), Iter2(ib+sb), OutIter(ic), std::less<int>()).check([&](R res)
-        {
-            CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
-            ranges::fill(ic, 0);
-        });
+        Iter2(ib), Iter2(ib+sb), OutIter(ic)).check(checker);
     set_union(Iter1(ib), Iter1(ib+sb),
-        Iter2(ia), Iter2(ia+sa), OutIter(ic), std::less<int>()).check([&](R res)
-        {
-            CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
-            ranges::fill(ic, 0);
-        });
+        Iter2(ia), Iter2(ia+sa), OutIter(ic)).check(checker);
+
+    set_union(Iter1(ia), Iter1(ia+sa),
+        Iter2(ib), Iter2(ib+sb), OutIter(ic), std::less<int>()).check(checker);
+    set_union(Iter1(ib), Iter1(ib+sb),
+        Iter2(ia), Iter2(ia+sa), OutIter(ic), std::less<int>()).check(checker);
 }
 
 struct S
@@ -165,7 +152,9 @@ int main()
     test<bidirectional_iterator<const int*>, forward_iterator<const int*>, bidirectional_iterator<int*> >();
     test<bidirectional_iterator<const int*>, forward_iterator<const int*>, random_access_iterator<int*> >();
     test<bidirectional_iterator<const int*>, forward_iterator<const int*>, int*>();
+#endif
 
+#ifdef SET_UNION_2
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, output_iterator<int*> >();
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, forward_iterator<int*> >();
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
@@ -177,9 +166,7 @@ int main()
     test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, bidirectional_iterator<int*> >();
     test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, random_access_iterator<int*> >();
     test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, int*>();
-#endif
 
-#ifdef SET_UNION_2
     test<bidirectional_iterator<const int*>, const int*, output_iterator<int*> >();
     test<bidirectional_iterator<const int*>, const int*, forward_iterator<int*> >();
     test<bidirectional_iterator<const int*>, const int*, bidirectional_iterator<int*> >();

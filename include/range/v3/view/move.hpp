@@ -62,7 +62,7 @@ namespace ranges
         public:
             move_view() = default;
             move_view(Rng &&rng)
-              : range_adaptor_t<move_view>(std::forward<Rng>(rng))
+              : range_adaptor_t<move_view>{std::forward<Rng>(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const

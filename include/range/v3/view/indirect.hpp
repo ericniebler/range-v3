@@ -51,7 +51,7 @@ namespace ranges
         public:
             indirect_view() = default;
             explicit indirect_view(Rng && rng)
-              : range_adaptor_t<indirect_view>(std::forward<Rng>(rng))
+              : range_adaptor_t<indirect_view>{std::forward<Rng>(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const

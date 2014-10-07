@@ -107,8 +107,8 @@ namespace ranges
           : range_adaptor<transformed_view<Rng, Fun>, Rng>
         {
         private:
-            using reference_t = concepts::Invokable::result_t<Fun, range_value_t<Rng>>;
             friend range_access;
+            using reference_t = concepts::Invokable::result_t<Fun, range_value_t<Rng>>;
             using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Fun>>(),
                 invokable_t<Fun>, detail::value_wrapper<invokable_t<Fun>>>;
             using adaptor_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Fun>>(),
@@ -155,7 +155,7 @@ namespace ranges
         public:
             transformed_view() = default;
             transformed_view(Rng && rng, Fun fun)
-              : range_adaptor_t<transformed_view>(std::forward<Rng>(rng))
+              : range_adaptor_t<transformed_view>{std::forward<Rng>(rng)}
               , fun_(invokable(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())

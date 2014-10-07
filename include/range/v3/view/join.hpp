@@ -27,6 +27,7 @@
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/typelist.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/all.hpp>
 
@@ -279,10 +280,7 @@ namespace ranges
             CONCEPT_REQUIRES(logical_and<(bool)SizedIterable<Rngs>()...>::value)
             size_type_ size() const
             {
-                return tuple_foldl(
-                    tuple_transform(rngs_, ranges::size),
-                    0,
-                    [](size_type_ i, size_type_ j) { return i + j; });
+                return tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});
             }
         };
 

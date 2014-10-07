@@ -114,8 +114,7 @@ namespace ranges
                     std::move(fun));
             }
             template<typename Tup, typename Val, typename Fun, std::size_t...Is>
-            static auto impl2(Tup && tup, Val val, Fun fun,
-                integer_sequence<Is...>) ->
+            static auto impl2(Tup && tup, Val val, Fun fun, integer_sequence<Is...>) ->
                 decltype(tuple_foldl_fn::impl<Is...>(
                     std::forward<Tup>(tup),
                     std::move(val),

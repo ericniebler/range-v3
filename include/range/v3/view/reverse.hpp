@@ -49,31 +49,26 @@ namespace ranges
                 range_iterator_t<Rng> begin(reversed_view const &rng) const
                 {
                     auto it = ranges::end(rng.base());
-                    if(it != ranges::begin(rng.base()))
-                        --it;
+                    ranges::advance_bounded(it, -1, ranges::begin(rng.base()));
                     return it;
                 }
                 void next(range_iterator_t<Rng> &it) const
                 {
-                    if(it == ranges::begin(rng_->base()))
+                    if(0 != ranges::advance_bounded(it, -1, ranges::begin(rng_->base())))
                         it = ranges::end(rng_->base());
-                    else
-                        --it;
                 }
                 void prev(range_iterator_t<Rng> &it) const
                 {
-                    if(it == ranges::end(rng_->base()))
+                    if(0 != ranges::advance_bounded(it, 1, ranges::end(rng_->base())))
                         it = ranges::begin(rng_->base());
-                    else
-                        ++it;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n) const
                 {
                     if(n > 0)
-                        ranges::advance(it, -n + 1), next(it);
+                        ranges::advance(it, -n + 1), this->next(it);
                     else if(n < 0)
-                        prev(it), ranges::advance(it, -n - 1);
+                        this->prev(it), ranges::advance(it, -n - 1);
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 range_difference_t<Rng>
@@ -100,7 +95,7 @@ namespace ranges
         public:
             reversed_view() = default;
             reversed_view(Rng && rng)
-              : range_adaptor_t<reversed_view>(std::forward<Rng>(rng))
+              : range_adaptor_t<reversed_view>{std::forward<Rng>(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const

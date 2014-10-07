@@ -17,6 +17,7 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -46,7 +47,7 @@ namespace ranges
         }
 
         template<typename Derived>
-        using base_range_t = typename range_access::base_range<Derived>::type;
+        using base_range_t = meta_apply<range_access::base_range, Derived>;
 
         template<typename Derived>
         using range_adaptor_t = meta_apply<range_access::range_adaptor, Derived>;
@@ -106,6 +107,8 @@ namespace ranges
             }
         };
 
+        // Build a cursor out of an iterator into the adapted range, and an
+        // adaptor that customizes behavior.
         template<typename BaseIter, typename Adapt>
         struct adaptor_cursor
           : private compressed_pair<BaseIter, Adapt>
@@ -113,11 +116,12 @@ namespace ranges
             using single_pass = detail::or_t<
                 range_access::single_pass_t<Adapt>,
                 SinglePass<BaseIter>>;
+            using compressed_pair<BaseIter, Adapt>::compressed_pair;
+        private:
+            template<typename BaseSent, typename SentAdapt>
+            friend struct adaptor_sentinel;
             using compressed_pair<BaseIter, Adapt>::first;
             using compressed_pair<BaseIter, Adapt>::second;
-            using compressed_pair<BaseIter, Adapt>::compressed_pair;
-            adaptor_cursor() = default;
-        private:
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A>().equal(first, first, second))>
             bool equal_(adaptor_cursor const &that, int) const
@@ -181,24 +185,25 @@ namespace ranges
             }
         };
 
+        // Build a sentinel out of an sentinel into the adapted range, and an
+        // adaptor that customizes behavior.
         template<typename BaseSent, typename Adapt>
         struct adaptor_sentinel
           : private compressed_pair<BaseSent, Adapt>
         {
             using single_pass = range_access::single_pass_t<Adapt>;
-            adaptor_sentinel() = default;
-            using compressed_pair<BaseSent, Adapt>::first;
-            using compressed_pair<BaseSent, Adapt>::second;
             using compressed_pair<BaseSent, Adapt>::compressed_pair;
         private:
+            using compressed_pair<BaseSent, Adapt>::first;
+            using compressed_pair<BaseSent, Adapt>::second;
             template<typename I, typename IA, typename A = Adapt,
-                     typename R = decltype(std::declval<A>().empty(std::declval<I>(), std::declval<IA>(), first))>
+                typename R = decltype(std::declval<A>().empty(std::declval<I>(), std::declval<IA>(), first))>
             constexpr bool equal_(adaptor_cursor<I, IA> const &that, int) const
             {
                 return second.empty(that.first, that.second, first);
             }
             template<typename I, typename IA, typename A = Adapt,
-                     typename R = decltype(std::declval<A>().empty(std::declval<I>(), first))>
+                typename R = decltype(std::declval<A>().empty(std::declval<I>(), first))>
             constexpr bool equal_(adaptor_cursor<I, IA> const &that, long) const
             {
                 return second.empty(that.first, first);

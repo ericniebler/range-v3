@@ -43,8 +43,6 @@ namespace ranges
             friend range_access;
             view::all_t<range_value_t<Rng>> cur_;
 
-            struct adaptor;
-            friend struct adaptor;
             struct adaptor : adaptor_base
             {
             private:
@@ -104,16 +102,17 @@ namespace ranges
             {
                 return {*this};
             }
+            // TODO: could support const iteration if range_reference_t<Rng> is a true reference.
         public:
             flatten_view() = default;
             explicit flatten_view(Rng &&rng)
-              : range_adaptor_t<flatten_view>(std::forward<Rng>(rng)), cur_{}
+              : range_adaptor_t<flatten_view>{std::forward<Rng>(rng)}, cur_{}
             {}
             CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardIterable<Rng>() &&
                              SizedIterable<range_value_t<Rng>>())
             size_type size() const
             {
-                return accumulate(view::transform(this->base(), ranges::size), size_type{});
+                return accumulate(view::transform(this->base(), ranges::size), size_type{0});
             }
         };
 
