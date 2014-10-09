@@ -79,6 +79,16 @@
     <None Include="..\..\..\..\doc\D4128.md">
       <Filter>Doc Files</Filter>
     </None>
+    <None Include="..\..\..\..\TODO.md" />
+    <None Include="..\..\..\..\doc\header.html">
+      <Filter>Doc Files</Filter>
+    </None>
+    <None Include="..\..\..\..\doc\pandoc-template.html">
+      <Filter>Doc Files</Filter>
+    </None>
+    <None Include="..\..\..\..\doc\show.cmd">
+      <Filter>Doc Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="range.cpp">

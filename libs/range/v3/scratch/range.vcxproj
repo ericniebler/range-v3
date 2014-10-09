@@ -64,10 +64,14 @@
     <None Include="..\..\..\..\doc\D4128.md">
       <SubType>Designer</SubType>
     </None>
+    <None Include="..\..\..\..\doc\header.html" />
+    <None Include="..\..\..\..\doc\pandoc-template.html" />
+    <None Include="..\..\..\..\doc\show.cmd" />
     <None Include="..\..\..\..\Jamfile" />
     <None Include="..\..\..\..\Jamroot" />
     <None Include="..\..\..\..\LICENSE" />
     <None Include="..\..\..\..\README.md" />
+    <None Include="..\..\..\..\TODO.md" />
     <None Include="..\doc\Jamfile" />
     <None Include="..\doc\ranges.qbk" />
     <None Include="Jamfile" />
