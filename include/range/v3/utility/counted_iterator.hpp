@@ -31,9 +31,19 @@ namespace ranges
             {
             private:
                 friend struct counted_sentinel;
+                using iterator_concept_ =
+                    concepts::most_refined<typelist<concepts::Iterator, concepts::WeakIterator>, I>;
                 I it_;
                 D n_;
 
+                bool equal_(counted_cursor const &that, concepts::WeakIterator*) const
+                {
+                    return n_ == that.n_;
+                }
+                bool equal_(counted_cursor const &that, concepts::Iterator*) const
+                {
+                    return it_ == that.it_;
+                }
                 // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
                 #ifdef __GNUC__
              public:
@@ -103,10 +113,10 @@ namespace ranges
                     ++it_;
                     --n_;
                 }
-                CONCEPT_REQUIRES(EqualityComparable<D>())
+                CONCEPT_REQUIRES(EqualityComparable<D>() || Iterator<I>())
                 bool equal(counted_cursor const &that) const
                 {
-                    return n_ == that.n_;
+                    return this->equal_(that, iterator_concept_{});
                 }
                 CONCEPT_REQUIRES(BidirectionalIterator<I>())
                 void prev()
