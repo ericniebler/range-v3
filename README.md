@@ -1,7 +1,7 @@
 range-v3
 ========
 
-Range library for C++11/14/17. This code is the basis of a formal proposal to add range support to the C++ standard library (N4128).
+Range library for C++11/14/17. This code is the basis of [a formal proposal](https://ericniebler.github.io/std/wg21/D4128.html) to add range support to the C++ standard library.
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
