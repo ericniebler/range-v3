@@ -19,6 +19,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/invokable.hpp>
 
 namespace ranges
 {
@@ -34,7 +35,7 @@ namespace ranges
                 {
                 private:
                     friend struct replace_if_fn;
-                    compressed_pair<invokable_t<Pred>, Val> fun_and_new_value_;
+                    compressed_pair<semiregular_invokable_t<Pred>, Val> fun_and_new_value_;
 
                     template<typename Val2>
                     replacer_if_fun(Pred pred, Val2 && new_value)

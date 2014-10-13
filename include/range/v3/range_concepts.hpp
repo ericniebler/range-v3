@@ -267,6 +267,21 @@ namespace ranges
         using SizedRange = concepts::models<concepts::SizedRange, T>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
+        // iterable_concept
+        template<typename T>
+        using iterable_concept =
+            concepts::most_refined<
+                typelist<
+                    concepts::RandomAccessIterable,
+                    concepts::BidirectionalIterable,
+                    concepts::ForwardIterable,
+                    concepts::InputIterable>, T>;
+
+        template<typename T>
+        using iterable_concept_t =
+            meta_apply<iterable_concept, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_iterable_concept
         template<typename T>
         using bounded_iterable_concept =

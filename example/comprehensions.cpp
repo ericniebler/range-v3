@@ -45,7 +45,7 @@ int main()
     //        std::make_tuple(x, y, z)); };}; };
 
     // Display the first 100 triples
-    for(auto triple : triples | view::take(100))
+    RANGES_FOR(auto triple, triples | view::take(100))
     {
         std::cout << '('
             << std::get<0>(triple) << ','
@@ -101,7 +101,7 @@ void benchmark()
 
     timer t;
     int result = 0;
-    for(auto triple : triples | view::take(max_triples))
+    RANGES_FOR(auto triple, triples | view::take(max_triples))
     {
         int i, j, k;
         std::tie(i, j, k) = triple;

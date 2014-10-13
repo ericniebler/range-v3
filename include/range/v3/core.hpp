@@ -20,6 +20,8 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_access.hpp>
+#include <range/v3/range_interface.hpp>
+#include <range/v3/range_for.hpp>
 #include <range/v3/at.hpp>
 #include <range/v3/back.hpp>
 #include <range/v3/front.hpp>

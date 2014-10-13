@@ -17,6 +17,7 @@
 #include <range/v3/view/reverse.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+#include "../test_iterators.hpp"
 
 struct is_odd
 {
@@ -47,10 +48,19 @@ int main()
     has_type<int &>(*begin(rng2));
     models<concepts::BidirectionalRange>(rng2);
     models_not<concepts::RandomAccessRange>(rng2);
-    models_not<concepts::BoundedRange>(rng2);
+    models<concepts::BoundedRange>(rng2);
     models_not<concepts::SizedRange>(rng2);
     ::check_equal(rng2, {1,3,5,7,9});
     CHECK(&*begin(rng2) == &rgi[0]);
+
+    auto && rng3 = view::counted(bidirectional_iterator<int*>{rgi}, 10) | view::filter(is_odd());
+    has_type<int &>(*begin(rng3));
+    models<concepts::BidirectionalRange>(rng3);
+    models_not<concepts::RandomAccessRange>(rng3);
+    models_not<concepts::BoundedRange>(rng3);
+    models_not<concepts::SizedRange>(rng3);
+    ::check_equal(rng3, {1,3,5,7,9});
+    CHECK(&*begin(rng3) == &rgi[0]);
 
     return test_result();
 }

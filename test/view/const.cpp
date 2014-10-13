@@ -16,6 +16,7 @@
 #include <range/v3/view/counted.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+#include "../test_iterators.hpp"
 
 int main()
 {
@@ -33,9 +34,10 @@ int main()
     CHECK(&*begin(rng) == &rgi[0]);
     CHECK(rng.size() == 4u);
 
-    auto && rng2 = view::counted(rgi, 4) | view::const_;
+    auto && rng2 = view::counted(forward_iterator<int*>(rgi), 4) | view::const_;
     has_type<int const &>(*begin(rng2));
-    models<concepts::RandomAccessRange>(rng2);
+    models<concepts::ForwardRange>(rng2);
+    models_not<concepts::BidirectionalRange>(rng2);
     models_not<concepts::BoundedRange>(rng2);
     models<concepts::SizedRange>(rng2);
     ::check_equal(rng2, {1, 2, 3, 4});

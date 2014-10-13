@@ -16,6 +16,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_access.hpp>
+#include <range/v3/range_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/basic_iterator.hpp>
@@ -58,7 +59,7 @@ namespace ranges
         template<typename Derived, bool Infinite>
         struct range_facade
           : private detail::is_infinite<Infinite>
-          , private range_base
+          , range_interface<Derived>
         {
         private:
             friend Derived;
@@ -102,63 +103,6 @@ namespace ranges
             detail::facade_sentinel_t<D const> end() const
             {
                 return {range_access::end_cursor(derived())};
-            }
-            bool empty() const
-            {
-                return begin() == end();
-            }
-            bool operator!() const
-            {
-                return empty();
-            }
-            explicit operator bool() const
-            {
-                return !empty();
-            }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() &&
-                    SizedIteratorRange<range_iterator_t<D>, range_sentinel_t<D>>())>
-            range_size_t<D> size() const
-            {
-                return iterator_range_size(begin(), end());
-            }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>())>
-            range_reference_t<D> front()
-            {
-                return *begin();
-            }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>())>
-            range_reference_t<D const> front() const
-            {
-                return *begin();
-            }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D>() && BidirectionalRange<D>())>
-            range_reference_t<D> back()
-            {
-                return *prev(end());
-            }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D const>() && BidirectionalRange<D const>())>
-            range_reference_t<D const> back() const
-            {
-                return *prev(end());
-            }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>())>
-            auto operator[](range_difference_t<D> n) ->
-                decltype(std::declval<D &>().begin()[n])
-            {
-                return begin()[n];
-            }
-            template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D const>())>
-            auto operator[](range_difference_t<D> n) const ->
-                decltype(std::declval<D const &>().begin()[n])
-            {
-                return begin()[n];
             }
         };
 

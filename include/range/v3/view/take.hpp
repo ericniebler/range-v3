@@ -13,59 +13,150 @@
 #ifndef RANGES_V3_VIEW_TAKE_HPP
 #define RANGES_V3_VIEW_TAKE_HPP
 
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/view/slice.hpp>
+#include <range/v3/range_interface.hpp>
+#include <range/v3/range.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/counted_iterator.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename Rng, bool IsRandomAccess = RandomAccessIterable<Rng>()>
+            struct take_view_
+              : range_facade<take_view<Rng>, false>
+            {
+            private:
+                friend range_access;
+                using base_range_t = view::all_t<Rng>;
+                using difference_type_ = range_difference_t<Rng>;
+                base_range_t rng_;
+                difference_type_ n_;
+
+                detail::counted_cursor<range_iterator_t<Rng>> begin_cursor()
+                {
+                    return {ranges::begin(rng_), n_};
+                }
+                CONCEPT_REQUIRES(Iterable<Rng const>())
+                detail::counted_cursor<range_iterator_t<Rng const>> begin_cursor() const
+                {
+                    return {ranges::begin(rng_), n_};
+                }
+                detail::counted_sentinel end_cursor() const
+                {
+                    return {};
+                }
+            public:
+                take_view_() = default;
+                take_view_(Rng && rng, difference_type_ n)
+                  : rng_(view::all(std::forward<Rng>(rng))), n_(n)
+                {
+                    RANGES_ASSERT(n >= 0);
+                }
+                range_size_t<Rng> size() const
+                {
+                    return static_cast<range_size_t<Rng>>(n_);
+                }
+            };
+
+            template<typename Rng>
+            struct take_view_<Rng, true>
+              : range_interface<take_view<Rng>>
+            {
+            private:
+                using base_range_t = view::all_t<Rng>;
+                using difference_type_ = range_difference_t<Rng>;
+                base_range_t rng_;
+                difference_type_ n_;
+            public:
+                take_view_() = default;
+                take_view_(Rng && rng, difference_type_ n)
+                  : rng_(view::all(std::forward<Rng>(rng))), n_(n)
+                {
+                    RANGES_ASSERT(n >= 0);
+                }
+                range_iterator_t<Rng> begin()
+                {
+                    return ranges::begin(rng_);
+                }
+                range_iterator_t<Rng> end()
+                {
+                    return next(ranges::begin(rng_), n_);
+                }
+                CONCEPT_REQUIRES(Iterable<Rng const>())
+                range_iterator_t<Rng const> begin() const
+                {
+                    return ranges::begin(rng_);
+                }
+                CONCEPT_REQUIRES(Iterable<Rng const>())
+                range_iterator_t<Rng const> end() const
+                {
+                    return next(ranges::begin(rng_), n_);
+                }
+                range_size_t<Rng> size() const
+                {
+                    return static_cast<range_size_t<Rng>>(n_);
+                }
+            };
+        }
+
         template<typename Rng>
         struct take_view
-          : detail::basic_sliced_view<Rng, true>
+          : detail::take_view_<Rng>
         {
-            CONCEPT_ASSERT(InputIterable<Rng>());
-
-            using size_type = range_size_t<Rng>;
-
-            take_view() = default;
-            take_view(Rng && rng, size_type to)
-              : detail::basic_sliced_view<Rng, true>{std::forward<Rng>(rng), to}
-            {}
+            using detail::take_view_<Rng>::take_view_;
         };
 
         namespace view
         {
             struct take_fn : bindable<take_fn>
             {
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+            private:
+                template<typename Rng>
                 static take_view<Rng>
-                invoke(take_fn, Rng && rng, range_size_t<Rng> to)
+                invoke_(Rng && rng, range_difference_t<Rng> to, concepts::InputIterable*)
                 {
                     return {std::forward<Rng>(rng), to};
                 }
-                template<typename I,
-                    CONCEPT_REQUIRES_(InputIterator<I>())>
-                static counted_view<I>
-                invoke(take_fn, I it, iterator_size_t<I> n)
+                template<typename Rng, CONCEPT_REQUIRES_(!Range<Rng>() && std::is_lvalue_reference<Rng>())>
+                static range<range_iterator_t<Rng>>
+                invoke_(Rng && rng, range_difference_t<Rng> to, concepts::RandomAccessIterable*)
                 {
-                    return {std::move(it),
-                            static_cast<iterator_difference_t<I>>(n)};
+                    return {begin(rng), next(begin(rng), to)};
                 }
+            public:
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                static auto
+                invoke(take_fn, Rng && rng, range_difference_t<Rng> to)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    take_fn::invoke_(std::forward<Rng>(rng), to, iterable_concept<Rng>{})
+                )
+                template<typename IRef, typename I = detail::uncvref_t<IRef>,
+                    CONCEPT_REQUIRES_(InputIterator<I>())>
+                static auto
+                invoke(take_fn, IRef && it, iterator_difference_t<I> n)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    view::counted(std::forward<IRef>(it), n)
+                )
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
                 static auto
-                invoke(take_fn take, Int to) ->
-                    decltype(take.move_bind(std::placeholders::_1, (Int)to))
-                {
-                    return take.move_bind(std::placeholders::_1, (Int)to);
-                }
+                invoke(take_fn take, Int to)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    take.move_bind(std::placeholders::_1, (Int)to)
+                )
             };
 
             RANGES_CONSTEXPR take_fn take {};

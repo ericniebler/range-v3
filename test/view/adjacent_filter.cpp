@@ -19,6 +19,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+#include "../test_iterators.hpp"
 
 int main()
 {
@@ -40,11 +41,20 @@ int main()
     auto && rng2 = view::counted(rgi, 7) | view::adjacent_filter(std::not_equal_to<int>{});
     has_type<int &>(*begin(rng2));
     models<concepts::ForwardRange>(rng2);
-    models_not<concepts::BoundedRange>(rng2);
+    models<concepts::BoundedRange>(rng2);
     models_not<concepts::SizedRange>(rng2);
     models<concepts::ForwardIterator>(begin(rng2));
     models_not<concepts::BidirectionalIterator>(begin(rng2));
     ::check_equal(rng2, {1, 2, 3, 4});
+
+    auto && rng3 = view::counted(forward_iterator<int*>(rgi), 7) | view::adjacent_filter(std::not_equal_to<int>{});
+    has_type<int &>(*begin(rng3));
+    models<concepts::ForwardRange>(rng3);
+    models_not<concepts::BoundedRange>(rng3);
+    models_not<concepts::SizedRange>(rng3);
+    models<concepts::ForwardIterator>(begin(rng3));
+    models_not<concepts::BidirectionalIterator>(begin(rng3));
+    ::check_equal(rng3, {1, 2, 3, 4});
 
     return test_result();
 }

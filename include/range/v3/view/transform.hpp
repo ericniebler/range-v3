@@ -30,78 +30,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace detail
-        {
-            template<typename T, bool IsSemiRegular = SemiRegular<T>()>
-            struct value_wrapper
-            {
-            private:
-                optional<T> t_;
-            public:
-                value_wrapper() = default;
-                value_wrapper(T f)
-                  : t_(std::move(f))
-                {}
-                T & get()
-                {
-                    RANGES_ASSERT(!!t_);
-                    return *t_;
-                }
-                T const & get() const
-                {
-                    RANGES_ASSERT(!!t_);
-                    return *t_;
-                }
-                operator T &()
-                {
-                    return get();
-                }
-                operator T const &() const
-                {
-                    return get();
-                }
-                template<typename...Args>
-                auto operator()(Args &&...args) ->
-                    decltype(std::declval<T &>()(std::forward<Args>(args)...))
-                {
-                    return get()(std::forward<Args>(args)...);
-                }
-                template<typename...Args>
-                auto operator()(Args &&...args) const ->
-                    decltype(std::declval<T const &>()(std::forward<Args>(args)...))
-                {
-                    return get()(std::forward<Args>(args)...);
-                }
-            };
-
-            template<typename T>
-            struct reference_wrapper
-            {
-            private:
-                T *t_;
-            public:
-                reference_wrapper() = default;
-                reference_wrapper(T &t)
-                  : t_(std::addressof(t))
-                {}
-                T & get() const
-                {
-                    RANGES_ASSERT(nullptr != t_);
-                    return *t_;
-                }
-                operator T &() const
-                {
-                    return get();
-                }
-                template<typename ...Args>
-                auto operator()(Args &&...args) const ->
-                    decltype((*t_)(std::forward<Args>(args)...))
-                {
-                    return (*t_)(std::forward<Args>(args)...);
-                }
-            };
-        }
-
         template<typename Rng, typename Fun>
         struct transformed_view
           : range_adaptor<transformed_view<Rng, Fun>, Rng>
@@ -109,11 +37,7 @@ namespace ranges
         private:
             friend range_access;
             using reference_t = concepts::Invokable::result_t<Fun, range_value_t<Rng>>;
-            using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Fun>>(),
-                invokable_t<Fun>, detail::value_wrapper<invokable_t<Fun>>>;
-            using adaptor_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Fun>>(),
-                view_fun_t, detail::reference_wrapper<view_fun_t const>>;
-            view_fun_t fun_;
+            semiregular_invokable_t<Fun> fun_;
             // Forward ranges must always return references. If the result of calling the function
             // is not a reference, this range is input-only.
             using single_pass = detail::or_t<
@@ -124,11 +48,11 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                adaptor_fun_t fun_;
+                semiregular_invokable_ref_t<Fun> fun_;
             public:
                 using single_pass = transformed_view::single_pass;
                 adaptor() = default;
-                adaptor(adaptor_fun_t fun)
+                adaptor(semiregular_invokable_ref_t<Fun> fun)
                   : fun_(std::move(fun))
                 {}
                 auto current(range_iterator_t<Rng> it) const ->

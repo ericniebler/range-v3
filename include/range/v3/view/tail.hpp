@@ -22,6 +22,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/range_interface.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/view/all.hpp>
@@ -32,7 +33,7 @@ namespace ranges
     {
         template<typename Rng>
         struct tail_view
-          : private range_base
+          : range_interface<tail_view<Rng>>
         {
         private:
             using base_range_t = view::all_t<Rng>;
@@ -55,14 +56,6 @@ namespace ranges
             sentinel end() const
             {
                 return ranges::end(rng_);
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
             }
             CONCEPT_REQUIRES(SizedRange<base_range_t>())
             range_size_t<base_range_t> size() const

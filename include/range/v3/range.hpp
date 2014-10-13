@@ -16,6 +16,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/range_interface.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -39,6 +40,7 @@ namespace ranges
         template<typename I, typename S /*= I*/>
         struct range
           : private compressed_pair<I, S>
+          , range_interface<range<I, S>>
         {
             using iterator = meta_apply<std::remove_const, I>;
             using sentinel = meta_apply<std::remove_const, S>;
@@ -67,47 +69,11 @@ namespace ranges
             {
                 return second;
             }
-            bool empty() const
-            {
-                return first == second;
-            }
-            bool operator!() const
-            {
-                return empty();
-            }
-            explicit operator bool() const
-            {
-                return !empty();
-            }
-            CONCEPT_REQUIRES(SizedIteratorRange<iterator, sentinel>())
-            iterator_size_t<iterator> size() const
-            {
-                return iterator_range_size(first, second);
-            }
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Convertible<I, X>() && Convertible<S, Y>())>
             constexpr operator std::pair<X, Y>() const
             {
                 return {first, second};
-            }
-            iterator_reference_t<iterator> front() const
-            {
-                RANGES_ASSERT(!empty());
-                return *first;
-            }
-            CONCEPT_REQUIRES(BidirectionalIterator<sentinel>())
-            iterator_reference_t<iterator> back() const
-            {
-                RANGES_ASSERT(!empty());
-                return *prev(second);
-            }
-            // The requirements on the return type of I::operator[] are different
-            // than for I::operator*, so respect that here.
-            template<typename F = iterator, CONCEPT_REQUIRES_(RandomAccessIterator<iterator>())>
-            auto operator[](iterator_difference_t<iterator> n) const ->
-                decltype(std::declval<F>()[n])
-            {
-                return first[n];
             }
             CONCEPT_REQUIRES(!std::is_const<I>())
             void pop_front()

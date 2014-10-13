@@ -41,7 +41,6 @@ namespace ranges
             private:
                 Val value_;
             public:
-                using single_pass = std::true_type;
                 cursor() = default;
                 cursor(Val value)
                   : value_(value)

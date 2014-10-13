@@ -13,13 +13,14 @@
 #include <range/v3/view/counted.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+#include "../test_iterators.hpp"
 
 int main()
 {
     using namespace ranges;
     std::cout << "\nTesting counted\n";
     int rgi[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    auto rng = view::counted(rgi, 10);
+    auto rng = view::counted(forward_iterator<int*>{rgi}, 10);
     rng.size();
     CONCEPT_ASSERT(SizedRange<decltype(rng)>());
     auto i = rng.begin();
@@ -27,5 +28,5 @@ int main()
     auto c = i.count();
     decltype(i) j{b, c};
     ::check_equal(rng, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-    static_assert(std::is_same<decltype(i), counted_iterator<int*>>::value, "");
+    static_assert(std::is_same<decltype(i), counted_iterator<forward_iterator<int*>>>::value, "");
 }

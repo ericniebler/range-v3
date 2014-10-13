@@ -53,6 +53,9 @@ add_test(test.view.slice, view.slice)
 add_executable(view.stride stride.cpp)
 add_test(test.view.stride, view.stride)
 
+add_executable(view.take take.cpp)
+add_test(test.view.take, view.take)
+
 add_executable(view.take_while take_while.cpp)
 add_test(test.view.take_while, view.take_while)
 

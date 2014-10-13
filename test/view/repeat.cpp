@@ -21,8 +21,10 @@ int main()
     using namespace ranges;
     auto rng = view::repeat(9) | view::take(10);
     ::models<concepts::SizedRange>(rng);
-    ::models<concepts::BoundedRange>(rng);
+    ::models<concepts::Range>(rng);
+    ::models_not<concepts::BoundedRange>(rng);
     ::models<concepts::InputIterator>(rng.begin());
+    ::models_not<concepts::ForwardIterator>(rng.begin());
     ::check_equal(rng, {9, 9, 9, 9, 9, 9, 9, 9, 9, 9});
 
     return test_result();

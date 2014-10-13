@@ -27,6 +27,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/nullval.hpp>
@@ -46,7 +47,8 @@ namespace ranges
             using value_type = meta_apply<std::remove_reference, Ref>;
             std::function<any_input_range<int>()> fun_;
 
-            struct impl : private range_base
+            struct impl
+              : range_interface<impl>
             {
             private:
                 friend recursive_range_fn;
@@ -83,14 +85,6 @@ namespace ranges
                 range_sentinel_t<any_input_range<int>> end() const
                 {
                     return ranges::end(rng());
-                }
-                bool operator!() const
-                {
-                    return begin() == end();
-                }
-                explicit operator bool() const
-                {
-                    return begin() != end();
                 }
                 any_input_range<int> & base()
                 {

@@ -430,6 +430,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\set_union2.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\take.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -950,6 +953,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\algorithm\set_union.hpp">
       <Filter>Test Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_interface.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\semiregular_wrappers.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_for.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

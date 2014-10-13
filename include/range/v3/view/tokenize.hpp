@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/range_interface.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
@@ -29,7 +30,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng, typename Regex, typename SubMatchRange>
-        struct tokenized_view : private range_base
+        struct tokenized_view
+          : range_interface<tokenized_view<Rng, Regex, SubMatchRange>>
         {
         private:
             using base_range_t = view::all_t<Rng>;
@@ -59,14 +61,6 @@ namespace ranges
             iterator end() const
             {
                 return {};
-            }
-            bool operator!() const
-            {
-                return begin() == end();
-            }
-            explicit operator bool() const
-            {
-                return begin() != end();
             }
         };
 

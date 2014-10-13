@@ -144,6 +144,24 @@ namespace ranges
         };
 
         // Get by tag type
+        template<typename Element>
+        Element & get(detail::identity_t<Element> & value)
+        {
+            return value;
+        }
+
+        template<typename Element>
+        Element const & get(detail::identity_t<Element> const & value)
+        {
+            return value;
+        }
+
+        template<typename Element>
+        Element && get(detail::identity_t<Element> && value)
+        {
+            return std::move(value);
+        }
+
         template<typename Tag, typename Element>
         Element & get(box<Element, Tag, false> & b)
         {

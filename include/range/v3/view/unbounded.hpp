@@ -13,6 +13,7 @@
 #define RANGES_V3_VIEW_UNBOUNDED_HPP
 
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/range_interface.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/unreachable.hpp>
 
@@ -23,7 +24,7 @@ namespace ranges
         template<typename I>
         struct unbounded_view
           : private detail::is_infinite<true>
-          , private range_base
+          , range_interface<unbounded_view<I>>
         {
         private:
             I it_;

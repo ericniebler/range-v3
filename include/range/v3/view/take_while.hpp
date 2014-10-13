@@ -33,11 +33,7 @@ namespace ranges
         private:
             friend range_access;
             using reference_t = concepts::Invokable::result_t<Pred, range_value_t<Rng>>;
-            using view_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Pred>>(),
-                invokable_t<Pred>, detail::value_wrapper<invokable_t<Pred>>>;
-            using adaptor_fun_t = detail::conditional_t<(bool) SemiRegular<invokable_t<Pred>>(),
-                view_fun_t, detail::reference_wrapper<view_fun_t const>>;
-            view_fun_t pred_;
+            semiregular_invokable_t<Pred> pred_;
 
             using single_pass = detail::or_t<
                 SinglePass<range_iterator_t<Rng>>,
@@ -47,11 +43,11 @@ namespace ranges
               : adaptor_base
             {
             private:
-                adaptor_fun_t pred_;
+                semiregular_invokable_ref_t<Pred> pred_;
             public:
                 using single_pass = take_while_view::single_pass;
                 sentinel_adaptor() = default;
-                sentinel_adaptor(adaptor_fun_t pred)
+                sentinel_adaptor(semiregular_invokable_ref_t<Pred> pred)
                   : pred_(std::move(pred))
                 {}
                 bool empty(range_iterator_t<Rng> it, range_sentinel_t<Rng> end) const

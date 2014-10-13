@@ -55,12 +55,24 @@ int main()
     auto && rng3 = view::counted(rgp, 10) | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rgi));
     has_type<int &>(*begin(rng3));
-    models_not<concepts::BoundedRange>(rng3);
+    models<concepts::BoundedRange>(rng3);
     models<concepts::SizedRange>(rng3);
     models<concepts::RandomAccessRange>(rng3);
     ::check_equal(rng3, {1,2,3,4,5,6,7,8,9,10});
     CHECK(&*begin(rng3) == &rgp[0].first);
     CHECK(rng3.size() == 10u);
+
+    auto && rng4 = view::counted(forward_iterator<std::pair<int, int>*>{rgp}, 10)
+                      | view::transform(&std::pair<int,int>::first);
+    has_type<int &>(*begin(rgi));
+    has_type<int &>(*begin(rng4));
+    models_not<concepts::BoundedRange>(rng4);
+    models<concepts::SizedRange>(rng4);
+    models<concepts::ForwardRange>(rng4);
+    models_not<concepts::BidirectionalRange>(rng4);
+    ::check_equal(rng4, {1,2,3,4,5,6,7,8,9,10});
+    CHECK(&*begin(rng4) == &rgp[0].first);
+    CHECK(rng4.size() == 10u);
 
     return test_result();
 }

@@ -112,7 +112,7 @@ int main()
         });
 
     // Display the first 100 triples
-    for(auto triple : triples | view::take(100))
+    RANGES_FOR(auto triple, triples | view::take(100))
     {
         std::cout << '('
             << std::get<0>(triple) << ','

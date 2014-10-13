@@ -185,7 +185,7 @@ namespace ranges
             }
         };
 
-        // Build a sentinel out of an sentinel into the adapted range, and an
+        // Build a sentinel out of a sentinel into the adapted range, and an
         // adaptor that customizes behavior.
         template<typename BaseSent, typename Adapt>
         struct adaptor_sentinel

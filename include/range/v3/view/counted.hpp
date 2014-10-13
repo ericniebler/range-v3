@@ -15,6 +15,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/range.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -32,7 +33,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            using size_type = iterator_size_t<I>;
+            using size_type_ = iterator_size_t<I>;
             I it_;
             D n_;
 
@@ -51,9 +52,9 @@ namespace ranges
             {
                 RANGES_ASSERT(0 <= n_);
             }
-            size_type size() const
+            size_type_ size() const
             {
-                return static_cast<size_type>(n_);
+                return static_cast<size_type_>(n_);
             }
         };
 
@@ -61,12 +62,18 @@ namespace ranges
         {
             struct counted_fn : bindable<counted_fn>
             {
-                template<typename I>
+                template<typename I, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
                 static counted_view<I> invoke(counted_fn, I it, iterator_difference_t<I> n)
                 {
                     // Nothing wrong with a weak counted output iterator!
                     CONCEPT_ASSERT(WeakIterator<I>());
                     return {std::move(it), n};
+                }
+
+                template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+                static range<I> invoke(counted_fn, I it, iterator_difference_t<I> n)
+                {
+                    return {it, it + n};
                 }
             };
 

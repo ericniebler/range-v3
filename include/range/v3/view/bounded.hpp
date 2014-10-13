@@ -19,6 +19,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/range_interface.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/common_range_iterator.hpp>
@@ -30,7 +31,7 @@ namespace ranges
     {
         template<typename Rng>
         struct bounded_view
-          : range_base
+          : range_interface<bounded_view<Rng>>
         {
         private:
             friend range_access;
