@@ -13,7 +13,6 @@
 #ifndef RANGES_V3_SIZE_HPP
 #define RANGES_V3_SIZE_HPP
 
-#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -43,6 +42,13 @@ namespace ranges
                 decltype(adl_size_detail::size_(std::forward<Rng>(rng), 42))
             {
                 return adl_size_detail::size_(std::forward<Rng>(rng), 42);
+            }
+
+            // A reference-wrapped Iterable
+            template<typename T>
+            auto size(ranges::reference_wrapper<T> t) -> decltype(size(t.get()))
+            {
+                return size(t.get());
             }
 
             // Built-in arrays

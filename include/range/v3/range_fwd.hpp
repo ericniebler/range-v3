@@ -372,6 +372,9 @@ namespace ranges
         template<typename Rng>
         struct range_pointer;
 
+        template<typename T>
+        struct reference_wrapper;
+
         // Views
         //
         template<typename Rng, typename BinaryPredicate>

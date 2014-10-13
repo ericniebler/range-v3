@@ -27,6 +27,19 @@ namespace ranges
             using std::begin;
             using std::end;
 
+            // A reference-wrapped Iterable is an Iterable
+            template<typename T>
+            auto begin(ranges::reference_wrapper<T> ref) -> decltype(begin(ref.get()))
+            {
+                return begin(ref.get());
+            }
+
+            template<typename T>
+            auto end(ranges::reference_wrapper<T> ref) -> decltype(end(ref.get()))
+            {
+                return end(ref.get());
+            }
+
             // Handle char*, std::pair<iterator, iterator>, std::pair<interator, int> ?
 
             struct begin_fn : bindable<begin_fn>

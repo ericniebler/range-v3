@@ -91,6 +91,17 @@ namespace ranges
                 return (*t_)(std::forward<Args>(args)...);
             }
         };
+
+        struct ref_fn
+        {
+            template<typename T>
+            reference_wrapper<T> operator()(T & t) const
+            {
+                return {t};
+            }
+        };
+
+        RANGES_CONSTEXPR ref_fn ref {};
     }
 }
 
