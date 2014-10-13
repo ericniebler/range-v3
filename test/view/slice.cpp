@@ -47,13 +47,14 @@ int main()
     ::check_equal(rng2, {8, 7, 6, 5, 4, 3});
 
     std::list<int> l{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    auto rng3 = l | view::slice(3, 9) | view::reverse;
+    auto rng3 = l | view::slice(3, 9);
     has_type<int &>(*begin(rng3));
-    models<concepts::BoundedRange>(rng3);
+    models<concepts::Range>(rng3);
+    models_not<concepts::BoundedRange>(rng3);
     models<concepts::SizedRange>(rng3);
     models<concepts::BidirectionalIterator>(begin(rng3));
     models_not<concepts::RandomAccessIterator>(begin(rng3));
-    ::check_equal(rng3, {8, 7, 6, 5, 4, 3});
+    ::check_equal(rng3, {3, 4, 5, 6, 7, 8});
 
     auto rng4 = view::iota(10) | view::slice(10, 20);
     ::models<concepts::BoundedRange>(rng4);
