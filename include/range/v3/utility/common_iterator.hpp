@@ -9,8 +9,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
-#ifndef RANGES_V3_UTILITY_COMMON_RANGE_ITERATOR_HPP
-#define RANGES_V3_UTILITY_COMMON_RANGE_ITERATOR_HPP
+#ifndef RANGES_V3_UTILITY_COMMON_ITERATOR_HPP
+#define RANGES_V3_UTILITY_COMMON_ITERATOR_HPP
 
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
@@ -94,8 +94,8 @@ namespace ranges
                     template<typename I_ = I, typename S_ = S,
                         CONCEPT_REQUIRES_(SizedIteratorRangeLike_<I_, S_>())>
                     friend iterator_difference_t<I>
-                    operator-(common_range_iterator<I, S> const &end,
-                              common_range_iterator<I, S> const &begin)
+                    operator-(common_iterator<I, S> const &end,
+                              common_iterator<I, S> const &begin)
                     {
                         return begin.common_cursor::mixin::get().distance_to_(
                                  end.common_cursor::mixin::get());
@@ -142,7 +142,7 @@ namespace ranges
         struct common_type<basic_iterator<Cur, S>, basic_sentinel<S>>
         {
             using type =
-                common_range_iterator<
+                common_iterator<
                     basic_iterator<Cur, S>,
                     basic_sentinel<S>>;
         };
@@ -151,7 +151,7 @@ namespace ranges
         struct common_type<basic_sentinel<S>, basic_iterator<Cur, S>>
         {
             using type =
-                common_range_iterator<
+                common_iterator<
                     basic_iterator<Cur, S>,
                     basic_sentinel<S>>;
         };

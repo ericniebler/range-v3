@@ -83,7 +83,7 @@ namespace ranges
                 }
                 void do_clean() const
                 {
-                    auto tmp = ranges::distance(rng_->base()) % rng_->stride_;
+                    auto tmp = ranges::distance(rng_->mutable_base()) % rng_->stride_;
                     offset() = 0 != tmp ? rng_->stride_ - tmp : tmp;
                 }
             public:
@@ -101,16 +101,16 @@ namespace ranges
                 void next(iterator &it)
                 {
                     RANGES_ASSERT(0 == offset());
-                    RANGES_ASSERT(it != ranges::end(rng_->base()));
+                    RANGES_ASSERT(it != ranges::end(rng_->mutable_base()));
                     offset() = advance_bounded(it, rng_->stride_ + offset(),
-                        ranges::end(rng_->base()));
+                        ranges::end(rng_->mutable_base()));
                 }
                 CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
                 void prev(iterator &it)
                 {
                     clean();
                     offset() = advance_bounded(it, -rng_->stride_ + offset(),
-                        ranges::begin(rng_->base()));
+                        ranges::begin(rng_->mutable_base()));
                     RANGES_ASSERT(0 == offset());
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
@@ -129,10 +129,10 @@ namespace ranges
                         clean();
                     if(0 < n)
                         offset() = advance_bounded(it, n * rng_->stride_ + offset(),
-                            ranges::end(rng_->base()));
+                            ranges::end(rng_->mutable_base()));
                     else if(0 > n)
                         offset() = advance_bounded(it, n * rng_->stride_ + offset(),
-                            ranges::begin(rng_->base()));
+                            ranges::begin(rng_->mutable_base()));
                 }
             };
             adaptor begin_adaptor() const

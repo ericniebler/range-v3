@@ -306,7 +306,7 @@ namespace ranges
         struct range_adaptor;
 
         template<typename I, typename S>
-        using common_range_iterator =
+        using common_iterator =
             basic_iterator<detail::common_cursor<I, S>>;
 
         template<typename First, typename Second>

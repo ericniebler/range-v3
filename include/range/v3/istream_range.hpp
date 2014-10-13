@@ -62,6 +62,10 @@ namespace ranges
             {
                 *sin_ >> obj_; // prime the pump
             }
+            Val & cached()
+            {
+                return obj_;
+            }
         };
 
         template<typename Val>

@@ -220,6 +220,11 @@ namespace ranges
             {
                 using type = typename RangeAdaptor::base_range_t;
             };
+            template<typename RangeAdaptor>
+            struct base_range<RangeAdaptor const>
+            {
+                using type = typename RangeAdaptor::base_range_t const;
+            };
             template<typename RangeFacade>
             struct range_facade
             {

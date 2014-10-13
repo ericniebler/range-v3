@@ -48,19 +48,19 @@ namespace ranges
                 {}
                 range_iterator_t<Rng> begin(reversed_view const &rng) const
                 {
-                    auto it = ranges::end(rng.base());
-                    ranges::advance_bounded(it, -1, ranges::begin(rng.base()));
+                    auto it = ranges::end(rng.mutable_base());
+                    ranges::advance_bounded(it, -1, ranges::begin(rng.mutable_base()));
                     return it;
                 }
                 void next(range_iterator_t<Rng> &it) const
                 {
-                    if(0 != ranges::advance_bounded(it, -1, ranges::begin(rng_->base())))
-                        it = ranges::end(rng_->base());
+                    if(0 != ranges::advance_bounded(it, -1, ranges::begin(rng_->mutable_base())))
+                        it = ranges::end(rng_->mutable_base());
                 }
                 void prev(range_iterator_t<Rng> &it) const
                 {
-                    if(0 != ranges::advance_bounded(it, 1, ranges::end(rng_->base())))
-                        it = ranges::begin(rng_->base());
+                    if(0 != ranges::advance_bounded(it, 1, ranges::end(rng_->mutable_base())))
+                        it = ranges::begin(rng_->mutable_base());
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n) const
@@ -76,11 +76,11 @@ namespace ranges
                     adaptor const &other_adapt) const
                 {
                     RANGES_ASSERT(rng_ == other_adapt.rng_);
-                    if(there == ranges::end(rng_->base()))
-                        return here == ranges::end(rng_->base())
-                            ? 0 : (here - ranges::begin(rng_->base())) + 1;
-                    else if(here == ranges::end(rng_->base()))
-                        return (ranges::begin(rng_->base()) - there) - 1;
+                    if(there == ranges::end(rng_->mutable_base()))
+                        return here == ranges::end(rng_->mutable_base())
+                            ? 0 : (here - ranges::begin(rng_->mutable_base())) + 1;
+                    else if(here == ranges::end(rng_->mutable_base()))
+                        return (ranges::begin(rng_->mutable_base()) - there) - 1;
                     return here - there;
                 }
             };

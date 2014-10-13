@@ -62,6 +62,14 @@ namespace ranges
             {
                 return ranges::size(rng_) - 1;
             }
+            base_range_t & base()
+            {
+                return rng_;
+            }
+            base_range_t const & base() const
+            {
+                return rng_;
+            }
         };
 
         namespace view

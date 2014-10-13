@@ -51,7 +51,7 @@ namespace ranges
                 void satisfy(range_iterator_t<Rng> &it)
                 {
                     auto &cur = rng_->cur_;
-                    auto const end = ranges::end(rng_->base());
+                    auto const end = ranges::end(rng_->mutable_base());
                     while(it_ == ranges::end(cur))
                     {
                         if(++it == end)
@@ -68,8 +68,8 @@ namespace ranges
                 {}
                 range_iterator_t<Rng> begin(flatten_view &)
                 {
-                    auto it = ranges::begin(rng_->base());
-                    auto const end = ranges::end(rng_->base());
+                    auto it = ranges::begin(rng_->mutable_base());
+                    auto const end = ranges::end(rng_->mutable_base());
                     if(it != end)
                     {
                         rng_->cur_ = view::all(*it);

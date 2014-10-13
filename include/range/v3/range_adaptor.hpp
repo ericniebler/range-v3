@@ -245,7 +245,7 @@ namespace ranges
             // the Range concept.
             mutable base_range_t rng_;
 
-            base_range_t & base() const
+            base_range_t & mutable_base() const
             {
                 return rng_;
             }
@@ -296,6 +296,14 @@ namespace ranges
             constexpr range_adaptor(BaseRng && rng)
               : rng_(view::all(detail::forward<BaseRng>(rng)))
             {}
+            base_range_t & base()
+            {
+                return rng_;
+            }
+            base_range_t const & base() const
+            {
+                return rng_;
+            }
         };
     }
 }

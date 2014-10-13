@@ -771,9 +771,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\common_range_iterator.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_type.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
@@ -962,6 +959,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range_for.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\common_iterator.hpp">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

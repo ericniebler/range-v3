@@ -45,7 +45,7 @@ namespace ranges
                 {}
                 void next(range_iterator_t<Rng> &it) const
                 {
-                    auto const end = ranges::end(rng_->base());
+                    auto const end = ranges::end(rng_->mutable_base());
                     RANGES_ASSERT(it != end);
                     it = adjacent_find(std::move(it), end, std::ref(rng_->pred_));
                     advance_bounded(it, 1, end);

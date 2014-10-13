@@ -66,6 +66,14 @@ namespace ranges
                 {
                     return static_cast<range_size_t<Rng>>(n_);
                 }
+                base_range_t & base()
+                {
+                    return rng_;
+                }
+                base_range_t const & base() const
+                {
+                    return rng_;
+                }
             };
 
             template<typename Rng>
@@ -105,6 +113,14 @@ namespace ranges
                 range_size_t<Rng> size() const
                 {
                     return static_cast<range_size_t<Rng>>(n_);
+                }
+                base_range_t & base()
+                {
+                    return rng_;
+                }
+                base_range_t const & base() const
+                {
+                    return rng_;
                 }
             };
         }

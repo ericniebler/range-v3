@@ -17,7 +17,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/istream_range.hpp>
-#include <range/v3/utility/common_range_iterator.hpp>
+#include <range/v3/utility/common_iterator.hpp>
 #include "../simple_test.hpp"
 
 struct noncopyable

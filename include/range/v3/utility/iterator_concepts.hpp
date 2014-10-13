@@ -540,7 +540,7 @@ namespace ranges
                     ));
             };
 
-            // Detail, used only to constrain common_range_iterator::operator-, which
+            // Detail, used only to constrain common_iterator::operator-, which
             // is used by SizedIteratorRange
             struct SizedIteratorRangeLike_
               : refines<IteratorRange>

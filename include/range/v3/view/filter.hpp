@@ -45,7 +45,7 @@ namespace ranges
                 using adaptor_base::advance;
                 void satisfy(range_iterator_t<Rng> &it) const
                 {
-                    it = find_if(std::move(it), ranges::end(rng_->base()), std::ref(rng_->pred_));
+                    it = find_if(std::move(it), ranges::end(rng_->mutable_base()), std::ref(rng_->pred_));
                 }
             public:
                 adaptor() = default;
@@ -54,7 +54,7 @@ namespace ranges
                 {}
                 range_iterator_t<Rng> begin(filtered_view const &rng) const
                 {
-                    auto it = ranges::begin(rng.base());
+                    auto it = ranges::begin(rng.mutable_base());
                     this->satisfy(it);
                     return it;
                 }

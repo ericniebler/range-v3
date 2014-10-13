@@ -398,12 +398,12 @@ namespace ranges
     template<typename I0, bool S, typename I1>
     struct common_type<sentinel<I0, S>, I1>
     {
-        using type = common_range_iterator<I1, sentinel<I0, S>>;
+        using type = common_iterator<I1, sentinel<I0, S>>;
     };
     template<typename I0, typename I1, bool S>
     struct common_type<I0, sentinel<I1, S>>
     {
-        using type = common_range_iterator<I0, sentinel<I1, S>>;
+        using type = common_iterator<I0, sentinel<I1, S>>;
     };
     template<typename I, bool B>
     struct common_type<sentinel<I, B>, sentinel<I, B>>

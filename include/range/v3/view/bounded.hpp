@@ -18,11 +18,10 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/common_range_iterator.hpp>
+#include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -41,7 +40,7 @@ namespace ranges
             base_range_t rng_;
 
         public:
-            using iterator = common_range_iterator<base_iterator_t, base_sentinel_t>;
+            using iterator = common_iterator<base_iterator_t, base_sentinel_t>;
 
             bounded_view() = default;
             explicit bounded_view(Rng && rng)
@@ -69,6 +68,14 @@ namespace ranges
             range_size_t<base_range_t> size() const
             {
                 return ranges::size(rng_);
+            }
+            base_range_t & base()
+            {
+                return rng_;
+            }
+            base_range_t const & base() const
+            {
+                return rng_;
             }
         };
 
