@@ -117,15 +117,18 @@ namespace ranges
             public:
                 using type =
                     detail::conditional_t<
-                        (bits < 8),
-                        std::int_fast8_t,
+                        (bits > sizeof(Val) * CHAR_BIT),
+                        meta_apply<std::make_signed, difference_t>,
                         detail::conditional_t<
-                            (bits < 16),
-                            std::int_fast16_t,
+                            (bits < 8),
+                            std::int_fast8_t,
                             detail::conditional_t<
-                                (bits < 32),
-                                std::int_fast32_t,
-                                std::int_fast64_t> > >;
+                                (bits < 16),
+                                std::int_fast16_t,
+                                detail::conditional_t<
+                                    (bits < 32),
+                                    std::int_fast32_t,
+                                    std::int_fast64_t> > > >;
             };
 
             template<typename Val>
