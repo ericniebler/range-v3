@@ -18,6 +18,9 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
+template<typename T>
+struct undef_t;
+
 int main()
 {
     using namespace ranges;
@@ -31,7 +34,13 @@ int main()
     ::check_equal(view::ints(0,9), {0,1,2,3,4,5,6,7,8,9});
     ::check_equal(view::ints(1,10), {1,2,3,4,5,6,7,8,9,10});
 
-    auto shorts = view::ints(std::numeric_limits<unsigned short>::min(), std::numeric_limits<unsigned short>::max());
+    auto chars = view::ints(std::numeric_limits<char>::min(),
+                           std::numeric_limits<char>::max());
+    static_assert(Same<int, range_difference_t<decltype(chars)>>(), "");
+    ::models<concepts::RandomAccessRange>(chars);
+
+    auto shorts = view::ints(std::numeric_limits<unsigned short>::min(),
+                           std::numeric_limits<unsigned short>::max());
     static_assert(Same<int, range_difference_t<decltype(shorts)>>(), "");
 
     auto uints = view::ints(
