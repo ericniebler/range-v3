@@ -590,6 +590,9 @@ namespace ranges
         using SignedIntegral = concepts::models<concepts::SignedIntegral, T>;
 
         template<typename T>
+        using UnsignedIntegral = concepts::models<concepts::UnsignedIntegral, T>;
+
+        template<typename T>
         using Destructible = concepts::models<concepts::Destructible, T>;
 
         template<typename T, typename...Us>

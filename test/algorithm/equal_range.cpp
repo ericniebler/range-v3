@@ -55,7 +55,7 @@ test()
     using namespace ranges::view;
     static constexpr unsigned M = 10;
     std::vector<int> v;
-    auto input = iota(0) | take(100) | transform([](int i){return repeat_n(i,M);}) | flatten;
+    auto input = ints | take(100) | transform([](int i){return repeat_n(i,M);}) | flatten;
     ranges::copy(input, ranges::back_inserter(v));
     for (int x = 0; x <= (int)M; ++x)
         test(Iter(v.data()), Sent(v.data()+v.size()), x);

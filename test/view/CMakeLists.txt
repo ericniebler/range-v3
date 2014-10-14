@@ -29,6 +29,9 @@ add_test(test.view.generate_n, view.generate_n)
 add_executable(view.indirect indirect.cpp)
 add_test(test.view.indirect, view.indirect)
 
+add_executable(view.iota iota.cpp)
+add_test(test.view.iota, view.iota)
+
 add_executable(view.join join.cpp)
 add_test(test.view.join, view.join)
 

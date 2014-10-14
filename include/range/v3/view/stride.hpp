@@ -83,7 +83,7 @@ namespace ranges
                 }
                 void do_clean() const
                 {
-                    auto tmp = ranges::distance(rng_->mutable_base()) % rng_->stride_;
+                    auto tmp = ranges::distance(rng_->base()) % rng_->stride_;
                     offset() = 0 != tmp ? rng_->stride_ - tmp : tmp;
                 }
             public:
