@@ -391,8 +391,11 @@ namespace ranges
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
-namespace std
-{
+#ifdef _LIBCPP_VERSION
+_LIBCPP_BEGIN_NAMESPACE_STD
+#else
+namespace std {
+#endif
     template<class Key, class Compare /*= less<Key>*/, class Alloc /*= allocator<Key>*/>
     class set;
 
@@ -404,7 +407,11 @@ namespace std
 
     template<class Key, class Hash /*= hash<Key>*/, class Pred /*= equal_to<Key>*/, class Alloc /*= allocator<Key>*/>
     class unordered_multiset;
+#ifdef _LIBCPP_VERSION
+_LIBCPP_END_NAMESPACE_STD
+#else
 }
+#endif
 #else
 #include <set>
 #include <multiset>

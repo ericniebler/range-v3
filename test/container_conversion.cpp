@@ -46,8 +46,8 @@ int main()
 
     CONCEPT_ASSERT(Iterable<std::set<int>>());
     CONCEPT_ASSERT(!Range<std::set<int>>());
-    //std::set<int> s = view::ints | view::take(10);
-    //::check_equal(s, {0,1,2,3,4,5,6,7,8,9});
+    std::set<int> s = view::ints | view::take(10);
+    ::check_equal(s, {0,1,2,3,4,5,6,7,8,9});
 
     return ::test_result();
 }
