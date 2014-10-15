@@ -436,6 +436,9 @@
     <ClCompile Include="..\..\..\..\test\view\iota.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\drop.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -965,6 +968,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_iterator.hpp">
       <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\drop.hpp">
+      <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

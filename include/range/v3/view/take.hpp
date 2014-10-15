@@ -158,14 +158,6 @@ namespace ranges
                 (
                     take_fn::invoke_(std::forward<Rng>(rng), to, iterable_concept<Rng>{})
                 )
-                template<typename IRef, typename I = detail::uncvref_t<IRef>,
-                    CONCEPT_REQUIRES_(InputIterator<I>())>
-                static auto
-                invoke(take_fn, IRef && it, iterator_difference_t<I> n)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    view::counted(std::forward<IRef>(it), n)
-                )
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
                 static auto
                 invoke(take_fn take, Int to)

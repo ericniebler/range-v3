@@ -18,14 +18,13 @@
 
 // A range-based for macro, basically a hack until the build-in range-for can handle Iterables
 // which have a different type for begin and end
-#define RANGES_FOR(VAR_DECL, RANGE)                                                                  \
-    if(bool _range_v3_done = false) {}                                                              \
-    else for(auto && _range_v3_rng = (RANGE); !_range_v3_done;)                                     \
-        for(auto _range_v3_begin = ranges::begin(_range_v3_rng); !_range_v3_done;)                  \
-            for(auto _range_v3_end = ranges::end(_range_v3_rng);                                    \
-                _range_v3_begin != _range_v3_end || !(_range_v3_done = true); ++_range_v3_begin)    \
-                if(bool _range_v3_once = false) {}                                                  \
-                else for(VAR_DECL = *_range_v3_begin; !_range_v3_once; _range_v3_once = true)       \
+#define RANGES_FOR(VAR_DECL, ...)                                                                                       \
+    if(bool _range_v3_done = false) {}                                                                                  \
+    else for(auto && _range_v3_rng = (__VA_ARGS__); !_range_v3_done;)                                                   \
+        for(auto _range_v3_begin = ranges::begin(_range_v3_rng); !_range_v3_done; _range_v3_done = true)                \
+            for(auto _range_v3_end = ranges::end(_range_v3_rng); _range_v3_begin != _range_v3_end; ++_range_v3_begin)   \
+                if(bool _range_v3_once = false) {}                                                                      \
+                else for(VAR_DECL = *_range_v3_begin; !_range_v3_once; _range_v3_once = true)                           \
     /**/
 
 #endif

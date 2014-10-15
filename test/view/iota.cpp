@@ -18,9 +18,6 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template<typename T>
-struct undef_t;
-
 int main()
 {
     using namespace ranges;

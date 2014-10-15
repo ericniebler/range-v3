@@ -17,6 +17,9 @@ add_test(test.view.counted, view.counted)
 add_executable(view.delimit delimit.cpp)
 add_test(test.view.delimit, view.delimit)
 
+add_executable(view.drop drop.cpp)
+add_test(test.view.drop, view.drop)
+
 add_executable(view.filter filter.cpp)
 add_test(test.view.filter, view.filter)
 
