@@ -92,17 +92,16 @@ namespace ranges
             using type = range_reference_t<Rng>;
         };
 
-        // BUGBUG
-        //template<typename Rng>
-        //struct range_size
-        //{
-        //    using type = range_size_t<Rng>;
-        //};
+        template<typename Rng>
+        struct range_size
+        {
+            using type = range_size_t<Rng>;
+        };
 
         // User customization point for infinite ranges:
         template<typename Rng, typename Void /*= void*/>
         struct is_infinite
-          : std::is_base_of<detail::is_infinite<true>, Rng>
+          : std::is_base_of<basic_range<true>, Rng>
         {};
     }
 }

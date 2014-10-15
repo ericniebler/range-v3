@@ -56,10 +56,9 @@ namespace ranges
             }
         };
 
-        template<typename Derived, bool Infinite>
+        template<typename Derived, bool Inf>
         struct range_facade
-          : private detail::is_infinite<Infinite>
-          , range_interface<Derived>
+          : range_interface<Derived, Inf>
         {
         private:
             friend Derived;

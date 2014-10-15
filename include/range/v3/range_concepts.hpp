@@ -389,4 +389,51 @@ namespace ranges
     }
 }
 
+#ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
+// Non-portable forward declarations of standard containers
+namespace std
+{
+    template<class Key, class Compare /*= less<Key>*/, class Alloc /*= allocator<Key>*/>
+    class set;
+
+    template<class Key, class Compare /*= less<Key>*/, class Alloc /*= allocator<Key>*/>
+    class multiset;
+
+    template<class Key, class Hash /*= hash<Key>*/, class Pred /*= equal_to<Key>*/, class Alloc /*= allocator<Key>*/>
+    class unordered_set;
+
+    template<class Key, class Hash /*= hash<Key>*/, class Pred /*= equal_to<Key>*/, class Alloc /*= allocator<Key>*/>
+    class unordered_multiset;
+}
+#else
+#include <set>
+#include <multiset>
+#include <unordered_set>
+#include <unordered_multiset>
+#endif
+
+namespace ranges
+{
+    // By default, the is_range default heuristic guesses wrong for these container types:
+    template<class Key, class Compare, class Alloc>
+    struct is_range<std::set<Key, Compare, Alloc>>
+      : std::false_type
+    {};
+
+    template<class Key, class Compare, class Alloc>
+    struct is_range<std::multiset<Key, Compare, Alloc>>
+      : std::false_type
+    {};
+
+    template<class Key, class Hash, class Pred, class Alloc>
+    struct is_range<std::unordered_set<Key, Hash, Pred, Alloc>>
+      : std::false_type
+    {};
+
+    template<class Key, class Hash, class Pred, class Alloc>
+    struct is_range<std::unordered_multiset<Key, Hash, Pred, Alloc>>
+      : std::false_type
+    {};
+}
+
 #endif

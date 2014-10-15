@@ -30,7 +30,7 @@ namespace ranges
     {
         template<typename Rng>
         struct bounded_view
-          : range_interface<bounded_view<Rng>>
+          : range_interface<bounded_view<Rng>, is_infinite<Rng>::value>
         {
         private:
             friend range_access;
@@ -83,17 +83,27 @@ namespace ranges
         {
             struct bounded_fn : bindable<bounded_fn>, pipeable<bounded_fn>
             {
-                template<typename Rng>
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(Iterable<Rng>() && !BoundedIterable<Rng>())>
                 static bounded_view<Rng>
                 invoke(bounded_fn, Rng && rng)
                 {
-                    CONCEPT_ASSERT(InputIterable<Rng>());
-                    CONCEPT_ASSERT(!BoundedIterable<Rng>());
                     return bounded_view<Rng>{std::forward<Rng>(rng)};
+                }
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(Iterable<Rng>() && BoundedIterable<Rng>())>
+                static view::all_t<Rng>
+                invoke(bounded_fn, Rng && rng)
+                {
+                    return view::all(std::forward<Rng>(rng));
                 }
             };
 
             RANGES_CONSTEXPR bounded_fn bounded{};
+
+            template<typename Rng>
+            using bounded_t =
+                decltype(bounded(std::declval<Rng>()));
         }
     }
 }

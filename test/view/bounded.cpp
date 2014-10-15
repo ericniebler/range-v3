@@ -58,5 +58,8 @@ int main()
     CHECK((e-e) == 0);
     CHECK((next(b)-b) == 1);
 
+    // Pass-through of already-bounded ranges is OK:
+    rng3 = rng3 | view::bounded;
+
     return ::test_result();
 }

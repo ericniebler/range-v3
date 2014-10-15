@@ -111,6 +111,18 @@ namespace ranges
                     return t < u ? u : t;
                 }
             } max_ {};
+
+            template<typename TupleLike>
+            TupleLike tuple_to_pair(TupleLike tup)
+            {
+                return tup;
+            }
+
+            template<typename First, typename Second>
+            std::pair<First, Second> tuple_to_pair(std::tuple<First, Second> tup)
+            {
+                return {std::get<0>(std::move(tup)), std::get<1>(std::move(tup))};
+            }
         } // namespace detail
 
         template<typename Fun, typename ...Rngs>
@@ -145,9 +157,9 @@ namespace ranges
                   : fun_(&fun), its_(std::move(its))
                 {}
                 auto current() const ->
-                    decltype(tuple_apply(*fun_, tuple_transform(its_, detail::deref)))
+                    decltype(detail::tuple_to_pair(tuple_apply(*fun_, tuple_transform(its_, detail::deref))))
                 {
-                    return tuple_apply(*fun_, tuple_transform(its_, detail::deref));
+                    return detail::tuple_to_pair(tuple_apply(*fun_, tuple_transform(its_, detail::deref)));
                 }
                 void next()
                 {

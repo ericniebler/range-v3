@@ -10,6 +10,9 @@ add_subdirectory(numeric)
 add_subdirectory(utility)
 add_subdirectory(view)
 
+add_executable(container_conversion container_conversion.cpp)
+add_test(test.container_conversion container_conversion)
+
 add_executable(range_facade range_facade.cpp)
 add_test(test.range_facade range_facade)
 

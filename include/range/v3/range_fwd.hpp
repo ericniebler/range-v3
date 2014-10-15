@@ -100,6 +100,13 @@ namespace ranges
         template<typename I>
         struct iterator_difference;
 
+        struct range_base
+        {};
+
+        template<bool Inf>
+        struct basic_range : range_base
+        {};
+
         namespace detail
         {
             struct empty
@@ -236,10 +243,6 @@ namespace ranges
             template<typename...Ts>
             void valid_exprs(Ts &&...);
 
-            template<bool Inf>
-            struct is_infinite
-            {};
-
             template<typename I, typename S>
             struct common_cursor;
 
@@ -285,9 +288,6 @@ namespace ranges
         template<typename T, typename Enable = void>
         struct is_sized_iterable;
 
-        struct range_base
-        {};
-
         template<typename Cur>
         struct basic_mixin;
 
@@ -323,6 +323,9 @@ namespace ranges
 
         template<typename T>
         using invokable_t = decltype(invokable(std::declval<T>()));
+
+        template<typename Derived, bool Inf = false>
+        struct range_interface;
 
         template<typename T>
         struct istream_range;

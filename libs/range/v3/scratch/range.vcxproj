@@ -159,6 +159,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
+    <ClCompile Include="..\..\..\..\test\container_conversion.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\adjacent_difference.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\inner_product.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp" />
     <ClCompile Include="..\..\..\..\test\view\drop.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\drop_while.cpp" />
     <ClCompile Include="..\..\..\..\test\view\filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate_n.cpp" />

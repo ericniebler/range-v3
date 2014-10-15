@@ -18,10 +18,11 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/range_interface.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -29,7 +30,7 @@ namespace ranges
     {
         template<typename Rng, typename Pred>
         struct drop_while_view
-          : range_facade<drop_while_view<Rng, Pred>, is_infinite<Rng>::value>
+          : range_interface<drop_while_view<Rng, Pred>, is_infinite<Rng>::value>
         {
         private:
             friend range_access;

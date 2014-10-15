@@ -23,8 +23,7 @@ namespace ranges
     {
         template<typename I>
         struct unbounded_view
-          : private detail::is_infinite<true>
-          , range_interface<unbounded_view<I>>
+          : range_interface<unbounded_view<I>, true>
         {
         private:
             I it_;

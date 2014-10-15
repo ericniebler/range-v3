@@ -21,7 +21,6 @@
 #include <range/v3/size.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/bindable.hpp>
@@ -33,7 +32,7 @@ namespace ranges
     {
         template<typename Rng>
         struct tail_view
-          : range_interface<tail_view<Rng>>
+          : range_interface<tail_view<Rng>, is_infinite<Rng>::value>
         {
         private:
             using base_range_t = view::all_t<Rng>;

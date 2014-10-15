@@ -13,14 +13,20 @@
 #define RANGES_V3_RANGE_INTERFACE_HPP
 
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/range_concepts.hpp>
+#include <range/v3/range_traits.hpp>
+#include <range/v3/begin_end.hpp>
+#include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/common_iterator.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        template<typename Derived>
-        struct range_interface : private range_base
+        template<typename Derived, bool Inf /* = false*/>
+        struct range_interface
+          : private basic_range<Inf>
         {
         private:
             Derived & derived()
@@ -88,6 +94,25 @@ namespace ranges
                 decltype(std::declval<D const &>().begin()[n])
             {
                 return derived().begin()[n];
+            }
+            template<typename Container,
+                typename Alloc = typename Container::allocator_type, // HACKHACK
+                typename D = Derived,
+                typename I = range_iterator_t<D>,
+                typename S = range_sentinel_t<D>,
+                typename CI = detail::conditional_t<(Same<I, S>()), I, common_iterator<I, S>>,
+                CONCEPT_REQUIRES_(
+                    Iterable<Container>() &&
+                    Movable<Container>() &&
+                    Convertible<range_value_t<D>, range_value_t<Container>>() &&
+                    Constructible<Container, CI, CI>() &&
+                    !Range<Container>()
+                )
+            >
+            operator Container () const
+            {
+                static_assert(!is_infinite<D>::value, "Attempt to convert an infinite range to a container.");
+                return Container{CI{begin(derived())}, CI{end(derived())}};
             }
         };
     }
