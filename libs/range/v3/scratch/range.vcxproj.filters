@@ -972,6 +972,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\drop.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\drop_while.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

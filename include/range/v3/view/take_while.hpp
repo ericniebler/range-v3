@@ -13,14 +13,16 @@
 #ifndef RANGES_V3_VIEW_TAKE_WHILE_HPP
 #define RANGES_V3_VIEW_TAKE_WHILE_HPP
 
+#include <utility>
+#include <functional>
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/range.hpp>
-#include <range/v3/utility/unreachable.hpp>
+#include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/view/transform.hpp>
+#include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges
 {
@@ -79,22 +81,13 @@ namespace ranges
                 {
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
-
-                template<typename I, typename Pred,
-                    CONCEPT_REQUIRES_(InputIterator<I>())>
-                static take_while_view<range<I, unreachable>, Pred>
-                invoke(take_while_fn, I begin, Pred pred)
-                {
-                    return {{std::move(begin), {}}, std::move(pred)};
-                }
-
                 template<typename Pred>
                 static auto
-                invoke(take_while_fn take_while, Pred pred) ->
-                    decltype(take_while.move_bind(std::placeholders::_1, std::move(pred)))
-                {
-                    return take_while.move_bind(std::placeholders::_1, std::move(pred));
-                }
+                invoke(take_while_fn take_while, Pred pred)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    take_while.move_bind(std::placeholders::_1, std::move(pred))
+                )
             };
 
             RANGES_CONSTEXPR take_while_fn take_while{};

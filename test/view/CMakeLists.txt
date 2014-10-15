@@ -20,6 +20,9 @@ add_test(test.view.delimit, view.delimit)
 add_executable(view.drop drop.cpp)
 add_test(test.view.drop, view.drop)
 
+add_executable(view.drop_while drop_while.cpp)
+add_test(test.view.drop_while, view.drop_while)
+
 add_executable(view.filter filter.cpp)
 add_test(test.view.filter, view.filter)
 
