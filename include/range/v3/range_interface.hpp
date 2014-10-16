@@ -24,6 +24,17 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
+            constexpr bool ConvertibleToContainer()
+            {
+                return Iterable<Cont>() && !Range<Cont>() && Movable<Cont>() &&
+                    Convertible<range_value_t<Rng>, range_value_t<Cont>>() &&
+                    Constructible<Cont, I, I>();
+            }
+        }
+
         template<typename Derived, bool Inf /* = false*/>
         struct range_interface
           : private basic_range<Inf>
@@ -95,24 +106,25 @@ namespace ranges
             {
                 return derived().begin()[n];
             }
-            template<typename Container,
+            template<typename Container, typename D = Derived,
                 typename Alloc = typename Container::allocator_type, // HACKHACK
-                typename D = Derived,
-                typename I = range_iterator_t<D>,
-                typename S = range_sentinel_t<D>,
-                typename CI = detail::conditional_t<(Same<I, S>()), I, common_iterator<I, S>>,
-                CONCEPT_REQUIRES_(
-                    Iterable<Container>() &&
-                    Movable<Container>() &&
-                    Convertible<range_value_t<D>, range_value_t<Container>>() &&
-                    Constructible<Container, CI, CI>() &&
-                    !Range<Container>()
-                )
-            >
+                CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D, Container>())>
+            operator Container ()
+            {
+                static_assert(!is_infinite<D>::value,
+                    "Attempt to convert an infinite range to a container.");
+                using I = range_common_iterator_t<D>;
+                return Container{I{begin(derived())}, I{end(derived())}};
+            }
+            template<typename Container, typename D = Derived,
+                typename Alloc = typename Container::allocator_type, // HACKHACK
+                CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D const, Container>())>
             operator Container () const
             {
-                static_assert(!is_infinite<D>::value, "Attempt to convert an infinite range to a container.");
-                return Container{CI{begin(derived())}, CI{end(derived())}};
+                static_assert(!is_infinite<D>::value,
+                    "Attempt to convert an infinite range to a container.");
+                using I = range_common_iterator_t<D const>;
+                return Container{I{begin(derived())}, I{end(derived())}};
             }
         };
     }

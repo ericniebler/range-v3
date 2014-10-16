@@ -49,6 +49,9 @@ namespace ranges
         template<typename Rng>
         using range_pointer_t = concepts::InputRange::pointer_t<Rng>;
 
+        template<typename Rng>
+        using range_common_iterator_t = common_iterator<range_iterator_t<Rng>, range_sentinel_t<Rng>>;
+
         // Metafunctions
         template<typename Rng>
         struct range_iterator

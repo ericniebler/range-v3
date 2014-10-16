@@ -18,6 +18,7 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/for_each.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/zip.hpp>
 #include "./simple_test.hpp"
@@ -42,6 +43,12 @@ int main()
     std::map<int, std::string> m =
         view::zip(view::ints, view::ints | view::transform(to_string)) | view::take(5);
     using P = std::pair<int const, std::string>;
+    ::check_equal(m, {P{0,"0"}, P{1,"1"}, P{2,"2"}, P{3,"3"}, P{4,"4"}});
+
+    // Another way to say the same thing, but with a range comprehension:
+    m = view::for_each(view::ints(0,4), [&](int i) {
+            return yield(std::make_pair(i, to_string(i)));
+        });
     ::check_equal(m, {P{0,"0"}, P{1,"1"}, P{2,"2"}, P{3,"3"}, P{4,"4"}});
 
     CONCEPT_ASSERT(Iterable<std::set<int>>());

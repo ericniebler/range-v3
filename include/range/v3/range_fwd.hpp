@@ -316,7 +316,10 @@ namespace ranges
 
         template<typename I, typename S>
         using common_iterator =
-            basic_iterator<detail::common_cursor<I, S>>;
+            detail::conditional_t<
+                std::is_same<I, S>::value,
+                I,
+                basic_iterator<detail::common_cursor<I, S>>>;
 
         template<typename First, typename Second>
         struct compressed_pair;
