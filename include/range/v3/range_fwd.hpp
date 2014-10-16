@@ -33,6 +33,15 @@
     { return (__VA_ARGS__); }               \
     /**/
 
+// Non-portable forward declarations of standard containers
+#ifdef _LIBCPP_VERSION
+#define RANGES_BEGIN_NAMESPACE_STD _LIBCPP_BEGIN_NAMESPACE_STD
+#define RANGES_END_NAMESPACE_STD _LIBCPP_END_NAMESPACE_STD
+#else
+#define RANGES_BEGIN_NAMESPACE_STD namespace std {
+#define RANGES_END_NAMESPACE_STD }
+#endif
+
 namespace ranges
 {
     inline namespace v3
