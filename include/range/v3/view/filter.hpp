@@ -22,6 +22,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/semiregular_wrappers.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 
 namespace ranges
@@ -34,8 +35,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            // BUGBUG doesn't handle non-Regular Invokables
-            invokable_t<Pred> pred_;
+            semiregular_invokable_t<Pred> pred_;
 
             struct adaptor
               : adaptor_base
