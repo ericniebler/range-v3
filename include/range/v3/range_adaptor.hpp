@@ -147,6 +147,17 @@ namespace ranges
                 return second.distance_to(first, that.first);
             }
         public:
+            struct mixin
+              : basic_mixin<adaptor_cursor>
+            {
+                using basic_mixin<adaptor_cursor>::basic_mixin;
+                // All iterators into adapted ranges have a base() member for fetching
+                // the underlying iterator.
+                BaseIter base() const
+                {
+                    return this->get().first;
+                }
+            };
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A>().current(first))>
             R current() const

@@ -74,5 +74,8 @@ int main()
     CHECK(&*begin(rng4) == &rgp[0].first);
     CHECK(rng4.size() == 10u);
 
+    counted_iterator<forward_iterator<std::pair<int, int>*>> i = begin(rng4).base();
+    (void)i;
+
     return test_result();
 }
