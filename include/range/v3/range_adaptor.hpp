@@ -220,6 +220,17 @@ namespace ranges
                 return second.empty(that.first, first);
             }
         public:
+            struct mixin
+              : basic_mixin<adaptor_sentinel>
+            {
+                using basic_mixin<adaptor_sentinel>::basic_mixin;
+                // All iterators into adapted ranges have a base() member for fetching
+                // the underlying iterator.
+                BaseSent base() const
+                {
+                    return this->get().first;
+                }
+            };
             template<typename I, typename IA, typename S = adaptor_sentinel>
             constexpr auto equal(adaptor_cursor<I, IA> const &that) const ->
                 decltype(std::declval<S const &>().equal_(that, 42))
