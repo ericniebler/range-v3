@@ -36,5 +36,10 @@ int main()
     CHECK(y.size() == 7u);
     CHECK(z.size() == 7u);
 
+    ranges::reference_wrapper<int[7]> rrgi = view::all(std::ref(rgi));
+    auto stdref = std::ref(rgi);
+    rrgi = view::all(stdref);
+    rrgi = view::all(static_cast<std::reference_wrapper<int[7]> const &>(stdref));
+
     return test_result();
 }

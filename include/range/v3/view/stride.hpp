@@ -150,7 +150,7 @@ namespace ranges
                 return {};
             }
             CONCEPT_REQUIRES(BoundedIterable<Rng>())
-            adaptor end_adaptor() const 
+            adaptor end_adaptor() const
             {
                 return {*this, end_tag{}};
             }

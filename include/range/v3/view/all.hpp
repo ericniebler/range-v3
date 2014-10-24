@@ -20,6 +20,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/semiregular_wrappers.hpp>
 
 namespace ranges
 {
@@ -82,6 +83,13 @@ namespace ranges
                     decltype(all_fn::from_iterable(std::forward<T>(t), range_concept<T>()))
                 {
                     return all_fn::from_iterable(std::forward<T>(t), range_concept<T>());
+                }
+
+                template<typename T,
+                    CONCEPT_REQUIRES_(Iterable<T>())>
+                static ranges::reference_wrapper<T> invoke(all_fn, std::reference_wrapper<T> ref)
+                {
+                    return ranges::ref(ref.get());
                 }
             };
 

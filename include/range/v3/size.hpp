@@ -46,6 +46,12 @@ namespace ranges
 
             // A reference-wrapped Iterable
             template<typename T>
+            auto size(std::reference_wrapper<T> t) -> decltype(size(t.get()))
+            {
+                return size(t.get());
+            }
+
+            template<typename T>
             auto size(ranges::reference_wrapper<T> t) -> decltype(size(t.get()))
             {
                 return size(t.get());

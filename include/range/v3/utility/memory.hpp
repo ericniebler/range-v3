@@ -106,7 +106,7 @@ namespace ranges
         struct raw_storage_iterator
         {
         private:
-            O out_; 
+            O out_;
         public:
             using difference_type = iterator_difference_t<O>;
             raw_storage_iterator() = default;

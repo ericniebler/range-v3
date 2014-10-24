@@ -14,6 +14,7 @@
 #define RANGES_V3_BEGIN_END_HPP
 
 #include <iterator>
+#include <functional>
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/bindable.hpp>
@@ -28,6 +29,18 @@ namespace ranges
             using std::end;
 
             // A reference-wrapped Iterable is an Iterable
+            template<typename T>
+            auto begin(std::reference_wrapper<T> ref) -> decltype(begin(ref.get()))
+            {
+                return begin(ref.get());
+            }
+
+            template<typename T>
+            auto end(std::reference_wrapper<T> ref) -> decltype(end(ref.get()))
+            {
+                return end(ref.get());
+            }
+
             template<typename T>
             auto begin(ranges::reference_wrapper<T> ref) -> decltype(begin(ref.get()))
             {
