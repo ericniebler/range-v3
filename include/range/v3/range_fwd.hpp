@@ -260,7 +260,7 @@ namespace ranges
 
             struct counted_sentinel;
 
-#if !defined(__GLIBCXX__) || __GLIBCXX__ > 20140522
+#if !defined(__GLIBCXX__)
             template<typename T>
             using is_trivially_copy_assignable = std::is_trivially_copy_assignable<T>;
 
@@ -269,12 +269,12 @@ namespace ranges
 #else
             template<typename T>
             struct is_trivially_copy_assignable
-              : std::is_scalar<T>
+              : std::is_trivial<T>
             {};
 
             template<typename T>
             struct is_trivially_move_assignable
-              : std::is_scalar<T>
+              : std::is_trivial<T>
             {};
 #endif
         }
