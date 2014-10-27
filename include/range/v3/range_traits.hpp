@@ -106,6 +106,16 @@ namespace ranges
         struct is_infinite
           : std::is_base_of<basic_range<true>, Rng>
         {};
+
+        template<typename Rng>
+        struct is_infinite<Rng &>
+          : is_infinite<Rng>
+        {};
+
+        template<typename Rng>
+        struct is_infinite<Rng const>
+          : is_infinite<Rng>
+        {};
     }
 }
 

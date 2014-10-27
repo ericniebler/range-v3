@@ -159,6 +159,8 @@
     <ClCompile Include="..\..\..\..\test\algorithm\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\cont_concepts.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\insert.cpp" />
     <ClCompile Include="..\..\..\..\test\container_conversion.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\adjacent_difference.cpp" />
@@ -279,6 +281,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\at.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\back.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\concepts.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\insert.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\re_enable_warnings.hpp" />
@@ -311,6 +316,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_tuple.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\copy.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\counted_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\functional.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\infinity.hpp" />
@@ -383,6 +389,7 @@
     <Text Include="..\..\..\..\perf\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\algorithm\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\CMakeLists.txt" />
+    <Text Include="..\..\..\..\test\container\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\numeric\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\utility\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\view\CMakeLists.txt" />

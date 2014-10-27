@@ -6,6 +6,7 @@ endif()
 set(CMAKE_CXX_COMPILER_FLAGS "${CMAKE_CXX_COMPILER_FLAGS} -g")
 
 add_subdirectory(algorithm)
+add_subdirectory(container)
 add_subdirectory(numeric)
 add_subdirectory(utility)
 add_subdirectory(view)

@@ -55,6 +55,12 @@
     <Filter Include="Perf Files">
       <UniqueIdentifier>{bc20ee0b-7da9-4870-b4cb-f5ce78da09d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\container">
+      <UniqueIdentifier>{2456fa98-8da1-453c-b4c6-c9f27829403e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test Files\container">
+      <UniqueIdentifier>{3b424817-1846-4df2-94a1-699cce48b60a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\.gitignore" />
@@ -444,6 +450,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\container_conversion.cpp">
       <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\container\cont_concepts.cpp">
+      <Filter>Test Files\container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\container\insert.cpp">
+      <Filter>Test Files\container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -981,6 +993,18 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\drop_while.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\concepts.hpp">
+      <Filter>Header Files\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\copy.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\insert.hpp">
+      <Filter>Header Files\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
@@ -1007,6 +1031,9 @@
     </Text>
     <Text Include="..\..\..\..\perf\CMakeLists.txt">
       <Filter>Perf Files</Filter>
+    </Text>
+    <Text Include="..\..\..\..\test\container\CMakeLists.txt">
+      <Filter>Test Files\container</Filter>
     </Text>
   </ItemGroup>
 </Project>

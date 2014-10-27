@@ -23,13 +23,16 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/range_algorithm.hpp>
+#include <range/v3/utility/copy.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct copy_fn
+        struct copy_fn : aux::copy_fn
         {
+            using aux::copy_fn::operator();
+
             template<typename I, typename S, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
                     InputIterator<I>() && IteratorRange<I, S>() &&
