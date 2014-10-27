@@ -66,7 +66,7 @@ namespace ranges
                     SizedIteratorRange<range_iterator_t<D>, range_sentinel_t<D>>())>
             range_size_t<D> size() const
             {
-                return iterator_range_size(derived().begin(), derived().end());
+                return iter_size(derived().begin(), derived().end());
             }
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>

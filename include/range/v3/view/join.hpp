@@ -300,15 +300,6 @@ namespace ranges
 
             RANGES_CONSTEXPR join_fn join {};
         }
-
-        // Binary range concatenation. Is there a better operator for this? Should this
-        // even be an operator?
-        template<typename Rng0, typename Rng1,
-            CONCEPT_REQUIRES_(InputIterable<Rng0>() && InputIterable<Rng1>())>
-        joined_view<Rng0, Rng1> operator + (Rng0 && rng0, Rng1 && rng1)
-        {
-            return joined_view<Rng0, Rng1>{std::forward<Rng0>(rng0), std::forward<Rng1>(rng1)};
-        }
     }
 }
 

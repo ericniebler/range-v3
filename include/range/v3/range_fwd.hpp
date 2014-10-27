@@ -103,8 +103,8 @@ namespace ranges
         struct distance_fn;
         extern distance_fn const distance;
 
-        struct iterator_range_size_fn;
-        extern iterator_range_size_fn const iterator_range_size;
+        struct iter_size_fn;
+        extern iter_size_fn const iter_size;
 
         template<typename I>
         struct iterator_difference;

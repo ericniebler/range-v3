@@ -150,7 +150,7 @@ namespace ranges
 
         RANGES_CONSTEXPR next_to_fn next_to{};
 
-        struct iterator_range_enumerate_fn
+        struct iter_enumerate_fn
         {
         private:
             template<typename I, typename S, typename D>
@@ -181,15 +181,15 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iterator_range_enumerate_fn iterator_range_enumerate {};
+        RANGES_CONSTEXPR iter_enumerate_fn iter_enumerate {};
 
-        struct iterator_range_distance_fn
+        struct iter_distance_fn
         {
         private:
             template<typename I, typename S, typename D>
             D impl_i(I begin, S end, D d, concepts::IteratorRange*) const
             {
-                return iterator_range_enumerate(std::move(begin), std::move(end), d).first;
+                return iter_enumerate(std::move(begin), std::move(end), d).first;
             }
             template<typename I, typename S, typename D>
             D impl_i(I begin, S end, D d, concepts::SizedIteratorRange*) const
@@ -206,10 +206,10 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iterator_range_distance_fn iterator_range_distance {};
+        RANGES_CONSTEXPR iter_distance_fn iter_distance {};
 
         // Like distance(b,e), but guaranteed to be O(1)
-        struct iterator_range_size_fn
+        struct iter_size_fn
         {
             template<typename I, typename S, CONCEPT_REQUIRES_(SizedIteratorRange<I, S>())>
             iterator_size_t<I> operator()(I begin, S end) const
@@ -219,26 +219,23 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iterator_range_size_fn iterator_range_size {};
+        RANGES_CONSTEXPR iter_size_fn iter_size {};
 
-        namespace adl_iter_swap_detail
+        struct iter_swap_fn
         {
-            using std::iter_swap;
-            struct iter_swap_fn
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(
+                    ForwardIterator<T>() &&
+                    ForwardIterator<U>() &&
+                    Swappable<iterator_reference_t<T>, iterator_reference_t<U>>())>
+            void operator()(T t, U u) const
             {
-                template<typename T, typename U,
-                    CONCEPT_REQUIRES_(
-                        ForwardIterator<T>() &&
-                        ForwardIterator<U>() &&
-                        Swappable<iterator_reference_t<T>, iterator_reference_t<U>>())>
-                void operator()(T t, U u) const
-                {
-                    iter_swap(std::forward<T>(t), std::forward<U>(u));
-                }
-            };
-        }
+                using std::iter_swap;
+                iter_swap(std::forward<T>(t), std::forward<U>(u));
+            }
+        };
 
-        RANGES_CONSTEXPR adl_iter_swap_detail::iter_swap_fn iter_swap {};
+        RANGES_CONSTEXPR iter_swap_fn iter_swap {};
 
         template<typename Cont>
         struct back_insert_iterator

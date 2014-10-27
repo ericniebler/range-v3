@@ -20,7 +20,9 @@
 #ifndef RANGES_V3_EXT_VIEW_RECURSIVE_RANGE_HPP
 #define RANGES_V3_EXT_VIEW_RECURSIVE_RANGE_HPP
 
+#ifndef RANGES_CYGWIN
 #include <mutex>
+#endif
 #include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -52,24 +54,34 @@ namespace ranges
             {
             private:
                 friend recursive_range_fn;
-                mutable std::mutex mtx_;
                 std::function<any_input_range<int>()> const *fun_;
                 mutable optional<any_input_range<int>> rng_;
+            #ifndef RANGES_CYGWIN
+                mutable std::mutex mtx_;
+            #endif
                 any_input_range<int> const &rng() const
                 {
+                #ifndef RANGES_CYGWIN
                     std::lock_guard<std::mutex> lock{mtx_};
+                #endif
                     if(!rng_)
                         rng_ = (*fun_)();
                     return *rng_;
                 }
                 impl(std::function<any_input_range<int>()> const &fun)
-                  : mtx_{}, fun_(&fun), rng_{}
+                  : fun_(&fun), rng_{}
+                #ifndef RANGES_CYGWIN
+                  , mtx_{}
+                #endif
                 {}
             public:
                 impl() = default;
                 impl(impl &&) = default;
                 impl(impl const &that)
-                  : mtx_{}, fun_(that.fun_), rng_{}
+                  : fun_(that.fun_), rng_{}
+                #ifndef RANGES_CYGWIN
+                  , mtx_{}
+                #endif
                 {}
                 impl &operator=(impl &&) = default;
                 impl &operator=(impl const &that)
@@ -103,7 +115,7 @@ namespace ranges
                                     any_input_range<Ref>
                                   >())>
             explicit recursive_range_fn(Fun fun)
-              : fun_{[=](){return fun() + make_range(nullval<value_type>(), nullval<value_type>());}}
+              : fun_{[=](){return view::join(fun(), make_range(nullval<value_type>(), nullval<value_type>()));}}
             {}
             recursive_range_fn(recursive_range_fn const &) = delete;
             recursive_range_fn &operator=(recursive_range_fn const &) = delete;

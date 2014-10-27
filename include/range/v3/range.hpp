@@ -113,7 +113,7 @@ namespace ranges
             void check() const
             {
                 RANGES_ASSERT(!ForwardIterator<I>() ||
-                    static_cast<iterator_size_t<I>>(iterator_range_distance(first, second)) == third);
+                    static_cast<iterator_size_t<I>>(iter_distance(first, second)) == third);
             }
         public:
             using range<I const, S const>::first;

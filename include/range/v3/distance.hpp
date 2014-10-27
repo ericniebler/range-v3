@@ -27,13 +27,13 @@ namespace ranges
 {
     inline namespace v3
     {
-        struct enumerate_fn : iterator_range_enumerate_fn
+        struct enumerate_fn : iter_enumerate_fn
         {
         private:
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
             std::pair<D, I> impl_r(Rng &rng, D d, concepts::Iterable*, concepts::Iterable*) const
             {
-                return iterator_range_enumerate(begin(rng), end(rng), d);
+                return iter_enumerate(begin(rng), end(rng), d);
             }
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
             std::pair<D, I> impl_r(Rng &rng, D d, concepts::BoundedIterable*, concepts::SizedIterable*) const
@@ -41,7 +41,7 @@ namespace ranges
                 return {static_cast<D>(size(rng)) + d, end(rng)};
             }
         public:
-            using iterator_range_enumerate_fn::operator();
+            using iter_enumerate_fn::operator();
 
             template<typename Rng, typename D = range_difference_t<Rng>,
                 typename I = range_iterator_t<Rng>,
@@ -57,7 +57,7 @@ namespace ranges
 
         RANGES_CONSTEXPR enumerate_fn enumerate{};
 
-        struct distance_fn : iterator_range_distance_fn
+        struct distance_fn : iter_distance_fn
         {
         private:
             template<typename Rng, typename D>
@@ -71,7 +71,7 @@ namespace ranges
                 return static_cast<D>(size(rng)) + d;
             }
         public:
-            using iterator_range_distance_fn::operator();
+            using iter_distance_fn::operator();
 
             template<typename Rng, typename D = range_difference_t<Rng>,
                 CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>

@@ -25,9 +25,9 @@ namespace ranges
         {
             template<typename Rng>
             constexpr auto size_(Rng && rng, long) ->
-                decltype(iterator_range_size(begin(rng), end(rng)))
+                decltype(iter_size(begin(rng), end(rng)))
             {
-                return iterator_range_size(begin(rng), end(rng));
+                return iter_size(begin(rng), end(rng));
             }
 
             template<typename Rng>
@@ -70,9 +70,9 @@ namespace ranges
                 return N;
             }
 
-            struct size_fn : iterator_range_size_fn
+            struct size_fn : iter_size_fn
             {
-                using iterator_range_size_fn::operator();
+                using iter_size_fn::operator();
 
                 template<typename Rng>
                 constexpr auto operator()(Rng &&rng) const ->
