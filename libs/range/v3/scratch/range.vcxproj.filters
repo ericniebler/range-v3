@@ -457,6 +457,12 @@
     <ClCompile Include="..\..\..\..\test\container\insert.cpp">
       <Filter>Test Files\container</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\container\push_front.cpp">
+      <Filter>Test Files\container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\container\push_back.cpp">
+      <Filter>Test Files\container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -1004,6 +1010,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\container.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\push_front.hpp">
+      <Filter>Header Files\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\push_back.hpp">
+      <Filter>Header Files\container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

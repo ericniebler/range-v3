@@ -20,7 +20,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/container/concepts.hpp>
-#include <range/v3/view/bounded.hpp>
 
 namespace ranges
 {
@@ -92,36 +91,53 @@ namespace ranges
                 return cont.insert(p, C{begin(rng)}, C{end(rng)});
             }
 
-            // TODO bindable? view::ints | view::take(10) | container::insert(v, v.begin());
-            struct insert_fn
+            struct insert_impl_fn : bindable<insert_impl_fn>
             {
                 template<typename Cont, typename T,
-                    CONCEPT_REQUIRES_(Container<Cont>())>
-                auto operator()(Cont & cont, T && t) const ->
+                    CONCEPT_REQUIRES_(Container<Cont>() && Constructible<range_value_t<Cont>, T &&>())>
+                static auto invoke(insert_impl_fn, Cont & cont, T && t) ->
                     decltype(insert(cont, std::forward<T>(t)))
                 {
                     return insert(cont, std::forward<T>(t));
                 }
 
+                template<typename Cont, typename Rng,
+                    CONCEPT_REQUIRES_(Container<Cont>() && Iterable<Rng>())>
+                static auto invoke(insert_impl_fn, Cont & cont, Rng && rng) ->
+                    decltype(insert(cont, std::forward<Rng>(rng)))
+                {
+                    return insert(cont, std::forward<Rng>(rng));
+                }
+
                 template<typename Cont, typename I, typename S,
                     CONCEPT_REQUIRES_(Container<Cont>() && IteratorRange<I, S>())>
-                auto operator()(Cont & cont, I i, S j) const ->
+                static auto invoke(insert_impl_fn, Cont & cont, I i, S j) ->
                     decltype(insert(cont, i, j))
                 {
                     return insert(cont, i, j);
                 }
 
                 template<typename Cont, typename I, typename T,
-                    CONCEPT_REQUIRES_(Container<Cont>() && Iterator<I>())>
-                auto operator()(Cont & cont, I p, T && t) const ->
+                    CONCEPT_REQUIRES_(Container<Cont>() && Iterator<I>() &&
+                        Constructible<range_value_t<Cont>, T &&>())>
+                static auto invoke(insert_impl_fn, Cont & cont, I p, T && t) ->
                     decltype(insert(cont, p, std::forward<T>(t)))
                 {
                     return insert(cont, p, std::forward<T>(t));
                 }
 
+                template<typename Cont, typename I, typename Rng,
+                    CONCEPT_REQUIRES_(Container<Cont>() && Iterator<I>() && Iterable<Rng>())>
+                static auto invoke(insert_impl_fn, Cont & cont, I p, Rng && rng) ->
+                    decltype(insert(cont, p, std::forward<Rng>(rng)))
+                {
+                    return insert(cont, p, std::forward<Rng>(rng));
+                }
+
                 template<typename Cont, typename I, typename N, typename T,
-                    CONCEPT_REQUIRES_(Container<Cont>() && Iterator<I>() && Integral<N>())>
-                auto operator()(Cont & cont, I p, N n, T && t) const ->
+                    CONCEPT_REQUIRES_(Container<Cont>() && Iterator<I>() && Integral<N>()
+                        && Constructible<range_value_t<Cont>, T &&>())>
+                static auto invoke(insert_impl_fn, Cont & cont, I p, N n, T && t) ->
                     decltype(insert(cont, p, n, std::forward<T>(t)))
                 {
                     return insert(cont, p, n, std::forward<T>(t));
@@ -129,18 +145,47 @@ namespace ranges
 
                 template<typename Cont, typename P, typename I, typename S,
                     CONCEPT_REQUIRES_(Container<Cont>() && Iterator<P>() && IteratorRange<I, S>())>
-                auto operator()(Cont & cont, P p, I i, S j) const ->
+                static auto invoke(insert_impl_fn, Cont & cont, P p, I i, S j) ->
                     decltype(insert(cont, p, i, j))
                 {
                     return insert(cont, p, i, j);
                 }
 
+                template<typename Cont,
+                    CONCEPT_REQUIRES_(Container<Cont>())>
+                static auto invoke(insert_impl_fn insert, Cont & cont) ->
+                    decltype(insert.move_bind(cont, std::placeholders::_1))
+                {
+                    return insert.move_bind(cont, std::placeholders::_1);
+                }
+
+                template<typename Cont, typename I,
+                    CONCEPT_REQUIRES_(Container<Cont>() && Iterator<I>())>
+                static auto invoke(insert_impl_fn insert, Cont & cont, I p) ->
+                    decltype(insert.move_bind(cont, (I)p, std::placeholders::_1))
+                {
+                    return insert.move_bind(cont, (I)p, std::placeholders::_1);
+                }
+            };
+
+            struct insert_fn : insert_impl_fn
+            {
+                using insert_impl_fn::operator();
+
+                template<typename Cont, typename T,
+                    CONCEPT_REQUIRES_(Container<Cont>())>
+                auto operator()(Cont & cont, std::initializer_list<T> rng) const ->
+                    decltype(insert_impl_fn{}(cont, rng.begin(), rng.end()))
+                {
+                    return insert_impl_fn{}(cont, rng.begin(), rng.end());
+                }
+
                 template<typename Cont, typename I, typename T,
                     CONCEPT_REQUIRES_(Container<Cont>() && Iterator<I>())>
                 auto operator()(Cont & cont, I p, std::initializer_list<T> rng) const ->
-                    decltype(insert(cont, p, rng.begin(), rng.end()))
+                    decltype(insert_impl_fn{}(cont, p, rng.begin(), rng.end()))
                 {
-                    return insert(cont, p, rng.begin(), rng.end());
+                    return insert_impl_fn{}(cont, p, rng.begin(), rng.end());
                 }
             };
         }

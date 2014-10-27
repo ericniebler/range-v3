@@ -7,13 +7,13 @@
 //  file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <set>
+#include <list>
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/for_each.hpp>
-#include <range/v3/container/insert.hpp>
+#include <range/v3/container/push_back.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -22,28 +22,26 @@ int main()
     using namespace ranges;
 
     std::vector<int> v;
-    auto i = container::insert(v, v.begin(), 42);
-    CHECK(i == v.begin());
-    ::check_equal(v, {42});
-    container::insert(v, v.end(), {1,2,3});
-    ::check_equal(v, {42,1,2,3});
+    container::push_back(v, {1,2,3});
+    ::check_equal(v, {1,2,3});
 
-    container::insert(v, v.begin(), view::ints | view::take(3));
-    ::check_equal(v, {0,1,2,42,1,2,3});
+    container::push_back(v, view::ints(10) | view::take(3));
+    ::check_equal(v, {1,2,3,10,11,12});
+
+    view::ints(10) | view::take(3) | container::push_back(v);
+    ::check_equal(v, {1,2,3,10,11,12,10,11,12});
 
     int rg[] = {9,8,7};
-    container::insert(v, v.begin()+3, rg);
-    ::check_equal(v, {0,1,2,9,8,7,42,1,2,3});
-    rg | container::insert(v, v.begin()+1);
-    ::check_equal(v, {0,9,8,7,1,2,9,8,7,42,1,2,3});
+    container::push_back(v, rg);
+    ::check_equal(v, {1,2,3,10,11,12,10,11,12,9,8,7});
+    rg | container::push_back(v);
+    ::check_equal(v, {1,2,3,10,11,12,10,11,12,9,8,7,9,8,7});
 
-    std::set<int> s;
-    container::insert(s,
+    std::list<int> s;
+    container::push_back(s,
         view::ints|view::take(10)|view::for_each([](int i){return yield_if(i%2==0,i);}));
     ::check_equal(s, {0,2,4,6,8});
-    auto j = container::insert(s, 10);
-    CHECK(j.first == prev(s.end()));
-    CHECK(j.second == true);
+    container::push_back(s, 10);
     ::check_equal(s, {0,2,4,6,8,10});
 
     return ::test_result();

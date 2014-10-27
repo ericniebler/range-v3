@@ -173,17 +173,17 @@ namespace ranges
                 return std::forward<Pipe>(pipe)(std::forward<Arg>(arg));
             }
         public:
-            template<typename Arg>
+            template<typename Arg, typename D = Derived>
             friend auto operator|(Arg && arg, pipeable const & pipe) ->
-                decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived const &>()))
+                decltype(D::pipe(std::declval<Arg>(), std::declval<Derived const &>()))
             {
-                return Derived::pipe(std::forward<Arg>(arg), pipe.derived());
+                return D::pipe(std::forward<Arg>(arg), pipe.derived());
             }
-            template<typename Arg>
+            template<typename Arg, typename D = Derived>
             friend auto operator|(Arg && arg, pipeable && pipe) ->
-                decltype(detail::always_t<Derived, Arg>::pipe(std::declval<Arg>(), std::declval<Derived>()))
+                decltype(D::pipe(std::declval<Arg>(), std::declval<Derived>()))
             {
-                return Derived::pipe(std::forward<Arg>(arg), std::move(pipe).derived());
+                return D::pipe(std::forward<Arg>(arg), std::move(pipe).derived());
             }
         };
     }
