@@ -40,9 +40,6 @@ namespace ranges
                 >::apply<T>;
         }
 
-        struct void_t
-        {};
-
         template<typename...Ts>
         struct tagged_variant;
 
@@ -280,7 +277,7 @@ namespace ranges
                 }
             };
 
-            template<typename Fun, typename Var = void_t>
+            template<typename Fun, typename Var = std::nullptr_t>
             struct apply_visitor
             {
             private:
@@ -290,7 +287,7 @@ namespace ranges
                 void apply_(T &&t, size_t<N> n, std::true_type) const
                 {
                     fun_(std::forward<T>(t), n);
-                    var_.template set<N>(void_t{});
+                    var_.template set<N>(nullptr);
                 }
                 template<typename T, std::size_t N>
                 void apply_(T &&t, size_t<N> n, std::false_type) const
@@ -310,7 +307,7 @@ namespace ranges
             };
 
             template<typename Fun>
-            struct apply_visitor<Fun, void_t>
+            struct apply_visitor<Fun, std::nullptr_t>
             {
             private:
                 Fun fun_;
@@ -389,7 +386,7 @@ namespace ranges
             using variant_result_t =
                 typelist_expand_t<
                     tagged_variant,
-                    typelist_replace_t<void, void_t,
+                    typelist_replace_t<void, std::nullptr_t,
                         typelist_transform_t<Types,
                             meta_bind_front<concepts::Function::result_t, Fun>::template apply> > >;
 
@@ -397,7 +394,7 @@ namespace ranges
             using variant_result_i_t =
                 typelist_expand_t<
                     tagged_variant,
-                    typelist_replace_t<void, void_t,
+                    typelist_replace_t<void, std::nullptr_t,
                         typelist_transform2_t<Types, typelist_integer_sequence_t<Types::size()>,
                             meta_bind_front<concepts::Function::result_t, Fun>::template apply> > >;
 

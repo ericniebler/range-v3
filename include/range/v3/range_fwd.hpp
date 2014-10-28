@@ -205,15 +205,15 @@ namespace ranges
             struct binder;
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // always
-            template<typename A, typename...Rest>
-            struct always
+            // void_
+            template<typename...Rest>
+            struct always_void
             {
-                using type = A;
+                using type = void;
             };
 
-            template<typename A, typename...Rest>
-            using always_t = typename always<A, Rest...>::type;
+            template<typename...Rest>
+            using void_t = typename always_void<Rest...>::type;
 
             struct not_equal_to;
 

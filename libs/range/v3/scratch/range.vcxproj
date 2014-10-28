@@ -333,6 +333,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\memory.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\meta.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\move.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\nullval.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\range_algorithm.hpp" />

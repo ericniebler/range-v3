@@ -107,8 +107,8 @@ namespace ranges
                 return static_cast<Derived &&>(*this);
             }
             template<typename...Args>
-            auto move_bind(Args &&...args)
-                -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
+            auto move_bind(Args &&...args) ->
+                detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
             {
                 return detail::wrap_bind(std::move(*this).derived(),
                     detail::unwrap_bind(std::forward<Args>(args))...);
@@ -118,35 +118,35 @@ namespace ranges
             // std placeholder, or another bind expression made with bindable
             template<typename ...Args,
                 CONCEPT_REQUIRES_(contains_placeholder_expression<Args...>())>
-            auto operator()(Args &&... args) const &
-                -> detail::bind_t<Derived const &, detail::unwrap_bind_t<Args>...>
+            auto operator()(Args &&... args) const & ->
+                detail::bind_t<Derived const &, detail::unwrap_bind_t<Args>...>
             {
                 return detail::wrap_bind(derived(),
                                          detail::unwrap_bind(std::forward<Args>(args))...);
             }
             template<typename ...Args,
                 CONCEPT_REQUIRES_(contains_placeholder_expression<Args...>())>
-            auto operator()(Args &&... args) &&
-                -> detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
+            auto operator()(Args &&... args) && ->
+                detail::bind_t<Derived &&, detail::unwrap_bind_t<Args>...>
             {
                 return detail::wrap_bind(std::move(*this).derived(),
                                          detail::unwrap_bind(std::forward<Args>(args))...);
             }
             // This gets called when none of the arguments are std placeholders
             // or bind expressions.
-            template<typename ...Args,
+            template<typename ...Args, typename D = Derived,
                 CONCEPT_REQUIRES_(!contains_placeholder_expression<Args...>())>
-            auto operator()(Args &&... args) const &
-                -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived const &>(), std::declval<Args>()...))
+            auto operator()(Args &&... args) const & ->
+                decltype(D::invoke(std::declval<Derived const &>(), std::declval<Args>()...))
             {
-                return Derived::invoke(derived(), std::forward<Args>(args)...);
+                return D::invoke(derived(), std::forward<Args>(args)...);
             }
-            template<typename ...Args,
+            template<typename ...Args, typename D = Derived,
                 CONCEPT_REQUIRES_(!contains_placeholder_expression<Args...>())>
-            auto operator()(Args &&... args) &&
-                -> decltype(detail::always_t<Derived, Args...>::invoke(std::declval<Derived>(), std::declval<Args>()...))
+            auto operator()(Args &&... args) && ->
+                decltype(D::invoke(std::declval<Derived>(), std::declval<Args>()...))
             {
-                return Derived::invoke(std::move(*this).derived(), std::forward<Args>(args)...);
+                return D::invoke(std::move(*this).derived(), std::forward<Args>(args)...);
             }
         };
 

@@ -92,7 +92,7 @@ namespace ranges
             };
 
             template<typename Concept>
-            struct base_concepts_of<Concept, always_t<void, typename Concept::base_concepts_t>>
+            struct base_concepts_of<Concept, void_t<typename Concept::base_concepts_t>>
             {
                 using type = typename Concept::base_concepts_t;
             };
@@ -116,15 +116,14 @@ namespace ranges
             auto models_(any, Ts &&...) ->
                 std::false_type;
 
-            template<typename Concept, typename...Ts>
-            auto models_(Concept *c, Ts &&...ts) ->
-                always_t<
-                    typelist_expand_t<
-                        lazy_and,
-                        typelist_transform_t<
-                            base_concepts_of_t<Concept>,
-                            meta_bind_back<concepts::models, Ts...>::template apply>>,
-                    decltype(c->requires_(std::forward<Ts>(ts)...))>;
+            template<typename Concept, typename...Ts,
+                typename = decltype(std::declval<Concept &>().requires_(std::declval<Ts>()...))>
+            auto models_(Concept *, Ts &&...) ->
+                typelist_expand_t<
+                    lazy_and,
+                    typelist_transform_t<
+                        base_concepts_of_t<Concept>,
+                        meta_bind_back<concepts::models, Ts...>::template apply>>;
         }
 
         namespace concepts
@@ -684,7 +683,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct difference_type<T, always_t<void, typename T::difference_type>>
+            struct difference_type<T, void_t<typename T::difference_type>>
             {
                 using type = typename T::difference_type;
             };
@@ -716,7 +715,7 @@ namespace ranges
             {};
 
             template<typename T>
-            struct value_type<T, always_t<void, typename T::value_type>>
+            struct value_type<T, void_t<typename T::value_type>>
               : std::enable_if<!std::is_void<typename T::value_type>::value, typename T::value_type>
             {
                 // The use of enable_if is to accomodate output iterators that are

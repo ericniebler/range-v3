@@ -40,7 +40,7 @@ namespace ranges
             {};
 
             template<typename T, typename U>
-            struct common_type_if<T, U, always_t<void, default_common_t<T, U>>>
+            struct common_type_if<T, U, void_t<default_common_t<T, U>>>
             {
                 using type = decay_t<default_common_t<T, U>>;
             };
@@ -62,7 +62,7 @@ namespace ranges
             {};
 
             template<typename Meta>
-            struct has_type<Meta, always_t<void, typename Meta::type>>
+            struct has_type<Meta, void_t<typename Meta::type>>
               : std::true_type
             {};
 

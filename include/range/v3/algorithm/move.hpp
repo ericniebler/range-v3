@@ -21,13 +21,16 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/move.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        struct move_fn
+        struct move_fn : aux::move_fn
         {
+            using aux::move_fn::operator();
+
             template<typename I, typename S, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() && WeaklyIncrementable<O>() &&
                     IndirectlyProjectedMovable<I, P, O>())>

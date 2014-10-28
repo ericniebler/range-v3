@@ -155,7 +155,7 @@ namespace ranges
             };
 
             template<typename Cur>
-            struct cursor_difference2<Cur, detail::always_t<void, random_access_cursor_difference_t<Cur>>>
+            struct cursor_difference2<Cur, detail::void_t<random_access_cursor_difference_t<Cur>>>
             {
                 using type = random_access_cursor_difference_t<Cur>;
             };
@@ -166,7 +166,7 @@ namespace ranges
             {};
 
             template<typename Cur>
-            struct cursor_difference<Cur, detail::always_t<void, typename Cur::difference_type>>
+            struct cursor_difference<Cur, detail::void_t<typename Cur::difference_type>>
             {
                 using type = typename Cur::difference_type;
             };
@@ -178,7 +178,7 @@ namespace ranges
             };
 
             template<typename Cur>
-            struct cursor_value<Cur, detail::always_t<void, typename Cur::value_type>>
+            struct cursor_value<Cur, detail::void_t<typename Cur::value_type>>
             {
                 using type = typename Cur::value_type;
             };
@@ -190,7 +190,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct single_pass<T, detail::always_t<void, typename T::single_pass>>
+            struct single_pass<T, detail::void_t<typename T::single_pass>>
             {
                 using type = typename T::single_pass;
             };

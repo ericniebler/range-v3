@@ -145,7 +145,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct iterator_category_type<T, always_t<void, typename T::iterator_category>>
+            struct iterator_category_type<T, void_t<typename T::iterator_category>>
               : as_ranges_iterator_category<typename T::iterator_category>
             {};
         }

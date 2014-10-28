@@ -10,12 +10,13 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_UTILITY_COPY_HPP
-#define RANGES_V3_UTILITY_COPY_HPP
+#ifndef RANGES_V3_UTILITY_MOVE_HPP
+#define RANGES_V3_UTILITY_MOVE_HPP
 
 #include <utility>
+#include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/bindable.hpp>
 
 namespace ranges
@@ -24,18 +25,17 @@ namespace ranges
     {
         namespace aux
         {
-            struct copy_fn : pipeable<copy_fn>
+            struct move_fn : pipeable<move_fn>
             {
                 template<typename T,
-                    typename U = detail::uncvref_t<T>,
-                    CONCEPT_REQUIRES_(Constructible<U, T &&>())>
-                U operator()(T && t) const noexcept(noexcept(U{std::declval<T>()}))
+                    typename U = meta_apply<std::remove_reference, T>>
+                U && operator()(T && t) const noexcept
                 {
-                    return static_cast<T &&>(t);
+                    return static_cast<U &&>(t);
                 }
             };
 
-            RANGES_CONSTEXPR copy_fn copy{};
+            RANGES_CONSTEXPR move_fn move{};
         }
     }
 }
