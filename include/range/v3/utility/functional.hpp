@@ -263,10 +263,17 @@ namespace ranges
 
         struct ref_fn : pipeable<ref_fn>
         {
-            template<typename T>
-            reference_wrapper<T> operator()(T & t) const
+            template<typename T,
+                CONCEPT_REQUIRES_(!is_reference_wrapper_t<T>() && std::is_lvalue_reference<T>())>
+            reference_wrapper<meta_apply<std::remove_reference, T>> operator()(T && t) const
             {
                 return {t};
+            }
+
+            template<typename T>
+            reference_wrapper<T> operator()(reference_wrapper<T> t) const
+            {
+                return t;
             }
         };
 

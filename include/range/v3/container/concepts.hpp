@@ -27,7 +27,7 @@ namespace ranges
         {
             // std::array is a SemiContainer, native arrays are not.
             struct SemiContainer
-              : refines<Iterable>
+              : refines<ForwardIterable>
             {
                 template<typename T>
                 auto requires_(T && t) -> decltype(
