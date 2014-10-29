@@ -28,7 +28,7 @@ namespace ranges
         template<typename I, typename C, typename T, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using ReplaceIfable = logical_and_t<
+        using ReplaceIfable = fast_logical_and<
             InputIterator<I>,
             Invokable<P, V>,
             InvokablePredicate<C, X>,

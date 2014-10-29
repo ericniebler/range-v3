@@ -29,7 +29,7 @@ namespace ranges
         template<typename I, typename O, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using RemoveCopyableIf = logical_and_t<
+        using RemoveCopyableIf = fast_logical_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
             InvokablePredicate<C, X>,

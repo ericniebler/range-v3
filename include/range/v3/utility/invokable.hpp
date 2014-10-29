@@ -18,7 +18,8 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/semiregular_wrappers.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/semiregular.hpp>
 
 namespace ranges
 {
@@ -49,14 +50,14 @@ namespace ranges
             detail::conditional_t<
                 (bool) SemiRegular<invokable_t<Fun>>(),
                 invokable_t<Fun>,
-                value_wrapper<invokable_t<Fun>>>;
+                semiregular<invokable_t<Fun>>>;
 
         template<typename Fun>
         using semiregular_invokable_ref_t =
             detail::conditional_t<
                 (bool) SemiRegular<invokable_t<Fun>>(),
                 invokable_t<Fun>,
-                reference_wrapper<value_wrapper<invokable_t<Fun>> const>>;
+                reference_wrapper<semiregular<invokable_t<Fun>> const>>;
 
         namespace concepts
         {

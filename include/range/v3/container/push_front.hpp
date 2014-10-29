@@ -26,43 +26,43 @@ namespace ranges
         namespace adl_push_front_detail
         {
             template<typename Cont, typename T,
-                CONCEPT_REQUIRES_(Container<Cont>() && Constructible<range_value_t<Cont>, T &&>())>
-            auto push_front(Cont & cont, T && t) ->
-                decltype((void)cont.push_front(std::forward<T>(t)))
+                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Constructible<range_value_t<Cont>, T &&>())>
+            auto push_front(Cont && cont, T && t) ->
+                decltype((void)unwrap_reference(cont).push_front(std::forward<T>(t)))
             {
-                cont.push_front(std::forward<T>(t));
+                unwrap_reference(cont).push_front(std::forward<T>(t));
             }
 
             template<typename Cont, typename Rng,
-                CONCEPT_REQUIRES_(Container<Cont>() && Iterable<Rng>())>
-            auto push_front(Cont & cont, Rng && rng) ->
-                decltype((void)container::insert(cont, begin(cont), std::forward<Rng>(rng)))
+                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Iterable<Rng>())>
+            auto push_front(Cont && cont, Rng && rng) ->
+                decltype((void)ranges::insert(cont, begin(cont), std::forward<Rng>(rng)))
             {
-                container::insert(cont, begin(cont), std::forward<Rng>(rng));
+                ranges::insert(cont, begin(cont), std::forward<Rng>(rng));
             }
 
             struct push_front_impl_fn : bindable<push_front_impl_fn>
             {
-                template<typename Cont, typename T,
-                    CONCEPT_REQUIRES_(Container<Cont>() && Constructible<range_value_t<Cont>, T &&>())>
-                static auto invoke(push_front_impl_fn, Cont & cont, T && t) ->
-                    decltype((void)push_front(cont, std::forward<T>(t)))
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(Iterable<Rng>() && Constructible<range_value_t<Rng>, T &&>())>
+                static auto invoke(push_front_impl_fn, Rng && rng, T && t) ->
+                    decltype((void)push_front(std::forward<Rng>(rng), std::forward<T>(t)))
                 {
-                    return push_front(cont, std::forward<T>(t));
+                    return push_front(std::forward<Rng>(rng), std::forward<T>(t));
                 }
-                template<typename Cont, typename Rng,
-                    CONCEPT_REQUIRES_(Container<Cont>() && Iterable<Rng>())>
-                static auto invoke(push_front_impl_fn, Cont & cont, Rng && rng) ->
-                    decltype((void)push_front(cont, std::forward<Rng>(rng)))
+                template<typename Rng, typename Rng2,
+                    CONCEPT_REQUIRES_(Iterable<Rng>() && Iterable<Rng2>())>
+                static auto invoke(push_front_impl_fn, Rng && rng, Rng2 && rng2) ->
+                    decltype((void)push_front(std::forward<Rng>(rng), std::forward<Rng2>(rng2)))
                 {
-                    return push_front(cont, std::forward<Rng>(rng));
+                    return push_front(std::forward<Rng>(rng), std::forward<Rng2>(rng2));
                 }
-                template<typename Cont,
-                    CONCEPT_REQUIRES_(Container<Cont>())>
-                static auto invoke(push_front_impl_fn push_front, Cont & cont) ->
-                    decltype(push_front.move_bind(cont, std::placeholders::_1))
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(Iterable<Rng>())>
+                static auto invoke(push_front_impl_fn push_front, Rng && rng) ->
+                    decltype(push_front.move_bind(std::forward<Rng>(rng), std::placeholders::_1))
                 {
-                    return push_front.move_bind(cont, std::placeholders::_1);
+                    return push_front.move_bind(std::forward<Rng>(rng), std::placeholders::_1);
                 }
             };
 
@@ -70,20 +70,17 @@ namespace ranges
             {
                 using push_front_impl_fn::operator();
 
-                template<typename Cont, typename T,
-                    CONCEPT_REQUIRES_(Container<Cont>())>
-                auto operator()(Cont & cont, std::initializer_list<T> t) const ->
-                    decltype(push_front_impl_fn{}(cont, t))
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(Iterable<Rng>())>
+                auto operator()(Rng && rng, std::initializer_list<T> t) const ->
+                    decltype(push_front_impl_fn{}(std::forward<Rng>(rng), t))
                 {
-                    return push_front_impl_fn{}(cont, t);
+                    return push_front_impl_fn{}(std::forward<Rng>(rng), t);
                 }
             };
         }
 
-        namespace container
-        {
-            RANGES_CONSTEXPR adl_push_front_detail::push_front_fn push_front{};
-        }
+        RANGES_CONSTEXPR adl_push_front_detail::push_front_fn push_front{};
     }
 }
 

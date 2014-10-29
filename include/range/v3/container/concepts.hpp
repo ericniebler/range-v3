@@ -16,6 +16,8 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/copy.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -52,6 +54,36 @@ namespace ranges
 
         template<typename T>
         using Container = concepts::models<concepts::Container, T>;
+
+        template<typename T>
+        struct RvalueContainerLike
+          : logical_or<
+                fast_logical_and<
+                    Container<T>,
+                    logical_not<std::is_reference<T>>
+                >,
+                logical_and<
+                    is_reference_wrapper_t<T>,
+                    // like Container<referent_of_t<T>>, but lazy:
+                    meta_defer<meta_compose<Container, meta_quote<referent_of>::apply>::apply, T>
+                >
+            >
+        {};
+
+        template<typename T>
+        struct LvalueContainerLike
+          : logical_or<
+                fast_logical_and<
+                    Container<T>,
+                    std::is_lvalue_reference<T>
+                >,
+                logical_and<
+                    is_reference_wrapper_t<T>,
+                    // like Container<referent_of_t<T>>, but lazy:
+                    meta_defer<meta_compose<Container, meta_quote<referent_of>::apply>::apply, T>
+                >
+            >
+        {};
     }
 }
 

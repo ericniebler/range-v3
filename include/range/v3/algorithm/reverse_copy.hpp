@@ -26,7 +26,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename I, typename O>
-        using ReverseCopyable = logical_and_t<
+        using ReverseCopyable = fast_logical_and<
             BidirectionalIterator<I>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>>;

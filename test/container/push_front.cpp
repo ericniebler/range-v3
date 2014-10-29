@@ -22,26 +22,26 @@ int main()
     using namespace ranges;
 
     std::vector<int> v;
-    container::push_front(v, {1,2,3});
+    push_front(v, {1,2,3});
     ::check_equal(v, {1,2,3});
 
-    container::push_front(v, view::ints(10) | view::take(3));
+    push_front(v, view::ints(10) | view::take(3));
     ::check_equal(v, {10,11,12,1,2,3});
 
-    view::ints(10) | view::take(3) | container::push_front(v);
+    view::ints(10) | view::take(3) | push_front(v);
     ::check_equal(v, {10,11,12,10,11,12,1,2,3});
 
     int rg[] = {9,8,7};
-    container::push_front(v, rg);
+    push_front(v, rg);
     ::check_equal(v, {9,8,7,10,11,12,10,11,12,1,2,3});
-    rg | container::push_front(v);
+    rg | push_front(v);
     ::check_equal(v, {9,8,7,9,8,7,10,11,12,10,11,12,1,2,3});
 
     std::list<int> s;
-    container::push_front(s,
+    push_front(s,
         view::ints|view::take(10)|view::for_each([](int i){return yield_if(i%2==0,i);}));
     ::check_equal(s, {0,2,4,6,8});
-    container::push_front(s, -2);
+    push_front(s, -2);
     ::check_equal(s, {-2,0,2,4,6,8});
 
     return ::test_result();

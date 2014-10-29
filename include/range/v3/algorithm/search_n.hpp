@@ -38,7 +38,7 @@ namespace ranges
         template<typename I, typename V, typename C = equal_to, typename P = ident,
             typename IV = iterator_value_t<I>,
             typename X1 = concepts::Invokable::result_t<P, IV>>
-        using Searchnable = logical_and_t<
+        using Searchnable = fast_logical_and<
             ForwardIterator<I>,
             Invokable<P, IV>,
             InvokableRelation<C, X1, V>>;

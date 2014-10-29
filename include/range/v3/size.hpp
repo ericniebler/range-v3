@@ -70,6 +70,12 @@ namespace ranges
                 return N;
             }
 
+            template<typename T, std::size_t N>
+            constexpr std::size_t size(T (&&)[N])
+            {
+                return N;
+            }
+
             struct size_fn : iter_size_fn
             {
                 using iter_size_fn::operator();

@@ -19,6 +19,7 @@
 #include <range/v3/utility/bind.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/logical_ops.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -91,7 +92,7 @@ namespace ranges
 
         template<typename ...T>
         using contains_placeholder_expression =
-            logical_or<detail::is_placeholder_expression<detail::uncvref_t<T>>::value...>;
+            logical_or_c<detail::is_placeholder_expression<detail::uncvref_t<T>>::value...>;
 
         template<typename Derived>
         struct bindable
@@ -147,43 +148,6 @@ namespace ranges
                 decltype(D::invoke(std::declval<Derived>(), std::declval<Args>()...))
             {
                 return D::invoke(std::move(*this).derived(), std::forward<Args>(args)...);
-            }
-        };
-
-        template<typename Derived>
-        struct pipeable
-        {
-        private:
-            friend Derived;
-            Derived const & derived() const &
-            {
-                return static_cast<Derived const &>(*this);
-            }
-            Derived && derived() &&
-            {
-                return static_cast<Derived &&>(const_cast<pipeable &&>(*this));
-            }
-
-            // Default Pipe behavior just passes the argument to the pipe's function call
-            // operator
-            template<typename Arg, typename Pipe>
-            static auto pipe(Arg && arg, Pipe && pipe) ->
-                decltype(std::declval<Pipe>()(std::declval<Arg>()))
-            {
-                return std::forward<Pipe>(pipe)(std::forward<Arg>(arg));
-            }
-        public:
-            template<typename Arg, typename D = Derived>
-            friend auto operator|(Arg && arg, pipeable const & pipe) ->
-                decltype(D::pipe(std::declval<Arg>(), std::declval<Derived const &>()))
-            {
-                return D::pipe(std::forward<Arg>(arg), pipe.derived());
-            }
-            template<typename Arg, typename D = Derived>
-            friend auto operator|(Arg && arg, pipeable && pipe) ->
-                decltype(D::pipe(std::declval<Arg>(), std::declval<Derived>()))
-            {
-                return D::pipe(std::forward<Arg>(arg), std::move(pipe).derived());
             }
         };
     }

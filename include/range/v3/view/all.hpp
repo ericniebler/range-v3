@@ -20,7 +20,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/semiregular_wrappers.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {

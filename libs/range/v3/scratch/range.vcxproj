@@ -336,9 +336,10 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\move.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\nullval.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\pipeable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\range_algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\semiregular_wrappers.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\semiregular.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\tuple_algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\typelist.hpp" />

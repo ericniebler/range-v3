@@ -109,7 +109,7 @@ namespace ranges
             template<typename Bool, typename...Bools>
             struct lazy_and<Bool, Bools...>
             {
-                static constexpr bool value{logical_and_t<Bool, Bools...>::value};
+                static constexpr bool value{fast_logical_and<Bool, Bools...>::value};
             };
 
             template<typename...Ts>

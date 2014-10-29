@@ -32,7 +32,7 @@ namespace ranges
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>,
             typename Y = concepts::Invokable::result_t<F, X>>
-        using Transformable1 = logical_and_t<
+        using Transformable1 = fast_logical_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
             Invokable<P, V>,
@@ -46,7 +46,7 @@ namespace ranges
             typename V1 = iterator_value_t<I1>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename Y = concepts::Invokable::result_t<F, X0, X1>>
-        using Transformable2 = logical_and_t<
+        using Transformable2 = fast_logical_and<
             InputIterator<I0>,
             WeakInputIterator<I1>,
             WeaklyIncrementable<O>,

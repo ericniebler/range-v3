@@ -29,7 +29,7 @@ namespace ranges
         template<typename I, typename O, typename C = equal_to, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using UniqueCopyable = logical_and_t<
+        using UniqueCopyable = fast_logical_and<
             InputIterator<I>,
             Invokable<P, V>,
             InvokableRelation<C, X>,

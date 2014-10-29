@@ -35,7 +35,7 @@ namespace ranges
             typename V2 = iterator_value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using Mismatchable1 = logical_and_t<
+        using Mismatchable1 = fast_logical_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
             Invokable<P1, V1>,
@@ -48,7 +48,7 @@ namespace ranges
             typename V2 = iterator_value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using Mismatchable2 = logical_and_t<
+        using Mismatchable2 = fast_logical_and<
             InputIterator<I1>,
             InputIterator<I2>,
             Invokable<P1, V1>,

@@ -40,7 +40,7 @@ namespace ranges
         template<typename I, typename C = ordered_less, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using IsHeapable = logical_and_t<
+        using IsHeapable = fast_logical_and<
             RandomAccessIterator<I>,
             Invokable<P, V>,
             InvokableRelation<C, X>>;

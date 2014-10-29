@@ -64,10 +64,7 @@ namespace ranges
             static void inplace_stable_sort(I begin, I end, C &pred, P &proj)
             {
                 if(end - begin < 15)
-                {
-                    detail::insertion_sort(begin, end, pred, proj);
-                    return;
-                }
+                    return detail::insertion_sort(begin, end, pred, proj), void();
                 I middle = begin + (end - begin) / 2;
                 stable_sort_fn::inplace_stable_sort(begin, middle, pred, proj);
                 stable_sort_fn::inplace_stable_sort(middle, end, pred, proj);

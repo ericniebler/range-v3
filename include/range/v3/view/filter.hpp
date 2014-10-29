@@ -22,7 +22,6 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
-#include <range/v3/utility/semiregular_wrappers.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 
 namespace ranges

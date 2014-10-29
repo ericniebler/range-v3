@@ -22,43 +22,71 @@ namespace ranges
         namespace detail
         {
             // Thanks to  Louis Dionne for this clever hack for a quick-to-compile
-            // implementation of logical_and and logical_or
-            std::true_type logical_and_impl_();
+            // implementation of logical_and_c and logical_or_c
+            std::true_type fast_logical_and_impl_();
 
             template<typename ...T>
-            std::true_type logical_and_impl_(T*...);
+            std::true_type fast_logical_and_impl_(T*...);
 
             template<typename ...T>
-            std::false_type logical_and_impl_(T...);
+            std::false_type fast_logical_and_impl_(T...);
 
-            std::false_type logical_or_impl_();
-
-            template<typename ...T>
-            std::false_type logical_or_impl_(T*...);
+            std::false_type fast_logical_or_impl_();
 
             template<typename ...T>
-            std::true_type logical_or_impl_(T...);
+            std::false_type fast_logical_or_impl_(T*...);
+
+            template<typename ...T>
+            std::true_type fast_logical_or_impl_(T...);
         }
 
         template<bool ...Bools>
-        using logical_and =
-            decltype(detail::logical_and_impl_(detail::conditional_t<Bools, int*, int>{}...));
+        using logical_and_c =
+            decltype(detail::fast_logical_and_impl_(detail::conditional_t<Bools, int*, int>{}...));
 
         template<bool ...Bools>
-        using logical_or =
-            decltype(detail::logical_or_impl_(detail::conditional_t<Bools, int, int*>{}...));
+        using logical_or_c =
+            decltype(detail::fast_logical_or_impl_(detail::conditional_t<Bools, int, int*>{}...));
 
         template<bool Bool>
-        using logical_not = std::integral_constant<bool, !Bool>;
+        using logical_not_c = std::integral_constant<bool, !Bool>;
 
         template<typename...Bools>
-        using logical_and_t = logical_and<Bools::value...>;
+        using fast_logical_and = logical_and_c<Bools::value...>;
 
         template<typename...Bools>
-        using logical_or_t = logical_or<Bools::value...>;
+        using fast_logical_or = logical_or_c<Bools::value...>;
 
         template<typename Bool>
-        using logical_not_t = logical_not<Bool::value>;
+        using logical_not = logical_not_c<Bool::value>;
+
+        template<typename ...Bools>
+        struct logical_and;
+
+        template<>
+        struct logical_and<>
+          : std::true_type
+        {};
+
+        template<typename Bool, typename...Bools>
+        struct logical_and<Bool, Bools...>
+          : detail::conditional_t<!Bool::value, std::false_type, logical_and<Bools...>>
+        {};
+
+        template<typename ...Bools>
+        struct logical_or;
+
+        template<>
+        struct logical_or<>
+          : std::false_type
+        {};
+
+        template<typename Bool, typename...Bools>
+        struct logical_or<Bool, Bools...>
+          : detail::conditional_t<Bool::value, std::true_type, logical_and<Bools...>>
+        {};
+
+
     }
 }
 

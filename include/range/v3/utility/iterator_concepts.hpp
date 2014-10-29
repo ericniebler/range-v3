@@ -451,12 +451,12 @@ namespace ranges
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
-        using SinglePass = logical_and_t<WeakInputIterator<I>, logical_not_t<ForwardIterator<I>>>;
+        using SinglePass = fast_logical_and<WeakInputIterator<I>, logical_not<ForwardIterator<I>>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
         template<typename I, typename V = concepts::Readable::value_t<I>>
-        using Permutable = logical_and_t<
+        using Permutable = fast_logical_and<
             ForwardIterator<I>,
             Movable<V>,
             IndirectlyMovable<I, I>>;
@@ -467,7 +467,7 @@ namespace ranges
             typename V1 = concepts::Readable::value_t<I1>,
             typename X0 = concepts::Invokable::result_t<P0, V0>,
             typename X1 = concepts::Invokable::result_t<P1, V1>>
-        using Mergeable = logical_and_t<
+        using Mergeable = fast_logical_and<
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
@@ -478,7 +478,7 @@ namespace ranges
         template<typename I, typename C = ordered_less, typename P = ident,
             typename V = concepts::Readable::value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using Sortable = logical_and_t<
+        using Sortable = fast_logical_and<
             ForwardIterator<I>,
             Invokable<P, V>,
             InvokableRelation<C, X, X>,
@@ -487,7 +487,7 @@ namespace ranges
         template<typename I, typename V2, typename C = ordered_less, typename P = ident,
             typename V = concepts::Readable::value_t<I>,
             typename X = concepts::Invokable::result_t<P, V> >
-        using BinarySearchable = logical_and_t<
+        using BinarySearchable = fast_logical_and<
             ForwardIterator<I>,
             Invokable<P, V>,
             InvokableRelation<C, X, V2>>;
@@ -498,7 +498,7 @@ namespace ranges
             typename V2 = concepts::Readable::value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using WeaklyAsymmetricallyComparable = logical_and_t<
+        using WeaklyAsymmetricallyComparable = fast_logical_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
             Invokable<P1, V1>,
@@ -507,7 +507,7 @@ namespace ranges
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using AsymmetricallyComparable = logical_and_t<
+        using AsymmetricallyComparable = fast_logical_and<
             WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
             InputIterator<I2>>;
 
@@ -517,13 +517,13 @@ namespace ranges
             typename V2 = concepts::Readable::value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using WeaklyComparable = logical_and_t<
+        using WeaklyComparable = fast_logical_and<
             WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
             InvokableRelation<C, X1, X2>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Comparable = logical_and_t<
+        using Comparable = fast_logical_and<
             WeaklyComparable<I1, I2, C, P1, P2>,
             InputIterator<I2>>;
 

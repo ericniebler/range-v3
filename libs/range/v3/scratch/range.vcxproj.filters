@@ -984,9 +984,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\range_interface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\semiregular_wrappers.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range_for.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1018,6 +1015,12 @@
       <Filter>Header Files\container</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\move.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\semiregular.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\pipeable.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>

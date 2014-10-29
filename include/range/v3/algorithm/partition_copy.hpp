@@ -32,7 +32,7 @@ namespace ranges
         template<typename I, typename O0, typename O1, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using PartitionCopyable = logical_and_t<
+        using PartitionCopyable = fast_logical_and<
             InputIterator<I>,
             WeaklyIncrementable<O0>,
             WeaklyIncrementable<O1>,

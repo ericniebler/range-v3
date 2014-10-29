@@ -39,7 +39,7 @@ namespace ranges
     {
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using IsPermutationable = logical_and_t<
+        using IsPermutationable = fast_logical_and<
             ForwardIterator<I1>,
             ForwardIterator<I2>,
             Comparable<I1, I2, C, P1, P2>>;

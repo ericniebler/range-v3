@@ -167,10 +167,7 @@ namespace ranges
                 while(end - begin > sort_fn::introsort_threshold)
                 {
                     if(depth_limit == 0)
-                    {
-                        partial_sort(begin, end, end, std::ref(pred), std::ref(proj));
-                        return;
-                    }
+                        return partial_sort(begin, end, end, std::ref(pred), std::ref(proj)), void();
                     I cut = detail::unguarded_partition(begin, end,
                         detail::median(proj(*begin), proj(*(begin + (end - begin) / 2)),
                             proj(*(end - 1)), pred),

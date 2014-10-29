@@ -30,7 +30,7 @@ namespace ranges
                   typename V = iterator_value_t<I>,
                   typename X = concepts::Invokable::result_t<P, V>,
                   typename Y = concepts::Invokable::result_t<BOp, X, X>>
-        using PartialSummable = logical_and_t<
+        using PartialSummable = fast_logical_and<
             InputIterator<I>,
             WeakOutputIterator<O, X>,
             Invokable<P, V>,

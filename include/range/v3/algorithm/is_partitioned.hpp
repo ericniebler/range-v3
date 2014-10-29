@@ -37,7 +37,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using IsPartitionedable = logical_and_t<
+        using IsPartitionedable = fast_logical_and<
             InputIterator<I>,
             Invokable<P, V>,
             InvokablePredicate<C, X>>;

@@ -12,8 +12,13 @@
 #ifndef RANGES_V3_UTILITY_FUNCTIONAL_HPP
 #define RANGES_V3_UTILITY_FUNCTIONAL_HPP
 
+#include <memory> // std::addressof
+#include <utility>
+#include <functional> // std::reference_wrapper
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -170,6 +175,125 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR not_fn not_ {};
+
+        template<typename T>
+        struct reference_wrapper
+        {
+        private:
+            T *t_;
+        public:
+            using type = T;
+            reference_wrapper() = default;
+            reference_wrapper(T &t) noexcept
+              : t_(std::addressof(t))
+            {}
+            T & get() const noexcept
+            {
+                RANGES_ASSERT(nullptr != t_);
+                return *t_;
+            }
+            operator T &() const noexcept
+            {
+                return get();
+            }
+            template<typename ...Args>
+            auto operator()(Args &&...args) const ->
+                decltype((*t_)(std::forward<Args>(args)...))
+            {
+                return (*t_)(std::forward<Args>(args)...);
+            }
+        };
+
+        template<typename T>
+        struct is_reference_wrapper
+          : std::false_type
+        {};
+
+        template<typename T>
+        struct is_reference_wrapper<reference_wrapper<T>>
+          : std::true_type
+        {};
+
+        template<typename T>
+        struct is_reference_wrapper<std::reference_wrapper<T>>
+          : std::true_type
+        {};
+
+        template<typename T>
+        struct is_reference_wrapper<T &>
+          : is_reference_wrapper<T>
+        {};
+
+        template<typename T>
+        struct is_reference_wrapper<T const>
+          : is_reference_wrapper<T>
+        {};
+
+        template<typename T>
+        using is_reference_wrapper_t = meta_apply<is_reference_wrapper, T>;
+
+        template<typename T>
+        struct referent_of
+        {};
+
+        template<typename T>
+        struct referent_of<reference_wrapper<T>>
+        {
+            using type = T;
+        };
+
+        template<typename T>
+        struct referent_of<std::reference_wrapper<T>>
+        {
+            using type = T;
+        };
+
+        template<typename T>
+        struct referent_of<T &>
+          : detail::conditional_t<is_reference_wrapper<T>::value, referent_of<T>, detail::identity<T>>
+        {};
+
+        template<typename T>
+        struct referent_of<T const>
+          : referent_of<T>
+        {};
+
+        template<typename T>
+        using referent_of_t = meta_apply<referent_of, T>;
+
+        struct ref_fn : pipeable<ref_fn>
+        {
+            template<typename T>
+            reference_wrapper<T> operator()(T & t) const
+            {
+                return {t};
+            }
+        };
+
+        RANGES_CONSTEXPR ref_fn ref {};
+
+        struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
+        {
+            template<typename T, CONCEPT_REQUIRES_(!is_reference_wrapper<T>())>
+            T & operator()(T & t) const noexcept
+            {
+                return t;
+            }
+
+            template<typename T>
+            T & operator()(reference_wrapper<T> t) const noexcept
+            {
+                return t.get();
+            }
+
+            template<typename T>
+            T & operator()(std::reference_wrapper<T> t) const noexcept
+            {
+                return t.get();
+            }
+        };
+
+        RANGES_CONSTEXPR unwrap_reference_fn unwrap_reference {};
     }
 }
 

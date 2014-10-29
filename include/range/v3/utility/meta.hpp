@@ -58,6 +58,11 @@ namespace ranges
             template<typename...Ts>
             using apply = C0<C1<Ts...>>;
         };
+
+        template<template<typename...> class C, typename...As>
+        struct meta_defer
+          : C<As...>
+        {};
     }
 }
 

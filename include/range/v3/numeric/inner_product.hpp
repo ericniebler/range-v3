@@ -35,7 +35,7 @@ namespace ranges
                 typename X2 = concepts::Invokable::result_t<P2, V2>,
                 typename Y2 = concepts::Invokable::result_t<BOp2, X1, X2>,
                 typename Y1 = concepts::Invokable::result_t<BOp1, T, Y2>>
-        using InnerProductable = logical_and_t<
+        using InnerProductable = fast_logical_and<
             InputIterator<I1>,
             InputIterator<I2>,
             Invokable<P1, V1>,

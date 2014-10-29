@@ -65,7 +65,7 @@ namespace ranges
         template<typename...Rngs>
         struct joined_view
           : range_facade<joined_view<Rngs...>,
-                logical_or<is_infinite<Rngs>::value...>::value>
+                logical_or_c<is_infinite<Rngs>::value...>::value>
         {
         private:
             friend range_access;
@@ -203,7 +203,7 @@ namespace ranges
                 }
             public:
                 using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
-                using single_pass = logical_or_t<SinglePass<range_iterator_t<Rngs>>...>;
+                using single_pass = fast_logical_or<SinglePass<range_iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(joined_view const &rng, begin_tag)
                   : rng_(&rng), its_{size_t<0>{}, begin(std::get<0>(rng.rngs_))}
@@ -226,12 +226,12 @@ namespace ranges
                 {
                     return its_ == pos.its_;
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)BidirectionalIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and_c<(bool)BidirectionalIterable<Rngs>()...>::value)
                 void prev()
                 {
                     its_.apply_i(prev_fun{this});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool)RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and_c<(bool)RandomAccessIterable<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     if(n > 0)
@@ -239,7 +239,7 @@ namespace ranges
                     else if(n < 0)
                         its_.apply_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.which() <= that.its_.which())
@@ -267,7 +267,7 @@ namespace ranges
                 return {*this, begin_tag{}};
             }
             detail::conditional_t<
-                logical_and<(bool)BoundedIterable<Rngs>()...>::value, cursor, sentinel>
+                logical_and_c<(bool)BoundedIterable<Rngs>()...>::value, cursor, sentinel>
             end_cursor() const
             {
                 return {*this, end_tag{}};
@@ -277,7 +277,7 @@ namespace ranges
             explicit joined_view(Rngs &&...rngs)
               : rngs_(view::all(std::forward<Rngs>(rngs))...)
             {}
-            CONCEPT_REQUIRES(logical_and<(bool)SizedIterable<Rngs>()...>::value)
+            CONCEPT_REQUIRES(logical_and_c<(bool)SizedIterable<Rngs>()...>::value)
             size_type_ size() const
             {
                 return tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});
@@ -292,7 +292,7 @@ namespace ranges
                 static joined_view<Rngs...>
                 invoke(join_fn, Rngs &&... rngs)
                 {
-                    static_assert(logical_and<(bool)InputIterable<Rngs>()...>::value,
+                    static_assert(logical_and_c<(bool)InputIterable<Rngs>()...>::value,
                         "Expecting Input Iterables");
                     return joined_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }

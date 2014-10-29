@@ -553,7 +553,7 @@ namespace ranges
         };
 
         template<typename...Ts, typename...Us,
-            CONCEPT_REQUIRES_(logical_and<(bool)EqualityComparable<Ts, Us>()...>::value)>
+            CONCEPT_REQUIRES_(logical_and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
         bool operator==(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
             RANGES_ASSERT(lhs.which() < sizeof...(Ts));
@@ -563,7 +563,7 @@ namespace ranges
         }
 
         template<typename...Ts, typename...Us,
-            CONCEPT_REQUIRES_(logical_and<(bool)EqualityComparable<Ts, Us>()...>::value)>
+            CONCEPT_REQUIRES_(logical_and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
         bool operator!=(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
             return !(lhs == rhs);

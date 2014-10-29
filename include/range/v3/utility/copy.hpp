@@ -29,7 +29,7 @@ namespace ranges
                 template<typename T,
                     typename U = detail::uncvref_t<T>,
                     CONCEPT_REQUIRES_(Constructible<U, T &&>())>
-                U operator()(T && t) const noexcept(noexcept(U{std::declval<T>()}))
+                U operator()(T && t) const
                 {
                     return static_cast<T &&>(t);
                 }

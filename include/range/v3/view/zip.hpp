@@ -129,7 +129,7 @@ namespace ranges
         struct zipped_with_view
           : range_facade<
                 zipped_with_view<Fun, Rngs...>,
-                logical_and<is_infinite<Rngs>::value...>::value>
+                logical_and_c<is_infinite<Rngs>::value...>::value>
         {
         private:
             friend range_access;
@@ -148,7 +148,7 @@ namespace ranges
             public:
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
                 using single_pass =
-                    logical_or<(bool) Derived<ranges::input_iterator_tag,
+                    logical_or_c<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
                 using value_type =
                     detail::uncvref_t<result_of_t<invokable_t<Fun>(range_value_t<Rngs>...)>>;
@@ -175,18 +175,18 @@ namespace ranges
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
-                CONCEPT_REQUIRES(logical_and<(bool) BidirectionalIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and_c<(bool) BidirectionalIterable<Rngs>()...>::value)
                 void prev()
                 {
                     tuple_for_each(its_, detail::dec);
                 }
-                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     using std::placeholders::_1;
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
-                CONCEPT_REQUIRES(logical_and<(bool) RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(logical_and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
@@ -225,7 +225,7 @@ namespace ranges
                 }
             };
 
-            using are_bounded_t = logical_and<(bool) BoundedIterable<Rngs>()...>;
+            using are_bounded_t = logical_and_c<(bool) BoundedIterable<Rngs>()...>;
 
             cursor begin_cursor()
             {
@@ -235,12 +235,12 @@ namespace ranges
             {
                 return {*fun_, tuple_transform(rngs_, end)};
             }
-            CONCEPT_REQUIRES(logical_and<(bool) Iterable<Rngs const>()...>::value)
+            CONCEPT_REQUIRES(logical_and_c<(bool) Iterable<Rngs const>()...>::value)
             cursor begin_cursor() const
             {
                 return {*fun_, tuple_transform(rngs_, begin)};
             }
-            CONCEPT_REQUIRES(logical_and<(bool) Iterable<Rngs const>()...>::value)
+            CONCEPT_REQUIRES(logical_and_c<(bool) Iterable<Rngs const>()...>::value)
             detail::conditional_t<are_bounded_t::value, cursor, sentinel> end_cursor() const
             {
                 return {*fun_, tuple_transform(rngs_, end)};
@@ -251,7 +251,7 @@ namespace ranges
               : fun_{invokable(std::move(fun))}
               , rngs_{view::all(std::forward<Rngs>(rngs))...}
             {}
-            CONCEPT_REQUIRES(logical_and<(bool) SizedIterable<Rngs>()...>::value)
+            CONCEPT_REQUIRES(logical_and_c<(bool) SizedIterable<Rngs>()...>::value)
             size_type_ size() const
             {
                 return tuple_foldl(
@@ -278,7 +278,7 @@ namespace ranges
                 template<typename...Rngs>
                 static zipped_view<Rngs...> invoke(zip_fn, Rngs &&... rngs)
                 {
-                    CONCEPT_ASSERT(logical_and<(bool) Iterable<Rngs>()...>::value);
+                    CONCEPT_ASSERT(logical_and_c<(bool) Iterable<Rngs>()...>::value);
                     return zipped_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };
@@ -290,7 +290,7 @@ namespace ranges
                 template<typename Fun, typename...Rngs>
                 static zipped_with_view<Fun, Rngs...> invoke(zip_with_fn, Fun fun, Rngs &&... rngs)
                 {
-                    CONCEPT_ASSERT(logical_and<(bool) Iterable<Rngs>()...>::value);
+                    CONCEPT_ASSERT(logical_and_c<(bool) Iterable<Rngs>()...>::value);
                     CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rngs>...>());
                     return zipped_with_view<Fun, Rngs...>{std::move(fun), std::forward<Rngs>(rngs)...};
                 }

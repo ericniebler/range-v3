@@ -33,7 +33,7 @@ namespace ranges
             typename VO = iterator_value_t<O>,
             typename XI = concepts::Invokable::result_t<PI, VI>,
             typename XO = concepts::Invokable::result_t<PO, VO>>
-        using PartialSortCopyConcept = logical_and_t<
+        using PartialSortCopyConcept = fast_logical_and<
             InputIterator<I>,
             RandomAccessIterator<O>,
             IndirectlyCopyable<I, O>,

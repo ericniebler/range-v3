@@ -37,7 +37,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using Partitionable = logical_and_t<
+        using Partitionable = fast_logical_and<
             ForwardIterator<I>,
             Permutable<I>,
             Invokable<P, V>,
