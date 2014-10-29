@@ -22,7 +22,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 
@@ -91,41 +91,21 @@ namespace ranges
 
         namespace view
         {
-            struct transform_fn : bindable<transform_fn>
+            struct transform_fn
             {
-            private:
-                template<typename Fun>
-                struct transformer1 : pipeable<transformer1<Fun>>
-                {
-                private:
-                    Fun fun_;
-                public:
-                    transformer1(Fun fun)
-                      : fun_(std::move(fun))
-                    {}
-                    template<typename Rng, typename This>
-                    static transformed_view<Rng, Fun>
-                    pipe(Rng && rng, This && this_)
-                    {
-                        return {std::forward<Rng>(rng), std::forward<This>(this_).fun_};
-                    }
-                };
-            public:
-                ///
                 template<typename Rng, typename Fun>
-                static transformed_view<Rng, Fun>
-                invoke(transform_fn, Rng && rng, Fun fun)
+                transformed_view<Rng, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(fun)};
                 }
 
-                /// \overload
                 template<typename Fun>
-                static transformer1<Fun> invoke(transform_fn, Fun fun)
+                auto operator()(Fun fun) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(fun)))
                 {
-                    return {std::move(fun)};
+                    return pipeable_bind(*this, std::placeholders::_1, std::move(fun));
                 }
             };
 

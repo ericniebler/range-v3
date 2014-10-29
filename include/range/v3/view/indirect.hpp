@@ -20,7 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -62,11 +62,10 @@ namespace ranges
 
         namespace view
         {
-            struct indirect_fn : bindable<indirect_fn>, pipeable<indirect_fn>
+            struct indirect_fn : pipeable<indirect_fn>
             {
                 template<typename Rng>
-                static indirect_view<Rng>
-                invoke(indirect_fn, Rng && rng)
+                indirect_view<Rng> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     return indirect_view<Rng>{std::forward<Rng>(rng)};

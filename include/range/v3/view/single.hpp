@@ -22,7 +22,6 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
@@ -76,11 +75,10 @@ namespace ranges
 
         namespace view
         {
-            struct single_fn : bindable<single_fn>
+            struct single_fn
             {
                 template<typename Val>
-                static single_view<Val>
-                invoke(single_fn, Val value)
+                single_view<Val> operator()(Val value) const
                 {
                     return single_view<Val>{std::move(value)};
                 }

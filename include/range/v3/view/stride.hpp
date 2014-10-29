@@ -24,7 +24,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator.hpp>
 
 namespace ranges
@@ -172,22 +172,20 @@ namespace ranges
 
         namespace view
         {
-            struct stride_fn : bindable<stride_fn>
+            struct stride_fn
             {
                 template<typename Rng>
-                static strided_view<Rng>
-                invoke(stride_fn, Rng && rng, range_difference_t<Rng> step)
+                strided_view<Rng> operator()(Rng && rng, range_difference_t<Rng> step) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     return {std::forward<Rng>(rng), step};
                 }
 
-                template<typename Difference>
-                static auto invoke(stride_fn stride, Difference step) ->
-                    decltype(stride.move_bind(std::placeholders::_1, std::move(step)))
+                template<typename Difference, CONCEPT_REQUIRES_(Integral<Difference>())>
+                auto operator()(Difference step) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(step)))
                 {
-                    CONCEPT_ASSERT(Integral<Difference>());
-                    return stride.move_bind(std::placeholders::_1, std::move(step));
+                    return pipeable_bind(*this, std::placeholders::_1, std::move(step));
                 }
             };
 

@@ -37,11 +37,10 @@ namespace ranges
 
         namespace view
         {
-            struct for_each_fn : bindable<for_each_fn>
+            struct for_each_fn
             {
                 template<typename Rng, typename F>
-                static for_each_view<Rng, F>
-                invoke(for_each_fn, Rng && rng, F f)
+                for_each_view<Rng, F> operator()(Rng && rng, F f) const
                 {
                     CONCEPT_ASSERT(Iterable<Rng>());
                     CONCEPT_ASSERT(Invokable<F, range_value_t<Rng>>());
@@ -49,12 +48,11 @@ namespace ranges
                     return {std::forward<Rng>(rng), std::move(f)};
                 }
 
-                /// \overload
                 template<typename F>
-                static auto invoke(for_each_fn for_each, F f) ->
-                    decltype(for_each.move_bind(std::placeholders::_1, std::move(f)))
+                auto operator()(F f) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(f)))
                 {
-                    return for_each.move_bind(std::placeholders::_1, std::move(f));
+                    return pipeable_bind(*this, std::placeholders::_1, std::move(f));
                 }
             };
 

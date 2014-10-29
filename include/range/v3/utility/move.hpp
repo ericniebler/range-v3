@@ -17,7 +17,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {

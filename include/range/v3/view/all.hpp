@@ -18,7 +18,7 @@
 #include <range/v3/range.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/functional.hpp>
 
@@ -28,7 +28,7 @@ namespace ranges
     {
         namespace view
         {
-            struct all_fn : bindable<all_fn>
+            struct all_fn : pipeable<all_fn>
             {
             private:
                 template<typename T>
@@ -79,7 +79,7 @@ namespace ranges
             public:
                 template<typename T,
                     CONCEPT_REQUIRES_(Iterable<T>())>
-                static auto invoke(all_fn, T && t) ->
+                auto operator()(T && t) const ->
                     decltype(all_fn::from_iterable(std::forward<T>(t), range_concept<T>()))
                 {
                     return all_fn::from_iterable(std::forward<T>(t), range_concept<T>());
@@ -87,7 +87,7 @@ namespace ranges
 
                 template<typename T,
                     CONCEPT_REQUIRES_(Iterable<T>())>
-                static ranges::reference_wrapper<T> invoke(all_fn, std::reference_wrapper<T> ref)
+                ranges::reference_wrapper<T> operator()(std::reference_wrapper<T> ref) const
                 {
                     return ranges::ref(ref.get());
                 }

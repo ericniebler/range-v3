@@ -19,7 +19,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/view/all.hpp>
@@ -81,19 +81,17 @@ namespace ranges
 
         namespace view
         {
-            struct bounded_fn : bindable<bounded_fn>, pipeable<bounded_fn>
+            struct bounded_fn : pipeable<bounded_fn>
             {
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && !BoundedIterable<Rng>())>
-                static bounded_view<Rng>
-                invoke(bounded_fn, Rng && rng)
+                bounded_view<Rng> operator()(Rng && rng) const
                 {
                     return bounded_view<Rng>{std::forward<Rng>(rng)};
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && BoundedIterable<Rng>())>
-                static view::all_t<Rng>
-                invoke(bounded_fn, Rng && rng)
+                view::all_t<Rng> operator()(Rng && rng) const
                 {
                     return view::all(std::forward<Rng>(rng));
                 }

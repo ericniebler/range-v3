@@ -24,7 +24,6 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/variant.hpp>
-#include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -286,11 +285,10 @@ namespace ranges
 
         namespace view
         {
-            struct join_fn : bindable<join_fn>
+            struct join_fn
             {
                 template<typename...Rngs>
-                static joined_view<Rngs...>
-                invoke(join_fn, Rngs &&... rngs)
+                joined_view<Rngs...> operator()(Rngs &&... rngs) const
                 {
                     static_assert(logical_and_c<(bool)InputIterable<Rngs>()...>::value,
                         "Expecting Input Iterables");

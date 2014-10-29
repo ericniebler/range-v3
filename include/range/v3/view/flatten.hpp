@@ -22,7 +22,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/view/all.hpp>
 
@@ -118,10 +118,10 @@ namespace ranges
 
         namespace view
         {
-            struct flatten_fn : bindable<flatten_fn>, pipeable<flatten_fn>
+            struct flatten_fn : pipeable<flatten_fn>
             {
                 template<typename Rng>
-                static flatten_view<Rng> invoke(flatten_fn, Rng && rng)
+                flatten_view<Rng> operator()(Rng && rng) const
                 {
                     // Must be a range of ranges
                     CONCEPT_ASSERT(Iterable<Rng>());

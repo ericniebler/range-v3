@@ -17,7 +17,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
 
@@ -27,7 +27,7 @@ namespace ranges
     {
         namespace view
         {
-            struct replace_if_fn : bindable<replace_if_fn>
+            struct replace_if_fn
             {
             private:
                 template<typename Pred, typename Val>
@@ -52,10 +52,8 @@ namespace ranges
                 };
             public:
                 template<typename Rng, typename Pred, typename Val>
-                static transformed_view<Rng,
-                                        replacer_if_fun<Pred,
-                                                        detail::decay_t<Val>>>
-                invoke(replace_if_fn, Rng && rng, Pred pred, Val && new_value)
+                transformed_view<Rng, replacer_if_fun<Pred, detail::decay_t<Val>>>
+                operator()(Rng && rng, Pred pred, Val && new_value) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     CONCEPT_ASSERT(InvokablePredicate<Pred,
@@ -67,15 +65,13 @@ namespace ranges
 
                 }
 
-                /// \overload
                 template<typename Pred, typename Val>
-                static auto
-                invoke(replace_if_fn replace_if, Pred pred, Val && new_value) ->
-                    decltype(replace_if.move_bind(std::placeholders::_1, std::move(pred),
-                        std::forward<Val>(new_value)))
+                auto operator()(Pred pred, Val && new_value) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(pred),
+                        bind_forward<Val>(new_value)))
                 {
-                    return replace_if.move_bind(std::placeholders::_1, std::move(pred),
-                        std::forward<Val>(new_value));
+                    return pipeable_bind(*this, std::placeholders::_1, std::move(pred),
+                        bind_forward<Val>(new_value));
                 }
             };
 

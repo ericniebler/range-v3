@@ -79,10 +79,10 @@ namespace ranges
 
         namespace view
         {
-            struct repeat_n_fn : bindable<repeat_n_fn>, pipeable<repeat_n_fn>
+            struct repeat_n_fn
             {
                 template<typename Val>
-                static repeated_n_view<Val> invoke(repeat_n_fn, Val value, std::size_t n)
+                repeated_n_view<Val> operator()(Val value, std::size_t n) const
                 {
                     CONCEPT_ASSERT(SemiRegular<Val>());
                     return repeated_n_view<Val>{std::move(value), n};

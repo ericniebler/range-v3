@@ -16,7 +16,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -47,19 +47,19 @@ namespace ranges
 
         namespace view
         {
-            struct keys_fn : bindable<keys_fn>, pipeable<keys_fn>
+            struct keys_fn : pipeable<keys_fn>
             {
                 template<typename Rng>
-                static keys_range_view<Rng> invoke(keys_fn, Rng && rng)
+                keys_range_view<Rng> operator()(Rng && rng) const
                 {
                     return {std::forward<Rng>(rng), detail::get_first{}};
                 }
             };
 
-            struct values_fn : bindable<values_fn>, pipeable<values_fn>
+            struct values_fn : pipeable<values_fn>
             {
                 template<typename Rng>
-                static values_range_view<Rng> invoke(values_fn, Rng && rng)
+                values_range_view<Rng> operator()(Rng && rng) const
                 {
                     return {std::forward<Rng>(rng), detail::get_second{}};
                 }

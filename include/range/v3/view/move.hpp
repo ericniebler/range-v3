@@ -21,7 +21,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -73,11 +73,10 @@ namespace ranges
 
         namespace view
         {
-            struct move_fn : bindable<move_fn>, pipeable<move_fn>
+            struct move_fn : pipeable<move_fn>
             {
                 template<typename Rng>
-                static move_view<Rng>
-                invoke(move_fn, Rng && rng)
+                move_view<Rng> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     return move_view<Rng>{std::forward<Rng>(rng)};

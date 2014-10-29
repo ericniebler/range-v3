@@ -16,7 +16,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/range.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -60,10 +60,10 @@ namespace ranges
 
         namespace view
         {
-            struct counted_fn : bindable<counted_fn>
+            struct counted_fn : pipeable<counted_fn>
             {
                 template<typename I, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
-                static counted_view<I> invoke(counted_fn, I it, iterator_difference_t<I> n)
+                counted_view<I> operator()(I it, iterator_difference_t<I> n) const
                 {
                     // Nothing wrong with a weak counted output iterator!
                     CONCEPT_ASSERT(WeakIterator<I>());
@@ -71,7 +71,7 @@ namespace ranges
                 }
 
                 template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-                static range<I> invoke(counted_fn, I it, iterator_difference_t<I> n)
+                range<I> operator()(I it, iterator_difference_t<I> n) const
                 {
                     return {it, it + n};
                 }

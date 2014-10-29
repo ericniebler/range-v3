@@ -14,7 +14,6 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_interface.hpp>
-#include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/unreachable.hpp>
 
 namespace ranges
@@ -43,11 +42,10 @@ namespace ranges
 
         namespace view
         {
-            struct unbounded_fn : bindable<unbounded_fn>
+            struct unbounded_fn
             {
                 template<typename I>
-                static constexpr unbounded_view<I>
-                invoke(unbounded_fn, I it)
+                constexpr unbounded_view<I> operator()(I it) const
                 {
                     CONCEPT_ASSERT(InputIterator<I>());
                     return unbounded_view<I>{detail::move(it)};

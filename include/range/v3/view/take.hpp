@@ -20,7 +20,7 @@
 #include <range/v3/range_interface.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/view/all.hpp>
@@ -135,7 +135,7 @@ namespace ranges
 
         namespace view
         {
-            struct take_fn : bindable<take_fn>
+            struct take_fn
             {
             private:
                 template<typename Rng>
@@ -151,20 +151,17 @@ namespace ranges
                     return {begin(rng), next(begin(rng), to)};
                 }
             public:
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
-                static auto
-                invoke(take_fn, Rng && rng, range_difference_t<Rng> to)
+                template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                auto operator()(Rng && rng, range_difference_t<Rng> to) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     take_fn::invoke_(std::forward<Rng>(rng), to, iterable_concept<Rng>{})
                 )
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                static auto
-                invoke(take_fn take, Int to)
+                auto operator()(Int to) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    take.move_bind(std::placeholders::_1, (Int)to)
+                    pipeable_bind(*this, std::placeholders::_1, to)
                 )
             };
 

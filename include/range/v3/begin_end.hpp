@@ -17,7 +17,6 @@
 #include <functional>
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/bindable.hpp>
 
 namespace ranges
 {
@@ -55,37 +54,41 @@ namespace ranges
 
             // Handle char*, std::pair<iterator, iterator>, std::pair<interator, int> ?
 
-            struct begin_fn : bindable<begin_fn>
+            struct begin_fn
             {
                 template<typename Rng>
-                static auto invoke(begin_fn, Rng && rng) -> decltype(begin(rng))
+                auto operator()(Rng && rng) const ->
+                    decltype(begin(rng))
                 {
                     return begin(rng);
                 }
             };
 
-            struct end_fn : bindable<end_fn>
+            struct end_fn
             {
                 template<typename Rng>
-                static auto invoke(end_fn, Rng && rng) -> decltype(end(rng))
+                auto operator()(Rng && rng) const ->
+                    decltype(end(rng))
                 {
                     return end(rng);
                 }
             };
 
-            struct cbegin_fn : bindable<cbegin_fn>
+            struct cbegin_fn
             {
                 template<typename Rng>
-                static auto invoke(cbegin_fn, Rng const & rng) -> decltype(begin(rng))
+                auto operator()(Rng const & rng) const ->
+                    decltype(begin(rng))
                 {
                     return begin(rng);
                 }
             };
 
-            struct cend_fn : bindable<cend_fn>
+            struct cend_fn
             {
                 template<typename Rng>
-                static auto invoke(cend_fn, Rng const & rng) -> decltype(end(rng))
+                auto operator()(Rng const & rng) const ->
+                    decltype(end(rng))
                 {
                     return end(rng);
                 }

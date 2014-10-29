@@ -32,7 +32,8 @@ namespace ranges
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<SemiRegular>(aux::copy(t)),
+                        concepts::model_of<DefaultConstructible>(aux::copy(t)),
+                        concepts::model_of<Movable>(aux::copy(t)),
                         concepts::is_false(is_range<T>())
                     ));
             };

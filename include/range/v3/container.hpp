@@ -15,5 +15,8 @@
 
 #include <range/v3/container/concepts.hpp>
 #include <range/v3/container/insert.hpp>
+#include <range/v3/container/push_back.hpp>
+#include <range/v3/container/push_front.hpp>
+#include <range/v3/container/sort.hpp>
 
 #endif

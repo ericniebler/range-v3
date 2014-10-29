@@ -20,7 +20,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -75,10 +75,10 @@ namespace ranges
 
         namespace view
         {
-            struct const_fn : bindable<const_fn>, pipeable<const_fn>
+            struct const_fn : pipeable<const_fn>
             {
                 template<typename Rng>
-                static const_view<Rng> invoke(const_fn, Rng && rng)
+                const_view<Rng> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(Iterable<Rng>());
                     return const_view<Rng>{std::forward<Rng>(rng)};

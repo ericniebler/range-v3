@@ -20,7 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 
@@ -88,39 +88,21 @@ namespace ranges
 
         namespace view
         {
-            struct filter_fn : bindable<filter_fn>
+            struct filter_fn
             {
-            private:
-                template<typename Pred>
-                struct filterer1 : pipeable<filterer1<Pred>>
-                {
-                private:
-                    Pred pred_;
-                public:
-                    filterer1(Pred pred)
-                      : pred_(std::move(pred))
-                    {}
-                    template<typename Rng, typename This>
-                    static filtered_view<Rng, Pred> pipe(Rng && rng, This && this_)
-                    {
-                        CONCEPT_ASSERT(Iterable<Rng>());
-                        CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
-                        return {std::forward<Rng>(rng), std::forward<This>(this_).pred_};
-                    }
-                };
-            public:
                 template<typename Rng, typename Pred>
-                static filtered_view<Rng, Pred>
-                invoke(filter_fn, Rng && rng, Pred pred)
+                filtered_view<Rng, Pred>
+                operator()(Rng && rng, Pred pred) const
                 {
                     CONCEPT_ASSERT(Iterable<Rng>());
                     CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
                 template<typename Pred>
-                static filterer1<Pred> invoke(filter_fn, Pred pred)
+                auto operator()(Pred pred) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(pred)))
                 {
-                    return {std::move(pred)};
+                    return pipeable_bind(*this, std::placeholders::_1, std::move(pred));
                 }
             };
 

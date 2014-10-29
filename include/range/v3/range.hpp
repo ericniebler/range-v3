@@ -18,7 +18,6 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -190,17 +189,17 @@ namespace ranges
             }
         };
 
-        struct make_range_fn : bindable<make_range_fn>
+        struct make_range_fn
         {
             template<typename I, typename S>
-            static range<I, S> invoke(make_range_fn, I begin, S end)
+            range<I, S> operator()(I begin, S end) const
             {
                 CONCEPT_ASSERT(IteratorRange<I, S>());
                 return {std::move(begin), std::move(end)};
             }
 
             template<typename I, typename S, typename Size>
-            static sized_range<I, S> invoke(make_range_fn, I begin, S end, Size size)
+            sized_range<I, S> operator()(I begin, S end, Size size) const
             {
                 CONCEPT_ASSERT(Integral<Size>());
                 CONCEPT_ASSERT(IteratorRange<I, S>());

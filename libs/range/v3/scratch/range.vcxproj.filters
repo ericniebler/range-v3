@@ -463,6 +463,9 @@
     <ClCompile Include="..\..\..\..\test\container\push_back.cpp">
       <Filter>Test Files\container</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\container\sort.cpp">
+      <Filter>Test Files\container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -485,9 +488,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\bindable.hpp">
-      <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp">
       <Filter>Header Files\utility</Filter>
@@ -670,9 +670,6 @@
       <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\bind.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp">
@@ -1022,6 +1019,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\pipeable.hpp">
       <Filter>Header Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\sort.hpp">
+      <Filter>Header Files\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\action.hpp">
+      <Filter>Header Files\container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

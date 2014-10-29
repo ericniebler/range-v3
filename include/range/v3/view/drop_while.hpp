@@ -19,7 +19,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/view/all.hpp>
@@ -74,20 +74,20 @@ namespace ranges
 
         namespace view
         {
-            struct drop_while_fn : bindable<drop_while_fn>
+            struct drop_while_fn
             {
                 template<typename Rng, typename Pred, CONCEPT_REQUIRES_(InputIterable<Rng>())>
-                static drop_while_view<Rng, Pred>
-                invoke(drop_while_fn, Rng && rng, Pred pred)
+                drop_while_view<Rng, Pred>
+                operator()(Rng && rng, Pred pred) const
                 {
                     CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
                 template<typename Pred>
-                static auto invoke(drop_while_fn drop_while, Pred pred)
+                auto operator()(Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    drop_while.move_bind(std::placeholders::_1, std::move(pred))
+                    pipeable_bind(*this, std::placeholders::_1, std::move(pred))
                 )
             };
 

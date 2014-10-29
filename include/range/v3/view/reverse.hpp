@@ -20,7 +20,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -106,11 +106,10 @@ namespace ranges
 
         namespace view
         {
-            struct reverse_fn : bindable<reverse_fn>, pipeable<reverse_fn>
+            struct reverse_fn : pipeable<reverse_fn>
             {
                 template<typename Rng>
-                static reversed_view<Rng>
-                invoke(reverse_fn, Rng && rng)
+                reversed_view<Rng> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(BidirectionalIterable<Rng>());
                     CONCEPT_ASSERT(BoundedIterable<Rng>());

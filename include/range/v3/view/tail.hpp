@@ -23,7 +23,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -73,10 +73,10 @@ namespace ranges
 
         namespace view
         {
-            struct tail_fn : bindable<tail_fn>, pipeable<tail_fn>
+            struct tail_fn : pipeable<tail_fn>
             {
                 template<typename Rng>
-                static tail_view<Rng> invoke(tail_fn, Rng && rng)
+                tail_view<Rng> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(Iterable<Rng>());
                     return tail_view<Rng>{std::forward<Rng>(rng)};

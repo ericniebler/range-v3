@@ -22,7 +22,7 @@
 #include <range/v3/range_interface.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -74,13 +74,13 @@ namespace ranges
 
         namespace view
         {
-            struct tokenizer_ : bindable<tokenizer_>
+            struct tokenizer_impl_fn
             {
                 template<typename Rng, typename Regex>
-                static tokenized_view<Rng, Regex, int>
-                invoke(tokenizer_, Rng && rng, Regex && rex, int sub = 0,
+                tokenized_view<Rng, Regex, int>
+                operator()(Rng && rng, Regex && rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
-                        std::regex_constants::match_default)
+                        std::regex_constants::match_default) const
                 {
                     CONCEPT_ASSERT(BidirectionalIterable<Rng>());
                     CONCEPT_ASSERT(BoundedIterable<Rng>());
@@ -92,10 +92,10 @@ namespace ranges
                 }
 
                 template<typename Rng, typename Regex>
-                static tokenized_view<Rng, Regex, std::vector<int>>
-                invoke(tokenizer_, Rng && rng, Regex && rex, std::vector<int> subs,
+                tokenized_view<Rng, Regex, std::vector<int>>
+                operator()(Rng && rng, Regex && rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
-                        std::regex_constants::match_default)
+                        std::regex_constants::match_default) const
                 {
                     CONCEPT_ASSERT(BidirectionalIterable<Rng>());
                     CONCEPT_ASSERT(BoundedIterable<Rng>());
@@ -107,10 +107,10 @@ namespace ranges
                 }
 
                 template<typename Rng, typename Regex>
-                static tokenized_view<Rng, Regex, std::initializer_list<int>>
-                invoke(tokenizer_, Rng && rng, Regex && rex,
+                tokenized_view<Rng, Regex, std::initializer_list<int>>
+                operator()(Rng && rng, Regex && rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
-                        std::regex_constants::match_default)
+                        std::regex_constants::match_default) const
                 {
                     CONCEPT_ASSERT(BidirectionalIterable<Rng>());
                     CONCEPT_ASSERT(BoundedIterable<Rng>());
@@ -121,46 +121,45 @@ namespace ranges
                             std::move(subs), flags};
                 }
 
-                /// \overload
                 template<typename Regex>
-                static auto invoke(tokenizer_ tokenize, Regex && rex, int sub = 0,
+                auto operator()(Regex && rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
-                        std::regex_constants::match_default) ->
-                    decltype(tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
+                        std::regex_constants::match_default) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
                             std::move(sub), std::move(flags)))
                 {
-                    return tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
+                    return pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
                         std::move(sub), std::move(flags));
                 }
 
                 template<typename Regex>
-                static auto invoke(tokenizer_ tokenize, Regex && rex, std::vector<int> subs,
+                auto operator()(Regex && rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
-                        std::regex_constants::match_default) ->
-                    decltype(tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
+                        std::regex_constants::match_default) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
                         std::move(subs), std::move(flags)))
                 {
-                    return tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
+                    return pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
                         std::move(subs), std::move(flags));
                 }
 
                 template<typename Regex>
-                static auto invoke(tokenizer_ tokenize, Regex && rex,
+                auto operator()(Regex && rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
-                        std::regex_constants::match_default) ->
-                    decltype(tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
+                        std::regex_constants::match_default) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
                             std::move(subs), std::move(flags)))
                 {
-                    return tokenize.move_bind(std::placeholders::_1, std::forward<Regex>(rex),
-                        std::move(subs), std::move(flags));
+                    return pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
+                            std::move(subs), std::move(flags));
                 }
             };
 
             // Damn C++ and its imperfect forwarding of initializer_list.
-            struct tokenize_fn : tokenizer_
+            struct tokenize_fn : tokenizer_impl_fn
             {
             private:
-                tokenizer_ const & base() const
+                tokenizer_impl_fn const & base() const
                 {
                     return *this;
                 }

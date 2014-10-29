@@ -24,7 +24,6 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/common_type.hpp>
@@ -273,10 +272,10 @@ namespace ranges
 
         namespace view
         {
-            struct zip_fn : bindable<zip_fn>
+            struct zip_fn
             {
                 template<typename...Rngs>
-                static zipped_view<Rngs...> invoke(zip_fn, Rngs &&... rngs)
+                zipped_view<Rngs...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(logical_and_c<(bool) Iterable<Rngs>()...>::value);
                     return zipped_view<Rngs...>{std::forward<Rngs>(rngs)...};
@@ -285,10 +284,10 @@ namespace ranges
 
             RANGES_CONSTEXPR zip_fn zip {};
 
-            struct zip_with_fn : bindable<zip_with_fn>
+            struct zip_with_fn
             {
                 template<typename Fun, typename...Rngs>
-                static zipped_with_view<Fun, Rngs...> invoke(zip_with_fn, Fun fun, Rngs &&... rngs)
+                zipped_with_view<Fun, Rngs...> operator()(Fun fun, Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(logical_and_c<(bool) Iterable<Rngs>()...>::value);
                     CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rngs>...>());

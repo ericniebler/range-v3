@@ -20,7 +20,7 @@
 #include <range/v3/range_interface.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/view/all.hpp>
 
@@ -81,7 +81,7 @@ namespace ranges
 
         namespace view
         {
-            struct drop_fn : bindable<drop_fn>
+            struct drop_fn
             {
             private:
                 template<typename Rng>
@@ -99,18 +99,16 @@ namespace ranges
             public:
                 template<typename Rng,
                     CONCEPT_REQUIRES_(InputIterable<Rng>())>
-                static auto
-                invoke(drop_fn, Rng && rng, range_difference_t<Rng> n)
+                auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     drop_fn::invoke_(std::forward<Rng>(rng), n, iterable_concept<Rng>{})
                 )
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                static auto
-                invoke(drop_fn drop, Int n)
+                auto operator()(Int n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    drop.move_bind(std::placeholders::_1, (Int)n)
+                    pipeable_bind(*this, std::placeholders::_1, n)
                 )
             };
 

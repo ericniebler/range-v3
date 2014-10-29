@@ -20,7 +20,6 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_facade.hpp>
-#include <range/v3/utility/bindable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 
@@ -84,10 +83,10 @@ namespace ranges
 
         namespace view
         {
-            struct generate_n_fn : bindable<generate_n_fn>
+            struct generate_n_fn
             {
                 template<typename G, CONCEPT_REQUIRES_(Function<G>())>
-                static generate_n_view<G> invoke(generate_n_fn, G g, std::size_t n)
+                generate_n_view<G> operator()(G g, std::size_t n) const
                 {
                     return generate_n_view<G>{std::move(g), n};
                 }

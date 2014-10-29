@@ -16,6 +16,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -69,10 +70,10 @@ namespace ranges
 
         namespace view
         {
-            struct repeat_fn : bindable<repeat_fn>, pipeable<repeat_fn>
+            struct repeat_fn : pipeable<repeat_fn>
             {
                 template<typename Val>
-                static repeated_view<Val> invoke(repeat_fn, Val value)
+                repeated_view<Val> operator()(Val value) const
                 {
                     CONCEPT_ASSERT(SemiRegular<Val>());
                     return repeated_view<Val>{std::move(value)};

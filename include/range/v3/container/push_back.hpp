@@ -17,7 +17,7 @@
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/container/insert.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -41,41 +41,35 @@ namespace ranges
                 ranges::insert(unwrap_reference(cont), end(cont), std::forward<Rng>(rng));
             }
 
-            struct push_back_impl_fn : bindable<push_back_impl_fn>
+            struct push_back_fn
             {
                 template<typename Rng, typename T,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && Constructible<range_value_t<Rng>, T &&>())>
-                static auto invoke(push_back_impl_fn, Rng && rng, T && t) ->
+                auto operator()(Rng && rng, T && t) const ->
                     decltype((void)push_back(std::forward<Rng>(rng), std::forward<T>(t)))
                 {
-                    return push_back(std::forward<Rng>(rng), std::forward<T>(t));
+                    push_back(std::forward<Rng>(rng), std::forward<T>(t));
                 }
                 template<typename Rng, typename Rng2,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && Iterable<Rng2>())>
-                static auto invoke(push_back_impl_fn, Rng && rng, Rng2 && rng2) ->
+                auto operator()(Rng && rng, Rng2 && rng2) const ->
                     decltype((void)push_back(std::forward<Rng>(rng), std::forward<Rng2>(rng2)))
                 {
-                    return push_back(std::forward<Rng>(rng), std::forward<Rng2>(rng2));
+                    push_back(std::forward<Rng>(rng), std::forward<Rng2>(rng2));
+                }
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(Iterable<Rng>())>
+                auto operator()(Rng && rng, std::initializer_list<T> rng2) const ->
+                    decltype((void)push_back(std::forward<Rng>(rng), rng2))
+                {
+                    push_back(std::forward<Rng>(rng), rng2);
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Iterable<Rng>())>
-                static auto invoke(push_back_impl_fn push_back, Rng && rng) ->
-                    decltype(push_back.move_bind(std::forward<Rng>(rng), std::placeholders::_1))
+                auto operator()(Rng && rng) const ->
+                    decltype(pipeable_bind(*this, bind_forward<Rng>(rng), std::placeholders::_1))
                 {
-                    return push_back.move_bind(std::forward<Rng>(rng), std::placeholders::_1);
-                }
-            };
-
-            struct push_back_fn : push_back_impl_fn
-            {
-                using push_back_impl_fn::operator();
-
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(Iterable<Rng>())>
-                auto operator()(Rng && rng, std::initializer_list<T> t) const ->
-                    decltype(push_back_impl_fn{}(std::forward<Rng>(rng), t))
-                {
-                    return push_back_impl_fn{}(std::forward<Rng>(rng), t);
+                    return pipeable_bind(*this, bind_forward<Rng>(rng), std::placeholders::_1);
                 }
             };
         }

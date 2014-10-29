@@ -17,7 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 
@@ -69,11 +69,11 @@ namespace ranges
 
         namespace view
         {
-            struct adjacent_filter_fn : bindable<adjacent_filter_fn>
+            struct adjacent_filter_fn
             {
                 template<typename Rng, typename F>
-                static adjacent_filtered_view<Rng, F>
-                invoke(adjacent_filter_fn, Rng && rng, F pred)
+                adjacent_filtered_view<Rng, F>
+                operator()(Rng && rng, F pred) const
                 {
                     CONCEPT_ASSERT(ForwardIterable<Rng>());
                     CONCEPT_ASSERT(InvokablePredicate<F, range_value_t<Rng>,
@@ -81,10 +81,10 @@ namespace ranges
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
                 template<typename F>
-                static auto invoke(adjacent_filter_fn adjacent_filter, F pred) ->
-                    decltype(adjacent_filter.move_bind(std::placeholders::_1, std::move(pred)))
+                auto operator()(F pred) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(pred)))
                 {
-                    return adjacent_filter.move_bind(std::placeholders::_1, std::move(pred));
+                    return pipeable_bind(*this, std::placeholders::_1, std::move(pred));
                 }
             };
 

@@ -19,7 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -72,21 +72,19 @@ namespace ranges
 
         namespace view
         {
-            struct take_while_fn : bindable<take_while_fn>
+            struct take_while_fn
             {
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Iterable<Rng>())>
-                static take_while_view<Rng, Pred>
-                invoke(take_while_fn, Rng && rng, Pred pred)
+                take_while_view<Rng, Pred> operator()(Rng && rng, Pred pred) const
                 {
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
                 template<typename Pred>
-                static auto
-                invoke(take_while_fn take_while, Pred pred)
+                auto operator()(Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    take_while.move_bind(std::placeholders::_1, std::move(pred))
+                    pipeable_bind(*this, std::placeholders::_1, std::move(pred))
                 )
             };
 

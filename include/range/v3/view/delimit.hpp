@@ -19,6 +19,7 @@
 #include <range/v3/range.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -59,30 +60,29 @@ namespace ranges
 
         namespace view
         {
-            struct delimit_fn : bindable<delimit_fn>
+            struct delimit_fn
             {
                 template<typename Rng, typename Val ,
                     CONCEPT_REQUIRES_(Iterable<Rng>())>
-                static delimited_view<Rng, Val>
-                invoke(delimit_fn, Rng && rng, Val value)
+                delimited_view<Rng, Val>
+                operator()(Rng && rng, Val value) const
                 {
                     return {std::forward<Rng>(rng), std::move(value)};
                 }
 
                 template<typename I, typename Val,
                     CONCEPT_REQUIRES_(InputIterator<I>())>
-                static delimited_view<range<I, unreachable>, Val>
-                invoke(delimit_fn, I begin, Val value)
+                delimited_view<range<I, unreachable>, Val>
+                operator()(I begin, Val value) const
                 {
                     return {{std::move(begin), {}}, std::move(value)};
                 }
 
                 template<typename Val>
-                static auto
-                invoke(delimit_fn delimit, Val value) ->
-                    decltype(delimit.move_bind(std::placeholders::_1, std::move(value)))
+                auto operator()(Val value) const ->
+                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(value)))
                 {
-                    return delimit.move_bind(std::placeholders::_1, std::move(value));
+                    return pipeable_bind(*this, std::placeholders::_1, std::move(value));
                 }
             };
 

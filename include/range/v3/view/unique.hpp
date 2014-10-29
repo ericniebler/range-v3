@@ -16,7 +16,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view/adjacent_filter.hpp>
-#include <range/v3/utility/bindable.hpp>
+#include <range/v3/utility/pipeable.hpp>
 
 namespace ranges
 {
@@ -36,11 +36,10 @@ namespace ranges
 
         namespace view
         {
-            struct unique_fn : bindable<unique_fn>, pipeable<unique_fn>
+            struct unique_fn : pipeable<unique_fn>
             {
                 template<typename Rng>
-                static uniqued_view<Rng>
-                invoke(unique_fn, Rng && rng)
+                uniqued_view<Rng> operator()(Rng && rng) const
                 {
                     return {std::forward<Rng>(rng), detail::not_equal_to{}};
                 }
