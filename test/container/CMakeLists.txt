@@ -12,3 +12,6 @@ add_test(test.cont.push_back cont.push_back)
 
 add_executable(cont.sort sort.cpp)
 add_test(test.cont.sort cont.sort)
+
+add_executable(cont.unique unique.cpp)
+add_test(test.cont.unique cont.unique)

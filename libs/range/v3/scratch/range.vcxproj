@@ -164,6 +164,7 @@
     <ClCompile Include="..\..\..\..\test\container\push_back.cpp" />
     <ClCompile Include="..\..\..\..\test\container\push_front.cpp" />
     <ClCompile Include="..\..\..\..\test\container\sort.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\container_conversion.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\adjacent_difference.cpp" />
@@ -287,10 +288,12 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\action.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\concepts.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\erase.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\insert.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_back.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_front.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\sort.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\re_enable_warnings.hpp" />
