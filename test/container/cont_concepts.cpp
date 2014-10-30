@@ -9,6 +9,7 @@
 
 #include <array>
 #include <vector>
+#include <memory>
 #include <range/v3/core.hpp>
 #include <range/v3/container/concepts.hpp>
 #include "../simple_test.hpp"
@@ -28,6 +29,15 @@ int main()
 
     std::vector<int> v;
     ::models<concepts::Container>(v);
+
+    std::vector<std::unique_ptr<int>> v2;
+    ::models<concepts::Container>(v2);
+
+    ::models<concepts::LvalueContainerLike>(v2);
+    ::models_not<concepts::LvalueContainerLike>(std::move(v2));
+
+    ::models<concepts::LvalueContainerLike>(ranges::ref(v2));
+    ::models<concepts::LvalueContainerLike>(std::ref(v2));
 
     return ::test_result();
 }

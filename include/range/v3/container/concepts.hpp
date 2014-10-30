@@ -13,9 +13,9 @@
 #ifndef RANGES_V3_CONTAINER_CONCEPTS_HPP
 #define RANGES_V3_CONTAINER_CONCEPTS_HPP
 
+#include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/copy.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/logical_ops.hpp>
 
@@ -32,8 +32,8 @@ namespace ranges
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<DefaultConstructible>(aux::copy(t)),
-                        concepts::model_of<Movable>(aux::copy(t)),
+                        concepts::model_of<DefaultConstructible>(std::move(t)),
+                        concepts::model_of<Movable>(std::move(t)),
                         concepts::is_false(is_range<T>())
                     ));
             };
@@ -45,7 +45,7 @@ namespace ranges
                 template<typename T>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Constructible>(aux::copy(t), begin(t), end(t))
+                        concepts::model_of<Constructible>(std::move(t), begin(t), end(t))
                     ));
             };
         }
@@ -56,35 +56,33 @@ namespace ranges
         template<typename T>
         using Container = concepts::models<concepts::Container, T>;
 
-        template<typename T>
-        struct RvalueContainerLike
-          : logical_or<
-                fast_logical_and<
-                    Container<T>,
-                    logical_not<std::is_reference<T>>
-                >,
-                logical_and<
-                    is_reference_wrapper_t<T>,
-                    // like Container<referent_of_t<T>>, but lazy:
-                    meta_defer<meta_compose<Container, meta_quote<referent_of>::apply>::apply, T>
-                >
-            >
-        {};
+        namespace detail
+        {
+            template<typename T, CONCEPT_REQUIRES_(Container<T>())>
+            std::true_type is_lvalue_container_like(T &);
+
+            template<typename T, CONCEPT_REQUIRES_(Container<T>())>
+            std::true_type is_lvalue_container_like(reference_wrapper<T>);
+
+            template<typename T, CONCEPT_REQUIRES_(Container<T>())>
+            std::true_type is_lvalue_container_like(std::reference_wrapper<T>);
+        }
+
+        namespace concepts
+        {
+            struct LvalueContainerLike
+              : refines<ForwardIterable>
+            {
+                template<typename T>
+                auto requires_(T && t) -> decltype(
+                    concepts::valid_expr(
+                        detail::is_lvalue_container_like(std::forward<T>(t))
+                    ));
+            };
+        }
 
         template<typename T>
-        struct LvalueContainerLike
-          : logical_or<
-                fast_logical_and<
-                    Container<T>,
-                    std::is_lvalue_reference<T>
-                >,
-                logical_and<
-                    is_reference_wrapper_t<T>,
-                    // like Container<referent_of_t<T>>, but lazy:
-                    meta_defer<meta_compose<Container, meta_quote<referent_of>::apply>::apply, T>
-                >
-            >
-        {};
+        using LvalueContainerLike = concepts::models<concepts::LvalueContainerLike, T>;
     }
 }
 

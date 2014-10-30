@@ -27,7 +27,8 @@ namespace ranges
         {
             struct sort_fn
             {
-                template<typename Rng, CONCEPT_REQUIRES_(Sortable<range_iterator_t<Rng>>())>
+                template<typename Rng, typename I = range_iterator_t<Rng>,
+                    CONCEPT_REQUIRES_(Iterable<Rng>() && Sortable<I>())>
                 void operator()(Rng & rng) const
                 {
                     ranges::sort(rng);
