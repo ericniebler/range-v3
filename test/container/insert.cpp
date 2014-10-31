@@ -34,7 +34,7 @@ int main()
     int rg[] = {9,8,7};
     insert(v, v.begin()+3, rg);
     ::check_equal(v, {0,1,2,9,8,7,42,1,2,3});
-    rg | insert(v, v.begin()+1);
+    insert(v, v.begin()+1, rg);
     ::check_equal(v, {0,9,8,7,1,2,9,8,7,42,1,2,3});
 
     std::set<int> s;

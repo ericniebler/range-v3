@@ -108,7 +108,7 @@ namespace ranges
                 auto operator()(Int n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    pipeable_bind(*this, std::placeholders::_1, n)
+                    make_pipeable(std::bind(*this, std::placeholders::_1, n))
                 )
             };
 

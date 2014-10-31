@@ -44,5 +44,13 @@ int main()
     CHECK(is_sorted(v));
     CHECK(equal(v, v2));
 
+    // Container algoritms can also be called directly
+    // in which case they take and return by reference
+    random_shuffle(v);
+    CHECK(!is_sorted(v));
+    auto & v3 = cont::sort(v);
+    CHECK(is_sorted(v));
+    CHECK(&v3 == &v);
+
     return ::test_result();
 }

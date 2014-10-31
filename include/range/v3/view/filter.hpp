@@ -100,9 +100,9 @@ namespace ranges
                 }
                 template<typename Pred>
                 auto operator()(Pred pred) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(pred)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(pred))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, std::move(pred));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(pred)));
                 }
             };
 

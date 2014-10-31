@@ -28,13 +28,13 @@ int main()
     push_back(v, view::ints(10) | view::take(3));
     ::check_equal(v, {1,2,3,10,11,12});
 
-    view::ints(10) | view::take(3) | push_back(v);
+    push_back(v, view::ints(10) | view::take(3));
     ::check_equal(v, {1,2,3,10,11,12,10,11,12});
 
     int rg[] = {9,8,7};
     push_back(v, rg);
     ::check_equal(v, {1,2,3,10,11,12,10,11,12,9,8,7});
-    rg | push_back(v);
+    push_back(v, rg);
     ::check_equal(v, {1,2,3,10,11,12,10,11,12,9,8,7,9,8,7});
 
     std::list<int> s;

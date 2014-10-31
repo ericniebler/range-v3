@@ -87,7 +87,7 @@ namespace ranges
                 auto operator()(Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    pipeable_bind(*this, std::placeholders::_1, std::move(pred))
+                    make_pipeable(std::bind(*this, std::placeholders::_1, std::move(pred)))
                 )
             };
 

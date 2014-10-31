@@ -29,7 +29,7 @@ namespace ranges
             struct unique_fn
             {
                 template<typename Rng, typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Sortable<I>() && EraseableIterable<Rng, I, I>())>
+                    CONCEPT_REQUIRES_(Sortable<I>() && EraseableIterable<Rng &, I, I>())>
                 void operator()(Rng & rng) const
                 {
                     auto it = ranges::unique(rng);

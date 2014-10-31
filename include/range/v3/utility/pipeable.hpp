@@ -14,7 +14,11 @@
 #define RANGES_V3_UTILITY_PIPEABLE_HPP
 
 #include <functional>
+#include <type_traits>
 #include <utility>
+#include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/meta.hpp>
 
 namespace ranges
 {
@@ -31,25 +35,18 @@ namespace ranges
                   : Bind(std::move(bind))
                 {}
             };
-
-            template<typename Bind>
-            pipeable_binder<Bind> make_pipeable_binder(Bind bind)
-            {
-                return {std::move(bind)};
-            }
         }
 
-        struct pipeable_bind_fn
+        struct make_pipeable_fn
         {
-            template<typename Fn, typename ...As>
-            auto operator()(Fn && fn, As &&...as) const ->
-                decltype(detail::make_pipeable_binder(std::bind(std::forward<Fn>(fn), std::forward<As>(as)...)))
+            template<typename Fun>
+            detail::pipeable_binder<Fun> operator()(Fun fun) const
             {
-                return detail::make_pipeable_binder(std::bind(std::forward<Fn>(fn), std::forward<As>(as)...));
+                return {std::move(fun)};
             }
         };
 
-        RANGES_CONSTEXPR pipeable_bind_fn pipeable_bind{};
+        RANGES_CONSTEXPR make_pipeable_fn make_pipeable{};
 
         template<typename T,
             typename U = detail::conditional_t<
@@ -92,55 +89,55 @@ namespace ranges
           : is_pipeable<T>
         {};
 
+        struct pipeable_access
+        {
+            template<typename Pipeable>
+            struct impl : Pipeable
+            {
+                using Pipeable::pipe;
+            };
+ 
+            template<typename Pipeable>
+            struct impl<Pipeable &> : impl<Pipeable>
+            {};
+        };
+
         template<typename Derived>
         struct pipeable : pipeable_base
         {
-        protected:
+        private:
+            friend pipeable_access;
             // Default Pipe behavior just passes the argument to the pipe's function call
             // operator
             template<typename Arg, typename Pipe>
-            static auto pipe(Arg && arg, Pipe && pipe) ->
-                decltype(std::declval<Pipe>()(std::declval<Arg>()))
-            {
-                return std::forward<Pipe>(pipe)(std::forward<Arg>(arg));
-            }
-        public:
-            // Evaluate the pipe with an argument
-            template<typename Arg, typename D = Derived, CONCEPT_REQUIRES_(!is_pipeable<Arg>())>
-            friend auto operator|(Arg && arg, pipeable const & pipe)
+            static auto pipe(Arg && arg, Pipe && pipe)
             RANGES_DECLTYPE_AUTO_RETURN
             (
-                D::pipe(std::forward<Arg>(arg), static_cast<D const &>(pipe))
-            )
-            template<typename Arg, typename D = Derived, CONCEPT_REQUIRES_(!is_pipeable<Arg>())>
-            friend auto operator|(Arg && arg, pipeable && pipe)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                D::pipe(std::forward<Arg>(arg), static_cast<D &&>(pipe))
-            )
-
-            // Compose two pipes
-            template<typename Arg, typename D = Derived, CONCEPT_REQUIRES_(is_pipeable<Arg>())>
-            friend auto operator|(Arg && arg, pipeable const & pipe)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                pipeable_bind(
-                    bitwise_or{},
-                    std::bind(bitwise_or{}, std::placeholders::_1, bind_forward<Arg>(arg)),
-                    std::ref(static_cast<D const &>(pipe))
-                )
-            )
-            template<typename Arg, typename D = Derived, CONCEPT_REQUIRES_(is_pipeable<Arg>())>
-            friend auto operator|(Arg && arg, pipeable && pipe)
-            RANGES_DECLTYPE_AUTO_RETURN
-            (
-                pipeable_bind(
-                    bitwise_or{},
-                    std::bind(bitwise_or{}, std::placeholders::_1, bind_forward<Arg>(arg)),
-                    static_cast<D &&>(pipe)
-                )
+                std::forward<Pipe>(pipe)(std::forward<Arg>(arg))
             )
         };
+
+        // Evaluate the pipe with an argument
+        template<typename Arg, typename Pipe,
+            CONCEPT_REQUIRES_(!is_pipeable<Arg>() && is_pipeable<Pipe>())>
+        auto operator|(Arg && arg, Pipe && pipe)
+        RANGES_DECLTYPE_AUTO_RETURN
+        (
+            pipeable_access::impl<Pipe>::pipe(std::forward<Arg>(arg), std::forward<Pipe>(pipe))
+        )
+
+        // Compose two pipes
+        template<typename Pipe0, typename Pipe1,
+            CONCEPT_REQUIRES_(is_pipeable<Pipe0>() && is_pipeable<Pipe1>())>
+        auto operator|(Pipe0 && pipe0, Pipe1 && pipe1)
+        RANGES_DECLTYPE_AUTO_RETURN
+        (
+            make_pipeable(std::bind(
+                bitwise_or{},
+                std::bind(bitwise_or{}, std::placeholders::_1, bind_forward<Pipe0>(pipe0)),
+                bind_forward<Pipe1>(pipe1)
+            ))
+        )
     }
 }
 

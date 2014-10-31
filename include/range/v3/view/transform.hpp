@@ -103,9 +103,9 @@ namespace ranges
 
                 template<typename Fun>
                 auto operator()(Fun fun) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(fun)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(fun))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, std::move(fun));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(fun)));
                 }
             };
 

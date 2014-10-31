@@ -183,9 +183,9 @@ namespace ranges
 
                 template<typename Difference, CONCEPT_REQUIRES_(Integral<Difference>())>
                 auto operator()(Difference step) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(step)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(step))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, std::move(step));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(step)));
                 }
             };
 

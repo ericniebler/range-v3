@@ -64,13 +64,6 @@ namespace ranges
                 {
                     push_back(std::forward<Rng>(rng), rng2);
                 }
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Iterable<Rng>())>
-                auto operator()(Rng && rng) const ->
-                    decltype(pipeable_bind(*this, bind_forward<Rng>(rng), std::placeholders::_1))
-                {
-                    return pipeable_bind(*this, bind_forward<Rng>(rng), std::placeholders::_1);
-                }
             };
         }
 

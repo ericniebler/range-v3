@@ -72,11 +72,11 @@ namespace ranges
                     CONCEPT_REQUIRES_(Same<detail::decay_t<Val1>,
                                            detail::decay_t<Val2>>())>
                 auto operator()(Val1 && old_value, Val2 && new_value) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, bind_forward<Val1>(old_value),
-                        bind_forward<Val2>(new_value)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Val1>(old_value),
+                        bind_forward<Val2>(new_value))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, bind_forward<Val1>(old_value),
-                        bind_forward<Val2>(new_value));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Val1>(old_value),
+                        bind_forward<Val2>(new_value)));
                 }
             };
 

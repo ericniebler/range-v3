@@ -72,8 +72,7 @@ namespace ranges
         using enable_if_t =
             typename std::enable_if<Condition, T>::type;
 
-        template<typename Derived>
-        struct bindable;
+        struct make_pipeable_fn;
 
         template<typename Derived>
         struct pipeable;

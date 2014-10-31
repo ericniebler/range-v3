@@ -171,22 +171,6 @@ namespace ranges
                 {
                     return insert(std::forward<Rng>(rng), p, i, j);
                 }
-
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Iterable<Rng>())>
-                auto operator()(Rng && rng) const ->
-                    decltype(pipeable_bind(*this, bind_forward<Rng>(rng), std::placeholders::_1))
-                {
-                    return pipeable_bind(*this, bind_forward<Rng>(rng), std::placeholders::_1);
-                }
-
-                template<typename Rng, typename I,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && Iterator<I>())>
-                auto operator()(Rng && rng, I p) const ->
-                    decltype(pipeable_bind(*this, bind_forward<Rng>(rng), p, std::placeholders::_1))
-                {
-                    return pipeable_bind(*this, bind_forward<Rng>(rng), p, std::placeholders::_1);
-                }
             };
         }
 

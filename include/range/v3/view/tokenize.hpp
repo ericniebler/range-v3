@@ -125,33 +125,33 @@ namespace ranges
                 auto operator()(Regex && rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
-                            std::move(sub), std::move(flags)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
+                        std::move(sub), std::move(flags))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
-                        std::move(sub), std::move(flags));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
+                        std::move(sub), std::move(flags)));
                 }
 
                 template<typename Regex>
                 auto operator()(Regex && rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
-                        std::move(subs), std::move(flags)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
+                        std::move(subs), std::move(flags))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
-                        std::move(subs), std::move(flags));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
+                        std::move(subs), std::move(flags)));
                 }
 
                 template<typename Regex>
                 auto operator()(Regex && rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
-                            std::move(subs), std::move(flags)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
+                        std::move(subs), std::move(flags))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
-                            std::move(subs), std::move(flags));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, bind_forward<Regex>(rex),
+                        std::move(subs), std::move(flags)));
                 }
             };
 

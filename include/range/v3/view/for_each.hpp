@@ -50,9 +50,9 @@ namespace ranges
 
                 template<typename F>
                 auto operator()(F f) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(f)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(f))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, std::move(f));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(f)));
                 }
             };
 

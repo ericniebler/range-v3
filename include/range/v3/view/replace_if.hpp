@@ -67,11 +67,11 @@ namespace ranges
 
                 template<typename Pred, typename Val>
                 auto operator()(Pred pred, Val && new_value) const ->
-                    decltype(pipeable_bind(*this, std::placeholders::_1, std::move(pred),
-                        bind_forward<Val>(new_value)))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(pred),
+                        bind_forward<Val>(new_value))))
                 {
-                    return pipeable_bind(*this, std::placeholders::_1, std::move(pred),
-                        bind_forward<Val>(new_value));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(pred),
+                        bind_forward<Val>(new_value)));
                 }
             };
 

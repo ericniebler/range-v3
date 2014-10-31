@@ -28,19 +28,33 @@ namespace ranges
             template<typename Action>
             struct action : pipeable<action<Action>>
             {
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(Function<Action, Rng &>() &&
-                        (Range<Rng>() || (Container<Rng>() && !std::is_reference<Rng>())))>
-                detail::uncvref_t<Rng> operator()(Rng && rng) const
+            private:
+                friend pipeable_access;
+                // Pipeing requires things are passed by value.
+                template<typename Rng, typename Act,
+                    CONCEPT_REQUIRES_(Function<Action, Rng &>() && Iterable<Rng>() &&
+                        !std::is_reference<Rng>())>
+                static detail::uncvref_t<Rng> pipe(Rng && rng, Act && act)
                 {
                     Action{}(rng);
                     return std::forward<Rng>(rng);
                 }
+            public:
+                // Calling directly requires things are passed by reference.
+                template<typename Rng, typename...Rest,
+                    CONCEPT_REQUIRES_(Function<Action, Rng &, Rest...>() && Iterable<Rng>())>
+                Rng & operator()(Rng & rng, Rest &&... rest) const
+                {
+                    Action{}(rng, std::forward<Rest>(rest)...);
+                    return rng;
+                }
             };
 
             template<typename Rng, typename Action,
-                typename RngRef = detail::conditional_t<(Range<Rng>()), Rng &, reference_wrapper<Rng>>,
-                CONCEPT_REQUIRES_(Iterable<Rng>() && Function<Action, RngRef>() && is_pipeable<Action>())>
+                typename RngRef =
+                    detail::conditional_t<(Range<Rng>()), Rng &, reference_wrapper<Rng>>,
+                CONCEPT_REQUIRES_(Iterable<Rng>() && Function<bitwise_or, RngRef, Action>() &&
+                    is_pipeable<Action>())>
             Rng & operator|=(Rng & rng, Action && action)
             {
                 RngRef{rng} | action;
