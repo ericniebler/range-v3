@@ -23,6 +23,21 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename T>
+            struct movable_input_iterator
+              : std::iterator<std::input_iterator_tag, T, std::ptrdiff_t, T *, T &&>
+            {
+                movable_input_iterator() = default;
+                movable_input_iterator &operator++();
+                movable_input_iterator operator++(int);
+                bool operator==(movable_input_iterator const &) const;
+                bool operator!=(movable_input_iterator const &) const;
+                T && operator*() const;
+            };
+        }
+
         namespace concepts
         {
             // std::array is a SemiContainer, native arrays are not.
@@ -42,10 +57,10 @@ namespace ranges
             struct Container
               : refines<SemiContainer>
             {
-                template<typename T>
+                template<typename T, typename I = detail::movable_input_iterator<range_value_t<T>>>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Constructible>(std::move(t), begin(t), end(t))
+                        concepts::model_of<Constructible>(std::move(t), I{}, I{})
                     ));
             };
         }
