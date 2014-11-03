@@ -86,7 +86,7 @@ namespace ranges
                 }
 
                 template<typename T,
-                    CONCEPT_REQUIRES_(Iterable<T>())>
+                    CONCEPT_REQUIRES_(Iterable<T &>())>
                 ranges::reference_wrapper<T> operator()(std::reference_wrapper<T> ref) const
                 {
                     return ranges::ref(ref.get());

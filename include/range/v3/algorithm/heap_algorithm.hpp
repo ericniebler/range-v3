@@ -102,7 +102,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Iterable<Rng &>())>
             I operator()(Rng &rng, C pred = C{}, P proj = P{}) const
             {
                 return detail::is_heap_until_n(begin(rng), distance(rng), std::move(pred), std::move(proj));
@@ -239,7 +239,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() && Sortable<I, C, P>())>
             I operator()(Rng & rng, C pred = C{}, P proj = P{}) const
             {
                 I begin = ranges::begin(rng);
@@ -284,7 +284,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() && Sortable<I, C, P>())>
             I operator()(Rng & rng, C pred = C{}, P proj = P{}) const
             {
                 I begin = ranges::begin(rng);
@@ -314,7 +314,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() && Sortable<I, C, P>())>
             I operator()(Rng & rng, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);
@@ -347,7 +347,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() && Sortable<I, C, P>())>
             I operator()(Rng & rng, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);

@@ -26,7 +26,7 @@ namespace ranges
         struct swap_ranges_fn
         {
             template<typename I1Ref, typename S1, typename I2,
-                typename I1 = detail::uncvref_t<I1Ref>,
+                typename I1 = uncvref_t<I1Ref>,
                 CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
                                   WeakInputIterator<I2>() &&
                                   IndirectlySwappable<I1, I2>())>

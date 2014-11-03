@@ -31,6 +31,12 @@ int main()
     CHECK(sum == 24);
 
     sum = 0;
+    auto rfun = [&](int & i){sum += i; };
+    CHECK(ranges::for_each(v1.begin(), v1.end(), rfun) == v1.end());
+    CHECK(ranges::for_each(v1, rfun) == v1.end());
+    CHECK(sum == 24);
+
+    sum = 0;
     std::vector<S> v2{{&sum, 0}, {&sum, 2}, {&sum, 4}, {&sum, 6}};
     CHECK(ranges::for_each(v2.begin(), v2.end(), &S::p) == v2.end());
     CHECK(ranges::for_each(v2, &S::p) == v2.end());

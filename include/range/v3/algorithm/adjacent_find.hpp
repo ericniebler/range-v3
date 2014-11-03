@@ -59,7 +59,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
-                    ForwardIterable<Rng>() &&
+                    ForwardIterable<Rng &>() &&
                     Invokable<P, V>() &&
                     InvokableRelation<C, concepts::Invokable::result_t<P, V>>()
                 )>

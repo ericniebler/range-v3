@@ -20,3 +20,10 @@
   - Make `inplace_merge` work with forward iterators
   - Make the sorting algorithms work with forward iterators
   - Study the impact of allowing ForwardIterator to return proxies
+
+* Maybe iterators are not necessarily countable. Is there a relation between
+  the ability to be able to subtract two iterators to find the distance, and
+  with the existence of a DistanceType associated type? Think of:
+  - counted iterators (subtractable regarless of traversal category)
+  - repeat_view iterators (*not* subtractable but could be random access otherwise)
+  - infinite ranges (only countable with an infinite precision integer which we lack)

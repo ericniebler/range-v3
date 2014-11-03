@@ -106,7 +106,7 @@ namespace ranges
 
             template<typename Rng, typename C, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Iterable<Rng &>())>
             I operator()(Rng &rng, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(begin(rng), end(rng), std::move(pred),

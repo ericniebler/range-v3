@@ -32,9 +32,9 @@ namespace ranges
             struct UniformRandomNumberGenerator
             {
                 template<typename Gen>
-                auto requires_(Gen && rand) -> decltype(
+                auto requires_(Gen rand) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<UnsignedIntegral>(((Gen &&) rand)())
+                        concepts::model_of<UnsignedIntegral>(val<Gen>()())
                     ));
             };
         }
@@ -67,7 +67,7 @@ namespace ranges
             }
 
             template<typename Rng, typename Gen, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() &&
                                   Permutable<I>() &&
                                   UniformRandomNumberGenerator<Gen>())>
             I operator()(Rng & rng, Gen && rand) const

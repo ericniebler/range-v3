@@ -150,7 +150,7 @@ namespace ranges
                     logical_or_c<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
                 using value_type =
-                    detail::uncvref_t<result_of_t<invokable_t<Fun>(range_value_t<Rngs>...)>>;
+                    uncvref_t<result_of_t<invokable_t<Fun>(range_value_t<Rngs>...)>>;
                 cursor() = default;
                 cursor(invokable_t<Fun> const &fun, std::tuple<range_iterator_t<view::all_t<Rngs>>...> its)
                   : fun_(&fun), its_(std::move(its))

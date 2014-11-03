@@ -13,6 +13,7 @@
 #ifndef RANGES_V3_CONTAINER_SORT_HPP
 #define RANGES_V3_CONTAINER_SORT_HPP
 
+#include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/container/action.hpp>
 #include <range/v3/algorithm/sort.hpp>
@@ -27,11 +28,21 @@ namespace ranges
         {
             struct sort_fn
             {
-                template<typename Rng, typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && Sortable<I>())>
-                void operator()(Rng & rng) const
+            private:
+                friend action_access;
+                template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Iterable<C>())>
+                static auto bind(sort_fn sort, C pred, P proj = P{})
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    std::bind(sort, std::placeholders::_1, std::move(pred), std::move(proj))
+                )
+            public:
+                template<typename Rng, typename C = ordered_less, typename P = ident,
+                    typename I = range_iterator_t<Rng>,
+                    CONCEPT_REQUIRES_(Iterable<Rng>() && Sortable<I, C, P>())>
+                void operator()(Rng & rng, C pred = C{}, P proj = P{}) const
                 {
-                    ranges::sort(rng);
+                    ranges::sort(rng, std::move(pred), std::move(proj));
                 }
             };
 

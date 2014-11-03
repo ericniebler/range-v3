@@ -67,9 +67,9 @@ namespace ranges
                 using result_t = Function::result_t<invokable_t<Fun>, Args...>;
 
                 template<typename Fun, typename...Args>
-                auto requires_(Fun &&fun, Args &&...args) -> decltype(
+                auto requires_(Fun, Args...) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Function>(invokable((Fun &&) fun), (Args &&) args...)
+                        concepts::model_of<Function, invokable_t<Fun>, Args...>()
                     ));
             };
 
@@ -81,9 +81,9 @@ namespace ranges
               : refines<RegularInvokable>
             {
                 template<typename Fun, typename...Args>
-                auto requires_(Fun &&fun, Args &&...args) -> decltype(
+                auto requires_(Fun, Args...) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Predicate>(invokable((Fun &&) fun), (Args &&) args...)
+                        concepts::model_of<Predicate, invokable_t<Fun>, Args...>()
                     ));
             };
 
@@ -91,9 +91,9 @@ namespace ranges
               : refines<InvokablePredicate>
             {
                 template<typename Fun, typename T, typename U>
-                auto requires_(Fun &&fun, T && t, U && u) -> decltype(
+                auto requires_(Fun, T, U) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Relation>(invokable((Fun &&) fun), (T &&) t, (U &&) u)
+                        concepts::model_of<Relation, invokable_t<Fun>, T, U>()
                     ));
             };
 
@@ -101,9 +101,9 @@ namespace ranges
               : refines<RegularInvokable>
             {
                 template<typename Fun, typename T>
-                auto requires_(Fun &&fun, T && t) -> decltype(
+                auto requires_(Fun, T) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Transform>(invokable((Fun &&) fun), (T &&) t)
+                        concepts::model_of<Transform, invokable_t<Fun>, T>()
                     ));
             };
         }

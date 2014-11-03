@@ -34,7 +34,7 @@ namespace ranges
               : refines<SemiRegular>
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T &>(++t)
                     ));
@@ -48,7 +48,7 @@ namespace ranges
               : refines<ForwardIota>
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T &>(--t)
                     ));
@@ -58,7 +58,7 @@ namespace ranges
               : refines<BidirectionalIota>
             {
                 template<typename T>
-                auto requires_(T && t) -> decltype(
+                auto requires_(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(t - t),
                         concepts::has_type<T &>(t += (t - t)),

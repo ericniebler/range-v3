@@ -83,7 +83,7 @@ namespace ranges
             template<typename Rng0, typename I1Ref,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 typename I0 = range_iterator_t<Rng0>,
-                typename I1 = detail::uncvref_t<I1Ref>,
+                typename I1 = uncvref_t<I1Ref>,
                 CONCEPT_REQUIRES_(
                     Iterable<Rng0>() &&
                     WeaklyComparable<I0, I1, C, P0, P1>()

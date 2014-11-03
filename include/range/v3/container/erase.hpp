@@ -69,9 +69,9 @@ namespace ranges
               : refines<Iterable(_1)>
             {
                 template<typename Rng, typename...Rest>
-                auto requires_(Rng && rng, Rest &&... rest) -> decltype(
+                auto requires_(Rng rng, Rest... rest) -> decltype(
                     concepts::valid_expr(
-                        (ranges::erase(std::forward<Rng>(rng), std::forward<Rest>(rest)...), 42)
+                        (ranges::erase(val<Rng>(), val<Rest>()...), 42)
                     ));
             };
         }

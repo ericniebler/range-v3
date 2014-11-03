@@ -71,7 +71,7 @@ namespace ranges
 
             template<typename Rng, typename O, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Iterable<Rng>() && Transformable1<I, O, F, P>())>
+                CONCEPT_REQUIRES_(Iterable<Rng &>() && Transformable1<I, O, F, P>())>
             std::pair<I, O> operator()(Rng & rng, O out, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(fun), std::move(proj));
@@ -96,7 +96,7 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident,
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = range_iterator_t<Rng1>,
-                CONCEPT_REQUIRES_(Iterable<Rng0>() && Iterable<Rng1>() && Transformable2<I0, I1, O, F, P0, P1>())>
+                CONCEPT_REQUIRES_(Iterable<Rng0 &>() && Iterable<Rng1 &>() && Transformable2<I0, I1, O, F, P0, P1>())>
             std::tuple<I0, I1, O> operator()(Rng0 & rng0, Rng1 & rng1, O out, F fun,
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
@@ -116,9 +116,9 @@ namespace ranges
             }
 
             template<typename Rng0, typename I1Ref, typename O, typename F,
-                typename P0 = ident, typename P1 = ident, typename I1 = detail::uncvref_t<I1Ref>,
+                typename P0 = ident, typename P1 = ident, typename I1 = uncvref_t<I1Ref>,
                 typename I0 = range_iterator_t<Rng0>,
-                CONCEPT_REQUIRES_(Iterable<Rng0>() && Transformable2<I0, I1, O, F, P0, P1>())>
+                CONCEPT_REQUIRES_(Iterable<Rng0 &>() && Transformable2<I0, I1, O, F, P0, P1>())>
             std::tuple<I0, I1, O> operator()(Rng0 & rng0, I1Ref &&begin1, O out, F fun,
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {

@@ -40,7 +40,7 @@ int main()
     random_shuffle(v);
     CHECK(!is_sorted(v));
 
-    v = v | move | cont::sort;
+    v = v | move | cont::sort(std::less<int>());
     CHECK(is_sorted(v));
     CHECK(equal(v, v2));
 
@@ -51,6 +51,9 @@ int main()
     auto & v3 = cont::sort(v);
     CHECK(is_sorted(v));
     CHECK(&v3 == &v);
+
+    auto ref=std::ref(v);
+    ref |= cont::sort;
 
     return ::test_result();
 }

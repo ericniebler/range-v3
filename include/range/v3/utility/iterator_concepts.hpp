@@ -152,12 +152,12 @@ namespace ranges
 
         template<typename T>
         struct pointer_type
-          : detail::pointer_type<detail::uncvref_t<T>>
+          : detail::pointer_type<uncvref_t<T>>
         {};
 
         template<typename T>
         struct iterator_category_type
-          : detail::iterator_category_type<detail::uncvref_t<T>>
+          : detail::iterator_category_type<uncvref_t<T>>
         {};
 
         namespace concepts
@@ -186,9 +186,9 @@ namespace ranges
               : refines<SemiRegular(_1)>
             {
                 template<typename Out, typename T>
-                auto requires_(Out o, T && value) -> decltype(
+                auto requires_(Out o, T) -> decltype(
                     concepts::valid_expr(
-                        *o = std::move(value)
+                        *o = std::move(val<T>())
                     ));
             };
 
@@ -196,9 +196,9 @@ namespace ranges
               : refines<MoveWritable>
             {
                 template<typename Out, typename T>
-                auto requires_(Out o, T &&value) -> decltype(
+                auto requires_(Out o, T) -> decltype(
                     concepts::valid_expr(
-                        *o = std::forward<T>(value)
+                        *o = val<T>()
                     ));
             };
 
@@ -207,9 +207,9 @@ namespace ranges
                 template<typename I, typename O>
                 auto requires_(I i, O o) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Readable>((I) i),
-                        concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<MoveWritable>((O) o, *i)
+                        concepts::model_of<Readable, I>(),
+                        concepts::model_of<SemiRegular, O>(),
+                        concepts::model_of<MoveWritable, O, Readable::reference_t<I>>()
                     ));
             };
 
@@ -218,9 +218,9 @@ namespace ranges
                 template<typename I, typename O>
                 auto requires_(I i, O o) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Readable>((I) i),
-                        concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<Writable>((O) o, *i)
+                        concepts::model_of<Readable, I>(),
+                        concepts::model_of<SemiRegular, O>(),
+                        concepts::model_of<Writable, O, Readable::reference_t<I>>()
                     ));
             };
 
@@ -229,8 +229,8 @@ namespace ranges
                 template<typename I1, typename I2>
                 auto requires_(I1 i1, I2 i2) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Readable>((I1) i1),
-                        concepts::model_of<Readable>((I2) i2),
+                        concepts::model_of<Readable, I1>(),
+                        concepts::model_of<Readable, I2>(),
                         (ranges::swap(*i1, *i2), 42),
                         (ranges::swap(*i2, *i1), 42)
                     ));
@@ -239,24 +239,24 @@ namespace ranges
             struct IndirectlyProjectedMovable
             {
                 template<typename I, typename P, typename O>
-                auto requires_(I i, P && p, O o) -> decltype(
+                auto requires_(I i, P p, O o) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Readable>((I) i),
-                        concepts::model_of<RegularInvokable>((P &&) p, *i),
-                        concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<MoveWritable>((O) o, invokable((P &&) p)(*i))
+                        concepts::model_of<Readable, I>(),
+                        concepts::model_of<RegularInvokable, P, Readable::reference_t<I>>(),
+                        concepts::model_of<SemiRegular, O>(),
+                        concepts::model_of<MoveWritable, O, Invokable::result_t<P, Readable::reference_t<I>>>()
                     ));
             };
 
             struct IndirectlyProjectedCopyable
             {
                 template<typename I, typename P, typename O>
-                auto requires_(I i, P && p, O o) -> decltype(
+                auto requires_(I i, P p, O o) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Readable>((I) i),
-                        concepts::model_of<RegularInvokable>((P &&) p, *i),
-                        concepts::model_of<SemiRegular>((O) o),
-                        concepts::model_of<Writable>((O) o, invokable((P &&) p)(*i))
+                        concepts::model_of<Readable, I>(),
+                        concepts::model_of<RegularInvokable, P, Readable::reference_t<I>>(),
+                        concepts::model_of<SemiRegular, O>(),
+                        concepts::model_of<Writable, O, Invokable::result_t<P, Readable::reference_t<I>>>()
                     ));
             };
 
@@ -534,9 +534,9 @@ namespace ranges
                 template<typename I, typename S>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Iterator>((I) i),
-                        concepts::model_of<Regular>((S) s),
-                        concepts::model_of<EqualityComparable>((I) i, (S) s)
+                        concepts::model_of<Iterator, I>(),
+                        concepts::model_of<Regular, S>(),
+                        concepts::model_of<EqualityComparable, I, S>()
                     ));
             };
 
@@ -556,13 +556,16 @@ namespace ranges
             struct SizedIteratorRange
               : refines<IteratorRange>
             {
-                template<typename I>
+                template<typename I, typename S,
+                    enable_if_t<std::is_same<I, S>::value> = 0>
                 auto requires_(I i, I s) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(s - i)
                     ));
 
-              template<typename I, typename S, typename C = common_type_t<I, S>>
+                template<typename I, typename S,
+                    enable_if_t<!std::is_same<I, S>::value> = 0,
+                    typename C = common_type_t<I, S>>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<SizedIteratorRange>(i, i),

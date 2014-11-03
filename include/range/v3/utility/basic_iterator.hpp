@@ -82,7 +82,7 @@ namespace ranges
                     struct private_ {};
                     using value_t =
                         detail::conditional_t<
-                            !Same<detail::uncvref_t<Ref>, iterator_value_t<I>>(),
+                            !Same<uncvref_t<Ref>, iterator_value_t<I>>(),
                             iterator_value_t<I>,
                             private_>;
                     I const it_;
@@ -116,7 +116,7 @@ namespace ranges
                     struct private_ {};
                     using value_t =
                         detail::conditional_t<
-                            !Same<detail::uncvref_t<Ref>, iterator_value_t<I>>(),
+                            !Same<uncvref_t<Ref>, iterator_value_t<I>>(),
                             iterator_value_t<I>,
                             private_>;
                     I const it_;

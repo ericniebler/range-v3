@@ -174,7 +174,7 @@ namespace ranges
             template<typename Cur, typename Enable = void>
             struct cursor_value
             {
-                using type = detail::uncvref_t<decltype(std::declval<Cur const &>().current())>;
+                using type = uncvref_t<decltype(std::declval<Cur const &>().current())>;
             };
 
             template<typename Cur>

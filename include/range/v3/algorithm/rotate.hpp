@@ -202,7 +202,7 @@ namespace ranges
             }
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Iterable<Rng>() && Permutable<I>())>
+                CONCEPT_REQUIRES_(Iterable<Rng &>() && Permutable<I>())>
             range<I> operator()(Rng &rng, I middle) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng));

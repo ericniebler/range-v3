@@ -274,9 +274,18 @@ namespace ranges
             {
                 return t;
             }
+
+            template<typename T>
+            reference_wrapper<T> operator()(std::reference_wrapper<T> t) const
+            {
+                return {t.get()};
+            }
         };
 
         RANGES_CONSTEXPR ref_fn ref {};
+
+        template<typename T>
+        using ref_t = decltype(ref(std::declval<T>()));
 
         struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
         {

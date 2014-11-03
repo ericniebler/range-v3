@@ -77,6 +77,12 @@ namespace ranges
         template<typename Derived>
         struct pipeable;
 
+        namespace cont
+        {
+            template<typename Action>
+            struct action;
+        }
+
         extern adl_begin_end_detail::begin_fn const begin;
         extern adl_begin_end_detail::end_fn const end;
         extern adl_begin_end_detail::cbegin_fn const cbegin;
@@ -147,10 +153,6 @@ namespace ranges
                     return T{};
                 }
             };
-
-            template<typename T>
-            using uncvref_t =
-                typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
             struct make_compressed_pair_fn;
             extern make_compressed_pair_fn const make_compressed_pair;
@@ -283,6 +285,10 @@ namespace ranges
             template<typename Concept, typename...Ts>
             struct models;
         }
+
+        template<typename T>
+        using uncvref_t =
+            typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
         struct begin_tag {};
         struct end_tag {};

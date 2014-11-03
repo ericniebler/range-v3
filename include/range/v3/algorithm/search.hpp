@@ -179,7 +179,7 @@ namespace ranges
                 typename P2 = ident, typename I1 = range_iterator_t<Rng1>, typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(
                     Searchable<I1, I2, C, P1, P2>() &&
-                    Iterable<Rng1>() &&
+                    Iterable<Rng1 &>() &&
                     Iterable<Rng2>()
                 )>
             I1 operator()(Rng1 & rng1, Rng2 && rng2, C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const

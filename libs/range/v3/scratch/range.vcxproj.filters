@@ -467,7 +467,7 @@
       <Filter>Test Files\container</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\container\unique.cpp">
-      <Filter>Header Files\container</Filter>
+      <Filter>Test Files\container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

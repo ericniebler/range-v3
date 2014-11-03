@@ -54,7 +54,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterable<Rng>())>
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterable<Rng &>())>
             I operator()(Rng & rng, I middle, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred), std::move(proj));

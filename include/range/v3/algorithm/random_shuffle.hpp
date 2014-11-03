@@ -32,10 +32,10 @@ namespace ranges
             struct RandomNumberGenerator
             {
                 template<typename Gen, typename D>
-                auto requires_(Gen && rand, D d) -> decltype(
+                auto requires_(Gen rand, D d) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Integral>(d),
-                        concepts::convertible_to<D>(((Gen &&) rand)(d))
+                        concepts::model_of<Integral, D>(),
+                        concepts::convertible_to<D>(val<Gen>()(d))
                     ));
             };
         }
@@ -87,7 +87,7 @@ namespace ranges
             }
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() &&
                                   Permutable<I>())>
             I operator()(Rng & rng) const
             {
@@ -95,7 +95,7 @@ namespace ranges
             }
 
             template<typename Rng, typename Gen, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() &&
                                   Permutable<I>() &&
                                   RandomNumberGenerator<Gen, iterator_difference_t<I>>())>
             I operator()(Rng & rng, Gen && rand) const

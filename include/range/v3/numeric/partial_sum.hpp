@@ -99,8 +99,8 @@ namespace ranges
 
             template <typename Rng, typename ORef, typename BOp = plus,
                       typename P = ident, typename I = range_iterator_t<Rng>,
-                      typename O = detail::uncvref_t<ORef>,
-                      CONCEPT_REQUIRES_(Iterable<Rng>() &&
+                      typename O = uncvref_t<ORef>,
+                      CONCEPT_REQUIRES_(Iterable<Rng &>() &&
                                         PartialSummable<I, O, BOp, P>())>
             std::pair<I, O>
             operator()(Rng &rng, ORef &&result, BOp bop = BOp{}, P proj = P{}) const
@@ -112,7 +112,7 @@ namespace ranges
             template <typename Rng, typename ORng, typename BOp = plus,
                       typename P = ident, typename I = range_iterator_t<Rng>,
                       typename O = range_iterator_t<ORng>,
-                      CONCEPT_REQUIRES_(Iterable<Rng>() && Iterable<ORng>() &&
+                      CONCEPT_REQUIRES_(Iterable<Rng &>() && Iterable<ORng &>() &&
                                         PartialSummable<I, O, BOp, P>())>
             std::pair<I, O>
             operator()(Rng &rng, ORng &result, BOp bop = BOp{}, P proj = P{}) const

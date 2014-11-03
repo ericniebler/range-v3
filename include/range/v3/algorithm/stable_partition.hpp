@@ -275,7 +275,7 @@ namespace ranges
             // BUGBUG Can this be optimized if Rng has O1 size?
             template<typename Rng, typename C, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && Iterable<Rng &>())>
             I operator()(Rng &rng, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

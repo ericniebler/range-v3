@@ -169,7 +169,7 @@ namespace ranges
 
             template<typename Rng, typename V, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Iterable<Rng &>())>
             I operator()(Rng & rng, iterator_difference_t<I> count, V const &val,
                 C pred_ = C{}, P proj_ = P{}) const
             {

@@ -84,7 +84,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(ForwardIterable<Rng>() && Invokable<P, V>() &&
+                CONCEPT_REQUIRES_(ForwardIterable<Rng &>() && Invokable<P, V>() &&
                     InvokableRelation<C, X>())>
             std::pair<I, I> operator()(Rng &rng, C pred = C{}, P proj = P{}) const
             {

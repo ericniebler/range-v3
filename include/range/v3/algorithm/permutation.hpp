@@ -164,7 +164,7 @@ namespace ranges
 
             template<typename Rng1, typename I2Ref, typename C = equal_to, typename P1 = ident,
                 typename P2 = ident, typename I1 = range_iterator_t<Rng1>,
-                typename I2 = detail::uncvref_t<I2Ref>,
+                typename I2 = uncvref_t<I2Ref>,
                 CONCEPT_REQUIRES_(ForwardIterable<Rng1>() && IsPermutationable<I1, I2, C, P1, P2>())>
             bool operator()(Rng1 &&rng1, I2Ref &&begin2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
@@ -227,7 +227,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(BidirectionalIterable<Rng &>() && Sortable<I, C, P>())>
             bool operator()(Rng &rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
@@ -271,7 +271,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(BidirectionalIterable<Rng &>() && Sortable<I, C, P>())>
             bool operator()(Rng &rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

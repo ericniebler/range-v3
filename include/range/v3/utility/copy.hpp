@@ -27,7 +27,7 @@ namespace ranges
             struct copy_fn : pipeable<copy_fn>
             {
                 template<typename T,
-                    typename U = detail::uncvref_t<T>,
+                    typename U = uncvref_t<T>,
                     CONCEPT_REQUIRES_(Constructible<U, T &&>())>
                 U operator()(T && t) const
                 {

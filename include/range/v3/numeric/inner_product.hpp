@@ -90,7 +90,7 @@ namespace ranges
             template<typename Rng1, typename I2Ref, typename T, typename BOp1 = plus,
                 typename BOp2 = multiplies, typename P1 = ident, typename P2 = ident,
                 typename I1 = range_iterator_t<Rng1>,
-                typename I2 = detail::uncvref_t<I2Ref>,
+                typename I2 = uncvref_t<I2Ref>,
                 CONCEPT_REQUIRES_(
                     Iterable<Rng1>() &&
                     InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()

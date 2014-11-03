@@ -27,12 +27,12 @@ namespace ranges
         namespace detail
         {
             template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
-            constexpr bool ConvertibleToContainer()
-            {
-                return Iterable<Cont>() && !Range<Cont>() && Movable<Cont>() &&
-                    Convertible<range_value_t<Rng>, range_value_t<Cont>>() &&
-                    Constructible<Cont, I, I>();
-            }
+            using ConvertibleToContainer = fast_logical_and<
+                Iterable<Cont>,
+                logical_not<Range<Cont>>,
+                Movable<Cont>,
+                Convertible<range_value_t<Rng>, range_value_t<Cont>>,
+                Constructible<Cont, I, I>>;
         }
 
         template<typename Derived, bool Inf /* = false*/>
