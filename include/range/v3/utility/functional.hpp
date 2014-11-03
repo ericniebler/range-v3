@@ -19,6 +19,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -309,6 +310,47 @@ namespace ranges
         };
 
         RANGES_CONSTEXPR unwrap_reference_fn unwrap_reference {};
+
+        namespace detail
+        {
+            // implement protect using std::is_bind_expression and std::is_placeholder
+            template<typename Bind>
+            struct protect_
+              : Bind
+            {
+                protect_() = default;
+                protect_(Bind b)
+                  : Bind(std::move(b))
+                {}
+            };
+
+            template<typename T>
+            struct is_bind_like
+              : fast_logical_or<std::is_bind_expression<T>, std::is_placeholder<T>>
+            {};
+
+            template<typename T>
+            struct is_bind_like<T &>
+              : is_bind_like<T>
+            {};
+        }
+
+        struct protect_fn
+        {
+            template<typename F, CONCEPT_REQUIRES_(detail::is_bind_like<F>())>
+            detail::protect_<uncvref_t<F>> operator()(F && f) const
+            {
+                return {std::forward<F>(f)};
+            }
+
+            template<typename F, CONCEPT_REQUIRES_(!detail::is_bind_like<F>())>
+            F operator()(F && f) const
+            {
+                return std::forward<F>(f);
+            }
+        };
+
+        RANGES_CONSTEXPR protect_fn protect{};
     }
 }
 

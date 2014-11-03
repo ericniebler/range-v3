@@ -1,6 +1,9 @@
 add_executable(cont.concepts cont_concepts.cpp)
 add_test(test.cont.concepts cont.concepts)
 
+add_executable(cont.erase_if erase_if.cpp)
+add_test(test.cont.erase_if cont.erase_if)
+
 add_executable(cont.insert insert.cpp)
 add_test(test.cont.insert cont.insert)
 

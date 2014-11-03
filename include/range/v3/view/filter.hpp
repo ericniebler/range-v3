@@ -22,6 +22,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 
 namespace ranges
@@ -100,9 +101,9 @@ namespace ranges
                 }
                 template<typename Pred>
                 auto operator()(Pred pred) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(pred))))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred)))))
                 {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(pred)));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred))));
                 }
             };
 

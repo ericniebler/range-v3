@@ -160,6 +160,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\container\cont_concepts.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\erase_if.cpp" />
     <ClCompile Include="..\..\..\..\test\container\insert.cpp" />
     <ClCompile Include="..\..\..\..\test\container\push_back.cpp" />
     <ClCompile Include="..\..\..\..\test\container\push_front.cpp" />
@@ -289,6 +290,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\action.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\concepts.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\erase.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\erase_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\insert.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_back.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_front.hpp" />

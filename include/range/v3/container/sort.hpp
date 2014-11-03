@@ -17,6 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/container/action.hpp>
 #include <range/v3/algorithm/sort.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 
@@ -34,7 +35,7 @@ namespace ranges
                 static auto bind(sort_fn sort, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    std::bind(sort, std::placeholders::_1, std::move(pred), std::move(proj))
+                    std::bind(sort, std::placeholders::_1, protect(std::move(pred)), protect(std::move(proj)))
                 )
             public:
                 template<typename Rng, typename C = ordered_less, typename P = ident,

@@ -25,6 +25,7 @@
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -103,9 +104,9 @@ namespace ranges
 
                 template<typename Fun>
                 auto operator()(Fun fun) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(fun))))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(fun)))))
                 {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(fun)));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(fun))));
                 }
             };
 

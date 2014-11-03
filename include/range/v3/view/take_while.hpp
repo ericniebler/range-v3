@@ -21,6 +21,7 @@
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -84,7 +85,7 @@ namespace ranges
                 auto operator()(Pred pred) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(*this, std::placeholders::_1, std::move(pred)))
+                    make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred))))
                 )
             };
 

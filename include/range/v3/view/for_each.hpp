@@ -20,6 +20,7 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -50,9 +51,9 @@ namespace ranges
 
                 template<typename F>
                 auto operator()(F f) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(f))))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(f)))))
                 {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(f)));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(f))));
                 }
             };
 

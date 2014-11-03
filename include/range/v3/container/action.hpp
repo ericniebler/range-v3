@@ -31,11 +31,11 @@ namespace ranges
                 template<typename Action>
                 struct impl
                 {
-                    template<typename...Ts>
+                    template<typename...Ts, typename A = Action>
                     static auto bind(Ts &&...ts)
                     RANGES_DECLTYPE_AUTO_RETURN
                     (
-                        Action::bind(std::forward<Ts>(ts)...)
+                        A::bind(std::forward<Ts>(ts)...)
                     )
                 };
             };
