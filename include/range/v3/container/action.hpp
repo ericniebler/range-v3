@@ -29,9 +29,14 @@ namespace ranges
             struct action_access
             {
                 template<typename Action>
-                struct impl : Action
+                struct impl
                 {
-                    using Action::bind;
+                    template<typename...Ts>
+                    static auto bind(Ts &&...ts)
+                    RANGES_DECLTYPE_AUTO_RETURN
+                    (
+                        Action::bind(std::forward<Ts>(ts)...)
+                    )
                 };
             };
 
