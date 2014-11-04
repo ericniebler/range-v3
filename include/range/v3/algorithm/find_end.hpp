@@ -28,23 +28,25 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+            template<typename I, typename S,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
             I next_to_if(I i, S s, std::true_type)
             {
                 return next_to(i, s);
             }
 
-            template<typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+            template<typename I, typename S,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
             S next_to_if(I, S s, std::false_type)
             {
                 return s;
             }
 
-            template<bool B, typename I, typename S, CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+            template<bool B, typename I, typename S,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
             conditional_t<B, I, S> next_to_if(I i, S s)
             {
-                return detail::next_to_if(std::move(i), std::move(s),
-                    std::integral_constant<bool, B>{});
+                return detail::next_to_if(std::move(i), std::move(s), bool_constant<B>{});
             }
         }
 

@@ -71,6 +71,17 @@ namespace ranges
 
         RANGES_CONSTEXPR yield_fn yield{};
 
+        struct yield_from_fn
+        {
+            template<typename Rng, CONCEPT_REQUIRES_(Range<Rng>())>
+            Rng operator()(Rng rng) const
+            {
+                return rng;
+            }
+        };
+
+        RANGES_CONSTEXPR yield_from_fn yield_from{};
+
         struct yield_if_fn
         {
             template<typename V>

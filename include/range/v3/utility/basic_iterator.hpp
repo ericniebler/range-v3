@@ -18,6 +18,7 @@
 #include <range/v3/range_access.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/nullval.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -49,11 +50,10 @@ namespace ranges
             //
             template<typename ValueParam, typename Ref>
             using iterator_writability_disabled =
-                std::integral_constant<bool,
-                    std::is_const<Ref>::value ||
-                    is_reference_to_const<Ref>::value ||
-                    std::is_const<ValueParam>::value
-                >;
+                fast_logical_or<
+                    std::is_const<Ref>,
+                    is_reference_to_const<Ref>,
+                    std::is_const<ValueParam>>;
 
             // operator[] must return a proxy in case iterator destruction invalidates
             // referents.

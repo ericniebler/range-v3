@@ -320,7 +320,7 @@ namespace ranges
                 template<typename I>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Derived>(category_t<I>{}, ranges::weak_input_iterator_tag{}),
+                        concepts::model_of<Derived, category_t<I>, ranges::weak_input_iterator_tag>(),
                         concepts::model_of<Readable>(i++)
                     ));
             };
@@ -331,7 +331,7 @@ namespace ranges
                 template<typename I>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Derived>(category_t<I>{}, ranges::input_iterator_tag{})
+                        concepts::model_of<Derived, category_t<I>, ranges::input_iterator_tag>()
                     ));
             };
 
@@ -341,7 +341,7 @@ namespace ranges
                 template<typename I>
                 auto requires_(I) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Derived>(category_t<I>{}, ranges::forward_iterator_tag{})
+                        concepts::model_of<Derived, category_t<I>, ranges::forward_iterator_tag>()
                     ));
             };
 
@@ -351,7 +351,7 @@ namespace ranges
                 template<typename I>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Derived>(category_t<I>{}, ranges::bidirectional_iterator_tag{}),
+                        concepts::model_of<Derived, category_t<I>, ranges::bidirectional_iterator_tag>(),
                         concepts::has_type<I &>(--i),
                         concepts::has_type<I>(i--),
                         concepts::same_type(*i, *i--)
@@ -364,7 +364,7 @@ namespace ranges
                 template<typename I, typename V = value_t<I>>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Derived>(category_t<I>{}, ranges::random_access_iterator_tag{}),
+                        concepts::model_of<Derived, category_t<I>, ranges::random_access_iterator_tag>(),
                         concepts::model_of<SignedIntegral>(i - i),
                         concepts::has_type<difference_t<I>>(i - i),
                         concepts::has_type<I>(i + (i - i)),
@@ -568,9 +568,9 @@ namespace ranges
                     typename C = common_type_t<I, S>>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<SizedIteratorRange>(i, i),
-                        concepts::model_of<Common>(i, s),
-                        concepts::model_of<SizedIteratorRange>(static_cast<C>(i), static_cast<C>(s)),
+                        concepts::model_of<SizedIteratorRange, I, I>(),
+                        concepts::model_of<Common, I, S>(),
+                        concepts::model_of<SizedIteratorRange, C, C>(),
                         concepts::model_of<Integral>(s - i),
                         concepts::same_type(s - i, i - s)
                     ));

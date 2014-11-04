@@ -22,6 +22,7 @@
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -38,9 +39,9 @@ namespace ranges
             using reference_t = concepts::Invokable::result_t<Pred, range_value_t<Rng>>;
             semiregular_invokable_t<Pred> pred_;
 
-            using single_pass = detail::or_t<
+            using single_pass = logical_or<
                 SinglePass<range_iterator_t<Rng>>,
-                detail::not_t<std::is_reference<reference_t>>>;
+                logical_not<std::is_reference<reference_t>>>;
 
             struct sentinel_adaptor
               : adaptor_base

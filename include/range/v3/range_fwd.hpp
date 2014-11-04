@@ -228,15 +228,6 @@ namespace ranges
             using add_const_if_t = conditional_t<B, T const, T>;
 
             template<typename T>
-            using not_t = std::integral_constant<bool, !T::value>;
-
-            template<typename T, typename U>
-            using and_t = std::integral_constant<bool, T::value && U::value>;
-
-            template<typename T, typename U>
-            using or_t = std::integral_constant<bool, T::value || U::value>;
-
-            template<typename T>
             using decay_t = typename std::decay<T>::type;
 
             template<typename T>
@@ -285,6 +276,9 @@ namespace ranges
             template<typename Concept, typename...Ts>
             struct models;
         }
+
+        template<bool B>
+        using bool_constant = std::integral_constant<bool, B>;
 
         template<typename T>
         using uncvref_t =

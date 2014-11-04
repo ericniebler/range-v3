@@ -49,7 +49,7 @@ namespace ranges
             decltype(detail::fast_logical_or_impl_(detail::conditional_t<Bools, int, int*>{}...));
 
         template<bool Bool>
-        using logical_not_c = std::integral_constant<bool, !Bool>;
+        using logical_not_c = bool_constant<!Bool>;
 
         template<typename...Bools>
         using fast_logical_and = logical_and_c<Bools::value...>;

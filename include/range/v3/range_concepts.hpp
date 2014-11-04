@@ -78,9 +78,9 @@ namespace ranges
               : refines<Iterable(_1)>
             {
                 template<typename T, typename V>
-                auto requires_(T t, V const &v) -> decltype(
+                auto requires_(T, V) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<OutputIterator>(begin(t), v)
+                        concepts::model_of<OutputIterator, Iterable::iterator_t<T>, V>()
                     ));
             };
 
@@ -150,6 +150,9 @@ namespace ranges
             struct SizedIterable
               : refines<Iterable>
             {
+                template<typename T>
+                using size_t = decltype(size(val<T>()));
+
                 template<typename T>
                 auto requires_(T t) -> decltype(
                     concepts::valid_expr(

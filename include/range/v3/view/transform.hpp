@@ -26,6 +26,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -41,10 +42,10 @@ namespace ranges
             semiregular_invokable_t<Fun> fun_;
             // Forward ranges must always return references. If the result of calling the function
             // is not a reference, this range is input-only.
-            using single_pass = detail::or_t<
+            using single_pass = logical_or<
                 SinglePass<range_iterator_t<Rng>>,
-                detail::not_t<std::is_reference<reference_t>>>;
-            using use_sentinel_t = detail::or_t<detail::not_t<BoundedIterable<Rng>>, single_pass>;
+                logical_not<std::is_reference<reference_t>>>;
+            using use_sentinel_t = logical_or<logical_not<BoundedIterable<Rng>>, single_pass>;
 
             struct adaptor : adaptor_base
             {

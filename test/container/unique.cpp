@@ -28,9 +28,7 @@ int main()
     // [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...]
     std::vector<int> v =
         view::for_each(view::ints(1,99), [](int i){
-            return view::for_each(view::repeat_n(i,i), [](int j) {
-                return yield(j);
-            });
+            return yield_from(view::repeat_n(i,i));
         });
     check_equal(view::take(v, 15), {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
     random_shuffle(v);

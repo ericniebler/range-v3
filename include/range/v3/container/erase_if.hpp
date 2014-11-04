@@ -35,7 +35,8 @@ namespace ranges
                 static auto bind(erase_if_fn erase_if, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    std::bind(erase_if, std::placeholders::_1, protect(std::move(pred)), protect(std::move(proj)))
+                    std::bind(erase_if, std::placeholders::_1, protect(std::move(pred)),
+                        protect(std::move(proj)))
                 )
             public:
                 template<typename Rng, typename C, typename P = ident,

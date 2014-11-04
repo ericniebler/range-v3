@@ -183,8 +183,7 @@ namespace ranges
             // models
             template<typename Concept, typename...Ts>
             struct models
-              : std::integral_constant<bool,
-                    decltype(detail::models_<Ts...>(nullval<Concept>()))::value>
+              : bool_constant<decltype(detail::models_<Ts...>(nullval<Concept>()))::value>
             {};
 
             template<typename Concept, typename...Args, typename...Ts>
