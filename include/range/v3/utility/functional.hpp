@@ -314,21 +314,34 @@ namespace ranges
         namespace detail
         {
             template<typename Bind>
-            struct protect_
-              : private Bind
+            struct protect
             {
-                protect_() = default;
-                protect_(Bind b)
-                  : Bind(std::move(b))
+            private:
+                Bind bind_;
+            public:
+                protect() = default;
+                protect(Bind b)
+                  : bind_(std::move(b))
                 {}
-                using Bind::operator();
+                template<typename...Ts>
+                auto operator()(Ts &&...ts)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    bind_(std::forward<Ts>(ts)...)
+                )
+                template<typename...Ts>
+                auto operator()(Ts &&...ts) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    bind_(std::forward<Ts>(ts)...)
+                )
             };
         }
 
         struct protect_fn
         {
             template<typename F, CONCEPT_REQUIRES_(std::is_bind_expression<uncvref_t<F>>())>
-            detail::protect_<uncvref_t<F>> operator()(F && f) const
+            detail::protect<uncvref_t<F>> operator()(F && f) const
             {
                 return {std::forward<F>(f)};
             }
