@@ -32,81 +32,78 @@
 #include "../test_iterators.hpp"
 
 /// Calls the iterator interface of the algorithm
-template <class T, template <class> class Iter> struct iter_call
+template <class Iter>
+struct iter_call
 {
-    using begin_t = Iter<T>;
-    using sentinel_t = sentinel<T>;
+    using begin_t = Iter;
+    using sentinel_t = typename sentinel_type<Iter>::type;
 
     template <class B, class E, class... Args>
-    auto operator()(B &&b, E &&e, Args &&... args) const
-     -> decltype(ranges::unique(begin_t{b}, sentinel_t{e}, std::forward<Args>(args)...))
+    auto operator()(B &&It, E &&e, Args &&... args) const
+     -> decltype(ranges::unique(begin_t{It}, sentinel_t{e}, std::forward<Args>(args)...))
     {
-        return ranges::unique(begin_t{b}, sentinel_t{e}, std::forward<Args>(args)...);
+        return ranges::unique(begin_t{It}, sentinel_t{e}, std::forward<Args>(args)...);
     }
 };
 
 /// Calls the range interface of the algorithm
-template <class T, template <class> class Iter> struct range_call
+template <class Iter>
+struct range_call
 {
-    using begin_t = Iter<T>;
-    using sentinel_t = sentinel<T>;
+    using begin_t = Iter;
+    using sentinel_t = typename sentinel_type<Iter>::type;
 
     template <class B, class E, class... Args>
-    auto operator()(B &&b, E &&e, Args &&... args) const
-     -> ranges::range_iterator_t<decltype(ranges::make_range(begin_t{b}, sentinel_t{e}))>
+    auto operator()(B &&It, E &&e, Args &&... args) const
+     -> ranges::range_iterator_t<decltype(ranges::make_range(begin_t{It}, sentinel_t{e}))>
     {
-        auto rng = ranges::make_range(begin_t{b}, sentinel_t{e});
+        auto rng = ranges::make_range(begin_t{It}, sentinel_t{e});
         return ranges::unique(rng, std::forward<Args>(args)...);
     }
 };
 
 template <class T> using identity_t = T;
 
-template <class T, template <class> class It,
-          template <class, template <class> class> class F>
+template <class It, template <class> class FunT>
 void test()
 {
-    using f = F<T, It>;
-    auto b = [](T i)
-    {
-        return It<T>{i};
-    };
+    using Fun = FunT<It>;
 
     {
         int a[] = {0};
         const unsigned sa = sizeof(a) / sizeof(a[0]);
-        auto r = f{}(a, a + sa);
-        CHECK(r == b(a + sa));
+        auto r = Fun{}(a, a + sa);
+        CHECK(r == It(a + sa));
         CHECK(a[0] == 0);
     }
     {
         int a[] = {0, 1};
         const unsigned sa = sizeof(a) / sizeof(a[0]);
-        auto r = f{}(a, a + sa);
-        CHECK(r == b(a + sa));
+        auto r = Fun{}(a, a + sa);
+        CHECK(r == It(a + sa));
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);
     }
     {
         int a[] = {0, 0};
         const unsigned sa = sizeof(a) / sizeof(a[0]);
-        auto r = f{}(a, a + sa);
-        CHECK(r == b(a + 1));
+        auto r = Fun{}(a, a + sa);
+        CHECK(r == It(a + 1));
         CHECK(a[0] == 0);
     }
     {
         int a[] = {0, 0, 1};
         const unsigned sa = sizeof(a) / sizeof(a[0]);
-        auto r = f{}(a, a + sa);
-        CHECK(r == b(a + 2));
+        auto r = Fun{}(a, a + sa);
+        CHECK(r == It(a + 2));
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);
     }
     {
         int a[] = {0, 0, 1, 0};
         const unsigned sa = sizeof(a) / sizeof(a[0]);
-        auto r = f{}(a, a + sa);
-        CHECK(r == b(a + 3));
+        auto r = Fun{}(a, a + sa);
+        CHECK(r == It(a + 3));
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);
         CHECK(a[2] == 0);
@@ -114,24 +111,24 @@ void test()
     {
         int a[] = {0, 0, 1, 1};
         const unsigned sa = sizeof(a) / sizeof(a[0]);
-        auto r = f{}(a, a + sa);
-        CHECK(r == b(a + 2));
+        auto r = Fun{}(a, a + sa);
+        CHECK(r == It(a + 2));
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);
     }
     {
         int a[] = {0, 1, 1};
         const unsigned sa = sizeof(a) / sizeof(a[0]);
-        auto r = f{}(a, a + sa);
-        CHECK(r == b(a + 2));
+        auto r = Fun{}(a, a + sa);
+        CHECK(r == It(a + 2));
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);
     }
     {
         int a[] = {0, 1, 1, 1, 2, 2, 2};
         const unsigned sa = sizeof(a) / sizeof(a[0]);
-        auto r = f{}(a, a + sa);
-        CHECK(r == b(a + 3));
+        auto r = Fun{}(a, a + sa);
+        CHECK(r == It(a + 3));
         CHECK(a[0] == 0);
         CHECK(a[1] == 1);
         CHECK(a[2] == 2);
@@ -140,15 +137,15 @@ void test()
 
 int main()
 {
-    test<int *, forward_iterator, iter_call>();
-    test<int *, bidirectional_iterator, iter_call>();
-    test<int *, random_access_iterator, iter_call>();
-    test<int *, identity_t, iter_call>();
+    test<forward_iterator<int*>, iter_call>();
+    test<bidirectional_iterator<int*>, iter_call>();
+    test<random_access_iterator<int*>, iter_call>();
+    test<int*, iter_call>();
 
-    test<int *, forward_iterator, range_call>();
-    test<int *, bidirectional_iterator, range_call>();
-    test<int *, random_access_iterator, range_call>();
-    test<int *, identity_t, range_call>();
+    test<forward_iterator<int*>, range_call>();
+    test<bidirectional_iterator<int*>, range_call>();
+    test<random_access_iterator<int*>, range_call>();
+    test<int*, range_call>();
 
     return ::test_result();
 }
