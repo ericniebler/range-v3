@@ -14,9 +14,13 @@
 #define RANGES_V3_CONTAINER_HPP
 
 #include <range/v3/container/concepts.hpp>
+#include <range/v3/container/erase.hpp>
+#include <range/v3/container/erase_if.hpp>
 #include <range/v3/container/insert.hpp>
 #include <range/v3/container/push_back.hpp>
 #include <range/v3/container/push_front.hpp>
 #include <range/v3/container/sort.hpp>
+#include <range/v3/container/stable_sort.hpp>
+#include <range/v3/container/unique.hpp>
 
 #endif

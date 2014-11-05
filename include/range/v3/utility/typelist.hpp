@@ -208,7 +208,7 @@ namespace ranges
         template<typename T, typename List>
         using typelist_push_back_t = typename typelist_push_back<T, List>::type;
 
-        // typelist_pop_back not provided because it cannot be made to meet the complixity
+        // typelist_pop_back not provided because it cannot be made to meet the complexity
         // guarantees one would expect.
 
         ////////////////////////////////////////////////////////////////////////////////////
@@ -223,32 +223,21 @@ namespace ranges
           : std::true_type
         {};
 
-        namespace detail
-        {
-            template<typename T, typename List>
-            struct typelist_in_
-            {
-                static std::false_type has(void*);
-            };
-
-            template<typename T, typename Head, typename...List>
-            struct typelist_in_<T, typelist<Head, List...>>
-              : typelist_in_<T, typelist<List...>>
-            {
-                using typelist_in_<T, typelist<List...>>::has;
-                static std::true_type has(detail::identity<Head>*);
-            };
-        }
-
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_in
         template<typename T, typename List>
-        struct typelist_in;
+        struct typelist_in
+          : std::false_type
+        {};
+
+        template<typename T, typename U, typename ...List>
+        struct typelist_in<T, typelist<U, List...>>
+          : typelist_in<T, typelist<List...>>
+        {};
 
         template<typename T, typename ...List>
-        struct typelist_in<T, typelist<List...>>
-          : decltype(detail::typelist_in_<T, typelist<List...>>
-                ::has(nullval<detail::identity<T>>()))
+        struct typelist_in<T, typelist<T, List...>>
+          : std::true_type
         {};
 
         namespace detail

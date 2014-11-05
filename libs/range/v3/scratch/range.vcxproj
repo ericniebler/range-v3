@@ -295,6 +295,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_back.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_front.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\sort.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\stable_sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp" />
