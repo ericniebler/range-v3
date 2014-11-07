@@ -478,6 +478,12 @@
     <ClCompile Include="..\..\..\..\test\container\take.cpp">
       <Filter>Test Files\container</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\container\drop_while.cpp">
+      <Filter>Test Files\container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\container\take_while.cpp">
+      <Filter>Test Files\container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -1054,6 +1060,12 @@
       <Filter>Header Files\container</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\container\take.hpp">
+      <Filter>Header Files\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\drop_while.hpp">
+      <Filter>Header Files\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\take_while.hpp">
       <Filter>Header Files\container</Filter>
     </ClInclude>
   </ItemGroup>
