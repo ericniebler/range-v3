@@ -10,13 +10,14 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_CONTAINER_STABLE_SORT_HPP
-#define RANGES_V3_CONTAINER_STABLE_SORT_HPP
+#ifndef RANGES_V3_CONTAINER_DROP_HPP
+#define RANGES_V3_CONTAINER_DROP_HPP
 
 #include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/container/action.hpp>
-#include <range/v3/algorithm/stable_sort.hpp>
+#include <range/v3/container/erase.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -27,28 +28,29 @@ namespace ranges
     {
         namespace cont
         {
-            struct stable_sort_fn
+            struct drop_fn
             {
             private:
                 friend action_access;
-                template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Iterable<C>())>
-                static auto bind(stable_sort_fn stable_sort, C pred, P proj = P{})
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(drop_fn drop, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    std::bind(stable_sort, std::placeholders::_1, protect(std::move(pred)),
-                        protect(std::move(proj)))
+                    std::bind(drop, std::placeholders::_1, n)
                 )
             public:
-                template<typename Rng, typename C = ordered_less, typename P = ident,
+                template<typename Rng, typename Int,
                     typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && Sortable<I, C, P>())>
-                void operator()(Rng & rng, C pred = C{}, P proj = P{}) const
+                    CONCEPT_REQUIRES_(ForwardIterable<Rng>() && Integral<Int>() &&
+                        EraseableIterable<Rng, I, I>())>
+                void operator()(Rng & rng, Int n) const
                 {
-                    ranges::stable_sort(rng, std::move(pred), std::move(proj));
+                    RANGES_ASSERT(n >= 0);
+                    cont::erase(rng, begin(rng), next_bounded(begin(rng), n, end(rng)));
                 }
             };
 
-            RANGES_CONSTEXPR action<stable_sort_fn> stable_sort{};
+            RANGES_CONSTEXPR action<drop_fn> drop{};
         }
     }
 }

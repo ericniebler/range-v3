@@ -11,6 +11,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/stride.hpp>
 #include <range/v3/algorithm/random_shuffle.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
@@ -54,6 +55,11 @@ int main()
 
     auto ref=std::ref(v);
     ref |= cont::sort;
+
+    // Can pipe a view to a "container" algorithm.
+    cont::sort(v, std::greater<int>());
+    v | view::stride(2) | cont::sort;
+    check_equal(view::take(v, 10), {1,98,3,96,5,94,7,92,9,90});
 
     return ::test_result();
 }

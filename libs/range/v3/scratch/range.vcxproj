@@ -160,11 +160,13 @@
     <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\container\cont_concepts.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\drop.cpp" />
     <ClCompile Include="..\..\..\..\test\container\erase_if.cpp" />
     <ClCompile Include="..\..\..\..\test\container\insert.cpp" />
     <ClCompile Include="..\..\..\..\test\container\push_back.cpp" />
     <ClCompile Include="..\..\..\..\test\container\push_front.cpp" />
     <ClCompile Include="..\..\..\..\test\container\sort.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\take.cpp" />
     <ClCompile Include="..\..\..\..\test\container\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\container_conversion.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
@@ -289,6 +291,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\action.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\concepts.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\drop.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\erase.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\erase_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\insert.hpp" />
@@ -296,6 +299,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_front.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\stable_sort.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\take.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp" />

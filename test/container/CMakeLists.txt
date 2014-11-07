@@ -1,6 +1,9 @@
 add_executable(cont.concepts cont_concepts.cpp)
 add_test(test.cont.concepts cont.concepts)
 
+add_executable(cont.drop drop.cpp)
+add_test(test.cont.drop cont.drop)
+
 add_executable(cont.erase_if erase_if.cpp)
 add_test(test.cont.erase_if cont.erase_if)
 
@@ -15,6 +18,9 @@ add_test(test.cont.push_back cont.push_back)
 
 add_executable(cont.sort sort.cpp)
 add_test(test.cont.sort cont.sort)
+
+add_executable(cont.take take.cpp)
+add_test(test.cont.take cont.take)
 
 add_executable(cont.unique unique.cpp)
 add_test(test.cont.unique cont.unique)

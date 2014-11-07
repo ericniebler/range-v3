@@ -150,6 +150,18 @@ namespace ranges
 
         RANGES_CONSTEXPR next_to_fn next_to{};
 
+        struct next_bounded_fn
+        {
+            template<typename I, typename S>
+            I operator()(I it, iterator_difference_t<I> n, S bound) const
+            {
+                advance_bounded(it, n, std::move(bound));
+                return it;
+            }
+        };
+
+        RANGES_CONSTEXPR next_bounded_fn next_bounded{};
+
         struct iter_enumerate_fn
         {
         private:

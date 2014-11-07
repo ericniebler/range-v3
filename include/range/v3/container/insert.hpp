@@ -176,6 +176,11 @@ namespace ranges
 
         RANGES_CONSTEXPR adl_insert_detail::insert_fn insert{};
 
+        namespace cont
+        {
+            using ranges::insert;
+        }
+
         namespace concepts
         {
             struct InsertableIterable

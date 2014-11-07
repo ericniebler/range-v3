@@ -63,6 +63,11 @@ namespace ranges
 
         RANGES_CONSTEXPR adl_erase_detail::erase_fn erase{};
 
+        namespace cont
+        {
+            using ranges::erase;
+        }
+
         namespace concepts
         {
             struct EraseableIterable
