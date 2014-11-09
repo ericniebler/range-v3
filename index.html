@@ -4,8 +4,27 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
-  <title></title>
+  <title>Ranges v3</title>
   <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
   <link rel="stylesheet" href="../stylesheets/stylesheet.css" type="text/css" />
 </head>
 <body>
@@ -21,26 +40,38 @@
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="outer">
   <section id="main_content" class="inner">
+<div id="header">
+<h1 class="title">Ranges v3</h1>
+</div>
 <div id="TOC">
 <ul>
-<li><a href="#range-v3"><span class="toc-section-number">1</span> range-v3</a><ul>
-<li><a href="#license"><span class="toc-section-number">1.1</span> License:</a></li>
-<li><a href="#supported-compilers"><span class="toc-section-number">1.2</span> Supported Compilers</a></li>
-</ul></li>
+<li><a href="#installation"><span class="toc-section-number">1</span> Installation</a></li>
+<li><a href="#license"><span class="toc-section-number">2</span> License:</a></li>
+<li><a href="#supported-compilers"><span class="toc-section-number">3</span> Supported Compilers</a></li>
+<li><a href="#documentation"><span class="toc-section-number">4</span> Documentation</a></li>
 </ul>
 </div>
-<h1 id="range-v3"><span class="header-section-number">1</span> range-v3</h1>
 <p>Range library for C++11/14/17. This code is the basis of <a href="https://ericniebler.github.io/std/wg21/D4128.html">a formal proposal</a> to add range support to the C++ standard library.</p>
-<p><strong>Development Status:</strong> This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code <em>will</em> evolve without regard to backwards compatibility.</p>
-<p><strong>Build status (on Travis-CI):</strong> <a href="https://travis-ci.org/ericniebler/range-v3"><img src="https://travis-ci.org/ericniebler/range-v3.svg?branch=master" alt="Build Status" /></a></p>
-<h2 id="license"><span class="header-section-number">1.1</span> License:</h2>
-<p>Most of the source code in this project are mine, and those are under the Boost Software License. Parts are taken from Alex Stepanov’s Elements of Programming, Howard Hinnant’s libc++, and from the SGI STL. Please see the attached LICENSE file and the CREDITS file for the licensing and acknolwedgements.</p>
-<h2 id="supported-compilers"><span class="header-section-number">1.2</span> Supported Compilers</h2>
+<p><strong>Development Status:</strong></p>
+<p>This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code <em>will</em> evolve without regard to backwards compatibility.</p>
+<p><strong>Build status (on Travis-CI):</strong></p>
+<p><a href="https://travis-ci.org/ericniebler/range-v3"><img src="https://travis-ci.org/ericniebler/range-v3.svg?branch=master" alt="Build Status" /></a></p>
+<h1 id="installation"><span class="header-section-number">1</span> Installation</h1>
+<p>This library is header-only. You can get the source code from the <a href="https://github.com/ericniebler/range-v3">range-v3 repository</a> on github. To compile with Range-v3, you can either #include the entire library:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;range/v3/all.hpp&gt;</span></code></pre>
+<p>Or you can #include only the core, and then the individual headers you want:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;range/v3/core.hpp&gt;</span>
+<span class="ot">#include &lt;range/v3/....</span></code></pre>
+<h1 id="license"><span class="header-section-number">2</span> License:</h1>
+<p>Most of the source code in this project are mine, and those are under the Boost Software License. Parts are taken from Alex Stepanov’s Elements of Programming, Howard Hinnant’s libc++, and from the SGI STL. Please see the attached LICENSE file and the CREDITS file for the licensing and acknowledgements.</p>
+<h1 id="supported-compilers"><span class="header-section-number">3</span> Supported Compilers</h1>
 <p>The code is known to work on the following compilers:</p>
 <ul>
 <li>clang 3.4.0</li>
 <li>GCC 4.9.0</li>
 </ul>
+<h1 id="documentation"><span class="header-section-number">4</span> Documentation</h1>
+<p>Please see the <a href="/range-v3/01_quick_start.html">Quick Start</a> for some ideas of the things you can do with the Range v3 library.</p>
 <div class="references">
 
 </div>

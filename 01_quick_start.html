@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" type="text/css" />
+</head>
+<body>
+<!-- HEADER -->
+<div id="header_wrap" class="outer">
+  <header class="inner">
+    <a id="forkme_banner" href="https://github.com/ericniebler/range-v3">View on GitHub</a>
+    <h1 id="project_title">Range v3</h1>
+    <h2 id="project_tagline"></h2>
+  </header>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main_content_wrap" class="outer">
+  <section id="main_content" class="inner">
+<div id="TOC">
+<ul>
+<li><a href="#quick-start"><span class="toc-section-number">1</span> Quick Start</a><ul>
+<li><a href="#why-use-ranges"><span class="toc-section-number">1.1</span> Why Use Ranges?</a><ul>
+<li><a href="#convenience"><span class="toc-section-number">1.1.1</span> Convenience</a></li>
+<li><a href="#composability"><span class="toc-section-number">1.1.2</span> Composability</a><ul>
+<li><a href="#range-views"><span class="toc-section-number">1.1.2.1</span> Range views</a></li>
+<li><a href="#container-algorithms"><span class="toc-section-number">1.1.2.2</span> Container Algorithms</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#create-custom-ranges"><span class="toc-section-number">1.2</span> Create Custom Ranges</a></li>
+<li><a href="#create-custom-range-views"><span class="toc-section-number">1.3</span> Create Custom Range Views</a></li>
+<li><a href="#constrain-functions-with-range-and-iterator-concepts"><span class="toc-section-number">1.4</span> Constrain Functions with Range and Iterator Concepts</a></li>
+<li><a href="#range-v3-and-the-future"><span class="toc-section-number">1.5</span> Range v3 and the Future</a></li>
+</ul></li>
+</ul>
+</div>
+<h1 id="quick-start"><span class="header-section-number">1</span> Quick Start</h1>
+<p>Range v3 is a generic library that augments the existing standard library with facilities for working with <em>ranges</em>. A range can be loosely thought of a pair of iterators, although they need not be implemented that way. Bundling begin/end iterators into a single object brings several benefits.</p>
+<h2 id="why-use-ranges"><span class="header-section-number">1.1</span> Why Use Ranges?</h2>
+<h3 id="convenience"><span class="header-section-number">1.1.1</span> Convenience</h3>
+<p>It’s more convenient to pass a single range object to an algorithm than separate begin/end iterators. Compare:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">std::vector&lt;<span class="dt">int</span>&gt; v{<span class="co">/*...*/</span>};
+std::sort( v.begin(), v.end() );</code></pre>
+<p>with</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">std::vector&lt;<span class="dt">int</span>&gt; v{<span class="co">/*...*/</span>};
+ranges::sort( v );</code></pre>
+<p>Range v3 contains a full implementation of all the standard algorithms with range-based overloads for convenience.</p>
+<h3 id="composability"><span class="header-section-number">1.1.2</span> Composability</h3>
+<p>Having a single range object permits <em>pipelines</em> of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by <em>range views</em>, and eager mutation is handled by <em>container algorithms</em>.</p>
+<h4 id="range-views"><span class="header-section-number">1.1.2.1</span> Range views</h4>
+<p>A range view is a lightweight wrapper that presents a view of an underlying sequence of elements in some custom way without mutating or copying it. Views are cheap to create and copy, and have non-owning reference semantics. Below are some examples:</p>
+<ol>
+<li><p>Filter a container using a predicate and transform it.</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">std::vector&lt;<span class="dt">int</span>&gt; vi{<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>};
+<span class="kw">using</span> <span class="kw">namespace</span> ranges;
+<span class="kw">auto</span> rng = vi | view::filter([](<span class="dt">int</span> i){<span class="kw">return</span> i % <span class="dv">2</span> == <span class="dv">0</span>;})
+              | view::transform([](<span class="dt">int</span> i){<span class="kw">return</span> std::to_string(i);});
+<span class="co">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></code></pre></li>
+<li><p>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">using</span> <span class="kw">namespace</span> ranges;
+<span class="dt">int</span> sum = accumulate(view::ints(<span class="dv">1</span>)
+                   | view::transform([](<span class="dt">int</span> i){<span class="kw">return</span> i*i;})
+                   | view::take(<span class="dv">10</span>), <span class="dv">0</span>);</code></pre></li>
+<li><p>Generate a sequence on the fly with a range comprehension and initialize a vector with it:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">using</span> <span class="kw">namespace</span> ranges;
+std::vector&lt;<span class="dt">int</span>&gt; vi =
+    view::for_each(view::ints(<span class="dv">1</span>,<span class="dv">10</span>), [](<span class="dt">int</span> i){
+        <span class="kw">return</span> yield_from(view::repeat(i,i));
+    });
+<span class="co">// vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}</span></code></pre></li>
+</ol>
+<h4 id="container-algorithms"><span class="header-section-number">1.1.2.2</span> Container Algorithms</h4>
+<p>When you want to mutate a container in-place, or forward it through a chain of mutating operations, you can use container algorithms. The following examples should make it clear.</p>
+<ol>
+<li><p>Read data into a vector, sort it, and make it unique.</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">extern</span> std::vector&lt;<span class="dt">int</span>&gt; read_data();
+<span class="kw">using</span> <span class="kw">namespace</span> ranges;
+std::vector&lt;<span class="dt">int</span>&gt; vi = read_data() | cont::sort | cont::unique;</code></pre></li>
+<li><p>Do the same to a <code>vector</code> that already contains some data:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">vi = std::move(vi) | cont::sort | cont::unique;</code></pre></li>
+<li><p>Mutate the container in-place:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">vi |= cont::sort | cont::unique;</code></pre></li>
+<li><p>Same as above, but with function-call syntax instead of pipe syntax:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">cont::unique(cont::sort(vi));</code></pre></li>
+</ol>
+<h2 id="create-custom-ranges"><span class="header-section-number">1.2</span> Create Custom Ranges</h2>
+<p>Range v3 provides a utility for easily creating your own range types, called <code>range_facade</code>. The Code below uses <code>range_facade</code> to create a range that traverses a null-terminated string:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;range/v3/all.hpp&gt;</span>
+<span class="kw">using</span> <span class="kw">namespace</span> ranges;
+
+<span class="co">// A range that iterates over all the characters in a</span>
+<span class="co">// null-terminated string.</span>
+<span class="kw">class</span> c_string_range
+  : <span class="kw">public</span> range_facade&lt;c_string_range&gt;
+{
+    <span class="kw">friend</span> range_access;
+    <span class="dt">char</span> <span class="dt">const</span> * sz_;
+    <span class="dt">char</span> <span class="dt">const</span> &amp; current() <span class="dt">const</span> { <span class="kw">return</span> *sz_; }
+    <span class="dt">bool</span> done() <span class="dt">const</span> { <span class="kw">return</span> *sz_ == <span class="st">&#39;</span><span class="ch">\0</span><span class="st">&#39;</span>; }
+    <span class="dt">void</span> next() { ++sz_; }
+<span class="kw">public</span>:
+    c_string_range() = <span class="kw">default</span>;
+    <span class="kw">explicit</span> c_string_range(<span class="dt">char</span> <span class="dt">const</span> *sz) : sz_(sz)
+    {
+        assert(sz != <span class="kw">nullptr</span>);
+    }
+};</code></pre>
+<p>The <code>range_facade</code> class generates an iterator and begin/end member functions from the minimal interface provided by <code>c_string_range</code>. This is an example of a very simple range for which it is not necessary to separate the range itself from the thing that iterates the range. Future examples will show examples of more sophisticated ranges.</p>
+<p>With <code>c_string_range</code>, you can now use algorithms to operate on null-terminated strings, as below:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;iostream&gt;</span>
+
+<span class="dt">int</span> main()
+{
+    c_string_range r(<span class="st">&quot;hello world&quot;</span>);
+    <span class="co">// Iterate over all the characters and print them out</span>
+    ranges::for_each(r, [](<span class="dt">char</span> ch){
+        std::cout &lt;&lt; ch &lt;&lt; <span class="st">&#39; &#39;</span>;
+    });
+    <span class="co">// prints: h e l l o   w o r l d</span>
+}</code></pre>
+<h2 id="create-custom-range-views"><span class="header-section-number">1.3</span> Create Custom Range Views</h2>
+<p>TODO</p>
+<h2 id="constrain-functions-with-range-and-iterator-concepts"><span class="header-section-number">1.4</span> Constrain Functions with Range and Iterator Concepts</h2>
+<p>TODO</p>
+<h2 id="range-v3-and-the-future"><span class="header-section-number">1.5</span> Range v3 and the Future</h2>
+<p>Range v3 forms the basis for a proposal to add ranges to the standard library<br />(<a href="www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html">N4128</a>), and will also be the basis for a Technical Specification on Ranges. Its design direction has already passed an initial review by the standardization committee. What that means is that you may see your compiler vendor shipping a library like Range v3 at some point in the future. That’s the hope, anyway.</p>
+<p>Enjoy!</p>
+<div class="references">
+
+</div>
+  </section>
+</div>
+
+<!-- FOOTER  -->
+<div id="footer_wrap" class="outer">
+  <footer class="inner">
+    <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+  </footer>
+</div>
+</body>
+</html>
