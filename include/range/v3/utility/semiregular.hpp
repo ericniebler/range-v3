@@ -62,6 +62,13 @@ namespace ranges
                 return get()(std::forward<Args>(args)...);
             }
         };
+
+        template<typename T>
+        using semiregular_t =
+            detail::conditional_t<
+                (bool) SemiRegular<T>(),
+                T,
+                semiregular<T>>;
     }
 }
 
