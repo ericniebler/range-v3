@@ -136,13 +136,94 @@ int main()
 }
 ````
 
-## Create Custom Range Views
+## Adapting Ranges
 
-TODO
+Often, a new range type is most easily expressed by adapting an existing range type. That's the case for many of the range views provided by the Range v3 library; for example, the `view::filter` and `view::transform` views. These are rich types with many moving parts, but thanks to a helper class called `range_adaptor`, they aren't hard to write.
 
-## Constrain Functions with Range and Iterator Concepts
+Below in roughly 2 dozen lines of code is the `transform` view, which takes one range and transforms all the elements with a unary function.
 
-TODO
+````c++
+// A class that adapts an existing range with a function
+template<class Rng, class Fun>
+class transform_view : public range_adaptor<transform_view<Rng, Fun>, Rng>
+{
+    friend range_access;
+    semiregular_t<Fun> fun_; // Make Fun model SemiRegular if it doesn't
+    class adaptor : public adaptor_base
+    {
+        semiregular_t<Fun> fun_;
+    public:
+        adaptor() = default;
+        adaptor(semiregular_t<Fun> const &fun) : fun_(fun) {}
+        // Here is where we apply Fun to the elements:
+        auto current(range_iterator_t<Rng> it) const -> decltype(fun_(*it))
+        {
+            return fun_(*it);
+        }
+    };
+    adaptor begin_adaptor() const { return {fun_}; }
+    adaptor end_adaptor() const { return {fun_}; }
+public:
+    transform_view() = default;
+    transform_view(Rng && rng, Fun fun)
+      : range_adaptor_t<transform_view>{std::forward<Rng>(rng)}
+      , fun_(std::move(fun))
+    {}
+};
+
+template<class Rng, class Fun>
+transform_view<Rng, Fun> transform(Rng && rng, Fun fun)
+{
+    return {std::forward<Rng>(rng), std::move(fun)};
+}
+````
+
+Range transformation is achieved by defining a nested `adaptor` class that handles the transformation, and then defining `begin_adaptor` and `end_adaptor` members that return adaptors for the begin iterator and the end sentinel, respectively. The `adaptor` class has a `current` member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: `equal`, `next`, `prev`, `advance`, and `distance_to`; but the transform adaptor takes the defaults defined in `adaptor_base`.
+
+With `transform_view`, we can print out the first 20 squares:
+
+````c++
+int main()
+{
+    auto squares = ::transform(view::ints(1), [](int i){return i*i;});
+    for(int i : squares | view::take(20))
+        std::cout << i << ' ';
+    std::cout << '\n';
+    // prints 1 4 9 16 25 36 49 64 81 100 121 144 169 196 225 256 289 324 361 400
+}
+````
+
+The `transform_view` defined above is an InputRange when its wrapping an InputRange, a ForwardRange when its wrapping a ForwardRange, etc. That happens because of smart defaults defined in the `adaptor_base` class. That frees you from having to deal with a host of niggly detail when implementing iterators.
+
+*(Note: the above `transform_view` always stores a copy of the function in the sentinel. That is only necessary if the underlying range's sentinel type models BidirectionalIterator. That's a finer point that you shouldn't worry about right now.)*
+
+## Constrain Functions with Concepts
+
+The Range v3 library makes heavy use of concepts to constrain functions, control overloading, and check type constraints at compile-time. It achieves this with the help of a Concepts Lite emulation layer that works on any standard-conforming C++11 compiler. The library provides many useful concepts, both for the core language and for iterators and ranges. You can use the concepts framework to constrain your own code.
+
+For instance, if you would like to write a function that takes an iterator/sentinel pair, you can write it like this:
+
+````c++
+template<class Iter, class Sent, class Comp = /*...some_default..*/,
+    CONCEPT_REQUIRES_(IteratorRange<Iter, Sent>())>
+void my_algorithm(Iter first, Sent last, Comp comp = Comp{})
+{
+    // ...
+}
+````
+
+You can then add an overload that take an Iterable:
+
+````c++
+template<class Rng, class Comp = /*...some_default..*/,
+    CONCEPT_REQUIRES_(Iterable<Rng>())>
+void my_algorithm(Rng && rng, Comp comp = Comp{})
+{
+    return my_algorithm(ranges::begin(rng), ranges::end(rng));
+}
+````
+
+With the type constraits expressed with the `CONCEPTS_REQUIRES_` macro, these two overloads are guaranteed to not be ambiguous.
 
 ## Range v3 and the Future
 

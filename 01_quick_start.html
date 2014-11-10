@@ -51,8 +51,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 </ul></li>
 <li><a href="#create-custom-ranges"><span class="toc-section-number">1.2</span> Create Custom Ranges</a></li>
-<li><a href="#create-custom-range-views"><span class="toc-section-number">1.3</span> Create Custom Range Views</a></li>
-<li><a href="#constrain-functions-with-range-and-iterator-concepts"><span class="toc-section-number">1.4</span> Constrain Functions with Range and Iterator Concepts</a></li>
+<li><a href="#adapting-ranges"><span class="toc-section-number">1.3</span> Adapting Ranges</a></li>
+<li><a href="#constrain-functions-with-concepts"><span class="toc-section-number">1.4</span> Constrain Functions with Concepts</a></li>
 <li><a href="#range-v3-and-the-future"><span class="toc-section-number">1.5</span> Range v3 and the Future</a></li>
 </ul></li>
 </ul>
@@ -141,10 +141,71 @@ std::vector&lt;<span class="dt">int</span>&gt; vi = read_data() | cont::sort | c
     });
     <span class="co">// prints: h e l l o   w o r l d</span>
 }</code></pre>
-<h2 id="create-custom-range-views"><span class="header-section-number">1.3</span> Create Custom Range Views</h2>
-<p>TODO</p>
-<h2 id="constrain-functions-with-range-and-iterator-concepts"><span class="header-section-number">1.4</span> Constrain Functions with Range and Iterator Concepts</h2>
-<p>TODO</p>
+<h2 id="adapting-ranges"><span class="header-section-number">1.3</span> Adapting Ranges</h2>
+<p>Often, a new range type is most easily expressed by adapting an existing range type. That’s the case for many of the range views provided by the Range v3 library; for example, the <code>view::filter</code> and <code>view::transform</code> views. These are rich types with many moving parts, but thanks to a helper class called <code>range_adaptor</code>, they aren’t hard to write.</p>
+<p>Below in roughly 2 dozen lines of code is the <code>transform</code> view, which takes one range and transforms all the elements with a unary function.</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// A class that adapts an existing range with a function</span>
+<span class="kw">template</span>&lt;<span class="kw">class</span> Rng, <span class="kw">class</span> Fun&gt;
+<span class="kw">class</span> transform_view : <span class="kw">public</span> range_adaptor&lt;transform_view&lt;Rng, Fun&gt;, Rng&gt;
+{
+    <span class="kw">friend</span> range_access;
+    semiregular_t&lt;Fun&gt; fun_; <span class="co">// Make Fun model SemiRegular if it doesn&#39;t</span>
+    <span class="kw">class</span> adaptor : <span class="kw">public</span> adaptor_base
+    {
+        semiregular_t&lt;Fun&gt; fun_;
+    <span class="kw">public</span>:
+        adaptor() = <span class="kw">default</span>;
+        adaptor(semiregular_t&lt;Fun&gt; <span class="dt">const</span> &amp;fun) : fun_(fun) {}
+        <span class="co">// Here is where we apply Fun to the elements:</span>
+        <span class="kw">auto</span> current(range_iterator_t&lt;Rng&gt; it) <span class="dt">const</span> -&gt; <span class="kw">decltype</span>(fun_(*it))
+        {
+            <span class="kw">return</span> fun_(*it);
+        }
+    };
+    adaptor begin_adaptor() <span class="dt">const</span> { <span class="kw">return</span> {fun_}; }
+    adaptor end_adaptor() <span class="dt">const</span> { <span class="kw">return</span> {fun_}; }
+<span class="kw">public</span>:
+    transform_view() = <span class="kw">default</span>;
+    transform_view(Rng &amp;&amp; rng, Fun fun)
+      : range_adaptor_t&lt;transform_view&gt;{std::forward&lt;Rng&gt;(rng)}
+      , fun_(std::move(fun))
+    {}
+};
+
+<span class="kw">template</span>&lt;<span class="kw">class</span> Rng, <span class="kw">class</span> Fun&gt;
+transform_view&lt;Rng, Fun&gt; transform(Rng &amp;&amp; rng, Fun fun)
+{
+    <span class="kw">return</span> {std::forward&lt;Rng&gt;(rng), std::move(fun)};
+}</code></pre>
+<p>Range transformation is achieved by defining a nested <code>adaptor</code> class that handles the transformation, and then defining <code>begin_adaptor</code> and <code>end_adaptor</code> members that return adaptors for the begin iterator and the end sentinel, respectively. The <code>adaptor</code> class has a <code>current</code> member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: <code>equal</code>, <code>next</code>, <code>prev</code>, <code>advance</code>, and <code>distance_to</code>; but the transform adaptor takes the defaults defined in <code>adaptor_base</code>.</p>
+<p>With <code>transform_view</code>, we can print out the first 20 squares:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="kw">auto</span> squares = ::transform(view::ints(<span class="dv">1</span>), [](<span class="dt">int</span> i){<span class="kw">return</span> i*i;});
+    <span class="kw">for</span>(<span class="dt">int</span> i : squares | view::take(<span class="dv">20</span>))
+        std::cout &lt;&lt; i &lt;&lt; <span class="st">&#39; &#39;</span>;
+    std::cout &lt;&lt; <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>;
+    <span class="co">// prints 1 4 9 16 25 36 49 64 81 100 121 144 169 196 225 256 289 324 361 400</span>
+}</code></pre>
+<p>The <code>transform_view</code> defined above is an InputRange when its wrapping an InputRange, a ForwardRange when its wrapping a ForwardRange, etc. That happens because of smart defaults defined in the <code>adaptor_base</code> class. That frees you from having to deal with a host of niggly detail when implementing iterators.</p>
+<p><em>(Note: the above <code>transform_view</code> always stores a copy of the function in the sentinel. That is only necessary if the underlying range’s sentinel type models BidirectionalIterator. That’s a finer point that you shouldn’t worry about right now.)</em></p>
+<h2 id="constrain-functions-with-concepts"><span class="header-section-number">1.4</span> Constrain Functions with Concepts</h2>
+<p>The Range v3 library makes heavy use of concepts to constrain functions, control overloading, and check type constraints at compile-time. It achieves this with the help of a Concepts Lite emulation layer that works on any standard-conforming C++11 compiler. The library provides many useful concepts, both for the core language and for iterators and ranges. You can use the concepts framework to constrain your own code.</p>
+<p>For instance, if you would like to write a function that takes an iterator/sentinel pair, you can write it like this:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span>&lt;<span class="kw">class</span> Iter, <span class="kw">class</span> Sent, <span class="kw">class</span> Comp = <span class="co">/*...some_default..*/</span>,
+    CONCEPT_REQUIRES_(IteratorRange&lt;Iter, Sent&gt;())&gt;
+<span class="dt">void</span> my_algorithm(Iter first, Sent last, Comp comp = Comp{})
+{
+    <span class="co">// ...</span>
+}</code></pre>
+<p>You can then add an overload that take an Iterable:</p>
+<pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span>&lt;<span class="kw">class</span> Rng, <span class="kw">class</span> Comp = <span class="co">/*...some_default..*/</span>,
+    CONCEPT_REQUIRES_(Iterable&lt;Rng&gt;())&gt;
+<span class="dt">void</span> my_algorithm(Rng &amp;&amp; rng, Comp comp = Comp{})
+{
+    <span class="kw">return</span> my_algorithm(ranges::begin(rng), ranges::end(rng));
+}</code></pre>
+<p>With the type constraits expressed with the <code>CONCEPTS_REQUIRES_</code> macro, these two overloads are guaranteed to not be ambiguous.</p>
 <h2 id="range-v3-and-the-future"><span class="header-section-number">1.5</span> Range v3 and the Future</h2>
 <p>Range v3 forms the basis for a proposal to add ranges to the standard library<br />(<a href="www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html">N4128</a>), and will also be the basis for a Technical Specification on Ranges. Its design direction has already passed an initial review by the standardization committee. What that means is that you may see your compiler vendor shipping a library like Range v3 at some point in the future. That’s the hope, anyway.</p>
 <p>Enjoy!</p>
