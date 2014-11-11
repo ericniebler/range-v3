@@ -49,37 +49,41 @@ namespace ranges
             {
                 using type = integer_sequence<T, N1..., (sizeof...(N1) + N2)...>;
             };
+
+            template<typename T, std::size_t N>
+            struct make_integer_sequence_
+              : concat_integer_sequence<
+                    typename make_integer_sequence_<T, N / 2>::type,
+                    typename make_integer_sequence_<T, N - N / 2>::type>
+            {};
+
+            template<typename T>
+            struct make_integer_sequence_<T, 0>
+            {
+                using type = integer_sequence<T>;
+            };
+
+            template<typename T>
+            struct make_integer_sequence_<T, 1>
+            {
+                using type = integer_sequence<T, 0>;
+            };
         }
 
         // generate integer_sequence [0,N) in O(log(N)) time
-        template<typename T, std::size_t N>
+        template<typename T, T N>
         struct make_integer_sequence
-          : detail::concat_integer_sequence<
-                typename make_integer_sequence<T, N / 2>::type,
-                typename make_integer_sequence<T, N - N / 2>::type
-            >
+          : detail::make_integer_sequence_<T, (std::size_t)N>
         {};
 
-        template<typename T>
-        struct make_integer_sequence<T, 0>
-        {
-            using type = integer_sequence<T>;
-        };
-
-        template<typename T>
-        struct make_integer_sequence<T, 1>
-        {
-            using type = integer_sequence<T, 0>;
-        };
-
         template<typename T, std::size_t N>
-        using integer_sequence_t = typename make_integer_sequence<T, N>::type;
+        using make_integer_sequence_t = typename make_integer_sequence<T, N>::type;
 
         template<std::size_t...Is>
         using index_sequence = integer_sequence<std::size_t, Is...>;
 
         template<std::size_t N>
-        using index_sequence_t = integer_sequence_t<std::size_t, N>;
+        using make_index_sequence_t = make_integer_sequence_t<std::size_t, N>;
     }
 }
 

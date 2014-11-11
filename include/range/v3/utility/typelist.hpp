@@ -344,18 +344,17 @@ namespace ranges
         // typelist_integer_sequence
         template<typename T, std::size_t N>
         struct typelist_integer_sequence
-          : detail::typelist_integer_sequence_<integer_sequence_t<T, N>>
+          : detail::typelist_integer_sequence_<make_integer_sequence_t<T, N>>
         {};
 
         template<typename T, std::size_t N>
         using typelist_integer_sequence_t = typename typelist_integer_sequence<T, N>::type;
 
-
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_integer_sequence
         template<std::size_t N>
         struct typelist_index_sequence
-          : detail::typelist_integer_sequence_<index_sequence_t<N>>
+          : detail::typelist_integer_sequence_<make_index_sequence_t<N>>
         {};
 
         template<std::size_t N>
