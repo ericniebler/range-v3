@@ -83,7 +83,7 @@ namespace ranges
 
         template<typename Bool, typename...Bools>
         struct logical_or<Bool, Bools...>
-          : detail::conditional_t<Bool::value, std::true_type, logical_and<Bools...>>
+          : detail::conditional_t<Bool::value, std::true_type, logical_or<Bools...>>
         {};
 
 
