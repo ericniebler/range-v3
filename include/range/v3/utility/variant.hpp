@@ -20,6 +20,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
 
 namespace ranges
@@ -51,52 +52,9 @@ namespace ranges
 
         namespace detail
         {
-            template<typename T>
-            struct ref
-            {
-            private:
-                T *t_;
-            public:
-                ref() = default;
-                ref(T &t)
-                  : t_(std::addressof(t))
-                {}
-                T &get() const
-                {
-                    return *t_;
-                }
-            };
-
-            template<typename T>
-            T &unwrap_ref(T &t)
-            {
-                return t;
-            }
-
-            template<typename T>
-            T &unwrap_ref(ref<T> t)
-            {
-                return t.get();
-            }
-
-            template<typename T>
-            struct wrap_ref
-            {
-                using type = T;
-            };
-
-            template<typename T>
-            struct wrap_ref<T &>
-            {
-                using type = ref<T>;
-            };
-
-            template<typename T>
-            using wrap_ref_t = typename wrap_ref<T>::type;
-
             template<typename Fun, typename T, std::size_t N,
-                typename = decltype(std::declval<Fun>()(std::declval<T &>(), size_t<N>{}))>
-            void apply_if(Fun &&fun, T &t, size_t<N> u)
+                typename = decltype(std::declval<Fun>()(std::declval<T &>(), index_t<N>{}))>
+            void apply_if(Fun &&fun, T &t, index_t<N> u)
             {
                 std::forward<Fun>(fun)(t, u);
             }
@@ -126,7 +84,7 @@ namespace ranges
                     return true;
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t, Fun &&, size_t<N> = size_t<N>{}) const
+                void apply(std::size_t, Fun &&, index_t<N> = index_t<N>{}) const
                 {
                     RANGES_ASSERT(false);
                 }
@@ -140,19 +98,19 @@ namespace ranges
                 friend union variant_data;
                 template<typename U>
                 using enable_if_ok = enable_if_t<typelist_in<U, typelist<Ts...>>::value>;
-                using head_t = decay_t<wrap_ref_t<T>>;
+                using head_t = decay_t<conditional_t<std::is_reference<T>::value, ref_t<T &>, T>>;
                 using tail_t = variant_data<Ts...>;
 
                 head_t head;
                 tail_t tail;
 
                 template<typename This, typename Fun, std::size_t N>
-                static void apply_(This &this_, std::size_t n, Fun &&fun, size_t<N> u)
+                static void apply_(This &this_, std::size_t n, Fun &&fun, index_t<N> u)
                 {
                     if(0 == n)
                         detail::apply_if(detail::forward<Fun>(fun), this_.head, u);
                     else
-                        this_.tail.apply(n - 1, detail::forward<Fun>(fun), size_t<N + 1>{});
+                        this_.tail.apply(n - 1, detail::forward<Fun>(fun), index_t<N + 1>{});
                 }
             public:
                 variant_data()
@@ -160,13 +118,13 @@ namespace ranges
                 // BUGBUG in-place construction?
                 template<typename U,
                     enable_if_t<std::is_constructible<head_t, U>::value> = 0>
-                variant_data(size_t<0>, U &&u)
+                variant_data(index_t<0>, U &&u)
                   : head(std::forward<U>(u))
                 {}
                 template<std::size_t N, typename U,
-                    enable_if_t<0 != N && std::is_constructible<tail_t, size_t<N - 1>, U>::value> = 0>
-                variant_data(size_t<N>, U &&u)
-                  : tail{size_t<N - 1>{}, std::forward<U>(u)}
+                    enable_if_t<0 != N && std::is_constructible<tail_t, index_t<N - 1>, U>::value> = 0>
+                variant_data(index_t<N>, U &&u)
+                  : tail{index_t<N - 1>{}, std::forward<U>(u)}
                 {}
                 ~variant_data()
                 {}
@@ -193,12 +151,12 @@ namespace ranges
                         return tail.equal(n - 1, that.tail);
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t n, Fun &&fun, size_t<N> u = size_t<N>{})
+                void apply(std::size_t n, Fun &&fun, index_t<N> u = index_t<N>{})
                 {
                     variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t n, Fun &&fun, size_t<N> u = size_t<N>{}) const
+                void apply(std::size_t n, Fun &&fun, index_t<N> u = index_t<N>{}) const
                 {
                     variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
@@ -230,7 +188,7 @@ namespace ranges
                 template<typename T>
                 void operator()(T const &t) const
                 {
-                    t.T::~T();
+                    t.~T();
                 }
             };
 
@@ -284,13 +242,13 @@ namespace ranges
                 Var &var_;
                 Fun fun_;
                 template<typename T, std::size_t N>
-                void apply_(T &&t, size_t<N> n, std::true_type) const
+                void apply_(T &&t, index_t<N> n, std::true_type) const
                 {
                     fun_(std::forward<T>(t), n);
                     var_.template set<N>(nullptr);
                 }
                 template<typename T, std::size_t N>
-                void apply_(T &&t, size_t<N> n, std::false_type) const
+                void apply_(T &&t, index_t<N> n, std::false_type) const
                 {
                     var_.template set<N>(fun_(std::forward<T>(t), n));
                 }
@@ -299,9 +257,9 @@ namespace ranges
                   : var_(var), fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
-                void operator()(T &&t, size_t<N> u) const
+                void operator()(T &&t, index_t<N> u) const
                 {
-                    using result_t = result_of_t<Fun(T &&, size_t<N>)>;
+                    using result_t = result_of_t<Fun(T &&, index_t<N>)>;
                     this->apply_(std::forward<T>(t), u, std::is_void<result_t>{});
                 }
             };
@@ -316,7 +274,7 @@ namespace ranges
                   : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
-                void operator()(T &&t, size_t<N> n) const
+                void operator()(T &&t, index_t<N> n) const
                 {
                     fun_(std::forward<T>(t), n);
                 }
@@ -373,10 +331,10 @@ namespace ranges
                   : var_(var)
                 {}
                 template<typename T, std::size_t N>
-                void operator()(T &&t, size_t<N>) const
+                void operator()(T &&t, index_t<N>) const
                 {
                     using E = typelist_element_t<N, typelist<From...>>;
-                    using F = typelist_find_t<E, typelist<To...>>;
+                    using F = typelist_find_t<typelist<To...>, E>;
                     static constexpr std::size_t M = sizeof...(To) - F::size();
                     var_.template set<M>(std::forward<T>(t));
                 }
@@ -385,18 +343,28 @@ namespace ranges
             template<typename Fun, typename Types>
             using variant_result_t =
                 typelist_expand_t<
-                    tagged_variant,
-                    typelist_replace_t<void, std::nullptr_t,
-                        typelist_transform_t<Types,
-                            meta_bind_front<concepts::Function::result_t, Fun>::template apply> > >;
+                    typelist_replace_t<
+                        typelist_transform_t<
+                            Types,
+                            meta_quote1<
+                                meta_bind_front<concepts::Function::result_t, Fun>::template apply
+                            >::template apply>,
+                        void,
+                        std::nullptr_t>,
+                    tagged_variant>;
 
             template<typename Fun, typename Types>
             using variant_result_i_t =
                 typelist_expand_t<
-                    tagged_variant,
-                    typelist_replace_t<void, std::nullptr_t,
-                        typelist_transform2_t<Types, typelist_integer_sequence_t<Types::size()>,
-                            meta_bind_front<concepts::Function::result_t, Fun>::template apply> > >;
+                    typelist_replace_t<
+                        typelist_transform2_t<
+                            Types,
+                            typelist_index_sequence_t<Types::size()>,
+                            meta_quote2<
+                                meta_bind_front<concepts::Function::result_t, Fun>::template apply
+                            >::template apply>,
+                        void, std::nullptr_t>,
+                    tagged_variant>;
 
             template<typename Fun>
             struct unwrap_ref_fun
@@ -409,15 +377,15 @@ namespace ranges
                 {}
                 template<typename T>
                 auto operator()(T &&t) const ->
-                    decltype(fun_(detail::unwrap_ref(std::forward<T>(t))))
+                    decltype(fun_(unwrap_reference(std::forward<T>(t))))
                 {
-                    return fun_(detail::unwrap_ref(std::forward<T>(t)));
+                    return fun_(unwrap_reference(std::forward<T>(t)));
                 }
                 template<typename T, std::size_t N>
-                auto operator()(T &&t, size_t<N> n) const ->
-                    decltype(fun_(detail::unwrap_ref(std::forward<T>(t)), n))
+                auto operator()(T &&t, index_t<N> n) const ->
+                    decltype(fun_(unwrap_reference(std::forward<T>(t)), n))
                 {
-                    return fun_(detail::unwrap_ref(std::forward<T>(t)), n);
+                    return fun_(unwrap_reference(std::forward<T>(t)), n);
                 }
             };
         }
@@ -445,8 +413,8 @@ namespace ranges
               : which_((std::size_t)-1), data_{}
             {}
             template<std::size_t N, typename U,
-                enable_if_t<std::is_constructible<data_t, size_t<N>, U>::value> = 0>
-            tagged_variant(size_t<N> n, U &&u)
+                enable_if_t<std::is_constructible<data_t, index_t<N>, U>::value> = 0>
+            tagged_variant(index_t<N> n, U &&u)
               : which_(N), data_{n, detail::forward<U>(u)}
             {
                 static_assert(N < sizeof...(Ts), "");
@@ -498,7 +466,7 @@ namespace ranges
                 return sizeof...(Ts);
             }
             template<std::size_t N, typename U,
-                enable_if_t<std::is_constructible<data_t, size_t<N>, U>::value> = 0>
+                enable_if_t<std::is_constructible<data_t, index_t<N>, U>::value> = 0>
             void set(U &&u)
             {
                 clear_();
@@ -648,7 +616,7 @@ namespace ranges
         struct tagged_variant_unique<tagged_variant<Ts...>>
         {
             using type =
-                typelist_expand_t<tagged_variant, typelist_unique_t<typelist<Ts...>>>;
+                typelist_expand_t<typelist_unique_t<typelist<Ts...>>, tagged_variant>;
         };
 
         template<typename Var>

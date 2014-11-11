@@ -22,16 +22,16 @@ namespace ranges
     inline namespace v3
     {
         ////////////////////////////////////////////////////////////////////////////////////////
-        // size_t
+        // index_t
         template<std::size_t N>
-        using size_t = std::integral_constant<std::size_t, N>;
+        using index_t = std::integral_constant<std::size_t, N>;
 
         ////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
-        template<std::size_t ...Is>
+        template<typename T, T...Is>
         struct integer_sequence
         {
-            using value_type = std::size_t;
+            using value_type = T;
             static constexpr std::size_t size() noexcept
             {
                 return sizeof...(Is);
@@ -44,36 +44,42 @@ namespace ranges
             template<typename I1, typename I2>
             struct concat_integer_sequence;
 
-            template<std::size_t...N1, std::size_t...N2>
-            struct concat_integer_sequence<integer_sequence<N1...>, integer_sequence<N2...>>
+            template<typename T, T...N1, T...N2>
+            struct concat_integer_sequence<integer_sequence<T, N1...>, integer_sequence<T, N2...>>
             {
-                using type = integer_sequence<N1..., (sizeof...(N1) + N2)...>;
+                using type = integer_sequence<T, N1..., (sizeof...(N1) + N2)...>;
             };
         }
 
         // generate integer_sequence [0,N) in O(log(N)) time
-        template<std::size_t N>
+        template<typename T, std::size_t N>
         struct make_integer_sequence
           : detail::concat_integer_sequence<
-                typename make_integer_sequence<N / 2>::type
-              , typename make_integer_sequence<N - N / 2>::type
+                typename make_integer_sequence<T, N / 2>::type,
+                typename make_integer_sequence<T, N - N / 2>::type
             >
         {};
 
-        template<>
-        struct make_integer_sequence<0>
+        template<typename T>
+        struct make_integer_sequence<T, 0>
         {
-            using type = integer_sequence<>;
+            using type = integer_sequence<T>;
         };
 
-        template<>
-        struct make_integer_sequence<1>
+        template<typename T>
+        struct make_integer_sequence<T, 1>
         {
-            using type = integer_sequence<0>;
+            using type = integer_sequence<T, 0>;
         };
+
+        template<typename T, std::size_t N>
+        using integer_sequence_t = typename make_integer_sequence<T, N>::type;
+
+        template<std::size_t...Is>
+        using index_sequence = integer_sequence<std::size_t, Is...>;
 
         template<std::size_t N>
-        using integer_sequence_t = typename make_integer_sequence<N>::type;
+        using index_sequence_t = integer_sequence_t<std::size_t, N>;
     }
 }
 

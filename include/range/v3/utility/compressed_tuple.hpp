@@ -29,7 +29,7 @@ namespace ranges
             struct compressed_tuple_data;
 
             template<std::size_t...Is, typename...Ts>
-            struct compressed_tuple_data<integer_sequence<Is...>, Ts...>
+            struct compressed_tuple_data<index_sequence<Is...>, Ts...>
               : box<Ts, std::integral_constant<std::size_t, Is>>...
             {
                 constexpr compressed_tuple_data() = default;
@@ -62,7 +62,7 @@ namespace ranges
             {}
         private:
             friend struct detail::compressed_tuple_core_access;
-            detail::compressed_tuple_data<integer_sequence_t<sizeof...(Ts)>, Ts...> data_;
+            detail::compressed_tuple_data<index_sequence_t<sizeof...(Ts)>, Ts...> data_;
         };
 
         // Get by index

@@ -63,6 +63,20 @@ namespace ranges
         struct meta_defer
           : C<As...>
         {};
+
+        template<template<typename...> class C>
+        struct meta_quote1
+        {
+            template<typename T>
+            using apply = C<T>;
+        };
+
+        template<template<typename...> class C>
+        struct meta_quote2
+        {
+            template<typename T, typename U>
+            using apply = C<T, U>;
+        };
     }
 }
 

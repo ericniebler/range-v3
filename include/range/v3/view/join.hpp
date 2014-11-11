@@ -84,16 +84,16 @@ namespace ranges
                 tagged_variant<range_iterator_t<view::all_t<Rngs> const>...> its_;
 
                 template<std::size_t N>
-                void satisfy(size_t<N>)
+                void satisfy(index_t<N>)
                 {
                     RANGES_ASSERT(its_.which() == N);
                     if(ranges::get<N>(its_) == end(std::get<N>(rng_->rngs_)))
                     {
                         ranges::set<N + 1>(its_, begin(std::get<N + 1>(rng_->rngs_)));
-                        this->satisfy(size_t<N + 1>{});
+                        this->satisfy(index_t<N + 1>{});
                     }
                 }
-                void satisfy(size_t<cranges - 1>)
+                void satisfy(index_t<cranges - 1>)
                 {
                     RANGES_ASSERT(its_.which() == cranges - 1);
                 }
@@ -101,7 +101,7 @@ namespace ranges
                 {
                     cursor *pos;
                     template<typename I, std::size_t N>
-                    void operator()(I &it, size_t<N> which) const
+                    void operator()(I &it, index_t<N> which) const
                     {
                         ++it;
                         pos->satisfy(which);
@@ -111,18 +111,18 @@ namespace ranges
                 {
                     cursor *pos;
                     template<typename I>
-                    void operator()(I &it, size_t<0>) const
+                    void operator()(I &it, index_t<0>) const
                     {
                         RANGES_ASSERT(it != begin(std::get<0>(pos->rng_->rngs_)));
                         --it;
                     }
                     template<typename I, std::size_t N>
-                    void operator()(I &it, size_t<N>) const
+                    void operator()(I &it, index_t<N>) const
                     {
                         if(it == begin(std::get<N>(pos->rng_->rngs_)))
                         {
                             ranges::set<N - 1>(pos->its_, end(std::get<N - 1>(pos->rng_->rngs_)));
-                            (*this)(ranges::get<N - 1>(pos->its_), size_t<N - 1>{});
+                            (*this)(ranges::get<N - 1>(pos->its_), index_t<N - 1>{});
                         }
                         else
                             --it;
@@ -133,12 +133,12 @@ namespace ranges
                     cursor *pos;
                     difference_type n;
                     template<typename Iterator>
-                    void operator()(Iterator &it, size_t<cranges - 1>) const
+                    void operator()(Iterator &it, index_t<cranges - 1>) const
                     {
                         ranges::advance(it, n);
                     }
                     template<typename Iterator, std::size_t N>
-                    void operator()(Iterator &it, size_t<N> which) const
+                    void operator()(Iterator &it, index_t<N> which) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
                         // BUGBUG If distance(it, end) > n, then using advance_bounded
@@ -156,18 +156,18 @@ namespace ranges
                     cursor *pos;
                     difference_type n;
                     template<typename Iterator>
-                    void operator()(Iterator &it, size_t<0>) const
+                    void operator()(Iterator &it, index_t<0>) const
                     {
                         ranges::advance(it, n);
                     }
                     template<typename Iterator, std::size_t N>
-                    void operator()(Iterator &it, size_t<N>) const
+                    void operator()(Iterator &it, index_t<N>) const
                     {
                         auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
                         if(it == begin)
                         {
                             ranges::set<N - 1>(pos->its_, end(std::get<N - 1>(pos->rng_->rngs_)));
-                            (*this)(ranges::get<N - 1>(pos->its_), size_t<N - 1>{});
+                            (*this)(ranges::get<N - 1>(pos->its_), index_t<N - 1>{});
                         }
                         else
                         {
@@ -177,26 +177,26 @@ namespace ranges
                         }
                     }
                 };
-                static difference_type distance_to_(size_t<cranges>, cursor const &, cursor const &)
+                static difference_type distance_to_(index_t<cranges>, cursor const &, cursor const &)
                 {
                     RANGES_ASSERT(false);
                     return 0;
                 }
                 template<std::size_t N>
-                static difference_type distance_to_(size_t<N>, cursor const &from, cursor const &to)
+                static difference_type distance_to_(index_t<N>, cursor const &from, cursor const &to)
                 {
                     if(from.its_.which() > N)
-                        return cursor::distance_to_(size_t<N + 1>{}, from, to);
+                        return cursor::distance_to_(index_t<N + 1>{}, from, to);
                     if(from.its_.which() == N)
                     {
                         if(to.its_.which() == N)
                             return std::distance(ranges::get<N>(from.its_), ranges::get<N>(to.its_));
                         return std::distance(ranges::get<N>(from.its_), end(std::get<N>(from.rng_->rngs_))) +
-                            cursor::distance_to_(size_t<N + 1>{}, from, to);
+                            cursor::distance_to_(index_t<N + 1>{}, from, to);
                     }
                     if(from.its_.which() < N && to.its_.which() > N)
                         return distance(std::get<N>(from.rng_->rngs_)) +
-                            cursor::distance_to_(size_t<N + 1>{}, from, to);
+                            cursor::distance_to_(index_t<N + 1>{}, from, to);
                     RANGES_ASSERT(to.its_.which() == N);
                     return std::distance(begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
@@ -205,12 +205,12 @@ namespace ranges
                 using single_pass = fast_logical_or<SinglePass<range_iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(joined_view const &rng, begin_tag)
-                  : rng_(&rng), its_{size_t<0>{}, begin(std::get<0>(rng.rngs_))}
+                  : rng_(&rng), its_{index_t<0>{}, begin(std::get<0>(rng.rngs_))}
                 {
-                    this->satisfy(size_t<0>{});
+                    this->satisfy(index_t<0>{});
                 }
                 cursor(joined_view const &rng, end_tag)
-                  : rng_(&rng), its_{size_t<cranges-1>{}, end(std::get<cranges-1>(rng.rngs_))}
+                  : rng_(&rng), its_{index_t<cranges-1>{}, end(std::get<cranges-1>(rng.rngs_))}
                 {}
                 reference current() const
                 {
@@ -242,8 +242,8 @@ namespace ranges
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.which() <= that.its_.which())
-                        return cursor::distance_to_(size_t<0>{}, *this, that);
-                    return -cursor::distance_to_(size_t<0>{}, that, *this);
+                        return cursor::distance_to_(index_t<0>{}, *this, that);
+                    return -cursor::distance_to_(index_t<0>{}, that, *this);
                 }
             };
             struct sentinel

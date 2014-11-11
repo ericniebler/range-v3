@@ -25,7 +25,7 @@ namespace ranges
     {
         template<typename Tup>
         using tuple_indices_t =
-            integer_sequence_t<
+            index_sequence_t<
                 std::tuple_size<typename std::remove_reference<Tup>::type>::value>;
 
         struct tuple_transform_fn
@@ -42,14 +42,14 @@ namespace ranges
 
             template<typename Tup, typename Fun, std::size_t...Is>
             static unary_result_t<Tup, Fun, Is...>
-            impl1(Tup && tup, Fun fun, integer_sequence<Is...>)
+            impl1(Tup && tup, Fun fun, index_sequence<Is...>)
             {
                 return unary_result_t<Tup, Fun, Is...>{
                     fun(std::get<Is>(std::forward<Tup>(tup)))...};
             }
             template<typename Tup0, typename Tup1, typename Fun, std::size_t...Is>
             static binary_result_t<Tup0, Tup1, Fun, Is...>
-            impl2(Tup0 && tup0, Tup1 && tup1, Fun fun, integer_sequence<Is...>)
+            impl2(Tup0 && tup0, Tup1 && tup1, Fun fun, index_sequence<Is...>)
             {
                 return binary_result_t<Tup0, Tup1, Fun, Is...>{
                     fun(std::get<Is>(std::forward<Tup0>(tup0)),
@@ -114,7 +114,7 @@ namespace ranges
                     std::move(fun));
             }
             template<typename Tup, typename Val, typename Fun, std::size_t...Is>
-            static auto impl2(Tup && tup, Val val, Fun fun, integer_sequence<Is...>) ->
+            static auto impl2(Tup && tup, Val val, Fun fun, index_sequence<Is...>) ->
                 decltype(tuple_foldl_fn::impl<Is...>(
                     std::forward<Tup>(tup),
                     std::move(val),
@@ -154,7 +154,7 @@ namespace ranges
             static void ignore(Ts &&...)
             {}
             template<typename Tup, typename Fun, std::size_t...Is>
-            static void impl(Tup && tup, Fun fun, integer_sequence<Is...>)
+            static void impl(Tup && tup, Fun fun, index_sequence<Is...>)
             {
                 tuple_for_each_fn::ignore(
                     (static_cast<void>(fun(std::get<Is>(std::forward<Tup>(tup)))), 42)...);
@@ -175,7 +175,7 @@ namespace ranges
         {
         private:
             template<typename Fun, typename Tup, std::size_t...Is>
-            static auto impl(Fun &&fun, Tup &&tup, integer_sequence<Is...>) ->
+            static auto impl(Fun &&fun, Tup &&tup, index_sequence<Is...>) ->
                 decltype(std::forward<Fun>(fun)(std::get<Is>(std::forward<Tup>(tup))...))
             {
                 return std::forward<Fun>(fun)(std::get<Is>(std::forward<Tup>(tup))...);

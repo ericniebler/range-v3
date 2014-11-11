@@ -120,10 +120,12 @@ namespace ranges
                 typename = decltype(std::declval<Concept &>().template requires_<Ts...>(std::declval<Ts>()...))>
             auto models_(Concept *) ->
                 typelist_expand_t<
-                    lazy_and,
                     typelist_transform_t<
                         base_concepts_of_t<Concept>,
-                        meta_bind_back<concepts::models, Ts...>::template apply>>;
+                        meta_quote1<
+                            meta_bind_back<concepts::models, Ts...>::template apply
+                        >::template apply>,
+                    lazy_and>;
         }
 
         namespace concepts
@@ -208,8 +210,8 @@ namespace ranges
             struct most_refined
               : typelist_front<
                     typelist_find_if_t<
-                        meta_bind_back<models, Ts...>::template apply,
-                        Concepts>>
+                        Concepts,
+                        meta_quote1<meta_bind_back<models, Ts...>::template apply>::template apply>>
             {
                 constexpr operator meta_eval<most_refined> *() const
                 {
