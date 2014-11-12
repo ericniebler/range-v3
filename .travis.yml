@@ -13,6 +13,9 @@ env:
     - BUILD_TYPE=Debug
     - BUILD_TYPE=Release
     - ASAN=On
+    exclude:
+      - compiler: gcc
+        env: ASAN=On
 
 # Install dependencies
 before_install:
@@ -40,8 +43,6 @@ install:
   - export CXX_LINKER_FLAGS=""
   - if [ -z "$BUILD_TYPE" ]; then export BUILD_TYPE=Release; fi
   - if [ -n "$ASAN" ]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
-  - if [ -n "$ASAN" -a "$CXX" = "g++-${GCC_VERSION}" ]; then exit 0; fi
-  - if [ -n "$LIBCXX" -a "$CXX" = "g++-${GCC_VERSION}" ]; then exit 0; fi
   - if [ "$CXX" == "clang++" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ -n "$LIBCXX" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
   - if [ -n "$LIBCXX" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
