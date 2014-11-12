@@ -350,7 +350,7 @@ namespace ranges
             using variant_result_i_t =
                 typelist_expand_t<
                     typelist_replace_t<
-                        typelist_transform2_t<
+                        typelist_transform_t<
                             Types,
                             as_typelist_t<make_index_sequence_t<Types::size()>>,
                             meta_bind_front<meta_quote_alias<concepts::Function::result_t>, Fun>>,

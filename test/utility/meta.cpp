@@ -44,7 +44,7 @@ Res tuple_cat(Tuples &&... tpls)
     static constexpr std::size_t N = sizeof...(Tuples);
     using inner =
         typelist_expand_t<
-            typelist_transform2_t<
+            typelist_transform_t<
                 typelist<tuple_types_t<Tuples>...>,
                 typelist_transform_t<
                     as_typelist_t<make_index_sequence_t<N> >,
