@@ -4,20 +4,23 @@ script: cmake
 
 compiler:
  - clang
-# - gcc
+ - gcc
 
 env:
-  - BUILD_TYPE=Debug
-  - BUILD_TYPE=Release
-  - ASAN=On
+  global:
+    - GCC_VERSION="4.9"
+  matrix:
+    - BUILD_TYPE=Debug
+    - BUILD_TYPE=Release
+    - ASAN=On
 
 # Install dependencies
 before_install:
   - export CHECKOUT_PATH=`pwd`;
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
-  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-${GCC_VERSION}; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
 
   # Install libc++ if tests are run with clang++
   - if [ "$CXX" == "clang++" ]; then export LIBCXX=On; fi
@@ -37,8 +40,8 @@ install:
   - export CXX_LINKER_FLAGS=""
   - if [ -z "$BUILD_TYPE" ]; then export BUILD_TYPE=Release; fi
   - if [ -n "$ASAN" ]; then export CXX_FLAGS="${CXX_FLAGS} -fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"; fi
-  - if [ -n "$ASAN" -a "$CXX" = "g++-4.8" ]; then exit 0; fi
-  - if [ -n "$LIBCXX" -a "$CXX" = "g++-4.8" ]; then exit 0; fi
+  - if [ -n "$ASAN" -a "$CXX" = "g++-${GCC_VERSION}" ]; then exit 0; fi
+  - if [ -n "$LIBCXX" -a "$CXX" = "g++-${GCC_VERSION}" ]; then exit 0; fi
   - if [ "$CXX" == "clang++" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ -n "$LIBCXX" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
   - if [ -n "$LIBCXX" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
