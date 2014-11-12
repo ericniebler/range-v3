@@ -19,19 +19,8 @@ namespace ranges
     {
         ////////////////////////////////////////////////////////////////////////////////////
         // General meta-programming utilities
-        template<template<typename...> class C, typename...Ts>
-        struct meta_bind_front
-        {
-            template<typename...Us>
-            using apply = C<Ts..., Us...>;
-        };
-
-        template<template<typename...> class C, typename...Us>
-        struct meta_bind_back
-        {
-            template<typename...Ts>
-            using apply = C<Ts..., Us...>;
-        };
+        template<typename F, typename...Args>
+        using meta_apply = typename F::template apply<Args...>;
 
         template<typename T>
         using meta_eval = typename T::type;
@@ -39,43 +28,79 @@ namespace ranges
 #if __GNUC__ == 4 && __GNUC_MINOR__ <= 9
         // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61738
         template<template<typename...> class C, typename...As>
-        using meta_apply = typename C<As...>::type;
+        using meta_quote_apply = typename C<As...>::type;
 #else
         template<template<typename...> class C, typename...As>
-        using meta_apply = meta_eval<C<As...>>;
+        using meta_quote_apply = meta_eval<C<As...>>;
 #endif
 
         template<template<typename...> class C>
         struct meta_quote
         {
+            using type = meta_quote;
+
             template<typename...Ts>
-            using apply = meta_apply<C, Ts...>;
+            using apply = meta_quote_apply<C, Ts...>;
         };
 
-        template<template<typename...> class C0, template<typename...> class C1>
+        template<typename T, template<T...> class F>
+        struct meta_quote_i
+        {
+            using type = meta_quote_i;
+
+            template<typename...Ts>
+            using apply = typename F<Ts::value...>::type;
+        };
+
+        template<typename...Fs>
         struct meta_compose
         {
+            using type = meta_compose;
+        };
+
+        template<typename F0>
+        struct meta_compose<F0>
+        {
+            using type = meta_compose;
+
             template<typename...Ts>
-            using apply = C0<C1<Ts...>>;
+            using apply = meta_apply<F0, Ts...>;
         };
 
-        template<template<typename...> class C, typename...As>
-        struct meta_defer
-          : C<As...>
-        {};
-
-        template<template<typename...> class C>
-        struct meta_quote1
+        template<typename F0, typename...Fs>
+        struct meta_compose<F0, Fs...>
         {
-            template<typename T>
-            using apply = C<T>;
+            using type = meta_compose;
+
+            template<typename...Ts>
+            using apply = meta_apply<F0, meta_apply<meta_compose<Fs...>, Ts...>>;
         };
 
-        template<template<typename...> class C>
-        struct meta_quote2
+        template<typename T>
+        struct meta_always
         {
-            template<typename T, typename U>
-            using apply = C<T, U>;
+            using type = meta_always;
+
+            template<typename...>
+            using apply = T;
+        };
+
+        template<typename F, typename...Ts>
+        struct meta_bind_front
+        {
+            using type = meta_bind_front;
+
+            template<typename...Us>
+            using apply = meta_apply<F, Ts..., Us...>;
+        };
+
+        template<typename F, typename...Us>
+        struct meta_bind_back
+        {
+            using type = meta_bind_back;
+
+            template<typename...Ts>
+            using apply = meta_apply<F, Ts..., Us...>;
         };
     }
 }

@@ -28,7 +28,7 @@ namespace ranges
             struct move_fn : pipeable<move_fn>
             {
                 template<typename T,
-                    typename U = meta_apply<std::remove_reference, T>>
+                    typename U = meta_quote_apply<std::remove_reference, T>>
                 U && operator()(T && t) const noexcept
                 {
                     return static_cast<U &&>(t);
