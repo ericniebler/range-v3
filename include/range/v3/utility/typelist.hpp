@@ -49,7 +49,8 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_cat
         template<typename...Lists>
-        struct typelist_cat;
+        struct typelist_cat
+        {};
 
         template<>
         struct typelist_cat<>
@@ -122,7 +123,8 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_element
         template<std::size_t N, typename List>
-        struct typelist_element;
+        struct typelist_element
+        {};
 
         template<std::size_t N, typename ...Ts>
         struct typelist_element<N, typelist<Ts...>>
@@ -138,7 +140,10 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////
             // typelist_drop_
             template<typename VoidPtrs>
-            struct typelist_drop_;
+            struct typelist_drop_
+            {
+                static empty eval(...);
+            };
 
             template<typename ...VoidPtrs>
             struct typelist_drop_<typelist<VoidPtrs...>>
@@ -146,14 +151,15 @@ namespace ranges
                 static empty eval(...);
 
                 template<typename...Ts>
-                static typelist<Ts...> eval(VoidPtrs..., identity<Ts> *...);
+                static identity<typelist<Ts...>> eval(VoidPtrs..., identity<Ts> *...);
             };
         }
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_drop
         template<std::size_t N, typename List>
-        struct typelist_drop;
+        struct typelist_drop
+        {};
 
         template<std::size_t N, typename ...Ts>
         struct typelist_drop<N, typelist<Ts...>>
@@ -182,7 +188,8 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_push_front
         template<typename List, typename T>
-        struct typelist_push_front;
+        struct typelist_push_front
+        {};
 
         template<typename ...List, typename T>
         struct typelist_push_front<typelist<List...>, T>
@@ -225,7 +232,8 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_push_back
         template<typename List, typename T>
-        struct typelist_push_back;
+        struct typelist_push_back
+        {};
 
         template<typename ...List, typename T>
         struct typelist_push_back<typelist<List...>, T>
@@ -317,7 +325,8 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_expand
         template<typename List, template<typename...> class C>
-        struct typelist_expand;
+        struct typelist_expand
+        {};
 
         template<typename ...List, template<typename...> class C>
         struct typelist_expand<typelist<List...>, C>
@@ -331,7 +340,8 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_transform
         template<typename List, typename Fun>
-        struct typelist_transform;
+        struct typelist_transform
+        {};
 
         template<typename ...List, typename Fun>
         struct typelist_transform<typelist<List...>, Fun>
@@ -345,7 +355,8 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_transform2
         template<typename List0, typename List1, typename Fun>
-        struct typelist_transform2;
+        struct typelist_transform2
+        {};
 
         template<typename ...List0, typename ...List1, typename Fun>
         struct typelist_transform2<typelist<List0...>, typelist<List1...>, Fun>
@@ -427,7 +438,6 @@ namespace ranges
 
         template<typename List, typename State, typename Fun>
         using typelist_foldl_t = typename typelist_foldl<List, State, Fun>::type;
-
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_foldr

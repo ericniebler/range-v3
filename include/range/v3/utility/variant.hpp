@@ -341,7 +341,7 @@ namespace ranges
                     typelist_replace_t<
                         typelist_transform_t<
                             Types,
-                            meta_bind_front<meta_quote<concepts::Function::result_t>, Fun>>,
+                            meta_bind_front<meta_quote_alias<concepts::Function::result_t>, Fun>>,
                         void,
                         std::nullptr_t>,
                     tagged_variant>;
@@ -353,7 +353,7 @@ namespace ranges
                         typelist_transform2_t<
                             Types,
                             as_typelist_t<make_index_sequence_t<Types::size()>>,
-                            meta_bind_front<meta_quote<concepts::Function::result_t>, Fun>>,
+                            meta_bind_front<meta_quote_alias<concepts::Function::result_t>, Fun>>,
                         void, std::nullptr_t>,
                     tagged_variant>;
 

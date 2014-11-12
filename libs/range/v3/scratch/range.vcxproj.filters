@@ -484,6 +484,9 @@
     <ClCompile Include="..\..\..\..\test\container\take_while.cpp">
       <Filter>Test Files\container</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\utility\meta.cpp">
+      <Filter>Test Files\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">

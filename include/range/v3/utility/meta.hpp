@@ -37,19 +37,73 @@ namespace ranges
         template<template<typename...> class C>
         struct meta_quote
         {
+        private:
+            // Indirection here needed to avoid Core issue 1430
+            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
+            template<typename...Ts>
+            struct impl
+            {
+                using type = meta_quote_apply<C, Ts...>;
+            };
+        public:
             using type = meta_quote;
 
             template<typename...Ts>
-            using apply = meta_quote_apply<C, Ts...>;
+            using apply = meta_quote_apply<impl, Ts...>;
+        };
+
+        template<template<typename...> class C>
+        struct meta_quote_alias
+        {
+        private:
+            // Indirection here needed to avoid Core issue 1430
+            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
+            template<typename...Ts>
+            struct impl
+            {
+                using type = C<Ts...>;
+            };
+        public:
+            using type = meta_quote_alias;
+
+            template<typename...Ts>
+            using apply = meta_quote_apply<impl, Ts...>;
         };
 
         template<typename T, template<T...> class F>
         struct meta_quote_i
         {
+        private:
+            // Indirection here needed to avoid Core issue 1430
+            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
+            template<typename ...Ts>
+            struct impl
+            {
+                using type = typename F<Ts::value...>::type;
+            };
+        public:
             using type = meta_quote_i;
 
             template<typename...Ts>
-            using apply = typename F<Ts::value...>::type;
+            using apply = meta_quote_apply<impl, Ts...>;
+        };
+
+        template<typename T, template<T...> class F>
+        struct meta_quote_alias_i
+        {
+        private:
+            // Indirection here needed to avoid Core issue 1430
+            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
+            template<typename ...Ts>
+            struct impl
+            {
+                using type = F<Ts::value...>;
+            };
+        public:
+            using type = meta_quote_alias_i;
+
+            template<typename...Ts>
+            using apply = meta_quote_apply<impl, Ts...>;
         };
 
         template<typename...Fs>
