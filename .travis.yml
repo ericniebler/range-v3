@@ -13,9 +13,11 @@ env:
     - BUILD_TYPE=Debug
     - BUILD_TYPE=Release
     - ASAN=On
-    exclude:
-      - compiler: gcc
-        env: ASAN=On
+    
+matrix:
+  exclude:
+    - compiler: gcc
+      env: ASAN=On
 
 # Install dependencies
 before_install:
