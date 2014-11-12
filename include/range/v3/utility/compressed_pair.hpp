@@ -96,7 +96,7 @@ namespace ranges
             };
 
             template<typename T>
-            using pair_element_t = meta_apply<pair_element, T>;
+            using pair_element_t = meta_quote_apply<pair_element, T>;
         }
 
         template<typename First, typename Second>

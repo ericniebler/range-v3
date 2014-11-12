@@ -48,10 +48,10 @@ namespace ranges
         }
 
         template<typename Derived>
-        using base_range_t = meta_apply<range_access::base_range, Derived>;
+        using base_range_t = meta_quote_apply<range_access::base_range, Derived>;
 
         template<typename Derived>
-        using range_adaptor_t = meta_apply<range_access::range_adaptor, Derived>;
+        using range_adaptor_t = meta_quote_apply<range_access::range_adaptor, Derived>;
 
         template<typename BaseIt, typename Adapt>
         struct adaptor_cursor;

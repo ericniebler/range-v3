@@ -83,7 +83,12 @@ namespace ranges
         using index_sequence = integer_sequence<std::size_t, Is...>;
 
         template<std::size_t N>
-        using make_index_sequence_t = make_integer_sequence_t<std::size_t, N>;
+        struct make_index_sequence
+          : detail::make_integer_sequence_<std::size_t, N>
+        {};
+
+        template<std::size_t N>
+        using make_index_sequence_t = typename make_index_sequence<N>::type;
     }
 }
 

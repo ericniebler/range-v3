@@ -135,7 +135,7 @@ namespace ranges
             optional<invokable_t<Fun>> fun_;
             std::tuple<view::all_t<Rngs>...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
-            using size_type_ = meta_apply<std::make_unsigned, difference_type_>;
+            using size_type_ = meta_quote_apply<std::make_unsigned, difference_type_>;
 
             struct sentinel;
             struct cursor

@@ -46,7 +46,7 @@ namespace ranges
         struct recursive_range_fn
         {
         private:
-            using value_type = meta_apply<std::remove_reference, Ref>;
+            using value_type = meta_quote_apply<std::remove_reference, Ref>;
             std::function<any_input_range<int>()> fun_;
 
             struct impl
