@@ -30,10 +30,10 @@ namespace ranges
         namespace detail
         {
             using add_ref_t =
-                meta_quote<std::add_lvalue_reference>;
+                meta_quote_trait<std::add_lvalue_reference>;
 
             using add_cref_t =
-                meta_compose<meta_quote<std::add_lvalue_reference>, meta_quote<std::add_const>>;
+                meta_compose<meta_quote_trait<std::add_lvalue_reference>, meta_quote_trait<std::add_const>>;
         }
 
         template<typename...Ts>
@@ -337,25 +337,25 @@ namespace ranges
 
             template<typename Fun, typename Types>
             using variant_result_t =
-                typelist_expand_t<
+                typelist_apply_t<
+                    meta_quote<tagged_variant>,
                     typelist_replace_t<
                         typelist_transform_t<
                             Types,
-                            meta_bind_front<meta_quote_alias<concepts::Function::result_t>, Fun>>,
+                            meta_bind_front<meta_quote<concepts::Function::result_t>, Fun>>,
                         void,
-                        std::nullptr_t>,
-                    tagged_variant>;
+                        std::nullptr_t>>;
 
             template<typename Fun, typename Types>
             using variant_result_i_t =
-                typelist_expand_t<
+                typelist_apply_t<
+                    meta_quote<tagged_variant>,
                     typelist_replace_t<
                         typelist_transform_t<
                             Types,
-                            as_typelist_t<make_index_sequence_t<Types::size()>>,
-                            meta_bind_front<meta_quote_alias<concepts::Function::result_t>, Fun>>,
-                        void, std::nullptr_t>,
-                    tagged_variant>;
+                            as_typelist_t<make_index_sequence<Types::size()>>,
+                            meta_bind_front<meta_quote<concepts::Function::result_t>, Fun>>,
+                        void, std::nullptr_t>>;
 
             template<typename Fun>
             struct unwrap_ref_fun
@@ -564,8 +564,8 @@ namespace ranges
             using elem_t =
                 meta_apply<
                     meta_compose<
-                        meta_quote<std::remove_reference>,
-                        meta_quote<std::add_const>
+                        meta_quote_trait<std::remove_reference>,
+                        meta_quote_trait<std::add_const>
                     >, tagged_variant_element_t<N, tagged_variant<Ts...>>>;
             using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
@@ -608,7 +608,9 @@ namespace ranges
         struct tagged_variant_unique<tagged_variant<Ts...>>
         {
             using type =
-                typelist_expand_t<typelist_unique_t<typelist<Ts...>>, tagged_variant>;
+                typelist_apply_t<
+                    meta_quote<tagged_variant>,
+                    typelist_unique_t<typelist<Ts...>>>;
         };
 
         template<typename Var>

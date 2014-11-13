@@ -19,11 +19,11 @@ namespace ranges
     {
         ////////////////////////////////////////////////////////////////////////////////////
         // General meta-programming utilities
-        template<typename F, typename...Args>
-        using meta_apply = typename F::template apply<Args...>;
-
         template<typename T>
         using meta_eval = typename T::type;
+
+        template<typename F, typename...Args>
+        using meta_apply = typename F::template apply<Args...>;
 
 #if __GNUC__ == 4 && __GNUC_MINOR__ <= 9
         // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61738
@@ -35,7 +35,7 @@ namespace ranges
 #endif
 
         template<template<typename...> class C>
-        struct meta_quote_alias
+        struct meta_quote
         {
         private:
             // Indirection here needed to avoid Core issue 1430
@@ -46,23 +46,19 @@ namespace ranges
                 using type = C<Ts...>;
             };
         public:
-            using type = meta_quote_alias;
-
             template<typename...Ts>
             using apply = meta_quote_apply<impl, Ts...>;
         };
 
         template<template<typename...> class C>
-        struct meta_quote
+        struct meta_quote_trait
         {
-            using type = meta_quote;
-
             template<typename...Ts>
-            using apply = meta_eval<meta_apply<meta_quote_alias<C>, Ts...> >;
+            using apply = meta_eval<meta_apply<meta_quote<C>, Ts...> >;
         };
 
         template<typename T, template<T...> class F>
-        struct meta_quote_alias_i
+        struct meta_quote_i
         {
         private:
             // Indirection here needed to avoid Core issue 1430
@@ -73,32 +69,24 @@ namespace ranges
                 using type = F<Ts::value...>;
             };
         public:
-            using type = meta_quote_alias_i;
-
             template<typename...Ts>
             using apply = meta_quote_apply<impl, Ts...>;
         };
 
         template<typename T, template<T...> class C>
-        struct meta_quote_i
+        struct meta_quote_trait_i
         {
-            using type = meta_quote_i;
-
             template<typename...Ts>
-            using apply = meta_eval<meta_apply<meta_quote_alias_i<T, C>, Ts...> >;
+            using apply = meta_eval<meta_apply<meta_quote_i<T, C>, Ts...> >;
         };
 
         template<typename...Fs>
         struct meta_compose
-        {
-            using type = meta_compose;
-        };
+        {};
 
         template<typename F0>
         struct meta_compose<F0>
         {
-            using type = meta_compose;
-
             template<typename...Ts>
             using apply = meta_apply<F0, Ts...>;
         };
@@ -106,8 +94,6 @@ namespace ranges
         template<typename F0, typename...Fs>
         struct meta_compose<F0, Fs...>
         {
-            using type = meta_compose;
-
             template<typename...Ts>
             using apply = meta_apply<F0, meta_apply<meta_compose<Fs...>, Ts...>>;
         };
@@ -115,8 +101,6 @@ namespace ranges
         template<typename T>
         struct meta_always
         {
-            using type = meta_always;
-
             template<typename...>
             using apply = T;
         };
@@ -124,8 +108,6 @@ namespace ranges
         template<typename F, typename...Ts>
         struct meta_bind_front
         {
-            using type = meta_bind_front;
-
             template<typename...Us>
             using apply = meta_apply<F, Ts..., Us...>;
         };
@@ -133,8 +115,6 @@ namespace ranges
         template<typename F, typename...Us>
         struct meta_bind_back
         {
-            using type = meta_bind_back;
-
             template<typename...Ts>
             using apply = meta_apply<F, Ts..., Us...>;
         };

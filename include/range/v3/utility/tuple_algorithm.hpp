@@ -25,7 +25,7 @@ namespace ranges
     {
         template<typename Tup>
         using tuple_indices_t =
-            make_index_sequence_t<
+            make_index_sequence<
                 std::tuple_size<typename std::remove_reference<Tup>::type>::value>;
 
         struct tuple_transform_fn

@@ -19,6 +19,12 @@
 #include <range/v3/utility/nullval.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
 
+RANGES_BEGIN_NAMESPACE_STD
+// Forward-declare tuple; not standard-conforming, but unlikely to cause trouble.
+template<typename...Ts>
+class tuple;
+RANGES_END_NAMESPACE_STD
+
 namespace ranges
 {
     inline namespace v3
@@ -48,35 +54,35 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_cat
-        template<typename...Lists>
+        template<typename ListOfLists>
         struct typelist_cat
         {};
 
         template<>
-        struct typelist_cat<>
+        struct typelist_cat<typelist<>>
         {
             using type = typelist<>;
         };
 
         template<typename...List1>
-        struct typelist_cat<typelist<List1...>>
+        struct typelist_cat<typelist<typelist<List1...>>>
         {
             using type = typelist<List1...>;
         };
 
         template<typename ...List1, typename ...List2>
-        struct typelist_cat<typelist<List1...>, typelist<List2...>>
+        struct typelist_cat<typelist<typelist<List1...>, typelist<List2...>>>
         {
             using type = typelist<List1..., List2...>;
         };
 
         template<typename ...List1, typename ...List2, typename...Rest>
-        struct typelist_cat<typelist<List1...>, typelist<List2...>, Rest...>
-          : typelist_cat<typelist<List1..., List2...>, Rest...>
+        struct typelist_cat<typelist<typelist<List1...>, typelist<List2...>, Rest...>>
+          : typelist_cat<typelist<typelist<List1..., List2...>, Rest...>>
         {};
 
-        template<typename...Lists>
-        using typelist_cat_t = typename typelist_cat<Lists...>::type;
+        template<typename ListOfLists>
+        using typelist_cat_t = typename typelist_cat<ListOfLists>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // make_typelist
@@ -84,8 +90,9 @@ namespace ranges
         template<std::size_t N, typename T = void>
         struct make_typelist
           : typelist_cat<
-                typename make_typelist<N / 2, T>::type,
-                typename make_typelist<N - N / 2, T>::type>
+                typelist<
+                    typename make_typelist<N / 2, T>::type,
+                    typename make_typelist<N - N / 2, T>::type> >
         {};
 
         template<typename T>
@@ -340,19 +347,19 @@ namespace ranges
         using typelist_replace_if_t = typename typelist_replace_if<List, C, U>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // typelist_expand
-        template<typename List, template<typename...> class C>
-        struct typelist_expand
+        // typelist_apply
+        template<typename C, typename List>
+        struct typelist_apply
         {};
 
-        template<typename ...List, template<typename...> class C>
-        struct typelist_expand<typelist<List...>, C>
+        template<typename C, typename ...List>
+        struct typelist_apply<C, typelist<List...>>
         {
-            using type = C<List...>;
+            using type = meta_apply<C, List...>;
         };
 
-        template<typename List, template<typename...> class C>
-        using typelist_expand_t = typename typelist_expand<List, C>::type;
+        template<typename C, typename List>
+        using typelist_apply_t = typename typelist_apply<C, List>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_foldl
@@ -408,19 +415,19 @@ namespace ranges
         using typelist_transform_t = typename typelist_transform<List, Fun, Dummy>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // typelist_transform_n
+        // typelist_transform_nary
         template<typename ListOfLists, typename Fun>
-        struct typelist_transform_n
+        struct typelist_transform_nary
           : typelist_transform<
                 typelist_foldl_t<
                     ListOfLists,
                     make_typelist_t<typelist_front_t<ListOfLists>::size(), Fun>,
-                    meta_bind_back<meta_quote<typelist_transform>, meta_quote<meta_bind_front> > >,
+                    meta_bind_back<meta_quote<typelist_transform_t>, meta_quote<meta_bind_front> > >,
                 meta_quote<meta_apply> >
         {};
 
         template<typename ListOfLists, typename Fun>
-        using typelist_transform_n_t = typename typelist_transform_n<ListOfLists, Fun>::type;
+        using typelist_transform_nary_t = typename typelist_transform_nary<ListOfLists, Fun>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // as_typelist
@@ -428,10 +435,26 @@ namespace ranges
         struct as_typelist
         {};
 
+        template<typename Sequence>
+        struct as_typelist<Sequence &>
+          : as_typelist<Sequence>
+        {};
+
+        template<typename Sequence>
+        struct as_typelist<Sequence const>
+          : as_typelist<Sequence>
+        {};
+
         template<typename T, T...Is>
         struct as_typelist<integer_sequence<T, Is...>>
         {
             using type = typelist<std::integral_constant<T, Is>...>;
+        };
+
+        template<typename ...Ts>
+        struct as_typelist<std::tuple<Ts...>>
+        {
+            using type = typelist<Ts...>;
         };
 
         template<typename Sequence>
@@ -460,7 +483,7 @@ namespace ranges
         using typelist_find_t = typename typelist_find<List, T>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // typelist_find
+        // typelist_find_if
         template<typename List, typename Fun>
         struct typelist_find_if
         {

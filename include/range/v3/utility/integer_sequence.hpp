@@ -72,23 +72,14 @@ namespace ranges
 
         // generate integer_sequence [0,N) in O(log(N)) time
         template<typename T, T N>
-        struct make_integer_sequence
-          : detail::make_integer_sequence_<T, (std::size_t)N>
-        {};
-
-        template<typename T, std::size_t N>
-        using make_integer_sequence_t = typename make_integer_sequence<T, N>::type;
+        using make_integer_sequence =
+            typename detail::make_integer_sequence_<T, (std::size_t)N>::type;
 
         template<std::size_t...Is>
         using index_sequence = integer_sequence<std::size_t, Is...>;
 
         template<std::size_t N>
-        struct make_index_sequence
-          : detail::make_integer_sequence_<std::size_t, N>
-        {};
-
-        template<std::size_t N>
-        using make_index_sequence_t = typename make_index_sequence<N>::type;
+        using make_index_sequence = make_integer_sequence<std::size_t, N>;
     }
 }
 

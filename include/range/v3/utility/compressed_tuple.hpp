@@ -62,7 +62,7 @@ namespace ranges
             {}
         private:
             friend struct detail::compressed_tuple_core_access;
-            detail::compressed_tuple_data<make_index_sequence_t<sizeof...(Ts)>, Ts...> data_;
+            detail::compressed_tuple_data<make_index_sequence<sizeof...(Ts)>, Ts...> data_;
         };
 
         // Get by index

@@ -103,13 +103,7 @@ namespace ranges
             template<typename...Bools>
             struct lazy_and
             {
-                static constexpr bool value{true};
-            };
-
-            template<typename Bool, typename...Bools>
-            struct lazy_and<Bool, Bools...>
-            {
-                static constexpr bool value{fast_logical_and<Bool, Bools...>::value};
+                static constexpr bool value{fast_logical_and<Bools...>::value};
             };
 
             template<typename...Ts>
@@ -119,11 +113,11 @@ namespace ranges
             template<typename...Ts, typename Concept,
                 typename = decltype(std::declval<Concept &>().template requires_<Ts...>(std::declval<Ts>()...))>
             auto models_(Concept *) ->
-                typelist_expand_t<
+                typelist_apply_t<
+                    meta_quote<lazy_and>,
                     typelist_transform_t<
                         base_concepts_of_t<Concept>,
-                        meta_bind_back<meta_quote<concepts::models>, Ts...>>,
-                    lazy_and>;
+                        meta_bind_back<meta_quote<concepts::models>, Ts...>>>;
         }
 
         namespace concepts

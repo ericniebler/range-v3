@@ -9,16 +9,6 @@ using namespace ranges;
 
 namespace __detail
 {
-    template<typename T>
-    struct tuple_types
-    {};
-
-    template<typename...Ts>
-    struct tuple_types<std::tuple<Ts...> >
-    {
-        using type = typelist<Ts...>;
-    };
-
     template<typename Ret, typename...Is, typename ...Ks, typename Tuples>
     Ret tuple_cat_(typelist<Is...>, typelist<Ks...>, Tuples tpls)
     {
@@ -26,40 +16,32 @@ namespace __detail
     }
 }
 
-template<typename T>
-struct tuple_types
-  : __detail::tuple_types<meta_quote_apply<std::decay, T> >
-{};
-
-template<typename T>
-using tuple_types_t = meta_quote_apply<tuple_types, T>;
-
 template<typename...Tuples,
     typename Res =
-        typelist_expand_t<
-            typelist_cat_t<tuple_types_t<Tuples>...>,
-            std::tuple> >
+        typelist_apply_t<
+            meta_quote<std::tuple>,
+            typelist_cat_t<typelist<as_typelist_t<Tuples>...> > > >
 Res tuple_cat(Tuples &&... tpls)
 {
     static constexpr std::size_t N = sizeof...(Tuples);
+    // E.g. [0,0,0,2,2,2,3,3]
     using inner =
-        typelist_expand_t<
+        typelist_cat_t<
             typelist_transform_t<
-                typelist<tuple_types_t<Tuples>...>,
+                typelist<as_typelist_t<Tuples>...>,
                 typelist_transform_t<
-                    as_typelist_t<make_index_sequence_t<N> >,
-                    meta_quote_alias<meta_always> >,
-                meta_quote<typelist_transform> >,
-            typelist_cat_t>;
+                    as_typelist_t<make_index_sequence<N> >,
+                    meta_quote<meta_always> >,
+                meta_quote<typelist_transform_t> > >;
+    // E.g. [0,1,2,0,1,2,0,1]
     using outer =
-        typelist_expand_t<
+        typelist_cat_t<
             typelist_transform_t<
-                typelist<tuple_types_t<Tuples>...>,
+                typelist<as_typelist_t<Tuples>...>,
                 meta_compose<
-                    meta_quote<as_typelist>,
+                    meta_quote<as_typelist_t>,
                     meta_quote_i<std::size_t, make_index_sequence>,
-                    meta_quote<typelist_size> > >,
-            typelist_cat_t>;
+                    meta_quote<typelist_size_t> > > >;
     return __detail::tuple_cat_<Res>(
         inner{},
         outer{},
