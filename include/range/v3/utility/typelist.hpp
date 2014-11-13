@@ -310,7 +310,8 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_replace
         template<typename List, typename T, typename U>
-        struct typelist_replace;
+        struct typelist_replace
+        {};
 
         template<typename...List, typename T, typename U>
         struct typelist_replace<typelist<List...>, T, U>
@@ -321,6 +322,22 @@ namespace ranges
 
         template<typename List, typename T, typename U>
         using typelist_replace_t = typename typelist_replace<List, T, U>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_replace_if
+        template<typename List, typename C, typename U>
+        struct typelist_replace_if
+        {};
+
+        template<typename...List, typename C, typename U>
+        struct typelist_replace_if<typelist<List...>, C, U>
+        {
+            using type = typelist<
+                detail::conditional_t<meta_apply<C, List>::value, U, List>...>;
+        };
+
+        template<typename List, typename C, typename U>
+        using typelist_replace_if_t = typename typelist_replace_if<List, C, U>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_expand
@@ -336,7 +353,6 @@ namespace ranges
 
         template<typename List, template<typename...> class C>
         using typelist_expand_t = typename typelist_expand<List, C>::type;
-
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_foldl

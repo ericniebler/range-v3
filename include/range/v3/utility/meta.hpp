@@ -35,24 +35,6 @@ namespace ranges
 #endif
 
         template<template<typename...> class C>
-        struct meta_quote
-        {
-        private:
-            // Indirection here needed to avoid Core issue 1430
-            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
-            template<typename...Ts>
-            struct impl
-            {
-                using type = meta_quote_apply<C, Ts...>;
-            };
-        public:
-            using type = meta_quote;
-
-            template<typename...Ts>
-            using apply = meta_quote_apply<impl, Ts...>;
-        };
-
-        template<template<typename...> class C>
         struct meta_quote_alias
         {
         private:
@@ -70,22 +52,13 @@ namespace ranges
             using apply = meta_quote_apply<impl, Ts...>;
         };
 
-        template<typename T, template<T...> class F>
-        struct meta_quote_i
+        template<template<typename...> class C>
+        struct meta_quote
         {
-        private:
-            // Indirection here needed to avoid Core issue 1430
-            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
-            template<typename ...Ts>
-            struct impl
-            {
-                using type = typename F<Ts::value...>::type;
-            };
-        public:
-            using type = meta_quote_i;
+            using type = meta_quote;
 
             template<typename...Ts>
-            using apply = meta_quote_apply<impl, Ts...>;
+            using apply = meta_eval<meta_apply<meta_quote_alias<C>, Ts...> >;
         };
 
         template<typename T, template<T...> class F>
@@ -104,6 +77,15 @@ namespace ranges
 
             template<typename...Ts>
             using apply = meta_quote_apply<impl, Ts...>;
+        };
+
+        template<typename T, template<T...> class C>
+        struct meta_quote_i
+        {
+            using type = meta_quote_i;
+
+            template<typename...Ts>
+            using apply = meta_eval<meta_apply<meta_quote_alias_i<T, C>, Ts...> >;
         };
 
         template<typename...Fs>
