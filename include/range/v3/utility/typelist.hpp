@@ -76,9 +76,15 @@ namespace ranges
             using type = typelist<List1..., List2...>;
         };
 
-        template<typename ...List1, typename ...List2, typename...Rest>
-        struct typelist_cat<typelist<typelist<List1...>, typelist<List2...>, Rest...>>
-          : typelist_cat<typelist<typelist<List1..., List2...>, Rest...>>
+        template<typename ...List1, typename ...List2, typename...List3>
+        struct typelist_cat<typelist<typelist<List1...>, typelist<List2...>, typelist<List3...>>>
+        {
+            using type = typelist<List1..., List2..., List3...>;
+        };
+
+        template<typename ...List1, typename ...List2, typename...List3, typename...Rest>
+        struct typelist_cat<typelist<typelist<List1...>, typelist<List2...>, typelist<List3...>, Rest...>>
+          : typelist_cat<typelist<typelist<List1..., List2..., List3...>, Rest...>>
         {};
 
         template<typename ListOfLists>
@@ -87,28 +93,35 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////
         // make_typelist
         // Generate lists<_,_,_,..._> with N arguments in O(log N)
-        template<std::size_t N, typename T = void>
-        struct make_typelist
-          : typelist_cat<
-                typelist<
-                    typename make_typelist<N / 2, T>::type,
-                    typename make_typelist<N - N / 2, T>::type> >
-        {};
-
-        template<typename T>
-        struct make_typelist<0, T>
+        namespace detail
         {
-            using type = typelist<>;
-        };
+            template<std::size_t N, typename T = void>
+            struct make_typelist_
+              : typelist_cat<
+                    typelist<
+                        typename make_typelist_<N / 2, T>::type,
+                        typename make_typelist_<N / 2, T>::type,
+                        typename make_typelist_<N % 2, T>::type> >
+            {};
 
-        template<typename T>
-        struct make_typelist<1, T>
-        {
-            using type = typelist<T>;
-        };
+            template<typename T>
+            struct make_typelist_<0, T>
+            {
+                using type = typelist<>;
+            };
+
+            template<typename T>
+            struct make_typelist_<1, T>
+            {
+                using type = typelist<T>;
+            };
+        }
 
         template<std::size_t N, typename T = void>
-        using make_typelist_t = typename make_typelist<N, T>::type;
+        using make_typelist = typename detail::make_typelist_<N, T>::type;
+
+        template<typename N, typename T = void>
+        using make_typelist_aux = typename detail::make_typelist_<N::value, T>::type;
 
         namespace detail
         {
@@ -135,12 +148,18 @@ namespace ranges
 
         template<std::size_t N, typename ...Ts>
         struct typelist_element<N, typelist<Ts...>>
-          : decltype(detail::typelist_element_<make_typelist_t<N, void *>>
+          : decltype(detail::typelist_element_<make_typelist<N, void *>>
                 ::eval(nullval<detail::identity<Ts>>()...))
         {};
 
+        template<typename N, typename List>
+        using typelist_element_aux = typelist_element<N::value, List>;
+
         template<std::size_t N, typename List>
         using typelist_element_t = typename typelist_element<N, List>::type;
+
+        template<typename N, typename List>
+        using typelist_element_aux_t = typename typelist_element<N::value, List>::type;
 
         namespace detail
         {
@@ -170,12 +189,18 @@ namespace ranges
 
         template<std::size_t N, typename ...Ts>
         struct typelist_drop<N, typelist<Ts...>>
-          : decltype(detail::typelist_drop_<make_typelist_t<N, void *>>
+          : decltype(detail::typelist_drop_<make_typelist<N, void *>>
                 ::eval(nullval<detail::identity<Ts>>()...))
         {};
 
+        template<typename N, typename List>
+        using typelist_drop_aux = typelist_drop<N::value, List>;
+
         template<std::size_t N, typename List>
         using typelist_drop_t = typename typelist_drop<N, List>::type;
+
+        template<typename N, typename List>
+        using typelist_drop_aux_t = typename typelist_drop<N::value, List>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_front
@@ -421,7 +446,7 @@ namespace ranges
           : typelist_transform<
                 typelist_foldl_t<
                     ListOfLists,
-                    make_typelist_t<typelist_front_t<ListOfLists>::size(), Fun>,
+                    make_typelist<typelist_front_t<ListOfLists>::size(), Fun>,
                     meta_bind_back<meta_quote<typelist_transform_t>, meta_quote<meta_bind_front> > >,
                 meta_quote<meta_apply> >
         {};
