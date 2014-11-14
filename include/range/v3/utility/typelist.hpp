@@ -440,9 +440,9 @@ namespace ranges
         using typelist_transform_t = typename typelist_transform<List, Fun, Dummy>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // typelist_transform_nary
-        template<typename ListOfLists, typename Fun>
-        struct typelist_transform_nary
+        // typelist_zip_with
+        template<typename Fun, typename ListOfLists>
+        struct typelist_zip_with
           : typelist_transform<
                 typelist_foldl_t<
                     ListOfLists,
@@ -451,8 +451,18 @@ namespace ranges
                 meta_quote<meta_apply> >
         {};
 
-        template<typename ListOfLists, typename Fun>
-        using typelist_transform_nary_t = typename typelist_transform_nary<ListOfLists, Fun>::type;
+        template<typename Fun, typename ListOfLists>
+        using typelist_zip_with_t = typename typelist_zip_with<Fun, ListOfLists>::type;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_zip
+        template<typename ListOfLists>
+        struct typelist_zip
+          : typelist_zip_with<meta_quote<typelist>, ListOfLists>
+        {};
+
+        template<typename ListOfLists>
+        using typelist_zip_t = typename typelist_zip<ListOfLists>::type;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // as_typelist

@@ -17,6 +17,9 @@ namespace ranges
 {
     inline namespace v3
     {
+        template<typename...T>
+        struct typelist;
+
         ////////////////////////////////////////////////////////////////////////////////////
         // General meta-programming utilities
         template<typename T>
@@ -117,6 +120,13 @@ namespace ranges
         {
             template<typename...Ts>
             using apply = meta_apply<F, Ts..., Us...>;
+        };
+
+        template<typename F>
+        struct meta_curry
+        {
+            template<typename...Ts>
+            using apply = meta_apply<F, typelist<Ts...>>;
         };
     }
 }
