@@ -70,6 +70,12 @@ static_assert(typelist_none_of<typelist<int, short, long>, meta_quote<std::is_fl
 static_assert(!typelist_any_of<typelist<int, short, long>, meta_quote<std::is_floating_point>>::value, "");
 static_assert(typelist_any_of<typelist<int, short, long, float>, meta_quote<std::is_floating_point>>::value, "");
 
+static_assert(std::is_same<typelist_zip_t<typelist<typelist<int, short, double>, typelist<int*, short*, double*>>>,
+                           typelist<typelist<int, int*>, typelist<short, short*>, typelist<double, double*>>>::value, "");
+static_assert(std::is_same<typelist_zip_with_t<meta_quote<std::tuple>, typelist<typelist<int, short, double>, typelist<int*, short*, double*>>>,
+                           typelist<std::tuple<int, int*>, std::tuple<short, short*>, std::tuple<double, double*>>>::value, "");
+
+
 int main()
 {
     test_tuple_cat();
