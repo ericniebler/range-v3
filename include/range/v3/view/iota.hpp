@@ -92,7 +92,7 @@ namespace ranges
                     concepts::InputIota>, T>;
 
         template<typename T>
-        using iota_concept_t = meta_quote_apply<iota_concept, T>;
+        using iota_concept_t = meta_eval<iota_concept<T>>;
 
         namespace detail
         {
@@ -118,7 +118,7 @@ namespace ranges
                 using type =
                     detail::conditional_t<
                         !std::is_same<Val, difference_t>::value,
-                        meta_quote_apply<std::make_signed, difference_t>,
+                        meta_eval<std::make_signed<difference_t>>,
                         detail::conditional_t<
                             (bits < 8),
                             std::int_fast8_t,
@@ -137,7 +137,7 @@ namespace ranges
             {};
 
             template<typename Val>
-            using iota_difference_t = meta_quote_apply<iota_difference, Val>;
+            using iota_difference_t = meta_eval<iota_difference<Val>>;
 
             template<typename Val, CONCEPT_REQUIRES_(!Integral<Val>())>
             iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)

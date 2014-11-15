@@ -28,15 +28,6 @@ namespace ranges
         template<typename F, typename...Args>
         using meta_apply = typename F::template apply<Args...>;
 
-#if __GNUC__ == 4 && __GNUC_MINOR__ <= 9
-        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61738
-        template<template<typename...> class C, typename...As>
-        using meta_quote_apply = typename C<As...>::type;
-#else
-        template<template<typename...> class C, typename...As>
-        using meta_quote_apply = meta_eval<C<As...>>;
-#endif
-
         template<template<typename...> class C>
         struct meta_quote
         {
@@ -50,7 +41,7 @@ namespace ranges
             };
         public:
             template<typename...Ts>
-            using apply = meta_quote_apply<impl, Ts...>;
+            using apply = meta_eval<impl<Ts...>>;
         };
 
         template<template<typename...> class C>
@@ -73,7 +64,7 @@ namespace ranges
             };
         public:
             template<typename...Ts>
-            using apply = meta_quote_apply<impl, Ts...>;
+            using apply = meta_eval<impl<Ts...>>;
         };
 
         template<typename T, template<T...> class C>
@@ -127,6 +118,40 @@ namespace ranges
         {
             template<typename...Ts>
             using apply = meta_apply<F, typelist<Ts...>>;
+        };
+
+        template<typename F>
+        struct meta_uncurry
+        {
+        private:
+            template<typename T>
+            struct impl
+            {};
+            template<typename ...Ts>
+            struct impl<typelist<Ts...>>
+            {
+                using type = meta_apply<F, Ts...>;
+            };
+        public:
+            template<typename T>
+            using apply = meta_eval<impl<T>>;
+        };
+
+        template<typename F>
+        struct meta_flip
+        {
+        private:
+            template<typename ...Ts>
+            struct impl
+            {};
+            template<typename A, typename B, typename ...Ts>
+            struct impl<A, B, Ts...>
+            {
+                using type = meta_apply<F, B, A, Ts...>;
+            };
+        public:
+            template<typename ...Ts>
+            using apply = meta_eval<impl<Ts...>>;
         };
     }
 }

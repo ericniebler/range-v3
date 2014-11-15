@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 
 namespace ranges
 {
@@ -41,20 +42,23 @@ namespace ranges
         namespace detail
         {
             // Glue two sets of integer_sequence together
-            template<typename I1, typename I2>
-            struct concat_integer_sequence;
+            template<typename I1, typename I2, typename I3>
+            struct integer_sequence_cat;
 
-            template<typename T, T...N1, T...N2>
-            struct concat_integer_sequence<integer_sequence<T, N1...>, integer_sequence<T, N2...>>
+            template<typename T, T...N1, T...N2, T...N3>
+            struct integer_sequence_cat<integer_sequence<T, N1...>, integer_sequence<T, N2...>,
+                integer_sequence<T, N3...>>
             {
-                using type = integer_sequence<T, N1..., (sizeof...(N1) + N2)...>;
+                using type = integer_sequence<T, N1..., (sizeof...(N1) + N2)...,
+                    (sizeof...(N1) + sizeof...(N2) + N3)...>;
             };
 
             template<typename T, std::size_t N>
             struct make_integer_sequence_
-              : concat_integer_sequence<
-                    typename make_integer_sequence_<T, N / 2>::type,
-                    typename make_integer_sequence_<T, N - N / 2>::type>
+              : integer_sequence_cat<
+                    meta_eval<make_integer_sequence_<T, N / 2>>,
+                    meta_eval<make_integer_sequence_<T, N / 2>>,
+                    meta_eval<make_integer_sequence_<T, N % 2>>>
             {};
 
             template<typename T>
@@ -73,7 +77,7 @@ namespace ranges
         // generate integer_sequence [0,N) in O(log(N)) time
         template<typename T, T N>
         using make_integer_sequence =
-            typename detail::make_integer_sequence_<T, (std::size_t)N>::type;
+            meta_eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
 
         template<std::size_t...Is>
         using index_sequence = integer_sequence<std::size_t, Is...>;

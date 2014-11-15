@@ -44,7 +44,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            using reference_ = meta_quote_apply<detail::cref_t, range_reference_t<Rng>>;
+            using reference_ = meta_eval<detail::cref_t<range_reference_t<Rng>>>;
             struct adaptor
               : adaptor_base
             {

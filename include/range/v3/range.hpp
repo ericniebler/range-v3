@@ -28,7 +28,7 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename T, typename U = meta_quote_apply<std::remove_const, T>>
+            template<typename T, typename U = meta_eval<std::remove_const<T>>>
             constexpr U && unsafe_move(T &t)
             {
                 return static_cast<U &&>(const_cast<U &>(t));
@@ -41,8 +41,8 @@ namespace ranges
           : private compressed_pair<I, S>
           , range_interface<range<I, S>>
         {
-            using iterator = meta_quote_apply<std::remove_const, I>;
-            using sentinel = meta_quote_apply<std::remove_const, S>;
+            using iterator = meta_eval<std::remove_const<I>>;
+            using sentinel = meta_eval<std::remove_const<S>>;
             using compressed_pair<I, S>::first;
             using compressed_pair<I, S>::second;
 

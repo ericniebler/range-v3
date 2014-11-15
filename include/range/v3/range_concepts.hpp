@@ -304,7 +304,7 @@ namespace ranges
 
         template<typename T>
         using iterable_concept_t =
-            meta_quote_apply<iterable_concept, T>;
+            meta_eval<iterable_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_iterable_concept
@@ -317,7 +317,7 @@ namespace ranges
 
         template<typename T>
         using bounded_iterable_concept_t =
-            meta_quote_apply<bounded_iterable_concept, T>;
+            meta_eval<bounded_iterable_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sized_iterable_concept
@@ -330,7 +330,7 @@ namespace ranges
 
         template<typename T>
         using sized_iterable_concept_t =
-            meta_quote_apply<sized_iterable_concept, T>;
+            meta_eval<sized_iterable_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_range_concept
@@ -342,7 +342,7 @@ namespace ranges
                     concepts::Range>, T>;
 
         template<typename T>
-        using bounded_range_concept_t = meta_quote_apply<bounded_range_concept, T>;
+        using bounded_range_concept_t = meta_eval<bounded_range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sized_range_concept
@@ -354,7 +354,7 @@ namespace ranges
                     concepts::Range>, T>;
 
         template<typename T>
-        using sized_range_concept_t = meta_quote_apply<sized_range_concept, T>;
+        using sized_range_concept_t = meta_eval<sized_range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept
@@ -366,7 +366,7 @@ namespace ranges
                     concepts::Iterable>, T>;
 
         template<typename T>
-        using range_concept_t = meta_quote_apply<range_concept, T>;
+        using range_concept_t = meta_eval<range_concept<T>>;
 
         namespace detail
         {

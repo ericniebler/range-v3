@@ -269,7 +269,7 @@ namespace ranges
                         range_access::InputCursorConcept>, T>;
 
             template<typename T>
-            using cursor_concept_t = meta_quote_apply<cursor_concept, T>;
+            using cursor_concept_t = meta_eval<cursor_concept<T>>;
         }
     }
 }

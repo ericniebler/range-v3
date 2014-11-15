@@ -16,6 +16,7 @@
 #include <cstddef>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/nullval.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
 
@@ -50,7 +51,7 @@ namespace ranges
         };
 
         template<typename List>
-        using typelist_size_t = typename typelist_size<List>::type;
+        using typelist_size_t = meta_eval<typelist_size<List>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_cat
@@ -88,7 +89,7 @@ namespace ranges
         {};
 
         template<typename ListOfLists>
-        using typelist_cat_t = typename typelist_cat<ListOfLists>::type;
+        using typelist_cat_t = meta_eval<typelist_cat<ListOfLists>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // make_typelist
@@ -99,9 +100,9 @@ namespace ranges
             struct make_typelist_
               : typelist_cat<
                     typelist<
-                        typename make_typelist_<N / 2, T>::type,
-                        typename make_typelist_<N / 2, T>::type,
-                        typename make_typelist_<N % 2, T>::type> >
+                        meta_eval<make_typelist_<N / 2, T>>,
+                        meta_eval<make_typelist_<N / 2, T>>,
+                        meta_eval<make_typelist_<N % 2, T>>>>
             {};
 
             template<typename T>
@@ -118,10 +119,10 @@ namespace ranges
         }
 
         template<std::size_t N, typename T = void>
-        using make_typelist = typename detail::make_typelist_<N, T>::type;
+        using make_typelist = meta_eval<detail::make_typelist_<N, T>>;
 
         template<typename N, typename T = void>
-        using make_typelist_aux = typename detail::make_typelist_<N::value, T>::type;
+        using make_typelist_aux = meta_eval<detail::make_typelist_<N::value, T>>;
 
         namespace detail
         {
@@ -156,10 +157,10 @@ namespace ranges
         using typelist_element_aux = typelist_element<N::value, List>;
 
         template<std::size_t N, typename List>
-        using typelist_element_t = typename typelist_element<N, List>::type;
+        using typelist_element_t = meta_eval<typelist_element<N, List>>;
 
         template<typename N, typename List>
-        using typelist_element_aux_t = typename typelist_element<N::value, List>::type;
+        using typelist_element_aux_t = meta_eval<typelist_element<N::value, List>>;
 
         namespace detail
         {
@@ -197,10 +198,10 @@ namespace ranges
         using typelist_drop_aux = typelist_drop<N::value, List>;
 
         template<std::size_t N, typename List>
-        using typelist_drop_t = typename typelist_drop<N, List>::type;
+        using typelist_drop_t = meta_eval<typelist_drop<N, List>>;
 
         template<typename N, typename List>
-        using typelist_drop_aux_t = typename typelist_drop<N::value, List>::type;
+        using typelist_drop_aux_t = meta_eval<typelist_drop<N::value, List>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_front
@@ -215,7 +216,7 @@ namespace ranges
         };
 
         template<typename List>
-        using typelist_front_t = typename typelist_front<List>::type;
+        using typelist_front_t = meta_eval<typelist_front<List>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_push_front
@@ -230,7 +231,7 @@ namespace ranges
         };
 
         template<typename List, typename T>
-        using typelist_push_front_t = typename typelist_push_front<List, T>::type;
+        using typelist_push_front_t = meta_eval<typelist_push_front<List, T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_pop_front
@@ -245,7 +246,7 @@ namespace ranges
         };
 
         template<typename List>
-        using typelist_pop_front_t = typename typelist_pop_front<List>::type;
+        using typelist_pop_front_t = meta_eval<typelist_pop_front<List>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_back
@@ -259,7 +260,7 @@ namespace ranges
         {};
 
         template<typename List>
-        using typelist_back_t = typename typelist_back<List>::type;
+        using typelist_back_t = meta_eval<typelist_back<List>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_push_back
@@ -274,7 +275,7 @@ namespace ranges
         };
 
         template<typename List, typename T>
-        using typelist_push_back_t = typename typelist_push_back<List, T>::type;
+        using typelist_push_back_t = meta_eval<typelist_push_back<List, T>>;
 
         // typelist_pop_back not provided because it cannot be made to meet the complexity
         // guarantees one would expect.
@@ -337,7 +338,7 @@ namespace ranges
         {};
 
         template<typename List>
-        using typelist_unique_t = typename typelist_unique<List>::type;
+        using typelist_unique_t = meta_eval<typelist_unique<List>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_replace
@@ -353,7 +354,7 @@ namespace ranges
         };
 
         template<typename List, typename T, typename U>
-        using typelist_replace_t = typename typelist_replace<List, T, U>::type;
+        using typelist_replace_t = meta_eval<typelist_replace<List, T, U>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_replace_if
@@ -369,22 +370,18 @@ namespace ranges
         };
 
         template<typename List, typename C, typename U>
-        using typelist_replace_if_t = typename typelist_replace_if<List, C, U>::type;
+        using typelist_replace_if_t = meta_eval<typelist_replace_if<List, C, U>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_apply
         template<typename C, typename List>
         struct typelist_apply
-        {};
-
-        template<typename C, typename ...List>
-        struct typelist_apply<C, typelist<List...>>
         {
-            using type = meta_apply<C, List...>;
+            using type = meta_apply<meta_uncurry<C>, List>;
         };
 
         template<typename C, typename List>
-        using typelist_apply_t = typename typelist_apply<C, List>::type;
+        using typelist_apply_t = meta_eval<typelist_apply<C, List>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_foldl
@@ -400,7 +397,7 @@ namespace ranges
         {};
 
         template<typename List, typename State, typename Fun>
-        using typelist_foldl_t = typename typelist_foldl<List, State, Fun>::type;
+        using typelist_foldl_t = meta_eval<typelist_foldl<List, State, Fun>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_foldr
@@ -412,11 +409,12 @@ namespace ranges
 
         template<typename Head, typename ...List, typename State, typename Fun>
         struct typelist_foldr<typelist<Head, List...>, State, Fun>
-          : meta_apply<Fun, typelist_foldr<typelist<List...>, State, Fun>, Head>
-        {};
+        {
+            using type = meta_apply<Fun, meta_eval<typelist_foldr<typelist<List...>, State, Fun>>, Head>;
+        };
 
         template<typename List, typename State, typename Fun>
-        using typelist_foldr_t = typename typelist_foldr<List, State, Fun>::type;
+        using typelist_foldr_t = meta_eval<typelist_foldr<List, State, Fun>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_transform
@@ -437,7 +435,7 @@ namespace ranges
         };
 
         template<typename List, typename Fun, typename Dummy = void>
-        using typelist_transform_t = typename typelist_transform<List, Fun, Dummy>::type;
+        using typelist_transform_t = meta_eval<typelist_transform<List, Fun, Dummy>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_zip_with
@@ -452,7 +450,7 @@ namespace ranges
         {};
 
         template<typename Fun, typename ListOfLists>
-        using typelist_zip_with_t = typename typelist_zip_with<Fun, ListOfLists>::type;
+        using typelist_zip_with_t = meta_eval<typelist_zip_with<Fun, ListOfLists>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_zip
@@ -462,7 +460,7 @@ namespace ranges
         {};
 
         template<typename ListOfLists>
-        using typelist_zip_t = typename typelist_zip<ListOfLists>::type;
+        using typelist_zip_t = meta_eval<typelist_zip<ListOfLists>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // as_typelist
@@ -493,7 +491,7 @@ namespace ranges
         };
 
         template<typename Sequence>
-        using as_typelist_t = typename as_typelist<Sequence>::type;
+        using as_typelist_t = meta_eval<as_typelist<Sequence>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_find
@@ -515,7 +513,7 @@ namespace ranges
         };
 
         template<typename List, typename T>
-        using typelist_find_t = typename typelist_find<List, T>::type;
+        using typelist_find_t = meta_eval<typelist_find<List, T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // typelist_find_if
@@ -534,7 +532,17 @@ namespace ranges
         {};
 
         template<typename List, typename Fun>
-        using typelist_find_if_t = typename typelist_find_if<List, Fun>::type;
+        using typelist_find_if_t = meta_eval<typelist_find_if<List, Fun>>;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_reverse
+        template<typename List>
+        struct typelist_reverse
+          : typelist_foldr<List, typelist<>, meta_quote<typelist_push_back_t>>
+        {};
+
+        template<typename List>
+        using typelist_reverse_t = meta_eval<typelist_reverse<List>>;
     }
 }
 

@@ -51,15 +51,15 @@ namespace ranges
         template<typename T,
             typename U = detail::conditional_t<
                 std::is_lvalue_reference<T>::value,
-                std::reference_wrapper<meta_quote_apply<std::remove_reference, T>>,
+                std::reference_wrapper<meta_eval<std::remove_reference<T>>>,
                 T &&>>
-        U bind_forward(meta_quote_apply<std::remove_reference, T> & t) noexcept
+        U bind_forward(meta_eval<std::remove_reference<T>> & t) noexcept
         {
             return static_cast<U>(t);
         }
 
         template<typename T>
-        T && bind_forward(meta_quote_apply<std::remove_reference, T> && t) noexcept
+        T && bind_forward(meta_eval<std::remove_reference<T>> && t) noexcept
         {
             // This is to catch way sketchy stuff like: forward<int const &>(42)
             static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");

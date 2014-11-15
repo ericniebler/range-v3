@@ -98,7 +98,7 @@ namespace ranges
             };
 
             template<typename Concept>
-            using base_concepts_of_t = meta_quote_apply<base_concepts_of, Concept>;
+            using base_concepts_of_t = meta_eval<base_concepts_of<Concept>>;
 
             template<typename...Bools>
             struct lazy_and
@@ -216,7 +216,7 @@ namespace ranges
             };
 
             template<typename Concepts, typename...Ts>
-            using most_refined_t = meta_quote_apply<most_refined, Concepts, Ts...>;
+            using most_refined_t = meta_eval<most_refined<Concepts, Ts...>>;
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // Core language concepts
@@ -513,8 +513,8 @@ namespace ranges
                 using result_t = decltype(val<Fun>()(val<Args>()...));
 
                 template<typename Fun, typename ...Args,
-                    typename UnRefFun = meta_quote_apply<std::remove_reference, Fun>,
-                    typename UnCvRefFun = meta_quote_apply<std::remove_cv, UnRefFun>>
+                    typename UnRefFun = meta_eval<std::remove_reference<Fun>>,
+                    typename UnCvRefFun = meta_eval<std::remove_cv<UnRefFun>>>
                 auto requires_(Fun fun, Args... args) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<UnRefFun *>(&fun),
@@ -751,7 +751,7 @@ namespace ranges
 
         template<typename T>
         struct size_type
-          : std::make_unsigned<meta_quote_apply<difference_type, T>>
+          : std::make_unsigned<meta_eval<difference_type<T>>>
         {};
 
         template<typename T>

@@ -546,8 +546,8 @@ namespace ranges
         {
             RANGES_ASSERT(N == var.which());
             using elem_t =
-                meta_quote_apply<std::remove_reference,
-                    tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+                meta_eval<std::remove_reference<
+                    tagged_variant_element_t<N, tagged_variant<Ts...>>>>;
             using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);
@@ -576,13 +576,13 @@ namespace ranges
         }
 
         template<std::size_t N, typename...Ts>
-        meta_quote_apply<std::add_rvalue_reference, tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        meta_eval<std::add_rvalue_reference<tagged_variant_element_t<N, tagged_variant<Ts...>>>>
         get(tagged_variant<Ts...> &&var)
         {
             RANGES_ASSERT(N == var.which());
             using elem_t =
-                meta_quote_apply<std::remove_reference,
-                    tagged_variant_element_t<N, tagged_variant<Ts...>>>;
+                meta_eval<std::remove_reference<
+                    tagged_variant_element_t<N, tagged_variant<Ts...>>>>;
             using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
             auto &data = detail::variant_core_access::data(var);

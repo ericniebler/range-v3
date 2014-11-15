@@ -167,13 +167,13 @@ namespace ranges
             {
                 // Associated types
                 template<typename I>
-                using value_t = meta_quote_apply<value_type, I>;
+                using value_t = meta_eval<value_type<I>>;
 
                 template<typename I>
                 using reference_t = decltype(*std::declval<I>());
 
                 template<typename I>
-                using pointer_t = meta_quote_apply<pointer_type, I>;
+                using pointer_t = meta_eval<pointer_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -265,7 +265,7 @@ namespace ranges
             {
                 // Associated types
                 template<typename I>
-                using difference_t = meta_quote_apply<difference_type, I>;
+                using difference_t = meta_eval<difference_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -315,7 +315,7 @@ namespace ranges
                 // value_t from readable
                 // distance_t from WeaklyIncrementable
                 template<typename I>
-                using category_t = meta_quote_apply<ranges::iterator_category_type, I>;
+                using category_t = meta_eval<ranges::iterator_category_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -447,7 +447,7 @@ namespace ranges
                     concepts::WeakInputIterator>, T>;
 
         template<typename T>
-        using iterator_concept_t = meta_quote_apply<iterator_concept, T>;
+        using iterator_concept_t = meta_eval<iterator_concept<T>>;
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
@@ -594,7 +594,7 @@ namespace ranges
                     concepts::IteratorRange>, I, S>;
 
         template<typename I, typename S = I>
-        using sized_iterator_range_concept_t = meta_quote_apply<sized_iterator_range_concept, I, S>;
+        using sized_iterator_range_concept_t = meta_eval<sized_iterator_range_concept<I, S>>;
     }
 }
 

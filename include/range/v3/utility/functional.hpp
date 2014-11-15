@@ -231,7 +231,7 @@ namespace ranges
         {};
 
         template<typename T>
-        using is_reference_wrapper_t = meta_quote_apply<is_reference_wrapper, T>;
+        using is_reference_wrapper_t = meta_eval<is_reference_wrapper<T>>;
 
         template<typename T>
         struct referent_of
@@ -260,7 +260,7 @@ namespace ranges
         {};
 
         template<typename T>
-        using referent_of_t = meta_quote_apply<referent_of, T>;
+        using referent_of_t = meta_eval<referent_of<T>>;
 
         struct ref_fn : pipeable<ref_fn>
         {
