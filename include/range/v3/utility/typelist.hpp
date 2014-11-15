@@ -438,29 +438,29 @@ namespace ranges
         using typelist_transform_t = meta_eval<typelist_transform<List, Fun, Dummy>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // typelist_zip_with
-        template<typename Fun, typename ListOfLists>
-        struct typelist_zip_with
-          : typelist_transform<
-                typelist_foldl_t<
-                    ListOfLists,
-                    make_typelist<typelist_front_t<ListOfLists>::size(), Fun>,
-                    meta_bind_back<meta_quote<typelist_transform_t>, meta_quote<meta_bind_front> > >,
-                meta_quote<meta_apply> >
-        {};
-
-        template<typename Fun, typename ListOfLists>
-        using typelist_zip_with_t = meta_eval<typelist_zip_with<Fun, ListOfLists>>;
-
-        ////////////////////////////////////////////////////////////////////////////////////
         // typelist_zip
         template<typename ListOfLists>
         struct typelist_zip
-          : typelist_zip_with<meta_quote<typelist>, ListOfLists>
+          : typelist_foldl_t<
+              ListOfLists,
+              make_typelist<typelist_front_t<ListOfLists>::size(), typelist<> >,
+              meta_bind_back<meta_quote<typelist_transform_t>, meta_quote<typelist_push_back_t> > >
         {};
 
         template<typename ListOfLists>
         using typelist_zip_t = meta_eval<typelist_zip<ListOfLists>>;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_zip_with
+        template<typename Fun, typename ListOfLists>
+        struct typelist_zip_with
+          : typelist_transform<
+                typelist_zip_t<ListOfLists>,
+                meta_bind_front<meta_quote<typelist_apply_t>, Fun> >
+        {};
+
+        template<typename Fun, typename ListOfLists>
+        using typelist_zip_with_t = meta_eval<typelist_zip_with<Fun, ListOfLists>>;
 
         ////////////////////////////////////////////////////////////////////////////////////
         // as_typelist
