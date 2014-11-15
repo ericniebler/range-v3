@@ -447,7 +447,7 @@ namespace ranges
                     concepts::WeakInputIterator>, T>;
 
         template<typename T>
-        using iterator_concept_t = meta_eval<iterator_concept<T>>;
+        using iterator_concept_t = typename iterator_concept<T>::type;
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
@@ -594,7 +594,7 @@ namespace ranges
                     concepts::IteratorRange>, I, S>;
 
         template<typename I, typename S = I>
-        using sized_iterator_range_concept_t = meta_eval<sized_iterator_range_concept<I, S>>;
+        using sized_iterator_range_concept_t = typename sized_iterator_range_concept<I, S>::type;
     }
 }
 
