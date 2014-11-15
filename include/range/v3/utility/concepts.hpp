@@ -118,6 +118,18 @@ namespace ranges
                     typelist_transform_t<
                         base_concepts_of_t<Concept>,
                         meta_bind_back<meta_quote<concepts::models>, Ts...>>>;
+
+            template<typename List>
+            struct most_refined_
+            {};
+
+            template<typename Head, typename...Tail>
+            struct most_refined_<typelist<Head, Tail...>>
+            {
+                using type = Head;
+                constexpr operator Head*() const { return nullptr; }
+                constexpr Head* operator()() const { return nullptr; }
+            };
         }
 
         namespace concepts
@@ -200,20 +212,11 @@ namespace ranges
             // Find the first concept in a list of concepts that is modeled by the Args
             template<typename Concepts, typename...Ts>
             struct most_refined
-              : typelist_front<
+              : detail::most_refined_<
                     typelist_find_if_t<
                         Concepts,
                         meta_bind_back<meta_quote<models>, Ts...>>>
-            {
-                constexpr operator meta_eval<most_refined> *() const
-                {
-                    return nullptr;
-                }
-                constexpr meta_eval<most_refined> *operator()() const
-                {
-                    return nullptr;
-                }
-            };
+            {};
 
             template<typename Concepts, typename...Ts>
             using most_refined_t = meta_eval<most_refined<Concepts, Ts...>>;
