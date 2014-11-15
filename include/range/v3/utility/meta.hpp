@@ -13,6 +13,8 @@
 #ifndef RANGES_V3_UTILITY_META_HPP
 #define RANGES_V3_UTILITY_META_HPP
 
+#include <range/v3/utility/logical_ops.hpp>
+
 namespace ranges
 {
     inline namespace v3
@@ -153,6 +155,10 @@ namespace ranges
             template<typename ...Ts>
             using apply = meta_eval<impl<Ts...>>;
         };
+
+        using meta_and = meta_quote<logical_and>;
+        using meta_or  = meta_quote<logical_or>;
+        using meta_not = meta_quote<logical_not>;
     }
 }
 

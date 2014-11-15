@@ -14,6 +14,7 @@
 #define RANGES_V3_UTILITY_LOGICAL_OPS_HPP
 
 #include <type_traits>
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {

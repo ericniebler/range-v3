@@ -543,6 +543,27 @@ namespace ranges
 
         template<typename List>
         using typelist_reverse_t = meta_eval<typelist_reverse<List>>;
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_all_of
+        template<typename List, typename F>
+        struct typelist_all_of
+          : bool_constant<0 == typelist_find_if_t<List, meta_compose<meta_not, F>>::size()>
+        {};
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_any_of
+        template<typename List, typename F>
+        struct typelist_any_of
+          : bool_constant<0 != typelist_find_if_t<List, F>::size()>
+        {};
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        // typelist_none_of
+        template<typename List, typename F>
+        struct typelist_none_of
+          : bool_constant<0 == typelist_find_if_t<List, F>::size()>
+        {};
     }
 }
 

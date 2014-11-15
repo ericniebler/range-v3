@@ -1,6 +1,7 @@
 #include <tuple>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/typelist.hpp>
+#include "../simple_test.hpp"
 
 using namespace ranges;
 
@@ -48,7 +49,7 @@ Res tuple_cat(Tuples &&... tpls)
         std::forward_as_tuple(std::forward<Tuples>(tpls)...));
 }
 
-int main()
+void test_tuple_cat()
 {
     std::tuple<int, short, long> t1;
     std::tuple<> t2;
@@ -58,4 +59,19 @@ int main()
     auto x = ::tuple_cat(t1, t2, t3, t4);
     using expected_type = std::tuple<int, short, long, float, double, long double, void*, char*>;
     static_assert(std::is_same<decltype(x), expected_type>::value, "");
+}
+
+// Other misc tests
+static_assert(std::is_same<typelist_reverse_t<typelist<int, short, double>>,
+                                              typelist<double, short, int>>::value, "");
+
+static_assert(typelist_all_of<typelist<int, short, long>, meta_quote<std::is_integral>>::value, "");
+static_assert(typelist_none_of<typelist<int, short, long>, meta_quote<std::is_floating_point>>::value, "");
+static_assert(!typelist_any_of<typelist<int, short, long>, meta_quote<std::is_floating_point>>::value, "");
+static_assert(typelist_any_of<typelist<int, short, long, float>, meta_quote<std::is_floating_point>>::value, "");
+
+int main()
+{
+    test_tuple_cat();
+    return ::test_result();
 }
