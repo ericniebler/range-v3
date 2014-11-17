@@ -166,6 +166,7 @@
     <ClCompile Include="..\..\..\..\test\container\insert.cpp" />
     <ClCompile Include="..\..\..\..\test\container\push_back.cpp" />
     <ClCompile Include="..\..\..\..\test\container\push_front.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\slice.cpp" />
     <ClCompile Include="..\..\..\..\test\container\sort.cpp" />
     <ClCompile Include="..\..\..\..\test\container\take.cpp" />
     <ClCompile Include="..\..\..\..\test\container\take_while.cpp" />
@@ -301,6 +302,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\insert.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_back.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\push_front.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\slice.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\stable_sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take.hpp" />

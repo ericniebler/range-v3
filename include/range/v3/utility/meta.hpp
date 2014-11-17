@@ -30,6 +30,12 @@ namespace ranges
         template<typename F, typename...Args>
         using meta_apply = typename F::template apply<Args...>;
 
+        template<typename F, typename...Args>
+        struct meta_apply_lazy
+        {
+            using type = meta_apply<F, Args...>;
+        };
+
         template<template<typename...> class C>
         struct meta_quote
         {
@@ -94,6 +100,12 @@ namespace ranges
             using apply = meta_apply<F0, meta_apply<meta_compose<Fs...>, Ts...>>;
         };
 
+        struct meta_id
+        {
+            template<typename T>
+            using apply = T;
+        };
+
         template<typename T>
         struct meta_always
         {
@@ -115,12 +127,10 @@ namespace ranges
             using apply = meta_apply<F, Ts..., Us...>;
         };
 
-        template<typename F>
+        template<typename F, typename Q = meta_quote<typelist>>
         struct meta_curry
-        {
-            template<typename...Ts>
-            using apply = meta_apply<F, typelist<Ts...>>;
-        };
+          : meta_compose<F, Q>
+        {};
 
         template<typename F>
         struct meta_uncurry
@@ -129,8 +139,8 @@ namespace ranges
             template<typename T>
             struct impl
             {};
-            template<typename ...Ts>
-            struct impl<typelist<Ts...>>
+            template<template<typename...> class T, typename ...Ts>
+            struct impl<T<Ts...>>
             {
                 using type = meta_apply<F, Ts...>;
             };

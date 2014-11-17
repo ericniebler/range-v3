@@ -19,6 +19,9 @@ add_test(test.cont.push_front cont.push_front)
 add_executable(cont.push_back push_back.cpp)
 add_test(test.cont.push_back cont.push_back)
 
+add_executable(cont.slice slice.cpp)
+add_test(test.cont.slice cont.slice)
+
 add_executable(cont.sort sort.cpp)
 add_test(test.cont.sort cont.sort)
 

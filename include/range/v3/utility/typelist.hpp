@@ -20,12 +20,6 @@
 #include <range/v3/utility/nullval.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
 
-RANGES_BEGIN_NAMESPACE_STD
-// Forward-declare tuple; not standard-conforming, but unlikely to cause trouble.
-template<typename...Ts>
-class tuple;
-RANGES_END_NAMESPACE_STD
-
 namespace ranges
 {
     inline namespace v3
@@ -466,28 +460,19 @@ namespace ranges
         // as_typelist
         template<typename Sequence>
         struct as_typelist
+          : detail::conditional_t<
+                std::is_same<uncvref_t<Sequence>, Sequence>::value,
+                // Turns T<Xs...> into typelist<Xs...> for any template type T:
+                meta_apply_lazy<meta_uncurry<meta_curry<meta_id>>, Sequence>,
+                as_typelist<uncvref_t<Sequence>>
+            >
         {};
 
-        template<typename Sequence>
-        struct as_typelist<Sequence &>
-          : as_typelist<Sequence>
-        {};
-
-        template<typename Sequence>
-        struct as_typelist<Sequence const>
-          : as_typelist<Sequence>
-        {};
-
+        // Specialize for integer_sequence
         template<typename T, T...Is>
         struct as_typelist<integer_sequence<T, Is...>>
         {
             using type = typelist<std::integral_constant<T, Is>...>;
-        };
-
-        template<typename ...Ts>
-        struct as_typelist<std::tuple<Ts...>>
-        {
-            using type = typelist<Ts...>;
         };
 
         template<typename Sequence>
