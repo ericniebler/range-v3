@@ -37,5 +37,13 @@ int main()
     ::models<concepts::BidirectionalIterator>(rng1.begin());
     CHECK(rng1.begin() == rng1.end());
 
+    // Check with a mutable predicate
+    int rgi[] = {0,1,2,3,4,5,6,7,8,9};
+    int cnt = 0;
+    auto mutable_only = view::drop_while(rgi, [cnt](int) mutable { return ++cnt <= 5;});
+    ::check_equal(mutable_only, {5,6,7,8,9});
+    CONCEPT_ASSERT(Range<decltype(mutable_only)>());
+    CONCEPT_ASSERT(!Range<decltype(mutable_only) const>());
+
     return test_result();
 }

@@ -62,5 +62,12 @@ int main()
     ::check_equal(rng3, {1,3,5,7,9});
     CHECK(&*begin(rng3) == &rgi[0]);
 
+    // Test filter with a mutable lambda
+    bool flag = false;
+    auto mutable_rng = view::filter(rgi, [flag](int) mutable { return flag = !flag;});
+    ::check_equal(mutable_rng, {1,3,5,7,9});
+    CONCEPT_ASSERT(Range<decltype(mutable_rng)>());
+    CONCEPT_ASSERT(!Range<decltype(mutable_rng) const>());
+
     return test_result();
 }

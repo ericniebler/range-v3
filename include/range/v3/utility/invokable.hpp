@@ -42,8 +42,8 @@ namespace ranges
 
         RANGES_CONSTEXPR make_invokable_fn invokable {};
 
-        //template<typename T>
-        //using invokable_t = decltype(invokable(std::declval<T>()));
+        template<typename T>
+        using invokable_t = decltype(invokable(std::declval<T>()));
 
         template<typename Fun>
         using semiregular_invokable_t =
@@ -52,12 +52,12 @@ namespace ranges
                 invokable_t<Fun>,
                 semiregular<invokable_t<Fun>>>;
 
-        template<typename Fun>
+        template<typename Fun, bool IsConst = false>
         using semiregular_invokable_ref_t =
             detail::conditional_t<
                 (bool) SemiRegular<invokable_t<Fun>>(),
                 invokable_t<Fun>,
-                reference_wrapper<semiregular<invokable_t<Fun>> const>>;
+                reference_wrapper<detail::add_const_if_t<semiregular<invokable_t<Fun>>, IsConst>>>;
 
         namespace concepts
         {

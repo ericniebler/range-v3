@@ -37,11 +37,13 @@ namespace ranges
             friend range_access;
             semiregular_invokable_t<Pred> pred_;
 
+            template<bool IsConst>
             struct adaptor
               : adaptor_base
             {
             private:
-                filtered_view const *rng_;
+                using filtered_view_t = detail::add_const_if_t<filtered_view, IsConst>;
+                filtered_view_t *rng_;
                 using adaptor_base::advance;
                 void satisfy(range_iterator_t<Rng> &it) const
                 {
@@ -49,10 +51,10 @@ namespace ranges
                 }
             public:
                 adaptor() = default;
-                adaptor(filtered_view const &rng)
+                adaptor(filtered_view_t &rng)
                   : rng_(&rng)
                 {}
-                range_iterator_t<Rng> begin(filtered_view const &rng) const
+                range_iterator_t<Rng> begin(filtered_view_t &rng) const
                 {
                     auto it = ranges::begin(rng.mutable_base());
                     this->satisfy(it);
@@ -69,13 +71,25 @@ namespace ranges
                     do --it; while(!pred(*it));
                 }
             };
-            adaptor begin_adaptor() const
+            CONCEPT_REQUIRES(!Invokable<Pred const, range_value_t<Rng>>())
+            adaptor<false> begin_adaptor()
+            {
+                return {*this};
+            }
+            CONCEPT_REQUIRES(Invokable<Pred const, range_value_t<Rng>>())
+            adaptor<true> begin_adaptor() const
             {
                 return {*this};
             }
             // TODO: if end is a sentinel, it holds an unnecessary pointer back to
             // this range.
-            adaptor end_adaptor() const
+            CONCEPT_REQUIRES(!Invokable<Pred const, range_value_t<Rng>>())
+            adaptor<false> end_adaptor()
+            {
+                return {*this};
+            }
+            CONCEPT_REQUIRES(Invokable<Pred const, range_value_t<Rng>>())
+            adaptor<true> end_adaptor() const
             {
                 return {*this};
             }

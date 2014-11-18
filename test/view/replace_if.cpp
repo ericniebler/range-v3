@@ -29,7 +29,7 @@ int main()
     std::stringstream sin{str};
 
     auto && rng = istream<int>(sin) | view::replace_if([](int i){return i == 1; }, 42);
-    has_type<int const &>(*begin(rng));
+    has_type<int>(*begin(rng));
     models<concepts::Range>(rng);
     models_not<concepts::SizedRange>(rng);
     models_not<concepts::BoundedRange>(rng);
@@ -37,13 +37,21 @@ int main()
     models_not<concepts::ForwardIterator>(begin(rng));
 
     auto && tmp = rng | view::bounded;
-    has_type<int const &>(*begin(tmp));
+    has_type<int>(*begin(tmp));
     models<concepts::BoundedRange>(tmp);
     models_not<concepts::SizedRange>(tmp);
     models<concepts::InputIterator>(begin(tmp));
     models_not<concepts::ForwardIterator>(begin(tmp));
     std::vector<int> actual{begin(tmp), end(tmp)};
     ::check_equal(actual, {42, 2, 3, 4, 5, 6, 7, 8, 9, 42, 2, 3, 4, 5, 6, 7, 8, 9, 42, 2, 3, 4, 5, 6, 7, 8, 9});
+
+    // Check with a mutable predicate
+    int rgi[] = {0,1,2,3,4,5,6,7,8,9};
+    bool flag = false;
+    auto mutable_only = view::replace_if(rgi, [flag](int) mutable { return flag = !flag;}, 42);
+    ::check_equal(mutable_only, {42,1,42,3,42,5,42,7,42,9});
+    CONCEPT_ASSERT(Range<decltype(mutable_only)>());
+    CONCEPT_ASSERT(!Range<decltype(mutable_only) const>());
 
     return test_result();
 }

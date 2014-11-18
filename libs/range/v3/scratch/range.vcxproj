@@ -172,6 +172,8 @@
     <ClCompile Include="..\..\..\..\test\container\take_while.cpp" />
     <ClCompile Include="..\..\..\..\test\container\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\container_conversion.cpp" />
+    <ClCompile Include="..\..\..\..\test\multiple1.cpp" />
+    <ClCompile Include="..\..\..\..\test\multiple2.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\adjacent_difference.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\inner_product.cpp" />
@@ -305,7 +307,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\slice.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\stable_sort.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\container\stride.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take_while.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\unique.hpp" />

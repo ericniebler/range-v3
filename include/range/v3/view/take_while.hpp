@@ -43,15 +43,16 @@ namespace ranges
                 SinglePass<range_iterator_t<Rng>>,
                 logical_not<std::is_reference<reference_t>>>;
 
+            template<bool IsConst>
             struct sentinel_adaptor
               : adaptor_base
             {
             private:
-                semiregular_invokable_ref_t<Pred> pred_;
+                semiregular_invokable_ref_t<Pred, IsConst> pred_;
             public:
                 using single_pass = take_while_view::single_pass;
                 sentinel_adaptor() = default;
-                sentinel_adaptor(semiregular_invokable_ref_t<Pred> pred)
+                sentinel_adaptor(semiregular_invokable_ref_t<Pred, IsConst> pred)
                   : pred_(std::move(pred))
                 {}
                 bool empty(range_iterator_t<Rng> it, range_sentinel_t<Rng> end) const
@@ -60,7 +61,13 @@ namespace ranges
                 }
             };
 
-            sentinel_adaptor end_adaptor() const
+            CONCEPT_REQUIRES(!Invokable<Pred const, range_value_t<Rng>>())
+            sentinel_adaptor<false> end_adaptor()
+            {
+                return {pred_};
+            }
+            CONCEPT_REQUIRES(Invokable<Pred const, range_value_t<Rng>>())
+            sentinel_adaptor<true> end_adaptor() const
             {
                 return {pred_};
             }

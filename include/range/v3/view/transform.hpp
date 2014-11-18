@@ -47,14 +47,15 @@ namespace ranges
                 logical_not<std::is_reference<reference_t>>>;
             using use_sentinel_t = logical_or<logical_not<BoundedIterable<Rng>>, single_pass>;
 
+            template<bool IsConst>
             struct adaptor : adaptor_base
             {
             private:
-                semiregular_invokable_ref_t<Fun> fun_;
+                semiregular_invokable_ref_t<Fun, IsConst> fun_;
             public:
                 using single_pass = transformed_view::single_pass;
                 adaptor() = default;
-                adaptor(semiregular_invokable_ref_t<Fun> fun)
+                adaptor(semiregular_invokable_ref_t<Fun, IsConst> fun)
                   : fun_(std::move(fun))
                 {}
                 auto current(range_iterator_t<Rng> it) const ->
@@ -64,7 +65,13 @@ namespace ranges
                 }
             };
 
-            adaptor begin_adaptor() const
+            CONCEPT_REQUIRES(!Invokable<Fun const, range_value_t<Rng>>())
+            adaptor<false> begin_adaptor()
+            {
+                return {fun_};
+            }
+            CONCEPT_REQUIRES(Invokable<Fun const, range_value_t<Rng>>())
+            adaptor<true> begin_adaptor() const
             {
                 return {fun_};
             }
@@ -73,8 +80,13 @@ namespace ranges
             {
                 return {};
             }
-            CONCEPT_REQUIRES(!use_sentinel_t())
-            adaptor end_adaptor() const
+            CONCEPT_REQUIRES(!use_sentinel_t() && !Invokable<Fun const, range_value_t<Rng>>())
+            adaptor<false> end_adaptor()
+            {
+                return {fun_};
+            }
+            CONCEPT_REQUIRES(!use_sentinel_t() && Invokable<Fun const, range_value_t<Rng>>())
+            adaptor<true> end_adaptor() const
             {
                 return {fun_};
             }

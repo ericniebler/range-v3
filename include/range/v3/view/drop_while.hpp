@@ -53,12 +53,12 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(Iterable<Rng const>())
+            CONCEPT_REQUIRES(Iterable<Rng const>() && Invokable<Pred const, range_value_t<Rng>>())
             range_iterator_t<Rng const> begin() const
             {
                 return find_if_not(rng_, std::ref(pred_));
             }
-            CONCEPT_REQUIRES(Iterable<Rng const>())
+            CONCEPT_REQUIRES(Iterable<Rng const>() && Invokable<Pred const, range_value_t<Rng>>())
             range_sentinel_t<Rng const> end() const
             {
                 return ranges::end(rng_);

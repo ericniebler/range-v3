@@ -30,5 +30,13 @@ int main()
     auto rng1 = vi | view::take_while([](int i) { return i != 50; });
     ::check_equal(rng1, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
+    // Check with a mutable predicate
+    int rgi[] = {0,1,2,3,4,5,6,7,8,9};
+    int cnt = 0;
+    auto mutable_only = view::take_while(rgi, [cnt](int) mutable { return ++cnt <= 5;});
+    ::check_equal(mutable_only, {0,1,2,3,4});
+    CONCEPT_ASSERT(Range<decltype(mutable_only)>());
+    CONCEPT_ASSERT(!Range<decltype(mutable_only) const>());
+
     return test_result();
 }

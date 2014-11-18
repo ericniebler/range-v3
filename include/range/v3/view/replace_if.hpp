@@ -39,13 +39,20 @@ namespace ranges
                     compressed_pair<semiregular_invokable_t<Pred>, Val> fun_and_new_value_;
 
                     template<typename Val2>
-                    replacer_if_fun(Pred pred, Val2 && new_value)
-                      : fun_and_new_value_{invokable(std::move(pred)),
-                                           std::forward<Val2>(new_value)}
+                    replacer_if_fun(Pred pred, Val2 new_value)
+                      : fun_and_new_value_{invokable(std::move(pred)), std::move(new_value)}
                     {}
                 public:
-                    template<typename Other>
-                    Other operator()(Other && other) const
+                    template<typename Other,
+                        CONCEPT_REQUIRES_(!Invokable<Pred const, Other &>())>
+                    uncvref_t<Other> operator()(Other && other)
+                    {
+                        return (fun_and_new_value_.first(other)) ?
+                            fun_and_new_value_.second : std::forward<Other>(other);
+                    }
+                    template<typename Other,
+                        CONCEPT_REQUIRES_(Invokable<Pred const, Other &>())>
+                    uncvref_t<Other> operator()(Other && other) const
                     {
                         return (fun_and_new_value_.first(other)) ?
                             fun_and_new_value_.second : std::forward<Other>(other);
@@ -54,25 +61,22 @@ namespace ranges
             public:
                 template<typename Rng, typename Pred, typename Val>
                 transformed_view<Rng, replacer_if_fun<Pred, detail::decay_t<Val>>>
-                operator()(Rng && rng, Pred pred, Val && new_value) const
+                operator()(Rng && rng, Pred pred, Val new_value) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
-                    CONCEPT_ASSERT(InvokablePredicate<Pred,
-                                                      range_value_t<Rng>>());
-                    CONCEPT_ASSERT(Convertible<detail::decay_t<Val> const &,
-                                               range_reference_t<Rng>>());
-                    return {std::forward<Rng>(rng),
-                            {std::move(pred), std::forward<Val>(new_value)}};
+                    CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
+                    CONCEPT_ASSERT(Convertible<Val, range_value_t<Rng>>());
+                    return {std::forward<Rng>(rng), {std::move(pred), std::move(new_value)}};
 
                 }
 
                 template<typename Pred, typename Val>
-                auto operator()(Pred pred, Val && new_value) const ->
+                auto operator()(Pred pred, Val new_value) const ->
                     decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred)),
-                        bind_forward<Val>(new_value))))
+                        std::move(new_value))))
                 {
                     return make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred)),
-                        bind_forward<Val>(new_value)));
+                        std::move(new_value)));
                 }
             };
 

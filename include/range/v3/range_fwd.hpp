@@ -313,9 +313,6 @@ namespace ranges
 
         struct bind_fn;
 
-        template<typename T>
-        using invokable_t = decltype(std::declval<make_invokable_fn>()(std::declval<T>()));
-
         template<typename Derived, bool Inf = false>
         struct range_interface;
 

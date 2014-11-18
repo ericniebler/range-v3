@@ -77,5 +77,13 @@ int main()
     counted_iterator<forward_iterator<std::pair<int, int>*>> i = begin(rng4).base();
     (void)i;
 
+    // Test transform with a mutable lambda
+    int cnt = 100;
+    auto mutable_rng = view::transform(rgi, [cnt](int i) mutable { return cnt++;});
+    ::check_equal(mutable_rng, {100,101,102,103,104,105,106,107,108,109});
+    CHECK(cnt == 100);
+    CONCEPT_ASSERT(Range<decltype(mutable_rng)>());
+    CONCEPT_ASSERT(!Range<decltype(mutable_rng) const>());
+
     return test_result();
 }
