@@ -42,8 +42,8 @@ namespace ranges
 
         RANGES_CONSTEXPR make_invokable_fn invokable {};
 
-        template<typename T>
-        using invokable_t = decltype(invokable(std::declval<T>()));
+        //template<typename T>
+        //using invokable_t = decltype(invokable(std::declval<T>()));
 
         template<typename Fun>
         using semiregular_invokable_t =

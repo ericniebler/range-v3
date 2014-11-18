@@ -88,7 +88,7 @@ namespace ranges
                     std::ref(pred), std::ref(proj), std::ref(proj));
             }
 
-            static constexpr int merge_sort_chunk_size = 7;
+            static constexpr int merge_sort_chunk_size() { return 7; }
 
             template<typename I, typename D, typename C, typename P>
             static void chunk_insertion_sort(I begin, I end, D chunk_size, C &pred, P &proj)
@@ -106,7 +106,7 @@ namespace ranges
             template<typename I, typename V, typename C, typename P>
             static void merge_sort_with_buffer(I begin, I end, V *buffer, C &pred, P &proj)
             {
-                iterator_difference_t<I> len = end - begin, step_size = stable_sort_fn::merge_sort_chunk_size;
+                iterator_difference_t<I> len = end - begin, step_size = stable_sort_fn::merge_sort_chunk_size();
                 stable_sort_fn::chunk_insertion_sort(begin, end, step_size, pred, proj);
                 if(step_size >= len)
                     return;
@@ -176,8 +176,6 @@ namespace ranges
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
         };
-
-        constexpr int stable_sort_fn::merge_sort_chunk_size;
 
         RANGES_CONSTEXPR stable_sort_fn stable_sort {};
 

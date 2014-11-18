@@ -305,6 +305,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\slice.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\stable_sort.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\stride.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take_while.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\unique.hpp" />

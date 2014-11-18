@@ -83,33 +83,19 @@ namespace ranges
             struct action;
         }
 
-        extern adl_begin_end_detail::begin_fn const begin;
-        extern adl_begin_end_detail::end_fn const end;
-        extern adl_begin_end_detail::cbegin_fn const cbegin;
-        extern adl_begin_end_detail::cend_fn const cend;
-
-        extern adl_size_detail::size_fn const size;
-
         struct advance_fn;
-        extern advance_fn const advance;
 
         struct advance_to_fn;
-        extern advance_to_fn const advance_to;
 
         struct advance_bounded_fn;
-        extern advance_bounded_fn const advance_bounded;
 
         struct next_fn;
-        extern next_fn const next;
 
         struct prev_fn;
-        extern prev_fn const prev;
 
         struct distance_fn;
-        extern distance_fn const distance;
 
         struct iter_size_fn;
-        extern iter_size_fn const iter_size;
 
         template<typename I>
         struct iterator_difference;
@@ -155,7 +141,6 @@ namespace ranges
             };
 
             struct make_compressed_pair_fn;
-            extern make_compressed_pair_fn const make_compressed_pair;
 
             template<typename ...T>
             struct is_placeholder;
@@ -164,13 +149,11 @@ namespace ranges
             struct is_binder;
 
             struct wrap_bind_fn;
-            extern wrap_bind_fn const wrap_bind;
 
             template<typename Bind>
             struct bind_wrapper;
 
             struct unwrap_bind_fn;
-            extern unwrap_bind_fn const unwrap_bind;
 
             template<typename T>
             struct identity
@@ -327,13 +310,11 @@ namespace ranges
         struct compressed_tuple;
 
         struct make_invokable_fn;
-        extern make_invokable_fn const invokable;
 
         struct bind_fn;
-        extern bind_fn const bind;
 
         template<typename T>
-        using invokable_t = decltype(invokable(std::declval<T>()));
+        using invokable_t = decltype(std::declval<make_invokable_fn>()(std::declval<T>()));
 
         template<typename Derived, bool Inf = false>
         struct range_interface;
@@ -351,7 +332,6 @@ namespace ranges
         struct sized_range;
 
         struct make_range_fn;
-        extern make_range_fn const make_range;
 
         template<typename I>
         struct iterator_value;
@@ -397,13 +377,11 @@ namespace ranges
         namespace view
         {
             struct adjacent_filter_fn;
-            extern adjacent_filter_fn const adjacent_filter;
         }
 
         namespace view
         {
             struct all_fn;
-            extern all_fn const all;
         }
 
         template<typename Rng>
@@ -412,7 +390,6 @@ namespace ranges
         namespace view
         {
             struct bounded_fn;
-            extern bounded_fn const bounded;
         }
 
         template<typename Rng>
@@ -421,7 +398,6 @@ namespace ranges
         namespace view
         {
             struct const_fn;
-            extern const_fn const const_;
         }
 
         template<typename I, typename D = typename iterator_difference<I>::type>
@@ -430,7 +406,6 @@ namespace ranges
         namespace view
         {
             struct counted_fn;
-            extern counted_fn const counted;
         }
 
         template<typename I, typename D = typename iterator_difference<I>::type>
@@ -446,7 +421,6 @@ namespace ranges
         namespace view
         {
             struct filter_fn;
-            extern filter_fn const filter;
         }
 
         template<typename Rng>
@@ -455,7 +429,6 @@ namespace ranges
         namespace view
         {
             struct indirect_fn;
-            extern indirect_fn const indirect;
         }
 
         template<typename Rng>
@@ -464,7 +437,6 @@ namespace ranges
         namespace view
         {
             struct iota_fn;
-            extern iota_fn const iota;
         }
 
         template<typename...Rngs>
@@ -473,7 +445,6 @@ namespace ranges
         namespace view
         {
             struct join_fn;
-            extern join_fn const join;
         }
 
         template<typename Rng>
@@ -482,7 +453,6 @@ namespace ranges
         namespace view
         {
             struct move_fn;
-            extern move_fn const move;
         }
 
         template<typename Val>
@@ -491,16 +461,13 @@ namespace ranges
         namespace view
         {
             struct repeat_fn;
-            extern repeat_fn const repeat;
         }
 
         namespace view
         {
             struct replace_fn;
-            extern replace_fn const replace;
 
             struct replace_if_fn;
-            extern replace_if_fn const replace_if;
         }
 
         template<typename Rng>
@@ -509,7 +476,6 @@ namespace ranges
         namespace view
         {
             struct reverse_fn;
-            extern reverse_fn const reverse;
         }
 
         template<typename Rng>
@@ -518,7 +484,6 @@ namespace ranges
         namespace view
         {
             struct slice_fn;
-            extern slice_fn const slice;
         }
 
         template<typename Rng>
@@ -527,7 +492,6 @@ namespace ranges
         namespace view
         {
             struct single_fn;
-            extern single_fn const single;
         }
 
         template<typename Rng>
@@ -536,7 +500,6 @@ namespace ranges
         namespace view
         {
             struct stride_fn;
-            extern stride_fn const stride;
         }
 
         template<typename Rng>
@@ -545,7 +508,6 @@ namespace ranges
         namespace view
         {
             struct take_fn;
-            extern take_fn const take;
         }
 
         template<typename Rng, typename Regex, typename SubMatchRange>
@@ -554,7 +516,6 @@ namespace ranges
         namespace view
         {
             struct tokenize_fn;
-            extern tokenize_fn const tokenize;
         }
 
         template<typename Rng, typename Fun>
@@ -563,7 +524,6 @@ namespace ranges
         namespace view
         {
             struct transform_fn;
-            extern transform_fn const transform;
         }
 
         template<typename I>
@@ -572,7 +532,6 @@ namespace ranges
         namespace view
         {
             struct unbounded_fn;
-            extern unbounded_fn const unbounded;
         }
 
         template<typename Rng>
@@ -581,7 +540,6 @@ namespace ranges
         namespace view
         {
             struct unique_fn;
-            extern unique_fn const unique;
         }
 
         template<typename Rng>
@@ -593,10 +551,8 @@ namespace ranges
         namespace view
         {
             struct keys_fn;
-            extern keys_fn const keys;
 
             struct values_fn;
-            extern values_fn const values;
         }
 
         template<typename Fun, typename...Rngs>
@@ -608,10 +564,8 @@ namespace ranges
         namespace view
         {
             struct zip_fn;
-            extern zip_fn const zip;
 
             struct zip_with_fn;
-            extern zip_with_fn const zip_with;
         }
     }
 }

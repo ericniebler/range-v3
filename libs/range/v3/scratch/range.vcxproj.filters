@@ -1077,6 +1077,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\slice.hpp">
       <Filter>Header Files\container</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\stride.hpp">
+      <Filter>Header Files\container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

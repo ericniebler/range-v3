@@ -138,15 +138,15 @@ namespace ranges
         struct sort_fn
         {
         private:
-            static constexpr int introsort_threshold = 16;
+            static constexpr int introsort_threshold() { return 16; }
 
             template<typename I, typename C, typename P>
             static void final_insertion_sort(I begin, I end, C &pred, P &proj)
             {
-                if(end - begin > sort_fn::introsort_threshold)
+                if(end - begin > sort_fn::introsort_threshold())
                 {
-                    detail::insertion_sort(begin, begin + sort_fn::introsort_threshold, pred, proj);
-                    detail::unguarded_insertion_sort(begin + sort_fn::introsort_threshold, end, pred, proj);
+                    detail::insertion_sort(begin, begin + sort_fn::introsort_threshold(), pred, proj);
+                    detail::unguarded_insertion_sort(begin + sort_fn::introsort_threshold(), end, pred, proj);
                 }
                 else
                     detail::insertion_sort(begin, end, pred, proj);
@@ -164,7 +164,7 @@ namespace ranges
             template<typename I, typename Size, typename C, typename P>
             static void introsort_loop(I begin, I end, Size depth_limit, C &pred, P &proj)
             {
-                while(end - begin > sort_fn::introsort_threshold)
+                while(end - begin > sort_fn::introsort_threshold())
                 {
                     if(depth_limit == 0)
                         return partial_sort(begin, end, end, std::ref(pred), std::ref(proj)), void();
@@ -201,8 +201,6 @@ namespace ranges
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
         };
-
-        constexpr int sort_fn::introsort_threshold;
 
         RANGES_CONSTEXPR sort_fn sort{};
 

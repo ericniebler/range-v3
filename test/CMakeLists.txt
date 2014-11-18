@@ -22,3 +22,6 @@ add_test(test.range_adaptor range_adaptor)
 
 add_executable(range range.cpp)
 add_test(test.range range)
+
+add_executable(multiple multiple1.cpp multiple2.cpp)
+add_test(test.multiple multiple)
