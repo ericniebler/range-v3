@@ -40,7 +40,7 @@ namespace ranges
             public:
                 template<typename Rng, typename C = ordered_less, typename P = ident,
                     typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && Sortable<I, C, P>())>
+                    CONCEPT_REQUIRES_(Iterable<Rng &>() && Sortable<I, C, P>())>
                 void operator()(Rng & rng, C pred = C{}, P proj = P{}) const
                 {
                     ranges::sort(rng, std::move(pred), std::move(proj));

@@ -39,7 +39,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng, typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && EraseableIterable<Rng &, I, I>())>
+                    CONCEPT_REQUIRES_(Iterable<Rng &>() && EraseableIterable<Rng &, I, I>())>
                 void operator()(Rng & rng, range_difference_t<Rng> from, range_difference_t<Rng> to) const
                 {
                     RANGES_ASSERT(from <= to);

@@ -35,6 +35,17 @@ namespace ranges
                 Constructible<Cont, I, I>>;
         }
 
+        // BUGBUG switch to variable template if it's available
+        template<typename Container, typename Rng,
+            CONCEPT_REQUIRES_(detail::ConvertibleToContainer<Rng, Container>())>
+        Container to_container(Rng && rng)
+        {
+            static_assert(!is_infinite<Rng>::value,
+                "Attempt to convert an infinite range to a container.");
+            using I = range_common_iterator_t<Rng>;
+            return Container{I{begin(rng)}, I{end(rng)}};
+        }
+
         template<typename Derived, bool Inf /* = false*/>
         struct range_interface
           : private basic_range<Inf>
@@ -111,20 +122,14 @@ namespace ranges
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D, Container>())>
             operator Container ()
             {
-                static_assert(!is_infinite<D>::value,
-                    "Attempt to convert an infinite range to a container.");
-                using I = range_common_iterator_t<D>;
-                return Container{I{begin(derived())}, I{end(derived())}};
+                return ranges::to_container<Container>(derived());
             }
             template<typename Container, typename D = Derived,
                 typename Alloc = typename Container::allocator_type, // HACKHACK
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D const, Container>())>
             operator Container () const
             {
-                static_assert(!is_infinite<D>::value,
-                    "Attempt to convert an infinite range to a container.");
-                using I = range_common_iterator_t<D const>;
-                return Container{I{begin(derived())}, I{end(derived())}};
+                return ranges::to_container<Container>(derived());
             }
         };
     }
