@@ -21,8 +21,10 @@
 #include <range/v3/container/insert.hpp>
 #include <range/v3/container/push_back.hpp>
 #include <range/v3/container/push_front.hpp>
+#include <range/v3/container/slice.hpp>
 #include <range/v3/container/sort.hpp>
 #include <range/v3/container/stable_sort.hpp>
+#include <range/v3/container/stride.hpp>
 #include <range/v3/container/take.hpp>
 #include <range/v3/container/take_while.hpp>
 #include <range/v3/container/unique.hpp>

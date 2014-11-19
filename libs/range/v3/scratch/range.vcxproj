@@ -168,6 +168,7 @@
     <ClCompile Include="..\..\..\..\test\container\push_front.cpp" />
     <ClCompile Include="..\..\..\..\test\container\slice.cpp" />
     <ClCompile Include="..\..\..\..\test\container\sort.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\stride.cpp" />
     <ClCompile Include="..\..\..\..\test\container\take.cpp" />
     <ClCompile Include="..\..\..\..\test\container\take_while.cpp" />
     <ClCompile Include="..\..\..\..\test\container\unique.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\slice.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\stable_sort.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\stride.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take_while.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\unique.hpp" />

@@ -25,6 +25,9 @@ add_test(test.cont.slice cont.slice)
 add_executable(cont.sort sort.cpp)
 add_test(test.cont.sort cont.sort)
 
+add_executable(cont.stride stride.cpp)
+add_test(test.cont.stride cont.stride)
+
 add_executable(cont.take take.cpp)
 add_test(test.cont.take cont.take)
 
