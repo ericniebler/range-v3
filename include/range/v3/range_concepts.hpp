@@ -40,9 +40,7 @@ RANGES_BEGIN_NAMESPACE_STD
 RANGES_END_NAMESPACE_STD
 #else
 #include <set>
-#include <multiset>
 #include <unordered_set>
-#include <unordered_multiset>
 #endif
 
 namespace ranges
