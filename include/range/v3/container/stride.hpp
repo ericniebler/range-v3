@@ -52,7 +52,9 @@ namespace ranges
                         {
                             for(I i = next_bounded(++begin, step-1, end); i != end;
                                 advance_bounded(i, step, end), ++begin)
+                            {
                                 *begin = std::move(*i);
+                            }
                         }
                         cont::erase(rng, begin, end);
                     }

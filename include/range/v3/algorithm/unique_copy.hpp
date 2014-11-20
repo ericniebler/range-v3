@@ -109,7 +109,7 @@ namespace ranges
             /// range-based version of the unique_copy std algorithm
             ///
             /// \pre InputRange is a model of the InputRange concept
-            /// \pre O is a model of the OutputIterator concept
+            /// \pre O is a model of the WeakOutputIterator concept
             /// \pre C is a model of the InvokableRelation concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && IteratorRange<I, S>())>
