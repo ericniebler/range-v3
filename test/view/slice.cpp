@@ -56,15 +56,6 @@ int main()
     models_not<concepts::RandomAccessIterator>(begin(rng3));
     ::check_equal(rng3, {3, 4, 5, 6, 7, 8});
 
-    auto rng3_ = view::all(l)[{3, 9}];
-    has_type<int &>(*begin(rng3_));
-    models<concepts::Range>(rng3_);
-    models_not<concepts::BoundedRange>(rng3_);
-    models<concepts::SizedRange>(rng3_);
-    models<concepts::BidirectionalIterator>(begin(rng3_));
-    models_not<concepts::RandomAccessIterator>(begin(rng3_));
-    ::check_equal(rng3_, {3, 4, 5, 6, 7, 8});
-
     auto rng4 = view::iota(10) | view::slice(10, 20);
     ::models<concepts::BoundedRange>(rng4);
     ::models<concepts::SizedRange>(rng4);
@@ -76,6 +67,24 @@ int main()
     ::models<concepts::SizedRange>(rng5);
     static_assert(!ranges::is_infinite<decltype(rng5)>::value, "");
     ::check_equal(rng5, {20, 21, 22, 23, 24, 25, 26, 27, 28, 29});
+
+    auto rng6 = view::all(l)[{3, 9}];
+    has_type<int &>(*begin(rng6));
+    models<concepts::Range>(rng6);
+    models_not<concepts::BoundedRange>(rng6);
+    models<concepts::SizedRange>(rng6);
+    models<concepts::BidirectionalIterator>(begin(rng6));
+    models_not<concepts::RandomAccessIterator>(begin(rng6));
+    ::check_equal(rng6, {3, 4, 5, 6, 7, 8});
+
+    auto rng7 = view::all(l)[{3, end}];
+    has_type<int &>(*begin(rng7));
+    models<concepts::Range>(rng7);
+    models<concepts::BoundedRange>(rng7);
+    models<concepts::SizedRange>(rng7);
+    models<concepts::BidirectionalIterator>(begin(rng7));
+    models_not<concepts::RandomAccessIterator>(begin(rng7));
+    ::check_equal(rng7, {3, 4, 5, 6, 7, 8, 9, 10});
 
     return test_result();
 }

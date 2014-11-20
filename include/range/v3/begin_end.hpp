@@ -95,10 +95,10 @@ namespace ranges
             };
         }
 
-        RANGES_CONSTEXPR adl_begin_end_detail::begin_fn begin {};
-        RANGES_CONSTEXPR adl_begin_end_detail::end_fn end {};
-        RANGES_CONSTEXPR adl_begin_end_detail::cbegin_fn cbegin {};
-        RANGES_CONSTEXPR adl_begin_end_detail::cend_fn cend {};
+        RANGES_CONSTEXPR begin_fn begin {};
+        RANGES_CONSTEXPR end_fn end {};
+        RANGES_CONSTEXPR cbegin_fn cbegin {};
+        RANGES_CONSTEXPR cend_fn cend {};
     }
 }
 

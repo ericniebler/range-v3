@@ -134,19 +134,61 @@ namespace ranges
                 return derived().begin()[n];
             }
             // Python-ic slicing with rng[{from,to}]
-            template<typename D = Derived,
+            template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D>())>
-            sliced_view<D &>
-            operator[](detail::slice_bounds<range_difference_t<D>> offs)
+            auto operator[](detail::slice_bounds<range_difference_t<D>> offs) ->
+                decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
             {
-                return sliced_view<D &>{derived(), offs.from, offs.to};
+                return Slice{}(derived(), offs.from, offs.to);
             }
-            template<typename D = Derived,
+            template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D const>())>
-            sliced_view<D const &>
-            operator[](detail::slice_bounds<range_difference_t<D>> offs) const
+            auto operator[](detail::slice_bounds<range_difference_t<D>> offs) const ->
+                decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
             {
-                return sliced_view<D const &>{derived(), offs.from, offs.to};
+                return Slice{}(derived(), offs.from, offs.to);
+            }
+            template<typename D = Derived, typename Slice = view::slice_fn,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D>())>
+            auto operator[](detail::slice_bounds<range_difference_t<D>, end_fn> offs) ->
+                decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
+            {
+                return Slice{}(derived(), offs.from, offs.to);
+            }
+            template<typename D = Derived, typename Slice = view::slice_fn,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D const>())>
+            auto operator[](detail::slice_bounds<range_difference_t<D>, end_fn> offs) const ->
+                decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
+            {
+                return Slice{}(derived(), offs.from, offs.to);
+            }
+            template<typename D = Derived, typename Slice = view::slice_fn,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D>())>
+            auto operator[](detail::slice_bounds<begin_fn, range_difference_t<D>> offs) ->
+                decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
+            {
+                return Slice{}(derived(), offs.from, offs.to);
+            }
+            template<typename D = Derived, typename Slice = view::slice_fn,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D const>())>
+            auto operator[](detail::slice_bounds<begin_fn, range_difference_t<D>> offs) const ->
+                decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
+            {
+                return Slice{}(derived(), offs.from, offs.to);
+            }
+            template<typename D = Derived, typename Slice = view::slice_fn,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D>())>
+            auto operator[](detail::slice_bounds<begin_fn, end_fn> offs) ->
+                decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
+            {
+                return Slice{}(derived(), offs.from, offs.to);
+            }
+            template<typename D = Derived, typename Slice = view::slice_fn,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D const>())>
+            auto operator[](detail::slice_bounds<begin_fn, end_fn> offs) const ->
+                decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
+            {
+                return Slice{}(derived(), offs.from, offs.to);
             }
             // Implicit conversion to something that looks like a container:
             template<typename Container, typename D = Derived,

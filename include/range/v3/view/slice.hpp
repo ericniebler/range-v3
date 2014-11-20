@@ -25,6 +25,7 @@
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
+#include <range/v3/view/drop.hpp>
 
 namespace ranges
 {
@@ -160,11 +161,50 @@ namespace ranges
                 (
                     slice_fn::invoke_(std::forward<Rng>(rng), from, to, iterable_concept<Rng>{})
                 )
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                auto operator()(Rng && rng, range_difference_t<Rng> from, end_fn) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    view::drop(std::forward<Rng>(rng), from)
+                )
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                auto operator()(Rng && rng, begin_fn, range_difference_t<Rng> to) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    slice_fn::invoke_(std::forward<Rng>(rng), 0, to, iterable_concept<Rng>{})
+                )
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                auto operator()(Rng && rng, begin_fn, end_fn) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    view::all(std::forward<Rng>(rng))
+                )
+
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
                 auto operator()(Int from, Int to) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(*this, std::placeholders::_1, from, to))
+                )
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                auto operator()(Int from, end_fn) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(view::drop, std::placeholders::_1, from))
+                )
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                auto operator()(begin_fn, Int to) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(*this, std::placeholders::_1, 0, to))
+                )
+                auto operator()(begin_fn, end_fn) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(view::all, std::placeholders::_1))
                 )
             };
 
