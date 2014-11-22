@@ -25,3 +25,6 @@ add_test(test.range range)
 
 add_executable(multiple multiple1.cpp multiple2.cpp)
 add_test(test.multiple multiple)
+
+add_executable(distance_compare distance_compare.cpp)
+add_test(test.distance_compare distance_compare)
