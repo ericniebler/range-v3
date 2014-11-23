@@ -167,7 +167,7 @@ namespace ranges
         private:
             using iota_concept_t = ranges::iota_concept<Val>;
             friend range_access;
-            using difference_type = detail::iota_difference_t<Val>;
+            using difference_type_ = detail::iota_difference_t<Val>;
 
             Val value_;
 
@@ -194,12 +194,12 @@ namespace ranges
                 --value_;
             }
             CONCEPT_REQUIRES(RandomAccessIota<Val>())
-            void advance(difference_type n)
+            void advance(difference_type_ n)
             {
                 value_ += n;
             }
             CONCEPT_REQUIRES(RandomAccessIota<Val>())
-            difference_type distance_to(iota_view const &that) const
+            difference_type_ distance_to(iota_view const &that) const
             {
                 return detail::iota_minus(that.value_, value_);
             }

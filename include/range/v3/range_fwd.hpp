@@ -242,6 +242,9 @@ namespace ranges
 
             struct counted_sentinel;
 
+            template<typename Int>
+            struct from_end_;
+
 #if !defined(__GLIBCXX__)
             template<typename T>
             using is_trivially_copy_assignable = std::is_trivially_copy_assignable<T>;
