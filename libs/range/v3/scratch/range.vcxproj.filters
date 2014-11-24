@@ -499,6 +499,12 @@
     <ClCompile Include="..\..\..\..\test\container\stride.cpp">
       <Filter>Test Files\container</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\container\transform.cpp">
+      <Filter>Test Files\container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\to_container.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -1088,6 +1094,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\container\stride.hpp">
       <Filter>Header Files\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\container\transform.hpp">
+      <Filter>Header Files\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\to_container.hpp">
+      <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

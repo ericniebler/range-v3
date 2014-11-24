@@ -45,6 +45,7 @@
 #include <range/v3/view/tail.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/take_while.hpp>
+#include <range/v3/view/to_container.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/tokenize.hpp>
 #include <range/v3/view/unbounded.hpp>

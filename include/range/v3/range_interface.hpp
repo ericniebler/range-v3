@@ -20,6 +20,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/common_iterator.hpp>
+#include <range/v3/view/to_container.hpp>
 
 namespace ranges
 {
@@ -27,14 +28,6 @@ namespace ranges
     {
         namespace detail
         {
-            template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
-            using ConvertibleToContainer = fast_logical_and<
-                Iterable<Cont>,
-                logical_not<Range<Cont>>,
-                Movable<Cont>,
-                Convertible<range_value_t<Rng>, range_value_t<Cont>>,
-                Constructible<Cont, I, I>>;
-
             template<typename From, typename To = From>
             struct slice_bounds
             {
@@ -59,17 +52,6 @@ namespace ranges
                     return {static_cast<Other>(dist_)};
                 }
             };
-        }
-
-        // BUGBUG switch to variable template if it's available
-        template<typename Container, typename Rng,
-            CONCEPT_REQUIRES_(detail::ConvertibleToContainer<Rng, Container>())>
-        Container to_container(Rng && rng)
-        {
-            static_assert(!is_infinite<Rng>::value,
-                "Attempt to convert an infinite range to a container.");
-            using I = range_common_iterator_t<Rng>;
-            return Container{I{begin(rng)}, I{end(rng)}};
         }
 
         template<typename Derived, bool Inf /* = false*/>
@@ -238,14 +220,14 @@ namespace ranges
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D, Container>())>
             operator Container ()
             {
-                return ranges::to_container<Container>(derived());
+                return detail::to_container<Container>(derived());
             }
             template<typename Container, typename D = Derived,
                 typename Alloc = typename Container::allocator_type, // HACKHACK
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D const, Container>())>
             operator Container () const
             {
-                return ranges::to_container<Container>(derived());
+                return detail::to_container<Container>(derived());
             }
         };
     }

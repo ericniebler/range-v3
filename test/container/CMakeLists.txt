@@ -34,5 +34,8 @@ add_test(test.cont.take cont.take)
 add_executable(cont.take_while take_while.cpp)
 add_test(test.cont.take_while cont.take_while)
 
+add_executable(cont.transform transform.cpp)
+add_test(test.cont.transform cont.transform)
+
 add_executable(cont.unique unique.cpp)
 add_test(test.cont.unique cont.unique)

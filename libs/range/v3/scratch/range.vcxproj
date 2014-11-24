@@ -171,6 +171,7 @@
     <ClCompile Include="..\..\..\..\test\container\stride.cpp" />
     <ClCompile Include="..\..\..\..\test\container\take.cpp" />
     <ClCompile Include="..\..\..\..\test\container\take_while.cpp" />
+    <ClCompile Include="..\..\..\..\test\container\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\container\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\container_conversion.cpp" />
     <ClCompile Include="..\..\..\..\test\multiple1.cpp" />
@@ -208,6 +209,7 @@
     <ClCompile Include="..\..\..\..\test\view\stride.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take_while.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\to_container.cpp" />
     <ClCompile Include="..\..\..\..\test\view\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\view\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\view\zip.cpp" />
@@ -311,6 +313,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\container\stride.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\take_while.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\container\transform.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\container\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\core.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp" />
@@ -399,6 +402,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\take.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\take_while.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\tokenize.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\to_container.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unbounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />

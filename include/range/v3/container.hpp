@@ -27,6 +27,7 @@
 #include <range/v3/container/stride.hpp>
 #include <range/v3/container/take.hpp>
 #include <range/v3/container/take_while.hpp>
+#include <range/v3/container/transform.hpp>
 #include <range/v3/container/unique.hpp>
 
 #endif

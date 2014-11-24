@@ -34,7 +34,7 @@ namespace ranges
         namespace detail
         {
             template<typename Rng, typename Int>
-            range_iterator_t<Rng> pos_at_(Rng && rng, Int i, concepts::BidirectionalIterable *,
+            range_iterator_t<Rng> pos_at_(Rng && rng, Int i, concepts::InputIterable *,
                 std::true_type)
             {
                 RANGES_ASSERT(0 <= i);
