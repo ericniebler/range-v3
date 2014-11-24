@@ -220,6 +220,48 @@ namespace ranges
 
         RANGES_CONSTEXPR iter_distance_fn iter_distance {};
 
+        struct iter_distance_compare_fn
+        {
+        private:
+            template<typename I, typename S>
+            int impl_i(I begin, S end, iterator_difference_t<I> n, concepts::IteratorRange*) const
+            {
+                if (n >= 0) {
+                    for (; n > 0; --n) {
+                        if (begin == end) {
+                            return -1;
+                        }
+                        ++begin;
+                    }
+                    return begin == end ? 0 : 1;
+                }
+                else {
+                    return 1;
+                }
+            }
+            template<typename I, typename S>
+            int impl_i(I begin, S end, iterator_difference_t<I> n, concepts::SizedIteratorRange*) const
+            {
+                iterator_difference_t<I> dist = static_cast<iterator_difference_t<I>>(end - begin);
+                if (dist > n)
+                    return  1;
+                else if (dist < n)
+                    return -1;
+                else
+                    return  0;
+            }
+        public:
+            template<typename I, typename S,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+            int operator()(I begin, S end, iterator_difference_t<I> n) const
+            {
+                return this->impl_i(std::move(begin), std::move(end), n,
+                    sized_iterator_range_concept<I, S>());
+            }
+        };
+
+        RANGES_CONSTEXPR iter_distance_compare_fn iter_distance_compare {};
+
         // Like distance(b,e), but guaranteed to be O(1)
         struct iter_size_fn
         {
