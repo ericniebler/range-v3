@@ -15,91 +15,93 @@
 #include <vector>
 #include <limits>
 #include <range/v3/core.hpp>
-#include <range/v3/distance_compare.hpp>
-#include <range/v3/utility/unreachable.hpp>
+#include <range/v3/view/iota.hpp>
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
+
+template <typename I, typename S>
+void test_iterators(I begin, S end, ranges::iterator_difference_t<I> n)
+{
+    using namespace ranges;
+
+    CHECK(distance(begin, end) == n);
+    CHECK(distance_compare(begin, end, n) == 0);
+    CHECK(distance_compare(begin, end, n - 1) > 0);
+    CHECK(distance_compare(begin, end, n + 1) < 0);
+    CHECK(distance_compare(begin, end, (std::numeric_limits<iterator_difference_t<I>>::min)()) > 0);
+    CHECK(distance_compare(begin, end, (std::numeric_limits<iterator_difference_t<I>>::max)()) < 0);
+}
+
+template <typename Rng>
+void test_range(Rng&& rng, ranges::range_difference_t<Rng> n)
+{
+    using namespace ranges;
+
+    CHECK(distance(rng) == n);
+    CHECK(distance_compare(rng, n) == 0);
+    CHECK(distance_compare(rng, n - 1) > 0);
+    CHECK(distance_compare(rng, n + 1) < 0);
+    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0);
+    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) < 0);
+}
+
+template <typename Rng>
+void test_infinite_range(Rng&& rng)
+{
+    using namespace ranges;
+
+    CHECK(distance_compare(rng, 0) > 0);
+    CHECK(distance_compare(rng,-1) > 0);
+    CHECK(distance_compare(rng, 1) > 0);
+    CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0);
+    // Comparing an infinite range with a huge number might take a significant amount of time.
+    // CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) > 0);
+}
 
 int main()
 {
     using namespace ranges;
 
     {
-        std::vector<int> v{1,2,3,4};
-        auto v_min = (std::numeric_limits<range_difference_t<decltype(v)>>::min)();
-        auto v_max = (std::numeric_limits<range_difference_t<decltype(v)>>::max)();
-        CHECK(distance_compare(v, 3) > 0);
-        CHECK(distance_compare(v, 4) == 0);
-        CHECK(distance_compare(v, 5) < 0);
-        CHECK(distance_compare(v, v_min) > 0);
-        CHECK(distance_compare(v, v_max) < 0);
+        using cont_t = std::vector<int>;
+        cont_t c {1, 2, 3, 4};
+        test_range(c, 4);
+        test_iterators(c.begin(), c.end(), 4);
 
-        range<range_iterator_t<decltype(v)>> rng {v.begin(), v.end()};
-        CHECK(distance_compare(rng, 3) > 0);
-        CHECK(distance_compare(rng, 4) == 0);
-        CHECK(distance_compare(rng, 5) < 0);
-        CHECK(distance_compare(rng, v_min) > 0);
-        CHECK(distance_compare(rng, v_max) < 0);
-
-        v.clear();
-        CHECK(distance_compare(v, -1) > 0);
-        CHECK(distance_compare(v, 0) == 0);
-        CHECK(distance_compare(v, 1) < 0);
-        CHECK(distance_compare(v, v_min) > 0);
-        CHECK(distance_compare(v, v_max) < 0);
+        c.clear();
+        test_range(c, 0);
+        test_iterators(c.begin(), c.end(), 0);
     }
 
     {
-        std::list<int> l{1,2,3,4};
-        auto l_min = (std::numeric_limits<range_difference_t<decltype(l)>>::min)();
-        auto l_max = (std::numeric_limits<range_difference_t<decltype(l)>>::max)();
-        CHECK(distance_compare(l, 3) > 0);
-        CHECK(distance_compare(l, 4) == 0);
-        CHECK(distance_compare(l, 5) < 0);
-        CHECK(distance_compare(l, l_min) > 0);
-        CHECK(distance_compare(l, l_max) < 0);
+        using cont_t = std::list<int>;
+        cont_t c {1, 2, 3, 4};
+        test_range(c, 4);
+        test_iterators(c.begin(), c.end(), 4);
 
-        // std::list is typically implemented as a (virtually) cyclic list; 
-        // the "end" node is connected to the "begin" node (i.e. ++end() == begin()).
-        // So we can use it to construct an infinite range.
-        range<range_iterator_t<decltype(l)>, unreachable> inf_rng {l.begin(), {}};
-        CHECK(distance_compare(inf_rng, 3) > 0);
-        CHECK(distance_compare(inf_rng, 4) > 0);
-        CHECK(distance_compare(inf_rng, 5) > 0);
-        CHECK(distance_compare(inf_rng, l_min) > 0);
-        // CHECK(distance_compare(inf_rng, l_max) > 0); // might take a huge amount of time
-
-        l.clear();
-        CHECK(distance_compare(l, -1) > 0);
-        CHECK(distance_compare(l, 0) == 0);
-        CHECK(distance_compare(l, 1) < 0);
-        CHECK(distance_compare(l, l_min) > 0);
-        CHECK(distance_compare(l, l_max) < 0);
+        c.clear();
+        test_range(c, 0);
+        test_iterators(c.begin(), c.end(), 0);
     }
 
     {
-        std::forward_list<int> f{1,2,3,4};
-        auto f_min = (std::numeric_limits<range_difference_t<decltype(f)>>::min)();
-        auto f_max = (std::numeric_limits<range_difference_t<decltype(f)>>::max)();
-        CHECK(distance_compare(f, 3) > 0);
-        CHECK(distance_compare(f, 4) == 0);
-        CHECK(distance_compare(f, 5) < 0);
-        CHECK(distance_compare(f, f_min) > 0);
-        CHECK(distance_compare(f, f_max) < 0);
+        using cont_t = std::forward_list<int>;
+        cont_t c {1, 2, 3, 4};
+        test_range(c, 4);
+        test_iterators(c.begin(), c.end(), 4);
 
-        sized_range<range_iterator_t<decltype(f)>> sized_rng {f.begin(), f.end(), 4};
-        CHECK(distance_compare(sized_rng, 3) > 0);
-        CHECK(distance_compare(sized_rng, 4) == 0);
-        CHECK(distance_compare(sized_rng, 5) < 0);
-        CHECK(distance_compare(sized_rng, f_min) > 0);
-        CHECK(distance_compare(sized_rng, f_max) < 0);
+        c.clear();
+        test_range(c, 0);
+        test_iterators(c.begin(), c.end(), 0);
+    }
 
-        f.clear();
-        CHECK(distance_compare(f, -1) > 0);
-        CHECK(distance_compare(f, 0) == 0);
-        CHECK(distance_compare(f, 1) < 0);
-        CHECK(distance_compare(f, f_min) > 0);
-        CHECK(distance_compare(f, f_max) < 0);
+    {
+        int a[] = {1, 2, 3, 4};
+        test_iterators(a + 4, a, -4);
+    }
+
+    {
+        test_infinite_range(view::ints(0u));
     }
 
     return ::test_result();
