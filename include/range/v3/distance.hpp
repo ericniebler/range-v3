@@ -90,10 +90,18 @@ namespace ranges
         struct distance_compare_fn : iter_distance_compare_fn
         {
         private:
-            template<typename Rng>
+            template<typename Rng,
+                CONCEPT_REQUIRES_(!is_infinite<Rng>())>
             int impl_r(Rng &rng, range_difference_t<Rng> n, concepts::Iterable*) const
             {
                 return iter_distance_compare(begin(rng), end(rng), n);
+            }
+            template<typename Rng,
+                CONCEPT_REQUIRES_(is_infinite<Rng>())>
+            int impl_r(Rng &rng, range_difference_t<Rng> n, concepts::Iterable*) const
+            {
+                // Infinite ranges are always compared to be larger than a finite number.
+                return 1;
             }
             template<typename Rng>
             int impl_r(Rng &rng, range_difference_t<Rng> n, concepts::SizedIterable*) const

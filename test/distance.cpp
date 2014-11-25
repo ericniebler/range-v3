@@ -54,8 +54,16 @@ void test_infinite_range(Rng&& rng)
     CHECK(distance_compare(rng,-1) > 0);
     CHECK(distance_compare(rng, 1) > 0);
     CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0);
-    // Comparing an infinite range with a huge number might take a significant amount of time.
-    // CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) > 0);
+    if (is_infinite<Rng>::value) {
+        // For infinite ranges that can be detected by is_infinite<Rng> traits,
+        // distance_compare can compute the result in constant time.
+        CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) > 0);
+    }
+    else {
+        // For other infinite ranges, comparing to a huge number might take too much time.
+        // Thus commented out the test.
+        // CHECK(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) > 0);
+    }
 }
 
 int main()
