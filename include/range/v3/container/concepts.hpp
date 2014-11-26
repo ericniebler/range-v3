@@ -16,6 +16,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/logical_ops.hpp>
 
