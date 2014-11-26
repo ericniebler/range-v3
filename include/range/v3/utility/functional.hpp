@@ -15,6 +15,7 @@
 #include <memory> // std::addressof
 #include <utility>
 #include <functional> // std::reference_wrapper
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
@@ -356,6 +357,42 @@ namespace ranges
         // Protect a callable so that it can be safely used in a bind expression without
         // accidentally becoming a "nested" bind.
         RANGES_CONSTEXPR protect_fn protect{};
+
+        // Accepts initializer_lists as either the first or second parameter, or both,
+        // and forwards on to an implementation.
+        template<typename ImplFn>
+        struct with_braced_init_args
+          : ImplFn
+        {
+        private:
+            ImplFn const & base() const
+            {
+                return *this;
+            }
+        public:
+            using ImplFn::operator();
+
+            template<typename V0, typename...Args>
+            auto operator()(std::initializer_list<V0> &&rng0, Args &&...args) const ->
+                decltype(std::declval<ImplFn const &>()(std::move(rng0), std::declval<Args>()...))
+            {
+                return base()(std::move(rng0), std::forward<Args>(args)...);
+            }
+
+            template<typename Rng0, typename V1, typename...Args>
+            auto operator()(Rng0 && rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
+                decltype(std::declval<ImplFn const &>()(std::declval<Rng0>(), std::move(rng1), std::declval<Args>()...))
+            {
+                return base()(std::forward<Rng0>(rng0), std::move(rng1), std::forward<Args>(args)...);
+            }
+
+            template<typename V0, typename V1, typename...Args>
+            auto operator()(std::initializer_list<V0> rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
+                decltype(std::declval<ImplFn const &>()(std::move(rng0), std::move(rng1), std::declval<Args>()...))
+            {
+                return base()(std::move(rng0), std::move(rng1), std::forward<Args>(args)...);
+            }
+        };
     }
 }
 

@@ -30,7 +30,6 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
-#include <range/v3/utility/range_algorithm.hpp>
 #include <range/v3/algorithm/copy.hpp>
 
 namespace ranges
@@ -73,7 +72,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<includes_fn> includes{};
+        RANGES_CONSTEXPR with_braced_init_args<includes_fn> includes{};
 
         struct set_union_fn
         {
@@ -173,7 +172,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<set_intersection_fn> set_intersection{};
+        RANGES_CONSTEXPR with_braced_init_args<set_intersection_fn> set_intersection{};
 
         struct set_difference_fn
         {
@@ -221,7 +220,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<set_difference_fn> set_difference{};
+        RANGES_CONSTEXPR with_braced_init_args<set_difference_fn> set_difference{};
 
         struct set_symmetric_difference_fn
         {

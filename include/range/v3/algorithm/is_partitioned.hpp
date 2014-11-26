@@ -28,7 +28,6 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
-#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -68,7 +67,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<is_partitioned_fn> is_partitioned{};
+        RANGES_CONSTEXPR with_braced_init_args<is_partitioned_fn> is_partitioned{};
 
     } // namespace v3
 } // namespace ranges

@@ -16,7 +16,7 @@
 #define RANGES_V3_ALGORITHM_IS_SORTED_HPP
 
 #include <range/v3/algorithm/is_sorted_until.hpp>
-#include <range/v3/utility/range_algorithm.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -58,7 +58,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<is_sorted_fn> is_sorted{};
+        RANGES_CONSTEXPR with_braced_init_args<is_sorted_fn> is_sorted{};
 
     } // namespace v3
 } // namespace ranges

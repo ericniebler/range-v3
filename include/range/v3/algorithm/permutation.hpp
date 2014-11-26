@@ -30,7 +30,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/swap.hpp>
-#include <range/v3/utility/range_algorithm.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/reverse.hpp>
 
 namespace ranges
@@ -190,7 +190,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<is_permutation_fn> is_permutation {};
+        RANGES_CONSTEXPR with_braced_init_args<is_permutation_fn> is_permutation {};
 
         struct next_permutation_fn
         {

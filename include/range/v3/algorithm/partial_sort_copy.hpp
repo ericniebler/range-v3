@@ -21,7 +21,6 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
-#include <range/v3/utility/range_algorithm.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
 
 namespace ranges
@@ -86,7 +85,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<partial_sort_copy_fn> partial_sort_copy {};
+        RANGES_CONSTEXPR with_braced_init_args<partial_sort_copy_fn> partial_sort_copy {};
 
     } // namespace v3
 } // namespace ranges

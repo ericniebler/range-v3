@@ -14,10 +14,10 @@
 #define RANGES_V3_CONTAINER_PUSH_BACK_HPP
 
 #include <utility>
-#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/container/insert.hpp>
-#include <range/v3/utility/pipeable.hpp>
+#include <range/v3/container/action.hpp>
 
 namespace ranges
 {
@@ -43,6 +43,15 @@ namespace ranges
 
             struct push_back_fn
             {
+            private:
+                friend cont::action_access;
+                template<typename T>
+                static auto bind(push_back_fn push_back, T && val)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    std::bind(push_back, std::placeholders::_1, bind_forward<T>(val))
+                )
+            public:
                 template<typename Rng, typename T,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && Constructible<range_value_t<Rng>, T &&>())>
                 auto operator()(Rng && rng, T && t) const ->
@@ -57,17 +66,15 @@ namespace ranges
                 {
                     push_back(std::forward<Rng>(rng), std::forward<Rng2>(rng2));
                 }
-                template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(Iterable<Rng>())>
-                auto operator()(Rng && rng, std::initializer_list<T> rng2) const ->
-                    decltype((void)push_back(std::forward<Rng>(rng), rng2))
-                {
-                    push_back(std::forward<Rng>(rng), rng2);
-                }
             };
         }
 
-        RANGES_CONSTEXPR adl_push_back_detail::push_back_fn push_back{};
+        namespace cont
+        {
+            RANGES_CONSTEXPR with_braced_init_args<cont::action<adl_push_back_detail::push_back_fn>> push_back{};
+        }
+
+        using cont::push_back;
     }
 }
 

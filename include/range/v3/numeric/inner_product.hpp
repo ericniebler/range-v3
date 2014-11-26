@@ -18,7 +18,6 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/range_algorithm.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -119,7 +118,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<inner_product_fn> inner_product{};
+        RANGES_CONSTEXPR with_braced_init_args<inner_product_fn> inner_product{};
     }
 }
 

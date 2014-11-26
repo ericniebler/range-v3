@@ -20,7 +20,6 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
-#include <range/v3/utility/range_algorithm.hpp>
 
 namespace ranges
 {
@@ -63,7 +62,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR range_algorithm<all_of_fn> all_of {};
+        RANGES_CONSTEXPR with_braced_init_args<all_of_fn> all_of {};
 
     } // inline namespace v3
 

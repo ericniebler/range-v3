@@ -888,9 +888,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\repeat_n.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\range_algorithm.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_if.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
