@@ -18,10 +18,6 @@ else()
   message(FATAL_ERROR "Unknown compiler.")
 endif()
 
-if(CYGWIN)
-  add_definitions(-DRANGES_CYGWIN)
-endif()
-
 add_subdirectory(test)
 add_subdirectory(example)
 add_subdirectory(perf)

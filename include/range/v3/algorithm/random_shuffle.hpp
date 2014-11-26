@@ -27,6 +27,15 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            inline unsigned int random_seed_()
+            {
+                static RANGES_THREAD_LOCAL std::random_device s_rd;
+                return s_rd();
+            }
+        }
+
         namespace concepts
         {
             struct RandomNumberGenerator
@@ -54,8 +63,7 @@ namespace ranges
                 if(d > 1)
                 {
                     using param_t = std::uniform_int_distribution<std::ptrdiff_t>::param_type;
-                    std::random_device rd;
-                    std::default_random_engine gen(rd());
+                    std::default_random_engine gen(detail::random_seed_());
                     std::uniform_int_distribution<std::ptrdiff_t> uid;
                     for(--end, --d; begin < end; ++begin, --d)
                     {

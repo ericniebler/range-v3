@@ -42,6 +42,20 @@
 #define RANGES_END_NAMESPACE_STD }
 #endif
 
+#ifdef __clang__
+#define RANGES_CXX_NO_VARIABLE_TEMPLATES !__has_feature(cxx_variable_templates)
+#else
+#define RANGES_CXX_NO_VARIABLE_TEMPLATES 1
+#endif
+
+#ifndef RANGES_THREAD_LOCAL
+#if defined(__clang__) && defined(__CYGWIN__)
+#define RANGES_THREAD_LOCAL
+#else
+#define RANGES_THREAD_LOCAL thread_local
+#endif
+#endif
+
 namespace ranges
 {
     inline namespace v3

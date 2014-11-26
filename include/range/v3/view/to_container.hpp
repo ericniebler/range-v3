@@ -71,7 +71,6 @@ namespace ranges
 
             RANGES_CONSTEXPR to_container_fn<meta_quote<std::vector>> to_vector {};
 
-            // BUGBUG switch to variable template if it's available
             template<template<typename...> class Cont>
             view::to_container_fn<meta_quote<Cont>> to_()
             {
