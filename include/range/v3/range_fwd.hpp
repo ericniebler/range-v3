@@ -49,10 +49,11 @@
 #endif
 
 #ifndef RANGES_THREAD_LOCAL
-#if defined(__clang__) && defined(__CYGWIN__)
-#define RANGES_THREAD_LOCAL
+#if (defined(__clang__) && defined(__CYGWIN__)) | \
+    (defined(__clang__) && defined(_LIBCPP_VERSION)) // BUGBUG avoid unresolved __cxa_thread_atexit
+#define RANGES_STATIC_THREAD_LOCAL
 #else
-#define RANGES_THREAD_LOCAL thread_local
+#define RANGES_STATIC_THREAD_LOCAL static thread_local
 #endif
 #endif
 

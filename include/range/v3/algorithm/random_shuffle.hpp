@@ -31,7 +31,7 @@ namespace ranges
         {
             inline unsigned int random_seed_()
             {
-                static RANGES_THREAD_LOCAL std::random_device s_rd;
+                RANGES_STATIC_THREAD_LOCAL std::random_device s_rd;
                 return s_rd();
             }
         }
