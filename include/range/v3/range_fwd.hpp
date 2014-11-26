@@ -99,7 +99,7 @@ namespace ranges
         template<typename Derived>
         struct pipeable;
 
-        namespace cont
+        namespace action
         {
             template<typename Action>
             struct action;

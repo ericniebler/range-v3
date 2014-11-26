@@ -15,7 +15,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/to_container.hpp>
-#include <range/v3/container/sort.hpp>
+#include <range/v3/action/sort.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -29,12 +29,12 @@ int main()
     ::check_equal(lst0, {0,1,4,9,16,25,36,49,64,81});
 
     auto vec0 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | view::to_vector | cont::sort(std::greater<int>{});
+        | view::to_vector | action::sort(std::greater<int>{});
     static_assert((bool)Same<decltype(vec0), std::vector<int>>(), "");
     ::check_equal(vec0, {81,64,49,36,25,16,9,4,1,0});
 
     auto vec1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | view::to_<std::vector<long>>() | cont::sort(std::greater<int>{});
+        | view::to_<std::vector<long>>() | action::sort(std::greater<int>{});
     static_assert((bool)Same<decltype(vec1), std::vector<long>>(), "");
     ::check_equal(vec1, {81,64,49,36,25,16,9,4,1,0});
 
