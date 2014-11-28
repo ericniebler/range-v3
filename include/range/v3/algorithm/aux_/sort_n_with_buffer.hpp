@@ -62,7 +62,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR sort_n_with_buffer_fn sort_n_with_buffer{};
+            constexpr sort_n_with_buffer_fn sort_n_with_buffer{};
 
         } // namespace aux
     } // namespace v3

@@ -72,7 +72,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR find_if_not_fn find_if_not {};
+        constexpr find_if_not_fn find_if_not {};
 
     } // namespace v3
 } // namespace ranges

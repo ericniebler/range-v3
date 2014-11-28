@@ -130,7 +130,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR flatten_fn flatten{};
+            constexpr flatten_fn flatten{};
         }
     }
 }

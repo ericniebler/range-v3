@@ -41,8 +41,8 @@ namespace ranges
 
             template<typename Derived>
             using facade_sentinel_t =
-                conditional_t<
-                    (Same<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>()),
+                meta::if_<
+                    Same<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
                     basic_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
                     basic_sentinel<facade_sentinel2_t<Derived>>>;
         }
@@ -106,7 +106,7 @@ namespace ranges
         };
 
         template<typename RangeFacade>
-        using range_facade_t = meta_eval<range_access::range_facade<RangeFacade>>;
+        using range_facade_t = meta::eval<range_access::range_facade<RangeFacade>>;
     }
 }
 

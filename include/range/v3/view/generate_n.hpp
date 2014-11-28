@@ -20,6 +20,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 
@@ -39,7 +40,7 @@ namespace ranges
             struct cursor
             {
             private:
-                using gen_t = detail::add_const_if_t<G, IsConst>;
+                using gen_t = meta::apply<meta::add_const_if_c<IsConst>, G>;
                 gen_t *gen_;
                 std::size_t n_;
             public:
@@ -92,7 +93,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR generate_n_fn generate_n{};
+            constexpr generate_n_fn generate_n{};
         }
     }
 }

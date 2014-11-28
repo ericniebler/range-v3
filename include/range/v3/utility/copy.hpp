@@ -35,7 +35,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR copy_fn copy{};
+            constexpr copy_fn copy{};
         }
     }
 }

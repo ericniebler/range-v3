@@ -89,7 +89,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR repeat_n_fn repeat_n{};
+            constexpr repeat_n_fn repeat_n{};
         }
     }
 }

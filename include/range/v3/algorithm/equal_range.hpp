@@ -49,7 +49,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR equal_range_fn equal_range{};
+        constexpr equal_range_fn equal_range{};
 
     } // namespace v3
 } // namespace ranges

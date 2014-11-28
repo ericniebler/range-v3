@@ -56,7 +56,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR max_element_fn max_element{};
+        constexpr max_element_fn max_element{};
 
     } // namespace v3
 } // namespace ranges

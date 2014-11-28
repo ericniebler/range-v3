@@ -13,49 +13,9 @@
 #ifndef RANGES_V3_RANGE_FWD_HPP
 #define RANGES_V3_RANGE_FWD_HPP
 
-#include <iosfwd>
-#include <type_traits>
 #include <utility>
-
-#ifndef RANGES_ASSERT
-# include <cassert>
-# define RANGES_ASSERT assert
-#endif
-
-#if __GNUC__ == 4 && __GNUC_MINOR__ < 9
-#define RANGES_CONSTEXPR const
-#else
-#define RANGES_CONSTEXPR constexpr
-#endif
-
-#define RANGES_DECLTYPE_AUTO_RETURN(...)    \
-    -> decltype(__VA_ARGS__)                \
-    { return (__VA_ARGS__); }               \
-    /**/
-
-// Non-portable forward declarations of standard containers
-#ifdef _LIBCPP_VERSION
-#define RANGES_BEGIN_NAMESPACE_STD _LIBCPP_BEGIN_NAMESPACE_STD
-#define RANGES_END_NAMESPACE_STD _LIBCPP_END_NAMESPACE_STD
-#else
-#define RANGES_BEGIN_NAMESPACE_STD namespace std {
-#define RANGES_END_NAMESPACE_STD }
-#endif
-
-#ifdef __clang__
-#define RANGES_CXX_NO_VARIABLE_TEMPLATES !__has_feature(cxx_variable_templates)
-#else
-#define RANGES_CXX_NO_VARIABLE_TEMPLATES 1
-#endif
-
-#ifndef RANGES_THREAD_LOCAL
-#if (defined(__clang__) && defined(__CYGWIN__)) | \
-    (defined(__clang__) && defined(_LIBCPP_VERSION)) // BUGBUG avoid unresolved __cxa_thread_atexit
-#define RANGES_STATIC_THREAD_LOCAL
-#else
-#define RANGES_STATIC_THREAD_LOCAL static thread_local
-#endif
-#endif
+#include <type_traits>
+#include <range/v3/detail/config.hpp>
 
 namespace ranges
 {
@@ -178,15 +138,6 @@ namespace ranges
             struct unwrap_bind_fn;
 
             template<typename T>
-            struct identity
-            {
-                using type = T;
-            };
-
-            template<typename T>
-            using identity_t = typename identity<T>::type;
-
-            template<typename T>
             constexpr T && forward(typename std::remove_reference<T>::type & t) noexcept
             {
                 return static_cast<T &&>(t);
@@ -222,15 +173,6 @@ namespace ranges
             using void_t = typename always_void<Rest...>::type;
 
             struct not_equal_to;
-
-            template<bool B, typename T, typename U>
-            using conditional_t = typename std::conditional<B, T, U>::type;
-
-            template<bool B, typename T, typename U>
-            using lazy_conditional_t = typename conditional_t<B, T, U>::type;
-
-            template<typename T, bool B>
-            using add_const_if_t = conditional_t<B, T const, T>;
 
             template<typename T>
             using decay_t = typename std::decay<T>::type;
@@ -285,9 +227,6 @@ namespace ranges
             struct models;
         }
 
-        template<bool B>
-        using bool_constant = std::integral_constant<bool, B>;
-
         template<typename T>
         using uncvref_t =
             typename std::remove_cv<typename std::remove_reference<T>::type>::type;
@@ -323,10 +262,10 @@ namespace ranges
 
         template<typename I, typename S>
         using common_iterator =
-            detail::conditional_t<
+            typename std::conditional<
                 std::is_same<I, S>::value,
                 I,
-                basic_iterator<detail::common_cursor<I, S>>>;
+                basic_iterator<detail::common_cursor<I, S>>>::type;
 
         template<typename First, typename Second>
         struct compressed_pair;

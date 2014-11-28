@@ -50,7 +50,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<take_fn> take{};
+            constexpr action<take_fn> take{};
         }
     }
 }

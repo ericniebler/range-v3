@@ -28,7 +28,7 @@ namespace ranges
         template<typename I, typename O, typename T0, typename T1, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using ReplaceCopyable = fast_logical_and<
+        using ReplaceCopyable = meta::fast_and<
             InputIterator<I>,
             WeakOutputIterator<O, T1>,
             IndirectlyCopyable<I, O>,
@@ -59,7 +59,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR replace_copy_fn replace_copy{};
+        constexpr replace_copy_fn replace_copy{};
 
     } // namespace v3
 } // namespace ranges

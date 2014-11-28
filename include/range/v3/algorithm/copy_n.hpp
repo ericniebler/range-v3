@@ -79,7 +79,7 @@ namespace ranges
             //}
         };
 
-        RANGES_CONSTEXPR copy_n_fn copy_n{};
+        constexpr copy_n_fn copy_n{};
 
     } // namespace v3
 } // namespace ranges

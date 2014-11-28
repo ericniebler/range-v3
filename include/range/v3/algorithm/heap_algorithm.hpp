@@ -39,7 +39,7 @@ namespace ranges
         template<typename I, typename C = ordered_less, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using IsHeapable = fast_logical_and<
+        using IsHeapable = meta::fast_and<
             RandomAccessIterator<I>,
             Invokable<P, V>,
             InvokableRelation<C, X>>;
@@ -74,7 +74,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR is_heap_until_n_fn is_heap_until_n {};
+            constexpr is_heap_until_n_fn is_heap_until_n {};
 
             struct is_heap_n_fn
             {
@@ -86,7 +86,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR is_heap_n_fn is_heap_n {};
+            constexpr is_heap_n_fn is_heap_n {};
         }
 
         struct is_heap_until_fn
@@ -108,7 +108,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR is_heap_until_fn is_heap_until {};
+        constexpr is_heap_until_fn is_heap_until {};
 
         struct is_heap_fn
         {
@@ -129,7 +129,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<is_heap_fn> is_heap {};
+        constexpr with_braced_init_args<is_heap_fn> is_heap {};
 
         namespace detail
         {
@@ -163,7 +163,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR sift_up_n_fn sift_up_n{};
+            constexpr sift_up_n_fn sift_up_n{};
 
             struct sift_down_n_fn
             {
@@ -222,7 +222,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR sift_down_n_fn sift_down_n{};
+            constexpr sift_down_n_fn sift_down_n{};
         }
 
         struct push_heap_fn
@@ -248,7 +248,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR push_heap_fn push_heap {};
+        constexpr push_heap_fn push_heap {};
 
         namespace detail
         {
@@ -267,7 +267,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR pop_heap_n_fn pop_heap_n{};
+            constexpr pop_heap_n_fn pop_heap_n{};
         }
 
         struct pop_heap_fn
@@ -293,7 +293,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR pop_heap_fn pop_heap {};
+        constexpr pop_heap_fn pop_heap {};
 
         struct make_heap_fn
         {
@@ -328,7 +328,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR make_heap_fn make_heap {};
+        constexpr make_heap_fn make_heap {};
 
         struct sort_heap_fn
         {
@@ -359,7 +359,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR sort_heap_fn sort_heap {};
+        constexpr sort_heap_fn sort_heap {};
 
     } // namespace v3
 } // namespace ranges

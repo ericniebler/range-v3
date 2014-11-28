@@ -15,6 +15,7 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/optional.hpp>
 
 namespace ranges
@@ -64,11 +65,7 @@ namespace ranges
         };
 
         template<typename T>
-        using semiregular_t =
-            detail::conditional_t<
-                (bool) SemiRegular<T>(),
-                T,
-                semiregular<T>>;
+        using semiregular_t = meta::if_<SemiRegular<T>, T, semiregular<T>>;
     }
 }
 

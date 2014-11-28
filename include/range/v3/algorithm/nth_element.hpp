@@ -302,7 +302,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR nth_element_fn nth_element{};
+        constexpr nth_element_fn nth_element{};
 
     } // namespace v3
 } // namespace ranges

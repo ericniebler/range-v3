@@ -39,7 +39,7 @@ namespace ranges
         using iterator_pointer_t = concepts::Readable::pointer_t<I>;
 
         template<typename I>
-        using iterator_size_t = meta_eval<std::make_unsigned<iterator_difference_t<I>>>;
+        using iterator_size_t = meta::eval<std::make_unsigned<iterator_difference_t<I>>>;
 
         // Metafunctions
         template<typename I>

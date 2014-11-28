@@ -20,6 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -42,7 +43,7 @@ namespace ranges
               : adaptor_base
             {
             private:
-                using filtered_view_t = detail::add_const_if_t<filtered_view, IsConst>;
+                using filtered_view_t = meta::apply<meta::add_const_if_c<IsConst>, filtered_view>;
                 filtered_view_t *rng_;
                 using adaptor_base::advance;
                 void satisfy(range_iterator_t<Rng> &it) const
@@ -121,7 +122,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR filter_fn filter {};
+            constexpr filter_fn filter {};
         }
     }
 }

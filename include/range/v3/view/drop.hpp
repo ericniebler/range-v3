@@ -112,7 +112,7 @@ namespace ranges
                 )
             };
 
-            RANGES_CONSTEXPR drop_fn drop {};
+            constexpr drop_fn drop {};
         }
     }
 }

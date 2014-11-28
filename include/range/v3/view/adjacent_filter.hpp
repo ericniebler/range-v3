@@ -89,7 +89,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR adjacent_filter_fn adjacent_filter {};
+            constexpr adjacent_filter_fn adjacent_filter {};
         }
     }
 }

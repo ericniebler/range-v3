@@ -61,7 +61,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<stride_fn> stride{};
+            constexpr action<stride_fn> stride{};
         }
     }
 }

@@ -71,7 +71,7 @@ namespace ranges
 
         namespace action
         {
-            RANGES_CONSTEXPR with_braced_init_args<action<adl_push_back_detail::push_back_fn>> push_back{};
+            constexpr with_braced_init_args<action<adl_push_back_detail::push_back_fn>> push_back{};
         }
 
         using action::push_back;

@@ -46,7 +46,7 @@ namespace ranges
             // If the size of the range is known a priori, then the runtime boolean
             // is always unnecessary.
             using dirty_t =
-                detail::conditional_t<
+                meta::if_c<
                     (BidirectionalIterable<Rng>() && !SizedIterable<Rng>()),
                     mutable_<std::atomic<bool>>,
                     constant<bool, false>>;
@@ -55,8 +55,8 @@ namespace ranges
             // far past they end they are, so that when they're decremented, they can
             // visit the correct elements.
             using offset_t =
-                detail::conditional_t<
-                    (BidirectionalIterable<Rng>()),
+                meta::if_<
+                    BidirectionalIterable<Rng>,
                     mutable_<std::atomic<difference_type_>>,
                     constant<difference_type_, 0>>;
 
@@ -189,7 +189,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR stride_fn stride{};
+            constexpr stride_fn stride{};
         }
     }
 }

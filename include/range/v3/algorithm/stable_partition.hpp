@@ -44,7 +44,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using StablePartitionable = fast_logical_and<
+        using StablePartitionable = meta::fast_and<
             ForwardIterator<I>,
             Permutable<I>,
             Invokable<P, V>,
@@ -282,7 +282,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR stable_partition_fn stable_partition{};
+        constexpr stable_partition_fn stable_partition{};
 
     } // namespace v3
 } // namespace ranges

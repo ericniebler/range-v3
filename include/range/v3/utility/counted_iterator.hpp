@@ -32,7 +32,7 @@ namespace ranges
             private:
                 friend struct counted_sentinel;
                 using iterator_concept_ =
-                    concepts::most_refined<typelist<concepts::Iterator, concepts::WeakIterator>, I>;
+                    concepts::most_refined<meta::list<concepts::Iterator, concepts::WeakIterator>, I>;
                 I it_;
                 D n_;
 

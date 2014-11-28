@@ -30,7 +30,7 @@ namespace ranges
         template<typename I, typename T, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using Removable = fast_logical_and<
+        using Removable = meta::fast_and<
             ForwardIterator<I>,
             Invokable<P, V>,
             EqualityComparable<T, X>,
@@ -67,7 +67,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR remove_fn remove{};
+        constexpr remove_fn remove{};
 
     } // namespace v3
 } // namespace ranges

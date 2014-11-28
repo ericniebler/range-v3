@@ -174,7 +174,7 @@ namespace ranges
             };
         }
 
-        RANGES_CONSTEXPR adl_insert_detail::insert_fn insert{};
+        constexpr adl_insert_detail::insert_fn insert{};
 
         namespace action
         {

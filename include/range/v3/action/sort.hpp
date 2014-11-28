@@ -47,7 +47,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<sort_fn> sort{};
+            constexpr action<sort_fn> sort{};
         }
     }
 }

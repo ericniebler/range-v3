@@ -61,7 +61,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR partial_sort_fn partial_sort {};
+        constexpr partial_sort_fn partial_sort {};
 
     } // namespace v3
 } // namespace ranges

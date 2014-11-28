@@ -44,7 +44,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            using reference_ = meta_eval<detail::cref_t<range_reference_t<Rng>>>;
+            using reference_ = meta::eval<detail::cref_t<range_reference_t<Rng>>>;
             struct adaptor
               : adaptor_base
             {
@@ -85,7 +85,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR const_fn const_ {};
+            constexpr const_fn const_ {};
         }
     }
 }

@@ -82,11 +82,7 @@ namespace ranges
 
             template<typename T>
             struct pair_element
-              : conditional_t<
-                    std::is_same<decay_t<T>, T>::value,
-                    identity<T>,
-                    pair_element<decay_t<T>>
-                >
+              : meta::if_<std::is_same<decay_t<T>, T>, meta::id<T>, pair_element<decay_t<T>>>
             {};
 
             template<typename T>
@@ -96,7 +92,7 @@ namespace ranges
             };
 
             template<typename T>
-            using pair_element_t = meta_eval<pair_element<T>>;
+            using pair_element_t = meta::eval<pair_element<T>>;
         }
 
         template<typename First, typename Second>
@@ -143,7 +139,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR make_compressed_pair_fn make_compressed_pair {};
+        constexpr make_compressed_pair_fn make_compressed_pair {};
 
         // Tuple-like access
         template<std::size_t I, typename First, typename Second>

@@ -32,7 +32,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR front_fn front {};
+        constexpr front_fn front {};
     }
 }
 

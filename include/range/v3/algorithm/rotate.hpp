@@ -209,7 +209,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR rotate_fn rotate {};
+        constexpr rotate_fn rotate {};
 
     } // namespace v3
 } // namespace ranges

@@ -38,7 +38,7 @@ namespace ranges
             };
         }
 
-        RANGES_CONSTEXPR adl_swap_detail::swap_fn swap {};
+        constexpr adl_swap_detail::swap_fn swap {};
     }
 }
 

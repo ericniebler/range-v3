@@ -31,7 +31,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR empty_fn empty {};
+        constexpr empty_fn empty {};
     }
 }
 

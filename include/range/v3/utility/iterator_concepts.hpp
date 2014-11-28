@@ -20,7 +20,6 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -167,13 +166,13 @@ namespace ranges
             {
                 // Associated types
                 template<typename I>
-                using value_t = meta_eval<value_type<I>>;
+                using value_t = meta::eval<value_type<I>>;
 
                 template<typename I>
                 using reference_t = decltype(*std::declval<I>());
 
                 template<typename I>
-                using pointer_t = meta_eval<pointer_type<I>>;
+                using pointer_t = meta::eval<pointer_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -265,7 +264,7 @@ namespace ranges
             {
                 // Associated types
                 template<typename I>
-                using difference_t = meta_eval<difference_type<I>>;
+                using difference_t = meta::eval<difference_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -315,7 +314,7 @@ namespace ranges
                 // value_t from readable
                 // distance_t from WeaklyIncrementable
                 template<typename I>
-                using category_t = meta_eval<ranges::iterator_category_type<I>>;
+                using category_t = meta::eval<ranges::iterator_category_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -439,7 +438,7 @@ namespace ranges
         template<typename T>
         using iterator_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::RandomAccessIterator,
                     concepts::BidirectionalIterator,
                     concepts::ForwardIterator,
@@ -447,16 +446,16 @@ namespace ranges
                     concepts::WeakInputIterator>, T>;
 
         template<typename T>
-        using iterator_concept_t = meta_eval<iterator_concept<T>>;
+        using iterator_concept_t = meta::eval<iterator_concept<T>>;
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
-        using SinglePass = fast_logical_and<WeakInputIterator<I>, logical_not<ForwardIterator<I>>>;
+        using SinglePass = meta::fast_and<WeakInputIterator<I>, meta::not_<ForwardIterator<I>>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
         template<typename I, typename V = concepts::Readable::value_t<I>>
-        using Permutable = fast_logical_and<
+        using Permutable = meta::fast_and<
             ForwardIterator<I>,
             Movable<V>,
             IndirectlyMovable<I, I>>;
@@ -467,7 +466,7 @@ namespace ranges
             typename V1 = concepts::Readable::value_t<I1>,
             typename X0 = concepts::Invokable::result_t<P0, V0>,
             typename X1 = concepts::Invokable::result_t<P1, V1>>
-        using Mergeable = fast_logical_and<
+        using Mergeable = meta::fast_and<
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
@@ -478,7 +477,7 @@ namespace ranges
         template<typename I, typename C = ordered_less, typename P = ident,
             typename V = concepts::Readable::value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using Sortable = fast_logical_and<
+        using Sortable = meta::fast_and<
             ForwardIterator<I>,
             Invokable<P, V>,
             InvokableRelation<C, X, X>,
@@ -487,7 +486,7 @@ namespace ranges
         template<typename I, typename V2, typename C = ordered_less, typename P = ident,
             typename V = concepts::Readable::value_t<I>,
             typename X = concepts::Invokable::result_t<P, V> >
-        using BinarySearchable = fast_logical_and<
+        using BinarySearchable = meta::fast_and<
             ForwardIterator<I>,
             Invokable<P, V>,
             InvokableRelation<C, X, V2>>;
@@ -498,7 +497,7 @@ namespace ranges
             typename V2 = concepts::Readable::value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using WeaklyAsymmetricallyComparable = fast_logical_and<
+        using WeaklyAsymmetricallyComparable = meta::fast_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
             Invokable<P1, V1>,
@@ -507,7 +506,7 @@ namespace ranges
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using AsymmetricallyComparable = fast_logical_and<
+        using AsymmetricallyComparable = meta::fast_and<
             WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
             InputIterator<I2>>;
 
@@ -517,13 +516,13 @@ namespace ranges
             typename V2 = concepts::Readable::value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using WeaklyComparable = fast_logical_and<
+        using WeaklyComparable = meta::fast_and<
             WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
             InvokableRelation<C, X1, X2>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Comparable = fast_logical_and<
+        using Comparable = meta::fast_and<
             WeaklyComparable<I1, I2, C, P1, P2>,
             InputIterator<I2>>;
 
@@ -589,12 +588,12 @@ namespace ranges
         template<typename I, typename S = I>
         using sized_iterator_range_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::SizedIteratorRange,
                     concepts::IteratorRange>, I, S>;
 
         template<typename I, typename S = I>
-        using sized_iterator_range_concept_t = meta_eval<sized_iterator_range_concept<I, S>>;
+        using sized_iterator_range_concept_t = meta::eval<sized_iterator_range_concept<I, S>>;
     }
 }
 

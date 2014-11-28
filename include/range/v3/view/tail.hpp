@@ -83,7 +83,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR tail_fn tail {};
+            constexpr tail_fn tail {};
         }
     }
 }

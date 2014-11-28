@@ -117,7 +117,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR reverse_fn reverse {};
+            constexpr reverse_fn reverse {};
         }
     }
 }

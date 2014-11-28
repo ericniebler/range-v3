@@ -97,7 +97,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR bounded_fn bounded{};
+            constexpr bounded_fn bounded{};
 
             template<typename Rng>
             using bounded_t =

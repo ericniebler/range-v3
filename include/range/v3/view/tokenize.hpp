@@ -193,7 +193,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR tokenize_fn tokenize {};
+            constexpr tokenize_fn tokenize {};
         }
     }
 }

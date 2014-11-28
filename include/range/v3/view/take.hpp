@@ -165,7 +165,7 @@ namespace ranges
                 )
             };
 
-            RANGES_CONSTEXPR take_fn take {};
+            constexpr take_fn take {};
         }
     }
 }

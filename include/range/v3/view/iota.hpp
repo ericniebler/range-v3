@@ -85,14 +85,14 @@ namespace ranges
         template<typename T>
         using iota_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::RandomAccessIota,
                     concepts::BidirectionalIota,
                     concepts::ForwardIota,
                     concepts::InputIota>, T>;
 
         template<typename T>
-        using iota_concept_t = meta_eval<iota_concept<T>>;
+        using iota_concept_t = meta::eval<iota_concept<T>>;
 
         namespace detail
         {
@@ -116,16 +116,16 @@ namespace ranges
                 static constexpr std::size_t bits = sizeof(difference_t) * CHAR_BIT;
             public:
                 using type =
-                    detail::conditional_t<
-                        !std::is_same<Val, difference_t>::value,
-                        meta_eval<std::make_signed<difference_t>>,
-                        detail::conditional_t<
+                    meta::if_<
+                        meta::not_<std::is_same<Val, difference_t>>,
+                        meta::eval<std::make_signed<difference_t>>,
+                        meta::if_c<
                             (bits < 8),
                             std::int_fast8_t,
-                            detail::conditional_t<
+                            meta::if_c<
                                 (bits < 16),
                                 std::int_fast16_t,
-                                detail::conditional_t<
+                                meta::if_c<
                                     (bits < 32),
                                     std::int_fast32_t,
                                     std::int_fast64_t> > > >;
@@ -137,7 +137,7 @@ namespace ranges
             {};
 
             template<typename Val>
-            using iota_difference_t = meta_eval<iota_difference<Val>>;
+            using iota_difference_t = meta::eval<iota_difference<Val>>;
 
             template<typename Val, CONCEPT_REQUIRES_(!Integral<Val>())>
             iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)
@@ -222,7 +222,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR iota_fn iota{};
+            constexpr iota_fn iota{};
 
             struct ints_fn
               : iota_view<int>
@@ -242,7 +242,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR ints_fn ints{};
+            constexpr ints_fn ints{};
         }
     }
 }

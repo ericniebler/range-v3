@@ -76,7 +76,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR shuffle_fn shuffle {};
+        constexpr shuffle_fn shuffle {};
 
     } // namespace v3
 } // namespace ranges

@@ -64,7 +64,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<find_first_of_fn> find_first_of {};
+        constexpr with_braced_init_args<find_first_of_fn> find_first_of {};
 
     } // namespace v3
 } // namespace ranges

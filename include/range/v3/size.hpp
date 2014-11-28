@@ -89,7 +89,7 @@ namespace ranges
             };
         }
 
-        RANGES_CONSTEXPR adl_size_detail::size_fn size {};
+        constexpr adl_size_detail::size_fn size {};
     }
 }
 

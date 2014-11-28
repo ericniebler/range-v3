@@ -16,9 +16,9 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_access.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/nullval.hpp>
-#include <range/v3/utility/logical_ops.hpp>
+#include <range/v3/utility/nullptr_v.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -50,7 +50,7 @@ namespace ranges
             //
             template<typename ValueParam, typename Ref>
             using iterator_writability_disabled =
-                fast_logical_or<
+                meta::fast_or<
                     std::is_const<Ref>,
                     is_reference_to_const<Ref>,
                     std::is_const<ValueParam>>;
@@ -81,8 +81,8 @@ namespace ranges
                 private:
                     struct private_ {};
                     using value_t =
-                        detail::conditional_t<
-                            !Same<uncvref_t<Ref>, iterator_value_t<I>>(),
+                        meta::if_<
+                            meta::not_<Same<uncvref_t<Ref>, iterator_value_t<I>>>,
                             iterator_value_t<I>,
                             private_>;
                     I const it_;
@@ -115,8 +115,8 @@ namespace ranges
                 private:
                     struct private_ {};
                     using value_t =
-                        detail::conditional_t<
-                            !Same<uncvref_t<Ref>, iterator_value_t<I>>(),
+                        meta::if_<
+                            meta::not_<Same<uncvref_t<Ref>, iterator_value_t<I>>>,
                             iterator_value_t<I>,
                             private_>;
                     I const it_;
@@ -153,10 +153,10 @@ namespace ranges
 
             template<typename I, typename Val, typename Ref>
             using operator_brackets_dispatch =
-                detail::conditional_t<
-                    iterator_writability_disabled<Val, Ref>::value,
-                    detail::conditional_t<
-                        std::is_pod<Val>::value,
+                meta::if_<
+                    iterator_writability_disabled<Val, Ref>,
+                    meta::if_<
+                        std::is_pod<Val>,
                         operator_brackets_value<typename std::remove_const<Val>::type>,
                         operator_brackets_const_proxy<I, Ref>
                     >,
@@ -265,19 +265,18 @@ namespace ranges
             // *r also returns a proxy.
             template<typename I, typename Val, typename Ref, typename Cat>
             using postfix_increment_result =
-                detail::lazy_conditional_t<
-                    // A proxy is only needed for readable iterators
-                    std::is_convertible<Ref, Val const&>::value &&
-                    // No forward iterator can have values that disappear
-                    // before positions can be re-visited
-                    (bool) ranges::Derived<ranges::input_iterator_tag, Cat>()
-                  , std::conditional<
-                        is_non_proxy_reference<Ref, Val>::value
-                      , postfix_increment_proxy<I>
-                      , writable_postfix_increment_proxy<I>
-                    >
-                  , detail::identity<I>
-                >;
+                meta::if_<
+                    meta::and_<
+                        // A proxy is only needed for readable iterators
+                        std::is_convertible<Ref, Val const &>,
+                        // No forward iterator can have values that disappear
+                        // before positions can be re-visited
+                        ranges::Derived<ranges::input_iterator_tag, Cat> >,
+                    meta::if_<
+                        is_non_proxy_reference<Ref, Val>,
+                        postfix_increment_proxy<I>,
+                        writable_postfix_increment_proxy<I>>,
+                    I>;
 
             // operator->() needs special support for input iterators to strictly meet the
             // standard's requirements. If *i is not an lvalue reference type, we must still
@@ -337,8 +336,7 @@ namespace ranges
 
             template<typename Cur>
             using mixin_base =
-                lazy_conditional_t<
-                    has_mixin<Cur>::value, get_mixin<Cur>, identity<basic_mixin<Cur>>>;
+                meta::eval<meta::if_<has_mixin<Cur>, get_mixin<Cur>, meta::id<basic_mixin<Cur>>>>;
 
             auto iter_cat(range_access::InputCursorConcept*) ->
                 ranges::input_iterator_tag;
@@ -415,8 +413,8 @@ namespace ranges
             CONCEPT_ASSERT(detail::InputCursor<Cur>());
             using single_pass = range_access::single_pass_t<Cur>;
             using cursor_concept_t =
-                detail::conditional_t<
-                    single_pass::value,
+                meta::if_<
+                    single_pass,
                     range_access::InputCursorConcept,
                     detail::cursor_concept_t<Cur>>;
 
@@ -448,7 +446,7 @@ namespace ranges
             constexpr bool equal_(basic_iterator const &that,
                 std::false_type *) const
             {
-                return basic_iterator::equal2_(that, nullval<cursor_concept_t>());
+                return basic_iterator::equal2_(that, _nullptr_v<cursor_concept_t>());
             }
             constexpr bool equal_(basic_iterator const &that,
                 std::true_type *) const
@@ -459,7 +457,7 @@ namespace ranges
             using reference =
                 decltype(range_access::current(std::declval<Cur const &>()));
             using value_type = range_access::cursor_value_t<Cur>;
-            using iterator_category = decltype(detail::iter_cat(nullval<cursor_concept_t>()));
+            using iterator_category = decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
             using difference_type = range_access::cursor_difference_t<Cur>;
             using pointer = typename detail::operator_arrow_dispatch<reference>::type;
         private:
@@ -497,7 +495,7 @@ namespace ranges
             // BUGBUG this doesn't handle weak iterators.
             constexpr bool operator==(basic_iterator const &that) const
             {
-                return basic_iterator::equal_(that, nullval<std::is_same<Cur, S>>());
+                return basic_iterator::equal_(that, _nullptr_v<std::is_same<Cur, S>>());
             }
             constexpr bool operator!=(basic_iterator const &that) const
             {

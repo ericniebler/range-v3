@@ -167,10 +167,10 @@ namespace ranges
         namespace adl_begin_end_detail
         {
             template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-            detail::from_end_<meta_eval<std::make_signed<Int>>> operator-(end_fn, Int dist)
+            detail::from_end_<meta::eval<std::make_signed<Int>>> operator-(end_fn, Int dist)
             {
-                RANGES_ASSERT(0 <= static_cast<meta_eval<std::make_signed<Int>>>(dist));
-                return {-static_cast<meta_eval<std::make_signed<Int>>>(dist)};
+                RANGES_ASSERT(0 <= static_cast<meta::eval<std::make_signed<Int>>>(dist));
+                return {-static_cast<meta::eval<std::make_signed<Int>>>(dist)};
             }
         }
 
@@ -308,7 +308,7 @@ namespace ranges
                 )
             };
 
-            RANGES_CONSTEXPR slice_fn slice {};
+            constexpr slice_fn slice {};
         }
     }
 }

@@ -37,7 +37,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR advance_fn advance{};
+        constexpr advance_fn advance{};
 
         struct advance_to_fn
         {
@@ -66,7 +66,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR advance_to_fn advance_to{};
+        constexpr advance_to_fn advance_to{};
 
         struct advance_bounded_fn
         {
@@ -112,7 +112,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR advance_bounded_fn advance_bounded {};
+        constexpr advance_bounded_fn advance_bounded {};
 
         struct next_fn
         {
@@ -124,7 +124,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR next_fn next{};
+        constexpr next_fn next{};
 
         struct prev_fn
         {
@@ -136,7 +136,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR prev_fn prev {};
+        constexpr prev_fn prev {};
 
         struct next_to_fn
         {
@@ -148,7 +148,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR next_to_fn next_to{};
+        constexpr next_to_fn next_to{};
 
         struct next_bounded_fn
         {
@@ -160,7 +160,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR next_bounded_fn next_bounded{};
+        constexpr next_bounded_fn next_bounded{};
 
         struct iter_enumerate_fn
         {
@@ -193,7 +193,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iter_enumerate_fn iter_enumerate {};
+        constexpr iter_enumerate_fn iter_enumerate {};
 
         struct iter_distance_fn
         {
@@ -218,7 +218,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iter_distance_fn iter_distance {};
+        constexpr iter_distance_fn iter_distance {};
 
         struct iter_distance_compare_fn
         {
@@ -260,7 +260,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iter_distance_compare_fn iter_distance_compare {};
+        constexpr iter_distance_compare_fn iter_distance_compare {};
 
         // Like distance(b,e), but guaranteed to be O(1)
         struct iter_size_fn
@@ -273,7 +273,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iter_size_fn iter_size {};
+        constexpr iter_size_fn iter_size {};
 
         struct iter_swap_fn
         {
@@ -289,7 +289,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iter_swap_fn iter_swap {};
+        constexpr iter_swap_fn iter_swap {};
 
         template<typename Cont>
         struct back_insert_iterator
@@ -330,7 +330,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR back_inserter_fn back_inserter {};
+        constexpr back_inserter_fn back_inserter {};
 
         template<typename T, typename Char = char, typename Traits = std::char_traits<Char>>
         struct ostream_iterator
@@ -416,8 +416,8 @@ namespace ranges
             };
         }
 
-        RANGES_CONSTEXPR adl_uncounted_recounted_detail::uncounted_fn uncounted{};
-        RANGES_CONSTEXPR adl_uncounted_recounted_detail::recounted_fn recounted{};
+        constexpr adl_uncounted_recounted_detail::uncounted_fn uncounted{};
+        constexpr adl_uncounted_recounted_detail::recounted_fn recounted{};
     }
 }
 

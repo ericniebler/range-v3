@@ -28,7 +28,7 @@ namespace ranges
         template<typename I, typename C, typename T, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using ReplaceIfable = fast_logical_and<
+        using ReplaceIfable = meta::fast_and<
             InputIterator<I>,
             Invokable<P, V>,
             InvokablePredicate<C, X>,
@@ -57,7 +57,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR replace_if_fn replace_if{};
+        constexpr replace_if_fn replace_if{};
 
     } // namespace v3
 } // namespace ranges

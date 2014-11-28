@@ -19,7 +19,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/logical_ops.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/view/all.hpp>
@@ -48,10 +47,10 @@ namespace ranges
         }
 
         template<typename Derived>
-        using base_range_t = meta_eval<range_access::base_range<Derived>>;
+        using base_range_t = meta::eval<range_access::base_range<Derived>>;
 
         template<typename Derived>
-        using range_adaptor_t = meta_eval<range_access::range_adaptor<Derived>>;
+        using range_adaptor_t = meta::eval<range_access::range_adaptor<Derived>>;
 
         template<typename BaseIt, typename Adapt>
         struct adaptor_cursor;
@@ -114,7 +113,7 @@ namespace ranges
         struct adaptor_cursor
           : private compressed_pair<BaseIter, Adapt>
         {
-            using single_pass = logical_or<
+            using single_pass = meta::or_<
                 range_access::single_pass_t<Adapt>,
                 SinglePass<BaseIter>>;
             using compressed_pair<BaseIter, Adapt>::compressed_pair;
@@ -246,9 +245,10 @@ namespace ranges
 
         template<typename D>
         using adaptor_sentinel_t =
-            detail::conditional_t<
-                Same<detail::adapted_iterator_t<D>, detail::adapted_sentinel_t<D>>() &&
-                    Same<detail::begin_adaptor_t<D>, detail::end_adaptor_t<D>>(),
+            meta::if_<
+                meta::and_<
+                    Same<detail::adapted_iterator_t<D>, detail::adapted_sentinel_t<D>>,
+                    Same<detail::begin_adaptor_t<D>, detail::end_adaptor_t<D>>>,
                 adaptor_cursor<detail::adapted_iterator_t<D>, detail::begin_adaptor_t<D>>,
                 adaptor_sentinel<detail::adapted_sentinel_t<D>, detail::end_adaptor_t<D>>>;
 

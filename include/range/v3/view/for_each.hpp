@@ -57,7 +57,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR for_each_fn for_each {};
+            constexpr for_each_fn for_each {};
         }
 
         struct yield_fn
@@ -69,7 +69,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR yield_fn yield{};
+        constexpr yield_fn yield{};
 
         struct yield_from_fn
         {
@@ -80,7 +80,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR yield_from_fn yield_from{};
+        constexpr yield_from_fn yield_from{};
 
         struct yield_if_fn
         {
@@ -91,7 +91,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR yield_if_fn yield_if{};
+        constexpr yield_if_fn yield_if{};
 
         struct lazy_yield_if_fn
         {
@@ -103,7 +103,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR lazy_yield_if_fn lazy_yield_if{};
+        constexpr lazy_yield_if_fn lazy_yield_if{};
 
         template<typename Rng, typename Fun,
             typename Result = concepts::Function::result_t<Fun, range_value_t<Rng>>,

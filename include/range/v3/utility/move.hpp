@@ -28,14 +28,14 @@ namespace ranges
             struct move_fn : pipeable<move_fn>
             {
                 template<typename T,
-                    typename U = meta_eval<std::remove_reference<T>>>
+                    typename U = meta::eval<std::remove_reference<T>>>
                 U && operator()(T && t) const noexcept
                 {
                     return static_cast<U &&>(t);
                 }
             };
 
-            RANGES_CONSTEXPR move_fn move{};
+            constexpr move_fn move{};
         }
     }
 }

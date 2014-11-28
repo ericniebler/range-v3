@@ -36,9 +36,9 @@ namespace ranges
         namespace detail
         {
             template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
-            using ConvertibleToContainer = fast_logical_and<
+            using ConvertibleToContainer = meta::fast_and<
                 Iterable<Cont>,
-                logical_not<Range<Cont>>,
+                meta::not_<Range<Cont>>,
                 Movable<Cont>,
                 Convertible<range_value_t<Rng>, range_value_t<Cont>>,
                 Constructible<Cont, I, I>>;
@@ -61,7 +61,7 @@ namespace ranges
               : pipeable<to_container_fn<ContainerMetafunctionClass>>
             {
                 template<typename Rng,
-                    typename Cont = meta_apply<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
                 Cont operator()(Rng && rng) const
                 {
@@ -69,16 +69,16 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR to_container_fn<meta_quote<std::vector>> to_vector {};
+            constexpr to_container_fn<meta::quote<std::vector>> to_vector {};
 
             template<template<typename...> class Cont>
-            view::to_container_fn<meta_quote<Cont>> to_()
+            view::to_container_fn<meta::quote<Cont>> to_()
             {
                 return {};
             }
 
             template<typename Cont>
-            view::to_container_fn<meta_always<Cont>> to_()
+            view::to_container_fn<meta::always<Cont>> to_()
             {
                 return {};
             }

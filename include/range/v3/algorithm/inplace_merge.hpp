@@ -174,7 +174,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR merge_adaptive_fn merge_adaptive {};
+            constexpr merge_adaptive_fn merge_adaptive {};
 
             struct inplace_merge_no_buffer_fn
             {
@@ -188,7 +188,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR inplace_merge_no_buffer_fn inplace_merge_no_buffer {};
+            constexpr inplace_merge_no_buffer_fn inplace_merge_no_buffer {};
         };
 
         struct inplace_merge_fn
@@ -223,7 +223,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR inplace_merge_fn inplace_merge {};
+        constexpr inplace_merge_fn inplace_merge {};
 
     } // namespace v3
 } // namespace ranges

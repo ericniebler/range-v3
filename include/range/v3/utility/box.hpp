@@ -145,19 +145,19 @@ namespace ranges
 
         // Get by tag type
         template<typename Element>
-        Element & get(detail::identity_t<Element> & value)
+        Element & get(meta::eval<meta::id<Element>> & value)
         {
             return value;
         }
 
         template<typename Element>
-        Element const & get(detail::identity_t<Element> const & value)
+        Element const & get(meta::eval<meta::id<Element>> const & value)
         {
             return value;
         }
 
         template<typename Element>
-        Element && get(detail::identity_t<Element> && value)
+        Element && get(meta::eval<meta::id<Element>> && value)
         {
             return std::move(value);
         }

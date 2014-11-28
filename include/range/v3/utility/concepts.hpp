@@ -21,10 +21,8 @@
 #include <type_traits>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/swap.hpp>
-#include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/common_type.hpp>
-#include <range/v3/utility/nullval.hpp>
-#include <range/v3/utility/logical_ops.hpp>
+#include <range/v3/utility/nullptr_v.hpp>
 
 namespace ranges
 {
@@ -88,7 +86,7 @@ namespace ranges
             template<typename Concept, typename Enable = void>
             struct base_concepts_of
             {
-                using type = typelist<>;
+                using type = meta::list<>;
             };
 
             template<typename Concept>
@@ -98,12 +96,12 @@ namespace ranges
             };
 
             template<typename Concept>
-            using base_concepts_of_t = meta_eval<base_concepts_of<Concept>>;
+            using base_concepts_of_t = meta::eval<base_concepts_of<Concept>>;
 
             template<typename...Bools>
             struct lazy_and
             {
-                static constexpr bool value{fast_logical_and<Bools...>::value};
+                static constexpr bool value{meta::fast_and<Bools...>::value};
             };
 
             template<typename...Ts>
@@ -113,18 +111,18 @@ namespace ranges
             template<typename...Ts, typename Concept,
                 typename = decltype(std::declval<Concept &>().template requires_<Ts...>(std::declval<Ts>()...))>
             auto models_(Concept *) ->
-                typelist_apply_t<
-                    meta_quote<lazy_and>,
-                    typelist_transform_t<
+                meta::apply_list<
+                    meta::quote<lazy_and>,
+                    meta::transform<
                         base_concepts_of_t<Concept>,
-                        meta_bind_back<meta_quote<concepts::models>, Ts...>>>;
+                        meta::bind_back<meta::quote<concepts::models>, Ts...>>>;
 
             template<typename List>
             struct most_refined_
             {};
 
             template<typename Head, typename...Tail>
-            struct most_refined_<typelist<Head, Tail...>>
+            struct most_refined_<meta::list<Head, Tail...>>
             {
                 using type = Head;
                 constexpr operator Head*() const { return nullptr; }
@@ -153,7 +151,7 @@ namespace ranges
             using _9 = std::integral_constant<int, 8>;
 
             template<typename T>
-            using val_t = detail::conditional_t<std::is_rvalue_reference<T>::value, T, T &>;
+            using val_t = meta::if_<std::is_rvalue_reference<T>, T, T &>;
 
             template<typename T>
             val_t<T> val();
@@ -179,7 +177,7 @@ namespace ranges
                 // up the vtable, given all the virtual bases.
                 refines() = delete;
 
-                using base_concepts_t = typelist<Concepts...>;
+                using base_concepts_t = meta::list<Concepts...>;
 
                 template<typename...Ts>
                 void requires_(Ts &&...);
@@ -189,12 +187,12 @@ namespace ranges
             // models
             template<typename Concept, typename...Ts>
             struct models
-              : bool_constant<decltype(detail::models_<Ts...>(nullval<Concept>()))::value>
+              : meta::bool_<decltype(detail::models_<Ts...>(_nullptr_v<Concept>()))::value>
             {};
 
             template<typename Concept, typename...Args, typename...Ts>
             struct models<Concept(Args...), Ts...>
-              : models<Concept, typelist_element_t<Args::value, typelist<Ts...> >...>
+              : models<Concept, meta::list_element<Args, meta::list<Ts...> >...>
             {};
 
             ////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,13 +211,13 @@ namespace ranges
             template<typename Concepts, typename...Ts>
             struct most_refined
               : detail::most_refined_<
-                    typelist_find_if_t<
+                    meta::find_if<
                         Concepts,
-                        meta_bind_back<meta_quote<models>, Ts...>>>
+                        meta::bind_back<meta::quote<models>, Ts...>>>
             {};
 
             template<typename Concepts, typename...Ts>
-            using most_refined_t = meta_eval<most_refined<Concepts, Ts...>>;
+            using most_refined_t = meta::eval<most_refined<Concepts, Ts...>>;
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // Core language concepts
@@ -516,8 +514,8 @@ namespace ranges
                 using result_t = decltype(val<Fun>()(val<Args>()...));
 
                 template<typename Fun, typename ...Args,
-                    typename UnRefFun = meta_eval<std::remove_reference<Fun>>,
-                    typename UnCvRefFun = meta_eval<std::remove_cv<UnRefFun>>>
+                    typename UnRefFun = meta::eval<std::remove_reference<Fun>>,
+                    typename UnCvRefFun = meta::eval<std::remove_cv<UnRefFun>>>
                 auto requires_(Fun fun, Args... args) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<UnRefFun *>(&fun),
@@ -754,7 +752,7 @@ namespace ranges
 
         template<typename T>
         struct size_type
-          : std::make_unsigned<meta_eval<difference_type<T>>>
+          : std::make_unsigned<meta::eval<difference_type<T>>>
         {};
 
         template<typename T>

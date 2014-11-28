@@ -63,7 +63,7 @@ namespace ranges
             };
         }
 
-        RANGES_CONSTEXPR adl_erase_detail::erase_fn erase{};
+        constexpr adl_erase_detail::erase_fn erase{};
 
         namespace action
         {

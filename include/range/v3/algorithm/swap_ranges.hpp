@@ -70,7 +70,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR swap_ranges_fn swap_ranges{};
+        constexpr swap_ranges_fn swap_ranges{};
 
     } // namespace v3
 } // namespace ranges

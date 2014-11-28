@@ -28,7 +28,7 @@ namespace ranges
         public:
             optional() = default;
             optional(T t)
-              : data_(index_t<0>{}, std::move(t))
+              : data_(meta::size_t<0>{}, std::move(t))
             {}
             explicit operator bool() const
             {

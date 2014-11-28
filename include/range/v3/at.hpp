@@ -33,7 +33,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR at_fn at {};
+        constexpr at_fn at {};
     }
 }
 

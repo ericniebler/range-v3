@@ -39,7 +39,7 @@ namespace ranges
     {
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using IsPermutationable = fast_logical_and<
+        using IsPermutationable = meta::fast_and<
             ForwardIterator<I1>,
             ForwardIterator<I2>,
             Comparable<I1, I2, C, P1, P2>>;
@@ -190,7 +190,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<is_permutation_fn> is_permutation {};
+        constexpr with_braced_init_args<is_permutation_fn> is_permutation {};
 
         struct next_permutation_fn
         {
@@ -234,7 +234,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR next_permutation_fn next_permutation{};
+        constexpr next_permutation_fn next_permutation{};
 
         struct prev_permutation_fn
         {
@@ -278,7 +278,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR prev_permutation_fn prev_permutation{};
+        constexpr prev_permutation_fn prev_permutation{};
 
     } // namespace v3
 } // namespace ranges

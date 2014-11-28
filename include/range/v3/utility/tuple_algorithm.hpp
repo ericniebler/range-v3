@@ -88,7 +88,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR tuple_transform_fn tuple_transform {};
+        constexpr tuple_transform_fn tuple_transform {};
 
         struct tuple_foldl_fn
         {
@@ -142,7 +142,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR tuple_foldl_fn tuple_foldl {};
+        constexpr tuple_foldl_fn tuple_foldl {};
 
         // NOTE: This does *not* guarantee order of evaluation, nor does
         // it return the function after it is done. Not to be used with
@@ -169,7 +169,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR tuple_for_each_fn tuple_for_each {};
+        constexpr tuple_for_each_fn tuple_for_each {};
 
         struct tuple_apply_fn
         {
@@ -193,7 +193,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR tuple_apply_fn tuple_apply {};
+        constexpr tuple_apply_fn tuple_apply {};
 
         struct make_tuple_fn
         {
@@ -204,7 +204,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR make_tuple_fn make_tuple {};
+        constexpr make_tuple_fn make_tuple {};
     }
 }
 

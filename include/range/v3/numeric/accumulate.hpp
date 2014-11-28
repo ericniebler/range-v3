@@ -28,7 +28,7 @@ namespace ranges
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>,
             typename Y = concepts::Invokable::result_t<Op, T, X>>
-        using Accumulateable = fast_logical_and<
+        using Accumulateable = meta::fast_and<
             InputIterator<I>,
             Invokable<P, V>,
             Invokable<Op, T, X>,
@@ -57,7 +57,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<accumulate_fn> accumulate{};
+        constexpr with_braced_init_args<accumulate_fn> accumulate{};
     }
 }
 

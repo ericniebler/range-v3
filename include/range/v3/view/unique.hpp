@@ -45,7 +45,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR unique_fn unique {};
+            constexpr unique_fn unique {};
         }
     }
 }

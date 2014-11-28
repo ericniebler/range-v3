@@ -48,7 +48,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<slice_fn> slice{};
+            constexpr action<slice_fn> slice{};
         }
     }
 }

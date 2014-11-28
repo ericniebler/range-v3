@@ -28,7 +28,7 @@ namespace ranges
         template<typename I, typename O, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using RemoveCopyableIf = fast_logical_and<
+        using RemoveCopyableIf = meta::fast_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
             InvokablePredicate<C, X>,
@@ -63,7 +63,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR remove_copy_if_fn remove_copy_if{};
+        constexpr remove_copy_if_fn remove_copy_if{};
 
     } // namespace v3
 } // namespace ranges

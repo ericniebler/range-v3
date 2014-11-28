@@ -50,7 +50,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<drop_fn> drop{};
+            constexpr action<drop_fn> drop{};
         }
     }
 }

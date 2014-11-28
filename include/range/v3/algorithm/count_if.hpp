@@ -64,7 +64,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<count_if_fn> count_if{};
+        constexpr with_braced_init_args<count_if_fn> count_if{};
     } // namespace v3
 } // namespace ranges
 

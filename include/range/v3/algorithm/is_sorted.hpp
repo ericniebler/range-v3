@@ -58,7 +58,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<is_sorted_fn> is_sorted{};
+        constexpr with_braced_init_args<is_sorted_fn> is_sorted{};
 
     } // namespace v3
 } // namespace ranges

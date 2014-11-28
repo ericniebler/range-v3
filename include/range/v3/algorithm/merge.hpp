@@ -91,7 +91,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR merge_fn merge{};
+        constexpr merge_fn merge{};
 
     } // namespace v3
 } // namespace ranges

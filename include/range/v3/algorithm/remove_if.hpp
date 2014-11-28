@@ -30,7 +30,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using RemovableIf = fast_logical_and<
+        using RemovableIf = meta::fast_and<
             ForwardIterator<I>,
             Invokable<P, V>,
             InvokablePredicate<C, X>,
@@ -68,7 +68,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR remove_if_fn remove_if{};
+        constexpr remove_if_fn remove_if{};
 
     } // namespace v3
 } // namespace ranges

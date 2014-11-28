@@ -49,7 +49,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR make_action_fn make_action{};
+            constexpr make_action_fn make_action{};
 
             template<typename Action>
             struct action : pipeable<action<Action>>

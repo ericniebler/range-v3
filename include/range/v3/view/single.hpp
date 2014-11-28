@@ -84,7 +84,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR single_fn single {};
+            constexpr single_fn single {};
         }
     }
 }

@@ -294,7 +294,7 @@ namespace ranges
         template<typename T>
         using iterable_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::RandomAccessIterable,
                     concepts::BidirectionalIterable,
                     concepts::ForwardIterable,
@@ -302,69 +302,69 @@ namespace ranges
 
         template<typename T>
         using iterable_concept_t =
-            meta_eval<iterable_concept<T>>;
+            meta::eval<iterable_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_iterable_concept
         template<typename T>
         using bounded_iterable_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::BoundedIterable,
                     concepts::Iterable>, T>;
 
         template<typename T>
         using bounded_iterable_concept_t =
-            meta_eval<bounded_iterable_concept<T>>;
+            meta::eval<bounded_iterable_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sized_iterable_concept
         template<typename T>
         using sized_iterable_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::SizedIterable,
                     concepts::Iterable>, T>;
 
         template<typename T>
         using sized_iterable_concept_t =
-            meta_eval<sized_iterable_concept<T>>;
+            meta::eval<sized_iterable_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_range_concept
         template<typename T>
         using bounded_range_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::BoundedRange,
                     concepts::Range>, T>;
 
         template<typename T>
-        using bounded_range_concept_t = meta_eval<bounded_range_concept<T>>;
+        using bounded_range_concept_t = meta::eval<bounded_range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sized_range_concept
         template<typename T>
         using sized_range_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::SizedRange,
                     concepts::Range>, T>;
 
         template<typename T>
-        using sized_range_concept_t = meta_eval<sized_range_concept<T>>;
+        using sized_range_concept_t = meta::eval<sized_range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept
         template<typename T>
         using range_concept =
             concepts::most_refined<
-                typelist<
+                meta::list<
                     concepts::Range,
                     concepts::Iterable>, T>;
 
         template<typename T>
-        using range_concept_t = meta_eval<range_concept<T>>;
+        using range_concept_t = meta::eval<range_concept<T>>;
 
         namespace detail
         {
@@ -403,21 +403,19 @@ namespace ranges
         // Specialize this if the default is wrong.
         template<typename T, typename Enable>
         struct is_sized_iterable
-          : std::conditional<
-                std::is_same<T, uncvref_t<T>>::value,
+          : meta::if_<
+                std::is_same<T, uncvref_t<T>>,
                 detail::is_sized_iterable_impl_<T>,
-                is_sized_iterable<uncvref_t<T>>
-            >::type
+                is_sized_iterable<uncvref_t<T>>>
         {};
 
         // Specialize this if the default is wrong.
         template<typename T, typename Enable>
         struct is_range
-          : std::conditional<
-                std::is_same<T, uncvref_t<T>>::value,
+          : meta::if_<
+                std::is_same<T, uncvref_t<T>>,
                 detail::is_range_impl_<T>,
-                is_range<uncvref_t<T>>
-            >::type
+                is_range<uncvref_t<T>>>
         {};
 
         // By default, the is_range default heuristic guesses wrong for these container types:

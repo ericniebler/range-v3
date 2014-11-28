@@ -71,7 +71,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR copy_if_fn copy_if{};
+        constexpr copy_if_fn copy_if{};
 
     } // namespace v3
 } // namespace ranges

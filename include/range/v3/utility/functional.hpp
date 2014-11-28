@@ -20,7 +20,6 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
-#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -176,7 +175,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR not_fn_fn not_fn {};
+        constexpr not_fn_fn not_fn {};
 
         template<typename T>
         struct reference_wrapper
@@ -232,7 +231,7 @@ namespace ranges
         {};
 
         template<typename T>
-        using is_reference_wrapper_t = meta_eval<is_reference_wrapper<T>>;
+        using is_reference_wrapper_t = meta::eval<is_reference_wrapper<T>>;
 
         template<typename T>
         struct referent_of
@@ -252,7 +251,7 @@ namespace ranges
 
         template<typename T>
         struct referent_of<T &>
-          : detail::conditional_t<is_reference_wrapper<T>::value, referent_of<T>, detail::identity<T>>
+          : meta::if_<is_reference_wrapper<T>, referent_of<T>, meta::id<T>>
         {};
 
         template<typename T>
@@ -261,7 +260,7 @@ namespace ranges
         {};
 
         template<typename T>
-        using referent_of_t = meta_eval<referent_of<T>>;
+        using referent_of_t = meta::eval<referent_of<T>>;
 
         struct ref_fn : pipeable<ref_fn>
         {
@@ -284,7 +283,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR ref_fn ref {};
+        constexpr ref_fn ref {};
 
         template<typename T>
         using ref_t = decltype(ref(std::declval<T>()));
@@ -310,7 +309,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR unwrap_reference_fn unwrap_reference {};
+        constexpr unwrap_reference_fn unwrap_reference {};
 
         namespace detail
         {
@@ -356,7 +355,7 @@ namespace ranges
 
         // Protect a callable so that it can be safely used in a bind expression without
         // accidentally becoming a "nested" bind.
-        RANGES_CONSTEXPR protect_fn protect{};
+        constexpr protect_fn protect{};
 
         // Accepts initializer_lists as either the first or second parameter, or both,
         // and forwards on to an implementation.

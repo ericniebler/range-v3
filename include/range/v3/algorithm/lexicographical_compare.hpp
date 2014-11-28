@@ -61,7 +61,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<lexicographical_compare_fn> lexicographical_compare{};
+        constexpr with_braced_init_args<lexicographical_compare_fn> lexicographical_compare{};
 
     } // namespace v3
 } // namespace ranges

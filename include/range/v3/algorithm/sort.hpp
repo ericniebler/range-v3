@@ -202,7 +202,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR sort_fn sort{};
+        constexpr sort_fn sort{};
 
     } // namespace v3
 } // namespace ranges

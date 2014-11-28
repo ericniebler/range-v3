@@ -65,8 +65,8 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR keys_fn keys {};
-            RANGES_CONSTEXPR values_fn values {};
+            constexpr keys_fn keys {};
+            constexpr values_fn values {};
         }
     }
 }

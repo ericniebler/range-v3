@@ -69,7 +69,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<find_fn> find {};
+        constexpr with_braced_init_args<find_fn> find {};
 
     } // namespace v3
 } // namespace ranges

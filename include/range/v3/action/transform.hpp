@@ -48,7 +48,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<transform_fn> transform{};
+            constexpr action<transform_fn> transform{};
         }
     }
 }

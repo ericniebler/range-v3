@@ -52,7 +52,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR move_fn move{};
+        constexpr move_fn move{};
 
     } // namespace v3
 } // namespace ranges

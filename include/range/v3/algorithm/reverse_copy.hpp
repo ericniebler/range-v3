@@ -26,7 +26,7 @@ namespace ranges
     inline namespace v3
     {
         template<typename I, typename O>
-        using ReverseCopyable = fast_logical_and<
+        using ReverseCopyable = meta::fast_and<
             BidirectionalIterator<I>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>>;
@@ -52,7 +52,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR reverse_copy_fn reverse_copy{};
+        constexpr reverse_copy_fn reverse_copy{};
 
     } // namespace v3
 } // namespace ranges

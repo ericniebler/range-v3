@@ -13,15 +13,22 @@
 #ifndef RANGES_V3_UTILITY_NULLVAL_HPP
 #define RANGES_V3_UTILITY_NULLVAL_HPP
 
+#include <range/v3/detail/config.hpp>
+
 namespace ranges
 {
     inline namespace v3
     {
         template<typename T>
-        constexpr T *nullval()
+        constexpr T *_nullptr_v()
         {
             return nullptr;
         }
+
+    #if !RANGES_CXX_NO_VARIABLE_TEMPLATES
+        template<typename T>
+        constexpr T *nullptr_v = nullptr;
+    #endif
     }
 }
 

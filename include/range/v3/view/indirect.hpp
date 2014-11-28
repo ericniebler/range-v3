@@ -72,7 +72,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR indirect_fn indirect{};
+            constexpr indirect_fn indirect{};
         }
     }
 }

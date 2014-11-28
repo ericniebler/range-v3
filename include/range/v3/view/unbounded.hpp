@@ -52,7 +52,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR unbounded_fn unbounded {};
+            constexpr unbounded_fn unbounded {};
         }
     }
 }

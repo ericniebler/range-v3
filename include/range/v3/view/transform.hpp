@@ -22,11 +22,11 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/logical_ops.hpp>
 
 namespace ranges
 {
@@ -42,10 +42,10 @@ namespace ranges
             semiregular_invokable_t<Fun> fun_;
             // Forward ranges must always return references. If the result of calling the function
             // is not a reference, this range is input-only.
-            using single_pass = logical_or<
+            using single_pass = meta::or_<
                 SinglePass<range_iterator_t<Rng>>,
-                logical_not<std::is_reference<reference_t>>>;
-            using use_sentinel_t = logical_or<logical_not<BoundedIterable<Rng>>, single_pass>;
+                meta::not_<std::is_reference<reference_t>>>;
+            using use_sentinel_t = meta::or_<meta::not_<BoundedIterable<Rng>>, single_pass>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
@@ -123,7 +123,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR transform_fn transform {};
+            constexpr transform_fn transform {};
         }
     }
 }

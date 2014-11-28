@@ -112,7 +112,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR random_shuffle_fn random_shuffle {};
+        constexpr random_shuffle_fn random_shuffle {};
 
     } // namespace v3
 } // namespace ranges

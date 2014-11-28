@@ -37,7 +37,7 @@ namespace ranges
     {
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Searchable = fast_logical_and<
+        using Searchable = meta::fast_and<
             ForwardIterator<I1>,
             ForwardIterator<I2>,
             Comparable<I1, I2, C, P1, P2>>;
@@ -198,7 +198,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<search_fn> search{};
+        constexpr with_braced_init_args<search_fn> search{};
 
     } // namespace v3
 } // namespace ranges

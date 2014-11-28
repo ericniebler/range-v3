@@ -56,7 +56,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR min_element_fn min_element{};
+        constexpr min_element_fn min_element{};
 
     } // namespace v3
 } // namespace ranges

@@ -19,10 +19,10 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/logical_ops.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -39,9 +39,9 @@ namespace ranges
             using reference_t = concepts::Invokable::result_t<Pred, range_value_t<Rng>>;
             semiregular_invokable_t<Pred> pred_;
 
-            using single_pass = logical_or<
+            using single_pass = meta::or_<
                 SinglePass<range_iterator_t<Rng>>,
-                logical_not<std::is_reference<reference_t>>>;
+                meta::not_<std::is_reference<reference_t>>>;
 
             template<bool IsConst>
             struct sentinel_adaptor
@@ -97,7 +97,7 @@ namespace ranges
                 )
             };
 
-            RANGES_CONSTEXPR take_while_fn take_while{};
+            constexpr take_while_fn take_while{};
         }
     }
 }

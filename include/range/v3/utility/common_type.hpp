@@ -18,6 +18,7 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 
 // Sadly, this is necessary because of:
 //  - std::common_type is not SFINAE-friendly, and
@@ -73,11 +74,10 @@ namespace ranges
 
             template<typename Meta, typename...Ts>
             struct common_type_recurse_if
-              : std::conditional<
-                    has_type<Meta>::value,
+              : meta::if_<
+                    has_type<Meta>,
                     common_type_recurse<Meta, Ts...>,
-                    empty
-                >::type
+                    empty>
             {};
         }
 

@@ -50,7 +50,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<erase_if_fn> erase_if{};
+            constexpr action<erase_if_fn> erase_if{};
         }
     }
 }

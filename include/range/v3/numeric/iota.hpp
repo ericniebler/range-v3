@@ -40,7 +40,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR iota_fn iota{};
+        constexpr iota_fn iota{};
     }
 }
 

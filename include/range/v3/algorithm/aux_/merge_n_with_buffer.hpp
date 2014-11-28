@@ -60,7 +60,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR merge_n_with_buffer_fn merge_n_with_buffer{};
+            constexpr merge_n_with_buffer_fn merge_n_with_buffer{};
 
         } // namespace aux
     } // namespace v3

@@ -177,7 +177,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR stable_sort_fn stable_sort {};
+        constexpr stable_sort_fn stable_sort {};
 
     } // namespace v3
 } // namespace ranges

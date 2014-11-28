@@ -95,10 +95,10 @@ namespace ranges
             };
         }
 
-        RANGES_CONSTEXPR begin_fn begin {};
-        RANGES_CONSTEXPR end_fn end {};
-        RANGES_CONSTEXPR cbegin_fn cbegin {};
-        RANGES_CONSTEXPR cend_fn cend {};
+        constexpr begin_fn begin {};
+        constexpr end_fn end {};
+        constexpr cbegin_fn cbegin {};
+        constexpr cend_fn cend {};
     }
 }
 

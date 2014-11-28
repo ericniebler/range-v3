@@ -32,7 +32,7 @@
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/nullval.hpp>
+#include <range/v3/utility/nullptr_v.hpp>
 #include <range/v3/view/any_range.hpp>
 #include <range/v3/view/join.hpp>
 
@@ -46,7 +46,7 @@ namespace ranges
         struct recursive_range_fn
         {
         private:
-            using value_type = meta_eval<std::remove_reference<Ref>>;
+            using value_type = meta::eval<std::remove_reference<Ref>>;
             std::function<any_input_range<int>()> fun_;
 
             struct impl
@@ -115,7 +115,7 @@ namespace ranges
                                     any_input_range<Ref>
                                   >())>
             explicit recursive_range_fn(Fun fun)
-              : fun_{[=](){return view::join(fun(), make_range(nullval<value_type>(), nullval<value_type>()));}}
+              : fun_{[=](){return view::join(fun(), make_range(_nullptr_v<value_type>(), _nullptr_v<value_type>()));}}
             {}
             recursive_range_fn(recursive_range_fn const &) = delete;
             recursive_range_fn &operator=(recursive_range_fn const &) = delete;

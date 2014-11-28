@@ -59,7 +59,7 @@ namespace ranges
             //}
         };
 
-        RANGES_CONSTEXPR fill_n_fn fill_n{};
+        constexpr fill_n_fn fill_n{};
 
     } // namespace v3
 } // namespace ranges

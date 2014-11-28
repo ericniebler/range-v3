@@ -93,11 +93,11 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR all_fn all{};
+            constexpr all_fn all{};
 
             template<typename Rng>
             using all_t =
-                meta_eval<std::decay<decltype(all(std::declval<Rng>()))>>;
+                meta::eval<std::decay<decltype(all(std::declval<Rng>()))>>;
         }
     }
 }

@@ -15,18 +15,13 @@
 
 #include <cstddef>
 #include <type_traits>
-#include <range/v3/range_fwd.hpp>
+#include <range/v3/detail/config.hpp>
 #include <range/v3/utility/meta.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        ////////////////////////////////////////////////////////////////////////////////////////
-        // index_t
-        template<std::size_t N>
-        using index_t = std::integral_constant<std::size_t, N>;
-
         ////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
         template<typename T, T...Is>
@@ -56,9 +51,9 @@ namespace ranges
             template<typename T, std::size_t N>
             struct make_integer_sequence_
               : integer_sequence_cat<
-                    meta_eval<make_integer_sequence_<T, N / 2>>,
-                    meta_eval<make_integer_sequence_<T, N / 2>>,
-                    meta_eval<make_integer_sequence_<T, N % 2>>>
+                    meta::eval<make_integer_sequence_<T, N / 2>>,
+                    meta::eval<make_integer_sequence_<T, N / 2>>,
+                    meta::eval<make_integer_sequence_<T, N % 2>>>
             {};
 
             template<typename T>
@@ -77,7 +72,7 @@ namespace ranges
         // generate integer_sequence [0,N) in O(log(N)) time
         template<typename T, T N>
         using make_integer_sequence =
-            meta_eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
+            meta::eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
 
         template<std::size_t...Is>
         using index_sequence = integer_sequence<std::size_t, Is...>;

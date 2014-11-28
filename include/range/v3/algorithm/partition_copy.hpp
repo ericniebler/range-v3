@@ -31,7 +31,7 @@ namespace ranges
         template<typename I, typename O0, typename O1, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using PartitionCopyable = fast_logical_and<
+        using PartitionCopyable = meta::fast_and<
             InputIterator<I>,
             WeaklyIncrementable<O0>,
             WeaklyIncrementable<O1>,
@@ -74,7 +74,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR partition_copy_fn partition_copy{};
+        constexpr partition_copy_fn partition_copy{};
 
     } // namespace v3
 } // namespace ranges

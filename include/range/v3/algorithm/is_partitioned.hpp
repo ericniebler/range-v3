@@ -36,7 +36,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
-        using IsPartitionedable = fast_logical_and<
+        using IsPartitionedable = meta::fast_and<
             InputIterator<I>,
             Invokable<P, V>,
             InvokablePredicate<C, X>>;
@@ -67,7 +67,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR with_braced_init_args<is_partitioned_fn> is_partitioned{};
+        constexpr with_braced_init_args<is_partitioned_fn> is_partitioned{};
 
     } // namespace v3
 } // namespace ranges

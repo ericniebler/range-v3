@@ -50,7 +50,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<drop_while_fn> drop_while{};
+            constexpr action<drop_while_fn> drop_while{};
         }
     }
 }

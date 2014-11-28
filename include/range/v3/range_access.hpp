@@ -262,14 +262,14 @@ namespace ranges
             template<typename T>
             using cursor_concept =
                 concepts::most_refined<
-                    typelist<
+                    meta::list<
                         range_access::RandomAccessCursorConcept,
                         range_access::BidirectionalCursorConcept,
                         range_access::ForwardCursorConcept,
                         range_access::InputCursorConcept>, T>;
 
             template<typename T>
-            using cursor_concept_t = meta_eval<cursor_concept<T>>;
+            using cursor_concept_t = meta::eval<cursor_concept<T>>;
         }
     }
 }

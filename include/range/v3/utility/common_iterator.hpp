@@ -103,10 +103,10 @@ namespace ranges
                 };
                 common_cursor() = default;
                 explicit common_cursor(I it)
-                  : data_(index_t<0>{}, std::move(it))
+                  : data_(meta::size_t<0>{}, std::move(it))
                 {}
                 explicit common_cursor(S se)
-                  : data_(index_t<1>{}, std::move(se))
+                  : data_(meta::size_t<1>{}, std::move(se))
                 {}
                 template<typename I2, typename S2,
                     CONCEPT_REQUIRES_(Convertible<I, I2>() &&

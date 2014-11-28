@@ -83,7 +83,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR move_fn move {};
+            constexpr move_fn move {};
         }
     }
 }

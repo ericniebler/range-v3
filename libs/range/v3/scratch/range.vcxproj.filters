@@ -723,12 +723,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\typelist.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\logical_ops.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
@@ -912,9 +906,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\empty.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\nullval.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\shuffle.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
@@ -1097,6 +1088,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\detail\config.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\nullptr_v.hpp">
+      <Filter>Header Files\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

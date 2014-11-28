@@ -55,7 +55,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR for_each_fn for_each{};
+        constexpr for_each_fn for_each{};
     } // namespace v3
 } // namespace ranges
 

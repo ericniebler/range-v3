@@ -37,7 +37,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR action<unique_fn> unique{};
+            constexpr action<unique_fn> unique{};
         }
     }
 }

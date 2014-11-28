@@ -18,7 +18,6 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/typelist.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
@@ -30,10 +29,10 @@ namespace ranges
         namespace detail
         {
             using add_ref_t =
-                meta_quote_trait<std::add_lvalue_reference>;
+                meta::quote_trait<std::add_lvalue_reference>;
 
             using add_cref_t =
-                meta_compose<meta_quote_trait<std::add_lvalue_reference>, meta_quote_trait<std::add_const>>;
+                meta::compose<meta::quote_trait<std::add_lvalue_reference>, meta::quote_trait<std::add_const>>;
         }
 
         template<typename...Ts>
@@ -48,8 +47,8 @@ namespace ranges
         namespace detail
         {
             template<typename Fun, typename T, std::size_t N,
-                typename = decltype(std::declval<Fun>()(std::declval<T &>(), index_t<N>{}))>
-            void apply_if(Fun &&fun, T &t, index_t<N> u)
+                typename = decltype(std::declval<Fun>()(std::declval<T &>(), meta::size_t<N>{}))>
+            void apply_if(Fun &&fun, T &t, meta::size_t<N> u)
             {
                 std::forward<Fun>(fun)(t, u);
             }
@@ -79,7 +78,7 @@ namespace ranges
                     return true;
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t, Fun &&, index_t<N> = index_t<N>{}) const
+                void apply(std::size_t, Fun &&, meta::size_t<N> = meta::size_t<N>{}) const
                 {
                     RANGES_ASSERT(false);
                 }
@@ -92,20 +91,20 @@ namespace ranges
                 template<typename...Us>
                 friend union variant_data;
                 template<typename U>
-                using enable_if_ok = enable_if_t<typelist_in<U, typelist<Ts...>>::value>;
-                using head_t = decay_t<conditional_t<std::is_reference<T>::value, ref_t<T &>, T>>;
+                using enable_if_ok = enable_if_t<meta::in<U, meta::list<Ts...>>::value>;
+                using head_t = decay_t<meta::if_<std::is_reference<T>, ref_t<T &>, T>>;
                 using tail_t = variant_data<Ts...>;
 
                 head_t head;
                 tail_t tail;
 
                 template<typename This, typename Fun, std::size_t N>
-                static void apply_(This &this_, std::size_t n, Fun &&fun, index_t<N> u)
+                static void apply_(This &this_, std::size_t n, Fun &&fun, meta::size_t<N> u)
                 {
                     if(0 == n)
                         detail::apply_if(detail::forward<Fun>(fun), this_.head, u);
                     else
-                        this_.tail.apply(n - 1, detail::forward<Fun>(fun), index_t<N + 1>{});
+                        this_.tail.apply(n - 1, detail::forward<Fun>(fun), meta::size_t<N + 1>{});
                 }
             public:
                 variant_data()
@@ -113,13 +112,13 @@ namespace ranges
                 // BUGBUG in-place construction?
                 template<typename U,
                     enable_if_t<std::is_constructible<head_t, U>::value> = 0>
-                variant_data(index_t<0>, U &&u)
+                variant_data(meta::size_t<0>, U &&u)
                   : head(std::forward<U>(u))
                 {}
                 template<std::size_t N, typename U,
-                    enable_if_t<0 != N && std::is_constructible<tail_t, index_t<N - 1>, U>::value> = 0>
-                variant_data(index_t<N>, U &&u)
-                  : tail{index_t<N - 1>{}, std::forward<U>(u)}
+                    enable_if_t<0 != N && std::is_constructible<tail_t, meta::size_t<N - 1>, U>::value> = 0>
+                variant_data(meta::size_t<N>, U &&u)
+                  : tail{meta::size_t<N - 1>{}, std::forward<U>(u)}
                 {}
                 ~variant_data()
                 {}
@@ -146,12 +145,12 @@ namespace ranges
                         return tail.equal(n - 1, that.tail);
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t n, Fun &&fun, index_t<N> u = index_t<N>{})
+                void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{})
                 {
                     variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t n, Fun &&fun, index_t<N> u = index_t<N>{}) const
+                void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{}) const
                 {
                     variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
@@ -237,13 +236,13 @@ namespace ranges
                 Var &var_;
                 Fun fun_;
                 template<typename T, std::size_t N>
-                void apply_(T &&t, index_t<N> n, std::true_type) const
+                void apply_(T &&t, meta::size_t<N> n, std::true_type) const
                 {
                     fun_(std::forward<T>(t), n);
                     var_.template set<N>(nullptr);
                 }
                 template<typename T, std::size_t N>
-                void apply_(T &&t, index_t<N> n, std::false_type) const
+                void apply_(T &&t, meta::size_t<N> n, std::false_type) const
                 {
                     var_.template set<N>(fun_(std::forward<T>(t), n));
                 }
@@ -252,9 +251,9 @@ namespace ranges
                   : var_(var), fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
-                void operator()(T &&t, index_t<N> u) const
+                void operator()(T &&t, meta::size_t<N> u) const
                 {
-                    using result_t = result_of_t<Fun(T &&, index_t<N>)>;
+                    using result_t = result_of_t<Fun(T &&, meta::size_t<N>)>;
                     this->apply_(std::forward<T>(t), u, std::is_void<result_t>{});
                 }
             };
@@ -269,7 +268,7 @@ namespace ranges
                   : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
-                void operator()(T &&t, index_t<N> n) const
+                void operator()(T &&t, meta::size_t<N> n) const
                 {
                     fun_(std::forward<T>(t), n);
                 }
@@ -326,10 +325,10 @@ namespace ranges
                   : var_(var)
                 {}
                 template<typename T, std::size_t N>
-                void operator()(T &&t, index_t<N>) const
+                void operator()(T &&t, meta::size_t<N>) const
                 {
-                    using E = typelist_element_t<N, typelist<From...>>;
-                    using F = typelist_find_t<typelist<To...>, E>;
+                    using E = meta::list_element_c<N, meta::list<From...>>;
+                    using F = meta::find<meta::list<To...>, E>;
                     static constexpr std::size_t M = sizeof...(To) - F::size();
                     var_.template set<M>(std::forward<T>(t));
                 }
@@ -337,24 +336,24 @@ namespace ranges
 
             template<typename Fun, typename Types>
             using variant_result_t =
-                typelist_apply_t<
-                    meta_quote<tagged_variant>,
-                    typelist_replace_t<
-                        typelist_transform_t<
+                meta::apply_list<
+                    meta::quote<tagged_variant>,
+                    meta::replace<
+                        meta::transform<
                             Types,
-                            meta_bind_front<meta_quote<concepts::Function::result_t>, Fun>>,
+                            meta::bind_front<meta::quote<concepts::Function::result_t>, Fun>>,
                         void,
                         std::nullptr_t>>;
 
             template<typename Fun, typename Types>
             using variant_result_i_t =
-                typelist_apply_t<
-                    meta_quote<tagged_variant>,
-                    typelist_replace_t<
-                        typelist_transform_t<
+                meta::apply_list<
+                    meta::quote<tagged_variant>,
+                    meta::replace<
+                        meta::transform<
                             Types,
-                            as_typelist_t<make_index_sequence<Types::size()>>,
-                            meta_bind_front<meta_quote<concepts::Function::result_t>, Fun>>,
+                            meta::as_list<make_index_sequence<Types::size()>>,
+                            meta::bind_front<meta::quote<concepts::Function::result_t>, Fun>>,
                         void, std::nullptr_t>>;
 
             template<typename Fun>
@@ -373,7 +372,7 @@ namespace ranges
                     return fun_(unwrap_reference(std::forward<T>(t)));
                 }
                 template<typename T, std::size_t N>
-                auto operator()(T &&t, index_t<N> n) const ->
+                auto operator()(T &&t, meta::size_t<N> n) const ->
                     decltype(fun_(unwrap_reference(std::forward<T>(t)), n))
                 {
                     return fun_(unwrap_reference(std::forward<T>(t)), n);
@@ -386,7 +385,7 @@ namespace ranges
         {
         private:
             friend struct detail::variant_core_access;
-            using types_t = typelist<Ts...>;
+            using types_t = meta::list<Ts...>;
             using data_t = detail::variant_data<Ts...>;
             std::size_t which_;
             data_t data_;
@@ -404,8 +403,8 @@ namespace ranges
               : which_((std::size_t)-1), data_{}
             {}
             template<std::size_t N, typename U,
-                enable_if_t<std::is_constructible<data_t, index_t<N>, U>::value> = 0>
-            tagged_variant(index_t<N> n, U &&u)
+                enable_if_t<std::is_constructible<data_t, meta::size_t<N>, U>::value> = 0>
+            tagged_variant(meta::size_t<N> n, U &&u)
               : which_(N), data_{n, detail::forward<U>(u)}
             {
                 static_assert(N < sizeof...(Ts), "");
@@ -457,7 +456,7 @@ namespace ranges
                 return sizeof...(Ts);
             }
             template<std::size_t N, typename U,
-                enable_if_t<std::is_constructible<data_t, index_t<N>, U>::value> = 0>
+                enable_if_t<std::is_constructible<data_t, meta::size_t<N>, U>::value> = 0>
             void set(U &&u)
             {
                 clear_();
@@ -473,7 +472,7 @@ namespace ranges
                 return which_;
             }
             template<typename Fun,
-                typename Args = typelist_transform_t<types_t, detail::add_ref_t>,
+                typename Args = meta::transform<types_t, detail::add_ref_t>,
                 typename Result = detail::variant_result_t<Fun, Args>>
             Result apply(Fun &&fun)
             {
@@ -482,7 +481,7 @@ namespace ranges
                 return res;
             }
             template<typename Fun,
-                typename Args = typelist_transform_t<types_t, detail::add_cref_t>,
+                typename Args = meta::transform<types_t, detail::add_cref_t>,
                 typename Result = detail::variant_result_t<Fun, Args >>
             Result apply(Fun &&fun) const
             {
@@ -492,7 +491,7 @@ namespace ranges
             }
 
             template<typename Fun,
-                typename Args = typelist_transform_t<types_t, detail::add_ref_t>,
+                typename Args = meta::transform<types_t, detail::add_ref_t>,
                 typename Result = detail::variant_result_i_t<Fun, Args>>
             Result apply_i(Fun &&fun)
             {
@@ -501,7 +500,7 @@ namespace ranges
                 return res;
             }
             template<typename Fun,
-                typename Args = typelist_transform_t<types_t, detail::add_cref_t>,
+                typename Args = meta::transform<types_t, detail::add_cref_t>,
                 typename Result = detail::variant_result_i_t<Fun, Args >>
             Result apply_i(Fun &&fun) const
             {
@@ -512,7 +511,7 @@ namespace ranges
         };
 
         template<typename...Ts, typename...Us,
-            CONCEPT_REQUIRES_(logical_and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
+            CONCEPT_REQUIRES_(meta::and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
         bool operator==(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
             RANGES_ASSERT(lhs.which() < sizeof...(Ts));
@@ -522,7 +521,7 @@ namespace ranges
         }
 
         template<typename...Ts, typename...Us,
-            CONCEPT_REQUIRES_(logical_and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
+            CONCEPT_REQUIRES_(meta::and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
         bool operator!=(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
             return !(lhs == rhs);
@@ -530,23 +529,21 @@ namespace ranges
 
         template<std::size_t N, typename...Ts>
         struct tagged_variant_element<N, tagged_variant<Ts...>>
-        {
-            using type =
-                detail::lazy_conditional_t<
-                    std::is_reference<typelist_element_t<N, typelist<Ts...>>>::value,
-                    typelist_element<N, typelist<Ts...>>,
-                    std::decay<typelist_element_t<N, typelist<Ts...>>>>;
-        };
+          : meta::if_<
+                std::is_reference<meta::list_element_c<N, meta::list<Ts...>>>,
+                meta::id<meta::list_element_c<N, meta::list<Ts...>>>,
+                std::decay<meta::list_element_c<N, meta::list<Ts...>>>>
+        {};
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // get
         template<std::size_t N, typename...Ts>
-        meta_apply<detail::add_ref_t, tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        meta::apply<detail::add_ref_t, tagged_variant_element_t<N, tagged_variant<Ts...>>>
         get(tagged_variant<Ts...> &var)
         {
             RANGES_ASSERT(N == var.which());
             using elem_t =
-                meta_eval<std::remove_reference<
+                meta::eval<std::remove_reference<
                     tagged_variant_element_t<N, tagged_variant<Ts...>>>>;
             using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
@@ -557,15 +554,15 @@ namespace ranges
         }
 
         template<std::size_t N, typename...Ts>
-        meta_apply<detail::add_cref_t, tagged_variant_element_t<N, tagged_variant<Ts...>>>
+        meta::apply<detail::add_cref_t, tagged_variant_element_t<N, tagged_variant<Ts...>>>
         get(tagged_variant<Ts...> const &var)
         {
             RANGES_ASSERT(N == var.which());
             using elem_t =
-                meta_apply<
-                    meta_compose<
-                        meta_quote_trait<std::remove_reference>,
-                        meta_quote_trait<std::add_const>
+                meta::apply<
+                    meta::compose<
+                        meta::quote_trait<std::remove_reference>,
+                        meta::quote_trait<std::add_const>
                     >, tagged_variant_element_t<N, tagged_variant<Ts...>>>;
             using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
@@ -576,12 +573,12 @@ namespace ranges
         }
 
         template<std::size_t N, typename...Ts>
-        meta_eval<std::add_rvalue_reference<tagged_variant_element_t<N, tagged_variant<Ts...>>>>
+        meta::eval<std::add_rvalue_reference<tagged_variant_element_t<N, tagged_variant<Ts...>>>>
         get(tagged_variant<Ts...> &&var)
         {
             RANGES_ASSERT(N == var.which());
             using elem_t =
-                meta_eval<std::remove_reference<
+                meta::eval<std::remove_reference<
                     tagged_variant_element_t<N, tagged_variant<Ts...>>>>;
             using get_fun = detail::get_fun<elem_t>;
             elem_t *elem = nullptr;
@@ -608,9 +605,9 @@ namespace ranges
         struct tagged_variant_unique<tagged_variant<Ts...>>
         {
             using type =
-                typelist_apply_t<
-                    meta_quote<tagged_variant>,
-                    typelist_unique_t<typelist<Ts...>>>;
+                meta::apply_list<
+                    meta::quote<tagged_variant>,
+                    meta::unique<meta::list<Ts...>>>;
         };
 
         template<typename Var>

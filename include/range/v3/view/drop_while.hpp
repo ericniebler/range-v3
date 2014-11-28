@@ -92,7 +92,7 @@ namespace ranges
                 )
             };
 
-            RANGES_CONSTEXPR drop_while_fn drop_while {};
+            constexpr drop_while_fn drop_while {};
         }
     }
 }

@@ -64,7 +64,7 @@ namespace ranges
             //}
         };
 
-        RANGES_CONSTEXPR generate_n_fn generate_n{};
+        constexpr generate_n_fn generate_n{};
     } // namespace v3
 } // namespace ranges
 

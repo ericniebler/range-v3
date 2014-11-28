@@ -77,7 +77,7 @@ namespace ranges
                 }
             };
 
-            RANGES_CONSTEXPR counted_fn counted {};
+            constexpr counted_fn counted {};
         }
     }
 }

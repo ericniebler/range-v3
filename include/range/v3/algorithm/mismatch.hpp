@@ -34,7 +34,7 @@ namespace ranges
             typename V2 = iterator_value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using Mismatchable1 = fast_logical_and<
+        using Mismatchable1 = meta::fast_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
             Invokable<P1, V1>,
@@ -47,7 +47,7 @@ namespace ranges
             typename V2 = iterator_value_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
-        using Mismatchable2 = fast_logical_and<
+        using Mismatchable2 = meta::fast_and<
             InputIterator<I1>,
             InputIterator<I2>,
             Invokable<P1, V1>,
@@ -111,7 +111,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR mismatch_fn mismatch{};
+        constexpr mismatch_fn mismatch{};
 
         // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So
         // that we can properly distinguish this case:

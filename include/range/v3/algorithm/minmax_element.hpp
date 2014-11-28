@@ -91,7 +91,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR minmax_element_fn minmax_element{};
+        constexpr minmax_element_fn minmax_element{};
 
     } // namespace v3
 } // namespace ranges

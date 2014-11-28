@@ -56,7 +56,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR enumerate_fn enumerate{};
+        constexpr enumerate_fn enumerate{};
 
         struct distance_fn : iter_distance_fn
         {
@@ -84,7 +84,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR distance_fn distance {};
+        constexpr distance_fn distance {};
 
         // The interface of distance_compare is taken from Util.listLengthCmp in the GHC API.
         struct distance_compare_fn : iter_distance_compare_fn
@@ -125,7 +125,7 @@ namespace ranges
             }
         };
 
-        RANGES_CONSTEXPR distance_compare_fn distance_compare {};
+        constexpr distance_compare_fn distance_compare {};
     }
 }
 
