@@ -166,7 +166,7 @@ namespace ranges
             }
         };
 
-        struct not_fn_fn
+        struct not_fn
         {
             template<typename Pred>
             constexpr logical_negate<Pred> operator()(Pred pred) const
@@ -175,7 +175,7 @@ namespace ranges
             }
         };
 
-        constexpr not_fn_fn not_fn {};
+        constexpr not_fn not_ {};
 
         template<typename T>
         struct reference_wrapper

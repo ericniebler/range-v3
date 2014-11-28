@@ -125,9 +125,9 @@ namespace ranges
         } // namespace detail
 
         template<typename Fun, typename ...Rngs>
-        struct zipped_with_view
+        struct zip_with_view
           : range_facade<
-                zipped_with_view<Fun, Rngs...>,
+                zip_with_view<Fun, Rngs...>,
                 meta::and_c<is_infinite<Rngs>::value...>::value>
         {
         private:
@@ -245,8 +245,8 @@ namespace ranges
                 return {*fun_, tuple_transform(rngs_, end)};
             }
         public:
-            zipped_with_view() = default;
-            explicit zipped_with_view(Fun fun, Rngs &&...rngs)
+            zip_with_view() = default;
+            explicit zip_with_view(Fun fun, Rngs &&...rngs)
               : fun_{invokable(std::move(fun))}
               , rngs_{view::all(std::forward<Rngs>(rngs))...}
             {}
@@ -261,12 +261,12 @@ namespace ranges
         };
 
         template<typename ...Rngs>
-        struct zipped_view
-          : zipped_with_view<make_tuple_fn, Rngs...>
+        struct zip_view
+          : zip_with_view<make_tuple_fn, Rngs...>
         {
-            zipped_view() = default;
-            zipped_view(Rngs &&...rngs)
-              : zipped_with_view<make_tuple_fn, Rngs...>{make_tuple, std::forward<Rngs>(rngs)...}
+            zip_view() = default;
+            zip_view(Rngs &&...rngs)
+              : zip_with_view<make_tuple_fn, Rngs...>{make_tuple, std::forward<Rngs>(rngs)...}
             {}
         };
 
@@ -275,10 +275,10 @@ namespace ranges
             struct zip_fn
             {
                 template<typename...Rngs>
-                zipped_view<Rngs...> operator()(Rngs &&... rngs) const
+                zip_view<Rngs...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_c<(bool) Iterable<Rngs>()...>::value);
-                    return zipped_view<Rngs...>{std::forward<Rngs>(rngs)...};
+                    return zip_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };
 
@@ -287,11 +287,11 @@ namespace ranges
             struct zip_with_fn
             {
                 template<typename Fun, typename...Rngs>
-                zipped_with_view<Fun, Rngs...> operator()(Fun fun, Rngs &&... rngs) const
+                zip_with_view<Fun, Rngs...> operator()(Fun fun, Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_c<(bool) Iterable<Rngs>()...>::value);
                     CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rngs>...>());
-                    return zipped_with_view<Fun, Rngs...>{std::move(fun), std::forward<Rngs>(rngs)...};
+                    return zip_with_view<Fun, Rngs...>{std::move(fun), std::forward<Rngs>(rngs)...};
                 }
             };
 

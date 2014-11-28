@@ -60,7 +60,7 @@ namespace ranges
                 };
             public:
                 template<typename Rng, typename Pred, typename Val>
-                transformed_view<Rng, replacer_if_fun<Pred, detail::decay_t<Val>>>
+                transform_view<Rng, replacer_if_fun<Pred, detail::decay_t<Val>>>
                 operator()(Rng && rng, Pred pred, Val new_value) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());

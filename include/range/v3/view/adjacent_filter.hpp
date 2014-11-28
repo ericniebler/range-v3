@@ -27,8 +27,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng, typename F>
-        struct adjacent_filtered_view
-          : range_adaptor<adjacent_filtered_view<Rng, F>, Rng>
+        struct adjacent_filter_view
+          : range_adaptor<adjacent_filter_view<Rng, F>, Rng>
         {
         private:
             friend range_access;
@@ -37,11 +37,11 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                adjacent_filtered_view const *rng_;
+                adjacent_filter_view const *rng_;
                 using adaptor_base::prev;
             public:
                 adaptor() = default;
-                adaptor(adjacent_filtered_view const &rng)
+                adaptor(adjacent_filter_view const &rng)
                   : rng_(&rng)
                 {}
                 void next(range_iterator_t<Rng> &it) const
@@ -61,9 +61,9 @@ namespace ranges
                 return {*this};
             }
         public:
-            adjacent_filtered_view() = default;
-            adjacent_filtered_view(Rng && rng, F pred)
-              : range_adaptor_t<adjacent_filtered_view>{std::forward<Rng>(rng)}
+            adjacent_filter_view() = default;
+            adjacent_filter_view(Rng && rng, F pred)
+              : range_adaptor_t<adjacent_filter_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))
             {}
         };
@@ -73,7 +73,7 @@ namespace ranges
             struct adjacent_filter_fn
             {
                 template<typename Rng, typename F>
-                adjacent_filtered_view<Rng, F>
+                adjacent_filter_view<Rng, F>
                 operator()(Rng && rng, F pred) const
                 {
                     CONCEPT_ASSERT(ForwardIterable<Rng>());

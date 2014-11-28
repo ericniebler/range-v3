@@ -30,8 +30,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng, typename Regex, typename SubMatchRange>
-        struct tokenized_view
-          : range_interface<tokenized_view<Rng, Regex, SubMatchRange>>
+        struct tokenize_view
+          : range_interface<tokenize_view<Rng, Regex, SubMatchRange>>
         {
         private:
             using base_range_t = view::all_t<Rng>;
@@ -43,8 +43,8 @@ namespace ranges
             using iterator =
                 std::regex_token_iterator<range_iterator_t<base_range_t>>;
 
-            tokenized_view() = default;
-            tokenized_view(Rng &&rng, Regex && rex, SubMatchRange subs,
+            tokenize_view() = default;
+            tokenize_view(Rng &&rng, Regex && rex, SubMatchRange subs,
                 std::regex_constants::match_flag_type flags)
               : rng_(view::all(std::forward<Rng>(rng)))
               , rex_(std::forward<Regex>(rex)), subs_(std::move(subs)), flags_(flags)
@@ -77,7 +77,7 @@ namespace ranges
             struct tokenizer_impl_fn
             {
                 template<typename Rng, typename Regex>
-                tokenized_view<Rng, Regex, int>
+                tokenize_view<Rng, Regex, int>
                 operator()(Rng && rng, Regex && rex, int sub = 0,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
@@ -92,7 +92,7 @@ namespace ranges
                 }
 
                 template<typename Rng, typename Regex>
-                tokenized_view<Rng, Regex, std::vector<int>>
+                tokenize_view<Rng, Regex, std::vector<int>>
                 operator()(Rng && rng, Regex && rex, std::vector<int> subs,
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
@@ -107,7 +107,7 @@ namespace ranges
                 }
 
                 template<typename Rng, typename Regex>
-                tokenized_view<Rng, Regex, std::initializer_list<int>>
+                tokenize_view<Rng, Regex, std::initializer_list<int>>
                 operator()(Rng && rng, Regex && rex,
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const

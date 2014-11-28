@@ -31,8 +31,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng, typename Pred>
-        struct filtered_view
-          : range_adaptor<filtered_view<Rng, Pred>, Rng>
+        struct filter_view
+          : range_adaptor<filter_view<Rng, Pred>, Rng>
         {
         private:
             friend range_access;
@@ -43,7 +43,7 @@ namespace ranges
               : adaptor_base
             {
             private:
-                using filtered_view_t = meta::apply<meta::add_const_if_c<IsConst>, filtered_view>;
+                using filtered_view_t = meta::apply<meta::add_const_if_c<IsConst>, filter_view>;
                 filtered_view_t *rng_;
                 using adaptor_base::advance;
                 void satisfy(range_iterator_t<Rng> &it) const
@@ -95,9 +95,9 @@ namespace ranges
                 return {*this};
             }
         public:
-            filtered_view() = default;
-            filtered_view(Rng && rng, Pred pred)
-              : range_adaptor_t<filtered_view>{std::forward<Rng>(rng)}
+            filter_view() = default;
+            filter_view(Rng && rng, Pred pred)
+              : range_adaptor_t<filter_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))
             {}
         };
@@ -107,7 +107,7 @@ namespace ranges
             struct filter_fn
             {
                 template<typename Rng, typename Pred>
-                filtered_view<Rng, Pred>
+                filter_view<Rng, Pred>
                 operator()(Rng && rng, Pred pred) const
                 {
                     CONCEPT_ASSERT(Iterable<Rng>());

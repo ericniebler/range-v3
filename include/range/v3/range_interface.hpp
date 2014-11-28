@@ -20,7 +20,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/common_iterator.hpp>
-#include <range/v3/view/to_container.hpp>
+#include <range/v3/to_container.hpp>
 
 namespace ranges
 {
@@ -220,14 +220,14 @@ namespace ranges
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D, Container>())>
             operator Container ()
             {
-                return detail::to_container<Container>(derived());
+                return ranges::to_<Container>(derived());
             }
             template<typename Container, typename D = Derived,
                 typename Alloc = typename Container::allocator_type, // HACKHACK
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D const, Container>())>
             operator Container () const
             {
-                return detail::to_container<Container>(derived());
+                return ranges::to_<Container>(derived());
             }
         };
     }

@@ -54,7 +54,7 @@ namespace ranges
                 template<typename Rng, typename Val1, typename Val2,
                     CONCEPT_REQUIRES_(Same<detail::decay_t<Val1>,
                                            detail::decay_t<Val2>>())>
-                transformed_view<Rng, replacer_fun<detail::decay_t<Val1>>>
+                transform_view<Rng, replacer_fun<detail::decay_t<Val1>>>
                 operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());

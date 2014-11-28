@@ -184,6 +184,7 @@
     <ClCompile Include="..\..\..\..\test\range.cpp" />
     <ClCompile Include="..\..\..\..\test\range_adaptor.cpp" />
     <ClCompile Include="..\..\..\..\test\range_facade.cpp" />
+    <ClCompile Include="..\..\..\..\test\to_container.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\meta.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
@@ -209,7 +210,6 @@
     <ClCompile Include="..\..\..\..\test\view\stride.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take_while.cpp" />
-    <ClCompile Include="..\..\..\..\test\view\to_container.cpp" />
     <ClCompile Include="..\..\..\..\test\view\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\view\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\view\zip.cpp" />
@@ -339,6 +339,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\range_interface.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\size.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\to_container.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\basic_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_iterator.hpp" />
@@ -400,7 +401,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\take.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\take_while.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\tokenize.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\view\to_container.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unbounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />

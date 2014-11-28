@@ -32,8 +32,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng>
-        struct strided_view
-          : range_adaptor<strided_view<Rng>, Rng>
+        struct stride_view
+          : range_adaptor<stride_view<Rng>, Rng>
         {
         private:
             friend range_access;
@@ -66,7 +66,7 @@ namespace ranges
             {
             private:
                 using iterator = ranges::range_iterator_t<Rng>;
-                strided_view const *rng_;
+                stride_view const *rng_;
                 dirty_t & dirty() { return *this; }
                 dirty_t const & dirty() const { return *this; }
                 offset_t & offset() { return *this; }
@@ -88,10 +88,10 @@ namespace ranges
                 }
             public:
                 adaptor() = default;
-                adaptor(strided_view const &rng, begin_tag)
+                adaptor(stride_view const &rng, begin_tag)
                   : dirty_t(false), offset_t(0), rng_(&rng)
                 {}
-                adaptor(strided_view const &rng, end_tag)
+                adaptor(stride_view const &rng, end_tag)
                   : dirty_t(true), offset_t(0), rng_(&rng)
                 {
                     // Opportunistic eager cleaning when we can do so in O(1)
@@ -155,9 +155,9 @@ namespace ranges
                 return {*this, end_tag{}};
             }
         public:
-            strided_view() = default;
-            strided_view(Rng &&rng, difference_type_ stride)
-              : range_adaptor_t<strided_view>{std::forward<Rng>(rng)}
+            stride_view() = default;
+            stride_view(Rng &&rng, difference_type_ stride)
+              : range_adaptor_t<stride_view>{std::forward<Rng>(rng)}
               , stride_(stride)
             {
                 RANGES_ASSERT(0 < stride_);
@@ -175,7 +175,7 @@ namespace ranges
             struct stride_fn
             {
                 template<typename Rng>
-                strided_view<Rng> operator()(Rng && rng, range_difference_t<Rng> step) const
+                stride_view<Rng> operator()(Rng && rng, range_difference_t<Rng> step) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     return {std::forward<Rng>(rng), step};

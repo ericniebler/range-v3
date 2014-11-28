@@ -27,8 +27,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng>
-        struct reversed_view
-          : range_adaptor<reversed_view<Rng>, Rng>
+        struct reverse_view
+          : range_adaptor<reverse_view<Rng>, Rng>
         {
         private:
             CONCEPT_ASSERT(BidirectionalIterable<Rng>());
@@ -40,13 +40,13 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                reversed_view const *rng_;
+                reverse_view const *rng_;
             public:
                 adaptor() = default;
-                adaptor(reversed_view const &rng)
+                adaptor(reverse_view const &rng)
                   : rng_(&rng)
                 {}
-                range_iterator_t<Rng> begin(reversed_view const &rng) const
+                range_iterator_t<Rng> begin(reverse_view const &rng) const
                 {
                     auto it = ranges::end(rng.mutable_base());
                     ranges::advance_bounded(it, -1, ranges::begin(rng.mutable_base()));
@@ -93,9 +93,9 @@ namespace ranges
                 return {*this};
             }
         public:
-            reversed_view() = default;
-            reversed_view(Rng && rng)
-              : range_adaptor_t<reversed_view>{std::forward<Rng>(rng)}
+            reverse_view() = default;
+            reverse_view(Rng && rng)
+              : range_adaptor_t<reverse_view>{std::forward<Rng>(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
@@ -109,11 +109,11 @@ namespace ranges
             struct reverse_fn : pipeable<reverse_fn>
             {
                 template<typename Rng>
-                reversed_view<Rng> operator()(Rng && rng) const
+                reverse_view<Rng> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(BidirectionalIterable<Rng>());
                     CONCEPT_ASSERT(BoundedIterable<Rng>());
-                    return reversed_view<Rng>{std::forward<Rng>(rng)};
+                    return reverse_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 

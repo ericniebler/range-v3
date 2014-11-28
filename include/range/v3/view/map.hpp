@@ -59,7 +59,7 @@ namespace ranges
             struct values_fn : pipeable<values_fn>
             {
                 template<typename Rng>
-                values_range_view<Rng> operator()(Rng && rng) const
+                values_view<Rng> operator()(Rng && rng) const
                 {
                     return {std::forward<Rng>(rng), detail::get_second{}};
                 }

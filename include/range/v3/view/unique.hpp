@@ -39,7 +39,7 @@ namespace ranges
             struct unique_fn : pipeable<unique_fn>
             {
                 template<typename Rng>
-                uniqued_view<Rng> operator()(Rng && rng) const
+                unique_view<Rng> operator()(Rng && rng) const
                 {
                     return {std::forward<Rng>(rng), detail::not_equal_to{}};
                 }

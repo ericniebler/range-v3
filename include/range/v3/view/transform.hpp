@@ -33,8 +33,8 @@ namespace ranges
     inline namespace v3
     {
         template<typename Rng, typename Fun>
-        struct transformed_view
-          : range_adaptor<transformed_view<Rng, Fun>, Rng>
+        struct transform_view
+          : range_adaptor<transform_view<Rng, Fun>, Rng>
         {
         private:
             friend range_access;
@@ -53,7 +53,7 @@ namespace ranges
             private:
                 semiregular_invokable_ref_t<Fun, IsConst> fun_;
             public:
-                using single_pass = transformed_view::single_pass;
+                using single_pass = transform_view::single_pass;
                 adaptor() = default;
                 adaptor(semiregular_invokable_ref_t<Fun, IsConst> fun)
                   : fun_(std::move(fun))
@@ -91,9 +91,9 @@ namespace ranges
                 return {fun_};
             }
         public:
-            transformed_view() = default;
-            transformed_view(Rng && rng, Fun fun)
-              : range_adaptor_t<transformed_view>{std::forward<Rng>(rng)}
+            transform_view() = default;
+            transform_view(Rng && rng, Fun fun)
+              : range_adaptor_t<transform_view>{std::forward<Rng>(rng)}
               , fun_(invokable(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
@@ -108,7 +108,7 @@ namespace ranges
             struct transform_fn
             {
                 template<typename Rng, typename Fun>
-                transformed_view<Rng, Fun> operator()(Rng && rng, Fun fun) const
+                transform_view<Rng, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rng>>());

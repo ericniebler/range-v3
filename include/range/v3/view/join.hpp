@@ -61,8 +61,8 @@ namespace ranges
         }
 
         template<typename...Rngs>
-        struct joined_view
-          : range_facade<joined_view<Rngs...>,
+        struct join_view
+          : range_facade<join_view<Rngs...>,
                 meta::or_c<is_infinite<Rngs>::value...>::value>
         {
         private:
@@ -79,7 +79,7 @@ namespace ranges
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
             private:
                 friend struct sentinel;
-                joined_view const *rng_;
+                join_view const *rng_;
                 tagged_variant<range_iterator_t<view::all_t<Rngs> const>...> its_;
 
                 template<std::size_t N>
@@ -203,12 +203,12 @@ namespace ranges
                 using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
                 using single_pass = meta::fast_or<SinglePass<range_iterator_t<Rngs>>...>;
                 cursor() = default;
-                cursor(joined_view const &rng, begin_tag)
+                cursor(join_view const &rng, begin_tag)
                   : rng_(&rng), its_{meta::size_t<0>{}, begin(std::get<0>(rng.rngs_))}
                 {
                     this->satisfy(meta::size_t<0>{});
                 }
-                cursor(joined_view const &rng, end_tag)
+                cursor(join_view const &rng, end_tag)
                   : rng_(&rng), its_{meta::size_t<cranges-1>{}, end(std::get<cranges-1>(rng.rngs_))}
                 {}
                 reference current() const
@@ -251,7 +251,7 @@ namespace ranges
                 range_sentinel_t<meta::back<meta::list<view::all_t<Rngs>...>> const> end_;
             public:
                 sentinel() = default;
-                sentinel(joined_view const &rng, end_tag)
+                sentinel(join_view const &rng, end_tag)
                   : end_(end(std::get<cranges - 1>(rng.rngs_)))
                 {}
                 bool equal(cursor const &pos) const
@@ -270,8 +270,8 @@ namespace ranges
                 return {*this, end_tag{}};
             }
         public:
-            joined_view() = default;
-            explicit joined_view(Rngs &&...rngs)
+            join_view() = default;
+            explicit join_view(Rngs &&...rngs)
               : rngs_(view::all(std::forward<Rngs>(rngs))...)
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool)SizedIterable<Rngs>()...>::value)
@@ -286,11 +286,11 @@ namespace ranges
             struct join_fn
             {
                 template<typename...Rngs>
-                joined_view<Rngs...> operator()(Rngs &&... rngs) const
+                join_view<Rngs...> operator()(Rngs &&... rngs) const
                 {
                     static_assert(meta::and_c<(bool)InputIterable<Rngs>()...>::value,
                         "Expecting Input Iterables");
-                    return joined_view<Rngs...>{std::forward<Rngs>(rngs)...};
+                    return join_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
             };
 

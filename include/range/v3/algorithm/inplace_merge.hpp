@@ -78,7 +78,7 @@ namespace ranges
                               std::move_iterator<Rv>{Rv{p.base().base()}},
                               std::move_iterator<Rv>{Rv{buf}},
                               RBi{std::move(end)},
-                              not_fn(std::ref(pred)), std::ref(proj), std::ref(proj));
+                              not_(std::ref(pred)), std::ref(proj), std::ref(proj));
                     }
                 }
 

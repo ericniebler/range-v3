@@ -28,3 +28,7 @@ add_test(test.multiple multiple)
 
 add_executable(distance distance.cpp)
 add_test(test.distance distance)
+
+add_executable(to_container to_container.cpp)
+add_test(test.to_container, to_container)
+

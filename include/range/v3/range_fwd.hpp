@@ -124,19 +124,6 @@ namespace ranges
 
             struct make_compressed_pair_fn;
 
-            template<typename ...T>
-            struct is_placeholder;
-
-            template<typename T>
-            struct is_binder;
-
-            struct wrap_bind_fn;
-
-            template<typename Bind>
-            struct bind_wrapper;
-
-            struct unwrap_bind_fn;
-
             template<typename T>
             constexpr T && forward(typename std::remove_reference<T>::type & t) noexcept
             {
@@ -157,9 +144,6 @@ namespace ranges
             {
                 return static_cast<typename std::remove_reference<T>::type &&>(t);
             }
-
-            template<typename Fn, typename...Args>
-            struct binder;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // void_
@@ -275,8 +259,6 @@ namespace ranges
 
         struct make_invokable_fn;
 
-        struct bind_fn;
-
         template<typename Derived, bool Inf = false>
         struct range_interface;
 
@@ -333,7 +315,7 @@ namespace ranges
         // Views
         //
         template<typename Rng, typename BinaryPredicate>
-        struct adjacent_filtered_view;
+        struct adjacent_filter_view;
 
         namespace view
         {
@@ -377,7 +359,7 @@ namespace ranges
             basic_sentinel<detail::counted_sentinel>;
 
         template<typename Rng, typename Pred>
-        struct filtered_view;
+        struct filter_view;
 
         namespace view
         {
@@ -401,7 +383,7 @@ namespace ranges
         }
 
         template<typename...Rngs>
-        struct joined_view;
+        struct join_view;
 
         namespace view
         {
@@ -417,7 +399,7 @@ namespace ranges
         }
 
         template<typename Val>
-        struct repeated_view;
+        struct repeat_view;
 
         namespace view
         {
@@ -432,7 +414,7 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct reversed_view;
+        struct reverse_view;
 
         namespace view
         {
@@ -456,7 +438,7 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct strided_view;
+        struct stride_view;
 
         namespace view
         {
@@ -472,7 +454,7 @@ namespace ranges
         }
 
         template<typename Rng, typename Regex, typename SubMatchRange>
-        struct tokenized_view;
+        struct tokenize_view;
 
         namespace view
         {
@@ -480,7 +462,7 @@ namespace ranges
         }
 
         template<typename Rng, typename Fun>
-        struct transformed_view;
+        struct transform_view;
 
         namespace view
         {
@@ -496,7 +478,7 @@ namespace ranges
         }
 
         template<typename Rng>
-        using uniqued_view = adjacent_filtered_view<Rng, detail::not_equal_to>;
+        using unique_view = adjacent_filter_view<Rng, detail::not_equal_to>;
 
         namespace view
         {
@@ -504,10 +486,10 @@ namespace ranges
         }
 
         template<typename Rng>
-        using keys_range_view = transformed_view<Rng, detail::get_first>;
+        using keys_range_view = transform_view<Rng, detail::get_first>;
 
         template<typename Rng>
-        using values_range_view = transformed_view<Rng, detail::get_second>;
+        using values_view = transform_view<Rng, detail::get_second>;
 
         namespace view
         {
@@ -517,10 +499,10 @@ namespace ranges
         }
 
         template<typename Fun, typename...Rngs>
-        struct zipped_with_view;
+        struct zip_with_view;
 
         template<typename...Rngs>
-        struct zipped_view;
+        struct zip_view;
 
         namespace view
         {

@@ -28,11 +28,11 @@ namespace ranges
     {
         template<typename Rng, typename F>
         struct for_each_view
-          : flatten_view<transformed_view<Rng, F>>
+          : flatten_view<transform_view<Rng, F>>
         {
             for_each_view() = default;
             for_each_view(Rng && rng, F f)
-              : flatten_view<transformed_view<Rng, F>>{{std::forward<Rng>(rng), std::move(f)}}
+              : flatten_view<transform_view<Rng, F>>{{std::forward<Rng>(rng), std::move(f)}}
             {}
         };
 

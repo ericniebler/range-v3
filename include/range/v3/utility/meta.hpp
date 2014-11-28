@@ -36,6 +36,12 @@ namespace ranges
             template<typename F, typename...Args>
             using apply = typename F::template apply<Args...>;
 
+            template<typename F, typename...Args>
+            struct lazy_apply
+            {
+                using type = apply<F, Args...>;
+            };
+
             template<std::size_t N>
             using size_t = std::integral_constant<std::size_t, N>;
 
@@ -133,23 +139,24 @@ namespace ranges
                 using apply = apply<F, Ts..., Us...>;
             };
 
-            template<typename T>
-            struct unpack_into
+            template<typename F, typename T>
+            struct lazy_apply_list
             {};
 
-            template<template<typename...> class T, typename ...Ts>
-            struct unpack_into<T<Ts...>>
+            template<typename F, template<typename...> class T, typename ...Ts>
+            struct lazy_apply_list<F, T<Ts...>>
             {
-                template<typename F>
-                using apply = apply<F, Ts...>;
+                using type = apply<F, Ts...>;
             };
 
-            template<typename T, T...Is>
-            struct unpack_into<integer_sequence<T, Is...>>
+            template<typename F, typename T, T...Is>
+            struct lazy_apply_list<F, integer_sequence<T, Is...>>
             {
-                template<typename F>
-                using apply = apply<F, std::integral_constant<T, Is>...>;
+                using type = apply<F, std::integral_constant<T, Is>...>;
             };
+
+            template<typename C, typename List>
+            using apply_list = eval<lazy_apply_list<C, List>>;
 
             template<typename F, typename Q = quote<list>>
             struct curry
@@ -160,7 +167,7 @@ namespace ranges
             struct uncurry
             {
                 template<typename T>
-                using apply = apply<unpack_into<T>, F>;
+                using apply = eval<lazy_apply_list<F, T>>;
             };
 
             template<typename F>
@@ -538,7 +545,7 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////
             // empty
             template<typename List>
-            using emtpy = bool_<0 == size<List>::value>;
+            using empty = bool_<0 == size<List>::value>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // find
@@ -595,7 +602,7 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////
             // in
             template<typename List, typename T>
-            using in = bool_<0 != size<find<List, T>>::value>;
+            using in = not_<empty<find<List, T>>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // unique
@@ -659,11 +666,6 @@ namespace ranges
 
             template<typename List, typename C, typename U>
             using replace_if = eval<meta_detail::replace_if_<List, C, U>>;
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // apply_list
-            template<typename C, typename List>
-            using apply_list = apply<uncurry<C>, List>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // foldl
@@ -744,8 +746,8 @@ namespace ranges
                     foldl<
                         ListOfLists,
                         repeat_n<size<front<ListOfLists>>, Fun>,
-                        bind_back<quote<transform>, quote<bind_front> > >,
-                    quote<apply> >;
+                        bind_back<quote<transform>, quote<bind_front>>>,
+                    quote<apply>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // zip
@@ -779,17 +781,17 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////
             // all_of
             template<typename List, typename F>
-            using all_of = bool_<0 == find_if<List, compose<quote<not_>, F>>::size()>;
+            using all_of = empty<find_if<List, compose<quote<not_>, F>>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // any_of
             template<typename List, typename F>
-            using any_of = bool_<0 != find_if<List, F>::size()>;
+            using any_of = not_<empty<find_if<List, F>>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // none_of
             template<typename List, typename F>
-            using none_of = bool_<0 == find_if<List, F>::size()>;
+            using none_of = empty<find_if<List, F>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // add_const_if
@@ -798,6 +800,56 @@ namespace ranges
 
             template<bool If>
             using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // Math operations
+            template<typename T, typename U>
+            using plus = std::integral_constant<decltype(T::value + U::value), T::value + U::value>;
+
+            template<typename T, typename U>
+            using minus = std::integral_constant<decltype(T::value - U::value), T::value - U::value>;
+
+            template<typename T, typename U>
+            using multiplies = std::integral_constant<decltype(T::value * U::value), T::value * U::value>;
+
+            template<typename T, typename U>
+            using divides = std::integral_constant<decltype(T::value / U::value), T::value / U::value>;
+
+            template<typename T>
+            using negate = std::integral_constant<decltype(-T::value), -T::value>;
+
+            template<typename T, typename U>
+            using modulus = std::integral_constant<decltype(T::value % U::value), T::value % U::value>;
+
+            template<typename T, typename U>
+            using equal_to = bool_<T::value == U::value>;
+
+            template<typename T, typename U>
+            using not_equal_to = bool_<T::value != U::value>;
+
+            template<typename T, typename U>
+            using greater = bool_<(T::value > U::value)>;
+
+            template<typename T, typename U>
+            using less = bool_<(T::value < U::value)>;
+
+            template<typename T, typename U>
+            using greater_equal = bool_<(T::value >= U::value)>;
+
+            template<typename T, typename U>
+            using less_equal = bool_<(T::value <= U::value)>;
+
+            template<typename T, typename U>
+            using bit_and = std::integral_constant<decltype(T::value & U::value), T::value & U::value>;
+
+            template<typename T, typename U>
+            using bit_or = std::integral_constant<decltype(T::value | U::value), T::value | U::value>;
+
+            template<typename T, typename U>
+            using bit_xor = std::integral_constant<decltype(T::value ^ U::value), T::value ^ U::value>;
+
+            template<typename T>
+            using bit_not = std::integral_constant<decltype(~T::value), ~T::value>;
         }
     }
 }
