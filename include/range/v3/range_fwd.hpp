@@ -390,7 +390,7 @@ namespace ranges
             struct join_fn;
         }
 
-        template<typename...Rngs>
+        template<typename Rng, typename Fun>
         struct partial_sum_view;
 
         namespace view
