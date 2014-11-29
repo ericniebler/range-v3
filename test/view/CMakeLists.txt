@@ -44,6 +44,9 @@ add_test(test.view.map, view.map)
 add_executable(view.move move.cpp)
 add_test(test.view.move, view.move)
 
+add_executable(view.partial_sum partial_sum.cpp)
+add_test(test.view.partial_sum, view.partial_sum)
+
 add_executable(view.repeat repeat.cpp)
 add_test(test.view.repeat, view.repeat)
 

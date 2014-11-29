@@ -157,11 +157,9 @@ namespace ranges
                     iterator_writability_disabled<Val, Ref>,
                     meta::if_<
                         std::is_pod<Val>,
-                        operator_brackets_value<typename std::remove_const<Val>::type>,
-                        operator_brackets_const_proxy<I, Ref>
-                    >,
-                    operator_brackets_proxy<I, Ref>
-                >;
+                        operator_brackets_value<meta::eval<std::remove_const<Val>>>,
+                        operator_brackets_const_proxy<I, Ref>>,
+                    operator_brackets_proxy<I, Ref>>;
 
             // iterators whose dereference operators reference the same value
             // for all iterators into the same sequence (like many input
@@ -244,9 +242,8 @@ namespace ranges
             template<typename Ref, typename Val>
             using is_non_proxy_reference =
                 std::is_convertible<
-                    typename std::remove_reference<Ref>::type const volatile*
-                  , Val const volatile*
-                >;
+                    meta::eval<std::remove_reference<Ref>> const volatile*
+                  , Val const volatile*>;
 
             // A metafunction to choose the result type of postfix ++
             //
@@ -271,7 +268,7 @@ namespace ranges
                         std::is_convertible<Ref, Val const &>,
                         // No forward iterator can have values that disappear
                         // before positions can be re-visited
-                        ranges::Derived<ranges::input_iterator_tag, Cat> >,
+                        ranges::Derived<ranges::input_iterator_tag, Cat>>,
                     meta::if_<
                         is_non_proxy_reference<Ref, Val>,
                         postfix_increment_proxy<I>,
@@ -311,7 +308,7 @@ namespace ranges
             template<typename Ref>
             struct operator_arrow_dispatch<Ref, true>
             {
-                using type = typename std::remove_reference<Ref>::type *;
+                using type = meta::eval<std::remove_reference<Ref>> *;
                 static type apply(Ref x)
                 {
                     return std::addressof(x);
@@ -459,7 +456,7 @@ namespace ranges
             using value_type = range_access::cursor_value_t<Cur>;
             using iterator_category = decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
             using difference_type = range_access::cursor_difference_t<Cur>;
-            using pointer = typename detail::operator_arrow_dispatch<reference>::type;
+            using pointer = meta::eval<detail::operator_arrow_dispatch<reference>>;
         private:
             using postfix_increment_result_t =
                 detail::postfix_increment_result<
@@ -659,9 +656,9 @@ namespace std
     public:
         using difference_type = typename iterator::difference_type;
         using value_type = typename iterator::value_type;
-        using iterator_category = typename ::ranges::detail::as_std_iterator_category<
-                                      typename iterator::iterator_category
-                                  >::type;
+        using iterator_category =
+            ::ranges::meta::eval<
+                ::ranges::detail::as_std_iterator_category<typename iterator::iterator_category>>;
         using reference = typename iterator::reference;
         using pointer = typename iterator::pointer;
     };

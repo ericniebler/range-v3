@@ -505,6 +505,9 @@
     <ClCompile Include="..\..\..\..\test\action\remove_if.cpp">
       <Filter>Test Files\action</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\partial_sum.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -1097,6 +1100,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\remove_if.hpp">
       <Filter>Header Files\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\partial_sum.hpp">
+      <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,7 @@
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
+#include <range/v3/view/partial_sum.hpp>
 #include <range/v3/view/repeat.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/remove_if.hpp>

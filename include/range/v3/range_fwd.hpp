@@ -390,6 +390,14 @@ namespace ranges
             struct join_fn;
         }
 
+        template<typename...Rngs>
+        struct partial_sum_view;
+
+        namespace view
+        {
+            struct partial_sum_fn;
+        }
+
         template<typename Rng>
         struct move_view;
 
