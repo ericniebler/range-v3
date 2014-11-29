@@ -7,9 +7,6 @@ add_test(test.act.drop act.drop)
 add_executable(act.drop_while drop_while.cpp)
 add_test(test.act.drop_while act.drop_while)
 
-add_executable(act.erase_if erase_if.cpp)
-add_test(test.act.erase_if act.erase_if)
-
 add_executable(act.insert insert.cpp)
 add_test(test.act.insert act.insert)
 
@@ -18,6 +15,9 @@ add_test(test.act.push_front act.push_front)
 
 add_executable(act.push_back push_back.cpp)
 add_test(test.act.push_back act.push_back)
+
+add_executable(act.remove_if remove_if.cpp)
+add_test(test.act.remove_if act.remove_if)
 
 add_executable(act.slice slice.cpp)
 add_test(test.act.slice act.slice)

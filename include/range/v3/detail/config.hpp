@@ -41,11 +41,23 @@
 #endif
 
 #ifndef RANGES_THREAD_LOCAL
-#if (defined(__clang__) && defined(__CYGWIN__)) | \
+#if (defined(__clang__) && defined(__CYGWIN__)) || \
     (defined(__clang__) && defined(_LIBCPP_VERSION)) // BUGBUG avoid unresolved __cxa_thread_atexit
 #define RANGES_STATIC_THREAD_LOCAL
 #else
 #define RANGES_STATIC_THREAD_LOCAL static thread_local
+#endif
+#endif
+
+#if __cplusplus > 201103
+#define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
+#else
+#if defined(__clang__) || defined(__GNUC__)
+#define RANGES_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
+#elif defined(_MSC_VER)
+#define RANGES_DEPRECATED(MSG) __declspec(deprecated(MSG))
+#else
+#define RANGES_DEPRECATED(MSG)
 #endif
 #endif
 

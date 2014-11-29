@@ -406,9 +406,6 @@
     <ClCompile Include="..\..\..\..\test\view\const.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\view\filter.cpp">
-      <Filter>Test Files\view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\transform.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -469,9 +466,6 @@
     <ClCompile Include="..\..\..\..\test\action\drop_while.cpp">
       <Filter>Test Files\action</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\action\erase_if.cpp">
-      <Filter>Test Files\action</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\action\insert.cpp">
       <Filter>Test Files\action</Filter>
     </ClCompile>
@@ -504,6 +498,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\to_container.cpp">
       <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\remove_if.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\action\remove_if.cpp">
+      <Filter>Test Files\action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1047,9 +1047,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\action\erase.hpp">
       <Filter>Header Files\action</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\action\erase_if.hpp">
-      <Filter>Header Files\action</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\insert.hpp">
       <Filter>Header Files\action</Filter>
     </ClInclude>
@@ -1094,6 +1091,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\to_container.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\remove_if.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\action\remove_if.hpp">
+      <Filter>Header Files\action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

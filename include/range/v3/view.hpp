@@ -36,6 +36,7 @@
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/repeat.hpp>
 #include <range/v3/view/repeat_n.hpp>
+#include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/replace.hpp>
 #include <range/v3/view/replace_if.hpp>
 #include <range/v3/view/reverse.hpp>

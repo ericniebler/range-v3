@@ -153,6 +153,13 @@ namespace ranges
 
             template<typename T,
                 CONCEPT_REQUIRES_(Predicate<Pred, T>())>
+            bool operator()(T && t)
+            {
+                return !pred_((T &&) t);
+            }
+
+            template<typename T,
+                CONCEPT_REQUIRES_(Predicate<Pred const, T>())>
             constexpr bool operator()(T && t) const
             {
                 return !pred_((T &&) t);
@@ -160,6 +167,13 @@ namespace ranges
 
             template<typename T, typename U,
                 CONCEPT_REQUIRES_(Predicate<Pred, T, U>())>
+            bool operator()(T && t, U && u)
+            {
+                return !pred_((T &&) t, (U &&) u);
+            }
+
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(Predicate<Pred const, T, U>())>
             constexpr bool operator()(T && t, U && u) const
             {
                 return !pred_((T &&) t, (U &&) u);

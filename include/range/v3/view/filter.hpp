@@ -13,106 +13,26 @@
 #ifndef RANGES_V3_VIEW_FILTER_HPP
 #define RANGES_V3_VIEW_FILTER_HPP
 
-#include <utility>
-#include <type_traits>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
-#include <range/v3/range_adaptor.hpp>
-#include <range/v3/range_concepts.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/pipeable.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/view/remove_if.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        template<typename Rng, typename Pred>
-        struct filter_view
-          : range_adaptor<filter_view<Rng, Pred>, Rng>
-        {
-        private:
-            friend range_access;
-            semiregular_invokable_t<Pred> pred_;
-
-            template<bool IsConst>
-            struct adaptor
-              : adaptor_base
-            {
-            private:
-                using filtered_view_t = meta::apply<meta::add_const_if_c<IsConst>, filter_view>;
-                filtered_view_t *rng_;
-                using adaptor_base::advance;
-                void satisfy(range_iterator_t<Rng> &it) const
-                {
-                    it = find_if(std::move(it), ranges::end(rng_->mutable_base()), std::ref(rng_->pred_));
-                }
-            public:
-                adaptor() = default;
-                adaptor(filtered_view_t &rng)
-                  : rng_(&rng)
-                {}
-                range_iterator_t<Rng> begin(filtered_view_t &rng) const
-                {
-                    auto it = ranges::begin(rng.mutable_base());
-                    this->satisfy(it);
-                    return it;
-                }
-                void next(range_iterator_t<Rng> &it) const
-                {
-                    this->satisfy(++it);
-                }
-                CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
-                void prev(range_iterator_t<Rng> &it) const
-                {
-                    auto &&pred = rng_->pred_;
-                    do --it; while(!pred(*it));
-                }
-            };
-            CONCEPT_REQUIRES(!Invokable<Pred const, range_value_t<Rng>>())
-            adaptor<false> begin_adaptor()
-            {
-                return {*this};
-            }
-            CONCEPT_REQUIRES(Invokable<Pred const, range_value_t<Rng>>())
-            adaptor<true> begin_adaptor() const
-            {
-                return {*this};
-            }
-            // TODO: if end is a sentinel, it holds an unnecessary pointer back to
-            // this range.
-            CONCEPT_REQUIRES(!Invokable<Pred const, range_value_t<Rng>>())
-            adaptor<false> end_adaptor()
-            {
-                return {*this};
-            }
-            CONCEPT_REQUIRES(Invokable<Pred const, range_value_t<Rng>>())
-            adaptor<true> end_adaptor() const
-            {
-                return {*this};
-            }
-        public:
-            filter_view() = default;
-            filter_view(Rng && rng, Pred pred)
-              : range_adaptor_t<filter_view>{std::forward<Rng>(rng)}
-              , pred_(invokable(std::move(pred)))
-            {}
-        };
-
         namespace view
         {
             struct filter_fn
             {
                 template<typename Rng, typename Pred>
-                filter_view<Rng, Pred>
+                remove_if_view<Rng, logical_negate<Pred>>
                 operator()(Rng && rng, Pred pred) const
                 {
                     CONCEPT_ASSERT(Iterable<Rng>());
                     CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
-                    return {std::forward<Rng>(rng), std::move(pred)};
+                    return {std::forward<Rng>(rng), not_(std::move(pred))};
                 }
                 template<typename Pred>
                 auto operator()(Pred pred) const ->
@@ -122,6 +42,7 @@ namespace ranges
                 }
             };
 
+            RANGES_DEPRECATED("Please switch to view::remove_if")
             constexpr filter_fn filter {};
         }
     }

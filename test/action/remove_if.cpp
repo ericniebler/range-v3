@@ -12,7 +12,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/action/sort.hpp>
-#include <range/v3/action/erase_if.hpp>
+#include <range/v3/action/remove_if.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -21,11 +21,11 @@ int main()
     using namespace ranges;
 
     std::vector<int> v = view::ints(1,20);
-    auto & v2 = action::erase_if(v, [](int i){return i % 2 == 0;});
+    auto & v2 = action::remove_if(v, [](int i){return i % 2 == 0;});
     CHECK(&v2 == &v);
     check_equal(v, {1,3,5,7,9,11,13,15,17,19});
 
-    auto && v3 = v | move | action::erase_if(std::bind(std::less<int>{}, std::placeholders::_1, 10));
+    auto && v3 = v | move | action::remove_if(std::bind(std::less<int>{}, std::placeholders::_1, 10));
     check_equal(v3, {11,13,15,17,19});
 
     return ::test_result();
