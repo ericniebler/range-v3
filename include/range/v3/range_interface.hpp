@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename From, typename To = From>
@@ -53,6 +54,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         template<typename Derived, bool Inf /* = false*/>
         struct range_interface

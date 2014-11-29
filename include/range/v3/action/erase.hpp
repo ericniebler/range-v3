@@ -23,6 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace adl_erase_detail
         {
             template<typename Cont, typename I,
@@ -62,6 +63,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         constexpr adl_erase_detail::erase_fn erase{};
 

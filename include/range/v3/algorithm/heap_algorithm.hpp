@@ -44,6 +44,7 @@ namespace ranges
             Invokable<P, V>,
             InvokableRelation<C, X>>;
 
+        /// \cond
         namespace detail
         {
             struct is_heap_until_n_fn
@@ -88,6 +89,7 @@ namespace ranges
 
             constexpr is_heap_n_fn is_heap_n {};
         }
+        /// \endcond
 
         struct is_heap_until_fn
         {
@@ -131,6 +133,7 @@ namespace ranges
 
         constexpr with_braced_init_args<is_heap_fn> is_heap {};
 
+        /// \cond
         namespace detail
         {
             struct sift_up_n_fn
@@ -224,6 +227,7 @@ namespace ranges
 
             constexpr sift_down_n_fn sift_down_n{};
         }
+        /// \endcond
 
         struct push_heap_fn
         {
@@ -250,6 +254,7 @@ namespace ranges
 
         constexpr push_heap_fn push_heap {};
 
+        /// \cond
         namespace detail
         {
             struct pop_heap_n_fn
@@ -269,6 +274,7 @@ namespace ranges
 
             constexpr pop_heap_n_fn pop_heap_n{};
         }
+        /// \endcond
 
         struct pop_heap_fn
         {

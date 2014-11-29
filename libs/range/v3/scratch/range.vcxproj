@@ -64,7 +64,9 @@
     <None Include="..\..\..\..\doc\D4128.md">
       <SubType>Designer</SubType>
     </None>
+    <None Include="..\..\..\..\doc\Doxyfile.in" />
     <None Include="..\..\..\..\doc\header.html" />
+    <None Include="..\..\..\..\doc\index.md" />
     <None Include="..\..\..\..\doc\pandoc-template.html" />
     <None Include="..\..\..\..\doc\show.cmd" />
     <None Include="..\..\..\..\Jamfile" />
@@ -418,6 +420,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
+    <Text Include="..\..\..\..\doc\CMakeLists.txt" />
     <Text Include="..\..\..\..\example\CMakeLists.txt" />
     <Text Include="..\..\..\..\perf\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\action\CMakeLists.txt" />
@@ -427,6 +430,9 @@
     <Text Include="..\..\..\..\test\utility\CMakeLists.txt" />
     <Text Include="..\..\..\..\test\view\CMakeLists.txt" />
     <Text Include="CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\..\..\doc\layout.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

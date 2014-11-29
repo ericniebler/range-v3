@@ -22,6 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct get_first
@@ -44,6 +45,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         namespace view
         {

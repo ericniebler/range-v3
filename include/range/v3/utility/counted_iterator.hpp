@@ -24,6 +24,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename I, typename D /* = iterator_difference_t<I>*/>
@@ -147,6 +148,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         // For RandomAccessIterator, operator- will be defined by basic_iterator
         template<typename I, typename D, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>

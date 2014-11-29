@@ -25,6 +25,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Derived>
@@ -46,6 +47,7 @@ namespace ranges
                     basic_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
                     basic_sentinel<facade_sentinel2_t<Derived>>>;
         }
+        /// \endcond
 
         struct default_sentinel
         {

@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             inline unsigned int random_seed_()
@@ -35,6 +36,7 @@ namespace ranges
                 return s_rd();
             }
         }
+        /// \endcond
 
         namespace concepts
         {

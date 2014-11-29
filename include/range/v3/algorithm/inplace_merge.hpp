@@ -47,6 +47,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct merge_adaptive_fn
@@ -189,7 +190,8 @@ namespace ranges
             };
 
             constexpr inplace_merge_no_buffer_fn inplace_merge_no_buffer {};
-        };
+        }
+        /// \endcond
 
         struct inplace_merge_fn
         {

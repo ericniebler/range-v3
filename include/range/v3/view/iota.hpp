@@ -94,6 +94,7 @@ namespace ranges
         template<typename T>
         using iota_concept_t = meta::eval<iota_concept<T>>;
 
+        /// \cond
         namespace detail
         {
             template<typename Val, typename Iota = iota_concept_t<Val>, bool IsIntegral = std::is_integral<Val>::value>
@@ -159,6 +160,7 @@ namespace ranges
                 return (D) (v0 - v1);
             }
         }
+        /// \endcond
 
         template<typename Val>
         struct iota_view

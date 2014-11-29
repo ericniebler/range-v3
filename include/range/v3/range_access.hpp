@@ -237,6 +237,7 @@ namespace ranges
             };
         };
 
+        /// \cond
         namespace detail
         {
             template<typename T>
@@ -271,6 +272,7 @@ namespace ranges
             template<typename T>
             using cursor_concept_t = meta::eval<cursor_concept<T>>;
         }
+        /// \endcond
     }
 }
 

@@ -33,6 +33,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct real_common_type_
@@ -59,6 +60,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         template<typename...Rngs>
         struct join_view

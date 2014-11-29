@@ -368,6 +368,7 @@ namespace ranges
             }
         };
 
+        /// \cond
         namespace adl_uncounted_recounted_detail
         {
             template<typename I>
@@ -415,6 +416,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         constexpr adl_uncounted_recounted_detail::uncounted_fn uncounted{};
         constexpr adl_uncounted_recounted_detail::recounted_fn recounted{};

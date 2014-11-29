@@ -366,6 +366,7 @@ namespace ranges
         template<typename T>
         using range_concept_t = meta::eval<range_concept<T>>;
 
+        /// \cond
         namespace detail
         {
             // Something is a range if it's an Iterable and either:
@@ -399,6 +400,7 @@ namespace ranges
               : std::true_type
             {};
         }
+        /// \endcond
 
         // Specialize this if the default is wrong.
         template<typename T, typename Enable>

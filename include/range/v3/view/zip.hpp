@@ -34,6 +34,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             constexpr struct
@@ -123,6 +124,7 @@ namespace ranges
                 return {std::get<0>(std::move(tup)), std::get<1>(std::move(tup))};
             }
         } // namespace detail
+        /// \endcond
 
         template<typename Fun, typename ...Rngs>
         struct zip_with_view

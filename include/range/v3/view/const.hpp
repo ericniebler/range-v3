@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T>
@@ -37,6 +38,7 @@ namespace ranges
             template<typename T>
             struct cref_t<T &&> { using type = T const &&; };
         }
+        /// \endcond
 
         template<typename Rng>
         struct const_view

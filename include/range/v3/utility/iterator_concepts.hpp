@@ -48,6 +48,7 @@ namespace ranges
           , virtual std::random_access_iterator_tag
         {};
 
+        /// \cond
         namespace detail
         {
             ////////////////////////////////////////////////////////////////////////////////////////
@@ -148,6 +149,7 @@ namespace ranges
               : as_ranges_iterator_category<typename T::iterator_category>
             {};
         }
+        /// \endcond
 
         template<typename T>
         struct pointer_type

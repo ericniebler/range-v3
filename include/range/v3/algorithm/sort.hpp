@@ -52,6 +52,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Val, typename C>
@@ -131,6 +132,7 @@ namespace ranges
                     detail::unguarded_linear_insert(i, std::move(*i), pred, proj);
             }
         }
+        /// \endcond
 
         // Introsort: Quicksort to a certain depth, then Heapsort. Insertion
         // sort below a certain threshold.

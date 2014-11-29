@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename I, typename S,
@@ -49,6 +50,7 @@ namespace ranges
                 return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
             }
         }
+        /// \endcond
 
         struct find_end_fn
         {

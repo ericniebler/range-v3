@@ -189,6 +189,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // if_
+            /// \cond
             namespace meta_detail
             {
                 template<bool If, typename Then, typename Else>
@@ -203,6 +204,7 @@ namespace ranges
                     using type = Then;
                 };
             }
+            /// \endcond
 
             template<typename If, typename Then, typename Else>
             using if_ = eval<meta_detail::_if_<If::value, Then, Else>>;
@@ -210,6 +212,7 @@ namespace ranges
             template<bool If, typename Then, typename Else>
             using if_c = eval<meta_detail::_if_<If, Then, Else>>;
 
+            /// \cond
             namespace meta_detail
             {
                 // Thanks to  Louis Dionne for this clever hack for a quick-to-compile
@@ -256,6 +259,7 @@ namespace ranges
                   : if_c<Bool::value, std::true_type, _or_<Bools...>>
                 {};
             }
+            /// \endcond
 
             template<bool ...Bools>
             using and_c =
@@ -302,6 +306,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list_cat
+            /// \cond
             namespace meta_detail
             {
                 template<typename ListOfLists>
@@ -337,6 +342,7 @@ namespace ranges
                   : list_cat_<list<list<List1..., List2..., List3...>, Rest...>>
                 {};
             }
+            /// \endcond
 
             template<typename ListOfLists>
             using list_cat = eval<meta_detail::list_cat_<ListOfLists>>;
@@ -344,6 +350,7 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////
             // repeat_n
             // Generate lists<_,_,_,..._> with N arguments in O(log N)
+            /// \cond
             namespace meta_detail
             {
                 template<std::size_t N, typename T>
@@ -369,6 +376,7 @@ namespace ranges
                     using type = list<T>;
                 };
             }
+            /// \endcond
 
             template<typename N, typename T = void>
             using repeat_n = eval<meta_detail::repeat_n_c_<N::value, T>>;
@@ -378,6 +386,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list_element
+            /// \cond
             namespace meta_detail
             {
                 struct empty {};
@@ -403,6 +412,7 @@ namespace ranges
                   : decltype(list_element_impl_<repeat_n<N, void *>>::eval(_nullptr_v<id<Ts>>()...))
                 {};
             }
+            /// \endcond
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list_element
@@ -414,6 +424,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // drop
+            /// \cond
             namespace meta_detail
             {
                 ////////////////////////////////////////////////////////////////////////////////////
@@ -442,6 +453,7 @@ namespace ranges
                   : decltype(drop_impl_<repeat_n<N, void *>>::eval(_nullptr_v<id<Ts>>()...))
                 {};
             }
+            /// \endcond
 
             template<typename N, typename List>
             using drop = eval<meta_detail::drop_<N, List>>;
@@ -451,6 +463,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // front
+            /// \cond
             namespace meta_detail
             {
                 template<typename List>
@@ -463,12 +476,14 @@ namespace ranges
                     using type = Head;
                 };
             }
+            /// \endcond
 
             template<typename List>
             using front = eval<meta_detail::front_<List>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // back
+            /// \cond
             namespace meta_detail
             {
                 template<typename List>
@@ -481,12 +496,14 @@ namespace ranges
                     using type = list_element_c<sizeof...(List), list<Head, List...>>;
                 };
             }
+            /// \endcond
 
             template<typename List>
             using back = eval<meta_detail::back_<List>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // push_front
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename T>
@@ -499,12 +516,14 @@ namespace ranges
                     using type = list<T, List...>;
                 };
             }
+            /// \endcond
 
             template<typename List, typename T>
             using push_front = eval<meta_detail::push_front_<List, T>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // pop_front
+            /// \cond
             namespace meta_detail
             {
                 template<typename List>
@@ -517,12 +536,14 @@ namespace ranges
                     using type = list<List...>;
                 };
             }
+            /// \endcond
 
             template<typename List>
             using pop_front = eval<meta_detail::pop_front_<List>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // push_back
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename T>
@@ -535,6 +556,7 @@ namespace ranges
                     using type = list<List..., T>;
                 };
             }
+            /// \endcond
 
             template<typename List, typename T>
             using push_back = eval<meta_detail::push_back_<List, T>>;
@@ -549,6 +571,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // find
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename T>
@@ -572,12 +595,14 @@ namespace ranges
                     using type = list<T, List...>;
                 };
             }
+            /// \endcond
 
             template<typename List, typename T>
             using find = eval<meta_detail::find_<List, T>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // find_if
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename Fun>
@@ -595,6 +620,7 @@ namespace ranges
                   : if_<apply<Fun, Head>, id<list<Head, List...>>, find_if_<list<List...>, Fun>>
                 {};
             }
+            /// \endcond
 
             template<typename List, typename Fun>
             using find_if = eval<meta_detail::find_if_<List, Fun>>;
@@ -606,6 +632,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // unique
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename Result>
@@ -627,12 +654,14 @@ namespace ranges
                             Result>>
                 {};
             }
+            /// \endcond
 
             template<typename List>
             using unique = eval<meta_detail::unique_<List, list<>>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // replace
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename T, typename U>
@@ -645,12 +674,14 @@ namespace ranges
                     using type = list<if_<std::is_same<T, List>, U, List>...>;
                 };
             }
+            /// \endcond
 
             template<typename List, typename T, typename U>
             using replace = eval<meta_detail::replace_<List, T, U>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // replace_if
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename C, typename U>
@@ -663,12 +694,14 @@ namespace ranges
                     using type = list<if_<apply<C, List>, U, List>...>;
                 };
             }
+            /// \endcond
 
             template<typename List, typename C, typename U>
             using replace_if = eval<meta_detail::replace_if_<List, C, U>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // foldl
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename State, typename Fun>
@@ -686,12 +719,14 @@ namespace ranges
                   : foldl_<list<List...>, apply<Fun, State, Head>, Fun>
                 {};
             }
+            /// \endcond
 
             template<typename List, typename State, typename Fun>
             using foldl = eval<meta_detail::foldl_<List, State, Fun>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // foldr
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename State, typename Fun>
@@ -710,12 +745,14 @@ namespace ranges
                     using type = apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>;
                 };
             }
+            /// \endcond
 
             template<typename List, typename State, typename Fun>
             using foldr = eval<meta_detail::foldr_<List, State, Fun>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // transform
+            /// \cond
             namespace meta_detail
             {
                 template<typename List, typename Fun, typename = void>
@@ -734,6 +771,7 @@ namespace ranges
                     using type = list<apply<Fun, List0, List1>...>;
                 };
             }
+            /// \endcond
 
             template<typename List, typename Fun, typename Dummy = void>
             using transform = eval<meta_detail::transform_<List, Fun, Dummy>>;
@@ -756,6 +794,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // as_list
+            /// \cond
             namespace meta_detail
             {
                 template<typename T>
@@ -769,6 +808,7 @@ namespace ranges
                     using type = apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>;
                 };
             }
+            /// \endcond
 
             template<typename Sequence>
             using as_list = eval<meta_detail::as_list_<Sequence>>;

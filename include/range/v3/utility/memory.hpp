@@ -30,6 +30,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             // Can be used with counted_cursor to maintain an external count.
@@ -101,6 +102,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         template<typename O, typename Val>
         struct raw_storage_iterator

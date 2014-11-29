@@ -39,6 +39,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             // stable, 2-3 compares, 0-2 swaps
@@ -96,6 +97,7 @@ namespace ranges
                 }
             }
         }
+        /// \endcond
 
         struct nth_element_fn
         {

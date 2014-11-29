@@ -28,6 +28,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             constexpr struct void_tester
@@ -129,6 +130,7 @@ namespace ranges
                 constexpr Head* operator()() const { return nullptr; }
             };
         }
+        /// \endcond
 
         namespace concepts
         {
@@ -669,6 +671,7 @@ namespace ranges
         template<typename F, typename T>
         using Transform = concepts::models<concepts::Transform, F, T>;
 
+        /// \cond
         namespace detail
         {
             ////////////////////////////////////////////////////////////////////////////////////////
@@ -742,6 +745,7 @@ namespace ranges
                 using type = typename T::char_type;
             };
         }
+        /// \endcond
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -765,15 +769,23 @@ namespace ranges
 #define CONCEPT_PP_CAT_(X, Y) X ## Y
 #define CONCEPT_PP_CAT(X, Y)  CONCEPT_PP_CAT_(X, Y)
 
-#define CONCEPT_REQUIRES_(...)                                                      \
+#define CONCEPT_REQUIRES_IMPL_(X)                                                   \
     int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                          \
     ranges::enable_if_t<                                                            \
-        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || (__VA_ARGS__)       \
+        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || X                   \
     > = 0                                                                           \
     /**/
 
+#define CONCEPT_REQUIRES_(...)                                                      \
+    CONCEPT_REQUIRES_IMPL_((__VA_ARGS__))                                           \
+    /**/
+
+#define CONCEPT_REQUIRES_IMPL(X)                                                    \
+    template<CONCEPT_REQUIRES_IMPL_(X)>                                             \
+    /**/
+
 #define CONCEPT_REQUIRES(...)                                                       \
-    template<CONCEPT_REQUIRES_(__VA_ARGS__)>                                        \
+    CONCEPT_REQUIRES_IMPL((__VA_ARGS__))                                            \
     /**/
 
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")

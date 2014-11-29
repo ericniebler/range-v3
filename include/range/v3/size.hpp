@@ -21,6 +21,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace adl_size_detail
         {
             template<typename Rng>
@@ -88,6 +89,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         constexpr adl_size_detail::size_fn size {};
     }

@@ -27,11 +27,13 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T> T && rref(T &, int);
             template<typename T> T rref(T, long);
         }
+        /// \endcond
 
         template<typename Rng>
         struct move_view

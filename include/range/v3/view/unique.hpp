@@ -22,6 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct not_equal_to
@@ -33,6 +34,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         namespace view
         {

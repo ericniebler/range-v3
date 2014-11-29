@@ -23,6 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Indices, typename...Ts>
@@ -50,6 +51,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         template<typename... Ts>
         struct compressed_tuple

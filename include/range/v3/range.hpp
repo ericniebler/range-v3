@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T, typename U = meta::eval<std::remove_const<T>>>
@@ -85,6 +86,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         template<typename I, typename S /*= I*/>
         struct range
@@ -270,6 +272,7 @@ namespace ranges
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wmismatched-tags"
 
+/// \cond
 namespace std
 {
     template<typename First, typename Second>
@@ -306,6 +309,7 @@ namespace std
         using type = Second;
     };
 }
+/// \endcond
 
 #pragma GCC diagnostic pop
 

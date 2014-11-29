@@ -33,11 +33,11 @@ namespace ranges
             ///
             /// \pre \c Rng is a model of the Range concept
             /// \pre \c I is a model of the InputIterator concept
-            /// \pre \c S is a model of the Sentinel<I> concept
-            /// \pre \c P is a model of the Invokable<V> concept, where V is the
+            /// \pre \c S is a model of the Sentinel\<I\> concept
+            /// \pre \c P is a model of the Invokable\<V\> concept, where V is the
             ///      value type of I.
-            /// \pre \c F models InvokablePredicate<X>, where X is the result type
-            ///      of Invokable<P, V>
+            /// \pre \c F models InvokablePredicate\<X\>, where X is the result type
+            ///      of Invokable\<P, V\>
             template<typename I, typename S, typename F, typename P = ident,
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,

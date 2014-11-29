@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Ref>
@@ -217,6 +218,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         /// \brief A type-erased InputRange
         template<typename Ref, bool Inf = false>

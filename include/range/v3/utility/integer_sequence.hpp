@@ -34,6 +34,7 @@ namespace ranges
             }
         };
 
+        /// \cond
         namespace detail
         {
             // Glue two sets of integer_sequence together
@@ -68,6 +69,7 @@ namespace ranges
                 using type = integer_sequence<T, 0>;
             };
         }
+        /// \endcond
 
         // generate integer_sequence [0,N) in O(log(N)) time
         template<typename T, T N>

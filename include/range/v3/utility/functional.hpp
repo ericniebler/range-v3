@@ -325,6 +325,7 @@ namespace ranges
 
         constexpr unwrap_reference_fn unwrap_reference {};
 
+        /// \cond
         namespace detail
         {
             template<typename Bind>
@@ -351,6 +352,7 @@ namespace ranges
                 )
             };
         }
+        /// \endcond
 
         struct protect_fn
         {
