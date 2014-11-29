@@ -1,1 +1,0 @@
-pandoc -f markdown_github+yaml_metadata_block+citations -t html -o %~n1.html --filter pandoc-citeproc --csl=acm-sig-proceedings.csl --number-sections --toc --toc-depth=4 --highlight-style=pygments -s -S --css=../stylesheets/stylesheet.css --include-before-body=header.html --include-after-body=footer.html %1 

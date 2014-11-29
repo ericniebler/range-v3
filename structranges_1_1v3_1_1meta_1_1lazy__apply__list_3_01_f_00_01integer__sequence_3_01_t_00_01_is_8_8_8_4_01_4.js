@@ -1,0 +1,4 @@
+var structranges_1_1v3_1_1meta_1_1lazy__apply__list_3_01_f_00_01integer__sequence_3_01_t_00_01_is_8_8_8_4_01_4 =
+[
+    [ "type", "structranges_1_1v3_1_1meta_1_1lazy__apply__list_3_01_f_00_01integer__sequence_3_01_t_00_01_is_8_8_8_4_01_4.html#a49b6110878d4a650218b9b0616b84eb5", null ]
+];

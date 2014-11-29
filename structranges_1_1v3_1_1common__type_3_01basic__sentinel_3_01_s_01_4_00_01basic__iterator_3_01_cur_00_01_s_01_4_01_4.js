@@ -1,0 +1,4 @@
+var structranges_1_1v3_1_1common__type_3_01basic__sentinel_3_01_s_01_4_00_01basic__iterator_3_01_cur_00_01_s_01_4_01_4 =
+[
+    [ "type", "structranges_1_1v3_1_1common__type_3_01basic__sentinel_3_01_s_01_4_00_01basic__iterator_3_01_cur_00_01_s_01_4_01_4.html#aec2b7edf43edf951839f29fe389759f5", null ]
+];
