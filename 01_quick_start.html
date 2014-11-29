@@ -46,8 +46,8 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li><a href="#why-use-ranges"><span class="toc-section-number">1.1</span> Why Use Ranges?</a><ul>
 <li><a href="#convenience"><span class="toc-section-number">1.1.1</span> Convenience</a></li>
 <li><a href="#composability"><span class="toc-section-number">1.1.2</span> Composability</a><ul>
-<li><a href="#range-views"><span class="toc-section-number">1.1.2.1</span> Range views</a></li>
-<li><a href="#container-algorithms"><span class="toc-section-number">1.1.2.2</span> Container Algorithms</a></li>
+<li><a href="#views"><span class="toc-section-number">1.1.2.1</span> Views</a></li>
+<li><a href="#actions"><span class="toc-section-number">1.1.2.2</span> Actions</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#create-custom-ranges"><span class="toc-section-number">1.2</span> Create Custom Ranges</a></li>
@@ -69,14 +69,14 @@ std::sort( v.begin(), v.end() );</code></pre>
 ranges::sort( v );</code></pre>
 <p>Range v3 contains a full implementation of all the standard algorithms with range-based overloads for convenience.</p>
 <h3 id="composability"><span class="header-section-number">1.1.2</span> Composability</h3>
-<p>Having a single range object permits <em>pipelines</em> of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by <em>range views</em>, and eager mutation is handled by <em>container algorithms</em>.</p>
-<h4 id="range-views"><span class="header-section-number">1.1.2.1</span> Range views</h4>
-<p>A range view is a lightweight wrapper that presents a view of an underlying sequence of elements in some custom way without mutating or copying it. Views are cheap to create and copy, and have non-owning reference semantics. Below are some examples:</p>
+<p>Having a single range object permits <em>pipelines</em> of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by <em>views</em>, and eager mutation is handled by <em>actions</em>.</p>
+<h4 id="views"><span class="header-section-number">1.1.2.1</span> Views</h4>
+<p>A view is a lightweight wrapper that presents a view of an underlying sequence of elements in some custom way without mutating or copying it. Views are cheap to create and copy, and have non-owning reference semantics. Below are some examples:</p>
 <ol>
 <li><p>Filter a container using a predicate and transform it.</p>
 <pre class="sourceCode cpp"><code class="sourceCode cpp">std::vector&lt;<span class="dt">int</span>&gt; vi{<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>};
 <span class="kw">using</span> <span class="kw">namespace</span> ranges;
-<span class="kw">auto</span> rng = vi | view::filter([](<span class="dt">int</span> i){<span class="kw">return</span> i % <span class="dv">2</span> == <span class="dv">0</span>;})
+<span class="kw">auto</span> rng = vi | view::remove_if([](<span class="dt">int</span> i){<span class="kw">return</span> i % <span class="dv">2</span> == <span class="dv">1</span>;})
               | view::transform([](<span class="dt">int</span> i){<span class="kw">return</span> std::to_string(i);});
 <span class="co">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></code></pre></li>
 <li><p>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</p>
@@ -92,22 +92,22 @@ std::vector&lt;<span class="dt">int</span>&gt; vi =
     });
 <span class="co">// vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}</span></code></pre></li>
 </ol>
-<h4 id="container-algorithms"><span class="header-section-number">1.1.2.2</span> Container Algorithms</h4>
-<p>When you want to mutate a container in-place, or forward it through a chain of mutating operations, you can use container algorithms. The following examples should make it clear.</p>
+<h4 id="actions"><span class="header-section-number">1.1.2.2</span> Actions</h4>
+<p>When you want to mutate a container in-place, or forward it through a chain of mutating operations, you can use actions. The following examples should make it clear.</p>
 <ol>
 <li><p>Read data into a vector, sort it, and make it unique.</p>
 <pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">extern</span> std::vector&lt;<span class="dt">int</span>&gt; read_data();
 <span class="kw">using</span> <span class="kw">namespace</span> ranges;
-std::vector&lt;<span class="dt">int</span>&gt; vi = read_data() | cont::sort | cont::unique;</code></pre></li>
+std::vector&lt;<span class="dt">int</span>&gt; vi = read_data() | action::sort | action::unique;</code></pre></li>
 <li><p>Do the same to a <code>vector</code> that already contains some data:</p>
-<pre class="sourceCode cpp"><code class="sourceCode cpp">vi = std::move(vi) | cont::sort | cont::unique;</code></pre></li>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">vi = std::move(vi) | action::sort | action::unique;</code></pre></li>
 <li><p>Mutate the container in-place:</p>
-<pre class="sourceCode cpp"><code class="sourceCode cpp">vi |= cont::sort | cont::unique;</code></pre></li>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">vi |= action::sort | action::unique;</code></pre></li>
 <li><p>Same as above, but with function-call syntax instead of pipe syntax:</p>
-<pre class="sourceCode cpp"><code class="sourceCode cpp">cont::unique(cont::sort(vi));</code></pre></li>
+<pre class="sourceCode cpp"><code class="sourceCode cpp">action::unique(action::sort(vi));</code></pre></li>
 </ol>
 <h2 id="create-custom-ranges"><span class="header-section-number">1.2</span> Create Custom Ranges</h2>
-<p>Range v3 provides a utility for easily creating your own range types, called <code>range_facade</code>. The Code below uses <code>range_facade</code> to create a range that traverses a null-terminated string:</p>
+<p>Range v3 provides a utility for easily creating your own range types, called <code>range_facade</code>. The code below uses <code>range_facade</code> to create a range that traverses a null-terminated string:</p>
 <pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="ot">#include &lt;range/v3/all.hpp&gt;</span>
 <span class="kw">using</span> <span class="kw">namespace</span> ranges;
 
@@ -142,7 +142,7 @@ std::vector&lt;<span class="dt">int</span>&gt; vi = read_data() | cont::sort | c
     <span class="co">// prints: h e l l o   w o r l d</span>
 }</code></pre>
 <h2 id="adapting-ranges"><span class="header-section-number">1.3</span> Adapting Ranges</h2>
-<p>Often, a new range type is most easily expressed by adapting an existing range type. That’s the case for many of the range views provided by the Range v3 library; for example, the <code>view::filter</code> and <code>view::transform</code> views. These are rich types with many moving parts, but thanks to a helper class called <code>range_adaptor</code>, they aren’t hard to write.</p>
+<p>Often, a new range type is most easily expressed by adapting an existing range type. That’s the case for many of the range views provided by the Range v3 library; for example, the <code>view::remove_if</code> and <code>view::transform</code> views. These are rich types with many moving parts, but thanks to a helper class called <code>range_adaptor</code>, they aren’t hard to write.</p>
 <p>Below in roughly 2 dozen lines of code is the <code>transform</code> view, which takes one range and transforms all the elements with a unary function.</p>
 <pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// A class that adapts an existing range with a function</span>
 <span class="kw">template</span>&lt;<span class="kw">class</span> Rng, <span class="kw">class</span> Fun&gt;
@@ -177,7 +177,7 @@ transform_view&lt;Rng, Fun&gt; transform(Rng &amp;&amp; rng, Fun fun)
 {
     <span class="kw">return</span> {std::forward&lt;Rng&gt;(rng), std::move(fun)};
 }</code></pre>
-<p>Range transformation is achieved by defining a nested <code>adaptor</code> class that handles the transformation, and then defining <code>begin_adaptor</code> and <code>end_adaptor</code> members that return adaptors for the begin iterator and the end sentinel, respectively. The <code>adaptor</code> class has a <code>current</code> member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: <code>equal</code>, <code>next</code>, <code>prev</code>, <code>advance</code>, and <code>distance_to</code>; but the transform adaptor takes the defaults defined in <code>adaptor_base</code>.</p>
+<p>Range transformation is achieved by defining a nested <code>adaptor</code> class that handles the transformation, and then defining <code>begin_adaptor</code> and <code>end_adaptor</code> members that return adaptors for the begin iterator and the end sentinel, respectively. The <code>adaptor</code> class has a <code>current</code> member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: <code>equal</code>, <code>next</code>, <code>prev</code>, <code>advance</code>, and <code>distance_to</code>; but the transform adaptor accepts the defaults defined in <code>adaptor_base</code>.</p>
 <p>With <code>transform_view</code>, we can print out the first 20 squares:</p>
 <pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
 {

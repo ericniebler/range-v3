@@ -25,18 +25,18 @@ Range v3 contains a full implementation of all the standard algorithms with rang
 
 ### Composability
 
-Having a single range object permits *pipelines* of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by *range views*, and eager mutation is handled by *container algorithms*.
+Having a single range object permits *pipelines* of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by *views*, and eager mutation is handled by *actions*.
 
-#### Range views
+#### Views
 
-A range view is a lightweight wrapper that presents a view of an underlying sequence of elements in some custom way without mutating or copying it. Views are cheap to create and copy, and have non-owning reference semantics. Below are some examples:
+A view is a lightweight wrapper that presents a view of an underlying sequence of elements in some custom way without mutating or copying it. Views are cheap to create and copy, and have non-owning reference semantics. Below are some examples:
 
 1. Filter a container using a predicate and transform it.
 
     ````c++
     std::vector<int> vi{1,2,3,4,5,6,7,8,9,10};
     using namespace ranges;
-    auto rng = vi | view::filter([](int i){return i % 2 == 0;})
+    auto rng = vi | view::remove_if([](int i){return i % 2 == 1;})
                   | view::transform([](int i){return std::to_string(i);});
     // rng == {"2","4","6","8","10"};
     ````
@@ -61,39 +61,39 @@ A range view is a lightweight wrapper that presents a view of an underlying sequ
     // vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}
     ````
 
-#### Container Algorithms
+#### Actions
 
-When you want to mutate a container in-place, or forward it through a chain of mutating operations, you can use container algorithms. The following examples should make it clear.
+When you want to mutate a container in-place, or forward it through a chain of mutating operations, you can use actions. The following examples should make it clear.
 
 1. Read data into a vector, sort it, and make it unique.
 
     ````c++
     extern std::vector<int> read_data();
     using namespace ranges;
-    std::vector<int> vi = read_data() | cont::sort | cont::unique;
+    std::vector<int> vi = read_data() | action::sort | action::unique;
     ````
 
 2. Do the same to a `vector` that already contains some data:
 
     ````c++
-    vi = std::move(vi) | cont::sort | cont::unique;
+    vi = std::move(vi) | action::sort | action::unique;
     ````
 
 3. Mutate the container in-place:
 
     ````c++
-    vi |= cont::sort | cont::unique;
+    vi |= action::sort | action::unique;
     ````
 
 4. Same as above, but with function-call syntax instead of pipe syntax:
 
     ````c++
-    cont::unique(cont::sort(vi));
+    action::unique(action::sort(vi));
     ````
 
 ## Create Custom Ranges
 
-Range v3 provides a utility for easily creating your own range types, called `range_facade`. The Code below uses `range_facade` to create a range that traverses a null-terminated string:
+Range v3 provides a utility for easily creating your own range types, called `range_facade`. The code below uses `range_facade` to create a range that traverses a null-terminated string:
 
 ````c++
 #include <range/v3/all.hpp>
@@ -138,7 +138,7 @@ int main()
 
 ## Adapting Ranges
 
-Often, a new range type is most easily expressed by adapting an existing range type. That's the case for many of the range views provided by the Range v3 library; for example, the `view::filter` and `view::transform` views. These are rich types with many moving parts, but thanks to a helper class called `range_adaptor`, they aren't hard to write.
+Often, a new range type is most easily expressed by adapting an existing range type. That's the case for many of the range views provided by the Range v3 library; for example, the `view::remove_if` and `view::transform` views. These are rich types with many moving parts, but thanks to a helper class called `range_adaptor`, they aren't hard to write.
 
 Below in roughly 2 dozen lines of code is the `transform` view, which takes one range and transforms all the elements with a unary function.
 
@@ -178,7 +178,7 @@ transform_view<Rng, Fun> transform(Rng && rng, Fun fun)
 }
 ````
 
-Range transformation is achieved by defining a nested `adaptor` class that handles the transformation, and then defining `begin_adaptor` and `end_adaptor` members that return adaptors for the begin iterator and the end sentinel, respectively. The `adaptor` class has a `current` member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: `equal`, `next`, `prev`, `advance`, and `distance_to`; but the transform adaptor takes the defaults defined in `adaptor_base`.
+Range transformation is achieved by defining a nested `adaptor` class that handles the transformation, and then defining `begin_adaptor` and `end_adaptor` members that return adaptors for the begin iterator and the end sentinel, respectively. The `adaptor` class has a `current` member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: `equal`, `next`, `prev`, `advance`, and `distance_to`; but the transform adaptor accepts the defaults defined in `adaptor_base`.
 
 With `transform_view`, we can print out the first 20 squares:
 
