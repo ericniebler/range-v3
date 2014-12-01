@@ -4,9 +4,7 @@ var annotated =
       [ "v3", null, [
         [ "action", null, [
           [ "action", "structranges_1_1v3_1_1action_1_1action.html", "structranges_1_1v3_1_1action_1_1action" ],
-          [ "action_access", "structranges_1_1v3_1_1action_1_1action__access.html", [
-            [ "impl", "structranges_1_1v3_1_1action_1_1action__access_1_1impl.html", null ]
-          ] ],
+          [ "action_access", "structranges_1_1v3_1_1action_1_1action__access.html", null ],
           [ "drop_fn", "structranges_1_1v3_1_1action_1_1drop__fn.html", "structranges_1_1v3_1_1action_1_1drop__fn" ],
           [ "drop_while_fn", "structranges_1_1v3_1_1action_1_1drop__while__fn.html", "structranges_1_1v3_1_1action_1_1drop__while__fn" ],
           [ "make_action_fn", "structranges_1_1v3_1_1action_1_1make__action__fn.html", "structranges_1_1v3_1_1action_1_1make__action__fn" ],
@@ -145,7 +143,6 @@ var annotated =
           [ "delimit_fn", "structranges_1_1v3_1_1view_1_1delimit__fn.html", "structranges_1_1v3_1_1view_1_1delimit__fn" ],
           [ "drop_fn", "structranges_1_1v3_1_1view_1_1drop__fn.html", "structranges_1_1v3_1_1view_1_1drop__fn" ],
           [ "drop_while_fn", "structranges_1_1v3_1_1view_1_1drop__while__fn.html", "structranges_1_1v3_1_1view_1_1drop__while__fn" ],
-          [ "filter_fn", "structranges_1_1v3_1_1view_1_1filter__fn.html", "structranges_1_1v3_1_1view_1_1filter__fn" ],
           [ "flatten_fn", "structranges_1_1v3_1_1view_1_1flatten__fn.html", "structranges_1_1v3_1_1view_1_1flatten__fn" ],
           [ "for_each_fn", "structranges_1_1v3_1_1view_1_1for__each__fn.html", "structranges_1_1v3_1_1view_1_1for__each__fn" ],
           [ "generate_fn", "structranges_1_1v3_1_1view_1_1generate__fn.html", "structranges_1_1v3_1_1view_1_1generate__fn" ],
@@ -261,7 +258,6 @@ var annotated =
         [ "ident", "structranges_1_1v3_1_1ident.html", "structranges_1_1v3_1_1ident" ],
         [ "includes_fn", "structranges_1_1v3_1_1includes__fn.html", "structranges_1_1v3_1_1includes__fn" ],
         [ "indirect_view", "structranges_1_1v3_1_1indirect__view.html", "structranges_1_1v3_1_1indirect__view" ],
-        [ "infinity", "structranges_1_1v3_1_1infinity.html", null ],
         [ "inner_product_fn", "structranges_1_1v3_1_1inner__product__fn.html", "structranges_1_1v3_1_1inner__product__fn" ],
         [ "inplace_merge_fn", "structranges_1_1v3_1_1inplace__merge__fn.html", "structranges_1_1v3_1_1inplace__merge__fn" ],
         [ "input_iterator_tag", "structranges_1_1v3_1_1input__iterator__tag.html", null ],
@@ -348,7 +344,6 @@ var annotated =
         [ "partition_point_fn", "structranges_1_1v3_1_1partition__point__fn.html", "structranges_1_1v3_1_1partition__point__fn" ],
         [ "pipeable", "structranges_1_1v3_1_1pipeable.html", null ],
         [ "pipeable_access", "structranges_1_1v3_1_1pipeable__access.html", [
-          [ "impl", "structranges_1_1v3_1_1pipeable__access_1_1impl.html", null ],
           [ "impl< Pipeable & >", "structranges_1_1v3_1_1pipeable__access_1_1impl_3_01_pipeable_01_6_01_4.html", null ]
         ] ],
         [ "pipeable_base", "structranges_1_1v3_1_1pipeable__base.html", null ],
@@ -362,7 +357,6 @@ var annotated =
         [ "random_access_iterator_tag", "structranges_1_1v3_1_1random__access__iterator__tag.html", null ],
         [ "random_shuffle_fn", "structranges_1_1v3_1_1random__shuffle__fn.html", "structranges_1_1v3_1_1random__shuffle__fn" ],
         [ "range", "structranges_1_1v3_1_1range.html", null ],
-        [ "range_access", "structranges_1_1v3_1_1range__access.html", "structranges_1_1v3_1_1range__access" ],
         [ "range_adaptor", "structranges_1_1v3_1_1range__adaptor.html", "structranges_1_1v3_1_1range__adaptor" ],
         [ "range_base", "structranges_1_1v3_1_1range__base.html", null ],
         [ "range_category", "structranges_1_1v3_1_1range__category.html", "structranges_1_1v3_1_1range__category" ],

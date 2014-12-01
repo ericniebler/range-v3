@@ -1,6 +1,5 @@
 var structranges_1_1v3_1_1adaptor__cursor =
 [
-    [ "mixin", "structranges_1_1v3_1_1adaptor__cursor_1_1mixin.html", "structranges_1_1v3_1_1adaptor__cursor_1_1mixin" ],
     [ "adaptor_sentinel", "structranges_1_1v3_1_1adaptor__cursor.html#ad1998db6c0a32c1c9b4dc41ec0d944eb", null ],
     [ "current", "structranges_1_1v3_1_1adaptor__cursor.html#af0f9c94a3e4850dde161bd32909a1a8b", null ],
     [ "next", "structranges_1_1v3_1_1adaptor__cursor.html#a6b652d5701a0ac2bee31f2b039dd867f", null ],

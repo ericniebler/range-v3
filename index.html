@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('index.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -92,7 +92,11 @@ $(document).ready(function(){initNavTree('index.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#tutorial-preface">Preface</a></li>
+<ul><li class="level1"><a href="#tutorial-preface">Preface</a><ul><li class="level2"><a href="#Installation"></a></li>
+<li class="level2"><a href="#License"></a></li>
+<li class="level2"><a href="#compilers">Supported Compilers</a></li>
+</ul>
+</li>
 <li class="level1"><a href="#quick_start">Quick Start</a></li>
 </ul>
 </div>
@@ -102,17 +106,20 @@ Preface</h1>
 <p> Range library for C++11/14/17. This code is the basis of <a href="https://ericniebler.github.io/std/wg21/D4128.html">a formal proposal</a> to add range support to the C++ standard library.</p>
 <p><b>Development Status:</b></p>
 <p>This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code <em>will</em> evolve without regard to backwards compatibility.</p>
-<h3>Installation</h3>
+<h2><a class="anchor" id="Installation"></a>
+Installation</h2>
 <hr/>
 <p> This library is header-only. You can get the source code from the <a href="https://github.com/ericniebler/range-v3">range-v3 repository</a> on github. To compile with Range-v3, you can either #include the entire library:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;range/v3/all.hpp&gt;</span></div>
 </div><!-- fragment --><p>Or you can #include only the core, and then the individual headers you want:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;range/v3/core.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;range/v3/....</span></div>
-</div><!-- fragment --><h3>License</h3>
+</div><!-- fragment --><h2><a class="anchor" id="License"></a>
+License</h2>
 <hr/>
 <p> Most of the source code in this project are mine, and those are under the Boost Software License. Parts are taken from Alex Stepanov's Elements of Programming, Howard Hinnant's libc++, and from the SGI STL. Please see the attached LICENSE file and the CREDITS file for the licensing and acknowledgements.</p>
-<h3>Supported Compilers</h3>
+<h2><a class="anchor" id="compilers"></a>
+Supported Compilers</h2>
 <hr/>
 <p> The code is known to work on the following compilers:</p>
 <ul>

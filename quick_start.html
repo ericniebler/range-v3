@@ -88,74 +88,168 @@ $(document).ready(function(){initNavTree('quick_start.html','');});
 
 <div class="header">
   <div class="headertitle">
-<div class="title">Quick Start {#quick_start} </div>  </div>
+<div class="title">Quick Start </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Range v3 is a generic library that augments the existing standard library with facilities for working with <em>ranges</em>. A range can be loosely thought of a pair of iterators, although they need not be implemented that way. Bundling begin/end iterators into a single object brings several benefits.</p>
+<div class="textblock"><hr/>
+<p> Range v3 is a generic library that augments the existing standard library with facilities for working with <em>ranges</em>. A range can be loosely thought of a pair of iterators, although they need not be implemented that way. Bundling begin/end iterators into a single object brings several benefits.</p>
 <h2>Why Use Ranges?</h2>
 <h3>Convenience</h3>
 <p>It's more convenient to pass a single range object to an algorithm than separate begin/end iterators. Compare:</p>
-<p>````c++ std::vector&lt;int&gt; v{/*...*/}; std::sort( v.begin(), v.end() ); ````</p>
-<p>with</p>
-<p>````c++ std::vector&lt;int&gt; v{/*...*/}; ranges::sort( v ); ````</p>
-<p>Range v3 contains a full implementation of all the standard algorithms with range-based overloads for convenience.</p>
+<div class="fragment"><div class="line">std::vector&lt;int&gt; v{<span class="comment">/*...*/</span>};</div>
+<div class="line">std::sort( v.begin(), v.end() );</div>
+</div><!-- fragment --><p>with</p>
+<div class="fragment"><div class="line">std::vector&lt;int&gt; v{<span class="comment">/*...*/</span>};</div>
+<div class="line">ranges::sort( v );</div>
+</div><!-- fragment --><p>Range v3 contains a full implementation of all the standard algorithms with range-based overloads for convenience.</p>
 <h3>Composability</h3>
 <p>Having a single range object permits <em>pipelines</em> of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by <em>views</em>, and eager mutation is handled by <em>actions</em>.</p>
 <h4>Views</h4>
 <p>A view is a lightweight wrapper that presents a view of an underlying sequence of elements in some custom way without mutating or copying it. Views are cheap to create and copy, and have non-owning reference semantics. Below are some examples:</p>
 <ol type="1">
-<li><p class="startli">Filter a container using a predicate and transform it.</p>
-<p class="startli">````c++ std::vector&lt;int&gt; vi{1,2,3,4,5,6,7,8,9,10}; using namespace ranges; auto rng = vi | view::remove_if([](int i){return i % 2 == 1;}) | view::transform([](int i){return std::to_string(i);}); // rng == {"2","4","6","8","10"}; ````</p>
-</li>
-<li><p class="startli">Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</p>
-<p class="startli">````c++ using namespace ranges; int sum = accumulate(view::ints(1) | view::transform([](int i){return i*i;}) | view::take(10), 0); ````</p>
-</li>
-<li><p class="startli">Generate a sequence on the fly with a range comprehension and initialize a vector with it:</p>
-<p class="startli">````c++ using namespace ranges; std::vector&lt;int&gt; vi = view::for_each(view::ints(1,10), [](int i){ return yield_from(view::repeat(i,i)); }); // vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...} ````</p>
-</li>
+<li>Filter a container using a predicate and transform it.</li>
 </ol>
-<h4>Actions</h4>
+<div class="fragment"><div class="line">std::vector&lt;int&gt; vi{1,2,3,4,5,6,7,8,9,10};</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
+<div class="line"><span class="keyword">auto</span> rng = vi | view::remove_if([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i % 2 == 1;})</div>
+<div class="line">              | view::transform([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> std::to_string(i);});</div>
+<div class="line"><span class="comment">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></div>
+</div><!-- fragment --><ol type="1">
+<li>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</li>
+</ol>
+<div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
+<div class="line"><span class="keywordtype">int</span> sum = accumulate(view::ints(1)</div>
+<div class="line">                   | view::transform([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;})</div>
+<div class="line">                   | view::take(10), 0);</div>
+</div><!-- fragment --><ol type="1">
+<li>Generate a sequence on the fly with a range comprehension and initialize a vector with it:</li>
+</ol>
+<div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
+<div class="line">std::vector&lt;int&gt; vi =</div>
+<div class="line">    view::for_each(view::ints(1,10), [](<span class="keywordtype">int</span> i){</div>
+<div class="line">        <span class="keywordflow">return</span> yield_from(view::repeat(i,i));</div>
+<div class="line">    });</div>
+<div class="line"><span class="comment">// vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}</span></div>
+</div><!-- fragment --><h4>Actions</h4>
 <p>When you want to mutate a container in-place, or forward it through a chain of mutating operations, you can use actions. The following examples should make it clear.</p>
 <ol type="1">
-<li><p class="startli">Read data into a vector, sort it, and make it unique.</p>
-<p class="startli">````c++ extern std::vector&lt;int&gt; read_data(); using namespace ranges; std::vector&lt;int&gt; vi = read_data() | action::sort | action::unique; ````</p>
-</li>
-<li><p class="startli">Do the same to a <code>vector</code> that already contains some data:</p>
-<p class="startli">````c++ vi = std::move(vi) | action::sort | action::unique; ````</p>
-</li>
-<li><p class="startli">Mutate the container in-place:</p>
-<p class="startli">````c++ vi |= action::sort | action::unique; ````</p>
-</li>
-<li><p class="startli">Same as above, but with function-call syntax instead of pipe syntax:</p>
-<p class="startli">````c++ action::unique(action::sort(vi)); ````</p>
-</li>
+<li>Read data into a vector, sort it, and make it unique.</li>
 </ol>
-<h2>Create Custom Ranges</h2>
+<div class="fragment"><div class="line"><span class="keyword">extern</span> std::vector&lt;int&gt; read_data();</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
+<div class="line">std::vector&lt;int&gt; vi = read_data() | action::sort | action::unique;</div>
+</div><!-- fragment --><ol type="1">
+<li>Do the same to a <code>vector</code> that already contains some data:</li>
+</ol>
+<div class="fragment"><div class="line">vi = std::move(vi) | action::sort | action::unique;</div>
+</div><!-- fragment --><ol type="1">
+<li>Mutate the container in-place:</li>
+</ol>
+<div class="fragment"><div class="line">vi |= action::sort | action::unique;</div>
+</div><!-- fragment --><ol type="1">
+<li>Same as above, but with function-call syntax instead of pipe syntax:</li>
+</ol>
+<div class="fragment"><div class="line">action::unique(action::sort(vi));</div>
+</div><!-- fragment --><h2>Create Custom Ranges</h2>
 <p>Range v3 provides a utility for easily creating your own range types, called <code>range_facade</code>. The code below uses <code>range_facade</code> to create a range that traverses a null-terminated string:</p>
-<p>````c++ #include &lt;range/v3/all.hpp&gt; using namespace ranges;</p>
-<p>// A range that iterates over all the characters in a // null-terminated string. class c_string_range : public range_facade&lt;c_string_range&gt; { friend range_access; char const * sz_; char const &amp; current() const { return *sz_; } bool done() const { return *sz_ == '\0'; } void next() { ++sz_; } public: c_string_range() = default; explicit c_string_range(char const *sz) : sz_(sz) { assert(sz != nullptr); } }; ````</p>
-<p>The <code>range_facade</code> class generates an iterator and begin/end member functions from the minimal interface provided by <code>c_string_range</code>. This is an example of a very simple range for which it is not necessary to separate the range itself from the thing that iterates the range. Future examples will show examples of more sophisticated ranges.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;range/v3/all.hpp&gt;</span></div>
+<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// A range that iterates over all the characters in a</span></div>
+<div class="line"><span class="comment">// null-terminated string.</span></div>
+<div class="line"><span class="keyword">class </span>c_string_range</div>
+<div class="line">  : <span class="keyword">public</span> range_facade&lt;c_string_range&gt;</div>
+<div class="line">{</div>
+<div class="line">    <span class="keyword">friend</span> range_access;</div>
+<div class="line">    <span class="keywordtype">char</span> <span class="keyword">const</span> * sz_;</div>
+<div class="line">    <span class="keywordtype">char</span> <span class="keyword">const</span> &amp; current()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *sz_; }</div>
+<div class="line">    <span class="keywordtype">bool</span> done()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *sz_ == <span class="charliteral">&#39;\0&#39;</span>; }</div>
+<div class="line">    <span class="keywordtype">void</span> next() { ++sz_; }</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    c_string_range() = <span class="keywordflow">default</span>;</div>
+<div class="line">    <span class="keyword">explicit</span> c_string_range(<span class="keywordtype">char</span> <span class="keyword">const</span> *sz) : sz_(sz)</div>
+<div class="line">    {</div>
+<div class="line">        assert(sz != <span class="keyword">nullptr</span>);</div>
+<div class="line">    }</div>
+<div class="line">};</div>
+</div><!-- fragment --><p>The <code>range_facade</code> class generates an iterator and begin/end member functions from the minimal interface provided by <code>c_string_range</code>. This is an example of a very simple range for which it is not necessary to separate the range itself from the thing that iterates the range. Future examples will show examples of more sophisticated ranges.</p>
 <p>With <code>c_string_range</code>, you can now use algorithms to operate on null-terminated strings, as below:</p>
-<p>````c++ #include &lt;iostream&gt;</p>
-<p>int main() { c_string_range r("hello world"); // Iterate over all the characters and print them out ranges::for_each(r, [](char ch){ std::cout &lt;&lt; ch &lt;&lt; ' '; }); // prints: h e l l o w o r l d } ````</p>
-<h2>Adapting Ranges</h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"></div>
+<div class="line"><span class="keywordtype">int</span> main()</div>
+<div class="line">{</div>
+<div class="line">    c_string_range r(<span class="stringliteral">&quot;hello world&quot;</span>);</div>
+<div class="line">    <span class="comment">// Iterate over all the characters and print them out</span></div>
+<div class="line">    ranges::for_each(r, [](<span class="keywordtype">char</span> ch){</div>
+<div class="line">        std::cout &lt;&lt; ch &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
+<div class="line">    });</div>
+<div class="line">    <span class="comment">// prints: h e l l o   w o r l d</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><h2>Adapting Ranges</h2>
 <p>Often, a new range type is most easily expressed by adapting an existing range type. That's the case for many of the range views provided by the Range v3 library; for example, the <code>view::remove_if</code> and <code>view::transform</code> views. These are rich types with many moving parts, but thanks to a helper class called <code>range_adaptor</code>, they aren't hard to write.</p>
 <p>Below in roughly 2 dozen lines of code is the <code>transform</code> view, which takes one range and transforms all the elements with a unary function.</p>
-<p>````c++ // A class that adapts an existing range with a function template&lt;class Rng, class Fun&gt; class transform_view : public range_adaptor&lt;transform_view&lt;Rng, Fun&gt;, Rng&gt; { friend range_access; semiregular_t&lt;Fun&gt; fun_; // Make Fun model SemiRegular if it doesn't class adaptor : public adaptor_base { semiregular_t&lt;Fun&gt; fun_; public: adaptor() = default; adaptor(semiregular_t&lt;Fun&gt; const &amp;fun) : fun_(fun) {} // Here is where we apply Fun to the elements: auto current(range_iterator_t&lt;Rng&gt; it) const -&gt; decltype(fun_(*it)) { return fun_(*it); } }; adaptor begin_adaptor() const { return {fun_}; } adaptor end_adaptor() const { return {fun_}; } public: transform_view() = default; transform_view(Rng &amp;&amp; rng, Fun fun) : range_adaptor_t&lt;transform_view&gt;{std::forward&lt;Rng&gt;(rng)} , fun_(std::move(fun)) {} };</p>
-<p>template&lt;class Rng, class Fun&gt; transform_view&lt;Rng, Fun&gt; transform(Rng &amp;&amp; rng, Fun fun) { return {std::forward&lt;Rng&gt;(rng), std::move(fun)}; } ````</p>
-<p>Range transformation is achieved by defining a nested <code>adaptor</code> class that handles the transformation, and then defining <code>begin_adaptor</code> and <code>end_adaptor</code> members that return adaptors for the begin iterator and the end sentinel, respectively. The <code>adaptor</code> class has a <code>current</code> member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: <code>equal</code>, <code>next</code>, <code>prev</code>, <code>advance</code>, and <code>distance_to</code>; but the transform adaptor accepts the defaults defined in <code>adaptor_base</code>.</p>
+<div class="fragment"><div class="line"><span class="comment">// A class that adapts an existing range with a function</span></div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng, <span class="keyword">class</span> Fun&gt;</div>
+<div class="line"><span class="keyword">class </span>transform_view : <span class="keyword">public</span> range_adaptor&lt;transform_view&lt;Rng, Fun&gt;, Rng&gt;</div>
+<div class="line">{</div>
+<div class="line">    <span class="keyword">friend</span> range_access;</div>
+<div class="line">    semiregular_t&lt;Fun&gt; fun_; <span class="comment">// Make Fun model SemiRegular if it doesn&#39;t</span></div>
+<div class="line">    <span class="keyword">class </span>adaptor : <span class="keyword">public</span> adaptor_base</div>
+<div class="line">    {</div>
+<div class="line">        semiregular_t&lt;Fun&gt; fun_;</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        adaptor() = <span class="keywordflow">default</span>;</div>
+<div class="line">        adaptor(semiregular_t&lt;Fun&gt; <span class="keyword">const</span> &amp;fun) : fun_(fun) {}</div>
+<div class="line">        <span class="comment">// Here is where we apply Fun to the elements:</span></div>
+<div class="line">        <span class="keyword">auto</span> current(range_iterator_t&lt;Rng&gt; it) <span class="keyword">const</span> -&gt; decltype(fun_(*it))</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keywordflow">return</span> fun_(*it);</div>
+<div class="line">        }</div>
+<div class="line">    };</div>
+<div class="line">    adaptor begin_adaptor()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> {fun_}; }</div>
+<div class="line">    adaptor end_adaptor()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> {fun_}; }</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    transform_view() = <span class="keywordflow">default</span>;</div>
+<div class="line">    transform_view(Rng &amp;&amp; rng, Fun fun)</div>
+<div class="line">      : range_adaptor_t&lt;transform_view&gt;{std::forward&lt;Rng&gt;(rng)}</div>
+<div class="line">      , fun_(std::move(fun))</div>
+<div class="line">    {}</div>
+<div class="line">};</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng, <span class="keyword">class</span> Fun&gt;</div>
+<div class="line">transform_view&lt;Rng, Fun&gt; transform(Rng &amp;&amp; rng, Fun fun)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">return</span> {std::forward&lt;Rng&gt;(rng), std::move(fun)};</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Range transformation is achieved by defining a nested <code>adaptor</code> class that handles the transformation, and then defining <code>begin_adaptor</code> and <code>end_adaptor</code> members that return adaptors for the begin iterator and the end sentinel, respectively. The <code>adaptor</code> class has a <code>current</code> member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: <code>equal</code>, <code>next</code>, <code>prev</code>, <code>advance</code>, and <code>distance_to</code>; but the transform adaptor accepts the defaults defined in <code>adaptor_base</code>.</p>
 <p>With <code>transform_view</code>, we can print out the first 20 squares:</p>
-<p>````c++ int main() { auto squares = ::transform(view::ints(1), [](int i){return i*i;}); for(int i : squares | view::take(20)) std::cout &lt;&lt; i &lt;&lt; ' '; std::cout &lt;&lt; '<br />
-'; // prints 1 4 9 16 25 36 49 64 81 100 121 144 169 196 225 256 289 324 361 400 } ````</p>
-<p>The <code>transform_view</code> defined above is an InputRange when its wrapping an InputRange, a ForwardRange when its wrapping a ForwardRange, etc. That happens because of smart defaults defined in the <code>adaptor_base</code> class. That frees you from having to deal with a host of niggly detail when implementing iterators.</p>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> main()</div>
+<div class="line">{</div>
+<div class="line">    <span class="keyword">auto</span> squares = ::transform(view::ints(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
+<div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i : squares | view::take(20))</div>
+<div class="line">        std::cout &lt;&lt; i &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
+<div class="line">    std::cout &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line">    <span class="comment">// prints 1 4 9 16 25 36 49 64 81 100 121 144 169 196 225 256 289 324 361 400</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><p>The <code>transform_view</code> defined above is an InputRange when its wrapping an InputRange, a ForwardRange when its wrapping a ForwardRange, etc. That happens because of smart defaults defined in the <code>adaptor_base</code> class. That frees you from having to deal with a host of niggly detail when implementing iterators.</p>
 <p>*(Note: the above <code>transform_view</code> always stores a copy of the function in the sentinel. That is only necessary if the underlying range's sentinel type models BidirectionalIterator. That's a finer point that you shouldn't worry about right now.)*</p>
 <h2>Constrain Functions with Concepts</h2>
 <p>The Range v3 library makes heavy use of concepts to constrain functions, control overloading, and check type constraints at compile-time. It achieves this with the help of a Concepts Lite emulation layer that works on any standard-conforming C++11 compiler. The library provides many useful concepts, both for the core language and for iterators and ranges. You can use the concepts framework to constrain your own code.</p>
 <p>For instance, if you would like to write a function that takes an iterator/sentinel pair, you can write it like this:</p>
-<p>````c++ template&lt;class Iter, class Sent, class Comp = /*...some_default..*/, CONCEPT_REQUIRES_(IteratorRange&lt;Iter, Sent&gt;())&gt; void my_algorithm(Iter first, Sent last, Comp comp = Comp{}) { // ... } ````</p>
-<p>You can then add an overload that take an Iterable:</p>
-<p>````c++ template&lt;class Rng, class Comp = /*...some_default..*/, CONCEPT_REQUIRES_(Iterable&lt;Rng&gt;())&gt; void my_algorithm(Rng &amp;&amp; rng, Comp comp = Comp{}) { return my_algorithm(ranges::begin(rng), ranges::end(rng)); } ````</p>
-<p>With the type constraits expressed with the <code>CONCEPTS_REQUIRES_</code> macro, these two overloads are guaranteed to not be ambiguous.</p>
+<div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class </span>Iter, <span class="keyword">class </span>Sent, <span class="keyword">class </span>Comp = <span class="comment">/*...some_default..*/</span>,</div>
+<div class="line">    CONCEPT_REQUIRES_(IteratorRange&lt;Iter, Sent&gt;())&gt;</div>
+<div class="line"><span class="keywordtype">void</span> my_algorithm(Iter first, Sent last, Comp comp = Comp{})</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">// ...</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><p>You can then add an overload that take an Iterable:</p>
+<div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class </span>Rng, <span class="keyword">class </span>Comp = <span class="comment">/*...some_default..*/</span>,</div>
+<div class="line">    CONCEPT_REQUIRES_(Iterable&lt;Rng&gt;())&gt;</div>
+<div class="line"><span class="keywordtype">void</span> my_algorithm(Rng &amp;&amp; rng, Comp comp = Comp{})</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">return</span> my_algorithm(ranges::begin(rng), ranges::end(rng));</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>With the type constraits expressed with the <code>CONCEPTS_REQUIRES_</code> macro, these two overloads are guaranteed to not be ambiguous.</p>
 <h2>Range v3 and the Future</h2>
 <p>Range v3 forms the basis for a proposal to add ranges to the standard library (<a href="www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html">N4128</a>), and will also be the basis for a Technical Specification on Ranges. Its design direction has already passed an initial review by the standardization committee. What that means is that you may see your compiler vendor shipping a library like Range v3 at some point in the future. That's the hope, anyway.</p>
 <p>Enjoy! </p>
