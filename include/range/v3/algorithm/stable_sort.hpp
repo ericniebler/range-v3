@@ -179,6 +179,8 @@ namespace ranges
             }
         };
 
+        /// \sa `stable_sort_fn`
+        /// \ingroup group-algorithms
         constexpr stable_sort_fn stable_sort {};
 
         /// @}

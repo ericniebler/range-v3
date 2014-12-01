@@ -53,6 +53,8 @@ namespace ranges
             }
         };
 
+        /// \sa `move_backward_fn`
+        /// \ingroup group-algorithms
         constexpr move_backward_fn move_backward{};
 
         /// @}

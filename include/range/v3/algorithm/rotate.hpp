@@ -211,6 +211,8 @@ namespace ranges
             }
         };
 
+        /// \sa `rotate_fn`
+        /// \ingroup group-algorithms
         constexpr rotate_fn rotate {};
 
         /// @}

@@ -285,6 +285,8 @@ namespace ranges
             }
         };
 
+        /// \sa `stable_partition_fn`
+        /// \ingroup group-algorithms
         constexpr stable_partition_fn stable_partition{};
 
         /// @}

@@ -130,6 +130,8 @@ namespace ranges
             }
         };
 
+        /// \sa `transform_fn`
+        /// \ingroup group-algorithms
         constexpr transform_fn transform{};
 
         /// @}

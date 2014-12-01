@@ -63,6 +63,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<stride_fn> stride{};
         }
         /// @}

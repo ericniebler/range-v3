@@ -227,6 +227,8 @@ namespace ranges
             }
         };
 
+        /// \sa `inplace_merge_fn`
+        /// \ingroup group-algorithms
         constexpr inplace_merge_fn inplace_merge {};
 
         /// @}

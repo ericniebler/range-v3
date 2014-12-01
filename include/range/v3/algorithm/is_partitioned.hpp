@@ -70,6 +70,8 @@ namespace ranges
             }
         };
 
+        /// \sa `is_partitioned_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<is_partitioned_fn> is_partitioned{};
 
         /// @}

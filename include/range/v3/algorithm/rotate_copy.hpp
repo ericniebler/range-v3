@@ -50,6 +50,8 @@ namespace ranges
             }
         };
 
+        /// \sa `rotate_copy_fn`
+        /// \ingroup group-algorithms
         constexpr rotate_copy_fn rotate_copy{};
 
         /// @}

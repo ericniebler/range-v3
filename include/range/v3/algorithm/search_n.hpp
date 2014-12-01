@@ -188,6 +188,8 @@ namespace ranges
             }
         };
 
+        /// \sa `search_n_fn`
+        /// \ingroup group-algorithms
         constexpr search_n_fn search_n{};
 
         /// @}

@@ -34,10 +34,10 @@ namespace ranges
             ///
             /// Works on ForwardRanges
             ///
-            /// \pre \c Rng is a model of the ForwardRange concept
-            /// \pre \c I is a model of the ForwardIterator concept
-            /// \pre \c S is a model of the Sentinel\<I\> concept
-            /// \pre \c R is a model of the Relation\<Value_Type\<I\>\> concept
+            /// \pre `Rng` is a model of the `ForwardRange` concept
+            /// \pre `I` is a model of the `ForwardIterator` concept
+            /// \pre `S` is a model of the `Sentinel<I>` concept
+            /// \pre `R` is a model of the `Relation<Value_Type<I>>` concept
             ///
             template <typename I, typename S, typename R = ordered_less,
                       typename P = ident, typename V = iterator_value_t<I>,
@@ -73,6 +73,8 @@ namespace ranges
             }
         };
 
+        /// \sa `is_sorted_until_fn`
+        /// \ingroup group-algorithms
         constexpr is_sorted_until_fn is_sorted_until{};
 
         /// @}

@@ -33,13 +33,13 @@ namespace ranges
             ///
             /// range-based version of the \c find_if_not std algorithm
             ///
-            /// \pre \c Rng is a model of the Range concept
-            /// \pre \c I is a model of the InputIterator concept
-            /// \pre \c S is a model of the Sentinel\<I\> concept
-            /// \pre \c P is a model of the Invokable\<V\> concept, where V is the
+            /// \pre `Rng` is a model of the `Iterable` concept
+            /// \pre `I` is a model of the `InputIterator` concept
+            /// \pre `S` is a model of the `Sentinel<I>` concept
+            /// \pre `P` is a model of the `Invokable<V>` concept, where `V` is the
             ///      value type of I.
-            /// \pre \c F models InvokablePredicate\<X\>, where X is the result type
-            ///      of Invokable\<P, V\>
+            /// \pre `F` models `InvokablePredicate<X>`, where `X` is the result type
+            ///      of `Invokable<P, V>`
             template<typename I, typename S, typename F, typename P = ident,
                 typename V = iterator_value_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
@@ -74,6 +74,8 @@ namespace ranges
             }
         };
 
+        /// \sa `find_if_not_fn`
+        /// \ingroup group-algorithms
         constexpr find_if_not_fn find_if_not {};
 
         /// @}

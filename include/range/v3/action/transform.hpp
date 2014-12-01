@@ -50,6 +50,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<transform_fn> transform{};
         }
         /// @}

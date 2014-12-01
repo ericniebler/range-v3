@@ -77,6 +77,8 @@ namespace ranges
             }
         };
 
+        /// \sa `partition_copy_fn`
+        /// \ingroup group-algorithms
         constexpr partition_copy_fn partition_copy{};
 
         /// @}

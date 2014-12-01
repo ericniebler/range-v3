@@ -51,6 +51,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr make_action_fn make_action{};
 
             template<typename Action>

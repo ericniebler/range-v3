@@ -18,6 +18,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -222,44 +223,51 @@ namespace ranges
         constexpr make_range_fn make_range {};
 
         // Tuple-like access
-        template<std::size_t I, typename First, typename Second>
+        // TODO Switch to variable template when available
+        template<std::size_t I, typename First, typename Second,
+            CONCEPT_REQUIRES_(I == 0)>
         constexpr auto get(range<First, Second> & p) ->
-            typename std::enable_if<I == 0, decltype((p.first))>::type
+            decltype((p.first))
         {
             return p.first;
         }
 
-        template<std::size_t I, typename First, typename Second>
+        template<std::size_t I, typename First, typename Second,
+            CONCEPT_REQUIRES_(I == 0)>
         constexpr auto get(range<First, Second> const & p) ->
-            typename std::enable_if<I == 0, decltype((p.first))>::type
+            decltype((p.first))
         {
             return p.first;
         }
 
-        template<std::size_t I, typename First, typename Second>
+        template<std::size_t I, typename First, typename Second,
+            CONCEPT_REQUIRES_(I == 0)>
         constexpr auto get(range<First, Second> && p) ->
-            typename std::enable_if<I == 0, decltype((detail::move(p).first))>::type
+            decltype((detail::move(p).first))
         {
             return detail::move(p).first;
         }
 
-        template<std::size_t I, typename First, typename Second>
+        template<std::size_t I, typename First, typename Second,
+            CONCEPT_REQUIRES_(I == 1)>
         constexpr auto get(range<First, Second> & p) ->
-            typename std::enable_if<I == 1, decltype((p.second))>::type
+            decltype((p.second))
         {
             return p.second;
         }
 
-        template<std::size_t I, typename First, typename Second>
+        template<std::size_t I, typename First, typename Second,
+            CONCEPT_REQUIRES_(I == 1)>
         constexpr auto get(range<First, Second> const & p) ->
-            typename std::enable_if<I == 1, decltype((p.second))>::type
+            decltype((p.second))
         {
             return p.second;
         }
 
-        template<std::size_t I, typename First, typename Second>
+        template<std::size_t I, typename First, typename Second,
+            CONCEPT_REQUIRES_(I == 1)>
         constexpr auto get(range<First, Second> && p) ->
-            typename std::enable_if<I == 1, decltype((detail::move(p).second))>::type
+            decltype((detail::move(p).second))
         {
             return detail::move(p).second;
         }

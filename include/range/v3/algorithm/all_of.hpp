@@ -64,6 +64,8 @@ namespace ranges
             }
         };
 
+        /// \sa `all_of_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<all_of_fn> all_of {};
 
         /// @}

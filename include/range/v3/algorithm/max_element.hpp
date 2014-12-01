@@ -58,6 +58,8 @@ namespace ranges
             }
         };
 
+        /// \sa `max_element_fn`
+        /// \ingroup group-algorithms
         constexpr max_element_fn max_element{};
 
         /// @}

@@ -37,11 +37,11 @@ namespace ranges
             template<typename T>
             using eval = typename T::type;
 
-            /// \brief Evaluate the Metafunction Class \c F with the arguments \c Args.
+            /// \brief Evaluate the Metafunction Class `F` with the arguments \c Args.
             template<typename F, typename...Args>
             using apply = typename F::template apply<Args...>;
 
-            /// \brief A metafunction that evaluates the Metafunction Class \c F with
+            /// \brief `A` metafunction that evaluates the Metafunction Class `F` with
             /// the arguments \c Args.
             template<typename F, typename...Args>
             struct lazy_apply
@@ -57,7 +57,7 @@ namespace ranges
             template<bool B>
             using bool_ = std::integral_constant<bool, B>;
 
-            /// \brief A metafunction that always returns type type \c T.
+            /// \brief `A` metafunction that always returns type type \c T.
             template<typename T>
             struct id
             {
@@ -136,7 +136,7 @@ namespace ranges
                 using apply = apply<F0, apply<compose<Fs...>, Ts...>>;
             };
 
-            /// \brief A Metafunction Class that always returns \c T.
+            /// \brief `A` Metafunction Class that always returns \c T.
             template<typename T>
             struct always
             {
@@ -144,8 +144,8 @@ namespace ranges
                 using apply = T;
             };
 
-            /// \brief A Metafunction Class partially applies the Metafunction
-            /// Class \c F by binding the arguments \c Ts to the <i>front</i>
+            /// \brief `A` Metafunction Class partially applies the Metafunction
+            /// Class `F` by binding the arguments \c Ts to the <i>front</i>
             /// of \c F.
             template<typename F, typename...Ts>
             struct bind_front
@@ -154,8 +154,8 @@ namespace ranges
                 using apply = apply<F, Ts..., Us...>;
             };
 
-            /// \brief A Metafunction Class partially applies the Metafunction
-            /// Class \c F by binding the arguments \c Ts to the <i>back</i>
+            /// \brief `A` Metafunction Class partially applies the Metafunction
+            /// Class `F` by binding the arguments \c Ts to the <i>back</i>
             /// of \c F.
             template<typename F, typename...Us>
             struct bind_back
@@ -164,7 +164,7 @@ namespace ranges
                 using apply = apply<F, Ts..., Us...>;
             };
 
-            /// \brief A metafunction that unpacks the types in the type list
+            /// \brief `A` metafunction that unpacks the types in the type list
             /// \c List into the Metafunction Class \c F.
             template<typename F, typename List>
             struct lazy_apply_list
@@ -182,22 +182,22 @@ namespace ranges
                 using type = apply<F, std::integral_constant<T, Is>...>;
             };
 
-            /// \brief Applies the Metafunction Class \c F using the types in
+            /// \brief Applies the Metafunction Class `F` using the types in
             /// the type list \c List as arguments.
             template<typename C, typename List>
             using apply_list = eval<lazy_apply_list<C, List>>;
 
-            /// \brief A Metafunction Class that takes a bunch of arguments,
+            /// \brief `A` Metafunction Class that takes a bunch of arguments,
             /// bundles them into a type list, and then calls the Metafunction
-            /// Class \c F with the type list.
+            /// Class `F` with the type list.
             template<typename F, typename Q = quote<list>>
             struct curry
               : compose<F, Q>
             {};
 
-            /// \brief A Metafunction Class that takes a type list,
+            /// \brief `A` Metafunction Class that takes a type list,
             /// unpacks the types, and then calls the Metafunction
-            /// Class \c F with types.
+            /// Class `F` with types.
             template<typename F>
             struct uncurry
             {
@@ -205,7 +205,7 @@ namespace ranges
                 using apply = eval<lazy_apply_list<F, T>>;
             };
 
-            /// \brief A Metafunction Class that reverses the order of the first
+            /// \brief `A` Metafunction Class that reverses the order of the first
             /// two arguments.
             template<typename F>
             struct flip
@@ -347,12 +347,12 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list
-            /// \brief A list of types
+            /// \brief `A` list of types
             template<typename...Ts>
             struct list
             {
                 using type = list;
-                /// \return <tt>sizeof...(Ts)</tt>
+                /// \return `sizeof...(Ts)`
                 static constexpr std::size_t size() noexcept
                 {
                     return sizeof...(Ts);
@@ -444,13 +444,13 @@ namespace ranges
             }
             /// \endcond
 
-            /// Generate <tt>list\<T,T,T...T\></tt> of size \c N arguments
+            /// Generate `list<T,T,T...T>` of size `N` arguments
             /// in O(log N)
             /// \ingroup group-meta
             template<typename N, typename T = void>
             using repeat_n = eval<meta_detail::repeat_n_c_<N::value, T>>;
 
-            /// Generate <tt>list\<T,T,T...T\></tt> of size \c N arguments
+            /// Generate `list<T,T,T...T>` of size `N` arguments
             /// in O(log N)
             /// \ingroup group-meta
             template<std::size_t N, typename T = void>
@@ -488,13 +488,13 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list_element
-            /// \brief Return the <tt>N</tt>th element in the \c meta::list \c List in
+            /// \brief Return the `N`th element in the \c meta::list \c List in
             /// amortized O(1)
             /// \ingroup group-meta
             template<typename N, typename List>
             using list_element = eval<meta_detail::list_element_<N, List>>;
 
-            /// \brief Return the <tt>N</tt>th element in the \c meta::list \c List in
+            /// \brief Return the `N`th element in the \c meta::list \c List in
             /// amortized O(1)
             /// \ingroup group-meta
             template<std::size_t N, typename List>
@@ -731,7 +731,7 @@ namespace ranges
             /// \endcond
 
             /// \brief Return the tail of the list \c List starting at the first element
-            /// \c A such that <tt>apply\<Fun, A\>::value</tt> is \c true, if any such element
+            /// `A` such that `apply<Fun, A>::%value` is \c true, if any such element
             /// exists; the empty list, otherwise.
             /// \ingroup group-meta
             template<typename List, typename Fun>
@@ -739,8 +739,8 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // in
-            /// \brief A Boolean integral constant wrapper around \c true if
-            /// there is at least one occurance of \c T in \c List.
+            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// there is at least one occurance of `T` in \c List.
             /// \ingroup group-meta
             template<typename List, typename T>
             using in = not_<empty<find<List, T>>>;
@@ -818,7 +818,7 @@ namespace ranges
             /// \endcond
 
             /// \brief Return a new \c meta::list where all elements \c A
-            /// such that <tt>apply\<C, A\>::value</tt> is \c true have been
+            /// such that `apply<C, A>::%value` is \c true have been
             /// replaced with \c U. Complexity: O(N)
             /// \ingroup group-meta
             template<typename List, typename C, typename U>
@@ -921,7 +921,7 @@ namespace ranges
             // zip_with
             /// \brief Given a list of lists of types and a Metafunction Class \c Fun,
             /// construct a new list by calling \c Fun with the elements from the lists
-            /// pairwise. Complexity: O(N*M), where N is the size of the outer list, and
+            /// pairwise. Complexity: O(N*M), where `N` is the size of the outer list, and
             /// M is the size of the inner lists.
             /// \ingroup group-meta
             template<typename Fun, typename ListOfLists>
@@ -937,8 +937,8 @@ namespace ranges
             // zip
             /// \brief Given a list of lists of types, construct a new list by
             /// grouping the elements from the lists pairwise into
-            /// <tt>meta::list</tt>s. Complexity: O(N*M), where N is the size of
-            /// the outer list, and M is the size of the inner lists.
+            /// `meta::list`s. Complexity: O(N*M), where `N` is the size of
+            /// the outer list, and `M` is the size of the inner lists.
             /// \ingroup group-meta
             template<typename ListOfLists>
             using zip = zip_with<quote<list>, ListOfLists>;
@@ -978,24 +978,24 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // all_of
-            /// \brief A Boolean integral constant wrapper around \c true if
-            /// <tt>apply\<F, A\>::value</tt> is \c true for all elements \c A
+            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// `apply<F, A>::%value` is \c true for all elements \c A
             /// in \c meta::list \c List; \c false, otherwise. Complexity: O(N)
             template<typename List, typename F>
             using all_of = empty<find_if<List, compose<quote<not_>, F>>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // any_of
-            /// \brief A Boolean integral constant wrapper around \c true if
-            /// <tt>apply\<F, A\>::value</tt> is \c true for any element \c A
+            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// `apply<F, A>::%value` is \c true for any element \c A
             /// in \c meta::list \c List; \c false, otherwise. Complexity: O(N)
             template<typename List, typename F>
             using any_of = not_<empty<find_if<List, F>>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // none_of
-            /// \brief A Boolean integral constant wrapper around \c true if
-            /// <tt>apply\<F, A\>::value</tt> is \c false for alls elements \c A
+            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// `apply<F, A>::%value` is \c false for alls elements \c A
             /// in \c meta::list \c List; \c false, otherwise. Complexity: O(N)
             template<typename List, typename F>
             using none_of = empty<find_if<List, F>>;
@@ -1042,33 +1042,33 @@ namespace ranges
             template<typename T, typename U>
             using modulus = std::integral_constant<decltype(T::value % U::value), T::value % U::value>;
 
-            /// \brief A Boolean integral constant wrapper around the result of comparing
+            /// \brief `A` Boolean integral constant wrapper around the result of comparing
             /// \c T::value and \c U::value for equality.
             template<typename T, typename U>
             using equal_to = bool_<T::value == U::value>;
 
-            /// \brief A Boolean integral constant wrapper around the result of comparing
+            /// \brief `A` Boolean integral constant wrapper around the result of comparing
             /// \c T::value and \c U::value for inequality.
             template<typename T, typename U>
             using not_equal_to = bool_<T::value != U::value>;
 
-            /// \brief A Boolean integral constant wrapper around \c true if
+            /// \brief `A` Boolean integral constant wrapper around \c true if
             /// \c T::value is greater than \c U::value; \c false, otherwise.
             template<typename T, typename U>
             using greater = bool_<(T::value > U::value)>;
 
-            /// \brief A Boolean integral constant wrapper around \c true if
+            /// \brief `A` Boolean integral constant wrapper around \c true if
             /// \c T::value is less than \c U::value; \c false, otherwise.
             template<typename T, typename U>
             using less = bool_<(T::value < U::value)>;
 
-            /// \brief A Boolean integral constant wrapper around \c true if
+            /// \brief `A` Boolean integral constant wrapper around \c true if
             /// \c T::value is greater than or equal to \c U::value; \c false,
             /// otherwise.
             template<typename T, typename U>
             using greater_equal = bool_<(T::value >= U::value)>;
 
-            /// \brief A Boolean integral constant wrapper around \c true if
+            /// \brief `A` Boolean integral constant wrapper around \c true if
             /// \c T::value is less than or equal to \c U::value; \c false,
             /// otherwise.
             template<typename T, typename U>

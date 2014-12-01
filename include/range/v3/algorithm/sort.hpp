@@ -207,6 +207,8 @@ namespace ranges
             }
         };
 
+        /// \sa `sort_fn`
+        /// \ingroup group-algorithms
         constexpr sort_fn sort{};
 
         /// @}

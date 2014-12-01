@@ -74,6 +74,8 @@ namespace ranges
             }
         };
 
+        /// \sa `includes_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<includes_fn> includes{};
 
         struct set_union_fn
@@ -128,6 +130,8 @@ namespace ranges
             }
         };
 
+        /// \sa `set_union_fn`
+        /// \ingroup group-algorithms
         constexpr set_union_fn set_union{};
 
         struct set_intersection_fn
@@ -174,6 +178,8 @@ namespace ranges
             }
         };
 
+        /// \sa `set_intersection_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<set_intersection_fn> set_intersection{};
 
         struct set_difference_fn
@@ -222,6 +228,8 @@ namespace ranges
             }
         };
 
+        /// \sa `set_difference_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<set_difference_fn> set_difference{};
 
         struct set_symmetric_difference_fn
@@ -279,6 +287,8 @@ namespace ranges
             }
         };
 
+        /// \sa `set_symmetric_difference_fn`
+        /// \ingroup group-algorithms
         constexpr set_symmetric_difference_fn set_symmetric_difference{};
 
         /// @}

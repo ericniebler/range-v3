@@ -115,6 +115,8 @@ namespace ranges
             }
         };
 
+        /// \sa `equal_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<equal_fn> equal{};
 
         /// @}

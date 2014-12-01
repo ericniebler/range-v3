@@ -67,6 +67,7 @@ namespace ranges
             {
                 return static_cast<Derived &>(*this);
             }
+            /// \overload
             Derived const & derived() const
             {
                 return static_cast<Derived const &>(*this);
@@ -85,7 +86,7 @@ namespace ranges
             {
                 return !empty();
             }
-            // Access the size of the range, if it can be determined:
+            /// Access the size of the range, if it can be determined:
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() &&
                     SizedIteratorRange<range_iterator_t<D>, range_sentinel_t<D>>())>
@@ -93,33 +94,35 @@ namespace ranges
             {
                 return iter_size(derived().begin(), derived().end());
             }
-            // Access the first element in a range:
+            /// Access the first element in a range:
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
             range_reference_t<D> front()
             {
                 return *derived().begin();
             }
+            /// \overload
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
             range_reference_t<D const> front() const
             {
                 return *derived().begin();
             }
-            // Access the last element in a range:
+            /// Access the last element in a range:
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D>() && BidirectionalRange<D>())>
             range_reference_t<D> back()
             {
                 return *prev(derived().end());
             }
+            /// \overload
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D const>() && BidirectionalRange<D const>())>
             range_reference_t<D const> back() const
             {
                 return *prev(derived().end());
             }
-            // Simple indexing:
+            /// Simple indexing:
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>())>
             auto operator[](range_difference_t<D> n) ->
@@ -127,6 +130,7 @@ namespace ranges
             {
                 return derived().begin()[n];
             }
+            /// \overload
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D const>())>
             auto operator[](range_difference_t<D> n) const ->
@@ -134,7 +138,7 @@ namespace ranges
             {
                 return derived().begin()[n];
             }
-            // Python-ic slicing:
+            /// Python-ic slicing:
             //      rng[{4,6}]
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D>())>
@@ -143,6 +147,7 @@ namespace ranges
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D const>())>
             auto operator[](detail::slice_bounds<range_difference_t<D>> offs) const ->
@@ -151,6 +156,7 @@ namespace ranges
                 return Slice{}(derived(), offs.from, offs.to);
             }
             //      rng[{4,end-2}]
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D>() && SizedRange<D>())>
             auto operator[](detail::slice_bounds<range_difference_t<D>,
@@ -159,6 +165,7 @@ namespace ranges
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D const>() && SizedRange<D const>())>
             auto operator[](detail::slice_bounds<range_difference_t<D>,
@@ -168,6 +175,7 @@ namespace ranges
                 return Slice{}(derived(), offs.from, offs.to);
             }
             //      rng[{end-4,end-2}]
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && (InputRange<D>() && SizedRange<D>()) ||
                     ForwardRange<D>())>
@@ -177,6 +185,7 @@ namespace ranges
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && (InputRange<D const>() && SizedRange<D const>()) ||
                     ForwardRange<D const>())>
@@ -187,6 +196,7 @@ namespace ranges
                 return Slice{}(derived(), offs.from, offs.to);
             }
             //      rng[{4,end}]
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D>())>
             auto operator[](detail::slice_bounds<range_difference_t<D>, end_fn> offs) ->
@@ -194,6 +204,7 @@ namespace ranges
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && InputRange<D const>())>
             auto operator[](detail::slice_bounds<range_difference_t<D>, end_fn> offs) const ->
@@ -202,6 +213,7 @@ namespace ranges
                 return Slice{}(derived(), offs.from, offs.to);
             }
             //      rng[{end-4,end}]
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && ((InputRange<D>() && SizedRange<D>()) ||
                     ForwardRange<D>()))>
@@ -210,6 +222,7 @@ namespace ranges
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
+            /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && ((InputRange<D const>() && SizedRange<D const>()) ||
                     ForwardRange<D const>()))>
@@ -218,7 +231,7 @@ namespace ranges
             {
                 return Slice{}(derived(), offs.from, offs.to);
             }
-            // Implicit conversion to something that looks like a container:
+            /// Implicit conversion to something that looks like a container.
             template<typename Container, typename D = Derived,
                 typename Alloc = typename Container::allocator_type, // HACKHACK
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D, Container>())>
@@ -226,6 +239,7 @@ namespace ranges
             {
                 return ranges::to_<Container>(derived());
             }
+            /// \overload
             template<typename Container, typename D = Derived,
                 typename Alloc = typename Container::allocator_type, // HACKHACK
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D const, Container>())>

@@ -80,6 +80,8 @@ namespace ranges
             }
         };
 
+        /// \sa `partition_point_fn`
+        /// \ingroup group-algorithms
         constexpr partition_point_fn partition_point{};
 
         /// @}

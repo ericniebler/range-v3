@@ -70,6 +70,8 @@ namespace ranges
             }
         };
 
+        /// \sa `remove_fn`
+        /// \ingroup group-algorithms
         constexpr remove_fn remove{};
 
         /// @}

@@ -48,6 +48,8 @@ namespace ranges
             }
         };
 
+        /// \sa `lower_bound_fn`
+        /// \ingroup group-algorithms
         constexpr lower_bound_fn lower_bound{};
 
         /// @}

@@ -63,6 +63,8 @@ namespace ranges
             }
         };
 
+        /// \sa `lexicographical_compare_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<lexicographical_compare_fn> lexicographical_compare{};
 
         /// @}

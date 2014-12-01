@@ -72,6 +72,8 @@ namespace ranges
             }
         };
 
+        /// \sa `swap_ranges_fn`
+        /// \ingroup group-algorithms
         constexpr swap_ranges_fn swap_ranges{};
 
         /// @}

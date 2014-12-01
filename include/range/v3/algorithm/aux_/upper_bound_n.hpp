@@ -30,9 +30,9 @@ namespace ranges
             {
                 /// \brief template function upper_bound
                 ///
-                /// range-based version of the upper_bound std algorithm
+                /// range-based version of the `upper_bound` std algorithm
                 ///
-                /// \pre Rng is a model of the Range concept
+                /// \pre `Rng` is a model of the `Iterable` concept
                 template<typename I, typename V2, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V2, C, P>())>
                 I operator()(I begin, iterator_difference_t<I> d, V2 const &val, C pred_ = C{},

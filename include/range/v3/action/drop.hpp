@@ -52,6 +52,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<drop_fn> drop{};
         }
         /// @}

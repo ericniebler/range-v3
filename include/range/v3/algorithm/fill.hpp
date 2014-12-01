@@ -44,6 +44,8 @@ namespace ranges
             }
         };
 
+        /// \sa `fill_fn`
+        /// \ingroup group-algorithms
         constexpr fill_fn fill{};
 
         /// @}

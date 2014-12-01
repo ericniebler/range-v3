@@ -81,6 +81,8 @@ namespace ranges
             }
         };
 
+        /// \sa `shuffle_fn`
+        /// \ingroup group-algorithms
         constexpr shuffle_fn shuffle {};
 
         /// @}

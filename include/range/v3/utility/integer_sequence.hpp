@@ -25,13 +25,13 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
 
-        /// \brief A container for a sequence of compile-time integer constants.
+        /// \brief `A` container for a sequence of compile-time integer constants.
         /// \ingroup group-meta
         template<typename T, T...Is>
         struct integer_sequence
         {
             using value_type = T;
-            /// \return <tt>sizeof...(Is)</tt>
+            /// \return `sizeof...(Is)`
             static constexpr std::size_t size() noexcept
             {
                 return sizeof...(Is);
@@ -82,7 +82,7 @@ namespace ranges
         using make_integer_sequence =
             meta::eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
 
-        /// \brief A container for a sequence of compile-time integer constants
+        /// \brief `A` container for a sequence of compile-time integer constants
         /// of type \c std::size_t
         /// \ingroup group-meta
         template<std::size_t...Is>

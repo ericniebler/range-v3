@@ -88,6 +88,8 @@ namespace ranges
             }
         };
 
+        /// \sa `partial_sort_copy_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<partial_sort_copy_fn> partial_sort_copy {};
 
         /// @}

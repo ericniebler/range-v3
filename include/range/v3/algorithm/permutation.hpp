@@ -193,6 +193,8 @@ namespace ranges
             }
         };
 
+        /// \sa `is_permutation_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<is_permutation_fn> is_permutation {};
 
         struct next_permutation_fn
@@ -237,6 +239,8 @@ namespace ranges
             }
         };
 
+        /// \sa `next_permutation_fn`
+        /// \ingroup group-algorithms
         constexpr next_permutation_fn next_permutation{};
 
         struct prev_permutation_fn
@@ -281,6 +285,8 @@ namespace ranges
             }
         };
 
+        /// \sa `prev_permutation_fn`
+        /// \ingroup group-algorithms
         constexpr prev_permutation_fn prev_permutation{};
 
         /// @}

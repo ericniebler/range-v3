@@ -57,6 +57,8 @@ namespace ranges
             }
         };
 
+        /// \sa `for_each_fn`
+        /// \ingroup group-algorithms
         constexpr for_each_fn for_each{};
 
         /// @}

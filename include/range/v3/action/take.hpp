@@ -52,6 +52,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<take_fn> take{};
         }
         /// @}

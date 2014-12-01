@@ -60,6 +60,8 @@ namespace ranges
             }
         };
 
+        /// \sa `replace_if_fn`
+        /// \ingroup group-algorithms
         constexpr replace_if_fn replace_if{};
 
         /// @}

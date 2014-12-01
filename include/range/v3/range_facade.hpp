@@ -73,6 +73,7 @@ namespace ranges
             {
                 return static_cast<Derived &>(*this);
             }
+            /// \overload
             Derived const & derived() const
             {
                 return static_cast<Derived const &>(*this);
@@ -92,16 +93,18 @@ namespace ranges
             {
                 return {range_access::begin_cursor(derived())};
             }
-            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
-            detail::facade_sentinel_t<D> end()
-            {
-                return {range_access::end_cursor(derived())};
-            }
+            /// \overload
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::facade_iterator_t<D const> begin() const
             {
                 return {range_access::begin_cursor(derived())};
             }
+            template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            detail::facade_sentinel_t<D> end()
+            {
+                return {range_access::end_cursor(derived())};
+            }
+            /// \overload
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             detail::facade_sentinel_t<D const> end() const
             {

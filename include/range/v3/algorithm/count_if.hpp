@@ -66,6 +66,8 @@ namespace ranges
             }
         };
 
+        /// \sa `count_if_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<count_if_fn> count_if{};
 
         /// @}

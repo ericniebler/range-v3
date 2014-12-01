@@ -54,6 +54,8 @@ namespace ranges
             }
         };
 
+        /// \sa `move_fn`
+        /// \ingroup group-algorithms
         constexpr move_fn move{};
 
         /// @}

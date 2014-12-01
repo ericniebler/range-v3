@@ -117,6 +117,8 @@ namespace ranges
             }
         };
 
+        /// \sa `partition_fn`
+        /// \ingroup group-algorithms
         constexpr partition_fn partition{};
 
         /// @}

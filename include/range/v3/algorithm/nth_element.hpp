@@ -306,6 +306,8 @@ namespace ranges
             }
         };
 
+        /// \sa `nth_element_fn`
+        /// \ingroup group-algorithms
         constexpr nth_element_fn nth_element{};
 
         /// @}

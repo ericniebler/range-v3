@@ -62,6 +62,8 @@ namespace ranges
             }
         };
 
+        /// \sa `replace_copy_fn`
+        /// \ingroup group-algorithms
         constexpr replace_copy_fn replace_copy{};
 
         /// @}

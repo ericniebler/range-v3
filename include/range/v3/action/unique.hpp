@@ -39,6 +39,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<unique_fn> unique{};
         }
         /// @}

@@ -50,6 +50,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<stable_sort_fn> stable_sort{};
         }
         /// @}

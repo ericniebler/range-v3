@@ -113,6 +113,8 @@ namespace ranges
             }
         };
 
+        /// \sa `is_heap_until_fn`
+        /// \ingroup group-algorithms
         constexpr is_heap_until_fn is_heap_until {};
 
         struct is_heap_fn
@@ -134,6 +136,8 @@ namespace ranges
             }
         };
 
+        /// \sa `is_heap_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<is_heap_fn> is_heap {};
         /// @}
 
@@ -258,6 +262,8 @@ namespace ranges
             }
         };
 
+        /// \sa `push_heap_fn`
+        /// \ingroup group-algorithms
         constexpr push_heap_fn push_heap {};
         /// @}
 
@@ -308,6 +314,8 @@ namespace ranges
             }
         };
 
+        /// \sa `pop_heap_fn`
+        /// \ingroup group-algorithms
         constexpr pop_heap_fn pop_heap {};
 
         struct make_heap_fn
@@ -343,6 +351,8 @@ namespace ranges
             }
         };
 
+        /// \sa `make_heap_fn`
+        /// \ingroup group-algorithms
         constexpr make_heap_fn make_heap {};
 
         struct sort_heap_fn
@@ -374,6 +384,8 @@ namespace ranges
             }
         };
 
+        /// \sa `sort_heap_fn`
+        /// \ingroup group-algorithms
         constexpr sort_heap_fn sort_heap {};
 
         /// @}

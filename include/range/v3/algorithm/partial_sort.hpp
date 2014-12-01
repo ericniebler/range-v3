@@ -63,6 +63,8 @@ namespace ranges
             }
         };
 
+        /// \sa `partial_sort_fn`
+        /// \ingroup group-algorithms
         constexpr partial_sort_fn partial_sort {};
 
         /// @}

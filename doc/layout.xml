@@ -5,7 +5,7 @@
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="pages" visible="yes" title="" intro=""/>
     <tab type="modules" visible="yes"
-                        title="Reference documentation"
+                        title="Reference"
                         intro="
 The reference documentation is split into logical modules, as documented in
 the user manual."/>
@@ -27,12 +27,6 @@ corresponding documentation."/>
                            title="Files"
                            intro=""/>
 
-<!--
-      <tab type="globals" visible="yes"
-                          title="Globals"
-                          intro=""/>
--->
-      
     </tab>
 
     <!-- We don't use what's below -->
@@ -48,8 +42,8 @@ corresponding documentation."/>
       <tab type="hierarchy" visible="no" title="" intro=""/>
     </tab>
 
-    <tab type="files" visible="yes" title="Files">
-      <tab type="globals" visible="yes" title="Globals" intro=""/>
+    <tab type="files" visible="no" title="Files">
+      <tab type="globals" visible="no" title="Globals" intro=""/>
     </tab>
   </navindex>
 

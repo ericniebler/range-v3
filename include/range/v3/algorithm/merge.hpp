@@ -93,6 +93,8 @@ namespace ranges
             }
         };
 
+        /// \sa `merge_fn`
+        /// \ingroup group-algorithms
         constexpr merge_fn merge{};
 
         /// @}

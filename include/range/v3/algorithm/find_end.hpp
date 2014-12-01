@@ -202,6 +202,8 @@ namespace ranges
             }
         };
 
+        /// \sa `find_end_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<find_end_fn> find_end{};
 
         /// @}

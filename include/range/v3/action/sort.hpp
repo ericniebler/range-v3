@@ -49,6 +49,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<sort_fn> sort{};
         }
         /// @}

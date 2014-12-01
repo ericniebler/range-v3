@@ -51,6 +51,8 @@ namespace ranges
             }
         };
 
+        /// \sa `equal_range_fn`
+        /// \ingroup group-algorithms
         constexpr equal_range_fn equal_range{};
 
         /// @}

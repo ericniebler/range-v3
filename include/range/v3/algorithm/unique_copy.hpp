@@ -108,11 +108,11 @@ namespace ranges
         public:
             /// \brief template function unique_copy
             ///
-            /// range-based version of the unique_copy std algorithm
+            /// range-based version of the `unique_copy` std algorithm
             ///
-            /// \pre InputRange is a model of the InputRange concept
-            /// \pre O is a model of the WeakOutputIterator concept
-            /// \pre C is a model of the InvokableRelation concept
+            /// \pre InputRange is a model of the `InputRange` concept
+            /// \pre `O` is a model of the `WeakOutputIterator` concept
+            /// \pre `C` is a model of the `InvokableRelation` concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && IteratorRange<I, S>())>
             std::pair<I, O> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
@@ -132,6 +132,8 @@ namespace ranges
             }
         };
 
+        /// \sa `unique_copy_fn`
+        /// \ingroup group-algorithms
         constexpr unique_copy_fn unique_copy{};
 
         /// @}

@@ -116,6 +116,8 @@ namespace ranges
             }
         };
 
+        /// \sa `mismatch_fn`
+        /// \ingroup group-algorithms
         constexpr mismatch_fn mismatch{};
 
         // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So

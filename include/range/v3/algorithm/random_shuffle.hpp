@@ -119,6 +119,8 @@ namespace ranges
             }
         };
 
+        /// \sa `random_shuffle_fn`
+        /// \ingroup group-algorithms
         constexpr random_shuffle_fn random_shuffle {};
 
         /// @}

@@ -32,8 +32,8 @@ namespace ranges
             ///
             /// range-based version of the \c adjacent_find std algorithm
             ///
-            /// \pre \c Rng is a model of the Range concept
-            /// \pre \c C is a model of the BinaryPredicate concept
+            /// \pre `Rng` is a model of the `Iterable` concept
+            /// \pre `C` is a model of the `BinaryPredicate` concept
             template<typename I, typename S, typename C = equal_to, typename P = ident,
                 typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(
@@ -71,6 +71,8 @@ namespace ranges
             }
         };
 
+        /// \sa `adjacent_find_fn`
+        /// \ingroup group-algorithms
         constexpr adjacent_find_fn adjacent_find {};
 
         /// @}

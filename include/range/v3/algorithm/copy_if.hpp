@@ -73,6 +73,8 @@ namespace ranges
             }
         };
 
+        /// \sa `copy_if_fn`
+        /// \ingroup group-algorithms
         constexpr copy_if_fn copy_if{};
 
         /// @}

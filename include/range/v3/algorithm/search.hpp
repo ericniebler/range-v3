@@ -201,6 +201,8 @@ namespace ranges
             }
         };
 
+        /// \sa `search_fn`
+        /// \ingroup group-algorithms
         constexpr with_braced_init_args<search_fn> search{};
 
         /// @}

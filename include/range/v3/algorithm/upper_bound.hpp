@@ -49,6 +49,8 @@ namespace ranges
             }
         };
 
+        /// \sa `upper_bound_fn`
+        /// \ingroup group-algorithms
         constexpr upper_bound_fn upper_bound{};
 
         /// @}

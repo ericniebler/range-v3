@@ -93,6 +93,8 @@ namespace ranges
             }
         };
 
+        /// \sa `minmax_element_fn`
+        /// \ingroup group-algorithms
         constexpr minmax_element_fn minmax_element{};
 
         /// @}

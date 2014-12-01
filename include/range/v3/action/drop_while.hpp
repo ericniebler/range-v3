@@ -52,6 +52,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<drop_while_fn> drop_while{};
         }
         /// @}

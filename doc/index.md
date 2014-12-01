@@ -15,17 +15,17 @@ This code is fairly stable, well-tested, and suitable for casual use, although c
 \subsection tutorial-installation Installation
 
 --------------------------------------------
-This library is header-only. You can get the source code from the [range-v3 repository](https://github.com/ericniebler/range-v3) on github. To compile with Range-v3, you can either #include the entire library:
+This library is header-only. You can get the source code from the [range-v3 repository](https://github.com/ericniebler/range-v3) on github. To compile with Range-v3, you can either `#%include` the entire library:
 
 ~~~~~~~{.cpp}
-    #include <range/v3/all.hpp>
+#include <range/v3/all.hpp>
 ~~~~~~~
 
-Or you can #include only the core, and then the individual headers you want:
+Or you can `#%include` only the core, and then the individual headers you want:
 
 ~~~~~~~{.cpp}
-    #include <range/v3/core.hpp>
-    #include <range/v3/....
+#include <range/v3/core.hpp>
+#include <range/v3/....
 ~~~~~~~
 
 \subsection tutorial-license License
@@ -74,7 +74,7 @@ Having a single range object permits *pipelines* of operations. In a pipeline, a
 
 A view is a lightweight wrapper that presents a view of an underlying sequence of elements in some custom way without mutating or copying it. Views are cheap to create and copy, and have non-owning reference semantics. Below are some examples:
 
-1. Filter a container using a predicate and transform it.
+Filter a container using a predicate and transform it.
 
 ~~~~~~~{.cpp}
     std::vector<int> vi{1,2,3,4,5,6,7,8,9,10};
@@ -84,7 +84,7 @@ A view is a lightweight wrapper that presents a view of an underlying sequence o
     // rng == {"2","4","6","8","10"};
 ~~~~~~~
 
-2. Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:
+Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:
 
 ~~~~~~~{.cpp}
     using namespace ranges;
@@ -93,7 +93,7 @@ A view is a lightweight wrapper that presents a view of an underlying sequence o
                        | view::take(10), 0);
 ~~~~~~~
 
-3. Generate a sequence on the fly with a range comprehension and initialize a vector with it:
+Generate a sequence on the fly with a range comprehension and initialize a vector with it:
 
 ~~~~~~~{.cpp}
     using namespace ranges;
@@ -108,7 +108,7 @@ A view is a lightweight wrapper that presents a view of an underlying sequence o
 
 When you want to mutate a container in-place, or forward it through a chain of mutating operations, you can use actions. The following examples should make it clear.
 
-1. Read data into a vector, sort it, and make it unique.
+Read data into a vector, sort it, and make it unique.
 
 ~~~~~~~{.cpp}
     extern std::vector<int> read_data();
@@ -116,19 +116,19 @@ When you want to mutate a container in-place, or forward it through a chain of m
     std::vector<int> vi = read_data() | action::sort | action::unique;
 ~~~~~~~
 
-2. Do the same to a `vector` that already contains some data:
+Do the same to a `vector` that already contains some data:
 
 ~~~~~~~{.cpp}
     vi = std::move(vi) | action::sort | action::unique;
 ~~~~~~~
 
-3. Mutate the container in-place:
+Mutate the container in-place:
 
 ~~~~~~~{.cpp}
     vi |= action::sort | action::unique;
 ~~~~~~~
 
-4. Same as above, but with function-call syntax instead of pipe syntax:
+Same as above, but with function-call syntax instead of pipe syntax:
 
 ~~~~~~~{.cpp}
     action::unique(action::sort(vi));

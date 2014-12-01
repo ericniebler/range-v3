@@ -52,6 +52,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-actions
             constexpr action<remove_if_fn> remove_if{};
         }
         /// @}

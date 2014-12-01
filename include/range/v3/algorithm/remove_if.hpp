@@ -71,6 +71,8 @@ namespace ranges
             }
         };
 
+        /// \sa `remove_if_fn`
+        /// \ingroup group-algorithms
         constexpr remove_if_fn remove_if{};
 
         /// @}

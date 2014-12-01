@@ -68,6 +68,8 @@ namespace ranges
             }
         };
 
+        /// \sa `reverse_fn`
+        /// \ingroup group-algorithms
         constexpr reverse_fn reverse{};
 
         /// @}

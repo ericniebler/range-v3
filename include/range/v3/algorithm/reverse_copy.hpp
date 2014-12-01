@@ -55,6 +55,8 @@ namespace ranges
             }
         };
 
+        /// \sa `reverse_copy_fn`
+        /// \ingroup group-algorithms
         constexpr reverse_copy_fn reverse_copy{};
 
         /// @}

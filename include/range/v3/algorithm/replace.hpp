@@ -58,6 +58,8 @@ namespace ranges
             }
         };
 
+        /// \sa `replace_fn`
+        /// \ingroup group-algorithms
         constexpr replace_fn replace{};
 
         /// @}

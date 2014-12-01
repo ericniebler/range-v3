@@ -43,6 +43,8 @@ namespace ranges
             }
         };
 
+        /// \sa `generate_n_fn`
+        /// \ingroup group-algorithms
         constexpr generate_n_fn generate_n{};
 
         // @}

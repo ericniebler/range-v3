@@ -58,6 +58,8 @@ namespace ranges
             }
         };
 
+        /// \sa `min_element_fn`
+        /// \ingroup group-algorithms
         constexpr min_element_fn min_element{};
 
         /// @}
