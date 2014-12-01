@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct find_fn
         {
             /// \brief template function \c find_fn::operator()
@@ -33,8 +35,8 @@ namespace ranges
             ///
             /// \pre \c Rng is a model of the Range concept
             /// \pre \c I is a model of the InputIterator concept
-            /// \pre \c S is a model of the Sentinel<I> concept
-            /// \pre \c P is a model of the Invokable<iterator_value_t<I>> concept
+            /// \pre \c S is a model of the Sentinel\<I\> concept
+            /// \pre \c P is a model of the Invokable\<iterator_value_t\<I\>\> concept
             /// \pre The ResultType of P is EqualityComparable with V1
             template<typename I, typename S, typename V1, typename P = ident,
                 typename V0 = iterator_value_t<I>,
@@ -71,6 +73,7 @@ namespace ranges
 
         constexpr with_braced_init_args<find_fn> find {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

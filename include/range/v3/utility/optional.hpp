@@ -20,6 +20,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-utility
         template<typename T>
         struct optional
         {

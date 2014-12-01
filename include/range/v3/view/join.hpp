@@ -33,6 +33,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct real_common_type_
@@ -59,7 +60,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename...Rngs>
         struct join_view
           : range_facade<join_view<Rngs...>,
@@ -296,6 +300,7 @@ namespace ranges
 
             constexpr join_fn join {};
         }
+        /// @}
     }
 }
 

@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T>
@@ -37,7 +38,10 @@ namespace ranges
             template<typename T>
             struct cref_t<T &&> { using type = T const &&; };
         }
+        /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct const_view
           : range_adaptor<const_view<Rng>, Rng>
@@ -87,6 +91,7 @@ namespace ranges
 
             constexpr const_fn const_ {};
         }
+        /// @}
     }
 }
 

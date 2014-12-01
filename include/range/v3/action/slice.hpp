@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-actions
+        /// @{
         namespace action
         {
             struct slice_fn
@@ -50,6 +52,7 @@ namespace ranges
 
             constexpr action<slice_fn> slice{};
         }
+        /// @}
     }
 }
 

@@ -30,6 +30,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct flatten_view
           : range_adaptor<flatten_view<Rng>, Rng,
@@ -132,6 +134,7 @@ namespace ranges
 
             constexpr flatten_fn flatten{};
         }
+        /// @}
     }
 }
 

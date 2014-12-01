@@ -31,6 +31,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct stride_view
           : range_adaptor<stride_view<Rng>, Rng>
@@ -191,6 +193,7 @@ namespace ranges
 
             constexpr stride_fn stride{};
         }
+        /// @}
     }
 }
 

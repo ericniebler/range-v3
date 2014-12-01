@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             inline unsigned int random_seed_()
@@ -35,7 +36,10 @@ namespace ranges
                 return s_rd();
             }
         }
+        /// \endcond
 
+        /// \addtogroup group-concepts
+        /// @{
         namespace concepts
         {
             struct RandomNumberGenerator
@@ -51,7 +55,10 @@ namespace ranges
 
         template<typename Gen, typename D>
         using RandomNumberGenerator = concepts::models<concepts::RandomNumberGenerator, Gen, D>;
+        /// @}
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct random_shuffle_fn
         {
             template<typename I, typename S,
@@ -114,6 +121,7 @@ namespace ranges
 
         constexpr random_shuffle_fn random_shuffle {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

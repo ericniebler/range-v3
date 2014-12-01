@@ -34,6 +34,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename Fun>
         struct partial_sum_view
           : range_adaptor<partial_sum_view<Rng, Fun>, Rng>
@@ -137,6 +139,7 @@ namespace ranges
 
             constexpr partial_sum_fn partial_sum {};
         }
+        /// @}
     }
 }
 

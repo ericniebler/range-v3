@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T>
@@ -344,7 +345,11 @@ namespace ranges
             auto iter_cat(range_access::RandomAccessCursorConcept*) ->
                 ranges::random_access_iterator_tag;
         }
+        /// \endcond
 
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
         template<typename T>
         struct basic_mixin
         {
@@ -359,6 +364,7 @@ namespace ranges
             {
                 return t_;
             }
+            /// \overload
             T const &get() const
             {
                 return t_;
@@ -643,9 +649,11 @@ namespace ranges
                 return operator_brackets_dispatch_t::apply(*this + n);
             }
         };
+        /// @}
     }
 }
 
+/// \cond
 namespace std
 {
     template<typename Cur, typename S>
@@ -663,5 +671,6 @@ namespace std
         using pointer = typename iterator::pointer;
     };
 }
+/// \endcond
 
 #endif

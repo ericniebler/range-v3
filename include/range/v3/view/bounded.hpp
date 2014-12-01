@@ -28,6 +28,9 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
+
         template<typename Rng>
         struct bounded_view
           : range_interface<bounded_view<Rng>, is_infinite<Rng>::value>
@@ -103,6 +106,7 @@ namespace ranges
             using bounded_t =
                 decltype(bounded(std::declval<Rng>()));
         }
+        /// @}
     }
 }
 

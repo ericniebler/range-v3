@@ -23,6 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace adl_erase_detail
         {
             template<typename Cont, typename I,
@@ -62,7 +63,9 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \ingroup group-actions
         constexpr adl_erase_detail::erase_fn erase{};
 
         namespace action
@@ -70,6 +73,8 @@ namespace ranges
             using ranges::erase;
         }
 
+        /// \addtogroup group-concepts
+        /// @{
         namespace concepts
         {
             struct EraseableIterable
@@ -88,6 +93,7 @@ namespace ranges
 
         template<typename Rng, typename...Rest>
         using EraseableIterable = concepts::models<concepts::EraseableIterable, Rng, Rest...>;
+        /// @}
     }
 }
 

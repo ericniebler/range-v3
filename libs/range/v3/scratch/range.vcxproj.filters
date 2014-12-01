@@ -95,6 +95,12 @@
     <None Include="..\..\..\..\doc\show.cmd">
       <Filter>Doc Files</Filter>
     </None>
+    <None Include="..\..\..\..\doc\Doxyfile.in">
+      <Filter>Doc Files</Filter>
+    </None>
+    <None Include="..\..\..\..\doc\index.md">
+      <Filter>Doc Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="range.cpp">
@@ -1134,5 +1140,13 @@
     <Text Include="..\..\..\..\test\action\CMakeLists.txt">
       <Filter>Test Files\action</Filter>
     </Text>
+    <Text Include="..\..\..\..\doc\CMakeLists.txt">
+      <Filter>Doc Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\..\..\doc\layout.xml">
+      <Filter>Doc Files</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

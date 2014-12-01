@@ -21,6 +21,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-core
+        /// @{
         struct empty_fn
         {
             template<typename Rng,
@@ -32,6 +34,8 @@ namespace ranges
         };
 
         constexpr empty_fn empty {};
+
+        /// @}
     }
 }
 

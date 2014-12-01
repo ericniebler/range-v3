@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility
+        /// @{
         struct equal_to
         {
             template<typename T, typename U,
@@ -325,6 +327,7 @@ namespace ranges
 
         constexpr unwrap_reference_fn unwrap_reference {};
 
+        /// \cond
         namespace detail
         {
             template<typename Bind>
@@ -351,6 +354,7 @@ namespace ranges
                 )
             };
         }
+        /// \endcond
 
         struct protect_fn
         {
@@ -406,6 +410,7 @@ namespace ranges
                 return base()(std::move(rng0), std::move(rng1), std::forward<Args>(args)...);
             }
         };
+        /// @{
     }
 }
 

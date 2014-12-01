@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         namespace view
         {
             struct all_fn : pipeable<all_fn>
@@ -99,6 +101,7 @@ namespace ranges
             using all_t =
                 meta::eval<std::decay<decltype(all(std::declval<Rng>()))>>;
         }
+        /// @}
     }
 }
 

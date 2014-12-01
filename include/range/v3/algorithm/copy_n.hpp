@@ -29,6 +29,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct copy_n_fn
         {
             template<typename I, typename O, typename P = ident,
@@ -48,39 +50,11 @@ namespace ranges
                     *out = proj(*b);
                 return {recounted(begin, b, norig), out};
             }
-
-            //template<typename I, typename S, typename O, typename P = ident,
-            //    CONCEPT_REQUIRES_(
-            //        InputIterator<I>() && IteratorRange<I, S>() &&
-            //        WeaklyIncrementable<O>() &&
-            //        IndirectlyProjectedCopyable<I, P, O>()
-            //    )>
-            //std::tuple<I, O, iterator_difference_t<I>>
-            //operator()(I begin, S end, iterator_difference_t<I> n, O out, P proj = P{}) const
-            //{
-            //    RANGES_ASSERT(0 <= n);
-            //    auto &&iproj = invokable(proj);
-            //    for(; n != 0; ++begin, ++out, --n)
-            //        *out = iproj(*begin);
-            //    return std::tuple<I, O, iterator_difference_t<I>>{begin, out, n};
-            //}
-
-            //template<typename Rng, typename O, typename P = ident,
-            //    typename I = range_iterator_t<Rng>,
-            //    CONCEPT_REQUIRES_(
-            //        InputIterable<Rng>() &&
-            //        WeaklyIncrementable<O>() &&
-            //        IndirectlyProjectedCopyable<I, P, O>()
-            //    )>
-            //std::tuple<I, O, iterator_difference_t<I>>
-            //operator()(Rng &rng, iterator_difference_t<I> n, O out, P proj = P{}) const
-            //{
-            //    return (*this)(begin(rng), end(rng), n, std::move(out), std::move(proj));
-            //}
         };
 
         constexpr copy_n_fn copy_n{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

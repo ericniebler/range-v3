@@ -22,6 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct not_equal_to
@@ -33,7 +34,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         namespace view
         {
             struct unique_fn : pipeable<unique_fn>
@@ -47,6 +51,7 @@ namespace ranges
 
             constexpr unique_fn unique {};
         }
+        /// @}
     }
 }
 

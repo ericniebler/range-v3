@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             using add_ref_t =
@@ -34,6 +35,7 @@ namespace ranges
             using add_cref_t =
                 meta::compose<meta::quote_trait<std::add_lvalue_reference>, meta::quote_trait<std::add_const>>;
         }
+        /// \endcond
 
         template<typename...Ts>
         struct tagged_variant;
@@ -44,6 +46,7 @@ namespace ranges
         template<std::size_t N, typename Var>
         using tagged_variant_element_t = typename tagged_variant_element<N, Var>::type;
 
+        /// \cond
         namespace detail
         {
             template<typename Fun, typename T, std::size_t N,
@@ -379,7 +382,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-utility
+        /// @{
         template<typename ...Ts>
         struct tagged_variant
         {
@@ -626,6 +632,7 @@ namespace ranges
             data.apply(var.which(), detail::unique_visitor<To, From>{res});
             return res;
         }
+        /// @}
     }
 }
 

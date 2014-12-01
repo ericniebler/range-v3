@@ -25,6 +25,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-concepts
         template<typename I, typename O, typename C = equal_to, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
@@ -34,6 +35,8 @@ namespace ranges
             InvokableRelation<C, X>,
             WeakOutputIterator<O, V>>; // BUGBUG V or X?
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct unique_copy_fn
         {
         private:
@@ -130,6 +133,8 @@ namespace ranges
         };
 
         constexpr unique_copy_fn unique_copy{};
+
+        /// @}
     } // namespace v3
 } // namespace ranges
 

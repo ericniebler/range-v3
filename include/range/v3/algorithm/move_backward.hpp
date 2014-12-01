@@ -27,6 +27,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct move_backward_fn
         {
             template<typename I, typename S, typename O, typename P = ident,
@@ -53,6 +55,7 @@ namespace ranges
 
         constexpr move_backward_fn move_backward{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

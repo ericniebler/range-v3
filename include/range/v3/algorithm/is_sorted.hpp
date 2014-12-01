@@ -22,6 +22,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct is_sorted_fn
         {
             /// \brief template function \c is_sorted_fn::operator()
@@ -32,8 +34,8 @@ namespace ranges
             ///
             /// \pre \c Rng is a model of the ForwardRange concept
             /// \pre \c I is a model of the ForwardIterator concept
-            /// \pre \c S is a model of the Sentinel<I> concept
-            /// \pre \c R is a model of the Relation<Value_Type<I>> concept
+            /// \pre \c S is a model of the Sentinel\<I\> concept
+            /// \pre \c R is a model of the Relation\<Value_Type\<I\>\> concept
             ///
             template <typename I, typename S, typename R = ordered_less,
                       typename P = ident, typename V = iterator_value_t<I>,
@@ -60,6 +62,7 @@ namespace ranges
 
         constexpr with_braced_init_args<is_sorted_fn> is_sorted{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

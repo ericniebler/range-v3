@@ -22,6 +22,9 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
         template<typename T>
         struct mutable_
         {
@@ -234,6 +237,7 @@ namespace ranges
         {
             return detail::move(b);
         }
+        /// @}
     }
 }
 

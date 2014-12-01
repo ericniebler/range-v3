@@ -27,12 +27,16 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T> T && rref(T &, int);
             template<typename T> T rref(T, long);
         }
+        /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct move_view
           : range_adaptor<move_view<Rng>, Rng>
@@ -85,6 +89,7 @@ namespace ranges
 
             constexpr move_fn move {};
         }
+        /// @}
     }
 }
 

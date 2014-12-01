@@ -33,6 +33,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
@@ -59,6 +60,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
+
+        /// \addtogroup group-core
+        /// @{
 
         constexpr detail::to_container_fn<meta::quote<std::vector>> to_vector {};
 
@@ -88,6 +93,8 @@ namespace ranges
         {
             return std::forward<Rng>(rng) | ranges::to_<Cont>();
         }
+
+        /// @}
     }
 }
 

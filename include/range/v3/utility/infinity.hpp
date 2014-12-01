@@ -20,6 +20,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         struct infinity
         {
         };
@@ -57,6 +58,7 @@ namespace ranges
         {
             return true;
         }
+        /// \endcond
     }
 }
 

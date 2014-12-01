@@ -22,6 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace adl_begin_end_detail
         {
             using std::begin;
@@ -94,11 +95,15 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         constexpr begin_fn begin {};
         constexpr end_fn end {};
         constexpr cbegin_fn cbegin {};
         constexpr cend_fn cend {};
+        /// @}
     }
 }
 

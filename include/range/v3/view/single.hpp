@@ -27,6 +27,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Val>
         struct single_view
           : range_facade<single_view<Val>>
@@ -86,6 +88,7 @@ namespace ranges
 
             constexpr single_fn single {};
         }
+        /// @}
     }
 }
 

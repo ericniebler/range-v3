@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct unique_fn
         {
             /// \brief template function \c unique_fn::operator()
@@ -67,6 +69,7 @@ namespace ranges
 
         constexpr unique_fn unique{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility
+        /// @{
         struct make_invokable_fn
         {
             template<typename R, typename T>
@@ -60,7 +62,10 @@ namespace ranges
                 invokable_t<Fun>,
                 reference_wrapper<
                     meta::apply<meta::add_const_if_c<IsConst>, semiregular<invokable_t<Fun>>>>>;
+        /// @}
 
+        /// \addtogroup group-concepts
+        /// @{
         namespace concepts
         {
             struct Invokable
@@ -124,6 +129,7 @@ namespace ranges
 
         template<typename F, typename T>
         using InvokableTransform = concepts::models<concepts::InvokableTransform, F, T>;
+        /// @}
     }
 }
 

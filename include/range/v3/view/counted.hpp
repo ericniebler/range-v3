@@ -27,6 +27,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename I, typename D /* = iterator_difference_t<I>*/>
         struct counted_view
           : range_facade<counted_view<I, D>>
@@ -79,6 +81,7 @@ namespace ranges
 
             constexpr counted_fn counted {};
         }
+        /// @}
     }
 }
 

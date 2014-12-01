@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename I, typename S,
@@ -49,7 +50,10 @@ namespace ranges
                 return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
             }
         }
+        /// \endcond
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct find_end_fn
         {
         private:
@@ -200,6 +204,7 @@ namespace ranges
 
         constexpr with_braced_init_args<find_end_fn> find_end{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

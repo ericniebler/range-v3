@@ -30,6 +30,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename Pred>
         struct take_while_view
           : range_adaptor<take_while_view<Rng, Pred>, Rng>
@@ -99,6 +101,7 @@ namespace ranges
 
             constexpr take_while_fn take_while{};
         }
+        /// @}
     }
 }
 

@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Ref>
@@ -217,8 +218,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         /// \brief A type-erased InputRange
+        /// \ingroup group-views
         template<typename Ref, bool Inf = false>
         struct any_input_range
           : range_facade<any_input_range<Ref>, Inf>

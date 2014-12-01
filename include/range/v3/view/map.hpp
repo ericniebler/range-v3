@@ -22,6 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct get_first
@@ -44,7 +45,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         namespace view
         {
             struct keys_fn : pipeable<keys_fn>
@@ -68,6 +72,7 @@ namespace ranges
             constexpr keys_fn keys {};
             constexpr values_fn values {};
         }
+        /// @}
     }
 }
 

@@ -28,6 +28,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace adl_insert_detail
         {
             template<typename Cont, typename T,
@@ -173,7 +174,9 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \ingroup group-actions
         constexpr adl_insert_detail::insert_fn insert{};
 
         namespace action
@@ -181,6 +184,8 @@ namespace ranges
             using ranges::insert;
         }
 
+        /// \addtogroup group-concepts
+        /// @{
         namespace concepts
         {
             struct InsertableIterable
@@ -196,6 +201,7 @@ namespace ranges
 
         template<typename Rng, typename...Rest>
         using InsertableIterable = concepts::models<concepts::InsertableIterable, Rng, Rest...>;
+        /// @}
     }
 }
 

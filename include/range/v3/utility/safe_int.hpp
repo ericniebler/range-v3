@@ -49,6 +49,7 @@ namespace ranges
         Therefore, (a%b) is only defined when both a and b are finite.
         */
 
+        /// \cond
         namespace detail
         {
             template<typename Signed>
@@ -86,6 +87,7 @@ namespace ranges
                 return signbit(left) == signbit(right);
             }
         }
+        /// \endcond
 
         // Requires: 2's complement representation
         template<typename SignedInteger>

@@ -24,6 +24,8 @@ namespace ranges
     {
         ////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
+
+        /// \ingroup group-meta
         template<typename T, T...Is>
         struct integer_sequence
         {
@@ -34,6 +36,7 @@ namespace ranges
             }
         };
 
+        /// \cond
         namespace detail
         {
             // Glue two sets of integer_sequence together
@@ -68,8 +71,12 @@ namespace ranges
                 using type = integer_sequence<T, 0>;
             };
         }
+        /// \endcond
 
-        // generate integer_sequence [0,N) in O(log(N)) time
+        /// \addtogroup group-meta
+        /// @{
+
+        /// \brief generate \c integer_sequence [0,N) in O(log(N)) time.
         template<typename T, T N>
         using make_integer_sequence =
             meta::eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
@@ -79,6 +86,7 @@ namespace ranges
 
         template<std::size_t N>
         using make_index_sequence = make_integer_sequence<std::size_t, N>;
+        /// @}
     }
 }
 

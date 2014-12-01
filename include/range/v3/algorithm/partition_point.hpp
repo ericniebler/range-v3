@@ -35,6 +35,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
@@ -43,7 +44,9 @@ namespace ranges
             Invokable<P, V>,
             InvokablePredicate<C, X>>;
 
-        // BUGBUG should partition_point also return the end iterator?
+        /// \addtogroup group-algorithms
+        /// @{
+
         struct partition_point_fn
         {
             template<typename I, typename S, typename C, typename P = ident,
@@ -79,6 +82,7 @@ namespace ranges
 
         constexpr partition_point_fn partition_point{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

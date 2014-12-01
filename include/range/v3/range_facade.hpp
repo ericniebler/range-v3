@@ -25,6 +25,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Derived>
@@ -46,7 +47,10 @@ namespace ranges
                     basic_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
                     basic_sentinel<facade_sentinel2_t<Derived>>>;
         }
+        /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         struct default_sentinel
         {
             template<typename Cur>
@@ -107,6 +111,8 @@ namespace ranges
 
         template<typename RangeFacade>
         using range_facade_t = meta::eval<range_access::range_facade<RangeFacade>>;
+
+        /// @}
     }
 }
 

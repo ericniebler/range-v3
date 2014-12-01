@@ -22,6 +22,9 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
+
         // Ordinarily, a view shouldn't contain its elements. This is so that copying
         // and assigning ranges is O(1), and also so that in the event of element
         // mutation, all the copies of the range see the mutation the same way. The
@@ -82,6 +85,7 @@ namespace ranges
 
             constexpr repeat_fn repeat{};
         }
+        /// @}
     }
 }
 

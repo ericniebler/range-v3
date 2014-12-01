@@ -23,6 +23,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct generate_fn
         {
             template<typename O, typename S, typename F,
@@ -47,6 +49,8 @@ namespace ranges
         };
 
         constexpr generate_fn generate{};
+
+        /// @}
     } // namespace v3
 } // namespace ranges
 

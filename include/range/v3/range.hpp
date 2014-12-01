@@ -26,6 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T, typename U = meta::eval<std::remove_const<T>>>
@@ -85,7 +86,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         template<typename I, typename S /*= I*/>
         struct range
           : detail::range_impl<range<I, S>, I, S>
@@ -261,6 +265,8 @@ namespace ranges
         }
 
         // TODO add specialization of is_infinite for when we can determine the range is infinite
+
+        /// @}
     }
 }
 
@@ -270,6 +276,7 @@ namespace ranges
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wmismatched-tags"
 
+/// \cond
 namespace std
 {
     template<typename First, typename Second>
@@ -306,6 +313,7 @@ namespace std
         using type = Second;
     };
 }
+/// \endcond
 
 #pragma GCC diagnostic pop
 

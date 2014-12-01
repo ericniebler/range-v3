@@ -30,6 +30,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename Pred>
         struct remove_if_view
           : range_adaptor<remove_if_view<Rng, Pred>, Rng>
@@ -124,6 +126,7 @@ namespace ranges
 
             constexpr remove_if_fn remove_if {};
         }
+        /// @}
     }
 }
 

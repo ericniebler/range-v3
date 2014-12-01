@@ -30,6 +30,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Rng, bool IsRandomAccess = RandomAccessIterable<Rng>()>
@@ -125,7 +126,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct take_view
           : detail::take_view_<Rng>
@@ -167,6 +171,7 @@ namespace ranges
 
             constexpr take_fn take {};
         }
+        /// @}
     }
 }
 

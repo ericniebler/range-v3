@@ -22,6 +22,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T, typename Enable = void>
@@ -94,7 +95,11 @@ namespace ranges
             template<typename T>
             using pair_element_t = meta::eval<pair_element<T>>;
         }
+        /// \endcond
 
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
         template<typename First, typename Second>
         struct compressed_pair
           : private detail::first_base<First>
@@ -183,6 +188,7 @@ namespace ranges
         {
             return detail::move(p).second;
         }
+        /// @}
     }
 }
 
@@ -191,6 +197,7 @@ namespace ranges
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wmismatched-tags"
 
+/// \cond
 namespace std
 {
     template<typename First, typename Second>
@@ -210,7 +217,7 @@ namespace std
         using type = Second;
     };
 }
-
+/// \endcond
 #pragma GCC diagnostic pop
 
 #endif

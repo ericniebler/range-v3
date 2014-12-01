@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3 
     {
+        /// \addtogroup group-actions
+        /// @{
         namespace action
         {
             struct remove_if_fn
@@ -52,6 +54,7 @@ namespace ranges
 
             constexpr action<remove_if_fn> remove_if{};
         }
+        /// @}
     }
 }
 

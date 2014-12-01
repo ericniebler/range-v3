@@ -23,8 +23,12 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-core
+        /// @{
         struct range_access
         {
+            /// \cond
+
             //
             // Concepts that the range cursor must model
             // BUGBUG this doesn't handle weak cursors.
@@ -235,8 +239,11 @@ namespace ranges
             {
                 using type = typename RangeAdaptor::range_adaptor_t;
             };
+            /// endcond
         };
+        /// @}
 
+        /// \cond
         namespace detail
         {
             template<typename T>
@@ -271,6 +278,7 @@ namespace ranges
             template<typename T>
             using cursor_concept_t = meta::eval<cursor_concept<T>>;
         }
+        /// \endcond
     }
 }
 

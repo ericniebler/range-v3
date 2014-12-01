@@ -23,6 +23,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace adl_swap_detail
         {
             using std::swap;
@@ -37,7 +38,9 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \ingroup group-utility
         constexpr adl_swap_detail::swap_fn swap {};
     }
 }

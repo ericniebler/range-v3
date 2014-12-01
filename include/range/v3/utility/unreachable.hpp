@@ -19,6 +19,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility
+        /// @{
         struct unreachable
         {
             template<typename T>
@@ -68,6 +70,7 @@ namespace ranges
         {
             using type = unreachable;
         };
+        /// @}
     }
 }
 

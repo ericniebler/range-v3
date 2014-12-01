@@ -29,6 +29,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct minmax_element_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
@@ -93,6 +95,7 @@ namespace ranges
 
         constexpr minmax_element_fn minmax_element{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

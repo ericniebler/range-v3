@@ -18,12 +18,14 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         template<typename T>
         constexpr bool is_infinity(T t)
         {
             return std::numeric_limits<T>::has_infinity &&
                 t == std::numeric_limits<T>::infinity();
         }
+        /// \endcond
     }
 }
 

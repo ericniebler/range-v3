@@ -28,6 +28,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-core
+        /// @{
         struct enumerate_fn : iter_enumerate_fn
         {
         private:
@@ -126,6 +128,8 @@ namespace ranges
         };
 
         constexpr distance_compare_fn distance_compare {};
+
+        /// @}
     }
 }
 

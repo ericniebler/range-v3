@@ -27,6 +27,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-concepts
+        /// @{
         namespace concepts
         {
             struct UniformRandomNumberGenerator
@@ -41,7 +43,10 @@ namespace ranges
 
         template<typename Gen>
         using UniformRandomNumberGenerator = concepts::models<concepts::UniformRandomNumberGenerator, Gen>;
+        /// @}
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct shuffle_fn
         {
             template<typename I, typename S, typename Gen,
@@ -78,6 +83,7 @@ namespace ranges
 
         constexpr shuffle_fn shuffle {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

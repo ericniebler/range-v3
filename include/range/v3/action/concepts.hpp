@@ -24,6 +24,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename T>
@@ -38,7 +39,10 @@ namespace ranges
                 T && operator*() const;
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-concepts
+        /// @{
         namespace concepts
         {
             // std::array is a SemiContainer, native arrays are not.
@@ -72,6 +76,7 @@ namespace ranges
         template<typename T>
         using Container = concepts::models<concepts::Container, T>;
 
+        /// \cond
         namespace detail
         {
             template<typename T, CONCEPT_REQUIRES_(Container<T>())>
@@ -83,6 +88,7 @@ namespace ranges
             template<typename T, CONCEPT_REQUIRES_(Container<T>())>
             std::true_type is_lvalue_container_like(std::reference_wrapper<T>);
         }
+        /// \endcond
 
         namespace concepts
         {
@@ -99,6 +105,7 @@ namespace ranges
 
         template<typename T>
         using LvalueContainerLike = concepts::models<concepts::LvalueContainerLike, T>;
+        /// @}
     }
 }
 

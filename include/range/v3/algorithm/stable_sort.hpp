@@ -58,6 +58,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct stable_sort_fn
         {
             template<typename I, typename C, typename P>
@@ -179,6 +181,7 @@ namespace ranges
 
         constexpr stable_sort_fn stable_sort {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

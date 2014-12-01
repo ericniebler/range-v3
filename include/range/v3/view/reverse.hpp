@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct reverse_view
           : range_adaptor<reverse_view<Rng>, Rng>
@@ -119,6 +121,7 @@ namespace ranges
 
             constexpr reverse_fn reverse {};
         }
+        /// @}
     }
 }
 

@@ -28,6 +28,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename G>
         struct generate_n_view
           : range_facade<generate_n_view<G>>
@@ -95,6 +97,7 @@ namespace ranges
 
             constexpr generate_n_fn generate_n{};
         }
+        /// @}
     }
 }
 

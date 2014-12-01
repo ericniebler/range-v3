@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct rotate_copy_fn
         {
             template<typename I, typename S, typename O, typename P = ident,
@@ -50,6 +52,7 @@ namespace ranges
 
         constexpr rotate_copy_fn rotate_copy{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

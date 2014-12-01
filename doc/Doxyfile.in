@@ -1,0 +1,131 @@
+PROJECT_NAME            = "Range-v3"
+PROJECT_BRIEF           = "Range algorithms, views, and actions for the Standard Library"
+PROJECT_LOGO            =
+PROJECT_NUMBER          =
+
+STRIP_FROM_PATH         = @Range-v3_SOURCE_DIR@/include
+BUILTIN_STL_SUPPORT     = YES
+STRIP_FROM_INC_PATH     = @Range-v3_SOURCE_DIR@/include
+ALIASES                 =
+ENABLED_SECTIONS        =
+
+
+# Resources
+OUTPUT_DIRECTORY        =
+INPUT                   = @Range-v3_SOURCE_DIR@/include \
+                          @Range-v3_SOURCE_DIR@/doc/index.md
+FILE_PATTERNS           = *.hpp *.md
+RECURSIVE               = YES
+EXCLUDE                 = @Range-v3_SOURCE_DIR@/include/range/v3/detail \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/algorithm/aux_ \
+                          @Range-v3_SOURCE_DIR@/include/range/v3/utility/safe_int.hpp
+EXAMPLE_PATH            = @Range-v3_SOURCE_DIR@/example \
+                          @Range-v3_SOURCE_DIR@/test
+EXAMPLE_RECURSIVE       = YES
+IMAGE_PATH              = @Range-v3_BINARY_DIR@/image
+WARN_IF_UNDOCUMENTED    = NO
+
+SHOW_GROUPED_MEMB_INC   = YES
+BRIEF_MEMBER_DESC       = YES
+REPEAT_BRIEF            = YES
+ALWAYS_DETAILED_SEC     = NO
+INLINE_INHERITED_MEMB   = NO
+JAVADOC_AUTOBRIEF       = YES
+QT_AUTOBRIEF            = YES
+MULTILINE_CPP_IS_BRIEF  = YES
+INHERIT_DOCS            = NO
+SEPARATE_MEMBER_PAGES   = NO
+DISTRIBUTE_GROUP_DOC    = NO
+SUBGROUPING             = NO
+INLINE_GROUPED_CLASSES  = NO
+INLINE_SIMPLE_STRUCTS   = NO
+
+# Generated formats
+GENERATE_HTML           = YES
+GENERATE_LATEX          = NO
+
+
+GENERATE_TODOLIST       = YES
+GENERATE_TESTLIST       = YES
+GENERATE_BUGLIST        = YES
+GENERATE_DEPRECATEDLIST = YES
+SHOW_USED_FILES         = NO
+SHOW_FILES              = YES
+SHOW_NAMESPACES         = YES
+LAYOUT_FILE             = @Range-v3_SOURCE_DIR@/doc/layout.xml
+
+
+CLASS_DIAGRAMS          = YES
+HAVE_DOT                = NO
+
+HIDE_UNDOC_RELATIONS    = NO
+HIDE_UNDOC_MEMBERS      = NO
+HIDE_UNDOC_CLASSES      = NO
+HIDE_FRIEND_COMPOUNDS   = NO
+HIDE_IN_BODY_DOCS       = NO
+INTERNAL_DOCS           = NO
+HIDE_SCOPE_NAMES        = NO
+SHOW_INCLUDE_FILES      = NO
+FORCE_LOCAL_INCLUDES    = NO
+INLINE_INFO             = NO
+SORT_MEMBER_DOCS        = NO
+SORT_BRIEF_DOCS         = NO
+SORT_MEMBERS_CTORS_1ST  = NO
+SORT_GROUP_NAMES        = NO
+SORT_BY_SCOPE_NAME      = YES
+
+
+ALPHABETICAL_INDEX      = YES
+COLS_IN_ALPHA_INDEX     = 1
+
+# Preprocessing
+ENABLE_PREPROCESSING    = YES
+MACRO_EXPANSION         = YES
+EXPAND_ONLY_PREDEF      = NO
+SEARCH_INCLUDES         = YES
+INCLUDE_PATH            = @Range-v3_SOURCE_DIR@/include
+INCLUDE_FILE_PATTERNS   =
+PREDEFINED              = RANGES_DOXYGEN_INVOKED \
+                          CONCEPT_REQUIRES_IMPL_(X)=requires=X \
+                          "CONCEPT_REQUIRES_IMPL(X)=/// \pre X" \
+SKIP_FUNCTION_MACROS    = NO
+
+# Source browsing
+SOURCE_BROWSER          = NO
+INLINE_SOURCES          = NO
+STRIP_CODE_COMMENTS     = YES
+REFERENCED_BY_RELATION  = YES
+REFERENCES_RELATION     = YES
+REFERENCES_LINK_SOURCE  = YES
+USE_HTAGS               = NO
+VERBATIM_HEADERS        = NO
+# CLANG_ASSISTED_PARSING  = NO
+# CLANG_OPTIONS           =
+
+# HTML output
+HTML_OUTPUT             = html
+HTML_FILE_EXTENSION     = .html
+HTML_HEADER             =
+HTML_FOOTER             =
+HTML_EXTRA_STYLESHEET   =
+HTML_EXTRA_FILES        =
+HTML_COLORSTYLE_HUE     = 75  # 0 - 359
+HTML_COLORSTYLE_SAT     = 100 # 0 - 255
+HTML_COLORSTYLE_GAMMA   = 80
+HTML_TIMESTAMP          = NO
+HTML_DYNAMIC_SECTIONS   = YES
+HTML_INDEX_NUM_ENTRIES  = 0 # Fully expand trees in the Indexes by default
+DISABLE_INDEX           = YES
+GENERATE_TREEVIEW       = YES
+TREEVIEW_WIDTH          = 270
+EXT_LINKS_IN_WINDOW     = NO
+FORMULA_FONTSIZE        = 10
+FORMULA_TRANSPARENT     = YES
+SEARCHENGINE            = YES
+
+# Mathjax (HTML only)
+USE_MATHJAX             = NO
+MATHJAX_FORMAT          = HTML-CSS
+MATHJAX_RELPATH         = http://cdn.mathjax.org/mathjax/latest
+MATHJAX_EXTENSIONS      =
+MATHJAX_CODEFILE        =

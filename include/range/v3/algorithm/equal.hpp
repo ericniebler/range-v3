@@ -27,6 +27,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct equal_fn
         {
         private:
@@ -115,6 +117,7 @@ namespace ranges
 
         constexpr with_braced_init_args<equal_fn> equal{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

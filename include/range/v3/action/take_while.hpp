@@ -27,6 +27,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-actions
+        /// @{
         namespace action
         {
             struct take_while_fn
@@ -52,6 +54,7 @@ namespace ranges
 
             constexpr action<take_while_fn> take_while{};
         }
+        /// @}
     }
 }
 

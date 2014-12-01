@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Derived>
@@ -45,7 +46,10 @@ namespace ranges
             using adapted_sentinel_t =
                 decltype(std::declval<end_adaptor_t<Derived>>().end(std::declval<Derived &>()));
         }
+        /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         template<typename Derived>
         using base_range_t = meta::eval<range_access::base_range<Derived>>;
 
@@ -323,11 +327,14 @@ namespace ranges
             {
                 return rng_;
             }
+            /// \overload
             base_range_t const & base() const
             {
                 return rng_;
             }
         };
+
+        /// @}
     }
 }
 

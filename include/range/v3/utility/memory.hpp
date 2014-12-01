@@ -30,6 +30,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             // Can be used with counted_cursor to maintain an external count.
@@ -101,7 +102,10 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
+        /// \addtogroup group-utility
+        /// @{
         template<typename O, typename Val>
         struct raw_storage_iterator
         {
@@ -161,6 +165,7 @@ namespace ranges
             return counted_iterator<raw_storage_iterator<I, V>, detail::external_count<D>>{
                 raw_storage_iterator<I, V>{std::move(i)}, d};
         }
+        /// @}
     }
 }
 

@@ -39,6 +39,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             // stable, 2-3 compares, 0-2 swaps
@@ -96,7 +97,10 @@ namespace ranges
                 }
             }
         }
+        /// \endcond
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct nth_element_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
@@ -304,6 +308,7 @@ namespace ranges
 
         constexpr nth_element_fn nth_element{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

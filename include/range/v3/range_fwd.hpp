@@ -17,10 +17,35 @@
 #include <type_traits>
 #include <range/v3/detail/config.hpp>
 
+/// \defgroup group-utility Utility
+/// Utility classes
+
+/// \defgroup group-core Core
+/// Core range functionality
+
+/// \defgroup group-algorithms Algorithms
+/// Itetator- and range-based algorithms, like the standard algorithms
+
+/// \defgroup group-views Views
+/// Lazy, non-owning, non-mutating, composable range views
+
+/// \defgroup group-actions Actions
+/// Eager, mutating, composable algorithms
+
+/// \defgroup group-actions Actions
+/// Eager, mutating, chainable algorithms
+
+/// \defgroup group-concepts Concepts
+/// Concept-checking classes and utilities
+
+/// \defgroup group-meta Metaprogramming
+/// Metaprogramming utilities
+
 namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace adl_begin_end_detail
         {
             struct begin_fn;
@@ -40,6 +65,7 @@ namespace ranges
         }
 
         using adl_size_detail::size_fn;
+        /// \endcond
 
         template<typename ...Ts>
         struct common_type;
@@ -89,6 +115,7 @@ namespace ranges
         struct basic_range : range_base
         {};
 
+        /// \cond
         namespace detail
         {
             struct empty
@@ -204,6 +231,7 @@ namespace ranges
             {};
 #endif
         }
+        /// \endcond
 
         namespace concepts
         {
