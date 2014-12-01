@@ -25,6 +25,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-concepts
         template<typename I, typename O, typename T0, typename T1, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
@@ -35,6 +36,8 @@ namespace ranges
             Invokable<P, V>,
             EqualityComparable<X, T0>>;
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct replace_copy_fn
         {
             template<typename I, typename S, typename O, typename T0, typename T1, typename P = ident,
@@ -61,6 +64,7 @@ namespace ranges
 
         constexpr replace_copy_fn replace_copy{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

@@ -29,6 +29,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename Pred>
         struct drop_while_view
           : range_interface<drop_while_view<Rng, Pred>, is_infinite<Rng>::value>
@@ -94,6 +96,7 @@ namespace ranges
 
             constexpr drop_while_fn drop_while {};
         }
+        /// @}
     }
 }
 

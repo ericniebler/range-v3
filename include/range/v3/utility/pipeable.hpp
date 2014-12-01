@@ -39,6 +39,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-utility
+        /// @{
+
         struct make_pipeable_fn
         {
             template<typename Fun>
@@ -140,6 +143,8 @@ namespace ranges
                 bind_forward<Pipe1>(pipe1)
             ))
         )
+
+        /// @}
     }
 }
 

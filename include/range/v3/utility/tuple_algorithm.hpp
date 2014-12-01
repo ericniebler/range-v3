@@ -23,6 +23,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility
+        /// @{
         template<typename Tup>
         using tuple_indices_t =
             make_index_sequence<
@@ -205,6 +207,7 @@ namespace ranges
         };
 
         constexpr make_tuple_fn make_tuple {};
+        /// @}
     }
 }
 

@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility
+        /// @{
         struct equal_to
         {
             template<typename T, typename U,
@@ -408,6 +410,7 @@ namespace ranges
                 return base()(std::move(rng0), std::move(rng1), std::forward<Args>(args)...);
             }
         };
+        /// @{
     }
 }
 

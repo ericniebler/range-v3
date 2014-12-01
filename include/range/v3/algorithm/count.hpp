@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct count_fn
         {
             template<typename I, typename S, typename V1, typename P = ident,
@@ -64,6 +66,8 @@ namespace ranges
         };
 
         constexpr with_braced_init_args<count_fn> count{};
+
+        /// @}
     } // namespace v3
 } // namespace ranges
 

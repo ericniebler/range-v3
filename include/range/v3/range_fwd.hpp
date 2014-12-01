@@ -17,6 +17,30 @@
 #include <type_traits>
 #include <range/v3/detail/config.hpp>
 
+/// \defgroup group-utility Utility
+/// Utility classes
+
+/// \defgroup group-core Core
+/// Core range functionality
+
+/// \defgroup group-algorithms Algorithms
+/// Itetator- and range-based algorithms, like the standard algorithms
+
+/// \defgroup group-views Views
+/// Lazy, non-owning, non-mutating, composable range views
+
+/// \defgroup group-actions Actions
+/// Eager, mutating, composable algorithms
+
+/// \defgroup group-actions Actions
+/// Eager, mutating, chainable algorithms
+
+/// \defgroup group-concepts Concepts
+/// Concept-checking classes and utilities
+
+/// \defgroup group-meta Metaprogramming
+/// Metaprogramming utilities
+
 namespace ranges
 {
     inline namespace v3

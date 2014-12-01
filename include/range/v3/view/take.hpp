@@ -128,6 +128,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct take_view
           : detail::take_view_<Rng>
@@ -169,6 +171,7 @@ namespace ranges
 
             constexpr take_fn take {};
         }
+        /// @}
     }
 }
 

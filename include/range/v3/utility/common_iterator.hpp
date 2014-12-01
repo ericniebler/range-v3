@@ -140,6 +140,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
         template<typename Cur, typename S>
         struct common_type<basic_iterator<Cur, S>, basic_sentinel<S>>
         {
@@ -157,6 +160,7 @@ namespace ranges
                     basic_iterator<Cur, S>,
                     basic_sentinel<S>>;
         };
+        /// @}
     }
 }
 

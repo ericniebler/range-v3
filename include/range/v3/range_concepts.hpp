@@ -47,6 +47,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-concepts
+        /// @{
         namespace concepts
         {
             ///
@@ -366,6 +368,8 @@ namespace ranges
         template<typename T>
         using range_concept_t = meta::eval<range_concept<T>>;
 
+        /// @}
+
         /// \cond
         namespace detail
         {
@@ -401,6 +405,9 @@ namespace ranges
             {};
         }
         /// \endcond
+
+        /// \addtogroup group-concepts
+        /// @{
 
         // Specialize this if the default is wrong.
         template<typename T, typename Enable>
@@ -445,6 +452,8 @@ namespace ranges
         struct is_range<std::unordered_multiset<Key, Hash, Pred, Alloc>>
           : std::false_type
         {};
+
+        /// @}
     }
 }
 

@@ -28,6 +28,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct drop_view
           : range_interface<drop_view<Rng>, is_infinite<Rng>::value>
@@ -114,6 +116,7 @@ namespace ranges
 
             constexpr drop_fn drop {};
         }
+        /// @}
     }
 }
 

@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename Val>
         struct delimited_view
           : range_adaptor<delimited_view<Rng, Val>, Rng>
@@ -88,6 +90,7 @@ namespace ranges
 
             constexpr delimit_fn delimit{};
         }
+        /// @}
     }
 }
 

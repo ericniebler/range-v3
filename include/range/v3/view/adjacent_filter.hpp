@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename F>
         struct adjacent_filter_view
           : range_adaptor<adjacent_filter_view<Rng, F>, Rng>
@@ -91,6 +93,7 @@ namespace ranges
 
             constexpr adjacent_filter_fn adjacent_filter {};
         }
+        /// @}
     }
 }
 

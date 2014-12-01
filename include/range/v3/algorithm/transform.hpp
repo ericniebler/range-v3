@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-concepts
         template<typename I, typename O, typename F, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>,
@@ -38,6 +39,7 @@ namespace ranges
             Invokable<F, X>,
             Writable<O, Y>>;
 
+        /// \ingroup group-concepts
         template<typename I0, typename I1, typename O, typename F,
             typename P0 = ident, typename P1 = ident,
             typename V0 = iterator_value_t<I0>,
@@ -54,6 +56,8 @@ namespace ranges
             Invokable<F, X0, X1>,
             Writable<O, Y>>;
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct transform_fn
         {
             // Single-range variant
@@ -128,6 +132,7 @@ namespace ranges
 
         constexpr transform_fn transform{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

@@ -126,6 +126,8 @@ namespace ranges
         } // namespace detail
         /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Fun, typename ...Rngs>
         struct zip_with_view
           : range_facade<
@@ -299,6 +301,7 @@ namespace ranges
 
             constexpr zip_with_fn zip_with {};
         }
+        /// @}
     }
 }
 

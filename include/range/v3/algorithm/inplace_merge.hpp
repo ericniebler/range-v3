@@ -193,6 +193,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct inplace_merge_fn
         {
             // TODO reimplement to only need forward iterators
@@ -227,6 +229,7 @@ namespace ranges
 
         constexpr inplace_merge_fn inplace_merge {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

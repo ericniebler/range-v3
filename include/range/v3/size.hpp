@@ -91,6 +91,7 @@ namespace ranges
         }
         /// \endcond
 
+        /// \ingroup group-core
         constexpr adl_size_detail::size_fn size {};
     }
 }

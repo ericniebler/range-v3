@@ -28,6 +28,8 @@ namespace ranges
     {
         // TODO Would be nice to use WeaklyComparable here, but that uses Relation instead
         // of Predicate. Relation requires symmetry: is_valid(pred(a,b)) => is_valid(pred(b,a))
+
+        /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to,
             typename P1 = ident, typename P2 = ident,
             typename V1 = iterator_value_t<I1>,
@@ -41,6 +43,7 @@ namespace ranges
             Invokable<P2, V2>,
             InvokablePredicate<C, X1, X2>>;
 
+        /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to,
             typename P1 = ident, typename P2 = ident,
             typename V1 = iterator_value_t<I1>,
@@ -54,6 +57,8 @@ namespace ranges
             Invokable<P2, V2>,
             InvokablePredicate<C, X1, X2>>;
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct mismatch_fn
         {
             template<typename I1, typename S1, typename I2, typename C = equal_to,
@@ -122,6 +127,7 @@ namespace ranges
         // two ranges, or a range and an iterator, where the iterator is the array, decayed
         // to a pointer. Yuk!
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

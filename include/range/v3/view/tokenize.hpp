@@ -29,6 +29,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename Regex, typename SubMatchRange>
         struct tokenize_view
           : range_interface<tokenize_view<Rng, Regex, SubMatchRange>>
@@ -195,6 +197,7 @@ namespace ranges
 
             constexpr tokenize_fn tokenize {};
         }
+        /// @}
     }
 }
 

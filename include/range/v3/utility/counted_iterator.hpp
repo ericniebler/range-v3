@@ -150,6 +150,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-utility
+        /// @{
+
         // For RandomAccessIterator, operator- will be defined by basic_iterator
         template<typename I, typename D, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
         iterator_difference_t<I>
@@ -175,6 +178,7 @@ namespace ranges
         {
             return 0;
         }
+        /// @}
     }
 }
 

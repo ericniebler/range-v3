@@ -134,6 +134,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-algorithms
+        /// @{
+
         // Introsort: Quicksort to a certain depth, then Heapsort. Insertion
         // sort below a certain threshold.
         // TODO Forward iterators, like EoP?
@@ -206,6 +209,7 @@ namespace ranges
 
         constexpr sort_fn sort{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

@@ -22,6 +22,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-core
+        /// @{
         struct at_fn
         {
             template<typename Rng,
@@ -34,6 +36,8 @@ namespace ranges
         };
 
         constexpr at_fn at {};
+
+        /// @}
     }
 }
 

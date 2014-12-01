@@ -178,6 +178,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct sliced_view
           : detail::sliced_view_<Rng>
@@ -314,6 +316,7 @@ namespace ranges
 
             constexpr slice_fn slice {};
         }
+        /// @}
     }
 }
 

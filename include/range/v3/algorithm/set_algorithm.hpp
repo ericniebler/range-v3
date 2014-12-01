@@ -36,6 +36,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct includes_fn
         {
             template<typename I1, typename S1, typename I2, typename S2,
@@ -279,6 +281,7 @@ namespace ranges
 
         constexpr set_symmetric_difference_fn set_symmetric_difference{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

@@ -25,6 +25,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingrooup group-concepts
         template<typename I, typename O, typename T, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
@@ -34,6 +35,8 @@ namespace ranges
             EqualityComparable<X, T>,
             IndirectlyProjectedCopyable<I, P, O>>;
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct remove_copy_fn
         {
             template<typename I, typename S, typename O, typename T, typename P = ident,
@@ -64,6 +67,7 @@ namespace ranges
 
         constexpr remove_copy_fn remove_copy{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

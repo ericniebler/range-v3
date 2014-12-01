@@ -19,6 +19,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-utility
         template<typename T>
         constexpr T *_nullptr_v()
         {
@@ -26,6 +27,7 @@ namespace ranges
         }
 
     #if !RANGES_CXX_NO_VARIABLE_TEMPLATES
+        /// \ingroup group-utility
         template<typename T>
         constexpr T *nullptr_v = nullptr;
     #endif

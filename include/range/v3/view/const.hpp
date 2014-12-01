@@ -40,6 +40,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct const_view
           : range_adaptor<const_view<Rng>, Rng>
@@ -89,6 +91,7 @@ namespace ranges
 
             constexpr const_fn const_ {};
         }
+        /// @}
     }
 }
 

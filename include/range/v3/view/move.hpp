@@ -35,6 +35,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct move_view
           : range_adaptor<move_view<Rng>, Rng>
@@ -87,6 +89,7 @@ namespace ranges
 
             constexpr move_fn move {};
         }
+        /// @}
     }
 }
 

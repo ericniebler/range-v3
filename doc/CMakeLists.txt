@@ -61,7 +61,7 @@ execute_process(
 )
 
 add_custom_target(gh-pages.update
-    COMMAND ${GIT_EXECUTABLE} add .
+    COMMAND ${GIT_EXECUTABLE} add --all .
     COMMAND ${GIT_EXECUTABLE} commit -m "Update to ${RANGE_V3_GIT_SHORT_SHA}"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/gh-pages
     COMMENT "Updating the gh-pages branch with freshly built documentation"

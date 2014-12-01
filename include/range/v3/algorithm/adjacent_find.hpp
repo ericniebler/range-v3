@@ -24,6 +24,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct adjacent_find_fn
         {
             /// \brief function template \c adjacent_find_fn::operator()
@@ -70,6 +72,8 @@ namespace ranges
         };
 
         constexpr adjacent_find_fn adjacent_find {};
+
+        /// @}
 
     } // namespace v3
 } // namespace ranges

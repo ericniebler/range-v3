@@ -21,6 +21,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-core
+        /// @{
         template<typename Val>
         struct istream_range
           : range_facade<istream_range<Val>>
@@ -68,11 +70,14 @@ namespace ranges
             }
         };
 
+        /// TODO use a variable template here when they're available
         template<typename Val>
         istream_range<Val> istream(std::istream & sin)
         {
             return istream_range<Val>{sin};
         }
+
+        /// @}
     }
 }
 

@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct find_first_of_fn
         {
             // Rationale: return I0 instead of pair<I0,I1> because find_first_of need
@@ -66,6 +68,7 @@ namespace ranges
 
         constexpr with_braced_init_args<find_first_of_fn> find_first_of {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

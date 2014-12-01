@@ -132,6 +132,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-concepts
+        /// @{
+        ///
         namespace concepts
         {
             using detail::void_;
@@ -763,6 +766,7 @@ namespace ranges
         struct value_type
           : detail::value_type<uncvref_t<T>>
         {};
+        /// @}
     }
 }
 
@@ -776,12 +780,14 @@ namespace ranges
     > = 0                                                                           \
     /**/
 
-#define CONCEPT_REQUIRES_(...)                                                      \
-    CONCEPT_REQUIRES_IMPL_((__VA_ARGS__))                                           \
-    /**/
-
 #define CONCEPT_REQUIRES_IMPL(X)                                                    \
     template<CONCEPT_REQUIRES_IMPL_(X)>                                             \
+    /**/
+
+/// \addtogroup group-concepts
+/// @{
+#define CONCEPT_REQUIRES_(...)                                                      \
+    CONCEPT_REQUIRES_IMPL_((__VA_ARGS__))                                           \
     /**/
 
 #define CONCEPT_REQUIRES(...)                                                       \
@@ -789,5 +795,6 @@ namespace ranges
     /**/
 
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
+/// @}
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

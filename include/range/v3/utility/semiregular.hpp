@@ -22,6 +22,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility
+        /// @{
         template<typename T>
         struct semiregular
         {
@@ -66,6 +68,7 @@ namespace ranges
 
         template<typename T>
         using semiregular_t = meta::if_<SemiRegular<T>, T, semiregular<T>>;
+        /// @}
     }
 }
 

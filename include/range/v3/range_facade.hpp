@@ -49,6 +49,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         struct default_sentinel
         {
             template<typename Cur>
@@ -109,6 +111,8 @@ namespace ranges
 
         template<typename RangeFacade>
         using range_facade_t = meta::eval<range_access::range_facade<RangeFacade>>;
+
+        /// @}
     }
 }
 

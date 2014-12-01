@@ -36,6 +36,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-concepts
         template<typename I, typename C = ordered_less, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
@@ -91,6 +92,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct is_heap_until_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
@@ -132,6 +135,7 @@ namespace ranges
         };
 
         constexpr with_braced_init_args<is_heap_fn> is_heap {};
+        /// @}
 
         /// \cond
         namespace detail
@@ -229,6 +233,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct push_heap_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
@@ -253,6 +259,7 @@ namespace ranges
         };
 
         constexpr push_heap_fn push_heap {};
+        /// @}
 
         /// \cond
         namespace detail
@@ -276,6 +283,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct pop_heap_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
@@ -367,6 +376,7 @@ namespace ranges
 
         constexpr sort_heap_fn sort_heap {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

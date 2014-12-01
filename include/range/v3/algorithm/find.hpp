@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct find_fn
         {
             /// \brief template function \c find_fn::operator()
@@ -71,6 +73,7 @@ namespace ranges
 
         constexpr with_braced_init_args<find_fn> find {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-concepts
         template<typename I, typename T, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
@@ -36,6 +37,8 @@ namespace ranges
             EqualityComparable<T, X>,
             Permutable<I>>;
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct remove_fn
         {
             template<typename I, typename S, typename T, typename P = ident,
@@ -69,6 +72,7 @@ namespace ranges
 
         constexpr remove_fn remove{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

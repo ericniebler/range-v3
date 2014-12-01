@@ -28,6 +28,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct binary_search_fn
         {
             /// \brief function template \c binary_search_fn::operator()
@@ -68,6 +70,7 @@ namespace ranges
 
         constexpr with_braced_init_args<binary_search_fn> binary_search{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

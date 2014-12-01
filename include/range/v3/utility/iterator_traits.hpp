@@ -21,6 +21,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-core
+        /// @{
         ////////////////////////////////////////////////////////////////////////////////////////////
         // iterator traits
         template<typename I>
@@ -77,6 +79,7 @@ namespace ranges
         {
             using type = iterator_size_t<I>;
         };
+        /// @}
     }
 }
 

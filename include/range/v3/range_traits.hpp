@@ -24,6 +24,9 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-core
+        /// @{
+
         // Aliases (SFINAE-able)
         template<typename Rng>
         using range_iterator_t = concepts::Range::iterator_t<Rng>;
@@ -116,6 +119,8 @@ namespace ranges
         struct is_infinite<Rng const>
           : is_infinite<Rng>
         {};
+
+        /// @}
     }
 }
 

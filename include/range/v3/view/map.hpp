@@ -47,6 +47,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         namespace view
         {
             struct keys_fn : pipeable<keys_fn>
@@ -70,6 +72,7 @@ namespace ranges
             constexpr keys_fn keys {};
             constexpr values_fn values {};
         }
+        /// @}
     }
 }
 

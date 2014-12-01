@@ -52,6 +52,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct find_end_fn
         {
         private:
@@ -202,6 +204,7 @@ namespace ranges
 
         constexpr with_braced_init_args<find_end_fn> find_end{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

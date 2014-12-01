@@ -88,6 +88,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         template<typename I, typename S /*= I*/>
         struct range
           : detail::range_impl<range<I, S>, I, S>
@@ -263,6 +265,8 @@ namespace ranges
         }
 
         // TODO add specialization of is_infinite for when we can determine the range is infinite
+
+        /// @}
     }
 }
 

@@ -27,6 +27,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct copy_if_fn
         {
             template<typename I, typename S, typename O, typename F, typename P = ident,
@@ -73,6 +75,7 @@ namespace ranges
 
         constexpr copy_if_fn copy_if{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

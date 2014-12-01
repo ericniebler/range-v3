@@ -97,6 +97,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
         template<typename First, typename Second>
         struct compressed_pair
           : private detail::first_base<First>
@@ -185,6 +188,7 @@ namespace ranges
         {
             return detail::move(p).second;
         }
+        /// @}
     }
 }
 

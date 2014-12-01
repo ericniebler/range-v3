@@ -162,6 +162,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename Val>
         struct iota_view
           : range_facade<iota_view<Val>, true>
@@ -246,6 +248,7 @@ namespace ranges
 
             constexpr ints_fn ints{};
         }
+        /// @}
     }
 }
 

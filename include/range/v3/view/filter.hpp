@@ -24,6 +24,7 @@ namespace ranges
     {
         namespace view
         {
+            /// \cond
             struct filter_fn
             {
                 template<typename Rng, typename Pred>
@@ -44,6 +45,7 @@ namespace ranges
 
             RANGES_DEPRECATED("Please switch to view::remove_if")
             constexpr filter_fn filter {};
+            /// \endcond
         }
     }
 }

@@ -22,6 +22,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility
+        /// @{
         namespace aux
         {
             struct copy_fn : pipeable<copy_fn>
@@ -37,6 +39,7 @@ namespace ranges
 
             constexpr copy_fn copy{};
         }
+        /// @}
     }
 }
 

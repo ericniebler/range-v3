@@ -384,6 +384,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-utility
+        /// @{
         template<typename ...Ts>
         struct tagged_variant
         {
@@ -630,6 +632,7 @@ namespace ranges
             data.apply(var.which(), detail::unique_visitor<To, From>{res});
             return res;
         }
+        /// @}
     }
 }
 

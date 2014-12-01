@@ -24,6 +24,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct fill_n_fn
         {
             template<typename O, typename V,
@@ -37,30 +39,11 @@ namespace ranges
                     *b = val;
                 return recounted(begin, b, norig);
             }
-
-            //template<typename O, typename S, typename V,
-            //    CONCEPT_REQUIRES_(OutputIterator<O, V>() && IteratorRange<O, S>())>
-            //std::pair<O, iterator_difference_t<O>>
-            //operator()(O begin, S end, iterator_difference_t<O> n, V const & val) const
-            //{
-            //    RANGES_ASSERT(n >= 0);
-            //    for(; begin != end && n != 0; ++begin, --n)
-            //        *begin = val;
-            //    return {begin, n};
-            //}
-
-            //template<typename Rng, typename V,
-            //    typename O = range_iterator_t<Rng>,
-            //    CONCEPT_REQUIRES_(OutputIterable<Rng, V>())>
-            //std::pair<O, iterator_difference_t<O>>
-            //operator()(Rng & rng, range_difference_t<O> n, V const & val) const
-            //{
-            //    return (*this)(begin(rng), end(n), n, val);
-            //}
         };
 
         constexpr fill_n_fn fill_n{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

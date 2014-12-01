@@ -347,6 +347,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
         template<typename T>
         struct basic_mixin
         {
@@ -361,6 +364,7 @@ namespace ranges
             {
                 return t_;
             }
+            /// \overload
             T const &get() const
             {
                 return t_;
@@ -645,6 +649,7 @@ namespace ranges
                 return operator_brackets_dispatch_t::apply(*this + n);
             }
         };
+        /// @}
     }
 }
 

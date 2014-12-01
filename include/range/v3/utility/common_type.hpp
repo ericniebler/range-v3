@@ -83,9 +83,13 @@ namespace ranges
         }
         /// \endcond
 
-        // Users should specialize this to hook the Common concept
-        // until std gets a SFINAE-friendly std::common_type and there's
-        // some sane way to deal with cv and ref qualifiers.
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
+
+        /// Users should specialize this to hook the \c Common concept
+        /// until \c std gets a SFINAE-friendly \c std::common_type and there's
+        /// some sane way to deal with cv and ref qualifiers.
         template<typename ...Ts>
         struct common_type
         {};
@@ -105,6 +109,7 @@ namespace ranges
         struct common_type<T, U, Vs...>
           : detail::common_type_recurse_if<common_type<T, U>, Vs...>
         {};
+        /// @}
     }
 }
 

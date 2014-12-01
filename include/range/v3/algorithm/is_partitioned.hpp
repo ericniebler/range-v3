@@ -33,6 +33,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
@@ -41,6 +42,8 @@ namespace ranges
             Invokable<P, V>,
             InvokablePredicate<C, X>>;
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct is_partitioned_fn
         {
             template<typename I, typename S, typename C, typename P = ident,
@@ -69,6 +72,7 @@ namespace ranges
 
         constexpr with_braced_init_args<is_partitioned_fn> is_partitioned{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

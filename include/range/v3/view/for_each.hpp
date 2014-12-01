@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename F>
         struct for_each_view
           : flatten_view<transform_view<Rng, F>>
@@ -104,7 +106,9 @@ namespace ranges
         };
 
         constexpr lazy_yield_if_fn lazy_yield_if{};
+        /// @}
 
+        /// \cond
         template<typename Rng, typename Fun,
             typename Result = concepts::Function::result_t<Fun, range_value_t<Rng>>,
             CONCEPT_REQUIRES_(Iterable<Rng>() &&
@@ -115,6 +119,7 @@ namespace ranges
         {
             return view::for_each(std::forward<Rng>(rng), std::move(fun));
         }
+        /// \endcond
     }
 }
 

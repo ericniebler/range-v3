@@ -12,7 +12,7 @@ Range library for C++11/14/17. This code is the basis of [a formal proposal](htt
 
 This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
-### Installation
+\subsection tutorial-installation Installation
 
 --------------------------------------------
 This library is header-only. You can get the source code from the [range-v3 repository](https://github.com/ericniebler/range-v3) on github. To compile with Range-v3, you can either #include the entire library:
@@ -28,12 +28,12 @@ Or you can #include only the core, and then the individual headers you want:
     #include <range/v3/....
 ~~~~~~~
 
-### License
+\subsection tutorial-license License
 
 --------------------------------------------
 Most of the source code in this project are mine, and those are under the Boost Software License. Parts are taken from Alex Stepanov's Elements of Programming, Howard Hinnant's libc++, and from the SGI STL. Please see the attached LICENSE file and the CREDITS file for the licensing and acknowledgements.
 
-### Supported Compilers
+\subsection tutorial-compilers Supported Compilers
 
 --------------------------------------------
 The code is known to work on the following compilers:
@@ -41,7 +41,7 @@ The code is known to work on the following compilers:
 - clang 3.4.0
 - GCC 4.9.0
 
-\section quick_start Quick Start
+\section tutorial-quick-start Quick Start
 
 --------------------------------------------
 Range v3 is a generic library that augments the existing standard library with facilities for working with *ranges*. A range can be loosely thought of a pair of iterators, although they need not be implemented that way. Bundling begin/end iterators into a single object brings several benefits.

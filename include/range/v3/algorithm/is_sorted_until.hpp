@@ -24,6 +24,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct is_sorted_until_fn
         {
             /// \brief template function \c is_sorted_until_fn::operator()
@@ -73,6 +75,7 @@ namespace ranges
 
         constexpr is_sorted_until_fn is_sorted_until{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

@@ -62,6 +62,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-views
+        /// @{
         template<typename...Rngs>
         struct join_view
           : range_facade<join_view<Rngs...>,
@@ -298,6 +300,7 @@ namespace ranges
 
             constexpr join_fn join {};
         }
+        /// @}
     }
 }
 

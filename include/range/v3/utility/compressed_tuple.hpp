@@ -53,6 +53,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
         template<typename... Ts>
         struct compressed_tuple
         {
@@ -98,6 +101,8 @@ namespace ranges
                 return compressed_tuple<Ts...>{detail::forward<Ts>(ts)...};
             }
         } make_compressed_tuple {};
+
+        /// @}
     }
 }
 

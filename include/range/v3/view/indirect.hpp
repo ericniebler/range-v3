@@ -26,6 +26,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct indirect_view
           : range_adaptor<indirect_view<Rng>, Rng>
@@ -74,6 +76,7 @@ namespace ranges
 
             constexpr indirect_fn indirect{};
         }
+        /// @}
     }
 }
 

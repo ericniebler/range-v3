@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct find_if_not_fn
         {
             /// \brief template function \c find_if_not_fn::operator()
@@ -74,6 +76,7 @@ namespace ranges
 
         constexpr find_if_not_fn find_if_not {};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

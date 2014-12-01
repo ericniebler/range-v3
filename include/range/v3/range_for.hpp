@@ -16,8 +16,9 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 
-// A range-based for macro, basically a hack until the build-in range-for can handle Iterables
-// which have a different type for begin and end
+/// A range-based for macro, basically a hack until the build-in range-for can handle Iterables
+/// which have a different type for begin and end.
+/// \ingroup range-core
 #define RANGES_FOR(VAR_DECL, ...)                                                               \
     if(bool _range_v3_done = false) {}                                                          \
     else for(auto && _range_v3_rng = (__VA_ARGS__); !_range_v3_done;)                           \

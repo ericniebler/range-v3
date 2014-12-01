@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-utility
+        /// @{
         struct advance_fn
         {
             template<typename I>
@@ -367,6 +369,7 @@ namespace ranges
                 return *this;
             }
         };
+        /// @}
 
         /// \cond
         namespace adl_uncounted_recounted_detail
@@ -418,8 +421,11 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-utility
+        /// @{
         constexpr adl_uncounted_recounted_detail::uncounted_fn uncounted{};
         constexpr adl_uncounted_recounted_detail::recounted_fn recounted{};
+        /// @}
     }
 }
 

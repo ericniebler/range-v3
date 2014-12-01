@@ -24,6 +24,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-actions
+        /// @{
         namespace action
         {
             struct action_access
@@ -98,6 +100,7 @@ namespace ranges
                 return rng;
             }
         }
+        /// @}
     }
 }
 

@@ -40,6 +40,7 @@ namespace ranges
         }
         /// \endcond
 
+        /// \ingroup group-utility
         constexpr adl_swap_detail::swap_fn swap {};
     }
 }

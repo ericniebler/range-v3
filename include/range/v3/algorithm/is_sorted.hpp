@@ -22,6 +22,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-algorithms
+        /// @{
         struct is_sorted_fn
         {
             /// \brief template function \c is_sorted_fn::operator()
@@ -60,6 +62,7 @@ namespace ranges
 
         constexpr with_braced_init_args<is_sorted_fn> is_sorted{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

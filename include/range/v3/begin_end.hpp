@@ -97,10 +97,13 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         constexpr begin_fn begin {};
         constexpr end_fn end {};
         constexpr cbegin_fn cbegin {};
         constexpr cend_fn cend {};
+        /// @}
     }
 }
 

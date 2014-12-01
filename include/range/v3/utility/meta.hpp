@@ -25,6 +25,9 @@ namespace ranges
 
         namespace meta
         {
+            /// \addtogroup group-meta
+            /// @{
+
             ////////////////////////////////////////////////////////////////////////////////////
             // General meta-programming utilities
             template<typename...Ts>
@@ -186,6 +189,7 @@ namespace ranges
                 template<typename ...Ts>
                 using apply = eval<impl<Ts...>>;
             };
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // if_
@@ -206,11 +210,14 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename If, typename Then, typename Else>
             using if_ = eval<meta_detail::_if_<If::value, Then, Else>>;
 
             template<bool If, typename Then, typename Else>
             using if_c = eval<meta_detail::_if_<If, Then, Else>>;
+            /// @}
 
             /// \cond
             namespace meta_detail
@@ -261,6 +268,8 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<bool ...Bools>
             using and_c =
                 decltype(meta_detail::fast_and_impl_(if_c<Bools, int*, int>{}...));
@@ -304,6 +313,8 @@ namespace ranges
             template<typename List>
             using size = meta::size_t<List::size()>;
 
+            /// @}
+
             ////////////////////////////////////////////////////////////////////////////////////
             // list_cat
             /// \cond
@@ -344,8 +355,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename ListOfLists>
             using list_cat = eval<meta_detail::list_cat_<ListOfLists>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // repeat_n
@@ -378,11 +392,14 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename N, typename T = void>
             using repeat_n = eval<meta_detail::repeat_n_c_<N::value, T>>;
 
             template<std::size_t N, typename T = void>
             using repeat_n_c = eval<meta_detail::repeat_n_c_<N, T>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list_element
@@ -414,6 +431,9 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
+
             ////////////////////////////////////////////////////////////////////////////////////
             // list_element
             template<typename N, typename List>
@@ -421,6 +441,7 @@ namespace ranges
 
             template<std::size_t N, typename List>
             using list_element_c = list_element<meta::size_t<N>, List>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // drop
@@ -455,11 +476,14 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename N, typename List>
             using drop = eval<meta_detail::drop_<N, List>>;
 
             template<std::size_t N, typename List>
             using drop_c = eval<meta_detail::drop_<meta::size_t<N>, List>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // front
@@ -478,8 +502,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List>
             using front = eval<meta_detail::front_<List>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // back
@@ -498,8 +525,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List>
             using back = eval<meta_detail::back_<List>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // push_front
@@ -518,8 +548,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename T>
             using push_front = eval<meta_detail::push_front_<List, T>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // pop_front
@@ -538,8 +571,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List>
             using pop_front = eval<meta_detail::pop_front_<List>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // push_back
@@ -558,6 +594,8 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename T>
             using push_back = eval<meta_detail::push_back_<List, T>>;
 
@@ -568,6 +606,7 @@ namespace ranges
             // empty
             template<typename List>
             using empty = bool_<0 == size<List>::value>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // find
@@ -597,8 +636,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename T>
             using find = eval<meta_detail::find_<List, T>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // find_if
@@ -622,6 +664,8 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename Fun>
             using find_if = eval<meta_detail::find_if_<List, Fun>>;
 
@@ -629,6 +673,7 @@ namespace ranges
             // in
             template<typename List, typename T>
             using in = not_<empty<find<List, T>>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // unique
@@ -656,8 +701,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List>
             using unique = eval<meta_detail::unique_<List, list<>>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // replace
@@ -676,8 +724,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename T, typename U>
             using replace = eval<meta_detail::replace_<List, T, U>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // replace_if
@@ -696,8 +747,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename C, typename U>
             using replace_if = eval<meta_detail::replace_if_<List, C, U>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // foldl
@@ -721,8 +775,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename State, typename Fun>
             using foldl = eval<meta_detail::foldl_<List, State, Fun>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // foldr
@@ -747,8 +804,11 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename State, typename Fun>
             using foldr = eval<meta_detail::foldr_<List, State, Fun>>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // transform
@@ -773,6 +833,8 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename List, typename Fun, typename Dummy = void>
             using transform = eval<meta_detail::transform_<List, Fun, Dummy>>;
 
@@ -791,6 +853,7 @@ namespace ranges
             // zip
             template<typename ListOfLists>
             using zip = zip_with<quote<list>, ListOfLists>;
+            /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
             // as_list
@@ -810,6 +873,8 @@ namespace ranges
             }
             /// \endcond
 
+            /// \addtogroup group-meta
+            /// @{
             template<typename Sequence>
             using as_list = eval<meta_detail::as_list_<Sequence>>;
 
@@ -890,6 +955,7 @@ namespace ranges
 
             template<typename T>
             using bit_not = std::integral_constant<decltype(~T::value), ~T::value>;
+            /// @}
         }
     }
 }

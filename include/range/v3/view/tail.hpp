@@ -30,6 +30,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng>
         struct tail_view
           : range_interface<tail_view<Rng>, is_infinite<Rng>::value>
@@ -85,6 +87,7 @@ namespace ranges
 
             constexpr tail_fn tail {};
         }
+        /// @}
     }
 }
 

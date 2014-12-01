@@ -24,6 +24,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         namespace view
         {
             struct replace_fn
@@ -82,6 +84,7 @@ namespace ranges
 
             constexpr replace_fn replace {};
         }
+        /// @}
     }
 }
 

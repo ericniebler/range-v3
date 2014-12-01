@@ -41,6 +41,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-concepts
+        /// @{
         namespace concepts
         {
             // std::array is a SemiContainer, native arrays are not.
@@ -103,6 +105,7 @@ namespace ranges
 
         template<typename T>
         using LvalueContainerLike = concepts::models<concepts::LvalueContainerLike, T>;
+        /// @}
     }
 }
 

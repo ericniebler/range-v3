@@ -25,12 +25,15 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-concepts
         template<typename I, typename O>
         using ReverseCopyable = meta::fast_and<
             BidirectionalIterator<I>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>>;
 
+        /// \addtogroup group-algorithms
+        /// @{
         struct reverse_copy_fn
         {
             template<typename I, typename S, typename O,
@@ -54,6 +57,7 @@ namespace ranges
 
         constexpr reverse_copy_fn reverse_copy{};
 
+        /// @}
     } // namespace v3
 } // namespace ranges
 

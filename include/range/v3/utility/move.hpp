@@ -25,6 +25,7 @@ namespace ranges
     {
         namespace aux
         {
+            /// \ingroup group-utility
             struct move_fn : pipeable<move_fn>
             {
                 template<typename T,
@@ -35,6 +36,7 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-utility
             constexpr move_fn move{};
         }
     }

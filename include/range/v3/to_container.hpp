@@ -62,6 +62,9 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
+
         constexpr detail::to_container_fn<meta::quote<std::vector>> to_vector {};
 
         template<template<typename...> class ContT>
@@ -90,6 +93,8 @@ namespace ranges
         {
             return std::forward<Rng>(rng) | ranges::to_<Cont>();
         }
+
+        /// @}
     }
 }
 

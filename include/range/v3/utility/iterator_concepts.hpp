@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-core
+        /// @{
         struct weak_input_iterator_tag
         {};
 
@@ -47,6 +49,7 @@ namespace ranges
           : bidirectional_iterator_tag
           , virtual std::random_access_iterator_tag
         {};
+        /// @}
 
         /// \cond
         namespace detail
@@ -151,6 +154,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-concepts
+        /// @{
         template<typename T>
         struct pointer_type
           : detail::pointer_type<uncvref_t<T>>
@@ -596,6 +601,7 @@ namespace ranges
 
         template<typename I, typename S = I>
         using sized_iterator_range_concept_t = meta::eval<sized_iterator_range_concept<I, S>>;
+        /// @}
     }
 }
 

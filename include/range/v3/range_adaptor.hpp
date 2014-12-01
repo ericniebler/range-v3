@@ -48,6 +48,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         template<typename Derived>
         using base_range_t = meta::eval<range_access::base_range<Derived>>;
 
@@ -325,11 +327,14 @@ namespace ranges
             {
                 return rng_;
             }
+            /// \overload
             base_range_t const & base() const
             {
                 return rng_;
             }
         };
+
+        /// @}
     }
 }
 

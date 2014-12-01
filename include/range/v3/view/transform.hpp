@@ -32,6 +32,8 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \addtogroup group-views
+        /// @{
         template<typename Rng, typename Fun>
         struct transform_view
           : range_adaptor<transform_view<Rng, Fun>, Rng>
@@ -125,6 +127,7 @@ namespace ranges
 
             constexpr transform_fn transform {};
         }
+        /// @}
     }
 }
 

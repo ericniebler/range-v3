@@ -56,6 +56,8 @@ namespace ranges
         }
         /// \endcond
 
+        /// \addtogroup group-core
+        /// @{
         template<typename Derived, bool Inf /* = false*/>
         struct range_interface
           : private basic_range<Inf>
@@ -232,6 +234,7 @@ namespace ranges
                 return ranges::to_<Container>(derived());
             }
         };
+        /// @}
     }
 }
 
