@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group-meta.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -100,28 +100,16 @@ $(document).ready(function(){initNavTree('group__group-meta.html','');});
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1integer__sequence.html">ranges::v3::integer_sequence&lt; T, Is &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container for a sequence of compile-time integer constants.  <a href="structranges_1_1v3_1_1integer__sequence.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> container for a sequence of compile-time integer constants.  <a href="structranges_1_1v3_1_1integer__sequence.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html">ranges::v3::meta::list&lt; Ts &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list of types.  <a href="structranges_1_1v3_1_1meta_1_1list.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1always.html">ranges::v3::meta::always&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Metafunction Class that always returns <code>T</code>.  <a href="structranges_1_1v3_1_1meta_1_1always.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1lazy__apply.html">ranges::v3::meta::lazy_apply&lt; F, Args &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A metafunction that evaluates the Metafunction Class <code>F</code> with the arguments <code>Args</code>.  <a href="structranges_1_1v3_1_1meta_1_1lazy__apply.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1bind__back.html">ranges::v3::meta::bind_back&lt; F, Us &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Metafunction Class partially applies the Metafunction Class <code>F</code> by binding the arguments <code>Ts</code> to the <em>back</em> of <code>F</code>.  <a href="structranges_1_1v3_1_1meta_1_1bind__back.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1id.html">ranges::v3::meta::id&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A metafunction that always returns type type <code>T</code>.  <a href="structranges_1_1v3_1_1meta_1_1id.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1quote.html">ranges::v3::meta::quote&lt; C &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template into a Metafunction Class.  <a href="structranges_1_1v3_1_1meta_1_1quote.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1quote__trait.html">ranges::v3::meta::quote_trait&lt; C &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a metafunction into a Metafunction Class.  <a href="structranges_1_1v3_1_1meta_1_1quote__trait.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1quote__i.html">ranges::v3::meta::quote_i&lt; T, F &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template into a Metafunction Class.  <a href="structranges_1_1v3_1_1meta_1_1quote__i.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1quote__trait__i.html">ranges::v3::meta::quote_trait_i&lt; T, C &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a metafunction into a Metafunction Class.  <a href="structranges_1_1v3_1_1meta_1_1quote__trait__i.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1bind__front.html">ranges::v3::meta::bind_front&lt; F, Ts &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Metafunction Class partially applies the Metafunction Class <code>F</code> by binding the arguments <code>Ts</code> to the <em>front</em> of <code>F</code>.  <a href="structranges_1_1v3_1_1meta_1_1bind__front.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1compose.html">ranges::v3::meta::compose&lt; Fs &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compose the Metafunction Classes in the parameter pack <code>Ts</code>.  <a href="structranges_1_1v3_1_1meta_1_1compose.html#details">More...</a><br /></td></tr>
@@ -130,339 +118,96 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1compose_3_01_f0_00_01_fs_8_8_8_4.html">ranges::v3::meta::compose&lt; F0, Fs...&gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1always.html">ranges::v3::meta::always&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Metafunction Class that always returns <code>T</code>.  <a href="structranges_1_1v3_1_1meta_1_1always.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1curry.html">ranges::v3::meta::curry&lt; F, Q &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Metafunction Class that takes a bunch of arguments, bundles them into a type list, and then calls the Metafunction Class <code>F</code> with the type list.  <a href="structranges_1_1v3_1_1meta_1_1curry.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1bind__front.html">ranges::v3::meta::bind_front&lt; F, Ts &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Metafunction Class partially applies the Metafunction Class <code>F</code> by binding the arguments <code>Ts</code> to the <em>front</em> of <code>F</code>.  <a href="structranges_1_1v3_1_1meta_1_1bind__front.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1flip.html">ranges::v3::meta::flip&lt; F &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Metafunction Class that reverses the order of the first two arguments.  <a href="structranges_1_1v3_1_1meta_1_1flip.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1bind__back.html">ranges::v3::meta::bind_back&lt; F, Us &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Metafunction Class partially applies the Metafunction Class <code>F</code> by binding the arguments <code>Ts</code> to the <em>back</em> of <code>F</code>.  <a href="structranges_1_1v3_1_1meta_1_1bind__back.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1id.html">ranges::v3::meta::id&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> metafunction that always returns type type <code>T</code>.  <a href="structranges_1_1v3_1_1meta_1_1id.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1lazy__apply.html">ranges::v3::meta::lazy_apply&lt; F, Args &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> metafunction that evaluates the Metafunction Class <code>F</code> with the arguments <code>Args</code>.  <a href="structranges_1_1v3_1_1meta_1_1lazy__apply.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1lazy__apply__list.html">ranges::v3::meta::lazy_apply_list&lt; F, List &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A metafunction that unpacks the types in the type list <code>List</code> into the Metafunction Class <code>F</code>.  <a href="structranges_1_1v3_1_1meta_1_1lazy__apply__list.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1lazy__apply__list_3_01_f_00_01_t_3_01_ts_8_8_8_4_01_4.html">ranges::v3::meta::lazy_apply_list&lt; F, T&lt; Ts...&gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> metafunction that unpacks the types in the type list <code>List</code> into the Metafunction Class <code>F</code>.  <a href="structranges_1_1v3_1_1meta_1_1lazy__apply__list.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1lazy__apply__list_3_01_f_00_01integer__sequence_3_01_t_00_01_is_8_8_8_4_01_4.html">ranges::v3::meta::lazy_apply_list&lt; F, integer_sequence&lt; T, Is...&gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1curry.html">ranges::v3::meta::curry&lt; F, Q &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Metafunction Class that takes a bunch of arguments, bundles them into a type list, and then calls the Metafunction Class <code>F</code> with the type list.  <a href="structranges_1_1v3_1_1meta_1_1curry.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1lazy__apply__list_3_01_f_00_01_t_3_01_ts_8_8_8_4_01_4.html">ranges::v3::meta::lazy_apply_list&lt; F, T&lt; Ts...&gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html">ranges::v3::meta::list&lt; Ts &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> list of types  <a href="structranges_1_1v3_1_1meta_1_1list.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1quote.html">ranges::v3::meta::quote&lt; C &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template into a Metafunction Class.  <a href="structranges_1_1v3_1_1meta_1_1quote.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1quote__i.html">ranges::v3::meta::quote_i&lt; T, F &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template into a Metafunction Class.  <a href="structranges_1_1v3_1_1meta_1_1quote__i.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1quote__trait.html">ranges::v3::meta::quote_trait&lt; C &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a metafunction into a Metafunction Class.  <a href="structranges_1_1v3_1_1meta_1_1quote__trait.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1quote__trait__i.html">ranges::v3::meta::quote_trait_i&lt; T, C &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a metafunction into a Metafunction Class.  <a href="structranges_1_1v3_1_1meta_1_1quote__trait__i.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1uncurry.html">ranges::v3::meta::uncurry&lt; F &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Metafunction Class that takes a type list, unpacks the types, and then calls the Metafunction Class <code>F</code> with types.  <a href="structranges_1_1v3_1_1meta_1_1uncurry.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1meta_1_1flip.html">ranges::v3::meta::flip&lt; F &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Metafunction Class that reverses the order of the first two arguments.  <a href="structranges_1_1v3_1_1meta_1_1flip.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Metafunction Class that takes a type list, unpacks the types, and then calls the Metafunction Class <code>F</code> with types.  <a href="structranges_1_1v3_1_1meta_1_1uncurry.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga24a1de77834df7c844ecb8e294c4dc75"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga24a1de77834df7c844ecb8e294c4dc75"></a>
-template&lt;typename T , T N&gt; </td></tr>
-<tr class="memitem:ga24a1de77834df7c844ecb8e294c4dc75"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga24a1de77834df7c844ecb8e294c4dc75">ranges::v3::make_integer_sequence</a> = meta::eval&lt; detail::make_integer_sequence_&lt; T,(std::size_t) N &gt;&gt;</td></tr>
-<tr class="memdesc:ga24a1de77834df7c844ecb8e294c4dc75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code><a class="el" href="structranges_1_1v3_1_1integer__sequence.html" title="A container for a sequence of compile-time integer constants. ">integer_sequence</a></code> containing integer constants [0,1,2,...,N-1]. Complexity: O(log(N)). <br /></td></tr>
-<tr class="separator:ga24a1de77834df7c844ecb8e294c4dc75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad3b0e2e9127c0877c3f4d4d6ec3450ff"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad3b0e2e9127c0877c3f4d4d6ec3450ff"></a>
-template&lt;std::size_t... Is&gt; </td></tr>
-<tr class="memitem:gad3b0e2e9127c0877c3f4d4d6ec3450ff"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gad3b0e2e9127c0877c3f4d4d6ec3450ff">ranges::v3::index_sequence</a> = integer_sequence&lt; std::size_t, Is...&gt;</td></tr>
-<tr class="memdesc:gad3b0e2e9127c0877c3f4d4d6ec3450ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container for a sequence of compile-time integer constants of type <code>std::size_t</code>. <br /></td></tr>
-<tr class="separator:gad3b0e2e9127c0877c3f4d4d6ec3450ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga59354705c3dc30eac61b14bf12619bc1"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga59354705c3dc30eac61b14bf12619bc1"></a>
-template&lt;std::size_t N&gt; </td></tr>
-<tr class="memitem:ga59354705c3dc30eac61b14bf12619bc1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga59354705c3dc30eac61b14bf12619bc1">ranges::v3::make_index_sequence</a> = make_integer_sequence&lt; std::size_t, N &gt;</td></tr>
-<tr class="memdesc:ga59354705c3dc30eac61b14bf12619bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>index_sequence</code> containing integer constants [0,1,2,...,N-1]. Complexity: O(log(N)). <br /></td></tr>
-<tr class="separator:ga59354705c3dc30eac61b14bf12619bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3e1d55cb48a2b12215367da883544fbd"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3e1d55cb48a2b12215367da883544fbd"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga3e1d55cb48a2b12215367da883544fbd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga3e1d55cb48a2b12215367da883544fbd">ranges::v3::meta::eval</a> = typename T::type</td></tr>
-<tr class="memdesc:ga3e1d55cb48a2b12215367da883544fbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Evaluate" a metafunction by returning the nested <code>T::type</code> alias. <br /></td></tr>
-<tr class="separator:ga3e1d55cb48a2b12215367da883544fbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac670a8780d21d1dce26ebc4eaf6d5b76"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac670a8780d21d1dce26ebc4eaf6d5b76"></a>
-template&lt;typename F , typename... Args&gt; </td></tr>
-<tr class="memitem:gac670a8780d21d1dce26ebc4eaf6d5b76"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gac670a8780d21d1dce26ebc4eaf6d5b76">ranges::v3::meta::apply</a> = typename F::template apply&lt; Args...&gt;</td></tr>
-<tr class="memdesc:gac670a8780d21d1dce26ebc4eaf6d5b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the Metafunction Class <code>F</code> with the arguments <code>Args</code>. <br /></td></tr>
-<tr class="separator:gac670a8780d21d1dce26ebc4eaf6d5b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga88028d2502e6f480033bbbf7e07fc284"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga88028d2502e6f480033bbbf7e07fc284"></a>
-template&lt;std::size_t N&gt; </td></tr>
-<tr class="memitem:ga88028d2502e6f480033bbbf7e07fc284"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga88028d2502e6f480033bbbf7e07fc284">ranges::v3::meta::size_t</a> = std::integral_constant&lt; std::size_t, N &gt;</td></tr>
-<tr class="memdesc:ga88028d2502e6f480033bbbf7e07fc284"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>std::size_t</code>. <br /></td></tr>
-<tr class="separator:ga88028d2502e6f480033bbbf7e07fc284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0825b9a6c977a5202a0df51d0ea0fd2b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0825b9a6c977a5202a0df51d0ea0fd2b"></a>
-template&lt;bool B&gt; </td></tr>
-<tr class="memitem:ga0825b9a6c977a5202a0df51d0ea0fd2b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga0825b9a6c977a5202a0df51d0ea0fd2b">ranges::v3::meta::bool_</a> = std::integral_constant&lt; bool, B &gt;</td></tr>
-<tr class="memdesc:ga0825b9a6c977a5202a0df51d0ea0fd2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>bool</code>. <br /></td></tr>
-<tr class="separator:ga0825b9a6c977a5202a0df51d0ea0fd2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga914933a438cebe32994999832b37a9df"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga914933a438cebe32994999832b37a9df"></a>
-template&lt;typename C , typename List &gt; </td></tr>
-<tr class="memitem:ga914933a438cebe32994999832b37a9df"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga914933a438cebe32994999832b37a9df">ranges::v3::meta::apply_list</a> = eval&lt; lazy_apply_list&lt; C, List &gt;&gt;</td></tr>
-<tr class="memdesc:ga914933a438cebe32994999832b37a9df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the Metafunction Class <code>F</code> using the types in the type list <code>List</code> as arguments. <br /></td></tr>
-<tr class="separator:ga914933a438cebe32994999832b37a9df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8de4403b307a43004facc2e1d4742f59"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga8de4403b307a43004facc2e1d4742f59"></a>
-template&lt;typename If , typename Then , typename Else &gt; </td></tr>
-<tr class="memitem:ga8de4403b307a43004facc2e1d4742f59"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga8de4403b307a43004facc2e1d4742f59">ranges::v3::meta::if_</a> = eval&lt; meta_detail::_if_&lt; If::value, Then, Else &gt;&gt;</td></tr>
-<tr class="memdesc:ga8de4403b307a43004facc2e1d4742f59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select one type or another depending on a compile-time Boolean. <br /></td></tr>
-<tr class="separator:ga8de4403b307a43004facc2e1d4742f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga12480247fab07845c86b40e4e41f4340"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga12480247fab07845c86b40e4e41f4340"></a>
-template&lt;bool If, typename Then , typename Else &gt; </td></tr>
-<tr class="memitem:ga12480247fab07845c86b40e4e41f4340"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga12480247fab07845c86b40e4e41f4340">ranges::v3::meta::if_c</a> = eval&lt; meta_detail::_if_&lt; If, Then, Else &gt;&gt;</td></tr>
-<tr class="memdesc:ga12480247fab07845c86b40e4e41f4340"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select one type or another depending on a compile-time Boolean. <br /></td></tr>
-<tr class="separator:ga12480247fab07845c86b40e4e41f4340"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae35cffff615290749fc307740108f97e"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae35cffff615290749fc307740108f97e"></a>
-template&lt;bool... Bools&gt; </td></tr>
-<tr class="memitem:gae35cffff615290749fc307740108f97e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gae35cffff615290749fc307740108f97e">ranges::v3::meta::and_c</a> = decltype(meta_detail::fast_and_impl_(if_c&lt; Bools, <a class="el" href="classint.html">int</a> *, <a class="el" href="classint.html">int</a> &gt;{}...))</td></tr>
-<tr class="memdesc:gae35cffff615290749fc307740108f97e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the Boolean parameters. <br /></td></tr>
-<tr class="separator:gae35cffff615290749fc307740108f97e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1310f3726905bd6e1eb91f4c0c83064e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1310f3726905bd6e1eb91f4c0c83064e"></a>
-template&lt;bool... Bools&gt; </td></tr>
-<tr class="memitem:ga1310f3726905bd6e1eb91f4c0c83064e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga1310f3726905bd6e1eb91f4c0c83064e">ranges::v3::meta::or_c</a> = decltype(meta_detail::fast_or_impl_(if_c&lt; Bools, <a class="el" href="classint.html">int</a>, <a class="el" href="classint.html">int</a> * &gt;{}...))</td></tr>
-<tr class="memdesc:ga1310f3726905bd6e1eb91f4c0c83064e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the Boolean parameters. <br /></td></tr>
-<tr class="separator:ga1310f3726905bd6e1eb91f4c0c83064e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga853db852d13181401724d3e0fd1734d1"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga853db852d13181401724d3e0fd1734d1"></a>
-template&lt;bool Bool&gt; </td></tr>
-<tr class="memitem:ga853db852d13181401724d3e0fd1734d1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga853db852d13181401724d3e0fd1734d1">ranges::v3::meta::not_c</a> = bool_&lt;!Bool &gt;</td></tr>
-<tr class="memdesc:ga853db852d13181401724d3e0fd1734d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the Boolean parameter. <br /></td></tr>
-<tr class="separator:ga853db852d13181401724d3e0fd1734d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad6600f84af6c2a717fa76de94a39e49e"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad6600f84af6c2a717fa76de94a39e49e"></a>
-template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:gad6600f84af6c2a717fa76de94a39e49e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gad6600f84af6c2a717fa76de94a39e49e">ranges::v3::meta::fast_and</a> = and_c&lt; Bools::value...&gt;</td></tr>
-<tr class="memdesc:gad6600f84af6c2a717fa76de94a39e49e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the integral constant-wrapped Boolean parameters, <em>without</em> doing short-circuiting. <br /></td></tr>
-<tr class="separator:gad6600f84af6c2a717fa76de94a39e49e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga902ade8a30d08a3ca1d6ad733039bcb2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga902ade8a30d08a3ca1d6ad733039bcb2"></a>
-template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:ga902ade8a30d08a3ca1d6ad733039bcb2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga902ade8a30d08a3ca1d6ad733039bcb2">ranges::v3::meta::fast_or</a> = or_c&lt; Bools::value...&gt;</td></tr>
-<tr class="memdesc:ga902ade8a30d08a3ca1d6ad733039bcb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, <em>without</em> doing short-circuiting. <br /></td></tr>
-<tr class="separator:ga902ade8a30d08a3ca1d6ad733039bcb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga03d35c2ffa865c4138c5c076a01a6134"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga03d35c2ffa865c4138c5c076a01a6134"></a>
-template&lt;typename Bool &gt; </td></tr>
-<tr class="memitem:ga03d35c2ffa865c4138c5c076a01a6134"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga03d35c2ffa865c4138c5c076a01a6134">ranges::v3::meta::not_</a> = not_c&lt; Bool::value &gt;</td></tr>
-<tr class="memdesc:ga03d35c2ffa865c4138c5c076a01a6134"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the integral constant-wrapped Boolean parameter. <br /></td></tr>
-<tr class="separator:ga03d35c2ffa865c4138c5c076a01a6134"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae89abd60b6ad37dc02cdfb863670e14c"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae89abd60b6ad37dc02cdfb863670e14c"></a>
+template&lt;typename List , typename F &gt; </td></tr>
+<tr class="memitem:gae89abd60b6ad37dc02cdfb863670e14c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gae89abd60b6ad37dc02cdfb863670e14c">ranges::v3::meta::all_of</a> = empty&lt; find_if&lt; List, compose&lt; quote&lt; not_ &gt;, F &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:gae89abd60b6ad37dc02cdfb863670e14c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. Complexity: O(N) <br /></td></tr>
+<tr class="separator:gae89abd60b6ad37dc02cdfb863670e14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1e144f7a7d4eb262938ca7312b666653"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1e144f7a7d4eb262938ca7312b666653"></a>
 template&lt;typename... Bools&gt; </td></tr>
 <tr class="memitem:ga1e144f7a7d4eb262938ca7312b666653"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga1e144f7a7d4eb262938ca7312b666653">ranges::v3::meta::and_</a> = eval&lt; meta_detail::_and_&lt; Bools...&gt;&gt;</td></tr>
 <tr class="memdesc:ga1e144f7a7d4eb262938ca7312b666653"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the integral constant-wrapped Boolean parameters, with short-circuiting. <br /></td></tr>
 <tr class="separator:ga1e144f7a7d4eb262938ca7312b666653"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5841b07130a2e602c44eb5d07b643ea8"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga5841b07130a2e602c44eb5d07b643ea8"></a>
-template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:ga5841b07130a2e602c44eb5d07b643ea8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga5841b07130a2e602c44eb5d07b643ea8">ranges::v3::meta::or_</a> = eval&lt; meta_detail::_or_&lt; Bools...&gt;&gt;</td></tr>
-<tr class="memdesc:ga5841b07130a2e602c44eb5d07b643ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, with short-circuiting. <br /></td></tr>
-<tr class="separator:ga5841b07130a2e602c44eb5d07b643ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6c8e20a398f9f943393b73a72f0a624c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6c8e20a398f9f943393b73a72f0a624c"></a>
-template&lt;typename List &gt; </td></tr>
-<tr class="memitem:ga6c8e20a398f9f943393b73a72f0a624c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga6c8e20a398f9f943393b73a72f0a624c">ranges::v3::meta::size</a> = meta::size_t&lt; List::size()&gt;</td></tr>
-<tr class="memdesc:ga6c8e20a398f9f943393b73a72f0a624c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper that is the size of the <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. <br /></td></tr>
-<tr class="separator:ga6c8e20a398f9f943393b73a72f0a624c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga94c580610f0eb7439c95fbc97e496d17"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga94c580610f0eb7439c95fbc97e496d17"></a>
-template&lt;typename ListOfLists &gt; </td></tr>
-<tr class="memitem:ga94c580610f0eb7439c95fbc97e496d17"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga94c580610f0eb7439c95fbc97e496d17">ranges::v3::meta::list_cat</a> = eval&lt; meta_detail::list_cat_&lt; ListOfLists &gt;&gt;</td></tr>
-<tr class="memdesc:ga94c580610f0eb7439c95fbc97e496d17"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper that is the size of the <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. <br /></td></tr>
-<tr class="separator:ga94c580610f0eb7439c95fbc97e496d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4d645708c29b8eb886f39abfdb338b71"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4d645708c29b8eb886f39abfdb338b71"></a>
-template&lt;typename N , typename T  = void&gt; </td></tr>
-<tr class="memitem:ga4d645708c29b8eb886f39abfdb338b71"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga4d645708c29b8eb886f39abfdb338b71">ranges::v3::meta::repeat_n</a> = eval&lt; meta_detail::repeat_n_c_&lt; N::value, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga4d645708c29b8eb886f39abfdb338b71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments in O(log N) <br /></td></tr>
-<tr class="separator:ga4d645708c29b8eb886f39abfdb338b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2c2fed381af8e9a89876a7ffab0a7e87"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2c2fed381af8e9a89876a7ffab0a7e87"></a>
-template&lt;std::size_t N, typename T  = void&gt; </td></tr>
-<tr class="memitem:ga2c2fed381af8e9a89876a7ffab0a7e87"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga2c2fed381af8e9a89876a7ffab0a7e87">ranges::v3::meta::repeat_n_c</a> = eval&lt; meta_detail::repeat_n_c_&lt; N, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga2c2fed381af8e9a89876a7ffab0a7e87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments in O(log N) <br /></td></tr>
-<tr class="separator:ga2c2fed381af8e9a89876a7ffab0a7e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0c77136af18fd78046b82f0546934a0b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0c77136af18fd78046b82f0546934a0b"></a>
-template&lt;typename N , typename List &gt; </td></tr>
-<tr class="memitem:ga0c77136af18fd78046b82f0546934a0b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga0c77136af18fd78046b82f0546934a0b">ranges::v3::meta::list_element</a> = eval&lt; meta_detail::list_element_&lt; N, List &gt;&gt;</td></tr>
-<tr class="memdesc:ga0c77136af18fd78046b82f0546934a0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <code>N</code>th element in the <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code> in amortized O(1) <br /></td></tr>
-<tr class="separator:ga0c77136af18fd78046b82f0546934a0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga45067c95a3cff5035862c7721c1b739d"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga45067c95a3cff5035862c7721c1b739d"></a>
-template&lt;std::size_t N, typename List &gt; </td></tr>
-<tr class="memitem:ga45067c95a3cff5035862c7721c1b739d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga45067c95a3cff5035862c7721c1b739d">ranges::v3::meta::list_element_c</a> = list_element&lt; meta::size_t&lt; N &gt;, List &gt;</td></tr>
-<tr class="memdesc:ga45067c95a3cff5035862c7721c1b739d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <code>N</code>th element in the <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code> in amortized O(1) <br /></td></tr>
-<tr class="separator:ga45067c95a3cff5035862c7721c1b739d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9593e0f8dbb513548e04c1cd1c8a4efa"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9593e0f8dbb513548e04c1cd1c8a4efa"></a>
-template&lt;typename N , typename List &gt; </td></tr>
-<tr class="memitem:ga9593e0f8dbb513548e04c1cd1c8a4efa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga9593e0f8dbb513548e04c1cd1c8a4efa">ranges::v3::meta::drop</a> = eval&lt; meta_detail::drop_&lt; N, List &gt;&gt;</td></tr>
-<tr class="memdesc:ga9593e0f8dbb513548e04c1cd1c8a4efa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first <code>N</code> element from <code>List</code>. Complexity: O(1) <br /></td></tr>
-<tr class="separator:ga9593e0f8dbb513548e04c1cd1c8a4efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga635af605133d47abae63dae788ecf758"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga635af605133d47abae63dae788ecf758"></a>
-template&lt;std::size_t N, typename List &gt; </td></tr>
-<tr class="memitem:ga635af605133d47abae63dae788ecf758"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga635af605133d47abae63dae788ecf758">ranges::v3::meta::drop_c</a> = eval&lt; meta_detail::drop_&lt; meta::size_t&lt; N &gt;, List &gt;&gt;</td></tr>
-<tr class="memdesc:ga635af605133d47abae63dae788ecf758"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first <code>N</code> element from <code>List</code>. Complexity: O(1) <br /></td></tr>
-<tr class="separator:ga635af605133d47abae63dae788ecf758"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadc72da8fac72d842187c489e7aa4d8d3"><td class="memTemplParams" colspan="2"><a class="anchor" id="gadc72da8fac72d842187c489e7aa4d8d3"></a>
-template&lt;typename List &gt; </td></tr>
-<tr class="memitem:gadc72da8fac72d842187c489e7aa4d8d3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gadc72da8fac72d842187c489e7aa4d8d3">ranges::v3::meta::front</a> = eval&lt; meta_detail::front_&lt; List &gt;&gt;</td></tr>
-<tr class="memdesc:gadc72da8fac72d842187c489e7aa4d8d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the first element in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. Complexity: O(1) <br /></td></tr>
-<tr class="separator:gadc72da8fac72d842187c489e7aa4d8d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeae248b334db0fea712b1967a370c36a"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaeae248b334db0fea712b1967a370c36a"></a>
-template&lt;typename List &gt; </td></tr>
-<tr class="memitem:gaeae248b334db0fea712b1967a370c36a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaeae248b334db0fea712b1967a370c36a">ranges::v3::meta::back</a> = eval&lt; meta_detail::back_&lt; List &gt;&gt;</td></tr>
-<tr class="memdesc:gaeae248b334db0fea712b1967a370c36a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the last element in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. Complexity: Amortized O(1) <br /></td></tr>
-<tr class="separator:gaeae248b334db0fea712b1967a370c36a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga426d5aeb140f46a83ed7177ae335745a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga426d5aeb140f46a83ed7177ae335745a"></a>
-template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:ga426d5aeb140f46a83ed7177ae335745a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga426d5aeb140f46a83ed7177ae335745a">ranges::v3::meta::push_front</a> = eval&lt; meta_detail::push_front_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga426d5aeb140f46a83ed7177ae335745a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> by adding the element <code>T</code> to the front of <code>List</code>. Complexity: O(1) <br /></td></tr>
-<tr class="separator:ga426d5aeb140f46a83ed7177ae335745a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacc20f1ad3c22f267b7da76af9898bc8b"><td class="memTemplParams" colspan="2"><a class="anchor" id="gacc20f1ad3c22f267b7da76af9898bc8b"></a>
-template&lt;typename List &gt; </td></tr>
-<tr class="memitem:gacc20f1ad3c22f267b7da76af9898bc8b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gacc20f1ad3c22f267b7da76af9898bc8b">ranges::v3::meta::pop_front</a> = eval&lt; meta_detail::pop_front_&lt; List &gt;&gt;</td></tr>
-<tr class="memdesc:gacc20f1ad3c22f267b7da76af9898bc8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first element from the front of <code>List</code>. Complexity: O(1) <br /></td></tr>
-<tr class="separator:gacc20f1ad3c22f267b7da76af9898bc8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0fe795d2cdc1185cb528e26e38849ac7"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0fe795d2cdc1185cb528e26e38849ac7"></a>
-template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:ga0fe795d2cdc1185cb528e26e38849ac7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga0fe795d2cdc1185cb528e26e38849ac7">ranges::v3::meta::push_back</a> = eval&lt; meta_detail::push_back_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga0fe795d2cdc1185cb528e26e38849ac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> by adding the element <code>T</code> to the back of <code>List</code>. Complexity: O(1) <br /></td></tr>
-<tr class="separator:ga0fe795d2cdc1185cb528e26e38849ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga487bb4647ac7abbd13162de11916246f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga487bb4647ac7abbd13162de11916246f"></a>
-template&lt;typename List &gt; </td></tr>
-<tr class="memitem:ga487bb4647ac7abbd13162de11916246f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga487bb4647ac7abbd13162de11916246f">ranges::v3::meta::empty</a> = bool_&lt; 0==size&lt; List &gt;::value &gt;</td></tr>
-<tr class="memdesc:ga487bb4647ac7abbd13162de11916246f"><td class="mdescLeft">&#160;</td><td class="mdescRight">An Boolean integral constant wrapper around <code>true</code> if <code>List</code> is an empty type list; <code>false</code>, otherwise. <br /></td></tr>
-<tr class="separator:ga487bb4647ac7abbd13162de11916246f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabe6ac5696edbc189c5f273e79adb2bbc"><td class="memTemplParams" colspan="2"><a class="anchor" id="gabe6ac5696edbc189c5f273e79adb2bbc"></a>
-template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:gabe6ac5696edbc189c5f273e79adb2bbc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gabe6ac5696edbc189c5f273e79adb2bbc">ranges::v3::meta::find</a> = eval&lt; meta_detail::find_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:gabe6ac5696edbc189c5f273e79adb2bbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first occurance of <code>T</code>, if any such element exists; the empty list, otherwise. <br /></td></tr>
-<tr class="separator:gabe6ac5696edbc189c5f273e79adb2bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf5bd0ce22badcc14a79a45216e39f4ba"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaf5bd0ce22badcc14a79a45216e39f4ba"></a>
-template&lt;typename List , typename Fun &gt; </td></tr>
-<tr class="memitem:gaf5bd0ce22badcc14a79a45216e39f4ba"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaf5bd0ce22badcc14a79a45216e39f4ba">ranges::v3::meta::find_if</a> = eval&lt; meta_detail::find_if_&lt; List, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gaf5bd0ce22badcc14a79a45216e39f4ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. <br /></td></tr>
-<tr class="separator:gaf5bd0ce22badcc14a79a45216e39f4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga37c89ac2d8b9c9118a7424a33eb5560f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga37c89ac2d8b9c9118a7424a33eb5560f"></a>
-template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:ga37c89ac2d8b9c9118a7424a33eb5560f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga37c89ac2d8b9c9118a7424a33eb5560f">ranges::v3::meta::in</a> = not_&lt; empty&lt; find&lt; List, T &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:ga37c89ac2d8b9c9118a7424a33eb5560f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if there is at least one occurance of <code>T</code> in <code>List</code>. <br /></td></tr>
-<tr class="separator:ga37c89ac2d8b9c9118a7424a33eb5560f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga95003751d9c3c79421032503fa1aa94c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga95003751d9c3c79421032503fa1aa94c"></a>
-template&lt;typename List &gt; </td></tr>
-<tr class="memitem:ga95003751d9c3c79421032503fa1aa94c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">ranges::v3::meta::unique</a> = eval&lt; meta_detail::unique_&lt; List, list&lt;&gt;&gt;&gt;</td></tr>
-<tr class="memdesc:ga95003751d9c3c79421032503fa1aa94c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> where all duplicate elements have been removed. Complexity: O(N^2) <br /></td></tr>
-<tr class="separator:ga95003751d9c3c79421032503fa1aa94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9397230a5daf4b1d02f871138f78f3b2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9397230a5daf4b1d02f871138f78f3b2"></a>
-template&lt;typename List , typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga9397230a5daf4b1d02f871138f78f3b2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga9397230a5daf4b1d02f871138f78f3b2">ranges::v3::meta::replace</a> = eval&lt; meta_detail::replace_&lt; List, T, U &gt;&gt;</td></tr>
-<tr class="memdesc:ga9397230a5daf4b1d02f871138f78f3b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> where all instances of type <code>T</code> have been replaced with <code>U</code>. Complexity: O(N) <br /></td></tr>
-<tr class="separator:ga9397230a5daf4b1d02f871138f78f3b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac7c1e99a0b3576a0f66a1ce2b1df4396"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac7c1e99a0b3576a0f66a1ce2b1df4396"></a>
-template&lt;typename List , typename C , typename U &gt; </td></tr>
-<tr class="memitem:gac7c1e99a0b3576a0f66a1ce2b1df4396"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gac7c1e99a0b3576a0f66a1ce2b1df4396">ranges::v3::meta::replace_if</a> = eval&lt; meta_detail::replace_if_&lt; List, C, U &gt;&gt;</td></tr>
-<tr class="memdesc:gac7c1e99a0b3576a0f66a1ce2b1df4396"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> where all elements <code>A</code> such that <code>apply&lt;C, A&gt;::value</code> is <code>true</code> have been replaced with <code>U</code>. Complexity: O(N) <br /></td></tr>
-<tr class="separator:gac7c1e99a0b3576a0f66a1ce2b1df4396"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae070a215bb86c146bc94dd93b6bde700"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae070a215bb86c146bc94dd93b6bde700"></a>
-template&lt;typename List , typename State , typename Fun &gt; </td></tr>
-<tr class="memitem:gae070a215bb86c146bc94dd93b6bde700"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gae070a215bb86c146bc94dd93b6bde700">ranges::v3::meta::foldl</a> = eval&lt; meta_detail::foldl_&lt; List, State, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gae070a215bb86c146bc94dd93b6bde700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Metafunction Class <code>Fun</code> and initial state <code>State</code>. Complexity: O(N) <br /></td></tr>
-<tr class="separator:gae070a215bb86c146bc94dd93b6bde700"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa82cba70310ff8b578e0c10c38ee3a4f"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa82cba70310ff8b578e0c10c38ee3a4f"></a>
-template&lt;typename List , typename State , typename Fun &gt; </td></tr>
-<tr class="memitem:gaa82cba70310ff8b578e0c10c38ee3a4f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaa82cba70310ff8b578e0c10c38ee3a4f">ranges::v3::meta::foldr</a> = eval&lt; meta_detail::foldr_&lt; List, State, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gaa82cba70310ff8b578e0c10c38ee3a4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Metafunction Class <code>Fun</code> and initial state <code>State</code>. Complexity: O(N) <br /></td></tr>
-<tr class="separator:gaa82cba70310ff8b578e0c10c38ee3a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac197b8f3f7c42e0d5194addc0a76706f"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac197b8f3f7c42e0d5194addc0a76706f"></a>
-template&lt;typename List , typename Fun , typename Dummy  = void&gt; </td></tr>
-<tr class="memitem:gac197b8f3f7c42e0d5194addc0a76706f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">ranges::v3::meta::transform</a> = eval&lt; meta_detail::transform_&lt; List, Fun, Dummy &gt;&gt;</td></tr>
-<tr class="memdesc:gac197b8f3f7c42e0d5194addc0a76706f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Metafuncion Class Fun. <code>transform</code> can also be called with two lists of the same length and a binary Metafunction Class, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise. Complexity: O(N) <br /></td></tr>
-<tr class="separator:gac197b8f3f7c42e0d5194addc0a76706f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad85d95198f31a25fa081fc98f1ca40b3"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad85d95198f31a25fa081fc98f1ca40b3"></a>
-template&lt;typename Fun , typename ListOfLists &gt; </td></tr>
-<tr class="memitem:gad85d95198f31a25fa081fc98f1ca40b3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gad85d95198f31a25fa081fc98f1ca40b3">ranges::v3::meta::zip_with</a> = transform&lt; foldl&lt; ListOfLists, repeat_n&lt; size&lt; front&lt; ListOfLists &gt;&gt;, Fun &gt;, bind_back&lt; quote&lt; transform &gt;, quote&lt; bind_front &gt;&gt;&gt;, quote&lt; apply &gt;&gt;</td></tr>
-<tr class="memdesc:gad85d95198f31a25fa081fc98f1ca40b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types and a Metafunction Class <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise. Complexity: O(N*M), where N is the size of the outer list, and M is the size of the inner lists. <br /></td></tr>
-<tr class="separator:gad85d95198f31a25fa081fc98f1ca40b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga146c7a3f34394e6ddb65c104c3696c1b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga146c7a3f34394e6ddb65c104c3696c1b"></a>
-template&lt;typename ListOfLists &gt; </td></tr>
-<tr class="memitem:ga146c7a3f34394e6ddb65c104c3696c1b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga146c7a3f34394e6ddb65c104c3696c1b">ranges::v3::meta::zip</a> = zip_with&lt; quote&lt; list &gt;, ListOfLists &gt;</td></tr>
-<tr class="memdesc:ga146c7a3f34394e6ddb65c104c3696c1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types, construct a new list by grouping the elements from the lists pairwise into <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code>s. Complexity: O(N*M), where N is the size of the outer list, and M is the size of the inner lists. <br /></td></tr>
-<tr class="separator:ga146c7a3f34394e6ddb65c104c3696c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3765f2d3d36c851c8843cb4e269caca8"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3765f2d3d36c851c8843cb4e269caca8"></a>
-template&lt;typename Sequence &gt; </td></tr>
-<tr class="memitem:ga3765f2d3d36c851c8843cb4e269caca8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga3765f2d3d36c851c8843cb4e269caca8">ranges::v3::meta::as_list</a> = eval&lt; meta_detail::as_list_&lt; Sequence &gt;&gt;</td></tr>
-<tr class="memdesc:ga3765f2d3d36c851c8843cb4e269caca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a type into an instance of <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> in a way determined by <code><a class="el" href="structranges_1_1v3_1_1meta_1_1lazy__apply__list.html" title="A metafunction that unpacks the types in the type list List into the Metafunction Class F...">meta::lazy_apply_list</a></code>. <br /></td></tr>
-<tr class="separator:ga3765f2d3d36c851c8843cb4e269caca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4ec4f462768d63260d8120f57091c971"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4ec4f462768d63260d8120f57091c971"></a>
-template&lt;typename List &gt; </td></tr>
-<tr class="memitem:ga4ec4f462768d63260d8120f57091c971"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga4ec4f462768d63260d8120f57091c971">ranges::v3::meta::reverse</a> = foldr&lt; List, list&lt;&gt;, quote&lt; push_back &gt;&gt;</td></tr>
-<tr class="memdesc:ga4ec4f462768d63260d8120f57091c971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> by reversing the elements in the list <code>List</code>. Complexity: O(N) <br /></td></tr>
-<tr class="separator:ga4ec4f462768d63260d8120f57091c971"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae89abd60b6ad37dc02cdfb863670e14c"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae89abd60b6ad37dc02cdfb863670e14c"></a>
-template&lt;typename List , typename F &gt; </td></tr>
-<tr class="memitem:gae89abd60b6ad37dc02cdfb863670e14c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gae89abd60b6ad37dc02cdfb863670e14c">ranges::v3::meta::all_of</a> = empty&lt; find_if&lt; List, compose&lt; quote&lt; not_ &gt;, F &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:gae89abd60b6ad37dc02cdfb863670e14c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. Complexity: O(N) <br /></td></tr>
-<tr class="separator:gae89abd60b6ad37dc02cdfb863670e14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae35cffff615290749fc307740108f97e"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae35cffff615290749fc307740108f97e"></a>
+template&lt;bool... Bools&gt; </td></tr>
+<tr class="memitem:gae35cffff615290749fc307740108f97e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gae35cffff615290749fc307740108f97e">ranges::v3::meta::and_c</a> = decltype(meta_detail::fast_and_impl_(if_c&lt; Bools, <a class="el" href="classint.html">int</a> *, <a class="el" href="classint.html">int</a> &gt;{}...))</td></tr>
+<tr class="memdesc:gae35cffff615290749fc307740108f97e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the Boolean parameters. <br /></td></tr>
+<tr class="separator:gae35cffff615290749fc307740108f97e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1c90a2f103ff702cf4498a5be9ce64c4"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1c90a2f103ff702cf4498a5be9ce64c4"></a>
 template&lt;typename List , typename F &gt; </td></tr>
 <tr class="memitem:ga1c90a2f103ff702cf4498a5be9ce64c4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga1c90a2f103ff702cf4498a5be9ce64c4">ranges::v3::meta::any_of</a> = not_&lt; empty&lt; find_if&lt; List, F &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:ga1c90a2f103ff702cf4498a5be9ce64c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. Complexity: O(N) <br /></td></tr>
+<tr class="memdesc:ga1c90a2f103ff702cf4498a5be9ce64c4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. Complexity: O(N) <br /></td></tr>
 <tr class="separator:ga1c90a2f103ff702cf4498a5be9ce64c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga68859fa17e5d8398414ad7ccf6c209fd"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga68859fa17e5d8398414ad7ccf6c209fd"></a>
-template&lt;typename List , typename F &gt; </td></tr>
-<tr class="memitem:ga68859fa17e5d8398414ad7ccf6c209fd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga68859fa17e5d8398414ad7ccf6c209fd">ranges::v3::meta::none_of</a> = empty&lt; find_if&lt; List, F &gt;&gt;</td></tr>
-<tr class="memdesc:ga68859fa17e5d8398414ad7ccf6c209fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>false</code> for alls elements <code>A</code> in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. Complexity: O(N) <br /></td></tr>
-<tr class="separator:ga68859fa17e5d8398414ad7ccf6c209fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga29ef9580ad8a918b832bc6aba33d832c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga29ef9580ad8a918b832bc6aba33d832c"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga29ef9580ad8a918b832bc6aba33d832c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga29ef9580ad8a918b832bc6aba33d832c">ranges::v3::meta::plus</a> = std::integral_constant&lt; decltype(T::value+U::value), T::value+U::value &gt;</td></tr>
-<tr class="memdesc:ga29ef9580ad8a918b832bc6aba33d832c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of adding the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
-<tr class="separator:ga29ef9580ad8a918b832bc6aba33d832c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeb49ab94a3797d588c39dc09f7e55cca"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaeb49ab94a3797d588c39dc09f7e55cca"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gaeb49ab94a3797d588c39dc09f7e55cca"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaeb49ab94a3797d588c39dc09f7e55cca">ranges::v3::meta::minus</a> = std::integral_constant&lt; decltype(T::value-U::value), T::value-U::value &gt;</td></tr>
-<tr class="memdesc:gaeb49ab94a3797d588c39dc09f7e55cca"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of subtracting the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
-<tr class="separator:gaeb49ab94a3797d588c39dc09f7e55cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeeedb1fa2946a60b78ccd7d0f2e85908"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaeeedb1fa2946a60b78ccd7d0f2e85908"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gaeeedb1fa2946a60b78ccd7d0f2e85908"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaeeedb1fa2946a60b78ccd7d0f2e85908">ranges::v3::meta::multiplies</a> = std::integral_constant&lt; decltype(T::value *U::value), T::value *U::value &gt;</td></tr>
-<tr class="memdesc:gaeeedb1fa2946a60b78ccd7d0f2e85908"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of multiplying the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
-<tr class="separator:gaeeedb1fa2946a60b78ccd7d0f2e85908"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga15c8afdb40f8bb0dfe9cb7a044026d58"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga15c8afdb40f8bb0dfe9cb7a044026d58"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga15c8afdb40f8bb0dfe9cb7a044026d58"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga15c8afdb40f8bb0dfe9cb7a044026d58">ranges::v3::meta::divides</a> = std::integral_constant&lt; decltype(T::value/U::value), T::value/U::value &gt;</td></tr>
-<tr class="memdesc:ga15c8afdb40f8bb0dfe9cb7a044026d58"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of dividing the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
-<tr class="separator:ga15c8afdb40f8bb0dfe9cb7a044026d58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1435365494a1b1039b7165820e8b3e4c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1435365494a1b1039b7165820e8b3e4c"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga1435365494a1b1039b7165820e8b3e4c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga1435365494a1b1039b7165820e8b3e4c">ranges::v3::meta::negate</a> = std::integral_constant&lt; decltype(-T::value),-T::value &gt;</td></tr>
-<tr class="memdesc:ga1435365494a1b1039b7165820e8b3e4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the remainder of dividing the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
-<tr class="separator:ga1435365494a1b1039b7165820e8b3e4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaceaa935f32a4c99615b17b3309fab47d"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaceaa935f32a4c99615b17b3309fab47d"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gaceaa935f32a4c99615b17b3309fab47d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaceaa935f32a4c99615b17b3309fab47d">ranges::v3::meta::modulus</a> = std::integral_constant&lt; decltype(T::value%U::value), T::value%U::value &gt;</td></tr>
-<tr class="memdesc:gaceaa935f32a4c99615b17b3309fab47d"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the remainder of dividing the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
-<tr class="separator:gaceaa935f32a4c99615b17b3309fab47d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae4d18b24da30f1c0a50f3b5c42647ec7"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae4d18b24da30f1c0a50f3b5c42647ec7"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gae4d18b24da30f1c0a50f3b5c42647ec7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gae4d18b24da30f1c0a50f3b5c42647ec7">ranges::v3::meta::equal_to</a> = bool_&lt; T::value==U::value &gt;</td></tr>
-<tr class="memdesc:gae4d18b24da30f1c0a50f3b5c42647ec7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around the result of comparing <code>T::value</code> and <code>U::value</code> for equality. <br /></td></tr>
-<tr class="separator:gae4d18b24da30f1c0a50f3b5c42647ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8f2fef69b4f9b4ab4e843e3bd8f685dc"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga8f2fef69b4f9b4ab4e843e3bd8f685dc"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga8f2fef69b4f9b4ab4e843e3bd8f685dc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga8f2fef69b4f9b4ab4e843e3bd8f685dc">ranges::v3::meta::not_equal_to</a> = bool_&lt; T::value!=U::value &gt;</td></tr>
-<tr class="memdesc:ga8f2fef69b4f9b4ab4e843e3bd8f685dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around the result of comparing <code>T::value</code> and <code>U::value</code> for inequality. <br /></td></tr>
-<tr class="separator:ga8f2fef69b4f9b4ab4e843e3bd8f685dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac9438179cfc54faf90f171233ba234ab"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac9438179cfc54faf90f171233ba234ab"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gac9438179cfc54faf90f171233ba234ab"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gac9438179cfc54faf90f171233ba234ab">ranges::v3::meta::greater</a> = bool_&lt;(T::value &gt; U::value)&gt;</td></tr>
-<tr class="memdesc:gac9438179cfc54faf90f171233ba234ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>T::value</code> is greater than <code>U::value</code>; <code>false</code>, otherwise. <br /></td></tr>
-<tr class="separator:gac9438179cfc54faf90f171233ba234ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2290c3109ba634f93ec9bff78f8da07a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2290c3109ba634f93ec9bff78f8da07a"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga2290c3109ba634f93ec9bff78f8da07a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga2290c3109ba634f93ec9bff78f8da07a">ranges::v3::meta::less</a> = bool_&lt;(T::value&lt; U::value)&gt;</td></tr>
-<tr class="memdesc:ga2290c3109ba634f93ec9bff78f8da07a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>T::value</code> is less than <code>U::value</code>; <code>false</code>, otherwise. <br /></td></tr>
-<tr class="separator:ga2290c3109ba634f93ec9bff78f8da07a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2feaf974c3d2e1ca46356e0423e39f47"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2feaf974c3d2e1ca46356e0423e39f47"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga2feaf974c3d2e1ca46356e0423e39f47"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga2feaf974c3d2e1ca46356e0423e39f47">ranges::v3::meta::greater_equal</a> = bool_&lt;(T::value &gt;=U::value)&gt;</td></tr>
-<tr class="memdesc:ga2feaf974c3d2e1ca46356e0423e39f47"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>T::value</code> is greater than or equal to <code>U::value</code>; <code>false</code>, otherwise. <br /></td></tr>
-<tr class="separator:ga2feaf974c3d2e1ca46356e0423e39f47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa3719a68f2123f15a9c87c4371a4a7b3"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa3719a68f2123f15a9c87c4371a4a7b3"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gaa3719a68f2123f15a9c87c4371a4a7b3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaa3719a68f2123f15a9c87c4371a4a7b3">ranges::v3::meta::less_equal</a> = bool_&lt;(T::value&lt;=U::value)&gt;</td></tr>
-<tr class="memdesc:gaa3719a68f2123f15a9c87c4371a4a7b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>T::value</code> is less than or equal to <code>U::value</code>; <code>false</code>, otherwise. <br /></td></tr>
-<tr class="separator:gaa3719a68f2123f15a9c87c4371a4a7b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac670a8780d21d1dce26ebc4eaf6d5b76"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac670a8780d21d1dce26ebc4eaf6d5b76"></a>
+template&lt;typename F , typename... Args&gt; </td></tr>
+<tr class="memitem:gac670a8780d21d1dce26ebc4eaf6d5b76"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gac670a8780d21d1dce26ebc4eaf6d5b76">ranges::v3::meta::apply</a> = typename F::template apply&lt; Args...&gt;</td></tr>
+<tr class="memdesc:gac670a8780d21d1dce26ebc4eaf6d5b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the Metafunction Class <code>F</code> with the arguments <code>Args</code>. <br /></td></tr>
+<tr class="separator:gac670a8780d21d1dce26ebc4eaf6d5b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga914933a438cebe32994999832b37a9df"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga914933a438cebe32994999832b37a9df"></a>
+template&lt;typename C , typename List &gt; </td></tr>
+<tr class="memitem:ga914933a438cebe32994999832b37a9df"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga914933a438cebe32994999832b37a9df">ranges::v3::meta::apply_list</a> = eval&lt; lazy_apply_list&lt; C, List &gt;&gt;</td></tr>
+<tr class="memdesc:ga914933a438cebe32994999832b37a9df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the Metafunction Class <code>F</code> using the types in the type list <code>List</code> as arguments. <br /></td></tr>
+<tr class="separator:ga914933a438cebe32994999832b37a9df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3765f2d3d36c851c8843cb4e269caca8"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3765f2d3d36c851c8843cb4e269caca8"></a>
+template&lt;typename Sequence &gt; </td></tr>
+<tr class="memitem:ga3765f2d3d36c851c8843cb4e269caca8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga3765f2d3d36c851c8843cb4e269caca8">ranges::v3::meta::as_list</a> = eval&lt; meta_detail::as_list_&lt; Sequence &gt;&gt;</td></tr>
+<tr class="memdesc:ga3765f2d3d36c851c8843cb4e269caca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a type into an instance of <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> in a way determined by <code><a class="el" href="structranges_1_1v3_1_1meta_1_1lazy__apply__list.html" title="A metafunction that unpacks the types in the type list List into the Metafunction Class F...">meta::lazy_apply_list</a></code>. <br /></td></tr>
+<tr class="separator:ga3765f2d3d36c851c8843cb4e269caca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeae248b334db0fea712b1967a370c36a"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaeae248b334db0fea712b1967a370c36a"></a>
+template&lt;typename List &gt; </td></tr>
+<tr class="memitem:gaeae248b334db0fea712b1967a370c36a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaeae248b334db0fea712b1967a370c36a">ranges::v3::meta::back</a> = eval&lt; meta_detail::back_&lt; List &gt;&gt;</td></tr>
+<tr class="memdesc:gaeae248b334db0fea712b1967a370c36a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the last element in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code>. Complexity: Amortized O(1) <br /></td></tr>
+<tr class="separator:gaeae248b334db0fea712b1967a370c36a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2d655d770679acb418aa61f98e6cb282"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2d655d770679acb418aa61f98e6cb282"></a>
 template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga2d655d770679acb418aa61f98e6cb282"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga2d655d770679acb418aa61f98e6cb282">ranges::v3::meta::bit_and</a> = std::integral_constant&lt; decltype(T::value &amp;U::value), T::value &amp;U::value &gt;</td></tr>
 <tr class="memdesc:ga2d655d770679acb418aa61f98e6cb282"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of bitwise-and'ing the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
 <tr class="separator:ga2d655d770679acb418aa61f98e6cb282"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6a2d7e102c7fb416d9bb7000f21be1ce"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6a2d7e102c7fb416d9bb7000f21be1ce"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga6a2d7e102c7fb416d9bb7000f21be1ce"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga6a2d7e102c7fb416d9bb7000f21be1ce">ranges::v3::meta::bit_not</a> = std::integral_constant&lt; decltype(~T::value),~T::value &gt;</td></tr>
+<tr class="memdesc:ga6a2d7e102c7fb416d9bb7000f21be1ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of bitwise-complimenting the wrapped integer <code>T::value</code>. <br /></td></tr>
+<tr class="separator:ga6a2d7e102c7fb416d9bb7000f21be1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6cf4d5ba5675434d1cdf50f165c13e67"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6cf4d5ba5675434d1cdf50f165c13e67"></a>
 template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga6cf4d5ba5675434d1cdf50f165c13e67"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga6cf4d5ba5675434d1cdf50f165c13e67">ranges::v3::meta::bit_or</a> = std::integral_constant&lt; decltype(T::value|U::value), T::value|U::value &gt;</td></tr>
@@ -473,11 +218,266 @@ template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga8e4534a23b9f039ebf2eee9839d324df"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga8e4534a23b9f039ebf2eee9839d324df">ranges::v3::meta::bit_xor</a> = std::integral_constant&lt; decltype(T::value^U::value), T::value^U::value &gt;</td></tr>
 <tr class="memdesc:ga8e4534a23b9f039ebf2eee9839d324df"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of bitwise-exclusive-or'ing the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
 <tr class="separator:ga8e4534a23b9f039ebf2eee9839d324df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6a2d7e102c7fb416d9bb7000f21be1ce"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6a2d7e102c7fb416d9bb7000f21be1ce"></a>
+<tr class="memitem:ga0825b9a6c977a5202a0df51d0ea0fd2b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0825b9a6c977a5202a0df51d0ea0fd2b"></a>
+template&lt;bool B&gt; </td></tr>
+<tr class="memitem:ga0825b9a6c977a5202a0df51d0ea0fd2b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga0825b9a6c977a5202a0df51d0ea0fd2b">ranges::v3::meta::bool_</a> = std::integral_constant&lt; bool, B &gt;</td></tr>
+<tr class="memdesc:ga0825b9a6c977a5202a0df51d0ea0fd2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>bool</code>. <br /></td></tr>
+<tr class="separator:ga0825b9a6c977a5202a0df51d0ea0fd2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga15c8afdb40f8bb0dfe9cb7a044026d58"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga15c8afdb40f8bb0dfe9cb7a044026d58"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:ga15c8afdb40f8bb0dfe9cb7a044026d58"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga15c8afdb40f8bb0dfe9cb7a044026d58">ranges::v3::meta::divides</a> = std::integral_constant&lt; decltype(T::value/U::value), T::value/U::value &gt;</td></tr>
+<tr class="memdesc:ga15c8afdb40f8bb0dfe9cb7a044026d58"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of dividing the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
+<tr class="separator:ga15c8afdb40f8bb0dfe9cb7a044026d58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9593e0f8dbb513548e04c1cd1c8a4efa"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9593e0f8dbb513548e04c1cd1c8a4efa"></a>
+template&lt;typename N , typename List &gt; </td></tr>
+<tr class="memitem:ga9593e0f8dbb513548e04c1cd1c8a4efa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga9593e0f8dbb513548e04c1cd1c8a4efa">ranges::v3::meta::drop</a> = eval&lt; meta_detail::drop_&lt; N, List &gt;&gt;</td></tr>
+<tr class="memdesc:ga9593e0f8dbb513548e04c1cd1c8a4efa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> by removing the first <code>N</code> element from <code>List</code>. Complexity: O(1) <br /></td></tr>
+<tr class="separator:ga9593e0f8dbb513548e04c1cd1c8a4efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga635af605133d47abae63dae788ecf758"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga635af605133d47abae63dae788ecf758"></a>
+template&lt;std::size_t N, typename List &gt; </td></tr>
+<tr class="memitem:ga635af605133d47abae63dae788ecf758"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga635af605133d47abae63dae788ecf758">ranges::v3::meta::drop_c</a> = eval&lt; meta_detail::drop_&lt; meta::size_t&lt; N &gt;, List &gt;&gt;</td></tr>
+<tr class="memdesc:ga635af605133d47abae63dae788ecf758"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> by removing the first <code>N</code> element from <code>List</code>. Complexity: O(1) <br /></td></tr>
+<tr class="separator:ga635af605133d47abae63dae788ecf758"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga487bb4647ac7abbd13162de11916246f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga487bb4647ac7abbd13162de11916246f"></a>
+template&lt;typename List &gt; </td></tr>
+<tr class="memitem:ga487bb4647ac7abbd13162de11916246f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga487bb4647ac7abbd13162de11916246f">ranges::v3::meta::empty</a> = bool_&lt; 0==size&lt; List &gt;::value &gt;</td></tr>
+<tr class="memdesc:ga487bb4647ac7abbd13162de11916246f"><td class="mdescLeft">&#160;</td><td class="mdescRight">An Boolean integral constant wrapper around <code>true</code> if <code>List</code> is an empty type list; <code>false</code>, otherwise. <br /></td></tr>
+<tr class="separator:ga487bb4647ac7abbd13162de11916246f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae4d18b24da30f1c0a50f3b5c42647ec7"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae4d18b24da30f1c0a50f3b5c42647ec7"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:gae4d18b24da30f1c0a50f3b5c42647ec7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gae4d18b24da30f1c0a50f3b5c42647ec7">ranges::v3::meta::equal_to</a> = bool_&lt; T::value==U::value &gt;</td></tr>
+<tr class="memdesc:gae4d18b24da30f1c0a50f3b5c42647ec7"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around the result of comparing <code>T::value</code> and <code>U::value</code> for equality. <br /></td></tr>
+<tr class="separator:gae4d18b24da30f1c0a50f3b5c42647ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3e1d55cb48a2b12215367da883544fbd"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3e1d55cb48a2b12215367da883544fbd"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga6a2d7e102c7fb416d9bb7000f21be1ce"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga6a2d7e102c7fb416d9bb7000f21be1ce">ranges::v3::meta::bit_not</a> = std::integral_constant&lt; decltype(~T::value),~T::value &gt;</td></tr>
-<tr class="memdesc:ga6a2d7e102c7fb416d9bb7000f21be1ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of bitwise-complimenting the wrapped integer <code>T::value</code>. <br /></td></tr>
-<tr class="separator:ga6a2d7e102c7fb416d9bb7000f21be1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3e1d55cb48a2b12215367da883544fbd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga3e1d55cb48a2b12215367da883544fbd">ranges::v3::meta::eval</a> = typename T::type</td></tr>
+<tr class="memdesc:ga3e1d55cb48a2b12215367da883544fbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Evaluate" a metafunction by returning the nested <code>T::type</code> alias. <br /></td></tr>
+<tr class="separator:ga3e1d55cb48a2b12215367da883544fbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad6600f84af6c2a717fa76de94a39e49e"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad6600f84af6c2a717fa76de94a39e49e"></a>
+template&lt;typename... Bools&gt; </td></tr>
+<tr class="memitem:gad6600f84af6c2a717fa76de94a39e49e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gad6600f84af6c2a717fa76de94a39e49e">ranges::v3::meta::fast_and</a> = and_c&lt; Bools::value...&gt;</td></tr>
+<tr class="memdesc:gad6600f84af6c2a717fa76de94a39e49e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the integral constant-wrapped Boolean parameters, <em>without</em> doing short-circuiting. <br /></td></tr>
+<tr class="separator:gad6600f84af6c2a717fa76de94a39e49e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga902ade8a30d08a3ca1d6ad733039bcb2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga902ade8a30d08a3ca1d6ad733039bcb2"></a>
+template&lt;typename... Bools&gt; </td></tr>
+<tr class="memitem:ga902ade8a30d08a3ca1d6ad733039bcb2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga902ade8a30d08a3ca1d6ad733039bcb2">ranges::v3::meta::fast_or</a> = or_c&lt; Bools::value...&gt;</td></tr>
+<tr class="memdesc:ga902ade8a30d08a3ca1d6ad733039bcb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, <em>without</em> doing short-circuiting. <br /></td></tr>
+<tr class="separator:ga902ade8a30d08a3ca1d6ad733039bcb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabe6ac5696edbc189c5f273e79adb2bbc"><td class="memTemplParams" colspan="2"><a class="anchor" id="gabe6ac5696edbc189c5f273e79adb2bbc"></a>
+template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:gabe6ac5696edbc189c5f273e79adb2bbc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gabe6ac5696edbc189c5f273e79adb2bbc">ranges::v3::meta::find</a> = eval&lt; meta_detail::find_&lt; List, T &gt;&gt;</td></tr>
+<tr class="memdesc:gabe6ac5696edbc189c5f273e79adb2bbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first occurance of <code>T</code>, if any such element exists; the empty list, otherwise. <br /></td></tr>
+<tr class="separator:gabe6ac5696edbc189c5f273e79adb2bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf5bd0ce22badcc14a79a45216e39f4ba"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaf5bd0ce22badcc14a79a45216e39f4ba"></a>
+template&lt;typename List , typename Fun &gt; </td></tr>
+<tr class="memitem:gaf5bd0ce22badcc14a79a45216e39f4ba"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaf5bd0ce22badcc14a79a45216e39f4ba">ranges::v3::meta::find_if</a> = eval&lt; meta_detail::find_if_&lt; List, Fun &gt;&gt;</td></tr>
+<tr class="memdesc:gaf5bd0ce22badcc14a79a45216e39f4ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. <br /></td></tr>
+<tr class="separator:gaf5bd0ce22badcc14a79a45216e39f4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae070a215bb86c146bc94dd93b6bde700"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae070a215bb86c146bc94dd93b6bde700"></a>
+template&lt;typename List , typename State , typename Fun &gt; </td></tr>
+<tr class="memitem:gae070a215bb86c146bc94dd93b6bde700"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gae070a215bb86c146bc94dd93b6bde700">ranges::v3::meta::foldl</a> = eval&lt; meta_detail::foldl_&lt; List, State, Fun &gt;&gt;</td></tr>
+<tr class="memdesc:gae070a215bb86c146bc94dd93b6bde700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Metafunction Class <code>Fun</code> and initial state <code>State</code>. Complexity: O(N) <br /></td></tr>
+<tr class="separator:gae070a215bb86c146bc94dd93b6bde700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa82cba70310ff8b578e0c10c38ee3a4f"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa82cba70310ff8b578e0c10c38ee3a4f"></a>
+template&lt;typename List , typename State , typename Fun &gt; </td></tr>
+<tr class="memitem:gaa82cba70310ff8b578e0c10c38ee3a4f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaa82cba70310ff8b578e0c10c38ee3a4f">ranges::v3::meta::foldr</a> = eval&lt; meta_detail::foldr_&lt; List, State, Fun &gt;&gt;</td></tr>
+<tr class="memdesc:gaa82cba70310ff8b578e0c10c38ee3a4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Metafunction Class <code>Fun</code> and initial state <code>State</code>. Complexity: O(N) <br /></td></tr>
+<tr class="separator:gaa82cba70310ff8b578e0c10c38ee3a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadc72da8fac72d842187c489e7aa4d8d3"><td class="memTemplParams" colspan="2"><a class="anchor" id="gadc72da8fac72d842187c489e7aa4d8d3"></a>
+template&lt;typename List &gt; </td></tr>
+<tr class="memitem:gadc72da8fac72d842187c489e7aa4d8d3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gadc72da8fac72d842187c489e7aa4d8d3">ranges::v3::meta::front</a> = eval&lt; meta_detail::front_&lt; List &gt;&gt;</td></tr>
+<tr class="memdesc:gadc72da8fac72d842187c489e7aa4d8d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the first element in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code>. Complexity: O(1) <br /></td></tr>
+<tr class="separator:gadc72da8fac72d842187c489e7aa4d8d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac9438179cfc54faf90f171233ba234ab"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac9438179cfc54faf90f171233ba234ab"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:gac9438179cfc54faf90f171233ba234ab"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gac9438179cfc54faf90f171233ba234ab">ranges::v3::meta::greater</a> = bool_&lt;(T::value &gt; U::value)&gt;</td></tr>
+<tr class="memdesc:gac9438179cfc54faf90f171233ba234ab"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around <code>true</code> if <code>T::value</code> is greater than <code>U::value</code>; <code>false</code>, otherwise. <br /></td></tr>
+<tr class="separator:gac9438179cfc54faf90f171233ba234ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2feaf974c3d2e1ca46356e0423e39f47"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2feaf974c3d2e1ca46356e0423e39f47"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:ga2feaf974c3d2e1ca46356e0423e39f47"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga2feaf974c3d2e1ca46356e0423e39f47">ranges::v3::meta::greater_equal</a> = bool_&lt;(T::value &gt;=U::value)&gt;</td></tr>
+<tr class="memdesc:ga2feaf974c3d2e1ca46356e0423e39f47"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around <code>true</code> if <code>T::value</code> is greater than or equal to <code>U::value</code>; <code>false</code>, otherwise. <br /></td></tr>
+<tr class="separator:ga2feaf974c3d2e1ca46356e0423e39f47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8de4403b307a43004facc2e1d4742f59"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga8de4403b307a43004facc2e1d4742f59"></a>
+template&lt;typename If , typename Then , typename Else &gt; </td></tr>
+<tr class="memitem:ga8de4403b307a43004facc2e1d4742f59"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga8de4403b307a43004facc2e1d4742f59">ranges::v3::meta::if_</a> = eval&lt; meta_detail::_if_&lt; If::value, Then, Else &gt;&gt;</td></tr>
+<tr class="memdesc:ga8de4403b307a43004facc2e1d4742f59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select one type or another depending on a compile-time Boolean. <br /></td></tr>
+<tr class="separator:ga8de4403b307a43004facc2e1d4742f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga12480247fab07845c86b40e4e41f4340"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga12480247fab07845c86b40e4e41f4340"></a>
+template&lt;bool If, typename Then , typename Else &gt; </td></tr>
+<tr class="memitem:ga12480247fab07845c86b40e4e41f4340"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga12480247fab07845c86b40e4e41f4340">ranges::v3::meta::if_c</a> = eval&lt; meta_detail::_if_&lt; If, Then, Else &gt;&gt;</td></tr>
+<tr class="memdesc:ga12480247fab07845c86b40e4e41f4340"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select one type or another depending on a compile-time Boolean. <br /></td></tr>
+<tr class="separator:ga12480247fab07845c86b40e4e41f4340"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga37c89ac2d8b9c9118a7424a33eb5560f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga37c89ac2d8b9c9118a7424a33eb5560f"></a>
+template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:ga37c89ac2d8b9c9118a7424a33eb5560f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga37c89ac2d8b9c9118a7424a33eb5560f">ranges::v3::meta::in</a> = not_&lt; empty&lt; find&lt; List, T &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga37c89ac2d8b9c9118a7424a33eb5560f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around <code>true</code> if there is at least one occurance of <code>T</code> in <code>List</code>. <br /></td></tr>
+<tr class="separator:ga37c89ac2d8b9c9118a7424a33eb5560f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad3b0e2e9127c0877c3f4d4d6ec3450ff"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad3b0e2e9127c0877c3f4d4d6ec3450ff"></a>
+template&lt;std::size_t... Is&gt; </td></tr>
+<tr class="memitem:gad3b0e2e9127c0877c3f4d4d6ec3450ff"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gad3b0e2e9127c0877c3f4d4d6ec3450ff">ranges::v3::index_sequence</a> = integer_sequence&lt; std::size_t, Is...&gt;</td></tr>
+<tr class="memdesc:gad3b0e2e9127c0877c3f4d4d6ec3450ff"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> container for a sequence of compile-time integer constants of type <code>std::size_t</code> <br /></td></tr>
+<tr class="separator:gad3b0e2e9127c0877c3f4d4d6ec3450ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2290c3109ba634f93ec9bff78f8da07a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2290c3109ba634f93ec9bff78f8da07a"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:ga2290c3109ba634f93ec9bff78f8da07a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga2290c3109ba634f93ec9bff78f8da07a">ranges::v3::meta::less</a> = bool_&lt;(T::value&lt; U::value)&gt;</td></tr>
+<tr class="memdesc:ga2290c3109ba634f93ec9bff78f8da07a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around <code>true</code> if <code>T::value</code> is less than <code>U::value</code>; <code>false</code>, otherwise. <br /></td></tr>
+<tr class="separator:ga2290c3109ba634f93ec9bff78f8da07a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa3719a68f2123f15a9c87c4371a4a7b3"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa3719a68f2123f15a9c87c4371a4a7b3"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:gaa3719a68f2123f15a9c87c4371a4a7b3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaa3719a68f2123f15a9c87c4371a4a7b3">ranges::v3::meta::less_equal</a> = bool_&lt;(T::value&lt;=U::value)&gt;</td></tr>
+<tr class="memdesc:gaa3719a68f2123f15a9c87c4371a4a7b3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around <code>true</code> if <code>T::value</code> is less than or equal to <code>U::value</code>; <code>false</code>, otherwise. <br /></td></tr>
+<tr class="separator:gaa3719a68f2123f15a9c87c4371a4a7b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga94c580610f0eb7439c95fbc97e496d17"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga94c580610f0eb7439c95fbc97e496d17"></a>
+template&lt;typename ListOfLists &gt; </td></tr>
+<tr class="memitem:ga94c580610f0eb7439c95fbc97e496d17"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga94c580610f0eb7439c95fbc97e496d17">ranges::v3::meta::list_cat</a> = eval&lt; meta_detail::list_cat_&lt; ListOfLists &gt;&gt;</td></tr>
+<tr class="memdesc:ga94c580610f0eb7439c95fbc97e496d17"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper that is the size of the <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code>. <br /></td></tr>
+<tr class="separator:ga94c580610f0eb7439c95fbc97e496d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c77136af18fd78046b82f0546934a0b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0c77136af18fd78046b82f0546934a0b"></a>
+template&lt;typename N , typename List &gt; </td></tr>
+<tr class="memitem:ga0c77136af18fd78046b82f0546934a0b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga0c77136af18fd78046b82f0546934a0b">ranges::v3::meta::list_element</a> = eval&lt; meta_detail::list_element_&lt; N, List &gt;&gt;</td></tr>
+<tr class="memdesc:ga0c77136af18fd78046b82f0546934a0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <code>N</code>th element in the <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code> in amortized O(1) <br /></td></tr>
+<tr class="separator:ga0c77136af18fd78046b82f0546934a0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga45067c95a3cff5035862c7721c1b739d"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga45067c95a3cff5035862c7721c1b739d"></a>
+template&lt;std::size_t N, typename List &gt; </td></tr>
+<tr class="memitem:ga45067c95a3cff5035862c7721c1b739d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga45067c95a3cff5035862c7721c1b739d">ranges::v3::meta::list_element_c</a> = list_element&lt; meta::size_t&lt; N &gt;, List &gt;</td></tr>
+<tr class="memdesc:ga45067c95a3cff5035862c7721c1b739d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the <code>N</code>th element in the <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code> in amortized O(1) <br /></td></tr>
+<tr class="separator:ga45067c95a3cff5035862c7721c1b739d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59354705c3dc30eac61b14bf12619bc1"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga59354705c3dc30eac61b14bf12619bc1"></a>
+template&lt;std::size_t N&gt; </td></tr>
+<tr class="memitem:ga59354705c3dc30eac61b14bf12619bc1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga59354705c3dc30eac61b14bf12619bc1">ranges::v3::make_index_sequence</a> = make_integer_sequence&lt; std::size_t, N &gt;</td></tr>
+<tr class="memdesc:ga59354705c3dc30eac61b14bf12619bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>index_sequence</code> containing integer constants [0,1,2,...,N-1]. Complexity: O(log(N)). <br /></td></tr>
+<tr class="separator:ga59354705c3dc30eac61b14bf12619bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga24a1de77834df7c844ecb8e294c4dc75"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga24a1de77834df7c844ecb8e294c4dc75"></a>
+template&lt;typename T , T N&gt; </td></tr>
+<tr class="memitem:ga24a1de77834df7c844ecb8e294c4dc75"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga24a1de77834df7c844ecb8e294c4dc75">ranges::v3::make_integer_sequence</a> = meta::eval&lt; detail::make_integer_sequence_&lt; T,(std::size_t) N &gt;&gt;</td></tr>
+<tr class="memdesc:ga24a1de77834df7c844ecb8e294c4dc75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code><a class="el" href="structranges_1_1v3_1_1integer__sequence.html" title="A container for a sequence of compile-time integer constants. ">integer_sequence</a></code> containing integer constants [0,1,2,...,N-1]. Complexity: O(log(N)). <br /></td></tr>
+<tr class="separator:ga24a1de77834df7c844ecb8e294c4dc75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeb49ab94a3797d588c39dc09f7e55cca"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaeb49ab94a3797d588c39dc09f7e55cca"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:gaeb49ab94a3797d588c39dc09f7e55cca"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaeb49ab94a3797d588c39dc09f7e55cca">ranges::v3::meta::minus</a> = std::integral_constant&lt; decltype(T::value-U::value), T::value-U::value &gt;</td></tr>
+<tr class="memdesc:gaeb49ab94a3797d588c39dc09f7e55cca"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of subtracting the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
+<tr class="separator:gaeb49ab94a3797d588c39dc09f7e55cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaceaa935f32a4c99615b17b3309fab47d"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaceaa935f32a4c99615b17b3309fab47d"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:gaceaa935f32a4c99615b17b3309fab47d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaceaa935f32a4c99615b17b3309fab47d">ranges::v3::meta::modulus</a> = std::integral_constant&lt; decltype(T::value%U::value), T::value%U::value &gt;</td></tr>
+<tr class="memdesc:gaceaa935f32a4c99615b17b3309fab47d"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the remainder of dividing the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
+<tr class="separator:gaceaa935f32a4c99615b17b3309fab47d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeeedb1fa2946a60b78ccd7d0f2e85908"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaeeedb1fa2946a60b78ccd7d0f2e85908"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:gaeeedb1fa2946a60b78ccd7d0f2e85908"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gaeeedb1fa2946a60b78ccd7d0f2e85908">ranges::v3::meta::multiplies</a> = std::integral_constant&lt; decltype(T::value *U::value), T::value *U::value &gt;</td></tr>
+<tr class="memdesc:gaeeedb1fa2946a60b78ccd7d0f2e85908"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of multiplying the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
+<tr class="separator:gaeeedb1fa2946a60b78ccd7d0f2e85908"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1435365494a1b1039b7165820e8b3e4c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1435365494a1b1039b7165820e8b3e4c"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga1435365494a1b1039b7165820e8b3e4c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga1435365494a1b1039b7165820e8b3e4c">ranges::v3::meta::negate</a> = std::integral_constant&lt; decltype(-T::value),-T::value &gt;</td></tr>
+<tr class="memdesc:ga1435365494a1b1039b7165820e8b3e4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the remainder of dividing the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
+<tr class="separator:ga1435365494a1b1039b7165820e8b3e4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga68859fa17e5d8398414ad7ccf6c209fd"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga68859fa17e5d8398414ad7ccf6c209fd"></a>
+template&lt;typename List , typename F &gt; </td></tr>
+<tr class="memitem:ga68859fa17e5d8398414ad7ccf6c209fd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga68859fa17e5d8398414ad7ccf6c209fd">ranges::v3::meta::none_of</a> = empty&lt; find_if&lt; List, F &gt;&gt;</td></tr>
+<tr class="memdesc:ga68859fa17e5d8398414ad7ccf6c209fd"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>false</code> for alls elements <code>A</code> in <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. Complexity: O(N) <br /></td></tr>
+<tr class="separator:ga68859fa17e5d8398414ad7ccf6c209fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga03d35c2ffa865c4138c5c076a01a6134"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga03d35c2ffa865c4138c5c076a01a6134"></a>
+template&lt;typename Bool &gt; </td></tr>
+<tr class="memitem:ga03d35c2ffa865c4138c5c076a01a6134"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga03d35c2ffa865c4138c5c076a01a6134">ranges::v3::meta::not_</a> = not_c&lt; Bool::value &gt;</td></tr>
+<tr class="memdesc:ga03d35c2ffa865c4138c5c076a01a6134"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the integral constant-wrapped Boolean parameter. <br /></td></tr>
+<tr class="separator:ga03d35c2ffa865c4138c5c076a01a6134"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga853db852d13181401724d3e0fd1734d1"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga853db852d13181401724d3e0fd1734d1"></a>
+template&lt;bool Bool&gt; </td></tr>
+<tr class="memitem:ga853db852d13181401724d3e0fd1734d1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga853db852d13181401724d3e0fd1734d1">ranges::v3::meta::not_c</a> = bool_&lt;!Bool &gt;</td></tr>
+<tr class="memdesc:ga853db852d13181401724d3e0fd1734d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the Boolean parameter. <br /></td></tr>
+<tr class="separator:ga853db852d13181401724d3e0fd1734d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8f2fef69b4f9b4ab4e843e3bd8f685dc"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga8f2fef69b4f9b4ab4e843e3bd8f685dc"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:ga8f2fef69b4f9b4ab4e843e3bd8f685dc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga8f2fef69b4f9b4ab4e843e3bd8f685dc">ranges::v3::meta::not_equal_to</a> = bool_&lt; T::value!=U::value &gt;</td></tr>
+<tr class="memdesc:ga8f2fef69b4f9b4ab4e843e3bd8f685dc"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> Boolean integral constant wrapper around the result of comparing <code>T::value</code> and <code>U::value</code> for inequality. <br /></td></tr>
+<tr class="separator:ga8f2fef69b4f9b4ab4e843e3bd8f685dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5841b07130a2e602c44eb5d07b643ea8"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga5841b07130a2e602c44eb5d07b643ea8"></a>
+template&lt;typename... Bools&gt; </td></tr>
+<tr class="memitem:ga5841b07130a2e602c44eb5d07b643ea8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga5841b07130a2e602c44eb5d07b643ea8">ranges::v3::meta::or_</a> = eval&lt; meta_detail::_or_&lt; Bools...&gt;&gt;</td></tr>
+<tr class="memdesc:ga5841b07130a2e602c44eb5d07b643ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, with short-circuiting. <br /></td></tr>
+<tr class="separator:ga5841b07130a2e602c44eb5d07b643ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1310f3726905bd6e1eb91f4c0c83064e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1310f3726905bd6e1eb91f4c0c83064e"></a>
+template&lt;bool... Bools&gt; </td></tr>
+<tr class="memitem:ga1310f3726905bd6e1eb91f4c0c83064e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga1310f3726905bd6e1eb91f4c0c83064e">ranges::v3::meta::or_c</a> = decltype(meta_detail::fast_or_impl_(if_c&lt; Bools, <a class="el" href="classint.html">int</a>, <a class="el" href="classint.html">int</a> * &gt;{}...))</td></tr>
+<tr class="memdesc:ga1310f3726905bd6e1eb91f4c0c83064e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the Boolean parameters. <br /></td></tr>
+<tr class="separator:ga1310f3726905bd6e1eb91f4c0c83064e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga29ef9580ad8a918b832bc6aba33d832c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga29ef9580ad8a918b832bc6aba33d832c"></a>
+template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:ga29ef9580ad8a918b832bc6aba33d832c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga29ef9580ad8a918b832bc6aba33d832c">ranges::v3::meta::plus</a> = std::integral_constant&lt; decltype(T::value+U::value), T::value+U::value &gt;</td></tr>
+<tr class="memdesc:ga29ef9580ad8a918b832bc6aba33d832c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of adding the two wrapped integers <code>T::value</code> and <code>U::value</code>. <br /></td></tr>
+<tr class="separator:ga29ef9580ad8a918b832bc6aba33d832c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc20f1ad3c22f267b7da76af9898bc8b"><td class="memTemplParams" colspan="2"><a class="anchor" id="gacc20f1ad3c22f267b7da76af9898bc8b"></a>
+template&lt;typename List &gt; </td></tr>
+<tr class="memitem:gacc20f1ad3c22f267b7da76af9898bc8b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gacc20f1ad3c22f267b7da76af9898bc8b">ranges::v3::meta::pop_front</a> = eval&lt; meta_detail::pop_front_&lt; List &gt;&gt;</td></tr>
+<tr class="memdesc:gacc20f1ad3c22f267b7da76af9898bc8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> by removing the first element from the front of <code>List</code>. Complexity: O(1) <br /></td></tr>
+<tr class="separator:gacc20f1ad3c22f267b7da76af9898bc8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0fe795d2cdc1185cb528e26e38849ac7"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0fe795d2cdc1185cb528e26e38849ac7"></a>
+template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:ga0fe795d2cdc1185cb528e26e38849ac7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga0fe795d2cdc1185cb528e26e38849ac7">ranges::v3::meta::push_back</a> = eval&lt; meta_detail::push_back_&lt; List, T &gt;&gt;</td></tr>
+<tr class="memdesc:ga0fe795d2cdc1185cb528e26e38849ac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> by adding the element <code>T</code> to the back of <code>List</code>. Complexity: O(1) <br /></td></tr>
+<tr class="separator:ga0fe795d2cdc1185cb528e26e38849ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga426d5aeb140f46a83ed7177ae335745a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga426d5aeb140f46a83ed7177ae335745a"></a>
+template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:ga426d5aeb140f46a83ed7177ae335745a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga426d5aeb140f46a83ed7177ae335745a">ranges::v3::meta::push_front</a> = eval&lt; meta_detail::push_front_&lt; List, T &gt;&gt;</td></tr>
+<tr class="memdesc:ga426d5aeb140f46a83ed7177ae335745a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> by adding the element <code>T</code> to the front of <code>List</code>. Complexity: O(1) <br /></td></tr>
+<tr class="separator:ga426d5aeb140f46a83ed7177ae335745a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4d645708c29b8eb886f39abfdb338b71"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4d645708c29b8eb886f39abfdb338b71"></a>
+template&lt;typename N , typename T  = void&gt; </td></tr>
+<tr class="memitem:ga4d645708c29b8eb886f39abfdb338b71"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga4d645708c29b8eb886f39abfdb338b71">ranges::v3::meta::repeat_n</a> = eval&lt; meta_detail::repeat_n_c_&lt; N::value, T &gt;&gt;</td></tr>
+<tr class="memdesc:ga4d645708c29b8eb886f39abfdb338b71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments in O(log N) <br /></td></tr>
+<tr class="separator:ga4d645708c29b8eb886f39abfdb338b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2c2fed381af8e9a89876a7ffab0a7e87"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2c2fed381af8e9a89876a7ffab0a7e87"></a>
+template&lt;std::size_t N, typename T  = void&gt; </td></tr>
+<tr class="memitem:ga2c2fed381af8e9a89876a7ffab0a7e87"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga2c2fed381af8e9a89876a7ffab0a7e87">ranges::v3::meta::repeat_n_c</a> = eval&lt; meta_detail::repeat_n_c_&lt; N, T &gt;&gt;</td></tr>
+<tr class="memdesc:ga2c2fed381af8e9a89876a7ffab0a7e87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments in O(log N) <br /></td></tr>
+<tr class="separator:ga2c2fed381af8e9a89876a7ffab0a7e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9397230a5daf4b1d02f871138f78f3b2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9397230a5daf4b1d02f871138f78f3b2"></a>
+template&lt;typename List , typename T , typename U &gt; </td></tr>
+<tr class="memitem:ga9397230a5daf4b1d02f871138f78f3b2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga9397230a5daf4b1d02f871138f78f3b2">ranges::v3::meta::replace</a> = eval&lt; meta_detail::replace_&lt; List, T, U &gt;&gt;</td></tr>
+<tr class="memdesc:ga9397230a5daf4b1d02f871138f78f3b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> where all instances of type <code>T</code> have been replaced with <code>U</code>. Complexity: O(N) <br /></td></tr>
+<tr class="separator:ga9397230a5daf4b1d02f871138f78f3b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac7c1e99a0b3576a0f66a1ce2b1df4396"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac7c1e99a0b3576a0f66a1ce2b1df4396"></a>
+template&lt;typename List , typename C , typename U &gt; </td></tr>
+<tr class="memitem:gac7c1e99a0b3576a0f66a1ce2b1df4396"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gac7c1e99a0b3576a0f66a1ce2b1df4396">ranges::v3::meta::replace_if</a> = eval&lt; meta_detail::replace_if_&lt; List, C, U &gt;&gt;</td></tr>
+<tr class="memdesc:gac7c1e99a0b3576a0f66a1ce2b1df4396"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> where all elements <code>A</code> such that <code>apply&lt;C, A&gt;::value</code> is <code>true</code> have been replaced with <code>U</code>. Complexity: O(N) <br /></td></tr>
+<tr class="separator:gac7c1e99a0b3576a0f66a1ce2b1df4396"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4ec4f462768d63260d8120f57091c971"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4ec4f462768d63260d8120f57091c971"></a>
+template&lt;typename List &gt; </td></tr>
+<tr class="memitem:ga4ec4f462768d63260d8120f57091c971"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga4ec4f462768d63260d8120f57091c971">ranges::v3::meta::reverse</a> = foldr&lt; List, list&lt;&gt;, quote&lt; push_back &gt;&gt;</td></tr>
+<tr class="memdesc:ga4ec4f462768d63260d8120f57091c971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> by reversing the elements in the list <code>List</code>. Complexity: O(N) <br /></td></tr>
+<tr class="separator:ga4ec4f462768d63260d8120f57091c971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6c8e20a398f9f943393b73a72f0a624c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6c8e20a398f9f943393b73a72f0a624c"></a>
+template&lt;typename List &gt; </td></tr>
+<tr class="memitem:ga6c8e20a398f9f943393b73a72f0a624c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga6c8e20a398f9f943393b73a72f0a624c">ranges::v3::meta::size</a> = meta::size_t&lt; List::size()&gt;</td></tr>
+<tr class="memdesc:ga6c8e20a398f9f943393b73a72f0a624c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper that is the size of the <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> <code>List</code>. <br /></td></tr>
+<tr class="separator:ga6c8e20a398f9f943393b73a72f0a624c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88028d2502e6f480033bbbf7e07fc284"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga88028d2502e6f480033bbbf7e07fc284"></a>
+template&lt;std::size_t N&gt; </td></tr>
+<tr class="memitem:ga88028d2502e6f480033bbbf7e07fc284"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga88028d2502e6f480033bbbf7e07fc284">ranges::v3::meta::size_t</a> = std::integral_constant&lt; std::size_t, N &gt;</td></tr>
+<tr class="memdesc:ga88028d2502e6f480033bbbf7e07fc284"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>std::size_t</code>. <br /></td></tr>
+<tr class="separator:ga88028d2502e6f480033bbbf7e07fc284"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac197b8f3f7c42e0d5194addc0a76706f"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac197b8f3f7c42e0d5194addc0a76706f"></a>
+template&lt;typename List , typename Fun , typename Dummy  = void&gt; </td></tr>
+<tr class="memitem:gac197b8f3f7c42e0d5194addc0a76706f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">ranges::v3::meta::transform</a> = eval&lt; meta_detail::transform_&lt; List, Fun, Dummy &gt;&gt;</td></tr>
+<tr class="memdesc:gac197b8f3f7c42e0d5194addc0a76706f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Metafuncion Class Fun. <code>transform</code> can also be called with two lists of the same length and a binary Metafunction Class, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise. Complexity: O(N) <br /></td></tr>
+<tr class="separator:gac197b8f3f7c42e0d5194addc0a76706f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga95003751d9c3c79421032503fa1aa94c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga95003751d9c3c79421032503fa1aa94c"></a>
+template&lt;typename List &gt; </td></tr>
+<tr class="memitem:ga95003751d9c3c79421032503fa1aa94c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">ranges::v3::meta::unique</a> = eval&lt; meta_detail::unique_&lt; List, list&lt;&gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga95003751d9c3c79421032503fa1aa94c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code> where all duplicate elements have been removed. Complexity: O(N^2) <br /></td></tr>
+<tr class="separator:ga95003751d9c3c79421032503fa1aa94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga146c7a3f34394e6ddb65c104c3696c1b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga146c7a3f34394e6ddb65c104c3696c1b"></a>
+template&lt;typename ListOfLists &gt; </td></tr>
+<tr class="memitem:ga146c7a3f34394e6ddb65c104c3696c1b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#ga146c7a3f34394e6ddb65c104c3696c1b">ranges::v3::meta::zip</a> = zip_with&lt; quote&lt; list &gt;, ListOfLists &gt;</td></tr>
+<tr class="memdesc:ga146c7a3f34394e6ddb65c104c3696c1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types, construct a new list by grouping the elements from the lists pairwise into <code><a class="el" href="structranges_1_1v3_1_1meta_1_1list.html" title="A list of types ">meta::list</a></code>s. Complexity: O(N*M), where <code>N</code> is the size of the outer list, and <code>M</code> is the size of the inner lists. <br /></td></tr>
+<tr class="separator:ga146c7a3f34394e6ddb65c104c3696c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad85d95198f31a25fa081fc98f1ca40b3"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad85d95198f31a25fa081fc98f1ca40b3"></a>
+template&lt;typename Fun , typename ListOfLists &gt; </td></tr>
+<tr class="memitem:gad85d95198f31a25fa081fc98f1ca40b3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-meta.html#gad85d95198f31a25fa081fc98f1ca40b3">ranges::v3::meta::zip_with</a> = transform&lt; foldl&lt; ListOfLists, repeat_n&lt; size&lt; front&lt; ListOfLists &gt;&gt;, Fun &gt;, bind_back&lt; quote&lt; transform &gt;, quote&lt; bind_front &gt;&gt;&gt;, quote&lt; apply &gt;&gt;</td></tr>
+<tr class="memdesc:gad85d95198f31a25fa081fc98f1ca40b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types and a Metafunction Class <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise. Complexity: O(N*M), where <code>N</code> is the size of the outer list, and M is the size of the inner lists. <br /></td></tr>
+<tr class="separator:gad85d95198f31a25fa081fc98f1ca40b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

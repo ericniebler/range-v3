@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -90,6 +90,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <div class="textblock"> This is an index of all the methods with links to the corresponding documentation.</div>
 
 <h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
+<li>back()
+: <a class="el" href="structranges_1_1v3_1_1range__interface.html#a5729d027e772d663116a975ac8b0f9bf">ranges::v3::range_interface&lt; Derived, Inf &gt;</a>
+</li>
 <li>base()
 : <a class="el" href="structranges_1_1v3_1_1range__adaptor.html#aa804872b1cfbb6a6e204c0794048f898">ranges::v3::range_adaptor&lt; Derived, BaseRng, Inf &gt;</a>
 </li>
@@ -97,7 +100,15 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="structranges_1_1v3_1_1bounded__view.html#a953b27b88924464d0e0980efc6204f0a">ranges::v3::bounded_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1drop__view.html#a4d8ef79ac48a1859e2a0ac2d1232f073">ranges::v3::drop_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1drop__while__view.html#ab0d7e097990c73b15c0bcecc7193676e">ranges::v3::drop_while_view&lt; Rng, Pred &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1range__facade.html#a81236ec96c0e433f06804b8df6577cb8">ranges::v3::range_facade&lt; Derived, Inf &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1tokenize__view.html#ac91508867ba4a63438f97fc1b71db2db">ranges::v3::tokenize_view&lt; Rng, Regex, SubMatchRange &gt;</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
+<li>derived()
+: <a class="el" href="structranges_1_1v3_1_1range__facade.html#a4121c8c53b355c850782ccbf157ddd06">ranges::v3::range_facade&lt; Derived, Inf &gt;</a>
 </li>
 </ul>
 
@@ -107,6 +118,14 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="structranges_1_1v3_1_1bounded__view.html#ae0c1e29d87c7eca86f8e4e08c9760f97">ranges::v3::bounded_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1drop__view.html#a0da892371657444b2fb83acf776255e9">ranges::v3::drop_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1drop__while__view.html#a34c6ebec3a1afa323dd14e666830d56c">ranges::v3::drop_while_view&lt; Rng, Pred &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1range__facade.html#a309acba1f0fcf88def930b10c3b7c05a">ranges::v3::range_facade&lt; Derived, Inf &gt;</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
+<li>front()
+: <a class="el" href="structranges_1_1v3_1_1range__interface.html#a09f66f823f6e1c9ee5468fa4eb485a04">ranges::v3::range_interface&lt; Derived, Inf &gt;</a>
 </li>
 </ul>
 
@@ -119,17 +138,23 @@ $(document).ready(function(){initNavTree('functions.html','');});
 
 
 <h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
+<li>operator Container()
+: <a class="el" href="structranges_1_1v3_1_1range__interface.html#a50935ff5e510b14270a3240e80e380eb">ranges::v3::range_interface&lt; Derived, Inf &gt;</a>
+</li>
 <li>operator()()
-: <a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html#a0c2f95a4022fbc493ca2a396b978b62a">ranges::v3::adjacent_find_fn</a>
-, <a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#a76d1ec4c465594758937c1058254ae97">ranges::v3::binary_search_fn</a>
-, <a class="el" href="structranges_1_1v3_1_1find__fn.html#a76d4884d134c8362e62accbefb851cde">ranges::v3::find_fn</a>
-, <a class="el" href="structranges_1_1v3_1_1find__if__fn.html#a06a1c6c1dfbe418d1d42f7183353de63">ranges::v3::find_if_fn</a>
+: <a class="el" href="structranges_1_1v3_1_1adjacent__find__fn.html#a30c8a2ae1bba2539a2cbcbe24051c302">ranges::v3::adjacent_find_fn</a>
+, <a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#a386b87522adf8f21520e86f5390a4445">ranges::v3::binary_search_fn</a>
+, <a class="el" href="structranges_1_1v3_1_1find__fn.html#afa5418e9338607cce6bdd37327daa5d9">ranges::v3::find_fn</a>
+, <a class="el" href="structranges_1_1v3_1_1find__if__fn.html#ad2e8ffa3039a0cc9a7f8384160488003">ranges::v3::find_if_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1find__if__not__fn.html#ac088e5b4090b9c920dbd7bae8b684b96">ranges::v3::find_if_not_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1is__sorted__fn.html#a02263b0d5dc67ebfdd44d76024557f8a">ranges::v3::is_sorted_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1is__sorted__until__fn.html#ae941ba1fcd5fb4a6ef79d508645dce83">ranges::v3::is_sorted_until_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1unique__copy__fn.html#abc4cbd3653cd20a383eb19bcfbd3128c">ranges::v3::unique_copy_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1unique__fn.html#ab19ab57a1667c3377780dfd00ec27b30">ranges::v3::unique_fn</a>
 , <a class="el" href="structranges_1_1v3_1_1upper__bound__fn.html#a434286d9140a95ba4b3c8dc8ca3ac2e7">ranges::v3::upper_bound_fn</a>
+</li>
+<li>operator[]()
+: <a class="el" href="structranges_1_1v3_1_1range__interface.html#a8b10a6d11ce29ba14c279008065becfa">ranges::v3::range_interface&lt; Derived, Inf &gt;</a>
 </li>
 </ul>
 
@@ -142,6 +167,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 , <a class="el" href="structranges_1_1v3_1_1join__view.html#a4f1c2d1017c515ee71c78a39a388639e">ranges::v3::join_view&lt; Rngs &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1meta_1_1list.html#a4709c14e82d9a7a48de6bb84bdd0ca79">ranges::v3::meta::list&lt; Ts &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1partial__sum__view.html#aff636d5519c2ed3e76b3ce5bf902708f">ranges::v3::partial_sum_view&lt; Rng, Fun &gt;</a>
+, <a class="el" href="structranges_1_1v3_1_1range__interface.html#abca414ddd491f2058c2d4cad0c7cf88a">ranges::v3::range_interface&lt; Derived, Inf &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1stride__view.html#a6a5e844b016101168e91c533b3b376a8">ranges::v3::stride_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1tail__view.html#afe7c93675ff2954bd76feec8cf52edae">ranges::v3::tail_view&lt; Rng &gt;</a>
 , <a class="el" href="structranges_1_1v3_1_1transform__view.html#a647ec0573faa8901d9ed4b16cc7187e4">ranges::v3::transform_view&lt; Rng, Fun &gt;</a>

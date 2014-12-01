@@ -9,7 +9,7 @@ var NAVTREE =
       ] ],
       [ "Quick Start", "index.html#tutorial-quick-start", null ]
     ] ],
-    [ "Reference documentation", "modules.html", "modules" ],
+    [ "Reference", "modules.html", "modules" ],
     [ "Indexes", "usergroup0.html", [
       [ "Methods", "functions.html", [
         [ "All", "functions.html", null ],
@@ -17,20 +17,18 @@ var NAVTREE =
       ] ],
       [ "Classes", "annotated.html", "annotated" ],
       [ "Files", "files.html", "files" ]
-    ] ],
-    [ "Class Index", "classes.html", null ],
-    [ "Files", null, null ]
+    ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
 ".html",
-"structranges_1_1v3_1_1at__fn.html#af44bd1ee92d39de36581ca198132d402",
-"structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html#ab4909e550b327c7cfacea51215dddd3f",
-"structranges_1_1v3_1_1meta_1_1always.html#aae585e26ec6a020d892fd9a9d1db3ae9",
-"structranges_1_1v3_1_1replace__if__fn.html#a16cace6971728d386013f90a58afceb5",
-"structranges_1_1v3_1_1view_1_1slice__fn.html#ac4620a00fdbf09b43475fe35dc0d288e"
+"structranges_1_1v3_1_1action_1_1action.html#aaff73a3c0b6ed199f433419ee4aa7dfb",
+"structranges_1_1v3_1_1concepts_1_1_iterator.html",
+"structranges_1_1v3_1_1is__range_3_01std_1_1set_3_01_key_00_01_compare_00_01_alloc_01_4_01_4.html",
+"structranges_1_1v3_1_1range__interface.html#a50935ff5e510b14270a3240e80e380eb",
+"structranges_1_1v3_1_1unreachable.html#a459b40b9fc8e7b6d869b7cf698b9c56b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

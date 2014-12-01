@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1slice__f
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -97,30 +97,30 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1slice__f
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac4620a00fdbf09b43475fe35dc0d288e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac4620a00fdbf09b43475fe35dc0d288e"></a>
-template&lt;typename Rng , requires  = ( InputIterable&lt;Rng&gt;() )&gt; </td></tr>
-<tr class="memitem:ac4620a00fdbf09b43475fe35dc0d288e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; from, range_difference_t&lt; Rng &gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from, to-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;</td></tr>
-<tr class="separator:ac4620a00fdbf09b43475fe35dc0d288e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a735a8dc05636174e3dbdcef44630cf39"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a735a8dc05636174e3dbdcef44630cf39"></a>
-return&#160;</td><td class="memItemRight" valign="bottom"><b>slice_fn::invoke_</b> (std::forward&lt; Rng &gt;(rng), from, to-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;{})</td></tr>
-<tr class="separator:a735a8dc05636174e3dbdcef44630cf39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff4f1c1f5712e0230f6dc04286a52208"><td class="memTemplParams" colspan="2"><a class="anchor" id="aff4f1c1f5712e0230f6dc04286a52208"></a>
-template&lt;typename Rng , requires  = ( InputIterable&lt;Rng&gt;() &amp;&amp; SizedIterable&lt;Rng&gt;() )&gt; </td></tr>
-<tr class="memitem:aff4f1c1f5712e0230f6dc04286a52208"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; from, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from, distance(rng)+to.dist_, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;</td></tr>
-<tr class="separator:aff4f1c1f5712e0230f6dc04286a52208"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3a614f05efdc7bd7032b81e4e37c1c5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad3a614f05efdc7bd7032b81e4e37c1c5"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>assert</b> (0&lt;=from)</td></tr>
 <tr class="separator:ad3a614f05efdc7bd7032b81e4e37c1c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87684d39b52a4003816bd425700bdc37"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a87684d39b52a4003816bd425700bdc37"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>assert</b> (from&lt;=distance(rng)+to.dist_)</td></tr>
 <tr class="separator:a87684d39b52a4003816bd425700bdc37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9164f4a0d83b7355e46b9f35d1a915b0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9164f4a0d83b7355e46b9f35d1a915b0"></a>
-return&#160;</td><td class="memItemRight" valign="bottom"><b>slice_fn::invoke_</b> (std::forward&lt; Rng &gt;(rng), from, distance(rng)+to.dist_, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;{})</td></tr>
-<tr class="separator:a9164f4a0d83b7355e46b9f35d1a915b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4620a00fdbf09b43475fe35dc0d288e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac4620a00fdbf09b43475fe35dc0d288e"></a>
+template&lt;typename Rng , requires  = ( InputIterable&lt;Rng&gt;() )&gt; </td></tr>
+<tr class="memitem:ac4620a00fdbf09b43475fe35dc0d288e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; from, range_difference_t&lt; Rng &gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from, to-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;</td></tr>
+<tr class="separator:ac4620a00fdbf09b43475fe35dc0d288e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff4f1c1f5712e0230f6dc04286a52208"><td class="memTemplParams" colspan="2"><a class="anchor" id="aff4f1c1f5712e0230f6dc04286a52208"></a>
+template&lt;typename Rng , requires  = ( InputIterable&lt;Rng&gt;() &amp;&amp; SizedIterable&lt;Rng&gt;() )&gt; </td></tr>
+<tr class="memitem:aff4f1c1f5712e0230f6dc04286a52208"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; from, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from, distance(rng)+to.dist_, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;</td></tr>
+<tr class="separator:aff4f1c1f5712e0230f6dc04286a52208"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f508b352e155596b85641fa16c6f25d"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7f508b352e155596b85641fa16c6f25d"></a>
 template&lt;typename Rng , requires  = ( (InputIterable&lt;Rng&gt;() &amp;&amp; SizedIterable&lt;Rng&gt;()) ||                         ForwardIterable&lt;Rng&gt;() )&gt; </td></tr>
 <tr class="memitem:a7f508b352e155596b85641fa16c6f25d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; from, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from.dist_, to.dist_-from.dist_, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;</td></tr>
 <tr class="separator:a7f508b352e155596b85641fa16c6f25d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a735a8dc05636174e3dbdcef44630cf39"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a735a8dc05636174e3dbdcef44630cf39"></a>
+return&#160;</td><td class="memItemRight" valign="bottom"><b>slice_fn::invoke_</b> (std::forward&lt; Rng &gt;(rng), from, to-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;{})</td></tr>
+<tr class="separator:a735a8dc05636174e3dbdcef44630cf39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9164f4a0d83b7355e46b9f35d1a915b0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9164f4a0d83b7355e46b9f35d1a915b0"></a>
+return&#160;</td><td class="memItemRight" valign="bottom"><b>slice_fn::invoke_</b> (std::forward&lt; Rng &gt;(rng), from, distance(rng)+to.dist_, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;{})</td></tr>
+<tr class="separator:a9164f4a0d83b7355e46b9f35d1a915b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

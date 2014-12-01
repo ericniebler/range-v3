@@ -5,6 +5,7 @@ var searchData=
   ['delimit_5ffn',['delimit_fn',['../structranges_1_1v3_1_1view_1_1delimit__fn.html',1,'ranges::v3::view']]],
   ['delimited_5fview',['delimited_view',['../structranges_1_1v3_1_1delimited__view.html',1,'ranges::v3']]],
   ['derived',['Derived',['../structranges_1_1v3_1_1concepts_1_1_derived.html',1,'ranges::v3::concepts']]],
+  ['derived',['derived',['../structranges_1_1v3_1_1range__facade.html#a4121c8c53b355c850782ccbf157ddd06',1,'ranges::v3::range_facade']]],
   ['destructible',['Destructible',['../structranges_1_1v3_1_1concepts_1_1_destructible.html',1,'ranges::v3::concepts']]],
   ['difference_5ftype',['difference_type',['../structranges_1_1v3_1_1difference__type.html',1,'ranges::v3']]],
   ['dirty_5ft',['dirty_t',['../classdirty__t.html',1,'']]],

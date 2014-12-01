@@ -443,6 +443,11 @@ var annotated =
         [ "zip_with_view", "structranges_1_1v3_1_1zip__with__view.html", "structranges_1_1v3_1_1zip__with__view" ]
       ] ]
     ] ],
+    [ "std", null, [
+      [ "tuple_element< 0,::ranges::v3::compressed_pair< First, Second > >", "structstd_1_1tuple__element_3_010_00_1_1ranges_1_1v3_1_1compressed__pair_3_01_first_00_01_second_01_4_01_4.html", "structstd_1_1tuple__element_3_010_00_1_1ranges_1_1v3_1_1compressed__pair_3_01_first_00_01_second_01_4_01_4" ],
+      [ "tuple_element< 1,::ranges::v3::compressed_pair< First, Second > >", "structstd_1_1tuple__element_3_011_00_1_1ranges_1_1v3_1_1compressed__pair_3_01_first_00_01_second_01_4_01_4.html", "structstd_1_1tuple__element_3_011_00_1_1ranges_1_1v3_1_1compressed__pair_3_01_first_00_01_second_01_4_01_4" ],
+      [ "tuple_size< ::ranges::v3::compressed_pair< First, Second > >", "structstd_1_1tuple__size_3_01_1_1ranges_1_1v3_1_1compressed__pair_3_01_first_00_01_second_01_4_01_4.html", null ]
+    ] ],
     [ "dirty_t", "classdirty__t.html", null ],
     [ "ImplFn", "class_impl_fn.html", null ],
     [ "offset_t", "classoffset__t.html", null ],

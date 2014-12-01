@@ -1,7 +1,9 @@
 var searchData=
 [
+  ['generate',['generate',['../group__group-algorithms.html#ga83f086435db5bdcb99964c10edc40560',1,'ranges::v3']]],
   ['generate_5ffn',['generate_fn',['../structranges_1_1v3_1_1generate__fn.html',1,'ranges::v3']]],
   ['generate_5ffn',['generate_fn',['../structranges_1_1v3_1_1view_1_1generate__fn.html',1,'ranges::v3::view']]],
+  ['generate_5fn',['generate_n',['../group__group-algorithms.html#ga5a11415b8607bcfb76915043fb52b067',1,'ranges::v3']]],
   ['generate_5fn_5ffn',['generate_n_fn',['../structranges_1_1v3_1_1generate__n__fn.html',1,'ranges::v3']]],
   ['generate_5fn_5ffn',['generate_n_fn',['../structranges_1_1v3_1_1view_1_1generate__n__fn.html',1,'ranges::v3::view']]],
   ['generate_5fn_5fview',['generate_n_view',['../structranges_1_1v3_1_1generate__n__view.html',1,'ranges::v3']]],

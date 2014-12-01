@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('index.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -109,9 +109,9 @@ Preface</h1>
 <h2><a class="anchor" id="tutorial-installation"></a>
 Installation</h2>
 <hr/>
-<p> This library is header-only. You can get the source code from the <a href="https://github.com/ericniebler/range-v3">range-v3 repository</a> on github. To compile with Range-v3, you can either #include the entire library:</p>
+<p> This library is header-only. You can get the source code from the <a href="https://github.com/ericniebler/range-v3">range-v3 repository</a> on github. To compile with Range-v3, you can either <code>#include</code> the entire library:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;range/v3/all.hpp&gt;</span></div>
-</div><!-- fragment --><p>Or you can #include only the core, and then the individual headers you want:</p>
+</div><!-- fragment --><p>Or you can <code>#include</code> only the core, and then the individual headers you want:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;range/v3/core.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;range/v3/....</span></div>
 </div><!-- fragment --><h2><a class="anchor" id="tutorial-license"></a>
@@ -143,49 +143,35 @@ Quick Start</h1>
 <p>Having a single range object permits <em>pipelines</em> of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by <em>views</em>, and eager mutation is handled by <em>actions</em>.</p>
 <h4>Views</h4>
 <p>A view is a lightweight wrapper that presents a view of an underlying sequence of elements in some custom way without mutating or copying it. Views are cheap to create and copy, and have non-owning reference semantics. Below are some examples:</p>
-<ol type="1">
-<li>Filter a container using a predicate and transform it.</li>
-</ol>
+<p>Filter a container using a predicate and transform it.</p>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; vi{1,2,3,4,5,6,7,8,9,10};</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line"><span class="keyword">auto</span> rng = vi | view::remove_if([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i % 2 == 1;})</div>
 <div class="line">              | <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> std::to_string(i);});</div>
 <div class="line"><span class="comment">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></div>
-</div><!-- fragment --><ol type="1">
-<li>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</li>
-</ol>
+</div><!-- fragment --><p>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</p>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line"><span class="keywordtype">int</span> sum = accumulate(view::ints(1)</div>
 <div class="line">                   | <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;})</div>
 <div class="line">                   | view::take(10), 0);</div>
-</div><!-- fragment --><ol type="1">
-<li>Generate a sequence on the fly with a range comprehension and initialize a vector with it:</li>
-</ol>
+</div><!-- fragment --><p>Generate a sequence on the fly with a range comprehension and initialize a vector with it:</p>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line">std::vector&lt;int&gt; vi =</div>
-<div class="line">    view::for_each(view::ints(1,10), [](<span class="keywordtype">int</span> i){</div>
+<div class="line">    <a class="code" href="group__group-algorithms.html#gaff0beb03ec81728246a25818492ee331">view::for_each</a>(view::ints(1,10), [](<span class="keywordtype">int</span> i){</div>
 <div class="line">        <span class="keywordflow">return</span> yield_from(view::repeat(i,i));</div>
 <div class="line">    });</div>
 <div class="line"><span class="comment">// vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}</span></div>
 </div><!-- fragment --><h4>Actions</h4>
 <p>When you want to mutate a container in-place, or forward it through a chain of mutating operations, you can use actions. The following examples should make it clear.</p>
-<ol type="1">
-<li>Read data into a vector, sort it, and make it unique.</li>
-</ol>
+<p>Read data into a vector, sort it, and make it unique.</p>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> std::vector&lt;int&gt; read_data();</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line">std::vector&lt;int&gt; vi = read_data() | action::sort | <a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>;</div>
-</div><!-- fragment --><ol type="1">
-<li>Do the same to a <code>vector</code> that already contains some data:</li>
-</ol>
-<div class="fragment"><div class="line">vi = std::move(vi) | action::sort | <a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>;</div>
-</div><!-- fragment --><ol type="1">
-<li>Mutate the container in-place:</li>
-</ol>
+</div><!-- fragment --><p>Do the same to a <code>vector</code> that already contains some data:</p>
+<div class="fragment"><div class="line">vi = <a class="code" href="group__group-algorithms.html#gab2adb3987718fd88d7a2d54189e6f2bf">std::move</a>(vi) | action::sort | <a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>;</div>
+</div><!-- fragment --><p>Mutate the container in-place:</p>
 <div class="fragment"><div class="line">vi |= action::sort | <a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>;</div>
-</div><!-- fragment --><ol type="1">
-<li>Same as above, but with function-call syntax instead of pipe syntax:</li>
-</ol>
+</div><!-- fragment --><p>Same as above, but with function-call syntax instead of pipe syntax:</p>
 <div class="fragment"><div class="line"><a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>(action::sort(vi));</div>
 </div><!-- fragment --><h2>Create Custom Ranges</h2>
 <p>Range v3 provides a utility for easily creating your own range types, called <code>range_facade</code>. The code below uses <code>range_facade</code> to create a range that traverses a null-terminated string:</p>
@@ -217,7 +203,7 @@ Quick Start</h1>
 <div class="line">{</div>
 <div class="line">    c_string_range r(<span class="stringliteral">&quot;hello world&quot;</span>);</div>
 <div class="line">    <span class="comment">// Iterate over all the characters and print them out</span></div>
-<div class="line">    ranges::for_each(r, [](<span class="keywordtype">char</span> ch){</div>
+<div class="line">    <a class="code" href="group__group-algorithms.html#gaff0beb03ec81728246a25818492ee331">ranges::for_each</a>(r, [](<span class="keywordtype">char</span> ch){</div>
 <div class="line">        std::cout &lt;&lt; ch &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
 <div class="line">    });</div>
 <div class="line">    <span class="comment">// prints: h e l l o   w o r l d</span></div>
@@ -249,14 +235,14 @@ Quick Start</h1>
 <div class="line">    transform_view() = <span class="keywordflow">default</span>;</div>
 <div class="line">    transform_view(Rng &amp;&amp; rng, Fun fun)</div>
 <div class="line">      : range_adaptor_t&lt;transform_view&gt;{std::forward&lt;Rng&gt;(rng)}</div>
-<div class="line">      , fun_(std::move(fun))</div>
+<div class="line">      , fun_(<a class="code" href="group__group-algorithms.html#gab2adb3987718fd88d7a2d54189e6f2bf">std::move</a>(fun))</div>
 <div class="line">    {}</div>
 <div class="line">};</div>
 <div class="line"></div>
 <div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng, <span class="keyword">class</span> Fun&gt;</div>
 <div class="line">transform_view&lt;Rng, Fun&gt; <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">transform</a>(Rng &amp;&amp; rng, Fun fun)</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordflow">return</span> {std::forward&lt;Rng&gt;(rng), std::move(fun)};</div>
+<div class="line">    <span class="keywordflow">return</span> {std::forward&lt;Rng&gt;(rng), <a class="code" href="group__group-algorithms.html#gab2adb3987718fd88d7a2d54189e6f2bf">std::move</a>(fun)};</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>Range transformation is achieved by defining a nested <code>adaptor</code> class that handles the transformation, and then defining <code>begin_adaptor</code> and <code>end_adaptor</code> members that return adaptors for the begin iterator and the end sentinel, respectively. The <code>adaptor</code> class has a <code>current</code> member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: <code>equal</code>, <code>next</code>, <code>prev</code>, <code>advance</code>, and <code>distance_to</code>; but the transform adaptor accepts the defaults defined in <code>adaptor_base</code>.</p>
 <p>With <code>transform_view</code>, we can print out the first 20 squares:</p>

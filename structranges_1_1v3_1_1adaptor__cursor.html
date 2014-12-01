@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1adaptor__cursor.
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -129,30 +129,30 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>single_pass</b> = <a
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af0f9c94a3e4850dde161bd32909a1a8b"><td class="memTemplParams" colspan="2"><a class="anchor" id="af0f9c94a3e4850dde161bd32909a1a8b"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().current(first))&gt; </td></tr>
-<tr class="memitem:af0f9c94a3e4850dde161bd32909a1a8b"><td class="memTemplItemLeft" align="right" valign="top">R&#160;</td><td class="memTemplItemRight" valign="bottom"><b>current</b> () const </td></tr>
-<tr class="separator:af0f9c94a3e4850dde161bd32909a1a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6b652d5701a0ac2bee31f2b039dd867f"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().next(first))&gt; </td></tr>
-<tr class="memitem:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>next</b> ()</td></tr>
-<tr class="separator:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8524aff2b4c68226b558c775d142b6b5"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8524aff2b4c68226b558c775d142b6b5"></a>
-template&lt;typename C  = adaptor_cursor&gt; </td></tr>
-<tr class="memitem:a8524aff2b4c68226b558c775d142b6b5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>equal</b> (<a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a> const &amp;that) const -&gt; decltype(std::declval&lt; C const &amp; &gt;().equal_(that, 42))</td></tr>
-<tr class="separator:a8524aff2b4c68226b558c775d142b6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a421d9d3f4a0b8dba4657bff67c1e44f9"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().prev(first))&gt; </td></tr>
-<tr class="memitem:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>prev</b> ()</td></tr>
-<tr class="separator:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a583df5c37b11b53d7f3a65f2ff941f34"><td class="memTemplParams" colspan="2"><a class="anchor" id="a583df5c37b11b53d7f3a65f2ff941f34"></a>
 template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().advance(first, 0))&gt; </td></tr>
 <tr class="memitem:a583df5c37b11b53d7f3a65f2ff941f34"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>advance</b> (iterator_difference_t&lt; BaseIter &gt; n)</td></tr>
 <tr class="separator:a583df5c37b11b53d7f3a65f2ff941f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0f9c94a3e4850dde161bd32909a1a8b"><td class="memTemplParams" colspan="2"><a class="anchor" id="af0f9c94a3e4850dde161bd32909a1a8b"></a>
+template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().current(first))&gt; </td></tr>
+<tr class="memitem:af0f9c94a3e4850dde161bd32909a1a8b"><td class="memTemplItemLeft" align="right" valign="top">R&#160;</td><td class="memTemplItemRight" valign="bottom"><b>current</b> () const </td></tr>
+<tr class="separator:af0f9c94a3e4850dde161bd32909a1a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5462b943147f2de757a4bd74dd2be927"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5462b943147f2de757a4bd74dd2be927"></a>
 template&lt;typename C  = adaptor_cursor&gt; </td></tr>
 <tr class="memitem:a5462b943147f2de757a4bd74dd2be927"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>distance_to</b> (<a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a> const &amp;that) const -&gt; decltype(std::declval&lt; C const &amp; &gt;().distance_to_(that, 42))</td></tr>
 <tr class="separator:a5462b943147f2de757a4bd74dd2be927"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8524aff2b4c68226b558c775d142b6b5"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8524aff2b4c68226b558c775d142b6b5"></a>
+template&lt;typename C  = adaptor_cursor&gt; </td></tr>
+<tr class="memitem:a8524aff2b4c68226b558c775d142b6b5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>equal</b> (<a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a> const &amp;that) const -&gt; decltype(std::declval&lt; C const &amp; &gt;().equal_(that, 42))</td></tr>
+<tr class="separator:a8524aff2b4c68226b558c775d142b6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6b652d5701a0ac2bee31f2b039dd867f"></a>
+template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().next(first))&gt; </td></tr>
+<tr class="memitem:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>next</b> ()</td></tr>
+<tr class="separator:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a421d9d3f4a0b8dba4657bff67c1e44f9"></a>
+template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().prev(first))&gt; </td></tr>
+<tr class="memitem:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>prev</b> ()</td></tr>
+<tr class="separator:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

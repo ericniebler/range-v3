@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['istream',['istream',['../group__group-core.html#ga21dccd922318b53ab5fc375ba0b161ef',1,'ranges::v3::istream(std::istream &amp;sin)'],['../group__group-core.html#ga21dccd922318b53ab5fc375ba0b161ef',1,'ranges::v3::istream(std::istream &amp;sin)']]]
+  ['front',['front',['../structranges_1_1v3_1_1range__interface.html#a09f66f823f6e1c9ee5468fa4eb485a04',1,'ranges::v3::range_interface::front()'],['../structranges_1_1v3_1_1range__interface.html#ad084dd4431da83b4a5ae726251e0f72f',1,'ranges::v3::range_interface::front() const ']]]
 ];
