@@ -3,11 +3,11 @@ var NAVTREE =
   [ "Range-v3", "index.html", [
     [ "User Manual", "index.html", [
       [ "Preface", "index.html#tutorial-preface", [
-        [ "Installation", "index.html#Installation", null ],
-        [ "License", "index.html#License", null ],
-        [ "Supported Compilers", "index.html#compilers", null ]
+        [ "Installation", "index.html#tutorial-installation", null ],
+        [ "License", "index.html#tutorial-license", null ],
+        [ "Supported Compilers", "index.html#tutorial-compilers", null ]
       ] ],
-      [ "Quick Start", "index.html#quick_start", null ]
+      [ "Quick Start", "index.html#tutorial-quick-start", null ]
     ] ],
     [ "Reference documentation", "modules.html", "modules" ],
     [ "Indexes", "usergroup0.html", [
@@ -26,10 +26,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"structranges_1_1v3_1_1common__type_3_01unreachable_00_01_t_01_4.html",
-"structranges_1_1v3_1_1drop__while__view.html#a2f0ee222ecba25764e09758d5312ef8e",
-"structranges_1_1v3_1_1next__permutation__fn.html#a47d13494a516d1a09de79009ca8576f4",
-"structranges_1_1v3_1_1sized__range.html#ab56c60240c7ac3dd59cbb63c03117280"
+"structranges_1_1v3_1_1at__fn.html#af44bd1ee92d39de36581ca198132d402",
+"structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html#ab4909e550b327c7cfacea51215dddd3f",
+"structranges_1_1v3_1_1meta_1_1always.html#aae585e26ec6a020d892fd9a9d1db3ae9",
+"structranges_1_1v3_1_1replace__if__fn.html#a16cace6971728d386013f90a58afceb5",
+"structranges_1_1v3_1_1view_1_1slice__fn.html#ac4620a00fdbf09b43475fe35dc0d288e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

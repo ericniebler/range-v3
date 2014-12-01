@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['back',['back',['../group__group-meta.html#gaeae248b334db0fea712b1967a370c36a',1,'ranges::v3::meta']]],
   ['back_5ffn',['back_fn',['../structranges_1_1v3_1_1back__fn.html',1,'ranges::v3']]],
   ['back_5finsert_5fiterator',['back_insert_iterator',['../structranges_1_1v3_1_1back__insert__iterator.html',1,'ranges::v3']]],
   ['back_5finserter_5ffn',['back_inserter_fn',['../structranges_1_1v3_1_1back__inserter__fn.html',1,'ranges::v3']]],
@@ -20,7 +21,12 @@ var searchData=
   ['binary_5fsearch_5ffn',['binary_search_fn',['../structranges_1_1v3_1_1binary__search__fn.html',1,'ranges::v3']]],
   ['bind_5fback',['bind_back',['../structranges_1_1v3_1_1meta_1_1bind__back.html',1,'ranges::v3::meta']]],
   ['bind_5ffront',['bind_front',['../structranges_1_1v3_1_1meta_1_1bind__front.html',1,'ranges::v3::meta']]],
+  ['bit_5fand',['bit_and',['../group__group-meta.html#ga2d655d770679acb418aa61f98e6cb282',1,'ranges::v3::meta']]],
+  ['bit_5fnot',['bit_not',['../group__group-meta.html#ga6a2d7e102c7fb416d9bb7000f21be1ce',1,'ranges::v3::meta']]],
+  ['bit_5for',['bit_or',['../group__group-meta.html#ga6cf4d5ba5675434d1cdf50f165c13e67',1,'ranges::v3::meta']]],
+  ['bit_5fxor',['bit_xor',['../group__group-meta.html#ga8e4534a23b9f039ebf2eee9839d324df',1,'ranges::v3::meta']]],
   ['bitwise_5for',['bitwise_or',['../structranges_1_1v3_1_1bitwise__or.html',1,'ranges::v3']]],
+  ['bool_5f',['bool_',['../group__group-meta.html#ga0825b9a6c977a5202a0df51d0ea0fd2b',1,'ranges::v3::meta']]],
   ['bounded_5ffn',['bounded_fn',['../structranges_1_1v3_1_1view_1_1bounded__fn.html',1,'ranges::v3::view']]],
   ['bounded_5fview',['bounded_view',['../structranges_1_1v3_1_1bounded__view.html',1,'ranges::v3']]],
   ['boundediterable',['BoundedIterable',['../structranges_1_1v3_1_1concepts_1_1_bounded_iterable.html',1,'ranges::v3::concepts']]],

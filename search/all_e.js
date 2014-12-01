@@ -30,11 +30,15 @@ var searchData=
   ['pipeable_5faccess',['pipeable_access',['../structranges_1_1v3_1_1pipeable__access.html',1,'ranges::v3']]],
   ['pipeable_5fbase',['pipeable_base',['../structranges_1_1v3_1_1pipeable__base.html',1,'ranges::v3']]],
   ['plus',['plus',['../structranges_1_1v3_1_1plus.html',1,'ranges::v3']]],
+  ['plus',['plus',['../group__group-meta.html#ga29ef9580ad8a918b832bc6aba33d832c',1,'ranges::v3::meta']]],
   ['pointer_5ftype',['pointer_type',['../structranges_1_1v3_1_1pointer__type.html',1,'ranges::v3']]],
+  ['pop_5ffront',['pop_front',['../group__group-meta.html#gacc20f1ad3c22f267b7da76af9898bc8b',1,'ranges::v3::meta']]],
   ['pop_5fheap_5ffn',['pop_heap_fn',['../structranges_1_1v3_1_1pop__heap__fn.html',1,'ranges::v3']]],
   ['predicate',['Predicate',['../structranges_1_1v3_1_1concepts_1_1_predicate.html',1,'ranges::v3::concepts']]],
   ['prev_5ffn',['prev_fn',['../structranges_1_1v3_1_1prev__fn.html',1,'ranges::v3']]],
   ['prev_5fpermutation_5ffn',['prev_permutation_fn',['../structranges_1_1v3_1_1prev__permutation__fn.html',1,'ranges::v3']]],
   ['protect_5ffn',['protect_fn',['../structranges_1_1v3_1_1protect__fn.html',1,'ranges::v3']]],
+  ['push_5fback',['push_back',['../group__group-meta.html#ga0fe795d2cdc1185cb528e26e38849ac7',1,'ranges::v3::meta']]],
+  ['push_5ffront',['push_front',['../group__group-meta.html#ga426d5aeb140f46a83ed7177ae335745a',1,'ranges::v3::meta']]],
   ['push_5fheap_5ffn',['push_heap_fn',['../structranges_1_1v3_1_1push__heap__fn.html',1,'ranges::v3']]]
 ];

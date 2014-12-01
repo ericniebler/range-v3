@@ -7,6 +7,8 @@ var searchData=
   ['optional_3c_20invokable_5ft_3c_20fun_20_3e_20_3e',['optional&lt; invokable_t&lt; Fun &gt; &gt;',['../structranges_1_1v3_1_1optional.html',1,'ranges::v3']]],
   ['optional_3c_20invokable_5ft_3c_20make_5ftuple_5ffn_20_3e_20_3e',['optional&lt; invokable_t&lt; make_tuple_fn &gt; &gt;',['../structranges_1_1v3_1_1optional.html',1,'ranges::v3']]],
   ['optional_3c_20range_5fvalue_5ft_3c_20rng_20_3e_20_3e',['optional&lt; range_value_t&lt; Rng &gt; &gt;',['../structranges_1_1v3_1_1optional.html',1,'ranges::v3']]],
+  ['or_5f',['or_',['../group__group-meta.html#ga5841b07130a2e602c44eb5d07b643ea8',1,'ranges::v3::meta']]],
+  ['or_5fc',['or_c',['../group__group-meta.html#ga1310f3726905bd6e1eb91f4c0c83064e',1,'ranges::v3::meta']]],
   ['ordered_5fless',['ordered_less',['../structranges_1_1v3_1_1ordered__less.html',1,'ranges::v3']]],
   ['ostream_5fiterator',['ostream_iterator',['../structranges_1_1v3_1_1ostream__iterator.html',1,'ranges::v3']]],
   ['outputiterable',['OutputIterable',['../structranges_1_1v3_1_1concepts_1_1_output_iterable.html',1,'ranges::v3::concepts']]],

@@ -92,12 +92,12 @@ $(document).ready(function(){initNavTree('index.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#tutorial-preface">Preface</a><ul><li class="level2"><a href="#Installation"></a></li>
-<li class="level2"><a href="#License"></a></li>
-<li class="level2"><a href="#compilers">Supported Compilers</a></li>
+<ul><li class="level1"><a href="#tutorial-preface">Preface</a><ul><li class="level2"><a href="#tutorial-installation">Installation</a></li>
+<li class="level2"><a href="#tutorial-license">License</a></li>
+<li class="level2"><a href="#tutorial-compilers">Supported Compilers</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#quick_start">Quick Start</a></li>
+<li class="level1"><a href="#tutorial-quick-start">Quick Start</a></li>
 </ul>
 </div>
 <div class="textblock"><h1><a class="anchor" id="tutorial-preface"></a>
@@ -106,7 +106,7 @@ Preface</h1>
 <p> Range library for C++11/14/17. This code is the basis of <a href="https://ericniebler.github.io/std/wg21/D4128.html">a formal proposal</a> to add range support to the C++ standard library.</p>
 <p><b>Development Status:</b></p>
 <p>This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code <em>will</em> evolve without regard to backwards compatibility.</p>
-<h2><a class="anchor" id="Installation"></a>
+<h2><a class="anchor" id="tutorial-installation"></a>
 Installation</h2>
 <hr/>
 <p> This library is header-only. You can get the source code from the <a href="https://github.com/ericniebler/range-v3">range-v3 repository</a> on github. To compile with Range-v3, you can either #include the entire library:</p>
@@ -114,11 +114,11 @@ Installation</h2>
 </div><!-- fragment --><p>Or you can #include only the core, and then the individual headers you want:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;range/v3/core.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;range/v3/....</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="License"></a>
+</div><!-- fragment --><h2><a class="anchor" id="tutorial-license"></a>
 License</h2>
 <hr/>
 <p> Most of the source code in this project are mine, and those are under the Boost Software License. Parts are taken from Alex Stepanov's Elements of Programming, Howard Hinnant's libc++, and from the SGI STL. Please see the attached LICENSE file and the CREDITS file for the licensing and acknowledgements.</p>
-<h2><a class="anchor" id="compilers"></a>
+<h2><a class="anchor" id="tutorial-compilers"></a>
 Supported Compilers</h2>
 <hr/>
 <p> The code is known to work on the following compilers:</p>
@@ -126,7 +126,7 @@ Supported Compilers</h2>
 <li>clang 3.4.0</li>
 <li>GCC 4.9.0</li>
 </ul>
-<h1><a class="anchor" id="quick_start"></a>
+<h1><a class="anchor" id="tutorial-quick-start"></a>
 Quick Start</h1>
 <hr/>
 <p> Range v3 is a generic library that augments the existing standard library with facilities for working with <em>ranges</em>. A range can be loosely thought of a pair of iterators, although they need not be implemented that way. Bundling begin/end iterators into a single object brings several benefits.</p>
@@ -149,14 +149,14 @@ Quick Start</h1>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; vi{1,2,3,4,5,6,7,8,9,10};</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line"><span class="keyword">auto</span> rng = vi | view::remove_if([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i % 2 == 1;})</div>
-<div class="line">              | view::transform([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> std::to_string(i);});</div>
+<div class="line">              | <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> std::to_string(i);});</div>
 <div class="line"><span class="comment">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></div>
 </div><!-- fragment --><ol type="1">
 <li>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</li>
 </ol>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line"><span class="keywordtype">int</span> sum = accumulate(view::ints(1)</div>
-<div class="line">                   | view::transform([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;})</div>
+<div class="line">                   | <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;})</div>
 <div class="line">                   | view::take(10), 0);</div>
 </div><!-- fragment --><ol type="1">
 <li>Generate a sequence on the fly with a range comprehension and initialize a vector with it:</li>
@@ -174,19 +174,19 @@ Quick Start</h1>
 </ol>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> std::vector&lt;int&gt; read_data();</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
-<div class="line">std::vector&lt;int&gt; vi = read_data() | action::sort | action::unique;</div>
+<div class="line">std::vector&lt;int&gt; vi = read_data() | action::sort | <a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>;</div>
 </div><!-- fragment --><ol type="1">
 <li>Do the same to a <code>vector</code> that already contains some data:</li>
 </ol>
-<div class="fragment"><div class="line">vi = std::move(vi) | action::sort | action::unique;</div>
+<div class="fragment"><div class="line">vi = std::move(vi) | action::sort | <a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>;</div>
 </div><!-- fragment --><ol type="1">
 <li>Mutate the container in-place:</li>
 </ol>
-<div class="fragment"><div class="line">vi |= action::sort | action::unique;</div>
+<div class="fragment"><div class="line">vi |= action::sort | <a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>;</div>
 </div><!-- fragment --><ol type="1">
 <li>Same as above, but with function-call syntax instead of pipe syntax:</li>
 </ol>
-<div class="fragment"><div class="line">action::unique(action::sort(vi));</div>
+<div class="fragment"><div class="line"><a class="code" href="group__group-meta.html#ga95003751d9c3c79421032503fa1aa94c">action::unique</a>(action::sort(vi));</div>
 </div><!-- fragment --><h2>Create Custom Ranges</h2>
 <p>Range v3 provides a utility for easily creating your own range types, called <code>range_facade</code>. The code below uses <code>range_facade</code> to create a range that traverses a null-terminated string:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;range/v3/all.hpp&gt;</span></div>
@@ -254,7 +254,7 @@ Quick Start</h1>
 <div class="line">};</div>
 <div class="line"></div>
 <div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng, <span class="keyword">class</span> Fun&gt;</div>
-<div class="line">transform_view&lt;Rng, Fun&gt; transform(Rng &amp;&amp; rng, Fun fun)</div>
+<div class="line">transform_view&lt;Rng, Fun&gt; <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">transform</a>(Rng &amp;&amp; rng, Fun fun)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordflow">return</span> {std::forward&lt;Rng&gt;(rng), std::move(fun)};</div>
 <div class="line">}</div>
@@ -262,7 +262,7 @@ Quick Start</h1>
 <p>With <code>transform_view</code>, we can print out the first 20 squares:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> main()</div>
 <div class="line">{</div>
-<div class="line">    <span class="keyword">auto</span> squares = ::transform(view::ints(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
+<div class="line">    <span class="keyword">auto</span> squares = <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">::transform</a>(view::ints(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
 <div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i : squares | view::take(20))</div>
 <div class="line">        std::cout &lt;&lt; i &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
 <div class="line">    std::cout &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
