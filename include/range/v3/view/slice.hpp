@@ -314,7 +314,9 @@ namespace ranges
                 )
             };
 
-            constexpr slice_fn slice {};
+            /// \sa `slice_fn`
+            /// \ingroup group-views
+            constexpr slice_fn slice{};
         }
         /// @}
     }

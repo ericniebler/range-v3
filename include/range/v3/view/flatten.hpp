@@ -132,6 +132,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `flatten_fn`
+            /// \ingroup group-views
             constexpr flatten_fn flatten{};
         }
         /// @}

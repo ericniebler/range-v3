@@ -74,6 +74,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `indirect_fn`
+            /// \ingroup group-views
             constexpr indirect_fn indirect{};
         }
         /// @}

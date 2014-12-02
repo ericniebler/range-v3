@@ -43,6 +43,8 @@ namespace ranges
             }
         };
 
+        /// \ingroup group-utility
+        /// \sa `make_invokable_fn`
         constexpr make_invokable_fn invokable {};
 
         template<typename T>

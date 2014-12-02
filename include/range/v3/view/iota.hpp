@@ -226,6 +226,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `iota_fn`
+            /// \ingroup group-views
             constexpr iota_fn iota{};
 
             struct ints_fn
@@ -246,6 +248,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `ints_fn`
+            /// \ingroup group-views
             constexpr ints_fn ints{};
         }
         /// @}

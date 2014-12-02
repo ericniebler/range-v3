@@ -124,7 +124,9 @@ namespace ranges
                 }
             };
 
-            constexpr remove_if_fn remove_if {};
+            /// \sa `remove_if_fn`
+            /// \ingroup group-views
+            constexpr remove_if_fn remove_if{};
         }
         /// @}
     }

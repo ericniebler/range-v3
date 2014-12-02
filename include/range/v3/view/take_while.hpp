@@ -99,6 +99,8 @@ namespace ranges
                 )
             };
 
+            /// \sa `take_while_fn`
+            /// \ingroup group-views
             constexpr take_while_fn take_while{};
         }
         /// @}

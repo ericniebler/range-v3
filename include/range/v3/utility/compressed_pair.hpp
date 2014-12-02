@@ -142,9 +142,11 @@ namespace ranges
             }
         };
 
+        /// \ingroup group-utility
+        /// \sa `make_compressed_pair_fn`
         constexpr make_compressed_pair_fn make_compressed_pair {};
 
-        // Tuple-like access
+        /// \brief Tuple-like access of `compressed_pair`
         // TODO Switch to variable template when available
         template<std::size_t I, typename First, typename Second,
             CONCEPT_REQUIRES_(I == 0)>
@@ -154,6 +156,7 @@ namespace ranges
             return p.first;
         }
 
+        /// \overload
         template<std::size_t I, typename First, typename Second,
             CONCEPT_REQUIRES_(I == 0)>
         constexpr auto get(compressed_pair<First, Second> const & p) ->
@@ -162,6 +165,7 @@ namespace ranges
             return p.first;
         }
 
+        /// \overload
         template<std::size_t I, typename First, typename Second,
             CONCEPT_REQUIRES_(I == 0)>
         constexpr auto get(compressed_pair<First, Second> && p) ->
@@ -170,6 +174,7 @@ namespace ranges
             return detail::move(p).first;
         }
 
+        /// \overload
         template<std::size_t I, typename First, typename Second,
             CONCEPT_REQUIRES_(I == 1)>
         constexpr auto get(compressed_pair<First, Second> & p) ->
@@ -178,6 +183,7 @@ namespace ranges
             return p.second;
         }
 
+        /// \overload
         template<std::size_t I, typename First, typename Second,
             CONCEPT_REQUIRES_(I == 1)>
         constexpr auto get(compressed_pair<First, Second> const & p) ->
@@ -186,6 +192,7 @@ namespace ranges
             return p.second;
         }
 
+        /// \overload
         template<std::size_t I, typename First, typename Second,
             CONCEPT_REQUIRES_(I == 1)>
         constexpr auto get(compressed_pair<First, Second> && p) ->

@@ -137,7 +137,9 @@ namespace ranges
                 }
             };
 
-            constexpr partial_sum_fn partial_sum {};
+            /// \sa `partial_sum_fn`
+            /// \ingroup group-views
+            constexpr partial_sum_fn partial_sum{};
         }
         /// @}
     }

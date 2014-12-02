@@ -119,7 +119,9 @@ namespace ranges
                 }
             };
 
-            constexpr reverse_fn reverse {};
+            /// \sa `reverse_fn`
+            /// \ingroup group-views
+            constexpr reverse_fn reverse{};
         }
         /// @}
     }

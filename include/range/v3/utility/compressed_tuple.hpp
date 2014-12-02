@@ -92,7 +92,7 @@ namespace ranges
             return ranges::get<I>(detail::compressed_tuple_core_access::get_data(detail::move(tup)));
         }
 
-        constexpr struct make_compressed_tuple_fn
+        struct make_compressed_tuple_fn
         {
             template<typename...Ts>
             constexpr auto operator()(Ts &&... ts) const ->
@@ -100,7 +100,11 @@ namespace ranges
             {
                 return compressed_tuple<Ts...>{detail::forward<Ts>(ts)...};
             }
-        } make_compressed_tuple {};
+        };
+        
+        /// \ingroup group-utility
+        /// \sa `make_compressed_tuple_fn`
+        constexpr make_compressed_tuple_fn make_compressed_tuple {};
 
         /// @}
     }

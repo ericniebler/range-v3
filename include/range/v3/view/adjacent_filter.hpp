@@ -91,7 +91,9 @@ namespace ranges
                 }
             };
 
-            constexpr adjacent_filter_fn adjacent_filter {};
+            /// \sa `adjacent_filter_fn`
+            /// \ingroup group-views
+            constexpr adjacent_filter_fn adjacent_filter{};
         }
         /// @}
     }

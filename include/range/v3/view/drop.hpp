@@ -114,7 +114,9 @@ namespace ranges
                 )
             };
 
-            constexpr drop_fn drop {};
+            /// \sa `drop_fn`
+            /// \ingroup group-views
+            constexpr drop_fn drop{};
         }
         /// @}
     }

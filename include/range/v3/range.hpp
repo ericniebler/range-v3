@@ -35,57 +35,6 @@ namespace ranges
             {
                 return static_cast<U &&>(const_cast<U &>(t));
             }
-
-            // Like boost::iterator_range.
-            template<typename Derived, typename I, typename S /*= I*/>
-            struct range_impl
-              : private compressed_pair<I, S>
-              , range_interface<Derived>
-            {
-                using iterator = meta::eval<std::remove_const<I>>;
-                using sentinel = meta::eval<std::remove_const<S>>;
-                using compressed_pair<I, S>::first;
-                using compressed_pair<I, S>::second;
-
-                range_impl() = default;
-                constexpr range_impl(iterator begin, sentinel end)
-                  : compressed_pair<I, S>{detail::move(begin), detail::move(end)}
-                {}
-                template<typename X, typename Y,
-                    CONCEPT_REQUIRES_(Convertible<X, iterator>() && Convertible<Y, sentinel>())>
-                constexpr range_impl(range<X, Y> rng)
-                  : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
-                {}
-                template<typename X, typename Y,
-                    CONCEPT_REQUIRES_(Convertible<X, iterator>() && Convertible<Y, sentinel>())>
-                constexpr range_impl(std::pair<X, Y> rng)
-                  : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
-                {}
-                iterator begin() const
-                {
-                    return first;
-                }
-                sentinel end() const
-                {
-                    return second;
-                }
-                template<typename X, typename Y,
-                    CONCEPT_REQUIRES_(Convertible<I, X>() && Convertible<S, Y>())>
-                constexpr operator std::pair<X, Y>() const
-                {
-                    return {first, second};
-                }
-                CONCEPT_REQUIRES(!std::is_const<I>())
-                void pop_front()
-                {
-                    ++first;
-                }
-                CONCEPT_REQUIRES(!std::is_const<S>() && BidirectionalIterator<sentinel>())
-                void pop_back()
-                {
-                    --second;
-                }
-            };
         }
         /// \endcond
 
@@ -93,9 +42,51 @@ namespace ranges
         /// @{
         template<typename I, typename S /*= I*/>
         struct range
-          : detail::range_impl<range<I, S>, I, S>
+          : private compressed_pair<I, S>
+          , range_interface<range<I, S>>
         {
-            using detail::range_impl<range<I, S>, I, S>::range_impl;
+            using iterator = I;
+            using sentinel = S;
+            using compressed_pair<I, S>::first;
+            using compressed_pair<I, S>::second;
+
+            range() = default;
+            constexpr range(iterator begin, sentinel end)
+              : compressed_pair<I, S>{detail::move(begin), detail::move(end)}
+            {}
+            template<typename X, typename Y,
+                CONCEPT_REQUIRES_(Convertible<X, iterator>() && Convertible<Y, sentinel>())>
+            constexpr range(range<X, Y> rng)
+              : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
+            {}
+            template<typename X, typename Y,
+                CONCEPT_REQUIRES_(Convertible<X, iterator>() && Convertible<Y, sentinel>())>
+            constexpr range(std::pair<X, Y> rng)
+              : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
+            {}
+            iterator begin() const
+            {
+                return first;
+            }
+            sentinel end() const
+            {
+                return second;
+            }
+            template<typename X, typename Y,
+                CONCEPT_REQUIRES_(Convertible<I, X>() && Convertible<S, Y>())>
+            constexpr operator std::pair<X, Y>() const
+            {
+                return {first, second};
+            }
+            void pop_front()
+            {
+                ++first;
+            }
+            CONCEPT_REQUIRES(BidirectionalIterator<sentinel>())
+            void pop_back()
+            {
+                --second;
+            }
         };
 
         // Like range, but with a known size. As with range and std::pair,
@@ -108,10 +99,10 @@ namespace ranges
         //
         template<typename I, typename S /* = I */>
         struct sized_range
-          : detail::range_impl<sized_range<I, S>, I const, S const>
+          : private compressed_pair<I const, S const>
+          , range_interface<sized_range<I, S>>
         {
         private:
-            using base_type_ = detail::range_impl<sized_range<I, S>, I const, S const>;
             template<typename X, typename Y>
             friend struct sized_range;
             I && move_first()
@@ -128,23 +119,25 @@ namespace ranges
                     static_cast<iterator_size_t<I>>(iter_distance(first, second)) == third);
             }
         public:
-            using base_type_::first;
-            using base_type_::second;
+            using iterator = I;
+            using sentinel = S;
+            using compressed_pair<I const, S const>::first;
+            using compressed_pair<I const, S const>::second;
             iterator_size_t<I> const third;
 
             constexpr sized_range()
-              : base_type_{}, third{}
+              : compressed_pair<I const, S const>{}, third{}
             {}
             sized_range(I begin, S end, iterator_size_t<I> size)
-              : base_type_{std::move(begin), std::move(end)}, third(size)
+              : compressed_pair<I const, S const>{std::move(begin), std::move(end)}, third(size)
             {
                 check();
             }
             sized_range(sized_range<I, S> const &rng)
-              : base_type_{rng.first, rng.second}, third(rng.third)
+              : compressed_pair<I const, S const>{rng.first, rng.second}, third(rng.third)
             {}
             sized_range(sized_range<I, S> &&rng)
-              : base_type_{rng.move_first(), rng.move_second()}, third(rng.third)
+              : compressed_pair<I const, S const>{rng.move_first(), rng.move_second()}, third(rng.third)
             {}
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Convertible<X, I>() && Convertible<Y, S>())>
@@ -184,6 +177,14 @@ namespace ranges
                 const_cast<iterator_size_t<I> &>(third) = rng.third;
                 return *this;
             }
+            iterator begin() const
+            {
+                return first;
+            }
+            sentinel end() const
+            {
+                return second;
+            }
             iterator_size_t<I> size() const
             {
                 return third;
@@ -204,6 +205,7 @@ namespace ranges
 
         struct make_range_fn
         {
+            /// \return `{begin, end}`
             template<typename I, typename S>
             range<I, S> operator()(I begin, S end) const
             {
@@ -211,6 +213,7 @@ namespace ranges
                 return {std::move(begin), std::move(end)};
             }
 
+            /// \return `{begin, end, size}`
             template<typename I, typename S, typename Size>
             sized_range<I, S> operator()(I begin, S end, Size size) const
             {
@@ -220,53 +223,115 @@ namespace ranges
             }
         };
 
+        /// \ingroup group-core
+        /// \sa `make_range_fn`
         constexpr make_range_fn make_range {};
 
-        // Tuple-like access
+        /// Tuple-like access for `range`
         // TODO Switch to variable template when available
-        template<std::size_t I, typename First, typename Second,
-            CONCEPT_REQUIRES_(I == 0)>
-        constexpr auto get(range<First, Second> & p) ->
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 0)>
+        constexpr auto get(range<I, S> & p) ->
             decltype((p.first))
         {
             return p.first;
         }
 
-        template<std::size_t I, typename First, typename Second,
-            CONCEPT_REQUIRES_(I == 0)>
-        constexpr auto get(range<First, Second> const & p) ->
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 0)>
+        constexpr auto get(range<I, S> const & p) ->
             decltype((p.first))
         {
             return p.first;
         }
 
-        template<std::size_t I, typename First, typename Second,
-            CONCEPT_REQUIRES_(I == 0)>
-        constexpr auto get(range<First, Second> && p) ->
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 0)>
+        constexpr auto get(range<I, S> && p) ->
             decltype((detail::move(p).first))
         {
             return detail::move(p).first;
         }
 
-        template<std::size_t I, typename First, typename Second,
-            CONCEPT_REQUIRES_(I == 1)>
-        constexpr auto get(range<First, Second> & p) ->
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 1)>
+        constexpr auto get(range<I, S> & p) ->
             decltype((p.second))
         {
             return p.second;
         }
 
-        template<std::size_t I, typename First, typename Second,
-            CONCEPT_REQUIRES_(I == 1)>
-        constexpr auto get(range<First, Second> const & p) ->
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 1)>
+        constexpr auto get(range<I, S> const & p) ->
             decltype((p.second))
         {
             return p.second;
         }
 
-        template<std::size_t I, typename First, typename Second,
-            CONCEPT_REQUIRES_(I == 1)>
-        constexpr auto get(range<First, Second> && p) ->
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 1)>
+        constexpr auto get(range<I, S> && p) ->
+            decltype((detail::move(p).second))
+        {
+            return detail::move(p).second;
+        }
+
+        /// Tuple-like access for `sized_range`
+        // TODO Switch to variable template when available
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 0)>
+        constexpr auto get(sized_range<I, S> & p) ->
+            decltype((p.first))
+        {
+            return p.first;
+        }
+
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 0)>
+        constexpr auto get(sized_range<I, S> const & p) ->
+            decltype((p.first))
+        {
+            return p.first;
+        }
+
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 0)>
+        constexpr auto get(sized_range<I, S> && p) ->
+            decltype((detail::move(p).first))
+        {
+            return detail::move(p).first;
+        }
+
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 1)>
+        constexpr auto get(sized_range<I, S> & p) ->
+            decltype((p.second))
+        {
+            return p.second;
+        }
+
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 1)>
+        constexpr auto get(sized_range<I, S> const & p) ->
+            decltype((p.second))
+        {
+            return p.second;
+        }
+
+        /// \overload
+        template<std::size_t N, typename I, typename S,
+            CONCEPT_REQUIRES_(N == 1)>
+        constexpr auto get(sized_range<I, S> && p) ->
             decltype((detail::move(p).second))
         {
             return detail::move(p).second;

@@ -86,7 +86,9 @@ namespace ranges
                 }
             };
 
-            constexpr single_fn single {};
+            /// \sa `single_fn`
+            /// \ingroup group-views
+            constexpr single_fn single{};
         }
         /// @}
     }

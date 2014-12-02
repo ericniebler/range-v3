@@ -59,7 +59,9 @@ namespace ranges
                 }
             };
 
-            constexpr for_each_fn for_each {};
+            /// \sa `for_each_fn`
+            /// \ingroup group-views
+            constexpr for_each_fn for_each{};
         }
 
         struct yield_fn
@@ -71,6 +73,8 @@ namespace ranges
             }
         };
 
+        /// \sa `yield_fn`
+        /// \ingroup group-views
         constexpr yield_fn yield{};
 
         struct yield_from_fn
@@ -82,6 +86,8 @@ namespace ranges
             }
         };
 
+        /// \sa `yield_from_fn`
+        /// \ingroup group-views
         constexpr yield_from_fn yield_from{};
 
         struct yield_if_fn
@@ -93,6 +99,8 @@ namespace ranges
             }
         };
 
+        /// \sa `yield_if_fn`
+        /// \ingroup group-views
         constexpr yield_if_fn yield_if{};
 
         struct lazy_yield_if_fn
@@ -105,6 +113,8 @@ namespace ranges
             }
         };
 
+        /// \sa `lazy_yield_if_fn`
+        /// \ingroup group-views
         constexpr lazy_yield_if_fn lazy_yield_if{};
         /// @}
 

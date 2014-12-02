@@ -79,7 +79,9 @@ namespace ranges
                 }
             };
 
-            constexpr counted_fn counted {};
+            /// \sa `counted_fn`
+            /// \ingroup group-views
+            constexpr counted_fn counted{};
         }
         /// @}
     }

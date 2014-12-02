@@ -82,7 +82,9 @@ namespace ranges
                 }
             };
 
-            constexpr replace_if_fn replace_if {};
+            /// \sa `replace_if_fn`
+            /// \ingroup group-views
+            constexpr replace_if_fn replace_if{};
         }
         /// @}
     }

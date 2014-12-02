@@ -51,6 +51,8 @@ namespace ranges
             }
         };
 
+        /// \ingroup group-utility
+        /// \sa `make_pipeable_fn`
         constexpr make_pipeable_fn make_pipeable{};
 
         template<typename T,

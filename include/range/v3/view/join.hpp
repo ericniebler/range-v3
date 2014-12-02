@@ -298,7 +298,9 @@ namespace ranges
                 }
             };
 
-            constexpr join_fn join {};
+            /// \sa `join_fn`
+            /// \ingroup group-views
+            constexpr join_fn join{};
         }
         /// @}
     }

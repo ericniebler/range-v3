@@ -169,7 +169,9 @@ namespace ranges
                 )
             };
 
-            constexpr take_fn take {};
+            /// \sa `take_fn`
+            /// \ingroup group-views
+            constexpr take_fn take{};
         }
         /// @}
     }

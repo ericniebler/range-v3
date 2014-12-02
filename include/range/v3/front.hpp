@@ -22,8 +22,10 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \ingroup group-core
         struct front_fn
         {
+            /// \return `*begin(rng)`
             template<typename Rng,
                 CONCEPT_REQUIRES_(Iterable<Rng>())>
             range_reference_t<Rng> operator()(Rng &&rng) const
@@ -32,6 +34,8 @@ namespace ranges
             }
         };
 
+        /// \ingroup group-core
+        /// \sa `front_fn`
         constexpr front_fn front {};
     }
 }

@@ -94,7 +94,9 @@ namespace ranges
                 )
             };
 
-            constexpr drop_while_fn drop_while {};
+            /// \sa `drop_while_fn`
+            /// \ingroup group-views
+            constexpr drop_while_fn drop_while{};
         }
         /// @}
     }

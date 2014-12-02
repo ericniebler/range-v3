@@ -286,7 +286,9 @@ namespace ranges
                 }
             };
 
-            constexpr zip_fn zip {};
+            /// \sa `zip_fn`
+            /// \ingroup group-views
+            constexpr zip_fn zip{};
 
             struct zip_with_fn
             {
@@ -299,7 +301,9 @@ namespace ranges
                 }
             };
 
-            constexpr zip_with_fn zip_with {};
+            /// \sa `zip_with_fn`
+            /// \ingroup group-views
+            constexpr zip_with_fn zip_with{};
         }
         /// @}
     }

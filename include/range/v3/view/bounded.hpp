@@ -100,6 +100,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `bounded_fn`
+            /// \ingroup group-views
             constexpr bounded_fn bounded{};
 
             template<typename Rng>

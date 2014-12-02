@@ -90,6 +90,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `generate_fn`
+            /// \ingroup group-views
             constexpr generate_fn generate{};
         }
         /// \@}

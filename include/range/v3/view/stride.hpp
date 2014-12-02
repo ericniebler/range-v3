@@ -191,6 +191,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `stride_fn`
+            /// \ingroup group-views
             constexpr stride_fn stride{};
         }
         /// @}

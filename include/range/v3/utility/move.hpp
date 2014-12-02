@@ -37,6 +37,7 @@ namespace ranges
             };
 
             /// \ingroup group-utility
+            /// \sa `move_fn`
             constexpr move_fn move{};
         }
     }

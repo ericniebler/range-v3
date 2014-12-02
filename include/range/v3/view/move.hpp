@@ -87,7 +87,9 @@ namespace ranges
                 }
             };
 
-            constexpr move_fn move {};
+            /// \sa `move_fn`
+            /// \ingroup group-views
+            constexpr move_fn move{};
         }
         /// @}
     }

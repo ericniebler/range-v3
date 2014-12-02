@@ -44,7 +44,9 @@ namespace ranges
             };
 
             RANGES_DEPRECATED("Please switch to view::remove_if")
-            constexpr filter_fn filter {};
+            /// \sa `filter_fn`
+            /// \ingroup group-views
+            constexpr filter_fn filter{};
             /// \endcond
         }
     }

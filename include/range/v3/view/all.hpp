@@ -95,6 +95,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `all_fn`
+            /// \ingroup group-views
             constexpr all_fn all{};
 
             template<typename Rng>

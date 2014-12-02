@@ -37,6 +37,8 @@ namespace ranges
                 }
             };
 
+            /// \ingroup group-utility
+            /// \sa `copy_fn`
             constexpr copy_fn copy{};
         }
         /// @}

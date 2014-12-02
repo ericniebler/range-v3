@@ -195,7 +195,9 @@ namespace ranges
                 }
             };
 
-            constexpr tokenize_fn tokenize {};
+            /// \sa `tokenize_fn`
+            /// \ingroup group-views
+            constexpr tokenize_fn tokenize{};
         }
         /// @}
     }

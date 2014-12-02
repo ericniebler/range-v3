@@ -65,14 +65,17 @@ namespace ranges
         /// \addtogroup group-core
         /// @{
 
+        /// \ingroup group-core
         constexpr detail::to_container_fn<meta::quote<std::vector>> to_vector {};
 
+        /// \brief For initializing a container of the specified type with the elements of an Iterable
         template<template<typename...> class ContT>
         detail::to_container_fn<meta::quote<ContT>> to_()
         {
             return {};
         }
 
+        /// \overload
         template<template<typename...> class ContT, typename Rng,
             typename Cont = meta::apply<meta::quote<ContT>, range_value_t<Rng>>,
             CONCEPT_REQUIRES_(Iterable<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
@@ -81,12 +84,14 @@ namespace ranges
             return std::forward<Rng>(rng) | ranges::to_<ContT>();
         }
 
+        /// \overload
         template<typename Cont>
         detail::to_container_fn<meta::always<Cont>> to_()
         {
             return {};
         }
 
+        /// \overload
         template<typename Cont, typename Rng,
             CONCEPT_REQUIRES_(Iterable<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
         Cont to_(Rng && rng)

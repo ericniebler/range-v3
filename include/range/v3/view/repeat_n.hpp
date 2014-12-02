@@ -92,6 +92,8 @@ namespace ranges
                 }
             };
 
+            /// \sa `repeat_n_fn`
+            /// \ingroup group-views
             constexpr repeat_n_fn repeat_n{};
         }
         /// @}

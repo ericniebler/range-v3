@@ -85,7 +85,9 @@ namespace ranges
                 }
             };
 
-            constexpr tail_fn tail {};
+            /// \sa `tail_fn`
+            /// \ingroup group-views
+            constexpr tail_fn tail{};
         }
         /// @}
     }

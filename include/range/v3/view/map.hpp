@@ -69,8 +69,12 @@ namespace ranges
                 }
             };
 
-            constexpr keys_fn keys {};
-            constexpr values_fn values {};
+            /// \sa `keys_fn`
+            /// \ingroup group-views
+            constexpr keys_fn keys{};
+            /// \sa `values_fn`
+            /// \ingroup group-views
+            constexpr values_fn values{};
         }
         /// @}
     }

@@ -49,7 +49,9 @@ namespace ranges
                 }
             };
 
-            constexpr unique_fn unique {};
+            /// \sa `unique_fn`
+            /// \ingroup group-views
+            constexpr unique_fn unique{};
         }
         /// @}
     }

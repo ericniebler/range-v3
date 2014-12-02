@@ -125,7 +125,9 @@ namespace ranges
                 }
             };
 
-            constexpr transform_fn transform {};
+            /// \sa `transform_fn`
+            /// \ingroup group-views
+            constexpr transform_fn transform{};
         }
         /// @}
     }
