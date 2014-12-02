@@ -97,11 +97,32 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1back__fn.html','
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad173581db0ca9d4e97eda867691efbd7"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad173581db0ca9d4e97eda867691efbd7"></a>
-template&lt;typename Rng , requires  = ( BoundedIterable&lt;Rng&gt;() &amp;&amp; BidirectionalIterable&lt;Rng&gt;() )&gt; </td></tr>
-<tr class="memitem:ad173581db0ca9d4e97eda867691efbd7"><td class="memTemplItemLeft" align="right" valign="top">range_reference_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng) const </td></tr>
+<tr class="memitem:ad173581db0ca9d4e97eda867691efbd7"><td class="memTemplParams" colspan="2">template&lt;typename Rng , requires  = ( BoundedIterable&lt;Rng&gt;() &amp;&amp; BidirectionalIterable&lt;Rng&gt;() )&gt; </td></tr>
+<tr class="memitem:ad173581db0ca9d4e97eda867691efbd7"><td class="memTemplItemLeft" align="right" valign="top">range_reference_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1back__fn.html#ad173581db0ca9d4e97eda867691efbd7">operator()</a> (Rng &amp;&amp;rng) const </td></tr>
 <tr class="separator:ad173581db0ca9d4e97eda867691efbd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="ad173581db0ca9d4e97eda867691efbd7"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Rng , requires  = ( BoundedIterable&lt;Rng&gt;() &amp;&amp; BidirectionalIterable&lt;Rng&gt;() )&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">range_reference_t&lt;Rng&gt; ranges::v3::back_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">Rng &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rng</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd><code>*prev(end(rng))</code> </dd></dl>
+
+<p>References <a class="el" href="group__group-core.html#gad1b3568669864576b4f73d7032263620">ranges::v3::end</a>, and <a class="el" href="group__group-utility.html#ga93ed84b86d8219a3018f2f5605c2492c">ranges::v3::prev</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,15 +1,10 @@
 var searchData=
 [
-  ['search',['search',['../group__group-algorithms.html#gabcbf0e67f943c41fdc4c898bdd3780fc',1,'ranges::v3']]],
-  ['search_5fn',['search_n',['../group__group-algorithms.html#ga6dfd54784744ff1d33ad4dc8611b3ec3',1,'ranges::v3']]],
-  ['set_5fdifference',['set_difference',['../group__group-algorithms.html#ga46dc29289a10772b9505424cd25797a6',1,'ranges::v3']]],
-  ['set_5fintersection',['set_intersection',['../group__group-algorithms.html#ga32c8b9861783cae7eb488669c8dd7ded',1,'ranges::v3']]],
-  ['set_5fsymmetric_5fdifference',['set_symmetric_difference',['../group__group-algorithms.html#gab73b9b67558c364f48179dcb9c8c542c',1,'ranges::v3']]],
-  ['set_5funion',['set_union',['../group__group-algorithms.html#gaded325afe098ed734fbecf38ac566c69',1,'ranges::v3']]],
-  ['shuffle',['shuffle',['../group__group-algorithms.html#ga23f003c075b9b8846e53e1c395ff0889',1,'ranges::v3']]],
-  ['sort',['sort',['../group__group-algorithms.html#ga3de9f2bf770d1f7d44dce6824eaf8407',1,'ranges::v3']]],
-  ['sort_5fheap',['sort_heap',['../group__group-algorithms.html#gab07658f66f2ad50c0def30030673168b',1,'ranges::v3']]],
-  ['stable_5fpartition',['stable_partition',['../group__group-algorithms.html#ga424afc21e3d0a18fc5a12dcb12101586',1,'ranges::v3']]],
-  ['stable_5fsort',['stable_sort',['../group__group-algorithms.html#ga16f3a903dc9adeeaf1592ea1263bc8dc',1,'ranges::v3']]],
-  ['swap_5franges',['swap_ranges',['../group__group-algorithms.html#gae8b7e6c46c507a8afe19a13b86766154',1,'ranges::v3']]]
+  ['next',['next',['../group__group-utility.html#ga70320521358b8e16455a2931d524bab9',1,'ranges::v3']]],
+  ['next_5fbounded',['next_bounded',['../group__group-utility.html#gafe82dc730889ccd37e45a49ad8ec0a6a',1,'ranges::v3']]],
+  ['next_5fpermutation',['next_permutation',['../group__group-algorithms.html#ga46ed5f5c78828078e9a1238f4a91a31c',1,'ranges::v3']]],
+  ['next_5fto',['next_to',['../group__group-utility.html#ga813bd2bfbfbf50456cd565304f89fc39',1,'ranges::v3']]],
+  ['none_5fof',['none_of',['../group__group-algorithms.html#gaa432a41b9fb1de276b8bed5a2877d758',1,'ranges::v3']]],
+  ['not_5f',['not_',['../group__group-utility.html#ga96f82ad60be7e34fc2d213fc8db110c3',1,'ranges::v3']]],
+  ['nth_5felement',['nth_element',['../group__group-algorithms.html#gaad585732b074e294b6fcafefd74e3a7c',1,'ranges::v3']]]
 ];

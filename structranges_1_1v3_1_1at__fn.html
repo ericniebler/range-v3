@@ -97,11 +97,43 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1at__fn.html','')
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af44bd1ee92d39de36581ca198132d402"><td class="memTemplParams" colspan="2"><a class="anchor" id="af44bd1ee92d39de36581ca198132d402"></a>
-template&lt;typename Rng , requires  = ( RandomAccessIterable&lt;Rng&gt;() )&gt; </td></tr>
-<tr class="memitem:af44bd1ee92d39de36581ca198132d402"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; n) const -&gt; decltype(begin(rng)[n])</td></tr>
+<tr class="memitem:af44bd1ee92d39de36581ca198132d402"><td class="memTemplParams" colspan="2">template&lt;typename Rng , requires  = ( RandomAccessIterable&lt;Rng&gt;() )&gt; </td></tr>
+<tr class="memitem:af44bd1ee92d39de36581ca198132d402"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1at__fn.html#af44bd1ee92d39de36581ca198132d402">operator()</a> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; n) const -&gt; decltype(begin(rng)[n])</td></tr>
 <tr class="separator:af44bd1ee92d39de36581ca198132d402"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="af44bd1ee92d39de36581ca198132d402"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Rng , requires  = ( RandomAccessIterable&lt;Rng&gt;() )&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto ranges::v3::at_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">Rng &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rng</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">range_difference_t&lt; Rng &gt;&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const -&gt; decltype(begin(rng)[n])
+            </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd><code>begin(rng)[n]</code> </dd></dl>
+
+<p>References <a class="el" href="group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b">ranges::v3::begin</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

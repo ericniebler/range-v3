@@ -97,15 +97,82 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1make__range__fn.
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0b2ca94573042c68ced9c5ee74c4e6c2"><td class="memTemplParams" colspan="2"><a class="anchor" id="a0b2ca94573042c68ced9c5ee74c4e6c2"></a>
-template&lt;typename I , typename S &gt; </td></tr>
-<tr class="memitem:a0b2ca94573042c68ced9c5ee74c4e6c2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1range.html">range</a>&lt; I, S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end) const </td></tr>
+<tr class="memitem:a0b2ca94573042c68ced9c5ee74c4e6c2"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S &gt; </td></tr>
+<tr class="memitem:a0b2ca94573042c68ced9c5ee74c4e6c2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1range.html">range</a>&lt; I, S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1make__range__fn.html#a0b2ca94573042c68ced9c5ee74c4e6c2">operator()</a> (I begin, S end) const </td></tr>
 <tr class="separator:a0b2ca94573042c68ced9c5ee74c4e6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a4b002685ac65766def03e50f61d1e9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7a4b002685ac65766def03e50f61d1e9"></a>
-template&lt;typename I , typename S , typename Size &gt; </td></tr>
-<tr class="memitem:a7a4b002685ac65766def03e50f61d1e9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1sized__range.html">sized_range</a>&lt; I, S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, Size size) const </td></tr>
+<tr class="memitem:a7a4b002685ac65766def03e50f61d1e9"><td class="memTemplParams" colspan="2">template&lt;typename I , typename S , typename Size &gt; </td></tr>
+<tr class="memitem:a7a4b002685ac65766def03e50f61d1e9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1sized__range.html">sized_range</a>&lt; I, S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1make__range__fn.html#a7a4b002685ac65766def03e50f61d1e9">operator()</a> (I begin, S end, Size size) const </td></tr>
 <tr class="separator:a7a4b002685ac65766def03e50f61d1e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a0b2ca94573042c68ced9c5ee74c4e6c2"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename I , typename S &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structranges_1_1v3_1_1range.html">range</a>&lt;I, S&gt; ranges::v3::make_range_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">I&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">S&#160;</td>
+          <td class="paramname"><em>end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd><code>{begin, end}</code> </dd></dl>
+
+<p>References <a class="el" href="group__group-algorithms.html#gab2adb3987718fd88d7a2d54189e6f2bf">ranges::v3::move</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7a4b002685ac65766def03e50f61d1e9"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename I , typename S , typename Size &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structranges_1_1v3_1_1sized__range.html">sized_range</a>&lt;I, S&gt; ranges::v3::make_range_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">I&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">S&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Size&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd><code>{begin, end, size}</code> </dd></dl>
+
+<p>References <a class="el" href="group__group-algorithms.html#gab2adb3987718fd88d7a2d54189e6f2bf">ranges::v3::move</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

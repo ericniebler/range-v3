@@ -101,11 +101,30 @@ Public Member Functions</h2></td></tr>
 template&lt;typename F , requires  = ( std::is_bind_expression&lt;uncvref_t&lt;F&gt;&gt;() )&gt; </td></tr>
 <tr class="memitem:ga835e56811aaca26aafa71e5f454bd7fb"><td class="memTemplItemLeft" align="right" valign="top">detail::protect&lt; uncvref_t&lt; F &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (F &amp;&amp;f) const </td></tr>
 <tr class="separator:ga835e56811aaca26aafa71e5f454bd7fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga835e56811aaca26aafa71e5f454bd7fb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga835e56811aaca26aafa71e5f454bd7fb"></a>
-template&lt;typename F , requires  = ( !std::is_bind_expression&lt;uncvref_t&lt;F&gt;&gt;() )&gt; </td></tr>
-<tr class="memitem:ga835e56811aaca26aafa71e5f454bd7fb"><td class="memTemplItemLeft" align="right" valign="top">F&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (F &amp;&amp;f) const </td></tr>
+<tr class="memitem:ga835e56811aaca26aafa71e5f454bd7fb"><td class="memTemplParams" colspan="2">template&lt;typename F , requires  = ( !std::is_bind_expression&lt;uncvref_t&lt;F&gt;&gt;() )&gt; </td></tr>
+<tr class="memitem:ga835e56811aaca26aafa71e5f454bd7fb"><td class="memTemplItemLeft" align="right" valign="top">F&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1protect__fn.html#ga835e56811aaca26aafa71e5f454bd7fb">operator()</a> (F &amp;&amp;f) const </td></tr>
 <tr class="separator:ga835e56811aaca26aafa71e5f454bd7fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="ga835e56811aaca26aafa71e5f454bd7fb"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F , requires  = ( !std::is_bind_expression&lt;uncvref_t&lt;F&gt;&gt;() )&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">F ranges::v3::protect_fn::operator() </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

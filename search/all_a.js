@@ -4,6 +4,7 @@ var searchData=
   ['lazy_5fapply_5flist',['lazy_apply_list',['../structranges_1_1v3_1_1meta_1_1lazy__apply__list.html',1,'ranges::v3::meta']]],
   ['lazy_5fapply_5flist_3c_20f_2c_20integer_5fsequence_3c_20t_2c_20is_2e_2e_2e_3e_20_3e',['lazy_apply_list&lt; F, integer_sequence&lt; T, Is...&gt; &gt;',['../structranges_1_1v3_1_1meta_1_1lazy__apply__list_3_01_f_00_01integer__sequence_3_01_t_00_01_is_8_8_8_4_01_4.html',1,'ranges::v3::meta']]],
   ['lazy_5fapply_5flist_3c_20f_2c_20t_3c_20ts_2e_2e_2e_3e_20_3e',['lazy_apply_list&lt; F, T&lt; Ts...&gt; &gt;',['../structranges_1_1v3_1_1meta_1_1lazy__apply__list_3_01_f_00_01_t_3_01_ts_8_8_8_4_01_4.html',1,'ranges::v3::meta']]],
+  ['lazy_5fyield_5fif',['lazy_yield_if',['../group__group-views.html#ga1e1f98b7cbcc24433e86df472fdf6d52',1,'ranges::v3']]],
   ['lazy_5fyield_5fif_5ffn',['lazy_yield_if_fn',['../structranges_1_1v3_1_1lazy__yield__if__fn.html',1,'ranges::v3']]],
   ['less',['less',['../group__group-meta.html#ga2290c3109ba634f93ec9bff78f8da07a',1,'ranges::v3::meta']]],
   ['less',['less',['../structranges_1_1v3_1_1less.html',1,'ranges::v3']]],

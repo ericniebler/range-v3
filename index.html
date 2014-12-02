@@ -151,14 +151,14 @@ Quick Start</h1>
 <div class="line"><span class="comment">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></div>
 </div><!-- fragment --><p>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</p>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
-<div class="line"><span class="keywordtype">int</span> sum = accumulate(view::ints(1)</div>
+<div class="line"><span class="keywordtype">int</span> sum = accumulate(<a class="code" href="group__group-views.html#ga8be703ef86e523eccf819f4317c68b68">view::ints</a>(1)</div>
 <div class="line">                   | <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;})</div>
 <div class="line">                   | view::take(10), 0);</div>
 </div><!-- fragment --><p>Generate a sequence on the fly with a range comprehension and initialize a vector with it:</p>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line">std::vector&lt;int&gt; vi =</div>
-<div class="line">    <a class="code" href="group__group-algorithms.html#gaff0beb03ec81728246a25818492ee331">view::for_each</a>(view::ints(1,10), [](<span class="keywordtype">int</span> i){</div>
-<div class="line">        <span class="keywordflow">return</span> yield_from(view::repeat(i,i));</div>
+<div class="line">    <a class="code" href="group__group-algorithms.html#gaff0beb03ec81728246a25818492ee331">view::for_each</a>(<a class="code" href="group__group-views.html#ga8be703ef86e523eccf819f4317c68b68">view::ints</a>(1,10), [](<span class="keywordtype">int</span> i){</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code" href="group__group-views.html#ga9cd8fe9a992efe059813101dfeff8e05">yield_from</a>(<a class="code" href="group__group-views.html#gab95879821625b0e6b1bdd0e5895160fe">view::repeat</a>(i,i));</div>
 <div class="line">    });</div>
 <div class="line"><span class="comment">// vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}</span></div>
 </div><!-- fragment --><h4>Actions</h4>
@@ -187,7 +187,7 @@ Quick Start</h1>
 <div class="line">    <span class="keywordtype">char</span> <span class="keyword">const</span> * sz_;</div>
 <div class="line">    <span class="keywordtype">char</span> <span class="keyword">const</span> &amp; current()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *sz_; }</div>
 <div class="line">    <span class="keywordtype">bool</span> done()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *sz_ == <span class="charliteral">&#39;\0&#39;</span>; }</div>
-<div class="line">    <span class="keywordtype">void</span> next() { ++sz_; }</div>
+<div class="line">    <span class="keywordtype">void</span> <a class="code" href="group__group-utility.html#ga70320521358b8e16455a2931d524bab9">next</a>() { ++sz_; }</div>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    c_string_range() = <span class="keywordflow">default</span>;</div>
 <div class="line">    <span class="keyword">explicit</span> c_string_range(<span class="keywordtype">char</span> <span class="keyword">const</span> *sz) : sz_(sz)</div>
@@ -248,7 +248,7 @@ Quick Start</h1>
 <p>With <code>transform_view</code>, we can print out the first 20 squares:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> main()</div>
 <div class="line">{</div>
-<div class="line">    <span class="keyword">auto</span> squares = <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">::transform</a>(view::ints(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
+<div class="line">    <span class="keyword">auto</span> squares = <a class="code" href="group__group-meta.html#gac197b8f3f7c42e0d5194addc0a76706f">::transform</a>(<a class="code" href="group__group-views.html#ga8be703ef86e523eccf819f4317c68b68">view::ints</a>(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
 <div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i : squares | view::take(20))</div>
 <div class="line">        std::cout &lt;&lt; i &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
 <div class="line">    std::cout &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
@@ -270,7 +270,7 @@ Quick Start</h1>
 <div class="line">    CONCEPT_REQUIRES_(Iterable&lt;Rng&gt;())&gt;</div>
 <div class="line"><span class="keywordtype">void</span> my_algorithm(Rng &amp;&amp; rng, Comp comp = Comp{})</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordflow">return</span> my_algorithm(ranges::begin(rng), ranges::end(rng));</div>
+<div class="line">    <span class="keywordflow">return</span> my_algorithm(<a class="code" href="group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b">ranges::begin</a>(rng), <a class="code" href="group__group-core.html#gad1b3568669864576b4f73d7032263620">ranges::end</a>(rng));</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>With the type constraits expressed with the <code>CONCEPTS_REQUIRES_</code> macro, these two overloads are guaranteed to not be ambiguous.</p>
 <h2>Range v3 and the Future</h2>

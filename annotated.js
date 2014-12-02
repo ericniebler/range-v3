@@ -356,7 +356,7 @@ var annotated =
         [ "push_heap_fn", "structranges_1_1v3_1_1push__heap__fn.html", "structranges_1_1v3_1_1push__heap__fn" ],
         [ "random_access_iterator_tag", "structranges_1_1v3_1_1random__access__iterator__tag.html", null ],
         [ "random_shuffle_fn", "structranges_1_1v3_1_1random__shuffle__fn.html", "structranges_1_1v3_1_1random__shuffle__fn" ],
-        [ "range", "structranges_1_1v3_1_1range.html", null ],
+        [ "range", "structranges_1_1v3_1_1range.html", "structranges_1_1v3_1_1range" ],
         [ "range_adaptor", "structranges_1_1v3_1_1range__adaptor.html", "structranges_1_1v3_1_1range__adaptor" ],
         [ "range_base", "structranges_1_1v3_1_1range__base.html", null ],
         [ "range_category", "structranges_1_1v3_1_1range__category.html", "structranges_1_1v3_1_1range__category" ],

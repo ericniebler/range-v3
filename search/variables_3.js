@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['equal',['equal',['../group__group-algorithms.html#ga231cf1ea1874a1589423358592df426d',1,'ranges::v3']]],
-  ['equal_5frange',['equal_range',['../group__group-algorithms.html#gac13843b2f82cdad7348fa14de4bfac60',1,'ranges::v3']]]
+  ['delimit',['delimit',['../group__group-views.html#gacab110da27d92b6ffafd6629288d3dda',1,'ranges::v3::view']]],
+  ['distance',['distance',['../group__group-core.html#gae77f7b6b33494f548b1bba9cf7a30985',1,'ranges::v3']]],
+  ['distance_5fcompare',['distance_compare',['../group__group-core.html#gad16934d0fd0cfafd1c74e70349a7aa02',1,'ranges::v3']]],
+  ['drop',['drop',['../group__group-views.html#ga6bfaca496ecccc7318c7abb951410757',1,'ranges::v3::view']]],
+  ['drop_5fwhile',['drop_while',['../group__group-views.html#gaeaadd90eddd9a7d2e7abb31b88b2381c',1,'ranges::v3::view']]]
 ];
