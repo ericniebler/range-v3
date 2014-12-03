@@ -50,6 +50,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa `sort_fn`
+            /// \sa `action`
             constexpr action<sort_fn> sort{};
         }
         /// @}

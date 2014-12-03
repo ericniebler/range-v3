@@ -229,14 +229,14 @@ namespace ranges
                 auto operator()(Rng && rng, range_difference_t<Rng> from,
                     detail::from_end_<range_difference_t<Rng>> to) const ->
                     decltype(slice_fn::invoke_(std::forward<Rng>(rng), from,
-                        distance(rng) + to.dist_, iterable_concept<Rng>{}))
+                        distance(rng) + to.dist_ - from, iterable_concept<Rng>{}))
                 {
                     static_assert(!is_infinite<Rng>(),
                         "Can't index from the end of an infinite range!");
                     RANGES_ASSERT(0 <= from);
                     RANGES_ASSERT(from <= distance(rng) + to.dist_);
                     return slice_fn::invoke_(std::forward<Rng>(rng), from,
-                        distance(rng) + to.dist_, iterable_concept<Rng>{});
+                        distance(rng) + to.dist_ - from, iterable_concept<Rng>{});
                 }
                 // slice(rng, end-4, end-2)
                 template<typename Rng,

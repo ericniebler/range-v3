@@ -51,6 +51,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa transform_fn
+            /// \sa action
             constexpr action<transform_fn> transform{};
         }
         /// @}

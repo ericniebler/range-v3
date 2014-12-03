@@ -53,6 +53,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa take_while_fn
+            /// \sa action
             constexpr action<take_while_fn> take_while{};
         }
         /// @}

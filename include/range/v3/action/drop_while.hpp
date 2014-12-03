@@ -53,6 +53,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa drop_while_fn
+            /// \sa action
             constexpr action<drop_while_fn> drop_while{};
         }
         /// @}

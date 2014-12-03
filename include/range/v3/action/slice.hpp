@@ -51,6 +51,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa slice_fn
+            /// \sa action
             constexpr action<slice_fn> slice{};
         }
         /// @}

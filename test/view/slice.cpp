@@ -115,5 +115,12 @@ int main()
         ::check_equal(rng11, {3, 4, 5, 6, 7, 8, 9});
     }
 
+    {
+        auto letters = view::iota('a','g');
+        static_assert(RandomAccessRange<decltype(letters)>(), "");
+        static_assert(BoundedRange<decltype(letters)>(), "");
+        ::check_equal(letters[{2,end-2}], {'c','d','e'});
+    }
+
     return test_result();
 }

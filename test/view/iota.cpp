@@ -18,6 +18,16 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
+struct Int
+{
+    int i = 0;
+    Int() = default;
+    Int(int i) : i(i) {}
+    Int & operator++() {++i; CHECK(i <= 10); return *this;}
+    bool operator==(Int j) const { return i == j.i; }
+    bool operator!=(Int j) const { return i != j.i; }
+};
+
 int main()
 {
     using namespace ranges;
@@ -53,6 +63,11 @@ int main()
     static_assert(Same<std::int64_t, range_difference_t<decltype(ints)>>(), "");
     static_assert(Same<std::uint64_t, range_size_t<decltype(ints)>>(), "");
     CHECK((static_cast<uint64_t>(std::numeric_limits<std::uint32_t>::max()) + 1) == ints.size());
+
+    {
+        auto ints = view::iota(Int{0}, Int{10});
+        ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
+    }
 
     return ::test_result();
 }

@@ -23,6 +23,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/view/take.hpp>
+#include <range/v3/view/delimit.hpp>
 
 namespace ranges
 {
@@ -214,15 +215,96 @@ namespace ranges
             {}
         };
 
+        /// An iota view in a closed range with non-random access iota value type
+        template<typename Val, typename Val2 = Val>
+        struct closed_iota_view
+          : range_facade<closed_iota_view<Val, Val2>, true>
+        {
+        private:
+            using iota_concept_t = ranges::iota_concept<Val>;
+            friend range_access;
+            using difference_type_ = detail::iota_difference_t<Val>;
+
+            Val from_;
+            Val2 to_;
+            bool done_ = false;
+
+            Val current() const
+            {
+                return from_;
+            }
+            void next()
+            {
+                if(from_ == to_)
+                    done_ = true;
+                else
+                    ++from_;
+            }
+            bool done() const
+            {
+                return done_;
+            }
+            CONCEPT_REQUIRES(ForwardIota<Val>())
+            bool equal(closed_iota_view const &that) const
+            {
+                return that.from_ == from_;
+            }
+            CONCEPT_REQUIRES(BidirectionalIota<Val>())
+            void prev()
+            {
+                --from_;
+            }
+            CONCEPT_REQUIRES(RandomAccessIota<Val>())
+            void advance(difference_type_ n)
+            {
+                RANGES_ASSERT(detail::iota_minus(to_, from_) >= n);
+                from_ += n;
+            }
+            CONCEPT_REQUIRES(RandomAccessIota<Val>())
+            difference_type_ distance_to(closed_iota_view const &that) const
+            {
+                return detail::iota_minus(that.from_, from_);
+            }
+        public:
+            closed_iota_view() = default;
+            closed_iota_view(Val from, Val2 to)
+              : from_(std::move(from)), to_(std::move(to))
+            {}
+        };
+
         namespace view
         {
             struct iota_fn
             {
+            private:
+                template<typename Val>
+                static take_view<iota_view<Val>>
+                impl(Val from, Val to, concepts::RandomAccessIota *)
+                {
+                    return {iota_view<Val>{std::move(from)}, detail::iota_minus(to, from) + 1};
+                }
+                template<typename Val, typename Val2>
+                static closed_iota_view<Val, Val2>
+                impl(Val from, Val2 to, concepts::InputIota *)
+                {
+                    return {std::move(from), std::move(to)};
+                }
+            public:
                 template<typename Val>
                 iota_view<Val> operator()(Val value) const
                 {
                     CONCEPT_ASSERT(InputIota<Val>());
                     return iota_view<Val>{std::move(value)};
+                }
+                template<typename Val, typename Val2>
+                meta::if_<
+                    meta::and_<RandomAccessIota<Val>, Same<Val, Val2>>,
+                    take_view<iota_view<Val>>,
+                    closed_iota_view<Val, Val2>>
+                operator()(Val from, Val2 to) const
+                {
+                    CONCEPT_ASSERT(EqualityComparable<Val, Val2>());
+                    return iota_fn::impl(std::move(from), std::move(to), iota_concept<Val>{});
                 }
             };
 
@@ -240,7 +322,6 @@ namespace ranges
                 {
                     return iota_view<Val>{value};
                 }
-
                 template<typename Val, CONCEPT_REQUIRES_(Integral<Val>())>
                 take_view<iota_view<Val>> operator()(Val from, Val to) const
                 {

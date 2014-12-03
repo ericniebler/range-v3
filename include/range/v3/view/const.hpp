@@ -89,7 +89,7 @@ namespace ranges
                 }
             };
 
-            /// \sa `const__fn`
+            /// \sa `const_fn`
             /// \ingroup group-views
             constexpr const_fn const_{};
         }

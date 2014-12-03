@@ -40,6 +40,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa unique_fn
+            /// \sa action
             constexpr action<unique_fn> unique{};
         }
         /// @}

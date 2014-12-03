@@ -53,6 +53,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa action
+            /// \sa with_braced_init_args
             constexpr action<remove_if_fn> remove_if{};
         }
         /// @}

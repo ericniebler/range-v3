@@ -64,6 +64,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa stride_fn
+            /// \sa action
             constexpr action<stride_fn> stride{};
         }
         /// @}

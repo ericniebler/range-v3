@@ -53,6 +53,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa take_fn
+            /// \sa action
             constexpr action<take_fn> take{};
         }
         /// @}

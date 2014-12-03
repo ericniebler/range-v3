@@ -12,7 +12,7 @@
 #ifndef RANGES_V3_RANGE_INTERFACE_HPP
 #define RANGES_V3_RANGE_INTERFACE_HPP
 
-#include <array>
+#include <iosfwd>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
@@ -246,6 +246,30 @@ namespace ranges
             operator Container () const
             {
                 return ranges::to_<Container>(derived());
+            }
+            /// \brief Print a range to an ostream
+            friend std::ostream &operator<<(std::ostream &sout, Derived &rng)
+            {
+                auto it = ranges::begin(rng);
+                auto const e = ranges::end(rng);
+                if(it == e)
+                    return sout << "[]";
+                sout << '[' << *it;
+                while(++it != e)
+                    sout << ',' << *it;
+                return sout << ']';
+            }
+            /// \overload
+            friend std::ostream &operator<<(std::ostream &sout, Derived const &rng)
+            {
+                auto it = ranges::begin(rng);
+                auto const e = ranges::end(rng);
+                if(it == e)
+                    return sout << "[]";
+                sout << '[' << *it;
+                while(++it != e)
+                    sout << ',' << *it;
+                return sout << ']';
             }
         };
         /// @}

@@ -53,6 +53,8 @@ namespace ranges
             };
 
             /// \ingroup group-actions
+            /// \sa drop_fn
+            /// \sa action
             constexpr action<drop_fn> drop{};
         }
         /// @}
