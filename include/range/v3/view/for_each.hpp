@@ -15,7 +15,7 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/view/flatten.hpp>
+#include <range/v3/view/join.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/single.hpp>
@@ -30,11 +30,11 @@ namespace ranges
         /// @{
         template<typename Rng, typename F>
         struct for_each_view
-          : flatten_view<transform_view<Rng, F>>
+          : join_view<transform_view<Rng, F>>
         {
             for_each_view() = default;
             for_each_view(Rng && rng, F f)
-              : flatten_view<transform_view<Rng, F>>{{std::forward<Rng>(rng), std::move(f)}}
+              : join_view<transform_view<Rng, F>>{{std::forward<Rng>(rng), std::move(f)}}
             {}
         };
 

@@ -298,9 +298,6 @@
     <ClCompile Include="..\..\..\..\test\algorithm\shuffle.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\view\join.cpp">
-      <Filter>Test Files\view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\stride.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -711,9 +708,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp">
-      <Filter>Header Files\view</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
@@ -872,9 +866,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp">
       <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\view\flatten.hpp">
-      <Filter>Header Files\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\generate.hpp">
       <Filter>Header Files\view</Filter>
@@ -1108,6 +1099,12 @@
       <Filter>Header Files\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\partial_sum.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\concat.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>

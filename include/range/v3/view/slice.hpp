@@ -68,8 +68,8 @@ namespace ranges
             }
 
             template<typename Rng, bool IsRandomAccess = RandomAccessIterable<Rng>()>
-            struct sliced_view_
-              : range_facade<sliced_view<Rng>, false>
+            struct slice_view_
+              : range_facade<slice_view<Rng>, false>
             {
             private:
                 friend range_access;
@@ -94,8 +94,8 @@ namespace ranges
                     return {};
                 }
             public:
-                sliced_view_() = default;
-                sliced_view_(Rng && rng, difference_type_ from, difference_type_ count)
+                slice_view_() = default;
+                slice_view_(Rng && rng, difference_type_ from, difference_type_ count)
                   : rng_(view::all(std::forward<Rng>(rng))), from_(from), count_(count)
                 {}
                 range_size_t<Rng> size() const
@@ -113,8 +113,8 @@ namespace ranges
             };
 
             template<typename Rng>
-            struct sliced_view_<Rng, true>
-              : range_interface<sliced_view<Rng>>
+            struct slice_view_<Rng, true>
+              : range_interface<slice_view<Rng>>
             {
             private:
                 using base_range_t = view::all_t<Rng>;
@@ -122,8 +122,8 @@ namespace ranges
                 base_range_t rng_;
                 difference_type_ from_, count_;
             public:
-                sliced_view_() = default;
-                sliced_view_(Rng && rng, difference_type_ from, difference_type_ count)
+                slice_view_() = default;
+                slice_view_(Rng && rng, difference_type_ from, difference_type_ count)
                   : rng_(view::all(std::forward<Rng>(rng))), from_(from), count_(count)
                 {
                     RANGES_ASSERT(0 <= count_);
@@ -181,10 +181,10 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng>
-        struct sliced_view
-          : detail::sliced_view_<Rng>
+        struct slice_view
+          : detail::slice_view_<Rng>
         {
-            using detail::sliced_view_<Rng>::sliced_view_;
+            using detail::slice_view_<Rng>::slice_view_;
         };
 
         namespace view
@@ -193,7 +193,7 @@ namespace ranges
             {
             private:
                 template<typename Rng>
-                static sliced_view<Rng>
+                static slice_view<Rng>
                 invoke_(Rng && rng, range_difference_t<Rng> from, range_difference_t<Rng> count,
                     concepts::InputIterable *, concepts::Iterable * = nullptr)
                 {

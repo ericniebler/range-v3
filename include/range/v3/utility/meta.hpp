@@ -41,7 +41,7 @@ namespace ranges
             template<typename F, typename...Args>
             using apply = typename F::template apply<Args...>;
 
-            /// \brief `A` metafunction that evaluates the Metafunction Class `F` with
+            /// \brief A metafunction that evaluates the Metafunction Class `F` with
             /// the arguments \c Args.
             template<typename F, typename...Args>
             struct lazy_apply
@@ -57,7 +57,7 @@ namespace ranges
             template<bool B>
             using bool_ = std::integral_constant<bool, B>;
 
-            /// \brief `A` metafunction that always returns type type \c T.
+            /// \brief A metafunction that always returns type type \c T.
             template<typename T>
             struct id
             {
@@ -136,7 +136,7 @@ namespace ranges
                 using apply = apply<F0, apply<compose<Fs...>, Ts...>>;
             };
 
-            /// \brief `A` Metafunction Class that always returns \c T.
+            /// \brief A Metafunction Class that always returns \c T.
             template<typename T>
             struct always
             {
@@ -144,7 +144,7 @@ namespace ranges
                 using apply = T;
             };
 
-            /// \brief `A` Metafunction Class partially applies the Metafunction
+            /// \brief A Metafunction Class partially applies the Metafunction
             /// Class `F` by binding the arguments \c Ts to the <i>front</i>
             /// of \c F.
             template<typename F, typename...Ts>
@@ -154,7 +154,7 @@ namespace ranges
                 using apply = apply<F, Ts..., Us...>;
             };
 
-            /// \brief `A` Metafunction Class partially applies the Metafunction
+            /// \brief A Metafunction Class partially applies the Metafunction
             /// Class `F` by binding the arguments \c Ts to the <i>back</i>
             /// of \c F.
             template<typename F, typename...Us>
@@ -164,7 +164,7 @@ namespace ranges
                 using apply = apply<F, Ts..., Us...>;
             };
 
-            /// \brief `A` metafunction that unpacks the types in the type list
+            /// \brief A metafunction that unpacks the types in the type list
             /// \c List into the Metafunction Class \c F.
             template<typename F, typename List>
             struct lazy_apply_list
@@ -187,7 +187,7 @@ namespace ranges
             template<typename C, typename List>
             using apply_list = eval<lazy_apply_list<C, List>>;
 
-            /// \brief `A` Metafunction Class that takes a bunch of arguments,
+            /// \brief A Metafunction Class that takes a bunch of arguments,
             /// bundles them into a type list, and then calls the Metafunction
             /// Class `F` with the type list.
             template<typename F, typename Q = quote<list>>
@@ -195,7 +195,7 @@ namespace ranges
               : compose<F, Q>
             {};
 
-            /// \brief `A` Metafunction Class that takes a type list,
+            /// \brief A Metafunction Class that takes a type list,
             /// unpacks the types, and then calls the Metafunction
             /// Class `F` with types.
             template<typename F>
@@ -205,7 +205,7 @@ namespace ranges
                 using apply = eval<lazy_apply_list<F, T>>;
             };
 
-            /// \brief `A` Metafunction Class that reverses the order of the first
+            /// \brief A Metafunction Class that reverses the order of the first
             /// two arguments.
             template<typename F>
             struct flip
@@ -347,7 +347,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list
-            /// \brief `A` list of types
+            /// \brief A list of types
             template<typename...Ts>
             struct list
             {
@@ -739,7 +739,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // in
-            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// \brief A Boolean integral constant wrapper around \c true if
             /// there is at least one occurance of `T` in \c List.
             /// \ingroup group-meta
             template<typename List, typename T>
@@ -978,7 +978,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // all_of
-            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// \brief A Boolean integral constant wrapper around \c true if
             /// `apply<F, A>::%value` is \c true for all elements \c A
             /// in \c meta::list \c List; \c false, otherwise. Complexity: O(N)
             template<typename List, typename F>
@@ -986,7 +986,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // any_of
-            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// \brief A Boolean integral constant wrapper around \c true if
             /// `apply<F, A>::%value` is \c true for any element \c A
             /// in \c meta::list \c List; \c false, otherwise. Complexity: O(N)
             template<typename List, typename F>
@@ -994,7 +994,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // none_of
-            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// \brief A Boolean integral constant wrapper around \c true if
             /// `apply<F, A>::%value` is \c false for alls elements \c A
             /// in \c meta::list \c List; \c false, otherwise. Complexity: O(N)
             template<typename List, typename F>
@@ -1042,33 +1042,33 @@ namespace ranges
             template<typename T, typename U>
             using modulus = std::integral_constant<decltype(T::value % U::value), T::value % U::value>;
 
-            /// \brief `A` Boolean integral constant wrapper around the result of comparing
+            /// \brief A Boolean integral constant wrapper around the result of comparing
             /// \c T::value and \c U::value for equality.
             template<typename T, typename U>
             using equal_to = bool_<T::value == U::value>;
 
-            /// \brief `A` Boolean integral constant wrapper around the result of comparing
+            /// \brief A Boolean integral constant wrapper around the result of comparing
             /// \c T::value and \c U::value for inequality.
             template<typename T, typename U>
             using not_equal_to = bool_<T::value != U::value>;
 
-            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// \brief A Boolean integral constant wrapper around \c true if
             /// \c T::value is greater than \c U::value; \c false, otherwise.
             template<typename T, typename U>
             using greater = bool_<(T::value > U::value)>;
 
-            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// \brief A Boolean integral constant wrapper around \c true if
             /// \c T::value is less than \c U::value; \c false, otherwise.
             template<typename T, typename U>
             using less = bool_<(T::value < U::value)>;
 
-            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// \brief A Boolean integral constant wrapper around \c true if
             /// \c T::value is greater than or equal to \c U::value; \c false,
             /// otherwise.
             template<typename T, typename U>
             using greater_equal = bool_<(T::value >= U::value)>;
 
-            /// \brief `A` Boolean integral constant wrapper around \c true if
+            /// \brief A Boolean integral constant wrapper around \c true if
             /// \c T::value is less than or equal to \c U::value; \c false,
             /// otherwise.
             template<typename T, typename U>

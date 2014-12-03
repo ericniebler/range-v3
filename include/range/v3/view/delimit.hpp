@@ -28,8 +28,8 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng, typename Val>
-        struct delimited_view
-          : range_adaptor<delimited_view<Rng, Val>, Rng>
+        struct delimit_view
+          : range_adaptor<delimit_view<Rng, Val>, Rng>
         {
         private:
             friend range_access;
@@ -53,9 +53,9 @@ namespace ranges
                 return {value_};
             }
         public:
-            delimited_view() = default;
-            delimited_view(Rng && rng, Val value)
-              : range_adaptor_t<delimited_view>{std::forward<Rng>(rng)}
+            delimit_view() = default;
+            delimit_view(Rng && rng, Val value)
+              : range_adaptor_t<delimit_view>{std::forward<Rng>(rng)}
               , value_(std::move(value))
             {}
         };
@@ -66,7 +66,7 @@ namespace ranges
             {
                 template<typename Rng, typename Val ,
                     CONCEPT_REQUIRES_(Iterable<Rng>())>
-                delimited_view<Rng, Val>
+                delimit_view<Rng, Val>
                 operator()(Rng && rng, Val value) const
                 {
                     return {std::forward<Rng>(rng), std::move(value)};
@@ -74,7 +74,7 @@ namespace ranges
 
                 template<typename I, typename Val,
                     CONCEPT_REQUIRES_(InputIterator<I>())>
-                delimited_view<range<I, unreachable>, Val>
+                delimit_view<range<I, unreachable>, Val>
                 operator()(I begin, Val value) const
                 {
                     return {{std::move(begin), {}}, std::move(value)};

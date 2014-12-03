@@ -25,13 +25,13 @@
 #include <range/v3/view/drop.hpp>
 #include <range/v3/view/drop_while.hpp>
 #include <range/v3/view/filter.hpp>
-#include <range/v3/view/flatten.hpp>
+#include <range/v3/view/join.hpp>
 #include <range/v3/view/for_each.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/indirect.hpp>
-#include <range/v3/view/join.hpp>
+#include <range/v3/view/concat.hpp>
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/partial_sum.hpp>

@@ -8,6 +8,9 @@ add_test(test.view.all, view.all)
 add_executable(view.bounded bounded.cpp)
 add_test(test.view.bounded, view.bounded)
 
+add_executable(view.concat concat.cpp)
+add_test(test.view.concat, view.concat)
+
 add_executable(view.const const.cpp)
 add_test(test.view.const, view.const)
 
@@ -34,9 +37,6 @@ add_test(test.view.indirect, view.indirect)
 
 add_executable(view.iota iota.cpp)
 add_test(test.view.iota, view.iota)
-
-add_executable(view.join join.cpp)
-add_test(test.view.join, view.join)
 
 add_executable(view.map keys_value.cpp)
 add_test(test.view.map, view.map)

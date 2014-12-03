@@ -29,7 +29,7 @@ int main()
     // Define a nullary function fibs that returns an infinite range
     // that generates the Fibonacci sequence.
     ranges::ext::recursive_range_fn<int> const fibs {[&]{
-        return join(ints(0,1), zip_with(std::plus<int>{}, fibs(), tail(fibs())));
+        return concat(ints(0,1), zip_with(std::plus<int>{}, fibs(), tail(fibs())));
     }};
 
     auto x = take(fibs(), 20);

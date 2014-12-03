@@ -11,7 +11,7 @@
 
 #include <vector>
 #include <range/v3/core.hpp>
-#include <range/v3/view/join.hpp>
+#include <range/v3/view/concat.hpp>
 #include <range/v3/view/reverse.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -22,7 +22,7 @@ int main()
 
     std::vector<std::string> his_face{"this", "is", "his", "face"};
     std::vector<std::string> another_mess{"another", "fine", "mess"};
-    auto joined = view::join(his_face, another_mess);
+    auto joined = view::concat(his_face, another_mess);
     ::models<concepts::RandomAccessRange>(joined);
     static_assert(std::is_same<range_reference_t<decltype(joined)>, std::string &>::value, "");
     CHECK(joined.size() == 7u);

@@ -411,11 +411,11 @@ namespace ranges
         }
 
         template<typename...Rngs>
-        struct join_view;
+        struct concat_view;
 
         namespace view
         {
-            struct join_fn;
+            struct concat_fn;
         }
 
         template<typename Rng, typename Fun>
@@ -458,7 +458,7 @@ namespace ranges
         }
 
         template<typename Rng>
-        struct sliced_view;
+        struct slice_view;
 
         namespace view
         {

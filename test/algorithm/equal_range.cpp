@@ -22,7 +22,7 @@
 #include <vector>
 #include <iterator>
 #include <range/v3/core.hpp>
-#include <range/v3/view/flatten.hpp>
+#include <range/v3/view/join.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/repeat_n.hpp>
@@ -55,7 +55,7 @@ test()
     using namespace ranges::view;
     static constexpr unsigned M = 10;
     std::vector<int> v;
-    auto input = ints | take(100) | transform([](int i){return repeat_n(i,M);}) | flatten;
+    auto input = ints | take(100) | transform([](int i){return repeat_n(i,M);}) | join;
     ranges::copy(input, ranges::back_inserter(v));
     for (int x = 0; x <= (int)M; ++x)
         test(Iter(v.data()), Sent(v.data()+v.size()), x);

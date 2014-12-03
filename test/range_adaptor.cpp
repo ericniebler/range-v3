@@ -77,7 +77,7 @@ public:
 struct my_delimited_range
   : ranges::range_adaptor<
         my_delimited_range,
-        ranges::delimited_view<ranges::istream_range<int>, int>>
+        ranges::delimit_view<ranges::istream_range<int>, int>>
 {
     using range_adaptor_t::range_adaptor_t;
 };
