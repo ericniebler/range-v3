@@ -248,7 +248,8 @@ namespace ranges
                 return ranges::to_<Container>(derived());
             }
             /// \brief Print a range to an ostream
-            friend std::ostream &operator<<(std::ostream &sout, Derived &rng)
+            template<bool B = true, typename Stream = enable_if_t<B, std::ostream>>
+            friend Stream &operator<<(Stream &sout, Derived &rng)
             {
                 auto it = ranges::begin(rng);
                 auto const e = ranges::end(rng);
@@ -260,7 +261,8 @@ namespace ranges
                 return sout << ']';
             }
             /// \overload
-            friend std::ostream &operator<<(std::ostream &sout, Derived const &rng)
+            template<bool B = true, typename Stream = enable_if_t<B, std::ostream>>
+            friend Stream &operator<<(Stream &sout, Derived const &rng)
             {
                 auto it = ranges::begin(rng);
                 auto const e = ranges::end(rng);
