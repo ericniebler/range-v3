@@ -32,6 +32,9 @@ add_test(test.view.generate, view.generate)
 add_executable(view.generate_n generate_n.cpp)
 add_test(test.view.generate_n, view.generate_n)
 
+add_executable(view.group_by group_by.cpp)
+add_test(test.view.group_by, view.group_by)
+
 add_executable(view.indirect indirect.cpp)
 add_test(test.view.indirect, view.indirect)
 

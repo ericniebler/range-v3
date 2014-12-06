@@ -511,6 +511,9 @@
     <ClCompile Include="..\..\..\..\test\view\partial_sum.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\group_by.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -1108,6 +1111,9 @@
       <Filter>Header Files\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\view.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\group_by.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>

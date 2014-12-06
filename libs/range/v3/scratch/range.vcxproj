@@ -199,6 +199,7 @@
     <ClCompile Include="..\..\..\..\test\view\drop_while.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate.cpp" />
     <ClCompile Include="..\..\..\..\test\view\generate_n.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\group_by.cpp" />
     <ClCompile Include="..\..\..\..\test\view\indirect.cpp" />
     <ClCompile Include="..\..\..\..\test\view\iota.cpp" />
     <ClCompile Include="..\..\..\..\test\view\keys_value.cpp" />
@@ -386,6 +387,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\for_each.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\generate.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\generate_n.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\group_by.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\indirect.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\iota.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp" />

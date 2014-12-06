@@ -408,6 +408,14 @@ namespace ranges
             struct indirect_fn;
         }
 
+        template<typename Rng, typename Fun>
+        struct group_by_view;
+
+        namespace view
+        {
+            struct group_by_fn;
+        }
+
         template<typename Rng>
         struct iota_view;
 
