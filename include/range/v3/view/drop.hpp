@@ -23,6 +23,7 @@
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -86,6 +87,24 @@ namespace ranges
             struct drop_fn
             {
             private:
+                friend view_access;
+                template<typename Int,
+                    CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(drop_fn drop, Int n)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(drop, std::placeholders::_1, n))
+                )
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Int,
+                    CONCEPT_REQUIRES_(!Integral<Int>())>
+                static detail::null_pipe bind(drop_fn drop, Int)
+                {
+                    CONCEPT_ASSERT_MSG(Integral<Int>(),
+                        "The object passed to view::drop must be Integral");
+                    return {};
+                }
+            #endif
                 template<typename Rng>
                 static drop_view<Rng>
                 invoke_(Rng && rng, range_difference_t<Rng> n, concepts::InputIterable*)
@@ -106,17 +125,22 @@ namespace ranges
                 (
                     drop_fn::invoke_(std::forward<Rng>(rng), n, iterable_concept<Rng>{})
                 )
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                auto operator()(Int n) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(*this, std::placeholders::_1, n))
-                )
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(!(InputIterable<Rng>() && Integral<T>()))>
+                void operator()(Rng &&, T) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The first argument to view::drop must be a model of the InputIterable concept");
+                    CONCEPT_ASSERT_MSG(Integral<T>(),
+                        "The second argument to view::drop must be a model of the Integral concept");
+                }
+            #endif
             };
 
             /// \sa `drop_fn`
             /// \ingroup group-views
-            constexpr drop_fn drop{};
+            constexpr view<drop_fn> drop{};
         }
         /// @}
     }

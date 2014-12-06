@@ -278,12 +278,24 @@ namespace ranges
         {
             struct zip_fn
             {
-                template<typename...Rngs>
+                template<typename ...Rngs>
+                using Concept = meta::and_<InputIterable<Rngs>...>;
+
+                template<typename...Rngs, CONCEPT_REQUIRES_(Concept<Rngs...>())>
                 zip_view<Rngs...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_c<(bool) Iterable<Rngs>()...>::value);
                     return zip_view<Rngs...>{std::forward<Rngs>(rngs)...};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename...Rngs, CONCEPT_REQUIRES_(!Concept<Rngs...>())>
+                void operator()(Rngs &&... rngs) const
+                {
+                    CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
+                        "All of the objects passed to view::zip must model the InputIterable "
+                        "concept");
+                }
+            #endif
             };
 
             /// \sa `zip_fn`
@@ -292,13 +304,28 @@ namespace ranges
 
             struct zip_with_fn
             {
-                template<typename Fun, typename...Rngs>
+                template<typename Fun, typename ...Rngs>
+                using Concept = meta::and_<
+                    InputIterable<Rngs>...,
+                    Invokable<Fun, range_value_t<Rngs>...>>;
+
+                template<typename Fun, typename...Rngs, CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
                 zip_with_view<Fun, Rngs...> operator()(Fun fun, Rngs &&... rngs) const
                 {
-                    CONCEPT_ASSERT(meta::and_c<(bool) Iterable<Rngs>()...>::value);
-                    CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rngs>...>());
                     return zip_with_view<Fun, Rngs...>{std::move(fun), std::forward<Rngs>(rngs)...};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Fun, typename...Rngs, CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>
+                void operator()(Fun, Rngs &&...) const
+                {
+                    CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
+                        "All of the objects passed to view::zip_with must model the InputIterable "
+                        "concept");
+                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_value_t<Rngs>...>(),
+                        "The function passed to view::zip_with must be callable with N arguments "
+                        "taken one from each of the N ranges.");
+                }
+            #endif
             };
 
             /// \sa `zip_with_fn`

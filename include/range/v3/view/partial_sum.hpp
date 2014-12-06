@@ -29,6 +29,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -118,28 +119,52 @@ namespace ranges
         {
             struct partial_sum_fn
             {
+            private:
+                friend view_access;
+                template<typename Fun>
+                static auto bind(partial_sum_fn partial_sum, Fun fun)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(partial_sum, std::placeholders::_1, protect(std::move(fun))))
+                )
+            public:
                 template<typename Rng, typename Fun>
+                using Concept = meta::and_<
+                    InputIterable<Rng>,
+                    Invokable<Fun, range_value_t<Rng>, range_value_t<Rng>>,
+                    Convertible<
+                        concepts::Invokable::result_t<Fun, range_value_t<Rng>, range_value_t<Rng>>,
+                        range_value_t<Rng>>>;
+
+                template<typename Rng, typename Fun,
+                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
                 partial_sum_view<Rng, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    CONCEPT_ASSERT(InputIterable<Rng>());
-                    CONCEPT_ASSERT(Invokable<Fun, range_value_t<Rng>, range_value_t<Rng>>());
-                    CONCEPT_ASSERT(Convertible<
-                        concepts::Invokable::result_t<Fun, range_value_t<Rng>, range_value_t<Rng>>,
-                        range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(fun)};
                 }
-
-                template<typename Fun>
-                auto operator()(Fun fun) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(fun)))))
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename Fun,
+                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
+                void operator()(Rng && rng, Fun fun) const
                 {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(fun))));
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The first argument passed to view::partial_sum must be a model of the "
+                        "InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_value_t<Rng>, range_value_t<Rng>>(),
+                        "The second argument passed to view::partial_sum must be callable with "
+                        "two values from the range passed as the first argument.");
+                    CONCEPT_ASSERT_MSG(Convertible<
+                        concepts::Invokable::result_t<Fun, range_value_t<Rng>, range_value_t<Rng>>,
+                        range_value_t<Rng>>(),
+                        "The return type of the function passed to view::partial_sum must be "
+                        "convertible to the value type of the range.");
                 }
+            #endif
             };
 
             /// \sa `partial_sum_fn`
             /// \ingroup group-views
-            constexpr partial_sum_fn partial_sum{};
+            constexpr view<partial_sum_fn> partial_sum{};
         }
         /// @}
     }

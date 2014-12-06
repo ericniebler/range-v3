@@ -32,8 +32,8 @@ namespace ranges
         //  - The element is immutable, so there is no potential for incorrect
         //    semantics.
         template<typename Val>
-        struct repeated_n_view
-          : range_facade<repeated_n_view<Val>>
+        struct repeat_n_view
+          : range_facade<repeat_n_view<Val>>
         {
         private:
             friend range_access;
@@ -70,8 +70,8 @@ namespace ranges
                 return {value_, n_};
             }
         public:
-            repeated_n_view() = default;
-            constexpr repeated_n_view(Val value, std::size_t n)
+            repeat_n_view() = default;
+            constexpr repeat_n_view(Val value, std::size_t n)
               : value_(detail::move(value)), n_(n)
             {}
             constexpr std::size_t size() const
@@ -84,12 +84,22 @@ namespace ranges
         {
             struct repeat_n_fn
             {
-                template<typename Val>
-                repeated_n_view<Val> operator()(Val value, std::size_t n) const
+                template<typename Val,
+                    CONCEPT_REQUIRES_(SemiRegular<Val>())>
+                repeat_n_view<Val> operator()(Val value, std::size_t n) const
                 {
-                    CONCEPT_ASSERT(SemiRegular<Val>());
-                    return repeated_n_view<Val>{std::move(value), n};
+                    return repeat_n_view<Val>{std::move(value), n};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Val,
+                    CONCEPT_REQUIRES_(!SemiRegular<Val>())>
+                void operator()(Val, std::size_t) const
+                {
+                    CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
+                        "The value passed to view::repeat_n must be SemiRegular; that is, it needs "
+                        "to be default constructable, copy and move constructable, and destructable.");
+                }
+            #endif
             };
 
             /// \sa `repeat_n_fn`

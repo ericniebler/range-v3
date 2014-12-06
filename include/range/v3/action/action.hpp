@@ -61,15 +61,36 @@ namespace ranges
             private:
                 Action action_;
                 friend pipeable_access;
+                template<typename Rng>
+                using ActionPipeConcept = meta::and_<
+                    Function<Action, Rng>,
+                    Iterable<Rng>,
+                    meta::not_<std::is_reference<Rng>>>;
                 // Pipeing requires things are passed by value.
                 template<typename Rng, typename Act,
-                    CONCEPT_REQUIRES_(Function<Action, Rng>() && Iterable<Rng>() &&
-                        !std::is_reference<Rng>())>
+                    CONCEPT_REQUIRES_(ActionPipeConcept<Rng>())>
                 static uncvref_t<Rng> pipe(Rng && rng, Act && act)
                 {
                     act.action_(rng);
                     return std::forward<Rng>(rng);
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                // For better error messages:
+                template<typename Rng, typename Act,
+                    CONCEPT_REQUIRES_(!ActionPipeConcept<Rng>())>
+                static void pipe(Rng &&, Act &&)
+                {
+                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
+                        "The type Rng must be a model of the Iterable concept.");
+                    // BUGBUG This isn't a very helpful message. This is probably the wrong place
+                    // to put this check:
+                    CONCEPT_ASSERT_MSG(Function<Action, Rng>(),
+                        "This action is not callable with this range type.");
+                    static_assert(!std::is_reference<Rng>(),
+                        "You can't pipe an lvalue into an action. Try using std::move on the argument, "
+                        "and be sure to save the result somewhere or pipe the result to another action.");
+                }
+            #endif
             public:
                 action() = default;
                 action(Action a)

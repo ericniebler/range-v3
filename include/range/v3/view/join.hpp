@@ -25,6 +25,7 @@
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -120,21 +121,37 @@ namespace ranges
 
         namespace view
         {
-            struct join_fn : pipeable<join_fn>
+            struct join_fn
             {
                 template<typename Rng>
+                using Concept = meta::and_<
+                    Iterable<Rng>,
+                    Iterable<range_value_t<Rng>>>;
+
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(Concept<Rng>())>
                 join_view<Rng> operator()(Rng && rng) const
                 {
-                    // Must be a range of ranges
-                    CONCEPT_ASSERT(Iterable<Rng>());
-                    CONCEPT_ASSERT(Iterable<range_value_t<Rng>>());
                     return join_view<Rng>{std::forward<Rng>(rng)};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!Concept<Rng>())>
+                void operator()(Rng &&) const
+                {
+                    // Must be a range of ranges
+                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
+                        "The argument to view::join must be a model of the Iterable concept.");
+                    CONCEPT_ASSERT_MSG(Iterable<range_value_t<Rng>>(),
+                        "The value type of the range passed to view::join must model the Iterable "
+                        "concept.");
+                }
+            #endif
             };
 
             /// \sa `join_fn`
             /// \ingroup group-views
-            constexpr join_fn join{};
+            constexpr view<join_fn> join{};
         }
         /// @}
     }

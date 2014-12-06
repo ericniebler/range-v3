@@ -20,10 +20,12 @@
 
 struct Int
 {
+    using difference_type = int;
     int i = 0;
     Int() = default;
-    Int(int i) : i(i) {}
+    explicit Int(int i) : i(i) {}
     Int & operator++() {++i; CHECK(i <= 10); return *this;}
+    Int operator++(int) {auto tmp = *this; ++*this; return tmp;}
     bool operator==(Int j) const { return i == j.i; }
     bool operator!=(Int j) const { return i != j.i; }
 };

@@ -21,6 +21,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -64,19 +65,38 @@ namespace ranges
 
         namespace view
         {
-            struct indirect_fn : pipeable<indirect_fn>
+            struct indirect_fn
             {
                 template<typename Rng>
+                using Concept = meta::and_<
+                    InputIterable<Rng>,
+                    Readable<range_value_t<Rng>>>;
+
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(Concept<Rng>())>
                 indirect_view<Rng> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
                     return indirect_view<Rng>{std::forward<Rng>(rng)};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!Concept<Rng>())>
+                void operator()(Rng &&) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The argument to view::indirect must be a model of the InputIterable "
+                        "concept");
+                    CONCEPT_ASSERT_MSG(Readable<range_value_t<Rng>>(),
+                        "The value type of the range passed to view::indirect must be a model "
+                        "of the Readable concept.");
+                }
+            #endif
             };
 
             /// \sa `indirect_fn`
             /// \ingroup group-views
-            constexpr indirect_fn indirect{};
+            constexpr view<indirect_fn> indirect{};
         }
         /// @}
     }

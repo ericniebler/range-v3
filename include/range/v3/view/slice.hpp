@@ -26,6 +26,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/drop.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -192,6 +193,8 @@ namespace ranges
             struct slice_fn
             {
             private:
+                friend view_access;
+
                 template<typename Rng>
                 static slice_view<Rng>
                 invoke_(Rng && rng, range_difference_t<Rng> from, range_difference_t<Rng> count,
@@ -208,6 +211,39 @@ namespace ranges
                     auto it = detail::pos_at_(rng, from, iterable_concept<Rng>{}, is_infinite<Rng>{});
                     return {it, it + count};
                 }
+
+                // Overloads for the pipe syntax: rng | view::slice(from,to)
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(slice_fn slice, Int from, Int to)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
+                )
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(slice_fn slice, Int from, detail::from_end_<Int> to)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
+                )
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(slice_fn slice, detail::from_end_<Int> from, detail::from_end_<Int> to)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
+                )
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(slice_fn slice, Int from, end_fn)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(ranges::view::drop, std::placeholders::_1, from))
+                )
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(slice_fn slice, detail::from_end_<Int> from, end_fn to)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
+                )
+
             public:
                 // slice(rng, 2, 4)
                 template<typename Rng,
@@ -259,10 +295,10 @@ namespace ranges
                 template<typename Rng,
                     CONCEPT_REQUIRES_(InputIterable<Rng>())>
                 auto operator()(Rng && rng, range_difference_t<Rng> from, end_fn) const ->
-                    decltype(view::drop(std::forward<Rng>(rng), from))
+                    decltype(ranges::view::drop(std::forward<Rng>(rng), from))
                 {
                     RANGES_ASSERT(0 <= from);
-                    return view::drop(std::forward<Rng>(rng), from);
+                    return ranges::view::drop(std::forward<Rng>(rng), from);
                 }
                 // slice(rng, end-4, end)
                 template<typename Rng,
@@ -281,42 +317,74 @@ namespace ranges
                         bounded_iterable_concept<Rng>{}());
                 }
 
-                // Overloads for the pipe syntax: rng | view::slice(from,to)
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                auto operator()(Int from, Int to) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(*this, std::placeholders::_1, from, to))
-                )
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                auto operator()(Int from, detail::from_end_<Int> to) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(*this, std::placeholders::_1, from, to))
-                )
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                auto operator()(detail::from_end_<Int> from, detail::from_end_<Int> to) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(*this, std::placeholders::_1, from, to))
-                )
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                auto operator()(Int from, end_fn) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(view::drop, std::placeholders::_1, from))
-                )
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                auto operator()(detail::from_end_<Int> from, end_fn to) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(*this, std::placeholders::_1, from, to))
-                )
+            #ifndef RANGES_DOXYGEN_INVOKED
+                //
+                // These overloads are strictly so that users get better error messages
+                // when they try to slice things in a way that doesn't support the operation.
+                //
+
+                // slice(rng, 2, 4)
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                void operator()(Rng &&, range_difference_t<Rng>, range_difference_t<Rng>) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object to be sliced must be a model of the InputIterable concept.");
+                }
+                // slice(rng, 4, end-2)
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!(InputIterable<Rng>() && SizedIterable<Rng>()))>
+                void operator()(Rng &&, range_difference_t<Rng>,
+                    detail::from_end_<range_difference_t<Rng>>) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object to be sliced must be a model of the InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(SizedIterable<Rng>(),
+                        "When slicing a range with a positive start offset and a stop offset "
+                        "measured from the end, the range must be a model of the SizedIterable "
+                        "concept; that is, its size must be known.");
+                }
+                // slice(rng, end-4, end-2)
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!((InputIterable<Rng>() && SizedIterable<Rng>()) ||
+                        ForwardIterable<Rng>()))>
+                void operator()(Rng &&, detail::from_end_<range_difference_t<Rng>>,
+                    detail::from_end_<range_difference_t<Rng>>) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object to be sliced must be a model of the InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(SizedIterable<Rng>() || ForwardIterable<Rng>(),
+                        "When slicing a range with a start and stop offset measured from the end, "
+                        "the range must either be a model of the SizedIterable concept (its size "
+                        "must be known), or it must be a model of the ForwardIterable concept.");
+                }
+                // slice(rng, 4, end)
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!(InputIterable<Rng>()))>
+                void operator()(Rng &&, range_difference_t<Rng>, end_fn) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object to be sliced must be a model of the InputIterable concept.");
+                }
+                // slice(rng, end-4, end)
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!((InputIterable<Rng>() && SizedIterable<Rng>()) ||
+                        ForwardIterable<Rng>()))>
+                void operator()(Rng &&, detail::from_end_<range_difference_t<Rng>>, end_fn) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object to be sliced must be a model of the InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(SizedIterable<Rng>() || ForwardIterable<Rng>(),
+                        "When slicing a range with a start and stop offset measured from the end, "
+                        "the range must either be a model of the SizedIterable concept (its size "
+                        "must be known), or it must be a model of the ForwardIterable concept.");
+                }
+            #endif
             };
 
             /// \sa `slice_fn`
             /// \ingroup group-views
-            constexpr slice_fn slice{};
+            constexpr view<slice_fn> slice{};
         }
         /// @}
     }

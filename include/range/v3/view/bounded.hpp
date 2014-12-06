@@ -23,6 +23,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -84,7 +85,7 @@ namespace ranges
 
         namespace view
         {
-            struct bounded_fn : pipeable<bounded_fn>
+            struct bounded_fn
             {
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && !BoundedIterable<Rng>())>
@@ -94,15 +95,24 @@ namespace ranges
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Iterable<Rng>() && BoundedIterable<Rng>())>
-                view::all_t<Rng> operator()(Rng && rng) const
+                ranges::view::all_t<Rng> operator()(Rng && rng) const
                 {
-                    return view::all(std::forward<Rng>(rng));
+                    return ranges::view::all(std::forward<Rng>(rng));
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(!Iterable<Rng>())>
+                void operator()(Rng && rng) const
+                {
+                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
+                        "Rng is not a model of the Iterable concept");
+                }
+            #endif
             };
 
             /// \sa `bounded_fn`
             /// \ingroup group-views
-            constexpr bounded_fn bounded{};
+            constexpr view<bounded_fn> bounded{};
 
             template<typename Rng>
             using bounded_t =

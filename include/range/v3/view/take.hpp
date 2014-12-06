@@ -20,11 +20,11 @@
 #include <range/v3/range_interface.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -142,6 +142,8 @@ namespace ranges
             struct take_fn
             {
             private:
+                friend view_access;
+
                 template<typename Rng>
                 static take_view<Rng>
                 invoke_(Rng && rng, range_difference_t<Rng> to, concepts::InputIterable*)
@@ -154,6 +156,22 @@ namespace ranges
                 {
                     return {begin(rng), next(begin(rng), to)};
                 }
+
+                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
+                static auto bind(take_fn take, Int to)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(take, std::placeholders::_1, to))
+                )
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Int, CONCEPT_REQUIRES_(!Integral<Int>())>
+                static detail::null_pipe bind(take_fn, Int)
+                {
+                    CONCEPT_ASSERT_MSG(Integral<Int>(),
+                        "The object passed to view::take must be a model of the Integral concept.");
+                    return {};
+                }
+            #endif
             public:
                 template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
                 auto operator()(Rng && rng, range_difference_t<Rng> to) const
@@ -161,17 +179,22 @@ namespace ranges
                 (
                     take_fn::invoke_(std::forward<Rng>(rng), to, iterable_concept<Rng>{})
                 )
-                template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                auto operator()(Int to) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(*this, std::placeholders::_1, to))
-                )
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename T, CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                void operator()(Rng &&, T &&) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<T>(),
+                        "The object on which view::take operates must be a model of the InputIterable "
+                        "concept.");
+                    CONCEPT_ASSERT_MSG(Integral<T>(),
+                        "The second argument to view::take must be a model of the Integral concept.");
+                }
+            #endif
             };
 
             /// \sa `take_fn`
             /// \ingroup group-views
-            constexpr take_fn take{};
+            constexpr view<take_fn> take{};
         }
         /// @}
     }

@@ -23,8 +23,8 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -75,19 +75,28 @@ namespace ranges
 
         namespace view
         {
-            struct tail_fn : pipeable<tail_fn>
+            struct tail_fn
             {
-                template<typename Rng>
+                template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
                 tail_view<Rng> operator()(Rng && rng) const
                 {
-                    CONCEPT_ASSERT(Iterable<Rng>());
                     return tail_view<Rng>{std::forward<Rng>(rng)};
                 }
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                void operator()(Rng &&) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object on which view::tail is to operate must be a model of the "
+                        "InputIterable concept.");
+                }
+            #endif
             };
 
             /// \sa `tail_fn`
             /// \ingroup group-views
-            constexpr tail_fn tail{};
+            constexpr view<tail_fn> tail{};
         }
         /// @}
     }

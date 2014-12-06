@@ -91,6 +91,12 @@ namespace ranges
             struct action;
         }
 
+        namespace view
+        {
+            template<typename View>
+            struct view;
+        }
+
         struct advance_fn;
 
         struct advance_to_fn;

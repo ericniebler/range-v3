@@ -743,6 +743,12 @@ namespace ranges
             };
 
             template<typename T>
+            struct value_type<T, detail::void_t<typename T::element_type>> // smart pointers
+            {
+                using type = typename T::element_type;
+            };
+
+            template<typename T>
             struct value_type<T, enable_if_t<std::is_base_of<std::ios_base, T>::value, void>>
             {
                 using type = typename T::char_type;
@@ -795,6 +801,9 @@ namespace ranges
     /**/
 
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
+/// @}
+
+#define CONCEPT_ASSERT_MSG static_assert
 /// @}
 
 #endif // RANGES_V3_UTILITY_CONCEPTS_HPP

@@ -24,6 +24,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/view/all.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -79,24 +80,46 @@ namespace ranges
         {
             struct drop_while_fn
             {
-                template<typename Rng, typename Pred, CONCEPT_REQUIRES_(InputIterable<Rng>())>
+            private:
+                friend view_access;
+                template<typename Pred>
+                static auto bind(drop_while_fn drop_while, Pred pred)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(drop_while, std::placeholders::_1, protect(std::move(pred))))
+                )
+            public:
+                template<typename Rng, typename Pred>
+                using Concept = meta::and_<
+                    InputIterable<Rng>,
+                    InvokablePredicate<Pred, range_value_t<Rng>>>;
+
+                template<typename Rng, typename Pred,
+                    CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
                 drop_while_view<Rng, Pred>
                 operator()(Rng && rng, Pred pred) const
                 {
-                    CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
-                template<typename Pred>
-                auto operator()(Pred pred) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred))))
-                )
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename Pred,
+                    CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
+                void operator()(Rng &&, Pred) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The first argument to view::drop_while must be a model of the "
+                        "InputIterable concept");
+                    CONCEPT_ASSERT_MSG(InvokablePredicate<Pred, range_value_t<Rng>>(),
+                        "The second argument to view::drop_while must be callable with "
+                        "an argument of the range's value type, and its return value must "
+                        "be convertible to bool");
+                }
+            #endif
             };
 
             /// \sa `drop_while_fn`
             /// \ingroup group-views
-            constexpr drop_while_fn drop_while{};
+            constexpr view<drop_while_fn> drop_while{};
         }
         /// @}
     }

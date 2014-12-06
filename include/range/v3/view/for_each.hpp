@@ -15,6 +15,7 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/view/view.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
@@ -42,26 +43,47 @@ namespace ranges
         {
             struct for_each_fn
             {
+            private:
+                friend view_access;
+                template<typename F>
+                static auto bind(for_each_fn for_each, F f)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(for_each, std::placeholders::_1, protect(std::move(f))))
+                )
+            public:
                 template<typename Rng, typename F>
+                using Concept = meta::and_<
+                    Iterable<Rng>,
+                    Invokable<F, range_value_t<Rng>>,
+                    Iterable<concepts::Invokable::result_t<F, range_value_t<Rng>>>>;
+
+                template<typename Rng, typename F,
+                    CONCEPT_REQUIRES_(Concept<Rng, F>())>
                 for_each_view<Rng, F> operator()(Rng && rng, F f) const
                 {
-                    CONCEPT_ASSERT(Iterable<Rng>());
-                    CONCEPT_ASSERT(Invokable<F, range_value_t<Rng>>());
-                    CONCEPT_ASSERT(Iterable<concepts::Invokable::result_t<F, range_value_t<Rng>>>());
                     return {std::forward<Rng>(rng), std::move(f)};
                 }
 
-                template<typename F>
-                auto operator()(F f) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(f)))))
+            #ifndef RANGES_DOXYGEN_INVOKED
+                // For better error reporting
+                template<typename Rng, typename F,
+                    CONCEPT_REQUIRES_(!Concept<Rng, F>())>
+                void operator()(Rng &&, F) const
                 {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(f))));
+                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
+                        "Rng is not a model of the Iterable concept.");
+                    CONCEPT_ASSERT_MSG(Invokable<F, range_value_t<Rng>>(),
+                        "The function F is not callable with arguments of the type of the range's value type.");
+                    CONCEPT_ASSERT_MSG(Iterable<concepts::Invokable::result_t<F, range_value_t<Rng>>>(),
+                        "To use view::for_each, the function F must return a model of the Iterable concept.");
                 }
+            #endif
             };
 
             /// \sa `for_each_fn`
             /// \ingroup group-views
-            constexpr for_each_fn for_each{};
+            constexpr view<for_each_fn> for_each{};
         }
 
         struct yield_fn
@@ -93,7 +115,7 @@ namespace ranges
         struct yield_if_fn
         {
             template<typename V>
-            repeated_n_view<V> operator()(bool b, V v) const
+            repeat_n_view<V> operator()(bool b, V v) const
             {
                 return view::repeat_n(std::move(v), b ? 1 : 0);
             }

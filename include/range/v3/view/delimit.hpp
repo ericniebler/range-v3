@@ -20,6 +20,7 @@
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -62,15 +63,47 @@ namespace ranges
 
         namespace view
         {
-            struct delimit_fn
+            struct delimit_impl_fn
             {
-                template<typename Rng, typename Val ,
-                    CONCEPT_REQUIRES_(Iterable<Rng>())>
+            private:
+                friend view_access;
+                template<typename Val>
+                static auto bind(delimit_impl_fn delimit, Val value)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(delimit, std::placeholders::_1, std::move(value)))
+                )
+            public:
+                template<typename Rng, typename Val>
+                using Concept = meta::and_<
+                    Iterable<Rng>,
+                    EqualityComparable<Val, range_value_t<Rng>>>;
+
+                template<typename Rng, typename Val,
+                    CONCEPT_REQUIRES_(Concept<Rng, Val>())>
                 delimit_view<Rng, Val>
                 operator()(Rng && rng, Val value) const
                 {
                     return {std::forward<Rng>(rng), std::move(value)};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename Val,
+                    CONCEPT_REQUIRES_(!Concept<Rng, Val>())>
+                void
+                operator()(Rng &&, Val) const
+                {
+                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
+                        "Rng must model the Iterable concept");
+                    CONCEPT_ASSERT_MSG(EqualityComparable<Val, range_value_t<Rng>>(),
+                        "The delimiting value type must be EqualityComparable to the "
+                        "range's value type.");
+                }
+            #endif
+            };
+
+            struct delimit_fn : view<delimit_impl_fn>
+            {
+                using view<delimit_impl_fn>::operator();
 
                 template<typename I, typename Val,
                     CONCEPT_REQUIRES_(InputIterator<I>())>
@@ -78,13 +111,6 @@ namespace ranges
                 operator()(I begin, Val value) const
                 {
                     return {{std::move(begin), {}}, std::move(value)};
-                }
-
-                template<typename Val>
-                auto operator()(Val value) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(value))))
-                {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(value)));
                 }
             };
 

@@ -20,7 +20,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/pipeable.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -108,20 +108,36 @@ namespace ranges
 
         namespace view
         {
-            struct reverse_fn : pipeable<reverse_fn>
+            struct reverse_fn
             {
                 template<typename Rng>
+                using Concept = meta::and_<
+                    BidirectionalIterable<Rng>,
+                    BoundedIterable<Rng>>;
+
+                template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
                 reverse_view<Rng> operator()(Rng && rng) const
                 {
-                    CONCEPT_ASSERT(BidirectionalIterable<Rng>());
-                    CONCEPT_ASSERT(BoundedIterable<Rng>());
                     return reverse_view<Rng>{std::forward<Rng>(rng)};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                // For error reporting
+                template<typename Rng, CONCEPT_REQUIRES_(!Concept<Rng>())>
+                void operator()(Rng &&) const
+                {
+                    CONCEPT_ASSERT_MSG(BidirectionalIterable<Rng>(),
+                        "The object on which view::reverse operates must be a model of the "
+                        "BidirectionalIterable concept.");
+                    CONCEPT_ASSERT_MSG(BoundedIterable<Rng>(),
+                        "To reverse an iterable object, its end iterator must be a model of "
+                        "the BidirectionalIterator concept.");
+                }
+            #endif
             };
 
             /// \sa `reverse_fn`
             /// \ingroup group-views
-            constexpr reverse_fn reverse{};
+            constexpr view<reverse_fn> reverse{};
         }
         /// @}
     }

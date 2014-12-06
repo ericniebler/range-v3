@@ -21,6 +21,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -79,19 +80,20 @@ namespace ranges
 
         namespace view
         {
-            struct const_fn : pipeable<const_fn>
+            struct const_fn
             {
                 template<typename Rng>
                 const_view<Rng> operator()(Rng && rng) const
                 {
-                    CONCEPT_ASSERT(Iterable<Rng>());
+                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
+                        "Rng must be a model of the Iterable concept");
                     return const_view<Rng>{std::forward<Rng>(rng)};
                 }
             };
 
             /// \sa `const_fn`
             /// \ingroup group-views
-            constexpr const_fn const_{};
+            constexpr view<const_fn> const_{};
         }
         /// @}
     }

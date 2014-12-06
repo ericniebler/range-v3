@@ -25,6 +25,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -108,25 +109,46 @@ namespace ranges
         {
             struct remove_if_fn
             {
+            private:
+                friend view_access;
+                template<typename Pred>
+                static auto bind(remove_if_fn remove_if, Pred pred)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(remove_if, std::placeholders::_1, protect(std::move(pred))))
+                )
+            public:
                 template<typename Rng, typename Pred>
+                using Concept = meta::and_<
+                    InputIterable<Rng>,
+                    InvokablePredicate<Pred, range_value_t<Rng>>>;
+
+                template<typename Rng, typename Pred,
+                    CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
                 remove_if_view<Rng, Pred>
                 operator()(Rng && rng, Pred pred) const
                 {
-                    CONCEPT_ASSERT(Iterable<Rng>());
-                    CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
-                template<typename Pred>
-                auto operator()(Pred pred) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred)))))
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename Pred,
+                    CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
+                void operator()(Rng &&, Pred) const
                 {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred))));
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The first argument to view::remove_if must be a model of the "
+                        "InputIterable concept");
+                    CONCEPT_ASSERT_MSG(InvokablePredicate<Pred, range_value_t<Rng>>(),
+                        "The second argument to view::remove_if must be callable with "
+                        "a value of the range, and the return type must be convertible "
+                        "to bool");
                 }
+            #endif
             };
 
             /// \sa `remove_if_fn`
             /// \ingroup group-views
-            constexpr remove_if_fn remove_if{};
+            constexpr view<remove_if_fn> remove_if{};
         }
         /// @}
     }

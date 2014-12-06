@@ -26,6 +26,7 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/view/view.hpp>
 
 namespace ranges
 {
@@ -176,24 +177,52 @@ namespace ranges
         {
             struct stride_fn
             {
-                template<typename Rng>
+            private:
+                friend view_access;
+                template<typename Difference, CONCEPT_REQUIRES_(Integral<Difference>())>
+                static auto bind(stride_fn stride, Difference step)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)))
+                )
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Difference, CONCEPT_REQUIRES_(!Integral<Difference>())>
+                static detail::null_pipe bind(stride_fn, Difference &&)
+                {
+                    CONCEPT_ASSERT_MSG(Integral<Difference>(),
+                        "The value to be used as the step in a call to view::stride must be a "
+                        "model of the Integral concept that is convertible to the range's "
+                        "difference type.");
+                    return {};
+                }
+            #endif
+
+            public:
+                template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
                 stride_view<Rng> operator()(Rng && rng, range_difference_t<Rng> step) const
                 {
-                    CONCEPT_ASSERT(InputIterable<Rng>());
                     return {std::forward<Rng>(rng), step};
                 }
 
-                template<typename Difference, CONCEPT_REQUIRES_(Integral<Difference>())>
-                auto operator()(Difference step) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, std::move(step))))
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                void operator()(Rng &&, T &&) const
                 {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, std::move(step)));
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object to be operated on by view::stride should be a model of the "
+                        "InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(Integral<T>(),
+                        "The value to be used as the step in a call to view::stride must be a "
+                        "model of the Integral concept that is convertible to the range's "
+                        "difference type.");
                 }
+            #endif
             };
 
             /// \sa `stride_fn`
             /// \ingroup group-views
-            constexpr stride_fn stride{};
+            constexpr view<stride_fn> stride{};
         }
         /// @}
     }

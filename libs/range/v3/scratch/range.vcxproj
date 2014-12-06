@@ -408,6 +408,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unbounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\set_difference.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\set_intersection.hpp" />

@@ -79,11 +79,22 @@ namespace ranges
         {
             struct single_fn
             {
-                template<typename Val>
+                template<typename Val, CONCEPT_REQUIRES_(SemiRegular<Val>())>
                 single_view<Val> operator()(Val value) const
                 {
                     return single_view<Val>{std::move(value)};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                // For error reporting
+                template<typename Val, CONCEPT_REQUIRES_(!SemiRegular<Val>())>
+                void operator()(Val &&) const
+                {
+                    CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
+                        "The object passed to view::single must be a model of the SemiRegular "
+                        "concept; that is, it needs to be default constructible, copy and move "
+                        " constructible, and destructible.");
+                }
+            #endif
             };
 
             /// \sa `single_fn`

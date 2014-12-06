@@ -88,11 +88,29 @@ namespace ranges
         {
             struct generate_n_fn
             {
-                template<typename G, CONCEPT_REQUIRES_(Function<G>())>
+                template<typename G>
+                using Concept = meta::and_<
+                    Function<G>,
+                    meta::not_<Same<void, concepts::Function::result_t<G>>>>;
+
+                template<typename G,
+                    CONCEPT_REQUIRES_(Concept<G>())>
                 generate_n_view<G> operator()(G g, std::size_t n) const
                 {
                     return generate_n_view<G>{std::move(g), n};
                 }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename G,
+                    CONCEPT_REQUIRES_(!Concept<G>())>
+                void operator()(G, std::size_t) const
+                {
+                    CONCEPT_ASSERT_MSG(Function<G>(),
+                        "The argument to view::generate must be a function that is callable with "
+                        "no arguments");
+                    CONCEPT_ASSERT_MSG(meta::not_<Same<void, concepts::Function::result_t<G>>>(),
+                        "The return type of the function G must not be void.");
+                }
+            #endif
             };
 
             /// \sa `generate_n_fn`
