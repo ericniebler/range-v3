@@ -13,7 +13,8 @@ var NAVTREE =
     [ "Indexes", "usergroup0.html", [
       [ "Methods", "functions.html", [
         [ "All", "functions.html", null ],
-        [ "Functions", "functions_func.html", null ]
+        [ "Functions", "functions_func.html", null ],
+        [ "Related Functions", "functions_rela.html", null ]
       ] ],
       [ "Classes", "annotated.html", "annotated" ],
       [ "Files", "files.html", "files" ]
@@ -24,12 +25,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"group__group-utility.html#ga9808273ef5ec1ecaf6200f7ca5f4d667",
-"structranges_1_1v3_1_1compressed__pair.html",
-"structranges_1_1v3_1_1drop__while__view.html#acd94dad431857054b0edd7f6b3b44028",
-"structranges_1_1v3_1_1none__of__fn.html",
-"structranges_1_1v3_1_1sized__range.html#a6b8f1ad3e7a71705c8620b7968c5d4b7",
-"structstd_1_1tuple__element_3_011_00_1_1ranges_1_1v3_1_1compressed__pair_3_01_first_00_01_second_01_4_01_4.html#a7f6c94ef4ba5d66a5b1b0df541a720dc"
+"group__group-utility.html#ga7bc2a0599560168b83abb091d1bd4db1",
+"structranges_1_1v3_1_1bounded__view.html#aaeeb536dfd456f15ce773d95f518259b",
+"structranges_1_1v3_1_1counted__view.html#aed9298e3cc3c7806bfe31c982cff0f47",
+"structranges_1_1v3_1_1min__element__fn.html#a6f457f7bdf3ab36f284b47b213ee4b56",
+"structranges_1_1v3_1_1semiregular.html#aee7fad3e74073498f66200971aadec05",
+"structranges_1_1v3_1_1view_1_1tokenize__fn.html#a0b8972a702aac8785b08df6b545cf38a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

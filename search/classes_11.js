@@ -24,7 +24,7 @@ var searchData=
   ['sizedrange',['SizedRange',['../structranges_1_1v3_1_1concepts_1_1_sized_range.html',1,'ranges::v3::concepts']]],
   ['slice_5ffn',['slice_fn',['../structranges_1_1v3_1_1action_1_1slice__fn.html',1,'ranges::v3::action']]],
   ['slice_5ffn',['slice_fn',['../structranges_1_1v3_1_1view_1_1slice__fn.html',1,'ranges::v3::view']]],
-  ['sliced_5fview',['sliced_view',['../structranges_1_1v3_1_1sliced__view.html',1,'ranges::v3']]],
+  ['slice_5fview',['slice_view',['../structranges_1_1v3_1_1slice__view.html',1,'ranges::v3']]],
   ['sort_5ffn',['sort_fn',['../structranges_1_1v3_1_1action_1_1sort__fn.html',1,'ranges::v3::action']]],
   ['sort_5ffn',['sort_fn',['../structranges_1_1v3_1_1sort__fn.html',1,'ranges::v3']]],
   ['sort_5fheap_5ffn',['sort_heap_fn',['../structranges_1_1v3_1_1sort__heap__fn.html',1,'ranges::v3']]],

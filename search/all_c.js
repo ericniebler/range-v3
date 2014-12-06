@@ -17,5 +17,6 @@ var searchData=
   ['not_5ffn',['not_fn',['../structranges_1_1v3_1_1not__fn.html',1,'ranges::v3']]],
   ['nth_5felement',['nth_element',['../group__group-algorithms.html#gaad585732b074e294b6fcafefd74e3a7c',1,'ranges::v3']]],
   ['nth_5felement_5ffn',['nth_element_fn',['../structranges_1_1v3_1_1nth__element__fn.html',1,'ranges::v3']]],
+  ['null_5fpipe',['null_pipe',['../structranges_1_1v3_1_1detail_1_1null__pipe.html',1,'ranges::v3::detail']]],
   ['numeric_2ehpp',['numeric.hpp',['../numeric_8hpp.html',1,'']]]
 ];

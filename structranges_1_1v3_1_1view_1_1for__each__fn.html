@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1for__eac
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -88,6 +88,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1for__eac
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1view_1_1for__each__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -95,16 +96,19 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1for__eac
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a2be0a631eedbfe0a7294df637e034644"><td class="memTemplParams" colspan="2"><a class="anchor" id="a2be0a631eedbfe0a7294df637e034644"></a>
+template&lt;typename Rng , typename F &gt; </td></tr>
+<tr class="memitem:a2be0a631eedbfe0a7294df637e034644"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__group-meta.html#ga1e144f7a7d4eb262938ca7312b666653">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Iterable</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Invokable</a>&lt; F, range_value_t&lt; Rng &gt;&gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Iterable</a>&lt; concepts::Invokable::result_t&lt; F, range_value_t&lt; Rng &gt;&gt;&gt;&gt;</td></tr>
+<tr class="separator:a2be0a631eedbfe0a7294df637e034644"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9b131a5b7dc1dae167c2be89e4845526"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9b131a5b7dc1dae167c2be89e4845526"></a>
-template&lt;typename Rng , typename F &gt; </td></tr>
-<tr class="memitem:a9b131a5b7dc1dae167c2be89e4845526"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1for__each__view.html">for_each_view</a>&lt; Rng, F &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, F f) const </td></tr>
-<tr class="separator:a9b131a5b7dc1dae167c2be89e4845526"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08c3b0b4c09276b975c51c625d9d2df9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a08c3b0b4c09276b975c51c625d9d2df9"></a>
-template&lt;typename F &gt; </td></tr>
-<tr class="memitem:a08c3b0b4c09276b975c51c625d9d2df9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (F f) const -&gt; decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(f)))))</td></tr>
-<tr class="separator:a08c3b0b4c09276b975c51c625d9d2df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fc689c1656fe0878c518039f01ac62a"><td class="memTemplParams" colspan="2"><a class="anchor" id="a2fc689c1656fe0878c518039f01ac62a"></a>
+template&lt;typename Rng , typename F , requires  = ( Concept&lt;Rng, F&gt;() )&gt; </td></tr>
+<tr class="memitem:a2fc689c1656fe0878c518039f01ac62a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1for__each__view.html">for_each_view</a>&lt; Rng, F &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, F f) const </td></tr>
+<tr class="separator:a2fc689c1656fe0878c518039f01ac62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -8,6 +8,7 @@ var searchData=
   ['make_5fpipeable_5ffn',['make_pipeable_fn',['../structranges_1_1v3_1_1make__pipeable__fn.html',1,'ranges::v3']]],
   ['make_5frange_5ffn',['make_range_fn',['../structranges_1_1v3_1_1make__range__fn.html',1,'ranges::v3']]],
   ['make_5ftuple_5ffn',['make_tuple_fn',['../structranges_1_1v3_1_1make__tuple__fn.html',1,'ranges::v3']]],
+  ['make_5fview_5ffn',['make_view_fn',['../structranges_1_1v3_1_1view_1_1make__view__fn.html',1,'ranges::v3::view']]],
   ['max_5felement_5ffn',['max_element_fn',['../structranges_1_1v3_1_1max__element__fn.html',1,'ranges::v3']]],
   ['merge_5ffn',['merge_fn',['../structranges_1_1v3_1_1merge__fn.html',1,'ranges::v3']]],
   ['min_5felement_5ffn',['min_element_fn',['../structranges_1_1v3_1_1min__element__fn.html',1,'ranges::v3']]],

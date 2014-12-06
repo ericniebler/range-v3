@@ -43,5 +43,19 @@ var group__group_actions =
     ] ],
     [ "unique_fn", "structranges_1_1v3_1_1action_1_1unique__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1unique__fn.html#a79e0949890952173bcef671eadeca0fc", null ]
-    ] ]
+    ] ],
+    [ "drop", "group__group-actions.html#ga17b7bac0ae8e65445f4ffd4c8539b6ae", null ],
+    [ "drop_while", "group__group-actions.html#gaa013b089fe610247a7e5ea31451ee2c4", null ],
+    [ "make_action", "group__group-actions.html#ga7d2592db99573dc6ae3531bc0d7ac50b", null ],
+    [ "push_back", "group__group-actions.html#gada4bdea69b0f12fad3fae7900d0c6d09", null ],
+    [ "push_front", "group__group-actions.html#gac7f6fadd408fb05733c220f1e5f1d3c2", null ],
+    [ "remove_if", "group__group-actions.html#ga673f1edcd5ad49303d37605d71b52e0e", null ],
+    [ "slice", "group__group-actions.html#ga1499f3fc01a0c4eddd224cf4ea7d2ca9", null ],
+    [ "sort", "group__group-actions.html#ga9a50d0508db58a6758b2239a75609b37", null ],
+    [ "stable_sort", "group__group-actions.html#ga04fa2cd3741600d6b9369906cb796f75", null ],
+    [ "stride", "group__group-actions.html#ga26069c09980ed0b916d28a5181ead36b", null ],
+    [ "take", "group__group-actions.html#ga57a4c1b1b1719479f7992b4ddecc38a9", null ],
+    [ "take_while", "group__group-actions.html#ga68c82f419f92a4b626fcc0545c644393", null ],
+    [ "transform", "group__group-actions.html#gaf87bb5a7dff9484d06ca2a349d06f818", null ],
+    [ "unique", "group__group-actions.html#ga5517ce4e80e41f5eff5ec6c6be075845", null ]
 ];

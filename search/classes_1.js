@@ -11,7 +11,7 @@ var searchData=
   ['basic_5fsentinel',['basic_sentinel',['../structranges_1_1v3_1_1basic__sentinel.html',1,'ranges::v3']]],
   ['begin_5ftag',['begin_tag',['../structranges_1_1v3_1_1begin__tag.html',1,'ranges::v3']]],
   ['bidirectional_5fiterator_5ftag',['bidirectional_iterator_tag',['../structranges_1_1v3_1_1bidirectional__iterator__tag.html',1,'ranges::v3']]],
-  ['bidirectionaliota',['BidirectionalIota',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_iota.html',1,'ranges::v3::concepts']]],
+  ['bidirectionalincrementable',['BidirectionalIncrementable',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_incrementable.html',1,'ranges::v3::concepts']]],
   ['bidirectionaliterable',['BidirectionalIterable',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_iterable.html',1,'ranges::v3::concepts']]],
   ['bidirectionaliterator',['BidirectionalIterator',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_iterator.html',1,'ranges::v3::concepts']]],
   ['bidirectionalrange',['BidirectionalRange',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_range.html',1,'ranges::v3::concepts']]],

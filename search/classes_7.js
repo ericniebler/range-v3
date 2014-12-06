@@ -2,8 +2,9 @@ var searchData=
 [
   ['id',['id',['../structranges_1_1v3_1_1meta_1_1id.html',1,'ranges::v3::meta']]],
   ['ident',['ident',['../structranges_1_1v3_1_1ident.html',1,'ranges::v3']]],
-  ['impl',['impl',['../structranges_1_1v3_1_1pipeable__access_1_1impl.html',1,'ranges::v3::pipeable_access']]],
   ['impl',['impl',['../structranges_1_1v3_1_1action_1_1action__access_1_1impl.html',1,'ranges::v3::action::action_access']]],
+  ['impl',['impl',['../structranges_1_1v3_1_1pipeable__access_1_1impl.html',1,'ranges::v3::pipeable_access']]],
+  ['impl',['impl',['../structranges_1_1v3_1_1view_1_1view__access_1_1impl.html',1,'ranges::v3::view::view_access']]],
   ['impl_3c_20pipeable_20_26_20_3e',['impl&lt; Pipeable &amp; &gt;',['../structranges_1_1v3_1_1pipeable__access_1_1impl_3_01_pipeable_01_6_01_4.html',1,'ranges::v3::pipeable_access']]],
   ['implfn',['ImplFn',['../class_impl_fn.html',1,'']]],
   ['includes_5ffn',['includes_fn',['../structranges_1_1v3_1_1includes__fn.html',1,'ranges::v3']]],
@@ -18,7 +19,6 @@ var searchData=
   ['inner_5fproduct_5ffn',['inner_product_fn',['../structranges_1_1v3_1_1inner__product__fn.html',1,'ranges::v3']]],
   ['inplace_5fmerge_5ffn',['inplace_merge_fn',['../structranges_1_1v3_1_1inplace__merge__fn.html',1,'ranges::v3']]],
   ['input_5fiterator_5ftag',['input_iterator_tag',['../structranges_1_1v3_1_1input__iterator__tag.html',1,'ranges::v3']]],
-  ['inputiota',['InputIota',['../structranges_1_1v3_1_1concepts_1_1_input_iota.html',1,'ranges::v3::concepts']]],
   ['inputiterable',['InputIterable',['../structranges_1_1v3_1_1concepts_1_1_input_iterable.html',1,'ranges::v3::concepts']]],
   ['inputiterator',['InputIterator',['../structranges_1_1v3_1_1concepts_1_1_input_iterator.html',1,'ranges::v3::concepts']]],
   ['inputrange',['InputRange',['../structranges_1_1v3_1_1concepts_1_1_input_range.html',1,'ranges::v3::concepts']]],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['closed_5fiota_5fview',['closed_iota_view',['../structranges_1_1v3_1_1closed__iota__view.html',1,'ranges::v3']]],
   ['coerce',['coerce',['../structranges_1_1v3_1_1coerce.html',1,'ranges::v3']]],
   ['coerce_3c_20t_20_26_20_3e',['coerce&lt; T &amp; &gt;',['../structranges_1_1v3_1_1coerce_3_01_t_01_6_01_4.html',1,'ranges::v3']]],
   ['coerce_3c_20t_20_26_26_20_3e',['coerce&lt; T &amp;&amp; &gt;',['../structranges_1_1v3_1_1coerce_3_01_t_01_6_6_01_4.html',1,'ranges::v3']]],
@@ -25,6 +26,8 @@ var searchData=
   ['compressed_5fpair_3c_20i_2c_20s_20_3e',['compressed_pair&lt; I, S &gt;',['../structranges_1_1v3_1_1compressed__pair.html',1,'ranges::v3']]],
   ['compressed_5fpair_3c_20semiregular_5finvokable_5ft_3c_20pred_20_3e_2c_20val_20_3e',['compressed_pair&lt; semiregular_invokable_t&lt; Pred &gt;, Val &gt;',['../structranges_1_1v3_1_1compressed__pair.html',1,'ranges::v3']]],
   ['compressed_5ftuple',['compressed_tuple',['../structranges_1_1v3_1_1compressed__tuple.html',1,'ranges::v3']]],
+  ['concat_5ffn',['concat_fn',['../structranges_1_1v3_1_1view_1_1concat__fn.html',1,'ranges::v3::view']]],
+  ['concat_5fview',['concat_view',['../structranges_1_1v3_1_1concat__view.html',1,'ranges::v3']]],
   ['const_5ffn',['const_fn',['../structranges_1_1v3_1_1view_1_1const__fn.html',1,'ranges::v3::view']]],
   ['const_5fview',['const_view',['../structranges_1_1v3_1_1const__view.html',1,'ranges::v3']]],
   ['constant',['constant',['../structranges_1_1v3_1_1constant.html',1,'ranges::v3']]],

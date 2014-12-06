@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1partial_
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -88,6 +88,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1partial_
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1view_1_1partial__sum__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -95,16 +96,19 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1partial_
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:aa540daba80018791162e91ac2f569ec6"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa540daba80018791162e91ac2f569ec6"></a>
+template&lt;typename Rng , typename Fun &gt; </td></tr>
+<tr class="memitem:aa540daba80018791162e91ac2f569ec6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__group-meta.html#ga1e144f7a7d4eb262938ca7312b666653">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterable</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Invokable</a>&lt; Fun, range_value_t&lt; Rng &gt;, range_value_t&lt; Rng &gt;&gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Convertible</a>&lt; concepts::Invokable::result_t&lt; Fun, range_value_t&lt; Rng &gt;, range_value_t&lt; Rng &gt;&gt;, range_value_t&lt; Rng &gt;&gt;&gt;</td></tr>
+<tr class="separator:aa540daba80018791162e91ac2f569ec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aeca418d5c47ffeb23db44b01e1bf71aa"><td class="memTemplParams" colspan="2"><a class="anchor" id="aeca418d5c47ffeb23db44b01e1bf71aa"></a>
-template&lt;typename Rng , typename Fun &gt; </td></tr>
-<tr class="memitem:aeca418d5c47ffeb23db44b01e1bf71aa"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1partial__sum__view.html">partial_sum_view</a>&lt; Rng, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const </td></tr>
-<tr class="separator:aeca418d5c47ffeb23db44b01e1bf71aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83f431db86bd63c915f14fd57839b4c8"><td class="memTemplParams" colspan="2"><a class="anchor" id="a83f431db86bd63c915f14fd57839b4c8"></a>
-template&lt;typename Fun &gt; </td></tr>
-<tr class="memitem:a83f431db86bd63c915f14fd57839b4c8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Fun fun) const -&gt; decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(fun)))))</td></tr>
-<tr class="separator:a83f431db86bd63c915f14fd57839b4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba1ead54868274f125965dd94fc7d5ff"><td class="memTemplParams" colspan="2"><a class="anchor" id="aba1ead54868274f125965dd94fc7d5ff"></a>
+template&lt;typename Rng , typename Fun , requires  = ( Concept&lt;Rng, Fun&gt;() )&gt; </td></tr>
+<tr class="memitem:aba1ead54868274f125965dd94fc7d5ff"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1partial__sum__view.html">partial_sum_view</a>&lt; Rng, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const </td></tr>
+<tr class="separator:aba1ead54868274f125965dd94fc7d5ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

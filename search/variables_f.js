@@ -9,11 +9,11 @@ var searchData=
   ['shuffle',['shuffle',['../group__group-algorithms.html#ga23f003c075b9b8846e53e1c395ff0889',1,'ranges::v3']]],
   ['single',['single',['../group__group-views.html#ga60ab046e2fe9f8e1bb303c2c288f612a',1,'ranges::v3::view']]],
   ['size',['size',['../group__group-core.html#ga35558802104747c8f1f3dfafdde2b642',1,'ranges::v3']]],
-  ['slice',['slice',['../group__group-views.html#ga01fd447152340346b318de9925b766fa',1,'ranges::v3::view']]],
-  ['sort',['sort',['../group__group-algorithms.html#ga3de9f2bf770d1f7d44dce6824eaf8407',1,'ranges::v3']]],
+  ['slice',['slice',['../group__group-actions.html#ga1499f3fc01a0c4eddd224cf4ea7d2ca9',1,'ranges::v3::action::slice()'],['../group__group-views.html#ga472978ed746d687abdc16629b2a80c02',1,'ranges::v3::view::slice()']]],
+  ['sort',['sort',['../group__group-actions.html#ga9a50d0508db58a6758b2239a75609b37',1,'ranges::v3::action::sort()'],['../group__group-algorithms.html#ga3de9f2bf770d1f7d44dce6824eaf8407',1,'ranges::v3::sort()']]],
   ['sort_5fheap',['sort_heap',['../group__group-algorithms.html#gab07658f66f2ad50c0def30030673168b',1,'ranges::v3']]],
   ['stable_5fpartition',['stable_partition',['../group__group-algorithms.html#ga424afc21e3d0a18fc5a12dcb12101586',1,'ranges::v3']]],
-  ['stable_5fsort',['stable_sort',['../group__group-algorithms.html#ga16f3a903dc9adeeaf1592ea1263bc8dc',1,'ranges::v3']]],
-  ['stride',['stride',['../group__group-views.html#gab7e2718bf14b28c61b5234703ce5c954',1,'ranges::v3::view']]],
+  ['stable_5fsort',['stable_sort',['../group__group-actions.html#ga04fa2cd3741600d6b9369906cb796f75',1,'ranges::v3::action::stable_sort()'],['../group__group-algorithms.html#ga16f3a903dc9adeeaf1592ea1263bc8dc',1,'ranges::v3::stable_sort()']]],
+  ['stride',['stride',['../group__group-actions.html#ga26069c09980ed0b916d28a5181ead36b',1,'ranges::v3::action::stride()'],['../group__group-views.html#ga1bd9df29f84ab15e38777b3739732130',1,'ranges::v3::view::stride()']]],
   ['swap_5franges',['swap_ranges',['../group__group-algorithms.html#gae8b7e6c46c507a8afe19a13b86766154',1,'ranges::v3']]]
 ];

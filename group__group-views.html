@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group-views.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -105,21 +105,24 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__filter__view.html">ranges::v3::adjacent_filter_view&lt; Rng, F &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1any__input__range.html">ranges::v3::any_input_range&lt; Ref, Inf &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><code>A</code> type-erased InputRange  <a href="structranges_1_1v3_1_1any__input__range.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type-erased InputRange.  <a href="structranges_1_1v3_1_1any__input__range.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bounded__view.html">ranges::v3::bounded_view&lt; Rng &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1closed__iota__view.html">ranges::v3::closed_iota_view&lt; Val, Val2 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An iota view in a closed range with non-random access iota value type.  <a href="structranges_1_1v3_1_1closed__iota__view.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concat__view.html">ranges::v3::concat_view&lt; Rngs &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1const__view.html">ranges::v3::const_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1counted__view.html">ranges::v3::counted_view&lt; I, D &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1delimited__view.html">ranges::v3::delimited_view&lt; Rng, Val &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1delimit__view.html">ranges::v3::delimit_view&lt; Rng, Val &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1drop__view.html">ranges::v3::drop_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1drop__while__view.html">ranges::v3::drop_while_view&lt; Rng, Pred &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1flatten__view.html">ranges::v3::flatten_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1for__each__view.html">ranges::v3::for_each_view&lt; Rng, F &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,11 +130,13 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1generate__view.html">ranges::v3::generate_view&lt; G &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1group__by__view.html">ranges::v3::group_by_view&lt; Rng, Fun &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1indirect__view.html">ranges::v3::indirect_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iota__view.html">ranges::v3::iota_view&lt; Val &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1join__view.html">ranges::v3::join_view&lt; Rngs &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1join__view.html">ranges::v3::join_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1lazy__yield__if__fn.html">ranges::v3::lazy_yield_if_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,15 +146,15 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1remove__if__view.html">ranges::v3::remove_if_view&lt; Rng, Pred &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1repeat__view.html">ranges::v3::repeat_view&lt; Val &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1repeat__n__view.html">ranges::v3::repeat_n_view&lt; Val &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1repeated__n__view.html">ranges::v3::repeated_n_view&lt; Val &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1repeat__view.html">ranges::v3::repeat_view&lt; Val &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1reverse__view.html">ranges::v3::reverse_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1single__view.html">ranges::v3::single_view&lt; Val &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1sliced__view.html">ranges::v3::sliced_view&lt; Rng &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1slice__view.html">ranges::v3::slice_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1stride__view.html">ranges::v3::stride_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,23 +176,27 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1bounded__fn.html">ranges::v3::view::bounded_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1concat__fn.html">ranges::v3::view::concat_fn</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1const__fn.html">ranges::v3::view::const_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1counted__fn.html">ranges::v3::view::counted_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1delimit__fn.html">ranges::v3::view::delimit_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1delimit__impl__fn.html">ranges::v3::view::delimit_impl_fn</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1drop__fn.html">ranges::v3::view::drop_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1drop__while__fn.html">ranges::v3::view::drop_while_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1flatten__fn.html">ranges::v3::view::flatten_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1for__each__fn.html">ranges::v3::view::for_each_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1generate__fn.html">ranges::v3::view::generate_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1generate__n__fn.html">ranges::v3::view::generate_n_fn</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1group__by__fn.html">ranges::v3::view::group_by_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1indirect__fn.html">ranges::v3::view::indirect_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,6 +207,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1join__fn.html">ranges::v3::view::join_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1keys__fn.html">ranges::v3::view::keys_fn</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1make__view__fn.html">ranges::v3::view::make_view_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1move__fn.html">ranges::v3::view::move_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -239,6 +250,12 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1values__fn.html">ranges::v3::view::values_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1view.html">ranges::v3::view::view&lt; View &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1view__access.html">ranges::v3::view::view_access</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1view__access_1_1impl.html">ranges::v3::view::view_access::impl&lt; View &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1zip__fn.html">ranges::v3::view::zip_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1zip__with__fn.html">ranges::v3::view::zip_with_fn</a></td></tr>
@@ -256,12 +273,24 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:ga9fdf0485a96471de4b8a443b818f18c1"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9fdf0485a96471de4b8a443b818f18c1"></a>
+template&lt;typename G &gt; </td></tr>
+<tr class="memitem:ga9fdf0485a96471de4b8a443b818f18c1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::generate_fn::Concept</b> = meta::and_&lt; Function&lt; G &gt;, meta::not_&lt; Same&lt; void, concepts::Function::result_t&lt; G &gt;&gt;&gt;&gt;</td></tr>
+<tr class="separator:ga9fdf0485a96471de4b8a443b818f18c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga919fcbb135022d39dfc406c8b3b4d2c3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga919fcbb135022d39dfc406c8b3b4d2c3"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cursor&lt; IsConst &gt;::single_pass</b> = std::true_type</td></tr>
 <tr class="separator:ga919fcbb135022d39dfc406c8b3b4d2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3aaaa90371b8f95a41a82e7c82d266b7"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3aaaa90371b8f95a41a82e7c82d266b7"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:ga3aaaa90371b8f95a41a82e7c82d266b7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::ViewableIterable</b> = meta::and_&lt; Iterable&lt; Rng &gt;, meta::or_&lt; std::is_lvalue_reference&lt; Rng &gt;, Range&lt; Rng &gt;&gt;&gt;</td></tr>
+<tr class="separator:ga3aaaa90371b8f95a41a82e7c82d266b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga75b468840cf8883c6f15117f98db2993"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga75b468840cf8883c6f15117f98db2993"></a>
+template&lt;typename... Ts, typename V  = View&gt; </td></tr>
+<tr class="memitem:ga75b468840cf8883c6f15117f98db2993"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::view_access::impl&lt; View &gt;::bind</b> (Ts &amp;&amp;...ts) -&gt; decltype(V::bind(std::forward&lt; Ts &gt;(ts)...))</td></tr>
+<tr class="separator:ga75b468840cf8883c6f15117f98db2993"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0a34ccb063eca2edfbb9c0a9231bf4aa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga0a34ccb063eca2edfbb9c0a9231bf4aa"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cursor&lt; IsConst &gt;::current</b> () const -&gt; decltype((*gen_)())</td></tr>
 <tr class="separator:ga0a34ccb063eca2edfbb9c0a9231bf4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -277,87 +306,107 @@ constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3:
 <tr class="memitem:ga8499b97a441438bb5893c9414868078a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga8499b97a441438bb5893c9414868078a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cursor&lt; IsConst &gt;::next</b> () const </td></tr>
 <tr class="separator:ga8499b97a441438bb5893c9414868078a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6052e026a8a7192a26dc06d9830bb66d"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6052e026a8a7192a26dc06d9830bb66d"></a>
+template&lt;typename Fun &gt; </td></tr>
+<tr class="memitem:ga6052e026a8a7192a26dc06d9830bb66d"><td class="memTemplItemLeft" align="right" valign="top">view&lt; Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::make_view_fn::operator()</b> (Fun fun) const </td></tr>
+<tr class="separator:ga6052e026a8a7192a26dc06d9830bb66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga28904b0a2902f04c79ea1a72c0983b61"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga28904b0a2902f04c79ea1a72c0983b61"></a>
-template&lt;typename G , requires  = ( Function&lt;G&gt;() )&gt; </td></tr>
+template&lt;typename G , requires  = ( Concept&lt;G&gt;() )&gt; </td></tr>
 <tr class="memitem:ga28904b0a2902f04c79ea1a72c0983b61"><td class="memTemplItemLeft" align="right" valign="top">generate_view&lt; G &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::generate_fn::operator()</b> (G g) const </td></tr>
 <tr class="separator:ga28904b0a2902f04c79ea1a72c0983b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83618742e4bf082fd58446740644d4c9"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga83618742e4bf082fd58446740644d4c9"></a>
+template&lt;typename Rng , typename... Rest, requires  = ( ViewConcept&lt;Rng, Rest...&gt;() )&gt; </td></tr>
+<tr class="memitem:ga83618742e4bf082fd58446740644d4c9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::view&lt; View &gt;::operator()</b> (Rng &amp;&amp;rng, Rest &amp;&amp;...rest) const -&gt; decltype(view_(std::forward&lt; Rng &gt;(rng), std::forward&lt; Rest &gt;(rest)...))</td></tr>
+<tr class="separator:ga83618742e4bf082fd58446740644d4c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab7a4fa5ac31f4731facfc8cc8540cfb9"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab7a4fa5ac31f4731facfc8cc8540cfb9"></a>
+template&lt;typename T , typename... Rest, typename V  = View&gt; </td></tr>
+<tr class="memitem:gab7a4fa5ac31f4731facfc8cc8540cfb9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::view::view&lt; View &gt;::operator()</b> (T &amp;&amp;t, Rest &amp;&amp;...rest) const -&gt; decltype(make_view(view_access::impl&lt; V &gt;::bind(view_, std::forward&lt; T &gt;(t), std::forward&lt; Rest &gt;(rest)...)))</td></tr>
+<tr class="separator:gab7a4fa5ac31f4731facfc8cc8540cfb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3b6f0165030d33f9b4e032a90453e181"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga3b6f0165030d33f9b4e032a90453e181"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::view::view&lt; View &gt;::view</b> (View a)</td></tr>
+<tr class="separator:ga3b6f0165030d33f9b4e032a90453e181"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:gaff013ceabea05dd32086cdf62ae05dd1"><td class="memItemLeft" align="right" valign="top">constexpr adjacent_filter_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gaff013ceabea05dd32086cdf62ae05dd1">ranges::v3::view::adjacent_filter</a> {}</td></tr>
-<tr class="separator:gaff013ceabea05dd32086cdf62ae05dd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae85c97f24f4213dff98676ab1b21ffb1"><td class="memItemLeft" align="right" valign="top">constexpr view<br class="typebreak" />
+&lt; adjacent_filter_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gae85c97f24f4213dff98676ab1b21ffb1">ranges::v3::view::adjacent_filter</a> {}</td></tr>
+<tr class="separator:gae85c97f24f4213dff98676ab1b21ffb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae9875b4abc317663167249d43d93ab20"><td class="memItemLeft" align="right" valign="top">constexpr all_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gae9875b4abc317663167249d43d93ab20">ranges::v3::view::all</a> {}</td></tr>
 <tr class="separator:gae9875b4abc317663167249d43d93ab20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga15b562617631f30ba515467362fc32da"><td class="memItemLeft" align="right" valign="top">constexpr bounded_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga15b562617631f30ba515467362fc32da">ranges::v3::view::bounded</a> {}</td></tr>
-<tr class="separator:ga15b562617631f30ba515467362fc32da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2d53e4005d8eae687d275c4b6eb0359b"><td class="memItemLeft" align="right" valign="top">constexpr const_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga2d53e4005d8eae687d275c4b6eb0359b">ranges::v3::view::const_</a> {}</td></tr>
-<tr class="separator:ga2d53e4005d8eae687d275c4b6eb0359b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga94f53900ef3ed10d00426f0672029799"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; bounded_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga94f53900ef3ed10d00426f0672029799">ranges::v3::view::bounded</a> {}</td></tr>
+<tr class="separator:ga94f53900ef3ed10d00426f0672029799"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b0560496a25b67bd98b73623c726c44"><td class="memItemLeft" align="right" valign="top">constexpr concat_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga9b0560496a25b67bd98b73623c726c44">ranges::v3::view::concat</a> {}</td></tr>
+<tr class="separator:ga9b0560496a25b67bd98b73623c726c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab9c87992905577ac90b42bf19898f8ed"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; const_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gab9c87992905577ac90b42bf19898f8ed">ranges::v3::view::const_</a> {}</td></tr>
+<tr class="separator:gab9c87992905577ac90b42bf19898f8ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf958ffe5b7d38c45a8d099ca17e56259"><td class="memItemLeft" align="right" valign="top">constexpr counted_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gaf958ffe5b7d38c45a8d099ca17e56259">ranges::v3::view::counted</a> {}</td></tr>
 <tr class="separator:gaf958ffe5b7d38c45a8d099ca17e56259"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacab110da27d92b6ffafd6629288d3dda"><td class="memItemLeft" align="right" valign="top">constexpr delimit_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gacab110da27d92b6ffafd6629288d3dda">ranges::v3::view::delimit</a> {}</td></tr>
 <tr class="separator:gacab110da27d92b6ffafd6629288d3dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6bfaca496ecccc7318c7abb951410757"><td class="memItemLeft" align="right" valign="top">constexpr drop_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga6bfaca496ecccc7318c7abb951410757">ranges::v3::view::drop</a> {}</td></tr>
-<tr class="separator:ga6bfaca496ecccc7318c7abb951410757"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaeaadd90eddd9a7d2e7abb31b88b2381c"><td class="memItemLeft" align="right" valign="top">constexpr drop_while_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gaeaadd90eddd9a7d2e7abb31b88b2381c">ranges::v3::view::drop_while</a> {}</td></tr>
-<tr class="separator:gaeaadd90eddd9a7d2e7abb31b88b2381c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1d5a47f7e145ee915ec0d1445074a245"><td class="memItemLeft" align="right" valign="top">constexpr flatten_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga1d5a47f7e145ee915ec0d1445074a245">ranges::v3::view::flatten</a> {}</td></tr>
-<tr class="separator:ga1d5a47f7e145ee915ec0d1445074a245"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaad03eca83239610aa92508be77d806b1"><td class="memItemLeft" align="right" valign="top">constexpr for_each_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gaad03eca83239610aa92508be77d806b1">ranges::v3::view::for_each</a> {}</td></tr>
-<tr class="separator:gaad03eca83239610aa92508be77d806b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga773b3b8caf4417a173986281055c733c"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; drop_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga773b3b8caf4417a173986281055c733c">ranges::v3::view::drop</a> {}</td></tr>
+<tr class="separator:ga773b3b8caf4417a173986281055c733c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64cc934f54eff32f323a1175ecc27f66"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; drop_while_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga64cc934f54eff32f323a1175ecc27f66">ranges::v3::view::drop_while</a> {}</td></tr>
+<tr class="separator:ga64cc934f54eff32f323a1175ecc27f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaceb94ca54f3a723c61463fa1c84a9cb1"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; for_each_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gaceb94ca54f3a723c61463fa1c84a9cb1">ranges::v3::view::for_each</a> {}</td></tr>
+<tr class="separator:gaceb94ca54f3a723c61463fa1c84a9cb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae624f5799da08ac15387af8f5b3f506e"><td class="memItemLeft" align="right" valign="top">constexpr generate_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gae624f5799da08ac15387af8f5b3f506e">ranges::v3::view::generate</a> {}</td></tr>
 <tr class="separator:gae624f5799da08ac15387af8f5b3f506e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga697682d7137cd6fa4b05ca4112dd7bb5"><td class="memItemLeft" align="right" valign="top">constexpr generate_n_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga697682d7137cd6fa4b05ca4112dd7bb5">ranges::v3::view::generate_n</a> {}</td></tr>
 <tr class="separator:ga697682d7137cd6fa4b05ca4112dd7bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga288f4f509482d0a90d25773d50c19082"><td class="memItemLeft" align="right" valign="top">constexpr indirect_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga288f4f509482d0a90d25773d50c19082">ranges::v3::view::indirect</a> {}</td></tr>
-<tr class="separator:ga288f4f509482d0a90d25773d50c19082"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8b0e16d136777ee9cb475e3bcbe72e1e"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; group_by_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga8b0e16d136777ee9cb475e3bcbe72e1e">ranges::v3::view::group_by</a> {}</td></tr>
+<tr class="separator:ga8b0e16d136777ee9cb475e3bcbe72e1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga701622b245e0a5e0a90988e1aa750b01"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; indirect_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga701622b245e0a5e0a90988e1aa750b01">ranges::v3::view::indirect</a> {}</td></tr>
+<tr class="separator:ga701622b245e0a5e0a90988e1aa750b01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8be703ef86e523eccf819f4317c68b68"><td class="memItemLeft" align="right" valign="top">constexpr ints_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga8be703ef86e523eccf819f4317c68b68">ranges::v3::view::ints</a> {}</td></tr>
 <tr class="separator:ga8be703ef86e523eccf819f4317c68b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac35fd9c7038dfde9b28df76f43d1126f"><td class="memItemLeft" align="right" valign="top">constexpr iota_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gac35fd9c7038dfde9b28df76f43d1126f">ranges::v3::view::iota</a> {}</td></tr>
 <tr class="separator:gac35fd9c7038dfde9b28df76f43d1126f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad74fa412650ab7356054f354f66cd3d9"><td class="memItemLeft" align="right" valign="top">constexpr join_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gad74fa412650ab7356054f354f66cd3d9">ranges::v3::view::join</a> {}</td></tr>
-<tr class="separator:gad74fa412650ab7356054f354f66cd3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga57a2aaa80da0823bd027c08ecb198dee"><td class="memItemLeft" align="right" valign="top">constexpr keys_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga57a2aaa80da0823bd027c08ecb198dee">ranges::v3::view::keys</a> {}</td></tr>
-<tr class="separator:ga57a2aaa80da0823bd027c08ecb198dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa44e156303add034ce8ec38564bced2e"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; join_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gaa44e156303add034ce8ec38564bced2e">ranges::v3::view::join</a> {}</td></tr>
+<tr class="separator:gaa44e156303add034ce8ec38564bced2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga748501a63fb2039a065863143f18821f"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; keys_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga748501a63fb2039a065863143f18821f">ranges::v3::view::keys</a> {}</td></tr>
+<tr class="separator:ga748501a63fb2039a065863143f18821f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1e1f98b7cbcc24433e86df472fdf6d52"><td class="memItemLeft" align="right" valign="top">constexpr lazy_yield_if_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga1e1f98b7cbcc24433e86df472fdf6d52">ranges::v3::lazy_yield_if</a> {}</td></tr>
 <tr class="separator:ga1e1f98b7cbcc24433e86df472fdf6d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabd3dd2276a3cd5400dbdb822be572b16"><td class="memItemLeft" align="right" valign="top">constexpr move_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gabd3dd2276a3cd5400dbdb822be572b16">ranges::v3::view::move</a> {}</td></tr>
-<tr class="separator:gabd3dd2276a3cd5400dbdb822be572b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6d4f17710dee3d0bf8bfbe5f0dc16ead"><td class="memItemLeft" align="right" valign="top">constexpr partial_sum_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga6d4f17710dee3d0bf8bfbe5f0dc16ead">ranges::v3::view::partial_sum</a> {}</td></tr>
-<tr class="separator:ga6d4f17710dee3d0bf8bfbe5f0dc16ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7c5aeede1701a8f051c9e266c9b6e140"><td class="memItemLeft" align="right" valign="top">constexpr remove_if_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga7c5aeede1701a8f051c9e266c9b6e140">ranges::v3::view::remove_if</a> {}</td></tr>
-<tr class="separator:ga7c5aeede1701a8f051c9e266c9b6e140"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d9cf14e40cd0d2e3d0955f773e70749"><td class="memItemLeft" align="right" valign="top">constexpr make_view_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga8d9cf14e40cd0d2e3d0955f773e70749">ranges::v3::view::make_view</a> {}</td></tr>
+<tr class="separator:ga8d9cf14e40cd0d2e3d0955f773e70749"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga120f16661b2ef68d0d6847cc89763a97"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; move_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga120f16661b2ef68d0d6847cc89763a97">ranges::v3::view::move</a> {}</td></tr>
+<tr class="separator:ga120f16661b2ef68d0d6847cc89763a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d0373100dddae43eb132860e4663415"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; partial_sum_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga8d0373100dddae43eb132860e4663415">ranges::v3::view::partial_sum</a> {}</td></tr>
+<tr class="separator:ga8d0373100dddae43eb132860e4663415"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7309997e9c7ab782d879bba75cd46a74"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; remove_if_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga7309997e9c7ab782d879bba75cd46a74">ranges::v3::view::remove_if</a> {}</td></tr>
+<tr class="separator:ga7309997e9c7ab782d879bba75cd46a74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab95879821625b0e6b1bdd0e5895160fe"><td class="memItemLeft" align="right" valign="top">constexpr repeat_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gab95879821625b0e6b1bdd0e5895160fe">ranges::v3::view::repeat</a> {}</td></tr>
 <tr class="separator:gab95879821625b0e6b1bdd0e5895160fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga29c4f809fe8777d74b858b1d5bc2d289"><td class="memItemLeft" align="right" valign="top">constexpr repeat_n_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga29c4f809fe8777d74b858b1d5bc2d289">ranges::v3::view::repeat_n</a> {}</td></tr>
 <tr class="separator:ga29c4f809fe8777d74b858b1d5bc2d289"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2a71ff5916eb53bfc323c510289cd1a6"><td class="memItemLeft" align="right" valign="top">constexpr replace_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga2a71ff5916eb53bfc323c510289cd1a6">ranges::v3::view::replace</a> {}</td></tr>
-<tr class="separator:ga2a71ff5916eb53bfc323c510289cd1a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6618eee80c8a2b46b4333b32d60feccb"><td class="memItemLeft" align="right" valign="top">constexpr replace_if_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga6618eee80c8a2b46b4333b32d60feccb">ranges::v3::view::replace_if</a> {}</td></tr>
-<tr class="separator:ga6618eee80c8a2b46b4333b32d60feccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6a6068f6ca3eaa9759c65d931ce1d6ad"><td class="memItemLeft" align="right" valign="top">constexpr reverse_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga6a6068f6ca3eaa9759c65d931ce1d6ad">ranges::v3::view::reverse</a> {}</td></tr>
-<tr class="separator:ga6a6068f6ca3eaa9759c65d931ce1d6ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga51364868884d47b253c1171ae8f679d7"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; replace_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga51364868884d47b253c1171ae8f679d7">ranges::v3::view::replace</a> {}</td></tr>
+<tr class="separator:ga51364868884d47b253c1171ae8f679d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga17ef53f46c01c9502e58e0a742e8ad56"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; replace_if_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga17ef53f46c01c9502e58e0a742e8ad56">ranges::v3::view::replace_if</a> {}</td></tr>
+<tr class="separator:ga17ef53f46c01c9502e58e0a742e8ad56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad66a6b6ba00ca6562c2c92eefeaa448d"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; reverse_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gad66a6b6ba00ca6562c2c92eefeaa448d">ranges::v3::view::reverse</a> {}</td></tr>
+<tr class="separator:gad66a6b6ba00ca6562c2c92eefeaa448d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga60ab046e2fe9f8e1bb303c2c288f612a"><td class="memItemLeft" align="right" valign="top">constexpr single_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga60ab046e2fe9f8e1bb303c2c288f612a">ranges::v3::view::single</a> {}</td></tr>
 <tr class="separator:ga60ab046e2fe9f8e1bb303c2c288f612a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga01fd447152340346b318de9925b766fa"><td class="memItemLeft" align="right" valign="top">constexpr slice_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga01fd447152340346b318de9925b766fa">ranges::v3::view::slice</a> {}</td></tr>
-<tr class="separator:ga01fd447152340346b318de9925b766fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab7e2718bf14b28c61b5234703ce5c954"><td class="memItemLeft" align="right" valign="top">constexpr stride_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gab7e2718bf14b28c61b5234703ce5c954">ranges::v3::view::stride</a> {}</td></tr>
-<tr class="separator:gab7e2718bf14b28c61b5234703ce5c954"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf8dcaba76acb19c9d2f8dabf9b98d346"><td class="memItemLeft" align="right" valign="top">constexpr tail_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gaf8dcaba76acb19c9d2f8dabf9b98d346">ranges::v3::view::tail</a> {}</td></tr>
-<tr class="separator:gaf8dcaba76acb19c9d2f8dabf9b98d346"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1579720a0cc6edd4ed5ea58a87d45fd3"><td class="memItemLeft" align="right" valign="top">constexpr take_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga1579720a0cc6edd4ed5ea58a87d45fd3">ranges::v3::view::take</a> {}</td></tr>
-<tr class="separator:ga1579720a0cc6edd4ed5ea58a87d45fd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabeea2fd1b97812c1fd85a6c93ddb0efb"><td class="memItemLeft" align="right" valign="top">constexpr take_while_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gabeea2fd1b97812c1fd85a6c93ddb0efb">ranges::v3::view::take_while</a> {}</td></tr>
-<tr class="separator:gabeea2fd1b97812c1fd85a6c93ddb0efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga472978ed746d687abdc16629b2a80c02"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; slice_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga472978ed746d687abdc16629b2a80c02">ranges::v3::view::slice</a> {}</td></tr>
+<tr class="separator:ga472978ed746d687abdc16629b2a80c02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bd9df29f84ab15e38777b3739732130"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; stride_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga1bd9df29f84ab15e38777b3739732130">ranges::v3::view::stride</a> {}</td></tr>
+<tr class="separator:ga1bd9df29f84ab15e38777b3739732130"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadd695c9054d51497569fcc13fcaf2f83"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; tail_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gadd695c9054d51497569fcc13fcaf2f83">ranges::v3::view::tail</a> {}</td></tr>
+<tr class="separator:gadd695c9054d51497569fcc13fcaf2f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga70fe65a678c1206f749597be0f1cc90e"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; take_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga70fe65a678c1206f749597be0f1cc90e">ranges::v3::view::take</a> {}</td></tr>
+<tr class="separator:ga70fe65a678c1206f749597be0f1cc90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac2e51b4f4c722fa114413ee366fc3f02"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; take_while_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gac2e51b4f4c722fa114413ee366fc3f02">ranges::v3::view::take_while</a> {}</td></tr>
+<tr class="separator:gac2e51b4f4c722fa114413ee366fc3f02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafc7e13e83edfce42aa2837a249044d97"><td class="memItemLeft" align="right" valign="top">constexpr tokenize_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gafc7e13e83edfce42aa2837a249044d97">ranges::v3::view::tokenize</a> {}</td></tr>
 <tr class="separator:gafc7e13e83edfce42aa2837a249044d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga851098d72d5bfbf4525e130fcd04f263"><td class="memItemLeft" align="right" valign="top">constexpr transform_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga851098d72d5bfbf4525e130fcd04f263">ranges::v3::view::transform</a> {}</td></tr>
-<tr class="separator:ga851098d72d5bfbf4525e130fcd04f263"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadd5dec32073f86f699bb71dba7748c50"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; transform_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gadd5dec32073f86f699bb71dba7748c50">ranges::v3::view::transform</a> {}</td></tr>
+<tr class="separator:gadd5dec32073f86f699bb71dba7748c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8ede9609c357cb6cc6a08df76ac1bb06"><td class="memItemLeft" align="right" valign="top">constexpr unbounded_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga8ede9609c357cb6cc6a08df76ac1bb06">ranges::v3::view::unbounded</a> {}</td></tr>
 <tr class="separator:ga8ede9609c357cb6cc6a08df76ac1bb06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadd748e5340a1caeb6446138765723da1"><td class="memItemLeft" align="right" valign="top">constexpr unique_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gadd748e5340a1caeb6446138765723da1">ranges::v3::view::unique</a> {}</td></tr>
-<tr class="separator:gadd748e5340a1caeb6446138765723da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3e8dec74f32cbc65106af6daebde656d"><td class="memItemLeft" align="right" valign="top">constexpr values_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga3e8dec74f32cbc65106af6daebde656d">ranges::v3::view::values</a> {}</td></tr>
-<tr class="separator:ga3e8dec74f32cbc65106af6daebde656d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8f8e8b4ecff6369191eddb5a85518fde"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; unique_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga8f8e8b4ecff6369191eddb5a85518fde">ranges::v3::view::unique</a> {}</td></tr>
+<tr class="separator:ga8f8e8b4ecff6369191eddb5a85518fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab204c824812960d51ec0e83e105d4116"><td class="memItemLeft" align="right" valign="top">constexpr view&lt; values_fn &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#gab204c824812960d51ec0e83e105d4116">ranges::v3::view::values</a> {}</td></tr>
+<tr class="separator:gab204c824812960d51ec0e83e105d4116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1a7cb91ce63ca41ed7e5d3a59c6075c8"><td class="memItemLeft" align="right" valign="top">constexpr yield_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga1a7cb91ce63ca41ed7e5d3a59c6075c8">ranges::v3::yield</a> {}</td></tr>
 <tr class="separator:ga1a7cb91ce63ca41ed7e5d3a59c6075c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9cd8fe9a992efe059813101dfeff8e05"><td class="memItemLeft" align="right" valign="top">constexpr yield_from_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__group-views.html#ga9cd8fe9a992efe059813101dfeff8e05">ranges::v3::yield_from</a> {}</td></tr>
@@ -376,12 +425,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 <tr class="separator:gaa23c4fedabcaea357b98d933959a9ba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="gaff013ceabea05dd32086cdf62ae05dd1"></a>
+<a class="anchor" id="gae85c97f24f4213dff98676ab1b21ffb1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr adjacent_filter_fn ranges::v3::view::adjacent_filter {}</td>
+          <td class="memname">constexpr view&lt;adjacent_filter_fn&gt; ranges::v3::view::adjacent_filter {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -406,12 +455,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga15b562617631f30ba515467362fc32da"></a>
+<a class="anchor" id="ga94f53900ef3ed10d00426f0672029799"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bounded_fn ranges::v3::view::bounded {}</td>
+          <td class="memname">constexpr view&lt;bounded_fn&gt; ranges::v3::view::bounded {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -421,18 +470,33 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga2d53e4005d8eae687d275c4b6eb0359b"></a>
+<a class="anchor" id="ga9b0560496a25b67bd98b73623c726c44"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr const_fn ranges::v3::view::const_ {}</td>
+          <td class="memname">constexpr concat_fn ranges::v3::view::concat {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;range/v3/view/concat.hpp&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1view_1_1concat__fn.html">concat_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gab9c87992905577ac90b42bf19898f8ed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr view&lt;const_fn&gt; ranges::v3::view::const_ {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;range/v3/view/const.hpp&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd><code>const__fn</code> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1view_1_1const__fn.html">const_fn</a></code> </dd></dl>
 
 </div>
 </div>
@@ -466,12 +530,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga6bfaca496ecccc7318c7abb951410757"></a>
+<a class="anchor" id="ga773b3b8caf4417a173986281055c733c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr drop_fn ranges::v3::view::drop {}</td>
+          <td class="memname">constexpr view&lt;drop_fn&gt; ranges::v3::view::drop {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -481,12 +545,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="gaeaadd90eddd9a7d2e7abb31b88b2381c"></a>
+<a class="anchor" id="ga64cc934f54eff32f323a1175ecc27f66"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr drop_while_fn ranges::v3::view::drop_while {}</td>
+          <td class="memname">constexpr view&lt;drop_while_fn&gt; ranges::v3::view::drop_while {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -496,27 +560,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga1d5a47f7e145ee915ec0d1445074a245"></a>
+<a class="anchor" id="gaceb94ca54f3a723c61463fa1c84a9cb1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr flatten_fn ranges::v3::view::flatten {}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;range/v3/view/flatten.hpp&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1view_1_1flatten__fn.html">flatten_fn</a></code> </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="gaad03eca83239610aa92508be77d806b1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr for_each_fn ranges::v3::view::for_each {}</td>
+          <td class="memname">constexpr view&lt;for_each_fn&gt; ranges::v3::view::for_each {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -556,12 +605,27 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga288f4f509482d0a90d25773d50c19082"></a>
+<a class="anchor" id="ga8b0e16d136777ee9cb475e3bcbe72e1e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr indirect_fn ranges::v3::view::indirect {}</td>
+          <td class="memname">constexpr view&lt;group_by_fn&gt; ranges::v3::view::group_by {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;range/v3/view/group_by.hpp&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1view_1_1group__by__fn.html">group_by_fn</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga701622b245e0a5e0a90988e1aa750b01"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr view&lt;indirect_fn&gt; ranges::v3::view::indirect {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -601,12 +665,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="gad74fa412650ab7356054f354f66cd3d9"></a>
+<a class="anchor" id="gaa44e156303add034ce8ec38564bced2e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr join_fn ranges::v3::view::join {}</td>
+          <td class="memname">constexpr view&lt;join_fn&gt; ranges::v3::view::join {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -616,12 +680,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga57a2aaa80da0823bd027c08ecb198dee"></a>
+<a class="anchor" id="ga748501a63fb2039a065863143f18821f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr keys_fn ranges::v3::view::keys {}</td>
+          <td class="memname">constexpr view&lt;keys_fn&gt; ranges::v3::view::keys {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -646,12 +710,27 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="gabd3dd2276a3cd5400dbdb822be572b16"></a>
+<a class="anchor" id="ga8d9cf14e40cd0d2e3d0955f773e70749"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr move_fn ranges::v3::view::move {}</td>
+          <td class="memname">constexpr make_view_fn ranges::v3::view::make_view {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;range/v3/view/view.hpp&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structranges_1_1v3_1_1view_1_1make__view__fn.html">make_view_fn</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga120f16661b2ef68d0d6847cc89763a97"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr view&lt;move_fn&gt; ranges::v3::view::move {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -661,12 +740,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga6d4f17710dee3d0bf8bfbe5f0dc16ead"></a>
+<a class="anchor" id="ga8d0373100dddae43eb132860e4663415"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr partial_sum_fn ranges::v3::view::partial_sum {}</td>
+          <td class="memname">constexpr view&lt;partial_sum_fn&gt; ranges::v3::view::partial_sum {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -676,12 +755,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga7c5aeede1701a8f051c9e266c9b6e140"></a>
+<a class="anchor" id="ga7309997e9c7ab782d879bba75cd46a74"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr remove_if_fn ranges::v3::view::remove_if {}</td>
+          <td class="memname">constexpr view&lt;remove_if_fn&gt; ranges::v3::view::remove_if {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -721,12 +800,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga2a71ff5916eb53bfc323c510289cd1a6"></a>
+<a class="anchor" id="ga51364868884d47b253c1171ae8f679d7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr replace_fn ranges::v3::view::replace {}</td>
+          <td class="memname">constexpr view&lt;replace_fn&gt; ranges::v3::view::replace {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -736,12 +815,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga6618eee80c8a2b46b4333b32d60feccb"></a>
+<a class="anchor" id="ga17ef53f46c01c9502e58e0a742e8ad56"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr replace_if_fn ranges::v3::view::replace_if {}</td>
+          <td class="memname">constexpr view&lt;replace_if_fn&gt; ranges::v3::view::replace_if {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -751,12 +830,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga6a6068f6ca3eaa9759c65d931ce1d6ad"></a>
+<a class="anchor" id="gad66a6b6ba00ca6562c2c92eefeaa448d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr reverse_fn ranges::v3::view::reverse {}</td>
+          <td class="memname">constexpr view&lt;reverse_fn&gt; ranges::v3::view::reverse {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -781,12 +860,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga01fd447152340346b318de9925b766fa"></a>
+<a class="anchor" id="ga472978ed746d687abdc16629b2a80c02"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr slice_fn ranges::v3::view::slice {}</td>
+          <td class="memname">constexpr view&lt;slice_fn&gt; ranges::v3::view::slice {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -796,12 +875,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="gab7e2718bf14b28c61b5234703ce5c954"></a>
+<a class="anchor" id="ga1bd9df29f84ab15e38777b3739732130"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr stride_fn ranges::v3::view::stride {}</td>
+          <td class="memname">constexpr view&lt;stride_fn&gt; ranges::v3::view::stride {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -811,12 +890,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="gaf8dcaba76acb19c9d2f8dabf9b98d346"></a>
+<a class="anchor" id="gadd695c9054d51497569fcc13fcaf2f83"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr tail_fn ranges::v3::view::tail {}</td>
+          <td class="memname">constexpr view&lt;tail_fn&gt; ranges::v3::view::tail {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -826,12 +905,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga1579720a0cc6edd4ed5ea58a87d45fd3"></a>
+<a class="anchor" id="ga70fe65a678c1206f749597be0f1cc90e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr take_fn ranges::v3::view::take {}</td>
+          <td class="memname">constexpr view&lt;take_fn&gt; ranges::v3::view::take {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -841,12 +920,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="gabeea2fd1b97812c1fd85a6c93ddb0efb"></a>
+<a class="anchor" id="gac2e51b4f4c722fa114413ee366fc3f02"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr take_while_fn ranges::v3::view::take_while {}</td>
+          <td class="memname">constexpr view&lt;take_while_fn&gt; ranges::v3::view::take_while {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -871,12 +950,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga851098d72d5bfbf4525e130fcd04f263"></a>
+<a class="anchor" id="gadd5dec32073f86f699bb71dba7748c50"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr transform_fn ranges::v3::view::transform {}</td>
+          <td class="memname">constexpr view&lt;transform_fn&gt; ranges::v3::view::transform {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -901,12 +980,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="gadd748e5340a1caeb6446138765723da1"></a>
+<a class="anchor" id="ga8f8e8b4ecff6369191eddb5a85518fde"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr unique_fn ranges::v3::view::unique {}</td>
+          <td class="memname">constexpr view&lt;unique_fn&gt; ranges::v3::view::unique {}</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -916,12 +995,12 @@ struct&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generat
 
 </div>
 </div>
-<a class="anchor" id="ga3e8dec74f32cbc65106af6daebde656d"></a>
+<a class="anchor" id="gab204c824812960d51ec0e83e105d4116"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr values_fn ranges::v3::view::values {}</td>
+          <td class="memname">constexpr view&lt;values_fn&gt; ranges::v3::view::values {}</td>
         </tr>
       </table>
 </div><div class="memdoc">

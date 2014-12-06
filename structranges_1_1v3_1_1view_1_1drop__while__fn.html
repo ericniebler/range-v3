@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1drop__wh
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -88,6 +88,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1drop__wh
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1view_1_1drop__while__fn-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -95,16 +96,19 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1view_1_1drop__wh
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a8f4fe9b121488912295fd4e6ee53f00d"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8f4fe9b121488912295fd4e6ee53f00d"></a>
+template&lt;typename Rng , typename Pred &gt; </td></tr>
+<tr class="memitem:a8f4fe9b121488912295fd4e6ee53f00d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__group-meta.html#ga1e144f7a7d4eb262938ca7312b666653">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputIterable</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InvokablePredicate</a>&lt; Pred, range_value_t&lt; Rng &gt;&gt;&gt;</td></tr>
+<tr class="separator:a8f4fe9b121488912295fd4e6ee53f00d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae3c1d0d8e74dfe24a044567a63c2ca78"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae3c1d0d8e74dfe24a044567a63c2ca78"></a>
-template&lt;typename Rng , typename Pred , requires  = ( InputIterable&lt;Rng&gt;() )&gt; </td></tr>
+template&lt;typename Rng , typename Pred , requires  = ( Concept&lt;Rng, Pred&gt;() )&gt; </td></tr>
 <tr class="memitem:ae3c1d0d8e74dfe24a044567a63c2ca78"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1drop__while__view.html">drop_while_view</a>&lt; Rng, Pred &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Pred pred) const </td></tr>
 <tr class="separator:ae3c1d0d8e74dfe24a044567a63c2ca78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad34cdeec17ef3a7b56115fb50ce4bf8f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad34cdeec17ef3a7b56115fb50ce4bf8f"></a>
-template&lt;typename Pred &gt; </td></tr>
-<tr class="memitem:ad34cdeec17ef3a7b56115fb50ce4bf8f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Pred pred) const -&gt; decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred)))))</td></tr>
-<tr class="separator:ad34cdeec17ef3a7b56115fb50ce4bf8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
