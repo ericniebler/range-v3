@@ -392,6 +392,14 @@ namespace ranges
         using counted_sentinel =
             basic_sentinel<detail::counted_sentinel>;
 
+        template<typename T>
+        struct empty_view;
+
+        namespace view
+        {
+            struct empty_fn;
+        }
+
         template<typename Rng, typename Pred>
         struct filter_view;
 
