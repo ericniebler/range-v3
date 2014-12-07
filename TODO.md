@@ -27,3 +27,6 @@
   - counted iterators (subtractable regarless of traversal category)
   - repeat_view iterators (*not* subtractable but could be random access otherwise)
   - infinite ranges (only countable with an infinite precision integer which we lack)
+
+* Add an optional extra argument to `view::join` for an element or sequence to be inserted
+  between the joined sequences.

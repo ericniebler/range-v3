@@ -113,6 +113,18 @@ namespace ranges
             } max_ {};
 
             template<typename TupleLike>
+            struct tuple_to_pair_type
+            {
+                using type = TupleLike;
+            };
+
+            template<typename First, typename Second>
+            struct tuple_to_pair_type<std::tuple<First, Second>>
+            {
+                using type = std::pair<First, Second>;
+            };
+
+            template<typename TupleLike>
             TupleLike tuple_to_pair(TupleLike tup)
             {
                 return tup;
@@ -154,7 +166,9 @@ namespace ranges
                     meta::or_c<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
                 using value_type =
-                    uncvref_t<result_of_t<invokable_t<Fun>(range_value_t<Rngs>...)>>;
+                    meta::eval<
+                        detail::tuple_to_pair_type<
+                            uncvref_t<result_of_t<invokable_t<Fun>(range_value_t<Rngs>...)>>>>;
                 cursor() = default;
                 cursor(invokable_t<Fun> const &fun, std::tuple<range_iterator_t<view::all_t<Rngs>>...> its)
                   : fun_(&fun), its_(std::move(its))

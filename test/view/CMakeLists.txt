@@ -65,6 +65,9 @@ add_test(test.view.replace_if, view.replace_if)
 add_executable(view.slice slice.cpp)
 add_test(test.view.slice, view.slice)
 
+add_executable(view.split split.cpp)
+add_test(test.view.split, view.split)
+
 add_executable(view.stride stride.cpp)
 add_test(test.view.stride, view.stride)
 

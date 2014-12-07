@@ -140,9 +140,67 @@ namespace ranges
 
         /// \addtogroup group-views
         /// @{
-        template<typename Val>
+
+        /// An iota view in a closed range with non-random access iota value type
+        template<typename Val, typename Val2 /* = void */>
         struct iota_view
-          : range_facade<iota_view<Val>, true>
+          : range_facade<iota_view<Val, Val2>, true>
+        {
+        private:
+            using incrementable_concept_t = ranges::incrementable_concept<Val>;
+            friend range_access;
+            using difference_type_ = detail::iota_difference_t<Val>;
+
+            Val from_;
+            Val2 to_;
+            bool done_ = false;
+
+            Val current() const
+            {
+                return from_;
+            }
+            void next()
+            {
+                if(from_ == to_)
+                    done_ = true;
+                else
+                    ++from_;
+            }
+            bool done() const
+            {
+                return done_;
+            }
+            CONCEPT_REQUIRES(Incrementable<Val>())
+            bool equal(iota_view const &that) const
+            {
+                return that.from_ == from_;
+            }
+            CONCEPT_REQUIRES(BidirectionalIncrementable<Val>())
+            void prev()
+            {
+                --from_;
+            }
+            CONCEPT_REQUIRES(RandomAccessIncrementable<Val>())
+            void advance(difference_type_ n)
+            {
+                RANGES_ASSERT(detail::iota_minus(to_, from_) >= n);
+                from_ += n;
+            }
+            CONCEPT_REQUIRES(RandomAccessIncrementable<Val>())
+            difference_type_ distance_to(iota_view const &that) const
+            {
+                return detail::iota_minus(that.from_, from_);
+            }
+        public:
+            iota_view() = default;
+            iota_view(Val from, Val2 to)
+              : from_(std::move(from)), to_(std::move(to))
+            {}
+        };
+
+        template<typename Val>
+        struct iota_view<Val, void>
+          : range_facade<iota_view<Val, void>, true>
         {
         private:
             using incrementable_concept_t = ranges::incrementable_concept<Val>;
@@ -190,63 +248,6 @@ namespace ranges
             {}
         };
 
-        /// An iota view in a closed range with non-random access iota value type
-        template<typename Val, typename Val2 = Val>
-        struct closed_iota_view
-          : range_facade<closed_iota_view<Val, Val2>, true>
-        {
-        private:
-            using incrementable_concept_t = ranges::incrementable_concept<Val>;
-            friend range_access;
-            using difference_type_ = detail::iota_difference_t<Val>;
-
-            Val from_;
-            Val2 to_;
-            bool done_ = false;
-
-            Val current() const
-            {
-                return from_;
-            }
-            void next()
-            {
-                if(from_ == to_)
-                    done_ = true;
-                else
-                    ++from_;
-            }
-            bool done() const
-            {
-                return done_;
-            }
-            CONCEPT_REQUIRES(Incrementable<Val>())
-            bool equal(closed_iota_view const &that) const
-            {
-                return that.from_ == from_;
-            }
-            CONCEPT_REQUIRES(BidirectionalIncrementable<Val>())
-            void prev()
-            {
-                --from_;
-            }
-            CONCEPT_REQUIRES(RandomAccessIncrementable<Val>())
-            void advance(difference_type_ n)
-            {
-                RANGES_ASSERT(detail::iota_minus(to_, from_) >= n);
-                from_ += n;
-            }
-            CONCEPT_REQUIRES(RandomAccessIncrementable<Val>())
-            difference_type_ distance_to(closed_iota_view const &that) const
-            {
-                return detail::iota_minus(that.from_, from_);
-            }
-        public:
-            closed_iota_view() = default;
-            closed_iota_view(Val from, Val2 to)
-              : from_(std::move(from)), to_(std::move(to))
-            {}
-        };
-
         namespace view
         {
             struct iota_fn
@@ -259,7 +260,7 @@ namespace ranges
                     return {iota_view<Val>{std::move(from)}, detail::iota_minus(to, from) + 1};
                 }
                 template<typename Val, typename Val2>
-                static closed_iota_view<Val, Val2>
+                static iota_view<Val, Val2>
                 impl(Val from, Val2 to, concepts::WeaklyIncrementable *)
                 {
                     return {std::move(from), std::move(to)};
@@ -277,7 +278,7 @@ namespace ranges
                 meta::if_<
                     meta::and_<RandomAccessIncrementable<Val>, Same<Val, Val2>>,
                     take_view<iota_view<Val>>,
-                    closed_iota_view<Val, Val2>>
+                    iota_view<Val, Val2>>
                 operator()(Val from, Val2 to) const
                 {
                     CONCEPT_ASSERT(EqualityComparable<Val, Val2>());

@@ -210,6 +210,7 @@
     <ClCompile Include="..\..\..\..\test\view\replace.cpp" />
     <ClCompile Include="..\..\..\..\test\view\replace_if.cpp" />
     <ClCompile Include="..\..\..\..\test\view\slice.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\split.cpp" />
     <ClCompile Include="..\..\..\..\test\view\stride.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take_while.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\single.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\slice.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\split.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\stride.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\tail.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\take.hpp" />

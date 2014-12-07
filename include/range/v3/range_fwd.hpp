@@ -424,7 +424,7 @@ namespace ranges
             struct group_by_fn;
         }
 
-        template<typename Rng>
+        template<typename T0, typename T1 = void>
         struct iota_view;
 
         namespace view
@@ -485,6 +485,14 @@ namespace ranges
         namespace view
         {
             struct slice_fn;
+        }
+
+        template<typename Rng, typename Fun>
+        struct split_view;
+
+        namespace view
+        {
+            struct split_fn;
         }
 
         template<typename Rng>

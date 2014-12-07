@@ -25,6 +25,8 @@ namespace ranges
 {
     inline namespace v3 
     {
+        // TODO Look at all the special cases handled by erase_if in Library Fundamentals 2
+
         /// \addtogroup group-actions
         /// @{
         namespace action
