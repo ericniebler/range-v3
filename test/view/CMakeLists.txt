@@ -5,6 +5,9 @@ add_test(test.view.adjacent_filter, view.adjacent_filter)
 add_executable(view.all all.cpp)
 add_test(test.view.all, view.all)
 
+add_executable(view.any_range any_range.cpp)
+add_test(test.view.any_range, view.any_range)
+
 add_executable(view.bounded bounded.cpp)
 add_test(test.view.bounded, view.bounded)
 
@@ -37,6 +40,9 @@ add_test(test.view.group_by, view.group_by)
 
 add_executable(view.indirect indirect.cpp)
 add_test(test.view.indirect, view.indirect)
+
+add_executable(view.intersperse intersperse.cpp)
+add_test(test.view.intersperse, view.intersperse)
 
 add_executable(view.iota iota.cpp)
 add_test(test.view.iota, view.iota)

@@ -62,7 +62,7 @@ namespace ranges
         struct range_interface
           : private basic_range<Inf>
         {
-        private:
+        protected:
             Derived & derived()
             {
                 return static_cast<Derived &>(*this);

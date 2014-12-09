@@ -128,6 +128,9 @@ namespace ranges
                   : ptr_{new any_input_cursor_impl<range_iterator_t<Rng>>{begin(rng)}}
                 {}
                 any_input_cursor(any_input_cursor &&) = default;
+                any_input_cursor(any_input_cursor &that)
+                  : ptr_{that.ptr_->clone()}
+                {}
                 any_input_cursor(any_input_cursor const &that)
                   : ptr_{that.ptr_->clone()}
                 {}
@@ -165,6 +168,9 @@ namespace ranges
                   : ptr_{new any_input_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{end(rng)}}
                 {}
                 any_input_sentinel(any_input_sentinel &&) = default;
+                any_input_sentinel(any_input_sentinel &that)
+                  : ptr_{that.ptr_->clone()}
+                {}
                 any_input_sentinel(any_input_sentinel const &that)
                   : ptr_{that.ptr_->clone()}
                 {}
@@ -224,7 +230,7 @@ namespace ranges
         /// \ingroup group-views
         template<typename Ref, bool Inf = false>
         struct any_input_range
-          : range_facade<any_input_range<Ref>, Inf>
+          : range_facade<any_input_range<Ref, Inf>, Inf>
         {
         private:
             friend range_access;
@@ -244,8 +250,14 @@ namespace ranges
                                   Same<Ref, range_reference_t<Rng>>())>
             any_input_range(Rng && rng)
               : ptr_{new detail::any_input_range_impl<Rng>{std::forward<Rng>(rng)}}
-            {}
+            {
+                static_assert(Inf == is_infinite<Rng>::value,
+                    "Rng finiteness does not match the Inf template parameter");
+            }
             any_input_range(any_input_range &&) = default;
+            any_input_range(any_input_range &that)
+              : ptr_{that.ptr_->clone()}
+            {}
             any_input_range(any_input_range const &that)
               : ptr_{that.ptr_->clone()}
             {}

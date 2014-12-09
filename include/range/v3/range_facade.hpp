@@ -29,23 +29,23 @@ namespace ranges
         namespace detail
         {
             template<typename Derived>
-            using facade_cursor_t =
+            using begin_cursor_t =
                 decltype(range_access::begin_cursor(std::declval<Derived &>()));
 
             template<typename Derived>
-            using facade_sentinel2_t =
+            using end_cursor_t =
                 decltype(range_access::end_cursor(std::declval<Derived &>()));
 
             template<typename Derived>
             using facade_iterator_t =
-                basic_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>;
+                basic_iterator<begin_cursor_t<Derived>, end_cursor_t<Derived>>;
 
             template<typename Derived>
             using facade_sentinel_t =
                 meta::if_<
-                    Same<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
-                    basic_iterator<facade_cursor_t<Derived>, facade_sentinel2_t<Derived>>,
-                    basic_sentinel<facade_sentinel2_t<Derived>>>;
+                    Same<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
+                    basic_iterator<begin_cursor_t<Derived>, end_cursor_t<Derived>>,
+                    basic_sentinel<end_cursor_t<Derived>>>;
         }
         /// \endcond
 
@@ -64,20 +64,10 @@ namespace ranges
         struct range_facade
           : range_interface<Derived, Inf>
         {
-        private:
-            friend Derived;
+        protected:
             friend range_access;
             using range_facade_t = range_facade;
-        protected:
-            Derived & derived()
-            {
-                return static_cast<Derived &>(*this);
-            }
-            /// \overload
-            Derived const & derived() const
-            {
-                return static_cast<Derived const &>(*this);
-            }
+            using range_interface<Derived, Inf>::derived;
             // Default implementations
             Derived begin_cursor() const
             {

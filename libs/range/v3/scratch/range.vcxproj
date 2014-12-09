@@ -191,6 +191,7 @@
     <ClCompile Include="..\..\..\..\test\utility\meta.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\any_range.cpp" />
     <ClCompile Include="..\..\..\..\test\view\bounded.cpp" />
     <ClCompile Include="..\..\..\..\test\view\const.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
