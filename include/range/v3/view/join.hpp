@@ -58,7 +58,10 @@ namespace ranges
                     while(it_ == ranges::end(cur))
                     {
                         if(++it == end)
+                        {
+                            it_ = detail::value_init{};
                             break;
+                        }
                         cur = view::all(*it);
                         it_ = ranges::begin(cur);
                     }
