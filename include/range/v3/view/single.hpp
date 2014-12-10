@@ -42,22 +42,39 @@ namespace ranges
                 Val value_;
                 bool done_;
             public:
-                using single_pass = std::true_type;
                 cursor() = default;
                 cursor(Val value)
                   : value_(std::move(value)), done_(false)
                 {}
+                Val current() const
+                {
+                    return value_;
+                }
                 bool done() const
                 {
                     return done_;
+                }
+                bool equal(cursor const &that) const
+                {
+                    return done_ == that.done_;
                 }
                 void next()
                 {
                     done_ = true;
                 }
-                Val current() const
+                void prev()
                 {
-                    return value_;
+                    done_ = false;
+                }
+                void advance(std::ptrdiff_t n)
+                {
+                    n += done_;
+                    RANGES_ASSERT(n == 0 || n == 1);
+                    done_ = n != 0;
+                }
+                std::ptrdiff_t distance_to(cursor const &that) const
+                {
+                    return that.done_ - done_;
                 }
             };
             cursor begin_cursor() const

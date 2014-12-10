@@ -64,6 +64,10 @@ namespace ranges
                 using type = T;
             };
 
+            /// \brief A metafunction that is type \c T.
+            template<typename T>
+            using id_t = eval<id<T>>;
+
             /// \brief Turn a class template or alias template into a
             /// Metafunction Class.
             template<template<typename...> class C>

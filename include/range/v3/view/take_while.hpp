@@ -32,9 +32,9 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        template<typename Rng, typename Pred>
+        template<typename Rng, typename Pred, bool Inf /*= is_infinite<Rng>::value*/>
         struct take_while_view
-          : range_adaptor<take_while_view<Rng, Pred>, Rng>
+          : range_adaptor<take_while_view<Rng, Pred, Inf>, Rng, Inf>
         {
         private:
             friend range_access;

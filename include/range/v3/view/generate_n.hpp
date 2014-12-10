@@ -82,6 +82,10 @@ namespace ranges
             explicit generate_n_view(G g, std::size_t n)
               : gen_(std::move(g)), n_(n)
             {}
+            std::size_t size() const
+            {
+                return n_;
+            }
         };
 
         namespace view

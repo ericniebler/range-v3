@@ -47,6 +47,9 @@ add_test(test.view.intersperse, view.intersperse)
 add_executable(view.iota iota.cpp)
 add_test(test.view.iota, view.iota)
 
+add_executable(view.join join.cpp)
+add_test(test.view.join, view.join)
+
 add_executable(view.map keys_value.cpp)
 add_test(test.view.map, view.map)
 

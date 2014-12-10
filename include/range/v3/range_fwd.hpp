@@ -408,14 +408,6 @@ namespace ranges
             struct filter_fn;
         }
 
-        template<typename Rng>
-        struct indirect_view;
-
-        namespace view
-        {
-            struct indirect_fn;
-        }
-
         template<typename Rng, typename Fun>
         struct group_by_view;
 
@@ -424,12 +416,28 @@ namespace ranges
             struct group_by_fn;
         }
 
+        template<typename Rng>
+        struct indirect_view;
+
+        namespace view
+        {
+            struct indirect_fn;
+        }
+
         template<typename T0, typename T1 = void>
         struct iota_view;
 
         namespace view
         {
             struct iota_fn;
+        }
+
+        template<typename Rng, typename ValRng = void>
+        struct join_view;
+
+        namespace view
+        {
+            struct join_fn;
         }
 
         template<typename...Rngs>
@@ -517,6 +525,14 @@ namespace ranges
         namespace view
         {
             struct take_fn;
+        }
+
+        template<typename Rng, typename Pred, bool Inf = is_infinite<Rng>::value>
+        struct take_while_view;
+
+        namespace view
+        {
+            struct take_while_fn;
         }
 
         template<typename Rng, typename Regex, typename SubMatchRange>

@@ -19,6 +19,7 @@
 #include <range/v3/empty.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
@@ -48,15 +49,9 @@ namespace ranges
                 range_value_t<Rng> val_;
             public:
                 cursor_adaptor() = default;
-                cursor_adaptor(range_value_t<Rng> val)
-                  : toggl_(false), val_(std::move(val))
+                cursor_adaptor(range_value_t<Rng> val, bool at_end)
+                  : toggl_(!at_end), val_(std::move(val))
                 {}
-                template<typename IntersperseView>
-                range_iterator_t<Rng> begin(IntersperseView &rng)
-                {
-                    toggl_ = !ranges::empty(rng.base());
-                    return ranges::begin(rng.base());
-                }
                 range_value_t<Rng> current(range_iterator_t<Rng> it) const
                 {
                     return toggl_ ? *it : val_;
@@ -88,7 +83,7 @@ namespace ranges
                         return d * 2 - (toggl_ != other.toggl_);
                     if(d < 0)
                         return d * 2 + (toggl_ != other.toggl_);
-                    return toggl_ ? (!other.toggl_ ? -1 : 0) : (other.toggl_ ? 1 : 0);
+                    return other.toggl_ - toggl_;
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
                 void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n)
@@ -108,12 +103,12 @@ namespace ranges
             };
             cursor_adaptor begin_adaptor() const
             {
-                return {val_};
+                return {val_, ranges::empty(this->mutable_base())};
             }
             CONCEPT_REQUIRES(BoundedIterable<Rng>() && !SinglePass<range_iterator_t<Rng>>())
             cursor_adaptor end_adaptor() const
             {
-                return {val_};
+                return {val_, true};
             }
             CONCEPT_REQUIRES(!BoundedIterable<Rng>() || SinglePass<range_iterator_t<Rng>>())
             sentinel_adaptor end_adaptor() const
@@ -128,7 +123,7 @@ namespace ranges
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
             {
-                auto tmp = this->base().size();
+                auto tmp = ranges::size(this->mutable_base());
                 return tmp ? tmp * 2 - 1 : 0;
             }
         };
