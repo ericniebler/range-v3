@@ -260,47 +260,47 @@ namespace ranges
         {
             struct join_fn
             {
-            private:
-                friend view_access;
-                template<typename T, CONCEPT_REQUIRES_(!JoinableIterable_<T>())>
-                static auto bind(join_fn join, T && t)
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)))
-                )
-            public:
+            //private:
+            //    friend view_access;
+            //    template<typename T, CONCEPT_REQUIRES_(!JoinableIterable_<T>())>
+            //    static auto bind(join_fn join, T && t)
+            //    RANGES_DECLTYPE_AUTO_RETURN
+            //    (
+            //        make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)))
+            //    )
+            //public:
                 template<typename Rng,
                     CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
                 join_view<Rng> operator()(Rng && rng) const
                 {
                     return join_view<Rng>{std::forward<Rng>(rng)};
                 }
-                template<typename Rng, typename Val = range_value_t<range_value_t<Rng>>,
-                    CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
-                join_view<Rng, single_view<Val>> operator()(Rng && rng, meta::id_t<Val> v) const
-                {
-                    CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
-                        "To join a range of ranges with a value, the value type must be a model of "
-                        "the SemiRegular concept; that is, it must have a default constructor, "
-                        "copy and move constructors, and a destructor.");
-                    return {std::forward<Rng>(rng), single(std::move(v))};
-                }
-                template<typename Rng, typename ValRng,
-                    CONCEPT_REQUIRES_(JoinableIterable_<Rng>() && ForwardIterable<ValRng>())>
-                join_view<Rng, ValRng> operator()(Rng && rng, ValRng && val) const
-                {
-                    CONCEPT_ASSERT_MSG(Common<range_value_t<ValRng>,
-                        range_value_t<range_value_t<Rng>>>(),
-                        "To join a range of ranges with another range, all the ranges must have "
-                        "a common value type.");
-                    CONCEPT_ASSERT_MSG(SemiRegular<concepts::Common::common_t<
-                        range_value_t<ValRng>, range_value_t<range_value_t<Rng>>>>(),
-                        "To join a range of ranges with another range, all the ranges must have "
-                        "a common value type, and that value type must model the SemiRegular "
-                        "concept; that is, it must have a default constructor, copy and move "
-                        "constructors, and a destructor.");
-                    return {std::forward<Rng>(rng), std::forward<ValRng>(val)};
-                }
+                //template<typename Rng, typename Val = range_value_t<range_value_t<Rng>>,
+                //    CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
+                //join_view<Rng, single_view<Val>> operator()(Rng && rng, meta::id_t<Val> v) const
+                //{
+                //    CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
+                //        "To join a range of ranges with a value, the value type must be a model of "
+                //        "the SemiRegular concept; that is, it must have a default constructor, "
+                //        "copy and move constructors, and a destructor.");
+                //    return {std::forward<Rng>(rng), single(std::move(v))};
+                //}
+                //template<typename Rng, typename ValRng,
+                //    CONCEPT_REQUIRES_(JoinableIterable_<Rng>() && ForwardIterable<ValRng>())>
+                //join_view<Rng, ValRng> operator()(Rng && rng, ValRng && val) const
+                //{
+                //    CONCEPT_ASSERT_MSG(Common<range_value_t<ValRng>,
+                //        range_value_t<range_value_t<Rng>>>(),
+                //        "To join a range of ranges with another range, all the ranges must have "
+                //        "a common value type.");
+                //    CONCEPT_ASSERT_MSG(SemiRegular<concepts::Common::common_t<
+                //        range_value_t<ValRng>, range_value_t<range_value_t<Rng>>>>(),
+                //        "To join a range of ranges with another range, all the ranges must have "
+                //        "a common value type, and that value type must model the SemiRegular "
+                //        "concept; that is, it must have a default constructor, copy and move "
+                //        "constructors, and a destructor.");
+                //    return {std::forward<Rng>(rng), std::forward<ValRng>(val)};
+                //}
             };
 
             /// \sa `join_fn`

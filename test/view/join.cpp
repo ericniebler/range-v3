@@ -43,36 +43,40 @@ int main()
     models_not<concepts::SizedIterable>(rng0);
     check_equal(rng0, {0,1,2,3,4,5,6,7,8});
 
-    // Joining with a value
-    N = 0;
-    auto rng1 = make_input_rng() | view::join(42);
-    models<concepts::InputIterable>(rng1);
-    models_not<concepts::ForwardIterable>(rng1);
-    models_not<concepts::BoundedIterable>(rng1);
-    models_not<concepts::SizedIterable>(rng1);
-    check_equal(rng1, {0,1,2,42,3,4,5,42,6,7,8});
+    //// Joining with a value
+    //N = 0;
+    //auto rng1 = make_input_rng() | view::join(42);
+    //models<concepts::InputIterable>(rng1);
+    //models_not<concepts::ForwardIterable>(rng1);
+    //models_not<concepts::BoundedIterable>(rng1);
+    //models_not<concepts::SizedIterable>(rng1);
+    //check_equal(rng1, {0,1,2,42,3,4,5,42,6,7,8});
 
-    // Joining with a range
-    N = 0;
-    int rgi[] = {42,43};
-    auto rng2 = make_input_rng() | view::join(rgi);
-    models<concepts::InputIterable>(rng2);
-    models_not<concepts::ForwardIterable>(rng2);
-    models_not<concepts::BoundedIterable>(rng2);
-    models_not<concepts::SizedIterable>(rng2);
-    check_equal(rng2, {0,1,2,42,43,3,4,5,42,43,6,7,8});
+    //// Joining with a range
+    //N = 0;
+    //int rgi[] = {42,43};
+    //auto rng2 = make_input_rng() | view::join(rgi);
+    //models<concepts::InputIterable>(rng2);
+    //models_not<concepts::ForwardIterable>(rng2);
+    //models_not<concepts::BoundedIterable>(rng2);
+    //models_not<concepts::SizedIterable>(rng2);
+    //check_equal(rng2, {0,1,2,42,43,3,4,5,42,43,6,7,8});
 
-    // Just for fun:
-    std::string str = "Now,is,the,time,for,all,good,men,to,come,to,the,aid,of,their,country";
-    std::string res = str | view::split(',') | view::join(' ');
-    CHECK(res == "Now is the time for all good men to come to the aid of their country");
+    //// Just for fun:
+    //std::string str = "Now,is,the,time,for,all,good,men,to,come,to,the,aid,of,their,country";
+    //std::string res = str | view::split(',') | view::join(' ');
+    //CHECK(res == "Now is the time for all good men to come to the aid of their country");
 
     std::vector<std::string> vs{"This","is","his","face"};
-    auto rng3 = view::join(vs, ' ');
+    auto rng3 = view::join(vs);
     models<concepts::SizedIterable>(rng3);
-    CHECK(rng3.size() == 16u);
-    CHECK(view::join(vs).size() == 13u);
-    CHECK(to_<std::string>(rng3) == "This is his face");
+    CHECK(rng3.size() == 13u);
+    CHECK(to_<std::string>(rng3) == "Thisishisface");
+
+    //auto rng4 = view::join(vs, ' ');
+    //models<concepts::SizedIterable>(rng4);
+    //CHECK(rng4.size() == 16u);
+    //CHECK(to_<std::string>(rng4) == "This is his face");
 
     return ::test_result();
 }
