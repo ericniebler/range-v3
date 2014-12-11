@@ -51,7 +51,7 @@ namespace ranges
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(InputIterable<Rng &>() && Invokable<P, V>() &&
                     Invokable<F, X>())>
-            I operator()(Rng &rng, F fun, P proj = P{}) const
+            I operator()(Rng &&rng, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));
             }
