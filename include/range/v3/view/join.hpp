@@ -263,37 +263,20 @@ namespace ranges
             }
         };
 
-        namespace concepts
-        {
-            // An Iterable is "joinable" if its value type is another Iterable,
-            // and both the outer and inner Iterables are at least Input.
-            struct JoinableIterable_
-              : refines<InputIterable>
-            {
-                template<typename Rng>
-                auto requires_(Rng rng) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<InputIterable>(val<range_value_t<Rng>>())
-                    ));
-            };
-        }
-
-        template<typename Rng>
-        using JoinableIterable_ = concepts::models<concepts::JoinableIterable_, Rng>;
-
         namespace view
         {
             struct join_fn
             {
-            private:
-               friend view_access;
-               template<typename T, CONCEPT_REQUIRES_(!JoinableIterable_<T>())>
-               static auto bind(join_fn join, T && t)
-               RANGES_DECLTYPE_AUTO_RETURN
-               (
-                   make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)))
-               )
-            public:
+                template<typename Rng>
+                using JoinableIterable_ = meta::and_<
+                    InputIterable<Rng>,
+                    // Only evaluate this one if the previous one succeeded
+                    meta::lazy_apply<
+                        meta::compose<
+                            meta::quote<InputIterable>,
+                            meta::quote<range_value_t>>,
+                        Rng>>;
+
                 template<typename Rng,
                     CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
                 join_view<Rng> operator()(Rng && rng) const
@@ -326,6 +309,14 @@ namespace ranges
                         "constructors, and a destructor.");
                     return {std::forward<Rng>(rng), std::forward<ValRng>(val)};
                 }
+            private:
+               friend view_access;
+               template<typename T, CONCEPT_REQUIRES_(!JoinableIterable_<T>())>
+               static auto bind(join_fn join, T && t)
+               RANGES_DECLTYPE_AUTO_RETURN
+               (
+                   make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)))
+               )
             };
 
             /// \sa `join_fn`

@@ -61,8 +61,7 @@ namespace ranges
                     semiregular_invokable_ref_t<Fun, IsConst> fun_;
                     bool operator()(range_iterator_t<Rng> cur) const
                     {
-                        return zero_ && cur == first_ ? true :
-                            cur == last_ ? false : !fun_(cur, last_).first;
+                        return (zero_ && cur == first_) || (cur != last_ && !fun_(cur, last_).first);
                     }
                 };
                 using reference_ =

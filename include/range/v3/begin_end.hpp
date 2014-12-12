@@ -28,6 +28,47 @@ namespace ranges
             using std::begin;
             using std::end;
 
+            template<typename T>
+            auto rbegin(T &t) -> decltype(t.rbegin())
+            {
+                return t.rbegin();
+            }
+            template<typename T>
+            auto rbegin(T const &t) -> decltype(t.rbegin())
+            {
+                return t.rbegin();
+            }
+            template<typename T>
+            auto rend(T &t) -> decltype(t.rend())
+            {
+                return t.rend();
+            }
+            template<typename T>
+            auto rend(T const &t) -> decltype(t.rend())
+            {
+                return t.rend();
+            }
+            template<typename T, std::size_t N>
+            std::reverse_iterator<T *> rbegin(T (&t)[N])
+            {
+                return std::reverse_iterator<T *>(t + N);
+            }
+            template<typename T, std::size_t N>
+            std::reverse_iterator<T *> rend(T (&t)[N])
+            {
+                return std::reverse_iterator<T *>(t);
+            }
+            template<typename T>
+            std::reverse_iterator<T const *> rbegin(std::initializer_list<T> il)
+            {
+                return std::reverse_iterator<T *>(il.end());
+            }
+            template<typename T>
+            std::reverse_iterator<T const *> rend(std::initializer_list<T> il)
+            {
+                return std::reverse_iterator<T const *>(il.begin());
+            }
+
             // A reference-wrapped Iterable is an Iterable
             template<typename T>
             auto begin(std::reference_wrapper<T> ref) -> decltype(begin(ref.get()))
@@ -53,7 +94,29 @@ namespace ranges
                 return end(ref.get());
             }
 
-            // Handle char*, std::pair<iterator, iterator>, std::pair<interator, int> ?
+            template<typename T>
+            auto rbegin(std::reference_wrapper<T> ref) -> decltype(rbegin(ref.get()))
+            {
+                return rbegin(ref.get());
+            }
+
+            template<typename T>
+            auto rend(std::reference_wrapper<T> ref) -> decltype(rend(ref.get()))
+            {
+                return rend(ref.get());
+            }
+
+            template<typename T>
+            auto rbegin(ranges::reference_wrapper<T> ref) -> decltype(rbegin(ref.get()))
+            {
+                return rbegin(ref.get());
+            }
+
+            template<typename T>
+            auto rend(ranges::reference_wrapper<T> ref) -> decltype(rend(ref.get()))
+            {
+                return rend(ref.get());
+            }
 
             struct begin_fn
             {
@@ -72,6 +135,26 @@ namespace ranges
                     decltype(end(rng))
                 {
                     return end(rng);
+                }
+            };
+
+            struct rbegin_fn
+            {
+                template<typename Rng>
+                auto operator()(Rng && rng) const ->
+                    decltype(rbegin(rng))
+                {
+                    return rbegin(rng);
+                }
+            };
+
+            struct rend_fn
+            {
+                template<typename Rng>
+                auto operator()(Rng && rng) const ->
+                    decltype(rend(rng))
+                {
+                    return rend(rng);
                 }
             };
 
@@ -94,6 +177,26 @@ namespace ranges
                     return end(rng);
                 }
             };
+
+            struct crbegin_fn
+            {
+                template<typename Rng>
+                auto operator()(Rng const & rng) const ->
+                    decltype(rbegin(rng))
+                {
+                    return rbegin(rng);
+                }
+            };
+
+            struct crend_fn
+            {
+                template<typename Rng>
+                auto operator()(Rng const & rng) const ->
+                    decltype(rend(rng))
+                {
+                    return rend(rng);
+                }
+            };
         }
         /// \endcond
 
@@ -114,6 +217,24 @@ namespace ranges
         /// \return The result of an unqualified call to the `end` free function
         /// with a const-qualified argument.
         constexpr cend_fn cend {};
+
+        /// \ingroup group-core
+        /// \return The result of an unqualified call to the `rbegin` free function
+        constexpr rbegin_fn rbegin {};
+
+        /// \ingroup group-core
+        /// \return The result of an unqualified call to the `rend` free function
+        constexpr rend_fn rend {};
+
+        /// \ingroup group-core
+        /// \return The result of an unqualified call to the `rbegin` free function
+        /// with a const-qualified argument.
+        constexpr crbegin_fn crbegin {};
+
+        /// \ingroup group-core
+        /// \return The result of an unqualified call to the `rend` free function
+        /// with a const-qualified argument.
+        constexpr crend_fn crend {};
     }
 }
 

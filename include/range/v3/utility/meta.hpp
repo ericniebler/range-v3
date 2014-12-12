@@ -105,7 +105,7 @@ namespace ranges
                 template<typename ...Ts>
                 struct impl
                 {
-                    using type = F<Ts::value...>;
+                    using type = F<Ts::type::value...>;
                 };
             public:
                 template<typename...Ts>
@@ -251,7 +251,7 @@ namespace ranges
             /// \brief Select one type or another depending on a compile-time Boolean.
             /// \ingroup group-meta
             template<typename If, typename Then, typename Else>
-            using if_ = eval<meta_detail::_if_<If::value, Then, Else>>;
+            using if_ = eval<meta_detail::_if_<If::type::value, Then, Else>>;
 
             /// \brief Select one type or another depending on a compile-time Boolean.
             /// \ingroup group-meta
@@ -289,7 +289,7 @@ namespace ranges
 
                 template<typename Bool, typename...Bools>
                 struct _and_<Bool, Bools...>
-                  : if_c<!Bool::value, std::false_type, _and_<Bools...>>
+                  : if_c<!Bool::type::value, std::false_type, _and_<Bools...>>
                 {};
 
                 template<typename ...Bools>
@@ -302,7 +302,7 @@ namespace ranges
 
                 template<typename Bool, typename...Bools>
                 struct _or_<Bool, Bools...>
-                  : if_c<Bool::value, std::true_type, _or_<Bools...>>
+                  : if_c<Bool::type::value, std::true_type, _or_<Bools...>>
                 {};
             }
             /// \endcond
@@ -327,17 +327,17 @@ namespace ranges
             /// \brief Logically and together all the integral constant-wrapped Boolean
             /// parameters, <i>without</i> doing short-circuiting.
             template<typename...Bools>
-            using fast_and = and_c<Bools::value...>;
+            using fast_and = and_c<Bools::type::value...>;
 
             /// \brief Logically or together all the integral constant-wrapped Boolean
             /// parameters, <i>without</i> doing short-circuiting.
             template<typename...Bools>
-            using fast_or = or_c<Bools::value...>;
+            using fast_or = or_c<Bools::type::value...>;
 
             /// \brief Logically negate the integral constant-wrapped Boolean
             /// parameter.
             template<typename Bool>
-            using not_ = not_c<Bool::value>;
+            using not_ = not_c<Bool::type::value>;
 
             /// \brief Logically and together all the integral constant-wrapped Boolean
             /// parameters, with short-circuiting.
@@ -452,7 +452,7 @@ namespace ranges
             /// in O(log N)
             /// \ingroup group-meta
             template<typename N, typename T = void>
-            using repeat_n = eval<meta_detail::repeat_n_c_<N::value, T>>;
+            using repeat_n = eval<meta_detail::repeat_n_c_<N::type::value, T>>;
 
             /// Generate `list<T,T,T...T>` of size `N` arguments
             /// in O(log N)
@@ -676,7 +676,7 @@ namespace ranges
             /// \c List is an empty type list; \c false, otherwise.
             /// \ingroup group-meta
             template<typename List>
-            using empty = bool_<0 == size<List>::value>;
+            using empty = bool_<0 == size<List>::type::value>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // find
@@ -1017,87 +1017,87 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////
             // Math operations
             /// \brief An integral constant wrapper around the result of adding the
-            /// two wrapped integers \c T::value and \c U::value.
+            /// two wrapped integers \c T::type::value and \c U::type::value.
             template<typename T, typename U>
-            using plus = std::integral_constant<decltype(T::value + U::value), T::value + U::value>;
+            using plus = std::integral_constant<decltype(T::type::value + U::type::value), T::type::value + U::type::value>;
 
             /// \brief An integral constant wrapper around the result of subtracting the
-            /// two wrapped integers \c T::value and \c U::value.
+            /// two wrapped integers \c T::type::value and \c U::type::value.
             template<typename T, typename U>
-            using minus = std::integral_constant<decltype(T::value - U::value), T::value - U::value>;
+            using minus = std::integral_constant<decltype(T::type::value - U::type::value), T::type::value - U::type::value>;
 
             /// \brief An integral constant wrapper around the result of multiplying the
-            /// two wrapped integers \c T::value and \c U::value.
+            /// two wrapped integers \c T::type::value and \c U::type::value.
             template<typename T, typename U>
-            using multiplies = std::integral_constant<decltype(T::value * U::value), T::value * U::value>;
+            using multiplies = std::integral_constant<decltype(T::type::value * U::type::value), T::type::value * U::type::value>;
 
             /// \brief An integral constant wrapper around the result of dividing the
-            /// two wrapped integers \c T::value and \c U::value.
+            /// two wrapped integers \c T::type::value and \c U::type::value.
             template<typename T, typename U>
-            using divides = std::integral_constant<decltype(T::value / U::value), T::value / U::value>;
+            using divides = std::integral_constant<decltype(T::type::value / U::type::value), T::type::value / U::type::value>;
 
             /// \brief An integral constant wrapper around the remainder of dividing the
-            /// two wrapped integers \c T::value and \c U::value.
+            /// two wrapped integers \c T::type::value and \c U::type::value.
             template<typename T>
-            using negate = std::integral_constant<decltype(-T::value), -T::value>;
+            using negate = std::integral_constant<decltype(-T::type::value), -T::type::value>;
 
             /// \brief An integral constant wrapper around the remainder of dividing the
-            /// two wrapped integers \c T::value and \c U::value.
+            /// two wrapped integers \c T::type::value and \c U::type::value.
             template<typename T, typename U>
-            using modulus = std::integral_constant<decltype(T::value % U::value), T::value % U::value>;
+            using modulus = std::integral_constant<decltype(T::type::value % U::type::value), T::type::value % U::type::value>;
 
             /// \brief A Boolean integral constant wrapper around the result of comparing
-            /// \c T::value and \c U::value for equality.
+            /// \c T::type::value and \c U::type::value for equality.
             template<typename T, typename U>
-            using equal_to = bool_<T::value == U::value>;
+            using equal_to = bool_<T::type::value == U::type::value>;
 
             /// \brief A Boolean integral constant wrapper around the result of comparing
-            /// \c T::value and \c U::value for inequality.
+            /// \c T::type::value and \c U::type::value for inequality.
             template<typename T, typename U>
-            using not_equal_to = bool_<T::value != U::value>;
+            using not_equal_to = bool_<T::type::value != U::type::value>;
 
             /// \brief A Boolean integral constant wrapper around \c true if
-            /// \c T::value is greater than \c U::value; \c false, otherwise.
+            /// \c T::type::value is greater than \c U::type::value; \c false, otherwise.
             template<typename T, typename U>
-            using greater = bool_<(T::value > U::value)>;
+            using greater = bool_<(T::type::value > U::type::value)>;
 
             /// \brief A Boolean integral constant wrapper around \c true if
-            /// \c T::value is less than \c U::value; \c false, otherwise.
+            /// \c T::type::value is less than \c U::type::value; \c false, otherwise.
             template<typename T, typename U>
-            using less = bool_<(T::value < U::value)>;
+            using less = bool_<(T::type::value < U::type::value)>;
 
             /// \brief A Boolean integral constant wrapper around \c true if
-            /// \c T::value is greater than or equal to \c U::value; \c false,
+            /// \c T::type::value is greater than or equal to \c U::type::value; \c false,
             /// otherwise.
             template<typename T, typename U>
-            using greater_equal = bool_<(T::value >= U::value)>;
+            using greater_equal = bool_<(T::type::value >= U::type::value)>;
 
             /// \brief A Boolean integral constant wrapper around \c true if
-            /// \c T::value is less than or equal to \c U::value; \c false,
+            /// \c T::type::value is less than or equal to \c U::type::value; \c false,
             /// otherwise.
             template<typename T, typename U>
-            using less_equal = bool_<(T::value <= U::value)>;
+            using less_equal = bool_<(T::type::value <= U::type::value)>;
 
             /// \brief An integral constant wrapper around the result of bitwise-and'ing
-            /// the two wrapped integers \c T::value and \c U::value.
+            /// the two wrapped integers \c T::type::value and \c U::type::value.
             template<typename T, typename U>
-            using bit_and = std::integral_constant<decltype(T::value & U::value), T::value & U::value>;
+            using bit_and = std::integral_constant<decltype(T::type::value & U::type::value), T::type::value & U::type::value>;
 
             /// \brief An integral constant wrapper around the result of bitwise-or'ing
-            /// the two wrapped integers \c T::value and \c U::value.
+            /// the two wrapped integers \c T::type::value and \c U::type::value.
             template<typename T, typename U>
-            using bit_or = std::integral_constant<decltype(T::value | U::value), T::value | U::value>;
+            using bit_or = std::integral_constant<decltype(T::type::value | U::type::value), T::type::value | U::type::value>;
 
             /// \brief An integral constant wrapper around the result of
-            /// bitwise-exclusive-or'ing the two wrapped integers \c T::value and
-            /// \c U::value.
+            /// bitwise-exclusive-or'ing the two wrapped integers \c T::type::value and
+            /// \c U::type::value.
             template<typename T, typename U>
-            using bit_xor = std::integral_constant<decltype(T::value ^ U::value), T::value ^ U::value>;
+            using bit_xor = std::integral_constant<decltype(T::type::value ^ U::type::value), T::type::value ^ U::type::value>;
 
             /// \brief An integral constant wrapper around the result of
-            /// bitwise-complimenting the wrapped integer \c T::value.
+            /// bitwise-complimenting the wrapped integer \c T::type::value.
             template<typename T>
-            using bit_not = std::integral_constant<decltype(~T::value), ~T::value>;
+            using bit_not = std::integral_constant<decltype(~T::type::value), ~T::type::value>;
             /// @}
         }
     }

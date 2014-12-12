@@ -52,12 +52,20 @@ namespace ranges
             struct end_fn;
             struct cbegin_fn;
             struct cend_fn;
+            struct rbegin_fn;
+            struct rend_fn;
+            struct crbegin_fn;
+            struct crend_fn;
         }
 
         using adl_begin_end_detail::begin_fn;
         using adl_begin_end_detail::end_fn;
         using adl_begin_end_detail::cbegin_fn;
         using adl_begin_end_detail::cend_fn;
+        using adl_begin_end_detail::rbegin_fn;
+        using adl_begin_end_detail::rend_fn;
+        using adl_begin_end_detail::crbegin_fn;
+        using adl_begin_end_detail::crend_fn;
 
         namespace adl_size_detail
         {
