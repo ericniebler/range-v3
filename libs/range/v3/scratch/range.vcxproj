@@ -74,8 +74,6 @@
     <None Include="..\..\..\..\LICENSE" />
     <None Include="..\..\..\..\README.md" />
     <None Include="..\..\..\..\TODO.md" />
-    <None Include="..\doc\Jamfile" />
-    <None Include="..\doc\ranges.qbk" />
     <None Include="Jamfile" />
     <None Include="Makefile" />
   </ItemGroup>

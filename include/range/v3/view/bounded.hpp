@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -110,7 +111,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `bounded_fn`
+            /// \relates bounded_fn
             /// \ingroup group-views
             constexpr view<bounded_fn> bounded{};
 

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -195,7 +196,7 @@ namespace ranges
                 }
             };
 
-            /// \sa `tokenize_fn`
+            /// \relates tokenize_fn
             /// \ingroup group-views
             constexpr tokenize_fn tokenize{};
         }

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -53,7 +54,7 @@ namespace ranges
             };
 
             /// \ingroup group-actions
-            /// \sa take_while_fn
+            /// \relates take_while_fn
             /// \sa action
             constexpr action<take_while_fn> take_while{};
         }

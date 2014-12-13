@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -174,7 +175,7 @@ namespace ranges
             };
 
 
-            /// \sa `intersperse_fn`
+            /// \relates intersperse_fn
             /// \ingroup group-views
             constexpr view<intersperse_fn> intersperse{};
         }

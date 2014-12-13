@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -67,7 +68,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `unique_fn`
+            /// \relates unique_fn
             /// \ingroup group-views
             constexpr view<unique_fn> unique{};
         }

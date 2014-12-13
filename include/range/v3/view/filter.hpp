@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -44,7 +45,7 @@ namespace ranges
             };
 
             RANGES_DEPRECATED("Please switch to view::remove_if")
-            /// \sa `filter_fn`
+            /// \relates filter_fn
             /// \ingroup group-views
             constexpr filter_fn filter{};
             /// \endcond

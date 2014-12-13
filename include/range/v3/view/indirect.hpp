@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -94,7 +95,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `indirect_fn`
+            /// \relates indirect_fn
             /// \ingroup group-views
             constexpr view<indirect_fn> indirect{};
         }

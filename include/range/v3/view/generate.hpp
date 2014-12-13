@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -108,7 +109,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `generate_fn`
+            /// \relates generate_fn
             /// \ingroup group-views
             constexpr generate_fn generate{};
         }

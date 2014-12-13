@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -109,11 +110,11 @@ namespace ranges
             #endif
             };
 
-            /// \sa `keys_fn`
+            /// \relates keys_fn
             /// \ingroup group-views
             constexpr view<keys_fn> keys{};
 
-            /// \sa `values_fn`
+            /// \relates values_fn
             /// \ingroup group-views
             constexpr view<values_fn> values{};
         }

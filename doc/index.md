@@ -274,3 +274,95 @@ Range v3 forms the basis for a proposal to add ranges to the standard library
 ([N4128](www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)), and will also be the basis for a Technical Specification on Ranges. Its design direction has already passed an initial review by the standardization committee. What that means is that you may see your compiler vendor shipping a library like Range v3 at some point in the future. That's the hope, anyway.
 
 Enjoy!
+
+\section range-views Range Views
+
+--------------------------------------------
+The big advantage of ranges over iterators is their *composability*. They permit a functional style of programming where data is manipulated by passing it through a series of combinators. In addition, the combinators can be *lazy*, only doing work when the answer is requested, and *purely functional*, without mutating the original data. This makes it easier to reason about your code, especially when writing concurrent programs.
+
+Below is a list of the lazy range combinators, or *views*, that Range v3 provides, and a blurb about how each is intended to be used.
+
+<DL>
+<DT>\link ranges::v3::view::adjacent_filter_fn `view::adjacent_filter`\endlink</DT>
+  <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the first element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, `adjacent_filter` with `std::not_equal_to` filters out all the non-unique elements.)</DD>
+<DT>\link ranges::v3::view::all_fn `view::all`\endlink</DT>
+  <DD>Return a range containing all the elements in the source. Useful for converting containers to ranges.</DD>
+<DT>\link ranges::v3::view::bounded_fn `view::bounded`\endlink</DT>
+  <DD>Convert the source range to a *bounded* range, where the type of the `end` is the same as the `begin`. Useful for iterating over a range with C++'s range-based `for` loop.</DD>
+<DT>\link ranges::v3::view::concat_fn `view::concat`\endlink</DT>
+  <DD>Given *N* source ranges, produce a result range that is the concatenation of all of them.</DD>
+<DT>\link ranges::v3::view::const_fn `view::const_`\endlink</DT>
+  <DD>Present a `const` view of a source range.</DD>
+<DT>\link ranges::v3::view::counted_fn `view::counted`\endlink</DT>
+  <DD>Given an iterator `it` and a count `n`, create a range that starts at `it` and includes the next `n` elements.</DD>
+<DT>\link ranges::v3::view::delimit_fn `view::delimit`\endlink</DT>
+  <DD>Given a source range and a value, return a new range that ends either at the end of the source or at the first occurrence of the value, whichever comes first. Alternatively, `view::delimit` can be called with an iterator and a value, in which case it returns a range that starts at the specified position and ends at the first occurrence of the value.</DD>
+<DT>\link ranges::v3::view::drop_fn `view::drop`\endlink</DT>
+  <DD>Remove the first *N* elements from the front of a source range.</DD>
+<DT>\link ranges::v3::view::drop_while_fn `view::drop_while`\endlink</DT>
+  <DD>Remove elements from the front of a range that satisfy a unary predicate.</DD>
+<DT>\link ranges::v3::view::empty() `view::empty`\endlink</DT>
+  <DD>Create an empty range with a given value type.</DD>
+<DT>\link ranges::v3::view::generate_fn `view::generate`\endlink</DT>
+  <DD>Given a nullary function, return an infinite range whose elements are generated with the function.</DD>
+<DT>\link ranges::v3::view::generate_n_fn `view::generate_n`\endlink</DT>
+  <DD>Given a nullary function and a count, return a range that generates the requested number of elements by calling the function.</DD>
+<DT>\link ranges::v3::view::group_by_fn `view::group_by`\endlink</DT>
+  <DD>Given a source range and a binary predicate, return a range of ranges where each range contains contiguous elements from the source range such that the following condition holds: for each element in the range apart from the first, when that element and the first element are passed to the binary predicate, the result is true. In essence, `view::group_by` *groups* contiguous elements together with a binary predicate.</DD>
+<DT>\link ranges::v3::view::indirect_fn `view::indirect`\endlink</DT>
+  <DD>Given a source range of readable values (e.g. pointers or iterators), return a new view that is the result of dereferencing each.</DD>
+<DT>\link ranges::v3::view::intersperse_fn `view::intersperse`\endlink</DT>
+  <DD>Given a source range and a value, return a new range where the value is inserted between contiguous elements from the source.</DD>
+<DT>\link ranges::v3::view::ints_fn `view::ints`\endlink</DT>
+  <DD>Generate a range of monotonically increasing `int`s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (inclusive).</DD>
+<DT>\link ranges::v3::view::iota_fn `view::iota`\endlink</DT>
+  <DD>A generalization of `view::ints` that generates a sequence of monotonically increasing values of any incrementable type.</DD>
+<DT>\link ranges::v3::view::join_fn `view::join`\endlink</DT>
+  <DD>Given a range of ranges, join them into a flattened sequence of elements. Optionally, you can specify a value or a range to be inserted between each source range.</DD>
+<DT>\link ranges::v3::view::keys_fn `view::keys`\endlink</DT>
+  <DD>Given a range of `pair`s (like a `std::map`), return a new range consisting of just the first element of the `pair`.</DD>
+<DT>\link ranges::v3::view::move_fn `view::move`\endlink</DT>
+  <DD>Given a source range, return a new range where each element has been has been cast to an rvalue reference.</DD>
+<DT>\link ranges::v3::view::partial_sum_fn `view::partial_sum`\endlink</DT>
+  <DD>Given a range and a binary function, return a new range where the *N*<SUP>th</SUP> element is the the result of applying the function to the *N*<SUP>th</SUP> element from the source range and the (N-1)th element from the result range.</DD>
+<DT>\link ranges::v3::view::remove_if_fn `view::remove_if`\endlink</DT>
+  <DD>Given a source range and a unary predicate, filter out those elements that do not satisfy the predicate. (For users of Boost.Range, this is like the `filter` adaptor with the predicate negated.)</DD>
+<DT>\link ranges::v3::view::repeat_fn `view::repeat`\endlink</DT>
+  <DD>Given a value, create a range that is that value repeated infinitely.</DD>
+<DT>\link ranges::v3::view::repeat_n_fn `view::repeat_n`\endlink</DT>
+  <DD>Given a value and a count, create a range that is that value repeated *count* number of times.</DD>
+<DT>\link ranges::v3::view::replace_fn `view::replace`\endlink</DT>
+  <DD>Given a source range, a source value and a target value, create a new range where all elements equal to the source value are replaced with the target value.</DD>
+<DT>\link ranges::v3::view::replace_if_fn `view::replace_if`\endlink</DT>
+  <DD>Given a source range, a unary predicate and a target value, create a new range where all elements that satisfy the predicate are replaced with the target value.</DD>
+<DT>\link ranges::v3::view::reverse_fn `view::reverse`\endlink</DT>
+  <DD>Create a new range that traverses the source range in reverse order.</DD>
+<DT>\link ranges::v3::view::single_fn `view::single`\endlink</DT>
+  <DD>Given a value, create a range with exactly one element.</DD>
+<DT>\link ranges::v3::view::slice_fn `view::slice`\endlink</DT>
+  <DD>Give a source range a lower bound (inclusive) and an upper bound (exclusive), create a new range that begins and ends at the specified offsets. Both the begin and the end can be integers relative to the front, or relative to the end with "`end-2`" syntax.</DD>
+<DT>\link ranges::v3::view::split_fn `view::split`\endlink</DT>
+  <DD>Given a source range and a delimiter specifier, split the source range into a range of ranges using the delimiter specifier to find the boundaries. The delimiter specifier can be a value, a subrange, or a function. The function should accept current/end iterators into the source range and return `make_pair(true, length)` if the current position is a boundary; otherwise, `make_pair(false, 0)`. The delimiter character(s) are excluded from the resulting range of ranges.</DD>
+<DT>\link ranges::v3::view::stride_fn `view::stride`\endlink</DT>
+  <DD>Given a source range and an integral stride value, return a range consisting of every *N*<SUP>th</SUP> element, starting with the first.</DD>
+<DT>\link ranges::v3::view::tail_fn `view::tail`\endlink</DT>
+  <DD>Given a source range, return a new range without the first element. The range must have at least one element.</DD>
+<DT>\link ranges::v3::view::take_fn `view::take`\endlink</DT>
+  <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range. The source range must have at least that many elements.</DD>
+<DT>\link ranges::v3::view::take_while_fn `view::take_while`\endlink</DT>
+  <DD>Given a source range and a unary predicate, return a new range consisting of the  elements from the front that satisfy the predicate.</DD>
+<DT>\link ranges::v3::view::tokenize_fn `view::tokenize`\endlink</DT>
+  <DD>Given a source range and optionally a submatch specifier and a `std::regex_constants::match_flag_type`, return a `std::regex_token_iterator` to step through the regex submatches of the source range. The submatch specifier may be either a plain `int`, a `std::vector<int>`, or a `std::initializer_list<int>`.</DD>
+<DT>\link ranges::v3::view::transform_fn `view::transform`\endlink</DT>
+  <DD>Given a source range and a unary function, return a new range where each result element is the result of applying the unary function to a source element.</DD>
+<DT>\link ranges::v3::view::unbounded_fn `view::unbounded`\endlink</DT>
+  <DD>Given an iterator, return an infinite range that begins at that position.</DD>
+<DT>\link ranges::v3::view::unique_fn `view::unique`\endlink</DT>
+  <DD>Given a range, return a new range where all consecutive elements that compare equal save the first have been filtered out.</DD>
+<DT>\link ranges::v3::view::values_fn `view::values`\endlink</DT>
+  <DD>Given a range of `pair`s (like a `std::map`), return a new range consisting of just the second element of the `pair`.</DD>
+<DT>\link ranges::v3::view::zip_fn `view::zip`\endlink</DT>
+  <DD>Given *N* ranges, return a new range where *M*<SUP>th</SUP> element is the result of calling `make_tuple` on the *M*<SUP>th</SUP> elements of all *N* ranges.</DD>
+<DT>\link ranges::v3::view::zip_with_fn `view::zip_with`\endlink</DT>
+  <DD>Given *N* ranges and a *N*-ary function, return a new range where *M*<SUP>th</SUP> element is the result of calling the function on the *M*<SUP>th</SUP> elements of all *N* ranges.</DD>
+</DL>

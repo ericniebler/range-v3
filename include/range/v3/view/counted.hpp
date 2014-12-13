@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -78,7 +79,7 @@ namespace ranges
                 }
             };
 
-            /// \sa `counted_fn`
+            /// \relates counted_fn
             /// \ingroup group-views
             constexpr counted_fn counted{};
         }

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -141,7 +142,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `group_by_fn`
+            /// \relates group_by_fn
             /// \ingroup group-views
             constexpr view<group_by_fn> group_by{};
         }

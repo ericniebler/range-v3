@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -51,7 +52,7 @@ namespace ranges
             };
 
             /// \ingroup group-actions
-            /// \sa transform_fn
+            /// \relates transform_fn
             /// \sa action
             constexpr action<transform_fn> transform{};
         }

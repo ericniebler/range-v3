@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -95,7 +96,7 @@ namespace ranges
                 }
             };
 
-            /// \sa `all_fn`
+            /// \relates all_fn
             /// \ingroup group-views
             constexpr all_fn all{};
 

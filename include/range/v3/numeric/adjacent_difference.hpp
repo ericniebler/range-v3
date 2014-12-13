@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 // Copyright Eric Niebler 2004

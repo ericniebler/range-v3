@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -138,7 +139,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `drop_fn`
+            /// \relates drop_fn
             /// \ingroup group-views
             constexpr view<drop_fn> drop{};
         }

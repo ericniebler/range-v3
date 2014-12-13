@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -319,7 +320,7 @@ namespace ranges
                )
             };
 
-            /// \sa `join_fn`
+            /// \relates join_fn
             /// \ingroup group-views
             constexpr view<join_fn> join{};
         }

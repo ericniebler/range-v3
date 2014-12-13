@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -52,7 +53,7 @@ namespace ranges
             };
 
             /// \ingroup group-actions
-            /// \sa make_action_fn
+            /// \relates make_action_fn
             constexpr make_action_fn make_action{};
 
             template<typename Action>

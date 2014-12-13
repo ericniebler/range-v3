@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -81,7 +82,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `for_each_fn`
+            /// \relates for_each_fn
             /// \ingroup group-views
             constexpr view<for_each_fn> for_each{};
         }
@@ -95,7 +96,7 @@ namespace ranges
             }
         };
 
-        /// \sa `yield_fn`
+        /// \relates yield_fn
         /// \ingroup group-views
         constexpr yield_fn yield{};
 
@@ -108,7 +109,7 @@ namespace ranges
             }
         };
 
-        /// \sa `yield_from_fn`
+        /// \relates yield_from_fn
         /// \ingroup group-views
         constexpr yield_from_fn yield_from{};
 
@@ -121,7 +122,7 @@ namespace ranges
             }
         };
 
-        /// \sa `yield_if_fn`
+        /// \relates yield_if_fn
         /// \ingroup group-views
         constexpr yield_if_fn yield_if{};
 
@@ -135,7 +136,7 @@ namespace ranges
             }
         };
 
-        /// \sa `lazy_yield_if_fn`
+        /// \relates lazy_yield_if_fn
         /// \ingroup group-views
         constexpr lazy_yield_if_fn lazy_yield_if{};
         /// @}

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -94,7 +95,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `tail_fn`
+            /// \relates tail_fn
             /// \ingroup group-views
             constexpr view<tail_fn> tail{};
         }

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -40,7 +41,7 @@ namespace ranges
             };
 
             /// \ingroup group-actions
-            /// \sa unique_fn
+            /// \relates unique_fn
             /// \sa action
             constexpr action<unique_fn> unique{};
         }

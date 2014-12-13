@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -93,7 +94,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `repeat_fn`
+            /// \relates repeat_fn
             /// \ingroup group-views
             constexpr repeat_fn repeat{};
         }

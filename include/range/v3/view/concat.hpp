@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014.
@@ -298,7 +299,7 @@ namespace ranges
                 }
             };
 
-            /// \sa `concat_fn`
+            /// \relates concat_fn
             /// \ingroup group-views
             constexpr concat_fn concat{};
         }

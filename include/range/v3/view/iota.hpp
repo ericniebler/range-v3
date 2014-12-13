@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -308,7 +309,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `iota_fn`
+            /// \relates iota_fn
             /// \ingroup group-views
             constexpr iota_fn iota{};
 
@@ -347,7 +348,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `ints_fn`
+            /// \relates ints_fn
             /// \ingroup group-views
             constexpr ints_fn ints{};
         }

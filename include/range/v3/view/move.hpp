@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -97,7 +98,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `move_fn`
+            /// \relates move_fn
             /// \ingroup group-views
             constexpr view<move_fn> move{};
         }

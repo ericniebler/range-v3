@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -239,7 +240,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `split_fn`
+            /// \relates split_fn
             /// \ingroup group-views
             constexpr view<split_fn> split{};
         }

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -162,7 +163,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `partial_sum_fn`
+            /// \relates partial_sum_fn
             /// \ingroup group-views
             constexpr view<partial_sum_fn> partial_sum{};
         }

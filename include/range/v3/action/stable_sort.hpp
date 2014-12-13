@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -51,7 +52,7 @@ namespace ranges
             };
 
             /// \ingroup group-actions
-            /// \sa stable_sort_fn
+            /// \relates stable_sort_fn
             /// \sa action
             constexpr action<stable_sort_fn> stable_sort{};
         }

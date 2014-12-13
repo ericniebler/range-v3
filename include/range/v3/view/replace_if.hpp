@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -109,7 +110,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `replace_if_fn`
+            /// \relates replace_if_fn
             /// \ingroup group-views
             constexpr view<replace_if_fn> replace_if{};
         }

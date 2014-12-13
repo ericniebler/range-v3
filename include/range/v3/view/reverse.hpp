@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -135,7 +136,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `reverse_fn`
+            /// \relates reverse_fn
             /// \ingroup group-views
             constexpr view<reverse_fn> reverse{};
         }

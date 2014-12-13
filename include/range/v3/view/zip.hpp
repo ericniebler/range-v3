@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -312,7 +313,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `zip_fn`
+            /// \relates zip_fn
             /// \ingroup group-views
             constexpr zip_fn zip{};
 
@@ -342,7 +343,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `zip_with_fn`
+            /// \relates zip_with_fn
             /// \ingroup group-views
             constexpr zip_with_fn zip_with{};
         }

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -144,7 +145,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `transform_fn`
+            /// \relates transform_fn
             /// \ingroup group-views
             constexpr view<transform_fn> transform{};
         }

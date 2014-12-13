@@ -54,7 +54,7 @@ namespace ranges
                 }
             };
 
-            /// \sa `unbounded_fn`
+            /// \relates unbounded_fn
             /// \ingroup group-views
             constexpr unbounded_fn unbounded{};
         }

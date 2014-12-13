@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -109,7 +110,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `adjacent_filter_fn`
+            /// \relates adjacent_filter_fn
             /// \ingroup group-views
             constexpr view<adjacent_filter_fn> adjacent_filter{};
         }

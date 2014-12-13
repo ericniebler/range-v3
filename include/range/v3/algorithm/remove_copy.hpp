@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2014
@@ -25,7 +26,7 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \ingrooup group-concepts
+        /// \ingroup group-concepts
         template<typename I, typename O, typename T, typename P = ident,
             typename V = iterator_value_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>

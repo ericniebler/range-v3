@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Andrew Sutton 2014

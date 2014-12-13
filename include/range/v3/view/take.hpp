@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -192,7 +193,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `take_fn`
+            /// \relates take_fn
             /// \ingroup group-views
             constexpr view<take_fn> take{};
         }

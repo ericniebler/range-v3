@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -53,7 +54,7 @@ namespace ranges
             };
 
             /// \ingroup group-actions
-            /// \sa drop_fn
+            /// \relates drop_fn
             /// \sa action
             constexpr action<drop_fn> drop{};
         }

@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -114,7 +115,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `single_fn`
+            /// \relates single_fn
             /// \ingroup group-views
             constexpr single_fn single{};
         }

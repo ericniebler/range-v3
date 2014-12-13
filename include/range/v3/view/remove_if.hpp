@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -146,7 +147,7 @@ namespace ranges
             #endif
             };
 
-            /// \sa `remove_if_fn`
+            /// \relates remove_if_fn
             /// \ingroup group-views
             constexpr view<remove_if_fn> remove_if{};
         }

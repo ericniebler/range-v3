@@ -1,3 +1,4 @@
+/// \file
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
@@ -64,7 +65,7 @@ namespace ranges
             };
 
             /// \ingroup group-actions
-            /// \sa stride_fn
+            /// \relates stride_fn
             /// \sa action
             constexpr action<stride_fn> stride{};
         }

@@ -75,12 +75,6 @@
     <None Include="Makefile">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="..\doc\ranges.qbk">
-      <Filter>Doc Files</Filter>
-    </None>
-    <None Include="..\doc\Jamfile">
-      <Filter>Doc Files</Filter>
-    </None>
     <None Include="..\..\..\..\.travis.yml" />
     <None Include="..\..\..\..\doc\D4128.md">
       <Filter>Doc Files</Filter>
