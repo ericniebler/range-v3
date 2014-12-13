@@ -7,13 +7,15 @@ var NAVTREE =
         [ "License", "index.html#tutorial-license", null ],
         [ "Supported Compilers", "index.html#tutorial-compilers", null ]
       ] ],
-      [ "Quick Start", "index.html#tutorial-quick-start", null ]
+      [ "Quick Start", "index.html#tutorial-quick-start", null ],
+      [ "Range Views", "index.html#range-views", null ]
     ] ],
     [ "Reference", "modules.html", "modules" ],
     [ "Indexes", "usergroup0.html", [
       [ "Methods", "functions.html", [
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
+        [ "Variables", "functions_vars.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
       ] ],
       [ "Classes", "annotated.html", "annotated" ],
@@ -25,12 +27,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"group__group-utility.html#ga7bc2a0599560168b83abb091d1bd4db1",
-"structranges_1_1v3_1_1bounded__view.html#aaeeb536dfd456f15ce773d95f518259b",
-"structranges_1_1v3_1_1counted__view.html#aed9298e3cc3c7806bfe31c982cff0f47",
-"structranges_1_1v3_1_1min__element__fn.html#a6f457f7bdf3ab36f284b47b213ee4b56",
-"structranges_1_1v3_1_1semiregular.html#aee7fad3e74073498f66200971aadec05",
-"structranges_1_1v3_1_1view_1_1tokenize__fn.html#a0b8972a702aac8785b08df6b545cf38a"
+"group__group-algorithms.html#ga7597a423baddd37df3db649125b07da2",
+"group__group-views.html#ga166d16ef6a4f0decc9eaf5f427e67e0b",
+"move__backward_8hpp.html",
+"structranges_1_1v3_1_1any__input__range.html#adc5fad83c7e0875fa1365dca216c051b",
+"structranges_1_1v3_1_1concepts_1_1_weak_input_iterator.html#a7a8c7173061889e853e669f78af6dca7",
+"structranges_1_1v3_1_1make__invokable__fn.html#ad10174754b895af234639e3d45d7a5ac",
+"structranges_1_1v3_1_1remove__if__fn.html",
+"structranges_1_1v3_1_1view_1_1indirect__fn.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

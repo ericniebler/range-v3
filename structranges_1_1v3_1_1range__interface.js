@@ -4,6 +4,8 @@ var structranges_1_1v3_1_1range__interface =
     [ "operator<<", "structranges_1_1v3_1_1range__interface.html#a7f10dbb649b1bb9889640d545b67322b", null ],
     [ "back", "structranges_1_1v3_1_1range__interface.html#a5729d027e772d663116a975ac8b0f9bf", null ],
     [ "back", "structranges_1_1v3_1_1range__interface.html#afa75ab811b834befaf7a2743ffd676ca", null ],
+    [ "derived", "structranges_1_1v3_1_1range__interface.html#a0af9861d264858ebbd623b027bbc1426", null ],
+    [ "derived", "structranges_1_1v3_1_1range__interface.html#a70e50daf587c94e80792cde7b595c6bd", null ],
     [ "empty", "structranges_1_1v3_1_1range__interface.html#ab429c130a261b8af5c275f2d726d2e8d", null ],
     [ "front", "structranges_1_1v3_1_1range__interface.html#a09f66f823f6e1c9ee5468fa4eb485a04", null ],
     [ "front", "structranges_1_1v3_1_1range__interface.html#ad084dd4431da83b4a5ae726251e0f72f", null ],

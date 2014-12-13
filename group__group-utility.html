@@ -77,7 +77,7 @@ $(document).ready(function(){initNavTree('group__group-utility.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -417,19 +417,19 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::muta
 <tr class="separator:gaa2f8c69bcdf395a82e754d0b49fc6b69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga16554a4e54662df08244a9a4cb26facd"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga16554a4e54662df08244a9a4cb26facd"></a>
 template&lt;typename... Ts, typename... Us, requires  = ( meta::and_c&lt;(bool)EqualityComparable&lt;Ts, Us&gt;()...&gt;::value )&gt; </td></tr>
-<tr class="memitem:ga16554a4e54662df08244a9a4cb26facd"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (tagged_variant&lt; Ts...&gt; const &amp;lhs, tagged_variant&lt; Us...&gt; const &amp;rhs)</td></tr>
+<tr class="memitem:ga16554a4e54662df08244a9a4cb26facd"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (tagged_variant&lt; Ts...&gt; const &amp;lhs, tagged_variant&lt; Us...&gt; const &amp;rhs)</td></tr>
 <tr class="separator:ga16554a4e54662df08244a9a4cb26facd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2bc0cd16d971fa7638aec9eafa7fe9a3"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2bc0cd16d971fa7638aec9eafa7fe9a3"></a>
 template&lt;typename T , typename U , requires  = ( EqualityComparable&lt;T, U&gt;() )&gt; </td></tr>
-<tr class="memitem:ga2bc0cd16d971fa7638aec9eafa7fe9a3"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::equal_to::operator()</b> (T &amp;&amp;t, U &amp;&amp;u) const </td></tr>
+<tr class="memitem:ga2bc0cd16d971fa7638aec9eafa7fe9a3"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::equal_to::operator()</b> (T &amp;&amp;t, U &amp;&amp;u) const </td></tr>
 <tr class="separator:ga2bc0cd16d971fa7638aec9eafa7fe9a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga59993c7f4ffc59c0e021e7d502caa793"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga59993c7f4ffc59c0e021e7d502caa793"></a>
 template&lt;typename T , typename U , requires  = ( WeaklyOrdered&lt;T, U&gt;() )&gt; </td></tr>
-<tr class="memitem:ga59993c7f4ffc59c0e021e7d502caa793"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::less::operator()</b> (T &amp;&amp;t, U &amp;&amp;u) const </td></tr>
+<tr class="memitem:ga59993c7f4ffc59c0e021e7d502caa793"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::less::operator()</b> (T &amp;&amp;t, U &amp;&amp;u) const </td></tr>
 <tr class="separator:ga59993c7f4ffc59c0e021e7d502caa793"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4f3a971f2621690e5982a869bfed19eb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4f3a971f2621690e5982a869bfed19eb"></a>
 template&lt;typename T , typename U , requires  = ( TotallyOrdered&lt;T, U&gt;() )&gt; </td></tr>
-<tr class="memitem:ga4f3a971f2621690e5982a869bfed19eb"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ordered_less::operator()</b> (T &amp;&amp;t, U &amp;&amp;u) const </td></tr>
+<tr class="memitem:ga4f3a971f2621690e5982a869bfed19eb"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ordered_less::operator()</b> (T &amp;&amp;t, U &amp;&amp;u) const </td></tr>
 <tr class="separator:ga4f3a971f2621690e5982a869bfed19eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacdbe4d39620c4787f82cb8657e050d1f"><td class="memTemplParams" colspan="2"><a class="anchor" id="gacdbe4d39620c4787f82cb8657e050d1f"></a>
 template&lt;typename T &gt; </td></tr>
@@ -463,16 +463,16 @@ T&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::coerce&lt; T
 <tr class="separator:ga2b26794144483648cac611d821d63551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga049239bb059eea16f76b041713514736"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga049239bb059eea16f76b041713514736"></a>
 template&lt;typename T , requires  = ( Predicate&lt;Pred, T&gt;() )&gt; </td></tr>
-<tr class="memitem:ga049239bb059eea16f76b041713514736"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::logical_negate&lt; Pred &gt;::operator()</b> (T &amp;&amp;t)</td></tr>
+<tr class="memitem:ga049239bb059eea16f76b041713514736"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::logical_negate&lt; Pred &gt;::operator()</b> (T &amp;&amp;t)</td></tr>
 <tr class="separator:ga049239bb059eea16f76b041713514736"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaeea76fa6e02b28c894fe9c5b0614ccaf"><td class="memTemplParams" colspan="2">template&lt;typename T , requires  = ( Predicate&lt;Pred const, T&gt;() )&gt; </td></tr>
-<tr class="memitem:gaeea76fa6e02b28c894fe9c5b0614ccaf"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaeea76fa6e02b28c894fe9c5b0614ccaf">ranges::v3::logical_negate&lt; Pred &gt;::operator()</a> (T &amp;&amp;t) const </td></tr>
+<tr class="memitem:gaeea76fa6e02b28c894fe9c5b0614ccaf"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaeea76fa6e02b28c894fe9c5b0614ccaf">ranges::v3::logical_negate&lt; Pred &gt;::operator()</a> (T &amp;&amp;t) const </td></tr>
 <tr class="separator:gaeea76fa6e02b28c894fe9c5b0614ccaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga78368b07a4ae23c4c4b7aed3fca6a88f"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U , requires  = ( Predicate&lt;Pred, T, U&gt;() )&gt; </td></tr>
-<tr class="memitem:ga78368b07a4ae23c4c4b7aed3fca6a88f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga78368b07a4ae23c4c4b7aed3fca6a88f">ranges::v3::logical_negate&lt; Pred &gt;::operator()</a> (T &amp;&amp;t, U &amp;&amp;u)</td></tr>
+<tr class="memitem:ga78368b07a4ae23c4c4b7aed3fca6a88f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga78368b07a4ae23c4c4b7aed3fca6a88f">ranges::v3::logical_negate&lt; Pred &gt;::operator()</a> (T &amp;&amp;t, U &amp;&amp;u)</td></tr>
 <tr class="separator:ga78368b07a4ae23c4c4b7aed3fca6a88f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga25dbbefcc0d624b49d597069b3b5eb48"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U , requires  = ( Predicate&lt;Pred const, T, U&gt;() )&gt; </td></tr>
-<tr class="memitem:ga25dbbefcc0d624b49d597069b3b5eb48"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga25dbbefcc0d624b49d597069b3b5eb48">ranges::v3::logical_negate&lt; Pred &gt;::operator()</a> (T &amp;&amp;t, U &amp;&amp;u) const </td></tr>
+<tr class="memitem:ga25dbbefcc0d624b49d597069b3b5eb48"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga25dbbefcc0d624b49d597069b3b5eb48">ranges::v3::logical_negate&lt; Pred &gt;::operator()</a> (T &amp;&amp;t, U &amp;&amp;u) const </td></tr>
 <tr class="separator:ga25dbbefcc0d624b49d597069b3b5eb48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8c24001f9720ea429297b521150cb63e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga8c24001f9720ea429297b521150cb63e"></a>
 template&lt;typename Pred &gt; </td></tr>
@@ -555,7 +555,7 @@ constant const &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>range
 <tr class="separator:ga693e0816d090cdf64878dcdc8fb3f680"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaef4b71a9b3729c28b78c1f2ea3ce1a4e"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaef4b71a9b3729c28b78c1f2ea3ce1a4e"></a>
 template&lt;typename... Ts, typename... Us, requires  = ( meta::and_c&lt;(bool)EqualityComparable&lt;Ts, Us&gt;()...&gt;::value )&gt; </td></tr>
-<tr class="memitem:gaef4b71a9b3729c28b78c1f2ea3ce1a4e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (tagged_variant&lt; Ts...&gt; const &amp;lhs, tagged_variant&lt; Us...&gt; const &amp;rhs)</td></tr>
+<tr class="memitem:gaef4b71a9b3729c28b78c1f2ea3ce1a4e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classbool.html">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (tagged_variant&lt; Ts...&gt; const &amp;lhs, tagged_variant&lt; Us...&gt; const &amp;rhs)</td></tr>
 <tr class="separator:gaef4b71a9b3729c28b78c1f2ea3ce1a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6df90098e99d565801797d43b3b98a09"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6df90098e99d565801797d43b3b98a09"></a>
 template&lt;typename Arg , typename Pipe , requires  = ( !is_pipeable&lt;Arg&gt;() &amp;&amp; is_pipeable&lt;Pipe&gt;() )&gt; </td></tr>
@@ -675,7 +675,7 @@ template&lt;typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -696,7 +696,7 @@ template&lt;typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -710,7 +710,7 @@ template&lt;typename Pred &gt; </div>
 template&lt;typename T , requires  = ( Predicate&lt;Pred const, T&gt;() )&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool <a class="el" href="structranges_1_1v3_1_1logical__negate.html">ranges::v3::logical_negate</a>&lt; Pred &gt;::operator() </td>
+          <td class="memname">constexpr <a class="el" href="classbool.html">bool</a> <a class="el" href="structranges_1_1v3_1_1logical__negate.html">ranges::v3::logical_negate</a>&lt; Pred &gt;::operator() </td>
           <td>(</td>
           <td class="paramtype">T &amp;&amp;&#160;</td>
           <td class="paramname"><em>t</em></td><td>)</td>
@@ -719,7 +719,7 @@ template&lt;typename T , requires  = ( Predicate&lt;Pred const, T&gt;() )&gt; </
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -733,7 +733,7 @@ template&lt;typename Pred &gt; </div>
 template&lt;typename T , typename U , requires  = ( Predicate&lt;Pred, T, U&gt;() )&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="structranges_1_1v3_1_1logical__negate.html">ranges::v3::logical_negate</a>&lt; Pred &gt;::operator() </td>
+          <td class="memname"><a class="el" href="classbool.html">bool</a> <a class="el" href="structranges_1_1v3_1_1logical__negate.html">ranges::v3::logical_negate</a>&lt; Pred &gt;::operator() </td>
           <td>(</td>
           <td class="paramtype">T &amp;&amp;&#160;</td>
           <td class="paramname"><em>t</em>, </td>
@@ -752,7 +752,7 @@ template&lt;typename T , typename U , requires  = ( Predicate&lt;Pred, T, U&gt;(
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -766,7 +766,7 @@ template&lt;typename Pred &gt; </div>
 template&lt;typename T , typename U , requires  = ( Predicate&lt;Pred const, T, U&gt;() )&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool <a class="el" href="structranges_1_1v3_1_1logical__negate.html">ranges::v3::logical_negate</a>&lt; Pred &gt;::operator() </td>
+          <td class="memname">constexpr <a class="el" href="classbool.html">bool</a> <a class="el" href="structranges_1_1v3_1_1logical__negate.html">ranges::v3::logical_negate</a>&lt; Pred &gt;::operator() </td>
           <td>(</td>
           <td class="paramtype">T &amp;&amp;&#160;</td>
           <td class="paramname"><em>t</em>, </td>
@@ -785,7 +785,7 @@ template&lt;typename T , typename U , requires  = ( Predicate&lt;Pred const, T, 
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -806,7 +806,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -827,7 +827,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -856,7 +856,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -885,7 +885,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
@@ -925,7 +925,7 @@ template&lt;typename Rng0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 <p>References <a class="el" href="group__group-algorithms.html#gab2adb3987718fd88d7a2d54189e6f2bf">ranges::v3::move</a>.</p>
@@ -967,7 +967,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 <p>References <a class="el" href="group__group-algorithms.html#gab2adb3987718fd88d7a2d54189e6f2bf">ranges::v3::move</a>.</p>
@@ -985,8 +985,10 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1advance__fn.html">advance_fn</a></code> </dd></dl>
+
+<p>Referenced by <a class="el" href="group__group-views.html#ga67b9c328efd3d2b06045a291d7f05c5e">ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::advance()</a>.</p>
 
 </div>
 </div>
@@ -1000,7 +1002,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1advance__bounded__fn.html">advance_bounded_fn</a></code> </dd></dl>
 
 </div>
@@ -1015,7 +1017,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1advance__to__fn.html">advance_to_fn</a></code> </dd></dl>
 
 </div>
@@ -1030,7 +1032,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1back__inserter__fn.html">back_inserter_fn</a></code> </dd></dl>
 
 </div>
@@ -1045,7 +1047,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/copy.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="utility_2copy_8hpp.html">range/v3/utility/copy.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1aux_1_1copy__fn.html">copy_fn</a></code> </dd></dl>
 
 </div>
@@ -1060,7 +1062,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/invokable.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="invokable_8hpp.html">range/v3/utility/invokable.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__invokable__fn.html">make_invokable_fn</a></code> </dd></dl>
 
 </div>
@@ -1075,7 +1077,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__distance__fn.html">iter_distance_fn</a></code> </dd></dl>
 
 </div>
@@ -1090,7 +1092,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__distance__compare__fn.html">iter_distance_compare_fn</a></code> </dd></dl>
 
 </div>
@@ -1105,7 +1107,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__enumerate__fn.html">iter_enumerate_fn</a></code> </dd></dl>
 
 </div>
@@ -1120,7 +1122,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__size__fn.html">iter_size_fn</a></code> </dd></dl>
 
 <p>Referenced by <a class="el" href="structranges_1_1v3_1_1range__interface.html#abca414ddd491f2058c2d4cad0c7cf88a">ranges::v3::range_interface&lt; bounded_view&lt; Rng &gt;, is_infinite&lt; Rng &gt;::value &gt;::size()</a>.</p>
@@ -1137,7 +1139,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1iter__swap__fn.html">iter_swap_fn</a></code> </dd></dl>
 
 </div>
@@ -1152,7 +1154,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/compressed_pair.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="compressed__pair_8hpp.html">range/v3/utility/compressed_pair.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__compressed__pair__fn.html">make_compressed_pair_fn</a></code> </dd></dl>
 
 </div>
@@ -1167,7 +1169,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/compressed_tuple.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="compressed__tuple_8hpp.html">range/v3/utility/compressed_tuple.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__compressed__tuple__fn.html">make_compressed_tuple_fn</a></code> </dd></dl>
 
 </div>
@@ -1182,7 +1184,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/pipeable.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="pipeable_8hpp.html">range/v3/utility/pipeable.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__pipeable__fn.html">make_pipeable_fn</a></code> </dd></dl>
 
 </div>
@@ -1197,7 +1199,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/tuple_algorithm.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1make__tuple__fn.html">make_tuple_fn</a></code> </dd></dl>
 
 </div>
@@ -1205,14 +1207,22 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
 <a class="anchor" id="gacff94b96a5b7150b9ebc65e67ad5168b"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">constexpr move_fn ranges::v3::aux::move {}</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">related</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/move.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="utility_2move_8hpp.html">range/v3/utility/move.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1aux_1_1move__fn.html">move_fn</a></code> </dd></dl>
 
 </div>
@@ -1227,7 +1237,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1next__fn.html">next_fn</a></code> </dd></dl>
 
 <p>Referenced by <a class="el" href="structranges_1_1v3_1_1drop__view.html#a4d8ef79ac48a1859e2a0ac2d1232f073">ranges::v3::drop_view&lt; Rng &gt;::begin()</a>.</p>
@@ -1244,7 +1254,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1next__bounded__fn.html">next_bounded_fn</a></code> </dd></dl>
 
 </div>
@@ -1259,7 +1269,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1next__to__fn.html">next_to_fn</a></code> </dd></dl>
 
 </div>
@@ -1274,7 +1284,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1not__fn.html">not_fn</a></code> </dd></dl>
 
 </div>
@@ -1289,7 +1299,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/iterator.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="iterator_8hpp.html">range/v3/utility/iterator.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1prev__fn.html">prev_fn</a></code> </dd></dl>
 
 <p>Referenced by <a class="el" href="structranges_1_1v3_1_1range__interface.html#a5729d027e772d663116a975ac8b0f9bf">ranges::v3::range_interface&lt; bounded_view&lt; Rng &gt;, is_infinite&lt; Rng &gt;::value &gt;::back()</a>, and <a class="el" href="structranges_1_1v3_1_1back__fn.html#ad173581db0ca9d4e97eda867691efbd7">ranges::v3::back_fn::operator()()</a>.</p>
@@ -1306,7 +1316,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 
 <p>Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. </p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1protect__fn.html">protect_fn</a></code> </dd></dl>
@@ -1323,7 +1333,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1ref__fn.html">ref_fn</a></code> </dd></dl>
 
 <p>Referenced by <a class="el" href="structranges_1_1v3_1_1drop__while__view.html#ab0d7e097990c73b15c0bcecc7193676e">ranges::v3::drop_while_view&lt; Rng, Pred &gt;::begin()</a>.</p>
@@ -1340,7 +1350,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/tuple_algorithm.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__apply__fn.html">tuple_apply_fn</a></code> </dd></dl>
 
 </div>
@@ -1355,7 +1365,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/tuple_algorithm.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__foldl__fn.html">tuple_foldl_fn</a></code> </dd></dl>
 
 <p>Referenced by <a class="el" href="structranges_1_1v3_1_1zip__with__view.html#a504e78f67d9e988303d65dd17ab2e795">ranges::v3::zip_with_view&lt; make_tuple_fn, Rngs...&gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1concat__view.html#ad04b7471ab668e9657dfd6b47df19661">ranges::v3::concat_view&lt; Rngs &gt;::size()</a>.</p>
@@ -1372,7 +1382,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/tuple_algorithm.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__for__each__fn.html">tuple_for_each_fn</a></code> </dd></dl>
 
 </div>
@@ -1387,7 +1397,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/tuple_algorithm.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="tuple__algorithm_8hpp.html">range/v3/utility/tuple_algorithm.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1tuple__transform__fn.html">tuple_transform_fn</a></code> </dd></dl>
 
 <p>Referenced by <a class="el" href="structranges_1_1v3_1_1zip__with__view.html#a504e78f67d9e988303d65dd17ab2e795">ranges::v3::zip_with_view&lt; make_tuple_fn, Rngs...&gt;::size()</a>, and <a class="el" href="structranges_1_1v3_1_1concat__view.html#ad04b7471ab668e9657dfd6b47df19661">ranges::v3::concat_view&lt; Rngs &gt;::size()</a>.</p>
@@ -1404,7 +1414,7 @@ template&lt;typename V0 , typename V1 , typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;range/v3/utility/functional.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="functional_8hpp.html">range/v3/utility/functional.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structranges_1_1v3_1_1unwrap__reference__fn.html">unwrap_reference_fn</a></code> </dd></dl>
 
 </div>

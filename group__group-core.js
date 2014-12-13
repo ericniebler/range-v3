@@ -102,17 +102,19 @@ var group__group_core =
       [ "begin", "structranges_1_1v3_1_1range__facade.html#aa4cfc657fa14364427a59874f11a5c42", null ],
       [ "begin", "structranges_1_1v3_1_1range__facade.html#a81236ec96c0e433f06804b8df6577cb8", null ],
       [ "begin_cursor", "structranges_1_1v3_1_1range__facade.html#abdbc0e384ddfb8e431f0b2fad65d946f", null ],
-      [ "derived", "structranges_1_1v3_1_1range__facade.html#ab88b8f0defeb67768b80cd1183a4f378", null ],
-      [ "derived", "structranges_1_1v3_1_1range__facade.html#a4121c8c53b355c850782ccbf157ddd06", null ],
       [ "end", "structranges_1_1v3_1_1range__facade.html#a72a501782c4fab6136e7905ad3a4e8c9", null ],
       [ "end", "structranges_1_1v3_1_1range__facade.html#a309acba1f0fcf88def930b10c3b7c05a", null ],
-      [ "end_cursor", "structranges_1_1v3_1_1range__facade.html#aacbd0041df2d73eb636bae7cef9e0da3", null ]
+      [ "end_cursor", "structranges_1_1v3_1_1range__facade.html#aacbd0041df2d73eb636bae7cef9e0da3", null ],
+      [ "range_access", "structranges_1_1v3_1_1range__facade.html#af3b7d5224fb464c975b3cf233ffc5a11", null ],
+      [ "range_facade_t", "structranges_1_1v3_1_1range__facade.html#a49d50c8e10e52cd1d0d493916bfc53a0", null ]
     ] ],
     [ "range_interface", "structranges_1_1v3_1_1range__interface.html", [
       [ "operator<<", "structranges_1_1v3_1_1range__interface.html#acc9b9c393df898452fe4a122cd4f6a40", null ],
       [ "operator<<", "structranges_1_1v3_1_1range__interface.html#a7f10dbb649b1bb9889640d545b67322b", null ],
       [ "back", "structranges_1_1v3_1_1range__interface.html#a5729d027e772d663116a975ac8b0f9bf", null ],
       [ "back", "structranges_1_1v3_1_1range__interface.html#afa75ab811b834befaf7a2743ffd676ca", null ],
+      [ "derived", "structranges_1_1v3_1_1range__interface.html#a0af9861d264858ebbd623b027bbc1426", null ],
+      [ "derived", "structranges_1_1v3_1_1range__interface.html#a70e50daf587c94e80792cde7b595c6bd", null ],
       [ "empty", "structranges_1_1v3_1_1range__interface.html#ab429c130a261b8af5c275f2d726d2e8d", null ],
       [ "front", "structranges_1_1v3_1_1range__interface.html#a09f66f823f6e1c9ee5468fa4eb485a04", null ],
       [ "front", "structranges_1_1v3_1_1range__interface.html#ad084dd4431da83b4a5ae726251e0f72f", null ],
@@ -192,6 +194,8 @@ var group__group_core =
     [ "begin", "group__group-core.html#ga5cd4d994f52574435adf4735ce3fd46b", null ],
     [ "cbegin", "group__group-core.html#ga7721b0c8060755cb4bec5bdf4323acda", null ],
     [ "cend", "group__group-core.html#ga573addb0396f1a228b0acb53cc352aaa", null ],
+    [ "crbegin", "group__group-core.html#ga3cc564a34c020d3fb44a839270ebfaa5", null ],
+    [ "crend", "group__group-core.html#ga2e1c1281b7f9f1d1373c9c857a801003", null ],
     [ "distance", "group__group-core.html#gae77f7b6b33494f548b1bba9cf7a30985", null ],
     [ "distance_compare", "group__group-core.html#gad16934d0fd0cfafd1c74e70349a7aa02", null ],
     [ "empty", "group__group-core.html#ga5b1e16eeda1eace75d315eea26562fe3", null ],
@@ -199,5 +203,7 @@ var group__group_core =
     [ "enumerate", "group__group-core.html#gaea4cba33b3f10f828c5c3418a6b271a7", null ],
     [ "front", "group__group-core.html#ga6dff9c25c486dcbc71307b450a872645", null ],
     [ "make_range", "group__group-core.html#gaab518d9a8a1f3f2433bb74d246bb208e", null ],
+    [ "rbegin", "group__group-core.html#gaabfe07b8ee2b064f45fab6c2740d29cf", null ],
+    [ "rend", "group__group-core.html#ga78cad5df2543c3ed53e4eb39b97cfb4e", null ],
     [ "size", "group__group-core.html#ga35558802104747c8f1f3dfafdde2b642", null ]
 ];

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['closed_5fiota_5fview',['closed_iota_view',['../structranges_1_1v3_1_1closed__iota__view.html',1,'ranges::v3']]],
   ['coerce',['coerce',['../structranges_1_1v3_1_1coerce.html',1,'ranges::v3']]],
   ['coerce_3c_20t_20_26_20_3e',['coerce&lt; T &amp; &gt;',['../structranges_1_1v3_1_1coerce_3_01_t_01_6_01_4.html',1,'ranges::v3']]],
   ['coerce_3c_20t_20_26_26_20_3e',['coerce&lt; T &amp;&amp; &gt;',['../structranges_1_1v3_1_1coerce_3_01_t_01_6_6_01_4.html',1,'ranges::v3']]],

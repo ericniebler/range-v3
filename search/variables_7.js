@@ -1,11 +1,8 @@
 var searchData=
 [
   ['includes',['includes',['../group__group-algorithms.html#ga171d9b16c205d86e45c3255ac01d7caa',1,'ranges::v3']]],
-  ['indirect',['indirect',['../group__group-views.html#ga701622b245e0a5e0a90988e1aa750b01',1,'ranges::v3::view']]],
   ['inplace_5fmerge',['inplace_merge',['../group__group-algorithms.html#ga184e9b5717cca066f394a8aab2491182',1,'ranges::v3']]],
-  ['ints',['ints',['../group__group-views.html#ga8be703ef86e523eccf819f4317c68b68',1,'ranges::v3::view']]],
   ['invokable',['invokable',['../group__group-utility.html#ga72b95663249847c6eb36e9342914f3bb',1,'ranges::v3']]],
-  ['iota',['iota',['../group__group-views.html#gac35fd9c7038dfde9b28df76f43d1126f',1,'ranges::v3::view']]],
   ['is_5fheap',['is_heap',['../group__group-algorithms.html#ga10df72f3d565ce5fcd11e930f091758d',1,'ranges::v3']]],
   ['is_5fheap_5funtil',['is_heap_until',['../group__group-algorithms.html#ga27e4e32676988a58cd08eed504745423',1,'ranges::v3']]],
   ['is_5fpartitioned',['is_partitioned',['../group__group-algorithms.html#ga14e144feb80bb05e86c1c0e5481fab41',1,'ranges::v3']]],
