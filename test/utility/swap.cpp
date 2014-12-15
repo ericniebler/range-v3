@@ -50,6 +50,7 @@ int main()
     CHECK(g == 42);
     CHECK(h == 0);
 
+#ifndef _LIBCPP_VERSION
     // Swap tuples of pair proxies
     ranges::swap(std::make_tuple(std::make_pair(std::ref(a),std::ref(b)), std::make_pair(std::ref(c),std::ref(d))),
                  std::make_tuple(std::make_pair(std::ref(e),std::ref(f)), std::make_pair(std::ref(g),std::ref(h))));
@@ -61,10 +62,12 @@ int main()
     CHECK(f == 2);
     CHECK(g == 3);
     CHECK(h == 4);
+#endif
 
-    ranges::iter_swap(&a, &b);
-    CHECK(a == 82);
-    CHECK(b == 24);
+    int aa=24,bb=82;
+    ranges::iter_swap(&aa, &bb);
+    CHECK(aa == 82);
+    CHECK(bb == 24);
 
     std::unique_ptr<int> u0{new int{1}};
     std::unique_ptr<int> u1{new int{2}};

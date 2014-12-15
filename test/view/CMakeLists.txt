@@ -86,7 +86,7 @@ add_test(test.view.take, view.take)
 add_executable(view.take_while take_while.cpp)
 add_test(test.view.take_while, view.take_while)
 
-if(NOT CYGWIN OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_executable(view.tokenize tokenize.cpp)
     add_test(test.view.tokenize, view.tokenize)
 endif()
