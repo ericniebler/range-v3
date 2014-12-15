@@ -520,6 +520,9 @@
     <ClCompile Include="..\..\..\..\test\view\join.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\utility\swap.cpp">
+      <Filter>Test Files\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">

@@ -187,6 +187,7 @@
     <ClCompile Include="..\..\..\..\test\to_container.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\meta.cpp" />
+    <ClCompile Include="..\..\..\..\test\utility\swap.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
     <ClCompile Include="..\..\..\..\test\view\any_range.cpp" />

@@ -16,6 +16,7 @@
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/bounded.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/algorithm/sort.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -62,6 +63,8 @@ int main()
     }
 
     auto rnd_rng = view::zip(vi, vs);
+    using Ref = range_reference_t<decltype(rnd_rng)>;
+    static_assert(std::is_same<Ref, std::pair<int &,std::string const &>>::value, "");
     ::models<concepts::BoundedRange>(rnd_rng);
     ::models<concepts::SizedRange>(rnd_rng);
     ::models<concepts::RandomAccessIterator>(begin(rnd_rng));

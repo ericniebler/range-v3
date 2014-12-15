@@ -238,8 +238,8 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::model_of<Readable, I1>(),
                         concepts::model_of<Readable, I2>(),
-                        (ranges::swap(*i1, *i2), 42),
-                        (ranges::swap(*i2, *i1), 42)
+                        (ranges::indirect_swap(i1, i2), 42),
+                        (ranges::indirect_swap(i2, i1), 42)
                     ));
             };
 

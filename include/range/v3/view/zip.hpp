@@ -25,6 +25,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/common_type.hpp>
@@ -113,29 +114,20 @@ namespace ranges
                 }
             } max_ {};
 
-            template<typename TupleLike>
-            struct tuple_to_pair_type
+            struct make_tuple_or_pair_fn
             {
-                using type = TupleLike;
+                template<typename ...Ts>
+                std::tuple<Ts...> operator()(Ts &&...ts) const
+                {
+                    return std::tuple<Ts...>{std::forward<Ts>(ts)...};
+                }
+
+                template<typename F, typename S>
+                std::pair<F, S> operator()(F && f, S && s) const
+                {
+                    return {std::forward<F>(f), std::forward<S>(s)};
+                }
             };
-
-            template<typename First, typename Second>
-            struct tuple_to_pair_type<std::tuple<First, Second>>
-            {
-                using type = std::pair<First, Second>;
-            };
-
-            template<typename TupleLike>
-            TupleLike tuple_to_pair(TupleLike tup)
-            {
-                return tup;
-            }
-
-            template<typename First, typename Second>
-            std::pair<First, Second> tuple_to_pair(std::tuple<First, Second> tup)
-            {
-                return {std::get<0>(std::move(tup)), std::get<1>(std::move(tup))};
-            }
         } // namespace detail
         /// \endcond
 
@@ -149,7 +141,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            optional<invokable_t<Fun>> fun_;
+            semiregular_invokable_t<Fun> fun_;
             std::tuple<view::all_t<Rngs>...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
             using size_type_ = meta::eval<std::make_unsigned<difference_type_>>;
@@ -159,25 +151,27 @@ namespace ranges
             {
             private:
                 friend struct sentinel;
-                invokable_t<Fun> const *fun_;
-                std::tuple<range_iterator_t<view::all_t<Rngs>>...> its_;
+                semiregular_invokable_ref_t<Fun, true> fun_;
+                std::tuple<range_iterator_t<Rngs>...> its_;
             public:
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
                 using single_pass =
                     meta::or_c<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
                 using value_type =
-                    meta::eval<
-                        detail::tuple_to_pair_type<
-                            uncvref_t<result_of_t<invokable_t<Fun>(range_value_t<Rngs>...)>>>>;
+                    detail::decay_t<meta::if_<
+                        Invokable<Fun, range_value_t<Rngs> &&...>,
+                        concepts::Invokable::result_t<Fun, range_value_t<Rngs> &&...>,
+                        concepts::Invokable::result_t<Fun, range_value_t<Rngs>...>>>;
                 cursor() = default;
-                cursor(invokable_t<Fun> const &fun, std::tuple<range_iterator_t<view::all_t<Rngs>>...> its)
-                  : fun_(&fun), its_(std::move(its))
+                cursor(
+                    semiregular_invokable_ref_t<Fun, true> fun,
+                    std::tuple<range_iterator_t<Rngs>...> its)
+                  : fun_(std::move(fun)), its_(std::move(its))
                 {}
-                auto current() const ->
-                    decltype(detail::tuple_to_pair(tuple_apply(*fun_, tuple_transform(its_, detail::deref))))
+                concepts::Invokable::result_t<Fun, range_reference_t<Rngs> &&...> current() const
                 {
-                    return detail::tuple_to_pair(tuple_apply(*fun_, tuple_transform(its_, detail::deref)));
+                    return tuple_apply(fun_, tuple_transform(its_, detail::deref));
                 }
                 void next()
                 {
@@ -225,10 +219,12 @@ namespace ranges
             struct sentinel
             {
             private:
-                std::tuple<range_sentinel_t<view::all_t<Rngs>>...> ends_;
+                std::tuple<range_sentinel_t<Rngs>...> ends_;
             public:
                 sentinel() = default;
-                sentinel(invokable_t<Fun> const &, std::tuple<range_sentinel_t<view::all_t<Rngs>>...> ends)
+                sentinel(
+                    semiregular_invokable_ref_t<Fun, true> const &,
+                    std::tuple<range_sentinel_t<Rngs>...> ends)
                   : ends_(std::move(ends))
                 {}
                 bool equal(cursor const &pos) const
@@ -247,26 +243,26 @@ namespace ranges
 
             cursor begin_cursor()
             {
-                return {*fun_, tuple_transform(rngs_, begin)};
+                return {fun_, tuple_transform(rngs_, begin)};
             }
             meta::if_<are_bounded_t, cursor, sentinel> end_cursor()
             {
-                return {*fun_, tuple_transform(rngs_, end)};
+                return {fun_, tuple_transform(rngs_, end)};
             }
             CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
             cursor begin_cursor() const
             {
-                return {*fun_, tuple_transform(rngs_, begin)};
+                return {fun_, tuple_transform(rngs_, begin)};
             }
             CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
             meta::if_<are_bounded_t, cursor, sentinel> end_cursor() const
             {
-                return {*fun_, tuple_transform(rngs_, end)};
+                return {fun_, tuple_transform(rngs_, end)};
             }
         public:
             zip_with_view() = default;
             explicit zip_with_view(Fun fun, Rngs &&...rngs)
-              : fun_{invokable(std::move(fun))}
+              : fun_(invokable(std::move(fun)))
               , rngs_{view::all(std::forward<Rngs>(rngs))...}
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool) SizedIterable<Rngs>()...>::value)
@@ -281,11 +277,13 @@ namespace ranges
 
         template<typename ...Rngs>
         struct zip_view
-          : zip_with_view<make_tuple_fn, Rngs...>
+          : zip_with_view<detail::make_tuple_or_pair_fn, Rngs...>
         {
             zip_view() = default;
             zip_view(Rngs &&...rngs)
-              : zip_with_view<make_tuple_fn, Rngs...>{make_tuple, std::forward<Rngs>(rngs)...}
+              : zip_with_view<detail::make_tuple_or_pair_fn, Rngs...>{
+                    detail::make_tuple_or_pair_fn{},
+                    std::forward<Rngs>(rngs)...}
             {}
         };
 

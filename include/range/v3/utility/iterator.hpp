@@ -17,8 +17,8 @@
 #include <new>
 #include <utility>
 #include <iterator>
-#include <algorithm> // for iter_swap
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/swap.hpp> // for indirect_swap
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -302,15 +302,12 @@ namespace ranges
 
         struct iter_swap_fn
         {
-            template<typename T, typename U,
-                CONCEPT_REQUIRES_(
-                    ForwardIterator<T>() &&
-                    ForwardIterator<U>() &&
-                    Swappable<iterator_reference_t<T>, iterator_reference_t<U>>())>
-            void operator()(T t, U u) const
+            template<typename Readable0, typename Readable1,
+                CONCEPT_REQUIRES_(IndirectlySwappable<Readable0, Readable1>())>
+            void operator()(Readable0 a, Readable1 b) const
+                noexcept(is_nothrow_indirectly_swappable<Readable0, Readable1>::value)
             {
-                using std::iter_swap;
-                iter_swap(std::forward<T>(t), std::forward<U>(u));
+                indirect_swap(std::move(a), std::move(b));
             }
         };
 

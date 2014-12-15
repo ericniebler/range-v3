@@ -228,6 +228,10 @@ namespace ranges
             template<typename Int>
             struct from_end_;
 
+            template<typename ...Ts>
+            void ignore_unused(Ts &&...)
+            {}
+
 #if !defined(__GLIBCXX__)
             template<typename T>
             using is_trivially_copy_assignable = std::is_trivially_copy_assignable<T>;

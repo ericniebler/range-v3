@@ -157,13 +157,10 @@ namespace ranges
         struct tuple_for_each_fn
         {
         private:
-            template<typename...Ts>
-            static void ignore(Ts &&...)
-            {}
             template<typename Tup, typename Fun, std::size_t...Is>
             static void impl(Tup && tup, Fun fun, index_sequence<Is...>)
             {
-                tuple_for_each_fn::ignore(
+                detail::ignore_unused(
                     (static_cast<void>(fun(std::get<Is>(std::forward<Tup>(tup)))), 42)...);
             }
         public:
@@ -209,10 +206,11 @@ namespace ranges
         struct make_tuple_fn
         {
             template<typename ...Ts>
-            std::tuple<Ts...> operator()(Ts &&...ts) const
-            {
-                return std::tuple<Ts...>{std::forward<Ts>(ts)...};
-            }
+            auto operator()(Ts &&...ts) const
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                std::make_tuple(std::forward<Ts>(ts)...)
+            )
         };
 
         /// \ingroup group-utility

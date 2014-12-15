@@ -30,6 +30,7 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
+        // BUGBUG should this be called adjacent_remove_if?
         template<typename Rng, typename F>
         struct adjacent_filter_view
           : range_adaptor<adjacent_filter_view<Rng, F>, Rng>

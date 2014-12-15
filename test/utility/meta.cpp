@@ -1,3 +1,17 @@
+// Range v3 library
+//
+//  Copyright Eric Niebler 2013-2014
+//
+//  Use, modification and distribution is subject to the
+//  Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+// Acknowledgements: Thanks for Paul Fultz for the suggestions that
+//                   concepts can be ordinary Boolean metafunctions.
+//
+// Project home: https://github.com/ericniebler/range-v3
+//
 #include <tuple>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
