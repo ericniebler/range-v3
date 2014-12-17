@@ -50,6 +50,13 @@ add_test(test.view.iota, view.iota)
 add_executable(view.join join.cpp)
 add_test(test.view.join, view.join)
 
+add_executable(view.join.cxx1y join.cpp)
+add_test(test.view.join.cxx1y, view.join.cxx1y)
+
+set_target_properties(
+    view.join.cxx1y
+    PROPERTIES COMPILE_FLAGS "-std=c++1y")
+
 add_executable(view.map keys_value.cpp)
 add_test(test.view.map, view.map)
 
