@@ -89,7 +89,8 @@ namespace ranges
                         "This action is not callable with this range type.");
                     static_assert(!std::is_reference<Rng>(),
                         "You can't pipe an lvalue into an action. Try using std::move on the argument, "
-                        "and be sure to save the result somewhere or pipe the result to another action.");
+                        "and be sure to save the result somewhere or pipe the result to another action. "
+                        "Or, wrap the argument with std::ref to pass it by reference.");
                 }
             #endif
             public:

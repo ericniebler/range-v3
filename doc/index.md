@@ -1,4 +1,4 @@
-﻿User Manual       {#mainpage}
+User Manual       {#mainpage}
 ===========
 
 \tableofcontents
