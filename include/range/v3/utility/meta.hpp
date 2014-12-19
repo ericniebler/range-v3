@@ -58,7 +58,7 @@ namespace ranges
             template<bool B>
             using bool_ = std::integral_constant<bool, B>;
 
-            /// \brief A metafunction that always returns type type \c T.
+            /// \brief A metafunction that always returns type \c T.
             template<typename T>
             struct id
             {
@@ -707,7 +707,7 @@ namespace ranges
             }
             /// \endcond
 
-            /// \brief Return the tail of the list \c List starting at the first occurance
+            /// \brief Return the tail of the list \c List starting at the first occurrence
             /// of \c T, if any such element exists; the empty list, otherwise.
             /// \ingroup group-meta
             template<typename List, typename T>
@@ -745,7 +745,7 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////
             // in
             /// \brief A Boolean integral constant wrapper around \c true if
-            /// there is at least one occurance of `T` in \c List.
+            /// there is at least one occurrence of `T` in \c List.
             /// \ingroup group-meta
             template<typename List, typename T>
             using in = not_<empty<find<List, T>>>;

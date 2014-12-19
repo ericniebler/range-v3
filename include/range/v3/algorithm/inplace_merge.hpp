@@ -153,7 +153,7 @@ namespace ranges
                         // swap middle two partitions
                         middle = rotate(m1, std::move(middle), m2).begin();
                         // len12 and len21 now have swapped meanings
-                        // merge smaller range with recurisve call and larger with tail recursion elimination
+                        // merge smaller range with recursive call and larger with tail recursion elimination
                         if(len11 + len21 < len12 + len22)
                         {
                             (*this)(std::move(begin), std::move(m1), middle, len11, len21, buf, buf_size,

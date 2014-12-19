@@ -266,7 +266,7 @@ You can then add an overload that take an Iterable:
     }
 ~~~~~~~
 
-With the type constraits expressed with the `CONCEPTS_REQUIRES_` macro, these two overloads are guaranteed to not be ambiguous.
+With the type constraints expressed with the `CONCEPTS_REQUIRES_` macro, these two overloads are guaranteed to not be ambiguous.
 
 ## Range v3 and the Future
 
@@ -324,7 +324,7 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
 <DT>\link ranges::v3::view::move_fn `view::move`\endlink</DT>
   <DD>Given a source range, return a new range where each element has been has been cast to an rvalue reference.</DD>
 <DT>\link ranges::v3::view::partial_sum_fn `view::partial_sum`\endlink</DT>
-  <DD>Given a range and a binary function, return a new range where the *N*<SUP>th</SUP> element is the the result of applying the function to the *N*<SUP>th</SUP> element from the source range and the (N-1)th element from the result range.</DD>
+  <DD>Given a range and a binary function, return a new range where the *N*<SUP>th</SUP> element is the result of applying the function to the *N*<SUP>th</SUP> element from the source range and the (N-1)th element from the result range.</DD>
 <DT>\link ranges::v3::view::remove_if_fn `view::remove_if`\endlink</DT>
   <DD>Given a source range and a unary predicate, filter out those elements that do not satisfy the predicate. (For users of Boost.Range, this is like the `filter` adaptor with the predicate negated.)</DD>
 <DT>\link ranges::v3::view::repeat_fn `view::repeat`\endlink</DT>

@@ -145,7 +145,7 @@ namespace ranges
                     {
                         if(++m2 == end2)  // If pattern exhausted, begin1 is the answer (works for 1 element pattern)
                             return begin1;
-                        if(++m1 == end1)  // Otherwise if source exhaused, pattern not found
+                        if(++m1 == end1)  // Otherwise if source exhausted, pattern not found
                             return m1;
                         if(!pred(proj1(*m1), proj2(*m2)))  // if there is a mismatch, restart with a new begin1
                         {

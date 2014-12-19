@@ -21,7 +21,7 @@
 
 #ifdef __GNUC__
 // Apparantly the code below confuses GCC's static analyzer and it
-// generatess a bogus warning for valid code.
+// generates a bogus warning for valid code.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
 #endif
