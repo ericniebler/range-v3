@@ -41,14 +41,56 @@ namespace ranges
                     std::bind(slice, std::placeholders::_1, from, to)
                 )
             public:
-                template<typename Rng, typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Iterable<Rng &>() && EraseableIterable<Rng &, I, I>())>
-                void operator()(Rng & rng, range_difference_t<Rng> from, range_difference_t<Rng> to) const
+                struct ConceptImpl
+                {
+                    template<typename Rng, typename T, typename U,
+                        typename I = range_iterator_t<Rng>,
+                        typename D = range_difference_t<Rng>>
+                    auto requires_(Rng rng, T, U) -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::ForwardIterable, Rng>(),
+                            concepts::model_of<concepts::EraseableIterable, Rng, I, I>(),
+                            concepts::model_of<concepts::Convertible, T, D>(),
+                            concepts::model_of<concepts::Convertible, U, D>()
+                        ));
+                };
+
+                template<typename Rng, typename T, typename U>
+                using Concept = concepts::models<ConceptImpl, Rng, T, U>;
+
+                // TODO support slice from end.
+                template<typename Rng,
+                    typename I = range_iterator_t<Rng>,
+                    typename D = range_difference_t<Rng>,
+                    CONCEPT_REQUIRES_(Concept<Rng, D, D>())>
+                Rng operator()(Rng && rng, range_difference_t<Rng> from,
+                    range_difference_t<Rng> to) const
                 {
                     RANGES_ASSERT(from <= to);
                     ranges::action::erase(rng, next(begin(rng), to), end(rng));
                     ranges::action::erase(rng, begin(rng), next(begin(rng), from));
+                    return std::forward<Rng>(rng);
                 }
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename T, typename U,
+                    CONCEPT_REQUIRES_(!Concept<Rng, T, U>())>
+                void operator()(Rng &&, T &&, U &&) const
+                {
+                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                        "The object on which action::slice operates must be a model of the "
+                        "ForwardIterable concept.");
+                    using I = range_iterator_t<Rng>;
+                    CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, I>(),
+                        "The object on which action::slice operates must allow element "
+                        "removal.");
+                    CONCEPT_ASSERT_MSG(meta::and_<Convertible<T, range_difference_t<Rng>>,
+                            Convertible<U, range_difference_t<Rng>>>(),
+                        "The bounds passed to action::slice must be convertible to the range's "
+                        "difference type. TODO slicing from the end with 'end-2' syntax is not "
+                        "supported yet, sorry!");
+                }
+            #endif
             };
 
             /// \ingroup group-actions

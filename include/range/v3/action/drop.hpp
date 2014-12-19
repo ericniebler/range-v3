@@ -42,15 +42,46 @@ namespace ranges
                     std::bind(drop, std::placeholders::_1, n)
                 )
             public:
-                template<typename Rng, typename Int,
-                    typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(ForwardIterable<Rng>() && Integral<Int>() &&
-                        EraseableIterable<Rng, I, I>())>
-                void operator()(Rng & rng, Int n) const
+                struct ConceptImpl
+                {
+                    template<typename Rng, typename T,
+                        typename I = range_iterator_t<Rng>,
+                        typename D = range_difference_t<Rng>>
+                    auto requires_(Rng rng, T) -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::ForwardIterable, Rng>(),
+                            concepts::model_of<concepts::EraseableIterable, Rng, I, I>(),
+                            concepts::model_of<concepts::Convertible, T, D>()
+                        ));
+                };
+
+                template<typename Rng, typename T>
+                using Concept = concepts::models<ConceptImpl, Rng, T>;
+
+                template<typename Rng, typename D = range_difference_t<Rng>,
+                    CONCEPT_REQUIRES_(Concept<Rng, D>())>
+                Rng operator()(Rng && rng, range_difference_t<Rng> n) const
                 {
                     RANGES_ASSERT(n >= 0);
                     ranges::action::erase(rng, begin(rng), next_bounded(begin(rng), n, end(rng)));
+                    return std::forward<Rng>(rng);
                 }
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(!Concept<Rng, T>())>
+                void operator()(Rng &&, T &&) const
+                {
+                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                        "The object on which action::drop operates must be a model of the "
+                        "ForwardIterable concept.");
+                    using I = range_iterator_t<Rng>;
+                    CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, I>(),
+                        "The object on which action::drop operates must allow element removal.");
+                    CONCEPT_ASSERT_MSG(Convertible<T, range_difference_t<Rng>>(),
+                        "The count passed to action::drop must be an integral type.");
+                }
+            #endif
             };
 
             /// \ingroup group-actions

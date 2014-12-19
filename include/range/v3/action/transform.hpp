@@ -42,13 +42,51 @@ namespace ranges
                         protect(std::move(proj)))
                 )
             public:
+                struct ConceptImpl
+                {
+                    template<typename Rng, typename F, typename P = ident,
+                        typename I = range_iterator_t<Rng>>
+                    auto requires_(Rng rng, F f, P p = P{}) -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::InputIterable, Rng>(),
+                            concepts::is_true(Transformable1<I, I, F, P>())
+                        ));
+                };
+
+                template<typename Rng, typename F, typename P = ident>
+                using Concept = concepts::models<ConceptImpl, Rng, F, P>;
+
                 template<typename Rng, typename F, typename P = ident,
-                    typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Iterable<Rng &>() && Transformable1<I, I, F, P>())>
-                void operator()(Rng & rng, F fun, P proj = P{}) const
+                    CONCEPT_REQUIRES_(Concept<Rng, F, P>())>
+                Rng operator()(Rng && rng, F fun, P proj = P{}) const
                 {
                     ranges::transform(rng, begin(rng), std::move(fun), std::move(proj));
+                    return std::forward<Rng>(rng);
                 }
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename F, typename P = ident,
+                    CONCEPT_REQUIRES_(!Concept<Rng, F, P>())>
+                void operator()(Rng &&, F &&, P && = P{}) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object on which action::transform operates must be a model of the "
+                        "InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(Invokable<P, range_value_t<Rng>>(),
+                        "The projection argument to action::transform must be callable with "
+                        "objects of the range's value type.");
+                    CONCEPT_ASSERT_MSG(Invokable<F,
+                            concepts::Invokable::result_t<P, range_value_t<Rng>>>(),
+                        "The function argument to action::transform must be callable with "
+                        "the result of the projection argument, or with objects of the range's "
+                        "value type is no projection is specified.");
+                    CONCEPT_ASSERT_MSG(Writable<range_iterator_t<Rng>,
+                            concepts::Invokable::result_t<F,
+                                concepts::Invokable::result_t<P, range_value_t<Rng>>>>(),
+                        "The result type of the function passed to action::transform must "
+                        "be writable back into the source range.");
+                }
+            #endif
             };
 
             /// \ingroup group-actions

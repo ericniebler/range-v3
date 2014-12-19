@@ -58,6 +58,7 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\.gitattributes" />
     <None Include="..\..\..\..\.gitignore" />
     <None Include="..\..\..\..\.travis.yml" />
     <None Include="..\..\..\..\doc\D4128.md">

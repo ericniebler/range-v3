@@ -54,20 +54,46 @@ namespace ranges
                     std::bind(push_back, std::placeholders::_1, bind_forward<T>(val))
                 )
             public:
+                struct ConceptImpl
+                {
+                    template<typename Rng, typename T>
+                    auto requires_(Rng rng, T t) -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::InputIterable, Rng>(),
+                            concepts::is_true(meta::or_<
+                                Constructible<range_value_t<Rng>, T &&>,
+                                Iterable<T &&>>()),
+                            (push_back(rng, concepts::val<T>()), 42)
+                        ));
+                };
+
+                template<typename Rng, typename Fun>
+                using Concept = concepts::models<ConceptImpl, Rng, Fun>;
+
                 template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && Constructible<range_value_t<Rng>, T &&>())>
-                auto operator()(Rng && rng, T && t) const ->
-                    decltype((void)push_back(std::forward<Rng>(rng), std::forward<T>(t)))
+                    CONCEPT_REQUIRES_(Concept<Rng, T>())>
+                Rng operator()(Rng && rng, T && t) const
                 {
-                    push_back(std::forward<Rng>(rng), std::forward<T>(t));
+                    push_back(rng, std::forward<T>(t));
+                    return std::forward<Rng>(rng);
                 }
-                template<typename Rng, typename Rng2,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && Iterable<Rng2>())>
-                auto operator()(Rng && rng, Rng2 && rng2) const ->
-                    decltype((void)push_back(std::forward<Rng>(rng), std::forward<Rng2>(rng2)))
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(!Concept<Rng, T>())>
+                void operator()(Rng &&, T &&) const
                 {
-                    push_back(std::forward<Rng>(rng), std::forward<Rng2>(rng2));
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object on which action::push_back operates must be a model of the "
+                        "InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(meta::or_<
+                        Constructible<range_value_t<Rng>, T &&>,
+                        Iterable<T &&>>(),
+                        "The object to be inserted with action::push_back must either be "
+                        "convertible to the range's value type, or else it must be a range "
+                        "of elements that are convertible to the range's value type.");
                 }
+            #endif
             };
         }
         /// \endcond

@@ -70,11 +70,11 @@ namespace ranges
                 // Pipeing requires things are passed by value.
                 template<typename Rng, typename Act,
                     CONCEPT_REQUIRES_(ActionPipeConcept<Rng>())>
-                static uncvref_t<Rng> pipe(Rng && rng, Act && act)
-                {
-                    act.action_(rng);
-                    return std::forward<Rng>(rng);
-                }
+                static auto pipe(Rng && rng, Act && act)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    act.action_(std::move(rng))
+                )
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For better error messages:
                 template<typename Rng, typename Act,
@@ -101,11 +101,11 @@ namespace ranges
                 // Calling directly requires things are passed by reference.
                 template<typename Rng, typename...Rest,
                     CONCEPT_REQUIRES_(Iterable<Rng &>() && Function<Action, Rng &, Rest &&...>())>
-                Rng & operator()(Rng & rng, Rest &&... rest) const
-                {
-                    action_(rng, std::forward<Rest>(rest)...);
-                    return rng;
-                }
+                auto operator()(Rng & rng, Rest &&... rest) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    action_(rng, std::forward<Rest>(rest)...)
+                )
                 // Currying overload.
                 template<typename T, typename...Rest, typename A = Action>
                 auto operator()(T && t, Rest &&... rest) const
@@ -117,8 +117,10 @@ namespace ranges
             };
 
             template<typename Rng, typename Action,
-                CONCEPT_REQUIRES_(Iterable<Rng &>() && Function<bitwise_or, ref_t<Rng &> &&, Action>() &&
-                    is_pipeable<Action>())>
+                CONCEPT_REQUIRES_(is_pipeable<Action>() && Iterable<Rng &>() &&
+                    Function<bitwise_or, ref_t<Rng &> &&, Action>() &&
+                    Same<ref_t<Rng &>,
+                        concepts::Function::result_t<bitwise_or, ref_t<Rng &> &&, Action>>())>
             Rng & operator|=(Rng & rng, Action && action)
             {
                 ref(rng) | action;

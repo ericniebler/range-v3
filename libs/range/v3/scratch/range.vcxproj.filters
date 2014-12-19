@@ -89,6 +89,7 @@
     <None Include="..\..\..\..\doc\index.md">
       <Filter>Doc Files</Filter>
     </None>
+    <None Include="..\..\..\..\.gitattributes" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="range.cpp">

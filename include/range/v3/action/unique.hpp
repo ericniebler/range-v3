@@ -31,13 +31,70 @@ namespace ranges
         {
             struct unique_fn
             {
-                template<typename Rng, typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(Sortable<I>() && EraseableIterable<Rng &, I, I>())>
-                void operator()(Rng & rng) const
+            private:
+                friend action_access;
+                template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Iterable<C>())>
+                static auto bind(sort_fn sort, C pred, P proj = P{})
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
+                        protect(std::move(proj)))
+                )
+            public:
+                struct ConceptImpl
                 {
-                    auto it = ranges::unique(rng);
+                    template<typename Rng, typename C = equal_to, typename P = ident,
+                        typename I = range_iterator_t<Rng>,
+                        typename S = range_sentinel_t<Rng>>
+                    auto requires_(Rng rng, C pred = C{}, P proj = P{}) -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::ForwardIterable, Rng>(),
+                            concepts::model_of<concepts::EraseableIterable, Rng, I, S>(),
+                            concepts::is_true(Sortable<I, C, P>())
+                        ));
+                };
+
+                template<typename Rng, typename C = equal_to, typename P = ident>
+                using Concept = concepts::models<ConceptImpl, Rng, C, P>;
+
+                template<typename Rng, typename C = equal_to, typename P = ident,
+                    typename I = range_iterator_t<Rng>,
+                    CONCEPT_REQUIRES_(Concept<Rng, C, P>())>
+                Rng operator()(Rng && rng, C pred = C{}, P proj = P{}) const
+                {
+                    I it = ranges::unique(rng, std::move(pred), std::move(proj));
                     ranges::erase(rng, it, end(rng));
+                    return std::forward<Rng>(rng);
                 }
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename C = equal_to, typename P = ident,
+                    CONCEPT_REQUIRES_(!Concept<Rng, C, P>())>
+                void operator()(Rng &&, C && = C{}, P && = P{}) const
+                {
+                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                        "The object on which action::unique operates must be a model of the "
+                        "ForwardIterable concept.");
+                    using I = range_iterator_t<Rng>;
+                    using S = range_sentinel_t<Rng>;
+                    CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, S>(),
+                        "The object on which action::unique operates must allow element "
+                        "removal.");
+                    using V = iterator_value_t<I>;
+                    CONCEPT_ASSERT_MSG(Invokable<P, V>(),
+                        "The projection argument passed to action::unique must accept objects "
+                        "of the range's value type.");
+                    using X = concepts::Invokable::result_t<P, V>;
+                    CONCEPT_ASSERT_MSG(InvokableRelation<C, X, X>(),
+                        "The comparator passed to action::unique must accept objects returned "
+                        "by the projection function, or of the range's value type if no projection "
+                        "is specified.");
+                    CONCEPT_ASSERT_MSG(Permutable<I>(),
+                        "The iterator type of the range passed to action::unique must allow its "
+                        "elements to be permuted; that is, the values must be movable and the "
+                        "iterator must be mutable.");
+                }
+            #endif
             };
 
             /// \ingroup group-actions

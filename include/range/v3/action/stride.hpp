@@ -41,11 +41,30 @@ namespace ranges
                     std::bind(stride, std::placeholders::_1, step)
                 )
             public:
-                template<typename Rng, typename I = range_iterator_t<Rng>,
-                    typename S = range_sentinel_t<Rng>,
-                    CONCEPT_REQUIRES_(EraseableIterable<Rng &, I, S>() && Permutable<I>())>
-                void operator()(Rng & rng, range_difference_t<Rng> const step) const
+                struct ConceptImpl
                 {
+                    template<typename Rng, typename T,
+                        typename I = range_iterator_t<Rng>,
+                        typename S = range_sentinel_t<Rng>,
+                        typename D = range_difference_t<Rng>>
+                    auto requires_(Rng rng, T) -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::ForwardIterable, Rng>(),
+                            concepts::model_of<concepts::EraseableIterable, Rng, I, S>(),
+                            concepts::model_of<concepts::Convertible, T, D>(),
+                            concepts::is_true(Permutable<I>())
+                        ));
+                };
+
+                template<typename Rng, typename T>
+                using Concept = concepts::models<ConceptImpl, Rng, T>;
+
+                template<typename Rng, typename D = range_difference_t<Rng>,
+                    CONCEPT_REQUIRES_(Concept<Rng, D>())>
+                Rng operator()(Rng && rng, range_difference_t<Rng> const step) const
+                {
+                    using I = range_iterator_t<Rng>;
+                    using S = range_sentinel_t<Rng>;
                     RANGES_ASSERT(0 < step);
                     if(1 < step)
                     {
@@ -61,7 +80,30 @@ namespace ranges
                         }
                         ranges::action::erase(rng, begin, end);
                     }
+                    return std::forward<Rng>(rng);
                 }
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename T,
+                    CONCEPT_REQUIRES_(!Concept<Rng, T>())>
+                void operator()(Rng &&, T &&) const
+                {
+                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                        "The object on which action::stride operates must be a model of the "
+                        "ForwardIterable concept.");
+                    using I = range_iterator_t<Rng>;
+                    using S = range_sentinel_t<Rng>;
+                    CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, S>(),
+                        "The object on which action::stride operates must allow element removal.");
+                    CONCEPT_ASSERT_MSG(Convertible<T, range_difference_t<Rng>>(),
+                        "The stride argument to action::stride must be convertible to the range's "
+                        "difference type.");
+                    CONCEPT_ASSERT_MSG(Permutable<I>(),
+                        "The iterator type of the range passed to action::stride must allow its "
+                        "elements to be permutaed; that is, the values must be movable and the "
+                        "iterator must be mutable.");
+                }
+            #endif
             };
 
             /// \ingroup group-actions

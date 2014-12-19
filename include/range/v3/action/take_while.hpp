@@ -43,14 +43,51 @@ namespace ranges
                     std::bind(take_while, std::placeholders::_1, std::move(fun))
                 )
             public:
-                template<typename Rng, typename Fun,
-                    typename I = range_iterator_t<Rng>,
-                    CONCEPT_REQUIRES_(ForwardIterable<Rng>() && EraseableIterable<Rng, I, I>() &&
-                        InvokablePredicate<Fun, range_value_t<Rng>>())>
-                void operator()(Rng & rng, Fun fun) const
+                struct ConceptImpl
                 {
-                    ranges::action::erase(rng, find_if_not(begin(rng), end(rng), std::move(fun)), end(rng));
+                    template<typename Rng, typename Fun,
+                        typename I = range_iterator_t<Rng>,
+                        typename S = range_sentinel_t<Rng>>
+                    auto requires_(Rng rng, Fun f) -> decltype(
+                        concepts::valid_expr(
+                            concepts::model_of<concepts::ForwardIterable, Rng>(),
+                            concepts::model_of<concepts::EraseableIterable, Rng, I, S>(),
+                            concepts::model_of<concepts::InvokablePredicate, Fun,
+                                range_value_t<Rng>>()
+                        ));
+                };
+
+                template<typename Rng, typename Fun>
+                using Concept = concepts::models<ConceptImpl, Rng, Fun>;
+
+                template<typename Rng, typename Fun,
+                    CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
+                Rng operator()(Rng && rng, Fun fun) const
+                {
+                    ranges::action::erase(rng, find_if_not(begin(rng), end(rng), std::move(fun)),
+                        end(rng));
+                    return std::forward<Rng>(rng);
                 }
+
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename Fun,
+                    CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
+                void operator()(Rng &&, Fun &&) const
+                {
+                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                        "The object on which action::take_while operates must be a model of the "
+                        "ForwardIterable concept.");
+                    using I = range_iterator_t<Rng>;
+                    using S = range_sentinel_t<Rng>;
+                    CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, S>(),
+                        "The object on which action::take_while operates must allow element "
+                        "removal.");
+                    CONCEPT_ASSERT_MSG(InvokablePredicate<Fun, range_value_t<Rng>>(),
+                        "The function passed to action::take_while must be callable with objects "
+                        "of the range's value type, and it must return something convertible to "
+                        "bool.");
+                }
+            #endif
             };
 
             /// \ingroup group-actions
