@@ -200,7 +200,7 @@ namespace ranges
                                 // The begin part is sorted,
                                 if(nth < i)
                                     return end_orig;
-                                // nth_element the secod part
+                                // nth_element the second part
                                 // nth_element<C>(i, nth, end, pred);
                                 begin = i;
                                 goto restart;

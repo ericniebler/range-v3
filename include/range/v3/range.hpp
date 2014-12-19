@@ -93,7 +93,7 @@ namespace ranges
         // Like range, but with a known size. As with range and std::pair,
         // first and second are public members (for compatibility with old code using
         // pair to store iterator ranges), but for sized_range, the members are
-        // const to prevent inadvertant violations of the class invariant.
+        // const to prevent inadvertent violations of the class invariant.
         //
         // Class invariant:
         //   distance(first, second) == third

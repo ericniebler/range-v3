@@ -115,7 +115,7 @@ namespace ranges
                 --l2;
                 while(true)
                 {
-                    // Find end element in sequence 1 that matchs *(end2-1), with a mininum of loop checks
+                    // Find end element in sequence 1 that matches *(end2-1), with a mininum of loop checks
                         // return end1 if no element matches *begin2
                     do  if(begin1 == l1) return end1;
                     while(!pred(proj(*--l1), *l2));
@@ -124,7 +124,7 @@ namespace ranges
                     I2 m2 = l2;
                         // If pattern exhausted, m1 is the answer (works for 1 element pattern)
                     do  if(m2 == begin2) return m1;
-                        // Otherwise if source exhaused, pattern not found
+                        // Otherwise if source exhausted, pattern not found
                         else if(m1 == begin1) return end1;
                         // if there is a mismatch, restart with a new l1
                         // else there is a match, check next elements

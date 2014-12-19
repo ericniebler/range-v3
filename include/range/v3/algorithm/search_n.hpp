@@ -144,7 +144,7 @@ namespace ranges
                     {
                         if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
                             return begin;
-                        if(++m == end)  // Otherwise if source exhaused, pattern not found
+                        if(++m == end)  // Otherwise if source exhausted, pattern not found
                             return m;
                         if(!pred(proj(*m), val))  // if there is a mismatch, restart with a new begin
                         {

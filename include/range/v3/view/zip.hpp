@@ -202,7 +202,7 @@ namespace ranges
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
-                    // pairs. This is to accomodate zippers of sequences of different length.
+                    // pairs. This is to accommodate zippers of sequences of different length.
                     if(0 < std::get<0>(that.its_) - std::get<0>(its_))
                         return tuple_foldl(
                             tuple_transform(its_, that.its_, detail::distance_to),

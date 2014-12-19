@@ -121,11 +121,11 @@ namespace ranges
             // A: No. Its operator= is currently defined to reseat the references, so
             //    std::swap(ra, rb) already means something when ra and rb are (lvalue)
             //    reference_wrappers. That reseats the reference wrappers but leaves the
-            //    referants unmodified. Treating rvalue reference_wrappers differently would
+            //    referents unmodified. Treating rvalue reference_wrappers differently would
             //    be confusing.
 
             // Q: Then why is it OK to "re"-define swap for pairs and tuples of references?
-            // A: Because as defined above, swapping an rvalue tuple of refences has the same
+            // A: Because as defined above, swapping an rvalue tuple of references has the same
             //    semantics as swapping an lvalue tuple of references. Rather than reseat the
             //    references, assignment happens *through* the references.
 

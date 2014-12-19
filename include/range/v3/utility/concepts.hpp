@@ -737,7 +737,7 @@ namespace ranges
             struct value_type<T, void_t<typename T::value_type>>
               : std::enable_if<!std::is_void<typename T::value_type>::value, typename T::value_type>
             {
-                // The use of enable_if is to accomodate output iterators that are
+                // The use of enable_if is to accommodate output iterators that are
                 // allowed to use void as their value type. We want treat output
                 // iterators as non-Readable. value_type<OutIt> should be
                 // SFINAE-friendly.
