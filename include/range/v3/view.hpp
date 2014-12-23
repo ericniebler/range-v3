@@ -47,6 +47,7 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/slice.hpp>
+#include <range/v3/view/split.hpp>
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/tail.hpp>
 #include <range/v3/view/take.hpp>
