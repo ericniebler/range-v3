@@ -198,8 +198,6 @@ namespace ranges
             template<typename...Rest>
             using void_t = typename always_void<Rest...>::type;
 
-            struct not_equal_to;
-
             template<typename T>
             using decay_t = typename std::decay<T>::type;
 
@@ -264,6 +262,11 @@ namespace ranges
 
         struct begin_tag {};
         struct end_tag {};
+
+        struct equal_to;
+        struct less;
+        struct ordered_less;
+        struct ident;
 
         template<typename Rng, typename Void = void>
         struct is_infinite;
@@ -362,11 +365,11 @@ namespace ranges
         // Views
         //
         template<typename Rng, typename BinaryPredicate>
-        struct adjacent_filter_view;
+        struct adjacent_remove_if_view;
 
         namespace view
         {
-            struct adjacent_filter_fn;
+            struct adjacent_remove_if_fn;
         }
 
         namespace view
@@ -573,7 +576,7 @@ namespace ranges
         }
 
         template<typename Rng>
-        using unique_view = adjacent_filter_view<Rng, detail::not_equal_to>;
+        using unique_view = adjacent_remove_if_view<Rng, equal_to>;
 
         namespace view
         {

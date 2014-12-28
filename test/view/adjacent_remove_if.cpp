@@ -13,7 +13,7 @@
 #include <iterator>
 #include <functional>
 #include <range/v3/core.hpp>
-#include <range/v3/view/adjacent_filter.hpp>
+#include <range/v3/view/adjacent_remove_if.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -28,7 +28,7 @@ int main()
     int rgi[] = {1, 1, 1, 2, 3, 4, 4};
     std::vector<int> out;
 
-    auto && rng = rgi | view::adjacent_filter(std::not_equal_to<int>{});
+    auto && rng = rgi | view::adjacent_remove_if(std::equal_to<int>{});
     has_type<int &>(*begin(rng));
     models<concepts::BoundedRange>(rng);
     models_not<concepts::SizedRange>(rng);
@@ -38,7 +38,9 @@ int main()
     copy(rng, ranges::back_inserter(out));
     ::check_equal(out, {1, 2, 3, 4});
 
-    auto && rng2 = view::counted(rgi, 7) | view::adjacent_filter(std::not_equal_to<int>{});
+    bool true_ = true;
+    auto && rng2 = view::counted(rgi, 7)
+      | view::adjacent_remove_if([&](int i, int j){return i == j && true_;});
     has_type<int &>(*begin(rng2));
     models<concepts::ForwardRange>(rng2);
     models<concepts::BoundedRange>(rng2);
@@ -47,7 +49,7 @@ int main()
     models_not<concepts::BidirectionalIterator>(begin(rng2));
     ::check_equal(rng2, {1, 2, 3, 4});
 
-    auto && rng3 = view::counted(forward_iterator<int*>(rgi), 7) | view::adjacent_filter(std::not_equal_to<int>{});
+    auto && rng3 = view::counted(forward_iterator<int*>(rgi), 7) | view::adjacent_remove_if(std::equal_to<int>{});
     has_type<int &>(*begin(rng3));
     models<concepts::ForwardRange>(rng3);
     models_not<concepts::BoundedRange>(rng3);

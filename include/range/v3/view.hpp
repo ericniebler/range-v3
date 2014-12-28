@@ -16,7 +16,7 @@
 
 #include <range/v3/detail/disable_warnings.hpp>
 
-#include <range/v3/view/adjacent_filter.hpp>
+#include <range/v3/view/adjacent_remove_if.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/any_range.hpp>
 #include <range/v3/view/bounded.hpp>

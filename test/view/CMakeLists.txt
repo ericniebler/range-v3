@@ -1,6 +1,6 @@
 
-add_executable(view.adjacent_filter adjacent_filter.cpp)
-add_test(test.view.adjacent_filter, view.adjacent_filter)
+add_executable(view.adjacent_remove_if adjacent_remove_if.cpp)
+add_test(test.view.adjacent_remove_if, view.adjacent_remove_if)
 
 add_executable(view.all all.cpp)
 add_test(test.view.all, view.all)

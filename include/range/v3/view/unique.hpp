@@ -16,27 +16,14 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/view/adjacent_filter.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/view/adjacent_remove_if.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        /// \cond
-        namespace detail
-        {
-            struct not_equal_to
-            {
-                template<typename T>
-                bool operator()(T && t, T && u) const
-                {
-                    return !(std::forward<T>(t) == std::forward<T>(u));
-                }
-            };
-        }
-        /// \endcond
-
         /// \addtogroup group-views
         /// @{
         namespace view
@@ -51,7 +38,7 @@ namespace ranges
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
                 unique_view<Rng> operator()(Rng && rng) const
                 {
-                    return {std::forward<Rng>(rng), detail::not_equal_to{}};
+                    return {std::forward<Rng>(rng), equal_to{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,

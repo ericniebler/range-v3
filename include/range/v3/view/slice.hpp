@@ -21,6 +21,7 @@
 #include <range/v3/range_interface.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
@@ -79,27 +80,50 @@ namespace ranges
                 using difference_type_ = range_difference_t<Rng>;
                 base_range_t rng_;
                 difference_type_ from_, count_;
+                optional<range_iterator_t<Rng>> begin_;
 
+                range_iterator_t<Rng> get_begin_()
+                {
+                    if(!begin_)
+                        begin_ = detail::pos_at_(rng_, from_, iterable_concept<Rng>{},
+                            is_infinite<Rng>{});
+                    return *begin_;
+                }
                 detail::counted_cursor<range_iterator_t<Rng>> begin_cursor()
                 {
-                    return {detail::pos_at_(rng_, from_, iterable_concept<Rng>{},
-                        is_infinite<Rng>{}), count_};
+                    return {get_begin_(), count_};
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
-                detail::counted_cursor<range_iterator_t<Rng const>> begin_cursor() const
-                {
-                    return {detail::pos_at_(rng_, from_, iterable_concept<Rng>{},
-                        is_infinite<Rng>{}), count_};
-                }
-                detail::counted_sentinel end_cursor() const
+                detail::counted_sentinel end_cursor()
                 {
                     return {};
                 }
             public:
                 slice_view_() = default;
-                slice_view_(Rng && rng, difference_type_ from, difference_type_ count)
-                  : rng_(view::all(std::forward<Rng>(rng))), from_(from), count_(count)
+                slice_view_(slice_view_ &&that)
+                  : rng_(std::move(that).rng_), from_(that.from_), count_(that.count_), begin_{}
                 {}
+                slice_view_(slice_view_ const &that)
+                  : rng_(that.rng_), from_(that.from_), count_(that.count_), begin_{}
+                {}
+                slice_view_(Rng && rng, difference_type_ from, difference_type_ count)
+                  : rng_(view::all(std::forward<Rng>(rng))), from_(from), count_(count), begin_{}
+                {}
+                slice_view_& operator=(slice_view_ &&that)
+                {
+                    rng_ = std::move(that).rng_;
+                    from_ = that.from_;
+                    count_ = that.count_;
+                    begin_.reset();
+                    return *this;
+                }
+                slice_view_& operator=(slice_view_ const &that)
+                {
+                    rng_ = that.rng_;
+                    from_ = that.from_;
+                    count_ = that.count_;
+                    begin_.reset();
+                    return *this;
+                }
                 range_size_t<Rng> size() const
                 {
                     return static_cast<range_size_t<Rng>>(count_);

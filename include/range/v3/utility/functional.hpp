@@ -97,17 +97,6 @@ namespace ranges
             }
         };
 
-        struct save_fn
-        {
-            template<typename T>
-            T operator()(T && t) const
-            {
-                return (T &&) t;
-            }
-        };
-        
-        constexpr save_fn save{};
-
         template<typename T>
         struct coerce
         {

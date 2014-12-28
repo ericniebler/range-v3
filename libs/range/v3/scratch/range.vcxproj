@@ -185,7 +185,7 @@
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\meta.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\swap.cpp" />
-    <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\adjacent_remove_if.cpp" />
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
     <ClCompile Include="..\..\..\..\test\view\any_range.cpp" />
     <ClCompile Include="..\..\..\..\test\view\bounded.cpp" />
@@ -373,7 +373,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\unreachable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\variant.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_remove_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\bounded.hpp" />

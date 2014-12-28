@@ -39,6 +39,8 @@ int main()
     copy(v, ostream_iterator<int>{str, " "});
     auto x = istream<int>(str) | view::stride(3);
     CONCEPT_ASSERT(InputRange<decltype(x)>());
+    CONCEPT_ASSERT(!InputRange<decltype(x) const>());
+    CONCEPT_ASSERT(!ForwardRange<decltype(x)>());
     check_equal(x, {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48});
 
     std::list<int> li;

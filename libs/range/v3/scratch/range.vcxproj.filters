@@ -131,9 +131,6 @@
     <ClCompile Include="..\..\..\..\test\view\slice.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\view\adjacent_filter.cpp">
-      <Filter>Test Files\view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\unique.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -518,6 +515,9 @@
     <ClCompile Include="..\..\..\..\test\utility\swap.cpp">
       <Filter>Test Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\adjacent_remove_if.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
@@ -738,9 +738,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp">
       <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_filter.hpp">
-      <Filter>Header Files\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp">
       <Filter>Header Files\view</Filter>
@@ -1127,6 +1124,9 @@
       <Filter>Header Files\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\intersperse.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_remove_if.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>

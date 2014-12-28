@@ -47,11 +47,11 @@ namespace ranges
                 auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin)
                 {
-                    // BUGBUG if proj does a move, this nukes all source elements.
-                    auto &&v = save(proj(*begin));
+                    auto &&x = *begin;
+                    auto &&v = proj((decltype(x) &&) x);
                     if(!(v == val))
                     {
-                        *out = (decltype(v)) v;
+                        *out = (decltype(v) &&) v;
                         ++out;
                     }
                 }

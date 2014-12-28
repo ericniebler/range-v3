@@ -20,6 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -36,34 +37,51 @@ namespace ranges
         template<typename Rng, typename Pred>
         struct drop_while_view
           : range_interface<drop_while_view<Rng, Pred>, is_infinite<Rng>::value>
-        {
+       {
         private:
             friend range_access;
             using base_range_t = view::all_t<Rng>;
             using difference_type_ = range_difference_t<Rng>;
             base_range_t rng_;
             semiregular_invokable_t<Pred> pred_;
+            optional<range_iterator_t<Rng>> begin_;
 
+            range_iterator_t<Rng> get_begin_()
+            {
+                if(!begin_)
+                    begin_ = find_if_not(rng_, std::ref(pred_));
+                return *begin_;
+            }
         public:
             drop_while_view() = default;
-            drop_while_view(Rng && rng, Pred pred)
-              : rng_(view::all(std::forward<Rng>(rng))), pred_(invokable(std::move(pred)))
+            drop_while_view(drop_while_view &&that)
+              : rng_(std::move(that).rng_), pred_(std::move(that).pred_), begin_{}
             {}
+            drop_while_view(drop_while_view const &that)
+              : rng_(that.rng_), pred_(that.pred_), begin_{}
+            {}
+            drop_while_view(Rng && rng, Pred pred)
+              : rng_(view::all(std::forward<Rng>(rng))), pred_(invokable(std::move(pred))), begin_{}
+            {}
+            drop_while_view& operator=(drop_while_view &&that)
+            {
+                rng_ = std::move(that).rng_;
+                pred_ = std::move(that).pred_;
+                begin_.reset();
+                return *this;
+            }
+            drop_while_view& operator=(drop_while_view const &that)
+            {
+                rng_ = that.rng_;
+                pred_ = that.pred_;
+                begin_.reset();
+                return *this;
+            }
             range_iterator_t<Rng> begin()
             {
-                return find_if_not(rng_, std::ref(pred_));
+                return get_begin_();
             }
             range_sentinel_t<Rng> end()
-            {
-                return ranges::end(rng_);
-            }
-            CONCEPT_REQUIRES(Iterable<Rng const>() && Invokable<Pred const, range_value_t<Rng>>())
-            range_iterator_t<Rng const> begin() const
-            {
-                return find_if_not(rng_, std::ref(pred_));
-            }
-            CONCEPT_REQUIRES(Iterable<Rng const>() && Invokable<Pred const, range_value_t<Rng>>())
-            range_sentinel_t<Rng const> end() const
             {
                 return ranges::end(rng_);
             }

@@ -11,8 +11,8 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#ifndef RANGES_V3_VIEW_ADJACENT_FILTER_HPP
-#define RANGES_V3_VIEW_ADJACENT_FILTER_HPP
+#ifndef RANGES_V3_VIEW_ADJACENT_REMOVE_IF_HPP
+#define RANGES_V3_VIEW_ADJACENT_REMOVE_IF_HPP
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
@@ -20,6 +20,7 @@
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/view/view.hpp>
@@ -30,30 +31,29 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        // BUGBUG should this be called adjacent_remove_if?
         template<typename Rng, typename F>
-        struct adjacent_filter_view
-          : range_adaptor<adjacent_filter_view<Rng, F>, Rng>
+        struct adjacent_remove_if_view
+          : range_adaptor<adjacent_remove_if_view<Rng, F>, Rng>
         {
         private:
             friend range_access;
-            invokable_t<F> pred_;
+            semiregular_invokable_t<F> pred_;
 
             struct adaptor : adaptor_base
             {
             private:
-                adjacent_filter_view const *rng_;
+                adjacent_remove_if_view const *rng_;
                 using adaptor_base::prev;
             public:
                 adaptor() = default;
-                adaptor(adjacent_filter_view const &rng)
+                adaptor(adjacent_remove_if_view const &rng)
                   : rng_(&rng)
                 {}
                 void next(range_iterator_t<Rng> &it) const
                 {
                     auto const end = ranges::end(rng_->mutable_base());
                     RANGES_ASSERT(it != end);
-                    it = adjacent_find(std::move(it), end, std::ref(rng_->pred_));
+                    it = adjacent_find(std::move(it), end, not_(std::ref(rng_->pred_)));
                     advance_bounded(it, 1, end);
                 }
             };
@@ -66,24 +66,25 @@ namespace ranges
                 return {*this};
             }
         public:
-            adjacent_filter_view() = default;
-            adjacent_filter_view(Rng && rng, F pred)
-              : range_adaptor_t<adjacent_filter_view>{std::forward<Rng>(rng)}
+            adjacent_remove_if_view() = default;
+            adjacent_remove_if_view(Rng && rng, F pred)
+              : range_adaptor_t<adjacent_remove_if_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))
             {}
         };
 
         namespace view
         {
-            struct adjacent_filter_fn
+            struct adjacent_remove_if_fn
             {
             private:
                 friend view_access;
                 template<typename F>
-                static auto bind(adjacent_filter_fn adjacent_filter, F pred)
+                static auto bind(adjacent_remove_if_fn adjacent_remove_if, F pred)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(adjacent_filter, std::placeholders::_1, protect(std::move(pred))))
+                    make_pipeable(std::bind(adjacent_remove_if, std::placeholders::_1,
+                        protect(std::move(pred))))
                 )
             public:
                 template<typename Rng, typename F>
@@ -93,7 +94,7 @@ namespace ranges
 
                 template<typename Rng, typename F,
                     CONCEPT_REQUIRES_(Concept<Rng, F>())>
-                adjacent_filter_view<Rng, F> operator()(Rng && rng, F pred) const
+                adjacent_remove_if_view<Rng, F> operator()(Rng && rng, F pred) const
                 {
                     return {std::forward<Rng>(rng), std::move(pred)};
                 }
@@ -111,9 +112,9 @@ namespace ranges
             #endif
             };
 
-            /// \relates adjacent_filter_fn
+            /// \relates adjacent_remove_if_fn
             /// \ingroup group-views
-            constexpr view<adjacent_filter_fn> adjacent_filter{};
+            constexpr view<adjacent_remove_if_fn> adjacent_remove_if{};
         }
         /// @}
     }

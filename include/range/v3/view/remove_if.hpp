@@ -23,6 +23,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
@@ -41,29 +42,33 @@ namespace ranges
         private:
             friend range_access;
             semiregular_invokable_t<Pred> pred_;
+            optional<range_iterator_t<Rng>> begin_;
 
-            template<bool IsConst>
             struct adaptor
               : adaptor_base
             {
             private:
-                using remove_if_view_t = meta::apply<meta::add_const_if_c<IsConst>, remove_if_view>;
-                remove_if_view_t *rng_;
+                remove_if_view *rng_;
                 using adaptor_base::advance;
                 void satisfy(range_iterator_t<Rng> &it) const
                 {
-                    it = find_if_not(std::move(it), ranges::end(rng_->mutable_base()), std::ref(rng_->pred_));
+                    it = find_if_not(std::move(it), ranges::end(rng_->mutable_base()),
+                        std::ref(rng_->pred_));
                 }
             public:
                 adaptor() = default;
-                adaptor(remove_if_view_t &rng)
+                adaptor(remove_if_view &rng)
                   : rng_(&rng)
                 {}
-                range_iterator_t<Rng> begin(remove_if_view_t &rng) const
+                range_iterator_t<Rng> begin(remove_if_view &) const
                 {
-                    auto it = ranges::begin(rng.mutable_base());
-                    this->satisfy(it);
-                    return it;
+                    auto &beg = rng_->begin_;
+                    if(!beg)
+                    {
+                        beg = ranges::begin(rng_->mutable_base());
+                        this->satisfy(*beg);
+                    }
+                    return *beg;
                 }
                 void next(range_iterator_t<Rng> &it) const
                 {
@@ -76,34 +81,47 @@ namespace ranges
                     do --it; while(pred(*it));
                 }
             };
-            CONCEPT_REQUIRES(!Invokable<Pred const, range_value_t<Rng>>())
-            adaptor<false> begin_adaptor()
-            {
-                return {*this};
-            }
-            CONCEPT_REQUIRES(Invokable<Pred const, range_value_t<Rng>>())
-            adaptor<true> begin_adaptor() const
+            adaptor begin_adaptor()
             {
                 return {*this};
             }
             // TODO: if end is a sentinel, it holds an unnecessary pointer back to
             // this range.
-            CONCEPT_REQUIRES(!Invokable<Pred const, range_value_t<Rng>>())
-            adaptor<false> end_adaptor()
-            {
-                return {*this};
-            }
-            CONCEPT_REQUIRES(Invokable<Pred const, range_value_t<Rng>>())
-            adaptor<true> end_adaptor() const
+            adaptor end_adaptor()
             {
                 return {*this};
             }
         public:
             remove_if_view() = default;
+            remove_if_view(remove_if_view &&that)
+              : range_adaptor_t<remove_if_view>(std::move(that))
+              , pred_(std::move(that).pred_)
+              , begin_{}
+            {}
+            remove_if_view(remove_if_view const &that)
+              : range_adaptor_t<remove_if_view>(that)
+              , pred_(that.pred_)
+              , begin_{}
+            {}
             remove_if_view(Rng && rng, Pred pred)
               : range_adaptor_t<remove_if_view>{std::forward<Rng>(rng)}
               , pred_(invokable(std::move(pred)))
+              , begin_{}
             {}
+            remove_if_view& operator=(remove_if_view &&that)
+            {
+                this->range_adaptor_t<remove_if_view>::operator=(std::move(that));
+                pred_ = std::move(that).pred_;
+                begin_.reset();
+                return *this;
+            }
+            remove_if_view& operator=(remove_if_view const &that)
+            {
+                this->range_adaptor_t<remove_if_view>::operator=(that);
+                pred_ = that.pred_;
+                begin_.reset();
+                return *this;
+            }
         };
 
         namespace view

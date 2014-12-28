@@ -22,7 +22,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/tuple_algorithm.hpp>
+#include <range/v3/utility/integer_sequence.hpp>
 
 namespace ranges
 {
@@ -114,7 +114,7 @@ namespace ranges
                 noexcept(meta::and_c<is_nothrow_swappable<Ts, Us>::value...>::value)
             {
                 adl_swap_detail::tuple_swap_(std::move(left), std::move(right),
-                    tuple_indices_t<std::tuple<Ts...>>{});
+                    make_index_sequence<sizeof...(Ts)>{});
             }
 
             // Q: Should std::reference_wrapper be considered a proxy wrt swapping rvalues?

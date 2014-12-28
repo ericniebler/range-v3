@@ -20,7 +20,9 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/range.hpp>
+#include <range/v3/utility/box.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/view/all.hpp>
@@ -35,6 +37,10 @@ namespace ranges
         template<typename Rng>
         struct drop_view
           : range_interface<drop_view<Rng>, is_infinite<Rng>::value>
+          , private meta::if_<
+                RandomAccessIterable<Rng>,
+                detail::empty,
+                box<optional<range_iterator_t<Rng>>, begin_tag>>
         {
         private:
             friend range_access;
@@ -43,27 +49,65 @@ namespace ranges
             base_range_t rng_;
             difference_type_ n_;
 
+            range_iterator_t<Rng> get_begin_(std::true_type) const
+            {
+                return next(ranges::begin(rng_), n_);
+            }
+            range_iterator_t<Rng> get_begin_(std::false_type)
+            {
+                auto &begin_ = ranges::get<begin_tag>(*this);
+                if(!begin_)
+                    begin_ = next(ranges::begin(rng_), n_);
+                return *begin_;
+            }
+            void dirty_(std::true_type)
+            {}
+            void dirty_(std::false_type)
+            {
+                auto &begin_ = ranges::get<begin_tag>(*this);
+                begin_.reset();
+            }
         public:
             drop_view() = default;
+            drop_view(drop_view &&that)
+              : rng_(std::move(that).rng_), n_(that.n_)
+            {}
+            drop_view(drop_view const &that)
+              : rng_(that.rng_), n_(that.n_)
+            {}
             drop_view(Rng && rng, difference_type_ n)
               : rng_(view::all(std::forward<Rng>(rng))), n_(n)
             {
                 RANGES_ASSERT(n >= 0);
             }
+            drop_view& operator=(drop_view &&that)
+            {
+                rng_ = std::move(that).rng_;
+                n_ = that.n_;
+                this->dirty_(RandomAccessIterable<Rng>{});
+                return *this;
+            }
+            drop_view& operator=(drop_view const &that)
+            {
+                rng_ = that.rng_;
+                n_ = that.n_;
+                this->dirty_(RandomAccessIterable<Rng>{});
+                return *this;
+            }
             range_iterator_t<Rng> begin()
             {
-                return next(ranges::begin(rng_), n_);
+                return this->get_begin_(RandomAccessIterable<Rng>{});
             }
             range_sentinel_t<Rng> end()
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(Iterable<Rng const>())
+            CONCEPT_REQUIRES(RandomAccessIterable<Rng const>())
             range_iterator_t<Rng const> begin() const
             {
-                return next(ranges::begin(rng_), n_);
+                return this->get_begin_(std::true_type{});
             }
-            CONCEPT_REQUIRES(Iterable<Rng const>())
+            CONCEPT_REQUIRES(RandomAccessIterable<Rng const>())
             range_sentinel_t<Rng const> end() const
             {
                 return ranges::end(rng_);
