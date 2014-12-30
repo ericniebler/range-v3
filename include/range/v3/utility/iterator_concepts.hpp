@@ -17,6 +17,7 @@
 #include <iterator>
 #include <type_traits>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/move.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
@@ -180,12 +181,26 @@ namespace ranges
                 using reference_t = decltype(*std::declval<I>());
 
                 template<typename I>
+                using rvalue_reference_t = decltype(indirect_move(std::declval<I>()));
+
+                template<typename I>
                 using pointer_t = meta::eval<pointer_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<value_t<I> const &>(*i)
+                        // BUGBUG imagine a zip_view where the rvalue reference type is
+                        // pair<T&&, S const &&> and the value type is pair<T, S>. Then the
+                        // check for convertibility below fails if S is move-only. :-(
+                        concepts::model_of<Convertible, rvalue_reference_t<I> &&, value_t<I> const &>(),
+                        concepts::model_of<Convertible, value_t<I> &&, rvalue_reference_t<I>>(),
+                        // This ensures that there is a way to move from reference type
+                        // to the rvalue reference type via the 2-argument version of indirect_move:
+                        concepts::same_type(indirect_move(i), indirect_move(i, *i))
+                        // Axiom: indirect_move(i) and indirect_move(i, *i) are required to be
+                        // semantically equivalent. There is no requirement that indirect_move(i)
+                        // be implemented in terms of indirect_move(i, *i). indirect_move(i, *i)
+                        // should not read from i.
                     ));
             };
 
@@ -211,23 +226,33 @@ namespace ranges
 
             struct IndirectlyMovable
             {
-                template<typename I, typename O>
-                auto requires_(I i, O o) -> decltype(
+                template<typename I, typename O, typename P = ident>
+                auto requires_(I i, O o, P = P{}) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
+                        concepts::model_of<Convertible, Readable::rvalue_reference_t<I> &&,
+                            Readable::value_t<I>>(),
+                        concepts::model_of<RegularInvokable, P,
+                            Readable::rvalue_reference_t<I> &&>(),
                         concepts::model_of<SemiRegular, O>(),
-                        concepts::model_of<MoveWritable, O, Readable::reference_t<I>>()
+                        concepts::model_of<Writable, O,
+                            Invokable::result_t<P, Readable::rvalue_reference_t<I> &&>>()
                     ));
             };
 
             struct IndirectlyCopyable
+              : refines<IndirectlyMovable>
             {
-                template<typename I, typename O>
-                auto requires_(I i, O o) -> decltype(
+                template<typename I, typename O, typename P = ident>
+                auto requires_(I i, O o, P = P{}) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
+                        concepts::model_of<Convertible, Readable::reference_t<I>,
+                            Readable::value_t<I>>(),
+                        concepts::model_of<RegularInvokable, P, Readable::reference_t<I> &&>(),
                         concepts::model_of<SemiRegular, O>(),
-                        concepts::model_of<Writable, O, Readable::reference_t<I>>()
+                        concepts::model_of<Writable, O,
+                            Invokable::result_t<P, Readable::reference_t<I> &&>>()
                     ));
             };
 
@@ -239,31 +264,9 @@ namespace ranges
                         concepts::model_of<Readable, I1>(),
                         concepts::model_of<Readable, I2>(),
                         (ranges::indirect_swap(i1, i2), 42),
+                        (ranges::indirect_swap(i1, i1), 42),
+                        (ranges::indirect_swap(i2, i2), 42),
                         (ranges::indirect_swap(i2, i1), 42)
-                    ));
-            };
-
-            struct IndirectlyProjectedMovable
-            {
-                template<typename I, typename P, typename O>
-                auto requires_(I i, P p, O o) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Readable, I>(),
-                        concepts::model_of<RegularInvokable, P, Readable::reference_t<I>>(),
-                        concepts::model_of<SemiRegular, O>(),
-                        concepts::model_of<MoveWritable, O, Invokable::result_t<P, Readable::reference_t<I>>>()
-                    ));
-            };
-
-            struct IndirectlyProjectedCopyable
-            {
-                template<typename I, typename P, typename O>
-                auto requires_(I i, P p, O o) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Readable, I>(),
-                        concepts::model_of<RegularInvokable, P, Readable::reference_t<I>>(),
-                        concepts::model_of<SemiRegular, O>(),
-                        concepts::model_of<Writable, O, Invokable::result_t<P, Readable::reference_t<I>>>()
                     ));
             };
 
@@ -393,20 +396,14 @@ namespace ranges
         template<typename Out, typename T>
         using Writable = concepts::models<concepts::Writable, Out, T>;
 
-        template<typename I, typename O>
-        using IndirectlyMovable = concepts::models<concepts::IndirectlyMovable, I, O>;
+        template<typename I, typename O, typename P = ident>
+        using IndirectlyMovable = concepts::models<concepts::IndirectlyMovable, I, O, P>;
 
-        template<typename I, typename O>
-        using IndirectlyCopyable = concepts::models<concepts::IndirectlyCopyable, I, O>;
+        template<typename I, typename O, typename P = ident>
+        using IndirectlyCopyable = concepts::models<concepts::IndirectlyCopyable, I, O, P>;
 
         template<typename I1, typename I2>
         using IndirectlySwappable = concepts::models<concepts::IndirectlySwappable, I1, I2>;
-
-        template<typename I, typename P, typename O>
-        using IndirectlyProjectedMovable = concepts::models<concepts::IndirectlyProjectedMovable, I, P, O>;
-
-        template<typename I, typename P, typename O>
-        using IndirectlyProjectedCopyable = concepts::models<concepts::IndirectlyProjectedCopyable, I, P, O>;
 
         template<typename T>
         using WeaklyIncrementable = concepts::models<concepts::WeaklyIncrementable, T>;

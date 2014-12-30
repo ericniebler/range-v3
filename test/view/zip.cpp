@@ -9,17 +9,54 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <cstring>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <range/v3/core.hpp>
 #include <range/v3/view/zip.hpp>
+#include <range/v3/view/map.hpp>
 #include <range/v3/view/bounded.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+
+struct MoveOnlyString
+{
+    char const *sz_;
+
+    MoveOnlyString(char const *sz = "")
+      : sz_(sz)
+    {}
+    MoveOnlyString(MoveOnlyString &&that)
+      : sz_(that.sz_)
+    {
+        that.sz_ = "";
+    }
+    MoveOnlyString(MoveOnlyString const &) = delete;
+    MoveOnlyString &operator=(MoveOnlyString &&that)
+    {
+        sz_ = that.sz_;
+        that.sz_ = "";
+        return *this;
+    }
+    MoveOnlyString &operator=(MoveOnlyString const &) = delete;
+    bool operator==(MoveOnlyString const &that) const
+    {
+        return 0 == std::strcmp(sz_, that.sz_);
+    }
+    bool operator!=(MoveOnlyString const &that) const
+    {
+        return !(*this == that);
+    }
+    friend std::ostream & operator<< (std::ostream &sout, MoveOnlyString const &str)
+    {
+        return sout << '"' << str.sz_ << '"';
+    }
+};
 
 int main()
 {
@@ -33,8 +70,20 @@ int main()
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
+        using Rng = decltype(rng);
         ::models<concepts::BoundedRange>(rng);
         ::models_not<concepts::SizedRange>(rng);
+        CONCEPT_ASSERT(Same<
+            range_value_t<Rng>,
+            std::tuple<int, std::string, std::string>>());
+        CONCEPT_ASSERT(Same<
+            range_reference_t<Rng>,
+            std::tuple<int &, std::string const &, std::string const &>>());
+        CONCEPT_ASSERT(Same<
+            range_rvalue_reference_t<Rng>,
+            std::tuple<int &&, std::string const &&, std::string const &&>>());
+        CONCEPT_ASSERT(Convertible<range_value_t<Rng> &&,
+            range_rvalue_reference_t<Rng>>());
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected(begin(rng), end(rng));
@@ -86,6 +135,62 @@ int main()
         copy(rng, ranges::back_inserter(expected));
         ::check_equal(expected, {"ax","by","cz"});
     }
+
+    // zip_with
+    {
+        std::vector<std::string> v0{"a","b","c"};
+        std::vector<std::string> v1{"x","y","z"};
+
+        auto rng = view::zip_with(std::plus<std::string>{}, v0, v1);
+        std::vector<std::string> expected;
+        copy(rng, ranges::back_inserter(expected));
+        ::check_equal(expected, {"ax","by","cz"});
+    }
+
+    // Move from a zip view
+    {
+        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
+
+        auto rng = view::zip(v0, v1);
+        ::models<concepts::RandomAccessIterable>(rng);
+        std::vector<std::pair<MoveOnlyString, MoveOnlyString>> expected;
+        move(rng, ranges::back_inserter(expected));
+        ::check_equal(expected | view::keys, {"a","b","c"});
+        ::check_equal(expected | view::values, {"x","y","z"});
+        ::check_equal(v0, {"","",""});
+        ::check_equal(v1, {"","",""});
+
+        move(expected, rng.begin());
+        ::check_equal(expected | view::keys, {"","",""});
+        ::check_equal(expected | view::values, {"","",""});
+        ::check_equal(v0, {"a","b","c"});
+        ::check_equal(v1, {"x","y","z"});
+
+        std::vector<MoveOnlyString> res;
+        using RRef = std::pair<MoveOnlyString&&,MoveOnlyString&&>;
+        CONCEPT_ASSERT(Same<RRef, range_rvalue_reference_t<decltype(rng)>>());
+        auto proj = [](RRef &&p) -> MoveOnlyString&& { return std::move(p.first); };
+        move(rng, ranges::back_inserter(res), proj);
+        ::check_equal(res, {"a","b","c"});
+        ::check_equal(v0, {"","",""});
+        ::check_equal(v1, {"x","y","z"});
+    }
+
+    //{
+    //    auto const v = to_<std::vector<MoveOnlyString>>({"a","b","c"});
+    //    auto rng = view::zip(v, v);
+    //    using Rng = decltype(rng);
+    //    using I = range_iterator_t<Rng>;
+    //    // See the comment in the definition of concepts::Readable for
+    //    // why this check fails. Perhaps we need a fix like:
+    //    //   If the value and rvalue-reference types are movable,
+    //    //   then there must be a conversion from the rvalue-reference type
+    //    //   to the value type.
+    //    //CONCEPT_ASSERT(Readable<I>());
+    //    // Should be false! Bug in tuple spec:
+    //    //CONCEPT_ASSERT(!Movable<iterator_rvalue_reference_t<I>>());
+    //}
 
     return test_result();
 }

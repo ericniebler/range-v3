@@ -89,8 +89,9 @@ namespace test_impl
             return true;
         }
     public:
-        R(char const *filename, int lineno, char const *expr, T t)
-          : filename_(filename), lineno_(lineno), expr_(expr), t_(std::move(t))
+        R(char const *filename, int lineno, char const *expr, T && t)
+          : filename_(filename), lineno_(lineno), expr_(expr)
+          , t_(std::forward<T>(t))
         {}
         ~R()
         {
@@ -146,9 +147,9 @@ namespace test_impl
           : filename_(filename), lineno_(lineno), expr_(expr)
         {}
         template<typename T>
-        R<T> operator->*(T t)
+        R<T> operator->*(T && t)
         {
-            return {filename_, lineno_, expr_, std::move(t)};
+            return {filename_, lineno_, expr_, std::forward<T>(t)};
         }
     };
 }

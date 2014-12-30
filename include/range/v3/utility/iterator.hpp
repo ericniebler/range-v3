@@ -19,6 +19,7 @@
 #include <iterator>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/swap.hpp> // for indirect_swap
+#include <range/v3/utility/move.hpp> // for indirect_move
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -314,6 +315,21 @@ namespace ranges
         /// \ingroup group-utility
         /// \sa `iter_swap_fn`
         constexpr iter_swap_fn iter_swap {};
+
+        struct iter_move_fn
+        {
+            template<typename I,
+                CONCEPT_REQUIRES_(Readable<I>())>
+            iterator_rvalue_reference_t<I> operator()(I i) const
+                noexcept(noexcept(indirect_move(i)))
+            {
+                return indirect_move(i);
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `iter_move_fn`
+        constexpr iter_move_fn iter_move {};
 
         template<typename Cont>
         struct back_insert_iterator

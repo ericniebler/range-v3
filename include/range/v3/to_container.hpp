@@ -86,6 +86,15 @@ namespace ranges
         }
 
         /// \overload
+        template<template<typename...> class ContT, typename T,
+            typename Cont = meta::apply<meta::quote<ContT>, T>,
+            CONCEPT_REQUIRES_(detail::ConvertibleToContainer<std::initializer_list<T>, Cont>())>
+        Cont to_(std::initializer_list<T> list)
+        {
+            return list | ranges::to_<ContT>();
+        }
+
+        /// \overload
         template<typename Cont>
         detail::to_container_fn<meta::always<Cont>> to_()
         {
@@ -98,6 +107,14 @@ namespace ranges
         Cont to_(Rng && rng)
         {
             return std::forward<Rng>(rng) | ranges::to_<Cont>();
+        }
+
+        /// \overload
+        template<typename Cont, typename T,
+            CONCEPT_REQUIRES_(detail::ConvertibleToContainer<std::initializer_list<T>, Cont>())>
+        Cont to_(std::initializer_list<T> list)
+        {
+            return list | ranges::to_<Cont>();
         }
 
         /// @}

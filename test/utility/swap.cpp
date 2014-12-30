@@ -13,13 +13,51 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
+#include <iostream>
+#include <cstring>
 #include <tuple>
 #include <memory>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp> // for iter_swap, which uses indirect_swap
+#include <range/v3/view/zip.hpp>
+#include <range/v3/to_container.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+
+struct MoveOnlyString
+{
+    char const *sz_;
+
+    MoveOnlyString(char const *sz = "")
+      : sz_(sz)
+    {}
+    MoveOnlyString(MoveOnlyString &&that)
+      : sz_(that.sz_)
+    {
+        that.sz_ = "";
+    }
+    MoveOnlyString(MoveOnlyString const &) = delete;
+    MoveOnlyString &operator=(MoveOnlyString &&that)
+    {
+        sz_ = that.sz_;
+        that.sz_ = "";
+        return *this;
+    }
+    MoveOnlyString &operator=(MoveOnlyString const &) = delete;
+    bool operator==(MoveOnlyString const &that) const
+    {
+        return 0 == std::strcmp(sz_, that.sz_);
+    }
+    bool operator!=(MoveOnlyString const &that) const
+    {
+        return !(*this == that);
+    }
+    friend std::ostream & operator<< (std::ostream &sout, MoveOnlyString const &str)
+    {
+        return sout << '"' << str.sz_ << '"';
+    }
+};
 
 int main()
 {
@@ -76,6 +114,16 @@ int main()
     ranges::iter_swap(&u0, &u1);
     CHECK(u0.get() == p1);
     CHECK(u1.get() == p0);
+
+    {
+        using namespace ranges;
+        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
+        auto rng = view::zip(v0, v1);
+        ranges::iter_swap(rng.begin(), rng.begin()+2);
+        ::check_equal(v0, {"c","b","a"});
+        ::check_equal(v1, {"z","y","x"});
+    }
 
     return ::test_result();
 }

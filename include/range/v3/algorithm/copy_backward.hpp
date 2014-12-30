@@ -34,7 +34,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     BidirectionalIterator<I>() && IteratorRange<I, S>() &&
                     BidirectionalIterator<O>() &&
-                    IndirectlyProjectedCopyable<I, P, O>()
+                    IndirectlyCopyable<I, O, P>()
                 )>
             std::pair<I, O> operator()(I begin, S end_, O out, P proj = P{}) const
             {
@@ -50,7 +50,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     BidirectionalIterable<Rng &>() &&
                     BidirectionalIterator<O>() &&
-                    IndirectlyProjectedCopyable<I, P, O>()
+                    IndirectlyCopyable<I, O, P>()
                 )>
             std::pair<I, O> operator()(Rng &rng, O out, P proj = P{}) const
             {

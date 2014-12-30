@@ -343,6 +343,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\size.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\to_container.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\associated_types.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\basic_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_iterator.hpp" />

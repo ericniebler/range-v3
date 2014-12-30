@@ -33,7 +33,7 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() && WeaklyIncrementable<O>() &&
-                    IndirectlyProjectedCopyable<I, P, O>())>
+                    IndirectlyCopyable<I, O, P>())>
             std::pair<I, O> operator()(I begin, I middle, S end, O out, P proj_ = P{}) const
             {
                 auto &&proj = invokable(proj_);
@@ -44,7 +44,7 @@ namespace ranges
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Iterable<Rng &>() && WeaklyIncrementable<O>() &&
-                    IndirectlyProjectedCopyable<I, P, O>())>
+                    IndirectlyCopyable<I, O, P>())>
             std::pair<I, O> operator()(Rng & rng, I middle, O out, P proj = P{}) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(out), std::move(proj));

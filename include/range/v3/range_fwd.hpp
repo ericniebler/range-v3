@@ -247,6 +247,10 @@ namespace ranges
               : std::is_trivial<T>
             {};
 #endif
+
+            struct make_tuple_like_fn;
+            struct copy_tuple_like_fn;
+            struct move_tuple_like_fn;
         }
         /// \endcond
 
@@ -596,11 +600,16 @@ namespace ranges
             struct values_fn;
         }
 
-        template<typename Fun, typename...Rngs>
+        template<typename Fun, typename Rngs, typename CopyFun = ident, typename MoveFun = ident>
         struct zip_with_view;
 
-        template<typename...Rngs>
-        struct zip_view;
+        template<typename Rngs>
+        using zip_view =
+            zip_with_view<
+                detail::make_tuple_like_fn,
+                Rngs,
+                detail::copy_tuple_like_fn,
+                detail::move_tuple_like_fn>;
 
         namespace view
         {

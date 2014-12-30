@@ -34,7 +34,7 @@ namespace ranges
             InputIterator<I>,
             WeaklyIncrementable<O>,
             InvokablePredicate<C, X>,
-            IndirectlyProjectedCopyable<I, P, O>>;
+            IndirectlyCopyable<I, O, P>>;
 
         /// \addtogroup group-algorithms
         /// @{

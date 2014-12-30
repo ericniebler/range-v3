@@ -45,6 +45,7 @@ namespace ranges
             static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::InputIterator*, std::false_type)
             {
+                // TODO this will be very interesting once we support proxy iterators.
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
                 if(begin != end)

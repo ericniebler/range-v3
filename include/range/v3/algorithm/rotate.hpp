@@ -29,6 +29,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/swap.hpp>
+#include <range/v3/utility/move.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/move.hpp>
@@ -47,7 +48,7 @@ namespace ranges
             template<typename I> // Forward
             static range<I> rotate_left(I begin, I end)
             {
-                auto tmp = std::move(*begin);
+                iterator_value_t<I> tmp = iter_move(begin);
                 I lm1 = move(next(begin), end, begin).second;
                 *lm1 = std::move(tmp);
                 return {lm1, end};
@@ -57,7 +58,7 @@ namespace ranges
             static range<I> rotate_right(I begin, I end)
             {
                 I lm1 = prev(end);
-                auto tmp = std::move(*lm1);
+                iterator_value_t<I> tmp = iter_move(lm1);
                 I fp1 = move_backward(begin, lm1, end).second;
                 *begin = std::move(tmp);
                 return {fp1, end};
@@ -122,12 +123,12 @@ namespace ranges
                 auto const g = rotate_fn::gcd(m1, m2);
                 for (I p = begin + g; p != begin;)
                 {
-                    auto t = std::move(*--p);
+                    iterator_value_t<I> t = iter_move(--p);
                     I p1 = p;
                     I p2 = p1 + m1;
                     do
                     {
-                        *p1 = std::move(*p2);
+                        *p1 = iter_move(p2);
                         p1 = p2;
                         auto const d = end - p2;
                         if(m1 < d)

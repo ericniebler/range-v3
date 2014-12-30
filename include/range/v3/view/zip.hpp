@@ -25,6 +25,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/move.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/optional.hpp>
@@ -114,18 +115,80 @@ namespace ranges
                 }
             } max_ {};
 
-            struct make_tuple_or_pair_fn
+            struct make_tuple_like_fn
             {
                 template<typename ...Ts>
                 std::tuple<Ts...> operator()(Ts &&...ts) const
                 {
                     return std::tuple<Ts...>{std::forward<Ts>(ts)...};
                 }
-
                 template<typename F, typename S>
                 std::pair<F, S> operator()(F && f, S && s) const
                 {
                     return {std::forward<F>(f), std::forward<S>(s)};
+                }
+            };
+
+            struct move_tuple_like_fn
+            {
+            private:
+                template<typename T>
+                using rvalue_ref_t =
+                    meta::if_<
+                        std::is_reference<T>,
+                        meta::eval<std::remove_reference<T>> &&,
+                        T>;
+
+                template<typename ...Ts, std::size_t...Is>
+                static std::tuple<rvalue_ref_t<Ts>...>
+                impl(std::tuple<Ts...> &t, index_sequence<Is...>)
+                {
+                    return std::tuple<rvalue_ref_t<Ts>...>{std::move(std::get<Is>(t))...};
+                }
+                template<typename...Ts>
+                using nothrow_move_ctors_t =
+                    meta::and_c<noexcept(rvalue_ref_t<Ts>(std::move(std::declval<Ts>())))...>;
+            public:
+                template<typename ...Ts>
+                std::tuple<rvalue_ref_t<Ts>...> operator()(std::tuple<Ts...> && t) const
+                    noexcept(nothrow_move_ctors_t<Ts...>::value)
+                {
+                    return move_tuple_like_fn::impl(t, make_index_sequence<sizeof...(Ts)>{});
+                }
+                template<typename F, typename S>
+                std::pair<rvalue_ref_t<F>, rvalue_ref_t<S>> operator()(std::pair<F, S> && p) const
+                    noexcept(nothrow_move_ctors_t<F, S>::value)
+                {
+                    return {std::move(p.first), std::move(p.second)};
+                }
+            };
+
+            struct copy_tuple_like_fn
+            {
+                template<typename ...Ts>
+                std::tuple<decay_t<Ts>...> operator()(std::tuple<Ts...> &&) const;
+                template<typename F, typename S>
+                std::pair<decay_t<F>, decay_t<S>> operator()(std::pair<F, S> &&) const;
+            };
+
+            template<typename Cur, typename Sent, typename Reference, typename MoveFun>
+            struct zip_with_mixin : basic_mixin<Cur>
+            {
+                using basic_mixin<Cur>::basic_mixin;
+                using I0 = basic_iterator<Cur, Sent>;
+                using I1 = basic_iterator<Cur, Cur>;
+                using R = Reference;
+                friend auto indirect_move(I0 const &, R && t)
+                    noexcept(noexcept(MoveFun{}(std::forward<R>(t)))) ->
+                    decltype(MoveFun{}(std::forward<R>(t)))
+                {
+                    return MoveFun{}(std::forward<R>(t));
+                }
+                friend auto indirect_move(I1 const &, R && t)
+                    noexcept(noexcept(MoveFun{}(std::forward<R>(t)))) ->
+                    decltype(MoveFun{}(std::forward<R>(t)))
+                {
+                    return MoveFun{}(std::forward<R>(t));
                 }
             };
         } // namespace detail
@@ -133,10 +196,10 @@ namespace ranges
 
         /// \addtogroup group-views
         /// @{
-        template<typename Fun, typename ...Rngs>
-        struct zip_with_view
+        template<typename Fun, typename...Rngs, typename CopyFun, typename MoveFun>
+        struct zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun>
           : range_facade<
-                zip_with_view<Fun, Rngs...>,
+                zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun>,
                 meta::and_c<is_infinite<Rngs>::value...>::value>
         {
         private:
@@ -154,22 +217,25 @@ namespace ranges
                 semiregular_invokable_ref_t<Fun, true> fun_;
                 std::tuple<range_iterator_t<Rngs>...> its_;
             public:
+                using reference_t_ =
+                    concepts::Invokable::result_t<Fun, range_reference_t<Rngs> &&...>;
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
                 using single_pass =
                     meta::or_c<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
                 using value_type =
-                    detail::decay_t<meta::if_<
-                        Invokable<Fun, range_value_t<Rngs> &&...>,
-                        concepts::Invokable::result_t<Fun, range_value_t<Rngs> &&...>,
-                        concepts::Invokable::result_t<Fun, range_value_t<Rngs>...>>>;
+                    detail::decay_t<
+                        concepts::Invokable::result_t<CopyFun,
+                            concepts::Invokable::result_t<Fun, range_reference_t<Rngs> &&...> &&>>;
+                // This is what gives zip_view iterators their special iter_move behavior:
+                using mixin =
+                    detail::zip_with_mixin<cursor, sentinel, reference_t_, MoveFun>;
                 cursor() = default;
-                cursor(
-                    semiregular_invokable_ref_t<Fun, true> fun,
+                cursor(semiregular_invokable_ref_t<Fun, true> fun,
                     std::tuple<range_iterator_t<Rngs>...> its)
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
-                concepts::Invokable::result_t<Fun, range_reference_t<Rngs> &&...> current() const
+                reference_t_ current() const
                 {
                     return tuple_apply(fun_, tuple_transform(its_, detail::deref));
                 }
@@ -261,6 +327,10 @@ namespace ranges
             }
         public:
             zip_with_view() = default;
+            explicit zip_with_view(Rngs &&...rngs)
+              : fun_(invokable(Fun{}))
+              , rngs_{view::all(std::forward<Rngs>(rngs))...}
+            {}
             explicit zip_with_view(Fun fun, Rngs &&...rngs)
               : fun_(invokable(std::move(fun)))
               , rngs_{view::all(std::forward<Rngs>(rngs))...}
@@ -275,18 +345,6 @@ namespace ranges
             }
         };
 
-        template<typename ...Rngs>
-        struct zip_view
-          : zip_with_view<detail::make_tuple_or_pair_fn, Rngs...>
-        {
-            zip_view() = default;
-            zip_view(Rngs &&...rngs)
-              : zip_with_view<detail::make_tuple_or_pair_fn, Rngs...>{
-                    detail::make_tuple_or_pair_fn{},
-                    std::forward<Rngs>(rngs)...}
-            {}
-        };
-
         namespace view
         {
             struct zip_fn
@@ -295,10 +353,10 @@ namespace ranges
                 using Concept = meta::and_<InputIterable<Rngs>...>;
 
                 template<typename...Rngs, CONCEPT_REQUIRES_(Concept<Rngs...>())>
-                zip_view<Rngs...> operator()(Rngs &&... rngs) const
+                zip_view<meta::list<Rngs...>> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_c<(bool) Iterable<Rngs>()...>::value);
-                    return zip_view<Rngs...>{std::forward<Rngs>(rngs)...};
+                    return zip_view<meta::list<Rngs...>>{std::forward<Rngs>(rngs)...};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename...Rngs, CONCEPT_REQUIRES_(!Concept<Rngs...>())>
@@ -323,9 +381,12 @@ namespace ranges
                     Invokable<Fun, range_value_t<Rngs>...>>;
 
                 template<typename Fun, typename...Rngs, CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
-                zip_with_view<Fun, Rngs...> operator()(Fun fun, Rngs &&... rngs) const
+                zip_with_view<Fun, meta::list<Rngs...>> operator()(Fun fun, Rngs &&... rngs) const
                 {
-                    return zip_with_view<Fun, Rngs...>{std::move(fun), std::forward<Rngs>(rngs)...};
+                    return zip_with_view<Fun, meta::list<Rngs...>>{
+                        std::move(fun),
+                        std::forward<Rngs>(rngs)...
+                    };
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Fun, typename...Rngs, CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>

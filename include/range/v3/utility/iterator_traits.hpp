@@ -33,6 +33,9 @@ namespace ranges
         using iterator_reference_t = concepts::Readable::reference_t<I>;
 
         template<typename I>
+        using iterator_rvalue_reference_t = concepts::Readable::rvalue_reference_t<I>;
+
+        template<typename I>
         using iterator_category_t = concepts::WeakInputIterator::category_t<I>;
 
         template<typename I>
@@ -73,6 +76,12 @@ namespace ranges
         struct iterator_reference
         {
             using type = iterator_reference_t<I>;
+        };
+
+        template<typename I>
+        struct iterator_rvalue_reference
+        {
+            using type = iterator_rvalue_reference_t<I>;
         };
 
         template<typename I>

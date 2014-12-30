@@ -211,31 +211,44 @@ namespace ranges
                 // value_type(*r++) can work.  In this case, *r is the same as
                 // *r++, and the conversion operator below is used to ensure
                 // readability.
-                writable_postfix_increment_proxy const& operator*() const
+                writable_postfix_increment_proxy const & operator*() const
                 {
                     return *this;
                 }
+                // So that iter_move(r++) moves the cached value out
+                friend value_type && indirect_move(
+                    writable_postfix_increment_proxy const &,
+                    writable_postfix_increment_proxy const &ref)
+                {
+                    return std::move(ref.value_);
+                }
                 // Provides readability of *r++
-                operator value_type&() const
+                operator value_type &() const
                 {
                     return value_;
                 }
                 // Provides writability of *r++
-                template<typename T, enable_if_t<!std::is_same<T, writable_postfix_increment_proxy>::value> = 0>
-                T const& operator=(T const& x) const
+                template<typename T,
+                    CONCEPT_REQUIRES_(Writable<I, T>())>
+                void operator=(T const &x) const
                 {
                     *it_ = x;
-                    return x;
                 }
                 // This overload just in case only non-const objects are writable
-                template<typename T, enable_if_t<!std::is_same<T, writable_postfix_increment_proxy>::value> = 0>
-                T& operator=(T& x) const
+                template<typename T,
+                    CONCEPT_REQUIRES_(Writable<I, T>())>
+                void operator=(T &x) const
                 {
                     *it_ = x;
-                    return x;
+                }
+                template<typename T,
+                    CONCEPT_REQUIRES_(MoveWritable<I, T>())>
+                void operator=(T &&x) const
+                {
+                    *it_ = std::move(x);
                 }
                 // Provides X(r++)
-                operator I const&() const
+                operator I const &() const
                 {
                     return it_;
                 }

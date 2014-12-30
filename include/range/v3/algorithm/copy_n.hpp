@@ -38,7 +38,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     WeakInputIterator<I>() &&
                     WeaklyIncrementable<O>() &&
-                    IndirectlyProjectedCopyable<I, P, O>()
+                    IndirectlyCopyable<I, O, P>()
                 )>
             std::pair<I, O>
             operator()(I begin, iterator_difference_t<I> n, O out, P proj_ = P{}) const

@@ -22,6 +22,8 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/move.hpp>
+#include <range/v3/utility/associated_types.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
 
 namespace ranges
@@ -142,6 +144,18 @@ namespace ranges
                 noexcept(is_nothrow_swappable<decltype(*std::declval<Readable0>()),
                                               decltype(*std::declval<Readable1>())>::value);
 
+            template<typename Readable0, typename Readable1>
+            typename std::enable_if<
+                !is_swappable<
+                    decltype(*std::declval<Readable0>()),
+                    decltype(*std::declval<Readable1>())>::value &&
+                is_indirectly_movable<Readable0, Readable1>::value &&
+                is_indirectly_movable<Readable1, Readable0>::value>::type
+            indirect_swap(Readable0 a, Readable1 b)
+                noexcept(
+                    is_nothrow_indirectly_movable<Readable0, Readable1>::value &&
+                    is_nothrow_indirectly_movable<Readable0, Readable1>::value);
+
             struct indirect_swap_fn
             {
                 template<typename Readable0, typename Readable1>
@@ -186,6 +200,23 @@ namespace ranges
                                               decltype(*std::declval<Readable1>())>::value)
             {
                 swap(*a, *b);
+            }
+
+            template<typename Readable0, typename Readable1>
+            typename std::enable_if<
+                !is_swappable<
+                    decltype(*std::declval<Readable0>()),
+                    decltype(*std::declval<Readable1>())>::value &&
+                is_indirectly_movable<Readable0, Readable1>::value &&
+                is_indirectly_movable<Readable1, Readable0>::value>::type
+            indirect_swap(Readable0 a, Readable1 b)
+                noexcept(
+                    is_nothrow_indirectly_movable<Readable0, Readable1>::value &&
+                    is_nothrow_indirectly_movable<Readable0, Readable1>::value)
+            {
+                meta::eval<value_type<Readable0>> v0 = indirect_move(a);
+                *a = indirect_move(b);
+                *b = std::move(v0);
             }
         }
         /// \endcond

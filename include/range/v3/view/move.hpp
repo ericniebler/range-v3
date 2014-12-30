@@ -31,6 +31,8 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            // BUGBUG if *it returns a T&&, then move_view's reference type
+            // should also be T&&, not T
             template<typename T> T && rref(T &, int);
             template<typename T> T rref(T, long);
         }

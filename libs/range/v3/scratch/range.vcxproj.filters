@@ -1129,6 +1129,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_remove_if.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\associated_types.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

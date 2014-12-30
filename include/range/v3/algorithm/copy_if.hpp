@@ -39,7 +39,7 @@ namespace ranges
                     InputIterator<I>() && IteratorRange<I, S>() &&
                     WeaklyIncrementable<O>() &&
                     InvokablePredicate<F, X>() &&
-                    IndirectlyProjectedCopyable<I, P, O>()
+                    IndirectlyCopyable<I, O, P>()
                 )>
             std::pair<I, O>
             operator()(I begin, S end, O out, F pred_, P proj_ = P{}) const
@@ -65,7 +65,7 @@ namespace ranges
                     InputIterable<Rng &>() &&
                     WeaklyIncrementable<O>() &&
                     InvokablePredicate<F, X>() &&
-                    IndirectlyProjectedCopyable<I, P, O>()
+                    IndirectlyCopyable<I, O, P>()
                 )>
             std::pair<I, O>
             operator()(Rng &rng, O out, F pred, P proj = P{}) const
