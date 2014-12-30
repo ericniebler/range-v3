@@ -17,6 +17,7 @@
 #include <cstring>
 #include <tuple>
 #include <memory>
+#include <vector>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp> // for iter_swap, which uses indirect_swap
