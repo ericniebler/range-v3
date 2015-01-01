@@ -189,6 +189,7 @@
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
     <ClCompile Include="..\..\..\..\test\view\any_range.cpp" />
     <ClCompile Include="..\..\..\..\test\view\bounded.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\concat.cpp" />
     <ClCompile Include="..\..\..\..\test\view\const.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp" />

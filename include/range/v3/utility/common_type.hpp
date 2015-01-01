@@ -23,7 +23,7 @@
 
 // Sadly, this is necessary because of:
 //  - std::common_type is not SFINAE-friendly, and
-//  - The specification of std::common_type makes it impossible
+//  - The specification of std::common_type makes it impossibly
 //    difficult to specialize on user-defined types without spamming
 //    out a bajillion copies to handle all combinations of cv and ref
 //    qualifiers.
@@ -36,7 +36,11 @@ namespace ranges
         namespace detail
         {
             template<typename T, typename U>
-            using default_common_t = decltype(true? std::declval<T>() : std::declval<U>());
+            using default_common_t =
+                meta::if_<
+                    std::is_same<T, U>,
+                    T,
+                    decltype(true? std::declval<T>() : std::declval<U>())>;
 
             template<typename T, typename U, typename Enable = void>
             struct common_type_if
@@ -109,6 +113,60 @@ namespace ranges
         template<typename T, typename U, typename... Vs>
         struct common_type<T, U, Vs...>
           : detail::common_type_recurse_if<common_type<T, U>, Vs...>
+        {};
+        /// @}
+
+        /// \cond
+        namespace detail
+        {
+            template<typename T, typename U, typename Enable = void>
+            struct common_reference_if
+            {};
+
+            template<typename T, typename U>
+            struct common_reference_if<T, U, void_t<default_common_t<T, U>>>
+            {
+                using type = default_common_t<T, U>;
+            };
+
+            template<typename Meta, typename...Ts>
+            struct common_reference_recurse
+              : common_reference<typename Meta::type, Ts...>
+            {};
+
+            template<typename Meta, typename...Ts>
+            struct common_reference_recurse_if
+              : meta::if_<
+                    has_type<Meta>,
+                    common_reference_recurse<Meta, Ts...>,
+                    empty>
+            {};
+        }
+        /// \endcond
+
+        /// \addtogroup group-utility Utility
+        /// @{
+        ///
+
+        /// Users should specialize this to hook the \c CommonReference concept.
+        template<typename ...Ts>
+        struct common_reference
+        {};
+
+        template<typename T>
+        struct common_reference<T>
+        {
+            using type = T;
+        };
+
+        template<typename T, typename U>
+        struct common_reference<T, U>
+          : detail::common_reference_if<T, U>
+        {};
+
+        template<typename T, typename U, typename... Vs>
+        struct common_reference<T, U, Vs...>
+          : detail::common_reference_recurse_if<common_reference<T, U>, Vs...>
         {};
         /// @}
     }

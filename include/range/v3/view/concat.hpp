@@ -37,19 +37,6 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            struct real_common_type_
-            {
-                template<typename T>
-                static T call(T &&);
-
-                template<typename T, typename...Ts, typename Impl = real_common_type_>
-                static auto call(T &&t, Ts &&...ts) ->
-                    decltype(true ? (T&&) t : Impl::call((Ts&&) ts...));
-            };
-
-            template<typename...Ts>
-            using real_common_type_t = decltype(real_common_type_::call(std::declval<Ts>()...));
-
             // Dereference the iterator and coerce the return type
             template<typename Reference>
             struct deref_fun
@@ -205,7 +192,9 @@ namespace ranges
                     return std::distance(begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
             public:
-                using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
+                //using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
+                // BUGBUG what about rvalue_reference and common_reference?
+                using reference = common_reference_t<range_reference_t<Rngs const>...>;
                 using single_pass = meta::fast_or<SinglePass<range_iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(concat_view const &rng, begin_tag)

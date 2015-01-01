@@ -162,6 +162,13 @@ namespace ranges
                 {
                     return this->get().first;
                 }
+                // TODO:
+                //friend auto indirect_move(mixin const &m, iterator_reference_t<BaseIter> && ref)
+                //    noexcept(noexcept(ranges::indirect_move(m.get(), (iterator_reference_t<BaseIter> &&) ref))) ->
+                //    decltype(ranges::indirect_move(m.get(), (iterator_reference_t<BaseIter> &&) ref))
+                //{
+                //    return ranges::indirect_move(m.get(), (iterator_reference_t<BaseIter> &&) ref);
+                //}
             };
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A>().current(first))>

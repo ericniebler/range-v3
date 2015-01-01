@@ -150,6 +150,7 @@ namespace ranges
                 template<typename I, typename C = ordered_less, typename P = ident>
                 void operator()(I begin, iterator_difference_t<I> len, C pred_ = C{}, P proj_ = P{}) const
                 {
+                    using R = iterator_common_reference_t<I>;
                     if(len > 1)
                     {
                         auto &&pred = invokable(pred_);
@@ -159,16 +160,16 @@ namespace ranges
                         I i = begin + len;
                         if(pred(proj(*i), proj(*--end)))
                         {
-                            iterator_value_t<I> v(std::move(*end));
+                            iterator_value_t<I> v = iter_move(end);
                             do
                             {
-                                *end = std::move(*i);
+                                *end = iter_move(i);
                                 end = i;
                                 if(len == 0)
                                     break;
                                 len = (len - 1) / 2;
                                 i = begin + len;
-                            } while(pred(proj(*i), proj(v)));
+                            } while(pred(proj(R(*i)), proj(R(v))));
                             *end = std::move(v);
                         }
                     }
@@ -182,6 +183,7 @@ namespace ranges
                 template<typename I, typename C = ordered_less, typename P = ident>
                 void operator()(I begin, iterator_difference_t<I> len, I start, C pred_ = C {}, P proj_ = P{}) const
                 {
+                    using R = iterator_common_reference_t<I>;
                     // left-child of start is at 2 * start + 1
                     // right-child of start is at 2 * start + 2
                     auto child = start - begin;
@@ -207,11 +209,11 @@ namespace ranges
                         // we are, start is larger than it's largest child
                         return;
 
-                    iterator_value_t<I> top(std::move(*start));
+                    iterator_value_t<I> top = iter_move(start);
                     do
                     {
                         // we are not in heap-order, swap the parent with it's largest child
-                        *start = std::move(*child_i);
+                        *start = iter_move(child_i);
                         start = child_i;
 
                         if((len - 2) / 2 < child)
@@ -229,7 +231,7 @@ namespace ranges
                         }
 
                         // check if we are in heap-order
-                    } while (!pred(proj(*child_i), proj(top)));
+                    } while (!pred(proj(R(*child_i)), proj(R(top))));
                     *start = std::move(top);
                 }
             };

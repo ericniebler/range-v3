@@ -84,6 +84,8 @@ int main()
             std::tuple<int &&, std::string const &&, std::string const &&>>());
         CONCEPT_ASSERT(Convertible<range_value_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
+        using I = range_iterator_t<Rng>;
+        static_assert(noexcept(iter_move(std::declval<I>())), "");
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected(begin(rng), end(rng));
@@ -168,7 +170,7 @@ int main()
         ::check_equal(v1, {"x","y","z"});
 
         std::vector<MoveOnlyString> res;
-        using RRef = std::pair<MoveOnlyString&&,MoveOnlyString&&>;
+        using RRef = std::pair<MoveOnlyString &&, MoveOnlyString &&>;
         CONCEPT_ASSERT(Same<RRef, range_rvalue_reference_t<decltype(rng)>>());
         auto proj = [](RRef &&p) -> MoveOnlyString&& { return std::move(p.first); };
         move(rng, ranges::back_inserter(res), proj);
@@ -177,20 +179,25 @@ int main()
         ::check_equal(v1, {"x","y","z"});
     }
 
-    //{
-    //    auto const v = to_<std::vector<MoveOnlyString>>({"a","b","c"});
-    //    auto rng = view::zip(v, v);
-    //    using Rng = decltype(rng);
-    //    using I = range_iterator_t<Rng>;
-    //    // See the comment in the definition of concepts::Readable for
-    //    // why this check fails. Perhaps we need a fix like:
-    //    //   If the value and rvalue-reference types are movable,
-    //    //   then there must be a conversion from the rvalue-reference type
-    //    //   to the value type.
-    //    //CONCEPT_ASSERT(Readable<I>());
-    //    // Should be false! Bug in tuple spec:
-    //    //CONCEPT_ASSERT(!Movable<iterator_rvalue_reference_t<I>>());
-    //}
+    {
+        auto const v = to_<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto rng = view::zip(v, v);
+        using Rng = decltype(rng);
+        using I = range_iterator_t<Rng>;
+        CONCEPT_ASSERT(Readable<I>());
+        CONCEPT_ASSERT(Same<
+            range_value_t<Rng>,
+            std::pair<MoveOnlyString, MoveOnlyString>>());
+        CONCEPT_ASSERT(Same<
+            range_reference_t<Rng>,
+            std::pair<MoveOnlyString const &, MoveOnlyString const &>>());
+        CONCEPT_ASSERT(Same<
+            range_rvalue_reference_t<Rng>,
+            std::pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
+        CONCEPT_ASSERT(Same<
+            range_common_reference_t<Rng>,
+            ranges::detail::pair_ref<MoveOnlyString const &, MoveOnlyString const &>>());
+    }
 
     return test_result();
 }

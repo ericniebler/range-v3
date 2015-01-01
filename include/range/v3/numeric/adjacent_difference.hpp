@@ -51,6 +51,7 @@ namespace ranges
             std::pair<I, O>
             operator()(I begin, S end, O result, BOp bop_ = BOp{}, P proj_ = P{}) const
             {
+                // BUGBUG think about the use of coerce here.
                 auto &&bop = invokable(bop_);
                 auto &&proj = invokable(proj_);
                 using V = iterator_value_t<I>;

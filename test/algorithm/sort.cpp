@@ -24,9 +24,35 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/sort.hpp>
+#include <range/v3/algorithm/copy.hpp>
+#include <range/v3/view/for_each.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/view/repeat_n.hpp>
+#include <range/v3/view/reverse.hpp>
+#include <range/v3/view/zip.hpp>
+#include <range/v3/view/transform.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+
+// BUGBUG
+namespace std
+{
+    template<typename F, typename S>
+    std::ostream & operator<<(std::ostream &sout, std::pair<F,S> const & p)
+    {
+        return sout << '[' << p.first << ',' << p.second << ']';
+    }
+}
+struct first
+{
+    template<typename P>
+    int operator()(P const & p) const
+    {
+        return p.first;
+    }
+};
+
 
 struct indirect_less
 {
@@ -209,6 +235,25 @@ int main()
             CHECK(v[i].i == i);
             CHECK((std::size_t)v[i].j == v.size() - i - 1);
         }
+    }
+
+    // Check sorting a zip view, which uses iter_move
+    {
+        using namespace ranges;
+        std::vector<int> v0 =
+            view::for_each(view::ints(1,5) | view::reverse, [](int i){
+                return ranges::yield_from(view::repeat_n(i,i));
+            });
+        std::vector<int> v1 =
+            view::for_each(view::ints(1,5), [](int i){
+                return ranges::yield_from(view::repeat_n(i,i));
+            });
+        auto rng = view::zip(v0, v1);
+        ::check_equal(v0,{5,5,5,5,5,4,4,4,4,3,3,3,2,2,1});
+        ::check_equal(v1,{1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
+        sort(rng);
+        ::check_equal(v0,{1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
+        ::check_equal(v1,{5,5,5,4,5,5,3,4,4,4,1,2,2,3,3});
     }
 
     return ::test_result();

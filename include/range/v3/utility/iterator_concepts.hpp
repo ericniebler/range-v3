@@ -184,16 +184,20 @@ namespace ranges
                 using rvalue_reference_t = decltype(indirect_move(std::declval<I>()));
 
                 template<typename I>
+                using common_reference_t = meta::eval<iter_common_reference<I>>;
+
+                template<typename I>
                 using pointer_t = meta::eval<pointer_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
-                        // BUGBUG imagine a zip_view where the rvalue reference type is
-                        // pair<T&&, S const &&> and the value type is pair<T, S>. Then the
-                        // check for convertibility below fails if S is move-only. :-(
-                        concepts::model_of<Convertible, rvalue_reference_t<I> &&, value_t<I> const &>(),
-                        concepts::model_of<Convertible, value_t<I> &&, rvalue_reference_t<I>>(),
+                        // In addition to value, reference, and rvalue reference,
+                        // an has a common reference type to which the reference and value types
+                        // are convertible. The concept checks should be expressed in terms of
+                        // the common reference type.
+                        concepts::model_of<Convertible, reference_t<I>, common_reference_t<I>>(),
+                        concepts::model_of<Convertible, value_t<I> &, common_reference_t<I>>(),
                         // This ensures that there is a way to move from reference type
                         // to the rvalue reference type via the 2-argument version of indirect_move:
                         concepts::same_type(indirect_move(i), indirect_move(i, *i))

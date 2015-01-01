@@ -19,6 +19,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/common_type.hpp>
 
 namespace ranges
 {
@@ -93,7 +94,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct value_type<T, detail::void_t<typename T::element_type>> // smart pointers
+            struct value_type<T, void_t<typename T::element_type>> // smart pointers
             {
                 using type = typename T::element_type;
             };
@@ -102,6 +103,34 @@ namespace ranges
             struct value_type<T, enable_if_t<std::is_base_of<std::ios_base, T>::value, void>>
             {
                 using type = typename T::char_type;
+            };
+
+            template<typename T, typename Enable = void>
+            struct iter_common_reference2
+            {};
+
+            template<typename T>
+            struct iter_common_reference2<T,
+                void_t<
+                    common_reference_t<
+                        remove_rvalue_reference_t<decltype(*std::declval<T>())> const &,
+                        typename value_type<T>::type &>>>
+            {
+                using type =
+                    common_reference_t<
+                        remove_rvalue_reference_t<decltype(*std::declval<T>())> const &,
+                        typename value_type<T>::type &>;
+            };
+
+            template<typename T, typename Enable = void>
+            struct iter_common_reference
+              : iter_common_reference2<T>
+            {};
+
+            template<typename T>
+            struct iter_common_reference<T, void_t<typename T::common_reference>>
+            {
+                using type = typename T::common_reference;
             };
         }
         /// \endcond
@@ -121,6 +150,11 @@ namespace ranges
         template<typename T>
         struct value_type
           : detail::value_type<uncvref_t<T>>
+        {};
+
+        template<typename T>
+        struct iter_common_reference
+          : detail::iter_common_reference<uncvref_t<T>>
         {};
         /// @}
     }

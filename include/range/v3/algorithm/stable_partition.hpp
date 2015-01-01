@@ -82,7 +82,7 @@ namespace ranges
                     // Update begin to always point to the end of the trues
                     auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
                     using MI = std::move_iterator<I>;
-                    *buf = std::move(*begin);
+                    *buf = iter_move(begin);
                     ++buf;
                     auto res = partition_copy(MI{next(begin)}, MI{end}, begin, buf, std::ref(pred), std::ref(proj));
                     // All trues now at start of range, all falses in buffer
@@ -176,12 +176,12 @@ namespace ranges
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
                     auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
-                    *buf = std::move(*begin);
+                    *buf = iter_move(begin);
                     ++buf;
                     auto res = partition_copy(MI{next(begin)}, MI{end}, begin, buf, std::ref(pred), std::ref(proj));
                     begin = std::get<1>(res);
                     // move *end, known to be true
-                    *begin = std::move(*std::get<0>(res));
+                    *begin = iter_move(std::get<0>(res));
                     ++begin;
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false

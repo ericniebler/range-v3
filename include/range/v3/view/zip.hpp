@@ -52,7 +52,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T>
-                auto operator()(T const & t) const -> decltype(*t)
+                auto operator()(T const & t) const noexcept(noexcept(*t)) -> decltype(*t)
                 {
                     return *t;
                 }
@@ -119,11 +119,13 @@ namespace ranges
             {
                 template<typename ...Ts>
                 std::tuple<Ts...> operator()(Ts &&...ts) const
+                    noexcept(std::is_nothrow_move_constructible<std::tuple<Ts...>>::value)
                 {
                     return std::tuple<Ts...>{std::forward<Ts>(ts)...};
                 }
                 template<typename F, typename S>
                 std::pair<F, S> operator()(F && f, S && s) const
+                    noexcept(std::is_nothrow_move_constructible<std::pair<F, S>>::value)
                 {
                     return {std::forward<F>(f), std::forward<S>(s)};
                 }
@@ -147,17 +149,20 @@ namespace ranges
                 }
                 template<typename...Ts>
                 using nothrow_move_ctors_t =
-                    meta::and_c<noexcept(rvalue_ref_t<Ts>(std::move(std::declval<Ts>())))...>;
+                    meta::and_<meta::or_<std::is_reference<rvalue_ref_t<Ts>>,
+                        std::is_nothrow_move_constructible<rvalue_ref_t<Ts>>>...>;
             public:
                 template<typename ...Ts>
                 std::tuple<rvalue_ref_t<Ts>...> operator()(std::tuple<Ts...> && t) const
-                    noexcept(nothrow_move_ctors_t<Ts...>::value)
+                    noexcept(std::is_nothrow_move_constructible<
+                        std::tuple<rvalue_ref_t<Ts>...>>::value)
                 {
                     return move_tuple_like_fn::impl(t, make_index_sequence<sizeof...(Ts)>{});
                 }
                 template<typename F, typename S>
                 std::pair<rvalue_ref_t<F>, rvalue_ref_t<S>> operator()(std::pair<F, S> && p) const
-                    noexcept(nothrow_move_ctors_t<F, S>::value)
+                    noexcept(std::is_nothrow_move_constructible<
+                        std::pair<rvalue_ref_t<F>, rvalue_ref_t<S>>>::value)
                 {
                     return {std::move(p.first), std::move(p.second)};
                 }
@@ -191,15 +196,63 @@ namespace ranges
                     return MoveFun{}(std::forward<R>(t));
                 }
             };
+
+            template<typename ...Ts>
+            struct tuple_ref
+              : std::tuple<Ts...>
+            {
+            private:
+                template<std::size_t...Is>
+                tuple_ref(std::tuple<decay_t<Ts>...> & val, index_sequence<Is...>)
+                  : std::tuple<Ts...>{std::get<Is>(val)...}
+                {}
+            public:
+                using std::tuple<Ts...>::tuple;
+                tuple_ref(std::tuple<decay_t<Ts>...> & val)
+                  : tuple_ref{val, make_index_sequence<sizeof...(Ts)>{}}
+                {}
+                using std::tuple<Ts...>::operator=;
+            };
+
+            template<typename F, typename S>
+            struct pair_ref
+              : std::pair<F, S>
+            {
+                using std::pair<F, S>::pair;
+                pair_ref(std::pair<decay_t<F>, decay_t<S>> & val)
+                  : std::pair<F, S>{val.first, val.second}
+                {}
+                using std::pair<F, S>::operator=;
+            };
+
+            template<typename...Refs, typename...ValRefs>
+            struct common_tuple_ref<std::tuple<Refs...> const &, std::tuple<ValRefs...> &>
+            {
+                using type =
+                    tuple_ref<
+                        common_reference_t<
+                            remove_rvalue_reference_t<Refs> const &,
+                            ValRefs &>...>;
+            };
+
+            template<typename F1, typename S1, typename F2, typename S2>
+            struct common_tuple_ref<std::pair<F1, S1> const &, std::pair<F2, S2> &>
+            {
+                using type =
+                    pair_ref<
+                        common_reference_t<remove_rvalue_reference_t<F1> const &, F2 &>,
+                        common_reference_t<remove_rvalue_reference_t<S1> const &, S2 &>>;
+            };
+
         } // namespace detail
         /// \endcond
 
         /// \addtogroup group-views
         /// @{
-        template<typename Fun, typename...Rngs, typename CopyFun, typename MoveFun>
-        struct zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun>
+        template<typename Fun, typename...Rngs, typename CopyFun, typename MoveFun, typename CommonRef>
+        struct zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun, CommonRef>
           : range_facade<
-                zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun>,
+                zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun, CommonRef>,
                 meta::and_c<is_infinite<Rngs>::value...>::value>
         {
         private:
@@ -216,17 +269,22 @@ namespace ranges
                 friend struct sentinel;
                 semiregular_invokable_ref_t<Fun, true> fun_;
                 std::tuple<range_iterator_t<Rngs>...> its_;
-            public:
+
                 using reference_t_ =
                     concepts::Invokable::result_t<Fun, range_reference_t<Rngs> &&...>;
+                using rvalue_reference_t_ =
+                    concepts::Invokable::result_t<MoveFun, reference_t_ &&>;
+            public:
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
                 using single_pass =
                     meta::or_c<(bool) Derived<ranges::input_iterator_tag,
                         range_category_t<Rngs>>()...>;
                 using value_type =
-                    detail::decay_t<
-                        concepts::Invokable::result_t<CopyFun,
-                            concepts::Invokable::result_t<Fun, range_reference_t<Rngs> &&...> &&>>;
+                    detail::decay_t<concepts::Invokable::result_t<CopyFun, reference_t_ &&>>;
+                using common_reference =
+                    meta::apply<CommonRef,
+                        detail::remove_rvalue_reference_t<reference_t_> const &,
+                        value_type &>;
                 // This is what gives zip_view iterators their special iter_move behavior:
                 using mixin =
                     detail::zip_with_mixin<cursor, sentinel, reference_t_, MoveFun>;
@@ -236,6 +294,7 @@ namespace ranges
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
                 reference_t_ current() const
+                    noexcept(noexcept(fun_(std::declval<range_reference_t<Rngs>>()...)))
                 {
                     return tuple_apply(fun_, tuple_transform(its_, detail::deref));
                 }

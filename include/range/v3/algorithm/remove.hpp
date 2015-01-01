@@ -54,7 +54,7 @@ namespace ranges
                     {
                         if(!(proj(*i) == val))
                         {
-                            *begin = std::move(*i);
+                            *begin = iter_move(i);
                             ++begin;
                         }
                     }

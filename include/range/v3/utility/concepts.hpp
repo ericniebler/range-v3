@@ -277,6 +277,20 @@ namespace ranges
                     ));
             };
 
+            struct CommonReference
+            {
+                template<typename T, typename U>
+                using common_reference_t = ranges::common_reference_t<T, U>;
+
+                template<typename T, typename U,
+                    typename C = common_reference_t<T, U>>
+                auto requires_(T t, U u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<C>(val<T>()),
+                        concepts::convertible_to<C>(val<U>())
+                    ));
+            };
+
             struct Integral
             {
                 template<typename T>
@@ -600,6 +614,9 @@ namespace ranges
 
         template<typename T, typename U>
         using Common = concepts::models<concepts::Common, T, U>;
+
+        template<typename T, typename U>
+        using CommonReference = concepts::models<concepts::CommonReference, T, U>;
 
         template<typename T>
         using Integral = concepts::models<concepts::Integral, T>;

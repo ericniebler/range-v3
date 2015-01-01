@@ -46,6 +46,33 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace meta
+        {
+            template<typename...Ts>
+            struct list;
+
+            template<typename T>
+            struct id;
+
+            template<template<typename...> class>
+            struct quote;
+
+            template<template<typename...> class C>
+            struct quote_trait;
+
+            template<typename T, template<T...> class F>
+            struct quote_i;
+
+            template<typename T, template<T...> class C>
+            struct quote_trait_i;
+
+            template<typename...Fs>
+            struct compose;
+
+            template<typename T>
+            struct always;
+        }
+
         /// \cond
         namespace adl_begin_end_detail
         {
@@ -81,6 +108,12 @@ namespace ranges
 
         template<typename ...Ts>
         using common_type_t = typename common_type<Ts...>::type;
+
+        template<typename ...Ts>
+        struct common_reference;
+
+        template<typename ...Ts>
+        using common_reference_t = typename common_reference<Ts...>::type;
 
         template<typename Sig>
         using result_of_t = typename std::result_of<Sig>::type;
@@ -248,9 +281,26 @@ namespace ranges
             {};
 #endif
 
+            template<typename T>
+            struct remove_rvalue_reference
+            {
+                using type = T;
+            };
+
+            template<typename T>
+            struct remove_rvalue_reference<T &&>
+            {
+                using type = T;
+            };
+
+            template<typename T>
+            using remove_rvalue_reference_t = typename remove_rvalue_reference<T>::type;
+
             struct make_tuple_like_fn;
             struct copy_tuple_like_fn;
             struct move_tuple_like_fn;
+            template<typename Ref, typename Val>
+            struct common_tuple_ref;
         }
         /// \endcond
 
@@ -600,7 +650,12 @@ namespace ranges
             struct values_fn;
         }
 
-        template<typename Fun, typename Rngs, typename CopyFun = ident, typename MoveFun = ident>
+        template<
+            typename Fun,
+            typename Rngs,
+            typename CopyFun = ident,
+            typename MoveFun = ident,
+            typename CommonRef = meta::quote<common_reference_t>>
         struct zip_with_view;
 
         template<typename Rngs>
@@ -609,7 +664,8 @@ namespace ranges
                 detail::make_tuple_like_fn,
                 Rngs,
                 detail::copy_tuple_like_fn,
-                detail::move_tuple_like_fn>;
+                detail::move_tuple_like_fn,
+                meta::quote_trait<detail::common_tuple_ref>>;
 
         namespace view
         {

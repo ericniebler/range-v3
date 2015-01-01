@@ -374,12 +374,12 @@ namespace ranges
             basic_mixin(T t)
               : t_(std::move(t))
             {}
-            T &get()
+            T &get() noexcept
             {
                 return t_;
             }
             /// \overload
-            T const &get() const
+            T const &get() const noexcept
             {
                 return t_;
             }
@@ -436,11 +436,11 @@ namespace ranges
                     detail::cursor_concept_t<Cur>>;
 
             using detail::mixin_base<Cur>::get;
-            Cur &pos()
+            Cur &pos() noexcept
             {
                 return this->detail::mixin_base<Cur>::get();
             }
-            Cur const &pos() const
+            Cur const &pos() const noexcept
             {
                 return this->detail::mixin_base<Cur>::get();
             }
@@ -474,6 +474,7 @@ namespace ranges
             using reference =
                 decltype(range_access::current(std::declval<Cur const &>()));
             using value_type = range_access::cursor_value_t<Cur>;
+            using common_reference = range_access::cursor_common_reference_t<Cur>;
             using iterator_category = decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
             using difference_type = range_access::cursor_difference_t<Cur>;
             using pointer = meta::eval<detail::operator_arrow_dispatch<reference>>;
@@ -491,6 +492,7 @@ namespace ranges
             // Mix in any additional constructors defined and exported by the cursor
             using detail::mixin_base<Cur>::mixin_base;
             reference operator*() const
+                noexcept(noexcept(range_access::current(std::declval<basic_iterator const &>().pos())))
             {
                 return range_access::current(pos());
             }

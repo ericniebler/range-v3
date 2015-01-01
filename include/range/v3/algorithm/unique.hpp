@@ -53,7 +53,7 @@ namespace ranges
                 {
                     for(I i = next(begin); ++i != end;)
                         if(!pred(proj(*begin), proj(*i)))
-                            *++begin = std::move(*i);
+                            *++begin = iter_move(i);
                     ++begin;
                 }
                 return begin;
