@@ -207,7 +207,20 @@ namespace ranges
                   : std::tuple<Ts...>{std::get<Is>(val)...}
                 {}
             public:
-                using std::tuple<Ts...>::tuple;
+                CONCEPT_REQUIRES(meta::and_c<(bool) DefaultConstructible<Ts>()...>::value)
+                tuple_ref()
+                  : std::tuple<Ts...>{}
+                {}
+                template<typename...Us,
+                    CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us const &>()...>::value)>
+                tuple_ref(std::tuple<Us...> const &that)
+                  : std::tuple<Ts...>(that)
+                {}
+                template<typename...Us,
+                    CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &&>()...>::value)>
+                tuple_ref(std::tuple<Us...> &&that)
+                  : std::tuple<Ts...>(std::move(that))
+                {}
                 tuple_ref(std::tuple<decay_t<Ts>...> & val)
                   : tuple_ref{val, make_index_sequence<sizeof...(Ts)>{}}
                 {}
@@ -218,7 +231,23 @@ namespace ranges
             struct pair_ref
               : std::pair<F, S>
             {
-                using std::pair<F, S>::pair;
+                CONCEPT_REQUIRES(meta::and_c<(bool)DefaultConstructible<F>(),
+                    (bool)DefaultConstructible<S>()>::value)
+                pair_ref()
+                  : std::pair<F, S>{}
+                {}
+                template<typename T, typename U,
+                    CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<F, T const &>(),
+                        (bool) Constructible<S, U const &>()>::value)>
+                pair_ref(std::pair<T, U> const &that)
+                  : std::pair<F, S>(that)
+                {}
+                template<typename T, typename U,
+                    CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<F, T &&>(),
+                        (bool) Constructible<S, U &&>()>::value)>
+                pair_ref(std::pair<T, U> &&that)
+                  : std::pair<F, S>(std::move(that))
+                {}
                 pair_ref(std::pair<decay_t<F>, decay_t<S>> & val)
                   : std::pair<F, S>{val.first, val.second}
                 {}
