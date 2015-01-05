@@ -260,10 +260,6 @@ namespace ranges
                         concepts::model_of<SemiRegular, O>(),
                         concepts::model_of<Writable, O,
                             Invokable::result_t<P, Readable::common_reference_t<I> &&>>()
-                        //concepts::model_of<RegularInvokable, P, Readable::reference_t<I> &&>(),
-                        //concepts::model_of<SemiRegular, O>(),
-                        //concepts::model_of<Writable, O,
-                        //    Invokable::result_t<P, Readable::reference_t<I> &&>>()
                     ));
             };
 

@@ -91,8 +91,8 @@ namespace ranges
                 }
             }
 
-            template<typename I, typename Val, typename C, typename P>
-            inline void unguarded_linear_insert(I end, Val val, C &pred, P &proj)
+            template<typename I, typename C, typename P>
+            inline void unguarded_linear_insert(I end, iterator_value_t<I> val, C &pred, P &proj)
             {
                 using R = iterator_common_reference_t<I>;
                 I next = prev(end);
@@ -131,9 +131,8 @@ namespace ranges
             template<typename I, typename C, typename P>
             inline void unguarded_insertion_sort(I begin, I end, C &pred, P &proj)
             {
-                using V = iterator_value_t<I>;
                 for(I i = begin; i != end; ++i)
-                    detail::unguarded_linear_insert(i, V(iter_move(i)), pred, proj);
+                    detail::unguarded_linear_insert(i, iter_move(i), pred, proj);
             }
         }
         /// \endcond

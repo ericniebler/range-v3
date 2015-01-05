@@ -225,6 +225,11 @@ namespace ranges
                   : tuple_ref{val, make_index_sequence<sizeof...(Ts)>{}}
                 {}
                 using std::tuple<Ts...>::operator=;
+		CONCEPT_REQUIRES(meta::and_c<(bool) Constructible<decay_t<Ts>, Ts const &>()...>::value)
+		operator std::tuple<decay_t<Ts>...> () const
+		{
+		    return static_cast<std::tuple<Ts...> const &>(*this);
+		}
                 CONCEPT_REQUIRES(meta::and_c<(bool) EqualityComparable<Ts>()...>::value)
                 friend bool operator==(tuple_ref const &a, tuple_ref const &b)
                 {
@@ -265,20 +270,17 @@ namespace ranges
                 std::pair<F, S> &base() { return *this; }
                 std::pair<F, S> const &base() const { return *this; }
             public:
-                CONCEPT_REQUIRES(meta::and_c<(bool)DefaultConstructible<F>(),
-                    (bool)DefaultConstructible<S>()>::value)
+                CONCEPT_REQUIRES(DefaultConstructible<F>() && DefaultConstructible<S>())
                 pair_ref()
                   : std::pair<F, S>{}
                 {}
                 template<typename T, typename U,
-                    CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<F, T const &>(),
-                        (bool) Constructible<S, U const &>()>::value)>
+                    CONCEPT_REQUIRES_(Constructible<F, T const &>() && Constructible<S, U const &>())>
                 pair_ref(std::pair<T, U> const &that)
                   : std::pair<F, S>(that)
                 {}
                 template<typename T, typename U,
-                    CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<F, T &&>(),
-                        (bool) Constructible<S, U &&>()>::value)>
+                    CONCEPT_REQUIRES_(Constructible<F, T &&>() && Constructible<S, U &&>())>
                 pair_ref(std::pair<T, U> &&that)
                   : std::pair<F, S>(std::move(that))
                 {}
@@ -286,6 +288,12 @@ namespace ranges
                   : std::pair<F, S>{val.first, val.second}
                 {}
                 using std::pair<F, S>::operator=;
+		CONCEPT_REQUIRES(Constructible<decay_t<F>, F const &>() &&
+		    Constructible<decay_t<S>, S const &>())
+		operator std::pair<decay_t<F>, decay_t<S>> () const
+		{
+		    return static_cast<std::pair<F, S> const &>(*this);
+		}
                 CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
                 friend bool operator==(pair_ref const &a, pair_ref const &b)
                 {
