@@ -35,10 +35,4 @@ The code is known to work on the following compilers:
 Say Thanks!
 -----------
 
-I do this work because I love it and because I love C++ and want it to be as excellent as I know it can be. If you like my work and are looking for a way to say thank you, there are a number of ways. One is to simply leave a supportive comment on [my blog](http://ericniebler.com).
-
-If giving money is your thing, click the "Donate" button below:
-
-<a href='https://pledgie.com/campaigns/27746'><img alt='Say thanks for my work on range-v3 and my C++ standardization efforts!' src='https://pledgie.com/campaigns/27746.png?skin_name=chrome' border='0' ></a>
-
-You could also just leave me some kudos on my Open Hub range-v3 contribution page. It's free! Just click the **Give Kudos** button [here](https://www.openhub.net/p/range-v3/contributors/3053743222308608).
+I do this work because I love it and because I love C++ and want it to be as excellent as I know it can be. If you like my work and are looking for a way to say thank you, you can leave a supportive comment on [my blog](http://ericniebler.com). Or you could leave me some kudos on my Open Hub range-v3 contribution page. Just click the **Give Kudos** button [here](https://www.openhub.net/p/range-v3/contributors/3053743222308608).
