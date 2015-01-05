@@ -56,8 +56,8 @@ namespace ranges
                 template<typename Rng, typename F>
                 using Concept = meta::and_<
                     Iterable<Rng>,
-                    Invokable<F, range_value_t<Rng>>,
-                    Iterable<concepts::Invokable::result_t<F, range_value_t<Rng>>>>;
+                    Invokable<F, range_common_reference_t<Rng>>,
+                    Iterable<concepts::Invokable::result_t<F, range_common_reference_t<Rng>>>>;
 
                 template<typename Rng, typename F,
                     CONCEPT_REQUIRES_(Concept<Rng, F>())>
@@ -74,10 +74,13 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(Iterable<Rng>(),
                         "Rng is not a model of the Iterable concept.");
-                    CONCEPT_ASSERT_MSG(Invokable<F, range_value_t<Rng>>(),
-                        "The function F is not callable with arguments of the type of the range's value type.");
-                    CONCEPT_ASSERT_MSG(Iterable<concepts::Invokable::result_t<F, range_value_t<Rng>>>(),
-                        "To use view::for_each, the function F must return a model of the Iterable concept.");
+                    CONCEPT_ASSERT_MSG(Invokable<F, range_common_reference_t<Rng>>(),
+                        "The function F is not callable with arguments of the type of the range's "
+                        "common reference type.");
+                    CONCEPT_ASSERT_MSG(Iterable<concepts::Invokable::result_t<F,
+                        range_common_reference_t<Rng>>>(),
+                        "To use view::for_each, the function F must return a model of the Iterable "
+                        "concept.");
                 }
             #endif
             };
@@ -143,9 +146,9 @@ namespace ranges
 
         /// \cond
         template<typename Rng, typename Fun,
-            typename Result = concepts::Function::result_t<Fun, range_value_t<Rng>>,
+            typename Result = concepts::Function::result_t<Fun, range_common_reference_t<Rng>>,
             CONCEPT_REQUIRES_(Iterable<Rng>() &&
-                              Function<Fun, range_value_t<Rng>>() &&
+                              Function<Fun, range_common_reference_t<Rng>>() &&
                               Iterable<Result>())>
         auto operator >>= (Rng && rng, Fun fun) ->
             decltype(view::for_each(std::forward<Rng>(rng), std::move(fun)))

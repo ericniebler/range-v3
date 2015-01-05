@@ -51,7 +51,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
-#include <range/v3/algorithm/merge.hpp>
+#include <range/v3/algorithm/merge_move.hpp>
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
 
@@ -78,16 +78,15 @@ namespace ranges
             template<typename I1, typename I2, typename D, typename C, typename P>
             static void merge_sort_loop(I1 begin, I1 end, I2 result, D step_size, C &pred, P &proj)
             {
-                using MI = std::move_iterator<I1>;
                 D two_step = 2 * step_size;
                 while(end - begin >= two_step)
                 {
-                    result = std::get<2>(merge(MI{begin}, MI{begin + step_size}, MI{begin + step_size},
-                        MI{begin + two_step}, result, std::ref(pred), std::ref(proj), std::ref(proj)));
+                    result = std::get<2>(merge_move(begin, begin + step_size, begin + step_size,
+                        begin + two_step, result, std::ref(pred), std::ref(proj), std::ref(proj)));
                     begin += two_step;
                 }
                 step_size = std::min(D(end - begin), step_size);
-                merge(MI{begin}, MI{begin + step_size}, MI{begin + step_size}, MI{end}, result,
+                merge_move(begin, begin + step_size, begin + step_size, end, result,
                     std::ref(pred), std::ref(proj), std::ref(proj));
             }
 

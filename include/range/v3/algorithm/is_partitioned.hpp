@@ -36,7 +36,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident,
-            typename V = iterator_value_t<I>,
+            typename V = iterator_common_reference_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
         using IsPartitionedable = meta::fast_and<
             InputIterator<I>,

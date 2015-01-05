@@ -31,6 +31,7 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/to_container.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -185,6 +186,47 @@ struct S
     int i, j;
 };
 
+struct Int
+{
+    using difference_type = int;
+    int i_;
+    Int(int i = 0) : i_(0) {}
+    Int(Int && that) : i_(that.i_) { that.i_ = 0; }
+    Int(Int const &) = delete;
+    Int & operator=(Int && that)
+    {
+        i_ = that.i_;
+        that.i_ = 0;
+        return *this;
+    }
+    Int &operator++() { ++i_; return *this; }
+    void operator++(int) { ++i_; }
+    friend bool operator==(Int const &a, Int const &b)
+    {
+        return a.i_ == b.i_;
+    }
+    friend bool operator!=(Int const &a, Int const &b)
+    {
+        return !(a == b);
+    }
+    friend bool operator<(Int const &a, Int const &b)
+    {
+        return a.i_ < b.i_;
+    }
+    friend bool operator>(Int const &a, Int const &b)
+    {
+        return a.i_ > b.i_;
+    }
+    friend bool operator<=(Int const &a, Int const &b)
+    {
+        return a.i_ <= b.i_;
+    }
+    friend bool operator>=(Int const &a, Int const &b)
+    {
+        return a.i_ >= b.i_;
+    }
+};
+
 int main()
 {
     // test null range
@@ -244,16 +286,21 @@ int main()
             view::for_each(view::ints(1,5) | view::reverse, [](int i){
                 return ranges::yield_from(view::repeat_n(i,i));
             });
-        std::vector<int> v1 =
-            view::for_each(view::ints(1,5), [](int i){
-                return ranges::yield_from(view::repeat_n(i,i));
-            });
+        auto v1 = ranges::to_<std::vector<Int>>(
+            {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
         auto rng = view::zip(v0, v1);
         ::check_equal(v0,{5,5,5,5,5,4,4,4,4,3,3,3,2,2,1});
         ::check_equal(v1,{1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
-        sort(rng);
+        using Rng = decltype(rng);
+        using R = range_common_reference_t<Rng>;
+        auto proj = [](R r) { return r; };
+        auto pred = [](R r1, R r2) { return r1 < r2; };
+        sort(rng, pred, proj);
         ::check_equal(v0,{1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
         ::check_equal(v1,{5,5,5,4,5,5,3,4,4,4,1,2,2,3,3});
+
+        // Check that this compiles, too:
+        sort(rng);
     }
 
     return ::test_result();

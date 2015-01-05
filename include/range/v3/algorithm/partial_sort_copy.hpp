@@ -30,8 +30,8 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename C = ordered_less, typename PI = ident, typename PO = ident,
-            typename VI = iterator_value_t<I>,
-            typename VO = iterator_value_t<O>,
+            typename VI = iterator_common_reference_t<I>,
+            typename VO = iterator_common_reference_t<O>,
             typename XI = concepts::Invokable::result_t<PI, VI>,
             typename XO = concepts::Invokable::result_t<PO, VO>>
         using PartialSortCopyConcept = meta::fast_and<

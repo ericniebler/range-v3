@@ -74,10 +74,7 @@ namespace ranges
                 template<typename Rng, typename Pred, typename Val>
                 using Concept = meta::and_<
                     InputIterable<Rng>,
-                    InvokablePredicate<Pred, range_value_t<Rng>>,
-                    EqualityComparable<
-                        range_value_t<Rng>,
-                        concepts::InvokablePredicate::result_t<Pred, range_value_t<Rng>>>,
+                    InvokablePredicate<Pred, range_common_reference_t<Rng>>,
                     Convertible<Val, range_value_t<Rng>>>;
 
                 template<typename Rng, typename Pred, typename Val,
@@ -96,13 +93,10 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The object on which view::replace_if operates must be a model of the "
                         "InputIterable concept.");
-                    CONCEPT_ASSERT_MSG(InvokablePredicate<Pred, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(InvokablePredicate<Pred, range_common_reference_t<Rng>>(),
                         "The function passed to view::replace_if must be callable with "
-                        "values from the range.");
-                    CONCEPT_ASSERT_MSG(EqualityComparable<range_value_t<Rng>,
-                        concepts::InvokablePredicate::result_t<Pred, range_value_t<Rng>>>(),
-                        "The result of the function passed to view::replace_if must be "
-                        "EqualityComparable with the range's value type.");
+                        "objects of the range's common reference type, and the result must be "
+                        "convertible to bool.");
                     CONCEPT_ASSERT_MSG(Convertible<Val, range_value_t<Rng>>(),
                         "The value passed to view::replace_if must be convertible to the "
                         "range's value type.");

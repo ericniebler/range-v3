@@ -33,8 +33,8 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to,
             typename P1 = ident, typename P2 = ident,
-            typename V1 = iterator_value_t<I1>,
-            typename V2 = iterator_value_t<I2>,
+            typename V1 = iterator_common_reference_t<I1>,
+            typename V2 = iterator_common_reference_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
         using Mismatchable1 = meta::fast_and<
@@ -47,8 +47,8 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to,
             typename P1 = ident, typename P2 = ident,
-            typename V1 = iterator_value_t<I1>,
-            typename V2 = iterator_value_t<I2>,
+            typename V1 = iterator_common_reference_t<I1>,
+            typename V2 = iterator_common_reference_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
         using Mismatchable2 = meta::fast_and<

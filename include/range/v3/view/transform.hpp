@@ -41,14 +41,9 @@ namespace ranges
         {
         private:
             friend range_access;
-            using reference_t = concepts::Invokable::result_t<Fun, range_value_t<Rng>>;
             semiregular_invokable_t<Fun> fun_;
-            // Forward ranges must always return references. If the result of calling the function
-            // is not a reference, this range is input-only.
-            using single_pass = meta::or_<
-                SinglePass<range_iterator_t<Rng>>,
-                meta::not_<std::is_reference<reference_t>>>;
-            using use_sentinel_t = meta::or_<meta::not_<BoundedIterable<Rng>>, single_pass>;
+            using use_sentinel_t =
+                meta::or_<meta::not_<BoundedIterable<Rng>>, SinglePass<range_iterator_t<Rng>>>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
@@ -56,7 +51,6 @@ namespace ranges
             private:
                 semiregular_invokable_ref_t<Fun, IsConst> fun_;
             public:
-                using single_pass = transform_view::single_pass;
                 adaptor() = default;
                 adaptor(semiregular_invokable_ref_t<Fun, IsConst> fun)
                   : fun_(std::move(fun))
@@ -68,12 +62,12 @@ namespace ranges
                 }
             };
 
-            CONCEPT_REQUIRES(!Invokable<Fun const, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(!Invokable<Fun const, range_common_reference_t<Rng>>())
             adaptor<false> begin_adaptor()
             {
                 return {fun_};
             }
-            CONCEPT_REQUIRES(Invokable<Fun const, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(Invokable<Fun const, range_common_reference_t<Rng>>())
             adaptor<true> begin_adaptor() const
             {
                 return {fun_};
@@ -83,12 +77,14 @@ namespace ranges
             {
                 return {};
             }
-            CONCEPT_REQUIRES(!use_sentinel_t() && !Invokable<Fun const, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(!use_sentinel_t() && !Invokable<Fun const,
+                range_common_reference_t<Rng>>())
             adaptor<false> end_adaptor()
             {
                 return {fun_};
             }
-            CONCEPT_REQUIRES(!use_sentinel_t() && Invokable<Fun const, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(!use_sentinel_t() && Invokable<Fun const,
+                range_common_reference_t<Rng>>())
             adaptor<true> end_adaptor() const
             {
                 return {fun_};
@@ -116,13 +112,14 @@ namespace ranges
                 static auto bind(transform_fn transform, Fun fun)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(transform, std::placeholders::_1, protect(std::move(fun))))
+                    make_pipeable(std::bind(transform, std::placeholders::_1,
+                        protect(std::move(fun))))
                 )
             public:
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     InputIterable<Rng>,
-                    Invokable<Fun, range_value_t<Rng>>>;
+                    Invokable<Fun, range_common_reference_t<Rng>>>;
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
@@ -138,9 +135,9 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The object on which view::transform operates must be a model of the "
                         "InputIterable concept.");
-                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_common_reference_t<Rng>>(),
                         "The function passed to view::transform must be callable with objects "
-                        "of the range's value type.");
+                        "of the range's common reference type.");
                 }
             #endif
             };

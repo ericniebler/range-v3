@@ -71,37 +71,46 @@ namespace ranges
                 }
                 void next(range_iterator_t<Rng> &it)
                 {
+                    using R = range_common_reference_t<Rng>;
                     if(++it != ranges::end(rng_->mutable_base()))
                     {
-                        sum_ = rng_->fun_(*sum_, *it);
+                        sum_ = rng_->fun_(R(*sum_), R(*it));
                     }
                 }
             };
 
-            CONCEPT_REQUIRES(!Invokable<Fun const, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(!Invokable<Fun const, range_common_reference_t<Rng>,
+                range_common_reference_t<Rng>>())
             adaptor<false> begin_adaptor()
             {
-                return empty(this->base()) ? adaptor<false>{*this} : adaptor<false>{*this, front(this->base())};
+                return empty(this->base()) ? adaptor<false>{*this} :
+                    adaptor<false>{*this, front(this->base())};
             }
-            CONCEPT_REQUIRES(Invokable<Fun const, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(Invokable<Fun const, range_common_reference_t<Rng>,
+                range_common_reference_t<Rng>>())
             adaptor<true> begin_adaptor() const
             {
-                return empty(this->base()) ? adaptor<true>{*this} : adaptor<true>{*this, front(this->base())};
+                return empty(this->base()) ? adaptor<true>{*this} :
+                    adaptor<true>{*this, front(this->base())};
             }
             CONCEPT_REQUIRES(use_sentinel_t())
             adaptor_base end_adaptor() const
             {
                 return {};
             }
-            CONCEPT_REQUIRES(!use_sentinel_t() && !Invokable<Fun const, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(!use_sentinel_t() && !Invokable<Fun const,
+                range_common_reference_t<Rng>, range_common_reference_t<Rng>>())
             adaptor<false> end_adaptor()
             {
-                return empty(this->base()) ? adaptor<false>{*this} : adaptor<false>{*this, front(this->base())};
+                return empty(this->base()) ? adaptor<false>{*this} :
+                    adaptor<false>{*this, front(this->base())};
             }
-            CONCEPT_REQUIRES(!use_sentinel_t() && Invokable<Fun const, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(!use_sentinel_t() && Invokable<Fun const,
+                range_common_reference_t<Rng>, range_common_reference_t<Rng>>())
             adaptor<true> end_adaptor() const
             {
-                return empty(this->base()) ? adaptor<true>{*this} : adaptor<true>{*this, front(this->base())};
+                return empty(this->base()) ? adaptor<true>{*this} :
+                    adaptor<true>{*this, front(this->base())};
             }
         public:
             partial_sum_view() = default;
@@ -126,15 +135,17 @@ namespace ranges
                 static auto bind(partial_sum_fn partial_sum, Fun fun)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(partial_sum, std::placeholders::_1, protect(std::move(fun))))
+                    make_pipeable(std::bind(partial_sum, std::placeholders::_1,
+                        protect(std::move(fun))))
                 )
             public:
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     InputIterable<Rng>,
-                    Invokable<Fun, range_value_t<Rng>, range_value_t<Rng>>,
+                    Invokable<Fun, range_common_reference_t<Rng>, range_common_reference_t<Rng>>,
                     Convertible<
-                        concepts::Invokable::result_t<Fun, range_value_t<Rng>, range_value_t<Rng>>,
+                        concepts::Invokable::result_t<Fun, range_common_reference_t<Rng>,
+                            range_common_reference_t<Rng>>,
                         range_value_t<Rng>>>;
 
                 template<typename Rng, typename Fun,
@@ -151,12 +162,13 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The first argument passed to view::partial_sum must be a model of the "
                         "InputIterable concept.");
-                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_value_t<Rng>, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_common_reference_t<Rng>,
+                        range_common_reference_t<Rng>>(),
                         "The second argument passed to view::partial_sum must be callable with "
                         "two values from the range passed as the first argument.");
                     CONCEPT_ASSERT_MSG(Convertible<
-                        concepts::Invokable::result_t<Fun, range_value_t<Rng>, range_value_t<Rng>>,
-                        range_value_t<Rng>>(),
+                        concepts::Invokable::result_t<Fun, range_common_reference_t<Rng>,
+                        range_common_reference_t<Rng>>, range_value_t<Rng>>(),
                         "The return type of the function passed to view::partial_sum must be "
                         "convertible to the value type of the range.");
                 }

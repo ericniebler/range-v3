@@ -80,10 +80,10 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, I>(),
                         "The object on which action::remove_if operates must allow element "
                         "removal.");
-                    using V = iterator_value_t<I>;
+                    using V = iterator_common_reference_t<I>;
                     CONCEPT_ASSERT_MSG(Invokable<P, V>(),
                         "The projection argument passed to action::remove_if must accept objects "
-                        "of the range's value type.");
+                        "of the range's common reference type.");
                     using X = concepts::Invokable::result_t<P, V>;
                     CONCEPT_ASSERT_MSG(InvokablePredicate<C, X>(),
                         "The predicate passed to action::remove_if must accept objects returned "

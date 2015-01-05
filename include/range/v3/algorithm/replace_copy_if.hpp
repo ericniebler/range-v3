@@ -28,7 +28,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename C, typename T, typename P = ident,
-            typename V = iterator_value_t<I>,
+            typename V = iterator_common_reference_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
         using ReplaceCopyIfable = meta::fast_and<
             InputIterator<I>,

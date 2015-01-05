@@ -36,7 +36,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/rotate.hpp>
-#include <range/v3/algorithm/partition_copy.hpp>
+#include <range/v3/algorithm/partition_move.hpp>
 
 namespace ranges
 {
@@ -44,7 +44,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident,
-            typename V = iterator_value_t<I>,
+            typename V = iterator_common_reference_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
         using StablePartitionable = meta::fast_and<
             ForwardIterator<I>,
@@ -81,10 +81,9 @@ namespace ranges
                     // Move the falses into the temporary buffer, and the trues to the front of the line
                     // Update begin to always point to the end of the trues
                     auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
-                    using MI = std::move_iterator<I>;
                     *buf = iter_move(begin);
                     ++buf;
-                    auto res = partition_copy(MI{next(begin)}, MI{end}, begin, buf, std::ref(pred), std::ref(proj));
+                    auto res = partition_move(next(begin), end, begin, buf, std::ref(pred), std::ref(proj));
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false
                     ranges::move(p.first, std::get<2>(res).base().base(), std::get<1>(res));
@@ -170,7 +169,6 @@ namespace ranges
                 }
                 if(len <= p.second)
                 {   // The buffer is big enough to use
-                    using MI = std::move_iterator<I>;
                     using value_type = iterator_value_t<I>;
                     std::unique_ptr<value_type, detail::destroy_n<value_type>> h{p.first, {}};
                     // Move the falses into the temporary buffer, and the trues to the front of the line
@@ -178,7 +176,7 @@ namespace ranges
                     auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
                     *buf = iter_move(begin);
                     ++buf;
-                    auto res = partition_copy(MI{next(begin)}, MI{end}, begin, buf, std::ref(pred), std::ref(proj));
+                    auto res = partition_move(next(begin), end, begin, buf, std::ref(pred), std::ref(proj));
                     begin = std::get<1>(res);
                     // move *end, known to be true
                     *begin = iter_move(std::get<0>(res));

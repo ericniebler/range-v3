@@ -32,7 +32,7 @@ namespace ranges
         struct count_if_fn
         {
             template<typename I, typename S, typename R, typename P = ident,
-                typename V0 = iterator_value_t<I>,
+                typename V0 = iterator_common_reference_t<I>,
                 typename X = concepts::Invokable::result_t<P, V0>,
                 CONCEPT_REQUIRES_(
                     InputIterator<I>() && IteratorRange<I, S>() &&
@@ -53,7 +53,7 @@ namespace ranges
 
             template<typename Rng, typename R, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V0 = iterator_value_t<I>,
+                typename V0 = iterator_common_reference_t<I>,
                 typename X = concepts::Invokable::result_t<P, V0>,
                 CONCEPT_REQUIRES_(
                     InputIterable<Rng>() &&

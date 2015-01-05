@@ -38,7 +38,7 @@ namespace ranges
     {
         /// ingroup group-concepts
         template<typename I, typename V, typename C = equal_to, typename P = ident,
-            typename IV = iterator_value_t<I>,
+            typename IV = iterator_common_reference_t<I>,
             typename X1 = concepts::Invokable::result_t<P, IV>>
         using Searchnable = meta::fast_and<
             ForwardIterator<I>,

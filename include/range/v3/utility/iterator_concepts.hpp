@@ -236,11 +236,14 @@ namespace ranges
                         concepts::model_of<Readable, I>(),
                         concepts::model_of<Convertible, Readable::rvalue_reference_t<I> &&,
                             Readable::value_t<I>>(),
-                        concepts::model_of<RegularInvokable, P,
-                            Readable::rvalue_reference_t<I> &&>(),
+                        // Should be:
+                        // concepts::model_of<RegularInvokable, P,
+                        //      CommonReference::common_t<Readable::value_t<I> &&,
+                        //          Readable::rvalue_reference_t<I> > >(),
+                        concepts::model_of<RegularInvokable, P, Readable::value_t<I> &&>(),
                         concepts::model_of<SemiRegular, O>(),
-                        concepts::model_of<Writable, O,
-                            Invokable::result_t<P, Readable::rvalue_reference_t<I> &&>>()
+                        concepts::model_of<MoveWritable, O,
+                            Invokable::result_t<P, Readable::value_t<I> &&>>()
                     ));
             };
 
@@ -253,10 +256,14 @@ namespace ranges
                         concepts::model_of<Readable, I>(),
                         concepts::model_of<Convertible, Readable::reference_t<I>,
                             Readable::value_t<I>>(),
-                        concepts::model_of<RegularInvokable, P, Readable::reference_t<I> &&>(),
+                        concepts::model_of<RegularInvokable, P, Readable::common_reference_t<I> &&>(),
                         concepts::model_of<SemiRegular, O>(),
                         concepts::model_of<Writable, O,
-                            Invokable::result_t<P, Readable::reference_t<I> &&>>()
+                            Invokable::result_t<P, Readable::common_reference_t<I> &&>>()
+                        //concepts::model_of<RegularInvokable, P, Readable::reference_t<I> &&>(),
+                        //concepts::model_of<SemiRegular, O>(),
+                        //concepts::model_of<Writable, O,
+                        //    Invokable::result_t<P, Readable::reference_t<I> &&>>()
                     ));
             };
 
@@ -375,7 +382,7 @@ namespace ranges
             struct RandomAccessIterator
               : refines<BidirectionalIterator, TotallyOrdered>
             {
-                template<typename I, typename V = value_t<I>>
+                template<typename I, typename V = common_reference_t<I>>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived, category_t<I>, ranges::random_access_iterator_tag>(),
@@ -386,7 +393,7 @@ namespace ranges
                         concepts::has_type<I>(i - (i - i)),
                         concepts::has_type<I &>(i += (i-i)),
                         concepts::has_type<I &>(i -= (i - i)),
-                        concepts::convertible_to<V const &>(i[i - i])
+                        concepts::convertible_to<V>(i[i - i])
                     ));
             };
         }
@@ -471,8 +478,8 @@ namespace ranges
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident,
-            typename V0 = concepts::Readable::value_t<I0>,
-            typename V1 = concepts::Readable::value_t<I1>,
+            typename V0 = concepts::Readable::common_reference_t<I0>,
+            typename V1 = concepts::Readable::common_reference_t<I1>,
             typename X0 = concepts::Invokable::result_t<P0, V0>,
             typename X1 = concepts::Invokable::result_t<P1, V1>>
         using Mergeable = meta::fast_and<
@@ -483,8 +490,22 @@ namespace ranges
             IndirectlyCopyable<I0, Out>,
             IndirectlyCopyable<I1, Out>>;
 
+        template<typename I0, typename I1, typename Out, typename C = ordered_less,
+            typename P0 = ident, typename P1 = ident,
+            typename V0 = concepts::Readable::common_reference_t<I0>,
+            typename V1 = concepts::Readable::common_reference_t<I1>,
+            typename X0 = concepts::Invokable::result_t<P0, V0>,
+            typename X1 = concepts::Invokable::result_t<P1, V1>>
+        using MergeMovable = meta::fast_and<
+            InputIterator<I0>,
+            InputIterator<I1>,
+            WeaklyIncrementable<Out>,
+            InvokableRelation<C, X1, X0>,
+            IndirectlyMovable<I0, Out>,
+            IndirectlyMovable<I1, Out>>;
+
         template<typename I, typename C = ordered_less, typename P = ident,
-            typename V = concepts::Readable::value_t<I>,
+            typename V = concepts::Readable::common_reference_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
         using Sortable = meta::fast_and<
             ForwardIterator<I>,
@@ -493,7 +514,7 @@ namespace ranges
             Permutable<I>>;
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident,
-            typename V = concepts::Readable::value_t<I>,
+            typename V = concepts::Readable::common_reference_t<I>,
             typename X = concepts::Invokable::result_t<P, V> >
         using BinarySearchable = meta::fast_and<
             ForwardIterator<I>,
@@ -502,8 +523,8 @@ namespace ranges
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident,
-            typename V1 = concepts::Readable::value_t<I1>,
-            typename V2 = concepts::Readable::value_t<I2>,
+            typename V1 = concepts::Readable::common_reference_t<I1>,
+            typename V2 = concepts::Readable::common_reference_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
         using WeaklyAsymmetricallyComparable = meta::fast_and<
@@ -521,8 +542,8 @@ namespace ranges
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident,
-            typename V1 = concepts::Readable::value_t<I1>,
-            typename V2 = concepts::Readable::value_t<I2>,
+            typename V1 = concepts::Readable::common_reference_t<I1>,
+            typename V2 = concepts::Readable::common_reference_t<I2>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename X2 = concepts::Invokable::result_t<P2, V2>>
         using WeaklyComparable = meta::fast_and<

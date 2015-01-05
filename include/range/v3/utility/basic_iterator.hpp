@@ -75,7 +75,7 @@ namespace ranges
                 }
             };
 
-            template<typename I, typename Ref>
+            template<typename I, typename Ref, typename CommonRef>
             struct operator_brackets_const_proxy
             {
                 using type = struct proxy
@@ -98,6 +98,11 @@ namespace ranges
                     {
                         return *it_;
                     }
+                    operator CommonRef() const volatile
+                    {
+                        return *it_;
+                    }
+                    CONCEPT_REQUIRES(Convertible<Ref, value_t>())
                     operator value_t() const
                     {
                         return *it_;
@@ -109,7 +114,7 @@ namespace ranges
                 }
             };
 
-            template<typename I, typename Ref>
+            template<typename I, typename Ref, typename CommonRef>
             struct operator_brackets_proxy
             {
                 using type = struct proxy
@@ -131,11 +136,17 @@ namespace ranges
                     {
                         return *it_;
                     }
+                    operator CommonRef() const volatile
+                    {
+                        return *it_;
+                    }
+                    CONCEPT_REQUIRES(Convertible<Ref, value_t>())
                     operator value_t() const
                     {
                         return *it_;
                     }
                     proxy const & operator=(proxy&) const = delete;
+                    // BUGBUG assign from common reference? from rvalue reference?
                     proxy const & operator=(iterator_value_t<I> const & x) const
                     {
                         *it_ = x;
@@ -153,15 +164,15 @@ namespace ranges
                 }
             };
 
-            template<typename I, typename Val, typename Ref>
+            template<typename I, typename Val, typename Ref, typename CommonRef>
             using operator_brackets_dispatch =
                 meta::if_<
                     iterator_writability_disabled<Val, Ref>,
                     meta::if_<
                         std::is_pod<Val>,
                         operator_brackets_value<meta::eval<std::remove_const<Val>>>,
-                        operator_brackets_const_proxy<I, Ref>>,
-                    operator_brackets_proxy<I, Ref>>;
+                        operator_brackets_const_proxy<I, Ref, CommonRef>>,
+                    operator_brackets_proxy<I, Ref, CommonRef>>;
 
             // iterators whose dereference operators reference the same value
             // for all iterators into the same sequence (like many input
@@ -483,7 +494,7 @@ namespace ranges
                 detail::postfix_increment_result<
                     basic_iterator, value_type, reference, iterator_category>;
             using operator_brackets_dispatch_t =
-                detail::operator_brackets_dispatch<basic_iterator, value_type, reference>;
+                detail::operator_brackets_dispatch<basic_iterator, value_type, reference, common_reference>;
         public:
             constexpr basic_iterator() = default;
             basic_iterator(Cur pos)

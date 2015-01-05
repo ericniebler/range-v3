@@ -36,7 +36,7 @@ namespace ranges
             /// \pre `Rng` is a model of the `Iterable` concept
             /// \pre `C` is a model of the `BinaryPredicate` concept
             template<typename I, typename S, typename C = equal_to, typename P = ident,
-                typename V = iterator_value_t<I>,
+                typename V = iterator_common_reference_t<I>,
                 CONCEPT_REQUIRES_(
                     ForwardIterator<I>() && IteratorRange<I, S>() &&
                     Invokable<P, V>() &&
@@ -59,7 +59,7 @@ namespace ranges
             /// \overload
             template<typename Rng, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V = iterator_value_t<I>,
+                typename V = iterator_common_reference_t<I>,
                 CONCEPT_REQUIRES_(
                     ForwardIterable<Rng &>() &&
                     Invokable<P, V>() &&

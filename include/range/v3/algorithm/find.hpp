@@ -37,10 +37,10 @@ namespace ranges
             /// \pre `Rng` is a model of the `Iterable` concept
             /// \pre `I` is a model of the `InputIterator` concept
             /// \pre `S` is a model of the `Sentinel<I>` concept
-            /// \pre `P` is a model of the `Invokable<iterator_value_t<I>>` concept
+            /// \pre `P` is a model of the `Invokable<iterator_common_reference_t<I>>` concept
             /// \pre The ResultType of `P` is EqualityComparable with V1
             template<typename I, typename S, typename V1, typename P = ident,
-                typename V0 = iterator_value_t<I>,
+                typename V0 = iterator_common_reference_t<I>,
                 typename X = concepts::Invokable::result_t<P, V0>,
                 CONCEPT_REQUIRES_(
                     InputIterator<I>() && IteratorRange<I, S>() &&
@@ -59,7 +59,7 @@ namespace ranges
             /// \overload
             template<typename Rng, typename V1, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V0 = iterator_value_t<I>,
+                typename V0 = iterator_common_reference_t<I>,
                 typename X = concepts::Invokable::result_t<P, V0>,
                 CONCEPT_REQUIRES_(
                     InputIterable<Rng &>() &&

@@ -33,14 +33,16 @@ namespace ranges
                 operator()(Rng && rng, Pred pred) const
                 {
                     CONCEPT_ASSERT(Iterable<Rng>());
-                    CONCEPT_ASSERT(InvokablePredicate<Pred, range_value_t<Rng>>());
+                    CONCEPT_ASSERT(InvokablePredicate<Pred, range_common_reference_t<Rng>>());
                     return {std::forward<Rng>(rng), not_(std::move(pred))};
                 }
                 template<typename Pred>
                 auto operator()(Pred pred) const ->
-                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred)))))
+                    decltype(make_pipeable(std::bind(*this, std::placeholders::_1,
+                        protect(std::move(pred)))))
                 {
-                    return make_pipeable(std::bind(*this, std::placeholders::_1, protect(std::move(pred))));
+                    return make_pipeable(std::bind(*this, std::placeholders::_1,
+                        protect(std::move(pred))));
                 }
             };
 

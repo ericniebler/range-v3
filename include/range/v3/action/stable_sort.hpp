@@ -73,10 +73,10 @@ namespace ranges
                         "The object on which action::stable_sort operates must be a model of the "
                         "ForwardIterable concept.");
                     using I = range_iterator_t<Rng>;
-                    using V = iterator_value_t<I>;
+                    using V = iterator_common_reference_t<I>;
                     CONCEPT_ASSERT_MSG(Invokable<P, V>(),
                         "The projection argument passed to action::stable_sort must accept objects "
-                        "of the range's value type.");
+                        "of the range's common reference type.");
                     using X = concepts::Invokable::result_t<P, V>;
                     CONCEPT_ASSERT_MSG(InvokableRelation<C, X, X>(),
                         "The comparator passed to action::stable_sort must accept objects returned "

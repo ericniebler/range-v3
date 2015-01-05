@@ -146,6 +146,7 @@ namespace ranges
                 using Concept = meta::and_<
                     InputIterable<Rng>,
                     Convertible<T, range_value_t<Rng>>,
+                    Convertible<range_reference_t<Rng>, range_value_t<Rng>>,
                     SemiRegular<range_value_t<Rng>>>;
 
                 template<typename Rng,
@@ -165,6 +166,9 @@ namespace ranges
                         "InputIterable concept.");
                     CONCEPT_ASSERT_MSG(Convertible<T, range_value_t<Rng>>(),
                         "The value to intersperse in the range must be convertible to the range's "
+                        "value type.");
+                    CONCEPT_ASSERT_MSG(Convertible<range_reference_t<Rng>, range_value_t<Rng>>(),
+                        "The range's reference type must be convertible to the range's "
                         "value type.");
                     CONCEPT_ASSERT_MSG(SemiRegular<range_value_t<Rng>>(),
                         "The range on which view::intersperse operates must have a value type that "

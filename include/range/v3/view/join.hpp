@@ -229,6 +229,7 @@ namespace ranges
                     toggl_ ? (void)++it_ : (void)++val_it_;
                     satisfy(it);
                 }
+                // BUGBUG use common_reference to declare the return type?
                 auto current(range_iterator_t<Rng> const &) const ->
                     decltype(true ? *it_ : *val_it_)
                 {

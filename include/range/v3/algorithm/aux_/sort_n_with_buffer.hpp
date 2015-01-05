@@ -45,8 +45,8 @@ namespace ranges
             struct sort_n_with_buffer_fn
             {
                 template<typename I, typename B, typename C = ordered_less, typename P = ident,
-                    typename VI = iterator_value_t<I>,
-                    typename VB = iterator_value_t<B>,
+                    typename VI = iterator_common_reference_t<I>,
+                    typename VB = iterator_common_reference_t<B>,
                     CONCEPT_REQUIRES_(
                         Same<VI, VB>() &&
                         IndirectlyCopyable<I, B>() &&

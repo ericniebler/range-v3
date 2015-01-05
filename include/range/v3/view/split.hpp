@@ -111,12 +111,12 @@ namespace ranges
             public:
                 cursor() = default;
             };
-            CONCEPT_REQUIRES(!Invokable<Fun const, range_value_t<Rng>, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(!Invokable<Fun const, range_iterator_t<Rng>, range_sentinel_t<Rng>>())
             cursor<false> begin_cursor()
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(Invokable<Fun const, range_value_t<Rng>, range_value_t<Rng>>())
+            CONCEPT_REQUIRES(Invokable<Fun const, range_iterator_t<Rng>, range_sentinel_t<Rng>>())
             cursor<true> begin_cursor() const
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};

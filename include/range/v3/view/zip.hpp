@@ -225,12 +225,46 @@ namespace ranges
                   : tuple_ref{val, make_index_sequence<sizeof...(Ts)>{}}
                 {}
                 using std::tuple<Ts...>::operator=;
+                CONCEPT_REQUIRES(meta::and_c<(bool) EqualityComparable<Ts>()...>::value)
+                friend bool operator==(tuple_ref const &a, tuple_ref const &b)
+                {
+                    return a.base() == b.base();
+                }
+                CONCEPT_REQUIRES(meta::and_c<(bool) EqualityComparable<Ts>()...>::value)
+                friend bool operator!=(tuple_ref const &a, tuple_ref const &b)
+                {
+                    return a.base() != b.base();
+                }
+                CONCEPT_REQUIRES(meta::and_c<(bool) TotallyOrdered<Ts>()...>::value)
+                friend bool operator<(tuple_ref const &a, tuple_ref const &b)
+                {
+                    return a.base() < b.base();
+                }
+                CONCEPT_REQUIRES(meta::and_c<(bool) TotallyOrdered<Ts>()...>::value)
+                friend bool operator>(tuple_ref const &a, tuple_ref const &b)
+                {
+                    return a.base() > b.base();
+                }
+                CONCEPT_REQUIRES(meta::and_c<(bool) TotallyOrdered<Ts>()...>::value)
+                friend bool operator<=(tuple_ref const &a, tuple_ref const &b)
+                {
+                    return a.base() <= b.base();
+                }
+                CONCEPT_REQUIRES(meta::and_c<(bool) TotallyOrdered<Ts>()...>::value)
+                friend bool operator>=(tuple_ref const &a, tuple_ref const &b)
+                {
+                    return a.base() >= b.base();
+                }
             };
 
             template<typename F, typename S>
             struct pair_ref
               : std::pair<F, S>
             {
+            private:
+                std::pair<F, S> &base() { return *this; }
+                std::pair<F, S> const &base() const { return *this; }
+            public:
                 CONCEPT_REQUIRES(meta::and_c<(bool)DefaultConstructible<F>(),
                     (bool)DefaultConstructible<S>()>::value)
                 pair_ref()
@@ -252,6 +286,36 @@ namespace ranges
                   : std::pair<F, S>{val.first, val.second}
                 {}
                 using std::pair<F, S>::operator=;
+                CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
+                friend bool operator==(pair_ref const &a, pair_ref const &b)
+                {
+                    return a.base() == b.base();
+                }
+                CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
+                friend bool operator!=(pair_ref const &a, pair_ref const &b)
+                {
+                    return a.base() != b.base();
+                }
+                CONCEPT_REQUIRES(TotallyOrdered<F>() && TotallyOrdered<S>())
+                friend bool operator<(pair_ref const &a, pair_ref const &b)
+                {
+                    return a.base() < b.base();
+                }
+                CONCEPT_REQUIRES(TotallyOrdered<F>() && TotallyOrdered<S>())
+                friend bool operator>(pair_ref const &a, pair_ref const &b)
+                {
+                    return a.base() > b.base();
+                }
+                CONCEPT_REQUIRES(TotallyOrdered<F>() && TotallyOrdered<S>())
+                friend bool operator<=(pair_ref const &a, pair_ref const &b)
+                {
+                    return a.base() <= b.base();
+                }
+                CONCEPT_REQUIRES(TotallyOrdered<F>() && TotallyOrdered<S>())
+                friend bool operator>=(pair_ref const &a, pair_ref const &b)
+                {
+                    return a.base() >= b.base();
+                }
             };
 
             template<typename...Refs, typename...ValRefs>
@@ -466,7 +530,7 @@ namespace ranges
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
                     InputIterable<Rngs>...,
-                    Invokable<Fun, range_value_t<Rngs>...>>;
+                    Invokable<Fun, range_common_reference_t<Rngs>...>>;
 
                 template<typename Fun, typename...Rngs, CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
                 zip_with_view<Fun, meta::list<Rngs...>> operator()(Fun fun, Rngs &&... rngs) const
@@ -483,7 +547,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
                         "All of the objects passed to view::zip_with must model the InputIterable "
                         "concept");
-                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_value_t<Rngs>...>(),
+                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_common_reference_t<Rngs>...>(),
                         "The function passed to view::zip_with must be callable with N arguments "
                         "taken one from each of the N ranges.");
                 }

@@ -36,8 +36,7 @@ int main()
     has_type<int &>(*begin(rgi));
     has_type<bool>(*begin(rng));
     models<concepts::SizedRange>(rng);
-    models<concepts::InputRange>(rng);
-    models_not<concepts::ForwardRange>(rng);
+    models<concepts::RandomAccessRange>(rng);
     ::check_equal(rng, {true, false, true, false, true, false, true, false, true, false});
 
     std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};

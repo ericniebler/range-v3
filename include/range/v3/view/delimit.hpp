@@ -78,7 +78,7 @@ namespace ranges
                 template<typename Rng, typename Val>
                 using Concept = meta::and_<
                     Iterable<Rng>,
-                    EqualityComparable<Val, range_value_t<Rng>>>;
+                    EqualityComparable<Val, range_common_reference_t<Rng>>>;
 
                 template<typename Rng, typename Val,
                     CONCEPT_REQUIRES_(Concept<Rng, Val>())>
@@ -95,9 +95,9 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(Iterable<Rng>(),
                         "Rng must model the Iterable concept");
-                    CONCEPT_ASSERT_MSG(EqualityComparable<Val, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(EqualityComparable<Val, range_common_reference_t<Rng>>(),
                         "The delimiting value type must be EqualityComparable to the "
-                        "range's value type.");
+                        "range's common reference type.");
                 }
             #endif
             };

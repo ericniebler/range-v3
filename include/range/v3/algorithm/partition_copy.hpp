@@ -29,9 +29,65 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            /// \ingroup group-concepts
+            template<typename I, typename O0, typename O1, typename C, typename P = ident,
+                typename V = iterator_common_reference_t<I>,
+                typename X = concepts::Invokable::result_t<P, V>>
+            using PartitionMovable = meta::fast_and<
+                InputIterator<I>,
+                WeaklyIncrementable<O0>,
+                WeaklyIncrementable<O1>,
+                IndirectlyMovable<I, O0>,
+                IndirectlyMovable<I, O1>,
+                Invokable<P, V>,
+                InvokablePredicate<C, X>>;
+
+            /// \addtogroup group-algorithms
+            /// @{
+            struct partition_move_fn
+            {
+                template<typename I, typename S, typename O0, typename O1, typename C, typename P = ident,
+                    CONCEPT_REQUIRES_(PartitionMovable<I, O0, O1, C, P>() && IteratorRange<I, S>())>
+                std::tuple<I, O0, O1> operator()(I begin, S end, O0 o0, O1 o1, C pred_, P proj_ = P{}) const
+                {
+                    auto && pred = invokable(pred_);
+                    auto && proj = invokable(proj_);
+                    for(; begin != end; ++begin)
+                    {
+                        if(pred(proj(*begin)))
+                        {
+                            *o0 = iter_move(begin);
+                            ++o0;
+                        }
+                        else
+                        {
+                            *o1 = iter_move(begin);
+                            ++o1;
+                        }
+                    }
+                    return std::tuple<I, O0, O1>{begin, o0, o1};
+                }
+
+                template<typename Rng, typename O0, typename O1, typename C, typename P = ident,
+                    typename I = range_iterator_t<Rng>,
+                    CONCEPT_REQUIRES_(PartitionMovable<I, O0, O1, C, P>() && Iterable<Rng &>())>
+                std::tuple<I, O0, O1> operator()(Rng &rng, O0 o0, O1 o1, C pred, P proj = P{}) const
+                {
+                    return (*this)(begin(rng), end(rng), std::move(o0), std::move(o1), std::move(pred),
+                        std::move(proj));
+                }
+            };
+
+            /// \sa `partition_move_fn`
+            /// \ingroup group-algorithms
+            constexpr partition_move_fn partition_move{};
+        }
+
         /// \ingroup group-concepts
         template<typename I, typename O0, typename O1, typename C, typename P = ident,
-            typename V = iterator_value_t<I>,
+            typename V = iterator_common_reference_t<I>,
             typename X = concepts::Invokable::result_t<P, V>>
         using PartitionCopyable = meta::fast_and<
             InputIterator<I>,

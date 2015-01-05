@@ -42,7 +42,7 @@ namespace ranges
             /// \pre `F` models `InvokablePredicate<X>`, where `X` is the result type
             ///      of `Invokable<P, V>`
             template<typename I, typename S, typename F, typename P = ident,
-                typename V = iterator_value_t<I>,
+                typename V = iterator_common_reference_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
                     InputIterator<I>() && IteratorRange<I, S>() &&
@@ -62,7 +62,7 @@ namespace ranges
             /// \overload
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V = iterator_value_t<I>,
+                typename V = iterator_common_reference_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(
                     InputIterable<Rng &>() &&

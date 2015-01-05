@@ -30,7 +30,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename F, typename P = ident,
-            typename V = iterator_value_t<I>,
+            typename V = iterator_common_reference_t<I>,
             typename X = concepts::Invokable::result_t<P, V>,
             typename Y = concepts::Invokable::result_t<F, X>>
         using Transformable1 = meta::fast_and<
@@ -43,9 +43,9 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I0, typename I1, typename O, typename F,
             typename P0 = ident, typename P1 = ident,
-            typename V0 = iterator_value_t<I0>,
+            typename V0 = iterator_common_reference_t<I0>,
             typename X0 = concepts::Invokable::result_t<P0, V0>,
-            typename V1 = iterator_value_t<I1>,
+            typename V1 = iterator_common_reference_t<I1>,
             typename X1 = concepts::Invokable::result_t<P1, V1>,
             typename Y = concepts::Invokable::result_t<F, X0, X1>>
         using Transformable2 = meta::fast_and<
