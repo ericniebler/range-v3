@@ -1141,6 +1141,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge_move.hpp">
       <Filter>Header Files\algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\common_tuple.hpp">
+      <Filter>Header Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

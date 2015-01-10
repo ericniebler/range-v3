@@ -149,7 +149,7 @@ namespace ranges
             CONCEPT_ASSERT(ForwardIterable<ValRng>());
             CONCEPT_ASSERT(InputIterable<range_value_t<Rng>>());
             CONCEPT_ASSERT(Common<range_value_t<range_value_t<Rng>>, range_value_t<ValRng>>());
-            CONCEPT_ASSERT(SemiRegular<concepts::Common::common_t<
+            CONCEPT_ASSERT(SemiRegular<concepts::Common::value_t<
                 range_value_t<range_value_t<Rng>>,
                 range_value_t<ValRng>>>());
             using size_t_ = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
@@ -303,7 +303,7 @@ namespace ranges
                         range_value_t<range_value_t<Rng>>>(),
                         "To join a range of ranges with another range, all the ranges must have "
                         "a common value type.");
-                    CONCEPT_ASSERT_MSG(SemiRegular<concepts::Common::common_t<
+                    CONCEPT_ASSERT_MSG(SemiRegular<concepts::Common::value_t<
                         range_value_t<ValRng>, range_value_t<range_value_t<Rng>>>>(),
                         "To join a range of ranges with another range, all the ranges must have "
                         "a common value type, and that value type must model the SemiRegular "

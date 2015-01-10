@@ -90,8 +90,8 @@ namespace ranges
                 template<typename Rng, typename F>
                 using Concept = meta::and_<
                     ForwardIterable<Rng>,
-                    InvokablePredicate<F, range_common_reference_t<Rng>,
-                        range_common_reference_t<Rng>>>;
+                    IndirectInvokablePredicate2<F, range_iterator_t<Rng>,
+                        range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename F,
                     CONCEPT_REQUIRES_(Concept<Rng, F>())>
@@ -106,8 +106,8 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
                         "Rng must model the ForwardIterable concept");
-                    CONCEPT_ASSERT_MSG(InvokablePredicate<F, range_common_reference_t<Rng>,
-                            range_common_reference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate2<F, range_iterator_t<Rng>,
+                        range_iterator_t<Rng>>(),
                         "Function F must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");
                 }

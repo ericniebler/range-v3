@@ -109,6 +109,9 @@ namespace ranges
         template<typename ...Ts>
         using common_type_t = typename common_type<Ts...>::type;
 
+        template<typename T, typename U, typename TQual, typename UQual>
+        struct common_reference_base;
+
         template<typename ...Ts>
         struct common_reference;
 
@@ -654,8 +657,7 @@ namespace ranges
             typename Fun,
             typename Rngs,
             typename CopyFun = ident,
-            typename MoveFun = ident,
-            typename CommonRef = meta::quote<common_reference_t>>
+            typename MoveFun = ident>
         struct zip_with_view;
 
         template<typename Rngs>
@@ -664,8 +666,7 @@ namespace ranges
                 detail::make_tuple_like_fn,
                 Rngs,
                 detail::copy_tuple_like_fn,
-                detail::move_tuple_like_fn,
-                meta::quote_trait<detail::common_tuple_ref>>;
+                detail::move_tuple_like_fn>;
 
         namespace view
         {

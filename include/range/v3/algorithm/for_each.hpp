@@ -34,7 +34,7 @@ namespace ranges
                 typename V = iterator_common_reference_t<I>,
                 typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
-                    Invokable<P, V>() && Invokable<F, X>())>
+                    IndirectInvokable1<F, I, P>())>
             I operator()(I begin, S end, F fun_, P proj_ = P{}) const
             {
                 auto &&fun = invokable(fun_);
@@ -48,10 +48,7 @@ namespace ranges
 
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(InputIterable<Rng &>() && Invokable<P, V>() &&
-                    Invokable<F, X>())>
+                CONCEPT_REQUIRES_(InputIterable<Rng &>() && IndirectInvokable1<F, I, P>())>
             I operator()(Rng &rng, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));

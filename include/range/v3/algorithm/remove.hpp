@@ -29,13 +29,10 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename T, typename P = ident,
-            typename V = iterator_common_reference_t<I>,
-            typename X = concepts::Invokable::result_t<P, V>>
+        template<typename I, typename T, typename P = ident>
         using Removable = meta::fast_and<
             ForwardIterator<I>,
-            Invokable<P, V>,
-            EqualityComparable<T, X>,
+            IndirectInvokableRelation<equal_to, I, T const *, P, ident>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms
@@ -43,7 +40,7 @@ namespace ranges
         struct remove_fn
         {
             template<typename I, typename S, typename T, typename P = ident,
-                CONCEPT_REQUIRES_(Removable<I, T const &, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Removable<I, T, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, T const &val, P proj_ = P{}) const
             {
                 auto &&proj = invokable(proj_);
@@ -64,7 +61,7 @@ namespace ranges
 
             template<typename Rng, typename T, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Removable<I, T const &, P>() && ForwardIterable<Rng &>())>
+                CONCEPT_REQUIRES_(Removable<I, T, P>() && ForwardIterable<Rng &>())>
             I operator()(Rng &rng, T const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));

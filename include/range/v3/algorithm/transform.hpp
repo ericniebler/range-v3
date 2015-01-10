@@ -36,8 +36,7 @@ namespace ranges
         using Transformable1 = meta::fast_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
-            Invokable<P, V>,
-            Invokable<F, X>,
+            IndirectInvokable1<F, I, P>,
             Writable<O, Y>>;
 
         /// \ingroup group-concepts
@@ -52,9 +51,7 @@ namespace ranges
             InputIterator<I0>,
             WeakInputIterator<I1>,
             WeaklyIncrementable<O>,
-            Invokable<P0, V0>,
-            Invokable<P1, V1>,
-            Invokable<F, X0, X1>,
+            IndirectInvokable2<F, I0, I1, P0, P1>,
             Writable<O, Y>>;
 
         /// \addtogroup group-algorithms

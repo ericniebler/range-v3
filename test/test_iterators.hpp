@@ -410,6 +410,21 @@ namespace ranges
     {
         using type = sentinel<I>;
     };
+    template<typename I0, bool S, typename I1, typename TQual, typename UQual>
+    struct common_reference_base<sentinel<I0, S>, I1, TQual, UQual>
+    {
+        using type = common_iterator<I1, sentinel<I0, S>>;
+    };
+    template<typename I0, typename I1, bool S, typename TQual, typename UQual>
+    struct common_reference_base<I0, sentinel<I1, S>, TQual, UQual>
+    {
+        using type = common_iterator<I0, sentinel<I1, S>>;
+    };
+    template<typename I, bool B, typename TQual, typename UQual>
+    struct common_reference_base<sentinel<I, B>, sentinel<I, B>, TQual, UQual>
+    {
+        using type = sentinel<I>;
+    };
 }
 
 #endif  // ITERATORS_H

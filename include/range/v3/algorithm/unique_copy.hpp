@@ -28,12 +28,10 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename C = equal_to, typename P = ident,
-            typename V = iterator_common_reference_t<I>,
-            typename X = concepts::Invokable::result_t<P, V>>
+            typename V = iterator_common_reference_t<I>>
         using UniqueCopyable = meta::fast_and<
             InputIterator<I>,
-            Invokable<P, V>,
-            InvokableRelation<C, X>,
+            IndirectInvokableRelation<C, I, I, P, P>,
             WeakOutputIterator<O, V>>; // BUGBUG V or X?
 
         /// \addtogroup group-algorithms

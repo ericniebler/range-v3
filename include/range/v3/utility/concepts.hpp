@@ -257,10 +257,24 @@ namespace ranges
                     ));
             };
 
+            struct CommonReference
+            {
+                template<typename T, typename U>
+                using reference_t = common_reference_t<T, U>;
+
+                template<typename T, typename U,
+                    typename C = reference_t<T, U>>
+                auto requires_(T t, U u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<C>(val<T>()),
+                        concepts::convertible_to<C>(val<U>())
+                    ));
+            };
+
             struct Common
             {
                 template<typename T, typename U>
-                using common_t = common_type_t<T, U>;
+                using value_t = common_type_t<T, U>;
 
                 template<typename T, typename U,
                     enable_if_t<std::is_same<uncvref_t<T>, uncvref_t<U>>::value> = 0>
@@ -269,25 +283,14 @@ namespace ranges
 
                 template<typename T, typename U,
                     enable_if_t<!std::is_same<uncvref_t<T>, uncvref_t<U>>::value> = 0,
-                    typename C = common_t<T, U>>
+                    typename C = value_t<T, U>,
+                    typename R = common_reference_t<T const &, U const &>>
                 auto requires_(T t, U u) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<C>(val<T>()),
-                        concepts::convertible_to<C>(val<U>())
-                    ));
-            };
-
-            struct CommonReference
-            {
-                template<typename T, typename U>
-                using common_reference_t = ranges::common_reference_t<T, U>;
-
-                template<typename T, typename U,
-                    typename C = common_reference_t<T, U>>
-                auto requires_(T t, U u) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<C>(val<T>()),
-                        concepts::convertible_to<C>(val<U>())
+                        concepts::model_of<CommonReference, T const &, U const &>(),
+                        concepts::model_of<CommonReference, C &, R>(),
+                        concepts::convertible_to<R>(val<T>()),
+                        concepts::convertible_to<R>(val<U>())
                     ));
             };
 
@@ -613,10 +616,10 @@ namespace ranges
         using Derived = concepts::models<concepts::Derived, T, U>;
 
         template<typename T, typename U>
-        using Common = concepts::models<concepts::Common, T, U>;
+        using CommonReference = concepts::models<concepts::CommonReference, T, U>;
 
         template<typename T, typename U>
-        using CommonReference = concepts::models<concepts::CommonReference, T, U>;
+        using Common = concepts::models<concepts::Common, T, U>;
 
         template<typename T>
         using Integral = concepts::models<concepts::Integral, T>;

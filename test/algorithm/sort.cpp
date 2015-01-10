@@ -292,9 +292,9 @@ int main()
         ::check_equal(v0,{5,5,5,5,5,4,4,4,4,3,3,3,2,2,1});
         ::check_equal(v1,{1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
         using Rng = decltype(rng);
-        using R = range_common_reference_t<Rng>;
-        auto proj = [](R r) { return r; };
-        auto pred = [](R r1, R r2) { return r1 < r2; };
+        using CR = range_common_reference_t<Rng>;
+        auto proj = [](CR r) { return r; };
+        auto pred = [](CR r1, CR r2) { return r1 < r2; };
         sort(rng, pred, proj);
         ::check_equal(v0,{1,2,2,3,3,3,4,4,4,4,5,5,5,5,5});
         ::check_equal(v1,{5,5,5,4,5,5,3,4,4,4,1,2,2,3,3});

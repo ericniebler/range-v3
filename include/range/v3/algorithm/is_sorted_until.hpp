@@ -40,21 +40,19 @@ namespace ranges
             /// \pre `S` is a model of the `Sentinel<I>` concept
             /// \pre `R` is a model of the `Relation<Value_Type<I>>` concept
             ///
-            template <typename I, typename S, typename R = ordered_less,
-                      typename P = ident, typename V = iterator_common_reference_t<I>,
-                      CONCEPT_REQUIRES_(
-                       ForwardIterator<I>() && IteratorRange<I, S>() && Invokable<P, V>() &&
-                       InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
-            I operator()(I begin, S end, R rel = R{}, P proj_ = P{}) const
+            template<typename I, typename S, typename R = ordered_less, typename P = ident,
+                CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() &&
+                    IndirectInvokableRelation<R, I, I, P, P>())>
+            I operator()(I begin, S end, R pred_ = R{}, P proj_ = P{}) const
             {
-                auto &&irel = invokable(rel);
-                auto &&iproj = invokable(proj_);
+                auto &&pred = invokable(pred_);
+                auto &&proj = invokable(proj_);
                 auto i = begin;
                 if(begin != end)
                 {
                     while(++i != end)
                     {
-                        if(irel(iproj(*i), iproj(*begin)))
+                        if(pred(proj(*i), proj(*begin)))
                             return i;
                         begin = i;
                     }
@@ -62,15 +60,13 @@ namespace ranges
                 return i;
             }
 
-            template <typename Rng, typename R = ordered_less, typename P = ident,
-                      typename I = range_iterator_t<Rng>,
-                      typename V = iterator_common_reference_t<I>,
-                      CONCEPT_REQUIRES_(
-                       ForwardIterable<Rng &>() && Invokable<P, V>() &&
-                       InvokableRelation<R, concepts::Invokable::result_t<P, V>>())>
-            I operator()(Rng &rng, R rel = R{}, P proj = P{}) const
+            template<typename Rng, typename R = ordered_less, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(ForwardIterable<Rng &>() &&
+                    IndirectInvokableRelation<R, I, I, P, P>())>
+            I operator()(Rng &rng, R pred = R{}, P proj = P{}) const
             {
-                return (*this)(begin(rng), end(rng), std::move(rel), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
         };
 

@@ -33,14 +33,9 @@ namespace ranges
         struct copy_if_fn
         {
             template<typename I, typename S, typename O, typename F, typename P = ident,
-                typename V = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(
-                    InputIterator<I>() && IteratorRange<I, S>() &&
-                    WeaklyIncrementable<O>() &&
-                    InvokablePredicate<F, X>() &&
-                    IndirectlyCopyable<I, O, P>()
-                )>
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
+                    WeaklyIncrementable<O>() && IndirectInvokablePredicate1<F, I, P>() &&
+                    IndirectlyCopyable<I, O, P>())>
             std::pair<I, O>
             operator()(I begin, S end, O out, F pred_, P proj_ = P{}) const
             {
@@ -59,14 +54,8 @@ namespace ranges
 
             template<typename Rng, typename O, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(
-                    InputIterable<Rng &>() &&
-                    WeaklyIncrementable<O>() &&
-                    InvokablePredicate<F, X>() &&
-                    IndirectlyCopyable<I, O, P>()
-                )>
+                CONCEPT_REQUIRES_(InputIterable<Rng &>() && WeaklyIncrementable<O>() &&
+                    IndirectInvokablePredicate1<F, I, P>() && IndirectlyCopyable<I, O, P>())>
             std::pair<I, O>
             operator()(Rng &rng, O out, F pred, P proj = P{}) const
             {

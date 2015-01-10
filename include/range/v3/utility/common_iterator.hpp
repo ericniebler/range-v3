@@ -161,6 +161,24 @@ namespace ranges
                     basic_iterator<Cur, S>,
                     basic_sentinel<S>>;
         };
+
+        template<typename Cur, typename S, typename TQual, typename UQual>
+        struct common_reference_base<basic_iterator<Cur, S>, basic_sentinel<S>, TQual, UQual>
+        {
+            using type =
+                common_iterator<
+                    basic_iterator<Cur, S>,
+                    basic_sentinel<S>>;
+        };
+
+        template<typename Cur, typename S, typename TQual, typename UQual>
+        struct common_reference_base<basic_sentinel<S>, basic_iterator<Cur, S>, TQual, UQual>
+        {
+            using type =
+                common_iterator<
+                    basic_iterator<Cur, S>,
+                    basic_sentinel<S>>;
+        };
         /// @}
     }
 }

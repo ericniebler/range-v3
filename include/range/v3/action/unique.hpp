@@ -80,12 +80,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, S>(),
                         "The object on which action::unique operates must allow element "
                         "removal.");
-                    using V = iterator_common_reference_t<I>;
-                    CONCEPT_ASSERT_MSG(Invokable<P, V>(),
-                        "The projection argument passed to action::unique must accept objects "
-                        "of the range's common reference type.");
-                    using X = concepts::Invokable::result_t<P, V>;
-                    CONCEPT_ASSERT_MSG(InvokableRelation<C, X, X>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvokableRelation<C, I, I, P, P>(),
                         "The comparator passed to action::unique must accept objects returned "
                         "by the projection function, or of the range's value type if no projection "
                         "is specified.");
