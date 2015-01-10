@@ -42,12 +42,20 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            template<typename T>
+            struct promote_rvalue :meta::id<T> {};
+            template<typename T>
+            struct promote_rvalue<T&&> :meta::id<T const &> {};
+            template<typename T>
+            using promote_rvalue_t = meta::eval<promote_rvalue<T>>;
+
             // Work around GCC #51317
             // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=51317
 #if defined(__GNUC__) && !defined(__clang__)
             template<typename T, typename U>
             struct gcc_default_common_
-              : meta::id<decltype(true? std::declval<T>() : std::declval<U>())>
+              : meta::id<decltype(true? std::declval<promote_rvalue_t<T>>()
+                                      : std::declval<promote_rvalue_t<U>>())>
             {};
             template<typename T>
             struct gcc_default_common_<T,T> : meta::id<T> {};
@@ -61,14 +69,16 @@ namespace ranges
                 meta::eval<meta::if_<
                     std::is_same<uncvref_t<T>, uncvref_t<U>>,
                     gcc_default_common_<T, U>,
-                    meta::id<decltype(true? std::declval<T>() : std::declval<U>())> > >;
+                    meta::id<decltype(true? std::declval<promote_rvalue_t<T>>()
+                                          : std::declval<promote_rvalue_t<U>>())> > >;
 #else
             template<typename T, typename U>
             using default_common_t =
                 meta::if_<
                     std::is_same<T, U>,
                     T,
-                    decltype(true? std::declval<T>() : std::declval<U>())>;
+                    decltype(true? std::declval<promote_rvalue_t<T>>()
+                                 : std::declval<promote_rvalue_t<U>>())>;
 #endif
 
             template<typename T, typename U, typename Enable = void>
@@ -212,8 +222,8 @@ namespace ranges
             template<typename T, typename U>
             using common_reference_base_ =
                 common_reference_base<
-                    decay_t<T>,
-                    decay_t<U>,
+                    uncvref_t<T>,
+                    uncvref_t<U>,
                     meta::eval<transform_reference<T>>,
                     meta::eval<transform_reference<U>>>;
 

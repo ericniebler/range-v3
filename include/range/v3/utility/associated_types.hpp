@@ -104,34 +104,6 @@ namespace ranges
             {
                 using type = typename T::char_type;
             };
-
-            template<typename T, typename Enable = void>
-            struct iter_common_reference2
-            {};
-
-            template<typename T>
-            struct iter_common_reference2<T,
-                void_t<
-                    common_reference_t<
-                        remove_rvalue_reference_t<decltype(*std::declval<T>())> const &,
-                        typename value_type<T>::type &>>>
-            {
-                using type =
-                    common_reference_t<
-                        remove_rvalue_reference_t<decltype(*std::declval<T>())> const &,
-                        typename value_type<T>::type &>;
-            };
-
-            template<typename T, typename Enable = void>
-            struct iter_common_reference
-              : iter_common_reference2<T>
-            {};
-
-            template<typename T>
-            struct iter_common_reference<T, void_t<typename T::common_reference>>
-            {
-                using type = typename T::common_reference;
-            };
         }
         /// \endcond
 
@@ -150,11 +122,6 @@ namespace ranges
         template<typename T>
         struct value_type
           : detail::value_type<uncvref_t<T>>
-        {};
-
-        template<typename T>
-        struct iter_common_reference
-          : detail::iter_common_reference<uncvref_t<T>>
         {};
         /// @}
     }

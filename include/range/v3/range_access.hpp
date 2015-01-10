@@ -189,22 +189,6 @@ namespace ranges
                 using type = typename Cur::value_type;
             };
 
-            template<typename Cur, typename Enable = void>
-            struct cursor_common_reference
-            {
-                using type =
-                    common_reference_t<
-                        detail::remove_rvalue_reference_t<
-                            decltype(std::declval<Cur const &>().current())> const &,
-                        typename cursor_value<Cur>::type &>;
-            };
-
-            template<typename Cur>
-            struct cursor_common_reference<Cur, detail::void_t<typename Cur::common_reference>>
-            {
-                using type = typename Cur::common_reference;
-            };
-
             template<typename T, typename Enable = void>
             struct single_pass
             {
@@ -222,9 +206,6 @@ namespace ranges
 
             template<typename Cur>
             using cursor_value_t = typename cursor_value<Cur>::type;
-
-            template<typename Cur>
-            using cursor_common_reference_t = typename cursor_common_reference<Cur>::type;
 
             template<typename Cur>
             using single_pass_t = typename single_pass<Cur>::type;

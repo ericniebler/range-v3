@@ -485,10 +485,10 @@ namespace ranges
             using reference =
                 decltype(range_access::current(std::declval<Cur const &>()));
             using value_type = range_access::cursor_value_t<Cur>;
-            using common_reference = range_access::cursor_common_reference_t<Cur>;
             using iterator_category = decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
             using difference_type = range_access::cursor_difference_t<Cur>;
             using pointer = meta::eval<detail::operator_arrow_dispatch<reference>>;
+            using common_reference = common_reference_t<reference &&, value_type &>;
         private:
             using postfix_increment_result_t =
                 detail::postfix_increment_result<

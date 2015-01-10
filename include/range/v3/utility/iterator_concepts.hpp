@@ -184,7 +184,10 @@ namespace ranges
                 using rvalue_reference_t = decltype(indirect_move(std::declval<I>()));
 
                 template<typename I>
-                using common_reference_t = meta::eval<iter_common_reference<I>>;
+                using common_reference_t =
+                    ranges::common_reference_t<
+                        reference_t<I> &&,
+                        value_t<I> &>;
 
                 template<typename I>
                 using pointer_t = meta::eval<pointer_type<I>>;
@@ -192,12 +195,10 @@ namespace ranges
                 template<typename I>
                 auto requires_(I i) -> decltype(
                     concepts::valid_expr(
-                        // In addition to value, reference, and rvalue reference,
-                        // an has a common reference type to which the reference and value types
-                        // are convertible. The concept checks should be expressed in terms of
-                        // the common reference type.
-                        concepts::model_of<Convertible, reference_t<I>, common_reference_t<I>>(),
-                        concepts::model_of<Convertible, value_t<I> &, common_reference_t<I>>(),
+                        // The value, reference and rvalue reference types are related
+                        // through the CommonReference concept.
+                        concepts::model_of<CommonReference, reference_t<I> &&, value_t<I> &>(),
+                        concepts::model_of<CommonReference, reference_t<I> &&, rvalue_reference_t<I> &&>(),
                         // This ensures that there is a way to move from reference type
                         // to the rvalue reference type via the 2-argument version of indirect_move:
                         concepts::same_type(indirect_move(i), indirect_move(i, *i))
