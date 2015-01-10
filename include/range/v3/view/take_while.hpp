@@ -93,7 +93,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     InputIterable<Rng>,
-                    InvokablePredicate<Pred, range_common_reference_t<Rng>>>;
+                    IndirectInvokablePredicate1<Pred, range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
@@ -109,7 +109,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The object on which view::take_while operates must be a model of the "
                         "InputIterable concept.");
-                    CONCEPT_ASSERT_MSG(InvokablePredicate<Pred, range_common_reference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate1<Pred, range_iterator_t<Rng>>(),
                         "The function passed to view::take_while must be callable with objects of "
                         "the range's common reference type, and its result type must be "
                         "convertible to bool.");

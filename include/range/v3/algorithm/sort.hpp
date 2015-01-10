@@ -94,9 +94,8 @@ namespace ranges
             template<typename I, typename C, typename P>
             inline void unguarded_linear_insert(I end, iterator_value_t<I> val, C &pred, P &proj)
             {
-                using R = iterator_common_reference_t<I>;
                 I next = prev(end);
-                while(pred(proj(R(val)), proj(R(*next))))
+                while(pred(proj(val), proj(*next)))
                 {
                     *end = iter_move(next);
                     end = next;
@@ -108,9 +107,8 @@ namespace ranges
             template<typename I, typename C, typename P>
             inline void linear_insert(I begin, I end, C &pred, P &proj)
             {
-                using R = iterator_common_reference_t<I>;
                 iterator_value_t<I> val = iter_move(end);
-                if(pred(proj(R(val)), proj(R(*begin))))
+                if(pred(proj(val), proj(*begin)))
                 {
                     move_backward(begin, end, end + 1);
                     *begin = std::move(val);

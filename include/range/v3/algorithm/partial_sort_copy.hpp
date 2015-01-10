@@ -29,16 +29,13 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O, typename C = ordered_less, typename PI = ident, typename PO = ident,
-            typename VI = iterator_common_reference_t<I>,
-            typename VO = iterator_common_reference_t<O>,
-            typename XI = concepts::Invokable::result_t<PI, VI>,
-            typename XO = concepts::Invokable::result_t<PO, VO>>
+        template<typename I, typename O, typename C = ordered_less, typename PI = ident,
+            typename PO = ident>
         using PartialSortCopyConcept = meta::fast_and<
             InputIterator<I>,
             RandomAccessIterator<O>,
             IndirectlyCopyable<I, O>,
-            InvokableRelation<C, XI, XO>,
+            IndirectInvokableRelation<C, I, O, PI, PO>,
             Sortable<O, C, PO>>;
 
         /// \addtogroup group-algorithms

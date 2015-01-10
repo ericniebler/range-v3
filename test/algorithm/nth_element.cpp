@@ -39,7 +39,7 @@ test_one(unsigned N, unsigned M)
     ranges::nth_element(array.get(), array.get()+M, array.get()+N);
     CHECK((unsigned)array[M] == M);
     std::random_shuffle(array.get(), array.get()+N);
-    ranges::nth_element(ranges::make_range(array.get(), array.get()+N), array.get()+M);
+    ranges::nth_element(::as_lvalue(ranges::make_range(array.get(), array.get()+N)), array.get()+M);
     CHECK((unsigned)array[M] == M);
     ranges::nth_element(array.get(), array.get()+N, array.get()+N); // begin, end, end
 }

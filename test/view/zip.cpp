@@ -78,7 +78,7 @@ int main()
             std::tuple<int, std::string, std::string>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
-            std::tuple<int &, std::string const &, std::string const &>>());
+            common_tuple<int &, std::string const &, std::string const &>>());
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
             std::tuple<int &&, std::string const &&, std::string const &&>>());
@@ -115,7 +115,7 @@ int main()
 
     auto rnd_rng = view::zip(vi, vs);
     using Ref = range_reference_t<decltype(rnd_rng)>;
-    static_assert(std::is_same<Ref, std::pair<int &,std::string const &>>::value, "");
+    static_assert(std::is_same<Ref, common_pair<int &,std::string const &>>::value, "");
     ::models<concepts::BoundedRange>(rnd_rng);
     ::models<concepts::SizedRange>(rnd_rng);
     ::models<concepts::RandomAccessIterator>(begin(rnd_rng));
@@ -190,13 +190,13 @@ int main()
             std::pair<MoveOnlyString, MoveOnlyString>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
-            std::pair<MoveOnlyString const &, MoveOnlyString const &>>());
+            common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
             std::pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
         CONCEPT_ASSERT(Same<
             range_common_reference_t<Rng>,
-            ranges::detail::pair_ref<MoveOnlyString const &, MoveOnlyString const &>>());
+            common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
     }
 
     return test_result();

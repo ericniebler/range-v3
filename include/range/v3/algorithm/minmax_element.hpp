@@ -35,10 +35,8 @@ namespace ranges
         struct minmax_element_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                typename V = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() && Invokable<P, V>() &&
-                    InvokableRelation<C, X>())>
+                CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() &&
+                    IndirectInvokableRelation<C, I, I, P, P>())>
             std::pair<I, I> operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto && pred = invokable(pred_);
@@ -84,10 +82,8 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V>,
-                CONCEPT_REQUIRES_(ForwardIterable<Rng &>() && Invokable<P, V>() &&
-                    InvokableRelation<C, X>())>
+                CONCEPT_REQUIRES_(ForwardIterable<Rng &>() &&
+                    IndirectInvokableRelation<C, I, I, P, P>())>
             std::pair<I, I> operator()(Rng &rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

@@ -165,15 +165,9 @@ namespace ranges
         public:
             template<typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
                 typename P = ident,
-                typename V1 = iterator_common_reference_t<I1>,
-                typename V2 = iterator_common_reference_t<I2>,
-                typename X = concepts::Invokable::result_t<P, V1>,
-                CONCEPT_REQUIRES_(
-                    ForwardIterator<I1>() && IteratorRange<I1, S1>() &&
+                CONCEPT_REQUIRES_(ForwardIterator<I1>() && IteratorRange<I1, S1>() &&
                     ForwardIterator<I2>() && IteratorRange<I2, S2>() &&
-                    Invokable<P, V1>() &&
-                    InvokableRelation<R, X, V2>()
-                )>
+                    IndirectInvokableRelation<R, I1, I2, P, ident>())>
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const
             {
                 constexpr bool Bidi = BidirectionalIterator<I1>() && BidirectionalIterator<I2>();
@@ -186,16 +180,9 @@ namespace ranges
 
             template<typename Rng1, typename Rng2, typename R = equal_to, typename P = ident,
                 typename I1 = range_iterator_t<Rng1>,
-                typename I2 = range_iterator_t<Rng2 const>,
-                typename V1 = iterator_common_reference_t<I1>,
-                typename V2 = iterator_common_reference_t<I2>,
-                typename X = concepts::Invokable::result_t<P, V1>,
-                CONCEPT_REQUIRES_(
-                    ForwardIterable<Rng1>() &&
-                    ForwardIterable<Rng2>() &&
-                    Invokable<P, V1>() &&
-                    InvokableRelation<R, X, V2>()
-                )>
+                typename I2 = range_iterator_t<Rng2>,
+                CONCEPT_REQUIRES_(ForwardIterable<Rng1 &>() && ForwardIterable<Rng2>() &&
+                    IndirectInvokableRelation<R, I1, I2, P, ident>())>
             I1 operator()(Rng1 &rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),

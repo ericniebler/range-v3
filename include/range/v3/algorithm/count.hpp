@@ -31,16 +31,11 @@ namespace ranges
         /// @{
         struct count_fn
         {
-            template<typename I, typename S, typename V1, typename P = ident,
-                typename V0 = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V0>,
-                CONCEPT_REQUIRES_(
-                    InputIterator<I>() && IteratorRange<I, S>() &&
-                    Invokable<P, V0>() &&
-                    EqualityComparable<X, V1>()
-                )>
+            template<typename I, typename S, typename V, typename P = ident,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
+                    IndirectInvokableRelation<equal_to, I, V const *, P, ident>())>
             iterator_difference_t<I>
-            operator()(I begin, S end, V1 const & val, P proj_ = P{}) const
+            operator()(I begin, S end, V const & val, P proj_ = P{}) const
             {
                 auto &&proj = invokable(proj_);
                 iterator_difference_t<I> n = 0;
@@ -50,17 +45,12 @@ namespace ranges
                 return n;
             }
 
-            template<typename Rng, typename V1, typename P = ident,
+            template<typename Rng, typename V, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V0 = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V0>,
-                CONCEPT_REQUIRES_(
-                    InputIterable<Rng>() &&
-                    Invokable<P, V0>() &&
-                    EqualityComparable<X, V1>()
-                )>
+                CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                    IndirectInvokableRelation<equal_to, I, V const *, P, ident>())>
             iterator_difference_t<I>
-            operator()(Rng &&rng, V1 const & val, P proj = P{}) const
+            operator()(Rng &&rng, V const & val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));
             }

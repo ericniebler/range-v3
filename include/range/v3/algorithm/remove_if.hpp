@@ -29,13 +29,10 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename C, typename P = ident,
-            typename V = iterator_common_reference_t<I>,
-            typename X = concepts::Invokable::result_t<P, V>>
+        template<typename I, typename C, typename P = ident>
         using RemovableIf = meta::fast_and<
             ForwardIterator<I>,
-            Invokable<P, V>,
-            InvokablePredicate<C, X>,
+            IndirectInvokablePredicate1<C, I, P>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms

@@ -30,6 +30,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/common_type.hpp>
+#include <range/v3/utility/common_tuple.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
 #include <range/v3/view/all.hpp>
 
@@ -118,13 +119,13 @@ namespace ranges
             struct make_tuple_like_fn
             {
                 template<typename ...Ts>
-                std::tuple<Ts...> operator()(Ts &&...ts) const
+                common_tuple<Ts...> operator()(Ts &&...ts) const
                     noexcept(std::is_nothrow_move_constructible<std::tuple<Ts...>>::value)
                 {
-                    return std::tuple<Ts...>{std::forward<Ts>(ts)...};
+                    return common_tuple<Ts...>{std::forward<Ts>(ts)...};
                 }
                 template<typename F, typename S>
-                std::pair<F, S> operator()(F && f, S && s) const
+                common_pair<F, S> operator()(F && f, S && s) const
                     noexcept(std::is_nothrow_move_constructible<std::pair<F, S>>::value)
                 {
                     return {std::forward<F>(f), std::forward<S>(s)};
@@ -196,164 +197,15 @@ namespace ranges
                     return MoveFun{}(std::forward<R>(t));
                 }
             };
-
-            template<typename ...Ts>
-            struct tuple_ref
-              : std::tuple<Ts...>
-            {
-            private:
-                template<std::size_t...Is>
-                tuple_ref(std::tuple<decay_t<Ts>...> & val, index_sequence<Is...>)
-                  : std::tuple<Ts...>{std::get<Is>(val)...}
-                {}
-            public:
-                CONCEPT_REQUIRES(meta::and_c<(bool) DefaultConstructible<Ts>()...>::value)
-                tuple_ref()
-                  : std::tuple<Ts...>{}
-                {}
-                template<typename...Us,
-                    CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us const &>()...>::value)>
-                tuple_ref(std::tuple<Us...> const &that)
-                  : std::tuple<Ts...>(that)
-                {}
-                template<typename...Us,
-                    CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &&>()...>::value)>
-                tuple_ref(std::tuple<Us...> &&that)
-                  : std::tuple<Ts...>(std::move(that))
-                {}
-                tuple_ref(std::tuple<decay_t<Ts>...> & val)
-                  : tuple_ref{val, make_index_sequence<sizeof...(Ts)>{}}
-                {}
-                using std::tuple<Ts...>::operator=;
-		CONCEPT_REQUIRES(meta::and_c<(bool) Constructible<decay_t<Ts>, Ts const &>()...>::value)
-		operator std::tuple<decay_t<Ts>...> () const
-		{
-		    return static_cast<std::tuple<Ts...> const &>(*this);
-		}
-                CONCEPT_REQUIRES(meta::and_c<(bool) EqualityComparable<Ts>()...>::value)
-                friend bool operator==(tuple_ref const &a, tuple_ref const &b)
-                {
-                    return a.base() == b.base();
-                }
-                CONCEPT_REQUIRES(meta::and_c<(bool) EqualityComparable<Ts>()...>::value)
-                friend bool operator!=(tuple_ref const &a, tuple_ref const &b)
-                {
-                    return a.base() != b.base();
-                }
-                CONCEPT_REQUIRES(meta::and_c<(bool) TotallyOrdered<Ts>()...>::value)
-                friend bool operator<(tuple_ref const &a, tuple_ref const &b)
-                {
-                    return a.base() < b.base();
-                }
-                CONCEPT_REQUIRES(meta::and_c<(bool) TotallyOrdered<Ts>()...>::value)
-                friend bool operator>(tuple_ref const &a, tuple_ref const &b)
-                {
-                    return a.base() > b.base();
-                }
-                CONCEPT_REQUIRES(meta::and_c<(bool) TotallyOrdered<Ts>()...>::value)
-                friend bool operator<=(tuple_ref const &a, tuple_ref const &b)
-                {
-                    return a.base() <= b.base();
-                }
-                CONCEPT_REQUIRES(meta::and_c<(bool) TotallyOrdered<Ts>()...>::value)
-                friend bool operator>=(tuple_ref const &a, tuple_ref const &b)
-                {
-                    return a.base() >= b.base();
-                }
-            };
-
-            template<typename F, typename S>
-            struct pair_ref
-              : std::pair<F, S>
-            {
-            private:
-                std::pair<F, S> &base() { return *this; }
-                std::pair<F, S> const &base() const { return *this; }
-            public:
-                CONCEPT_REQUIRES(DefaultConstructible<F>() && DefaultConstructible<S>())
-                pair_ref()
-                  : std::pair<F, S>{}
-                {}
-                template<typename T, typename U,
-                    CONCEPT_REQUIRES_(Constructible<F, T const &>() && Constructible<S, U const &>())>
-                pair_ref(std::pair<T, U> const &that)
-                  : std::pair<F, S>(that)
-                {}
-                template<typename T, typename U,
-                    CONCEPT_REQUIRES_(Constructible<F, T &&>() && Constructible<S, U &&>())>
-                pair_ref(std::pair<T, U> &&that)
-                  : std::pair<F, S>(std::move(that))
-                {}
-                pair_ref(std::pair<decay_t<F>, decay_t<S>> & val)
-                  : std::pair<F, S>{val.first, val.second}
-                {}
-                using std::pair<F, S>::operator=;
-		CONCEPT_REQUIRES(Constructible<decay_t<F>, F const &>() &&
-		    Constructible<decay_t<S>, S const &>())
-		operator std::pair<decay_t<F>, decay_t<S>> () const
-		{
-		    return static_cast<std::pair<F, S> const &>(*this);
-		}
-                CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
-                friend bool operator==(pair_ref const &a, pair_ref const &b)
-                {
-                    return a.base() == b.base();
-                }
-                CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
-                friend bool operator!=(pair_ref const &a, pair_ref const &b)
-                {
-                    return a.base() != b.base();
-                }
-                CONCEPT_REQUIRES(TotallyOrdered<F>() && TotallyOrdered<S>())
-                friend bool operator<(pair_ref const &a, pair_ref const &b)
-                {
-                    return a.base() < b.base();
-                }
-                CONCEPT_REQUIRES(TotallyOrdered<F>() && TotallyOrdered<S>())
-                friend bool operator>(pair_ref const &a, pair_ref const &b)
-                {
-                    return a.base() > b.base();
-                }
-                CONCEPT_REQUIRES(TotallyOrdered<F>() && TotallyOrdered<S>())
-                friend bool operator<=(pair_ref const &a, pair_ref const &b)
-                {
-                    return a.base() <= b.base();
-                }
-                CONCEPT_REQUIRES(TotallyOrdered<F>() && TotallyOrdered<S>())
-                friend bool operator>=(pair_ref const &a, pair_ref const &b)
-                {
-                    return a.base() >= b.base();
-                }
-            };
-
-            template<typename...Refs, typename...ValRefs>
-            struct common_tuple_ref<std::tuple<Refs...> const &, std::tuple<ValRefs...> &>
-            {
-                using type =
-                    tuple_ref<
-                        common_reference_t<
-                            remove_rvalue_reference_t<Refs> const &,
-                            ValRefs &>...>;
-            };
-
-            template<typename F1, typename S1, typename F2, typename S2>
-            struct common_tuple_ref<std::pair<F1, S1> const &, std::pair<F2, S2> &>
-            {
-                using type =
-                    pair_ref<
-                        common_reference_t<remove_rvalue_reference_t<F1> const &, F2 &>,
-                        common_reference_t<remove_rvalue_reference_t<S1> const &, S2 &>>;
-            };
-
         } // namespace detail
         /// \endcond
 
         /// \addtogroup group-views
         /// @{
-        template<typename Fun, typename...Rngs, typename CopyFun, typename MoveFun, typename CommonRef>
-        struct zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun, CommonRef>
+        template<typename Fun, typename...Rngs, typename CopyFun, typename MoveFun>
+        struct zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun>
           : range_facade<
-                zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun, CommonRef>,
+                zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun>,
                 meta::and_c<is_infinite<Rngs>::value...>::value>
         {
         private:
@@ -382,10 +234,6 @@ namespace ranges
                         range_category_t<Rngs>>()...>;
                 using value_type =
                     detail::decay_t<concepts::Invokable::result_t<CopyFun, reference_t_ &&>>;
-                using common_reference =
-                    meta::apply<CommonRef,
-                        detail::remove_rvalue_reference_t<reference_t_> const &,
-                        value_type &>;
                 // This is what gives zip_view iterators their special iter_move behavior:
                 using mixin =
                     detail::zip_with_mixin<cursor, sentinel, reference_t_, MoveFun>;

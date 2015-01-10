@@ -142,7 +142,7 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     InputIterable<Rng>,
-                    Invokable<Fun, range_common_reference_t<Rng>, range_common_reference_t<Rng>>,
+                    IndirectInvokable2<Fun, range_iterator_t<Rng>, range_iterator_t<Rng>>,
                     Convertible<
                         concepts::Invokable::result_t<Fun, range_common_reference_t<Rng>,
                             range_common_reference_t<Rng>>,
@@ -162,8 +162,8 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The first argument passed to view::partial_sum must be a model of the "
                         "InputIterable concept.");
-                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_common_reference_t<Rng>,
-                        range_common_reference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvokable2<Fun, range_iterator_t<Rng>,
+                        range_iterator_t<Rng>>(),
                         "The second argument passed to view::partial_sum must be callable with "
                         "two values from the range passed as the first argument.");
                     CONCEPT_ASSERT_MSG(Convertible<

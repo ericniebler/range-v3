@@ -38,16 +38,11 @@ namespace ranges
             /// \pre `I` is a model of the `InputIterator` concept
             /// \pre `S` is a model of the `Sentinel<I>` concept
             /// \pre `P` is a model of the `Invokable<iterator_common_reference_t<I>>` concept
-            /// \pre The ResultType of `P` is EqualityComparable with V1
-            template<typename I, typename S, typename V1, typename P = ident,
-                typename V0 = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V0>,
-                CONCEPT_REQUIRES_(
-                    InputIterator<I>() && IteratorRange<I, S>() &&
-                    Invokable<P, V0>() &&
-                    EqualityComparable<X, V1>()
-                )>
-            I operator()(I begin, S end, V1 const &val, P proj_ = P{}) const
+            /// \pre The ResultType of `P` is EqualityComparable with V
+            template<typename I, typename S, typename V, typename P = ident,
+                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
+                    IndirectInvokableRelation<equal_to, I, V const *, P, ident>())>
+            I operator()(I begin, S end, V const &val, P proj_ = P{}) const
             {
                 auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin)
@@ -57,16 +52,11 @@ namespace ranges
             }
 
             /// \overload
-            template<typename Rng, typename V1, typename P = ident,
+            template<typename Rng, typename V, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                typename V0 = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V0>,
-                CONCEPT_REQUIRES_(
-                    InputIterable<Rng &>() &&
-                    Invokable<P, V0>() &&
-                    EqualityComparable<X, V1>()
-                )>
-            I operator()(Rng &rng, V1 const &val, P proj = P{}) const
+                CONCEPT_REQUIRES_(InputIterable<Rng &>() &&
+                    IndirectInvokableRelation<equal_to, I, V const *, P, ident>())>
+            I operator()(Rng &rng, V const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));
             }

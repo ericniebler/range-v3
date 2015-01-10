@@ -38,13 +38,10 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename C = ordered_less, typename P = ident,
-            typename V = iterator_common_reference_t<I>,
-            typename X = concepts::Invokable::result_t<P, V>>
+        template<typename I, typename C = ordered_less, typename P = ident>
         using IsHeapable = meta::fast_and<
             RandomAccessIterator<I>,
-            Invokable<P, V>,
-            InvokableRelation<C, X>>;
+            IndirectInvokableRelation<C, I, I, P, P>>;
 
         /// \cond
         namespace detail
@@ -150,7 +147,6 @@ namespace ranges
                 template<typename I, typename C = ordered_less, typename P = ident>
                 void operator()(I begin, iterator_difference_t<I> len, C pred_ = C{}, P proj_ = P{}) const
                 {
-                    using R = iterator_common_reference_t<I>;
                     if(len > 1)
                     {
                         auto &&pred = invokable(pred_);
@@ -169,7 +165,7 @@ namespace ranges
                                     break;
                                 len = (len - 1) / 2;
                                 i = begin + len;
-                            } while(pred(proj(R(*i)), proj(R(v))));
+                            } while(pred(proj(*i), proj(v)));
                             *end = std::move(v);
                         }
                     }
@@ -183,7 +179,6 @@ namespace ranges
                 template<typename I, typename C = ordered_less, typename P = ident>
                 void operator()(I begin, iterator_difference_t<I> len, I start, C pred_ = C {}, P proj_ = P{}) const
                 {
-                    using R = iterator_common_reference_t<I>;
                     // left-child of start is at 2 * start + 1
                     // right-child of start is at 2 * start + 2
                     auto child = start - begin;
@@ -231,7 +226,7 @@ namespace ranges
                         }
 
                         // check if we are in heap-order
-                    } while (!pred(proj(R(*child_i)), proj(R(top))));
+                    } while (!pred(proj(*child_i), proj(top)));
                     *start = std::move(top);
                 }
             };

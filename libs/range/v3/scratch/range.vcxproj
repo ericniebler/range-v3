@@ -350,6 +350,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\basic_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_iterator.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\common_tuple.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_type.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_tuple.hpp" />

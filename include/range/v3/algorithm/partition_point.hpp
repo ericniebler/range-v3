@@ -42,8 +42,7 @@ namespace ranges
             typename X = concepts::Invokable::result_t<P, V>>
         using PartitionPointable = meta::fast_and<
             ForwardIterator<I>,
-            Invokable<P, V>,
-            InvokablePredicate<C, X>>;
+            IndirectInvokablePredicate1<C, I, P>>;
 
         /// \addtogroup group-algorithms
         /// @{

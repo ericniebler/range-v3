@@ -27,12 +27,10 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename T0, typename T1, typename P = ident,
-            typename V = iterator_common_reference_t<I>,
-            typename X = concepts::Invokable::result_t<P, V>>
+        template<typename I, typename T0, typename T1, typename P = ident>
         using Replaceable = meta::fast_and<
             InputIterator<I>,
-            EqualityComparable<X, T0>,
+            IndirectInvokableRelation<equal_to, I, T0 const *, P, ident>,
             Writable<I, T1>>;
 
         /// \addtogroup group-algorithms

@@ -120,8 +120,8 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     ForwardIterable<Rng>,
-                    InvokablePredicate<Fun, range_common_reference_t<Rng>,
-                        range_common_reference_t<Rng>>>;
+                    IndirectInvokablePredicate2<Fun, range_iterator_t<Rng>,
+                        range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
@@ -138,8 +138,8 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
                         "The object on which view::group_by operates must be a model of the "
                         "ForwardIterable concept.");
-                    CONCEPT_ASSERT_MSG(InvokablePredicate<Fun, range_common_reference_t<Rng>,
-                        range_common_reference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate2<Fun, range_iterator_t<Rng>,
+                        range_iterator_t<Rng>>(),
                         "The function passed to view::group_by must be callable with two arguments "
                         "of the range's common reference type, and its return type must be "
                         "convertible to bool.");
