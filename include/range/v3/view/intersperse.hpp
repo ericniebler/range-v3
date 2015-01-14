@@ -26,6 +26,7 @@
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -178,10 +179,12 @@ namespace ranges
             #endif
             };
 
-
             /// \relates intersperse_fn
             /// \ingroup group-views
-            constexpr view<intersperse_fn> intersperse{};
+            namespace
+            {
+                constexpr auto&& intersperse = static_const<view<intersperse_fn>>::value;
+            }
         }
     }
 }

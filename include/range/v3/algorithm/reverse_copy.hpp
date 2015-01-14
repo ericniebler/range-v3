@@ -21,6 +21,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -58,7 +59,10 @@ namespace ranges
 
         /// \sa `reverse_copy_fn`
         /// \ingroup group-algorithms
-        constexpr reverse_copy_fn reverse_copy{};
+        namespace
+        {
+            constexpr auto&& reverse_copy = static_const<reverse_copy_fn>::value;
+        }
 
         /// @}
     } // namespace v3

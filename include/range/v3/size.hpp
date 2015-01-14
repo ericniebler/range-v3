@@ -17,6 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -94,7 +95,10 @@ namespace ranges
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to `size`
-        constexpr adl_size_detail::size_fn size {};
+        namespace
+        {
+            constexpr auto&& size = static_const<adl_size_detail::size_fn>::value;
+        }
     }
 }
 

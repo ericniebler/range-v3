@@ -36,6 +36,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/move.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -96,7 +97,10 @@ namespace ranges
 
         /// \sa `merge_move_fn`
         /// \ingroup group-algorithms
-        constexpr merge_move_fn merge_move{};
+        namespace
+        {
+            constexpr auto&& merge_move = static_const<merge_move_fn>::value;
+        }
 
         /// @}
     } // namespace v3

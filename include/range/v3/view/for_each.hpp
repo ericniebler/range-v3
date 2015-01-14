@@ -23,6 +23,7 @@
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -87,7 +88,10 @@ namespace ranges
 
             /// \relates for_each_fn
             /// \ingroup group-views
-            constexpr view<for_each_fn> for_each{};
+            namespace
+            {
+                constexpr auto&& for_each = static_const<view<for_each_fn>>::value;
+            }
         }
 
         struct yield_fn
@@ -101,7 +105,10 @@ namespace ranges
 
         /// \relates yield_fn
         /// \ingroup group-views
-        constexpr yield_fn yield{};
+        namespace
+        {
+            constexpr auto&& yield = static_const<yield_fn>::value;
+        }
 
         struct yield_from_fn
         {
@@ -114,7 +121,10 @@ namespace ranges
 
         /// \relates yield_from_fn
         /// \ingroup group-views
-        constexpr yield_from_fn yield_from{};
+        namespace
+        {
+            constexpr auto&& yield_from = static_const<yield_from_fn>::value;
+        }
 
         struct yield_if_fn
         {
@@ -127,7 +137,10 @@ namespace ranges
 
         /// \relates yield_if_fn
         /// \ingroup group-views
-        constexpr yield_if_fn yield_if{};
+        namespace
+        {
+            constexpr auto&& yield_if = static_const<yield_if_fn>::value;
+        }
 
         struct lazy_yield_if_fn
         {
@@ -141,7 +154,10 @@ namespace ranges
 
         /// \relates lazy_yield_if_fn
         /// \ingroup group-views
-        constexpr lazy_yield_if_fn lazy_yield_if{};
+        namespace
+        {
+            constexpr auto&& lazy_yield_if = static_const<lazy_yield_if_fn>::value;
+        }
         /// @}
 
         /// \cond

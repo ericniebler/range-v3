@@ -21,6 +21,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -119,7 +120,10 @@ namespace ranges
             }
         };
 
-        constexpr with_braced_init_args<inner_product_fn> inner_product{};
+        namespace
+        {
+            constexpr auto&& inner_product = static_const<with_braced_init_args<inner_product_fn>>::value;
+        }
     }
 }
 

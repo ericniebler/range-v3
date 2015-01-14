@@ -23,6 +23,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -92,7 +93,10 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates take_while_fn
             /// \sa action
-            constexpr action<take_while_fn> take_while{};
+            namespace
+            {
+                constexpr auto&& take_while = static_const<action<take_while_fn>>::value;
+            }
         }
         /// @}
     }

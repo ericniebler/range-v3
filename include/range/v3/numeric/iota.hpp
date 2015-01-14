@@ -17,6 +17,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -41,7 +42,10 @@ namespace ranges
             }
         };
 
-        constexpr iota_fn iota{};
+        namespace
+        {
+            constexpr auto&& iota = static_const<iota_fn>::value;
+        }
     }
 }
 

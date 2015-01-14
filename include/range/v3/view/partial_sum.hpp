@@ -30,6 +30,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -177,7 +178,10 @@ namespace ranges
 
             /// \relates partial_sum_fn
             /// \ingroup group-views
-            constexpr view<partial_sum_fn> partial_sum{};
+            namespace
+            {
+                constexpr auto&& partial_sum = static_const<view<partial_sum_fn>>::value;
+            }
         }
         /// @}
     }

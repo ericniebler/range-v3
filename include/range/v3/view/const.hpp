@@ -22,6 +22,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -94,7 +95,10 @@ namespace ranges
 
             /// \relates const_fn
             /// \ingroup group-views
-            constexpr view<const_fn> const_{};
+            namespace
+            {
+                constexpr auto&& const_ = static_const<view<const_fn>>::value;
+            }
         }
         /// @}
     }

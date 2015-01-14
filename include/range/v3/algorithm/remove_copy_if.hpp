@@ -21,6 +21,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -68,7 +69,10 @@ namespace ranges
 
         /// \sa `remove_copy_if_fn`
         /// \ingroup group-algorithms
-        constexpr remove_copy_if_fn remove_copy_if{};
+        namespace
+        {
+            constexpr auto&& remove_copy_if = static_const<remove_copy_if_fn>::value;
+        }
 
         /// @}
     } // namespace v3

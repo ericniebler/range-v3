@@ -22,6 +22,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -112,7 +113,10 @@ namespace ranges
 
         /// \sa `mismatch_fn`
         /// \ingroup group-algorithms
-        constexpr mismatch_fn mismatch{};
+        namespace
+        {
+            constexpr auto&& mismatch = static_const<mismatch_fn>::value;
+        }
 
         // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So
         // that we can properly distinguish this case:

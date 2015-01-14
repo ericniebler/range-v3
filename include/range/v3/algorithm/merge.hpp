@@ -36,6 +36,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -96,7 +97,10 @@ namespace ranges
 
         /// \sa `merge_fn`
         /// \ingroup group-algorithms
-        constexpr merge_fn merge{};
+        namespace
+        {
+            constexpr auto&& merge = static_const<merge_fn>::value;
+        }
 
         /// @}
     } // namespace v3

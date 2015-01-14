@@ -22,6 +22,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -116,7 +117,10 @@ namespace ranges
 
             /// \relates adjacent_remove_if_fn
             /// \ingroup group-views
-            constexpr view<adjacent_remove_if_fn> adjacent_remove_if{};
+            namespace
+            {
+                constexpr auto&& adjacent_remove_if = static_const<view<adjacent_remove_if_fn>>::value;
+            }
         }
         /// @}
     }

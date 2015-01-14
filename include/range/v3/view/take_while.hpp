@@ -25,6 +25,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -119,7 +120,10 @@ namespace ranges
 
             /// \relates take_while_fn
             /// \ingroup group-views
-            constexpr view<take_while_fn> take_while{};
+            namespace
+            {
+                constexpr auto&& take_while = static_const<view<take_while_fn>>::value;
+            }
         }
         /// @}
     }

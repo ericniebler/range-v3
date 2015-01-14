@@ -24,6 +24,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -61,7 +62,10 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `enumerate_fn`
-        constexpr enumerate_fn enumerate{};
+        namespace
+        {
+            constexpr auto&& enumerate = static_const<enumerate_fn>::value;
+        }
 
         struct distance_fn : iter_distance_fn
         {
@@ -91,7 +95,10 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `distance_fn`
-        constexpr distance_fn distance {};
+        namespace
+        {
+            constexpr auto&& distance = static_const<distance_fn>::value;
+        }
 
         // The interface of distance_compare is taken from Util.listLengthCmp in the GHC API.
         struct distance_compare_fn : iter_distance_compare_fn
@@ -134,7 +141,10 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `distance_compare_fn`
-        constexpr distance_compare_fn distance_compare {};
+        namespace
+        {
+            constexpr auto&& distance_compare = static_const<distance_compare_fn>::value;
+        }
 
         /// @}
     }

@@ -21,6 +21,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -88,7 +89,10 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates sort_fn
             /// \sa `action`
-            constexpr action<sort_fn> sort{};
+            namespace
+            {
+                constexpr auto&& sort = static_const<action<sort_fn>>::value;
+            }
         }
         /// @}
     }

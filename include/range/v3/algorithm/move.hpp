@@ -23,6 +23,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/move.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -61,7 +62,10 @@ namespace ranges
 
         /// \sa `move_fn`
         /// \ingroup group-algorithms
-        constexpr move_fn move{};
+        namespace
+        {
+            constexpr auto&& move = static_const<move_fn>::value;
+        }
 
         /// @}
     } // namespace v3

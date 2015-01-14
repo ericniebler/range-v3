@@ -35,6 +35,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/algorithm/min_element.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -309,7 +310,10 @@ namespace ranges
 
         /// \sa `nth_element_fn`
         /// \ingroup group-algorithms
-        constexpr nth_element_fn nth_element{};
+        namespace
+        {
+            constexpr auto&& nth_element = static_const<nth_element_fn>::value;
+        }
 
         /// @}
     } // namespace v3

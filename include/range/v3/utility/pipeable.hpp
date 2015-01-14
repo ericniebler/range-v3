@@ -20,6 +20,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -54,7 +55,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_pipeable_fn`
-        constexpr make_pipeable_fn make_pipeable{};
+        namespace
+        {
+            constexpr auto&& make_pipeable = static_const<make_pipeable_fn>::value;
+        }
 
         template<typename T,
             typename U = meta::if_<

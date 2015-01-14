@@ -21,6 +21,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -134,7 +135,10 @@ namespace ranges
 
         /// \sa `unique_copy_fn`
         /// \ingroup group-algorithms
-        constexpr unique_copy_fn unique_copy{};
+        namespace
+        {
+            constexpr auto&& unique_copy = static_const<unique_copy_fn>::value;
+        }
 
         /// @}
     } // namespace v3

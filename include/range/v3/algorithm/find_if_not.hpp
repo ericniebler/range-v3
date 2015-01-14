@@ -21,6 +21,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -66,7 +67,10 @@ namespace ranges
 
         /// \sa `find_if_not_fn`
         /// \ingroup group-algorithms
-        constexpr find_if_not_fn find_if_not {};
+        namespace
+        {
+            constexpr auto&& find_if_not = static_const<find_if_not_fn>::value;
+        }
 
         /// @}
     } // namespace v3

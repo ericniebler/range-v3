@@ -373,6 +373,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\pipeable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\semiregular.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\static_const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\tuple_algorithm.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\unreachable.hpp" />

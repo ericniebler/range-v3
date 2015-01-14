@@ -30,6 +30,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/swap.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -117,7 +118,10 @@ namespace ranges
 
         /// \sa `partition_fn`
         /// \ingroup group-algorithms
-        constexpr partition_fn partition{};
+        namespace
+        {
+            constexpr auto&& partition = static_const<partition_fn>::value;
+        }
 
         /// @}
     } // namespace v3

@@ -22,6 +22,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -192,7 +193,10 @@ namespace ranges
 
         /// \sa `find_end_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<find_end_fn> find_end{};
+        namespace
+        {
+            constexpr auto&& find_end = static_const<with_braced_init_args<find_end_fn>>::value;
+        }
 
         /// @}
     } // namespace v3

@@ -22,6 +22,7 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/associated_types.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -248,11 +249,17 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \relates adl_swap_detail::swap_fn
-        constexpr adl_swap_detail::swap_fn swap {};
+        namespace
+        {
+            constexpr auto&& swap = static_const<adl_swap_detail::swap_fn>::value;
+        }
 
         /// \ingroup group-utility
         /// \relates adl_swap_detail::indirect_swap_fn
-        constexpr adl_swap_detail::indirect_swap_fn indirect_swap {};
+        namespace
+        {
+            constexpr auto&& indirect_swap = static_const<adl_swap_detail::indirect_swap_fn>::value;
+        }
     }
 }
 

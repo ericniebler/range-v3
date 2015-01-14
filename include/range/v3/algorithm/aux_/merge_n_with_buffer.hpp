@@ -35,6 +35,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/algorithm/aux_/merge_n.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -61,7 +62,10 @@ namespace ranges
                 }
             };
 
-            constexpr merge_n_with_buffer_fn merge_n_with_buffer{};
+            namespace
+            {
+                constexpr auto&& merge_n_with_buffer = static_const<merge_n_with_buffer_fn>::value;
+            }
 
         } // namespace aux
     } // namespace v3

@@ -23,6 +23,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -226,7 +227,10 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `make_range_fn`
-        constexpr make_range_fn make_range {};
+        namespace
+        {
+            constexpr auto&& make_range = static_const<make_range_fn>::value;
+        }
 
         /// Tuple-like access for `range`
         // TODO Switch to variable template when available

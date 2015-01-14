@@ -21,6 +21,7 @@
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -117,7 +118,10 @@ namespace ranges
 
             /// \relates delimit_fn
             /// \ingroup group-views
-            constexpr delimit_fn delimit{};
+            namespace
+            {
+                constexpr auto&& delimit = static_const<delimit_fn>::value;
+            }
         }
         /// @}
     }

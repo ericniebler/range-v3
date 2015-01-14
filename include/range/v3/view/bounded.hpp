@@ -23,6 +23,7 @@
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/common_iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -113,7 +114,10 @@ namespace ranges
 
             /// \relates bounded_fn
             /// \ingroup group-views
-            constexpr view<bounded_fn> bounded{};
+            namespace
+            {
+                constexpr auto&& bounded = static_const<view<bounded_fn>>::value;
+            }
 
             template<typename Rng>
             using bounded_t =

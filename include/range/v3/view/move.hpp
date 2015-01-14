@@ -23,7 +23,9 @@
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
+
 namespace ranges
 {
     inline namespace v3
@@ -91,7 +93,10 @@ namespace ranges
 
             /// \relates move_fn
             /// \ingroup group-views
-            constexpr view<move_fn> move{};
+            namespace
+            {
+                constexpr auto&& move = static_const<view<move_fn>>::value;
+            }
         }
         /// @}
     }

@@ -19,6 +19,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/common_iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
@@ -67,7 +68,10 @@ namespace ranges
         /// @{
 
         /// \ingroup group-core
-        constexpr detail::to_container_fn<meta::quote<std::vector>> to_vector {};
+        namespace
+        {
+            constexpr auto&& to_vector = static_const<detail::to_container_fn<meta::quote<std::vector>>>::value;
+        }
 
         /// \brief For initializing a container of the specified type with the elements of an Iterable
         template<template<typename...> class ContT>

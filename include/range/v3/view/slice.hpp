@@ -25,6 +25,7 @@
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/drop.hpp>
@@ -409,7 +410,10 @@ namespace ranges
 
             /// \relates slice_fn
             /// \ingroup group-views
-            constexpr view<slice_fn> slice{};
+            namespace
+            {
+                constexpr auto&& slice = static_const<view<slice_fn>>::value;
+            }
         }
         /// @}
     }

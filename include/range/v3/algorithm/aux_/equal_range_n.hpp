@@ -25,6 +25,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
 #include <range/v3/algorithm/aux_/upper_bound_n.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -64,7 +65,10 @@ namespace ranges
                 }
             };
 
-            constexpr equal_range_n_fn equal_range_n{};
+            namespace
+            {
+                constexpr auto&& equal_range_n = static_const<equal_range_n_fn>::value;
+            }
         }
     } // namespace v3
 } // namespace ranges

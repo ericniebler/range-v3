@@ -21,6 +21,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/aux_/upper_bound_n.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -52,7 +53,10 @@ namespace ranges
 
         /// \sa `upper_bound_fn`
         /// \ingroup group-algorithms
-        constexpr upper_bound_fn upper_bound{};
+        namespace
+        {
+            constexpr auto&& upper_bound = static_const<upper_bound_fn>::value;
+        }
 
         /// @}
     } // namespace v3

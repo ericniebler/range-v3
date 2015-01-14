@@ -22,6 +22,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -53,7 +54,10 @@ namespace ranges
 
         /// \sa `rotate_copy_fn`
         /// \ingroup group-algorithms
-        constexpr rotate_copy_fn rotate_copy{};
+        namespace
+        {
+            constexpr auto&& rotate_copy = static_const<rotate_copy_fn>::value;
+        }
 
         /// @}
     } // namespace v3

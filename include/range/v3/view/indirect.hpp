@@ -22,6 +22,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -99,7 +100,10 @@ namespace ranges
 
             /// \relates indirect_fn
             /// \ingroup group-views
-            constexpr view<indirect_fn> indirect{};
+            namespace
+            {
+                constexpr auto&& indirect = static_const<view<indirect_fn>>::value;
+            }
         }
         /// @}
     }

@@ -18,6 +18,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -37,7 +38,10 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `back_fn`
-        constexpr back_fn back {};
+        namespace
+        {
+            constexpr auto&& back = static_const<back_fn>::value;
+        }
     }
 }
 

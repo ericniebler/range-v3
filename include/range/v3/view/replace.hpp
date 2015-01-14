@@ -20,6 +20,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -116,7 +117,10 @@ namespace ranges
 
             /// \relates replace_fn
             /// \ingroup group-views
-            constexpr view<replace_fn> replace{};
+            namespace
+            {
+                constexpr auto&& replace = static_const<view<replace_fn>>::value;
+            }
         }
         /// @}
     }

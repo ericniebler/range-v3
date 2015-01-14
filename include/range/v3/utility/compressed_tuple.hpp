@@ -19,6 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -105,7 +106,10 @@ namespace ranges
         
         /// \ingroup group-utility
         /// \sa `make_compressed_tuple_fn`
-        constexpr make_compressed_tuple_fn make_compressed_tuple {};
+        namespace
+        {
+            constexpr auto&& make_compressed_tuple = static_const<make_compressed_tuple_fn>::value;
+        }
 
         /// @}
     }

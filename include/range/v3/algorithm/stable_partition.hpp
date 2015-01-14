@@ -37,6 +37,7 @@
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/rotate.hpp>
 #include <range/v3/algorithm/partition_move.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -283,7 +284,10 @@ namespace ranges
 
         /// \sa `stable_partition_fn`
         /// \ingroup group-algorithms
-        constexpr stable_partition_fn stable_partition{};
+        namespace
+        {
+            constexpr auto&& stable_partition = static_const<stable_partition_fn>::value;
+        }
 
         /// @}
     } // namespace v3

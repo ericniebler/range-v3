@@ -19,6 +19,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/action/insert.hpp>
 #include <range/v3/action/action.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -102,7 +103,10 @@ namespace ranges
         {
             /// \ingroup group-actions
             /// \sa with_braced_init_args
-            constexpr with_braced_init_args<action<adl_push_front_detail::push_front_fn>> push_front{};
+            namespace
+            {
+                constexpr auto&& push_front = static_const<with_braced_init_args<action<adl_push_front_detail::push_front_fn>>>::value;
+            }
         }
 
         using action::push_front;

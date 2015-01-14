@@ -35,6 +35,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/aux_/merge_n_with_buffer.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -63,7 +64,10 @@ namespace ranges
                 }
             };
 
-            constexpr sort_n_with_buffer_fn sort_n_with_buffer{};
+            namespace
+            {
+                constexpr auto&& sort_n_with_buffer = static_const<sort_n_with_buffer_fn>::value;
+            }
 
         } // namespace aux
     } // namespace v3

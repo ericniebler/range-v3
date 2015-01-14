@@ -23,6 +23,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/take_while.hpp>
@@ -149,7 +150,10 @@ namespace ranges
 
             /// \relates group_by_fn
             /// \ingroup group-views
-            constexpr view<group_by_fn> group_by{};
+            namespace
+            {
+                constexpr auto&& group_by = static_const<view<group_by_fn>>::value;
+            }
         }
         /// @}
     }

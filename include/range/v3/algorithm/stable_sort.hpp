@@ -54,6 +54,7 @@
 #include <range/v3/algorithm/merge_move.hpp>
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -181,7 +182,10 @@ namespace ranges
 
         /// \sa `stable_sort_fn`
         /// \ingroup group-algorithms
-        constexpr stable_sort_fn stable_sort {};
+        namespace
+        {
+            constexpr auto&& stable_sort = static_const<stable_sort_fn>::value;
+        }
 
         /// @}
     } // namespace v3

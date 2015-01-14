@@ -21,6 +21,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -184,7 +185,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `not_fn`
-        constexpr not_fn not_ {};
+        namespace
+        {
+            constexpr auto&& not_ = static_const<not_fn>::value;
+        }
 
         template<typename T>
         struct reference_wrapper
@@ -294,7 +298,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `ref_fn`
-        constexpr ref_fn ref {};
+        namespace
+        {
+            constexpr auto&& ref = static_const<ref_fn>::value;
+        }
 
         template<typename T>
         using ref_t = decltype(ref(std::declval<T>()));
@@ -322,7 +329,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `unwrap_reference_fn`
-        constexpr unwrap_reference_fn unwrap_reference {};
+        namespace
+        {
+            constexpr auto&& unwrap_reference = static_const<unwrap_reference_fn>::value;
+        }
 
         /// \cond
         namespace detail
@@ -373,7 +383,10 @@ namespace ranges
         /// accidentally becoming a "nested" bind.
         /// \ingroup group-utility
         /// \sa `protect_fn`
-        constexpr protect_fn protect{};
+        namespace
+        {
+            constexpr auto&& protect = static_const<protect_fn>::value;
+        }
 
         // Accepts initializer_lists as either the first or second parameter, or both,
         // and forwards on to an implementation.

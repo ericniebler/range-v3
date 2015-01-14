@@ -33,6 +33,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/reverse.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -196,7 +197,10 @@ namespace ranges
 
         /// \sa `is_permutation_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<is_permutation_fn> is_permutation {};
+        namespace
+        {
+            constexpr auto&& is_permutation = static_const<with_braced_init_args<is_permutation_fn>>::value;
+        }
 
         struct next_permutation_fn
         {
@@ -242,7 +246,10 @@ namespace ranges
 
         /// \sa `next_permutation_fn`
         /// \ingroup group-algorithms
-        constexpr next_permutation_fn next_permutation{};
+        namespace
+        {
+            constexpr auto&& next_permutation = static_const<next_permutation_fn>::value;
+        }
 
         struct prev_permutation_fn
         {
@@ -288,7 +295,10 @@ namespace ranges
 
         /// \sa `prev_permutation_fn`
         /// \ingroup group-algorithms
-        constexpr prev_permutation_fn prev_permutation{};
+        namespace
+        {
+            constexpr auto&& prev_permutation = static_const<prev_permutation_fn>::value;
+        }
 
         /// @}
     } // namespace v3

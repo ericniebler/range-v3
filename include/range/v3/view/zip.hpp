@@ -32,6 +32,7 @@
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/common_tuple.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -176,27 +177,6 @@ namespace ranges
                 template<typename F, typename S>
                 std::pair<decay_t<F>, decay_t<S>> operator()(std::pair<F, S> &&) const;
             };
-
-            template<typename Cur, typename Sent, typename Reference, typename MoveFun>
-            struct zip_with_mixin : basic_mixin<Cur>
-            {
-                using basic_mixin<Cur>::basic_mixin;
-                using I0 = basic_iterator<Cur, Sent>;
-                using I1 = basic_iterator<Cur, Cur>;
-                using R = Reference;
-                friend auto indirect_move(I0 const &, R && t)
-                    noexcept(noexcept(MoveFun{}(std::forward<R>(t)))) ->
-                    decltype(MoveFun{}(std::forward<R>(t)))
-                {
-                    return MoveFun{}(std::forward<R>(t));
-                }
-                friend auto indirect_move(I1 const &, R && t)
-                    noexcept(noexcept(MoveFun{}(std::forward<R>(t)))) ->
-                    decltype(MoveFun{}(std::forward<R>(t)))
-                {
-                    return MoveFun{}(std::forward<R>(t));
-                }
-            };
         } // namespace detail
         /// \endcond
 
@@ -235,8 +215,24 @@ namespace ranges
                 using value_type =
                     detail::decay_t<concepts::Invokable::result_t<CopyFun, reference_t_ &&>>;
                 // This is what gives zip_view iterators their special iter_move behavior:
-                using mixin =
-                    detail::zip_with_mixin<cursor, sentinel, reference_t_, MoveFun>;
+                struct mixin : basic_mixin<cursor>
+                {
+                    using basic_mixin<cursor>::basic_mixin;
+                    using I0 = basic_iterator<cursor, sentinel>;
+                    using I1 = basic_iterator<cursor, cursor>;
+                    friend auto indirect_move(I0 const &, reference_t_ && t)
+                        noexcept(noexcept(MoveFun{}(std::forward<reference_t_>(t)))) ->
+                        decltype(MoveFun{}(std::forward<reference_t_>(t)))
+                    {
+                        return MoveFun{}(std::forward<reference_t_>(t));
+                    }
+                    friend auto indirect_move(I1 const &, reference_t_ && t)
+                        noexcept(noexcept(MoveFun{}(std::forward<reference_t_>(t)))) ->
+                        decltype(MoveFun{}(std::forward<reference_t_>(t)))
+                    {
+                        return MoveFun{}(std::forward<reference_t_>(t));
+                    }
+                };
                 cursor() = default;
                 cursor(semiregular_invokable_ref_t<Fun, true> fun,
                     std::tuple<range_iterator_t<Rngs>...> its)
@@ -379,7 +375,10 @@ namespace ranges
 
             /// \relates zip_fn
             /// \ingroup group-views
-            constexpr zip_fn zip{};
+            namespace
+            {
+                constexpr auto&& zip = static_const<zip_fn>::value;
+            }
 
             struct zip_with_fn
             {
@@ -412,7 +411,10 @@ namespace ranges
 
             /// \relates zip_with_fn
             /// \ingroup group-views
-            constexpr zip_with_fn zip_with{};
+            namespace
+            {
+                constexpr auto&& zip_with = static_const<zip_with_fn>::value;
+            }
         }
         /// @}
     }

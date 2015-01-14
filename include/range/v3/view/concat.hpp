@@ -28,6 +28,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -290,7 +291,10 @@ namespace ranges
 
             /// \relates concat_fn
             /// \ingroup group-views
-            constexpr concat_fn concat{};
+            namespace
+            {
+                constexpr auto&& concat = static_const<concat_fn>::value;
+            }
         }
         /// @}
     }

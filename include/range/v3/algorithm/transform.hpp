@@ -23,6 +23,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/unreachable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -130,7 +131,10 @@ namespace ranges
 
         /// \sa `transform_fn`
         /// \ingroup group-algorithms
-        constexpr transform_fn transform{};
+        namespace
+        {
+            constexpr auto&& transform = static_const<transform_fn>::value;
+        }
 
         /// @}
     } // namespace v3

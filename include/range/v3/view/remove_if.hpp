@@ -26,6 +26,7 @@
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -167,7 +168,10 @@ namespace ranges
 
             /// \relates remove_if_fn
             /// \ingroup group-views
-            constexpr view<remove_if_fn> remove_if{};
+            namespace
+            {
+                constexpr auto&& remove_if = static_const<view<remove_if_fn>>::value;
+            }
         }
         /// @}
     }

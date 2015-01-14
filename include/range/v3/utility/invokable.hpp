@@ -22,6 +22,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -46,7 +47,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_invokable_fn`
-        constexpr make_invokable_fn invokable {};
+        namespace
+        {
+            constexpr auto&& invokable = static_const<make_invokable_fn>::value;
+        }
 
         template<typename T>
         using invokable_t = decltype(invokable(std::declval<T>()));

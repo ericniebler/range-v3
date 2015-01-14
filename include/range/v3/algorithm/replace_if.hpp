@@ -21,6 +21,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -60,7 +61,10 @@ namespace ranges
 
         /// \sa `replace_if_fn`
         /// \ingroup group-algorithms
-        constexpr replace_if_fn replace_if{};
+        namespace
+        {
+            constexpr auto&& replace_if = static_const<replace_if_fn>::value;
+        }
 
         /// @}
     } // namespace v3

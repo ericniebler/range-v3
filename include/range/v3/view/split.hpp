@@ -23,6 +23,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/iota.hpp>
@@ -242,7 +243,10 @@ namespace ranges
 
             /// \relates split_fn
             /// \ingroup group-views
-            constexpr view<split_fn> split{};
+            namespace
+            {
+                constexpr auto&& split = static_const<view<split_fn>>::value;
+            }
         }
         /// @}
     }

@@ -20,6 +20,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -72,7 +73,10 @@ namespace ranges
 
         /// \sa `is_sorted_until_fn`
         /// \ingroup group-algorithms
-        constexpr is_sorted_until_fn is_sorted_until{};
+        namespace
+        {
+            constexpr auto&& is_sorted_until = static_const<is_sorted_until_fn>::value;
+        }
 
         /// @}
     } // namespace v3

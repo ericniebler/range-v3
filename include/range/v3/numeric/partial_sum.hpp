@@ -21,6 +21,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -122,7 +123,10 @@ namespace ranges
             }
         };
 
-        constexpr partial_sum_fn partial_sum{};
+        namespace
+        {
+            constexpr auto&& partial_sum = static_const<partial_sum_fn>::value;
+        }
     }
 }
 

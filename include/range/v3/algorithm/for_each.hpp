@@ -21,6 +21,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -57,7 +58,10 @@ namespace ranges
 
         /// \sa `for_each_fn`
         /// \ingroup group-algorithms
-        constexpr for_each_fn for_each{};
+        namespace
+        {
+            constexpr auto&& for_each = static_const<for_each_fn>::value;
+        }
 
         /// @}
     } // namespace v3

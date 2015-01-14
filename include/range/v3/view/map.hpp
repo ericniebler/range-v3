@@ -17,6 +17,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/transform.hpp>
 
@@ -112,11 +113,17 @@ namespace ranges
 
             /// \relates keys_fn
             /// \ingroup group-views
-            constexpr view<keys_fn> keys{};
+            namespace
+            {
+                constexpr auto&& keys = static_const<view<keys_fn>>::value;
+            }
 
             /// \relates values_fn
             /// \ingroup group-views
-            constexpr view<values_fn> values{};
+            namespace
+            {
+                constexpr auto&& values = static_const<view<values_fn>>::value;
+            }
         }
         /// @}
     }

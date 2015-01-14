@@ -22,6 +22,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -81,7 +82,10 @@ namespace ranges
 
             /// \relates counted_fn
             /// \ingroup group-views
-            constexpr counted_fn counted{};
+            namespace
+            {
+                constexpr auto&& counted = static_const<counted_fn>::value;
+            }
         }
         /// @}
     }

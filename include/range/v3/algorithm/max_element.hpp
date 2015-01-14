@@ -22,6 +22,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -57,7 +58,10 @@ namespace ranges
 
         /// \sa `max_element_fn`
         /// \ingroup group-algorithms
-        constexpr max_element_fn max_element{};
+        namespace
+        {
+            constexpr auto&& max_element = static_const<max_element_fn>::value;
+        }
 
         /// @}
     } // namespace v3

@@ -22,6 +22,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -57,7 +58,10 @@ namespace ranges
 
         /// \sa `any_of_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<any_of_fn> any_of {};
+        namespace
+        {
+            constexpr auto&& any_of = static_const<with_braced_init_args<any_of_fn>>::value;
+        }
 
         /// @}
     } // inline namespace v3

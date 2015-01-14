@@ -20,6 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -53,7 +54,10 @@ namespace ranges
                 }
             };
 
-            constexpr lower_bound_n_fn lower_bound_n{};
+            namespace
+            {
+                constexpr auto&& lower_bound_n = static_const<lower_bound_n_fn>::value;
+            }
         }
     } // namespace v3
 } // namespace ranges

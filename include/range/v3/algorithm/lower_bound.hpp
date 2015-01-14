@@ -21,6 +21,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -51,7 +52,10 @@ namespace ranges
 
         /// \sa `lower_bound_fn`
         /// \ingroup group-algorithms
-        constexpr lower_bound_fn lower_bound{};
+        namespace
+        {
+            constexpr auto&& lower_bound = static_const<lower_bound_fn>::value;
+        }
 
         /// @}
     } // namespace v3

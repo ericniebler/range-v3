@@ -22,6 +22,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -57,7 +58,10 @@ namespace ranges
 
         /// \sa `min_element_fn`
         /// \ingroup group-algorithms
-        constexpr min_element_fn min_element{};
+        namespace
+        {
+            constexpr auto&& min_element = static_const<min_element_fn>::value;
+        }
 
         /// @}
     } // namespace v3

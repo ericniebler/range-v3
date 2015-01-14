@@ -21,6 +21,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -65,7 +66,10 @@ namespace ranges
 
             /// \ingroup group-views
             /// \sa make_view_fn
-            constexpr make_view_fn make_view{};
+            namespace
+            {
+                constexpr auto&& make_view = static_const<make_view_fn>::value;
+            }
 
             template<typename Rng>
             using ViewableIterable = meta::and_<

@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -93,7 +94,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `tuple_transform_fn`
-        constexpr tuple_transform_fn tuple_transform {};
+        namespace
+        {
+            constexpr auto&& tuple_transform = static_const<tuple_transform_fn>::value;
+        }
 
         struct tuple_foldl_fn
         {
@@ -149,7 +153,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `tuple_foldl_fn`
-        constexpr tuple_foldl_fn tuple_foldl {};
+        namespace
+        {
+            constexpr auto&& tuple_foldl = static_const<tuple_foldl_fn>::value;
+        }
 
         // NOTE: This does *not* guarantee order of evaluation, nor does
         // it return the function after it is done. Not to be used with
@@ -175,7 +182,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `tuple_for_each_fn`
-        constexpr tuple_for_each_fn tuple_for_each {};
+        namespace
+        {
+            constexpr auto&& tuple_for_each = static_const<tuple_for_each_fn>::value;
+        }
 
         struct tuple_apply_fn
         {
@@ -201,7 +211,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `tuple_apply_fn`
-        constexpr tuple_apply_fn tuple_apply {};
+        namespace
+        {
+            constexpr auto&& tuple_apply = static_const<tuple_apply_fn>::value;
+        }
 
         struct make_tuple_fn
         {
@@ -215,7 +228,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_tuple_fn`
-        constexpr make_tuple_fn make_tuple {};
+        namespace
+        {
+            constexpr auto&& make_tuple = static_const<make_tuple_fn>::value;
+        }
         /// @}
     }
 }

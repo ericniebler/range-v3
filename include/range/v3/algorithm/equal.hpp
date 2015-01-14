@@ -23,6 +23,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -118,7 +119,10 @@ namespace ranges
 
         /// \sa `equal_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<equal_fn> equal{};
+        namespace
+        {
+            constexpr auto&& equal = static_const<with_braced_init_args<equal_fn>>::value;
+        }
 
         /// @}
     } // namespace v3

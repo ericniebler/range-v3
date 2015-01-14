@@ -22,6 +22,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -106,7 +107,10 @@ namespace ranges
 
             /// \relates replace_if_fn
             /// \ingroup group-views
-            constexpr view<replace_if_fn> replace_if{};
+            namespace
+            {
+                constexpr auto&& replace_if = static_const<view<replace_if_fn>>::value;
+            }
         }
         /// @}
     }

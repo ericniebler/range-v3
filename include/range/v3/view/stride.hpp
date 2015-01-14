@@ -27,6 +27,7 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -223,7 +224,10 @@ namespace ranges
 
             /// \relates stride_fn
             /// \ingroup group-views
-            constexpr view<stride_fn> stride{};
+            namespace
+            {
+                constexpr auto&& stride = static_const<view<stride_fn>>::value;
+            }
         }
         /// @}
     }

@@ -31,6 +31,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -204,7 +205,10 @@ namespace ranges
 
         /// \sa `search_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<search_fn> search{};
+        namespace
+        {
+            constexpr auto&& search = static_const<with_braced_init_args<search_fn>>::value;
+        }
 
         /// @}
     } // namespace v3

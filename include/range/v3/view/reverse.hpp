@@ -21,6 +21,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -138,7 +139,10 @@ namespace ranges
 
             /// \relates reverse_fn
             /// \ingroup group-views
-            constexpr view<reverse_fn> reverse{};
+            namespace
+            {
+                constexpr auto&& reverse = static_const<view<reverse_fn>>::value;
+            }
         }
         /// @}
     }

@@ -23,6 +23,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -60,7 +61,10 @@ namespace ranges
 
         /// \sa `move_backward_fn`
         /// \ingroup group-algorithms
-        constexpr move_backward_fn move_backward{};
+        namespace
+        {
+            constexpr auto&& move_backward = static_const<move_backward_fn>::value;
+        }
 
         /// @}
     } // namespace v3

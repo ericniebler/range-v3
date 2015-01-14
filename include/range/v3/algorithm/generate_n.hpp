@@ -21,6 +21,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -46,7 +47,10 @@ namespace ranges
 
         /// \sa `generate_n_fn`
         /// \ingroup group-algorithms
-        constexpr generate_n_fn generate_n{};
+        namespace
+        {
+            constexpr auto&& generate_n = static_const<generate_n_fn>::value;
+        }
 
         // @}
     } // namespace v3

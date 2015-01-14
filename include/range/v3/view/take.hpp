@@ -23,6 +23,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/view.hpp>
@@ -195,7 +196,10 @@ namespace ranges
 
             /// \relates take_fn
             /// \ingroup group-views
-            constexpr view<take_fn> take{};
+            namespace
+            {
+                constexpr auto&& take = static_const<view<take_fn>>::value;
+            }
         }
         /// @}
     }

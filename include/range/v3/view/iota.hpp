@@ -23,6 +23,7 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/delimit.hpp>
 
@@ -311,7 +312,10 @@ namespace ranges
 
             /// \relates iota_fn
             /// \ingroup group-views
-            constexpr iota_fn iota{};
+            namespace
+            {
+                constexpr auto&& iota = static_const<iota_fn>::value;
+            }
 
             struct ints_fn
               : iota_view<int>
@@ -350,7 +354,10 @@ namespace ranges
 
             /// \relates ints_fn
             /// \ingroup group-views
-            constexpr ints_fn ints{};
+            namespace
+            {
+                constexpr auto&& ints = static_const<ints_fn>::value;
+            }
         }
         /// @}
     }

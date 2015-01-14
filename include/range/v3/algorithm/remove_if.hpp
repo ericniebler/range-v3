@@ -23,6 +23,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -71,7 +72,10 @@ namespace ranges
 
         /// \sa `remove_if_fn`
         /// \ingroup group-algorithms
-        constexpr remove_if_fn remove_if{};
+        namespace
+        {
+            constexpr auto&& remove_if = static_const<remove_if_fn>::value;
+        }
 
         /// @}
     } // namespace v3

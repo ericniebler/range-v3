@@ -35,6 +35,7 @@
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/move_backward.hpp>
 #include <range/v3/algorithm/swap_ranges.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -215,7 +216,10 @@ namespace ranges
 
         /// \sa `rotate_fn`
         /// \ingroup group-algorithms
-        constexpr rotate_fn rotate {};
+        namespace
+        {
+            constexpr auto&& rotate = static_const<rotate_fn>::value;
+        }
 
         /// @}
     } // namespace v3

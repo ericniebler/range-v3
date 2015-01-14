@@ -18,6 +18,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -96,7 +97,10 @@ namespace ranges
 
             /// \relates repeat_fn
             /// \ingroup group-views
-            constexpr repeat_fn repeat{};
+            namespace
+            {
+                constexpr auto&& repeat = static_const<repeat_fn>::value;
+            }
         }
         /// @}
     }

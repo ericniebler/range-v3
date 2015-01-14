@@ -17,6 +17,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/adjacent_remove_if.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -57,7 +58,10 @@ namespace ranges
 
             /// \relates unique_fn
             /// \ingroup group-views
-            constexpr view<unique_fn> unique{};
+            namespace
+            {
+                constexpr auto&& unique = static_const<view<unique_fn>>::value;
+            }
         }
         /// @}
     }

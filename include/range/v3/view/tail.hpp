@@ -24,6 +24,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -97,7 +98,10 @@ namespace ranges
 
             /// \relates tail_fn
             /// \ingroup group-views
-            constexpr view<tail_fn> tail{};
+            namespace
+            {
+                constexpr auto&& tail = static_const<view<tail_fn>>::value;
+            }
         }
         /// @}
     }

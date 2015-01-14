@@ -18,6 +18,7 @@
 
 #include <range/v3/algorithm/is_sorted_until.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -59,7 +60,10 @@ namespace ranges
 
         /// \sa `is_sorted_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<is_sorted_fn> is_sorted{};
+        namespace
+        {
+            constexpr auto&& is_sorted = static_const<with_braced_init_args<is_sorted_fn>>::value;
+        }
 
         /// @}
     } // namespace v3

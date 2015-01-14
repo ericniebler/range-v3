@@ -48,6 +48,7 @@
 #include <range/v3/algorithm/move_backward.hpp>
 #include <range/v3/algorithm/partial_sort.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -210,7 +211,10 @@ namespace ranges
 
         /// \sa `sort_fn`
         /// \ingroup group-algorithms
-        constexpr sort_fn sort{};
+        namespace
+        {
+            constexpr auto&& sort = static_const<sort_fn>::value;
+        }
 
         /// @}
     } // namespace v3

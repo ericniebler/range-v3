@@ -24,6 +24,7 @@
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
@@ -138,7 +139,10 @@ namespace ranges
 
             /// \relates drop_while_fn
             /// \ingroup group-views
-            constexpr view<drop_while_fn> drop_while{};
+            namespace
+            {
+                constexpr auto&& drop_while = static_const<view<drop_while_fn>>::value;
+            }
         }
         /// @}
     }

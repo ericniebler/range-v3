@@ -24,6 +24,7 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -65,7 +66,10 @@ namespace ranges
 
         /// \sa `binary_search_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<binary_search_fn> binary_search{};
+        namespace
+        {
+            constexpr auto&& binary_search = static_const<with_braced_init_args<binary_search_fn>>::value;
+        }
 
         /// @}
     } // namespace v3

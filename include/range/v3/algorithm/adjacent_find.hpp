@@ -20,6 +20,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -66,7 +67,10 @@ namespace ranges
 
         /// \sa `adjacent_find_fn`
         /// \ingroup group-algorithms
-        constexpr adjacent_find_fn adjacent_find {};
+        namespace
+        {
+            constexpr auto&& adjacent_find = static_const<adjacent_find_fn>::value;
+        }
 
         /// @}
 

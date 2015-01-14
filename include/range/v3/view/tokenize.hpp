@@ -24,6 +24,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -198,7 +199,10 @@ namespace ranges
 
             /// \relates tokenize_fn
             /// \ingroup group-views
-            constexpr tokenize_fn tokenize{};
+            namespace
+            {
+                constexpr auto&& tokenize = static_const<tokenize_fn>::value;
+            }
         }
         /// @}
     }

@@ -18,6 +18,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -38,7 +39,10 @@ namespace ranges
 
         /// \ingroup group-core
         /// \sa `at_fn`
-        constexpr at_fn at {};
+        namespace
+        {
+            constexpr auto&& at = static_const<at_fn>::value;
+        }
     }
 }
 

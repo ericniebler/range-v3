@@ -21,6 +21,7 @@
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/remove_if.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -95,7 +96,10 @@ namespace ranges
             /// \ingroup group-actions
             /// \sa action
             /// \sa with_braced_init_args
-            constexpr action<remove_if_fn> remove_if{};
+            namespace
+            {
+                constexpr auto&& remove_if = static_const<action<remove_if_fn>>::value;
+            }
         }
         /// @}
     }

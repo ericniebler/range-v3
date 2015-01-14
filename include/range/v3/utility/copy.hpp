@@ -18,6 +18,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -40,7 +41,10 @@ namespace ranges
 
             /// \ingroup group-utility
             /// \sa `copy_fn`
-            constexpr copy_fn copy{};
+            namespace
+            {
+                constexpr auto&& copy = static_const<copy_fn>::value;
+            }
         }
         /// @}
     }

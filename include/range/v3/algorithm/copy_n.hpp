@@ -25,6 +25,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -55,7 +56,10 @@ namespace ranges
 
         /// \sa `copy_n_fn`
         /// \ingroup group-algorithms
-        constexpr copy_n_fn copy_n{};
+        namespace
+        {
+            constexpr auto&& copy_n = static_const<copy_n_fn>::value;
+        }
 
         /// @}
     } // namespace v3

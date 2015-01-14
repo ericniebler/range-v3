@@ -27,6 +27,7 @@
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
 namespace ranges
@@ -144,7 +145,10 @@ namespace ranges
 
             /// \relates transform_fn
             /// \ingroup group-views
-            constexpr view<transform_fn> transform{};
+            namespace
+            {
+                constexpr auto&& transform = static_const<view<transform_fn>>::value;
+            }
         }
         /// @}
     }

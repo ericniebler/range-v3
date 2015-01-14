@@ -18,6 +18,7 @@
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/associated_types.hpp>
 
 namespace ranges
@@ -39,7 +40,10 @@ namespace ranges
 
             /// \ingroup group-utility
             /// \sa `move_fn`
-            constexpr move_fn move{};
+            namespace
+            {
+                constexpr auto&& move = static_const<move_fn>::value;
+            }
 
             /// \ingroup group-utility
             /// \sa `move_fn`
@@ -93,7 +97,11 @@ namespace ranges
         }
         /// \endcond
 
-        constexpr adl_move_detail::indirect_move_fn indirect_move {};
+        namespace
+        {
+            constexpr auto&& indirect_move =
+                static_const<adl_move_detail::indirect_move_fn>::value;
+        }
 
         namespace detail
         {

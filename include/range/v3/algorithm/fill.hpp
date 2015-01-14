@@ -18,6 +18,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -47,7 +48,10 @@ namespace ranges
 
         /// \sa `fill_fn`
         /// \ingroup group-algorithms
-        constexpr fill_fn fill{};
+        namespace
+        {
+            constexpr auto&& fill = static_const<fill_fn>::value;
+        }
 
         /// @}
     } // namespace v3

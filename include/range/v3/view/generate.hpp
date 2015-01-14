@@ -24,6 +24,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -111,7 +112,10 @@ namespace ranges
 
             /// \relates generate_fn
             /// \ingroup group-views
-            constexpr generate_fn generate{};
+            namespace
+            {
+                constexpr auto&& generate = static_const<generate_fn>::value;
+            }
         }
         /// \@}
     }

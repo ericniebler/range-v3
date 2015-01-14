@@ -23,6 +23,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/algorithm/find.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -70,7 +71,10 @@ namespace ranges
 
         /// \sa `remove_fn`
         /// \ingroup group-algorithms
-        constexpr remove_fn remove{};
+        namespace
+        {
+            constexpr auto&& remove = static_const<remove_fn>::value;
+        }
 
         /// @}
     } // namespace v3

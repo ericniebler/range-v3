@@ -23,6 +23,7 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -117,7 +118,10 @@ namespace ranges
 
             /// \relates single_fn
             /// \ingroup group-views
-            constexpr single_fn single{};
+            namespace
+            {
+                constexpr auto&& single = static_const<single_fn>::value;
+            }
         }
         /// @}
     }

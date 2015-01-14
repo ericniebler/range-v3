@@ -19,6 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -145,7 +146,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `make_compressed_pair_fn`
-        constexpr make_compressed_pair_fn make_compressed_pair {};
+        namespace
+        {
+            constexpr auto&& make_compressed_pair = static_const<make_compressed_pair_fn>::value;
+        }
 
         /// \brief Tuple-like access of `compressed_pair`
         // TODO Switch to variable template when available

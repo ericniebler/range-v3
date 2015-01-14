@@ -32,6 +32,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -77,7 +78,10 @@ namespace ranges
 
         /// \sa `includes_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<includes_fn> includes{};
+        namespace
+        {
+            constexpr auto&& includes = static_const<with_braced_init_args<includes_fn>>::value;
+        }
 
         struct set_union_fn
         {
@@ -133,7 +137,10 @@ namespace ranges
 
         /// \sa `set_union_fn`
         /// \ingroup group-algorithms
-        constexpr set_union_fn set_union{};
+        namespace
+        {
+            constexpr auto&& set_union = static_const<set_union_fn>::value;
+        }
 
         struct set_intersection_fn
         {
@@ -181,7 +188,10 @@ namespace ranges
 
         /// \sa `set_intersection_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<set_intersection_fn> set_intersection{};
+        namespace
+        {
+            constexpr auto&& set_intersection = static_const<with_braced_init_args<set_intersection_fn>>::value;
+        }
 
         struct set_difference_fn
         {
@@ -231,7 +241,10 @@ namespace ranges
 
         /// \sa `set_difference_fn`
         /// \ingroup group-algorithms
-        constexpr with_braced_init_args<set_difference_fn> set_difference{};
+        namespace
+        {
+            constexpr auto&& set_difference = static_const<with_braced_init_args<set_difference_fn>>::value;
+        }
 
         struct set_symmetric_difference_fn
         {
@@ -290,7 +303,10 @@ namespace ranges
 
         /// \sa `set_symmetric_difference_fn`
         /// \ingroup group-algorithms
-        constexpr set_symmetric_difference_fn set_symmetric_difference{};
+        namespace
+        {
+            constexpr auto&& set_symmetric_difference = static_const<set_symmetric_difference_fn>::value;
+        }
 
         /// @}
     } // namespace v3

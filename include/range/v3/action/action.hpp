@@ -20,6 +20,7 @@
 #include <range/v3/action/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -54,7 +55,10 @@ namespace ranges
 
             /// \ingroup group-actions
             /// \relates make_action_fn
-            constexpr make_action_fn make_action{};
+            namespace
+            {
+                constexpr auto&& make_action = static_const<make_action_fn>::value;
+            }
 
             template<typename Action>
             struct action : pipeable<action<Action>>

@@ -23,6 +23,7 @@
 #include <range/v3/utility/move.hpp> // for indirect_move
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -44,7 +45,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `advance_fn`
-        constexpr advance_fn advance{};
+        namespace
+        {
+            constexpr auto&& advance = static_const<advance_fn>::value;
+        }
 
         struct advance_to_fn
         {
@@ -75,7 +79,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `advance_to_fn`
-        constexpr advance_to_fn advance_to{};
+        namespace
+        {
+            constexpr auto&& advance_to = static_const<advance_to_fn>::value;
+        }
 
         struct advance_bounded_fn
         {
@@ -123,7 +130,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `advance_bounded_fn`
-        constexpr advance_bounded_fn advance_bounded {};
+        namespace
+        {
+            constexpr auto&& advance_bounded = static_const<advance_bounded_fn>::value;
+        }
 
         struct next_fn
         {
@@ -137,7 +147,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `next_fn`
-        constexpr next_fn next{};
+        namespace
+        {
+            constexpr auto&& next = static_const<next_fn>::value;
+        }
 
         struct prev_fn
         {
@@ -151,7 +164,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `prev_fn`
-        constexpr prev_fn prev {};
+        namespace
+        {
+            constexpr auto&& prev = static_const<prev_fn>::value;
+        }
 
         struct next_to_fn
         {
@@ -165,7 +181,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `next_to_fn`
-        constexpr next_to_fn next_to{};
+        namespace
+        {
+            constexpr auto&& next_to = static_const<next_to_fn>::value;
+        }
 
         struct next_bounded_fn
         {
@@ -179,7 +198,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `next_bounded_fn`
-        constexpr next_bounded_fn next_bounded{};
+        namespace
+        {
+            constexpr auto&& next_bounded = static_const<next_bounded_fn>::value;
+        }
 
         struct iter_enumerate_fn
         {
@@ -214,7 +236,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_enumerate_fn`
-        constexpr iter_enumerate_fn iter_enumerate {};
+        namespace
+        {
+            constexpr auto&& iter_enumerate = static_const<iter_enumerate_fn>::value;
+        }
 
         struct iter_distance_fn
         {
@@ -241,7 +266,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_distance_fn`
-        constexpr iter_distance_fn iter_distance {};
+        namespace
+        {
+            constexpr auto&& iter_distance = static_const<iter_distance_fn>::value;
+        }
 
         struct iter_distance_compare_fn
         {
@@ -285,7 +313,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_distance_compare_fn`
-        constexpr iter_distance_compare_fn iter_distance_compare {};
+        namespace
+        {
+            constexpr auto&& iter_distance_compare = static_const<iter_distance_compare_fn>::value;
+        }
 
         // Like distance(b,e), but guaranteed to be O(1)
         struct iter_size_fn
@@ -300,7 +331,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_size_fn`
-        constexpr iter_size_fn iter_size {};
+        namespace
+        {
+            constexpr auto&& iter_size = static_const<iter_size_fn>::value;
+        }
 
         struct iter_swap_fn
         {
@@ -315,7 +349,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_swap_fn`
-        constexpr iter_swap_fn iter_swap {};
+        namespace
+        {
+            constexpr auto&& iter_swap = static_const<iter_swap_fn>::value;
+        }
 
         struct iter_move_fn
         {
@@ -330,7 +367,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `iter_move_fn`
-        constexpr iter_move_fn iter_move {};
+        namespace
+        {
+            constexpr auto&& iter_move = static_const<iter_move_fn>::value;
+        }
 
         template<typename Cont>
         struct back_insert_iterator
@@ -373,7 +413,10 @@ namespace ranges
 
         /// \ingroup group-utility
         /// \sa `back_inserter_fn`
-        constexpr back_inserter_fn back_inserter {};
+        namespace
+        {
+            constexpr auto&& back_inserter = static_const<back_inserter_fn>::value;
+        }
 
         template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
         struct ostream_iterator
@@ -470,8 +513,11 @@ namespace ranges
 
         /// \addtogroup group-utility
         /// @{
-        constexpr adl_uncounted_recounted_detail::uncounted_fn uncounted{};
-        constexpr adl_uncounted_recounted_detail::recounted_fn recounted{};
+        namespace
+        {
+            constexpr auto&& uncounted = static_const<adl_uncounted_recounted_detail::uncounted_fn>::value;
+            constexpr auto&& recounted = static_const<adl_uncounted_recounted_detail::recounted_fn>::value;
+        }
         /// @}
     }
 }

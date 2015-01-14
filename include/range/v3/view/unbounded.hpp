@@ -15,6 +15,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/unreachable.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -56,7 +57,10 @@ namespace ranges
 
             /// \relates unbounded_fn
             /// \ingroup group-views
-            constexpr unbounded_fn unbounded{};
+            namespace
+            {
+                constexpr auto&& unbounded = static_const<unbounded_fn>::value;
+            }
         }
         /// @}
     }

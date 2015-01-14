@@ -25,6 +25,7 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/single.hpp>
@@ -323,7 +324,10 @@ namespace ranges
 
             /// \relates join_fn
             /// \ingroup group-views
-            constexpr view<join_fn> join{};
+            namespace
+            {
+                constexpr auto&& join = static_const<view<join_fn>>::value;
+            }
         }
         /// @}
     }

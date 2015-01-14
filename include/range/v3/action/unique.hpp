@@ -20,6 +20,7 @@
 #include <range/v3/action/erase.hpp>
 #include <range/v3/algorithm/unique.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -95,7 +96,10 @@ namespace ranges
             /// \ingroup group-actions
             /// \relates unique_fn
             /// \sa action
-            constexpr action<unique_fn> unique{};
+            namespace
+            {
+                constexpr auto&& unique = static_const<action<unique_fn>>::value;
+            }
         }
         /// @}
     }
