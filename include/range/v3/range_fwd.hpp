@@ -33,14 +33,13 @@
 /// \defgroup group-actions Actions
 /// Eager, mutating, composable algorithms
 
-/// \defgroup group-actions Actions
-/// Eager, mutating, chainable algorithms
-
 /// \defgroup group-concepts Concepts
 /// Concept-checking classes and utilities
 
 /// \defgroup group-meta Metaprogramming
 /// Metaprogramming utilities
+/// \note The algorithmic complexity listed for these utilities describes
+///     the total number of templates they cause to be instantiated.
 
 namespace ranges
 {
@@ -142,7 +141,11 @@ namespace ranges
             struct view;
         }
 
-        struct advance_fn;
+        namespace adl_advance_detail
+        {
+            struct advance_fn;
+        }
+        using adl_advance_detail::advance_fn;
 
         struct advance_to_fn;
 
@@ -224,12 +227,15 @@ namespace ranges
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // void_
-            template<typename...Rest>
-            struct always_void
+            // always, always_void, void_t
+            template<typename T, typename...Rest>
+            struct always
             {
-                using type = void;
+                using type = T;
             };
+
+            template<typename...Rest>
+            using always_void = always<void, Rest...>;
 
             template<typename...Rest>
             using void_t = typename always_void<Rest...>::type;
@@ -302,8 +308,6 @@ namespace ranges
             struct make_tuple_like_fn;
             struct copy_tuple_like_fn;
             struct move_tuple_like_fn;
-            template<typename Ref, typename Val>
-            struct common_tuple_ref;
         }
         /// \endcond
 

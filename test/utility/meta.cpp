@@ -33,20 +33,20 @@ namespace tc_detail
 }
 
 template<typename...Tuples,
-    typename Res = apply_list<quote<std::tuple>, list_cat<list<as_list<Tuples>...>>>>
+    typename Res = apply_list<quote<std::tuple>, concat<as_list<Tuples>...>>>
 Res tuple_cat(Tuples &&... tpls)
 {
     static constexpr std::size_t N = sizeof...(Tuples);
     // E.g. [0,0,0,2,2,2,3,3]
     using inner =
-        list_cat<
+        join<
             transform<
                 list<as_list<Tuples>...>,
                 transform<as_list<make_index_sequence<N>>, quote<always>>,
                 quote<transform>>>;
     // E.g. [0,1,2,0,1,2,0,1]
     using outer =
-        list_cat<
+        join<
             transform<
                 list<as_list<Tuples>...>,
                 compose<quote<as_list>, quote_i<std::size_t, make_index_sequence>, quote<size>>>>;

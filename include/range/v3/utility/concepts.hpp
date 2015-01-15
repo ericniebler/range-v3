@@ -259,8 +259,8 @@ namespace ranges
 
             struct CommonReference
             {
-                template<typename T, typename U>
-                using reference_t = common_reference_t<T, U>;
+                template<typename T, typename U, typename...Rest>
+                using reference_t = common_reference_t<T, U, Rest...>;
 
                 template<typename T, typename U,
                     typename C = reference_t<T, U>>
@@ -269,12 +269,21 @@ namespace ranges
                         concepts::convertible_to<C>(val<T>()),
                         concepts::convertible_to<C>(val<U>())
                     ));
+
+                template<typename T, typename U, typename...Rest,
+                    typename CommonReference_ = CommonReference,
+                    typename C = reference_t<T, U>>
+                auto requires_(T t, U u, Rest...) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<CommonReference_, T, U>(),
+                        concepts::model_of<CommonReference_, C, Rest...>()
+                    ));
             };
 
             struct Common
             {
-                template<typename T, typename U>
-                using value_t = common_type_t<T, U>;
+                template<typename T, typename U, typename...Rest>
+                using value_t = common_type_t<T, U, Rest...>;
 
                 template<typename T, typename U,
                     enable_if_t<std::is_same<uncvref_t<T>, uncvref_t<U>>::value> = 0>
@@ -288,9 +297,16 @@ namespace ranges
                 auto requires_(T t, U u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<CommonReference, T const &, U const &>(),
-                        concepts::model_of<CommonReference, C &, R>(),
-                        concepts::convertible_to<R>(val<T>()),
-                        concepts::convertible_to<R>(val<U>())
+                        concepts::model_of<CommonReference, C &, R>()
+                    ));
+
+                template<typename T, typename U, typename...Rest,
+                    typename Common_ = Common,
+                    typename C = value_t<T, U>>
+                auto requires_(T t, U u, Rest...) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Common_, T, U>(),
+                        concepts::model_of<Common_, C, Rest...>()
                     ));
             };
 
@@ -607,7 +623,7 @@ namespace ranges
         }
 
         template<typename T, typename U>
-        using Same = concepts::models<concepts::Same, T, U>;
+        using Same = std::is_same<T, U>; // This handles void better than using the Same concept
 
         template<typename T, typename U>
         using Convertible = concepts::models<concepts::Convertible, T, U>;
@@ -615,11 +631,19 @@ namespace ranges
         template<typename T, typename U>
         using Derived = concepts::models<concepts::Derived, T, U>;
 
-        template<typename T, typename U>
-        using CommonReference = concepts::models<concepts::CommonReference, T, U>;
+        // This is an ugly hack around the fact that the core concept-checking
+        // code doesn't handle void very well.
+        template<typename T, typename U, typename...Rest>
+        using CommonReference =
+            meta::or_<
+                meta::fast_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
+                concepts::models<concepts::CommonReference, T, U, Rest...>>;
 
-        template<typename T, typename U>
-        using Common = concepts::models<concepts::Common, T, U>;
+        template<typename T, typename U, typename...Rest>
+        using Common =
+            meta::or_<
+                meta::fast_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
+                concepts::models<concepts::Common, T, U, Rest...>>;
 
         template<typename T>
         using Integral = concepts::models<concepts::Integral, T>;

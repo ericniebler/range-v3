@@ -31,23 +31,61 @@ namespace ranges
     {
         /// \addtogroup group-utility
         /// @{
-        struct advance_fn
+        namespace adl_advance_detail
         {
+            using std::advance;
+
             template<typename I>
-            void operator()(I &i, iterator_difference_t<I> n) const
+            void advance_impl(I &i, iterator_difference_t<I> n, concepts::InputIterator *)
             {
-                // Use ADL here to give custom iterator types (like counted_iterator)
-                // a chance to optimize it (see view/counted.hpp)
-                using std::advance;
-                advance(i, n);
+                RANGES_ASSERT(n >= 0);
+                for(; n > 0; --n)
+                    ++i;
             }
-        };
+
+            template<typename I>
+            void advance_impl(I &i, iterator_difference_t<I> n, concepts::BidirectionalIterator *)
+            {
+                if(n > 0)
+                    for(; n > 0; --n)
+                        ++i;
+                else
+                    for(; n < 0; ++n)
+                        --i;
+            }
+
+            template<typename I>
+            void advance_impl(I &i, iterator_difference_t<I> n, concepts::RandomAccessIterator *)
+            {
+                i += n;
+            }
+
+            // Handle range-v3 iterators specially, since many range-v3 iterators will want to
+            // decrement an iterator that is bidirectional from the perspective of range-v3,
+            // but only input from the perspective of std::advance.
+            template<typename Cur, typename Sent>
+            void advance(basic_iterator<Cur, Sent> &i, iterator_difference_t<basic_iterator<Cur, Sent>> n)
+            {
+                adl_advance_detail::advance_impl(i, n, iterator_concept<basic_iterator<Cur, Sent>>{});
+            }
+
+            struct advance_fn
+            {
+                template<typename I>
+                void operator()(I &i, iterator_difference_t<I> n) const
+                {
+                    // Use ADL here to give custom iterator types (like counted_iterator)
+                    // a chance to optimize it (see view/counted.hpp)
+                    advance(i, n);
+                }
+            };
+        }
 
         /// \ingroup group-utility
         /// \sa `advance_fn`
         namespace
         {
-            constexpr auto&& advance = static_const<advance_fn>::value;
+            constexpr auto&& advance = static_const<adl_advance_detail::advance_fn>::value;
         }
 
         struct advance_to_fn

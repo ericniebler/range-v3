@@ -691,10 +691,12 @@ namespace std
     public:
         using difference_type = typename iterator::difference_type;
         using value_type = typename iterator::value_type;
+        using reference = typename iterator::reference;
         using iterator_category =
             ::ranges::meta::eval<
-                ::ranges::detail::as_std_iterator_category<typename iterator::iterator_category>>;
-        using reference = typename iterator::reference;
+                ::ranges::detail::as_std_iterator_category<
+                    typename iterator::iterator_category,
+                    reference>>;
         using pointer = typename iterator::pointer;
     };
 }

@@ -262,24 +262,6 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                // Thanks to  Louis Dionne for this clever hack for a quick-to-compile
-                // implementation of and_c and or_c
-                std::true_type fast_and_impl_();
-
-                template<typename ...T>
-                std::true_type fast_and_impl_(T*...);
-
-                template<typename ...T>
-                std::false_type fast_and_impl_(T...);
-
-                std::false_type fast_or_impl_();
-
-                template<typename ...T>
-                std::false_type fast_or_impl_(T*...);
-
-                template<typename ...T>
-                std::true_type fast_or_impl_(T...);
-
                 template<typename ...Bools>
                 struct _and_;
 
@@ -311,39 +293,43 @@ namespace ranges
             /// \addtogroup group-meta
             /// @{
 
-            /// \brief Logically and together all the Boolean parameters
-            template<bool ...Bools>
-            using and_c =
-                decltype(meta_detail::fast_and_impl_(if_c<Bools, int*, int>{}...));
-
-            /// \brief Logically or together all the Boolean parameters
-            template<bool ...Bools>
-            using or_c =
-                decltype(meta_detail::fast_or_impl_(if_c<Bools, int, int*>{}...));
-
             /// \brief Logically negate the Boolean parameter
             template<bool Bool>
             using not_c = bool_<!Bool>;
-
-            /// \brief Logically and together all the integral constant-wrapped Boolean
-            /// parameters, <i>without</i> doing short-circuiting.
-            template<typename...Bools>
-            using fast_and = and_c<Bools::type::value...>;
-
-            /// \brief Logically or together all the integral constant-wrapped Boolean
-            /// parameters, <i>without</i> doing short-circuiting.
-            template<typename...Bools>
-            using fast_or = or_c<Bools::type::value...>;
 
             /// \brief Logically negate the integral constant-wrapped Boolean
             /// parameter.
             template<typename Bool>
             using not_ = not_c<Bool::type::value>;
 
+            /// \brief Logically and together all the Boolean parameters
+            template<bool ...Bools>
+            using and_c =
+                std::is_same<
+                    integer_sequence<bool, Bools...>,
+                    integer_sequence<bool, (Bools || true)...>>;
+
+            /// \brief Logically and together all the integral constant-wrapped Boolean
+            /// parameters, <i>without</i> doing short-circuiting.
+            template<typename...Bools>
+            using fast_and = and_c<Bools::type::value...>;
+
             /// \brief Logically and together all the integral constant-wrapped Boolean
             /// parameters, with short-circuiting.
             template<typename...Bools>
             using and_ = eval<meta_detail::_and_<Bools...>>;
+
+            /// \brief Logically or together all the Boolean parameters
+            template<bool ...Bools>
+            using or_c = not_<
+                std::is_same<
+                    integer_sequence<bool, Bools...>,
+                    integer_sequence<bool, (Bools && false)...>>>;
+
+            /// \brief Logically or together all the integral constant-wrapped Boolean
+            /// parameters, <i>without</i> doing short-circuiting.
+            template<typename...Bools>
+            using fast_or = or_c<Bools::type::value...>;
 
             /// \brief Logically or together all the integral constant-wrapped Boolean
             /// parameters, with short-circuiting.
@@ -374,50 +360,61 @@ namespace ranges
             /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // list_cat
+            // concat
             /// \cond
             namespace meta_detail
             {
-                template<typename ListOfLists>
-                struct list_cat_
+                template<typename...Lists>
+                struct concat_
                 {};
 
                 template<>
-                struct list_cat_<list<>>
+                struct concat_<>
                 {
                     using type = list<>;
                 };
 
                 template<typename...List1>
-                struct list_cat_<list<list<List1...>>>
+                struct concat_<list<List1...>>
                 {
                     using type = list<List1...>;
                 };
 
                 template<typename ...List1, typename ...List2>
-                struct list_cat_<list<list<List1...>, list<List2...>>>
+                struct concat_<list<List1...>, list<List2...>>
                 {
                     using type = list<List1..., List2...>;
                 };
 
                 template<typename ...List1, typename ...List2, typename...List3>
-                struct list_cat_<list<list<List1...>, list<List2...>, list<List3...>>>
+                struct concat_<list<List1...>, list<List2...>, list<List3...>>
                 {
                     using type = list<List1..., List2..., List3...>;
                 };
 
                 template<typename ...List1, typename ...List2, typename...List3, typename...Rest>
-                struct list_cat_<list<list<List1...>, list<List2...>, list<List3...>, Rest...>>
-                  : list_cat_<list<list<List1..., List2..., List3...>, Rest...>>
+                struct concat_<list<List1...>, list<List2...>, list<List3...>, Rest...>
+                  : concat_<list<List1..., List2..., List3...>, Rest...>
                 {};
             }
             /// \endcond
 
-            /// \brief An integral constant wrapper that is the size of the \c meta::list
-            /// \c List
+            /// \brief Concatenates several lists into a single list.
+            /// \pre The parameters must all be instantiations of \c meta::list.
+            /// \note Has complexity O(L), where L is the number of lists in the list
+            ///     of lists.
+            /// \ingroup group-meta
+            template<typename...Lists>
+            using concat = eval<meta_detail::concat_<Lists...>>;
+
+            /// \brief Joins a list of lists into a single list.
+            /// \pre The parameter must be an instantiation of \c meta::list\<T...\>
+            ///     where each \c T is itself an instantiation of \c meta::list.
+            /// \note Has complexity O(L), where L is the number of lists in the list
+            ///     of lists.
             /// \ingroup group-meta
             template<typename ListOfLists>
-            using list_cat = eval<meta_detail::list_cat_<ListOfLists>>;
+            using join = apply_list<quote<concat>, ListOfLists>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // repeat_n
@@ -427,12 +424,10 @@ namespace ranges
                 template<std::size_t N, typename T>
                 struct repeat_n_c_
                 {
-                    using type =
-                        list_cat<
-                            list<
-                                eval<repeat_n_c_<N / 2, T>>,
-                                eval<repeat_n_c_<N / 2, T>>,
-                                eval<repeat_n_c_<N % 2, T>>>>;
+                    using type = concat<
+                        eval<repeat_n_c_<N / 2, T>>,
+                        eval<repeat_n_c_<N / 2, T>>,
+                        eval<repeat_n_c_<N % 2, T>>>;
                 };
 
                 template<typename T>
