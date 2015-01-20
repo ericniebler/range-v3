@@ -38,7 +38,7 @@ namespace ranges
             WeaklyIncrementable<O1>,
             IndirectlyMovable<I, O0>,
             IndirectlyMovable<I, O1>,
-            IndirectInvokablePredicate1<C, I, P>>;
+            IndirectInvokablePredicate<C, Project<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{

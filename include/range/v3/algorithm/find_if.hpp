@@ -44,7 +44,7 @@ namespace ranges
             ///      of `Invokable<P, V>`
             template<typename I, typename S, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
-                    IndirectInvokablePredicate1<F, I, P>())>
+                    IndirectInvokablePredicate<F, Project<I, P> >())>
             I operator()(I begin, S end, F pred_, P proj_ = P{}) const
             {
                 auto &&pred = invokable(pred_);
@@ -58,7 +58,7 @@ namespace ranges
             /// \overload
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputIterable<Rng &>() && IndirectInvokablePredicate1<F, I, P>())>
+                CONCEPT_REQUIRES_(InputIterable<Rng &>() && IndirectInvokablePredicate<F, Project<I, P> >())>
             I operator()(Rng &rng, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

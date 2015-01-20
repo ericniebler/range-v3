@@ -31,7 +31,7 @@ namespace ranges
         template<typename I, typename C, typename T, typename P = ident>
         using ReplaceIfable = meta::fast_and<
             InputIterator<I>,
-            IndirectInvokablePredicate1<C, I, P>,
+            IndirectInvokablePredicate<C, Project<I, P>>,
             Writable<I, T>>;
 
         /// \addtogroup group-algorithms

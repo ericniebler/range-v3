@@ -168,7 +168,7 @@ namespace ranges
                 typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I1>() && IteratorRange<I1, S1>() &&
                     ForwardIterator<I2>() && IteratorRange<I2, S2>() &&
-                    IndirectInvokableRelation<R, I1, I2, P, ident>())>
+                    IndirectInvokableRelation<R, Project<I1, P>, I2>())>
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const
             {
                 constexpr bool Bidi = BidirectionalIterator<I1>() && BidirectionalIterator<I2>();
@@ -183,7 +183,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(ForwardIterable<Rng1 &>() && ForwardIterable<Rng2>() &&
-                    IndirectInvokableRelation<R, I1, I2, P, ident>())>
+                    IndirectInvokableRelation<R, Project<I1, P>, I2>())>
             I1 operator()(Rng1 &rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),

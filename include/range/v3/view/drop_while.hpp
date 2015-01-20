@@ -112,7 +112,7 @@ namespace ranges
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
                     InputIterable<Rng>,
-                    IndirectInvokablePredicate1<Pred, range_iterator_t<Rng>>>;
+                    IndirectInvokablePredicate<Pred, range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
@@ -129,7 +129,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The first argument to view::drop_while must be a model of the "
                         "InputIterable concept");
-                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate1<Pred, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate<Pred, range_iterator_t<Rng>>(),
                         "The second argument to view::drop_while must be callable with "
                         "an argument of the range's common reference type, and its return value "
                         "must be convertible to bool");

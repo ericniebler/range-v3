@@ -53,7 +53,7 @@ namespace ranges
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardIterable, Rng>(),
                             concepts::model_of<concepts::EraseableIterable, Rng, I, S>(),
-                            concepts::is_true(IndirectInvokablePredicate1<Fun, I>{})
+                            concepts::is_true(IndirectInvokablePredicate<Fun, I>{})
                         ));
                 };
 
@@ -82,7 +82,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, S>(),
                         "The object on which action::take_while operates must allow element "
                         "removal.");
-                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate1<Fun, I>(),
+                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate<Fun, I>(),
                         "The function passed to action::take_while must be callable with objects "
                         "of the range's common reference type, and it must return something convertible to "
                         "bool.");

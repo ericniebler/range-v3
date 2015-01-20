@@ -41,7 +41,7 @@ namespace ranges
         template<typename I, typename V, typename C = equal_to, typename P = ident>
         using Searchnable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectInvokableRelation<C, I, V const *, P, ident>>;
+            IndirectInvokableRelation<C, Project<I, P>, V const *>>;
 
         /// \addtogroup group-algorithms
         /// @{

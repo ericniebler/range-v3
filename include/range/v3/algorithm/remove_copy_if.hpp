@@ -32,7 +32,7 @@ namespace ranges
         using RemoveCopyableIf = meta::fast_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
-            IndirectInvokablePredicate1<C, I, P>,
+            IndirectInvokablePredicate<C, Project<I, P>>,
             IndirectlyCopyable<I, O, P>>;
 
         /// \addtogroup group-algorithms

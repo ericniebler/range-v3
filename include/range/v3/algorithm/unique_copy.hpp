@@ -32,7 +32,7 @@ namespace ranges
             typename V = iterator_common_reference_t<I>>
         using UniqueCopyable = meta::fast_and<
             InputIterator<I>,
-            IndirectInvokableRelation<C, I, I, P, P>,
+            IndirectInvokableRelation<C, Project<I, P>>,
             WeakOutputIterator<O, V>>; // BUGBUG V or X?
 
         /// \addtogroup group-algorithms

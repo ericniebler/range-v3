@@ -38,7 +38,7 @@ namespace ranges
             WeaklyIncrementable<O1>,
             IndirectlyCopyable<I, O0>,
             IndirectlyCopyable<I, O1>,
-            IndirectInvokablePredicate1<C, I, P>>;
+            IndirectInvokablePredicate<C, Project<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{

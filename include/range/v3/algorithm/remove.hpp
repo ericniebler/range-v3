@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename T, typename P = ident>
         using Removable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectInvokableRelation<equal_to, I, T const *, P, ident>,
+            IndirectInvokableRelation<equal_to, Project<I, P>, T const *>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms

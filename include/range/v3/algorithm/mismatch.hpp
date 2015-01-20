@@ -37,7 +37,7 @@ namespace ranges
         using Mismatchable1 = meta::fast_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
-            IndirectInvokablePredicate2<C, I1, I2, P1, P2>>;
+            IndirectInvokablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
 
         /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
@@ -45,7 +45,7 @@ namespace ranges
         using Mismatchable2 = meta::fast_and<
             InputIterator<I1>,
             InputIterator<I2>,
-            IndirectInvokablePredicate2<C, I1, I2, P1, P2>>;
+            IndirectInvokablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
 
         /// \addtogroup group-algorithms
         /// @{

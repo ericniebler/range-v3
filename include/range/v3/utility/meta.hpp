@@ -1000,6 +1000,33 @@ namespace ranges
             template<typename List, typename F>
             using none_of = empty<find_if<List, F>>;
 
+            ////////////////////////////////////////////////////////////////////////////////////
+            // sequence
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename M2, typename M>
+                struct cartesian_product_fn
+                {
+                    template<typename X>
+                    struct b
+                    {
+                        template<typename Xs>
+                        using c = list<push_front<Xs, X>>;
+                        using type = join<transform<M2, quote<c>>>;
+                    };
+                    using type = join<transform<M, quote_trait<b>>>;
+                };
+            }
+            /// \endcond
+
+            /// \brief Given a list of lists, return a new list of lists that is the
+            /// Cartesian Product. Like the \c sequence function from the Haskell Prelude.
+            /// Complexity: O(N*M)
+            template<typename ListOfLists>
+            using cartesian_product =
+                foldr<ListOfLists, list<list<>>, quote_trait<meta_detail::cartesian_product_fn>>;
+
             /// \cond
             ////////////////////////////////////////////////////////////////////////////////////
             // add_const_if

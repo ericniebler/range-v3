@@ -43,62 +43,72 @@ namespace ranges
             common_tuple(That && that, index_sequence<Is...>)
               : std::tuple<Ts...>{std::get<Is>(std::forward<That>(that))...}
             {}
-            std::tuple<Ts...> const & base() const
+            std::tuple<Ts...> const & base() const noexcept
             {
                 return *this;
             }
         public:
             CONCEPT_REQUIRES(meta::and_c<(bool) DefaultConstructible<Ts>()...>::value)
             common_tuple()
+                noexcept(meta::and_c<std::is_nothrow_default_constructible<Ts>::value...>::value)
               : std::tuple<Ts...>{}
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &&>()...>::value)>
             explicit common_tuple(Us &&... us)
+                noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &&>::value...>::value)
               : std::tuple<Ts...>{std::forward<Us>(us)...}
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &>()...>::value)>
             common_tuple(std::tuple<Us...> &that)
+                noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
               : common_tuple(that, make_index_sequence<sizeof...(Ts)>{})
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us const &>()...>::value)>
             common_tuple(std::tuple<Us...> const &that)
+                noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
               : common_tuple(that, make_index_sequence<sizeof...(Ts)>{})
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &&>()...>::value)>
             common_tuple(std::tuple<Us...> &&that)
+                noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &&>::value...>::value)
               : common_tuple(std::move(that), make_index_sequence<sizeof...(Ts)>{})
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us const &&>()...>::value)>
             common_tuple(std::tuple<Us...> const &&that)
+                noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &&>::value...>::value)
               : common_tuple(std::move(that), make_index_sequence<sizeof...(Ts)>{})
             {}
             using std::tuple<Ts...>::operator=;
             template<typename ...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Us, Ts &>()...>::value)>
             operator std::tuple<Us...> () &
+                noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
             {
 	            return detail::to_std_tuple<Us...>(*this, make_index_sequence<sizeof...(Ts)>{});
             }
             template<typename ...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Us, Ts const &>()...>::value)>
             operator std::tuple<Us...> () const &
+                noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts const &>::value...>::value)
             {
 	            return detail::to_std_tuple<Us...>(*this, make_index_sequence<sizeof...(Ts)>{});
             }
             template<typename ...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Us, Ts &&>()...>::value)>
             operator std::tuple<Us...> () &&
+                noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts &&>::value...>::value)
             {
 	            return detail::to_std_tuple<Us...>(std::move(*this), make_index_sequence<sizeof...(Ts)>{});
             }
             template<typename ...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Us, Ts const &&>()...>::value)>
             operator std::tuple<Us...> () const &&
+                noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts const &&>::value...>::value)
             {
 	            return detail::to_std_tuple<Us...>(std::move(*this), make_index_sequence<sizeof...(Ts)>{});
             }
@@ -141,62 +151,82 @@ namespace ranges
           : std::pair<F, S>
         {
         private:
-            std::pair<F, S> const & base() const
+            std::pair<F, S> const & base() const noexcept
             {
                 return *this;
             }
         public:
             CONCEPT_REQUIRES(DefaultConstructible<F>() && DefaultConstructible<S>())
             common_pair()
+                noexcept(std::is_nothrow_default_constructible<F>::value &&
+                    std::is_nothrow_default_constructible<S>::value)
               : std::pair<F, S>{}
             {}
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F, F2 &&>() && Constructible<S, S2 &&>())>
             common_pair(F2 &&f2, S2 &&s2)
+                noexcept(std::is_nothrow_constructible<F, F2 &&>::value &&
+                    std::is_nothrow_constructible<S, S2 &&>::value)
               : std::pair<F, S>{std::forward<F2>(f2), std::forward<S2>(s2)}
             {}
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F, F2 &>() && Constructible<S, S2 &>())>
             common_pair(std::pair<F2, S2> &that)
+                noexcept(std::is_nothrow_constructible<F, F2 &>::value &&
+                    std::is_nothrow_constructible<S, S2 &>::value)
               : std::pair<F, S>{that.first, that.second}
             {}
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F, F2 const &>() && Constructible<S, S2 const &>())>
             common_pair(std::pair<F2, S2> const &that)
+                noexcept(std::is_nothrow_constructible<F, F2 const &>::value &&
+                    std::is_nothrow_constructible<S, S2 const &>::value)
               : std::pair<F, S>{that.first, that.second}
             {}
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F, F2 &&>() && Constructible<S, S2 &&>())>
             common_pair(std::pair<F2, S2> &&that)
+                noexcept(std::is_nothrow_constructible<F, F2 &&>::value &&
+                    std::is_nothrow_constructible<S, S2 &&>::value)
               : std::pair<F, S>{std::move(that).first, std::move(that).second}
             {}
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F, F2 const &&>() && Constructible<S, S2 const &&>())>
             common_pair(std::pair<F2, S2> const &&that)
+                noexcept(std::is_nothrow_constructible<F, F2 const &&>::value &&
+                    std::is_nothrow_constructible<S, S2 const &&>::value)
               : std::pair<F, S>{std::move(that).first, std::move(that).second}
             {}
             using std::pair<F, S>::operator=;
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F2, F &>() && Constructible<S2, S &>())>
             operator std::pair<F2, S2> () &
+                noexcept(std::is_nothrow_constructible<F2, F &>::value &&
+                    std::is_nothrow_constructible<S2, S &>::value)
             {
                 return {this->first, this->second};
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F2, F const &>() && Constructible<S2, S const &>())>
             operator std::pair<F2, S2> () const &
+                noexcept(std::is_nothrow_constructible<F2, F const &>::value &&
+                    std::is_nothrow_constructible<S2, S const &>::value)
             {
                 return {this->first, this->second};
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F2, F &&>() && Constructible<S2, S &&>())>
             operator std::pair<F2, S2> () &&
+                noexcept(std::is_nothrow_constructible<F2, F &&>::value &&
+                    std::is_nothrow_constructible<S2, S &&>::value)
             {
                 return {std::move(*this).first, std::move(*this).second};
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F2, F const &&>() && Constructible<S2, S const &&>())>
             operator std::pair<F2, S2> () const &&
+                noexcept(std::is_nothrow_constructible<F2, F const &&>::value &&
+                    std::is_nothrow_constructible<S2, S const &&>::value)
             {
                 return {std::move(*this).first, std::move(*this).second};
             }

@@ -45,6 +45,7 @@ namespace std
         return sout << '[' << p.first << ',' << p.second << ']';
     }
 }
+
 struct first
 {
     template<typename P>
@@ -53,7 +54,6 @@ struct first
         return p.first;
     }
 };
-
 
 struct indirect_less
 {

@@ -339,7 +339,7 @@ namespace ranges
               : refines<WeakIterator, Readable>
             {
                 // Associated types
-                // value_t from readable
+                // value_t from Readable
                 // distance_t from WeaklyIncrementable
                 template<typename I>
                 using category_t = meta::eval<ranges::iterator_category_type<I>>;
@@ -399,6 +399,8 @@ namespace ranges
                         concepts::has_type<I>(i - (i - i)),
                         concepts::has_type<I &>(i += (i-i)),
                         concepts::has_type<I &>(i -= (i - i)),
+                        // BUGBUG Should be CommonReference<V const &, decltype(i[i-i])>
+                        // Redesign basic_iterator's operator[]'s proxy reference type
                         concepts::convertible_to<V>(i[i - i])
                     ));
             };
@@ -474,82 +476,93 @@ namespace ranges
         template<typename I>
         using SinglePass = meta::fast_and<WeakInputIterator<I>, meta::not_<ForwardIterator<I>>>;
 
+        namespace detail
+        {
+            template<typename I, typename Proj>
+            struct projected_readable
+            {
+                using value_type =
+                    decay_t<concepts::Invokable::result_t<Proj, concepts::Readable::value_t<I>>>;
+                using reference =
+                    concepts::Invokable::result_t<Proj, concepts::Readable::reference_t<I>>;
+                using pointer =
+                    meta::eval<std::add_pointer<reference>>;
+                reference operator*() const;
+                friend auto indirect_move(projected_readable const &, reference &&) ->
+                    concepts::Invokable::result_t<Proj, concepts::Readable::rvalue_reference_t<I>>
+                {
+                    RANGES_ASSERT(false);
+                    throw;
+                }
+            };
+        }
+
+        template<typename I, typename Proj>
+        using Project =
+            meta::eval<std::enable_if<
+                meta::fast_and<
+                    Readable<I>,
+                    Invokable<Proj, concepts::Readable::value_t<I> >,
+                    Invokable<Proj, concepts::Readable::reference_t<I> >,
+                    Invokable<Proj, concepts::Readable::rvalue_reference_t<I> > >::value,
+                detail::projected_readable<I, Proj>>>;
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
-        template<typename Fun, typename I, typename P = ident,
-            typename X = concepts::Invokable::result_t<P, concepts::Readable::value_t<I>>,
-            typename Y = concepts::Invokable::result_t<P, concepts::Readable::reference_t<I>>,
-            typename Z = concepts::Invokable::result_t<P, concepts::Readable::common_reference_t<I>>>
-        using IndirectInvokable1 = meta::fast_and<
-            Invokable<Fun, X>,
-            Invokable<Fun, Y>,
-            Invokable<Fun, Z>,
-            CommonReference<
-                concepts::Invokable::result_t<Fun, X>,
-                concepts::Invokable::result_t<Fun, Y>,
-                concepts::Invokable::result_t<Fun, Z>>>;
+        namespace detail
+        {
+            // Return the value and reference types of an iterator in a list.
+            template<typename I>
+            using readable_types =
+                meta::list<concepts::Readable::value_t<I>, concepts::Readable::reference_t<I>>;
 
-        template<typename C, typename I0, typename I1 = I0, typename P0 = ident, typename P1 = ident,
-            typename X0 = concepts::Invokable::result_t<P0, concepts::Readable::value_t<I0>>,
-            typename X1 = concepts::Invokable::result_t<P1, concepts::Readable::value_t<I1>>,
-            typename Y0 = concepts::Invokable::result_t<P0, concepts::Readable::reference_t<I0>>,
-            typename Y1 = concepts::Invokable::result_t<P1, concepts::Readable::reference_t<I1>>,
-            typename Z0 = concepts::Invokable::result_t<P0, concepts::Readable::common_reference_t<I0>>,
-            typename Z1 = concepts::Invokable::result_t<P1, concepts::Readable::common_reference_t<I1>>>
-        using IndirectInvokable2 = meta::fast_and<
-            Invokable<C, X0, X1>,
-            Invokable<C, Y0, Y1>,
-            Invokable<C, Z0, Z1>,
-            Invokable<C, X0, Y1>,
-            Invokable<C, Y0, X1>,
-            CommonReference<
-                concepts::Invokable::result_t<C, X0, X1>,
-                concepts::Invokable::result_t<C, Y0, Y1>,
-                concepts::Invokable::result_t<C, Z0, Z1>,
-                concepts::Invokable::result_t<C, X0, Y1>,
-                concepts::Invokable::result_t<C, Y0, X1>>>;
+            template<typename CombineFn, typename ApplyFn, typename...Is>
+            struct indirect_apply_combine
+            {
+                using type =
+                    // Collect the list of results computed below with CombineFn
+                    meta::apply_list<
+                        CombineFn,
+                        // Call ApplyFn with the cartesian product of the Readables' value and reference
+                        // types. In addition, call ApplyFn with the common_reference type of all the
+                        // Readables. Return the result as a list.
+                        meta::transform<
+                            meta::push_back<
+                                meta::cartesian_product<
+                                    meta::transform<meta::list<Is...>,
+                                    meta::quote<readable_types>>>,
+                                meta::list<concepts::Readable::common_reference_t<Is>...>>,
+                            meta::bind_front<meta::quote<meta::apply_list>, ApplyFn>>>;
+            };
+        }
 
-        template<typename C, typename I, typename P = ident,
-            typename X = concepts::Invokable::result_t<P, concepts::Readable::value_t<I>>,
-            typename Y = concepts::Invokable::result_t<P, concepts::Readable::reference_t<I>>,
-            typename Z = concepts::Invokable::result_t<P, concepts::Readable::common_reference_t<I>>>
-        using IndirectInvokablePredicate1 = meta::fast_and<
-            IndirectInvokable1<P, I>,
-            InvokablePredicate<C, X>,
-            InvokablePredicate<C, Y>,
-            InvokablePredicate<C, Z>>;
+        template<typename C, typename ...Is>
+        using IndirectInvokable = meta::and_<
+            // C must be Invokable with the values and references read from the Is.
+            detail::indirect_apply_combine<
+                meta::quote<meta::fast_and>,
+                meta::bind_front<meta::quote<Invokable>, C>,
+                Is...>,
+            // In addition, the return types of the C invocations tried above must all
+            // share a common reference type.
+            detail::indirect_apply_combine<
+                meta::quote<CommonReference>,
+                meta::bind_front<meta::quote<concepts::Invokable::result_t>, C>,
+                Is...> >;
 
-        template<typename C, typename I0, typename I1 = I0, typename P0 = ident, typename P1 = ident,
-            typename X0 = concepts::Invokable::result_t<P0, concepts::Readable::value_t<I0>>,
-            typename X1 = concepts::Invokable::result_t<P1, concepts::Readable::value_t<I1>>,
-            typename Y0 = concepts::Invokable::result_t<P0, concepts::Readable::reference_t<I0>>,
-            typename Y1 = concepts::Invokable::result_t<P1, concepts::Readable::reference_t<I1>>,
-            typename Z0 = concepts::Invokable::result_t<P0, concepts::Readable::common_reference_t<I0>>,
-            typename Z1 = concepts::Invokable::result_t<P1, concepts::Readable::common_reference_t<I1>>>
-        using IndirectInvokablePredicate2 = meta::fast_and<
-            IndirectInvokable1<P0, I0>,
-            IndirectInvokable1<P1, I1>,
-            InvokablePredicate<C, X0, X1>,
-            InvokablePredicate<C, Y0, Y1>,
-            InvokablePredicate<C, Z0, Z1>,
-            InvokablePredicate<C, X0, Y1>,
-            InvokablePredicate<C, Y0, X1>>;
+        template<typename C, typename ...Is>
+        using IndirectInvokablePredicate =
+            meta::eval<detail::indirect_apply_combine<
+                meta::quote<meta::fast_and>,
+                meta::bind_front<meta::quote<InvokablePredicate>, C>,
+                Is...> >;
 
-        template<typename C, typename I0, typename I1 = I0, typename P0 = ident, typename P1 = ident,
-            typename X0 = concepts::Invokable::result_t<P0, concepts::Readable::value_t<I0>>,
-            typename X1 = concepts::Invokable::result_t<P1, concepts::Readable::value_t<I1>>,
-            typename Y0 = concepts::Invokable::result_t<P0, concepts::Readable::reference_t<I0>>,
-            typename Y1 = concepts::Invokable::result_t<P1, concepts::Readable::reference_t<I1>>,
-            typename Z0 = concepts::Invokable::result_t<P0, concepts::Readable::common_reference_t<I0>>,
-            typename Z1 = concepts::Invokable::result_t<P1, concepts::Readable::common_reference_t<I1>>>
-        using IndirectInvokableRelation = meta::fast_and<
-            IndirectInvokable1<P0, I0>,
-            IndirectInvokable1<P1, I1>,
-            InvokableRelation<C, X0, X1>,
-            InvokableRelation<C, Y0, Y1>,
-            InvokableRelation<C, Z0, Z1>,
-            InvokableRelation<C, X0, Y1>,
-            InvokableRelation<C, Y0, X1>>;
+        template<typename C, typename I0, typename I1 = I0>
+        using IndirectInvokableRelation =
+            meta::eval<detail::indirect_apply_combine<
+                meta::quote<meta::fast_and>,
+                meta::bind_front<meta::quote<InvokableRelation>, C>,
+                I0, I1> >;
 
         template<typename I, typename V = concepts::Readable::value_t<I>>
         using Permutable = meta::fast_and<
@@ -563,7 +576,7 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectInvokableRelation<C, I0, I1, P0, P1>,
+            IndirectInvokableRelation<C, Project<I0, P0>, Project<I1, P1>>,
             IndirectlyCopyable<I0, Out>,
             IndirectlyCopyable<I1, Out>>;
 
@@ -573,28 +586,28 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectInvokableRelation<C, I0, I1, P0, P1>,
+            IndirectInvokableRelation<C, Project<I0, P0>, Project<I1, P1>>,
             IndirectlyMovable<I0, Out>,
             IndirectlyMovable<I1, Out>>;
 
         template<typename I, typename C = ordered_less, typename P = ident>
         using Sortable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectInvokableRelation<C, I, I, P, P>,
+            IndirectInvokableRelation<C, Project<I, P>, Project<I, P>>,
             Permutable<I>>;
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
         using BinarySearchable = meta::fast_and<
             ForwardIterator<I>,
             TotallyOrdered<V2>,
-            IndirectInvokableRelation<C, I, V2 const *, P, ident>>;
+            IndirectInvokableRelation<C, Project<I, P>, V2 const *>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
         using WeaklyAsymmetricallyComparable = meta::fast_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
-            IndirectInvokablePredicate2<C, I1, I2, P1, P2>>;
+            IndirectInvokablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
@@ -606,7 +619,7 @@ namespace ranges
             typename P2 = ident>
         using WeaklyComparable = meta::fast_and<
             WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
-            IndirectInvokableRelation<C, I1, I2, P1, P2>>;
+            IndirectInvokableRelation<C, Project<I1, P1>, Project<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>

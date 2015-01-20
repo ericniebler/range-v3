@@ -33,7 +33,7 @@ namespace ranges
             InputIterator<I>,
             WeakOutputIterator<O, T1>,
             IndirectlyCopyable<I, O>,
-            IndirectInvokableRelation<equal_to, I, T0 const *, P, ident>>;
+            IndirectInvokableRelation<equal_to, Project<I, P>, T0 const *>>;
 
         /// \addtogroup group-algorithms
         /// @{

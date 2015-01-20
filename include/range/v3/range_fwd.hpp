@@ -318,6 +318,12 @@ namespace ranges
         }
 
         template<typename T>
+        struct pointer_type;
+
+        template<typename T>
+        struct iterator_category_type;
+
+        template<typename T>
         using uncvref_t =
             typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
@@ -658,8 +664,8 @@ namespace ranges
         }
 
         template<
-            typename Fun,
             typename Rngs,
+            typename Fun,
             typename CopyFun = ident,
             typename MoveFun = ident>
         struct zip_with_view;
@@ -667,8 +673,8 @@ namespace ranges
         template<typename Rngs>
         using zip_view =
             zip_with_view<
-                detail::make_tuple_like_fn,
                 Rngs,
+                detail::make_tuple_like_fn,
                 detail::copy_tuple_like_fn,
                 detail::move_tuple_like_fn>;
 

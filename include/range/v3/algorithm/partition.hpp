@@ -41,7 +41,7 @@ namespace ranges
         using Partitionable = meta::fast_and<
             ForwardIterator<I>,
             Permutable<I>,
-            IndirectInvokablePredicate1<C, I, P>>;
+            IndirectInvokablePredicate<C, Project<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{

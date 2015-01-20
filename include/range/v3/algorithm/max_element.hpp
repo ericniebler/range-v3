@@ -34,7 +34,7 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() &&
-                    IndirectInvokableRelation<C, I, I, P, P>())>
+                    IndirectInvokableRelation<C, Project<I, P>>())>
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto && pred = invokable(pred_);
@@ -49,7 +49,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardIterable<Rng &>() &&
-                    IndirectInvokableRelation<C, I, I, P, P>())>
+                    IndirectInvokableRelation<C, Project<I, P>>())>
             I operator()(Rng &rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

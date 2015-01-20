@@ -182,10 +182,10 @@ namespace ranges
 
         /// \addtogroup group-views
         /// @{
-        template<typename Fun, typename...Rngs, typename CopyFun, typename MoveFun>
-        struct zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun>
+        template<typename...Rngs, typename Fun, typename CopyFun, typename MoveFun>
+        struct zip_with_view<meta::list<Rngs...>, Fun, CopyFun, MoveFun>
           : range_facade<
-                zip_with_view<Fun, meta::list<Rngs...>, CopyFun, MoveFun>,
+                zip_with_view<meta::list<Rngs...>, Fun, CopyFun, MoveFun>,
                 meta::and_c<is_infinite<Rngs>::value...>::value>
         {
         private:
@@ -331,11 +331,7 @@ namespace ranges
             }
         public:
             zip_with_view() = default;
-            explicit zip_with_view(Rngs &&...rngs)
-              : fun_(invokable(Fun{}))
-              , rngs_{view::all(std::forward<Rngs>(rngs))...}
-            {}
-            explicit zip_with_view(Fun fun, Rngs &&...rngs)
+            explicit zip_with_view(Rngs &&...rngs, Fun fun = Fun{})
               : fun_(invokable(std::move(fun)))
               , rngs_{view::all(std::forward<Rngs>(rngs))...}
             {}
@@ -356,14 +352,16 @@ namespace ranges
                 template<typename ...Rngs>
                 using Concept = meta::and_<InputIterable<Rngs>...>;
 
-                template<typename...Rngs, CONCEPT_REQUIRES_(Concept<Rngs...>())>
+                template<typename...Rngs,
+                    CONCEPT_REQUIRES_(Concept<Rngs...>())>
                 zip_view<meta::list<Rngs...>> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_c<(bool) Iterable<Rngs>()...>::value);
                     return zip_view<meta::list<Rngs...>>{std::forward<Rngs>(rngs)...};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename...Rngs, CONCEPT_REQUIRES_(!Concept<Rngs...>())>
+                template<typename...Rngs,
+                    CONCEPT_REQUIRES_(!Concept<Rngs...>())>
                 void operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
@@ -382,27 +380,38 @@ namespace ranges
 
             struct zip_with_fn
             {
-                template<typename Fun, typename ...Rngs>
+                template<typename Rngs, typename Fun, typename CopyFun = ident, typename MoveFun = ident,
+                    typename Ref =
+                        meta::apply_list<
+                            meta::bind_front<meta::quote<concepts::Invokable::result_t>, Fun>,
+                            meta::transform<Rngs, meta::quote<range_reference_t>>>>
                 using Concept = meta::and_<
-                    InputIterable<Rngs>...,
-                    Invokable<Fun, range_common_reference_t<Rngs>...>>;
+                    meta::all_of<Rngs, meta::quote<InputIterable>>,
+                    // The following is like: Invokable<Fun, range_reference_t<Rngs>...>
+                    meta::apply_list<
+                        meta::bind_front<meta::quote<Invokable>, Fun>,
+                        meta::transform<Rngs, meta::quote<range_reference_t>>>,
+                    Invokable<CopyFun, Ref>,
+                    Invokable<MoveFun, Ref>>;
 
-                template<typename Fun, typename...Rngs, CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
-                zip_with_view<Fun, meta::list<Rngs...>> operator()(Fun fun, Rngs &&... rngs) const
+                template<typename...Rngs, typename Fun,
+                    CONCEPT_REQUIRES_(Concept<meta::list<Rngs...>, Fun>())>
+                zip_with_view<meta::list<Rngs...>, Fun> operator()(Fun fun, Rngs &&... rngs) const
                 {
-                    return zip_with_view<Fun, meta::list<Rngs...>>{
-                        std::move(fun),
-                        std::forward<Rngs>(rngs)...
+                    return zip_with_view<meta::list<Rngs...>, Fun>{
+                        std::forward<Rngs>(rngs)...,
+                        std::move(fun)
                     };
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Fun, typename...Rngs, CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>
+                template<typename Fun, typename...Rngs,
+                    CONCEPT_REQUIRES_(!Concept<meta::list<Rngs...>, Fun>())>
                 void operator()(Fun, Rngs &&...) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
                         "All of the objects passed to view::zip_with must model the InputIterable "
                         "concept");
-                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_common_reference_t<Rngs>...>(),
+                    CONCEPT_ASSERT_MSG(Invokable<Fun, range_reference_t<Rngs>...>(),
                         "The function passed to view::zip_with must be callable with N arguments "
                         "taken one from each of the N ranges.");
                 }
