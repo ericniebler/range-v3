@@ -1009,19 +1009,19 @@ namespace ranges
                 struct cartesian_product_fn
                 {
                     template<typename X>
-                    struct b
+                    struct lambda0
                     {
                         template<typename Xs>
-                        using c = list<push_front<Xs, X>>;
-                        using type = join<transform<M2, quote<c>>>;
+                        using lambda1 = list<push_front<Xs, X>>;
+                        using type = join<transform<M2, quote<lambda1>>>;
                     };
-                    using type = join<transform<M, quote_trait<b>>>;
+                    using type = join<transform<M, quote_trait<lambda0>>>;
                 };
             }
             /// \endcond
 
             /// \brief Given a list of lists, return a new list of lists that is the
-            /// Cartesian Product. Like the \c sequence function from the Haskell Prelude.
+            /// Cartesian Product. Like the `sequence` function from the Haskell Prelude.
             /// Complexity: O(N*M)
             template<typename ListOfLists>
             using cartesian_product =

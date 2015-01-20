@@ -495,20 +495,31 @@ namespace ranges
                     throw;
                 }
             };
+
+            template<typename I, typename Proj>
+            struct Projectable_
+            {
+                using type =
+                    meta::fast_and<
+                        Invokable<Proj, concepts::Readable::value_t<I>>,
+                        Invokable<Proj, concepts::Readable::reference_t<I>>,
+                        Invokable<Proj, concepts::Readable::rvalue_reference_t<I>>>;
+            };
         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // Composite concepts for use defining algorithms:
+        template<typename I, typename Proj>
+        using Projectable = meta::and_<
+            Readable<I>,
+            detail::Projectable_<I, Proj>>;
 
         template<typename I, typename Proj>
         using Project =
             meta::eval<std::enable_if<
-                meta::fast_and<
-                    Readable<I>,
-                    Invokable<Proj, concepts::Readable::value_t<I> >,
-                    Invokable<Proj, concepts::Readable::reference_t<I> >,
-                    Invokable<Proj, concepts::Readable::rvalue_reference_t<I> > >::value,
+                Projectable<I, Proj>::value,
                 detail::projected_readable<I, Proj>>>;
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Composite concepts for use defining algorithms:
         namespace detail
         {
             // Return the value and reference types of an iterator in a list.
@@ -517,52 +528,59 @@ namespace ranges
                 meta::list<concepts::Readable::value_t<I>, concepts::Readable::reference_t<I>>;
 
             template<typename CombineFn, typename ApplyFn, typename...Is>
-            struct indirect_apply_combine
-            {
-                using type =
-                    // Collect the list of results computed below with CombineFn
-                    meta::apply_list<
-                        CombineFn,
-                        // Call ApplyFn with the cartesian product of the Readables' value and reference
-                        // types. In addition, call ApplyFn with the common_reference type of all the
-                        // Readables. Return the result as a list.
-                        meta::transform<
-                            meta::push_back<
-                                meta::cartesian_product<
-                                    meta::transform<meta::list<Is...>,
-                                    meta::quote<readable_types>>>,
-                                meta::list<concepts::Readable::common_reference_t<Is>...>>,
-                            meta::bind_front<meta::quote<meta::apply_list>, ApplyFn>>>;
-            };
+            using indirect_apply_combine =
+                // Collect the list of results computed below with CombineFn
+                meta::apply_list<
+                    CombineFn,
+                    // Call ApplyFn with the cartesian product of the Readables' value and reference
+                    // types. In addition, call ApplyFn with the common_reference type of all the
+                    // Readables. Return all the results as a list.
+                    meta::transform<
+                        meta::push_back<
+                            meta::cartesian_product<
+                                meta::transform<meta::list<Is...>, meta::quote<readable_types>>>,
+                            meta::list<concepts::Readable::common_reference_t<Is>...>>,
+                        meta::bind_front<meta::quote<meta::apply_list>, ApplyFn>>>;
         }
 
         template<typename C, typename ...Is>
-        using IndirectInvokable = meta::and_<
-            // C must be Invokable with the values and references read from the Is.
+        using IndirectFunction = meta::and_<
+            // C must be callable with the values and references read from the Is.
             detail::indirect_apply_combine<
                 meta::quote<meta::fast_and>,
-                meta::bind_front<meta::quote<Invokable>, C>,
+                meta::bind_front<meta::quote<Function>, C>,
                 Is...>,
             // In addition, the return types of the C invocations tried above must all
-            // share a common reference type.
-            detail::indirect_apply_combine<
+            // share a common reference type. (The lazy_apply is so that this doesn't get
+            // evaluated unless C is truly callable as determined above.)
+            meta::lazy_apply<
+                meta::quote<detail::indirect_apply_combine>,
                 meta::quote<CommonReference>,
-                meta::bind_front<meta::quote<concepts::Invokable::result_t>, C>,
+                meta::bind_front<meta::quote<concepts::Function::result_t>, C>,
                 Is...> >;
 
         template<typename C, typename ...Is>
-        using IndirectInvokablePredicate =
-            meta::eval<detail::indirect_apply_combine<
+        using IndirectPredicate =
+            detail::indirect_apply_combine<
                 meta::quote<meta::fast_and>,
-                meta::bind_front<meta::quote<InvokablePredicate>, C>,
-                Is...> >;
+                meta::bind_front<meta::quote<Predicate>, C>,
+                Is...>;
 
         template<typename C, typename I0, typename I1 = I0>
-        using IndirectInvokableRelation =
-            meta::eval<detail::indirect_apply_combine<
+        using IndirectRelation =
+            detail::indirect_apply_combine<
                 meta::quote<meta::fast_and>,
-                meta::bind_front<meta::quote<InvokableRelation>, C>,
-                I0, I1> >;
+                meta::bind_front<meta::quote<Relation>, C>,
+                I0, I1>;
+
+        template<typename C, typename ...Is>
+        using IndirectInvokable = IndirectFunction<invokable_t<C>, Is...>;
+
+        template<typename C, typename ...Is>
+        using IndirectInvokablePredicate = IndirectPredicate<invokable_t<C>, Is...>;
+
+        template<typename C, typename I0, typename I1 = I0>
+        using IndirectInvokableRelation = IndirectRelation<invokable_t<C>, I0, I1>;
 
         template<typename I, typename V = concepts::Readable::value_t<I>>
         using Permutable = meta::fast_and<

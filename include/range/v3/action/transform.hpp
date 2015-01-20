@@ -74,6 +74,9 @@ namespace ranges
                         "The object on which action::transform operates must be a model of the "
                         "InputIterable concept.");
                     using I = range_iterator_t<Rng>;
+                    CONCEPT_ASSERT_MSG(Projectable<I, P>(),
+                        "The projection function must accept objects of the iterator's value type, "
+                        "reference type, and rvalue reference type.");
                     CONCEPT_ASSERT_MSG(IndirectInvokable<F, Project<I, P>>(),
                         "The function argument to action::transform must be callable with "
                         "the result of the projection argument, or with objects of the range's "

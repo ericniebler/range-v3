@@ -81,6 +81,9 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, I>(),
                         "The object on which action::remove_if operates must allow element "
                         "removal.");
+                    CONCEPT_ASSERT_MSG(Projectable<I, P>(),
+                        "The projection function must accept objects of the iterator's value type, "
+                        "reference type, and rvalue reference type.");
                     CONCEPT_ASSERT_MSG(IndirectInvokablePredicate<C, Project<I, P>>(),
                         "The predicate passed to action::remove_if must accept objects returned "
                         "by the projection function, or of the range's value type if no projection "
