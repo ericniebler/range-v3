@@ -233,6 +233,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\action\remove_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\slice.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\sort.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\action\split.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\stable_sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\stride.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\take.hpp" />

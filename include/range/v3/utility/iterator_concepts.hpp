@@ -545,8 +545,10 @@ namespace ranges
 
         template<typename C, typename ...Is>
         using IndirectFunction = meta::and_<
+            meta::fast_and<Readable<Is>...>,
             // C must be callable with the values and references read from the Is.
-            detail::indirect_apply_combine<
+            meta::lazy_apply<
+                meta::quote<detail::indirect_apply_combine>,
                 meta::quote<meta::fast_and>,
                 meta::bind_front<meta::quote<Function>, C>,
                 Is...>,
@@ -560,18 +562,22 @@ namespace ranges
                 Is...> >;
 
         template<typename C, typename ...Is>
-        using IndirectPredicate =
-            detail::indirect_apply_combine<
+        using IndirectPredicate = meta::and_<
+            meta::fast_and<Readable<Is>...>,
+            meta::lazy_apply<
+                meta::quote<detail::indirect_apply_combine>,
                 meta::quote<meta::fast_and>,
                 meta::bind_front<meta::quote<Predicate>, C>,
-                Is...>;
+                Is...>>;
 
         template<typename C, typename I0, typename I1 = I0>
-        using IndirectRelation =
-            detail::indirect_apply_combine<
+        using IndirectRelation = meta::and_<
+            meta::fast_and<Readable<I0>, Readable<I1>>,
+            meta::lazy_apply<
+                meta::quote<detail::indirect_apply_combine>,
                 meta::quote<meta::fast_and>,
                 meta::bind_front<meta::quote<Relation>, C>,
-                I0, I1>;
+                I0, I1>>;
 
         template<typename C, typename ...Is>
         using IndirectInvokable = IndirectFunction<invokable_t<C>, Is...>;

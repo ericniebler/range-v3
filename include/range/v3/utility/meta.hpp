@@ -853,6 +853,11 @@ namespace ranges
             template<typename List, typename State, typename Fun>
             using foldl = eval<meta_detail::foldl_<List, State, Fun>>;
 
+            /// \brief An alias for `meta::foldl`. Complexity: O(N)
+            /// \ingroup group-meta
+            template<typename List, typename State, typename Fun>
+            using accumulate = foldl<List, State, Fun>;
+
             ////////////////////////////////////////////////////////////////////////////////////
             // foldr
             /// \cond
@@ -1001,7 +1006,7 @@ namespace ranges
             using none_of = empty<find_if<List, F>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // sequence
+            // cartesian_product
             /// \cond
             namespace meta_detail
             {

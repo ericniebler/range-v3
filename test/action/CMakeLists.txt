@@ -25,6 +25,9 @@ add_test(test.act.slice act.slice)
 add_executable(act.sort sort.cpp)
 add_test(test.act.sort act.sort)
 
+add_executable(act.split split.cpp)
+add_test(test.act.split act.split)
+
 add_executable(act.stride stride.cpp)
 add_test(test.act.stride act.stride)
 

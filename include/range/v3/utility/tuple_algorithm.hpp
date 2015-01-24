@@ -17,6 +17,7 @@
 #include <tuple>
 #include <utility>
 #include <type_traits>
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -158,25 +159,25 @@ namespace ranges
             constexpr auto&& tuple_foldl = static_const<tuple_foldl_fn>::value;
         }
 
-        // NOTE: This does *not* guarantee order of evaluation, nor does
-        // it return the function after it is done. Not to be used with
-        // stateful function objects.
         struct tuple_for_each_fn
         {
         private:
+            struct eat_args { eat_args(std::initializer_list<int>) {} };
             template<typename Tup, typename Fun, std::size_t...Is>
             static void impl(Tup && tup, Fun fun, index_sequence<Is...>)
             {
-                detail::ignore_unused(
-                    (static_cast<void>(fun(std::get<Is>(std::forward<Tup>(tup)))), 42)...);
+                [](eat_args){}(
+                    {(static_cast<void>(fun(std::get<Is>(std::forward<Tup>(tup)))), 42)...});
             }
         public:
             template<typename Tup, typename Fun>
-            void operator()(Tup && tup, Fun fun) const
+            Fun operator()(Tup && tup, Fun fun) const
             {
-                tuple_for_each_fn::impl(std::forward<Tup>(tup),
-                                      std::move(fun),
-                                      tuple_indices_t<Tup>{});
+                tuple_for_each_fn::impl(
+                    std::forward<Tup>(tup),
+                    std::ref(fun),
+                    tuple_indices_t<Tup>{});
+                return fun;
             }
         };
 

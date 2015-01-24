@@ -58,6 +58,7 @@ namespace ranges
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
                     using I = range_common_iterator_t<Rng>;
+                    // BUGBUG size may be known here, even though I may be an InputIterator
                     return Cont{I{begin(rng)}, I{end(rng)}};
                 }
             };
