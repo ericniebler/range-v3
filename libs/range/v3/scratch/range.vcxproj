@@ -87,6 +87,7 @@
     <ClCompile Include="..\..\..\..\test\action\remove_if.cpp" />
     <ClCompile Include="..\..\..\..\test\action\slice.cpp" />
     <ClCompile Include="..\..\..\..\test\action\sort.cpp" />
+    <ClCompile Include="..\..\..\..\test\action\split.cpp" />
     <ClCompile Include="..\..\..\..\test\action\stride.cpp" />
     <ClCompile Include="..\..\..\..\test\action\take.cpp" />
     <ClCompile Include="..\..\..\..\test\action\take_while.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="..\..\..\..\test\range_facade.cpp" />
     <ClCompile Include="..\..\..\..\test\to_container.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
+    <ClCompile Include="..\..\..\..\test\utility\functional.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\meta.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\swap.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_remove_if.cpp" />
@@ -371,7 +373,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\move.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\nullptr_v.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\pipeable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\semiregular.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\static_const.hpp" />
@@ -387,6 +388,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\concat.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\c_str.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\drop.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\drop_while.hpp" />

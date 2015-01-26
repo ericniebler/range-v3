@@ -21,7 +21,6 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>

@@ -23,7 +23,7 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/pipeable.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>

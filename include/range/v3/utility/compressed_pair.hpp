@@ -19,6 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -83,20 +84,6 @@ namespace ranges
             template<typename T>
             T second_base<T, typename std::enable_if<std::is_empty<T>::value &&
                 std::is_trivial<T>::value>::type>::second{};
-
-            template<typename T>
-            struct pair_element
-              : meta::if_<std::is_same<decay_t<T>, T>, meta::id<T>, pair_element<decay_t<T>>>
-            {};
-
-            template<typename T>
-            struct pair_element<std::reference_wrapper<T>>
-            {
-                using type = T &;
-            };
-
-            template<typename T>
-            using pair_element_t = meta::eval<pair_element<T>>;
         }
         /// \endcond
 
@@ -136,9 +123,10 @@ namespace ranges
 
         struct make_compressed_pair_fn
         {
+            using expects_wrapped_references = void;
             template<typename First, typename Second>
             constexpr auto operator()(First && f, Second && s) const ->
-                compressed_pair<detail::pair_element_t<First>, detail::pair_element_t<Second>>
+                compressed_pair<bind_element_t<First>, bind_element_t<Second>>
             {
                 return {detail::forward<First>(f), detail::forward<Second>(s)};
             }

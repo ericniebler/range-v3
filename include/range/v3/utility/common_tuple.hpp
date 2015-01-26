@@ -146,6 +146,28 @@ namespace ranges
 #undef LOGICAL_OP
         };
 
+        struct make_common_tuple_fn
+        {
+            using expects_wrapped_references = void;
+            template<typename ...Args>
+            common_tuple<bind_element_t<Args>...> operator()(Args &&... args) const
+                noexcept(meta::and_c<
+                    std::is_nothrow_constructible<
+                        bind_element_t<Args>,
+                        unwrap_reference_t<Args> >::value...>::value)
+            {
+                return common_tuple<bind_element_t<Args>...>{
+                    unwrap_reference(std::forward<Args>(args))...};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `make_common_tuple_fn`
+        namespace
+        {
+            constexpr auto&& make_common_tuple = static_const<make_common_tuple_fn>::value;
+        }
+
         template<typename F, typename S>
         struct common_pair
           : std::pair<F, S>
@@ -188,14 +210,14 @@ namespace ranges
             common_pair(std::pair<F2, S2> &&that)
                 noexcept(std::is_nothrow_constructible<F, F2 &&>::value &&
                     std::is_nothrow_constructible<S, S2 &&>::value)
-              : std::pair<F, S>{std::move(that).first, std::move(that).second}
+              : std::pair<F, S>{std::forward<F2>(that.first), std::forward<S2>(that.second)}
             {}
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F, F2 const &&>() && Constructible<S, S2 const &&>())>
             common_pair(std::pair<F2, S2> const &&that)
                 noexcept(std::is_nothrow_constructible<F, F2 const &&>::value &&
                     std::is_nothrow_constructible<S, S2 const &&>::value)
-              : std::pair<F, S>{std::move(that).first, std::move(that).second}
+              : std::pair<F, S>{std::forward<F2 const>(that.first), std::forward<S2 const>(that.second)}
             {}
             using std::pair<F, S>::operator=;
             template<typename F2, typename S2,
@@ -220,7 +242,8 @@ namespace ranges
                 noexcept(std::is_nothrow_constructible<F2, F &&>::value &&
                     std::is_nothrow_constructible<S2, S &&>::value)
             {
-                return {std::move(*this).first, std::move(*this).second};
+                return {std::forward<F>(this->first), std::forward<S>(this->second)};
+                //return {std::move(*this).first, std::move(*this).second};
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F2, F const &&>() && Constructible<S2, S const &&>())>
@@ -228,7 +251,8 @@ namespace ranges
                 noexcept(std::is_nothrow_constructible<F2, F const &&>::value &&
                     std::is_nothrow_constructible<S2, S const &&>::value)
             {
-                return {std::move(*this).first, std::move(*this).second};
+                return {std::forward<F const>(this->first), std::forward<S const>(this->second)};
+                //return {std::move(*this).first, std::move(*this).second};
             }
             CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
             friend bool operator ==(common_pair const &a, common_pair const &b)
@@ -307,6 +331,29 @@ namespace ranges
             LOGICAL_OP(>=, TotallyOrdered, !(a < b))
 #undef LOGICAL_OP
         };
+
+        struct make_common_pair_fn
+        {
+            using expects_wrapped_references = void;
+            template<typename First, typename Second,
+                typename F = bind_element_t<First>,
+                typename S = bind_element_t<Second>>
+            common_pair<F, S> operator()(First && f, Second && s) const
+                noexcept(std::is_nothrow_constructible<F, unwrap_reference_t<First>>::value &&
+                    std::is_nothrow_constructible<F, unwrap_reference_t<Second>>::value)
+            {
+                return {
+                    unwrap_reference(std::forward<First>(f)),
+                    unwrap_reference(std::forward<Second>(s))};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `make_common_pair_fn`
+        namespace
+        {
+            constexpr auto&& make_common_pair = static_const<make_common_pair_fn>::value;
+        }
     }
 }
 

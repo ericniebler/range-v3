@@ -16,11 +16,12 @@
 #include <memory> // std::addressof
 #include <utility>
 #include <functional> // std::reference_wrapper
+#include <type_traits>
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/box.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -95,6 +96,16 @@ namespace ranges
                 decltype((T &&) t * (U &&) u)
             {
                 return (T &&) t * (U &&) u;
+            }
+        };
+
+        struct bitwise_or
+        {
+            template<typename T, typename U>
+            auto operator()(T && t, U && u) const ->
+                decltype((T &&) t | (U &&) u)
+            {
+                return (T &&) t | (U &&) u;
             }
         };
 
@@ -190,31 +201,187 @@ namespace ranges
             constexpr auto&& not_ = static_const<not_fn>::value;
         }
 
+        template<typename Second, typename First>
+        struct composed
+          : private box<Second, meta::size_t<0>>
+          , private box<First, meta::size_t<1>>
+        {
+            composed() = default;
+            composed(Second second, First first)
+              : box<Second, meta::size_t<0>>{std::move(second)}
+              , box<First, meta::size_t<1>>{std::move(first)}
+            {}
+            template<typename...Ts>
+            auto operator()(Ts &&...ts)
+            RANGES_DECLTYPE_AUTO_RETURN(
+                ranges::get<0>(*this)(ranges::get<1>(*this)((Ts &&)ts)...)
+            )
+            template<typename...Ts>
+            auto operator()(Ts &&...ts) const
+            RANGES_DECLTYPE_AUTO_RETURN(
+                ranges::get<0>(*this)(ranges::get<1>(*this)((Ts &&)ts)...)
+            )
+        };
+
+        struct compose_fn
+        {
+            template<typename Second, typename First>
+            composed<Second, First> operator()(Second second, First first) const
+            {
+                return {std::move(second), std::move(first)};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `compose_fn`
+        namespace
+        {
+            constexpr auto&& compose = static_const<compose_fn>::value;
+        }
+
+        /// \cond
+        namespace detail
+        {
+            template<typename Bind>
+            struct pipeable_binder
+              : Bind
+              , pipeable<pipeable_binder<Bind>>
+            {
+                pipeable_binder(Bind bind)
+                  : Bind(std::move(bind))
+                {}
+            };
+        }
+        /// \endcond
+
+        struct make_pipeable_fn
+        {
+            template<typename Fun>
+            detail::pipeable_binder<Fun> operator()(Fun fun) const
+            {
+                return {std::move(fun)};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `make_pipeable_fn`
+        namespace
+        {
+            constexpr auto&& make_pipeable = static_const<make_pipeable_fn>::value;
+        }
+
+        template<typename T,
+            typename U = meta::if_<
+                std::is_lvalue_reference<T>,
+                std::reference_wrapper<meta::eval<std::remove_reference<T>>>,
+                T &&>>
+        U bind_forward(meta::eval<std::remove_reference<T>> & t) noexcept
+        {
+            return static_cast<U>(t);
+        }
+
         template<typename T>
+        T && bind_forward(meta::eval<std::remove_reference<T>> && t) noexcept
+        {
+            // This is to catch way sketchy stuff like: forward<int const &>(42)
+            static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
+            return static_cast<T &&>(t);
+        }
+
+        struct pipeable_base
+        {};
+
+        template<typename T>
+        struct is_pipeable
+          : std::is_base_of<pipeable_base, T>
+        {};
+
+        template<typename T>
+        struct is_pipeable<T &>
+          : is_pipeable<T>
+        {};
+
+        struct pipeable_access
+        {
+            template<typename Pipeable>
+            struct impl : Pipeable
+            {
+                using Pipeable::pipe;
+            };
+
+            template<typename Pipeable>
+            struct impl<Pipeable &> : impl<Pipeable>
+            {};
+        };
+
+        template<typename Derived>
+        struct pipeable : pipeable_base
+        {
+        private:
+            friend pipeable_access;
+            // Default Pipe behavior just passes the argument to the pipe's function call
+            // operator
+            template<typename Arg, typename Pipe>
+            static auto pipe(Arg && arg, Pipe && pipe)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                std::forward<Pipe>(pipe)(std::forward<Arg>(arg))
+            )
+        };
+
+        // Evaluate the pipe with an argument
+        template<typename Arg, typename Pipe,
+            CONCEPT_REQUIRES_(!is_pipeable<Arg>() && is_pipeable<Pipe>())>
+        auto operator|(Arg && arg, Pipe && pipe)
+        RANGES_DECLTYPE_AUTO_RETURN
+        (
+            pipeable_access::impl<Pipe>::pipe(std::forward<Arg>(arg), std::forward<Pipe>(pipe))
+        )
+
+        // Compose two pipes
+        template<typename Pipe0, typename Pipe1,
+            CONCEPT_REQUIRES_(is_pipeable<Pipe0>() && is_pipeable<Pipe1>())>
+        auto operator|(Pipe0 && pipe0, Pipe1 && pipe1)
+        RANGES_DECLTYPE_AUTO_RETURN
+        (
+            make_pipeable(std::bind(
+                bitwise_or{},
+                std::bind(bitwise_or{}, std::placeholders::_1, bind_forward<Pipe0>(pipe0)),
+                bind_forward<Pipe1>(pipe1)
+            ))
+        )
+
+        template<typename T, bool RValue /* = false*/>
         struct reference_wrapper
         {
         private:
             T *t_;
         public:
             using type = T;
+            using reference = meta::if_c<RValue, T &&, T &>;
             reference_wrapper() = default;
-            reference_wrapper(T &t) noexcept
+            reference_wrapper(reference t) noexcept
               : t_(std::addressof(t))
             {}
-            T & get() const noexcept
+            reference get() const noexcept
             {
                 RANGES_ASSERT(nullptr != t_);
-                return *t_;
+                return static_cast<reference>(*t_);
             }
-            operator T &() const noexcept
+            operator reference() const noexcept
             {
                 return get();
             }
+            CONCEPT_REQUIRES(!RValue)
+            operator std::reference_wrapper<T> () const noexcept
+            {
+                return {get()};
+            }
             template<typename ...Args>
             auto operator()(Args &&...args) const ->
-                decltype((*t_)(std::forward<Args>(args)...))
+                decltype(std::declval<reference>()(std::declval<Args>()...))
             {
-                return (*t_)(std::forward<Args>(args)...);
+                return get()(std::forward<Args>(args)...);
             }
         };
 
@@ -223,8 +390,8 @@ namespace ranges
           : std::false_type
         {};
 
-        template<typename T>
-        struct is_reference_wrapper<reference_wrapper<T>>
+        template<typename T, bool RValue>
+        struct is_reference_wrapper<reference_wrapper<T, RValue>>
           : std::true_type
         {};
 
@@ -250,8 +417,8 @@ namespace ranges
         struct referent_of
         {};
 
-        template<typename T>
-        struct referent_of<reference_wrapper<T>>
+        template<typename T, bool RValue>
+        struct referent_of<reference_wrapper<T, RValue>>
         {
             using type = T;
         };
@@ -268,12 +435,74 @@ namespace ranges
         {};
 
         template<typename T>
+        struct referent_of<T &&>
+          : meta::if_<is_reference_wrapper<T>, referent_of<T>, meta::id<T>>
+        {};
+
+        template<typename T>
         struct referent_of<T const>
           : referent_of<T>
         {};
 
         template<typename T>
         using referent_of_t = meta::eval<referent_of<T>>;
+
+        template<typename T>
+        struct reference_of
+        {};
+
+        template<typename T, bool RValue>
+        struct reference_of<reference_wrapper<T, RValue>>
+        {
+            using type = meta::if_c<RValue, T &&, T &>;
+        };
+
+        template<typename T>
+        struct reference_of<std::reference_wrapper<T>>
+        {
+            using type = T &;
+        };
+
+        template<typename T>
+        struct reference_of<T &>
+          : meta::if_<is_reference_wrapper<T>, reference_of<T>, meta::id<T &>>
+        {};
+
+        template<typename T>
+        struct reference_of<T &&>
+          : meta::if_<is_reference_wrapper<T>, reference_of<T>, meta::id<T &&>>
+        {};
+
+        template<typename T>
+        struct reference_of<T const>
+          : reference_of<T>
+        {};
+
+        template<typename T>
+        using reference_of_t = meta::eval<reference_of<T>>;
+
+        template<typename T>
+        struct bind_element
+          : meta::if_<
+                std::is_same<detail::decay_t<T>, T>,
+                meta::id<T>,
+                bind_element<detail::decay_t<T>>>
+        {};
+
+        template<typename T>
+        struct bind_element<std::reference_wrapper<T>>
+        {
+            using type = T &;
+        };
+
+        template<typename T, bool RValue>
+        struct bind_element<reference_wrapper<T, RValue>>
+        {
+            using type = meta::if_c<RValue, T &&, T &>;
+        };
+
+        template<typename T>
+        using bind_element_t = meta::eval<bind_element<T>>;
 
         struct ref_fn : pipeable<ref_fn>
         {
@@ -283,8 +512,8 @@ namespace ranges
                 return {t};
             }
             /// \overload
-            template<typename T>
-            reference_wrapper<T> operator()(reference_wrapper<T> t) const
+            template<typename T, bool RValue>
+            reference_wrapper<T, RValue> operator()(reference_wrapper<T, RValue> t) const
             {
                 return t;
             }
@@ -306,16 +535,43 @@ namespace ranges
         template<typename T>
         using ref_t = decltype(ref(std::declval<T>()));
 
-        struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
+        struct rref_fn : pipeable<rref_fn>
         {
-            template<typename T, CONCEPT_REQUIRES_(!is_reference_wrapper<T>())>
-            T & operator()(T & t) const noexcept
+            template<typename T,
+                CONCEPT_REQUIRES_(!is_reference_wrapper_t<T>() &&
+                    !std::is_lvalue_reference<T>::value)>
+            reference_wrapper<T, true> operator()(T && t) const
             {
-                return t;
+                return {std::move(t)};
             }
             /// \overload
             template<typename T>
-            T & operator()(reference_wrapper<T> t) const noexcept
+            reference_wrapper<T, true> operator()(reference_wrapper<T, true> t) const
+            {
+                return t;
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `rref_fn`
+        namespace
+        {
+            constexpr auto&& rref = static_const<rref_fn>::value;
+        }
+
+        template<typename T>
+        using rref_t = decltype(rref(std::declval<T>()));
+
+        struct unwrap_reference_fn : pipeable<unwrap_reference_fn>
+        {
+            template<typename T, CONCEPT_REQUIRES_(!is_reference_wrapper<T>())>
+            T && operator()(T && t) const noexcept
+            {
+                return std::forward<T>(t);
+            }
+            /// \overload
+            template<typename T, bool RValue>
+            meta::if_c<RValue, T &&, T &> operator()(reference_wrapper<T, RValue> t) const noexcept
             {
                 return t.get();
             }
@@ -333,6 +589,96 @@ namespace ranges
         {
             constexpr auto&& unwrap_reference = static_const<unwrap_reference_fn>::value;
         }
+
+        template<typename T>
+        using unwrap_reference_t = decltype(unwrap_reference(std::declval<T>()));
+
+        /// \ingroup group-utility
+        template<typename T>
+        using forward_ref_t =
+            meta::if_<
+                std::is_reference<T>,
+                reference_wrapper<
+                    meta::eval<std::remove_reference<T>>,
+                    std::is_rvalue_reference<T>::value>,
+                T &&>;
+
+        /// Forward arguments, wrapping lvalue and rvalue refs in ranges::reference_wrapper.
+        /// \ingroup group-utility
+        template<typename T, typename U>
+        forward_ref_t<T> forward_ref(U && t) noexcept
+        {
+            // This is to catch way sketchy stuff like: forward<int const &>(42)
+            //static_assert(std::is_same<T &, U>::value, "You didn't just do that!");
+            return static_cast<forward_ref_t<T>>((T &&) t);
+        }
+
+        /// \cond
+        namespace detail
+        {
+            template<typename F>
+            struct unwrap_args_fn
+              : private box<F, meta::size_t<0>>
+            {
+                using expects_wrapped_references = void;
+                unwrap_args_fn() = default;
+                explicit unwrap_args_fn(F f)
+                  : box<F, meta::size_t<0>>{std::move(f)}
+                {}
+                template<typename...Args>
+                auto operator()(Args &&...args) ->
+                    decltype(std::declval<F &>()(unwrap_reference(std::forward<Args>(args))...))
+                {
+                    return ranges::get<0>(*this)(unwrap_reference(std::forward<Args>(args))...);
+                }
+                template<typename...Args>
+                auto operator()(Args &&...args) const ->
+                    decltype(std::declval<F const &>()(unwrap_reference(std::forward<Args>(args))...))
+                {
+                    return ranges::get<0>(*this)(unwrap_reference(std::forward<Args>(args))...);
+                }
+            };
+
+            template<typename T, typename Enable = void>
+            struct expects_wrapped_references_
+              : std::false_type
+            {};
+
+            template<typename T>
+            struct expects_wrapped_references_<T, void_t<typename T::expects_wrapped_references>>
+              : std::true_type
+            {};
+        }
+        /// \endcond
+
+        template<typename T>
+        struct expects_wrapped_references
+          : detail::expects_wrapped_references_<uncvref_t<T>>
+        {};
+
+        struct make_unwrap_args_fn
+        {
+            template<typename F, CONCEPT_REQUIRES_(!expects_wrapped_references<F>::value)>
+            detail::unwrap_args_fn<F> operator()(F f) const
+            {
+                return detail::unwrap_args_fn<F>{std::move(f)};
+            }
+            template<typename F, CONCEPT_REQUIRES_(expects_wrapped_references<F>::value)>
+            F operator()(F f) const
+            {
+                return std::move(f);
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `make_unwrap_args_fn`
+        namespace
+        {
+            constexpr auto&& make_unwrap_args = static_const<make_unwrap_args_fn>::value;
+        }
+
+        template<typename F>
+        using unwrap_args_t = decltype(make_unwrap_args(std::declval<F>()));
 
         /// \cond
         namespace detail
@@ -423,6 +769,7 @@ namespace ranges
                 return base()(std::move(rng0), std::move(rng1), std::forward<Args>(args)...);
             }
         };
+
         /// @{
     }
 }

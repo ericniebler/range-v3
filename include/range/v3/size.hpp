@@ -54,8 +54,8 @@ namespace ranges
                 return size(t.get());
             }
 
-            template<typename T>
-            auto size(ranges::reference_wrapper<T> t) -> decltype(size(t.get()))
+            template<typename T, bool RValue>
+            auto size(ranges::reference_wrapper<T, RValue> t) -> decltype(size(t.get()))
             {
                 return size(t.get());
             }

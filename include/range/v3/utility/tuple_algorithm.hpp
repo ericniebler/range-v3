@@ -162,12 +162,11 @@ namespace ranges
         struct tuple_for_each_fn
         {
         private:
-            struct eat_args { eat_args(std::initializer_list<int>) {} };
             template<typename Tup, typename Fun, std::size_t...Is>
             static void impl(Tup && tup, Fun fun, index_sequence<Is...>)
             {
-                [](eat_args){}(
-                    {(static_cast<void>(fun(std::get<Is>(std::forward<Tup>(tup)))), 42)...});
+                (void)std::initializer_list<int>{
+                    ((void)fun(std::get<Is>(std::forward<Tup>(tup))), 42)...};
             }
         public:
             template<typename Tup, typename Fun>

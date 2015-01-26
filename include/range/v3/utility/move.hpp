@@ -62,19 +62,11 @@ namespace ranges
                 typename R = decltype(*std::declval<I>()),
                 typename U = meta::eval<std::remove_reference<R>>>
             meta::if_<std::is_reference<R>, U &&, detail::decay_t<U>>
-            indirect_move(I const &, meta::id_t<R> && ref)
+            indirect_move(I const &i)
                 noexcept(std::is_reference<R>::value ||
                     std::is_nothrow_constructible<detail::decay_t<U>, U &&>::value)
             {
-                return aux::move(ref);
-            }
-
-            template<typename I>
-            auto indirect_move(I const &i)
-                noexcept(noexcept(indirect_move(i, *i))) ->
-                decltype(indirect_move(i, *i))
-            {
-                return indirect_move(i, *i);
+                return aux::move(*i);
             }
 
             struct indirect_move_fn
@@ -85,13 +77,6 @@ namespace ranges
                     decltype(indirect_move(i))
                 {
                     return indirect_move(i);
-                }
-                template<typename I>
-                auto operator()(I const &i, decltype(*i) && ref) const
-                    noexcept(noexcept(indirect_move(i, (decltype(*i) &&) ref))) ->
-                    decltype(indirect_move(i, (decltype(*i) &&) ref))
-                {
-                    return indirect_move(i, (decltype(*i) &&) ref);
                 }
             };
         }

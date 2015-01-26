@@ -82,7 +82,8 @@ namespace ranges
                     {
                         // http://llvm.org/bugs/show_bug.cgi?id=21109
                         // it.mixin::get().advance_(n);
-                        it.counted_cursor::mixin::get().advance_(n);
+                        mixin &mix = it;
+                        mix.get().advance_(n);
                     }
                     // Overload uncounted and recounted for packing and unpacking
                     // counted iterators

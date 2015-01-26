@@ -426,7 +426,7 @@ namespace ranges
         template<typename Rng>
         struct range_pointer;
 
-        template<typename T>
+        template<typename T, bool RValue = false>
         struct reference_wrapper;
 
         // Views
@@ -663,20 +663,11 @@ namespace ranges
             struct values_fn;
         }
 
-        template<
-            typename Rngs,
-            typename Fun,
-            typename CopyFun = ident,
-            typename MoveFun = ident>
+        template<typename Fun, typename ...Rngs>
         struct zip_with_view;
 
-        template<typename Rngs>
-        using zip_view =
-            zip_with_view<
-                Rngs,
-                detail::make_tuple_like_fn,
-                detail::copy_tuple_like_fn,
-                detail::move_tuple_like_fn>;
+        template<typename ... Rngs>
+        using zip_view = zip_with_view<detail::make_tuple_like_fn, Rngs...>;
 
         namespace view
         {

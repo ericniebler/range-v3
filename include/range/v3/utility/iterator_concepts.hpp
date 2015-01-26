@@ -202,14 +202,7 @@ namespace ranges
                         // through the CommonReference concept.
                         concepts::model_of<CommonReference, reference_t<I> &&, value_t<I> &>(),
                         concepts::model_of<CommonReference, reference_t<I> &&, rvalue_reference_t<I> &&>(),
-                        concepts::model_of<CommonReference, rvalue_reference_t<I> &&, value_t<I> const &>(),
-                        // This ensures that there is a way to move from reference type
-                        // to the rvalue reference type via the 2-argument version of indirect_move:
-                        concepts::same_type(indirect_move(i), indirect_move(i, *i))
-                        // Axiom: indirect_move(i) and indirect_move(i, *i) are required to be
-                        // semantically equivalent. There is no requirement that indirect_move(i)
-                        // be implemented in terms of indirect_move(i, *i). indirect_move(i, *i)
-                        // should not read from i.
+                        concepts::model_of<CommonReference, rvalue_reference_t<I> &&, value_t<I> const &>()
                     ));
             };
 
@@ -488,7 +481,7 @@ namespace ranges
                 using pointer =
                     meta::eval<std::add_pointer<reference>>;
                 reference operator*() const;
-                friend auto indirect_move(projected_readable const &, reference &&) ->
+                friend auto indirect_move(projected_readable const &) ->
                     concepts::Invokable::result_t<Proj, concepts::Readable::rvalue_reference_t<I>>
                 {
                     RANGES_ASSERT(false);

@@ -18,7 +18,6 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>

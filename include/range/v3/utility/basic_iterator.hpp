@@ -227,9 +227,7 @@ namespace ranges
                     return *this;
                 }
                 // So that iter_move(r++) moves the cached value out
-                friend value_type && indirect_move(
-                    writable_postfix_increment_proxy const &,
-                    writable_postfix_increment_proxy const &ref)
+                friend value_type && indirect_move(writable_postfix_increment_proxy const &ref)
                 {
                     return std::move(ref.value_);
                 }
@@ -438,6 +436,7 @@ namespace ranges
         {
         private:
             friend range_access;
+            friend detail::mixin_base<Cur>;
             CONCEPT_ASSERT(detail::InputCursor<Cur>());
             using single_pass = range_access::single_pass_t<Cur>;
             using cursor_concept_t =

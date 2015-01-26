@@ -16,6 +16,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/map.hpp>
+#include <range/v3/view/move.hpp>
 #include <range/v3/view/bounded.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
@@ -75,13 +76,13 @@ int main()
         ::models_not<concepts::SizedRange>(rng);
         CONCEPT_ASSERT(Same<
             range_value_t<Rng>,
-            std::tuple<int, std::string, std::string>>());
+            common_tuple<int, std::string, std::string>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
             common_tuple<int &, std::string const &, std::string const &>>());
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
-            std::tuple<int &&, std::string const &&, std::string const &&>>());
+            common_tuple<int &&, std::string const &&, std::string const &&>>());
         CONCEPT_ASSERT(Convertible<range_value_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
         using I = range_iterator_t<Rng>;
@@ -170,7 +171,7 @@ int main()
         ::check_equal(v1, {"x","y","z"});
 
         std::vector<MoveOnlyString> res;
-        using RRef = std::pair<MoveOnlyString &&, MoveOnlyString &&>;
+        using RRef = common_pair<MoveOnlyString &&, MoveOnlyString &&>;
         CONCEPT_ASSERT(Same<RRef, range_rvalue_reference_t<decltype(rng)>>());
         auto proj = [](RRef &&p) -> MoveOnlyString&& { return std::move(p.first); };
         move(rng, ranges::back_inserter(res), proj);
@@ -187,16 +188,26 @@ int main()
         CONCEPT_ASSERT(Readable<I>());
         CONCEPT_ASSERT(Same<
             range_value_t<Rng>,
-            std::pair<MoveOnlyString, MoveOnlyString>>());
+            common_pair<MoveOnlyString, MoveOnlyString>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
             common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
-            std::pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
+            common_pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
         CONCEPT_ASSERT(Same<
             range_common_reference_t<Rng>,
             common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
+    }
+
+    {
+        std::vector<int> v{1,2,3,4};
+        auto moved = v | view::move;
+        using Moved = decltype(moved);
+        CONCEPT_ASSERT(Same<range_reference_t<Moved>, int &&>());
+        auto zipped = view::zip(moved);
+        using Zipped = decltype(zipped);
+        CONCEPT_ASSERT(Same<range_reference_t<Zipped>, common_tuple<int &&> >());
     }
 
     return test_result();

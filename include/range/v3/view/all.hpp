@@ -19,7 +19,6 @@
 #include <range/v3/range.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
-#include <range/v3/utility/pipeable.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>

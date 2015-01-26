@@ -84,14 +84,14 @@ namespace ranges
                 return end(ref.get());
             }
 
-            template<typename T>
-            auto begin(ranges::reference_wrapper<T> ref) -> decltype(begin(ref.get()))
+            template<typename T, bool RValue>
+            auto begin(ranges::reference_wrapper<T, RValue> ref) -> decltype(begin(ref.get()))
             {
                 return begin(ref.get());
             }
 
-            template<typename T>
-            auto end(ranges::reference_wrapper<T> ref) -> decltype(end(ref.get()))
+            template<typename T, bool RValue>
+            auto end(ranges::reference_wrapper<T, RValue> ref) -> decltype(end(ref.get()))
             {
                 return end(ref.get());
             }
@@ -108,14 +108,14 @@ namespace ranges
                 return rend(ref.get());
             }
 
-            template<typename T>
-            auto rbegin(ranges::reference_wrapper<T> ref) -> decltype(rbegin(ref.get()))
+            template<typename T, bool RValue>
+            auto rbegin(ranges::reference_wrapper<T, RValue> ref) -> decltype(rbegin(ref.get()))
             {
                 return rbegin(ref.get());
             }
 
-            template<typename T>
-            auto rend(ranges::reference_wrapper<T> ref) -> decltype(rend(ref.get()))
+            template<typename T, bool RValue>
+            auto rend(ranges::reference_wrapper<T, RValue> ref) -> decltype(rend(ref.get()))
             {
                 return rend(ref.get());
             }
