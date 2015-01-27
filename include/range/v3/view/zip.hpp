@@ -24,6 +24,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/invokable.hpp>
@@ -116,17 +117,34 @@ namespace ranges
                 using make_common_pair_fn::operator();
                 using make_common_tuple_fn::operator();
             };
+
+            template<typename T>
+            struct as_std_tuple_like
+            {};
+
+            template<typename ...Ts>
+            struct as_std_tuple_like<common_tuple<Ts...>>
+            {
+                using type = std::tuple<Ts...>;
+            };
+
+            template<typename First, typename Second>
+            struct as_std_tuple_like<common_pair<First, Second>>
+            {
+                using type = std::pair<First, Second>;
+            };
         } // namespace detail
         /// \endcond
 
         /// \addtogroup group-views
         /// @{
-        template<typename Fun,typename...Rngs>
+        template<typename Fun, typename...Rngs>
         struct zip_with_view
           : range_facade<zip_with_view<Fun, Rngs...>, meta::and_<is_infinite<Rngs>...>::value>
         {
         private:
             friend range_access;
+        friend zip_view<Rngs...>;
             semiregular_invokable_t<unwrap_args_t<Fun>> fun_;
             std::tuple<view::all_t<Rngs>...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
@@ -301,6 +319,45 @@ namespace ranges
                     (std::numeric_limits<size_type_>::max)(),
                     detail::min_);
             }
+        };
+
+        // The zip_view is an adapted zip_with_view using a function that makes common_tuples
+        // (or common_pairs). In addition, it changes the value type and the rvalue reference
+        // type to be std::tuple (or std::pair).
+        template<typename...Rngs>
+        struct zip_view
+          : range_adaptor<zip_view<Rngs...>, zip_with_view<detail::make_tuple_like_fn, Rngs...>>
+        {
+        private:
+            friend range_access;
+            using base_range_t = zip_with_view<detail::make_tuple_like_fn, Rngs...>;
+            struct adaptor : adaptor_base
+            {
+                using value_type =
+                    meta::eval<detail::as_std_tuple_like<range_value_t<base_range_t>>>;
+                using rvalue_reference_ =
+                    meta::eval<detail::as_std_tuple_like<range_rvalue_reference_t<base_range_t>>>;
+                // BUGBUG This isn't ideal. Should fix the problems with common_pair and
+                // common_tuple instead.
+                rvalue_reference_ indirect_move(range_iterator_t<base_range_t> const &it) const
+                    noexcept(noexcept(rvalue_reference_(ranges::indirect_move(it))))
+                {
+                    return ranges::indirect_move(it);
+                }
+            };
+            adaptor begin_adaptor() const
+            {
+                return {};
+            }
+            adaptor end_adaptor() const
+            {
+                return {};
+            }
+        public:
+            zip_view() = default;
+            zip_view(Rngs &&...rngs)
+              : range_adaptor_t<zip_view>{base_range_t{std::forward<Rngs>(rngs)...}}
+            {}
         };
 
         namespace view

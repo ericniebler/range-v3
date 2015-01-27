@@ -46,6 +46,16 @@ namespace ranges
             template<typename Derived>
             using adapted_sentinel_t =
                 decltype(std::declval<end_adaptor_t<Derived>>().end(std::declval<Derived &>()));
+
+            template<typename Adapt, typename Enable = void>
+            struct adaptor_value_type
+            {};
+
+            template<typename Adapt>
+            struct adaptor_value_type<Adapt, void_t<typename Adapt::value_type>>
+            {
+                using value_type = typename Adapt::value_type;
+            };
         }
         /// \endcond
 
@@ -82,6 +92,7 @@ namespace ranges
             }
             template<typename I, CONCEPT_REQUIRES_(WeakIterator<I>())>
             static iterator_reference_t<I> current(I const &it)
+                noexcept(noexcept(iterator_reference_t<I>(*it)))
             {
                 return *it;
             }
@@ -117,6 +128,7 @@ namespace ranges
         template<typename BaseIter, typename Adapt>
         struct adaptor_cursor
           : private compressed_pair<BaseIter, Adapt>
+          , detail::adaptor_value_type<Adapt>
         {
             using single_pass = meta::or_<
                 range_access::single_pass_t<Adapt>,
@@ -162,18 +174,25 @@ namespace ranges
                 {
                     return this->get().first;
                 }
-                // TODO:
-                //friend auto indirect_move(mixin const &m, iterator_reference_t<BaseIter> && ref)
-                //    noexcept(noexcept(ranges::indirect_move(m.get(), (iterator_reference_t<BaseIter> &&) ref))) ->
-                //    decltype(ranges::indirect_move(m.get(), (iterator_reference_t<BaseIter> &&) ref))
-                //{
-                //    return ranges::indirect_move(m.get(), (iterator_reference_t<BaseIter> &&) ref);
-                //}
+                template<typename Sent, typename M = mixin>
+                friend auto indirect_move(basic_iterator<adaptor_cursor, Sent> const &it)
+                    noexcept(noexcept(std::declval<M const &>().get().indirect_move(42))) ->
+                    decltype(std::declval<M const &>().get().indirect_move(42))
+                {
+                    mixin const &mix = it;
+                    return mix.get().indirect_move(42);
+                }
             };
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A>().current(first))>
             R current() const
+                noexcept(noexcept(R(std::declval<A>().current(first))))
             {
+                using V = range_access::cursor_value_t<adaptor_cursor>;
+                static_assert(
+                    CommonReference<R &&, V &>(),
+                    "In your adaptor, you've specified a value type that does not "
+                    "share a common reference type with the return type of current.");
                 return second.current(first);
             }
             template<typename A = Adapt,
@@ -205,6 +224,29 @@ namespace ranges
                 decltype(std::declval<C const &>().distance_to_(that, 42))
             {
                 return this->distance_to_(that, 42);
+            }
+            template<typename A = Adapt,
+                typename R = decltype(std::declval<A>().indirect_move(first))>
+            R indirect_move(int) const
+                noexcept(noexcept(std::declval<A>().indirect_move(first)))
+            {
+                return second.indirect_move(first);
+            }
+            template<typename A = Adapt,
+                typename R = decltype(std::declval<A>().current(first)),
+                typename X =
+                    meta::if_<std::is_reference<R>, meta::eval<std::remove_reference<R>> &&, R>>
+            X indirect_move(long) const
+                noexcept(noexcept(X(static_cast<X &&>(std::declval<R>()))))
+            {
+                using V = range_access::cursor_value_t<adaptor_cursor>;
+                static_assert(
+                    CommonReference<X &&, V const &>(),
+                    "In your adaptor, you've specified a value type that does not "
+                    "share a common reference type with the result of moving the value "
+                    "returned by current. Consider defining an indirect_move function "
+                    "in your adaptor.");
+                return static_cast<X &&>(second.current(first));
             }
         };
 

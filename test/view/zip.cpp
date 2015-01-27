@@ -76,13 +76,13 @@ int main()
         ::models_not<concepts::SizedRange>(rng);
         CONCEPT_ASSERT(Same<
             range_value_t<Rng>,
-            common_tuple<int, std::string, std::string>>());
+            std::tuple<int, std::string, std::string>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
             common_tuple<int &, std::string const &, std::string const &>>());
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
-            common_tuple<int &&, std::string const &&, std::string const &&>>());
+            std::tuple<int &&, std::string const &&, std::string const &&>>());
         CONCEPT_ASSERT(Convertible<range_value_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
         using I = range_iterator_t<Rng>;
@@ -171,7 +171,7 @@ int main()
         ::check_equal(v1, {"x","y","z"});
 
         std::vector<MoveOnlyString> res;
-        using RRef = common_pair<MoveOnlyString &&, MoveOnlyString &&>;
+        using RRef = std::pair<MoveOnlyString &&, MoveOnlyString &&>;
         CONCEPT_ASSERT(Same<RRef, range_rvalue_reference_t<decltype(rng)>>());
         auto proj = [](RRef &&p) -> MoveOnlyString&& { return std::move(p.first); };
         move(rng, ranges::back_inserter(res), proj);
@@ -188,13 +188,13 @@ int main()
         CONCEPT_ASSERT(Readable<I>());
         CONCEPT_ASSERT(Same<
             range_value_t<Rng>,
-            common_pair<MoveOnlyString, MoveOnlyString>>());
+            std::pair<MoveOnlyString, MoveOnlyString>>());
         CONCEPT_ASSERT(Same<
             range_reference_t<Rng>,
             common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
-            common_pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
+            std::pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
         CONCEPT_ASSERT(Same<
             range_common_reference_t<Rng>,
             common_pair<MoveOnlyString const &, MoveOnlyString const &>>());

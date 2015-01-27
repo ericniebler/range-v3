@@ -666,8 +666,8 @@ namespace ranges
         template<typename Fun, typename ...Rngs>
         struct zip_with_view;
 
-        template<typename ... Rngs>
-        using zip_view = zip_with_view<detail::make_tuple_like_fn, Rngs...>;
+        template<typename ...Rngs>
+        struct zip_view;
 
         namespace view
         {
