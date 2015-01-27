@@ -20,6 +20,7 @@
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
@@ -675,6 +676,36 @@ namespace ranges
                 return operator_brackets_dispatch_t::apply(*this + n);
             }
         };
+
+        /// Get a cursor from a basic_iterator
+        struct get_cursor_fn
+        {
+            template<typename Cur, typename Sent>
+            Cur &operator()(basic_iterator<Cur, Sent> &it) const
+            {
+                detail::mixin_base<Cur> &mix = it;
+                return mix.get();
+            }
+            template<typename Cur, typename Sent>
+            Cur const &operator()(basic_iterator<Cur, Sent> const &it) const
+            {
+                detail::mixin_base<Cur> const &mix = it;
+                return mix.get();
+            }
+            template<typename Cur, typename Sent>
+            Cur operator()(basic_iterator<Cur, Sent> &&it) const
+            {
+                detail::mixin_base<Cur> &mix = it;
+                return mix.get();
+            }
+        };
+
+        /// \sa `get_cursor_fn`
+        /// \ingroup group-utility
+        namespace
+        {
+            constexpr auto &&get_cursor = static_const<get_cursor_fn>::value;
+        }
         /// @}
     }
 }

@@ -153,6 +153,16 @@ namespace ranges
             struct sentinel;
             struct cursor
             {
+                using difference_type =
+                    common_type_t<range_difference_t<Rngs>...>;
+                using single_pass =
+                    meta::or_c<(bool) Derived<ranges::input_iterator_tag,
+                        range_category_t<Rngs>>()...>;
+                using value_type =
+                    detail::decay_t<
+                        concepts::Invokable::result_t<
+                            Fun,
+                            range_reference_t<Rngs>...>>;
             private:
                 friend struct sentinel;
                 semiregular_invokable_ref_t<unwrap_args_t<Fun>, true> fun_;
@@ -166,16 +176,12 @@ namespace ranges
                     concepts::Invokable::result_t<
                         unwrap_args_t<Fun>,
                         forward_ref_t<range_rvalue_reference_t<Rngs>>...>;
-            public:
-                using difference_type = common_type_t<range_difference_t<Rngs>...>;
-                using single_pass =
-                    meta::or_c<(bool) Derived<ranges::input_iterator_tag,
-                        range_category_t<Rngs>>()...>;
-                using value_type =
-                    detail::decay_t<
-                        concepts::Invokable::result_t<
-                            Fun,
-                            range_reference_t<Rngs>...>>;
+                template<std::size_t...Is>
+                reference_t_ current_(index_sequence<Is...>) const
+                {
+                    return fun_(ranges::forward_ref<range_reference_t<Rngs>>(
+                        *std::get<Is>(its_))...);
+                }
                 // This is what gives zip_view iterators their special iter_move behavior:
                 template<std::size_t...Is>
                 rvalue_reference_t_ indirect_move_(index_sequence<Is...>) const
@@ -183,32 +189,20 @@ namespace ranges
                     return fun_(ranges::forward_ref<range_rvalue_reference_t<Rngs>>(
                         indirect_move(std::get<Is>(its_)))...);
                 }
-                struct mixin : basic_mixin<cursor>
+                template<typename Sent>
+                friend rvalue_reference_t_ indirect_move(basic_iterator<cursor, Sent> const &it)
+                    noexcept(noexcept(
+                        std::declval<invokable_t<unwrap_args_t<Fun>> const &>()(
+                            std::declval<forward_ref_t<range_rvalue_reference_t<Rngs>>>()...)))
                 {
-                    mixin() = default;
-                    using basic_mixin<cursor>::basic_mixin;
-                    template<typename Sent>
-                    friend rvalue_reference_t_ indirect_move(basic_iterator<cursor, Sent> const &it)
-                        noexcept(noexcept(
-                            std::declval<invokable_t<unwrap_args_t<Fun>> const &>()(
-                                std::declval<forward_ref_t<range_rvalue_reference_t<Rngs>>>()...)))
-                    {
-                        // http://llvm.org/bugs/show_bug.cgi?id=21109
-                        //return it.mixin::get().indirect_move_(make_index_sequence<sizeof...(Rngs)>{});
-                        mixin const &mix = it;
-                        return mix.get().indirect_move_(make_index_sequence<sizeof...(Rngs)>{});
-                    }
-                };
+                    return get_cursor(it).indirect_move_(make_index_sequence<sizeof...(Rngs)>{});
+                }
+            public:
                 cursor() = default;
                 cursor(semiregular_invokable_ref_t<unwrap_args_t<Fun>, true> fun,
                     std::tuple<range_iterator_t<Rngs>...> its)
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
-                template<std::size_t...Is>
-                reference_t_ current_(index_sequence<Is...>) const
-                {
-                    return fun_(ranges::forward_ref<range_reference_t<Rngs>>(*std::get<Is>(its_))...);
-                }
                 reference_t_ current() const
                     noexcept(noexcept(
                         fun_(std::declval<forward_ref_t<range_reference_t<Rngs>>>()...)))

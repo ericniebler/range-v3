@@ -31,31 +31,6 @@ namespace ranges
             template<typename I, typename D /* = iterator_difference_t<I>*/>
             struct counted_cursor
             {
-            private:
-                friend struct counted_sentinel;
-                using iterator_concept_ =
-                    concepts::most_refined<meta::list<concepts::Iterator, concepts::WeakIterator>, I>;
-                I it_;
-                D n_;
-
-                bool equal_(counted_cursor const &that, concepts::WeakIterator*) const
-                {
-                    return n_ == that.n_;
-                }
-                bool equal_(counted_cursor const &that, concepts::Iterator*) const
-                {
-                    return it_ == that.it_;
-                }
-                // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
-                #ifdef __GNUC__
-             public:
-                #endif
-                void advance_(iterator_difference_t<I> n)
-                {
-                    n_ -= n;
-                    ranges::advance(it_, n);
-                }
-            public:
                 using single_pass = SinglePass<I>;
                 struct mixin
                   : basic_mixin<counted_cursor>
@@ -75,34 +50,49 @@ namespace ranges
                     {
                         return this->get().n_;
                     }
-                    // Overload the advance algorithm for counted_iterators.
-                    // This is much faster. This gets found by ADL because
-                    // counted_iterator inherits from counted_cursor::mixin.
-                    friend void advance(counted_iterator<I, D> &it, iterator_difference_t<I> n)
-                    {
-                        // http://llvm.org/bugs/show_bug.cgi?id=21109
-                        // it.mixin::get().advance_(n);
-                        mixin &mix = it;
-                        mix.get().advance_(n);
-                    }
-                    // Overload uncounted and recounted for packing and unpacking
-                    // counted iterators
-                    friend I uncounted(counted_iterator<I, D> i)
-                    {
-                        return i.base();
-                    }
-                    friend counted_iterator<I, D>
-                    recounted(counted_iterator<I, D> const &j, I i, iterator_difference_t<I> n)
-                    {
-                        RANGES_ASSERT(!ForwardIterator<I>() || ranges::next(j.base(), n) == i);
-                        return {i, j.count() - n};
-                    }
-                    CONCEPT_REQUIRES(RandomAccessIterator<I>())
-                    friend counted_iterator<I, D> recounted(counted_iterator<I, D> const &j, I i)
-                    {
-                        return {i, j.count() - (i - j.base())};
-                    }
                 };
+            private:
+                friend struct counted_sentinel;
+                using iterator_concept_ =
+                    concepts::most_refined<meta::list<concepts::Iterator, concepts::WeakIterator>, I>;
+                I it_;
+                D n_;
+
+                bool equal_(counted_cursor const &that, concepts::WeakIterator*) const
+                {
+                    return n_ == that.n_;
+                }
+                bool equal_(counted_cursor const &that, concepts::Iterator*) const
+                {
+                    return it_ == that.it_;
+                }
+                // Overload the advance algorithm for counted_iterators.
+                // This is much faster. This gets found by ADL because
+                // counted_cursor is an associated type of counted_iterator.
+                friend void advance(counted_iterator<I, D> &it, iterator_difference_t<I> n)
+                {
+                    counted_cursor &cur = get_cursor(it);
+                    cur.n_ -= n;
+                    ranges::advance(cur.it_, n);
+                }
+                // Overload uncounted and recounted for packing and unpacking
+                // counted iterators
+                friend I uncounted(counted_iterator<I, D> i)
+                {
+                    return i.base();
+                }
+                friend counted_iterator<I, D>
+                recounted(counted_iterator<I, D> const &j, I i, iterator_difference_t<I> n)
+                {
+                    RANGES_ASSERT(!ForwardIterator<I>() || ranges::next(j.base(), n) == i);
+                    return {i, j.count() - n};
+                }
+                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                friend counted_iterator<I, D> recounted(counted_iterator<I, D> const &j, I i)
+                {
+                    return {i, j.count() - (i - j.base())};
+                }
+            public:
                 counted_cursor() = default;
                 counted_cursor(I it, D n)
                   : it_(std::move(it)), n_(n)

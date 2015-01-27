@@ -134,6 +134,16 @@ namespace ranges
                 range_access::single_pass_t<Adapt>,
                 SinglePass<BaseIter>>;
             using compressed_pair<BaseIter, Adapt>::compressed_pair;
+            struct mixin : basic_mixin<adaptor_cursor>
+            {
+                using basic_mixin<adaptor_cursor>::basic_mixin;
+                // All iterators into adapted ranges have a base() member for fetching
+                // the underlying iterator.
+                BaseIter base() const
+                {
+                    return this->get().first;
+                }
+            };
         private:
             template<typename BaseSent, typename SentAdapt>
             friend struct adaptor_sentinel;
@@ -163,26 +173,41 @@ namespace ranges
             {
                 return second.distance_to(first, that.first);
             }
-        public:
-            struct mixin
-              : basic_mixin<adaptor_cursor>
+            // If the adaptor has an indirect_move function, use it.
+            template<typename A = Adapt,
+                typename R = decltype(std::declval<A>().indirect_move(first))>
+            R indirect_move_(int) const
+                noexcept(noexcept(std::declval<A>().indirect_move(first)))
             {
-                using basic_mixin<adaptor_cursor>::basic_mixin;
-                // All iterators into adapted ranges have a base() member for fetching
-                // the underlying iterator.
-                BaseIter base() const
-                {
-                    return this->get().first;
-                }
-                template<typename Sent, typename M = mixin>
-                friend auto indirect_move(basic_iterator<adaptor_cursor, Sent> const &it)
-                    noexcept(noexcept(std::declval<M const &>().get().indirect_move(42))) ->
-                    decltype(std::declval<M const &>().get().indirect_move(42))
-                {
-                    mixin const &mix = it;
-                    return mix.get().indirect_move(42);
-                }
-            };
+                return second.indirect_move(first);
+            }
+            // If the adaptor does not have an indirect_move function, use the current
+            // member function instead and apply std::move to it.
+            template<typename A = Adapt,
+                typename R = decltype(std::declval<A>().current(first)),
+                typename X =
+                    meta::if_<std::is_reference<R>, meta::eval<std::remove_reference<R>> &&, R>>
+            X indirect_move_(long) const
+                noexcept(noexcept(X(static_cast<X &&>(std::declval<R>()))))
+            {
+                using V = range_access::cursor_value_t<adaptor_cursor>;
+                static_assert(
+                    CommonReference<X &&, V const &>(),
+                    "In your adaptor, you've specified a value type that does not "
+                    "share a common reference type with the result of moving the value "
+                    "returned by current. Consider defining an indirect_move function "
+                    "in your adaptor.");
+                return static_cast<X &&>(second.current(first));
+            }
+            // Gives users a way to override the default indirect_move function in their adaptors.
+            template<typename Sent, typename M = mixin>
+            friend auto indirect_move(basic_iterator<adaptor_cursor, Sent> const &it)
+                noexcept(noexcept(std::declval<M const &>().get().indirect_move_(42))) ->
+                decltype(std::declval<M const &>().get().indirect_move_(42))
+            {
+                return get_cursor(it).indirect_move_(42);
+            }
+        public:
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A>().current(first))>
             R current() const
@@ -224,29 +249,6 @@ namespace ranges
                 decltype(std::declval<C const &>().distance_to_(that, 42))
             {
                 return this->distance_to_(that, 42);
-            }
-            template<typename A = Adapt,
-                typename R = decltype(std::declval<A>().indirect_move(first))>
-            R indirect_move(int) const
-                noexcept(noexcept(std::declval<A>().indirect_move(first)))
-            {
-                return second.indirect_move(first);
-            }
-            template<typename A = Adapt,
-                typename R = decltype(std::declval<A>().current(first)),
-                typename X =
-                    meta::if_<std::is_reference<R>, meta::eval<std::remove_reference<R>> &&, R>>
-            X indirect_move(long) const
-                noexcept(noexcept(X(static_cast<X &&>(std::declval<R>()))))
-            {
-                using V = range_access::cursor_value_t<adaptor_cursor>;
-                static_assert(
-                    CommonReference<X &&, V const &>(),
-                    "In your adaptor, you've specified a value type that does not "
-                    "share a common reference type with the result of moving the value "
-                    "returned by current. Consider defining an indirect_move function "
-                    "in your adaptor.");
-                return static_cast<X &&>(second.current(first));
             }
         };
 
