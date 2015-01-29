@@ -42,7 +42,7 @@ namespace ranges
             /// \pre The ResultType of `P` is EqualityComparable with V
             template<typename I, typename S, typename V, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
-                    IndirectInvokableRelation<equal_to, Project<I, P>, Project<V const *, ident>>())>
+                    IndirectInvokableRelation<equal_to, Project<I, P>, V const *>())>
             I operator()(I begin, S end, V const &val, P proj_ = P{}) const
             {
                 auto &&proj = invokable(proj_);

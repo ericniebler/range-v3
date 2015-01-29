@@ -35,28 +35,23 @@ namespace ranges
         {
             using aux::move_fn::operator();
 
-            template<typename I, typename S, typename O, typename P = ident,
+            template<typename I, typename S, typename O,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
-                    WeaklyIncrementable<O>() && IndirectlyMovable<I, O, P>())>
-            std::pair<I, O> operator()(I begin, S end, O out, P proj_ = P{}) const
+                    WeaklyIncrementable<O>() && IndirectlyMovable<I, O>())>
+            std::pair<I, O> operator()(I begin, S end, O out) const
             {
-                auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin, ++out)
-                {
-                    // BUGBUG should the projection be applied *before* the move?
-                    auto &&x = iter_move(begin);
-                    *out = proj((decltype(x) &&) x);
-                }
+                    *out = iter_move(begin);
                 return {begin, out};
             }
 
-            template<typename Rng, typename O, typename P = ident,
+            template<typename Rng, typename O,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng &>() && WeaklyIncrementable<O>() &&
-                    IndirectlyMovable<I, O, P>())>
-            std::pair<I, O> operator()(Rng &rng, O out, P proj = P{}) const
+                    IndirectlyMovable<I, O>())>
+            std::pair<I, O> operator()(Rng &rng, O out) const
             {
-                return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(out));
             }
         };
 

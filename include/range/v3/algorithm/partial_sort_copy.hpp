@@ -62,9 +62,10 @@ namespace ranges
                     auto len = r - out_begin;
                     for(; begin != end; ++begin)
                     {
-                        if(pred(in_proj(*begin), out_proj(*out_begin)))
+                        auto &&x = *begin;
+                        if(pred(in_proj(x), out_proj(*out_begin)))
                         {
-                            *out_begin = *begin;
+                            *out_begin = (decltype(x) &&) x;
                             detail::sift_down_n(out_begin, len, out_begin, std::ref(pred), std::ref(out_proj));
                         }
                     }

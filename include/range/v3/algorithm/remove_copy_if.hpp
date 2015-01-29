@@ -33,7 +33,7 @@ namespace ranges
             InputIterator<I>,
             WeaklyIncrementable<O>,
             IndirectInvokablePredicate<C, Project<I, P>>,
-            IndirectlyCopyable<I, O, P>>;
+            IndirectlyCopyable<I, O>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -48,10 +48,9 @@ namespace ranges
                 for(; begin != end; ++begin)
                 {
                     auto &&x = *begin;
-                    auto &&v = proj((decltype(x) &&) x);
-                    if(!(pred(v)))
+                    if(!(pred(proj(x))))
                     {
-                        *out = (decltype(v) &&) v;
+                        *out = (decltype(x) &&) x;
                         ++out;
                     }
                 }

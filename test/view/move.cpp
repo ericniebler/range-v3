@@ -29,11 +29,10 @@ int main()
     CONCEPT_ASSERT(Same<sized_range_concept_t<decltype(x)>, concepts::SizedRange>());
     ::models<concepts::BoundedRange>(x);
     ::models<concepts::SizedRange>(x);
-    ::models<concepts::InputIterator>(x.begin());
-    ::models_not<concepts::ForwardIterator>(x.begin());
+    ::models<concepts::RandomAccessIterator>(x.begin());
     using I = decltype(x.begin());
-    CONCEPT_ASSERT(Same<iterator_concept_t<I>, concepts::InputIterator>());
-    CONCEPT_ASSERT(Same<iterator_category_t<I>, ranges::input_iterator_tag>());
+    CONCEPT_ASSERT(Same<iterator_concept_t<I>, concepts::RandomAccessIterator>());
+    CONCEPT_ASSERT(Same<iterator_category_t<I>, ranges::random_access_iterator_tag>());
 
     CHECK(std::strcmp(x.begin()->c_str(), "'allo") == 0);
 

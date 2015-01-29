@@ -36,32 +36,31 @@ namespace ranges
         {
             using aux::copy_fn::operator();
 
-            template<typename I, typename S, typename O, typename P = ident,
+            template<typename I, typename S, typename O,
                 CONCEPT_REQUIRES_(
                     InputIterator<I>() && IteratorRange<I, S>() &&
                     WeaklyIncrementable<O>() &&
-                    IndirectlyCopyable<I, O, P>()
+                    IndirectlyCopyable<I, O>()
                 )>
             std::pair<I, O>
-            operator()(I begin, S end, O out, P proj_ = P{}) const
+            operator()(I begin, S end, O out) const
             {
-                auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin, ++out)
-                    *out = proj(*begin);
+                    *out = *begin;
                 return {begin, out};
             }
 
-            template<typename Rng, typename O, typename P = ident,
+            template<typename Rng, typename O,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
                     InputIterable<Rng &>() &&
                     WeaklyIncrementable<O>() &&
-                    IndirectlyCopyable<I, O, P>()
+                    IndirectlyCopyable<I, O>()
                 )>
             std::pair<I, O>
-            operator()(Rng &rng, O out, P proj = P{}) const
+            operator()(Rng &rng, O out) const
             {
-                return (*this)(begin(rng), end(rng), std::move(out), std::move(proj));
+                return (*this)(begin(rng), end(rng), std::move(out));
             }
         };
 

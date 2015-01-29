@@ -40,11 +40,12 @@ namespace ranges
             friend range_access;
             struct adaptor : adaptor_base
             {
-            private:
-                using adaptor_base::prev;
-            public:
-                using single_pass = std::true_type;
+                using value_type = range_value_t<Rng>;
                 range_rvalue_reference_t<Rng> current(range_iterator_t<Rng> it) const
+                {
+                    return iter_move(it);
+                }
+                range_rvalue_reference_t<Rng> indirect_move(range_iterator_t<Rng> it) const
                 {
                     return iter_move(it);
                 }

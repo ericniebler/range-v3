@@ -45,10 +45,13 @@ namespace ranges
             {
                 auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin, ++out)
-                    if(proj(*begin) == old_value)
+                {
+                    auto &&x = *begin;
+                    if(proj(x) == old_value)
                         *out = new_value;
                     else
-                        *out = *begin;
+                        *out = (decltype(x) &&) x;
+                }
                 return {begin, out};
             }
 

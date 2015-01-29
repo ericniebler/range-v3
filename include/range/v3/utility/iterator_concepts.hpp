@@ -244,6 +244,8 @@ namespace ranges
                     ));
             };
 
+            // BUGBUG shouldn't this also require that I's value type is Semiregular?
+            // See unique_copy for InputIterators.
             struct IndirectlyCopyable
               : refines<IndirectlyMovable>
             {

@@ -267,8 +267,8 @@ namespace ranges
             template<typename Ref, typename Val>
             using is_non_proxy_reference =
                 std::is_convertible<
-                    meta::eval<std::remove_reference<Ref>> const volatile*
-                  , Val const volatile*>;
+                    meta::eval<std::remove_reference<Ref>> const volatile *,
+                    Val const volatile *>;
 
             // A metafunction to choose the result type of postfix ++
             //
@@ -707,6 +707,19 @@ namespace ranges
             constexpr auto &&get_cursor = static_const<get_cursor_fn>::value;
         }
         /// @}
+
+        /// \cond
+        // This is so that writable postfix proxy objects satisfy Readability
+        template<typename T, typename I, typename Qual1, typename Qual2>
+        struct common_reference_base<T, detail::writable_postfix_increment_proxy<I>, Qual1, Qual2>
+          : common_reference_base<T, iterator_value_t<I>, Qual1, qual::lvalue_ref_t>
+        {};
+
+        template<typename I, typename T, typename Qual1, typename Qual2>
+        struct common_reference_base<detail::writable_postfix_increment_proxy<I>, T, Qual1, Qual2>
+          : common_reference_base<iterator_value_t<I>, T, qual::lvalue_ref_t, Qual2>
+        {};
+        /// \endcond
     }
 }
 

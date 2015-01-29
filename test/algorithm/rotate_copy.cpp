@@ -301,11 +301,5 @@ int main()
     test<const int*, random_access_iterator<int*> >();
     test<const int*, int*>();
 
-    // Test projection
-    S ia[4] = {{1},{2},{3},{4}};
-    int ib[4] = {};
-    ranges::rotate_copy(ia, ia + 2, ib, &S::i);
-    ::check_equal(ib, {3,4,1,2});
-
     return ::test_result();
 }

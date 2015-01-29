@@ -52,14 +52,15 @@ namespace ranges
                 auto && proj = invokable(proj_);
                 for(; begin != end; ++begin)
                 {
-                    if(pred(proj(*begin)))
+                    auto &&x = *begin;
+                    if(pred(proj(x)))
                     {
-                        *o0 = *begin;
+                        *o0 = (decltype(x) &&) x;
                         ++o0;
                     }
                     else
                     {
-                        *o1 = *begin;
+                        *o1 = (decltype(x) &&) x;
                         ++o1;
                     }
                 }

@@ -144,7 +144,6 @@ namespace ranges
         {
         private:
             friend range_access;
-        friend zip_view<Rngs...>;
             semiregular_invokable_t<unwrap_args_t<Fun>> fun_;
             std::tuple<view::all_t<Rngs>...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
@@ -192,8 +191,7 @@ namespace ranges
                 template<typename Sent>
                 friend rvalue_reference_t_ indirect_move(basic_iterator<cursor, Sent> const &it)
                     noexcept(noexcept(
-                        std::declval<invokable_t<unwrap_args_t<Fun>> const &>()(
-                            std::declval<forward_ref_t<range_rvalue_reference_t<Rngs>>>()...)))
+                        fun_(std::declval<forward_ref_t<range_rvalue_reference_t<Rngs>>>()...)))
                 {
                     return get_cursor(it).indirect_move_(make_index_sequence<sizeof...(Rngs)>{});
                 }
@@ -258,9 +256,7 @@ namespace ranges
                 std::tuple<range_sentinel_t<Rngs>...> ends_;
             public:
                 sentinel() = default;
-                sentinel(
-                    semiregular_invokable_ref_t<unwrap_args_t<Fun>, true> const &,
-                    std::tuple<range_sentinel_t<Rngs>...> ends)
+                sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
                   : ends_(std::move(ends))
                 {}
                 bool equal(cursor const &pos) const

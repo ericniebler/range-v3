@@ -19,13 +19,6 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/variant.hpp>
 
-#ifdef __GNUC__
-// Apparantly the code below confuses GCC's static analyzer and it
-// generates a bogus warning for valid code.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#endif
-
 namespace ranges
 {
     inline namespace v3
@@ -173,9 +166,5 @@ namespace ranges
         /// @}
     }
 }
-
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
 
 #endif

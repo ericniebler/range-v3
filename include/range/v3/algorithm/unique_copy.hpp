@@ -28,12 +28,12 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-concepts
-        template<typename I, typename O, typename C = equal_to, typename P = ident,
-            typename V = iterator_common_reference_t<I>>
+        template<typename I, typename O, typename C = equal_to, typename P = ident>
         using UniqueCopyable = meta::fast_and<
             InputIterator<I>,
             IndirectInvokableRelation<C, Project<I, P>>,
-            WeakOutputIterator<O, V>>; // BUGBUG V or X?
+            WeaklyIncrementable<O>,
+            IndirectlyCopyable<I, O>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -44,19 +44,21 @@ namespace ranges
             static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::InputIterator*, std::false_type)
             {
-                // TODO this will be very interesting once we support proxy iterators.
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
                 if(begin != end)
                 {
-                    iterator_value_t<I> value = *begin;
+                    // Must save a copy into a local because we will need this value
+                    // even after we advance the input iterator.
+                    iterator_value_t<I> value = *begin; // This is guaranteed by IndirectlyCopyable
                     *out = value;
                     ++out;
                     while(++begin != end)
                     {
-                        if(!pred(proj(value), proj(*begin)))
+                        auto &&x = *begin;
+                        if(!pred(proj(value), proj(x)))
                         {
-                            value = *begin;
+                            value = (decltype(x) &&) x;
                             *out = value;
                             ++out;
                         }
@@ -78,9 +80,10 @@ namespace ranges
                     ++out;
                     while(++begin != end)
                     {
-                        if(!pred(proj(*tmp), proj(*begin)))
+                        auto &&x = *begin;
+                        if(!pred(proj(*tmp), proj(x)))
                         {
-                            *out = *begin;
+                            *out = (decltype(x) &&) x;
                             ++out;
                             tmp = begin;
                         }
@@ -99,8 +102,11 @@ namespace ranges
                 {
                     *out = *begin;
                     while(++begin != end)
-                        if(!pred(proj(*out), proj(*begin)))
-                            *++out = *begin;
+                    {
+                        auto &&x = *begin;
+                        if(!pred(proj(*out), proj(x)))
+                            *++out = (decltype(x) &&) x;
+                    }
                     ++out;
                 }
                 return {begin, out};

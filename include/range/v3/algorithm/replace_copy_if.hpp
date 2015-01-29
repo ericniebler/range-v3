@@ -46,10 +46,13 @@ namespace ranges
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin, ++out)
-                    if(pred(proj(*begin)))
+                {
+                    auto &&x = *begin;
+                    if(pred(proj(x)))
                         *out = new_value;
                     else
-                        *out = *begin;
+                        *out = (decltype(x) &&) x;
+                }
                 return {begin, out};
             }
 

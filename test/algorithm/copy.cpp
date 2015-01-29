@@ -42,24 +42,6 @@ int main()
 
     std::fill_n(out, size(out), std::make_pair(0, 0));
 
-    int out2[size(a)] = {};
-    int const expected[] = {0, 0, 1, 1, 3, 3};
-
-    auto res2 = ranges::copy(begin(a), end(a), out2, &std::pair<int,int>::first);
-    CHECK(res2.first == end(a));
-    CHECK(res2.second == out2 + size(out2));
-    CHECK(std::equal(begin(expected), end(expected), out2));
-
-    std::fill_n(out2, size(out2), 0);
-    CHECK(!std::equal(begin(expected), end(expected), out2));
-
-    res2 = ranges::copy(a, out2, &std::pair<int, int>::first);
-    CHECK(res2.first == a + size(a));
-    CHECK(res2.second == out2 + size(out2));
-    CHECK(std::equal(begin(expected), end(expected), out2));
-
-    std::fill_n(out2, size(out2), 0);
-
     using ranges::view::delimit;
     char const *sz = "hello world";
     char buf[50];

@@ -36,7 +36,7 @@ namespace ranges
             template<typename I, typename S, typename O, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     WeaklyIncrementable<O>() && IndirectInvokablePredicate<F, Project<I, P> >() &&
-                    IndirectlyCopyable<I, O, P>())>
+                    IndirectlyCopyable<I, O>())>
             std::pair<I, O>
             operator()(I begin, S end, O out, F pred_, P proj_ = P{}) const
             {
@@ -44,9 +44,10 @@ namespace ranges
                 auto &&proj = invokable(proj_);
                 for(; begin != end; ++begin)
                 {
-                    if(pred(proj(*begin)))
+                    auto &&x = *begin;
+                    if(pred(proj(x)))
                     {
-                        *out = proj(*begin);
+                        *out = (decltype(x) &&) x;
                         ++out;
                     }
                 }
@@ -56,7 +57,7 @@ namespace ranges
             template<typename Rng, typename O, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng &>() && WeaklyIncrementable<O>() &&
-                    IndirectInvokablePredicate<F, Project<I, P> >() && IndirectlyCopyable<I, O, P>())>
+                    IndirectInvokablePredicate<F, Project<I, P> >() && IndirectlyCopyable<I, O>())>
             std::pair<I, O>
             operator()(Rng &rng, O out, F pred, P proj = P{}) const
             {

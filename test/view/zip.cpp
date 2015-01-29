@@ -18,6 +18,7 @@
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/bounded.hpp>
+#include <range/v3/view/transform.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/sort.hpp>
@@ -58,6 +59,9 @@ struct MoveOnlyString
         return sout << '"' << str.sz_ << '"';
     }
 };
+
+template<typename T>
+struct undef_t;
 
 int main()
 {
@@ -171,10 +175,9 @@ int main()
         ::check_equal(v1, {"x","y","z"});
 
         std::vector<MoveOnlyString> res;
-        using RRef = std::pair<MoveOnlyString &&, MoveOnlyString &&>;
-        CONCEPT_ASSERT(Same<RRef, range_rvalue_reference_t<decltype(rng)>>());
-        auto proj = [](RRef &&p) -> MoveOnlyString&& { return std::move(p.first); };
-        move(rng, ranges::back_inserter(res), proj);
+        auto proj = [](range_reference_t<decltype(rng)> p) -> MoveOnlyString & {return p.first;};
+        auto rng2 = rng | view::transform(proj);
+        move(rng2, ranges::back_inserter(res));
         ::check_equal(res, {"a","b","c"});
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});

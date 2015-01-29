@@ -140,16 +140,16 @@ int main()
     {
         S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
         constexpr unsigned sa = ranges::size(ia);
-        int ib[sa];
-        std::pair<S*, int*> r = ranges::remove_copy_if(ia, ib, [](int i){return i == 2;}, &S::i);
+        S ib[sa];
+        std::pair<S*, S*> r = ranges::remove_copy_if(ia, ib, [](int i){return i == 2;}, &S::i);
         CHECK(r.first == ia + sa);
         CHECK(r.second == ib + sa-3);
-        CHECK(ib[0] == 0);
-        CHECK(ib[1] == 1);
-        CHECK(ib[2] == 3);
-        CHECK(ib[3] == 4);
-        CHECK(ib[4] == 3);
-        CHECK(ib[5] == 4);
+        CHECK(ib[0].i == 0);
+        CHECK(ib[1].i == 1);
+        CHECK(ib[2].i == 3);
+        CHECK(ib[3].i == 4);
+        CHECK(ib[4].i == 3);
+        CHECK(ib[5].i == 4);
     }
 
     return ::test_result();

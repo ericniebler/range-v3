@@ -33,7 +33,7 @@ namespace ranges
             InputIterator<I>,
             WeaklyIncrementable<O>,
             IndirectInvokableRelation<equal_to, Project<I, P>, T const *>,
-            IndirectlyCopyable<I, O, P>>;
+            IndirectlyCopyable<I, O>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -47,10 +47,9 @@ namespace ranges
                 for(; begin != end; ++begin)
                 {
                     auto &&x = *begin;
-                    auto &&v = proj((decltype(x) &&) x);
-                    if(!(v == val))
+                    if(!(proj(x) == val))
                     {
-                        *out = (decltype(v) &&) v;
+                        *out = (decltype(x) &&) x;
                         ++out;
                     }
                 }
