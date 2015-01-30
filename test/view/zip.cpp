@@ -17,6 +17,7 @@
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
+#include <range/v3/view/stride.hpp>
 #include <range/v3/view/bounded.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/algorithm/copy.hpp>
@@ -211,6 +212,16 @@ int main()
         auto zipped = view::zip(moved);
         using Zipped = decltype(zipped);
         CONCEPT_ASSERT(Same<range_reference_t<Zipped>, common_tuple<int &&> >());
+    }
+
+    // This is actually a test of the logic of range_adaptor. Since the stride view
+    // does not redefine the current member function, the base range's indirect_move
+    // function gets picked up automatically.
+    {
+        auto rng0 = view::zip(vi, vs);
+        auto rng1 = view::stride(rng0, 2);
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng1)>, range_rvalue_reference_t<decltype(rng0)>>());
+        CONCEPT_ASSERT(Same<range_value_t<decltype(rng1)>, range_value_t<decltype(rng0)>>());
     }
 
     return test_result();
