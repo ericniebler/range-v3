@@ -9,12 +9,16 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <string>
+#include <vector>
 #include <iterator>
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/zip.hpp>
+#include <range/v3/algorithm/move.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -43,6 +47,8 @@ int main()
     auto && rng2 = rgp | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rgi));
     has_type<int &>(*begin(rng2));
+    CONCEPT_ASSERT(Same<range_value_t<decltype(rng2)>, int>());
+    CONCEPT_ASSERT(Same<decltype(iter_move(begin(rng2))), int &&>());
     models<concepts::BoundedRange>(rng2);
     models<concepts::SizedRange>(rng2);
     models<concepts::RandomAccessRange>(rng2);
@@ -83,6 +89,35 @@ int main()
     CHECK(cnt == 100);
     CONCEPT_ASSERT(Range<decltype(mutable_rng)>());
     CONCEPT_ASSERT(!Range<decltype(mutable_rng) const>());
+
+    // Test iter_transform by transforming a zip view to select one element.
+    {
+        auto v0 = to_<std::vector<std::string>>({"a","b","c"});
+        auto v1 = to_<std::vector<std::string>>({"x","y","z"});
+
+        auto rng = view::zip(v0, v1);
+        ::models<concepts::RandomAccessIterable>(rng);
+
+        std::vector<std::string> res;
+        using R = decltype(rng);
+        using I = range_iterator_t<R>;
+        // Needlessly verbose -- a simple transform would do the same, but this
+        // is an interesting test.
+        auto proj = overload(
+            +[](I i) -> std::string& {return i->first;},
+            +[](copy_tag, I i) -> std::string {return {};},
+            +[](move_tag, I i) -> std::string&& {return std::move(i->first);}
+        );
+        auto rng2 = rng | view::iter_transform(proj);
+        move(rng2, ranges::back_inserter(res));
+        ::check_equal(res, {"a","b","c"});
+        ::check_equal(v0, {"","",""});
+        ::check_equal(v1, {"x","y","z"});
+        using R2 = decltype(rng2);
+        CONCEPT_ASSERT(Same<range_value_t<R2>, std::string>());
+        CONCEPT_ASSERT(Same<range_reference_t<R2>, std::string &>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, std::string &&>());
+    }
 
     return test_result();
 }

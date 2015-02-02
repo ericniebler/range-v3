@@ -363,7 +363,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\functional.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\infinity.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\is_infinity.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_concepts.hpp" />
@@ -424,6 +423,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\zip_with.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\set_difference.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\set_intersection.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\set_symmetric_difference.hpp" />

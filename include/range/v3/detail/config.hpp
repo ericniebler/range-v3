@@ -21,9 +21,15 @@
 # define RANGES_ASSERT assert
 #endif
 
-#define RANGES_DECLTYPE_AUTO_RETURN(...)    \
-    -> decltype(__VA_ARGS__)                \
-    { return (__VA_ARGS__); }               \
+#define RANGES_DECLTYPE_AUTO_RETURN(...)                        \
+    -> decltype(__VA_ARGS__)                                    \
+    { return (__VA_ARGS__); }                                   \
+    /**/
+
+#define RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(...)               \
+    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->   \
+    decltype(__VA_ARGS__)                                       \
+    { return (__VA_ARGS__); }                                   \
     /**/
 
 // Non-portable forward declarations of standard containers

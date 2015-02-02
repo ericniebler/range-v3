@@ -28,7 +28,7 @@ namespace ranges
         namespace aux
         {
             /// \ingroup group-utility
-            struct move_fn
+            struct move_fn : move_tag
             {
                 template<typename T,
                     typename U = meta::eval<std::remove_reference<T>>>
@@ -52,6 +52,15 @@ namespace ranges
             {
                 return move(t);
             }
+
+            /// \ingroup group-utility
+            /// \sa `move_fn`
+            template<typename R>
+            using move_t =
+                meta::if_<
+                    std::is_reference<R>,
+                    meta::eval<std::remove_reference<R>> &&,
+                    detail::decay_t<meta::eval<std::remove_reference<R>>>>;
         }
 
         /// \cond
@@ -61,8 +70,7 @@ namespace ranges
             template<typename I,
                 typename R = decltype(*std::declval<I>()),
                 typename U = meta::eval<std::remove_reference<R>>>
-            meta::if_<std::is_reference<R>, U &&, detail::decay_t<U>>
-            indirect_move(I const &i)
+            aux::move_t<R> indirect_move(I const &i)
                 noexcept(std::is_reference<R>::value ||
                     std::is_nothrow_constructible<detail::decay_t<U>, U &&>::value)
             {

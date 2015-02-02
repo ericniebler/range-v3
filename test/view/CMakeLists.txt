@@ -106,3 +106,7 @@ add_test(test.view.unique, view.unique)
 
 add_executable(view.zip zip.cpp)
 add_test(test.view.zip, view.zip)
+
+# set_target_properties(
+#     view.zip
+#     PROPERTIES COMPILE_FLAGS "-std=c++1y")

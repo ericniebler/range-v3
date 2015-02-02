@@ -57,6 +57,7 @@
 #include <range/v3/view/tokenize.hpp>
 #include <range/v3/view/unbounded.hpp>
 #include <range/v3/view/unique.hpp>
+#include <range/v3/view/zip_with.hpp>
 #include <range/v3/view/zip.hpp>
 
 #include <range/v3/detail/re_enable_warnings.hpp>

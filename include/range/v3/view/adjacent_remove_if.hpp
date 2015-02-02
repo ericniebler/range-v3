@@ -19,8 +19,8 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/view/view.hpp>
@@ -37,7 +37,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_invokable_t<F> pred_;
+            semiregular_t<invokable_t<F>> pred_;
 
             struct adaptor : adaptor_base
             {

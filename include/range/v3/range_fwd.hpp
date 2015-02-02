@@ -129,6 +129,12 @@ namespace ranges
         template<typename Derived>
         struct pipeable;
 
+        template<typename First, typename Second>
+        struct composed;
+
+        template<typename ...Fns>
+        struct overloaded;
+
         namespace action
         {
             template<typename Action>
@@ -304,10 +310,6 @@ namespace ranges
 
             template<typename T>
             using remove_rvalue_reference_t = typename remove_rvalue_reference<T>::type;
-
-            struct make_tuple_like_fn;
-            struct copy_tuple_like_fn;
-            struct move_tuple_like_fn;
         }
         /// \endcond
 
@@ -316,6 +318,11 @@ namespace ranges
             template<typename Concept, typename...Ts>
             struct models;
         }
+
+        struct begin_tag {};
+        struct end_tag {};
+        struct copy_tag {};
+        struct move_tag {};
 
         template<typename T>
         struct pointer_type;
@@ -326,9 +333,6 @@ namespace ranges
         template<typename T>
         using uncvref_t =
             typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-
-        struct begin_tag {};
-        struct end_tag {};
 
         struct equal_to;
         struct less;
@@ -428,6 +432,9 @@ namespace ranges
 
         template<typename T, bool RValue = false>
         struct reference_wrapper;
+
+        template<typename T>
+        using rvalue_reference_wrapper = reference_wrapper<T, true>;
 
         // Views
         //
@@ -627,6 +634,9 @@ namespace ranges
         }
 
         template<typename Rng, typename Fun>
+        struct iter_transform_view;
+
+        template<typename Rng, typename Fun>
         struct transform_view;
 
         namespace view
@@ -663,6 +673,9 @@ namespace ranges
             struct values_fn;
         }
 
+        template<typename Fun, typename...Rngs>
+        struct iter_zip_with_view;
+
         template<typename Fun, typename ...Rngs>
         struct zip_with_view;
 
@@ -671,9 +684,11 @@ namespace ranges
 
         namespace view
         {
-            struct zip_fn;
+            struct iter_zip_with_fn;
 
             struct zip_with_fn;
+
+            struct zip_fn;
         }
     }
 }

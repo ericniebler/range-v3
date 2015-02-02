@@ -21,8 +21,8 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_interface.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/find_if_not.hpp>
 #include <range/v3/view/all.hpp>
@@ -43,7 +43,7 @@ namespace ranges
             using base_range_t = view::all_t<Rng>;
             using difference_type_ = range_difference_t<Rng>;
             base_range_t rng_;
-            semiregular_invokable_t<Pred> pred_;
+            semiregular_t<invokable_t<Pred>> pred_;
             optional<range_iterator_t<Rng>> begin_;
 
             range_iterator_t<Rng> get_begin_()

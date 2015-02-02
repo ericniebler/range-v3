@@ -14,10 +14,8 @@
 #ifndef RANGES_V3_UTILITY_COPY_HPP
 #define RANGES_V3_UTILITY_COPY_HPP
 
-#include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -28,12 +26,11 @@ namespace ranges
         /// @{
         namespace aux
         {
-            struct copy_fn : pipeable<copy_fn>
+            struct copy_fn : copy_tag
             {
                 template<typename T,
-                    typename U = uncvref_t<T>,
-                    CONCEPT_REQUIRES_(Constructible<U, T &&>())>
-                U operator()(T && t) const
+                    CONCEPT_REQUIRES_(Constructible<detail::decay_t<T>, T &&>())>
+                detail::decay_t<T> operator()(T && t) const
                 {
                     return static_cast<T &&>(t);
                 }
@@ -44,6 +41,15 @@ namespace ranges
             namespace
             {
                 constexpr auto&& copy = static_const<copy_fn>::value;
+            }
+
+            /// \ingroup group-utility
+            /// \sa `copy_fn`
+            template<typename T,
+                CONCEPT_REQUIRES_(Constructible<detail::decay_t<T>, T &&>())>
+            detail::decay_t<T> operator|(T && t, copy_fn)
+            {
+                return static_cast<T &&>(t);
             }
         }
         /// @}

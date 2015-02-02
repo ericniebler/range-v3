@@ -32,9 +32,7 @@ namespace ranges
         struct mutable_
         {
             mutable T value;
-            constexpr mutable_()
-              : value{}
-            {}
+            constexpr mutable_() = default;
             constexpr explicit mutable_(T const &t)
               : value(t)
             {}
@@ -123,9 +121,7 @@ namespace ranges
         {
             Element value;
 
-            box()
-              : value{}
-            {}
+            box() = default;
 
             template<typename E,
                      typename std::enable_if<

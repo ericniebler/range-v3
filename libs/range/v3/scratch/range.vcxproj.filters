@@ -724,9 +724,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\invokable.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp">
       <Filter>Header Files\utility</Filter>
     </ClInclude>
@@ -1154,6 +1151,9 @@
       <Filter>Header Files\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\c_str.hpp">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\zip_with.hpp">
       <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>

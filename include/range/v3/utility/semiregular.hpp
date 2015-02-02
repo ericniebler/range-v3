@@ -68,7 +68,18 @@ namespace ranges
         };
 
         template<typename T>
-        using semiregular_t = meta::if_<SemiRegular<T>, T, semiregular<T>>;
+        using semiregular_t =
+            meta::if_<
+                SemiRegular<T>,
+                T,
+                semiregular<T>>;
+
+        template<typename T, bool IsConst = false>
+        using semiregular_ref_or_val_t =
+            meta::if_<
+                SemiRegular<T>,
+                T,
+                reference_wrapper<meta::apply<meta::add_const_if_c<IsConst>, semiregular<T>>>>;
         /// @}
     }
 }

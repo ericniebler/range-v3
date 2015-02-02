@@ -21,7 +21,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/iterator.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
 #include <range/v3/algorithm/aux_/upper_bound_n.hpp>

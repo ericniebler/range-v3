@@ -21,9 +21,8 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/iterator_concepts.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
@@ -40,17 +39,17 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_invokable_t<Pred> pred_;
+            semiregular_t<invokable_t<Pred>> pred_;
 
             template<bool IsConst>
             struct sentinel_adaptor
               : adaptor_base
             {
             private:
-                semiregular_invokable_ref_t<Pred, IsConst> pred_;
+                semiregular_ref_or_val_t<invokable_t<Pred>, IsConst> pred_;
             public:
                 sentinel_adaptor() = default;
-                sentinel_adaptor(semiregular_invokable_ref_t<Pred, IsConst> pred)
+                sentinel_adaptor(semiregular_ref_or_val_t<invokable_t<Pred>, IsConst> pred)
                   : pred_(std::move(pred))
                 {}
                 bool empty(range_iterator_t<Rng> it, range_sentinel_t<Rng> end) const

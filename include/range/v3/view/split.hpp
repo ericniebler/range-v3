@@ -22,7 +22,8 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
-#include <range/v3/utility/invokable.hpp>
+#include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/view/view.hpp>
@@ -43,7 +44,7 @@ namespace ranges
         private:
             friend range_access;
             view::all_t<Rng> rng_;
-            semiregular_invokable_t<Fun> fun_;
+            semiregular_t<invokable_t<Fun>> fun_;
 
             template<bool IsConst>
             struct cursor
@@ -53,14 +54,14 @@ namespace ranges
                 bool zero_;
                 range_iterator_t<Rng> cur_;
                 range_sentinel_t<Rng> last_;
-                semiregular_invokable_ref_t<Fun, IsConst> fun_;
+                semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun_;
 
                 struct search_pred
                 {
                     bool zero_;
                     range_iterator_t<Rng> first_;
                     range_sentinel_t<Rng> last_;
-                    semiregular_invokable_ref_t<Fun, IsConst> fun_;
+                    semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun_;
                     bool operator()(range_iterator_t<Rng> cur) const
                     {
                         return (zero_ && cur == first_) || (cur != last_ && !fun_(cur, last_).first);
@@ -101,7 +102,7 @@ namespace ranges
                 {
                     return cur_ == that.cur_;
                 }
-                cursor(semiregular_invokable_ref_t<Fun, IsConst> fun, range_iterator_t<Rng> first,
+                cursor(semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun, range_iterator_t<Rng> first,
                     range_sentinel_t<Rng> last)
                   : cur_(first), last_(last), fun_(fun)
                 {

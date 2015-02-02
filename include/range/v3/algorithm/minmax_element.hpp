@@ -24,7 +24,6 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

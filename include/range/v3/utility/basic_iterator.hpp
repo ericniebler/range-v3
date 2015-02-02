@@ -681,19 +681,20 @@ namespace ranges
         struct get_cursor_fn
         {
             template<typename Cur, typename Sent>
-            Cur &operator()(basic_iterator<Cur, Sent> &it) const
+            Cur &operator()(basic_iterator<Cur, Sent> &it) const noexcept
             {
                 detail::mixin_base<Cur> &mix = it;
                 return mix.get();
             }
             template<typename Cur, typename Sent>
-            Cur const &operator()(basic_iterator<Cur, Sent> const &it) const
+            Cur const &operator()(basic_iterator<Cur, Sent> const &it) const noexcept
             {
                 detail::mixin_base<Cur> const &mix = it;
                 return mix.get();
             }
             template<typename Cur, typename Sent>
             Cur operator()(basic_iterator<Cur, Sent> &&it) const
+                noexcept(std::is_nothrow_copy_constructible<Cur>::value)
             {
                 detail::mixin_base<Cur> &mix = it;
                 return mix.get();

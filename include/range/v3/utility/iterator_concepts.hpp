@@ -20,7 +20,6 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/functional.hpp>
 
 namespace ranges

@@ -26,9 +26,9 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -44,7 +44,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_invokable_t<Fun> fun_;
+            semiregular_t<invokable_t<Fun>> fun_;
             using single_pass = SinglePass<range_iterator_t<Rng>>;
             using use_sentinel_t = meta::or_<meta::not_<BoundedIterable<Rng>>, single_pass>;
 

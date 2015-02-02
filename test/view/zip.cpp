@@ -15,6 +15,7 @@
 #include <sstream>
 #include <range/v3/core.hpp>
 #include <range/v3/view/zip.hpp>
+#include <range/v3/view/zip_with.hpp>
 #include <range/v3/view/map.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/stride.hpp>
@@ -90,8 +91,6 @@ int main()
             std::tuple<int &&, std::string const &&, std::string const &&>>());
         CONCEPT_ASSERT(Convertible<range_value_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
-        using I = range_iterator_t<Rng>;
-        static_assert(noexcept(iter_move(std::declval<I>())), "");
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected(begin(rng), end(rng));
@@ -176,12 +175,18 @@ int main()
         ::check_equal(v1, {"x","y","z"});
 
         std::vector<MoveOnlyString> res;
-        auto proj = [](range_reference_t<decltype(rng)> p) -> MoveOnlyString & {return p.first;};
+        using R = decltype(rng);
+        auto proj =
+            [](range_reference_t<R> p) -> MoveOnlyString& {return p.first;};
         auto rng2 = rng | view::transform(proj);
         move(rng2, ranges::back_inserter(res));
         ::check_equal(res, {"a","b","c"});
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});
+        using R2 = decltype(rng2);
+        CONCEPT_ASSERT(Same<range_value_t<R2>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_reference_t<R2>, MoveOnlyString &>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>());
     }
 
     {

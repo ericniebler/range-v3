@@ -24,7 +24,6 @@
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/invokable.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>

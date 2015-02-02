@@ -22,6 +22,7 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
+//#include <range/v3/utility/semiregular.hpp> // BUGBUG
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -144,6 +145,54 @@ namespace ranges
           : coerce<T>
         {};
 
+        /// \addtogroup group-utility
+        struct make_invokable_fn
+        {
+        private:
+            template<typename R, typename...Args>
+            struct ptr_fn_
+            {
+            private:
+                R (*pfn_)(Args...);
+            public:
+                ptr_fn_() = default;
+                explicit ptr_fn_(R (*pfn)(Args...))
+                  : pfn_(pfn)
+                {}
+                R operator()(Args...args) const
+                {
+                    return (*pfn_)(std::forward<Args>(args)...);
+                }
+            };
+        public:
+            template<typename R, typename ...Args>
+            ptr_fn_<R, Args...> operator()(R (*p)(Args...)) const
+            {
+                return ptr_fn_<R, Args...>(p);
+            }
+            template<typename R, typename T>
+            auto operator()(R T::* p) const -> decltype(std::mem_fn(p))
+            {
+                return std::mem_fn(p);
+            }
+            template<typename T, typename U = detail::decay_t<T>>
+            auto operator()(T && t) const ->
+                enable_if_t<!std::is_pointer<U>::value && !std::is_member_pointer<U>::value, T>
+            {
+                return std::forward<T>(t);
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `make_invokable_fn`
+        namespace
+        {
+            constexpr auto&& invokable = static_const<make_invokable_fn>::value;
+        }
+
+        template<typename T>
+        using invokable_t = decltype(invokable(std::declval<T>()));
+
         template<typename Pred>
         struct logical_negate
         {
@@ -237,6 +286,51 @@ namespace ranges
         namespace
         {
             constexpr auto&& compose = static_const<compose_fn>::value;
+        }
+
+        template<>
+        struct overloaded<>
+        {};
+
+        template<typename Fn>
+        struct overloaded<Fn>
+          : private invokable_t<Fn>
+        {
+            overloaded() = default;
+            constexpr overloaded(Fn fn)
+              : invokable_t<Fn>(invokable(std::move(fn)))
+            {}
+            using invokable_t<Fn>::operator();
+        };
+
+        template<typename First, typename...Rest>
+        struct overloaded<First, Rest...>
+          : private overloaded<First>
+          , private overloaded<Rest...>
+        {
+            overloaded() = default;
+            constexpr overloaded(First first, Rest... rest)
+              : overloaded<First>{detail::move(first)}
+              , overloaded<Rest...>{detail::move(rest)...}
+            {}
+            using overloaded<First>::operator();
+            using overloaded<Rest...>::operator();
+        };
+
+        struct overload_fn
+        {
+            template<typename ...Fns>
+            constexpr overloaded<Fns...> operator()(Fns... fns) const
+            {
+                return overloaded<Fns...>{detail::move(fns)...};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `overload_fn`
+        namespace
+        {
+            constexpr auto&& overload = static_const<overload_fn>::value;
         }
 
         /// \cond
@@ -387,7 +481,10 @@ namespace ranges
 
         template<typename T>
         struct is_reference_wrapper
-          : std::false_type
+          : meta::if_<
+                std::is_same<uncvref_t<T>, T>,
+                std::false_type,
+                is_reference_wrapper<uncvref_t<T>>>
         {};
 
         template<typename T, bool RValue>
@@ -398,16 +495,6 @@ namespace ranges
         template<typename T>
         struct is_reference_wrapper<std::reference_wrapper<T>>
           : std::true_type
-        {};
-
-        template<typename T>
-        struct is_reference_wrapper<T &>
-          : is_reference_wrapper<T>
-        {};
-
-        template<typename T>
-        struct is_reference_wrapper<T const>
-          : is_reference_wrapper<T>
         {};
 
         template<typename T>
@@ -769,8 +856,74 @@ namespace ranges
                 return base()(std::move(rng0), std::move(rng1), std::forward<Args>(args)...);
             }
         };
+        /// @}
 
+        /// \addtogroup group-concepts
         /// @{
+        namespace concepts
+        {
+            struct Invokable
+            {
+                template<typename Fun, typename...Args>
+                using result_t = Function::result_t<invokable_t<Fun>, Args...>;
+
+                template<typename Fun, typename...Args>
+                auto requires_(Fun, Args...) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Function, invokable_t<Fun>, Args...>()
+                    ));
+            };
+
+            struct RegularInvokable
+              : refines<Invokable>
+            {};
+
+            struct InvokablePredicate
+              : refines<RegularInvokable>
+            {
+                template<typename Fun, typename...Args>
+                auto requires_(Fun, Args...) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Predicate, invokable_t<Fun>, Args...>()
+                    ));
+            };
+
+            struct InvokableRelation
+              : refines<InvokablePredicate>
+            {
+                template<typename Fun, typename T, typename U>
+                auto requires_(Fun, T, U) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Relation, invokable_t<Fun>, T, U>()
+                    ));
+            };
+
+            struct InvokableTransform
+              : refines<RegularInvokable>
+            {
+                template<typename Fun, typename T>
+                auto requires_(Fun, T) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Transform, invokable_t<Fun>, T>()
+                    ));
+            };
+        }
+
+        template<typename Fun, typename...Args>
+        using Invokable = concepts::models<concepts::Invokable, Fun, Args...>;
+
+        template<typename Fun, typename...Args>
+        using RegularInvokable = concepts::models<concepts::RegularInvokable, Fun, Args...>;
+
+        template<typename Fun, typename...Args>
+        using InvokablePredicate = concepts::models<concepts::InvokablePredicate, Fun, Args...>;
+
+        template<typename Fun, typename T, typename U = T>
+        using InvokableRelation = concepts::models<concepts::InvokableRelation, Fun, T, U>;
+
+        template<typename F, typename T>
+        using InvokableTransform = concepts::models<concepts::InvokableTransform, F, T>;
+        /// @}
     }
 }
 
