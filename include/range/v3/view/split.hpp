@@ -54,14 +54,15 @@ namespace ranges
                 bool zero_;
                 range_iterator_t<Rng> cur_;
                 range_sentinel_t<Rng> last_;
-                semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun_;
+                using fun_ref_t = semiregular_ref_or_val_t<invokable_t<Fun>, IsConst>;
+                fun_ref_t fun_;
 
                 struct search_pred
                 {
                     bool zero_;
                     range_iterator_t<Rng> first_;
                     range_sentinel_t<Rng> last_;
-                    semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun_;
+                    fun_ref_t fun_;
                     bool operator()(range_iterator_t<Rng> cur) const
                     {
                         return (zero_ && cur == first_) || (cur != last_ && !fun_(cur, last_).first);
@@ -102,8 +103,7 @@ namespace ranges
                 {
                     return cur_ == that.cur_;
                 }
-                cursor(semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun, range_iterator_t<Rng> first,
-                    range_sentinel_t<Rng> last)
+                cursor(fun_ref_t fun, range_iterator_t<Rng> first, range_sentinel_t<Rng> last)
                   : cur_(first), last_(last), fun_(fun)
                 {
                     // For skipping an initial zero-length match

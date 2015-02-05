@@ -33,11 +33,11 @@ namespace ranges
         {
             template<typename Derived>
             using begin_adaptor_t =
-                decltype(range_access::begin_adaptor(std::declval<Derived &>()));
+                decltype(range_access::begin_adaptor(std::declval<Derived &>(), 42));
 
             template<typename Derived>
             using end_adaptor_t =
-                decltype(range_access::end_adaptor(std::declval<Derived &>()));
+                decltype(range_access::end_adaptor(std::declval<Derived &>(), 42));
 
             template<typename Derived>
             using adapted_iterator_t =
@@ -92,6 +92,14 @@ namespace ranges
 
         struct adaptor_base
         {
+            adaptor_base() = default;
+            adaptor_base(adaptor_base &&) = default;
+            adaptor_base(adaptor_base const &) = default;
+            adaptor_base &operator=(adaptor_base &&) = default;
+            adaptor_base &operator=(adaptor_base const &) = default;
+
+            adaptor_base(detail::any, detail::any = {}, detail::any = {})
+            {}
             template<typename Rng>
             range_iterator_t<base_range_t<Rng>> begin(Rng &rng) const
             {
@@ -378,14 +386,14 @@ namespace ranges
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             adaptor_cursor_t<D> begin_cursor()
             {
-                auto adapt = range_access::begin_adaptor(derived());
+                auto adapt = range_access::begin_adaptor(derived(), 42);
                 auto pos = adapt.begin(derived());
                 return {std::move(pos), std::move(adapt)};
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
             adaptor_sentinel_t<D> end_cursor()
             {
-                auto adapt = range_access::end_adaptor(derived());
+                auto adapt = range_access::end_adaptor(derived(), 42);
                 auto pos = adapt.end(derived());
                 return {std::move(pos), std::move(adapt)};
             }
@@ -396,7 +404,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
             adaptor_cursor_t<D const> begin_cursor() const
             {
-                auto adapt = range_access::begin_adaptor(derived());
+                auto adapt = range_access::begin_adaptor(derived(), 42);
                 auto pos = adapt.begin(derived());
                 return {std::move(pos), std::move(adapt)};
             }
@@ -404,7 +412,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
             adaptor_sentinel_t<D const> end_cursor() const
             {
-                auto adapt = range_access::end_adaptor(derived());
+                auto adapt = range_access::end_adaptor(derived(), 42);
                 auto pos = adapt.end(derived());
                 return {std::move(pos), std::move(adapt)};
             }

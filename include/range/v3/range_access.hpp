@@ -82,72 +82,103 @@ namespace ranges
             };
 
             template<typename Rng>
-            static auto begin_cursor(Rng & rng) -> decltype(rng.begin_cursor())
-            {
-                return rng.begin_cursor();
-            }
+            static auto begin_cursor(Rng & rng, long)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                rng.begin_cursor()
+            )
             template<typename Rng>
-            static auto end_cursor(Rng & rng) -> decltype(rng.end_cursor())
-            {
-                return rng.end_cursor();
-            }
+            static auto begin_cursor(Rng & rng, int)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                static_cast<Rng const &>(rng).begin_cursor()
+            )
+            template<typename Rng>
+            static auto end_cursor(Rng & rng, long)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                rng.end_cursor()
+            )
+            template<typename Rng>
+            static auto end_cursor(Rng & rng, int)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                static_cast<Rng const &>(rng).end_cursor()
+            )
 
             template<typename Rng>
-            static auto begin_adaptor(Rng & rng) -> decltype(rng.begin_adaptor())
-            {
-                return rng.begin_adaptor();
-            }
+            static auto begin_adaptor(Rng & rng, long)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                rng.begin_adaptor()
+            )
             template<typename Rng>
-            static auto end_adaptor(Rng & rng) -> decltype(rng.end_adaptor())
-            {
-                return rng.end_adaptor();
-            }
+            static auto begin_adaptor(Rng & rng, int)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                static_cast<Rng const &>(rng).begin_adaptor()
+            )
+            template<typename Rng>
+            static auto end_adaptor(Rng & rng, long)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                rng.end_adaptor()
+            )
+            template<typename Rng>
+            static auto end_adaptor(Rng & rng, int)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                static_cast<Rng const &>(rng).end_adaptor()
+            )
 
             template<typename Cur>
-            static auto current(Cur const &pos) noexcept(noexcept(pos.current())) ->
-                decltype(pos.current())
-            {
-                return pos.current();
-            }
+            static auto current(Cur const &pos)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                pos.current()
+            )
             template<typename Cur>
-            static auto next(Cur & pos) -> decltype(pos.next())
-            {
-                pos.next();
-            }
+            static auto next(Cur & pos)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                pos.next()
+            )
             template<typename Cur>
-            static constexpr auto done(Cur const & pos) -> decltype(pos.done())
-            {
-                return pos.done();
-            }
+            static constexpr auto done(Cur const & pos)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                pos.done()
+            )
             template<typename Cur>
-            static auto equal(Cur const &pos0, Cur const &pos1) ->
-                decltype(pos0.equal(pos1))
-            {
-                return pos0.equal(pos1);
-            }
+            static auto equal(Cur const &pos0, Cur const &pos1)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                pos0.equal(pos1)
+            )
             template<typename Cur, typename S>
-            static constexpr auto empty(Cur const &pos, S const &end) ->
-                decltype(end.equal(pos))
-            {
-                return end.equal(pos);
-            }
+            static constexpr auto empty(Cur const &pos, S const &end)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                end.equal(pos)
+            )
             template<typename Cur>
-            static auto prev(Cur & pos) -> decltype(pos.prev())
-            {
-                pos.prev();
-            }
+            static auto prev(Cur & pos)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                pos.prev()
+            )
             template<typename Cur, typename D>
-            static auto advance(Cur & pos, D n) ->
-                decltype(pos.advance(n))
-            {
-                pos.advance(n);
-            }
+            static auto advance(Cur & pos, D n)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                pos.advance(n)
+            )
             template<typename Cur>
-            static auto distance_to(Cur const &pos0, Cur const &pos1) ->
-                decltype(pos0.distance_to(pos1))
-            {
-                return pos0.distance_to(pos1);
-            }
+            static auto distance_to(Cur const &pos0, Cur const &pos1)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                pos0.distance_to(pos1)
+            )
 
         private:
             template<typename Cur>

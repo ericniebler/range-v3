@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <memory>
 #include <range/v3/core.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/zip_with.hpp>
@@ -23,7 +24,6 @@
 #include <range/v3/view/transform.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
-#include <range/v3/algorithm/sort.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -61,9 +61,6 @@ struct MoveOnlyString
         return sout << '"' << str.sz_ << '"';
     }
 };
-
-template<typename T>
-struct undef_t;
 
 int main()
 {
@@ -227,6 +224,16 @@ int main()
         auto rng1 = view::stride(rng0, 2);
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng1)>, range_rvalue_reference_t<decltype(rng0)>>());
         CONCEPT_ASSERT(Same<range_value_t<decltype(rng1)>, range_value_t<decltype(rng0)>>());
+    }
+
+    // Test for noexcept iter_move
+    {
+        static_assert(noexcept(std::declval<std::unique_ptr<int>&>() = std::declval<std::unique_ptr<int>&&>()), "");
+        std::unique_ptr<int> rg1[10], rg2[10];
+        auto x = view::zip(rg1, rg2);
+        std::pair<std::unique_ptr<int>, std::unique_ptr<int>> p = iter_move(x.begin());
+        auto it = x.begin();
+        static_assert(noexcept(iter_move(it)), "");
     }
 
     return test_result();

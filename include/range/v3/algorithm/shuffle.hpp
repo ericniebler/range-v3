@@ -34,6 +34,7 @@ namespace ranges
         namespace concepts
         {
             struct UniformRandomNumberGenerator
+              : refines<Function>
             {
                 template<typename Gen>
                 auto requires_(Gen rand) -> decltype(
@@ -54,7 +55,10 @@ namespace ranges
             template<typename I, typename S, typename Gen,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
                                   Permutable<I>() &&
-                                  UniformRandomNumberGenerator<Gen>())>
+                                  UniformRandomNumberGenerator<Gen>() &&
+                                  Convertible<
+                                      concepts::UniformRandomNumberGenerator::result_t<Gen>,
+                                      concepts::WeaklyIncrementable::difference_t<I> >())>
             I operator()(I begin, S end_, Gen && gen) const
             {
                 I end = next_to(begin, end_);
@@ -76,7 +80,10 @@ namespace ranges
             template<typename Rng, typename Gen, typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() &&
                                   Permutable<I>() &&
-                                  UniformRandomNumberGenerator<Gen>())>
+                                  UniformRandomNumberGenerator<Gen>() &&
+                                  Convertible<
+                                      concepts::UniformRandomNumberGenerator::result_t<Gen>,
+                                      concepts::WeaklyIncrementable::difference_t<I> >())>
             I operator()(Rng & rng, Gen && rand) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));

@@ -103,13 +103,15 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(RandomAccessIterable<Rng const>())
-            range_iterator_t<Rng const> begin() const
+            template<typename BaseRng = base_range_t,
+                CONCEPT_REQUIRES_(RandomAccessIterable<BaseRng const>())>
+            range_iterator_t<BaseRng const> begin() const
             {
                 return this->get_begin_(std::true_type{});
             }
-            CONCEPT_REQUIRES(RandomAccessIterable<Rng const>())
-            range_sentinel_t<Rng const> end() const
+            template<typename BaseRng = base_range_t,
+                CONCEPT_REQUIRES_(RandomAccessIterable<BaseRng const>())>
+            range_sentinel_t<BaseRng const> end() const
             {
                 return ranges::end(rng_);
             }

@@ -165,14 +165,16 @@ namespace ranges
                     return detail::pos_at_(rng_, from_, iterable_concept<Rng>{},
                         is_infinite<Rng>{}) + count_;
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
-                range_iterator_t<Rng const> begin() const
+                template<typename BaseRng = base_range_t,
+                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                range_iterator_t<BaseRng const> begin() const
                 {
                     return detail::pos_at_(rng_, from_, iterable_concept<Rng>{},
                         is_infinite<Rng>{});
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
-                range_iterator_t<Rng const> end() const
+                template<typename BaseRng = base_range_t,
+                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                range_iterator_t<BaseRng const> end() const
                 {
                     return detail::pos_at_(rng_, from_, iterable_concept<Rng>{},
                         is_infinite<Rng>{}) + count_;

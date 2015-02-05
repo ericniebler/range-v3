@@ -50,8 +50,9 @@ namespace ranges
                 {
                     return {ranges::begin(rng_), n_};
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
-                detail::counted_cursor<range_iterator_t<Rng const>> begin_cursor() const
+                template<typename BaseRng = base_range_t,
+                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                detail::counted_cursor<range_iterator_t<BaseRng const>> begin_cursor() const
                 {
                     return {ranges::begin(rng_), n_};
                 }
@@ -104,13 +105,15 @@ namespace ranges
                 {
                     return next(ranges::begin(rng_), n_);
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
-                range_iterator_t<Rng const> begin() const
+                template<typename BaseRng = base_range_t,
+                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                range_iterator_t<BaseRng const> begin() const
                 {
                     return ranges::begin(rng_);
                 }
-                CONCEPT_REQUIRES(Iterable<Rng const>())
-                range_iterator_t<Rng const> end() const
+                template<typename BaseRng = base_range_t,
+                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                range_iterator_t<BaseRng const> end() const
                 {
                     return next(ranges::begin(rng_), n_);
                 }

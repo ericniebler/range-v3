@@ -112,6 +112,7 @@ namespace ranges
             {
             private:
                 using BaseFn = invokable_t<Fn>;
+
                 BaseFn & base()                { return *this; }
                 BaseFn const & base() const    { return *this; }
             public:
@@ -180,20 +181,15 @@ namespace ranges
                 std::tuple<range_iterator_t<Rngs>...> its_;
 
                 template<std::size_t...Is>
-                auto current_(index_sequence<Is...>) const
-                    noexcept(noexcept(fun_(std::declval<range_iterator_t<Rngs>>()...)))
-                RANGES_DECLTYPE_AUTO_RETURN(
-                    fun_(std::get<Is>(its_)...)
-                )
-                template<std::size_t...Is>
                 auto indirect_move_(index_sequence<Is...>) const
-                    noexcept(noexcept(fun_(move_tag{}, std::declval<range_iterator_t<Rngs>>()...)))
-                RANGES_DECLTYPE_AUTO_RETURN(
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
                     fun_(move_tag{}, std::get<Is>(its_)...)
                 )
                 template<typename Sent>
                 friend auto indirect_move(basic_iterator<cursor, Sent> const &it)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
                     get_cursor(it).indirect_move_(make_index_sequence<sizeof...(Rngs)>{})
                 )
             public:
@@ -210,11 +206,10 @@ namespace ranges
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
                 auto current() const
-                    noexcept(noexcept(fun_(std::declval<range_iterator_t<Rngs>>()...))) ->
-                    decltype(fun_(std::declval<range_iterator_t<Rngs>>()...))
-                {
-                    return current_(make_index_sequence<sizeof...(Rngs)>{});
-                }
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    tuple_apply(fun_, its_)
+                )
                 void next()
                 {
                     tuple_for_each(its_, detail::inc);
@@ -289,12 +284,12 @@ namespace ranges
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
+            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<view::all_t<Rngs> const>()...>::value)
             cursor begin_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
+            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<view::all_t<Rngs> const>()...>::value)
             meta::if_<are_bounded_t, cursor, sentinel> end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};

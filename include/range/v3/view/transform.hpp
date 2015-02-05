@@ -62,21 +62,22 @@ namespace ranges
                   : fun_(std::move(fun))
                 {}
                 auto current(range_iterator_t<Rng> it) const
-                    noexcept(noexcept(fun_(it))) ->
-                    decltype(fun_(it))
-                {
-                    return fun_(it);
-                }
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    fun_(it)
+                )
                 auto indirect_move(range_iterator_t<Rng> it) const
-                    noexcept(noexcept(fun_(move_tag{}, it))) ->
-                    decltype(fun_(move_tag{}, it))
-                {
-                    return fun_(move_tag{}, it);
-                }
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    fun_(move_tag{}, it)
+                )
             };
 
-            CONCEPT_REQUIRES(!Invokable<Fun const, range_iterator_t<Rng>>())
             adaptor<false> begin_adaptor()
+            {
+                return {fun_};
+            }
+            meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
             {
                 return {fun_};
             }
@@ -85,18 +86,8 @@ namespace ranges
             {
                 return {fun_};
             }
-            CONCEPT_REQUIRES(use_sentinel_t())
-            adaptor_base end_adaptor() const
-            {
-                return {};
-            }
-            CONCEPT_REQUIRES(!use_sentinel_t() && !Invokable<Fun const, range_iterator_t<Rng>>())
-            adaptor<false> end_adaptor()
-            {
-                return {fun_};
-            }
-            CONCEPT_REQUIRES(!use_sentinel_t() && Invokable<Fun const, range_iterator_t<Rng>>())
-            adaptor<true> end_adaptor() const
+            CONCEPT_REQUIRES(Invokable<Fun const, range_iterator_t<Rng>>())
+            meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {fun_};
             }
