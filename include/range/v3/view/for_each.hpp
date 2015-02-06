@@ -17,6 +17,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/all.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/generate_n.hpp>
 #include <range/v3/view/repeat_n.hpp>
@@ -36,8 +37,8 @@ namespace ranges
           : join_view<transform_view<Rng, F>>
         {
             for_each_view() = default;
-            for_each_view(Rng && rng, F f)
-              : join_view<transform_view<Rng, F>>{{std::forward<Rng>(rng), std::move(f)}}
+            for_each_view(Rng rng, F f)
+              : join_view<transform_view<Rng, F>>{{std::move(rng), std::move(f)}}
             {}
         };
 
@@ -62,9 +63,9 @@ namespace ranges
 
                 template<typename Rng, typename F,
                     CONCEPT_REQUIRES_(Concept<Rng, F>())>
-                for_each_view<Rng, F> operator()(Rng && rng, F f) const
+                for_each_view<all_t<Rng>, F> operator()(Rng && rng, F f) const
                 {
-                    return {std::forward<Rng>(rng), std::move(f)};
+                    return {all(std::forward<Rng>(rng)), std::move(f)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

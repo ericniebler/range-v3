@@ -66,9 +66,9 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Concept<Rng>())>
-                keys_range_view<Rng> operator()(Rng && rng) const
+                keys_range_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return {std::forward<Rng>(rng), detail::get_first{}};
+                    return {all(std::forward<Rng>(rng)), detail::get_first{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
@@ -93,9 +93,9 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Concept<Rng>())>
-                values_view<Rng> operator()(Rng && rng) const
+                values_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return {std::forward<Rng>(rng), detail::get_second{}};
+                    return {all(std::forward<Rng>(rng)), detail::get_second{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,

@@ -30,6 +30,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/all.hpp>
 #include <range/v3/view/zip_with.hpp>
 
 namespace ranges
@@ -93,8 +94,8 @@ namespace ranges
             }
         public:
             iter_transform_view() = default;
-            iter_transform_view(Rng && rng, Fun fun)
-              : range_adaptor_t<iter_transform_view>{std::forward<Rng>(rng)}
+            iter_transform_view(Rng rng, Fun fun)
+              : range_adaptor_t<iter_transform_view>{std::move(rng)}
               , fun_(invokable(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
@@ -109,8 +110,8 @@ namespace ranges
           : iter_transform_view<Rng, detail::indirect_fn_<Fun>>
         {
             transform_view() = default;
-            transform_view(Rng && rng, Fun fun)
-              : iter_transform_view<Rng, detail::indirect_fn_<Fun>>{std::forward<Rng>(rng),
+            transform_view(Rng rng, Fun fun)
+              : iter_transform_view<Rng, detail::indirect_fn_<Fun>>{std::move(rng),
                     {std::move(fun)}}
             {}
         };
@@ -138,9 +139,9 @@ namespace ranges
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
-                iter_transform_view<Rng, Fun> operator()(Rng && rng, Fun fun) const
+                iter_transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {std::forward<Rng>(rng), std::move(fun)};
+                    return {all(std::forward<Rng>(rng)), std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -193,9 +194,9 @@ namespace ranges
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
-                transform_view<Rng, Fun> operator()(Rng && rng, Fun fun) const
+                transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {std::forward<Rng>(rng), std::move(fun)};
+                    return {all(std::forward<Rng>(rng)), std::move(fun)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,

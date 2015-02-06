@@ -167,7 +167,7 @@ namespace ranges
         private:
             friend range_access;
             semiregular_t<invokable_t<Fun>> fun_;
-            std::tuple<view::all_t<Rngs>...> rngs_;
+            std::tuple<Rngs...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
             using size_type_ = meta::eval<std::make_unsigned<difference_type_>>;
 
@@ -284,25 +284,25 @@ namespace ranges
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<view::all_t<Rngs> const>()...>::value)
+            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
             cursor begin_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<view::all_t<Rngs> const>()...>::value)
+            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
             meta::if_<are_bounded_t, cursor, sentinel> end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
         public:
             iter_zip_with_view() = default;
-            explicit iter_zip_with_view(Rngs &&...rngs)
+            explicit iter_zip_with_view(Rngs ...rngs)
               : fun_(invokable(Fun{}))
-              , rngs_{view::all(std::forward<Rngs>(rngs))...}
+              , rngs_{std::move(rngs)...}
             {}
-            explicit iter_zip_with_view(Fun fun, Rngs &&...rngs)
+            explicit iter_zip_with_view(Fun fun, Rngs ...rngs)
               : fun_(invokable(std::move(fun)))
-              , rngs_{view::all(std::forward<Rngs>(rngs))...}
+              , rngs_{std::move(rngs)...}
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool) SizedIterable<Rngs>()...>::value)
             size_type_ size() const
@@ -319,13 +319,13 @@ namespace ranges
           : iter_zip_with_view<detail::indirect_fn_<Fun>, Rngs...>
         {
             zip_with_view() = default;
-            explicit zip_with_view(Rngs &&...rngs)
+            explicit zip_with_view(Rngs ...rngs)
               : iter_zip_with_view<detail::indirect_fn_<Fun>, Rngs...>{
-                  {Fun{}}, std::forward<Rngs>(rngs)...}
+                  {Fun{}}, std::move(rngs)...}
             {}
-            explicit zip_with_view(Fun fun, Rngs &&...rngs)
+            explicit zip_with_view(Fun fun, Rngs ...rngs)
               : iter_zip_with_view<detail::indirect_fn_<Fun>, Rngs...>{
-                  {std::move(fun)}, std::forward<Rngs>(rngs)...}
+                  {std::move(fun)}, std::move(rngs)...}
             {}
         };
 
@@ -342,11 +342,11 @@ namespace ranges
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
-                iter_zip_with_view<Fun, Rngs...> operator()(Fun fun, Rngs &&... rngs) const
+                iter_zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
                 {
-                    return iter_zip_with_view<Fun, Rngs...>{
+                    return iter_zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
-                        std::forward<Rngs>(rngs)...
+                        all(std::forward<Rngs>(rngs))...
                     };
                 }
 
@@ -390,11 +390,11 @@ namespace ranges
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
-                zip_with_view<Fun, Rngs...> operator()(Fun fun, Rngs &&... rngs) const
+                zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
                 {
-                    return zip_with_view<Fun, Rngs...>{
+                    return zip_with_view<Fun, all_t<Rngs>...>{
                         std::move(fun),
-                        std::forward<Rngs>(rngs)...
+                        all(std::forward<Rngs>(rngs))...
                     };
                 }
 

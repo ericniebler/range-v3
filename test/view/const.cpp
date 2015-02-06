@@ -14,6 +14,8 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/counted.hpp>
+#include <range/v3/view/zip.hpp>
+#include <range/v3/view/move.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -27,6 +29,7 @@ int main()
     auto && rng = rgi | view::const_;
     has_type<int &>(*begin(rgi));
     has_type<int const &>(*begin(rng));
+    CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng)>, int const &&>());
     models<concepts::BoundedRange>(rng);
     models<concepts::SizedRange>(rng);
     models<concepts::RandomAccessRange>(rng);
@@ -36,6 +39,7 @@ int main()
 
     auto && rng2 = view::counted(forward_iterator<int*>(rgi), 4) | view::const_;
     has_type<int const &>(*begin(rng2));
+    CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(rng2)>, int const &&>());
     models<concepts::ForwardRange>(rng2);
     models_not<concepts::BidirectionalRange>(rng2);
     models_not<concepts::BoundedRange>(rng2);
@@ -43,6 +47,35 @@ int main()
     ::check_equal(rng2, {1, 2, 3, 4});
     CHECK(&*begin(rng2) == &rgi[0]);
     CHECK(rng2.size() == 4u);
+
+    auto zip = view::zip(rgi, rgi);
+    auto rng3 = zip | view::const_;
+    has_type<common_pair<int &, int &>>(*begin(zip));
+    has_type<std::pair<int &&, int &&>>(iter_move(begin(zip)));
+    has_type<common_pair<int const &, int const &>>(*begin(rng3));
+    has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng3)));
+    models<concepts::RandomAccessRange>(rng3);
+    models<concepts::BoundedRange>(rng3);
+    models<concepts::SizedRange>(rng3);
+    using P = std::pair<int,int>;
+    ::check_equal(rng3, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
+    CHECK(&begin(rng3)->first == &rgi[0]);
+    CHECK(rng3.size() == 4u);
+
+    auto zip2 = view::zip(rgi, rgi) | view::move;
+    auto rng4 = zip2 | view::const_;
+    // BUGBUG should be common_pair, right?
+    has_type<std::pair<int &&, int &&>>(*begin(zip2));
+    has_type<std::pair<int &&, int &&>>(iter_move(begin(zip2)));
+    has_type<common_pair<int const &&, int const &&>>(*begin(rng4));
+    has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng4)));
+    models<concepts::RandomAccessRange>(rng4);
+    models<concepts::BoundedRange>(rng4);
+    models<concepts::SizedRange>(rng4);
+    using P = std::pair<int,int>;
+    ::check_equal(rng4, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
+    CHECK(&begin(rng4)->first == &rgi[0]);
+    CHECK(rng4.size() == 4u);
 
     return test_result();
 }

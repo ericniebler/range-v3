@@ -107,9 +107,15 @@ namespace ranges
                     ++it_;
                     satisfy(it);
                 }
-                auto current(range_iterator_t<Rng> const &) const -> decltype(*it_)
+                auto current(range_iterator_t<Rng> const &) const ->
+                    decltype(*it_)
                 {
                     return *it_;
+                }
+                auto indirect_move(range_iterator_t<Rng> const &) const ->
+                    decltype(ranges::indirect_move(it_))
+                {
+                    return ranges::indirect_move(it_);
                 }
             };
             adaptor begin_adaptor()
@@ -127,8 +133,8 @@ namespace ranges
             // TODO: could support const iteration if range_reference_t<Rng> is a true reference.
         public:
             join_view() = default;
-            explicit join_view(Rng &&rng)
-              : range_adaptor_t<join_view>{std::forward<Rng>(rng)}, cur_{}
+            explicit join_view(Rng rng)
+              : range_adaptor_t<join_view>{std::move(rng)}, cur_{}
             {}
             CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardIterable<Rng>() &&
                              SizedIterable<range_value_t<Rng>>())
@@ -156,7 +162,7 @@ namespace ranges
 
             friend range_access;
             view::all_t<range_value_t<Rng>> cur_;
-            view::all_t<ValRng> val_;
+            ValRng val_;
 
             struct adaptor : adaptor_base
             {
@@ -229,11 +235,23 @@ namespace ranges
                     toggl_ ? (void)++it_ : (void)++val_it_;
                     satisfy(it);
                 }
-                // BUGBUG use common_reference to declare the return type?
                 auto current(range_iterator_t<Rng> const &) const ->
-                    decltype(true ? *it_ : *val_it_)
+                    common_reference_t<
+                        range_reference_t<range_value_t<Rng>>,
+                        range_reference_t<ValRng>>
                 {
-                    return toggl_ ? *it_ : *val_it_;
+                    if(toggl_)
+                        return *it_;
+                    return *val_it_;
+                }
+                auto indirect_move(range_iterator_t<Rng> const &) const ->
+                    common_reference_t<
+                        range_rvalue_reference_t<range_value_t<Rng>>,
+                        range_rvalue_reference_t<ValRng>>
+                {
+                    if(toggl_)
+                        return ranges::indirect_move(it_);
+                    return ranges::indirect_move(val_it_);
                 }
             };
             adaptor begin_adaptor()
@@ -251,9 +269,9 @@ namespace ranges
             // TODO: could support const iteration if range_reference_t<Rng> is a true reference.
         public:
             join_view() = default;
-            join_view(Rng &&rng, ValRng && val)
-              : range_adaptor_t<join_view>{std::forward<Rng>(rng)}
-              , cur_{}, val_(view::all(std::forward<ValRng>(val)))
+            join_view(Rng rng, ValRng val)
+              : range_adaptor_t<join_view>{std::move(rng)}
+              , cur_{}, val_(std::move(val))
             {}
             CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardIterable<Rng>() &&
                              SizedIterable<range_value_t<Rng>>() && SizedIterable<ValRng>())
@@ -281,23 +299,23 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
-                join_view<Rng> operator()(Rng && rng) const
+                join_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return join_view<Rng>{std::forward<Rng>(rng)};
+                    return join_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
                 template<typename Rng, typename Val = range_value_t<range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
-                join_view<Rng, single_view<Val>> operator()(Rng && rng, meta::id_t<Val> v) const
+                join_view<all_t<Rng>, single_view<Val>> operator()(Rng && rng, meta::id_t<Val> v) const
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
                         "To join a range of ranges with a value, the value type must be a model of "
                         "the SemiRegular concept; that is, it must have a default constructor, "
                         "copy and move constructors, and a destructor.");
-                    return {std::forward<Rng>(rng), single(std::move(v))};
+                    return {all(std::forward<Rng>(rng)), single(std::move(v))};
                 }
                 template<typename Rng, typename ValRng,
                     CONCEPT_REQUIRES_(JoinableIterable_<Rng>() && ForwardIterable<ValRng>())>
-                join_view<Rng, ValRng> operator()(Rng && rng, ValRng && val) const
+                join_view<all_t<Rng>, all_t<ValRng>> operator()(Rng && rng, ValRng && val) const
                 {
                     CONCEPT_ASSERT_MSG(Common<range_value_t<ValRng>,
                         range_value_t<range_value_t<Rng>>>(),
@@ -309,7 +327,7 @@ namespace ranges
                         "a common value type, and that value type must model the SemiRegular "
                         "concept; that is, it must have a default constructor, copy and move "
                         "constructors, and a destructor.");
-                    return {std::forward<Rng>(rng), std::forward<ValRng>(val)};
+                    return {all(std::forward<Rng>(rng)), all(std::forward<ValRng>(val))};
                 }
             private:
                friend view_access;

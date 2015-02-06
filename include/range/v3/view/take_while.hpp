@@ -58,7 +58,6 @@ namespace ranges
                 }
             };
 
-            CONCEPT_REQUIRES(!Invokable<Pred const, range_common_reference_t<Rng>>())
             sentinel_adaptor<false> end_adaptor()
             {
                 return {pred_};
@@ -70,8 +69,8 @@ namespace ranges
             }
         public:
             take_while_view() = default;
-            take_while_view(Rng && rng, Pred pred)
-              : range_adaptor_t<take_while_view>{std::forward<Rng>(rng)}
+            take_while_view(Rng rng, Pred pred)
+              : range_adaptor_t<take_while_view>{std::move(rng)}
               , pred_(invokable(std::move(pred)))
             {}
         };
@@ -97,9 +96,9 @@ namespace ranges
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
-                take_while_view<Rng, Pred> operator()(Rng && rng, Pred pred) const
+                take_while_view<all_t<Rng>, Pred> operator()(Rng && rng, Pred pred) const
                 {
-                    return {std::forward<Rng>(rng), std::move(pred)};
+                    return {all(std::forward<Rng>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,

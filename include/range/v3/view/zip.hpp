@@ -99,9 +99,9 @@ namespace ranges
           : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>
         {
             zip_view() = default;
-            explicit zip_view(Rngs &&...rngs)
+            explicit zip_view(Rngs...rngs)
               : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>{
-                  detail::indirect_zip_fn_{}, std::forward<Rngs>(rngs)...}
+                  detail::indirect_zip_fn_{}, std::move(rngs)...}
             {}
         };
 
@@ -114,10 +114,10 @@ namespace ranges
 
                 template<typename...Rngs,
                     CONCEPT_REQUIRES_(Concept<Rngs...>())>
-                zip_view<Rngs...> operator()(Rngs &&... rngs) const
+                zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_<Iterable<Rngs>...>());
-                    return zip_view<Rngs...>{std::forward<Rngs>(rngs)...};
+                    return zip_view<all_t<Rngs>...>{all(std::forward<Rngs>(rngs))...};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

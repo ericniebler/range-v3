@@ -103,8 +103,8 @@ namespace ranges
               , pred_(that.pred_)
               , begin_{}
             {}
-            remove_if_view(Rng && rng, Pred pred)
-              : range_adaptor_t<remove_if_view>{std::forward<Rng>(rng)}
+            remove_if_view(Rng rng, Pred pred)
+              : range_adaptor_t<remove_if_view>{std::move(rng)}
               , pred_(invokable(std::move(pred)))
               , begin_{}
             {}
@@ -144,10 +144,10 @@ namespace ranges
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
-                remove_if_view<Rng, Pred>
+                remove_if_view<all_t<Rng>, Pred>
                 operator()(Rng && rng, Pred pred) const
                 {
-                    return {std::forward<Rng>(rng), std::move(pred)};
+                    return {all(std::forward<Rng>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,

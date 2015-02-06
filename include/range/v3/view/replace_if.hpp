@@ -23,6 +23,7 @@
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -79,10 +80,10 @@ namespace ranges
 
                 template<typename Rng, typename Pred, typename Val,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred, Val>())>
-                transform_view<Rng, replacer_if_fun<Pred, detail::decay_t<Val>>>
+                transform_view<all_t<Rng>, replacer_if_fun<Pred, detail::decay_t<Val>>>
                 operator()(Rng && rng, Pred pred, Val new_value) const
                 {
-                    return {std::forward<Rng>(rng), {std::move(pred), std::move(new_value)}};
+                    return {all(std::forward<Rng>(rng)), {std::move(pred), std::move(new_value)}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting

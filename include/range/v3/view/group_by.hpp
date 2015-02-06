@@ -41,7 +41,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            view::all_t<Rng> rng_;
+            Rng rng_;
             semiregular_t<invokable_t<Fun>> fun_;
 
             template<bool IsConst>
@@ -86,8 +86,6 @@ namespace ranges
             public:
                 cursor() = default;
             };
-            CONCEPT_REQUIRES(!Invokable<Fun const, range_common_reference_t<Rng>,
-                range_common_reference_t<Rng>>())
             cursor<false> begin_cursor()
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
@@ -100,8 +98,8 @@ namespace ranges
             }
         public:
             group_by_view() = default;
-            group_by_view(Rng && rng, Fun fun)
-              : rng_(view::all(std::forward<Rng>(rng)))
+            group_by_view(Rng rng, Fun fun)
+              : rng_(std::move(rng))
               , fun_(std::move(fun))
             {}
         };
@@ -127,9 +125,9 @@ namespace ranges
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
-                group_by_view<Rng, Fun> operator()(Rng && rng, Fun fun) const
+                group_by_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {std::forward<Rng>(rng), std::move(fun)};
+                    return {all(std::forward<Rng>(rng)), std::move(fun)};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

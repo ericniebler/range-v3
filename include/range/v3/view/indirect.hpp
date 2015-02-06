@@ -40,9 +40,15 @@ namespace ranges
             struct adaptor
               : adaptor_base
             {
-                auto current(range_iterator_t<Rng> it) const -> decltype(**it)
+                auto current(range_iterator_t<Rng> it) const ->
+                    decltype(**it)
                 {
                     return **it;
+                }
+                auto indirect_move(range_iterator_t<Rng> it) const ->
+                    decltype(ranges::indirect_move(*it))
+                {
+                    return ranges::indirect_move(*it);
                 }
             };
             adaptor begin_adaptor() const
@@ -55,8 +61,8 @@ namespace ranges
             }
         public:
             indirect_view() = default;
-            explicit indirect_view(Rng && rng)
-              : range_adaptor_t<indirect_view>{std::forward<Rng>(rng)}
+            explicit indirect_view(Rng rng)
+              : range_adaptor_t<indirect_view>{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
@@ -78,10 +84,10 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(Concept<Rng>())>
-                indirect_view<Rng> operator()(Rng && rng) const
+                indirect_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     CONCEPT_ASSERT(InputIterable<Rng>());
-                    return indirect_view<Rng>{std::forward<Rng>(rng)};
+                    return indirect_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,

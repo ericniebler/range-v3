@@ -27,6 +27,7 @@
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/all.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/take_while.hpp>
@@ -43,14 +44,15 @@ namespace ranges
         {
         private:
             friend range_access;
-            view::all_t<Rng> rng_;
+            Rng rng_;
             semiregular_t<invokable_t<Fun>> fun_;
 
             template<bool IsConst>
             struct cursor
             {
             private:
-                friend range_access; friend split_view;
+                friend range_access;
+                friend split_view;
                 bool zero_;
                 range_iterator_t<Rng> cur_;
                 range_sentinel_t<Rng> last_;
@@ -113,7 +115,6 @@ namespace ranges
             public:
                 cursor() = default;
             };
-            CONCEPT_REQUIRES(!Invokable<Fun const, range_iterator_t<Rng>, range_sentinel_t<Rng>>())
             cursor<false> begin_cursor()
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
@@ -125,8 +126,8 @@ namespace ranges
             }
         public:
             split_view() = default;
-            split_view(Rng && rng, Fun fun)
-              : rng_(view::all(std::forward<Rng>(rng)))
+            split_view(Rng rng, Fun fun)
+              : rng_(std::move(rng))
               , fun_(std::move(fun))
             {}
         };
@@ -204,21 +205,21 @@ namespace ranges
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(FunctionConcept<Rng, Fun>())>
-                split_view<Rng, Fun> operator()(Rng && rng, Fun fun) const
+                split_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
-                    return {std::forward<Rng>(rng), std::move(fun)};
+                    return {all(std::forward<Rng>(rng)), std::move(fun)};
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(ElementConcept<Rng>())>
-                split_view<Rng, element_pred<Rng>> operator()(Rng && rng, range_value_t<Rng> val) const
+                split_view<all_t<Rng>, element_pred<Rng>> operator()(Rng && rng, range_value_t<Rng> val) const
                 {
-                    return {std::forward<Rng>(rng), {std::move(val)}};
+                    return {all(std::forward<Rng>(rng)), {std::move(val)}};
                 }
                 template<typename Rng, typename Sub,
                     CONCEPT_REQUIRES_(SubRangeConcept<Rng, Sub>())>
-                split_view<Rng, subrange_pred<Rng, Sub>> operator()(Rng && rng, Sub && sub) const
+                split_view<all_t<Rng>, subrange_pred<Rng, Sub>> operator()(Rng && rng, Sub && sub) const
                 {
-                    return {std::forward<Rng>(rng), {std::forward<Sub>(sub)}};
+                    return {all(std::forward<Rng>(rng)), {std::forward<Sub>(sub)}};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

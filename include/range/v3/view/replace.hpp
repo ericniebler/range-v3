@@ -22,6 +22,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -85,10 +86,10 @@ namespace ranges
 
                 template<typename Rng, typename Val1, typename Val2,
                     CONCEPT_REQUIRES_(Concept<Rng, Val1, Val2>())>
-                transform_view<Rng, replacer_fun<detail::decay_t<Val1>>>
+                transform_view<all_t<Rng>, replacer_fun<detail::decay_t<Val1>>>
                 operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
                 {
-                    return {std::forward<Rng>(rng),
+                    return {all(std::forward<Rng>(rng)),
                             {std::forward<Val1>(old_value),
                              std::forward<Val2>(new_value)}};
                 }

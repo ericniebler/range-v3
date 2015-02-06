@@ -43,9 +43,13 @@ namespace ranges
         namespace detail
         {
             template<typename T>
-            struct promote_rvalue :meta::id<T> {};
+            struct promote_rvalue
+              : meta::id<T>
+            {};
             template<typename T>
-            struct promote_rvalue<T&&> :meta::id<T const &> {};
+            struct promote_rvalue<T &&>
+              : meta::id<T const &>
+            {};
             template<typename T>
             using promote_rvalue_t = meta::eval<promote_rvalue<T>>;
 
@@ -53,32 +57,117 @@ namespace ranges
             // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=51317
 #if defined(__GNUC__) && !defined(__clang__)
             template<typename T, typename U>
-            struct gcc_default_common_
-              : meta::id<decltype(true? std::declval<promote_rvalue_t<T>>()
-                                      : std::declval<promote_rvalue_t<U>>())>
-            {};
+            struct default_common_impl
+            {
+                template<typename T2, typename U2>
+                using apply = decltype(true? std::declval<promote_rvalue_t<T2>>()
+                                           : std::declval<promote_rvalue_t<U2>>());
+            };
             template<typename T>
-            struct gcc_default_common_<T,T> : meta::id<T> {};
+            struct default_common_impl<T, T>
+            {
+                template<typename, typename>
+                using apply = T;
+            };
             template<typename T>
-            struct gcc_default_common_<T&,T const&> : meta::id<T const &> {};
+            struct default_common_impl<T &&, T &&>
+            {
+                template<typename, typename>
+                using apply = T &&;
+            };
+            template<typename T, typename U>
+            struct default_common_impl<T &&, U &&>
+            {
+                template<typename T2, typename U2>
+                using apply = decltype(true? std::declval<T2 &&>()
+                                           : std::declval<U2 &&>());
+            };
             template<typename T>
-            struct gcc_default_common_<T const &,T &> : meta::id<T const &> {};
+            struct default_common_impl<T &, T const &>
+            {
+                template<typename, typename>
+                using apply = T const &;
+            };
+            template<typename T>
+            struct default_common_impl<T const &, T &>
+            {
+                template<typename, typename>
+                using apply = T const &;
+            };
+            template<typename T>
+            struct default_common_impl<T &&, T const &&>
+            {
+                template<typename, typename>
+                using apply = T const &&;
+            };
+            template<typename T>
+            struct default_common_impl<T const &&, T &&>
+            {
+                template<typename, typename>
+                using apply = T const &&;
+            };
+            template<typename T>
+            struct default_common_impl<T &&, T const &>
+            {
+                template<typename, typename>
+                using apply = T const &;
+            };
+            template<typename T>
+            struct default_common_impl<T const &&, T &>
+            {
+                template<typename, typename>
+                using apply = T const &;
+            };
+            template<typename T>
+            struct default_common_impl<T &, T const &&>
+            {
+                template<typename, typename>
+                using apply = T const &;
+            };
+            template<typename T>
+            struct default_common_impl<T const &, T &&>
+            {
+                template<typename, typename>
+                using apply = T const &;
+            };
 
             template<typename T, typename U>
             using default_common_t =
-                meta::eval<meta::if_<
-                    std::is_same<uncvref_t<T>, uncvref_t<U>>,
-                    gcc_default_common_<T, U>,
-                    meta::id<decltype(true? std::declval<promote_rvalue_t<T>>()
-                                          : std::declval<promote_rvalue_t<U>>())> > >;
+                meta::eval<
+                    meta::if_<
+                        std::is_same<uncvref_t<T>, uncvref_t<U>>,
+                        meta::lazy_apply<default_common_impl<T, U>, T, U>,
+                        meta::id<decltype(true? std::declval<promote_rvalue_t<T>>()
+                                              : std::declval<promote_rvalue_t<U>>())> > >;
 #else
             template<typename T, typename U>
-            using default_common_t =
-                meta::if_<
-                    std::is_same<T, U>,
-                    T,
-                    decltype(true? std::declval<promote_rvalue_t<T>>()
-                                 : std::declval<promote_rvalue_t<U>>())>;
+            struct default_common_impl
+            {
+                template<typename T2, typename U2>
+                using apply = decltype(true? std::declval<promote_rvalue_t<T2>>()
+                                           : std::declval<promote_rvalue_t<U2>>());
+            };
+            template<typename T>
+            struct default_common_impl<T, T>
+            {
+                template<typename, typename>
+                using apply = T;
+            };
+            template<typename T>
+            struct default_common_impl<T &&, T &&>
+            {
+                template<typename, typename>
+                using apply = T &&;
+            };
+            template<typename T, typename U>
+            struct default_common_impl<T &&, U &&>
+            {
+                template<typename T2, typename U2>
+                using apply = decltype(true? std::declval<T2 &&>()
+                                           : std::declval<U2 &&>());
+            };
+            template<typename T, typename U>
+            using default_common_t = meta::apply<default_common_impl<T, U>, T, U>;
 #endif
 
             template<typename T, typename U, typename Enable = void>

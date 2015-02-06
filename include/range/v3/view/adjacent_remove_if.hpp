@@ -67,8 +67,8 @@ namespace ranges
             }
         public:
             adjacent_remove_if_view() = default;
-            adjacent_remove_if_view(Rng && rng, F pred)
-              : range_adaptor_t<adjacent_remove_if_view>{std::forward<Rng>(rng)}
+            adjacent_remove_if_view(Rng rng, F pred)
+              : range_adaptor_t<adjacent_remove_if_view>{std::move(rng)}
               , pred_(invokable(std::move(pred)))
             {}
         };
@@ -95,9 +95,9 @@ namespace ranges
 
                 template<typename Rng, typename F,
                     CONCEPT_REQUIRES_(Concept<Rng, F>())>
-                adjacent_remove_if_view<Rng, F> operator()(Rng && rng, F pred) const
+                adjacent_remove_if_view<all_t<Rng>, F> operator()(Rng && rng, F pred) const
                 {
-                    return {std::forward<Rng>(rng), std::move(pred)};
+                    return {all(std::forward<Rng>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename F,

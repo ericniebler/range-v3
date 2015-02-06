@@ -63,7 +63,7 @@ namespace ranges
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
             using size_type_ = meta::eval<std::make_unsigned<difference_type_>>;
             static constexpr std::size_t cranges{sizeof...(Rngs)};
-            std::tuple<view::all_t<Rngs>...> rngs_;
+            std::tuple<Rngs...> rngs_;
 
             struct sentinel;
 
@@ -73,7 +73,7 @@ namespace ranges
             private:
                 friend struct sentinel;
                 concat_view const *rng_;
-                tagged_variant<range_iterator_t<view::all_t<Rngs> const>...> its_;
+                tagged_variant<range_iterator_t<Rngs const>...> its_;
 
                 template<std::size_t N>
                 void satisfy(meta::size_t<N>)
@@ -243,7 +243,7 @@ namespace ranges
             struct sentinel
             {
             private:
-                range_sentinel_t<meta::back<meta::list<view::all_t<Rngs>...>> const> end_;
+                range_sentinel_t<meta::back<meta::list<Rngs...>> const> end_;
             public:
                 sentinel() = default;
                 sentinel(concat_view const &rng, end_tag)
@@ -266,8 +266,8 @@ namespace ranges
             }
         public:
             concat_view() = default;
-            explicit concat_view(Rngs &&...rngs)
-              : rngs_(view::all(std::forward<Rngs>(rngs))...)
+            explicit concat_view(Rngs...rngs)
+              : rngs_{std::move(rngs)...}
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool)SizedIterable<Rngs>()...>::value)
             size_type_ size() const
@@ -281,11 +281,11 @@ namespace ranges
             struct concat_fn
             {
                 template<typename...Rngs>
-                concat_view<Rngs...> operator()(Rngs &&... rngs) const
+                concat_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
                     static_assert(meta::and_c<(bool)InputIterable<Rngs>()...>::value,
                         "Expecting Input Iterables");
-                    return concat_view<Rngs...>{std::forward<Rngs>(rngs)...};
+                    return concat_view<all_t<Rngs>...>{all(std::forward<Rngs>(rngs))...};
                 }
             };
 

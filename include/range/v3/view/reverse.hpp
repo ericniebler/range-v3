@@ -98,8 +98,8 @@ namespace ranges
             }
         public:
             reverse_view() = default;
-            reverse_view(Rng && rng)
-              : range_adaptor_t<reverse_view>{std::forward<Rng>(rng)}
+            reverse_view(Rng rng)
+              : range_adaptor_t<reverse_view>{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
@@ -118,9 +118,9 @@ namespace ranges
                     BoundedIterable<Rng>>;
 
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
-                reverse_view<Rng> operator()(Rng && rng) const
+                reverse_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return reverse_view<Rng>{std::forward<Rng>(rng)};
+                    return reverse_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting

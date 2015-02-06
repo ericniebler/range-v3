@@ -21,28 +21,17 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
+#include <range/v3/utility/move.hpp>
+#include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        /// \cond
-        namespace detail
-        {
-            template<typename T>
-            struct cref_t { using type = T; };
-
-            template<typename T>
-            struct cref_t<T &> { using type = T const &; };
-
-            template<typename T>
-            struct cref_t<T &&> { using type = T const &&; };
-        }
-        /// \endcond
-
         /// \addtogroup group-views
         /// @{
         template<typename Rng>
@@ -51,13 +40,22 @@ namespace ranges
         {
         private:
             friend range_access;
-            using reference_ = meta::eval<detail::cref_t<range_reference_t<Rng>>>;
+            using value_ =
+                range_value_t<Rng>;
+            using reference_ =
+                common_reference_t<value_ const &&, range_reference_t<Rng>>;
+            using rvalue_reference_ =
+                common_reference_t<value_ const &&, range_rvalue_reference_t<Rng>>;
             struct adaptor
               : adaptor_base
             {
                 reference_ current(range_iterator_t<Rng> it) const
                 {
                     return *it;
+                }
+                rvalue_reference_ indirect_move(range_iterator_t<Rng> it) const
+                {
+                    return iter_move(it);
                 }
             };
             adaptor begin_adaptor() const
@@ -70,8 +68,8 @@ namespace ranges
             }
         public:
             const_view() = default;
-            explicit const_view(Rng && rng)
-              : range_adaptor_t<const_view>{std::forward<Rng>(rng)}
+            explicit const_view(Rng rng)
+              : range_adaptor_t<const_view>{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
             range_size_t<Rng> size() const
@@ -85,11 +83,11 @@ namespace ranges
             struct const_fn
             {
                 template<typename Rng>
-                const_view<Rng> operator()(Rng && rng) const
+                const_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     CONCEPT_ASSERT_MSG(Iterable<Rng>(),
                         "Rng must be a model of the Iterable concept");
-                    return const_view<Rng>{std::forward<Rng>(rng)};
+                    return const_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
             };
 

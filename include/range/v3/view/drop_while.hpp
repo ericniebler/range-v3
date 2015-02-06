@@ -40,9 +40,8 @@ namespace ranges
        {
         private:
             friend range_access;
-            using base_range_t = view::all_t<Rng>;
             using difference_type_ = range_difference_t<Rng>;
-            base_range_t rng_;
+            Rng rng_;
             semiregular_t<invokable_t<Pred>> pred_;
             optional<range_iterator_t<Rng>> begin_;
 
@@ -60,8 +59,8 @@ namespace ranges
             drop_while_view(drop_while_view const &that)
               : rng_(that.rng_), pred_(that.pred_), begin_{}
             {}
-            drop_while_view(Rng && rng, Pred pred)
-              : rng_(view::all(std::forward<Rng>(rng))), pred_(invokable(std::move(pred))), begin_{}
+            drop_while_view(Rng rng, Pred pred)
+              : rng_(std::move(rng)), pred_(invokable(std::move(pred))), begin_{}
             {}
             drop_while_view& operator=(drop_while_view &&that)
             {
@@ -85,11 +84,11 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            base_range_t & base()
+            Rng & base()
             {
                 return rng_;
             }
-            base_range_t const & base() const
+            Rng const & base() const
             {
                 return rng_;
             }
@@ -115,10 +114,10 @@ namespace ranges
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
-                drop_while_view<Rng, Pred>
+                drop_while_view<all_t<Rng>, Pred>
                 operator()(Rng && rng, Pred pred) const
                 {
-                    return {std::forward<Rng>(rng), std::move(pred)};
+                    return {all(std::forward<Rng>(rng)), std::move(pred)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,

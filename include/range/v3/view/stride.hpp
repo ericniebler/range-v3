@@ -29,6 +29,7 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
+#include <range/v3/view/all.hpp>
 
 namespace ranges
 {
@@ -161,8 +162,8 @@ namespace ranges
             }
         public:
             stride_view() = default;
-            stride_view(Rng &&rng, difference_type_ stride)
-              : range_adaptor_t<stride_view>{std::forward<Rng>(rng)}
+            stride_view(Rng rng, difference_type_ stride)
+              : range_adaptor_t<stride_view>{std::move(rng)}
               , stride_(stride)
             {
                 RANGES_ASSERT(0 < stride_);
@@ -201,9 +202,9 @@ namespace ranges
 
             public:
                 template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
-                stride_view<Rng> operator()(Rng && rng, range_difference_t<Rng> step) const
+                stride_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> step) const
                 {
-                    return {std::forward<Rng>(rng), step};
+                    return {all(std::forward<Rng>(rng)), step};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED

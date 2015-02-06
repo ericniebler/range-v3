@@ -41,16 +41,15 @@ namespace ranges
             {
             private:
                 friend range_access;
-                using base_range_t = view::all_t<Rng>;
                 using difference_type_ = range_difference_t<Rng>;
-                base_range_t rng_;
+                Rng rng_;
                 difference_type_ n_;
 
                 detail::counted_cursor<range_iterator_t<Rng>> begin_cursor()
                 {
                     return {ranges::begin(rng_), n_};
                 }
-                template<typename BaseRng = base_range_t,
+                template<typename BaseRng = Rng,
                     CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
                 detail::counted_cursor<range_iterator_t<BaseRng const>> begin_cursor() const
                 {
@@ -62,8 +61,8 @@ namespace ranges
                 }
             public:
                 take_view_() = default;
-                take_view_(Rng && rng, difference_type_ n)
-                  : rng_(view::all(std::forward<Rng>(rng))), n_(n)
+                take_view_(Rng rng, difference_type_ n)
+                  : rng_(std::move(rng)), n_(n)
                 {
                     RANGES_ASSERT(n >= 0);
                 }
@@ -71,11 +70,11 @@ namespace ranges
                 {
                     return static_cast<range_size_t<Rng>>(n_);
                 }
-                base_range_t & base()
+                Rng & base()
                 {
                     return rng_;
                 }
-                base_range_t const & base() const
+                Rng const & base() const
                 {
                     return rng_;
                 }
@@ -86,14 +85,13 @@ namespace ranges
               : range_interface<take_view<Rng>>
             {
             private:
-                using base_range_t = view::all_t<Rng>;
                 using difference_type_ = range_difference_t<Rng>;
-                base_range_t rng_;
+                Rng rng_;
                 difference_type_ n_;
             public:
                 take_view_() = default;
-                take_view_(Rng && rng, difference_type_ n)
-                  : rng_(view::all(std::forward<Rng>(rng))), n_(n)
+                take_view_(Rng rng, difference_type_ n)
+                  : rng_(std::move(rng)), n_(n)
                 {
                     RANGES_ASSERT(n >= 0);
                 }
@@ -105,13 +103,13 @@ namespace ranges
                 {
                     return next(ranges::begin(rng_), n_);
                 }
-                template<typename BaseRng = base_range_t,
+                template<typename BaseRng = Rng,
                     CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
                 range_iterator_t<BaseRng const> begin() const
                 {
                     return ranges::begin(rng_);
                 }
-                template<typename BaseRng = base_range_t,
+                template<typename BaseRng = Rng,
                     CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
                 range_iterator_t<BaseRng const> end() const
                 {
@@ -121,11 +119,11 @@ namespace ranges
                 {
                     return static_cast<range_size_t<Rng>>(n_);
                 }
-                base_range_t & base()
+                Rng & base()
                 {
                     return rng_;
                 }
-                base_range_t const & base() const
+                Rng const & base() const
                 {
                     return rng_;
                 }
@@ -150,10 +148,10 @@ namespace ranges
                 friend view_access;
 
                 template<typename Rng>
-                static take_view<Rng>
+                static take_view<all_t<Rng>>
                 invoke_(Rng && rng, range_difference_t<Rng> to, concepts::InputIterable*)
                 {
-                    return {std::forward<Rng>(rng), to};
+                    return {all(std::forward<Rng>(rng)), to};
                 }
                 template<typename Rng, CONCEPT_REQUIRES_(!Range<Rng>() && std::is_lvalue_reference<Rng>())>
                 static range<range_iterator_t<Rng>>
