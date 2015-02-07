@@ -240,11 +240,14 @@ namespace ranges
                 using type = T;
             };
 
+            template<typename T, typename...Rest>
+            using always_t = typename always<T, Rest...>::type;
+
             template<typename...Rest>
             using always_void = always<void, Rest...>;
 
             template<typename...Rest>
-            using void_t = typename always_void<Rest...>::type;
+            using void_t = always_t<void, Rest...>;
 
             template<typename T>
             using decay_t = typename std::decay<T>::type;

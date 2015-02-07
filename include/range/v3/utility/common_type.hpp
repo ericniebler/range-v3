@@ -42,142 +42,108 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename T>
-            struct promote_rvalue
-              : meta::id<T>
-            {};
-            template<typename T>
-            struct promote_rvalue<T &&>
-              : meta::id<T const &>
-            {};
-            template<typename T>
-            using promote_rvalue_t = meta::eval<promote_rvalue<T>>;
+            template<typename From, typename To>
+            struct copy_cv
+            {
+                using type = To;
+            };
+            template<typename From, typename To>
+            struct copy_cv<From const, To>
+            {
+                using type = To const;
+            };
+            template<typename From, typename To>
+            struct copy_cv<From volatile, To>
+            {
+                using type = To volatile;
+            };
+            template<typename From, typename To>
+            struct copy_cv<From const volatile, To>
+            {
+                using type = To const volatile;
+            };
+            template<typename From, typename To>
+            using copy_cv_t = meta::eval<copy_cv<From, To>>;
 
-            // Work around GCC #51317
-            // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=51317
+            template<typename T, typename U>
+            using conditional_common_t = decltype(true ? std::declval<T>() : std::declval<U>());
+
+            ////////////////////////////////////////////////////////////////////////////////////////
+            template<typename T, typename U>
+            struct builtin_common_impl;
+
+            // Work around GCC #64970
+            // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
 #if defined(__GNUC__) && !defined(__clang__)
             template<typename T, typename U>
-            struct default_common_impl
-            {
-                template<typename T2, typename U2>
-                using apply = decltype(true? std::declval<promote_rvalue_t<T2>>()
-                                           : std::declval<promote_rvalue_t<U2>>());
-            };
-            template<typename T>
-            struct default_common_impl<T, T>
-            {
-                template<typename, typename>
-                using apply = T;
-            };
-            template<typename T>
-            struct default_common_impl<T &&, T &&>
-            {
-                template<typename, typename>
-                using apply = T &&;
-            };
-            template<typename T, typename U>
-            struct default_common_impl<T &&, U &&>
-            {
-                template<typename T2, typename U2>
-                using apply = decltype(true? std::declval<T2 &&>()
-                                           : std::declval<U2 &&>());
-            };
-            template<typename T>
-            struct default_common_impl<T &, T const &>
-            {
-                template<typename, typename>
-                using apply = T const &;
-            };
-            template<typename T>
-            struct default_common_impl<T const &, T &>
-            {
-                template<typename, typename>
-                using apply = T const &;
-            };
-            template<typename T>
-            struct default_common_impl<T &&, T const &&>
-            {
-                template<typename, typename>
-                using apply = T const &&;
-            };
-            template<typename T>
-            struct default_common_impl<T const &&, T &&>
-            {
-                template<typename, typename>
-                using apply = T const &&;
-            };
-            template<typename T>
-            struct default_common_impl<T &&, T const &>
-            {
-                template<typename, typename>
-                using apply = T const &;
-            };
-            template<typename T>
-            struct default_common_impl<T const &&, T &>
-            {
-                template<typename, typename>
-                using apply = T const &;
-            };
-            template<typename T>
-            struct default_common_impl<T &, T const &&>
-            {
-                template<typename, typename>
-                using apply = T const &;
-            };
-            template<typename T>
-            struct default_common_impl<T const &, T &&>
-            {
-                template<typename, typename>
-                using apply = T const &;
-            };
-
-            template<typename T, typename U>
-            using default_common_t =
-                meta::eval<
-                    meta::if_<
-                        std::is_same<uncvref_t<T>, uncvref_t<U>>,
-                        meta::lazy_apply<default_common_impl<T, U>, T, U>,
-                        meta::id<decltype(true? std::declval<promote_rvalue_t<T>>()
-                                              : std::declval<promote_rvalue_t<U>>())> > >;
+            using builtin_common_t =
+                meta::if_c<
+                    false,
+                    conditional_common_t<as_cref_t<T>, as_cref_t<U>>,
+                    meta::apply<builtin_common_impl<T, U>, T, U>>;
 #else
             template<typename T, typename U>
-            struct default_common_impl
+            using builtin_common_t =
+                meta::apply<builtin_common_impl<T, U>, T, U>;
+#endif
+
+            template<typename T, typename U>
+            struct builtin_common_impl
             {
-                template<typename T2, typename U2>
-                using apply = decltype(true? std::declval<promote_rvalue_t<T2>>()
-                                           : std::declval<promote_rvalue_t<U2>>());
+                template<typename X, typename Y>
+                using apply = conditional_common_t<X, Y>;
             };
             template<typename T>
-            struct default_common_impl<T, T>
+            struct builtin_common_impl<T, T>
             {
                 template<typename, typename>
                 using apply = T;
             };
             template<typename T>
-            struct default_common_impl<T &&, T &&>
+            struct builtin_common_impl<T &&, T &&>
             {
                 template<typename, typename>
                 using apply = T &&;
             };
-            template<typename T, typename U>
-            struct default_common_impl<T &&, U &&>
+            template<typename T>
+            struct builtin_common_impl<T &, T &>
             {
-                template<typename T2, typename U2>
-                using apply = decltype(true? std::declval<T2 &&>()
-                                           : std::declval<U2 &&>());
+                template<typename, typename>
+                using apply = T &;
             };
             template<typename T, typename U>
-            using default_common_t = meta::apply<default_common_impl<T, U>, T, U>;
-#endif
+            struct builtin_common_impl<T &&, U &&>
+            {
+                template<typename, typename, typename X = T, typename Y = U,
+                    typename R = builtin_common_t<X &, Y &>>
+                using apply =
+                    meta::if_<std::is_reference<R>, meta::eval<std::remove_reference<R>> &&, R>;
+            };
+            template<typename T, typename U>
+            struct builtin_common_impl<T &, U &>
+            {
+                template<typename, typename, typename X = T, typename Y = U>
+                using apply =
+                    conditional_common_t<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
+            };
+            template<typename T, typename U>
+            struct builtin_common_impl<T &, U &&>
+              : builtin_common_impl<T &, U const &>
+            {};
+            template<typename T, typename U>
+            struct builtin_common_impl<T &&, U &>
+              : builtin_common_impl<T const &, U &>
+            {};
 
+            ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T, typename U, typename Enable = void>
             struct common_type_if
             {};
 
             template<typename T, typename U>
-            struct common_type_if<T, U, void_t<default_common_t<T, U>>>
+            struct common_type_if<T, U, void_t<builtin_common_t<T, U>>>
             {
-                using type = decay_t<default_common_t<T, U>>;
+                using type = decay_t<builtin_common_t<T, U>>;
             };
 
             template<typename T, typename U,
@@ -322,12 +288,12 @@ namespace ranges
             {};
 
             template<typename T, typename U>
-            struct common_reference_if<T, U, void_t<default_common_t<T, U>>>
+            struct common_reference_if<T, U, void_t<builtin_common_t<T, U>>>
               : meta::if_<
                     meta::or_<
-                        std::is_reference<default_common_t<T, U> >,
+                        std::is_reference<builtin_common_t<T, U> >,
                         meta::not_<has_type<common_reference_base_<T, U> > > >,
-                    meta::id<default_common_t<T, U> >,
+                    meta::id<builtin_common_t<T, U> >,
                     common_reference_base_<T, U> >
             {};
 
