@@ -57,7 +57,7 @@ namespace ranges
                         noexcept(iterator_rvalue_reference_t<Its>(iter_move(its)))...>::value)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    std::tuple<iterator_rvalue_reference_t<Its>...>{iter_move(its)...}
+                    common_tuple<iterator_rvalue_reference_t<Its>...>{iter_move(its)...}
                 )
 
                 // pair value
@@ -85,7 +85,7 @@ namespace ranges
                              noexcept(iterator_rvalue_reference_t<It2>(iter_move(it2))))
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    std::pair<iterator_rvalue_reference_t<It1>, iterator_rvalue_reference_t<It2>>{
+                    common_pair<iterator_rvalue_reference_t<It1>, iterator_rvalue_reference_t<It2>>{
                         iter_move(it1), iter_move(it2)}
                 )
             };

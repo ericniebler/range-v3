@@ -22,7 +22,6 @@
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
-//#include <range/v3/utility/semiregular.hpp> // BUGBUG
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

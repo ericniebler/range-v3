@@ -527,6 +527,9 @@
     <ClCompile Include="..\..\..\..\test\utility\functional.cpp">
       <Filter>Test Files\utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\utility\common_type.cpp">
+      <Filter>Test Files\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">

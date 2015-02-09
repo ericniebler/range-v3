@@ -51,7 +51,7 @@ int main()
     auto zip = view::zip(rgi, rgi);
     auto rng3 = zip | view::const_;
     has_type<common_pair<int &, int &>>(*begin(zip));
-    has_type<std::pair<int &&, int &&>>(iter_move(begin(zip)));
+    has_type<common_pair<int &&, int &&>>(iter_move(begin(zip)));
     has_type<common_pair<int const &, int const &>>(*begin(rng3));
     has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng3)));
     models<concepts::RandomAccessRange>(rng3);
@@ -64,9 +64,8 @@ int main()
 
     auto zip2 = view::zip(rgi, rgi) | view::move;
     auto rng4 = zip2 | view::const_;
-    // BUGBUG should be common_pair, right?
-    has_type<std::pair<int &&, int &&>>(*begin(zip2));
-    has_type<std::pair<int &&, int &&>>(iter_move(begin(zip2)));
+    has_type<common_pair<int &&, int &&>>(*begin(zip2));
+    has_type<common_pair<int &&, int &&>>(iter_move(begin(zip2)));
     has_type<common_pair<int const &&, int const &&>>(*begin(rng4));
     has_type<common_pair<int const &&, int const &&>>(iter_move(begin(rng4)));
     models<concepts::RandomAccessRange>(rng4);

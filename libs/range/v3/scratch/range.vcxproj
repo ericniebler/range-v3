@@ -183,6 +183,7 @@
     <ClCompile Include="..\..\..\..\test\range_adaptor.cpp" />
     <ClCompile Include="..\..\..\..\test\range_facade.cpp" />
     <ClCompile Include="..\..\..\..\test\to_container.cpp" />
+    <ClCompile Include="..\..\..\..\test\utility\common_type.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\functional.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\meta.cpp" />

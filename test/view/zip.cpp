@@ -85,7 +85,7 @@ int main()
             common_tuple<int &, std::string const &, std::string const &>>());
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
-            std::tuple<int &&, std::string const &&, std::string const &&>>());
+            common_tuple<int &&, std::string const &&, std::string const &&>>());
         CONCEPT_ASSERT(Convertible<range_value_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
         ::models<concepts::InputIterator>(begin(rng));
@@ -200,7 +200,7 @@ int main()
             common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
-            std::pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
+            common_pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
         CONCEPT_ASSERT(Same<
             range_common_reference_t<Rng>,
             common_pair<MoveOnlyString const &, MoveOnlyString const &>>());

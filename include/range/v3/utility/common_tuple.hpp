@@ -18,6 +18,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -243,7 +244,6 @@ namespace ranges
                     std::is_nothrow_constructible<S2, S &&>::value)
             {
                 return {std::forward<F>(this->first), std::forward<S>(this->second)};
-                //return {std::move(*this).first, std::move(*this).second};
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F2, F const &&>() && Constructible<S2, S const &&>())>
@@ -252,7 +252,6 @@ namespace ranges
                     std::is_nothrow_constructible<S2, S const &&>::value)
             {
                 return {std::forward<F const>(this->first), std::forward<S const>(this->second)};
-                //return {std::move(*this).first, std::move(*this).second};
             }
             CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
             friend bool operator ==(common_pair const &a, common_pair const &b)
@@ -354,6 +353,147 @@ namespace ranges
         {
             constexpr auto&& make_common_pair = static_const<make_common_pair_fn>::value;
         }
+
+        /// \cond
+        namespace detail
+        {
+            template<typename T, typename U, typename TupleLike>
+            struct common_tuple_like;
+
+            template<template<typename...> class T0, typename ...Ts,
+                     template<typename...> class T1, typename ...Us,
+                     typename TupleLike>
+            struct common_tuple_like<T0<Ts...>, T1<Us...>, TupleLike>
+              : meta::if_<
+                    meta::and_<detail::has_type<common_type<Ts, Us> >...>,
+                    meta::lazy_apply<
+                        meta::compose<
+                            meta::uncurry<TupleLike>,
+                            meta::bind_back<meta::quote<meta::transform>, meta::quote<meta::eval> > >,
+                        meta::list<common_type<Ts, Us>...> >,
+                    detail::empty>
+            {};
+        }
+
+        // common_type for std::pairs
+        template<typename F1, typename S1, typename F2, typename S2>
+        struct common_type<std::pair<F1, S1>, common_pair<F2, S2>>
+          : detail::common_tuple_like<std::pair<F1, S1>, common_pair<F2, S2>, meta::quote<common_pair>>
+        {};
+
+        template<typename F1, typename S1, typename F2, typename S2>
+        struct common_type<common_pair<F1, S1>, std::pair<F2, S2>>
+          : detail::common_tuple_like<common_pair<F1, S1>, std::pair<F2, S2>, meta::quote<common_pair>>
+        {};
+
+        template<typename F1, typename S1, typename F2, typename S2>
+        struct common_type<common_pair<F1, S1>, common_pair<F2, S2>>
+          : detail::common_tuple_like<common_pair<F1, S1>, common_pair<F2, S2>, meta::quote<common_pair>>
+        {};
+
+        // common_type for std::tuples
+        template<typename ...Ts, typename ...Us>
+        struct common_type<common_tuple<Ts...>, std::tuple<Us...>>
+          : meta::if_c<
+                sizeof...(Ts) == sizeof...(Us),
+                detail::common_tuple_like<common_tuple<Ts...>, std::tuple<Us...>, meta::quote<common_tuple> >,
+                detail::empty>
+        {};
+
+        template<typename ...Ts, typename ...Us>
+        struct common_type<std::tuple<Ts...>, common_tuple<Us...>>
+          : meta::if_c<
+                sizeof...(Ts) == sizeof...(Us),
+                detail::common_tuple_like<std::tuple<Ts...>, common_tuple<Us...>, meta::quote<common_tuple> >,
+                detail::empty>
+        {};
+
+        template<typename ...Ts, typename ...Us>
+        struct common_type<common_tuple<Ts...>, common_tuple<Us...>>
+          : meta::if_c<
+                sizeof...(Ts) == sizeof...(Us),
+                detail::common_tuple_like<common_tuple<Ts...>, common_tuple<Us...>, meta::quote<common_tuple> >,
+                detail::empty>
+        {};
+
+        namespace detail
+        {
+            template<typename T, typename U, typename TupleLike>
+            struct common_tuple_like_ref;
+
+            template<template<typename...> class T0, typename ...Ts,
+                     template<typename...> class T1, typename ...Us, typename TupleLike>
+            struct common_tuple_like_ref<T0<Ts...>, T1<Us...>, TupleLike>
+              : meta::if_<
+                    meta::and_<detail::has_type<common_reference<Ts, Us> >...>,
+                    meta::lazy_apply<
+                        meta::compose<
+                            meta::uncurry<TupleLike>,
+                            meta::bind_back<meta::quote<meta::transform>, meta::quote<meta::eval> > >,
+                        meta::list<common_reference<Ts, Us>...> >,
+                    detail::empty>
+            {};
+        }
+
+        // A common reference for std::pairs
+        template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+        struct common_reference_base<common_pair<F1, S1>, std::pair<F2, S2>, Qual1, Qual2>
+          : detail::common_tuple_like_ref<
+                common_pair<meta::apply<Qual1, F1>, meta::apply<Qual1, S1> >,
+                std::pair<meta::apply<Qual2, F2>, meta::apply<Qual2, S2> >,
+                meta::quote<common_pair> >
+        {};
+
+        template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+        struct common_reference_base<std::pair<F1, S1>, common_pair<F2, S2>, Qual1, Qual2>
+          : detail::common_tuple_like_ref<
+                std::pair<meta::apply<Qual1, F1>, meta::apply<Qual1, S1> >,
+                common_pair<meta::apply<Qual2, F2>, meta::apply<Qual2, S2> >,
+                meta::quote<common_pair> >
+        {};
+
+        template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
+        struct common_reference_base<common_pair<F1, S1>, common_pair<F2, S2>, Qual1, Qual2>
+          : detail::common_tuple_like_ref<
+                common_pair<meta::apply<Qual1, F1>, meta::apply<Qual1, S1> >,
+                common_pair<meta::apply<Qual2, F2>, meta::apply<Qual2, S2> >,
+                meta::quote<common_pair> >
+        {};
+
+        // A common reference for std::tuples
+        template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+        struct common_reference_base<common_tuple<Ts...>, std::tuple<Us...>, Qual1, Qual2>
+          : meta::if_c<
+                sizeof...(Ts) == sizeof...(Us),
+                detail::common_tuple_like_ref<
+                    common_tuple<meta::apply<Qual1, Ts>...>,
+                    std::tuple<meta::apply<Qual2, Us>...>,
+                    meta::quote<common_tuple> >,
+                detail::empty>
+        {};
+
+        template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+        struct common_reference_base<std::tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>
+          : meta::if_c<
+                sizeof...(Ts) == sizeof...(Us),
+                detail::common_tuple_like_ref<
+                    std::tuple<meta::apply<Qual1, Ts>...>,
+                    common_tuple<meta::apply<Qual2, Us>...>,
+                    meta::quote<common_tuple> >,
+                detail::empty>
+        {};
+
+        template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
+        struct common_reference_base<common_tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>
+          : meta::if_c<
+                sizeof...(Ts) == sizeof...(Us),
+                detail::common_tuple_like_ref<
+                    common_tuple<meta::apply<Qual1, Ts>...>,
+                    common_tuple<meta::apply<Qual2, Us>...>,
+                    meta::quote<common_tuple> >,
+                detail::empty>
+        {};
+        /// \endcond
     }
 }
 
