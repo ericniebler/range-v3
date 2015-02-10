@@ -9,6 +9,12 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+// Work around strange glibc bug(?)
+#include <iosfwd>
+#if __cplusplus >= 201402L && defined(__GLIBCXX__)
+int gets;
+#endif
+
 #include <vector>
 #include <iterator>
 #include <functional>
