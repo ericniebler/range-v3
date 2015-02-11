@@ -87,12 +87,29 @@ namespace ranges
                 using apply = eval<impl<Ts...>>;
             };
 
+            /// \brief Turn a class template or alias template into a
+            /// Metafunction Class.
+            template<template<typename...> class C>
+            struct direct_quote
+            {
+                template<typename...Ts>
+                using apply = C<Ts...>;
+            };
+
             /// \brief Turn a metafunction into a Metafunction Class.
             template<template<typename...> class C>
             struct quote_trait
             {
                 template<typename...Ts>
                 using apply = eval<apply<quote<C>, Ts...> >;
+            };
+
+            /// \brief Turn a metafunction into a Metafunction Class.
+            template<template<typename...> class C>
+            struct direct_quote_trait
+            {
+                template<typename...Ts>
+                using apply = eval<apply<direct_quote<C>, Ts...> >;
             };
 
             /// \brief Turn a class template or alias template into a
@@ -113,12 +130,29 @@ namespace ranges
                 using apply = eval<impl<Ts...>>;
             };
 
+            /// \brief Turn a class template or alias template into a
+            /// Metafunction Class.
+            template<typename T, template<T...> class F>
+            struct direct_quote_i
+            {
+                template<typename...Ts>
+                using apply = F<Ts::type::value...>;
+            };
+
             /// \brief Turn a metafunction into a Metafunction Class.
             template<typename T, template<T...> class C>
             struct quote_trait_i
             {
                 template<typename...Ts>
                 using apply = eval<apply<quote_i<T, C>, Ts...> >;
+            };
+
+            /// \brief Turn a metafunction into a Metafunction Class.
+            template<typename T, template<T...> class C>
+            struct direct_quote_trait_i
+            {
+                template<typename...Ts>
+                using apply = eval<apply<direct_quote_i<T, C>, Ts...> >;
             };
 
             /// \brief Compose the Metafunction Classes in the parameter pack

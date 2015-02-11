@@ -560,7 +560,7 @@ namespace ranges
             CONCEPT_REQUIRES(detail::BidirectionalCursor<Cur>())
             basic_iterator operator--(int)
             {
-                auto tmp{*this};
+                basic_iterator tmp{*this};
                 --*this;
                 return tmp;
             }

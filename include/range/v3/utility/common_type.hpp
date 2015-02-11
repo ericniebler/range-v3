@@ -65,9 +65,6 @@ namespace ranges
             template<typename From, typename To>
             using copy_cv_t = meta::eval<copy_cv<From, To>>;
 
-            template<typename T, typename U>
-            using conditional_common_t = decltype(true ? std::declval<T>() : std::declval<U>());
-
             ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T, typename U>
             struct builtin_common_impl;
@@ -75,24 +72,113 @@ namespace ranges
             // Work around GCC #64970
             // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
 #if defined(__GNUC__) && !defined(__clang__)
+            template<typename A, typename B, typename = void>
+            struct conditional_result
+            {};
+            template<typename A, typename B>
+            struct conditional_result<A, B, void_t<decltype(true ? std::declval<A>() : std::declval<B>())>>
+            {
+                using type = decltype(true ? std::declval<A>() : std::declval<B>());
+            };
+
             template<typename T, typename U>
             using builtin_common_t =
-                meta::if_c<
-                    false,
-                    conditional_common_t<as_cref_t<T>, as_cref_t<U>>,
-                    meta::apply<builtin_common_impl<T, U>, T, U>>;
+                meta::eval<meta::apply<builtin_common_impl<T, U>, T, U> >;
+
+            template<typename T, typename U, typename = decay_t<T>, typename = decay_t<U>>
+            struct builtin_common_impl2
+            {
+                template<typename, typename, typename X = T, typename Y = U, typename = void>
+                struct apply
+                {};
+                template<typename a, typename b, typename X, typename Y>
+                struct apply<a, b, X, Y, void_t<meta::eval<conditional_result<X, Y> > > >
+                {
+                    using type = decay_t<meta::eval<conditional_result<X, Y> > >;
+                };
+            };
+            template<typename T, typename U, typename X>
+            struct builtin_common_impl2<T, U, X, X>
+            {
+                template<typename, typename>
+                using apply = meta::id<X>;
+            };
+            template<typename T, typename U>
+            struct builtin_common_impl
+              : builtin_common_impl2<T, U>
+            {};
+            template<typename T>
+            struct builtin_common_impl<T, T>
+            {
+                template<typename, typename>
+                using apply = meta::id<T>;
+            };
+            template<typename T>
+            struct builtin_common_impl<T &&, T &&>
+            {
+                template<typename, typename>
+                using apply = meta::id<T &&>;
+            };
+            template<typename T>
+            struct builtin_common_impl<T &, T &>
+            {
+                template<typename, typename>
+                using apply = meta::id<T &>;
+            };
+            template<typename T, typename U>
+            struct builtin_common_impl<T &&, U &&>
+            {
+                template<typename, typename, typename X = T, typename Y = U, typename = void>
+                struct apply
+                {};
+                template<typename a, typename b, typename X, typename Y>
+                struct apply<a, b, X, Y, void_t< builtin_common_t<X &, Y &> > >
+                {
+                    using R = builtin_common_t<X &, Y &>;
+                    using type =
+                        meta::if_<std::is_reference<R>, meta::eval<std::remove_reference<R>> &&, R>;
+                };
+            };
+            template<typename T, typename U>
+            struct builtin_common_impl<T &, U &>
+            {
+                template<typename, typename, typename X = T, typename Y = U>
+                using apply =
+                    conditional_result<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
+            };
+            template<typename T, typename U>
+            struct builtin_common_impl<T &, U &&>
+              : builtin_common_impl<T &, U const &>
+            {};
+            template<typename T, typename U>
+            struct builtin_common_impl<T &&, U &>
+              : builtin_common_impl<T const &, U &>
+            {};
 #else
+            template<typename T, typename U>
+            using conditional_result_t =
+                decltype(true ? std::declval<T>() : std::declval<U>());
+
             template<typename T, typename U>
             using builtin_common_t =
                 meta::apply<builtin_common_impl<T, U>, T, U>;
-#endif
 
-            template<typename T, typename U>
-            struct builtin_common_impl
+            template<typename T, typename U, typename = decay_t<T>, typename = decay_t<U>>
+            struct builtin_common_impl2
             {
                 template<typename, typename, typename X = T, typename Y = U>
-                using apply = conditional_common_t<X, Y>;
+                using apply = decay_t<conditional_result_t<X, Y>>;
             };
+            template<typename T, typename U, typename X>
+            struct builtin_common_impl2<T, U, X, X>
+            {
+                template<typename, typename>
+                using apply = X;
+            };
+            template<typename T, typename U>
+            struct builtin_common_impl
+              : builtin_common_impl2<T, U>
+            {};
             template<typename T>
             struct builtin_common_impl<T, T>
             {
@@ -124,7 +210,7 @@ namespace ranges
             {
                 template<typename, typename, typename X = T, typename Y = U>
                 using apply =
-                    conditional_common_t<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
+                    conditional_result_t<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
             };
             template<typename T, typename U>
             struct builtin_common_impl<T &, U &&>
@@ -134,6 +220,7 @@ namespace ranges
             struct builtin_common_impl<T &&, U &>
               : builtin_common_impl<T const &, U &>
             {};
+#endif
 
             ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T, typename U, typename Enable = void>

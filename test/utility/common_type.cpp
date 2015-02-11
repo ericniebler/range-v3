@@ -6,6 +6,15 @@
 struct B {};
 struct D : B {};
 
+struct noncopyable
+{
+    noncopyable() = default;
+    noncopyable(noncopyable const &) = delete;
+    noncopyable(noncopyable &&) = default;
+    noncopyable &operator=(noncopyable const &) = delete;
+    noncopyable &operator=(noncopyable &&) = default;
+};
+
 int main()
 {
     using namespace ranges;
@@ -40,11 +49,16 @@ int main()
 
     static_assert(std::is_same<
         common_reference_t<common_pair<int const &, int const &>, std::pair<int, int>>,
-        common_pair<int, int>
+        std::pair<int, int>
     >::value, "");
 
     static_assert(std::is_same<
         detail::builtin_common_t<common_pair<int, int> const &, std::pair<int, int> &>,
         std::pair<int, int> const &
+    >::value, "");
+
+    static_assert(std::is_same<
+        detail::builtin_common_t<noncopyable const &, noncopyable>,
+        noncopyable
     >::value, "");
 }
