@@ -82,57 +82,28 @@ namespace ranges
             };
 
             template<typename T, typename U>
-            using builtin_common_t =
-                meta::eval<meta::apply<builtin_common_impl<T, U>, T, U> >;
+            using builtin_common_t = meta::eval<meta::apply<builtin_common_impl<T, U>, T, U>>;
 
-            template<typename T, typename U, typename = decay_t<T>, typename = decay_t<U>>
-            struct builtin_common_impl2
+            template<typename T, typename U>
+            struct builtin_common_impl
             {
-                template<typename, typename, typename X = T, typename Y = U, typename = void>
+                template<typename, typename, typename = T, typename = U, typename = void>
                 struct apply
                 {};
                 template<typename a, typename b, typename X, typename Y>
-                struct apply<a, b, X, Y, void_t<meta::eval<conditional_result<X, Y> > > >
+                struct apply<a, b, X, Y, void_t<meta::eval<conditional_result<as_cref_t<X>, as_cref_t<Y>>>>>
                 {
-                    using type = decay_t<meta::eval<conditional_result<X, Y> > >;
+                    using type = decay_t<meta::eval<conditional_result<as_cref_t<X>, as_cref_t<Y>>>>;
                 };
-            };
-            template<typename T, typename U, typename X>
-            struct builtin_common_impl2<T, U, X, X>
-            {
-                template<typename, typename>
-                using apply = meta::id<X>;
-            };
-            template<typename T, typename U>
-            struct builtin_common_impl
-              : builtin_common_impl2<T, U>
-            {};
-            template<typename T>
-            struct builtin_common_impl<T, T>
-            {
-                template<typename, typename>
-                using apply = meta::id<T>;
-            };
-            template<typename T>
-            struct builtin_common_impl<T &&, T &&>
-            {
-                template<typename, typename>
-                using apply = meta::id<T &&>;
-            };
-            template<typename T>
-            struct builtin_common_impl<T &, T &>
-            {
-                template<typename, typename>
-                using apply = meta::id<T &>;
             };
             template<typename T, typename U>
             struct builtin_common_impl<T &&, U &&>
             {
-                template<typename, typename, typename X = T, typename Y = U, typename = void>
+                template<typename, typename, typename = T, typename = U, typename = void>
                 struct apply
                 {};
                 template<typename a, typename b, typename X, typename Y>
-                struct apply<a, b, X, Y, void_t< builtin_common_t<X &, Y &> > >
+                struct apply<a, b, X, Y, void_t< builtin_common_t<X &, Y &>>>
                 {
                     using R = builtin_common_t<X &, Y &>;
                     using type =
@@ -143,8 +114,7 @@ namespace ranges
             struct builtin_common_impl<T &, U &>
             {
                 template<typename, typename, typename X = T, typename Y = U>
-                using apply =
-                    conditional_result<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
+                using apply = conditional_result<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
             };
             template<typename T, typename U>
             struct builtin_common_impl<T &, U &&>
@@ -156,46 +126,16 @@ namespace ranges
             {};
 #else
             template<typename T, typename U>
-            using conditional_result_t =
-                decltype(true ? std::declval<T>() : std::declval<U>());
+            using conditional_result_t = decltype(true ? std::declval<T>() : std::declval<U>());
 
             template<typename T, typename U>
-            using builtin_common_t =
-                meta::apply<builtin_common_impl<T, U>, T, U>;
+            using builtin_common_t = meta::apply<builtin_common_impl<T, U>, T, U>;
 
-            template<typename T, typename U, typename = decay_t<T>, typename = decay_t<U>>
-            struct builtin_common_impl2
-            {
-                template<typename, typename, typename X = T, typename Y = U>
-                using apply = decay_t<conditional_result_t<X, Y>>;
-            };
-            template<typename T, typename U, typename X>
-            struct builtin_common_impl2<T, U, X, X>
-            {
-                template<typename, typename>
-                using apply = X;
-            };
             template<typename T, typename U>
             struct builtin_common_impl
-              : builtin_common_impl2<T, U>
-            {};
-            template<typename T>
-            struct builtin_common_impl<T, T>
             {
-                template<typename, typename>
-                using apply = T;
-            };
-            template<typename T>
-            struct builtin_common_impl<T &&, T &&>
-            {
-                template<typename, typename>
-                using apply = T &&;
-            };
-            template<typename T>
-            struct builtin_common_impl<T &, T &>
-            {
-                template<typename, typename>
-                using apply = T &;
+                template<typename, typename, typename X = T, typename Y = U>
+                using apply = decay_t<conditional_result_t<as_cref_t<X>, as_cref_t<Y>>>;
             };
             template<typename T, typename U>
             struct builtin_common_impl<T &&, U &&>
@@ -209,8 +149,7 @@ namespace ranges
             struct builtin_common_impl<T &, U &>
             {
                 template<typename, typename, typename X = T, typename Y = U>
-                using apply =
-                    conditional_result_t<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
+                using apply = conditional_result_t<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
             };
             template<typename T, typename U>
             struct builtin_common_impl<T &, U &&>

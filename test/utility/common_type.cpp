@@ -15,6 +15,9 @@ struct noncopyable
     noncopyable &operator=(noncopyable &&) = default;
 };
 
+struct noncopyable2 : noncopyable
+{};
+
 int main()
 {
     using namespace ranges;
@@ -57,8 +60,19 @@ int main()
         std::pair<int, int> const &
     >::value, "");
 
+    // Some tests with noncopyable types
     static_assert(std::is_same<
         detail::builtin_common_t<noncopyable const &, noncopyable>,
+        noncopyable
+    >::value, "");
+
+    static_assert(std::is_same<
+        detail::builtin_common_t<noncopyable2 const &, noncopyable>,
+        noncopyable
+    >::value, "");
+
+    static_assert(std::is_same<
+        detail::builtin_common_t<noncopyable const &, noncopyable2>,
         noncopyable
     >::value, "");
 }
