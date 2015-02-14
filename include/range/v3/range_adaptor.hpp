@@ -58,7 +58,7 @@ namespace ranges
             struct adaptor_value_type2<
                 BaseIter,
                 Adapt,
-                void_t<decltype(Adapt::current(BaseIter{}, adaptor_base_current_mem_fn{}))>>
+                meta::void_<decltype(Adapt::current(BaseIter{}, adaptor_base_current_mem_fn{}))>>
             {
                 using value_type = iterator_value_t<BaseIter>;
             };
@@ -69,7 +69,7 @@ namespace ranges
             {};
 
             template<typename BaseIter, typename Adapt>
-            struct adaptor_value_type<BaseIter, Adapt, void_t<typename Adapt::value_type>>
+            struct adaptor_value_type<BaseIter, Adapt, meta::void_<typename Adapt::value_type>>
             {
                 using value_type = typename Adapt::value_type;
             };

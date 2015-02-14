@@ -17,10 +17,13 @@
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
 
-static_assert(sizeof(ranges::range<int*, ranges::detail::empty>) == sizeof(int*),
+struct empty
+{};
+
+static_assert(sizeof(ranges::range<int*, empty>) == sizeof(int*),
     "Expected range to be compressed");
 
-static_assert(sizeof(ranges::sized_range<int*, ranges::detail::empty>) == sizeof(int*) + sizeof(std::size_t),
+static_assert(sizeof(ranges::sized_range<int*, empty>) == sizeof(int*) + sizeof(std::size_t),
     "Expected sized_range to be compressed");
 
 template<typename T, typename U = decltype(std::declval<T>().pop_front())>

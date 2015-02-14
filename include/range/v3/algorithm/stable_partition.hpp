@@ -36,6 +36,7 @@
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/rotate.hpp>
 #include <range/v3/algorithm/partition_move.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges

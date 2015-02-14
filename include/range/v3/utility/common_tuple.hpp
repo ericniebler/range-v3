@@ -417,13 +417,13 @@ namespace ranges
                      typename TupleLike>
             struct common_tuple_like<T0<Ts...>, T1<Us...>, TupleLike>
               : meta::if_<
-                    meta::and_<detail::has_type<common_type<Ts, Us> >...>,
+                    meta::and_<meta::has_type<common_type<Ts, Us> >...>,
                     meta::lazy_apply<
                         meta::compose<
                             meta::uncurry<TupleLike>,
                             meta::bind_back<meta::quote<meta::transform>, meta::quote<meta::eval> > >,
                         meta::list<common_type<Ts, Us>...> >,
-                    detail::empty>
+                    meta::nil_>
             {};
 
             template<typename T, typename U>
@@ -463,7 +463,7 @@ namespace ranges
           : meta::if_c<
                 sizeof...(Ts) == sizeof...(Us),
                 detail::common_tuple_like<common_tuple<Ts...>, std::tuple<Us...>, meta::quote<std::tuple> >,
-                detail::empty>
+                meta::nil_>
         {};
 
         template<typename ...Ts, typename ...Us>
@@ -471,7 +471,7 @@ namespace ranges
           : meta::if_c<
                 sizeof...(Ts) == sizeof...(Us),
                 detail::common_tuple_like<std::tuple<Ts...>, common_tuple<Us...>, meta::quote<std::tuple> >,
-                detail::empty>
+                meta::nil_>
         {};
 
         template<typename ...Ts, typename ...Us>
@@ -479,7 +479,7 @@ namespace ranges
           : meta::if_c<
                 sizeof...(Ts) == sizeof...(Us),
                 detail::common_tuple_like<common_tuple<Ts...>, common_tuple<Us...>, meta::quote<std::tuple> >,
-                detail::empty>
+                meta::nil_>
         {};
 
         namespace detail
@@ -491,13 +491,13 @@ namespace ranges
                      template<typename...> class T1, typename ...Us, typename TupleLike>
             struct common_tuple_like_ref<T0<Ts...>, T1<Us...>, TupleLike>
               : meta::if_<
-                    meta::and_<detail::has_type<common_reference<Ts, Us> >...>,
+                    meta::and_<meta::has_type<common_reference<Ts, Us> >...>,
                     meta::lazy_apply<
                         meta::compose<
                             meta::uncurry<TupleLike>,
                             meta::bind_back<meta::quote<meta::transform>, meta::quote<meta::eval> > >,
                         meta::list<common_reference<Ts, Us>...> >,
-                    detail::empty>
+                    meta::nil_>
             {};
         }
 
@@ -535,7 +535,7 @@ namespace ranges
                     common_tuple<meta::apply<Qual1, Ts>...>,
                     std::tuple<meta::apply<Qual2, Us>...>,
                     meta::quote<detail::make_common_tuple> >,
-                detail::empty>
+                meta::nil_>
         {};
 
         template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
@@ -546,7 +546,7 @@ namespace ranges
                     std::tuple<meta::apply<Qual1, Ts>...>,
                     common_tuple<meta::apply<Qual2, Us>...>,
                     meta::quote<detail::make_common_tuple> >,
-                detail::empty>
+                meta::nil_>
         {};
 
         template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
@@ -557,7 +557,7 @@ namespace ranges
                     common_tuple<meta::apply<Qual1, Ts>...>,
                     common_tuple<meta::apply<Qual2, Us>...>,
                     meta::quote<detail::make_common_tuple> >,
-                detail::empty>
+                meta::nil_>
         {};
         /// \endcond
     }

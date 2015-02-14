@@ -93,7 +93,7 @@ namespace ranges
             };
 
             template<typename Concept>
-            struct base_concepts_of<Concept, void_t<typename Concept::base_concepts_t>>
+            struct base_concepts_of<Concept, meta::void_<typename Concept::base_concepts_t>>
             {
                 using type = typename Concept::base_concepts_t;
             };

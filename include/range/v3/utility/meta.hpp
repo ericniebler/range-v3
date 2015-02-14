@@ -34,6 +34,13 @@ namespace ranges
             template<typename...Ts>
             struct list;
 
+            /// \brief An empty type used for various things.
+            struct nil_
+            {};
+            #ifndef nil
+            using nil = nil_;
+            #endif
+
             /// \brief "Evaluate" a metafunction by returning the nested \c T::type alias.
             template<typename T>
             using eval = typename T::type;
@@ -41,6 +48,50 @@ namespace ranges
             /// \brief Evaluate the Metafunction Class `F` with the arguments \c Args.
             template<typename F, typename...Args>
             using apply = typename F::template apply<Args...>;
+
+            /// \brief A Metafunction Class that always returns \c T.
+            template<typename T>
+            struct always
+            {
+            private:
+                // Redirect through a class template for compilers that have not
+                // yet implemented CWG 1558:
+                // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
+                template<typename...>
+                struct impl
+                {
+                    using type = T;
+                };
+            public:
+                template<typename...Ts>
+                using apply = eval<impl<Ts...>>;
+            };
+
+            /// \brief An alias for `void`.
+            template<typename...Ts>
+            using void_ = apply<always<void>, Ts...>;
+
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename, typename = void>
+                struct has_type_
+                {
+                    using type = std::false_type;
+                };
+
+                template<typename T>
+                struct has_type_<T, void_<typename T::type>>
+                {
+                    using type = std::true_type;
+                };
+            }
+            /// \endcond
+
+            /// \brief An alias for `std::true_type` if `T::type` exists and names a type;
+            ///        otherwise, it's an alias for `std::false_type`.
+            template<typename T>
+            using has_type = eval<meta_detail::has_type_<T>>;
 
             /// \brief A metafunction that evaluates the Metafunction Class `F` with
             /// the arguments \c Args.
@@ -75,10 +126,18 @@ namespace ranges
             struct quote
             {
             private:
+                // TODO figure out why this causes GCC to puke on the range-v3
+                // regression tests.
+                //template<template<typename...> class D, typename...Ts>
+                //static id<D<Ts...>> test(int);
+                //template<template<typename...> class D, typename...Ts>
+                //static nil_ test(long);
+
                 // Indirection here needed to avoid Core issue 1430
                 // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
                 template<typename...Ts>
                 struct impl
+                  //: decltype(quote::test<C, Ts...>(42))
                 {
                     using type = C<Ts...>;
                 };
@@ -173,14 +232,6 @@ namespace ranges
             {
                 template<typename...Ts>
                 using apply = apply<F0, apply<compose<Fs...>, Ts...>>;
-            };
-
-            /// \brief A Metafunction Class that always returns \c T.
-            template<typename T>
-            struct always
-            {
-                template<typename...>
-                using apply = T;
             };
 
             /// \brief A Metafunction Class partially applies the Metafunction
@@ -495,15 +546,13 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                struct empty {};
-
                 template<typename VoidPtrs>
                 struct list_element_impl_;
 
                 template<typename ...VoidPtrs>
                 struct list_element_impl_<list<VoidPtrs...>>
                 {
-                    static empty eval(...);
+                    static nil_ eval(...);
 
                     template<typename T, typename ...Us>
                     static T eval(VoidPtrs..., T *, Us *...);
@@ -544,13 +593,13 @@ namespace ranges
                 template<typename VoidPtrs>
                 struct drop_impl_
                 {
-                    static empty eval(...);
+                    static nil_ eval(...);
                 };
 
                 template<typename ...VoidPtrs>
                 struct drop_impl_<list<VoidPtrs...>>
                 {
-                    static empty eval(...);
+                    static nil_ eval(...);
 
                     template<typename...Ts>
                     static id<list<Ts...>> eval(VoidPtrs..., id<Ts> *...);
@@ -928,12 +977,12 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template<typename List, typename Fun, typename = void>
+                template<typename...Args>
                 struct transform_
                 {};
 
                 template<typename ...List, typename Fun>
-                struct transform_<list<List...>, Fun, void>
+                struct transform_<list<List...>, Fun>
                 {
                     using type = list<apply<Fun, List>...>;
                 };
@@ -953,8 +1002,8 @@ namespace ranges
             /// constructed with the results of calling \c Fun with each element in the
             /// lists, pairwise. Complexity: O(N)
             /// \ingroup group-meta
-            template<typename List, typename Fun, typename Dummy = void>
-            using transform = eval<meta_detail::transform_<List, Fun, Dummy>>;
+            template<typename ...Args>
+            using transform = eval<meta_detail::transform_<Args...>>;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // zip_with

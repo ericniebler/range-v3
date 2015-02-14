@@ -731,7 +731,7 @@ namespace ranges
             {};
 
             template<typename T>
-            struct expects_wrapped_references_<T, void_t<typename T::expects_wrapped_references>>
+            struct expects_wrapped_references_<T, meta::void_<typename T::expects_wrapped_references>>
               : std::true_type
             {};
         }

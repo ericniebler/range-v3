@@ -44,6 +44,11 @@ int main()
     static_assert(std::is_same<common_reference_t<int &, short &>, int>::value, "");
     static_assert(std::is_same<common_reference_t<int &, short>, int>::value, "");
 
+    // Array types?? Yup!
+    static_assert(std::is_same<common_reference_t<int (&)[10], int (&&)[10]>, int const(&)[10]>::value, "");
+    static_assert(std::is_same<common_reference_t<int const (&)[10], int volatile (&)[10]>, int const volatile(&)[10]>::value, "");
+    static_assert(std::is_same<common_reference_t<int (&)[10], int (&)[11]>, int *>::value, "");
+
     // Some tests for common_pair with common_reference
     static_assert(std::is_same<
         common_reference_t<std::pair<int &, int &>, common_pair<int,int> const &>,

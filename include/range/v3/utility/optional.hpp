@@ -15,6 +15,7 @@
 #define RANGES_V3_UTILITY_OPTIONAL_HPP
 
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/variant.hpp>
 
 namespace ranges
@@ -26,7 +27,7 @@ namespace ranges
         struct optional
         {
         private:
-            tagged_variant<T, detail::empty> data_;
+            tagged_variant<T, meta::nil_> data_;
         public:
             optional() = default;
             optional(T t)
@@ -57,7 +58,7 @@ namespace ranges
             }
             void reset()
             {
-                ranges::set<1>(data_, detail::empty{});
+                ranges::set<1>(data_, meta::nil_{});
             }
         };
     }

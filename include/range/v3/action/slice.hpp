@@ -18,6 +18,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/erase.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>

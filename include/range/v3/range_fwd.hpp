@@ -178,9 +178,6 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            struct empty
-            {};
-
             template<typename T = void>
             struct any_
             {
@@ -231,23 +228,6 @@ namespace ranges
             {
                 return static_cast<typename std::remove_reference<T>::type &&>(t);
             }
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // always, always_void, void_t
-            template<typename T, typename...Rest>
-            struct always
-            {
-                using type = T;
-            };
-
-            template<typename T, typename...Rest>
-            using always_t = typename always<T, Rest...>::type;
-
-            template<typename...Rest>
-            using always_void = always<void, Rest...>;
-
-            template<typename...Rest>
-            using void_t = always_t<void, Rest...>;
 
             template<typename T>
             using decay_t = typename std::decay<T>::type;

@@ -40,7 +40,7 @@ namespace ranges
           : range_interface<drop_view<Rng>, is_infinite<Rng>::value>
           , private meta::if_<
                 RandomAccessIterable<Rng>,
-                detail::empty,
+                meta::nil_,
                 box<optional<range_iterator_t<Rng>>, begin_tag>>
         {
         private:

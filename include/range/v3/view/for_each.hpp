@@ -23,6 +23,7 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 

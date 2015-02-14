@@ -18,6 +18,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/range.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/functional.hpp>

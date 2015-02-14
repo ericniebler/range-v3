@@ -76,7 +76,7 @@ namespace ranges
             struct conditional_result
             {};
             template<typename A, typename B>
-            struct conditional_result<A, B, void_t<decltype(true ? std::declval<A>() : std::declval<B>())>>
+            struct conditional_result<A, B, meta::void_<decltype(true ? std::declval<A>() : std::declval<B>())>>
             {
                 using type = decltype(true ? std::declval<A>() : std::declval<B>());
             };
@@ -91,7 +91,7 @@ namespace ranges
                 struct apply
                 {};
                 template<typename a, typename b, typename X, typename Y>
-                struct apply<a, b, X, Y, void_t<meta::eval<conditional_result<as_cref_t<X>, as_cref_t<Y>>>>>
+                struct apply<a, b, X, Y, meta::void_<meta::eval<conditional_result<as_cref_t<X>, as_cref_t<Y>>>>>
                 {
                     using type = decay_t<meta::eval<conditional_result<as_cref_t<X>, as_cref_t<Y>>>>;
                 };
@@ -103,7 +103,7 @@ namespace ranges
                 struct apply
                 {};
                 template<typename a, typename b, typename X, typename Y>
-                struct apply<a, b, X, Y, void_t< builtin_common_t<X &, Y &>>>
+                struct apply<a, b, X, Y, meta::void_<builtin_common_t<X &, Y &>>>
                 {
                     using R = builtin_common_t<X &, Y &>;
                     using type =
@@ -167,7 +167,7 @@ namespace ranges
             {};
 
             template<typename T, typename U>
-            struct common_type_if<T, U, void_t<builtin_common_t<T, U>>>
+            struct common_type_if<T, U, meta::void_<builtin_common_t<T, U>>>
             {
                 using type = decay_t<builtin_common_t<T, U>>;
             };
@@ -183,16 +183,6 @@ namespace ranges
               : common_type_if<T, U>
             {};
 
-            template<typename Meta, typename Enable = void>
-            struct has_type
-              : std::false_type
-            {};
-
-            template<typename Meta>
-            struct has_type<Meta, void_t<typename Meta::type>>
-              : std::true_type
-            {};
-
             template<typename Meta, typename...Ts>
             struct common_type_recurse
               : common_type<typename Meta::type, Ts...>
@@ -201,9 +191,9 @@ namespace ranges
             template<typename Meta, typename...Ts>
             struct common_type_recurse_if
               : meta::if_<
-                    has_type<Meta>,
+                    meta::has_type<Meta>,
                     common_type_recurse<Meta, Ts...>,
-                    empty>
+                    meta::nil_>
             {};
         }
         /// \endcond
@@ -314,11 +304,11 @@ namespace ranges
             {};
 
             template<typename T, typename U>
-            struct common_reference_if<T, U, void_t<builtin_common_t<T, U>>>
+            struct common_reference_if<T, U, meta::void_<builtin_common_t<T, U>>>
               : meta::if_<
                     meta::or_<
                         std::is_reference<builtin_common_t<T, U> >,
-                        meta::not_<has_type<common_reference_base_<T, U> > > >,
+                        meta::not_<meta::has_type<common_reference_base_<T, U> > > >,
                     meta::id<builtin_common_t<T, U> >,
                     common_reference_base_<T, U> >
             {};
@@ -331,9 +321,9 @@ namespace ranges
             template<typename Meta, typename...Ts>
             struct common_reference_recurse_if
               : meta::if_<
-                    has_type<Meta>,
+                    meta::has_type<Meta>,
                     common_reference_recurse<Meta, Ts...>,
-                    empty>
+                    meta::nil_>
             {};
         }
         /// \endcond

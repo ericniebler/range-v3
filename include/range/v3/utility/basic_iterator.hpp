@@ -346,7 +346,7 @@ namespace ranges
             {};
 
             template<typename Cur>
-            struct has_mixin<Cur, void_t<typename Cur::mixin>>
+            struct has_mixin<Cur, meta::void_<typename Cur::mixin>>
               : std::true_type
             {};
 

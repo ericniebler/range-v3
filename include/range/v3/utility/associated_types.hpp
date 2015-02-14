@@ -52,7 +52,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct difference_type<T, void_t<typename T::difference_type>>
+            struct difference_type<T, meta::void_<typename T::difference_type>>
             {
                 using type = typename T::difference_type;
             };
@@ -84,7 +84,7 @@ namespace ranges
             {};
 
             template<typename T>
-            struct value_type<T, void_t<typename T::value_type>>
+            struct value_type<T, meta::void_<typename T::value_type>>
               : std::enable_if<!std::is_void<typename T::value_type>::value, typename T::value_type>
             {
                 // The use of enable_if is to accommodate output iterators that are
@@ -94,7 +94,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct value_type<T, void_t<typename T::element_type>> // smart pointers
+            struct value_type<T, meta::void_<typename T::element_type>> // smart pointers
             {
                 using type = typename T::element_type;
             };

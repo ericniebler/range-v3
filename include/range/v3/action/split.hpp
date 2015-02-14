@@ -19,6 +19,7 @@
 #include <range/v3/to_container.hpp>
 #include <range/v3/action/action.hpp>
 #include <range/v3/action/concepts.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>

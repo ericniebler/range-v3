@@ -15,6 +15,7 @@
 #include <tuple>
 #include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
+#include <range/v3/range_fwd.hpp>
 #include "../simple_test.hpp"
 
 using namespace ranges;
@@ -78,6 +79,24 @@ static_assert(!any_of<list<int, short, long>, quote<std::is_floating_point>>::va
 static_assert(any_of<list<int, short, long, float>, quote<std::is_floating_point>>::value, "");
 
 static_assert(std::is_same<apply<uncurry<curry<quote_trait<id>>>, std::tuple<int, short, double>>, list<int, short, double>>::value, "");
+
+//template<typename, typename, typename = void>
+//struct can_apply_
+//  : std::false_type
+//{};
+//
+//template<typename F, typename...As>
+//struct can_apply_<F, meta::list<As...>, detail::void_t<meta::apply<F, As...>>>
+//  : std::true_type
+//{};
+//
+//template<typename F, typename...As>
+//struct can_apply
+//  : can_apply_<F, meta::list<As...>>
+//{};
+//
+//static_assert(can_apply<meta::quote<std::pair>, int, int>::value, "");
+//static_assert(!can_apply<meta::quote<std::pair>, int, int, int>::value, "");
 
 int main()
 {
