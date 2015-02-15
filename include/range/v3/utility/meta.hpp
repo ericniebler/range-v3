@@ -85,6 +85,16 @@ namespace ranges
                 {
                     using type = std::true_type;
                 };
+
+                template<typename, typename, typename = void>
+                struct lazy_apply_
+                {};
+
+                template<typename F, typename...Ts>
+                struct lazy_apply_<F, list<Ts...>, void_<apply<F, Ts...>>>
+                {
+                    using type = apply<F, Ts...>;
+                };
             }
             /// \endcond
 
@@ -97,9 +107,8 @@ namespace ranges
             /// the arguments \c Args.
             template<typename F, typename...Args>
             struct lazy_apply
-            {
-                using type = apply<F, Args...>;
-            };
+              : meta_detail::lazy_apply_<F, list<Args...>>
+            {};
 
             /// \brief An integral constant wrapper for \c std::size_t.
             template<std::size_t N>
@@ -126,33 +135,19 @@ namespace ranges
             struct quote
             {
             private:
-                // TODO figure out why this causes GCC to puke on the range-v3
-                // regression tests.
-                //template<template<typename...> class D, typename...Ts>
-                //static id<D<Ts...>> test(int);
-                //template<template<typename...> class D, typename...Ts>
-                //static nil_ test(long);
-
+                template<typename, typename = quote, typename = void>
+                struct impl
+                {};
+                template<typename...Ts, template<typename...> class D>
+                struct impl<list<Ts...>, quote<D>, void_<D<Ts...>>>
+                {
+                    using type = D<Ts...>;
+                };
+            public:
                 // Indirection here needed to avoid Core issue 1430
                 // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
                 template<typename...Ts>
-                struct impl
-                  //: decltype(quote::test<C, Ts...>(42))
-                {
-                    using type = C<Ts...>;
-                };
-            public:
-                template<typename...Ts>
-                using apply = eval<impl<Ts...>>;
-            };
-
-            /// \brief Turn a class template or alias template into a
-            /// Metafunction Class.
-            template<template<typename...> class C>
-            struct direct_quote
-            {
-                template<typename...Ts>
-                using apply = C<Ts...>;
+                using apply = eval<impl<list<Ts...>>>;
             };
 
             /// \brief Turn a metafunction into a Metafunction Class.
@@ -160,15 +155,7 @@ namespace ranges
             struct quote_trait
             {
                 template<typename...Ts>
-                using apply = eval<apply<quote<C>, Ts...> >;
-            };
-
-            /// \brief Turn a metafunction into a Metafunction Class.
-            template<template<typename...> class C>
-            struct direct_quote_trait
-            {
-                template<typename...Ts>
-                using apply = eval<apply<direct_quote<C>, Ts...> >;
+                using apply = eval<apply<quote<C>, Ts...>>;
             };
 
             /// \brief Turn a class template or alias template into a
@@ -179,23 +166,17 @@ namespace ranges
             private:
                 // Indirection here needed to avoid Core issue 1430
                 // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
-                template<typename ...Ts>
+                template<typename, typename = quote_i, typename = void>
                 struct impl
+                {};
+                template<typename...Ts, typename U, template<U...> class D>
+                struct impl<list<Ts...>, quote_i<U, D>, void_<D<Ts::type::value...>>>
                 {
-                    using type = F<Ts::type::value...>;
+                    using type = D<Ts::type::value...>;
                 };
             public:
                 template<typename...Ts>
-                using apply = eval<impl<Ts...>>;
-            };
-
-            /// \brief Turn a class template or alias template into a
-            /// Metafunction Class.
-            template<typename T, template<T...> class F>
-            struct direct_quote_i
-            {
-                template<typename...Ts>
-                using apply = F<Ts::type::value...>;
+                using apply = eval<impl<list<Ts...>>>;
             };
 
             /// \brief Turn a metafunction into a Metafunction Class.
@@ -203,15 +184,7 @@ namespace ranges
             struct quote_trait_i
             {
                 template<typename...Ts>
-                using apply = eval<apply<quote_i<T, C>, Ts...> >;
-            };
-
-            /// \brief Turn a metafunction into a Metafunction Class.
-            template<typename T, template<T...> class C>
-            struct direct_quote_trait_i
-            {
-                template<typename...Ts>
-                using apply = eval<apply<direct_quote_i<T, C>, Ts...> >;
+                using apply = eval<apply<quote_i<T, C>, Ts...>>;
             };
 
             /// \brief Compose the Metafunction Classes in the parameter pack
@@ -262,15 +235,13 @@ namespace ranges
 
             template<typename F, template<typename...> class T, typename ...Ts>
             struct lazy_apply_list<F, T<Ts...>>
-            {
-                using type = apply<F, Ts...>;
-            };
+              : lazy_apply<F, Ts...>
+            {};
 
             template<typename F, typename T, T...Is>
             struct lazy_apply_list<F, integer_sequence<T, Is...>>
-            {
-                using type = apply<F, std::integral_constant<T, Is>...>;
-            };
+              : lazy_apply<F, std::integral_constant<T, Is>...>
+            {};
 
             /// \brief Applies the Metafunction Class `F` using the types in
             /// the type list \c List as arguments.
@@ -292,7 +263,7 @@ namespace ranges
             struct uncurry
             {
                 template<typename T>
-                using apply = eval<lazy_apply_list<F, T>>;
+                using apply = apply_list<F, T>;
             };
 
             /// \brief A Metafunction Class that reverses the order of the first
@@ -306,9 +277,8 @@ namespace ranges
                 {};
                 template<typename A, typename B, typename ...Ts>
                 struct impl<A, B, Ts...>
-                {
-                    using type = apply<F, B, A, Ts...>;
-                };
+                  : lazy_apply<F, B, A, Ts...>
+                {};
             public:
                 template<typename ...Ts>
                 using apply = eval<impl<Ts...>>;
@@ -912,7 +882,7 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template<typename List, typename State, typename Fun>
+                template<typename, typename, typename, typename = void>
                 struct foldl_
                 {};
 
@@ -923,7 +893,7 @@ namespace ranges
                 };
 
                 template<typename Head, typename ...List, typename State, typename Fun>
-                struct foldl_<list<Head, List...>, State, Fun>
+                struct foldl_<list<Head, List...>, State, Fun, void_<apply<Fun, State, Head>>>
                   : foldl_<list<List...>, apply<Fun, State, Head>, Fun>
                 {};
             }
@@ -946,7 +916,7 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template<typename List, typename State, typename Fun>
+                template<typename, typename, typename, typename = void>
                 struct foldr_
                 {};
 
@@ -957,10 +927,9 @@ namespace ranges
                 };
 
                 template<typename Head, typename ...List, typename State, typename Fun>
-                struct foldr_<list<Head, List...>, State, Fun>
-                {
-                    using type = apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>;
-                };
+                struct foldr_<list<Head, List...>, State, Fun, void_<eval<foldr_<list<List...>, State, Fun>>>>
+                  : lazy_apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>
+                {};
             }
             /// \endcond
 
@@ -977,21 +946,39 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template<typename...Args>
-                struct transform_
+                template<typename, typename, typename = void>
+                struct transform1_
                 {};
 
-                template<typename ...List, typename Fun>
-                struct transform_<list<List...>, Fun>
+                template<typename...List, typename Fun>
+                struct transform1_<list<List...>, Fun, void_<list<apply<Fun, List>...>>>
                 {
                     using type = list<apply<Fun, List>...>;
                 };
 
+                template<typename, typename, typename, typename = void>
+                struct transform2_
+                {};
+
                 template<typename ...List0, typename ...List1, typename Fun>
-                struct transform_<list<List0...>, list<List1...>, Fun>
+                struct transform2_<list<List0...>, list<List1...>, Fun, void_<list<apply<Fun, List0, List1>...>>>
                 {
                     using type = list<apply<Fun, List0, List1>...>;
                 };
+
+                template<typename...Args>
+                struct transform_
+                {};
+
+                template<typename List, typename Fun>
+                struct transform_<List, Fun>
+                  : transform1_<List, Fun>
+                {};
+
+                template<typename List0, typename List1, typename Fun>
+                struct transform_<List0, List1, Fun>
+                  : transform2_<List0, List1, Fun>
+                {};
             }
             /// \endcond
 
@@ -1043,9 +1030,8 @@ namespace ranges
                 // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
                 template<typename Sequence>
                 struct as_list_
-                {
-                    using type = apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>;
-                };
+                  : lazy_apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
+                {};
             }
             /// \endcond
 
