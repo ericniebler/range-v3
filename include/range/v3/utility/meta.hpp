@@ -85,6 +85,16 @@ namespace ranges
                 {
                     using type = std::true_type;
                 };
+
+                template<typename, typename, typename = void>
+                struct lazy_apply_
+                {};
+
+                template<typename F, typename...Ts>
+                struct lazy_apply_<F, list<Ts...>, void_<apply<F, Ts...>>>
+                {
+                    using type = apply<F, Ts...>;
+                };
             }
             /// \endcond
 
@@ -97,9 +107,8 @@ namespace ranges
             /// the arguments \c Args.
             template<typename F, typename...Args>
             struct lazy_apply
-            {
-                using type = apply<F, Args...>;
-            };
+              : meta_detail::lazy_apply_<F, list<Args...>>
+            {};
 
             /// \brief An integral constant wrapper for \c std::size_t.
             template<std::size_t N>
@@ -126,49 +135,19 @@ namespace ranges
             struct quote
             {
             private:
-                // TODO figure out why this causes GCC to puke on the range-v3
-                // regression tests.
-                //template<template<typename...> class D, typename...Ts>
-                //static id<D<Ts...>> test(int);
-                //template<template<typename...> class D, typename...Ts>
-                //static nil_ test(long);
-
+                template<typename, typename = quote, typename = void>
+                struct impl
+                {};
+                template<typename...Ts, template<typename...> class D>
+                struct impl<list<Ts...>, quote<D>, void_<D<Ts...>>>
+                {
+                    using type = D<Ts...>;
+                };
+            public:
                 // Indirection here needed to avoid Core issue 1430
                 // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
                 template<typename...Ts>
-                struct impl
-                  //: decltype(quote::test<C, Ts...>(42))
-                {
-                    using type = C<Ts...>;
-                };
-            public:
-                template<typename...Ts>
-                using apply = eval<impl<Ts...>>;
-            };
-
-            /// \brief Turn a class template or alias template into a
-            /// Metafunction Class.
-            template<template<typename...> class C>
-            struct direct_quote
-            {
-                template<typename...Ts>
-                using apply = C<Ts...>;
-            };
-
-            /// \brief Turn a metafunction into a Metafunction Class.
-            template<template<typename...> class C>
-            struct quote_trait
-            {
-                template<typename...Ts>
-                using apply = eval<apply<quote<C>, Ts...> >;
-            };
-
-            /// \brief Turn a metafunction into a Metafunction Class.
-            template<template<typename...> class C>
-            struct direct_quote_trait
-            {
-                template<typename...Ts>
-                using apply = eval<apply<direct_quote<C>, Ts...> >;
+                using apply = eval<impl<list<Ts...>>>;
             };
 
             /// \brief Turn a class template or alias template into a
@@ -179,23 +158,25 @@ namespace ranges
             private:
                 // Indirection here needed to avoid Core issue 1430
                 // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
-                template<typename ...Ts>
+                template<typename, typename = quote_i, typename = void>
                 struct impl
+                {};
+                template<typename...Ts, typename U, template<U...> class D>
+                struct impl<list<Ts...>, quote_i<U, D>, void_<D<Ts::type::value...>>>
                 {
-                    using type = F<Ts::type::value...>;
+                    using type = D<Ts::type::value...>;
                 };
             public:
                 template<typename...Ts>
-                using apply = eval<impl<Ts...>>;
+                using apply = eval<impl<list<Ts...>>>;
             };
 
-            /// \brief Turn a class template or alias template into a
-            /// Metafunction Class.
-            template<typename T, template<T...> class F>
-            struct direct_quote_i
+            /// \brief Turn a metafunction into a Metafunction Class.
+            template<template<typename...> class C>
+            struct quote_trait
             {
                 template<typename...Ts>
-                using apply = F<Ts::type::value...>;
+                using apply = eval<apply<quote<C>, Ts...>>;
             };
 
             /// \brief Turn a metafunction into a Metafunction Class.
@@ -203,15 +184,7 @@ namespace ranges
             struct quote_trait_i
             {
                 template<typename...Ts>
-                using apply = eval<apply<quote_i<T, C>, Ts...> >;
-            };
-
-            /// \brief Turn a metafunction into a Metafunction Class.
-            template<typename T, template<T...> class C>
-            struct direct_quote_trait_i
-            {
-                template<typename...Ts>
-                using apply = eval<apply<direct_quote_i<T, C>, Ts...> >;
+                using apply = eval<apply<quote_i<T, C>, Ts...>>;
             };
 
             /// \brief Compose the Metafunction Classes in the parameter pack
@@ -262,15 +235,13 @@ namespace ranges
 
             template<typename F, template<typename...> class T, typename ...Ts>
             struct lazy_apply_list<F, T<Ts...>>
-            {
-                using type = apply<F, Ts...>;
-            };
+              : lazy_apply<F, Ts...>
+            {};
 
             template<typename F, typename T, T...Is>
             struct lazy_apply_list<F, integer_sequence<T, Is...>>
-            {
-                using type = apply<F, std::integral_constant<T, Is>...>;
-            };
+              : lazy_apply<F, std::integral_constant<T, Is>...>
+            {};
 
             /// \brief Applies the Metafunction Class `F` using the types in
             /// the type list \c List as arguments.
@@ -292,7 +263,7 @@ namespace ranges
             struct uncurry
             {
                 template<typename T>
-                using apply = eval<lazy_apply_list<F, T>>;
+                using apply = apply_list<F, T>;
             };
 
             /// \brief A Metafunction Class that reverses the order of the first
@@ -306,9 +277,8 @@ namespace ranges
                 {};
                 template<typename A, typename B, typename ...Ts>
                 struct impl<A, B, Ts...>
-                {
-                    using type = apply<F, B, A, Ts...>;
-                };
+                  : lazy_apply<F, B, A, Ts...>
+                {};
             public:
                 template<typename ...Ts>
                 using apply = eval<impl<Ts...>>;
@@ -912,7 +882,7 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template<typename List, typename State, typename Fun>
+                template<typename, typename, typename, typename = void>
                 struct foldl_
                 {};
 
@@ -923,7 +893,7 @@ namespace ranges
                 };
 
                 template<typename Head, typename ...List, typename State, typename Fun>
-                struct foldl_<list<Head, List...>, State, Fun>
+                struct foldl_<list<Head, List...>, State, Fun, void_<apply<Fun, State, Head>>>
                   : foldl_<list<List...>, apply<Fun, State, Head>, Fun>
                 {};
             }
@@ -946,7 +916,7 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template<typename List, typename State, typename Fun>
+                template<typename, typename, typename, typename = void>
                 struct foldr_
                 {};
 
@@ -957,10 +927,9 @@ namespace ranges
                 };
 
                 template<typename Head, typename ...List, typename State, typename Fun>
-                struct foldr_<list<Head, List...>, State, Fun>
-                {
-                    using type = apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>;
-                };
+                struct foldr_<list<Head, List...>, State, Fun, void_<eval<foldr_<list<List...>, State, Fun>>>>
+                  : lazy_apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>
+                {};
             }
             /// \endcond
 
@@ -977,21 +946,39 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template<typename...Args>
-                struct transform_
+                template<typename, typename, typename = void>
+                struct transform1_
                 {};
 
-                template<typename ...List, typename Fun>
-                struct transform_<list<List...>, Fun>
+                template<typename...List, typename Fun>
+                struct transform1_<list<List...>, Fun, void_<list<apply<Fun, List>...>>>
                 {
                     using type = list<apply<Fun, List>...>;
                 };
 
+                template<typename, typename, typename, typename = void>
+                struct transform2_
+                {};
+
                 template<typename ...List0, typename ...List1, typename Fun>
-                struct transform_<list<List0...>, list<List1...>, Fun>
+                struct transform2_<list<List0...>, list<List1...>, Fun, void_<list<apply<Fun, List0, List1>...>>>
                 {
                     using type = list<apply<Fun, List0, List1>...>;
                 };
+
+                template<typename...Args>
+                struct transform_
+                {};
+
+                template<typename List, typename Fun>
+                struct transform_<List, Fun>
+                  : transform1_<List, Fun>
+                {};
+
+                template<typename List0, typename List1, typename Fun>
+                struct transform_<List0, List1, Fun>
+                  : transform2_<List0, List1, Fun>
+                {};
             }
             /// \endcond
 
@@ -1043,9 +1030,8 @@ namespace ranges
                 // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
                 template<typename Sequence>
                 struct as_list_
-                {
-                    using type = apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>;
-                };
+                  : lazy_apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
+                {};
             }
             /// \endcond
 
@@ -1213,5 +1199,145 @@ namespace ranges
         }
     }
 }
+
+// Make meta::quote work consistently with libc++ containers
+// Works around:
+//    http://llvm.org/bugs/show_bug.cgi?id=22601 and
+//    http://llvm.org/bugs/show_bug.cgi?id=22605
+#if defined(__clang__)          && \
+    defined(_LIBCPP_VERSION)    && \
+   !defined(RANGES_NO_STD_FORWARD_DECLARACTIONS)
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+    template <class, class> struct _LIBCPP_TYPE_VIS_ONLY pair;
+    template <class> struct _LIBCPP_TYPE_VIS_ONLY hash;
+    template <class> struct _LIBCPP_TYPE_VIS_ONLY less;
+    template <class> struct _LIBCPP_TYPE_VIS_ONLY equal_to;
+    template <class> struct _LIBCPP_TYPE_VIS_ONLY char_traits;
+    template <class, class> class _LIBCPP_TYPE_VIS_ONLY list;
+    template <class, class> class _LIBCPP_TYPE_VIS_ONLY forward_list;
+    template <class, class> class _LIBCPP_TYPE_VIS_ONLY vector;
+    template <class, class> class _LIBCPP_TYPE_VIS_ONLY deque;
+    template <class, class, class> class _LIBCPP_TYPE_VIS_ONLY basic_string;
+    template <class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY map;
+    template <class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY multimap;
+    template <class, class, class> class _LIBCPP_TYPE_VIS_ONLY set;
+    template <class, class, class> class _LIBCPP_TYPE_VIS_ONLY multiset;
+    template <class, class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_map;
+    template <class, class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_multimap;
+    template <class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_set;
+    template <class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_multiset;
+    template <class, class> class _LIBCPP_TYPE_VIS_ONLY queue;
+    template <class, class, class> class _LIBCPP_TYPE_VIS_ONLY priority_queue;
+    template <class, class> class _LIBCPP_TYPE_VIS_ONLY stack;
+_LIBCPP_END_NAMESPACE_STD
+
+namespace ranges
+{
+    inline namespace v3
+    {
+        namespace meta
+        {
+            namespace meta_detail
+            {
+                template<typename T, typename A = std::allocator<T>>
+                using std_list = std::list<T, A>;
+                template<typename T, typename A = std::allocator<T>>
+                using std_forward_list = std::forward_list<T, A>;
+                template<typename T, typename A = std::allocator<T>>
+                using std_vector = std::vector<T, A>;
+                template<typename T, typename A = std::allocator<T>>
+                using std_deque = std::deque<T, A>;
+                template<typename T, typename C = std::char_traits<T>, typename A = std::allocator<T>>
+                using std_basic_string = std::basic_string<T, C, A>;
+                template<typename K, typename V, typename C = std::less<K>, typename A = std::allocator<std::pair<K const, V>>>
+                using std_map = std::map<K, V, C, A>;
+                template<typename K, typename V, typename C = std::less<K>, typename A = std::allocator<std::pair<K const, V>>>
+                using std_multimap = std::multimap<K, V, C, A>;
+                template<typename K, typename C = std::less<K>, typename A = std::allocator<K>>
+                using std_set = std::set<K, C, A>;
+                template<typename K, typename C = std::less<K>, typename A = std::allocator<K>>
+                using std_multiset = std::multiset<K, C, A>;
+                template<typename K, typename V, typename H = std::hash<K>, typename C = std::equal_to<K>, typename A = std::allocator<std::pair<K const, V>>>
+                using std_unordered_map = std::unordered_map<K, V, H, C, A>;
+                template<typename K, typename V, typename H = std::hash<K>, typename C = std::equal_to<K>, typename A = std::allocator<std::pair<K const, V>>>
+                using std_unordered_multimap = std::unordered_multimap<K, V, H, C, A>;
+                template<typename K, typename H = std::hash<K>, typename C = std::equal_to<K>, typename A = std::allocator<K>>
+                using std_unordered_set = std::unordered_set<K, H, C, A>;
+                template<typename K, typename H = std::hash<K>, typename C = std::equal_to<K>, typename A = std::allocator<K>>
+                using std_unordered_multiset = std::unordered_multiset<K, H, C, A>;
+                template<typename T, typename C = std_deque<T>>
+                using std_queue = std::queue<T, C>;
+                template<typename T, typename C = std_vector<T>, class D = std::less<typename C::value_type>>
+                using std_priority_queue = std::priority_queue<T, C, D>;
+                template<typename T, typename C = std_deque<T>>
+                using std_stack = std::stack<T, C>;
+            }
+
+            template<>
+            struct quote< ::std::list >
+              : quote< meta_detail::std_list >
+            {};
+            template<>
+            struct quote< ::std::forward_list >
+              : quote< meta_detail::std_forward_list >
+            {};
+            template<>
+            struct quote< ::std::vector >
+              : quote< meta_detail::std_vector >
+            {};
+            template<>
+            struct quote< ::std::basic_string >
+              : quote< meta_detail::std_basic_string >
+            {};
+            template<>
+            struct quote< ::std::map >
+              : quote< meta_detail::std_map >
+            {};
+            template<>
+            struct quote< ::std::multimap >
+              : quote< meta_detail::std_multimap >
+            {};
+            template<>
+            struct quote< ::std::set >
+              : quote< meta_detail::std_set >
+            {};
+            template<>
+            struct quote< ::std::multiset >
+              : quote< meta_detail::std_multiset >
+            {};
+            template<>
+            struct quote< ::std::unordered_map >
+              : quote< meta_detail::std_unordered_map >
+            {};
+            template<>
+            struct quote< ::std::unordered_multimap >
+              : quote< meta_detail::std_unordered_multimap >
+            {};
+            template<>
+            struct quote< ::std::unordered_set >
+              : quote< meta_detail::std_unordered_set >
+            {};
+            template<>
+            struct quote< ::std::unordered_multiset >
+              : quote< meta_detail::std_unordered_multiset >
+            {};
+            template<>
+            struct quote< ::std::queue >
+              : quote< meta_detail::std_queue >
+            {};
+            template<>
+            struct quote< ::std::priority_queue >
+              : quote< meta_detail::std_priority_queue >
+            {};
+            template<>
+            struct quote< ::std::stack >
+              : quote< meta_detail::std_stack >
+            {};
+        }
+    }
+}
+
+#endif
 
 #endif
