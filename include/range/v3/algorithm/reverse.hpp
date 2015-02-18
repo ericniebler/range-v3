@@ -57,7 +57,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Permutable<I>())>
             I operator()(I begin, S end_) const
             {
-                I end = next_to(begin, end_);
+                I end = ranges::next(begin, end_);
                 reverse_fn::impl(begin, end, iterator_concept<I>{});
                 return end;
             }

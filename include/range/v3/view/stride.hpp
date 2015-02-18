@@ -109,14 +109,14 @@ namespace ranges
                 {
                     RANGES_ASSERT(0 == offset());
                     RANGES_ASSERT(it != ranges::end(rng_->mutable_base()));
-                    offset() = advance_bounded(it, rng_->stride_ + offset(),
+                    offset() = ranges::advance(it, rng_->stride_ + offset(),
                         ranges::end(rng_->mutable_base()));
                 }
                 CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
                 void prev(iterator &it)
                 {
                     clean();
-                    offset() = advance_bounded(it, -rng_->stride_ + offset(),
+                    offset() = ranges::advance(it, -rng_->stride_ + offset(),
                         ranges::begin(rng_->mutable_base()));
                     RANGES_ASSERT(0 == offset());
                 }
@@ -135,10 +135,10 @@ namespace ranges
                     if(n != 0)
                         clean();
                     if(0 < n)
-                        offset() = advance_bounded(it, n * rng_->stride_ + offset(),
+                        offset() = ranges::advance(it, n * rng_->stride_ + offset(),
                             ranges::end(rng_->mutable_base()));
                     else if(0 > n)
-                        offset() = advance_bounded(it, n * rng_->stride_ + offset(),
+                        offset() = ranges::advance(it, n * rng_->stride_ + offset(),
                             ranges::begin(rng_->mutable_base()));
                 }
             };

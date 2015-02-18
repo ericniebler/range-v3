@@ -56,7 +56,7 @@ namespace ranges
                     if(SizedIterable<Rng>() && !BoundedIterable<Rng>())
                         return next(ranges::begin(rng), distance(rng) + i);
                     // Otherwise, probably faster to count from the back.
-                    return next(next_to(ranges::begin(rng), ranges::end(rng)), i);
+                    return next(ranges::next(ranges::begin(rng), ranges::end(rng)), i);
                 }
                 return next(ranges::begin(rng), i);
             }

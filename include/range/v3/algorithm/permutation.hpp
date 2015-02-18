@@ -212,7 +212,7 @@ namespace ranges
                 auto &&proj = invokable(proj_);
                 if(begin == end_)
                     return false;
-                I end = next_to(begin, end_), i = end;
+                I end = ranges::next(begin, end_), i = end;
                 if(begin == --i)
                     return false;
                 while(true)
@@ -261,7 +261,7 @@ namespace ranges
                 auto &&proj = invokable(proj_);
                 if(begin == end_)
                     return false;
-                I end = next_to(begin, end_), i = end;
+                I end = ranges::next(begin, end_), i = end;
                 if(begin == --i)
                     return false;
                 while(true)

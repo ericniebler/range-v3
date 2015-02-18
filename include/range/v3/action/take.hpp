@@ -65,7 +65,7 @@ namespace ranges
                 Rng operator()(Rng && rng, range_difference_t<Rng> n) const
                 {
                     RANGES_ASSERT(n >= 0);
-                    ranges::action::erase(rng, next_bounded(begin(rng), n, end(rng)), end(rng));
+                    ranges::action::erase(rng, ranges::next(begin(rng), n, end(rng)), end(rng));
                     return std::forward<Rng>(rng);
                 }
 

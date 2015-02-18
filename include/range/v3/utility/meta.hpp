@@ -252,19 +252,13 @@ namespace ranges
             /// bundles them into a type list, and then calls the Metafunction
             /// Class `F` with the type list.
             template<typename F, typename Q = quote<list>>
-            struct curry
-              : compose<F, Q>
-            {};
+            using curry = compose<F, Q>;
 
             /// \brief A Metafunction Class that takes a type list,
             /// unpacks the types, and then calls the Metafunction
             /// Class `F` with types.
             template<typename F>
-            struct uncurry
-            {
-                template<typename T>
-                using apply = apply_list<F, T>;
-            };
+            using uncurry = bind_front<quote<apply_list>, F>;
 
             /// \brief A Metafunction Class that reverses the order of the first
             /// two arguments.

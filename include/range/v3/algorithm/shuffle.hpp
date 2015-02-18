@@ -61,7 +61,7 @@ namespace ranges
                                       concepts::WeaklyIncrementable::difference_t<I> >())>
             I operator()(I begin, S end_, Gen && gen) const
             {
-                I end = next_to(begin, end_);
+                I end = ranges::next(begin, end_);
                 auto d = end - begin;
                 if(d > 1)
                 {

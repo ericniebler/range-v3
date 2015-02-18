@@ -193,7 +193,7 @@ namespace ranges
                 auto &&proj = invokable(proj_);
                 if(begin == end_)
                     return begin;
-                I end = next_to(begin, end_);
+                I end = ranges::next(begin, end_);
                 sort_fn::introsort_loop(begin, end, sort_fn::log2(end - begin) * 2, pred, proj);
                 sort_fn::final_insertion_sort(begin, end, pred, proj);
                 return end;

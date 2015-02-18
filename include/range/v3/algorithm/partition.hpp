@@ -77,7 +77,7 @@ namespace ranges
             {
                 auto && pred = invokable(pred_);
                 auto && proj = invokable(proj_);
-                I end = next_to(begin, end_);
+                I end = ranges::next(begin, end_);
                 while(true)
                 {
                     while(true)

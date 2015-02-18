@@ -102,7 +102,7 @@ namespace ranges
                     while(true)
                     {
                         if(d1 < d2)  // return the end if we've run out of room
-                            return next_to(recounted(begin1_, std::move(begin1), d1_ - d1), std::move(end1));
+                            return ranges::next(recounted(begin1_, std::move(begin1), d1_ - d1), std::move(end1));
                         if(pred(proj1(*begin1), proj2(*begin2)))
                             break;
                         ++begin1;

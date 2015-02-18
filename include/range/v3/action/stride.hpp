@@ -73,8 +73,8 @@ namespace ranges
                         S const end = ranges::end(rng);
                         if(begin != end)
                         {
-                            for(I i = next_bounded(++begin, step-1, end); i != end;
-                                advance_bounded(i, step, end), ++begin)
+                            for(I i = ranges::next(++begin, step-1, end); i != end;
+                                advance(i, step, end), ++begin)
                             {
                                 *begin = iter_move(i);
                             }

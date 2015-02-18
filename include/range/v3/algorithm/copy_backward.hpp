@@ -39,7 +39,7 @@ namespace ranges
                 )>
             std::pair<I, O> operator()(I begin, S end_, O out) const
             {
-                I i = next_to(begin, end_), end = i;
+                I i = ranges::next(begin, end_), end = i;
                 while(begin != i)
                     *--out = *--i;
                 return {end, out};

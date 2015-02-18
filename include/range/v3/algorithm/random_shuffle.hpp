@@ -67,7 +67,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Permutable<I>())>
             I operator()(I begin, S end_) const
             {
-                I end = next_to(begin, end_);
+                I end = ranges::next(begin, end_);
                 auto d = end - begin;
                 if(d > 1)
                 {
@@ -90,7 +90,7 @@ namespace ranges
                                   RandomNumberGenerator<Gen, iterator_difference_t<I>>())>
             I operator()(I begin, S end_, Gen && rand) const
             {
-                I end = next_to(begin, end_);
+                I end = ranges::next(begin, end_);
                 auto d = end - begin;
                 if(d > 1)
                 {

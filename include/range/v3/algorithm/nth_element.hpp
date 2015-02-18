@@ -110,7 +110,7 @@ namespace ranges
             {
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
-                I end = next_to(nth, end_), end_orig = end;
+                I end = ranges::next(nth, end_), end_orig = end;
                 // C is known to be a reference type
                 using difference_type = iterator_difference_t<I>;
                 difference_type const limit = 7;

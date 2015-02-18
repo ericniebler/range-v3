@@ -35,7 +35,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
             I next_to_if(I i, S s, std::true_type)
             {
-                return next_to(i, s);
+                return ranges::next(i, s);
             }
 
             template<typename I, typename S,
@@ -69,7 +69,7 @@ namespace ranges
                 bool found = false;
                 I1 res;
                 if(begin2 == end2)
-                    return next_to(begin1, end1);
+                    return ranges::next(begin1, end1);
                 while(true)
                 {
                     while(true)

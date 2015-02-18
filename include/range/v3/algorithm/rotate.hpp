@@ -196,7 +196,7 @@ namespace ranges
             {
                 if(begin == middle)
                 {
-                    begin = next_to(std::move(begin), end);
+                    begin = ranges::next(std::move(begin), end);
                     return {begin, begin};
                 }
                 if(middle == end)

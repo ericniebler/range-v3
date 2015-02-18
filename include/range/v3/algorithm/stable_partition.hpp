@@ -244,7 +244,7 @@ namespace ranges
                 }
                 // begin points to first false, everything prior to begin is already set.
                 // Either prove [begin, end) is all false and return begin, or point end to last true
-                I end = next_to(begin, end_);
+                I end = ranges::next(begin, end_);
                 do
                 {
                     if(begin == --end)

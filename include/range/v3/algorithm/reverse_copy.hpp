@@ -43,7 +43,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(IteratorRange<I, S>() && ReverseCopyable<I, O>())>
             std::pair<I, O> operator()(I begin, S end_, O out) const
             {
-                I end = next_to(begin, end_), res = end;
+                I end = ranges::next(begin, end_), res = end;
                 for (; begin != end; ++out)
                     *out = *--end;
                 return {res, out};

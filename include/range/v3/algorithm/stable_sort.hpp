@@ -157,7 +157,7 @@ namespace ranges
             {
                 auto && pred = invokable(pred_);
                 auto && proj = invokable(proj_);
-                I end = next_to(begin, end_);
+                I end = ranges::next(begin, end_);
                 using D = iterator_difference_t<I>;
                 using V = iterator_value_t<I>;
                 D len = end - begin;

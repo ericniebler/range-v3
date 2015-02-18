@@ -646,7 +646,7 @@ namespace ranges
                 template<typename I, typename S>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Iterator, I>(),
+                        concepts::model_of<WeakIterator, I>(),
                         concepts::model_of<Regular, S>(),
                         concepts::model_of<EqualityComparable, I, S>()
                     ));

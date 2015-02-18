@@ -54,17 +54,17 @@ namespace ranges
                 range_iterator_t<Rng> begin(reverse_view const &rng) const
                 {
                     auto it = ranges::end(rng.mutable_base());
-                    ranges::advance_bounded(it, -1, ranges::begin(rng.mutable_base()));
+                    ranges::advance(it, -1, ranges::begin(rng.mutable_base()));
                     return it;
                 }
                 void next(range_iterator_t<Rng> &it) const
                 {
-                    if(0 != ranges::advance_bounded(it, -1, ranges::begin(rng_->mutable_base())))
+                    if(0 != ranges::advance(it, -1, ranges::begin(rng_->mutable_base())))
                         it = ranges::end(rng_->mutable_base());
                 }
                 void prev(range_iterator_t<Rng> &it) const
                 {
-                    if(0 != ranges::advance_bounded(it, 1, ranges::end(rng_->mutable_base())))
+                    if(0 != ranges::advance(it, 1, ranges::end(rng_->mutable_base())))
                         it = ranges::begin(rng_->mutable_base());
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())

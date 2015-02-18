@@ -85,7 +85,7 @@ namespace ranges
                 {
                     RANGES_ASSERT(cur_ != last_);
                     // If the last match consumed zero elements, bump the position.
-                    advance_bounded(cur_, (int)zero_, last_);
+                    advance(cur_, (int)zero_, last_);
                     zero_ = false;
                     for(; cur_ != last_; ++cur_)
                     {

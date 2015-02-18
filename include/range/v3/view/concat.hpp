@@ -133,11 +133,11 @@ namespace ranges
                     void operator()(Iterator &it, meta::size_t<N> which) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
-                        // BUGBUG If distance(it, end) > n, then using advance_bounded
+                        // BUGBUG If distance(it, end) > n, then using bounded advance
                         // is O(n) when it need not be since the end iterator position
                         // is actually not interesting. Only the "rest" is needed, which
                         // can sometimes be O(1).
-                        auto rest = advance_bounded(it, n, std::move(end));
+                        auto rest = ranges::advance(it, n, std::move(end));
                         pos->satisfy(which);
                         if(rest != 0)
                             pos->its_.apply_i(advance_fwd_fun{pos, rest});
@@ -163,7 +163,7 @@ namespace ranges
                         }
                         else
                         {
-                            auto rest = advance_bounded(it, n, std::move(begin));
+                            auto rest = ranges::advance(it, n, std::move(begin));
                             if(rest != 0)
                                 pos->its_.apply_i(advance_rev_fun{pos, rest});
                         }

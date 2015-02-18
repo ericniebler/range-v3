@@ -55,7 +55,7 @@ namespace ranges
                     auto const end = ranges::end(rng_->mutable_base());
                     RANGES_ASSERT(it != end);
                     it = adjacent_find(std::move(it), end, not_(std::ref(rng_->pred_)));
-                    advance_bounded(it, 1, end);
+                    ranges::advance(it, 1, end);
                 }
             };
             adaptor begin_adaptor() const
