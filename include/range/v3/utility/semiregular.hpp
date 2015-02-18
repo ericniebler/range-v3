@@ -78,7 +78,7 @@ namespace ranges
         using semiregular_ref_or_val_t =
             meta::if_<
                 SemiRegular<T>,
-                T,
+                meta::if_c<IsConst, T, reference_wrapper<T>>,
                 reference_wrapper<meta::apply<meta::add_const_if_c<IsConst>, semiregular<T>>>>;
         /// @}
     }

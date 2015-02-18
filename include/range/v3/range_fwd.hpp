@@ -234,14 +234,28 @@ namespace ranges
 
             template<typename T>
             using as_ref_t =
-                typename std::remove_const<typename std::remove_reference<T>::type>::type &;
+                typename std::add_lvalue_reference<
+                    typename std::remove_const<
+                        typename std::remove_reference<T>::type
+                    >::type
+                >::type;
 
             template<typename T>
             using as_cref_t =
-                typename std::add_const<typename std::remove_reference<T>::type>::type &;
+                typename std::add_lvalue_reference<
+                    typename std::add_const<
+                        typename std::remove_reference<T>::type
+                    >::type
+                >::type;
 
             struct get_first;
             struct get_second;
+
+            template<typename Val1, typename Val2>
+            struct replacer_fn;
+
+            template<typename Pred, typename Val>
+            struct replacer_if_fn;
 
             template<typename...Ts>
             void valid_exprs(Ts &&...);
@@ -545,13 +559,6 @@ namespace ranges
             struct repeat_fn;
         }
 
-        namespace view
-        {
-            struct replace_fn;
-
-            struct replace_if_fn;
-        }
-
         template<typename Rng>
         struct reverse_view;
 
@@ -625,6 +632,19 @@ namespace ranges
         namespace view
         {
             struct transform_fn;
+        }
+
+        template<typename Rng, typename Val1, typename Val2>
+        using replace_view = iter_transform_view<Rng, detail::replacer_fn<Val1, Val2>>;
+
+        template<typename Rng, typename Pred, typename Val>
+        using replace_if_view = iter_transform_view<Rng, detail::replacer_if_fn<Pred, Val>>;
+
+        namespace view
+        {
+            struct replace_fn;
+
+            struct replace_if_fn;
         }
 
         template<typename I>

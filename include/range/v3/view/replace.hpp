@@ -29,6 +29,47 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename Val1, typename Val2>
+            struct replacer_fn
+            {
+            private:
+                Val1 old_value_;
+                Val2 new_value_;
+            public:
+                replacer_fn() = default;
+                replacer_fn(Val1 old_value, Val2 new_value)
+                  : old_value_(std::move(old_value))
+                  , new_value_(std::move(new_value))
+                {}
+
+                template<typename I>
+                common_type_t<decay_t<unwrap_reference_t<Val2 const &>>, iterator_value_t<I>>
+                operator()(copy_tag, I const &i) const;
+
+                template<typename I>
+                common_reference_t<unwrap_reference_t<Val2 const &>, iterator_reference_t<I>>
+                operator()(I const &i) const
+                {
+                    auto &&x = *i;
+                    if(x == unwrap_reference(old_value_))
+                        return unwrap_reference(new_value_);
+                    return ((decltype(x) &&) x);
+                }
+
+                template<typename I>
+                common_reference_t<unwrap_reference_t<Val2 const &>, iterator_rvalue_reference_t<I>>
+                operator()(move_tag, I const &i) const
+                {
+                    auto &&x = iter_move(i);
+                    if(x == unwrap_reference(old_value_))
+                        return unwrap_reference(new_value_);
+                    return ((decltype(x) &&) x);
+                }
+            };
+        }
+
         /// \addtogroup group-views
         /// @{
         namespace view
@@ -37,57 +78,44 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Val>
-                struct replacer_fun
-                {
-                private:
-                    friend struct replace_fn;
-                    Val old_value_;
-                    Val new_value_;
-
-                    template<typename Val1, typename Val2>
-                    replacer_fun(Val1 && old_value, Val2 && new_value)
-                      : old_value_(std::forward<Val1>(old_value)),
-                        new_value_(std::forward<Val2>(new_value))
-                    {}
-
-                public:
-                    template<typename Other>
-                    Other operator()(Other && other) const
-                    {
-                        return (other == old_value_) ? new_value_ : std::forward<Other>(other);
-                    }
-                };
                 template<typename Val1, typename Val2,
-                    CONCEPT_REQUIRES_(Same<detail::decay_t<Val1>, detail::decay_t<Val2>>())>
-                static auto bind(replace_fn replace, Val1 && old_value, Val2 && new_value)
+                    typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
+                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>,
+                    CONCEPT_REQUIRES_(Same<V1, V2>())>
+                static auto bind(replace_fn replace, Val1 old_value, Val2 new_value)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(replace, std::placeholders::_1,
-                        bind_forward<Val1>(old_value), bind_forward<Val2>(new_value)))
+                        std::move(old_value), std::move(new_value)))
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 template<typename Val1, typename Val2,
-                    CONCEPT_REQUIRES_(!Same<detail::decay_t<Val1>, detail::decay_t<Val2>>())>
-                static detail::null_pipe bind(replace_fn replace, Val1 &&, Val2 &&)
+                    typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
+                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>,
+                    CONCEPT_REQUIRES_(!Same<V1, V2>())>
+                static detail::null_pipe bind(replace_fn replace, Val1, Val2)
                 {
-                    CONCEPT_ASSERT_MSG(Same<detail::decay_t<Val1>, detail::decay_t<Val2>>(),
+                    CONCEPT_ASSERT_MSG(Same<V1, V2>(),
                         "The two values passed to view::replace must have the same type.");
                     return {};
                 }
             #endif
             public:
-                template<typename Rng, typename Val1, typename Val2>
+                template<typename Rng, typename Val1, typename Val2,
+                    typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
+                    typename V2 = detail::decay_t<unwrap_reference_t<Val2>>>
                 using Concept = meta::and_<
                     InputIterable<Rng>,
-                    Same<detail::decay_t<Val1>, detail::decay_t<Val2>>,
-                    EqualityComparable<range_value_t<Rng>, detail::decay_t<Val1>>,
-                    Convertible<detail::decay_t<Val1> const &, range_reference_t<Rng>>>;
+                    Same<V1, V2>,
+                    EqualityComparable<V1, range_value_t<Rng>>,
+                    Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_t<Rng>>,
+                    CommonReference<unwrap_reference_t<Val2 const &>, range_reference_t<Rng>>,
+                    CommonReference<unwrap_reference_t<Val2 const &>, range_rvalue_reference_t<Rng>>>;
 
                 template<typename Rng, typename Val1, typename Val2,
                     CONCEPT_REQUIRES_(Concept<Rng, Val1, Val2>())>
-                transform_view<all_t<Rng>, replacer_fun<detail::decay_t<Val1>>>
+                replace_view<all_t<Rng>, detail::decay_t<Val1>, detail::decay_t<Val2>>
                 operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
                 {
                     return {all(std::forward<Rng>(rng)),
@@ -100,19 +128,28 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Val1, Val2>())>
                 void operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
                 {
+                    using V1 = detail::decay_t<unwrap_reference_t<Val1>>;
+                    using V2 = detail::decay_t<unwrap_reference_t<Val2>>;
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The first argument to view::replace must be a model of the "
                         "InputIterable concept.");
-                    CONCEPT_ASSERT_MSG(Same<detail::decay_t<Val1>, detail::decay_t<Val2>>(),
+                    CONCEPT_ASSERT_MSG(Same<V1, V2>(),
                         "The two values passed to view::replace must have the same type.");
-                    CONCEPT_ASSERT_MSG(EqualityComparable<range_value_t<Rng>,
-                        detail::decay_t<Val1>>(),
+                    CONCEPT_ASSERT_MSG(EqualityComparable<V1, range_value_t<Rng>>(),
                         "The values passed to view::replace must be EqualityComparable "
                         "to the range's value type.");
-                    CONCEPT_ASSERT_MSG(Convertible<detail::decay_t<Val1> const &,
-                        range_reference_t<Rng>>(),
-                        "The value passed to view::replace must be convertible to the "
+                    CONCEPT_ASSERT_MSG(Common<detail::decay_t<unwrap_reference_t<Val2 const &>>,
+                            range_value_t<Rng>>(),
+                        "The value passed to view::replace must share a common type with the "
+                        "range's value type.");
+                    CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val2 const &>,
+                            range_reference_t<Rng>>(),
+                        "The value passed to view::replace must share a reference with the "
                         "range's reference type.");
+                    CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val2 const &>,
+                            range_rvalue_reference_t<Rng>>(),
+                        "The value passed to view::replace must share a reference with the "
+                        "range's rvalue reference type.");
                 }
             #endif
             };

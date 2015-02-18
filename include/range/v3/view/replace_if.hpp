@@ -30,6 +30,68 @@ namespace ranges
 {
     inline namespace v3
     {
+        namespace detail
+        {
+            template<typename Pred, typename Val>
+            struct replacer_if_fn
+            {
+            private:
+                compressed_pair<semiregular_t<invokable_t<Pred>>, Val> fun_and_new_value_;
+
+            public:
+                replacer_if_fn() = default;
+                replacer_if_fn(Pred pred, Val new_value)
+                  : fun_and_new_value_{invokable(std::move(pred)), std::move(new_value)}
+                {}
+
+                template<typename I>
+                common_type_t<decay_t<unwrap_reference_t<Val const &>>, iterator_value_t<I>>
+                operator()(copy_tag, I const &i) const;
+
+                template<typename I,
+                    CONCEPT_REQUIRES_(!Invokable<Pred const, iterator_reference_t<I>>())>
+                common_reference_t<unwrap_reference_t<Val const &>, iterator_reference_t<I>>
+                operator()(I const &i)
+                {
+                    auto &&x = *i;
+                    if(fun_and_new_value_.first((decltype(x) &&) x))
+                        return unwrap_reference(fun_and_new_value_.second);
+                    return (decltype(x) &&) x;
+                }
+                template<typename I,
+                    CONCEPT_REQUIRES_(Invokable<Pred const, iterator_reference_t<I>>())>
+                common_reference_t<unwrap_reference_t<Val const &>, iterator_reference_t<I>>
+                operator()(I const &i) const
+                {
+                    auto &&x = *i;
+                    if(fun_and_new_value_.first((decltype(x) &&) x))
+                        return unwrap_reference(fun_and_new_value_.second);
+                    return (decltype(x) &&) x;
+                }
+
+                template<typename I,
+                    CONCEPT_REQUIRES_(!Invokable<Pred const, iterator_rvalue_reference_t<I>>())>
+                common_reference_t<unwrap_reference_t<Val const &>, iterator_rvalue_reference_t<I>>
+                operator()(move_tag, I const &i)
+                {
+                    auto &&x = iter_move(i);
+                    if(fun_and_new_value_.first((decltype(x) &&) x))
+                        return unwrap_reference(fun_and_new_value_.second);
+                    return (decltype(x) &&) x;
+                }
+                template<typename I,
+                    CONCEPT_REQUIRES_(Invokable<Pred const, iterator_rvalue_reference_t<I>>())>
+                common_reference_t<unwrap_reference_t<Val const &>, iterator_rvalue_reference_t<I>>
+                operator()(move_tag, I const &i) const
+                {
+                    auto &&x = iter_move(i);
+                    if(fun_and_new_value_.first((decltype(x) &&) x))
+                        return unwrap_reference(fun_and_new_value_.second);
+                    return (decltype(x) &&) x;
+                }
+            };
+        }
+
         /// \addtogroup group-views
         /// @{
         namespace view
@@ -38,33 +100,6 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Pred, typename Val>
-                struct replacer_if_fun
-                {
-                private:
-                    friend struct replace_if_fn;
-                    compressed_pair<semiregular_t<invokable_t<Pred>>, Val> fun_and_new_value_;
-
-                    template<typename Val2>
-                    replacer_if_fun(Pred pred, Val2 new_value)
-                      : fun_and_new_value_{invokable(std::move(pred)), std::move(new_value)}
-                    {}
-                public:
-                    template<typename Other,
-                        CONCEPT_REQUIRES_(!Invokable<Pred const, Other &>())>
-                    uncvref_t<Other> operator()(Other && other)
-                    {
-                        return (fun_and_new_value_.first(other)) ?
-                            fun_and_new_value_.second : std::forward<Other>(other);
-                    }
-                    template<typename Other,
-                        CONCEPT_REQUIRES_(Invokable<Pred const, Other &>())>
-                    uncvref_t<Other> operator()(Other && other) const
-                    {
-                        return (fun_and_new_value_.first(other)) ?
-                            fun_and_new_value_.second : std::forward<Other>(other);
-                    }
-                };
                 template<typename Pred, typename Val>
                 static auto bind(replace_if_fn replace_if, Pred pred, Val new_value)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -77,11 +112,13 @@ namespace ranges
                 using Concept = meta::and_<
                     InputIterable<Rng>,
                     IndirectInvokablePredicate<Pred, range_iterator_t<Rng>>,
-                    Convertible<Val, range_value_t<Rng>>>;
+                    Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_t<Rng>>,
+                    CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>>,
+                    CommonReference<unwrap_reference_t<Val const &>, range_rvalue_reference_t<Rng>>>;
 
                 template<typename Rng, typename Pred, typename Val,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred, Val>())>
-                transform_view<all_t<Rng>, replacer_if_fun<Pred, detail::decay_t<Val>>>
+                replace_if_view<all_t<Rng>, Pred, Val>
                 operator()(Rng && rng, Pred pred, Val new_value) const
                 {
                     return {all(std::forward<Rng>(rng)), {std::move(pred), std::move(new_value)}};
@@ -99,9 +136,18 @@ namespace ranges
                         "The function passed to view::replace_if must be callable with "
                         "objects of the range's common reference type, and the result must be "
                         "convertible to bool.");
-                    CONCEPT_ASSERT_MSG(Convertible<Val, range_value_t<Rng>>(),
-                        "The value passed to view::replace_if must be convertible to the "
+                    CONCEPT_ASSERT_MSG(Common<detail::decay_t<unwrap_reference_t<Val const &>>,
+                            range_value_t<Rng>>(),
+                        "The value passed to view::replace must share a common type with the "
                         "range's value type.");
+                    CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val const &>,
+                            range_reference_t<Rng>>(),
+                        "The value passed to view::replace must share a reference with the "
+                        "range's reference type.");
+                    CONCEPT_ASSERT_MSG(CommonReference<unwrap_reference_t<Val const &>,
+                            range_rvalue_reference_t<Rng>>(),
+                        "The value passed to view::replace must share a reference with the "
+                        "range's rvalue reference type.");
                 }
             #endif
             };

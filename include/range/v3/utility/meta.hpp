@@ -156,8 +156,6 @@ namespace ranges
             struct quote_i
             {
             private:
-                // Indirection here needed to avoid Core issue 1430
-                // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
                 template<typename, typename = quote_i, typename = void>
                 struct impl
                 {};
@@ -167,6 +165,8 @@ namespace ranges
                     using type = D<Ts::type::value...>;
                 };
             public:
+                // Indirection here needed to avoid Core issue 1430
+                // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
                 template<typename...Ts>
                 using apply = eval<impl<list<Ts...>>>;
             };
