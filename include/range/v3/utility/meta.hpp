@@ -1200,7 +1200,8 @@ namespace ranges
 //    http://llvm.org/bugs/show_bug.cgi?id=22605
 #if defined(__clang__)          && \
     defined(_LIBCPP_VERSION)    && \
-   !defined(RANGES_NO_STD_FORWARD_DECLARACTIONS)
+    _LIBCPP_VERSION <= 1101     && \
+    !defined(RANGES_NO_STD_FORWARD_DECLARACTIONS)
 
 _LIBCPP_BEGIN_NAMESPACE_STD
     template <class, class> struct _LIBCPP_TYPE_VIS_ONLY pair;
