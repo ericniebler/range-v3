@@ -3,8 +3,13 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
 project(Range-v3 CXX)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
 find_package(Doxygen)
 find_package(Git)
+
+find_package(Meta)
+include_directories(${Meta_INCLUDE_DIR})
 
 enable_testing()
 
