@@ -17,6 +17,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/detail/config.hpp>
+#include <meta/meta_fwd.hpp>
 
 /// \defgroup group-utility Utility
 /// Utility classes
@@ -45,32 +46,8 @@ namespace ranges
 {
     inline namespace v3
     {
-        namespace meta
-        {
-            template<typename...Ts>
-            struct list;
 
-            template<typename T>
-            struct id;
-
-            template<template<typename...> class>
-            struct quote;
-
-            template<template<typename...> class C>
-            struct quote_trait;
-
-            template<typename T, template<T...> class F>
-            struct quote_i;
-
-            template<typename T, template<T...> class C>
-            struct quote_trait_i;
-
-            template<typename...Fs>
-            struct compose;
-
-            template<typename T>
-            struct always;
-        }
+        namespace meta = ::meta;
 
         /// \cond
         namespace adl_begin_end_detail
