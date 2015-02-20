@@ -31,8 +31,6 @@ namespace ranges
         struct for_each_fn
         {
             template<typename I, typename S, typename F, typename P = ident,
-                typename V = iterator_common_reference_t<I>,
-                typename X = concepts::Invokable::result_t<P, V>,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     IndirectInvokable<F, Project<I, P>>())>
             I operator()(I begin, S end, F fun_, P proj_ = P{}) const
