@@ -46,9 +46,6 @@ namespace ranges
         using iterator_difference_t = concepts::WeaklyIncrementable::difference_t<I>;
 
         template<typename I>
-        using iterator_pointer_t = concepts::Readable::pointer_t<I>;
-
-        template<typename I>
         using iterator_size_t = meta::eval<std::make_unsigned<iterator_difference_t<I>>>;
 
         // Metafunctions
@@ -68,12 +65,6 @@ namespace ranges
         struct iterator_difference
         {
             using type = iterator_difference_t<I>;
-        };
-
-        template<typename I>
-        struct iterator_pointer
-        {
-            using type = iterator_pointer_t<I>;
         };
 
         template<typename I>

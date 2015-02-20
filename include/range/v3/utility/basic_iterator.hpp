@@ -333,7 +333,7 @@ namespace ranges
             template<typename Ref>
             struct operator_arrow_dispatch<Ref, true>
             {
-                using type = meta::eval<std::remove_reference<Ref>> *;
+                using type = meta::eval<std::add_pointer<Ref>>;
                 static type apply(Ref x)
                 {
                     return std::addressof(x);

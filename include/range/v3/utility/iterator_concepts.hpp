@@ -127,23 +127,6 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T, typename Enable = void>
-            struct pointer_type
-            {};
-
-            template<typename T>
-            struct pointer_type<T *, void>
-            {
-                using type = T *;
-            };
-
-            template<typename T>
-            struct pointer_type<T, enable_if_t<std::is_class<T>::value, void>>
-            {
-                using type = decltype(std::declval<T>().operator->());
-            };
-
-            ////////////////////////////////////////////////////////////////////////////////////////
-            template<typename T, typename Enable = void>
             struct iterator_category_type
             {};
 
@@ -162,11 +145,6 @@ namespace ranges
 
         /// \addtogroup group-concepts
         /// @{
-        template<typename T>
-        struct pointer_type
-          : detail::pointer_type<uncvref_t<T>>
-        {};
-
         template<typename T>
         struct iterator_category_type
           : detail::iterator_category_type<uncvref_t<T>>
@@ -190,9 +168,6 @@ namespace ranges
                 template<typename I>
                 using common_reference_t =
                     ranges::common_reference_t<reference_t<I> &&, value_t<I> &>;
-
-                template<typename I>
-                using pointer_t = meta::eval<pointer_type<I>>;
 
                 template<typename I>
                 auto requires_(I i) -> decltype(
@@ -473,8 +448,6 @@ namespace ranges
                     decay_t<concepts::Invokable::result_t<Proj, concepts::Readable::value_t<I>>>;
                 using reference =
                     concepts::Invokable::result_t<Proj, concepts::Readable::reference_t<I>>;
-                using pointer =
-                    meta::eval<std::add_pointer<reference>>;
                 reference operator*() const;
                 friend auto indirect_move(projected_readable const &) ->
                     concepts::Invokable::result_t<Proj, concepts::Readable::rvalue_reference_t<I>>

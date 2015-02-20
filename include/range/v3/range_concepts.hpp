@@ -105,9 +105,6 @@ namespace ranges
                 using common_reference_t = concepts::Readable::common_reference_t<iterator_t<T>>;
 
                 template<typename T>
-                using pointer_t = concepts::Readable::pointer_t<iterator_t<T>>;
-
-                template<typename T>
                 auto requires_(T t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<InputIterator>(begin(t))

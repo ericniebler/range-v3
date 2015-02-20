@@ -322,9 +322,6 @@ namespace ranges
         struct move_tag {};
 
         template<typename T>
-        struct pointer_type;
-
-        template<typename T>
         struct iterator_category_type;
 
         template<typename T>
@@ -406,9 +403,6 @@ namespace ranges
         template<typename I>
         struct iterator_difference;
 
-        template<typename I>
-        struct iterator_pointer;
-
         template<typename Rng>
         struct range_iterator;
 
@@ -423,9 +417,6 @@ namespace ranges
 
         template<typename Rng>
         struct range_difference;
-
-        template<typename Rng>
-        struct range_pointer;
 
         template<typename T, bool RValue = false>
         struct reference_wrapper;

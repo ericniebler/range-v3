@@ -58,9 +58,6 @@ namespace ranges
         using range_category_t = concepts::InputRange::category_t<Rng>;
 
         template<typename Rng>
-        using range_pointer_t = concepts::InputRange::pointer_t<Rng>;
-
-        template<typename Rng>
         using range_common_iterator_t = common_iterator<range_iterator_t<Rng>, range_sentinel_t<Rng>>;
 
         // Metafunctions
@@ -92,12 +89,6 @@ namespace ranges
         struct range_difference
         {
             using type = range_difference_t<Rng>;
-        };
-
-        template<typename Rng>
-        struct range_pointer
-        {
-            using type = range_pointer_t<Rng>;
         };
 
         template<typename Rng>
