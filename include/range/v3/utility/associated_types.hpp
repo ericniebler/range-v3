@@ -33,6 +33,12 @@ namespace ranges
             struct difference_type
             {};
 
+            template<>
+            struct difference_type<std::nullptr_t, void>
+            {
+                using type = std::ptrdiff_t;
+            };
+
             template<typename T>
             struct difference_type<T *, void>
             {
@@ -95,8 +101,9 @@ namespace ranges
 
             template<typename T>
             struct value_type<T, meta::void_<typename T::element_type>> // smart pointers
+              : std::enable_if<!std::is_void<typename T::element_type>::value, typename T::element_type>
             {
-                using type = typename T::element_type;
+                // The enable_if here is because shared_ptr<void> is not Readable.
             };
 
             template<typename T>

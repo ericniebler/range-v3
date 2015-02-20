@@ -1282,6 +1282,10 @@ namespace ranges
               : quote< meta_detail::std_vector >
             {};
             template<>
+            struct quote< ::std::deque >
+              : quote< meta_detail::std_deque >
+            {};
+            template<>
             struct quote< ::std::basic_string >
               : quote< meta_detail::std_basic_string >
             {};
