@@ -26,6 +26,9 @@ namespace ranges
 
         namespace meta
         {
+            template<template<typename...> class C, typename...Ts>
+            struct defer;
+
             /// \addtogroup group-meta
             /// @{
 
@@ -70,6 +73,12 @@ namespace ranges
             /// An alias for `void`.
             template<typename...Ts>
             using void_ = apply<always<void>, Ts...>;
+
+            namespace lazy
+            {
+                template<typename T>
+                using always = defer<always, T>;
+            }
 
             /// \cond
             namespace meta_detail
@@ -128,6 +137,12 @@ namespace ranges
             /// A metafunction that is type \c T.
             template<typename T>
             using id_t = eval<id<T>>;
+
+            namespace lazy
+            {
+                template<typename T>
+                using id = defer<id, T>;
+            }
 
             /// Turn a class template or alias template \p C into a
             /// Metafunction Class.
@@ -188,6 +203,25 @@ namespace ranges
                 using apply = eval<apply<quote_i<T, C>, Ts...>>;
             };
 
+            ////////////////////////////////////////////////////////////////////////////////////
+            // defer
+            /// A wrapper that defers the instantiation of a template in a \c lambda
+            /// expression.
+            ///
+            /// In the code below, the lambda would ideally be written as
+            /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
+            /// expects its first argument to be a list, not a placeholder. Instead,
+            /// we express it using \c defer as follows:
+            ///
+            /// \code
+            /// template<typename List>
+            /// using reverse = foldr<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
+            /// \endcode
+            template<template<typename...> class C, typename...Ts>
+            struct defer
+              : lazy_apply<quote<C>, Ts...>
+            {};
+
             /// Compose the Metafunction Classes \p Fs in the parameter pack
             /// \p Ts.
             template<typename...Fs>
@@ -208,6 +242,12 @@ namespace ranges
                 using apply = apply<F0, apply<compose<Fs...>, Ts...>>;
             };
 
+            namespace lazy
+            {
+                template<typename...Fns>
+                using compose = defer<compose, Fns...>;
+            }
+
             /// A Metafunction Class that partially applies the Metafunction
             /// Class \p F by binding the arguments \p Ts to the \e front
             /// of \p F.
@@ -227,6 +267,15 @@ namespace ranges
                 template<typename...Ts>
                 using apply = apply<F, Ts..., Us...>;
             };
+
+            namespace lazy
+            {
+                template<typename Fn, typename...Ts>
+                using bind_front = defer<bind_front, Fn, Ts...>;
+
+                template<typename Fn, typename...Ts>
+                using bind_back = defer<bind_back, Fn, Ts...>;
+            }
 
             /// A metafunction that unpacks the types in the type list
             /// \p List into the Metafunction Class \p F.
@@ -249,6 +298,15 @@ namespace ranges
             template<typename C, typename List>
             using apply_list = eval<lazy_apply_list<C, List>>;
 
+            namespace lazy
+            {
+                template<typename F, typename List>
+                using lazy_apply_list = defer<lazy_apply_list, F, List>;
+
+                template<typename F, typename List>
+                using apply_list = defer<apply_list, F, List>;
+            }
+
             /// A Metafunction Class that takes a bunch of arguments,
             /// bundles them into a type list, and then calls the Metafunction
             /// Class \p F with the type list \p Q.
@@ -260,6 +318,15 @@ namespace ranges
             /// Class \p F with the types.
             template<typename F>
             using uncurry = bind_front<quote<apply_list>, F>;
+
+            namespace lazy
+            {
+                template<typename F, typename Q = quote<list>>
+                using curry = defer<curry, F, Q>;
+
+                template<typename F>
+                using uncurry = defer<uncurry, F>;
+            }
 
             /// A Metafunction Class that reverses the order of the first
             /// two arguments.
@@ -279,6 +346,12 @@ namespace ranges
                 using apply = eval<impl<Ts...>>;
             };
             /// @}
+
+            namespace lazy
+            {
+                template<typename...Ts>
+                using flip = defer<flip, Ts...>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // if_
@@ -310,6 +383,12 @@ namespace ranges
             /// \ingroup group-meta
             template<bool If, typename...Args>
             using if_c = eval<meta_detail::_if_<bool_<If>, Args...>>;
+
+            namespace lazy
+            {
+                template<typename...Args>
+                using if_ = defer<if_, Args...>;
+            }
 
             /// \cond
             namespace meta_detail
@@ -388,6 +467,18 @@ namespace ranges
             template<typename...Bools>
             using or_ = eval<meta_detail::_or_<Bools...>>;
 
+            namespace lazy
+            {
+                template<typename...Bools>
+                using and_ = defer<and_, Bools...>;
+
+                template<typename...Bools>
+                using or_ = defer<or_, Bools...>;
+
+                template<typename Bool>
+                using not_ = defer<not_, Bool>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // list
             /// A list of types
@@ -409,6 +500,11 @@ namespace ranges
             template<typename List>
             using size = meta::size_t<List::size()>;
 
+            namespace lazy
+            {
+                template<typename List>
+                using size = defer<size, List>;
+            }
             /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -460,6 +556,12 @@ namespace ranges
             template<typename...Lists>
             using concat = eval<meta_detail::concat_<Lists...>>;
 
+            namespace lazy
+            {
+                template<typename...Lists>
+                using concat = defer<concat, Lists...>;
+            }
+
             /// Joins a list of lists into a single list.
             /// \pre The parameter must be an instantiation of \c meta::list\<T...\>
             ///     where each \c T is itself an instantiation of \c meta::list.
@@ -469,6 +571,12 @@ namespace ranges
             /// \ingroup group-meta
             template<typename ListOfLists>
             using join = apply_list<quote<concat>, ListOfLists>;
+
+            namespace lazy
+            {
+                template<typename ListOfLists>
+                using join = defer<join, ListOfLists>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // repeat_n
@@ -511,6 +619,12 @@ namespace ranges
             /// \ingroup group-meta
             template<std::size_t N, typename T = void>
             using repeat_n_c = eval<meta_detail::repeat_n_c_<N, T>>;
+
+            namespace lazy
+            {
+                template<typename N, typename T = void>
+                using repeat_n = defer<repeat_n, N, T>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // list_element
@@ -555,6 +669,12 @@ namespace ranges
             /// \ingroup group-meta
             template<std::size_t N, typename List>
             using list_element_c = list_element<meta::size_t<N>, List>;
+
+            namespace lazy
+            {
+                template<typename N, typename List>
+                using list_element = defer<list_element, N, List>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // drop
@@ -605,6 +725,12 @@ namespace ranges
             template<std::size_t N, typename List>
             using drop_c = eval<meta_detail::drop_<meta::size_t<N>, List>>;
 
+            namespace lazy
+            {
+                template<typename N, typename List>
+                using drop = defer<drop, N, List>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // front
             /// \cond
@@ -629,6 +755,12 @@ namespace ranges
             template<typename List>
             using front = eval<meta_detail::front_<List>>;
 
+            namespace lazy
+            {
+                template<typename List>
+                using front = defer<front, List>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // back
             /// \cond
@@ -652,6 +784,12 @@ namespace ranges
             /// \ingroup group-meta
             template<typename List>
             using back = eval<meta_detail::back_<List>>;
+
+            namespace lazy
+            {
+                template<typename List>
+                using back = defer<back, List>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // push_front
@@ -678,6 +816,12 @@ namespace ranges
             template<typename List, typename T>
             using push_front = eval<meta_detail::push_front_<List, T>>;
 
+            namespace lazy
+            {
+                template<typename List, typename T>
+                using push_front = defer<push_front, List, T>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // pop_front
             /// \cond
@@ -702,6 +846,12 @@ namespace ranges
             /// \ingroup group-meta
             template<typename List>
             using pop_front = eval<meta_detail::pop_front_<List>>;
+
+            namespace lazy
+            {
+                template<typename List>
+                using pop_front = defer<pop_front, List>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // push_back
@@ -730,6 +880,11 @@ namespace ranges
             template<typename List, typename T>
             using push_back = eval<meta_detail::push_back_<List, T>>;
 
+            namespace lazy
+            {
+                template<typename List, typename T>
+                using push_back = defer<push_back, List, T>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // empty
@@ -738,6 +893,12 @@ namespace ranges
             /// \ingroup group-meta
             template<typename List>
             using empty = bool_<0 == size<List>::type::value>;
+
+            namespace lazy
+            {
+                template<typename List>
+                using empty = defer<empty, List>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // find
@@ -773,6 +934,12 @@ namespace ranges
             template<typename List, typename T>
             using find = eval<meta_detail::find_<List, T>>;
 
+            namespace lazy
+            {
+                template<typename List, typename T>
+                using find = defer<find, List, T>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // find_if
             /// \cond
@@ -802,6 +969,12 @@ namespace ranges
             template<typename List, typename Fun>
             using find_if = eval<meta_detail::find_if_<List, Fun>>;
 
+            namespace lazy
+            {
+                template<typename List, typename Fun>
+                using find_if = defer<find_if, List, Fun>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // in
             /// A Boolean integral constant wrapper around \c true if
@@ -809,6 +982,12 @@ namespace ranges
             /// \ingroup group-meta
             template<typename List, typename T>
             using in = not_<empty<find<List, T>>>;
+
+            namespace lazy
+            {
+                template<typename List, typename T>
+                using in = defer<in, List, T>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // unique
@@ -844,6 +1023,12 @@ namespace ranges
             template<typename List>
             using unique = eval<meta_detail::unique_<List, list<>>>;
 
+            namespace lazy
+            {
+                template<typename List>
+                using unique = defer<unique, List>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // replace
             /// \cond
@@ -869,6 +1054,12 @@ namespace ranges
             template<typename List, typename T, typename U>
             using replace = eval<meta_detail::replace_<List, T, U>>;
 
+            namespace lazy
+            {
+                template<typename List, typename T, typename U>
+                using replace = defer<replace, T, U>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // replace_if
             /// \cond
@@ -893,6 +1084,12 @@ namespace ranges
             /// \ingroup group-meta
             template<typename List, typename C, typename U>
             using replace_if = eval<meta_detail::replace_if_<List, C, U>>;
+
+            namespace lazy
+            {
+                template<typename List, typename C, typename U>
+                using replace_if = defer<replace_if, C, U>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // foldl
@@ -932,6 +1129,15 @@ namespace ranges
             template<typename List, typename State, typename Fun>
             using accumulate = foldl<List, State, Fun>;
 
+            namespace lazy
+            {
+                template<typename List, typename State, typename Fun>
+                using foldl = defer<foldl, List, State, Fun>;
+
+                template<typename List, typename State, typename Fun>
+                using accumulate = defer<accumulate, List, State, Fun>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // foldr
             /// \cond
@@ -962,6 +1168,12 @@ namespace ranges
             /// \ingroup group-meta
             template<typename List, typename State, typename Fun>
             using foldr = eval<meta_detail::foldr_<List, State, Fun>>;
+
+            namespace lazy
+            {
+                template<typename List, typename State, typename Fun>
+                using foldr = defer<foldr, List, State, Fun>;
+            }
             /// @}
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -1017,6 +1229,12 @@ namespace ranges
             template<typename ...Args>
             using transform = eval<meta_detail::transform_<Args...>>;
 
+            namespace lazy
+            {
+                template<typename...Args>
+                using transform = defer<transform, Args...>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // zip_with
             /// Given a list of lists \p ListOfLists of types and a Metafunction Class \p Fun,
@@ -1035,6 +1253,12 @@ namespace ranges
                         bind_back<quote<transform>, quote<bind_front>>>,
                     quote<apply>>;
 
+            namespace lazy
+            {
+                template<typename Fun, typename ListOfLists>
+                using zip_with = defer<zip_with, Fun, ListOfLists>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // zip
             /// Given a list of lists of types \p ListOfLists, construct a new list by
@@ -1046,6 +1270,12 @@ namespace ranges
             /// \ingroup group-meta
             template<typename ListOfLists>
             using zip = zip_with<quote<list>, ListOfLists>;
+
+            namespace lazy
+            {
+                template<typename ListOfLists>
+                using zip = defer<zip, ListOfLists>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // as_list
@@ -1072,6 +1302,12 @@ namespace ranges
             template<typename Sequence>
             using as_list = eval<meta_detail::as_list_<Sequence>>;
 
+            namespace lazy
+            {
+                template<typename Sequence>
+                using as_list = defer<as_list, Sequence>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // reverse
             /// Return a new \c meta::list by reversing the elements in the
@@ -1080,6 +1316,12 @@ namespace ranges
             /// \f$ O(N) \f$.
             template<typename List>
             using reverse = foldr<List, list<>, quote<push_back>>;
+
+            namespace lazy
+            {
+                template<typename List>
+                using reverse = defer<reverse, List>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // all_of
@@ -1091,6 +1333,12 @@ namespace ranges
             template<typename List, typename F>
             using all_of = empty<find_if<List, compose<quote<not_>, F>>>;
 
+            namespace lazy
+            {
+                template<typename List, typename Fn>
+                using all_of = defer<all_of, List, Fn>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // any_of
             /// A Boolean integral constant wrapper around \c true if
@@ -1100,6 +1348,12 @@ namespace ranges
             /// \f$ O(N) \f$.
             template<typename List, typename F>
             using any_of = not_<empty<find_if<List, F>>>;
+
+            namespace lazy
+            {
+                template<typename List, typename Fn>
+                using any_of = defer<any_of, List, Fn>;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // none_of
@@ -1111,22 +1365,11 @@ namespace ranges
             template<typename List, typename F>
             using none_of = empty<find_if<List, F>>;
 
-            ////////////////////////////////////////////////////////////////////////////////////
-            // lazy
-            /// A wrapper that defers the instantiation of a template in a \c lambda
-            /// expression.
-            ///
-            /// In the code below, the lambda would ideally be written as
-            /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
-            /// expects its first argument to be a list, not a placeholder. Instead,
-            /// we express it using \c lazy as follows:
-            ///
-            /// \code
-            /// template<typename List>
-            /// using reverse = foldr<List, list<>, lambda<_a, _b, lazy<push_back, _a, _b> > >;
-            /// \endcode
-            template<template<typename...> class C, typename...Ts>
-            struct lazy;
+            namespace lazy
+            {
+                template<typename List, typename Fn>
+                using none_of = defer<none_of, List, Fn>;
+            }
 
             /// \cond
             namespace meta_detail
@@ -1138,21 +1381,21 @@ namespace ranges
                     static constexpr std::size_t arity = sizeof...(As) - 1;
                     using Tags = list<As...>; // Includes the lambda body as the last arg!
                     using F = back<Tags>;
-                    template<typename T, typename, bool IsTag = in<Tags, T>::value>
+                    template<typename T, typename Args, typename Pos = find<Tags, T>>
                     struct impl2
                     {
-                        using type = T;
+                        using type = list_element_c<(Tags::size() - Pos::size()), Args>;
                     };
                     template<typename T, typename Args>
-                    struct impl2<T, Args, true>
+                    struct impl2<T, Args, list<>>
                     {
-                        using type = list_element_c<(Tags::size() - find<Tags, T>::size()), Args>;
+                        using type = T;
                     };
                     template<typename T, typename Args, typename = void>
                     struct impl : impl2<T, Args>
                     {};
                     template<template<typename...> class C, typename...Ts, typename Args>
-                    struct impl<lazy<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
+                    struct impl<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
                     {
                         using type = C<eval<impl<Ts, Args>>...>;
                     };
@@ -1220,6 +1463,12 @@ namespace ranges
             template<typename ListOfLists>
             using cartesian_product =
                 foldr<ListOfLists, list<list<>>, quote_trait<meta_detail::cartesian_product_fn>>;
+
+            namespace lazy
+            {
+                template<typename ListOfLists>
+                using cartesian_product = defer<cartesian_product, ListOfLists>;
+            }
 
             /// \cond
             ////////////////////////////////////////////////////////////////////////////////////
@@ -1316,6 +1565,57 @@ namespace ranges
             template<typename T>
             using bit_not = std::integral_constant<decltype(~T::type::value), ~T::type::value>;
             /// @}
+
+            namespace lazy
+            {
+                template<typename T, typename U>
+                using plus = defer<plus, T, U>;
+
+                template<typename T, typename U>
+                using minus = defer<minus, T, U>;
+
+                template<typename T, typename U>
+                using multiplies = defer<multiplies, T, U>;
+
+                template<typename T, typename U>
+                using divides = defer<divides, T, U>;
+
+                template<typename T>
+                using negate = defer<negate, T>;
+
+                template<typename T, typename U>
+                using modulus = defer<modulus, T, U>;
+
+                template<typename T, typename U>
+                using equal_to = defer<equal_to, T, U>;
+
+                template<typename T, typename U>
+                using not_equal_to = defer<not_equal_to, T, U>;
+
+                template<typename T, typename U>
+                using greater = defer<greater, T, U>;
+
+                template<typename T, typename U>
+                using less = defer<less, T, U>;
+
+                template<typename T, typename U>
+                using greater_equal = defer<greater_equal, T, U>;
+
+                template<typename T, typename U>
+                using less_equal = defer<less_equal, T, U>;
+
+                template<typename T, typename U>
+                using bit_and = defer<bit_and, T, U>;
+
+                template<typename T, typename U>
+                using bit_or = defer<bit_or, T, U>;
+
+                template<typename T, typename U>
+                using bit_xor = defer<bit_xor, T, U>;
+
+                template<typename T>
+                using bit_not = defer<bit_not, T>;
+            }
         }
     }
 }

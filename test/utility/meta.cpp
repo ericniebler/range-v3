@@ -114,11 +114,12 @@ static_assert(std::is_same<Pair1, std::pair<short, int>>::value, "");
 static_assert(std::is_same<Pair2, std::pair<short, std::pair<int, int>>>::value, "");
 
 // Not saying you should do it this way, but it's a good test.
+namespace l = meta::lazy;
 template<class L>
 using cart_prod=foldr<L,list<list<>>,
-    lambda<_a,_b,lazy<join,lazy<transform,_b,
-        lambda<_c,lazy<join,lazy<transform,_a,
-            lambda<_d,list<lazy<push_front,_d,_c>>>>>>>>>>;
+    lambda<_a,_b,l::join<l::transform<_b,
+        lambda<_c,l::join<l::transform<_a,
+            lambda<_d,list<l::push_front<_d,_c>>>>>>>>>>;
 
 using CartProd = cart_prod<meta::list<meta::list<int, short>, meta::list<float, double>>>;
 static_assert(std::is_same<CartProd,
@@ -130,7 +131,7 @@ static_assert(std::is_same<CartProd,
 >::value, "");
 
 template<typename List>
-using rev = foldr<List, list<>, lambda<_a, _b, lazy<push_back, _a, _b> > >;
+using rev = foldr<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
 static_assert(std::is_same<rev<list<int, short, double>>,
                            list<double, short, int>>::value, "");
 
