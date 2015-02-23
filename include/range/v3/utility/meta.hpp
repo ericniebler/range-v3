@@ -285,29 +285,31 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template<bool If, typename Then, typename Else>
+                template<typename...>
                 struct _if_
-                {
-                    using type = Else;
-                };
+                {};
 
-                template<typename Then, typename Else>
-                struct _if_<true, Then, Else>
-                {
-                    using type = Then;
-                };
+                template<typename If, typename Then>
+                struct _if_<If, Then>
+                  : std::enable_if<If::type::value, Then>
+                {};
+
+                template<typename If, typename Then, typename Else>
+                struct _if_<If, Then, Else>
+                  : std::conditional<If::type::value, Then, Else>
+                {};
             }
             /// \endcond
 
             /// Select one type or another depending on a compile-time Boolean.
             /// \ingroup group-meta
-            template<typename If, typename Then, typename Else>
-            using if_ = eval<meta_detail::_if_<If::type::value, Then, Else>>;
+            template<typename...Args>
+            using if_ = eval<meta_detail::_if_<Args...>>;
 
             /// Select one type or another depending on a compile-time Boolean.
             /// \ingroup group-meta
-            template<bool If, typename Then, typename Else>
-            using if_c = eval<meta_detail::_if_<If, Then, Else>>;
+            template<bool If, typename...Args>
+            using if_c = eval<meta_detail::_if_<bool_<If>, Args...>>;
 
             /// \cond
             namespace meta_detail
@@ -1108,6 +1110,87 @@ namespace ranges
             /// \f$ O(N) \f$.
             template<typename List, typename F>
             using none_of = empty<find_if<List, F>>;
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // lazy
+            /// A wrapper that defers the instantiation of a template in a \c lambda
+            /// expression.
+            ///
+            /// In the code below, the lambda would ideally be written as
+            /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
+            /// expects its first argument to be a list, not a placeholder. Instead,
+            /// we express it using \c lazy as follows:
+            ///
+            /// \code
+            /// template<typename List>
+            /// using reverse = foldr<List, list<>, lambda<_a, _b, lazy<push_back, _a, _b> > >;
+            /// \endcode
+            template<template<typename...> class C, typename...Ts>
+            struct lazy;
+
+            /// \cond
+            namespace meta_detail
+            {
+                template<int, typename...As>
+                struct lambda_
+                {
+                private:
+                    static constexpr std::size_t arity = sizeof...(As) - 1;
+                    using Tags = list<As...>; // Includes the lambda body as the last arg!
+                    using F = back<Tags>;
+                    template<typename T, typename, bool IsTag = in<Tags, T>::value>
+                    struct impl2
+                    {
+                        using type = T;
+                    };
+                    template<typename T, typename Args>
+                    struct impl2<T, Args, true>
+                    {
+                        using type = list_element_c<(Tags::size() - find<Tags, T>::size()), Args>;
+                    };
+                    template<typename T, typename Args, typename = void>
+                    struct impl : impl2<T, Args>
+                    {};
+                    template<template<typename...> class C, typename...Ts, typename Args>
+                    struct impl<lazy<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
+                    {
+                        using type = C<eval<impl<Ts, Args>>...>;
+                    };
+                    template<int N, typename...Ts, typename Args>
+                    struct impl<lambda_<N, Ts...>, Args>
+                    {
+                        using type = impl;
+                        template<typename...Us>
+                        using apply =
+                            apply_list<lambda_<0, As..., Ts...>, concat<Args, list<Us...>>>;
+                    };
+                    template<template<typename...> class C, typename...Ts, typename Args>
+                    struct impl<C<Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
+                    {
+                        using type = C<eval<impl<Ts, Args>>...>;
+                    };
+                public:
+                    template<typename...Ts>
+                    using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., void>>>>;
+                };
+            }
+            /// \endcond
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // lambda
+            /// For creating anonymous Metafunction Classes.
+            /// \code
+            /// using L = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
+            /// using P = apply<L, int, short>;
+            /// static_assert(std::is_same<P, std::pair<short, std::pair<int, int>>>::value, "");
+            /// \endcode
+            template<typename...Ts>
+            using lambda = meta_detail::lambda_<0, Ts...>;
+
+            // Some argument placeholders for use in \c lambda expressions.
+            struct _a; struct _b; struct _c;
+            struct _d; struct _e; struct _f;
+            struct _g; struct _h; struct _i;
 
             ////////////////////////////////////////////////////////////////////////////////////
             // cartesian_product

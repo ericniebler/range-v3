@@ -102,6 +102,38 @@ static_assert(can_apply<meta::quote<std::pair>, int, int>::value, "");
 static_assert(!can_apply<meta::quote<std::pair>, int, int, int>::value, "");
 #endif
 
+// Sanity-check meta::lambda
+using Lambda0 = lambda<_a, _b, std::pair<_a, _b>>;
+using Lambda1 = lambda<_a, _b, std::pair<_b, _a>>;
+using Lambda2 = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
+using Pair0 = apply<Lambda0, int, short>;
+using Pair1 = apply<Lambda1, int, short>;
+using Pair2 = apply<Lambda2, int, short>;
+static_assert(std::is_same<Pair0, std::pair<int, short>>::value, "");
+static_assert(std::is_same<Pair1, std::pair<short, int>>::value, "");
+static_assert(std::is_same<Pair2, std::pair<short, std::pair<int, int>>>::value, "");
+
+// Not saying you should do it this way, but it's a good test.
+template<class L>
+using cart_prod=foldr<L,list<list<>>,
+    lambda<_a,_b,lazy<join,lazy<transform,_b,
+        lambda<_c,lazy<join,lazy<transform,_a,
+            lambda<_d,list<lazy<push_front,_d,_c>>>>>>>>>>;
+
+using CartProd = cart_prod<meta::list<meta::list<int, short>, meta::list<float, double>>>;
+static_assert(std::is_same<CartProd,
+    meta::list<
+        meta::list<int, float>,
+        meta::list<int, double>,
+        meta::list<short, float>,
+        meta::list<short, double> >
+>::value, "");
+
+template<typename List>
+using rev = foldr<List, list<>, lambda<_a, _b, lazy<push_back, _a, _b> > >;
+static_assert(std::is_same<rev<list<int, short, double>>,
+                           list<double, short, int>>::value, "");
+
 int main()
 {
     test_tuple_cat();
