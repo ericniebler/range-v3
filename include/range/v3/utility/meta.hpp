@@ -40,9 +40,6 @@ namespace ranges
             /// An empty type used for various things.
             struct nil_
             {};
-            #ifndef nil
-            using nil = nil_;
-            #endif
 
             /// "Evaluate" the metafunction \p T by returning the nested \c T::type alias.
             template<typename T>
@@ -51,6 +48,15 @@ namespace ranges
             /// Evaluate the Metafunction Class \p F with the arguments \p Args.
             template<typename F, typename...Args>
             using apply = typename F::template apply<Args...>;
+
+            namespace lazy
+            {
+                template<typename T>
+                using eval = defer<eval, T>;
+
+                template<typename F, typename...Args>
+                using apply = defer<apply, F, Args...>;
+            }
 
             /// A Metafunction Class that always returns \p T.
             template<typename T>
@@ -95,14 +101,14 @@ namespace ranges
                     using type = std::true_type;
                 };
 
-                template<typename, typename, typename = void>
-                struct lazy_apply_
+                template<template<typename...> class C, typename, typename = void>
+                struct defer_
                 {};
 
-                template<typename F, typename...Ts>
-                struct lazy_apply_<F, list<Ts...>, void_<apply<F, Ts...>>>
+                template<template<typename...> class C, typename...Ts>
+                struct defer_<C, list<Ts...>, void_<C<Ts...>>>
                 {
-                    using type = apply<F, Ts...>;
+                    using type = C<Ts...>;
                 };
             }
             /// \endcond
@@ -112,11 +118,23 @@ namespace ranges
             template<typename T>
             using has_type = eval<meta_detail::has_type_<T>>;
 
-            /// A metafunction that evaluates the Metafunction Class `F` with
-            /// the arguments \c Args.
-            template<typename F, typename...Args>
-            struct lazy_apply
-              : meta_detail::lazy_apply_<F, list<Args...>>
+            ////////////////////////////////////////////////////////////////////////////////////
+            // defer
+            /// A wrapper that defers the instantiation of a template in a \c lambda
+            /// expression.
+            ///
+            /// In the code below, the lambda would ideally be written as
+            /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
+            /// expects its first argument to be a list, not a placeholder. Instead,
+            /// we express it using \c defer as follows:
+            ///
+            /// \code
+            /// template<typename List>
+            /// using reverse = foldr<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
+            /// \endcode
+            template<template<typename...> class C, typename...Ts>
+            struct defer
+              : meta_detail::defer_<C, list<Ts...>>
             {};
 
             /// An integral constant wrapper for \c std::size_t.
@@ -203,25 +221,6 @@ namespace ranges
                 using apply = eval<apply<quote_i<T, C>, Ts...>>;
             };
 
-            ////////////////////////////////////////////////////////////////////////////////////
-            // defer
-            /// A wrapper that defers the instantiation of a template in a \c lambda
-            /// expression.
-            ///
-            /// In the code below, the lambda would ideally be written as
-            /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
-            /// expects its first argument to be a list, not a placeholder. Instead,
-            /// we express it using \c defer as follows:
-            ///
-            /// \code
-            /// template<typename List>
-            /// using reverse = foldr<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
-            /// \endcode
-            template<template<typename...> class C, typename...Ts>
-            struct defer
-              : lazy_apply<quote<C>, Ts...>
-            {};
-
             /// Compose the Metafunction Classes \p Fs in the parameter pack
             /// \p Ts.
             template<typename...Fs>
@@ -280,29 +279,26 @@ namespace ranges
             /// A metafunction that unpacks the types in the type list
             /// \p List into the Metafunction Class \p F.
             template<typename F, typename List>
-            struct lazy_apply_list
+            struct apply_list_impl
             {};
 
             template<typename F, template<typename...> class T, typename ...Ts>
-            struct lazy_apply_list<F, T<Ts...>>
-              : lazy_apply<F, Ts...>
+            struct apply_list_impl<F, T<Ts...>>
+              : lazy::apply<F, Ts...>
             {};
 
             template<typename F, typename T, T...Is>
-            struct lazy_apply_list<F, integer_sequence<T, Is...>>
-              : lazy_apply<F, std::integral_constant<T, Is>...>
+            struct apply_list_impl<F, integer_sequence<T, Is...>>
+              : lazy::apply<F, std::integral_constant<T, Is>...>
             {};
 
             /// Applies the Metafunction Class \p C using the types in
             /// the type list \p List as arguments.
             template<typename C, typename List>
-            using apply_list = eval<lazy_apply_list<C, List>>;
+            using apply_list = eval<apply_list_impl<C, List>>;
 
             namespace lazy
             {
-                template<typename F, typename List>
-                using lazy_apply_list = defer<lazy_apply_list, F, List>;
-
                 template<typename F, typename List>
                 using apply_list = defer<apply_list, F, List>;
             }
@@ -339,7 +335,7 @@ namespace ranges
                 {};
                 template<typename A, typename B, typename ...Ts>
                 struct impl<A, B, Ts...>
-                  : lazy_apply<F, B, A, Ts...>
+                  : lazy::apply<F, B, A, Ts...>
                 {};
             public:
                 template<typename ...Ts>
@@ -941,6 +937,45 @@ namespace ranges
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
+            // rfind
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename List, typename T, typename State = list<>>
+                struct rfind_
+                {};
+
+                template<typename T, typename State>
+                struct rfind_<list<>, T, State>
+                {
+                    using type = State;
+                };
+
+                template<typename Head, typename ...List, typename T, typename State>
+                struct rfind_<list<Head, List...>, T, State>
+                  : rfind_<list<List...>, T, State>
+                {};
+
+                template<typename ...List, typename T, typename State>
+                struct rfind_<list<T, List...>, T, State>
+                  : rfind_<list<List...>, T, list<T, List...>>
+                {};
+            }
+            /// \endcond
+
+            /// Return the tail of the list \p List starting at the last occurrence
+            /// of \p T, if any such element exists; the empty list, otherwise.
+            /// \ingroup group-meta
+            template<typename List, typename T>
+            using rfind = eval<meta_detail::rfind_<List, T>>;
+
+            namespace lazy
+            {
+                template<typename List, typename T>
+                using rfind = defer<rfind, List, T>;
+            }
+
+            ////////////////////////////////////////////////////////////////////////////////////
             // find_if
             /// \cond
             namespace meta_detail
@@ -973,6 +1008,41 @@ namespace ranges
             {
                 template<typename List, typename Fun>
                 using find_if = defer<find_if, List, Fun>;
+            }
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // rfind_if
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename List, typename Fun, typename State = list<>>
+                struct rfind_if_
+                {};
+
+                template<typename Fun, typename State>
+                struct rfind_if_<list<>, Fun, State>
+                {
+                    using type = State;
+                };
+
+                template<typename Head, typename ...List, typename Fun, typename State>
+                struct rfind_if_<list<Head, List...>, Fun, State>
+                  : rfind_if_<list<List...>, Fun, if_<apply<Fun, Head>, list<Head, List...>, State>>
+                {};
+            }
+            /// \endcond
+
+            /// Return the tail of the list \p List starting at the last element
+            /// `A` such that `apply<Fun, A>::%value` is \c true, if any such element
+            /// exists; the empty list, otherwise.
+            /// \ingroup group-meta
+            template<typename List, typename Fun>
+            using rfind_if = eval<meta_detail::rfind_if_<List, Fun>>;
+
+            namespace lazy
+            {
+                template<typename List, typename Fun>
+                using rfind_if = defer<rfind_if, List, Fun>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -1155,7 +1225,7 @@ namespace ranges
 
                 template<typename Head, typename ...List, typename State, typename Fun>
                 struct foldr_<list<Head, List...>, State, Fun, void_<eval<foldr_<list<List...>, State, Fun>>>>
-                  : lazy_apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>
+                  : lazy::apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>
                 {};
             }
             /// \endcond
@@ -1289,7 +1359,7 @@ namespace ranges
                 // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
                 template<typename Sequence>
                 struct as_list_
-                  : lazy_apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
+                  : lazy::apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
                 {};
             }
             /// \endcond
@@ -1298,7 +1368,7 @@ namespace ranges
             /// @{
 
             /// Turn a type into an instance of \c meta::list in a way
-            /// determined by \c meta::lazy_apply_list.
+            /// determined by \c meta::apply_list.
             template<typename Sequence>
             using as_list = eval<meta_detail::as_list_<Sequence>>;
 
@@ -1381,7 +1451,7 @@ namespace ranges
                     static constexpr std::size_t arity = sizeof...(As) - 1;
                     using Tags = list<As...>; // Includes the lambda body as the last arg!
                     using F = back<Tags>;
-                    template<typename T, typename Args, typename Pos = find<Tags, T>>
+                    template<typename T, typename Args, typename Pos = rfind<Tags, T>>
                     struct impl2
                     {
                         using type = list_element_c<(Tags::size() - Pos::size()), Args>;

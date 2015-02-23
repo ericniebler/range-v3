@@ -135,6 +135,13 @@ using rev = foldr<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
 static_assert(std::is_same<rev<list<int, short, double>>,
                            list<double, short, int>>::value, "");
 
+using uncvref_fn = lambda<_a, l::eval<std::remove_cv<l::eval<std::remove_reference<_a>>>>>;
+static_assert(std::is_same<apply<uncvref_fn, int const &>, int>::value, "");
+
+using L = list<int, short, int, float>;
+static_assert(std::is_same<find<L, int>, list<int, short, int, float>>::value, "");
+static_assert(std::is_same<rfind<L, int>, list<int, float>>::value, "");
+
 int main()
 {
     test_tuple_cat();

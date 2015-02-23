@@ -508,15 +508,15 @@ namespace ranges
         using IndirectFunction = meta::and_<
             meta::fast_and<Readable<Is>...>,
             // C must be callable with the values and references read from the Is.
-            meta::lazy_apply<
+            meta::lazy::apply<
                 meta::quote<detail::indirect_apply_combine>,
                 meta::quote<meta::fast_and>,
                 meta::bind_front<meta::quote<Function>, C>,
                 Is...>,
             // In addition, the return types of the C invocations tried above must all
-            // share a common reference type. (The lazy_apply is so that this doesn't get
+            // share a common reference type. (The lazy::apply is so that this doesn't get
             // evaluated unless C is truly callable as determined above.)
-            meta::lazy_apply<
+            meta::lazy::apply<
                 meta::quote<detail::indirect_apply_combine>,
                 meta::quote<CommonReference>,
                 meta::bind_front<meta::quote<concepts::Function::result_t>, C>,
@@ -525,7 +525,7 @@ namespace ranges
         template<typename C, typename ...Is>
         using IndirectPredicate = meta::and_<
             meta::fast_and<Readable<Is>...>,
-            meta::lazy_apply<
+            meta::lazy::apply<
                 meta::quote<detail::indirect_apply_combine>,
                 meta::quote<meta::fast_and>,
                 meta::bind_front<meta::quote<Predicate>, C>,
@@ -534,7 +534,7 @@ namespace ranges
         template<typename C, typename I0, typename I1 = I0>
         using IndirectRelation = meta::and_<
             meta::fast_and<Readable<I0>, Readable<I1>>,
-            meta::lazy_apply<
+            meta::lazy::apply<
                 meta::quote<detail::indirect_apply_combine>,
                 meta::quote<meta::fast_and>,
                 meta::bind_front<meta::quote<Relation>, C>,

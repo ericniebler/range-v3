@@ -418,7 +418,7 @@ namespace ranges
             struct common_tuple_like<T0<Ts...>, T1<Us...>, TupleLike>
               : meta::if_<
                     meta::and_<meta::has_type<common_type<Ts, Us> >...>,
-                    meta::lazy_apply<
+                    meta::lazy::apply<
                         meta::compose<
                             meta::uncurry<TupleLike>,
                             meta::bind_back<meta::quote<meta::transform>, meta::quote<meta::eval> > >,
@@ -492,7 +492,7 @@ namespace ranges
             struct common_tuple_like_ref<T0<Ts...>, T1<Us...>, TupleLike>
               : meta::if_<
                     meta::and_<meta::has_type<common_reference<Ts, Us> >...>,
-                    meta::lazy_apply<
+                    meta::lazy::apply<
                         meta::compose<
                             meta::uncurry<TupleLike>,
                             meta::bind_back<meta::quote<meta::transform>, meta::quote<meta::eval> > >,

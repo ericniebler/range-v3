@@ -292,7 +292,7 @@ namespace ranges
                 using JoinableIterable_ = meta::and_<
                     InputIterable<Rng>,
                     // Only evaluate this one if the previous one succeeded
-                    meta::lazy_apply<
+                    meta::lazy::apply<
                         meta::compose<
                             meta::quote<InputIterable>,
                             meta::quote<range_value_t>>,
