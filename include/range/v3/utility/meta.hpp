@@ -15,6 +15,7 @@
 #define RANGES_V3_UTILITY_META_HPP
 
 #include <type_traits>
+#include <initializer_list>
 #include <range/v3/utility/nullptr_v.hpp>
 #include <range/v3/utility/static_const.hpp>
 
