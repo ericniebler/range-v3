@@ -16,6 +16,7 @@
 
 #include <type_traits>
 #include <range/v3/utility/nullptr_v.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -144,6 +145,28 @@ namespace ranges
             /// An integral constant wrapper for \c bool.
             template<bool B>
             using bool_ = std::integral_constant<bool, B>;
+
+            /// A metafunction that computes the size of the type \p T.
+            /// \par Complexity
+            /// \f$ O(1) \f$.
+            template <class T>
+            using sizeof_ = meta::size_t<sizeof(T)>;
+
+            /// A metafunction that computes the alignment required for
+            /// any instance of the type \p T.
+            /// \par Complexity
+            /// \f$ O(1) \f$.
+            template <class T>
+            using alignof_ = meta::size_t<alignof(T)>;
+
+            namespace lazy
+            {
+                template <typename T>
+                using sizeof_ = defer<sizeof_, T>;
+
+                template <typename T>
+                using alignof_ = defer<alignof_, T>;
+            }
 
             /// A metafunction that always returns its argument \p T.
             template<typename T>
@@ -1305,7 +1328,57 @@ namespace ranges
                 using transform = defer<transform, Args...>;
             }
 
-            ////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////
+            // filter
+            /// \cond
+            namespace meta_detail
+            {
+                template <typename Predicate>
+                struct filter_
+                {
+                    template <typename State, typename A>
+                    using apply = if_<apply<Predicate, A>, push_back<State, A>, State>;
+                };
+            } // namespace detail
+            /// \endcond
+
+            /// Returns a new meta::list where only those elements of \p List A that satisfy the
+            /// Metafunction Class \p Predicate such that `apply<Pred,A>::%value` is \c true are
+            /// present. That is, those elements that don't satisfy the \p Predicate are "removed".
+            template <typename List, typename Predicate>
+            using filter = foldl<List, list<>, meta_detail::filter_<Predicate>>;
+
+            namespace lazy
+            {
+                template <typename List, typename Predicate>
+                using filter = defer<filter, List, Predicate>;
+            }
+
+            ///////////////////////////////////////////////////////////////////////////////////////
+            // for_each
+            /// \cond
+            namespace meta_detail
+            {
+                struct for_each_fn
+                {
+                    template <class UnaryFunction, class... Args>
+                    constexpr auto operator()(list<Args...>, UnaryFunction f) const
+                        -> UnaryFunction
+                    {
+                        return (void)std::initializer_list<int>{(f(Args{}), void(), 0)...}, f;
+                    }
+                };
+            } // namespace meta_detail
+            /// \endcond
+
+            namespace
+            {
+                /// `for_each(List, UnaryFunction)` calls the \p UnaryFunction for each
+                /// argument in the \p List.
+                constexpr auto &&for_each = static_const<meta_detail::for_each_fn>::value;
+            }
+
+            ///////////////////////////////////////////////////////////////////////////////////////
             // zip_with
             /// Given a list of lists \p ListOfLists of types and a Metafunction Class \p Fun,
             /// construct a new list by calling \p Fun with the elements from the lists
@@ -1685,6 +1758,25 @@ namespace ranges
 
                 template<typename T>
                 using bit_not = defer<bit_not, T>;
+            }
+
+            /// An integral constant wrapper around the minimum of \c T::type::value
+            /// and \c U::type::value
+            template <typename T, typename U>
+            using min = if_<less<U, T>, U, T>;
+
+            /// An integral constant wrapper around the maximum of \c T::type::value
+            /// and \c U::type::value
+            template <typename T, typename U>
+            using max = if_<less<U, T>, T, U>;
+
+            namespace lazy
+            {
+                template <typename T, typename U>
+                using max = defer<max, T, U>;
+
+                template <typename T, typename U>
+                using min = defer<min, T, U>;
             }
         }
     }
