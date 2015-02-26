@@ -157,7 +157,7 @@ using find_index_ = let<
     var<_a, List>,
     var<_b, lazy::find<_a, T>>,
     lazy::if_<
-        lazy::equal_to<lazy::size<_b>, meta::size_t<0>>,
+        std::is_same<_b, list<>>,
         meta::npos,
         lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
 static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
@@ -203,18 +203,18 @@ int main()
     // meta::index
     {
         using l = meta::list<int, long, short>;
-        static_assert(meta::find_index<int, l>{} == 0, "");
-        static_assert(meta::find_index<long, l>{} == 1, "");
-        static_assert(meta::find_index<short, l>{} == 2, "");
-        static_assert(meta::find_index<double, l>{} == meta::npos{}, "");
-        static_assert(meta::find_index<float, l>{} == meta::npos{}, "");
+        static_assert(meta::find_index<l, int>{} == 0, "");
+        static_assert(meta::find_index<l, long>{} == 1, "");
+        static_assert(meta::find_index<l, short>{} == 2, "");
+        static_assert(meta::find_index<l, double>{} == meta::npos{}, "");
+        static_assert(meta::find_index<l, float>{} == meta::npos{}, "");
 
         using l2 = meta::list<>;
-        static_assert(meta::find_index<double, l2>{} == meta::npos{}, "");
+        static_assert(meta::find_index<l2, double>{} == meta::npos{}, "");
 
         using namespace meta::placeholders;
 
-        using lambda = meta::lambda<_a, _b, meta::lazy::find_index<_a, _b>>;
+        using lambda = meta::lambda<_a, _b, meta::lazy::find_index<_b, _a>>;
         using result = meta::apply<lambda, long, l>;
         static_assert(result{} == 1, "");
     }
@@ -223,16 +223,16 @@ int main()
     {
         using l = meta::list<int, long, short, int>;
 
-        static_assert(meta::reverse_find_index<int, l>{} == 3, "");
-        static_assert(meta::reverse_find_index<long, l>{} == 1, "");
-        static_assert(meta::reverse_find_index<short, l>{} == 2, "");
-        static_assert(meta::reverse_find_index<double, l>{} == meta::npos{}, "");
-        static_assert(meta::reverse_find_index<float, l>{} == meta::npos{}, "");
+        static_assert(meta::reverse_find_index<l, int>{} == 3, "");
+        static_assert(meta::reverse_find_index<l, long>{} == 1, "");
+        static_assert(meta::reverse_find_index<l, short>{} == 2, "");
+        static_assert(meta::reverse_find_index<l, double>{} == meta::npos{}, "");
+        static_assert(meta::reverse_find_index<l, float>{} == meta::npos{}, "");
 
         using l2 = meta::list<>;
-        static_assert(meta::reverse_find_index<double, l2>{} == meta::npos{}, "");
+        static_assert(meta::reverse_find_index<l2, double>{} == meta::npos{}, "");
 
-        using lambda = meta::lambda<_a, _b, meta::lazy::reverse_find_index<_a, _b>>;
+        using lambda = meta::lambda<_a, _b, meta::lazy::reverse_find_index<_b, _a>>;
         using result = meta::apply<lambda, long, l>;
         static_assert(result{} == 1, "");
     }

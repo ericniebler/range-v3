@@ -331,7 +331,7 @@ namespace ranges
                 template<typename T, std::size_t N>
                 void operator()(T &&t, meta::size_t<N>) const
                 {
-                    using E = meta::at_c<N, meta::list<From...>>;
+                    using E = meta::at_c<meta::list<From...>, N>;
                     using F = meta::find<meta::list<To...>, E>;
                     static constexpr std::size_t M = sizeof...(To) - F::size();
                     var_.template set<M>(std::forward<T>(t));
@@ -537,9 +537,9 @@ namespace ranges
         template<std::size_t N, typename...Ts>
         struct tagged_variant_element<N, tagged_variant<Ts...>>
           : meta::if_<
-                std::is_reference<meta::at_c<N, meta::list<Ts...>>>,
-                meta::id<meta::at_c<N, meta::list<Ts...>>>,
-                std::decay<meta::at_c<N, meta::list<Ts...>>>>
+                std::is_reference<meta::at_c<meta::list<Ts...>, N>>,
+                meta::id<meta::at_c<meta::list<Ts...>, N>>,
+                std::decay<meta::at_c<meta::list<Ts...>, N>>>
         {};
 
         ////////////////////////////////////////////////////////////////////////////////////////////

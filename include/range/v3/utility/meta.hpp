@@ -303,22 +303,22 @@ namespace ranges
             /// A metafunction that computes the size of the type \p T.
             /// \par Complexity
             /// \f$ O(1) \f$.
-            template <class T>
+            template<class T>
             using sizeof_ = meta::size_t<sizeof(T)>;
 
             /// A metafunction that computes the alignment required for
             /// any instance of the type \p T.
             /// \par Complexity
             /// \f$ O(1) \f$.
-            template <class T>
+            template<class T>
             using alignof_ = meta::size_t<alignof(T)>;
 
             namespace lazy
             {
-                template <typename T>
+                template<typename T>
                 using sizeof_ = defer<sizeof_, T>;
 
-                template <typename T>
+                template<typename T>
                 using alignof_ = defer<alignof_, T>;
             }
 
@@ -832,12 +832,12 @@ namespace ranges
                     static T eval(VoidPtrs..., T *, Us *...);
                 };
 
-                template<typename N, typename List>
+                template<typename List, typename N>
                 struct at_
                 {};
 
-                template<typename N, typename...Ts>
-                struct at_<N, list<Ts...>>
+                template<typename...Ts, typename N>
+                struct at_<list<Ts...>, N>
                   : decltype(at_impl_<repeat_n<N, void *>>::eval(_nullptr_v<id<Ts>>()...))
                 {};
             }
@@ -849,20 +849,20 @@ namespace ranges
             /// \par Complexity
             /// Amortized \f$ O(1) \f$.
             /// \ingroup group-meta
-            template<typename N, typename List>
-            using at = eval<meta_detail::at_<N, List>>;
+            template<typename List, typename N>
+            using at = eval<meta_detail::at_<List, N>>;
 
             /// Return the `N`th element in the \c meta::list \c List.
             /// \par Complexity
             /// Amortized \f$ O(1) \f$.
             /// \ingroup group-meta
-            template<std::size_t N, typename List>
-            using at_c = at<meta::size_t<N>, List>;
+            template<typename List, std::size_t N>
+            using at_c = at<List, meta::size_t<N>>;
 
             namespace lazy
             {
-                template<typename N, typename List>
-                using at = defer<at, N, List>;
+                template<typename List, typename N>
+                using at = defer<at, List, N>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -887,12 +887,12 @@ namespace ranges
                     static id<list<Ts...>> eval(VoidPtrs..., id<Ts> *...);
                 };
 
-                template<typename N, typename List>
+                template<typename List, typename N>
                 struct drop_
                 {};
 
-                template<typename N, typename ...Ts>
-                struct drop_<N, list<Ts...>>
+                template<typename ...Ts, typename N>
+                struct drop_<list<Ts...>, N>
                   : decltype(drop_impl_<repeat_n<N, void *>>::eval(_nullptr_v<id<Ts>>()...))
                 {};
             }
@@ -903,21 +903,21 @@ namespace ranges
             /// \par Complexity
             /// \f$ O(1) \f$.
             /// \ingroup group-meta
-            template<typename N, typename List>
-            using drop = eval<meta_detail::drop_<N, List>>;
+            template<typename List, typename N>
+            using drop = eval<meta_detail::drop_<List, N>>;
 
             /// Return a new \c meta::list by removing the first \p N
             /// elements from \p List.
             /// \par Complexity
             /// \f$ O(1) \f$.
             /// \ingroup group-meta
-            template<std::size_t N, typename List>
-            using drop_c = eval<meta_detail::drop_<meta::size_t<N>, List>>;
+            template<typename List, std::size_t N>
+            using drop_c = eval<meta_detail::drop_<List, meta::size_t<N>>>;
 
             namespace lazy
             {
-                template<typename N, typename List>
-                using drop = defer<drop, N, List>;
+                template<typename List, typename N>
+                using drop = defer<drop, List, N>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -962,7 +962,7 @@ namespace ranges
                 template<typename Head, typename ...List>
                 struct back_<list<Head, List...>>
                 {
-                    using type = at_c<sizeof...(List), list<Head, List...>>;
+                    using type = at_c<list<Head, List...>, sizeof...(List)>;
                 };
             }
             /// \endcond
@@ -1236,6 +1236,67 @@ namespace ranges
             {
                 template<typename List, typename Fun>
                 using reverse_find_if = defer<reverse_find_if, List, Fun>;
+            }
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            // find_index
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename List, typename T>
+                struct find_index_
+                {
+                    static constexpr std::size_t i = List::size() - find<List, T>::size();
+                    using type = if_c<i == List::size(), npos, size_t<i>>;
+                };
+            } // namespace detail
+            /// \endcond
+
+            /// Finds the index of the first occurrence of the type \p T within the list \p List.
+            /// Returns `#meta::npos` if the type \p T was not found.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            /// \ingroup group-meta
+            template<typename List, typename T>
+            using find_index = eval<meta_detail::find_index_<List, T>>;
+
+            namespace lazy
+            {
+                /// \sa `meta::index`
+                /// \ingroup group-meta
+                template<typename List, typename T>
+                using find_index = defer<find_index, List, T>;
+            }
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            // reverse_find_index
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename List, typename T>
+                struct reverse_find_index_
+                {
+                    static constexpr std::size_t i = List::size() - reverse_find<List, T>::size();
+                    using type = if_c<i == List::size(), npos, size_t<i>>;
+                };
+            } // namespace detail
+            /// \endcond
+
+            /// Finds the index of the last occurrence of the type \p T within the list \p List.
+            /// Returns `#meta::npos` if the type \p T was not found.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            /// \ingroup query
+            /// \sa `#meta::npos`
+            template<typename List, typename T>
+            using reverse_find_index = eval<meta_detail::reverse_find_index_<List, T>>;
+
+            namespace lazy
+            {
+                /// \sa 'meta::reverse_find_index'
+                /// \ingroup lazy_query
+                template<typename List, typename T>
+                using reverse_find_index = defer<reverse_find_index, List, T>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -1549,10 +1610,10 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
-                template <typename Predicate>
+                template<typename Predicate>
                 struct filter_
                 {
-                    template <typename State, typename A>
+                    template<typename State, typename A>
                     using apply = if_<apply<Predicate, A>, push_back<State, A>, State>;
                 };
             } // namespace detail
@@ -1561,12 +1622,12 @@ namespace ranges
             /// Returns a new meta::list where only those elements of \p List A that satisfy the
             /// Metafunction Class \p Predicate such that `apply<Pred,A>::%value` is \c true are
             /// present. That is, those elements that don't satisfy the \p Predicate are "removed".
-            template <typename List, typename Predicate>
+            template<typename List, typename Predicate>
             using filter = fold<List, list<>, meta_detail::filter_<Predicate>>;
 
             namespace lazy
             {
-                template <typename List, typename Predicate>
+                template<typename List, typename Predicate>
                 using filter = defer<filter, List, Predicate>;
             }
 
@@ -1577,7 +1638,7 @@ namespace ranges
             {
                 struct for_each_fn
                 {
-                    template <class UnaryFunction, class... Args>
+                    template<class UnaryFunction, class... Args>
                     constexpr auto operator()(list<Args...>, UnaryFunction f) const
                         -> UnaryFunction
                     {
@@ -1740,18 +1801,9 @@ namespace ranges
                     static constexpr std::size_t arity = sizeof...(As) - 1;
                     using Tags = list<As...>; // Includes the lambda body as the last arg!
                     using F = back<Tags>;
-                    template<typename T, typename Args, typename Pos = reverse_find<Tags, T>>
-                    struct impl2
-                    {
-                        using type = at_c<(Tags::size() - Pos::size()), Args>;
-                    };
-                    template<typename T, typename Args>
-                    struct impl2<T, Args, list<>>
-                    {
-                        using type = T;
-                    };
                     template<typename T, typename Args, typename = void>
-                    struct impl : impl2<T, Args>
+                    struct impl
+                      : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
                     {};
                     template<template<typename...> class C, typename...Ts, typename Args>
                     struct impl<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
@@ -1823,7 +1875,7 @@ namespace ranges
             ///     var<_a, List>,
             ///     var<_b, lazy::find<_a, T>>,
             ///     lazy::if_<
-            ///         lazy::equal_to<lazy::size<_b>, meta::size_t<0>>,
+            ///         std::is_same<_b, list<>>,
             ///         meta::npos,
             ///         lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
             /// static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
@@ -1894,83 +1946,22 @@ namespace ranges
             using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
             /// \endcond
 
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // find_index
-            /// \cond
-            namespace meta_detail
-            {
-                template <typename T, typename List>
-                struct find_index_
-                {
-                    static constexpr std::size_t i = List::size() - find<List, T>::size();
-                    using type = if_c<i == List::size(), npos, size_t<i>>;
-                };
-            } // namespace detail
-            /// \endcond
-
-            /// Finds the index of the first occurrence of the type \p T within the list \p List.
-            /// Returns `#meta::npos` if the type \p T was not found.
-            /// \par Complexity
-            /// \f$ O(N) \f$.
-            /// \ingroup group-meta
-            template<typename T, typename List>
-            using find_index = eval<meta_detail::find_index_<T, List>>;
-
-            namespace lazy
-            {
-                /// \sa `meta::index`
-                /// \ingroup group-meta
-                template<typename T, typename List>
-                using find_index = defer<find_index, T, List>;
-            }
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            // reverse_find_index
-            /// \cond
-            namespace meta_detail
-            {
-                template <typename T, typename List>
-                struct reverse_find_index_
-                {
-                    static constexpr std::size_t i = List::size() - reverse_find<List, T>::size();
-                    using type = if_c<i == List::size(), npos, size_t<i>>;
-                };
-            } // namespace detail
-            /// \endcond
-
-            /// Finds the index of the last occurrence of the type \p T within the list \p List.
-            /// Returns `#meta::npos` if the type \p T was not found.
-            /// \par Complexity
-            /// \f$ O(N) \f$.
-            /// \ingroup query
-            /// \sa `#meta::npos`
-            template <typename T, typename List>
-            using reverse_find_index = eval<meta_detail::reverse_find_index_<T, List>>;
-
-            namespace lazy
-            {
-                /// \sa 'meta::reverse_find_index'
-                /// \ingroup lazy_query
-                template <typename T, typename List>
-                using reverse_find_index = defer<reverse_find_index, T, List>;
-            }
-
             /// An integral constant wrapper around the minimum of \c T::type::value
             /// and \c U::type::value
-            template <typename T, typename U>
+            template<typename T, typename U>
             using min = if_<less<U, T>, U, T>;
 
             /// An integral constant wrapper around the maximum of \c T::type::value
             /// and \c U::type::value
-            template <typename T, typename U>
+            template<typename T, typename U>
             using max = if_<less<U, T>, T, U>;
 
             namespace lazy
             {
-                template <typename T, typename U>
+                template<typename T, typename U>
                 using max = defer<max, T, U>;
 
-                template <typename T, typename U>
+                template<typename T, typename U>
                 using min = defer<min, T, U>;
             }
         }
@@ -1987,27 +1978,27 @@ namespace ranges
     !defined(RANGES_NO_STD_FORWARD_DECLARACTIONS)
 
 _LIBCPP_BEGIN_NAMESPACE_STD
-    template <class, class> struct _LIBCPP_TYPE_VIS_ONLY pair;
-    template <class> struct _LIBCPP_TYPE_VIS_ONLY hash;
-    template <class> struct _LIBCPP_TYPE_VIS_ONLY less;
-    template <class> struct _LIBCPP_TYPE_VIS_ONLY equal_to;
-    template <class> struct _LIBCPP_TYPE_VIS_ONLY char_traits;
-    template <class, class> class _LIBCPP_TYPE_VIS_ONLY list;
-    template <class, class> class _LIBCPP_TYPE_VIS_ONLY forward_list;
-    template <class, class> class _LIBCPP_TYPE_VIS_ONLY vector;
-    template <class, class> class _LIBCPP_TYPE_VIS_ONLY deque;
-    template <class, class, class> class _LIBCPP_TYPE_VIS_ONLY basic_string;
-    template <class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY map;
-    template <class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY multimap;
-    template <class, class, class> class _LIBCPP_TYPE_VIS_ONLY set;
-    template <class, class, class> class _LIBCPP_TYPE_VIS_ONLY multiset;
-    template <class, class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_map;
-    template <class, class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_multimap;
-    template <class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_set;
-    template <class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_multiset;
-    template <class, class> class _LIBCPP_TYPE_VIS_ONLY queue;
-    template <class, class, class> class _LIBCPP_TYPE_VIS_ONLY priority_queue;
-    template <class, class> class _LIBCPP_TYPE_VIS_ONLY stack;
+    template<class, class> struct _LIBCPP_TYPE_VIS_ONLY pair;
+    template<class> struct _LIBCPP_TYPE_VIS_ONLY hash;
+    template<class> struct _LIBCPP_TYPE_VIS_ONLY less;
+    template<class> struct _LIBCPP_TYPE_VIS_ONLY equal_to;
+    template<class> struct _LIBCPP_TYPE_VIS_ONLY char_traits;
+    template<class, class> class _LIBCPP_TYPE_VIS_ONLY list;
+    template<class, class> class _LIBCPP_TYPE_VIS_ONLY forward_list;
+    template<class, class> class _LIBCPP_TYPE_VIS_ONLY vector;
+    template<class, class> class _LIBCPP_TYPE_VIS_ONLY deque;
+    template<class, class, class> class _LIBCPP_TYPE_VIS_ONLY basic_string;
+    template<class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY map;
+    template<class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY multimap;
+    template<class, class, class> class _LIBCPP_TYPE_VIS_ONLY set;
+    template<class, class, class> class _LIBCPP_TYPE_VIS_ONLY multiset;
+    template<class, class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_map;
+    template<class, class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_multimap;
+    template<class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_set;
+    template<class, class, class, class> class _LIBCPP_TYPE_VIS_ONLY unordered_multiset;
+    template<class, class> class _LIBCPP_TYPE_VIS_ONLY queue;
+    template<class, class, class> class _LIBCPP_TYPE_VIS_ONLY priority_queue;
+    template<class, class> class _LIBCPP_TYPE_VIS_ONLY stack;
 _LIBCPP_END_NAMESPACE_STD
 
 namespace ranges
