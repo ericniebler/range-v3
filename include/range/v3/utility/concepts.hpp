@@ -193,7 +193,7 @@ namespace ranges
 
             template<typename Concept, typename...Args, typename...Ts>
             struct models<Concept(Args...), Ts...>
-              : models<Concept, meta::list_element<Args, meta::list<Ts...> >...>
+              : models<Concept, meta::at<Args, meta::list<Ts...> >...>
             {};
 
             ////////////////////////////////////////////////////////////////////////////////////////////

@@ -43,6 +43,167 @@ namespace ranges
             struct nil_
             {};
 
+            /// An integral constant wrapper for \c std::size_t.
+            template<std::size_t N>
+            using size_t = std::integral_constant<std::size_t, N>;
+
+            /// An integral constant wrapper for \c bool.
+            template<bool B>
+            using bool_ = std::integral_constant<bool, B>;
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // Math operations
+            /// An integral constant wrapper around the result of incrementing the
+            /// wrapped integer \c T::type::value.
+            template<typename T>
+            using inc = std::integral_constant<decltype(T::type::value), T::type::value + 1>;
+
+            /// An integral constant wrapper around the result of decrementing the
+            /// wrapped integer \c T::type::value.
+            template<typename T>
+            using dec = std::integral_constant<decltype(T::type::value), T::type::value - 1>;
+
+            /// An integral constant wrapper around the result of adding the
+            /// two wrapped integers \c T::type::value and \c U::type::value.
+            template<typename T, typename U>
+            using plus = std::integral_constant<decltype(T::type::value + U::type::value), T::type::value + U::type::value>;
+
+            /// An integral constant wrapper around the result of subtracting the
+            /// two wrapped integers \c T::type::value and \c U::type::value.
+            template<typename T, typename U>
+            using minus = std::integral_constant<decltype(T::type::value - U::type::value), T::type::value - U::type::value>;
+
+            /// An integral constant wrapper around the result of multiplying the
+            /// two wrapped integers \c T::type::value and \c U::type::value.
+            template<typename T, typename U>
+            using multiplies = std::integral_constant<decltype(T::type::value * U::type::value), T::type::value * U::type::value>;
+
+            /// An integral constant wrapper around the result of dividing the
+            /// two wrapped integers \c T::type::value and \c U::type::value.
+            template<typename T, typename U>
+            using divides = std::integral_constant<decltype(T::type::value / U::type::value), T::type::value / U::type::value>;
+
+            /// An integral constant wrapper around the remainder of dividing the
+            /// two wrapped integers \c T::type::value and \c U::type::value.
+            template<typename T>
+            using negate = std::integral_constant<decltype(-T::type::value), -T::type::value>;
+
+            /// An integral constant wrapper around the remainder of dividing the
+            /// two wrapped integers \c T::type::value and \c U::type::value.
+            template<typename T, typename U>
+            using modulus = std::integral_constant<decltype(T::type::value % U::type::value), T::type::value % U::type::value>;
+
+            /// A Boolean integral constant wrapper around the result of comparing
+            /// \c T::type::value and \c U::type::value for equality.
+            template<typename T, typename U>
+            using equal_to = bool_<T::type::value == U::type::value>;
+
+            /// A Boolean integral constant wrapper around the result of comparing
+            /// \c T::type::value and \c U::type::value for inequality.
+            template<typename T, typename U>
+            using not_equal_to = bool_<T::type::value != U::type::value>;
+
+            /// A Boolean integral constant wrapper around \c true if
+            /// \c T::type::value is greater than \c U::type::value; \c false, otherwise.
+            template<typename T, typename U>
+            using greater = bool_<(T::type::value > U::type::value)>;
+
+            /// A Boolean integral constant wrapper around \c true if
+            /// \c T::type::value is less than \c U::type::value; \c false, otherwise.
+            template<typename T, typename U>
+            using less = bool_<(T::type::value < U::type::value)>;
+
+            /// A Boolean integral constant wrapper around \c true if
+            /// \c T::type::value is greater than or equal to \c U::type::value; \c false,
+            /// otherwise.
+            template<typename T, typename U>
+            using greater_equal = bool_<(T::type::value >= U::type::value)>;
+
+            /// A Boolean integral constant wrapper around \c true if
+            /// \c T::type::value is less than or equal to \c U::type::value; \c false,
+            /// otherwise.
+            template<typename T, typename U>
+            using less_equal = bool_<(T::type::value <= U::type::value)>;
+
+            /// An integral constant wrapper around the result of bitwise-and'ing
+            /// the two wrapped integers \c T::type::value and \c U::type::value.
+            template<typename T, typename U>
+            using bit_and = std::integral_constant<decltype(T::type::value & U::type::value), T::type::value & U::type::value>;
+
+            /// An integral constant wrapper around the result of bitwise-or'ing
+            /// the two wrapped integers \c T::type::value and \c U::type::value.
+            template<typename T, typename U>
+            using bit_or = std::integral_constant<decltype(T::type::value | U::type::value), T::type::value | U::type::value>;
+
+            /// An integral constant wrapper around the result of
+            /// bitwise-exclusive-or'ing the two wrapped integers \c T::type::value and
+            /// \c U::type::value.
+            template<typename T, typename U>
+            using bit_xor = std::integral_constant<decltype(T::type::value ^ U::type::value), T::type::value ^ U::type::value>;
+
+            /// An integral constant wrapper around the result of
+            /// bitwise-complimenting the wrapped integer \c T::type::value.
+            template<typename T>
+            using bit_not = std::integral_constant<decltype(~T::type::value), ~T::type::value>;
+            /// @}
+
+            namespace lazy
+            {
+                template<typename T>
+                using inc = defer<inc, T>;
+
+                template<typename T>
+                using dec = defer<dec, T>;
+
+                template<typename T, typename U>
+                using plus = defer<plus, T, U>;
+
+                template<typename T, typename U>
+                using minus = defer<minus, T, U>;
+
+                template<typename T, typename U>
+                using multiplies = defer<multiplies, T, U>;
+
+                template<typename T, typename U>
+                using divides = defer<divides, T, U>;
+
+                template<typename T>
+                using negate = defer<negate, T>;
+
+                template<typename T, typename U>
+                using modulus = defer<modulus, T, U>;
+
+                template<typename T, typename U>
+                using equal_to = defer<equal_to, T, U>;
+
+                template<typename T, typename U>
+                using not_equal_to = defer<not_equal_to, T, U>;
+
+                template<typename T, typename U>
+                using greater = defer<greater, T, U>;
+
+                template<typename T, typename U>
+                using less = defer<less, T, U>;
+
+                template<typename T, typename U>
+                using greater_equal = defer<greater_equal, T, U>;
+
+                template<typename T, typename U>
+                using less_equal = defer<less_equal, T, U>;
+
+                template<typename T, typename U>
+                using bit_and = defer<bit_and, T, U>;
+
+                template<typename T, typename U>
+                using bit_or = defer<bit_or, T, U>;
+
+                template<typename T, typename U>
+                using bit_xor = defer<bit_xor, T, U>;
+
+                template<typename T>
+                using bit_not = defer<bit_not, T>;
+            }
+
             /// "Evaluate" the metafunction \p T by returning the nested \c T::type alias.
             template<typename T>
             using eval = typename T::type;
@@ -138,14 +299,6 @@ namespace ranges
             struct defer
               : meta_detail::defer_<C, list<Ts...>>
             {};
-
-            /// An integral constant wrapper for \c std::size_t.
-            template<std::size_t N>
-            using size_t = std::integral_constant<std::size_t, N>;
-
-            /// An integral constant wrapper for \c bool.
-            template<bool B>
-            using bool_ = std::integral_constant<bool, B>;
 
             /// A metafunction that computes the size of the type \p T.
             /// \par Complexity
@@ -508,6 +661,13 @@ namespace ranges
                 using fast_or = defer<fast_or, Bools...>;
             }
 
+            ///////////////////////////////////////////////////////////////////////////////////////
+            // npos
+            /// A special value used to indicate no matches. It equals the maximum value
+            /// representable by `std::size_t`.
+            /// \ingroup group-meta
+            using npos = meta::size_t<std::size_t(-1)>;
+
             ////////////////////////////////////////////////////////////////////////////////////
             // list
             /// A list of types
@@ -656,15 +816,15 @@ namespace ranges
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // list_element
+            // at
             /// \cond
             namespace meta_detail
             {
                 template<typename VoidPtrs>
-                struct list_element_impl_;
+                struct at_impl_;
 
                 template<typename ...VoidPtrs>
-                struct list_element_impl_<list<VoidPtrs...>>
+                struct at_impl_<list<VoidPtrs...>>
                 {
                     static nil_ eval(...);
 
@@ -673,36 +833,36 @@ namespace ranges
                 };
 
                 template<typename N, typename List>
-                struct list_element_
+                struct at_
                 {};
 
                 template<typename N, typename...Ts>
-                struct list_element_<N, list<Ts...>>
-                  : decltype(list_element_impl_<repeat_n<N, void *>>::eval(_nullptr_v<id<Ts>>()...))
+                struct at_<N, list<Ts...>>
+                  : decltype(at_impl_<repeat_n<N, void *>>::eval(_nullptr_v<id<Ts>>()...))
                 {};
             }
             /// \endcond
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // list_element
+            // at
             /// Return the \p N th element in the \c meta::list \p List.
             /// \par Complexity
             /// Amortized \f$ O(1) \f$.
             /// \ingroup group-meta
             template<typename N, typename List>
-            using list_element = eval<meta_detail::list_element_<N, List>>;
+            using at = eval<meta_detail::at_<N, List>>;
 
             /// Return the `N`th element in the \c meta::list \c List.
             /// \par Complexity
             /// Amortized \f$ O(1) \f$.
             /// \ingroup group-meta
             template<std::size_t N, typename List>
-            using list_element_c = list_element<meta::size_t<N>, List>;
+            using at_c = at<meta::size_t<N>, List>;
 
             namespace lazy
             {
                 template<typename N, typename List>
-                using list_element = defer<list_element, N, List>;
+                using at = defer<at, N, List>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -802,7 +962,7 @@ namespace ranges
                 template<typename Head, typename ...List>
                 struct back_<list<Head, List...>>
                 {
-                    using type = list_element_c<sizeof...(List), list<Head, List...>>;
+                    using type = at_c<sizeof...(List), list<Head, List...>>;
                 };
             }
             /// \endcond
@@ -1279,6 +1439,52 @@ namespace ranges
             }
             /// @}
 
+            ///////////////////////////////////////////////////////////////////////////////////////
+            // count
+            namespace meta_detail
+            {
+                template<typename State, typename Val, typename T>
+                using count_fn = if_<std::is_same<Val, T>, inc<State>, State>;
+            }
+
+            /// Count the number of times a type \p T appears in the list \p List.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            template<typename List, typename T>
+            using count = fold<List, meta::size_t<0>, bind_back<quote<meta_detail::count_fn>, T>>;
+
+            namespace lazy
+            {
+                /// \sa `meta::count`
+                /// \ingroup group-meta
+                template<typename List, typename T>
+                using count = defer<count, List, T>;
+            }
+
+            ///////////////////////////////////////////////////////////////////////////////////////
+            // count_if
+            namespace meta_detail
+            {
+                template<typename State, typename Val, typename Fn>
+                using count_if_fn = if_<apply<Fn, Val>, inc<State>, State>;
+            }
+
+            /// Count the number of times the predicate \p Fn evaluates to true for all the
+            /// elements in the list \p List.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            template<typename List, typename Fn>
+            using count_if =
+                fold<List, meta::size_t<0>, bind_back<quote<meta_detail::count_if_fn>, Fn>>;
+
+            namespace lazy
+            {
+                /// \sa `meta::count_if`
+                /// \ingroup group-meta
+                template<typename List, typename Fn>
+                using count_if = defer<count_if, List, Fn>;
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////
             // transform
             /// \cond
@@ -1537,7 +1743,7 @@ namespace ranges
                     template<typename T, typename Args, typename Pos = reverse_find<Tags, T>>
                     struct impl2
                     {
-                        using type = list_element_c<(Tags::size() - Pos::size()), Args>;
+                        using type = at_c<(Tags::size() - Pos::size()), Args>;
                     };
                     template<typename T, typename Args>
                     struct impl2<T, Args, list<>>
@@ -1583,10 +1789,65 @@ namespace ranges
             template<typename...Ts>
             using lambda = meta_detail::lambda_<0, Ts...>;
 
-            // Some argument placeholders for use in \c lambda expressions.
-            struct _a; struct _b; struct _c;
-            struct _d; struct _e; struct _f;
-            struct _g; struct _h; struct _i;
+            ///////////////////////////////////////////////////////////////////////////////////////
+            // let
+            /// For use when defining local variables in \c meta::let expressions
+            /// \sa `meta::let`
+            template<typename Tag, typename Value>
+            struct var;
+
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename...As>
+                struct let_
+                {};
+                template<typename Fn>
+                struct let_<Fn>
+                {
+                    using type = Fn;
+                };
+                template<typename Tag, typename Value, typename...Rest>
+                struct let_<var<Tag, Value>, Rest...>
+                {
+                    using type = lazy::apply<lambda<Tag, eval<let_<Rest...>>>, Value>;
+                };
+            }
+            /// \endcond
+
+            /// A lexically scoped expression with local variables.
+            ///
+            /// \code
+            /// template<typename T, typename List>
+            /// using find_index_ = let<
+            ///     var<_a, List>,
+            ///     var<_b, lazy::find<_a, T>>,
+            ///     lazy::if_<
+            ///         lazy::equal_to<lazy::size<_b>, meta::size_t<0>>,
+            ///         meta::npos,
+            ///         lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
+            /// static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
+            /// static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
+            /// \endcode
+            /// \ingroup group-meta
+            template<typename...As>
+            using let = eval<eval<meta_detail::let_<As...>>>;
+
+            namespace lazy
+            {
+                /// \sa `meta::let`
+                /// \ingroup group-meta
+                template<typename...As>
+                using let = defer<let, As...>;
+            }
+
+            inline namespace placeholders
+            {
+                // Some argument placeholders for use in \c lambda and \c let expressions.
+                struct _a; struct _b; struct _c;
+                struct _d; struct _e; struct _f;
+                struct _g; struct _h; struct _i;
+            }
 
             ////////////////////////////////////////////////////////////////////////////////////
             // cartesian_product
@@ -1633,141 +1894,65 @@ namespace ranges
             using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
             /// \endcond
 
-            ////////////////////////////////////////////////////////////////////////////////////
-            // Math operations
-            /// An integral constant wrapper around the result of adding the
-            /// two wrapped integers \c T::type::value and \c U::type::value.
-            template<typename T, typename U>
-            using plus = std::integral_constant<decltype(T::type::value + U::type::value), T::type::value + U::type::value>;
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            // find_index
+            /// \cond
+            namespace meta_detail
+            {
+                template <typename T, typename List>
+                struct find_index_
+                {
+                    static constexpr std::size_t i = List::size() - find<List, T>::size();
+                    using type = if_c<i == List::size(), npos, size_t<i>>;
+                };
+            } // namespace detail
+            /// \endcond
 
-            /// An integral constant wrapper around the result of subtracting the
-            /// two wrapped integers \c T::type::value and \c U::type::value.
-            template<typename T, typename U>
-            using minus = std::integral_constant<decltype(T::type::value - U::type::value), T::type::value - U::type::value>;
-
-            /// An integral constant wrapper around the result of multiplying the
-            /// two wrapped integers \c T::type::value and \c U::type::value.
-            template<typename T, typename U>
-            using multiplies = std::integral_constant<decltype(T::type::value * U::type::value), T::type::value * U::type::value>;
-
-            /// An integral constant wrapper around the result of dividing the
-            /// two wrapped integers \c T::type::value and \c U::type::value.
-            template<typename T, typename U>
-            using divides = std::integral_constant<decltype(T::type::value / U::type::value), T::type::value / U::type::value>;
-
-            /// An integral constant wrapper around the remainder of dividing the
-            /// two wrapped integers \c T::type::value and \c U::type::value.
-            template<typename T>
-            using negate = std::integral_constant<decltype(-T::type::value), -T::type::value>;
-
-            /// An integral constant wrapper around the remainder of dividing the
-            /// two wrapped integers \c T::type::value and \c U::type::value.
-            template<typename T, typename U>
-            using modulus = std::integral_constant<decltype(T::type::value % U::type::value), T::type::value % U::type::value>;
-
-            /// A Boolean integral constant wrapper around the result of comparing
-            /// \c T::type::value and \c U::type::value for equality.
-            template<typename T, typename U>
-            using equal_to = bool_<T::type::value == U::type::value>;
-
-            /// A Boolean integral constant wrapper around the result of comparing
-            /// \c T::type::value and \c U::type::value for inequality.
-            template<typename T, typename U>
-            using not_equal_to = bool_<T::type::value != U::type::value>;
-
-            /// A Boolean integral constant wrapper around \c true if
-            /// \c T::type::value is greater than \c U::type::value; \c false, otherwise.
-            template<typename T, typename U>
-            using greater = bool_<(T::type::value > U::type::value)>;
-
-            /// A Boolean integral constant wrapper around \c true if
-            /// \c T::type::value is less than \c U::type::value; \c false, otherwise.
-            template<typename T, typename U>
-            using less = bool_<(T::type::value < U::type::value)>;
-
-            /// A Boolean integral constant wrapper around \c true if
-            /// \c T::type::value is greater than or equal to \c U::type::value; \c false,
-            /// otherwise.
-            template<typename T, typename U>
-            using greater_equal = bool_<(T::type::value >= U::type::value)>;
-
-            /// A Boolean integral constant wrapper around \c true if
-            /// \c T::type::value is less than or equal to \c U::type::value; \c false,
-            /// otherwise.
-            template<typename T, typename U>
-            using less_equal = bool_<(T::type::value <= U::type::value)>;
-
-            /// An integral constant wrapper around the result of bitwise-and'ing
-            /// the two wrapped integers \c T::type::value and \c U::type::value.
-            template<typename T, typename U>
-            using bit_and = std::integral_constant<decltype(T::type::value & U::type::value), T::type::value & U::type::value>;
-
-            /// An integral constant wrapper around the result of bitwise-or'ing
-            /// the two wrapped integers \c T::type::value and \c U::type::value.
-            template<typename T, typename U>
-            using bit_or = std::integral_constant<decltype(T::type::value | U::type::value), T::type::value | U::type::value>;
-
-            /// An integral constant wrapper around the result of
-            /// bitwise-exclusive-or'ing the two wrapped integers \c T::type::value and
-            /// \c U::type::value.
-            template<typename T, typename U>
-            using bit_xor = std::integral_constant<decltype(T::type::value ^ U::type::value), T::type::value ^ U::type::value>;
-
-            /// An integral constant wrapper around the result of
-            /// bitwise-complimenting the wrapped integer \c T::type::value.
-            template<typename T>
-            using bit_not = std::integral_constant<decltype(~T::type::value), ~T::type::value>;
-            /// @}
+            /// Finds the index of the first occurrence of the type \p T within the list \p List.
+            /// Returns `#meta::npos` if the type \p T was not found.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            /// \ingroup group-meta
+            template<typename T, typename List>
+            using find_index = eval<meta_detail::find_index_<T, List>>;
 
             namespace lazy
             {
-                template<typename T, typename U>
-                using plus = defer<plus, T, U>;
+                /// \sa `meta::index`
+                /// \ingroup group-meta
+                template<typename T, typename List>
+                using find_index = defer<find_index, T, List>;
+            }
 
-                template<typename T, typename U>
-                using minus = defer<minus, T, U>;
+            ///////////////////////////////////////////////////////////////////////////////////////////////
+            // reverse_find_index
+            /// \cond
+            namespace meta_detail
+            {
+                template <typename T, typename List>
+                struct reverse_find_index_
+                {
+                    static constexpr std::size_t i = List::size() - reverse_find<List, T>::size();
+                    using type = if_c<i == List::size(), npos, size_t<i>>;
+                };
+            } // namespace detail
+            /// \endcond
 
-                template<typename T, typename U>
-                using multiplies = defer<multiplies, T, U>;
+            /// Finds the index of the last occurrence of the type \p T within the list \p List.
+            /// Returns `#meta::npos` if the type \p T was not found.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            /// \ingroup query
+            /// \sa `#meta::npos`
+            template <typename T, typename List>
+            using reverse_find_index = eval<meta_detail::reverse_find_index_<T, List>>;
 
-                template<typename T, typename U>
-                using divides = defer<divides, T, U>;
-
-                template<typename T>
-                using negate = defer<negate, T>;
-
-                template<typename T, typename U>
-                using modulus = defer<modulus, T, U>;
-
-                template<typename T, typename U>
-                using equal_to = defer<equal_to, T, U>;
-
-                template<typename T, typename U>
-                using not_equal_to = defer<not_equal_to, T, U>;
-
-                template<typename T, typename U>
-                using greater = defer<greater, T, U>;
-
-                template<typename T, typename U>
-                using less = defer<less, T, U>;
-
-                template<typename T, typename U>
-                using greater_equal = defer<greater_equal, T, U>;
-
-                template<typename T, typename U>
-                using less_equal = defer<less_equal, T, U>;
-
-                template<typename T, typename U>
-                using bit_and = defer<bit_and, T, U>;
-
-                template<typename T, typename U>
-                using bit_or = defer<bit_or, T, U>;
-
-                template<typename T, typename U>
-                using bit_xor = defer<bit_xor, T, U>;
-
-                template<typename T>
-                using bit_not = defer<bit_not, T>;
+            namespace lazy
+            {
+                /// \sa 'meta::reverse_find_index'
+                /// \ingroup lazy_query
+                template <typename T, typename List>
+                using reverse_find_index = defer<reverse_find_index, T, List>;
             }
 
             /// An integral constant wrapper around the minimum of \c T::type::value
@@ -1787,21 +1972,6 @@ namespace ranges
 
                 template <typename T, typename U>
                 using min = defer<min, T, U>;
-            }
-
-            /// Index of the first occurrence of the type \p T within the list \p List.
-            /// \par Complexity
-            /// \f$ O(N) \f$.
-            /// \ingroup group-meta
-            template<typename T, typename List>
-            using index = size_t<List::size() - find<List, T>::size()>;
-
-            namespace lazy
-            {
-                /// \sa 'meta::index'
-                /// \ingroup group-meta
-                template<typename T, typename List>
-                using index = defer<index, T, List>;
             }
         }
     }
