@@ -101,12 +101,6 @@ namespace ranges
             template<typename Concept>
             using base_concepts_of_t = meta::eval<base_concepts_of<Concept>>;
 
-            template<typename...Bools>
-            struct lazy_and
-            {
-                static constexpr bool value{meta::fast_and<Bools...>::value};
-            };
-
             template<typename...Ts>
             auto models_(any) ->
                 std::false_type;
@@ -115,7 +109,7 @@ namespace ranges
                 typename = decltype(std::declval<Concept &>().template requires_<Ts...>(std::declval<Ts>()...))>
             auto models_(Concept *) ->
                 meta::apply_list<
-                    meta::quote<lazy_and>,
+                    meta::quote<meta::lazy::fast_and>,
                     meta::transform<
                         base_concepts_of_t<Concept>,
                         meta::bind_back<meta::quote<concepts::models>, Ts...>>>;
@@ -194,7 +188,7 @@ namespace ranges
             // models
             template<typename Concept, typename...Ts>
             struct models
-              : meta::bool_<decltype(detail::models_<Ts...>(_nullptr_v<Concept>()))::value>
+              : meta::bool_<decltype(detail::models_<Ts...>(_nullptr_v<Concept>()))::type::value>
             {};
 
             template<typename Concept, typename...Args, typename...Ts>

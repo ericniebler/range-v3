@@ -132,7 +132,7 @@ namespace ranges
             ///
             /// \code
             /// template<typename List>
-            /// using reverse = foldr<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
+            /// using reverse = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
             /// \endcode
             template<template<typename...> class C, typename...Ts>
             struct defer
@@ -302,24 +302,27 @@ namespace ranges
 
             /// A metafunction that unpacks the types in the type list
             /// \p List into the Metafunction Class \p F.
-            template<typename F, typename List>
-            struct apply_list_impl
-            {};
+            namespace extension
+            {
+                template<typename F, typename List>
+                struct apply_list
+                {};
 
-            template<typename F, template<typename...> class T, typename ...Ts>
-            struct apply_list_impl<F, T<Ts...>>
-              : lazy::apply<F, Ts...>
-            {};
+                template<typename F, template<typename...> class T, typename ...Ts>
+                struct apply_list<F, T<Ts...>>
+                  : lazy::apply<F, Ts...>
+                {};
 
-            template<typename F, typename T, T...Is>
-            struct apply_list_impl<F, integer_sequence<T, Is...>>
-              : lazy::apply<F, std::integral_constant<T, Is>...>
-            {};
+                template<typename F, typename T, T...Is>
+                struct apply_list<F, integer_sequence<T, Is...>>
+                  : lazy::apply<F, std::integral_constant<T, Is>...>
+                {};
+            }
 
             /// Applies the Metafunction Class \p C using the types in
             /// the type list \p List as arguments.
             template<typename C, typename List>
-            using apply_list = eval<apply_list_impl<C, List>>;
+            using apply_list = eval<extension::apply_list<C, List>>;
 
             namespace lazy
             {
@@ -369,8 +372,8 @@ namespace ranges
 
             namespace lazy
             {
-                template<typename...Ts>
-                using flip = defer<flip, Ts...>;
+                template<typename F>
+                using flip = defer<flip, F>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -497,6 +500,12 @@ namespace ranges
 
                 template<typename Bool>
                 using not_ = defer<not_, Bool>;
+
+                template<typename...Bools>
+                using fast_and = defer<fast_and, Bools...>;
+
+                template<typename...Bools>
+                using fast_or = defer<fast_or, Bools...>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -961,28 +970,28 @@ namespace ranges
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // rfind
+            // reverse_find
             /// \cond
             namespace meta_detail
             {
                 template<typename List, typename T, typename State = list<>>
-                struct rfind_
+                struct reverse_find_
                 {};
 
                 template<typename T, typename State>
-                struct rfind_<list<>, T, State>
+                struct reverse_find_<list<>, T, State>
                 {
                     using type = State;
                 };
 
                 template<typename Head, typename ...List, typename T, typename State>
-                struct rfind_<list<Head, List...>, T, State>
-                  : rfind_<list<List...>, T, State>
+                struct reverse_find_<list<Head, List...>, T, State>
+                  : reverse_find_<list<List...>, T, State>
                 {};
 
                 template<typename ...List, typename T, typename State>
-                struct rfind_<list<T, List...>, T, State>
-                  : rfind_<list<List...>, T, list<T, List...>>
+                struct reverse_find_<list<T, List...>, T, State>
+                  : reverse_find_<list<List...>, T, list<T, List...>>
                 {};
             }
             /// \endcond
@@ -991,12 +1000,12 @@ namespace ranges
             /// of \p T, if any such element exists; the empty list, otherwise.
             /// \ingroup group-meta
             template<typename List, typename T>
-            using rfind = eval<meta_detail::rfind_<List, T>>;
+            using reverse_find = eval<meta_detail::reverse_find_<List, T>>;
 
             namespace lazy
             {
                 template<typename List, typename T>
-                using rfind = defer<rfind, List, T>;
+                using reverse_find = defer<reverse_find, List, T>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -1035,23 +1044,23 @@ namespace ranges
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // rfind_if
+            // reverse_find_if
             /// \cond
             namespace meta_detail
             {
                 template<typename List, typename Fun, typename State = list<>>
-                struct rfind_if_
+                struct reverse_find_if_
                 {};
 
                 template<typename Fun, typename State>
-                struct rfind_if_<list<>, Fun, State>
+                struct reverse_find_if_<list<>, Fun, State>
                 {
                     using type = State;
                 };
 
                 template<typename Head, typename ...List, typename Fun, typename State>
-                struct rfind_if_<list<Head, List...>, Fun, State>
-                  : rfind_if_<list<List...>, Fun, if_<apply<Fun, Head>, list<Head, List...>, State>>
+                struct reverse_find_if_<list<Head, List...>, Fun, State>
+                  : reverse_find_if_<list<List...>, Fun, if_<apply<Fun, Head>, list<Head, List...>, State>>
                 {};
             }
             /// \endcond
@@ -1061,12 +1070,12 @@ namespace ranges
             /// exists; the empty list, otherwise.
             /// \ingroup group-meta
             template<typename List, typename Fun>
-            using rfind_if = eval<meta_detail::rfind_if_<List, Fun>>;
+            using reverse_find_if = eval<meta_detail::reverse_find_if_<List, Fun>>;
 
             namespace lazy
             {
                 template<typename List, typename Fun>
-                using rfind_if = defer<rfind_if, List, Fun>;
+                using reverse_find_if = defer<reverse_find_if, List, Fun>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -1186,23 +1195,23 @@ namespace ranges
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // foldl
+            // fold
             /// \cond
             namespace meta_detail
             {
                 template<typename, typename, typename, typename = void>
-                struct foldl_
+                struct fold_
                 {};
 
                 template<typename State, typename Fun>
-                struct foldl_<list<>, State, Fun>
+                struct fold_<list<>, State, Fun>
                 {
                     using type = State;
                 };
 
                 template<typename Head, typename ...List, typename State, typename Fun>
-                struct foldl_<list<Head, List...>, State, Fun, void_<apply<Fun, State, Head>>>
-                  : foldl_<list<List...>, apply<Fun, State, Head>, Fun>
+                struct fold_<list<Head, List...>, State, Fun, void_<apply<Fun, State, Head>>>
+                  : fold_<list<List...>, apply<Fun, State, Head>, Fun>
                 {};
             }
             /// \endcond
@@ -1214,42 +1223,42 @@ namespace ranges
             /// \f$ O(N) \f$.
             /// \ingroup group-meta
             template<typename List, typename State, typename Fun>
-            using foldl = eval<meta_detail::foldl_<List, State, Fun>>;
+            using fold = eval<meta_detail::fold_<List, State, Fun>>;
 
-            /// An alias for `meta::foldl`.
+            /// An alias for `meta::fold`.
             /// \par Complexity
             /// \f$ O(N) \f$.
             /// \ingroup group-meta
             template<typename List, typename State, typename Fun>
-            using accumulate = foldl<List, State, Fun>;
+            using accumulate = fold<List, State, Fun>;
 
             namespace lazy
             {
                 template<typename List, typename State, typename Fun>
-                using foldl = defer<foldl, List, State, Fun>;
+                using fold = defer<fold, List, State, Fun>;
 
                 template<typename List, typename State, typename Fun>
                 using accumulate = defer<accumulate, List, State, Fun>;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // foldr
+            // reverse_fold
             /// \cond
             namespace meta_detail
             {
                 template<typename, typename, typename, typename = void>
-                struct foldr_
+                struct reverse_fold_
                 {};
 
                 template<typename State, typename Fun>
-                struct foldr_<list<>, State, Fun>
+                struct reverse_fold_<list<>, State, Fun>
                 {
                     using type = State;
                 };
 
                 template<typename Head, typename ...List, typename State, typename Fun>
-                struct foldr_<list<Head, List...>, State, Fun, void_<eval<foldr_<list<List...>, State, Fun>>>>
-                  : lazy::apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>
+                struct reverse_fold_<list<Head, List...>, State, Fun, void_<eval<reverse_fold_<list<List...>, State, Fun>>>>
+                  : lazy::apply<Fun, eval<reverse_fold_<list<List...>, State, Fun>>, Head>
                 {};
             }
             /// \endcond
@@ -1261,12 +1270,12 @@ namespace ranges
             /// \f$ O(N) \f$.
             /// \ingroup group-meta
             template<typename List, typename State, typename Fun>
-            using foldr = eval<meta_detail::foldr_<List, State, Fun>>;
+            using reverse_fold = eval<meta_detail::reverse_fold_<List, State, Fun>>;
 
             namespace lazy
             {
                 template<typename List, typename State, typename Fun>
-                using foldr = defer<foldr, List, State, Fun>;
+                using reverse_fold = defer<reverse_fold, List, State, Fun>;
             }
             /// @}
 
@@ -1347,7 +1356,7 @@ namespace ranges
             /// Metafunction Class \p Predicate such that `apply<Pred,A>::%value` is \c true are
             /// present. That is, those elements that don't satisfy the \p Predicate are "removed".
             template <typename List, typename Predicate>
-            using filter = foldl<List, list<>, meta_detail::filter_<Predicate>>;
+            using filter = fold<List, list<>, meta_detail::filter_<Predicate>>;
 
             namespace lazy
             {
@@ -1391,7 +1400,7 @@ namespace ranges
             template<typename Fun, typename ListOfLists>
             using zip_with =
                 transform<
-                    foldl<
+                    fold<
                         ListOfLists,
                         repeat_n<size<front<ListOfLists>>, Fun>,
                         bind_back<quote<transform>, quote<bind_front>>>,
@@ -1459,7 +1468,7 @@ namespace ranges
             /// \par Complexity
             /// \f$ O(N) \f$.
             template<typename List>
-            using reverse = foldr<List, list<>, quote<push_back>>;
+            using reverse = reverse_fold<List, list<>, quote<push_back>>;
 
             namespace lazy
             {
@@ -1525,7 +1534,7 @@ namespace ranges
                     static constexpr std::size_t arity = sizeof...(As) - 1;
                     using Tags = list<As...>; // Includes the lambda body as the last arg!
                     using F = back<Tags>;
-                    template<typename T, typename Args, typename Pos = rfind<Tags, T>>
+                    template<typename T, typename Args, typename Pos = reverse_find<Tags, T>>
                     struct impl2
                     {
                         using type = list_element_c<(Tags::size() - Pos::size()), Args>;
@@ -1606,7 +1615,7 @@ namespace ranges
             /// \f$ M \f$ is the size of the inner lists.
             template<typename ListOfLists>
             using cartesian_product =
-                foldr<ListOfLists, list<list<>>, quote_trait<meta_detail::cartesian_product_fn>>;
+                reverse_fold<ListOfLists, list<list<>>, quote_trait<meta_detail::cartesian_product_fn>>;
 
             namespace lazy
             {
@@ -1778,6 +1787,21 @@ namespace ranges
 
                 template <typename T, typename U>
                 using min = defer<min, T, U>;
+            }
+
+            /// Index of the first occurrence of the type \p T within the list \p List.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            /// \ingroup group-meta
+            template<typename T, typename List>
+            using index = size_t<List::size() - find<List, T>::size()>;
+
+            namespace lazy
+            {
+                /// \sa 'meta::index'
+                /// \ingroup group-meta
+                template<typename T, typename List>
+                using index = defer<index, T, List>;
             }
         }
     }

@@ -116,7 +116,7 @@ static_assert(std::is_same<Pair2, std::pair<short, std::pair<int, int>>>::value,
 // Not saying you should do it this way, but it's a good test.
 namespace l = meta::lazy;
 template<class L>
-using cart_prod=foldr<L,list<list<>>,
+using cart_prod = reverse_fold<L,list<list<>>,
     lambda<_a,_b,l::join<l::transform<_b,
         lambda<_c,l::join<l::transform<_a,
             lambda<_d,list<l::push_front<_d,_c>>>>>>>>>>;
@@ -131,7 +131,7 @@ static_assert(std::is_same<CartProd,
 >::value, "");
 
 template<typename List>
-using rev = foldr<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
+using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
 static_assert(std::is_same<rev<list<int, short, double>>,
                            list<double, short, int>>::value, "");
 
@@ -140,7 +140,7 @@ static_assert(std::is_same<apply<uncvref_fn, int const &>, int>::value, "");
 
 using L = list<int, short, int, float>;
 static_assert(std::is_same<find<L, int>, list<int, short, int, float>>::value, "");
-static_assert(std::is_same<rfind<L, int>, list<int, float>>::value, "");
+static_assert(std::is_same<reverse_find<L, int>, list<int, float>>::value, "");
 
 struct check_integral
 {
@@ -180,6 +180,25 @@ int main()
     {
         using l = meta::list<int, long, short>;
         meta::for_each(l{}, check_integral());
+    }
+
+    // meta::all_of with trivial lambda
+    {
+        static_assert(meta::all_of<list<int, short, double>, lambda<_a, std::is_convertible<_a,int>>>{}, "");
+        static_assert(!meta::all_of<list<int, short, double, char*>, lambda<_a, std::is_convertible<_a,int>>>{}, "");
+    }
+
+    // meta::index
+    {
+        using l = meta::list<int, long, short>;
+        static_assert(meta::index<int, l>{} == 0, "");
+        static_assert(meta::index<long, l>{} == 1, "");
+        static_assert(meta::index<short, l>{} == 2, "");
+        static_assert(meta::index<double, l>{} == l::size(), "");
+        static_assert(meta::index<float, l>{} == l::size(), "");
+
+        using l2 = meta::list<>;
+        static_assert(meta::index<double, l2>{} == l2::size(), "");
     }
 
     test_tuple_cat();
