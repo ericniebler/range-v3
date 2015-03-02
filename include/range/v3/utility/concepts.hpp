@@ -719,26 +719,23 @@ namespace ranges
 #define CONCEPT_PP_CAT_(X, Y) X ## Y
 #define CONCEPT_PP_CAT(X, Y)  CONCEPT_PP_CAT_(X, Y)
 
-#define CONCEPT_REQUIRES_IMPL_(X)                                                   \
-    int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                          \
-    ranges::meta::if_c<                                                             \
-        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || X,                  \
-        int                                                                         \
-    > = 0                                                                           \
-    /**/
-
-#define CONCEPT_REQUIRES_IMPL(X)                                                    \
-    template<CONCEPT_REQUIRES_IMPL_(X)>                                             \
-    /**/
-
 /// \addtogroup group-concepts
 /// @{
 #define CONCEPT_REQUIRES_(...)                                                      \
-    CONCEPT_REQUIRES_IMPL_((__VA_ARGS__))                                           \
+    int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                          \
+    typename std::enable_if<                                                        \
+        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || (__VA_ARGS__),      \
+        int                                                                         \
+    >::type = 0                                                                     \
     /**/
 
 #define CONCEPT_REQUIRES(...)                                                       \
-    CONCEPT_REQUIRES_IMPL((__VA_ARGS__))                                            \
+    template<                                                                       \
+        int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                      \
+        typename std::enable_if<                                                    \
+            (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || (__VA_ARGS__),  \
+            int                                                                     \
+        >::type = 0>                                                                \
     /**/
 
 #define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
