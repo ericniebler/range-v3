@@ -64,7 +64,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct difference_type<T, typename std::enable_if<std::is_integral<T>::value>::type>
+            struct difference_type<T, meta::if_<std::is_integral<T>>>
             {
                 using type = decltype(std::declval<T>() - std::declval<T>());
             };
@@ -91,9 +91,10 @@ namespace ranges
 
             template<typename T>
             struct value_type<T, meta::void_<typename T::value_type>>
-              : std::enable_if<!std::is_void<typename T::value_type>::value, typename T::value_type>
+              : meta::lazy::if_<meta::not_<std::is_void<typename T::value_type>>,
+                    typename T::value_type>
             {
-                // The use of enable_if is to accommodate output iterators that are
+                // The use of meta::if_c is to accommodate output iterators that are
                 // allowed to use void as their value type. We want treat output
                 // iterators as non-Readable. value_type<OutIt> should be
                 // SFINAE-friendly.
@@ -101,13 +102,14 @@ namespace ranges
 
             template<typename T>
             struct value_type<T, meta::void_<typename T::element_type>> // smart pointers
-              : std::enable_if<!std::is_void<typename T::element_type>::value, typename T::element_type>
+              : meta::lazy::if_<meta::not_<std::is_void<typename T::element_type>>,
+                    typename T::element_type>
             {
-                // The enable_if here is because shared_ptr<void> is not Readable.
+                // The meta::if_c here is because shared_ptr<void> is not Readable.
             };
 
             template<typename T>
-            struct value_type<T, enable_if_t<std::is_base_of<std::ios_base, T>::value, void>>
+            struct value_type<T, meta::if_<std::is_base_of<std::ios_base, T>>>
             {
                 using type = typename T::char_type;
             };

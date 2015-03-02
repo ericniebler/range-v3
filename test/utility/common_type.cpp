@@ -68,6 +68,11 @@ int main()
         std::pair<int, int> const &
     >::value, "");
 
+    static_assert(std::is_same<
+        common_reference_t<common_pair<int, int> const &, std::pair<int, int> &>,
+        std::pair<int, int> const &
+    >::value, "");
+
     // Some tests with noncopyable types
     static_assert(std::is_same<
         detail::builtin_common_t<noncopyable const &, noncopyable>,

@@ -120,10 +120,6 @@ namespace ranges
         template<typename Sig>
         using result_of_t = typename std::result_of<Sig>::type;
 
-        template<bool Condition, typename T = int>
-        using enable_if_t =
-            typename std::enable_if<Condition, T>::type;
-
         struct make_pipeable_fn;
 
         template<typename Derived>
@@ -165,8 +161,8 @@ namespace ranges
 
         struct iter_size_fn;
 
-        template<typename I>
-        struct iterator_difference;
+        template<typename T>
+        struct difference_type;
 
         struct range_base
         {};
@@ -263,7 +259,7 @@ namespace ranges
             template<typename I, typename S>
             struct common_cursor;
 
-            template<typename I, typename D = typename iterator_difference<I>::type>
+            template<typename I, typename D = typename difference_type<I>::type>
             struct counted_cursor;
 
             struct counted_sentinel;
@@ -391,33 +387,6 @@ namespace ranges
 
         struct make_range_fn;
 
-        template<typename I>
-        struct iterator_value;
-
-        template<typename I>
-        struct iterator_reference;
-
-        template<typename I>
-        struct iterator_category;
-
-        template<typename I>
-        struct iterator_difference;
-
-        template<typename Rng>
-        struct range_iterator;
-
-        template<typename Rng>
-        struct range_value;
-
-        template<typename Rng>
-        struct range_reference;
-
-        template<typename Rng>
-        struct range_category;
-
-        template<typename Rng>
-        struct range_difference;
-
         template<typename T, bool RValue = false>
         struct reference_wrapper;
 
@@ -455,7 +424,7 @@ namespace ranges
             struct const_fn;
         }
 
-        template<typename I, typename D = typename iterator_difference<I>::type>
+        template<typename I, typename D = typename difference_type<I>::type>
         struct counted_view;
 
         namespace view
@@ -463,7 +432,7 @@ namespace ranges
             struct counted_fn;
         }
 
-        template<typename I, typename D = typename iterator_difference<I>::type>
+        template<typename I, typename D = typename difference_type<I>::type>
         using counted_iterator =
             basic_iterator<detail::counted_cursor<I, D>, detail::counted_sentinel>;
 

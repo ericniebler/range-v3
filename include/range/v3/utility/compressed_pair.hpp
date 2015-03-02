@@ -17,6 +17,7 @@
 #include <utility>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -28,33 +29,31 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename T, typename Enable = void>
+            template<typename T, typename = void>
             struct first_base
             {
                 T first;
                 first_base() = default;
                 template<typename U,
-                    typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
+                    meta::if_<std::is_constructible<T, U &&>, int> = 0>
                 constexpr explicit first_base(U && u)
                   : first((U &&) u)
                 {}
             };
 
             template<typename T>
-            struct first_base<T, typename std::enable_if<std::is_empty<T>::value &&
-                std::is_trivial<T>::value>::type>
+            struct first_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>
             {
                 static T first;
                 first_base() = default;
                 template<typename U,
-                    typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
+                    meta::if_<std::is_constructible<T, U &&>, int> = 0>
                 constexpr explicit first_base(U &&)
                 {}
             };
 
             template<typename T>
-            T first_base<T, typename std::enable_if<std::is_empty<T>::value &&
-                std::is_trivial<T>::value>::type>::first{};
+            T first_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>::first{};
 
             template<typename T, typename Enable = void>
             struct second_base
@@ -62,27 +61,25 @@ namespace ranges
                 T second;
                 second_base() = default;
                 template<typename U,
-                    typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
+                    meta::if_<std::is_constructible<T, U &&>, int> = 0>
                 constexpr explicit second_base(U && u)
                   : second((U &&) u)
                 {}
             };
 
             template<typename T>
-            struct second_base<T, typename std::enable_if<std::is_empty<T>::value &&
-                std::is_trivial<T>::value>::type>
+            struct second_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>
             {
                 static T second;
                 second_base() = default;
                 template<typename U,
-                    typename std::enable_if<std::is_constructible<T, U &&>::value, int>::type = 0>
+                    meta::if_<std::is_constructible<T, U &&>, int> = 0>
                 constexpr explicit second_base(U &&)
                 {}
             };
 
             template<typename T>
-            T second_base<T, typename std::enable_if<std::is_empty<T>::value &&
-                std::is_trivial<T>::value>::type>::second{};
+            T second_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>::second{};
         }
         /// \endcond
 
@@ -104,16 +101,16 @@ namespace ranges
             {}
 
             template<typename F, typename S,
-                typename std::enable_if<std::is_constructible<First, F &&>::value &&
-                                        std::is_constructible<Second, S &&>::value, int>::type = 0>
+                meta::if_<meta::and_<std::is_constructible<First, F &&>,
+                                     std::is_constructible<Second, S &&>>, int> = 0>
             constexpr compressed_pair(F && f, S && s)
               : detail::first_base<First>{(F &&) f}
               , detail::second_base<Second>{(S &&) s}
             {}
 
             template<typename F, typename S,
-                typename std::enable_if<std::is_constructible<F, First const &>::value &&
-                                        std::is_constructible<S, Second const &>::value, int>::type = 0>
+                meta::if_<meta::and_<std::is_constructible<F, First const &>,
+                                     std::is_constructible<S, Second const &>>, int> = 0>
             constexpr operator std::pair<F, S> () const
             {
                 return std::pair<F, S>{first, second};

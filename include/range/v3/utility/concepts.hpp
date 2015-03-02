@@ -54,21 +54,21 @@ namespace ranges
             {
                 template<typename T, typename U>
                 auto operator()(T &&, U &&) const ->
-                    typename std::enable_if<std::is_same<T,U>::value, int>::type;
+                    meta::if_<std::is_same<T,U>, int>;
             } same_type {};
 
             constexpr struct is_true_t
             {
                 template<typename Bool>
                 auto operator()(Bool) const ->
-                    typename std::enable_if<Bool::value, int>::type;
+                    meta::if_c<Bool::value, int>;
             } is_true {};
 
             constexpr struct is_false_t
             {
                 template<typename Bool>
                 auto operator()(Bool) const ->
-                    typename std::enable_if<!Bool::value, int>::type;
+                    meta::if_c<!Bool::value, int>;
             } is_false {};
 
             template<typename Concept>
@@ -166,7 +166,7 @@ namespace ranges
 
             template<typename T, typename U>
             auto has_type(U &&) ->
-                enable_if_t<std::is_same<T, U>::value>;
+                meta::if_<std::is_same<T, U>, int>;
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // refines
@@ -200,11 +200,11 @@ namespace ranges
             // model_of
             template<typename Concept, typename ...Ts>
             auto model_of(Ts &&...) ->
-                enable_if_t<concepts::models<Concept, Ts...>::value>;
+                meta::if_c<concepts::models<Concept, Ts...>::value, int>;
 
             template<typename Concept, typename ...Ts>
             auto model_of() ->
-                enable_if_t<concepts::models<Concept, Ts...>::value>;
+                meta::if_c<concepts::models<Concept, Ts...>::value, int>;
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // most_refined
@@ -280,12 +280,12 @@ namespace ranges
                 using value_t = common_type_t<T, U, Rest...>;
 
                 template<typename T, typename U,
-                    enable_if_t<std::is_same<uncvref_t<T>, uncvref_t<U>>::value> = 0>
+                    meta::if_<std::is_same<uncvref_t<T>, uncvref_t<U>>, int> = 0>
                 auto requires_(T, U) ->
                     void;
 
                 template<typename T, typename U,
-                    enable_if_t<!std::is_same<uncvref_t<T>, uncvref_t<U>>::value> = 0,
+                    meta::if_c<!std::is_same<uncvref_t<T>, uncvref_t<U>>::value, int> = 0,
                     typename C = value_t<T, U>,
                     typename R = common_reference_t<T const &, U const &>>
                 auto requires_(T t, U u) -> decltype(
@@ -428,7 +428,7 @@ namespace ranges
                     ));
 
                 template<typename T, typename U,
-                    enable_if_t<std::is_same<T, U>::value> = 0>
+                    meta::if_<std::is_same<T, U>, int> = 0>
                 auto requires_(T t, U u) -> decltype(
                     concepts::valid_expr(
                         concepts::convertible_to<bool>(t == u),
@@ -440,7 +440,7 @@ namespace ranges
                 // Cross-type equality comparison from N3351:
                 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf
                 template<typename T, typename U,
-                    enable_if_t<!std::is_same<T, U>::value> = 0,
+                    meta::if_c<!std::is_same<T, U>::value, int> = 0,
                     typename C = common_type_t<T, U>>
                 auto requires_(T t, U u) -> decltype(
                     concepts::valid_expr(
@@ -585,14 +585,14 @@ namespace ranges
                     ));
 
                 template<typename Fun, typename T, typename U,
-                    enable_if_t<std::is_same<T, U>::value> = 0>
+                    meta::if_<std::is_same<T, U>, int> = 0>
                 auto requires_(Fun fun, T t, T u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Predicate>(val<Fun>(), val<T>(), val<U>())
                     ));
 
                 template<typename Fun, typename T, typename U,
-                    enable_if_t<!std::is_same<T, U>::value> = 0,
+                    meta::if_c<!std::is_same<T, U>::value, int> = 0,
                     typename C = common_type_t<T, U>>
                 auto requires_(Fun fun, T t, U u) -> decltype(
                     concepts::valid_expr(
@@ -721,8 +721,9 @@ namespace ranges
 
 #define CONCEPT_REQUIRES_IMPL_(X)                                                   \
     int CONCEPT_PP_CAT(_concept_requires_, __LINE__) = 42,                          \
-    ranges::enable_if_t<                                                            \
-        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || X                   \
+    ranges::meta::if_c<                                                             \
+        (CONCEPT_PP_CAT(_concept_requires_, __LINE__) == 43) || X,                  \
+        int                                                                         \
     > = 0                                                                           \
     /**/
 

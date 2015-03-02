@@ -476,10 +476,7 @@ namespace ranges
             detail::Projectable_<I, Proj>>;
 
         template<typename I, typename Proj>
-        using Project =
-            meta::eval<std::enable_if<
-                Projectable<I, Proj>::value,
-                detail::projected_readable<I, Proj>>>;
+        using Project = meta::if_<Projectable<I, Proj>, detail::projected_readable<I, Proj>>;
 
         namespace detail
         {
@@ -642,14 +639,14 @@ namespace ranges
               : refines<IteratorRange>
             {
                 template<typename I, typename S,
-                    enable_if_t<std::is_same<I, S>::value> = 0>
+                    meta::if_<std::is_same<I, S>, int> = 0>
                 auto requires_(I i, I s) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(s - i)
                     ));
 
                 template<typename I, typename S,
-                    enable_if_t<!std::is_same<I, S>::value> = 0,
+                    meta::if_c<!std::is_same<I, S>::value, int> = 0,
                     typename C = common_type_t<I, S>>
                 auto requires_(I i, S s) -> decltype(
                     concepts::valid_expr(

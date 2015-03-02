@@ -50,46 +50,25 @@ namespace ranges
 
         // Metafunctions
         template<typename I>
-        struct iterator_category
-        {
-            using type = iterator_category_t<I>;
-        };
+        using iterator_category = meta::defer<iterator_category_t, I>;
 
         template<typename I>
-        struct iterator_value
-        {
-            using type = iterator_value_t<I>;
-        };
+        using iterator_value = meta::defer<iterator_value_t, I>;
 
         template<typename I>
-        struct iterator_difference
-        {
-            using type = iterator_difference_t<I>;
-        };
+        using iterator_difference = meta::defer<iterator_difference_t, I>;
 
         template<typename I>
-        struct iterator_reference
-        {
-            using type = iterator_reference_t<I>;
-        };
+        using iterator_reference = meta::defer<iterator_reference_t, I>;
 
         template<typename I>
-        struct iterator_rvalue_reference
-        {
-            using type = iterator_rvalue_reference_t<I>;
-        };
+        using iterator_rvalue_reference = meta::defer<iterator_rvalue_reference_t, I>;
 
         template<typename I>
-        struct iterator_common_reference
-        {
-            using type = iterator_common_reference_t<I>;
-        };
+        using iterator_common_reference = meta::defer<iterator_common_reference_t, I>;
 
         template<typename I>
-        struct iterator_size
-        {
-            using type = iterator_size_t<I>;
-        };
+        using iterator_size = meta::defer<iterator_size_t, I>;
         /// @}
     }
 }

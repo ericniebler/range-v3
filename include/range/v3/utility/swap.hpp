@@ -47,16 +47,14 @@ namespace ranges
 
             // Forward-declarations first!
             template<typename First0, typename Second0, typename First1, typename Second1>
-            typename std::enable_if<
-                is_swappable<First0, First1>::value &&
-                is_swappable<Second0, Second1>::value>::type
+            meta::if_c<is_swappable<First0, First1>::value &&
+                       is_swappable<Second0, Second1>::value>
             swap(std::pair<First0, Second0> &&left, std::pair<First1, Second1> &&right)
                 noexcept(is_nothrow_swappable<First0, First1>::value &&
                          is_nothrow_swappable<Second0, Second1>::value);
 
             template<typename ...Ts, typename ...Us>
-            typename std::enable_if<
-                meta::and_c<is_swappable<Ts, Us>::value...>::value>::type
+            meta::if_c<meta::and_c<is_swappable<Ts, Us>::value...>::value>
             swap(std::tuple<Ts...> &&left, std::tuple<Us...> &&right)
                 noexcept(meta::and_c<is_nothrow_swappable<Ts, Us>::value...>::value);
 
@@ -64,7 +62,7 @@ namespace ranges
             struct swap_fn
             {
                 template<typename T, typename U>
-                typename std::enable_if<is_swappable<T, U>::value>::type
+                meta::if_c<is_swappable<T, U>::value>
                 operator()(T && t, U && u) const noexcept(is_nothrow_swappable<T, U>::value)
                 {
                     swap(std::forward<T>(t), std::forward<U>(u));
@@ -78,9 +76,9 @@ namespace ranges
             {};
 
             template<typename T, typename U>
-            struct is_swappable_<T, U, typename std::enable_if<
+            struct is_swappable_<T, U, meta::if_c<
                 std::is_void<decltype(swap(std::declval<T>(), std::declval<U>()))>::value &&
-                std::is_void<decltype(swap(std::declval<U>(), std::declval<T>()))>::value>::type>
+                std::is_void<decltype(swap(std::declval<U>(), std::declval<T>()))>::value>>
               : std::true_type
             {};
 
@@ -90,8 +88,8 @@ namespace ranges
             {};
 
             template<typename First0, typename Second0, typename First1, typename Second1>
-            typename std::enable_if<
-                is_swappable<First0, First1>::value && is_swappable<Second0, Second1>::value>::type
+            meta::if_c<is_swappable<First0, First1>::value &&
+                       is_swappable<Second0, Second1>::value>
             swap(std::pair<First0, Second0> &&left, std::pair<First1, Second1> &&right)
                 noexcept(is_nothrow_swappable<First0, First1>::value &&
                          is_nothrow_swappable<Second0, Second1>::value )
@@ -108,8 +106,7 @@ namespace ranges
             }
 
             template<typename ...Ts, typename ...Us>
-            typename std::enable_if<
-                meta::and_c<is_swappable<Ts, Us>::value...>::value>::type
+            meta::if_c<meta::and_c<is_swappable<Ts, Us>::value...>::value>
             swap(std::tuple<Ts...> &&left, std::tuple<Us...> &&right)
                 noexcept(meta::and_c<is_nothrow_swappable<Ts, Us>::value...>::value)
             {
@@ -135,20 +132,20 @@ namespace ranges
 
             // Forward-declarations first!
             template<typename Readable0, typename Readable1>
-            typename std::enable_if<
+            meta::if_c<
                 is_swappable<decltype(*std::declval<Readable0>()),
-                             decltype(*std::declval<Readable1>())>::value>::type
+                             decltype(*std::declval<Readable1>())>::value>
             indirect_swap(Readable0 a, Readable1 b)
                 noexcept(is_nothrow_swappable<decltype(*std::declval<Readable0>()),
                                               decltype(*std::declval<Readable1>())>::value);
 
             template<typename Readable0, typename Readable1>
-            typename std::enable_if<
+            meta::if_c<
                 !is_swappable<
                     decltype(*std::declval<Readable0>()),
                     decltype(*std::declval<Readable1>())>::value &&
                 is_indirectly_movable<Readable0, Readable1>::value &&
-                is_indirectly_movable<Readable1, Readable0>::value>::type
+                is_indirectly_movable<Readable1, Readable0>::value>
             indirect_swap(Readable0 a, Readable1 b)
                 noexcept(
                     is_nothrow_indirectly_movable<Readable0, Readable1>::value &&
@@ -157,7 +154,7 @@ namespace ranges
             struct indirect_swap_fn
             {
                 template<typename Readable0, typename Readable1>
-                typename std::enable_if<is_indirectly_swappable<Readable0, Readable1>::value>::type
+                meta::if_c<is_indirectly_swappable<Readable0, Readable1>::value>
                 operator()(Readable0 a, Readable1 b) const
                     noexcept(is_nothrow_indirectly_swappable<Readable0, Readable1>::value)
                 {
@@ -172,9 +169,9 @@ namespace ranges
             {};
 
             template<typename T, typename U>
-            struct is_indirectly_swappable_<T, U, typename std::enable_if<
+            struct is_indirectly_swappable_<T, U, meta::if_c<
                 std::is_void<
-                    decltype(indirect_swap(std::declval<T>(), std::declval<U>()))>::value>::type>
+                    decltype(indirect_swap(std::declval<T>(), std::declval<U>()))>::value>>
               : std::true_type
             {};
 
@@ -190,9 +187,9 @@ namespace ranges
             //    properly constrain std::iter_swap and rename this.
 
             template<typename Readable0, typename Readable1>
-            typename std::enable_if<
+            meta::if_c<
                 is_swappable<decltype(*std::declval<Readable0>()),
-                             decltype(*std::declval<Readable1>())>::value>::type
+                             decltype(*std::declval<Readable1>())>::value>
             indirect_swap(Readable0 a, Readable1 b)
                 noexcept(is_nothrow_swappable<decltype(*std::declval<Readable0>()),
                                               decltype(*std::declval<Readable1>())>::value)
@@ -201,12 +198,12 @@ namespace ranges
             }
 
             template<typename Readable0, typename Readable1>
-            typename std::enable_if<
+            meta::if_c<
                 !is_swappable<
                     decltype(*std::declval<Readable0>()),
                     decltype(*std::declval<Readable1>())>::value &&
                 is_indirectly_movable<Readable0, Readable1>::value &&
-                is_indirectly_movable<Readable1, Readable0>::value>::type
+                is_indirectly_movable<Readable1, Readable0>::value>
             indirect_swap(Readable0 a, Readable1 b)
                 noexcept(
                     is_nothrow_indirectly_movable<Readable0, Readable1>::value &&

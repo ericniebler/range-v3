@@ -176,7 +176,7 @@ namespace ranges
             }
             template<typename T, typename U = detail::decay_t<T>>
             auto operator()(T && t) const ->
-                enable_if_t<!std::is_pointer<U>::value && !std::is_member_pointer<U>::value, T>
+                meta::if_c<!std::is_pointer<U>::value && !std::is_member_pointer<U>::value, T>
             {
                 return std::forward<T>(t);
             }

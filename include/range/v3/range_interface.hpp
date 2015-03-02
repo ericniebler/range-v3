@@ -18,6 +18,7 @@
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
+#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/common_iterator.hpp>
@@ -245,7 +246,7 @@ namespace ranges
                 return ranges::to_<Container>(derived());
             }
             /// \brief Print a range to an ostream
-            template<bool B = true, typename Stream = enable_if_t<B, std::ostream>>
+            template<bool B = true, typename Stream = meta::if_c<B, std::ostream>>
             friend Stream &operator<<(Stream &sout, Derived &rng)
             {
                 auto it = ranges::begin(rng);
@@ -258,7 +259,7 @@ namespace ranges
                 return sout << ']';
             }
             /// \overload
-            template<bool B = true, typename Stream = enable_if_t<B, std::ostream>>
+            template<bool B = true, typename Stream = meta::if_c<B, std::ostream>>
             friend Stream &operator<<(Stream &sout, Derived const &rng)
             {
                 auto it = ranges::begin(rng);

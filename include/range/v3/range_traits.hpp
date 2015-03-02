@@ -62,58 +62,31 @@ namespace ranges
 
         // Metafunctions
         template<typename Rng>
-        struct range_iterator
-        {
-            using type = range_iterator_t<Rng>;
-        };
+        using range_iterator = meta::defer<range_iterator_t, Rng>;
 
         template<typename Rng>
-        struct range_sentinel
-        {
-            using type = range_sentinel_t<Rng>;
-        };
+        using range_sentinel = meta::defer<range_sentinel_t, Rng>;
 
         template<typename Rng>
-        struct range_category
-        {
-            using type = range_category_t<Rng>;
-        };
+        using range_category = meta::defer<range_category_t, Rng>;
 
         template<typename Rng>
-        struct range_value
-        {
-            using type = range_value_t<Rng>;
-        };
+        using range_value = meta::defer<range_value_t, Rng>;
 
         template<typename Rng>
-        struct range_difference
-        {
-            using type = range_difference_t<Rng>;
-        };
+        using range_difference = meta::defer<range_difference_t, Rng>;
 
         template<typename Rng>
-        struct range_reference
-        {
-            using type = range_reference_t<Rng>;
-        };
+        using range_reference = meta::defer<range_reference_t, Rng>;
 
         template<typename Rng>
-        struct range_rvalue_reference
-        {
-            using type = range_rvalue_reference_t<Rng>;
-        };
+        using range_rvalue_reference = meta::defer<range_rvalue_reference_t, Rng>;
 
         template<typename Rng>
-        struct range_common_reference
-        {
-            using type = range_common_reference_t<Rng>;
-        };
+        using range_common_reference = meta::defer<range_common_reference_t, Rng>;
 
         template<typename Rng>
-        struct range_size
-        {
-            using type = range_size_t<Rng>;
-        };
+        using range_size = meta::defer<range_size_t, Rng>;
 
         // User customization point for infinite ranges:
         template<typename Rng, typename Void /*= void*/>

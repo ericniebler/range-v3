@@ -196,12 +196,6 @@ namespace ranges
 
             template<typename T, typename U>
             using lazy_builtin_common_t = meta::defer<builtin_common_t, T, U>;
-
-            template<typename ...Ts>
-            using lazy_common_type_t = meta::defer<common_type_t, Ts...>;
-
-            template<typename ...Ts>
-            using lazy_common_reference_t = meta::defer<common_reference_t, Ts...>;
         }
         /// \endcond
 
@@ -234,7 +228,8 @@ namespace ranges
 
         template<typename T, typename U, typename... Vs>
         struct common_type<T, U, Vs...>
-          : meta::lazy::let<detail::lazy_common_type_t<detail::lazy_common_type_t<T, U>, Vs...>>
+          : meta::lazy::let<meta::lazy::eval<common_type<
+                meta::lazy::eval<common_type<T, U>>, Vs...>>>
         {};
     #else
         template<typename T, typename U>
@@ -373,7 +368,7 @@ namespace ranges
           : meta::if_<
                 meta::and_<
                     meta::has_type<detail::lazy_builtin_common_t<T, U>>,
-                    meta::let<meta::or_<
+                    meta::lazy::let<meta::lazy::or_<
                         std::is_reference<detail::lazy_builtin_common_t<T, U>>,
                         meta::not_<meta::has_type<detail::common_reference_base_<T, U>>>>>>,
                 detail::lazy_builtin_common_t<T, U>,
@@ -382,8 +377,8 @@ namespace ranges
 
         template<typename T, typename U, typename... Vs>
         struct common_reference<T, U, Vs...>
-          : meta::lazy::let<detail::lazy_common_reference_t<
-                detail::lazy_common_reference_t<T, U>, Vs...>>
+          : meta::lazy::let<meta::lazy::eval<common_reference<
+                meta::lazy::eval<common_reference<T, U>>, Vs...>>>
         {};
     #else
         template<typename T, typename U>

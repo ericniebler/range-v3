@@ -124,8 +124,7 @@ namespace ranges
             box() = default;
 
             template<typename E,
-                     typename std::enable_if<
-                         std::is_constructible<Element, E &&>::value, int>::type = 0>
+                meta::if_<std::is_constructible<Element, E &&>, int> = 0>
             constexpr explicit box(E && e)
               : value(detail::forward<E>(e))
             {}
@@ -138,8 +137,7 @@ namespace ranges
             box() = default;
 
             template<typename E,
-                     typename std::enable_if<
-                         std::is_constructible<Element, E &&>::value, int>::type = 0>
+                meta::if_<std::is_constructible<Element, E &&>, int> = 0>
             constexpr explicit box(E && e)
               : Element(detail::forward<E>(e))
             {}
