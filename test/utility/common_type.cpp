@@ -18,6 +18,9 @@ struct noncopyable
 struct noncopyable2 : noncopyable
 {};
 
+template<typename T>
+struct undef_t;
+
 int main()
 {
     using namespace ranges;

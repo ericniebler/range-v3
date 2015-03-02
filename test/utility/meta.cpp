@@ -112,6 +112,7 @@ using Pair2 = apply<Lambda2, int, short>;
 static_assert(std::is_same<Pair0, std::pair<int, short>>::value, "");
 static_assert(std::is_same<Pair1, std::pair<short, int>>::value, "");
 static_assert(std::is_same<Pair2, std::pair<short, std::pair<int, int>>>::value, "");
+static_assert(std::is_same<apply<lambda<_a, int>, int>, int>::value, "");
 
 // Not saying you should do it this way, but it's a good test.
 namespace l = meta::lazy;
@@ -129,6 +130,13 @@ static_assert(std::is_same<CartProd,
         meta::list<short, float>,
         meta::list<short, double> >
 >::value, "");
+
+static_assert(can_apply<lambda<_a, lazy::if_<std::is_integral<_a>, _a> >, int>::value, "");
+// I'm guessing this failure is due to GCC #64970
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if !defined(__GNUC__) || defined(__clang__)
+static_assert(!can_apply<lambda<_a, lazy::if_<std::is_integral<_a>, _a> >, float>::value, "");
+#endif
 
 template<typename List>
 using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b> > >;
@@ -162,6 +170,11 @@ using find_index_ = let<
         lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
 static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
 static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
+
+template<typename A, int B = 0>
+struct lambda_test
+{
+};
 
 int main()
 {
@@ -251,6 +264,12 @@ int main()
         static_assert(meta::count_if<l, lambda<_a, std::is_same<_a, int>>>{} == 2, "");
         static_assert(meta::count_if<l, lambda<_b, std::is_same<_b, short>>>{} == 1, "");
         static_assert(meta::count_if<l, lambda<_c, std::is_same<_c, double>>>{} == 0, "");
+    }
+
+    // pathological lambda test
+    {
+        using X = apply<lambda<_a, lambda_test<_a>>, int>;
+        static_assert(std::is_same<X, lambda_test<_a>>::value, "");
     }
 
     test_tuple_cat();

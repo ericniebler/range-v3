@@ -538,6 +538,11 @@ namespace ranges
                 struct _if_
                 {};
 
+                template<typename If>
+                struct _if_<If>
+                  : std::enable_if<If::type::value>
+                {};
+
                 template<typename If, typename Then>
                 struct _if_<If, Then>
                   : std::enable_if<If::type::value, Then>
@@ -1801,31 +1806,33 @@ namespace ranges
                     static constexpr std::size_t arity = sizeof...(As) - 1;
                     using Tags = list<As...>; // Includes the lambda body as the last arg!
                     using F = back<Tags>;
-                    template<typename T, typename Args, typename = void>
+                    template<typename T, typename Args>
                     struct impl
                       : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
                     {};
+                    template<typename, typename, typename = void>
+                    struct impl_
+                    {};
                     template<template<typename...> class C, typename...Ts, typename Args>
-                    struct impl<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
+                    struct impl_<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
                     {
                         using type = C<eval<impl<Ts, Args>>...>;
                     };
+                    template<template<typename...> class C, typename...Ts, typename Args>
+                    struct impl<defer<C, Ts...>, Args> : impl_<defer<C, Ts...>, Args>
+                    {};
+                    template<template<typename...> class C, typename...Ts, typename Args>
+                    struct impl<C<Ts...>, Args> : impl_<defer<C, Ts...>, Args>
+                    {};
                     template<int N, typename...Ts, typename Args>
                     struct impl<lambda_<N, Ts...>, Args>
                     {
-                        using type = impl;
-                        template<typename...Us>
-                        using apply =
-                            apply_list<lambda_<0, As..., Ts...>, concat<Args, list<Us...>>>;
-                    };
-                    template<template<typename...> class C, typename...Ts, typename Args>
-                    struct impl<C<Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
-                    {
-                        using type = C<eval<impl<Ts, Args>>...>;
+                        using type = compose<uncurry<lambda_<0, As..., Ts...>>,
+                                             curry<bind_front<quote<concat>, Args>>>;
                     };
                 public:
                     template<typename...Ts>
-                    using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., void>>>>;
+                    using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
                 };
             }
             /// \endcond
@@ -1857,7 +1864,7 @@ namespace ranges
                 template<typename Fn>
                 struct let_<Fn>
                 {
-                    using type = Fn;
+                    using type = lazy::apply<lambda<Fn>>;
                 };
                 template<typename Tag, typename Value, typename...Rest>
                 struct let_<var<Tag, Value>, Rest...>
