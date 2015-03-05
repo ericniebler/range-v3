@@ -1305,122 +1305,6 @@ namespace ranges
             }
 
             ////////////////////////////////////////////////////////////////////////////////////
-            // in
-            /// A Boolean integral constant wrapper around \c true if
-            /// there is at least one occurrence of \p T in \p List.
-            /// \ingroup group-meta
-            template<typename List, typename T>
-            using in = not_<empty<find<List, T>>>;
-
-            namespace lazy
-            {
-                template<typename List, typename T>
-                using in = defer<in, List, T>;
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // unique
-            /// \cond
-            namespace meta_detail
-            {
-                template<typename List, typename Result>
-                struct unique_
-                {};
-
-                template<typename Result>
-                struct unique_<list<>, Result>
-                {
-                    using type = Result;
-                };
-
-                template<typename Head, typename...List, typename Result>
-                struct unique_<list<Head, List...>, Result>
-                  : unique_<
-                        list<List...>,
-                        apply<
-                            if_<in<Result, Head>, quote_trait<id>, bind_back<quote<push_back>, Head>>,
-                            Result>>
-                {};
-            }
-            /// \endcond
-
-            /// Return a new \c meta::list where all duplicate elements
-            /// have been removed.
-            /// \par Complexity
-            /// \f$ O(N^2) \f$.
-            /// \ingroup group-meta
-            template<typename List>
-            using unique = eval<meta_detail::unique_<List, list<>>>;
-
-            namespace lazy
-            {
-                template<typename List>
-                using unique = defer<unique, List>;
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // replace
-            /// \cond
-            namespace meta_detail
-            {
-                template<typename List, typename T, typename U>
-                struct replace_
-                {};
-
-                template<typename...List, typename T, typename U>
-                struct replace_<list<List...>, T, U>
-                {
-                    using type = list<if_<std::is_same<T, List>, U, List>...>;
-                };
-            }
-            /// \endcond
-
-            /// Return a new \c meta::list where all instances of type \p T
-            /// have been replaced with \p U.
-            /// \par Complexity
-            /// \f$ O(N) \f$.
-            /// \ingroup group-meta
-            template<typename List, typename T, typename U>
-            using replace = eval<meta_detail::replace_<List, T, U>>;
-
-            namespace lazy
-            {
-                template<typename List, typename T, typename U>
-                using replace = defer<replace, T, U>;
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////////
-            // replace_if
-            /// \cond
-            namespace meta_detail
-            {
-                template<typename List, typename C, typename U>
-                struct replace_if_
-                {};
-
-                template<typename...List, typename C, typename U>
-                struct replace_if_<list<List...>, C, U>
-                {
-                    using type = list<if_<apply<C, List>, U, List>...>;
-                };
-            }
-            /// \endcond
-
-            /// Return a new \c meta::list where all elements \c A of the list \p List
-            /// for which `apply<C,A>::%value` is \c true have been replaced with \p U.
-            /// \par Complexity
-            /// \f$ O(N) \f$.
-            /// \ingroup group-meta
-            template<typename List, typename C, typename U>
-            using replace_if = eval<meta_detail::replace_if_<List, C, U>>;
-
-            namespace lazy
-            {
-                template<typename List, typename C, typename U>
-                using replace_if = defer<replace_if, C, U>;
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////////
             // fold
             /// \cond
             namespace meta_detail
@@ -1504,6 +1388,136 @@ namespace ranges
                 using reverse_fold = defer<reverse_fold, List, State, Fun>;
             }
             /// @}
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // in
+            /// A Boolean integral constant wrapper around \c true if
+            /// there is at least one occurrence of \p T in \p List.
+            /// \ingroup group-meta
+            template<typename List, typename T>
+            using in = not_<empty<find<List, T>>>;
+
+            namespace lazy
+            {
+                template<typename List, typename T>
+                using in = defer<in, List, T>;
+            }
+
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            // set
+            // Used to improve the performance of \c meta::unique.
+            /// \cond
+            namespace meta_detail
+            {
+                template <typename... Nodes>
+                struct root_ : Nodes...
+                {
+                };
+
+                template <typename... Ts>
+                using set_ = root_<id<Ts>...>;
+
+                template <typename Set, typename T>
+                struct in_
+                {
+                };
+
+                template <typename... Set, typename T>
+                struct in_<list<Set...>, T> : std::is_base_of<id<T>, set_<Set...>>
+                {
+                };
+
+                template <typename Set, typename T>
+                struct insert_back_
+                {
+                };
+
+                template <typename... Set, typename T>
+                struct insert_back_<list<Set...>, T>
+                {
+                    using type = if_<in_<list<Set...>, T>, list<Set...>, list<Set..., T>>;
+                };
+            } // namespace meta_detail
+            /// \endcond
+
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            // unique
+            /// Return a new \c meta::list where all duplicate elements have been removed.
+            /// \par Complexity
+            /// \f$ O(N^2) \f$.
+            /// \ingroup group-meta
+            template <typename List>
+            using unique = fold<List, list<>, quote_trait<meta_detail::insert_back_>>;
+
+            namespace lazy
+            {
+                /// \sa 'meta::unique'
+                /// \ingroup group-meta
+                template <typename List>
+                using unique = defer<unique, List>;
+            }
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // replace
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename List, typename T, typename U>
+                struct replace_
+                {};
+
+                template<typename...List, typename T, typename U>
+                struct replace_<list<List...>, T, U>
+                {
+                    using type = list<if_<std::is_same<T, List>, U, List>...>;
+                };
+            }
+            /// \endcond
+
+            /// Return a new \c meta::list where all instances of type \p T
+            /// have been replaced with \p U.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            /// \ingroup group-meta
+            template<typename List, typename T, typename U>
+            using replace = eval<meta_detail::replace_<List, T, U>>;
+
+            namespace lazy
+            {
+                template<typename List, typename T, typename U>
+                using replace = defer<replace, T, U>;
+            }
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // replace_if
+            /// \cond
+            namespace meta_detail
+            {
+                template<typename List, typename C, typename U>
+                struct replace_if_
+                {};
+
+                template<typename...List, typename C, typename U>
+                struct replace_if_<list<List...>, C, U>
+                {
+                    using type = list<if_<apply<C, List>, U, List>...>;
+                };
+            }
+            /// \endcond
+
+            /// Return a new \c meta::list where all elements \c A of the list \p List
+            /// for which `apply<C,A>::%value` is \c true have been replaced with \p U.
+            /// \par Complexity
+            /// \f$ O(N) \f$.
+            /// \ingroup group-meta
+            template<typename List, typename C, typename U>
+            using replace_if = eval<meta_detail::replace_if_<List, C, U>>;
+
+            namespace lazy
+            {
+                template<typename List, typename C, typename U>
+                using replace_if = defer<replace_if, C, U>;
+            }
 
             ///////////////////////////////////////////////////////////////////////////////////////
             // count

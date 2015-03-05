@@ -272,6 +272,14 @@ int main()
         static_assert(std::is_same<X, lambda_test<_a>>::value, "");
     }
 
+    // meta::in
+    {
+        static_assert(in<list<int,int,short,float>, int>::value, "");
+        static_assert(in<list<int,int,short,float>, short>::value, "");
+        static_assert(in<list<int,int,short,float>, float>::value, "");
+        static_assert(!in<list<int,int,short,float>, double>::value, "");
+    }
+
     test_tuple_cat();
     return ::test_result();
 }
