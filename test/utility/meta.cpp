@@ -171,6 +171,21 @@ using find_index_ = let<
 static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
 static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
 
+// Test that the unselected branch does not get evaluated:
+template<typename T>
+using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T> > >;
+static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
+
+// Test that and_ gets short-circuited:
+template<typename T>
+using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T> > >;
+static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
+
+// Test that and_ gets short-circuited:
+template<typename T>
+using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T> > >;
+static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
+
 template<typename A, int B = 0>
 struct lambda_test
 {

@@ -1813,6 +1813,13 @@ namespace ranges
             /// \cond
             namespace meta_detail
             {
+                template<typename T, int = 0>
+                struct protect;
+
+                // Returns which branch to evaluate
+                template<typename If, typename ...Ts>
+                using lazy_if_ = lazy::eval<defer<_if_, If, protect<Ts>...>>;
+
                 template<int, typename...As>
                 struct lambda_
                 {
@@ -1820,18 +1827,37 @@ namespace ranges
                     static constexpr std::size_t arity = sizeof...(As) - 1;
                     using Tags = list<As...>; // Includes the lambda body as the last arg!
                     using F = back<Tags>;
+                    template<typename T, typename Args> struct impl;
                     template<typename T, typename Args>
-                    struct impl
-                      : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
-                    {};
+                    using lazy_impl_ = lazy::eval<defer<impl, T, protect<Args>>>;
                     template<typename, typename, typename = void>
                     struct impl_
                     {};
                     template<template<typename...> class C, typename...Ts, typename Args>
                     struct impl_<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
-                    {
-                        using type = C<eval<impl<Ts, Args>>...>;
-                    };
+                      : id<C<eval<impl<Ts, Args>>...>>
+                    {};
+                    template<typename T, typename Args>
+                    struct impl
+                      : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
+                    {};
+                    template<typename T, typename Args>
+                    struct impl<protect<T>, Args> : id<T>
+                    {};
+                    template<typename If, typename ...Ts, typename Args>
+                    struct impl<defer<if_, If, Ts...>, Args> // Short-circuit if_
+                      : impl<lazy_impl_<lazy_if_<If, Ts...>, Args>, Args>
+                    {};
+                    template<typename Bool, typename ...Ts, typename Args>
+                    struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
+                      : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect<std::false_type>>,
+                            Args>, Args>
+                    {};
+                    template<typename Bool, typename ...Ts, typename Args>
+                    struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
+                      : impl<lazy_impl_<lazy_if_<Bool, protect<std::true_type>, lazy::or_<Ts...>>,
+                            Args>, Args>
+                    {};
                     template<template<typename...> class C, typename...Ts, typename Args>
                     struct impl<defer<C, Ts...>, Args> : impl_<defer<C, Ts...>, Args>
                     {};
@@ -1840,10 +1866,9 @@ namespace ranges
                     {};
                     template<int N, typename...Ts, typename Args>
                     struct impl<lambda_<N, Ts...>, Args>
-                    {
-                        using type = compose<uncurry<lambda_<0, As..., Ts...>>,
-                                             curry<bind_front<quote<concat>, Args>>>;
-                    };
+                      : id<compose<uncurry<lambda_<0, As..., Ts...>>,
+                            curry<bind_front<quote<concat>, Args>>>>
+                    {};
                 public:
                     template<typename...Ts>
                     using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
@@ -1861,6 +1886,9 @@ namespace ranges
             /// \endcode
             template<typename...Ts>
             using lambda = meta_detail::lambda_<0, Ts...>;
+
+            //template<typename...Ts>
+            //using lambda2 = meta_detail::lambda2_<0, Ts...>;
 
             ///////////////////////////////////////////////////////////////////////////////////////
             // let
