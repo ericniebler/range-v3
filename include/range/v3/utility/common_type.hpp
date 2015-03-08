@@ -74,26 +74,25 @@ namespace ranges
             using conditional_result_t = decltype(true ? std::declval<T>() : std::declval<U>());
 
             template<typename T, typename U>
-            using builtin_common_t = meta::apply<builtin_common_impl<T, U>, T, U>;
+            using builtin_common_t = meta::apply<builtin_common_impl<T, U>>;
 
             template<typename T, typename U>
             struct builtin_common_impl
             {
-                template<typename, typename, typename X = T, typename Y = U>
+                template<typename X = T, typename Y = U>
                 using apply = decay_t<conditional_result_t<as_cref_t<X>, as_cref_t<Y>>>;
             };
             template<typename T, typename U>
             struct builtin_common_impl<T &&, U &&>
             {
-                template<typename, typename, typename X = T, typename Y = U,
-                    typename R = builtin_common_t<X &, Y &>>
+                template<typename X = T, typename Y = U, typename R = builtin_common_t<X &, Y &>>
                 using apply =
                     meta::if_<std::is_reference<R>, meta::eval<std::remove_reference<R>> &&, R>;
             };
             template<typename T, typename U>
             struct builtin_common_impl<T &, U &>
             {
-                template<typename, typename, typename X = T, typename Y = U>
+                template<typename X = T, typename Y = U>
                 using apply = conditional_result_t<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
             };
             template<typename T, typename U>
@@ -115,16 +114,16 @@ namespace ranges
             };
 
             template<typename T, typename U>
-            using builtin_common_t = meta::eval<meta::apply<builtin_common_impl<T, U>, T, U>>;
+            using builtin_common_t = meta::eval<meta::apply<builtin_common_impl<T, U>>>;
 
             template<typename T, typename U>
             struct builtin_common_impl
             {
-                template<typename, typename, typename = T, typename = U, typename = void>
+                template<typename = T, typename = U, typename = void>
                 struct apply
                 {};
-                template<typename a, typename b, typename X, typename Y>
-                struct apply<a, b, X, Y, meta::void_<meta::eval<conditional_result<as_cref_t<X>, as_cref_t<Y>>>>>
+                template<typename X, typename Y>
+                struct apply<X, Y, meta::void_<meta::eval<conditional_result<as_cref_t<X>, as_cref_t<Y>>>>>
                 {
                     using type = decay_t<meta::eval<conditional_result<as_cref_t<X>, as_cref_t<Y>>>>;
                 };
@@ -132,11 +131,11 @@ namespace ranges
             template<typename T, typename U>
             struct builtin_common_impl<T &&, U &&>
             {
-                template<typename, typename, typename = T, typename = U, typename = void>
+                template<typename = T, typename = U, typename = void>
                 struct apply
                 {};
-                template<typename a, typename b, typename X, typename Y>
-                struct apply<a, b, X, Y, meta::void_<builtin_common_t<X &, Y &>>>
+                template<typename X, typename Y>
+                struct apply<X, Y, meta::void_<builtin_common_t<X &, Y &>>>
                 {
                     using R = builtin_common_t<X &, Y &>;
                     using type =
@@ -146,7 +145,7 @@ namespace ranges
             template<typename T, typename U>
             struct builtin_common_impl<T &, U &>
             {
-                template<typename, typename, typename X = T, typename Y = U>
+                template<typename X = T, typename Y = U>
                 using apply = conditional_result<copy_cv_t<Y, X> &, copy_cv_t<X, Y> &>;
             };
             template<typename T, typename U>
@@ -219,17 +218,15 @@ namespace ranges
         template<typename T, typename U>
         struct common_type<T, U>
           : meta::if_c<
-                std::is_same<detail::decay_t<T>, T>::value &&
-                    std::is_same<detail::decay_t<U>, U>::value,
-                meta::lazy::let<meta::lazy::eval<std::decay<
-                    detail::lazy_builtin_common_t<T, U>>>>,
+                ( std::is_same<detail::decay_t<T>, T>::value &&
+                  std::is_same<detail::decay_t<U>, U>::value ),
+                meta::lazy::let<detail::lazy_builtin_common_t<T, U>>,
                 common_type<detail::decay_t<T>, detail::decay_t<U>>>
         {};
 
         template<typename T, typename U, typename... Vs>
         struct common_type<T, U, Vs...>
-          : meta::lazy::let<meta::lazy::eval<common_type<
-                meta::lazy::eval<common_type<T, U>>, Vs...>>>
+          : meta::lazy::let<meta::lazy::fold<meta::list<U, Vs...>, T, meta::quote<common_type_t>>>
         {};
     #else
         template<typename T, typename U>
@@ -377,8 +374,8 @@ namespace ranges
 
         template<typename T, typename U, typename... Vs>
         struct common_reference<T, U, Vs...>
-          : meta::lazy::let<meta::lazy::eval<common_reference<
-                meta::lazy::eval<common_reference<T, U>>, Vs...>>>
+          : meta::lazy::let<meta::lazy::fold<meta::list<U, Vs...>, T,
+                meta::quote<common_reference_t>>>
         {};
     #else
         template<typename T, typename U>
