@@ -68,15 +68,15 @@ namespace ranges
             template<>
             union variant_data<>
             {
-                void move(std::size_t n, variant_data &&) const
+                void move(std::size_t, variant_data &&) const
                 {
                     RANGES_ASSERT(false);
                 }
-                void copy(std::size_t n, variant_data const &) const
+                void copy(std::size_t, variant_data const &) const
                 {
                     RANGES_ASSERT(false);
                 }
-                bool equal(std::size_t n, variant_data const &) const
+                bool equal(std::size_t, variant_data const &) const
                 {
                     RANGES_ASSERT(false);
                     return true;
