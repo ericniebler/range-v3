@@ -191,6 +191,32 @@ struct lambda_test
 {
 };
 
+template<typename N>
+struct fact
+  : let<lazy::if_c<(N::value > 0),
+                   lazy::multiplies<N, defer<fact, dec<N>>>,
+                   meta::size_t<1>>>
+{};
+
+static_assert(fact<meta::size_t<0>>::value == 1, "");
+static_assert(fact<meta::size_t<1>>::value == 1, "");
+static_assert(fact<meta::size_t<2>>::value == 2, "");
+static_assert(fact<meta::size_t<3>>::value == 6, "");
+static_assert(fact<meta::size_t<4>>::value == 24, "");
+
+template<std::size_t N>
+struct fact2
+  : let<lazy::if_c<(N > 0),
+                   lazy::multiplies<meta::size_t<N>, defer_i<std::size_t, fact2, N-1>>,
+                   meta::size_t<1>>>
+{};
+
+static_assert(fact2<0>::value == 1, "");
+static_assert(fact2<1>::value == 1, "");
+static_assert(fact2<2>::value == 2, "");
+static_assert(fact2<3>::value == 6, "");
+static_assert(fact2<4>::value == 24, "");
+
 int main()
 {
     // meta::sizeof_
@@ -348,6 +374,9 @@ int main()
         static_assert(!can_apply<lambda<_a, defer<std::pair, _a, _a>>, int, short>::value, "");
         #endif
     }
+
+    // Check the _z user-defined literal:
+    static_assert(42_z == 42, "");
 
     test_tuple_cat();
     return ::test_result();

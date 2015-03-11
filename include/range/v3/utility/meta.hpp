@@ -51,6 +51,14 @@ namespace ranges
             template<bool B>
             using bool_ = std::integral_constant<bool, B>;
 
+            /// An integral constant wrapper for \c int.
+            template<int I>
+            using int_ = std::integral_constant<int, I>;
+
+            /// An integral constant wrapper for \c char.
+            template<char Ch>
+            using char_ = std::integral_constant<char, Ch>;
+
             ////////////////////////////////////////////////////////////////////////////////////
             // Math operations
             /// An integral constant wrapper around the result of incrementing the
@@ -273,6 +281,17 @@ namespace ranges
                 {
                     using type = C<Ts...>;
                 };
+
+                template <typename T, template <T...> class C, typename, typename = void>
+                struct defer_i_
+                {
+                };
+
+                template <typename T, template <T...> class C, T... Is>
+                struct defer_i_<T, C, integer_sequence<T, Is...>, void_<C<Is...>>>
+                {
+                    using type = C<Is...>;
+                };
             }
             /// \endcond
 
@@ -283,8 +302,8 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // defer
-            /// A wrapper that defers the instantiation of a template in a \c lambda
-            /// expression.
+            /// A wrapper that defers the instantiation of a template \p C with type parameters
+            /// \p Ts in a \c lambda or \c let expression.
             ///
             /// In the code below, the lambda would ideally be written as
             /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
@@ -299,6 +318,32 @@ namespace ranges
             struct defer
               : meta_detail::defer_<C, list<Ts...>>
             {};
+
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            // defer_i
+            /// A wrapper that defers the instantiation of a template \p C with integral constant
+            /// parameters \p Is in a \c lambda or \c let expression.
+            /// \sa `defer`
+            template<typename T, template<T...> class C, T... Is>
+            struct defer_i
+              : meta_detail::defer_i_<T, C, integer_sequence<T, Is...>>
+            {};
+
+            ////////////////////////////////////////////////////////////////////////////////////
+            // defer_trait
+            /// A wrapper that defers the instantiation of a trait \p C with type parameters \p Ts
+            /// in a \c lambda or \c let expression.
+            /// \sa `defer`
+            template<template<typename...> class C, typename...Ts>
+            using defer_trait = lazy::eval<defer<C, Ts...>>;
+
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            // defer_trait_i
+            /// A wrapper that defers the instantiation of a trait \p C with integral constant
+            /// parameters \p Is in a \c lambda or \c let expression.
+            /// \sa `defer`
+            template <typename T, template <T...> class C, T... Is>
+            using defer_trait_i = lazy::eval<defer_i<T, C, Is...>>;
 
             /// A metafunction that computes the size of the type \p T.
             /// \par Complexity
@@ -567,8 +612,13 @@ namespace ranges
 
             namespace lazy
             {
+                /// \sa 'meta::if_'
                 template<typename...Args>
                 using if_ = defer<if_, Args...>;
+
+                /// \sa 'meta::if_c'
+                template <bool If, typename... Args>
+                using if_c = if_<bool_<If>, Args...>;
             }
 
             /// \cond
@@ -1883,6 +1933,9 @@ namespace ranges
                     struct subst_<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
                       : id<C<eval<impl<Ts, Args>>...>>
                     {};
+                    template <typename T, template <T...> class C, T... Is, typename Args>
+                    struct subst_<defer_i<T, C, Is...>, Args> : defer_i<T, C, Is...>
+                    {};
                     template<typename T, typename Args>
                     struct impl
                       : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
@@ -1909,6 +1962,9 @@ namespace ranges
                     {};
                     template<template<typename...> class C, typename...Ts, typename Args>
                     struct impl<defer<C, Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                    {};
+                    template <typename T, template <T...> class C, T... Is, typename Args>
+                    struct impl<defer_i<T, C, Is...>, Args> : subst_<defer_i<T, C, Is...>, Args>
                     {};
                     template<template<typename...> class C, typename...Ts, typename Args>
                     struct impl<C<Ts...>, Args> : subst_<defer<C, Ts...>, Args>
@@ -1953,6 +2009,11 @@ namespace ranges
                     {
                         using type = list<try_subst_<C, Args, list<Ts...>>>;
                     };
+                    template <typename T, template <T...> class C, T... Is, typename Args>
+                    struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
+                    {
+                        using type = list<C<Is...>>;
+                    };
                     template<typename T, typename Args>
                     struct impl
                       : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<list<T>>>
@@ -1979,6 +2040,9 @@ namespace ranges
                     {};
                     template<template<typename...> class C, typename...Ts, typename Args>
                     struct impl<defer<C, Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                    {};
+                    template <typename T, template <T...> class C, T... Is, typename Args>
+                    struct impl<defer_i<T, C, Is...>, Args> : subst_<defer_i<T, C, Is...>, Args>
                     {};
                     template<template<typename...> class C, typename...Ts, typename Args>
                     struct impl<C<Ts...>, Args> : subst_<defer<C, Ts...>, Args>
@@ -2153,6 +2217,22 @@ namespace ranges
                 template<typename T, typename U>
                 using min = defer<min, T, U>;
             }
+
+            /// \cond
+            namespace meta_detail
+            {
+                template <typename State, typename Ch>
+                using atoi_ = if_c<(Ch::value >= '0' && Ch::value <= '9'),
+                                   std::integral_constant<typename State::value_type,
+                                                          State::value * 10 + (Ch::value - '0')>>;
+            }
+            /// \endcond
+
+            /// A user-defined literal that generates objects of type \c meta::size_t.
+            /// \ingroup integral
+            template<char...Chs>
+            constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<meta_detail::atoi_>>
+            operator "" _z() { return {}; }
         }
     }
 }
