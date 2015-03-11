@@ -24,7 +24,7 @@ before_install:
   - export CHECKOUT_PATH=`pwd`;
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
-  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-${GCC_VERSION}; fi
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq -y --force-yes g++-${GCC_VERSION}; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
 
   # Install libc++ if tests are run with clang++
