@@ -18,9 +18,6 @@ struct noncopyable
 struct noncopyable2 : noncopyable
 {};
 
-template<typename T>
-struct undef_t;
-
 int main()
 {
     using namespace ranges;
@@ -29,6 +26,7 @@ int main()
     static_assert(std::is_same<common_reference_t<B &, D const &>, B const &>::value, "");
     static_assert(std::is_same<common_reference_t<B &, D const &, D &>, B const &>::value, "");
     static_assert(std::is_same<common_reference_t<B const &, D &>, B const &>::value, "");
+    static_assert(std::is_same<common_reference_t<B &, D &, B &, D &>, B &>::value, "");
 
     static_assert(std::is_same<common_reference_t<B &&, D &&>, B &&>::value, "");
     static_assert(std::is_same<common_reference_t<B const &&, D &&>, B const &&>::value, "");

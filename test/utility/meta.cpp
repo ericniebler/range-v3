@@ -217,6 +217,19 @@ static_assert(fact2<2>::value == 2, "");
 static_assert(fact2<3>::value == 6, "");
 static_assert(fact2<4>::value == 24, "");
 
+template<typename N>
+struct factorial : eval<
+    if_c<N::value == 0,
+         meta::size_t<1>,
+         lazy::multiplies<N, factorial<lazy::dec<N>>>>>
+{};
+
+static_assert(factorial<meta::size_t<0>>::value == 1, "");
+static_assert(factorial<meta::size_t<1>>::value == 1, "");
+static_assert(factorial<meta::size_t<2>>::value == 2, "");
+static_assert(factorial<meta::size_t<3>>::value == 6, "");
+static_assert(factorial<meta::size_t<4>>::value == 24, "");
+
 int main()
 {
     // meta::sizeof_
@@ -364,7 +377,6 @@ int main()
                 _args_a>>,
             int, short, float, double>;
         static_assert(std::is_same<ZZ, list<short, int, list<float, double>, list<short, float, double>>>::value, "");
-
 
         // I'm guessing this failure is due to GCC #64970
         // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970

@@ -220,13 +220,13 @@ namespace ranges
           : meta::if_c<
                 ( std::is_same<detail::decay_t<T>, T>::value &&
                   std::is_same<detail::decay_t<U>, U>::value ),
-                meta::lazy::let<detail::lazy_builtin_common_t<T, U>>,
+                detail::lazy_builtin_common_t<T, U>,
                 common_type<detail::decay_t<T>, detail::decay_t<U>>>
         {};
 
         template<typename T, typename U, typename... Vs>
         struct common_type<T, U, Vs...>
-          : meta::lazy::let<meta::lazy::fold<meta::list<U, Vs...>, T, meta::quote<common_type_t>>>
+          : meta::lazy::fold<meta::list<U, Vs...>, T, meta::quote<common_type_t>>
         {};
     #else
         template<typename T, typename U>
@@ -363,19 +363,18 @@ namespace ranges
         template<typename T, typename U>
         struct common_reference<T, U>
           : meta::if_<
-                meta::let<meta::lazy::and_<
+                meta::lazy::and_<
                     meta::is_valid<detail::lazy_builtin_common_t<T, U>>,
                     meta::lazy::or_<
                         std::is_reference<detail::lazy_builtin_common_t<T, U>>,
-                        meta::not_<meta::has_type<detail::common_reference_base_<T, U>>>>>>,
+                        meta::not_<meta::has_type<detail::common_reference_base_<T, U>>>>>,
                 detail::lazy_builtin_common_t<T, U>,
                 detail::common_reference_base_<T, U>>
         {};
 
         template<typename T, typename U, typename... Vs>
         struct common_reference<T, U, Vs...>
-          : meta::lazy::let<meta::lazy::fold<meta::list<U, Vs...>, T,
-                meta::quote<common_reference_t>>>
+          : meta::lazy::fold<meta::list<U, Vs...>, T, meta::quote<common_reference_t>>
         {};
     #else
         template<typename T, typename U>

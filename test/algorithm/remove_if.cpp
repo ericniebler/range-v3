@@ -25,6 +25,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/remove_if.hpp>
 #include "../simple_test.hpp"
@@ -37,7 +38,8 @@ test_iter()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr unsigned sa = ranges::size(ia);
-    Iter r = ranges::remove_if(Iter(ia), Sent(ia+sa), std::bind2nd(std::equal_to<int>(), 2));
+    using namespace std::placeholders;
+    Iter r = ranges::remove_if(Iter(ia), Sent(ia+sa), std::bind(std::equal_to<int>(), _1, 2));
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
@@ -53,7 +55,8 @@ test_range()
 {
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr unsigned sa = ranges::size(ia);
-    Iter r = ranges::remove_if(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia+sa))), std::bind2nd(std::equal_to<int>(), 2));
+    using namespace std::placeholders;
+    Iter r = ranges::remove_if(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia+sa))), std::bind(std::equal_to<int>(), _1, 2));
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
@@ -160,7 +163,8 @@ int main()
     // Check projection
     S ia[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
     constexpr unsigned sa = ranges::size(ia);
-    S* r = ranges::remove_if(ia, std::bind2nd(std::equal_to<int>(), 2), &S::i);
+    using namespace std::placeholders;
+    S* r = ranges::remove_if(ia, std::bind(std::equal_to<int>(), _1, 2), &S::i);
     CHECK(r == ia + sa-3);
     CHECK(ia[0].i == 0);
     CHECK(ia[1].i == 1);

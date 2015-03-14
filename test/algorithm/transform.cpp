@@ -25,6 +25,8 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
+using namespace std::placeholders;
+
 template <class InIter, class OutIter>
 void
 test1()
@@ -35,7 +37,7 @@ test1()
         int ib[sa] = {0};
         std::pair<InIter, OutIter> r =
             ranges::transform(InIter(ia), sentinel<int const *>(ia+sa), OutIter(ib),
-                              std::bind2nd(std::plus<int>(), 1));
+                              std::bind(std::plus<int>(), _1, 1));
         CHECK(base(r.first) == ia + sa);
         CHECK(base(r.second) == ib + sa);
         CHECK(ib[0] == 1);
@@ -52,7 +54,7 @@ test1()
         auto rng = ranges::make_range(InIter(ia), sentinel<int const *>(ia + sa));
         std::pair<InIter, OutIter> r =
             ranges::transform(rng, OutIter(ib),
-                              std::bind2nd(std::plus<int>(), 1));
+                              std::bind(std::plus<int>(), _1, 1));
         CHECK(base(r.first) == ia + sa);
         CHECK(base(r.second) == ib + sa);
         CHECK(ib[0] == 1);
