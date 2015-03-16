@@ -16,6 +16,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/detail/config.hpp>
 
 /// \defgroup group-utility Utility
@@ -36,42 +37,10 @@
 /// \defgroup group-concepts Concepts
 /// Concept-checking classes and utilities
 
-/// \defgroup group-meta Metaprogramming
-/// Metaprogramming utilities
-/// \note The algorithmic complexity listed for these utilities describes
-///     the total number of templates they cause to be instantiated.
-
 namespace ranges
 {
     inline namespace v3
     {
-        namespace meta
-        {
-            template<typename...Ts>
-            struct list;
-
-            template<typename T>
-            struct id;
-
-            template<template<typename...> class>
-            struct quote;
-
-            template<template<typename...> class C>
-            struct quote_trait;
-
-            template<typename T, template<T...> class F>
-            struct quote_i;
-
-            template<typename T, template<T...> class C>
-            struct quote_trait_i;
-
-            template<typename...Fs>
-            struct compose;
-
-            template<typename T>
-            struct always;
-        }
-
         /// \cond
         namespace adl_begin_end_detail
         {

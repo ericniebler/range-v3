@@ -14,87 +14,25 @@
 #ifndef RANGES_V3_UTILITY_INTEGER_SEQUENCE_HPP
 #define RANGES_V3_UTILITY_INTEGER_SEQUENCE_HPP
 
-#include <cstddef>
-#include <type_traits>
-#include <range/v3/detail/config.hpp>
-#include <range/v3/utility/meta.hpp>
+#if defined(__GNUC__) || defined(__clang__)
+#  warning "This header is deprecated. Please use: meta/meta.hpp"
+#endif
+
+#include <range/v3/range_fwd.hpp>
+#include <meta/meta.hpp>
 
 namespace ranges
 {
     inline namespace v3
     {
-        ////////////////////////////////////////////////////////////////////////////////////////
-        // integer_sequence
-
-        /// \brief A container for a sequence of compile-time integer constants.
-        /// \ingroup group-meta
-        template<typename T, T...Is>
-        struct integer_sequence
-        {
-            using value_type = T;
-            /// \return `sizeof...(Is)`
-            static constexpr std::size_t size() noexcept
-            {
-                return sizeof...(Is);
-            }
-        };
-
-        /// \cond
-        namespace detail
-        {
-            // Glue two sets of integer_sequence together
-            template<typename I1, typename I2, typename I3>
-            struct integer_sequence_cat;
-
-            template<typename T, T...N1, T...N2, T...N3>
-            struct integer_sequence_cat<integer_sequence<T, N1...>, integer_sequence<T, N2...>,
-                integer_sequence<T, N3...>>
-            {
-                using type = integer_sequence<T, N1..., (sizeof...(N1) + N2)...,
-                    (sizeof...(N1) + sizeof...(N2) + N3)...>;
-            };
-
-            template<typename T, std::size_t N>
-            struct make_integer_sequence_
-              : integer_sequence_cat<
-                    meta::eval<make_integer_sequence_<T, N / 2>>,
-                    meta::eval<make_integer_sequence_<T, N / 2>>,
-                    meta::eval<make_integer_sequence_<T, N % 2>>>
-            {};
-
-            template<typename T>
-            struct make_integer_sequence_<T, 0>
-            {
-                using type = integer_sequence<T>;
-            };
-
-            template<typename T>
-            struct make_integer_sequence_<T, 1>
-            {
-                using type = integer_sequence<T, 0>;
-            };
-        }
-        /// \endcond
-
-        /// \brief Generate \c integer_sequence containing integer constants
-        /// [0,1,2,...,N-1]. Complexity: O(log(N)).
-        /// \ingroup group-meta
-        template<typename T, T N>
-        using make_integer_sequence =
-            meta::eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
-
-        /// \brief A container for a sequence of compile-time integer constants
-        /// of type \c std::size_t
-        /// \ingroup group-meta
-        template<std::size_t...Is>
-        using index_sequence = integer_sequence<std::size_t, Is...>;
-
-        /// \brief Generate \c index_sequence containing integer constants
-        /// [0,1,2,...,N-1]. Complexity: O(log(N)).
-        /// \ingroup group-meta
-        template<std::size_t N>
-        using make_index_sequence = make_integer_sequence<std::size_t, N>;
+        namespace meta = ::meta::v1;
     }
+
+    using meta::integer_sequence;
+    using meta::make_integer_sequence;
+
+    using meta::index_sequence;
+    using meta::make_index_sequence;
 }
 
 #endif

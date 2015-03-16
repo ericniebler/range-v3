@@ -15,8 +15,8 @@
 #define RANGES_V3_UTILITY_ITERATOR_TRAITS_HPP
 
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 
 namespace ranges

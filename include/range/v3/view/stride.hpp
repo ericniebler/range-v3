@@ -17,6 +17,7 @@
 #include <atomic>
 #include <utility>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/distance.hpp>
@@ -24,7 +25,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator.hpp>

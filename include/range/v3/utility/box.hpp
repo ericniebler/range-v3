@@ -18,8 +18,8 @@
 #include <utility>
 #include <cstdlib>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/meta.hpp>
 
 namespace ranges
 {

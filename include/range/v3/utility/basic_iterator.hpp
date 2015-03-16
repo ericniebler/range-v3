@@ -15,9 +15,9 @@
 
 #include <utility>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_access.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -737,7 +737,7 @@ namespace std
         using value_type = typename iterator::value_type;
         using reference = typename iterator::reference;
         using iterator_category =
-            ::ranges::meta::eval<
+            ::meta::eval<
                 ::ranges::detail::as_std_iterator_category<
                     typename iterator::iterator_category,
                     reference>>;

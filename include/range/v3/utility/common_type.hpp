@@ -15,8 +15,8 @@
 #define RANGES_V3_UTILITY_COMMON_TYPE_HPP
 
 #include <utility>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/meta.hpp>
 
 // Sadly, this is necessary because of:
 //  - std::common_type is not SFINAE-friendly, and

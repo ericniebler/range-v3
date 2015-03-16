@@ -13,12 +13,10 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 #include <tuple>
-#include <range/v3/utility/meta.hpp>
-#include <range/v3/utility/integer_sequence.hpp>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include "../simple_test.hpp"
 
-using namespace ranges;
 using namespace meta;
 
 // An implementation of tuple_cat gives Range v3's meta-programming and list

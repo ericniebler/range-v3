@@ -19,12 +19,12 @@
 #include <utility>
 #include <functional>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_facade.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -181,7 +181,7 @@ namespace ranges
                 std::tuple<range_iterator_t<Rngs>...> its_;
 
                 template<std::size_t...Is>
-                auto indirect_move_(index_sequence<Is...>) const
+                auto indirect_move_(meta::index_sequence<Is...>) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     fun_(move_tag{}, std::get<Is>(its_)...)
@@ -190,7 +190,7 @@ namespace ranges
                 friend auto indirect_move(basic_iterator<cursor, Sent> const &it)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
-                    get_cursor(it).indirect_move_(make_index_sequence<sizeof...(Rngs)>{})
+                    get_cursor(it).indirect_move_(meta::make_index_sequence<sizeof...(Rngs)>{})
                 )
             public:
                 using difference_type =

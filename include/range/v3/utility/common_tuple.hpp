@@ -15,8 +15,8 @@
 #define RANGES_V3_UTILITY_COMMON_TUPLE_HPP
 
 #include <utility>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/tuple_algorithm.hpp>
@@ -29,7 +29,7 @@ namespace ranges
         namespace detail
         {
             template<typename ...Us, typename Tup, std::size_t...Is>
-            std::tuple<Us...> to_std_tuple(Tup && tup, index_sequence<Is...>)
+            std::tuple<Us...> to_std_tuple(Tup && tup, meta::index_sequence<Is...>)
             {
                 return std::tuple<Us...>{std::get<Is>(std::forward<Tup>(tup))...};
             }
@@ -42,7 +42,7 @@ namespace ranges
         {
         private:
             template<typename That, std::size_t...Is>
-            common_tuple(That && that, index_sequence<Is...>)
+            common_tuple(That && that, meta::index_sequence<Is...>)
               : std::tuple<Ts...>{std::get<Is>(std::forward<That>(that))...}
             {}
             std::tuple<Ts...> & base() noexcept
@@ -79,19 +79,19 @@ namespace ranges
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &>()...>::value)>
             common_tuple(std::tuple<Us...> &that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &>::value...>::value)
-              : common_tuple(that, make_index_sequence<sizeof...(Ts)>{})
+              : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us const &>()...>::value)>
             common_tuple(std::tuple<Us...> const &that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us const &>::value...>::value)
-              : common_tuple(that, make_index_sequence<sizeof...(Ts)>{})
+              : common_tuple(that, meta::make_index_sequence<sizeof...(Ts)>{})
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &&>()...>::value)>
             common_tuple(std::tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &&>::value...>::value)
-              : common_tuple(std::move(that), make_index_sequence<sizeof...(Ts)>{})
+              : common_tuple(std::move(that), meta::make_index_sequence<sizeof...(Ts)>{})
             {}
 
             // Assignment
@@ -126,21 +126,21 @@ namespace ranges
             operator std::tuple<Us...> () &
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts &>::value...>::value)
             {
-                return detail::to_std_tuple<Us...>(*this, make_index_sequence<sizeof...(Ts)>{});
+                return detail::to_std_tuple<Us...>(*this, meta::make_index_sequence<sizeof...(Ts)>{});
             }
             template<typename ...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Us, Ts const &>()...>::value)>
             operator std::tuple<Us...> () const &
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts const &>::value...>::value)
             {
-                return detail::to_std_tuple<Us...>(*this, make_index_sequence<sizeof...(Ts)>{});
+                return detail::to_std_tuple<Us...>(*this, meta::make_index_sequence<sizeof...(Ts)>{});
             }
             template<typename ...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Us, Ts &&>()...>::value)>
             operator std::tuple<Us...> () &&
                 noexcept(meta::and_c<std::is_nothrow_constructible<Us, Ts &&>::value...>::value)
             {
-                return detail::to_std_tuple<Us...>(std::move(*this), make_index_sequence<sizeof...(Ts)>{});
+                return detail::to_std_tuple<Us...>(std::move(*this), meta::make_index_sequence<sizeof...(Ts)>{});
             }
 
         // Logical operators

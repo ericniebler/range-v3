@@ -16,6 +16,7 @@
 
 #include <utility>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/numeric.hpp> // for accumulate
@@ -23,7 +24,6 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>

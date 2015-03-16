@@ -17,10 +17,10 @@
 #include <utility>
 #include <type_traits>
 #include <initializer_list>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 

@@ -18,9 +18,9 @@
 #include <functional> // std::reference_wrapper
 #include <type_traits>
 #include <initializer_list>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 

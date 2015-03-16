@@ -17,11 +17,10 @@
 #include <new>
 #include <utility>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
-#include <range/v3/utility/integer_sequence.hpp>
 
 namespace ranges
 {
@@ -354,7 +353,7 @@ namespace ranges
                     meta::replace<
                         meta::transform<
                             Types,
-                            meta::as_list<make_index_sequence<Types::size()>>,
+                            meta::as_list<meta::make_index_sequence<Types::size()>>,
                             meta::bind_front<meta::quote<concepts::Function::result_t>, Fun>>,
                         void, std::nullptr_t>>;
 

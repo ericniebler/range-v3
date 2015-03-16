@@ -13,12 +13,12 @@
 #ifndef RANGES_V3_RANGE_ADAPTOR_HPP
 #define RANGES_V3_RANGE_ADAPTOR_HPP
 
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/distance.hpp>
 #include <range/v3/range_facade.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>

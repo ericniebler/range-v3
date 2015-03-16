@@ -14,8 +14,8 @@
 #ifndef RANGES_V3_UTILITY_OPTIONAL_HPP
 #define RANGES_V3_UTILITY_OPTIONAL_HPP
 
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/variant.hpp>
 
 namespace ranges

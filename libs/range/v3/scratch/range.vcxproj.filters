@@ -13,20 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\algorithm">
-      <UniqueIdentifier>{f87f0a13-772c-4135-936f-f98583a5b7f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\utility">
-      <UniqueIdentifier>{a46c63d4-ad02-4b7f-b8a4-caf55c25c2b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\view">
-      <UniqueIdentifier>{1f2a27ab-42a7-4938-911a-25fa526b2316}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Doc Files">
       <UniqueIdentifier>{675985ce-8f00-458c-8f93-c8f8d422af97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\detail">
-      <UniqueIdentifier>{66529b85-f87c-4a81-9969-20ddd8e909fe}</UniqueIdentifier>
     </Filter>
     <Filter Include="Test Files">
       <UniqueIdentifier>{9a4f9301-d571-4f84-b014-c091b7b12f56}</UniqueIdentifier>
@@ -40,26 +28,44 @@
     <Filter Include="Test Files\view">
       <UniqueIdentifier>{a71f57e8-040b-4b94-9274-da06b6289cdb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\algorithm\aux_">
-      <UniqueIdentifier>{21f9047f-a75e-409c-a808-8a11eb973cda}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Example Files">
       <UniqueIdentifier>{9d51143b-26a0-4529-b451-017ddeb46b48}</UniqueIdentifier>
     </Filter>
     <Filter Include="Test Files\numeric">
       <UniqueIdentifier>{5cf1974c-3872-470c-ae7d-4c35564d8e15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\numeric">
-      <UniqueIdentifier>{03fb638e-a787-4e62-993a-26df0f4b37f5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Perf Files">
       <UniqueIdentifier>{bc20ee0b-7da9-4870-b4cb-f5ce78da09d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\action">
-      <UniqueIdentifier>{5562dcd5-3571-40f8-89ac-0affa1a0716c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Test Files\action">
       <UniqueIdentifier>{041bb5d8-48e6-427a-a006-5ec4e9ed8e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\range">
+      <UniqueIdentifier>{d21287eb-ff67-441e-ac4d-1651bdc034a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\meta">
+      <UniqueIdentifier>{c7849521-7c9a-4c52-84bb-0f43ce1af843}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\range\action">
+      <UniqueIdentifier>{5562dcd5-3571-40f8-89ac-0affa1a0716c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\range\algorithm">
+      <UniqueIdentifier>{f87f0a13-772c-4135-936f-f98583a5b7f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\range\algorithm\aux_">
+      <UniqueIdentifier>{21f9047f-a75e-409c-a808-8a11eb973cda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\range\detail">
+      <UniqueIdentifier>{66529b85-f87c-4a81-9969-20ddd8e909fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\range\numeric">
+      <UniqueIdentifier>{03fb638e-a787-4e62-993a-26df0f4b37f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\range\utility">
+      <UniqueIdentifier>{a46c63d4-ad02-4b7f-b8a4-caf55c25c2b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\range\view">
+      <UniqueIdentifier>{1f2a27ab-42a7-4938-911a-25fa526b2316}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -532,479 +538,416 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
-      <Filter>Header Files\algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\concepts.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\binary_search.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_backward.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\count.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\count_if.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\equal_range.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\fill.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\fill_n.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find_end.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find_first_of.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find_if.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\for_each.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\generate.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\heap_algorithm.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\inplace_merge.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lexicographical_compare.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lower_bound.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\max_element.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\min_element.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\mismatch.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\nth_element.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partial_sort.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partial_sort_copy.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\permutation.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\random_shuffle.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\remove.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\remove_copy.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\remove_copy_if.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\remove_if.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\replace.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\replace_copy.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\replace_copy_if.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\replace_if.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\reverse.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\reverse_copy.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\rotate.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\rotate_copy.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\search.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\search_n.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\set_algorithm.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\sort.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\stable_partition.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\stable_sort.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\swap_ranges.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\transform.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\unique.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\unique_copy.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\upper_bound.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\filter.hpp">
-      <Filter>Header Files\view</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\view.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\reverse.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_pair.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_concepts.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_concepts.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator_traits.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\swap.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\unique.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\slice.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\indirect.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\map.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\replace_if.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\tokenize.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\stride.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\box.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\size.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\tuple_algorithm.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\move.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\iota.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\repeat.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\take.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\functional.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\is_infinity.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\generate_n.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\move_backward.hpp">
-      <Filter>Header Files\algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_facade.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\compressed_tuple.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\variant.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\infinity.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\unreachable.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\unbounded.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_type.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\all_of.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\simple_test.hpp">
       <Filter>Test Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\meta.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\core.hpp">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\test_utils.hpp">
       <Filter>Test Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\iterator.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_n.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\merge_n_with_buffer.hpp">
-      <Filter>Header Files\algorithm\aux_</Filter>
+      <Filter>Header Files\range\algorithm\aux_</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\sort_n_with_buffer.hpp">
-      <Filter>Header Files\algorithm\aux_</Filter>
+      <Filter>Header Files\range\algorithm\aux_</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\optional.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\generate.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\for_each.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\single.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\generate_n.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\repeat_n.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\copy_if.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\minmax_element.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\is_partitioned.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_point.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_copy.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\tail.hpp">
-      <Filter>Header Files\view</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\empty.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\shuffle.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\take_while.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\any_of.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\none_of.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\example\recursive_range.hpp">
       <Filter>Example Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\is_sorted.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\is_sorted_until.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\detail\disable_warnings.hpp">
-      <Filter>Header Files\detail</Filter>
+      <Filter>Header Files\range\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\detail\re_enable_warnings.hpp">
-      <Filter>Header Files\detail</Filter>
+      <Filter>Header Files\range\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\merge_n.hpp">
-      <Filter>Header Files\algorithm\aux_</Filter>
+      <Filter>Header Files\range\algorithm\aux_</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\lower_bound_n.hpp">
-      <Filter>Header Files\algorithm\aux_</Filter>
+      <Filter>Header Files\range\algorithm\aux_</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\upper_bound_n.hpp">
-      <Filter>Header Files\algorithm\aux_</Filter>
+      <Filter>Header Files\range\algorithm\aux_</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\aux_\equal_range_n.hpp">
-      <Filter>Header Files\algorithm\aux_</Filter>
+      <Filter>Header Files\range\algorithm\aux_</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\accumulate.hpp">
-      <Filter>Header Files\numeric</Filter>
+      <Filter>Header Files\range\numeric</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\inner_product.hpp">
-      <Filter>Header Files\numeric</Filter>
+      <Filter>Header Files\range\numeric</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\iota.hpp">
-      <Filter>Header Files\numeric</Filter>
+      <Filter>Header Files\range\numeric</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\partial_sum.hpp">
-      <Filter>Header Files\numeric</Filter>
+      <Filter>Header Files\range\numeric</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\adjacent_difference.hpp">
-      <Filter>Header Files\numeric</Filter>
+      <Filter>Header Files\range\numeric</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\test_iterators.hpp">
       <Filter>Test Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\bounded.hpp">
-      <Filter>Header Files\view</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\all.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_access.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\at.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\back.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\front.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\memory.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\basic_iterator.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\counted_iterator.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\find_if_not.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\algorithm\set_difference.hpp">
       <Filter>Test Files\algorithm</Filter>
@@ -1018,146 +961,212 @@
     <ClInclude Include="..\..\..\..\test\algorithm\set_union.hpp">
       <Filter>Test Files\algorithm</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_interface.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_for.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_iterator.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\drop.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\drop_while.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\copy.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\move.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\semiregular.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\action.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\concepts.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\drop.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\drop_while.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\erase.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\insert.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\push_back.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\push_front.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\slice.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\sort.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\stable_sort.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\stride.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\take.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\take_while.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\transform.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\unique.hpp">
-      <Filter>Header Files\action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\action.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\detail\config.hpp">
-      <Filter>Header Files\detail</Filter>
+      <Filter>Header Files\range\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\nullptr_v.hpp">
-      <Filter>Header Files\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\to_container.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\remove_if.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\remove_if.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\partial_sum.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\concat.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\join.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\view.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\group_by.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\empty.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\split.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\intersperse.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_remove_if.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\associated_types.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_move.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge_move.hpp">
-      <Filter>Header Files\algorithm</Filter>
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\common_tuple.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\static_const.hpp">
-      <Filter>Header Files\utility</Filter>
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\split.hpp">
-      <Filter>Header Files\action</Filter>
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\c_str.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip_with.hpp">
-      <Filter>Header Files\view</Filter>
+      <Filter>Header Files\range\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\action.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\all.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\at.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\back.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\begin_end.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\core.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\empty.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\front.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_access.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_concepts.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_facade.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_for.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_interface.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\size.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\to_container.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\meta\meta.hpp">
+      <Filter>Header Files\meta</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\meta.hpp">
+      <Filter>Header Files\range\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

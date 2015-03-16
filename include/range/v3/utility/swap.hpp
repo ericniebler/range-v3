@@ -17,11 +17,10 @@
 #include <tuple>
 #include <utility>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/associated_types.hpp>
-#include <range/v3/utility/integer_sequence.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -99,7 +98,7 @@ namespace ranges
             }
 
             template<typename ...Ts, typename ...Us, std::size_t ...Is>
-            void tuple_swap_(std::tuple<Ts...> &&left, std::tuple<Us...> &&right, index_sequence<Is...>)
+            void tuple_swap_(std::tuple<Ts...> &&left, std::tuple<Us...> &&right, meta::index_sequence<Is...>)
             {
                 detail::ignore_unused(
                     (swap(std::get<Is>(std::move(left)), std::get<Is>(std::move(right))), 42)...);
@@ -111,7 +110,7 @@ namespace ranges
                 noexcept(meta::and_c<is_nothrow_swappable<Ts, Us>::value...>::value)
             {
                 adl_swap_detail::tuple_swap_(std::move(left), std::move(right),
-                    make_index_sequence<sizeof...(Ts)>{});
+                    meta::make_index_sequence<sizeof...(Ts)>{});
             }
 
             // Q: Should std::reference_wrapper be considered a proxy wrt swapping rvalues?

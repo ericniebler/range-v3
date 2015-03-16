@@ -16,11 +16,11 @@
 
 #include <utility>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/integer_sequence.hpp>
 
 namespace ranges
 {
@@ -70,7 +70,7 @@ namespace ranges
             {}
         private:
             friend struct detail::compressed_tuple_core_access;
-            detail::compressed_tuple_data<make_index_sequence<sizeof...(Ts)>, Ts...> data_;
+            detail::compressed_tuple_data<meta::make_index_sequence<sizeof...(Ts)>, Ts...> data_;
         };
 
         // Get by index

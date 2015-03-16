@@ -14,10 +14,10 @@
 #ifndef RANGES_V3_TO_CONTAINER_HPP
 #define RANGES_V3_TO_CONTAINER_HPP
 
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 

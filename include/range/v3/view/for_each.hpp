@@ -15,6 +15,7 @@
 #define RANGES_V3_VIEW_FOR_EACH_HPP
 
 #include <utility>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
@@ -23,7 +24,6 @@
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/single.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 

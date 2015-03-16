@@ -18,12 +18,12 @@
 #include <iterator>
 #include <functional>
 #include <type_traits>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
-#include <range/v3/utility/meta.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/optional.hpp>
