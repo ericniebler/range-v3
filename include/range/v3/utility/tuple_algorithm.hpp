@@ -18,6 +18,7 @@
 #include <utility>
 #include <type_traits>
 #include <initializer_list>
+#include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/integer_sequence.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -80,7 +81,7 @@ namespace ranges
             )
         public:
             template<typename Tup, typename Fun>
-            auto operator()(Tup && tup, Fun fun) const 
+            auto operator()(Tup && tup, Fun fun) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 tuple_transform_fn::impl1(std::forward<Tup>(tup), std::move(fun),
