@@ -23,6 +23,21 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 add_subdirectory(doc)
+
+if(BIICODE)
+    ADD_BIICODE_TARGETS()
+
+    string(REPLACE " " ";" TARGET_CXX_FLAGS         ${CMAKE_CXX_FLAGS})
+    string(REPLACE " " ";" TARGET_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG})
+    string(REPLACE " " ";" TARGET_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})     
+
+    target_compile_options(${BII_BLOCK_TARGET} INTERFACE ${TARGET_CXX_FLAGS}
+                           $<$<CONFIG:Debug>:${TARGET_CXX_FLAGS_DEBUG}>
+                           $<$<CONFIG:Release>:${TARGET_CXX_FLAGS_RELEASE}>)
+
+    return()
+endif()
+
 add_subdirectory(test)
 add_subdirectory(example)
 add_subdirectory(perf)

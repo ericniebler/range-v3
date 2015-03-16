@@ -30,7 +30,8 @@ The code is known to work on the following compilers:
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
-**Build status (on Travis-CI):** [![Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
+**Build status (on Travis-CI):** [![Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)  
+**Deployment status (on biicode):** [![Build Status](https://webapi.biicode.com/v1/badges/manu343726/manu343726/range/master)](https://www.biicode.com/manu343726/range) 
 
 Say Thanks!
 -----------
