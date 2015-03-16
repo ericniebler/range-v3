@@ -216,7 +216,7 @@ namespace ranges
             template<typename T>
             using eval = typename T::type;
 
-            /// Evaluate the Metafunction Class \p F with the arguments \p Args.
+            /// Evaluate the Alias Class \p F with the arguments \p Args.
             template<typename F, typename...Args>
             using apply = typename F::template apply<Args...>;
 
@@ -229,7 +229,7 @@ namespace ranges
                 using apply = defer<apply, F, Args...>;
             }
 
-            /// A Metafunction Class that always returns \p T.
+            /// A Alias Class that always returns \p T.
             template<typename T>
             struct always
             {
@@ -378,7 +378,7 @@ namespace ranges
             }
 
             /// Turn a class template or alias template \p C into a
-            /// Metafunction Class.
+            /// Alias Class.
             template<template<typename...> class C>
             struct quote
             {
@@ -399,7 +399,7 @@ namespace ranges
             };
 
             /// Turn a class template or alias template \p F taking literals of
-            /// type \p T into a Metafunction Class.
+            /// type \p T into a Alias Class.
             template<typename T, template<T...> class F>
             struct quote_i
             {
@@ -419,7 +419,7 @@ namespace ranges
                 using apply = eval<impl<list<Ts...>>>;
             };
 
-            /// Turn a trait \p C into a Metafunction Class.
+            /// Turn a trait \p C into a Alias Class.
             template<template<typename...> class C>
             struct quote_trait
             {
@@ -428,7 +428,7 @@ namespace ranges
             };
 
             /// Turn a trait \p C taking literals of type \p T
-            /// into a Metafunction Class.
+            /// into a Alias Class.
             template<typename T, template<T...> class C>
             struct quote_trait_i
             {
@@ -436,7 +436,7 @@ namespace ranges
                 using apply = eval<apply<quote_i<T, C>, Ts...>>;
             };
 
-            /// Compose the Metafunction Classes \p Fs in the parameter pack
+            /// Compose the Alias Classes \p Fs in the parameter pack
             /// \p Ts.
             template<typename...Fs>
             struct compose
@@ -462,7 +462,7 @@ namespace ranges
                 using compose = defer<compose, Fns...>;
             }
 
-            /// A Metafunction Class that partially applies the Metafunction
+            /// A Alias Class that partially applies the Metafunction
             /// Class \p F by binding the arguments \p Ts to the \e front
             /// of \p F.
             template<typename F, typename...Ts>
@@ -472,7 +472,7 @@ namespace ranges
                 using apply = apply<F, Ts..., Us...>;
             };
 
-            /// A Metafunction Class partially applies the Metafunction
+            /// A Alias Class partially applies the Metafunction
             /// Class \p F by binding the arguments \p Ts to the \e back
             /// of \p F.
             template<typename F, typename...Us>
@@ -509,7 +509,7 @@ namespace ranges
             {};
 
             /// A trait that unpacks the types in the type list
-            /// \p List into the Metafunction Class \p F.
+            /// \p List into the Alias Class \p F.
             namespace extension
             {
                 template<typename F, typename List>
@@ -527,7 +527,7 @@ namespace ranges
                 {};
             }
 
-            /// Applies the Metafunction Class \p C using the types in
+            /// Applies the Alias Class \p C using the types in
             /// the type list \p List as arguments.
             template<typename C, typename List>
             using apply_list = eval<extension::apply_list<C, List>>;
@@ -538,13 +538,13 @@ namespace ranges
                 using apply_list = defer<apply_list, F, List>;
             }
 
-            /// A Metafunction Class that takes a bunch of arguments,
+            /// A Alias Class that takes a bunch of arguments,
             /// bundles them into a type list, and then calls the Metafunction
             /// Class \p F with the type list \p Q.
             template<typename F, typename Q = quote<list>>
             using curry = compose<F, Q>;
 
-            /// A Metafunction Class that takes a type list,
+            /// A Alias Class that takes a type list,
             /// unpacks the types, and then calls the Metafunction
             /// Class \p F with the types.
             template<typename F>
@@ -559,7 +559,7 @@ namespace ranges
                 using uncurry = defer<uncurry, F>;
             }
 
-            /// A Metafunction Class that reverses the order of the first
+            /// A Alias Class that reverses the order of the first
             /// two arguments.
             template<typename F>
             struct flip
@@ -1387,7 +1387,7 @@ namespace ranges
             /// \endcond
 
             /// Return a new \c meta::list constructed by doing a left fold
-            /// of the list \p List using binary Metafunction Class \p Fun and
+            /// of the list \p List using binary Alias Class \p Fun and
             /// initial state \p State.
             /// \par Complexity
             /// \f$ O(N) \f$.
@@ -1434,7 +1434,7 @@ namespace ranges
             /// \endcond
 
             /// Return a new \c meta::list constructed by doing a right fold
-            /// of the list \p List using binary Metafunction Class \p Fun and
+            /// of the list \p List using binary Alias Class \p Fun and
             /// initial state \p State.
             /// \par Complexity
             /// \f$ O(N) \f$.
@@ -1669,7 +1669,7 @@ namespace ranges
             /// Return a new \c meta::list constructed by transforming all
             /// the elements in \p List with the unary Metafuncion Class \p Fun.
             /// \c transform can also be called with two lists of the same length
-            /// and a binary Metafunction Class, in which case it returns a new list
+            /// and a binary Alias Class, in which case it returns a new list
             /// constructed with the results of calling \p Fun with each element in the
             /// lists, pairwise.
             /// \par Complexity
@@ -1699,7 +1699,7 @@ namespace ranges
             /// \endcond
 
             /// Returns a new meta::list where only those elements of \p List A that satisfy the
-            /// Metafunction Class \p Predicate such that `apply<Pred,A>::%value` is \c true are
+            /// Alias Class \p Predicate such that `apply<Pred,A>::%value` is \c true are
             /// present. That is, those elements that don't satisfy the \p Predicate are "removed".
             template<typename List, typename Predicate>
             using filter = fold<List, list<>, meta_detail::filter_<Predicate>>;
@@ -1736,7 +1736,7 @@ namespace ranges
 
             ///////////////////////////////////////////////////////////////////////////////////////
             // zip_with
-            /// Given a list of lists \p ListOfLists of types and a Metafunction Class \p Fun,
+            /// Given a list of lists \p ListOfLists of types and a Alias Class \p Fun,
             /// construct a new list by calling \p Fun with the elements from the lists
             /// pairwise.
             /// \par Complexity
@@ -1909,9 +1909,9 @@ namespace ranges
                     compose<quote<eval>, bind_back<quote<subst1_>, back<As>,
                         drop<Ts, minus<size<As>, meta::size_t<2>>>>>>>, list<back<As>>>;
 
-                template<typename As, typename Ts>
-                using substitutions = if_c<(size<Ts>::value + 2 >= size<As>::value),
-                    substitutions_<As, Ts>>;
+                template <typename As, typename Ts>
+                using substitutions =
+                    apply<if_c<(size<Ts>{} + 2 >= size<As>{}), quote<substitutions_>>, As, Ts>;
 
                 template<typename T>
                 struct is_vararg_
@@ -2112,7 +2112,7 @@ namespace ranges
 
             ////////////////////////////////////////////////////////////////////////////////////
             // lambda
-            /// For creating anonymous Metafunction Classes.
+            /// For creating anonymous Alias Classes.
             /// \code
             /// using L = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
             /// using P = apply<L, int, short>;
@@ -2222,7 +2222,7 @@ namespace ranges
                 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
                 template<template<typename...> class C, typename...Ts>
                 struct defer_<C, list<Ts...>,
-                    if_<typename lambda<defer<C, Ts...>>::template can_apply_<>>>
+                    if_c<lambda<defer<C, Ts...>>::template can_apply_<>::value>>
                 {
                     using type = apply<lambda<defer<C, Ts...>>>;
                 };
