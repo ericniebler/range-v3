@@ -1,5 +1,4 @@
 var structranges_1_1v3_1_1view_1_1delimit__fn =
 [
-    [ "delimit", "group__group-views.html#ga9f45f145d714032f00831d47e7c73511", null ],
-    [ "operator()", "structranges_1_1v3_1_1view_1_1delimit__fn.html#af151f0755c4647a34c03182c330df8e5", null ]
+    [ "operator()", "structranges_1_1v3_1_1view_1_1delimit__fn.html#a63a1b24a678ae59de72db29a2ccaef9a", null ]
 ];

@@ -1,5 +1,4 @@
 var structranges_1_1v3_1_1yield__from__fn =
 [
-    [ "yield_from", "group__group-views.html#gac8c134bc4e3d7fe4bb2c632d13b4bc98", null ],
-    [ "operator()", "structranges_1_1v3_1_1yield__from__fn.html#a4644cb5cd14b40ba6ecf89ee640f62e6", null ]
+    [ "operator()", "structranges_1_1v3_1_1yield__from__fn.html#a82e6c88592307ce632c4126241bf49b9", null ]
 ];

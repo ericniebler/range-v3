@@ -16,11 +16,18 @@ var searchData=
   ['bidirectionaliterator',['BidirectionalIterator',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_iterator.html',1,'ranges::v3::concepts']]],
   ['bidirectionalrange',['BidirectionalRange',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_range.html',1,'ranges::v3::concepts']]],
   ['binary_5fsearch_5ffn',['binary_search_fn',['../structranges_1_1v3_1_1binary__search__fn.html',1,'ranges::v3']]],
-  ['bind_5fback',['bind_back',['../structranges_1_1v3_1_1meta_1_1bind__back.html',1,'ranges::v3::meta']]],
-  ['bind_5ffront',['bind_front',['../structranges_1_1v3_1_1meta_1_1bind__front.html',1,'ranges::v3::meta']]],
+  ['bind_5fback',['bind_back',['../structmeta_1_1bind__back.html',1,'meta']]],
+  ['bind_5felement',['bind_element',['../structranges_1_1v3_1_1bind__element.html',1,'ranges::v3']]],
+  ['bind_5felement_3c_20reference_5fwrapper_3c_20t_2c_20rvalue_20_3e_20_3e',['bind_element&lt; reference_wrapper&lt; T, RValue &gt; &gt;',['../structranges_1_1v3_1_1bind__element_3_01reference__wrapper_3_01_t_00_01_r_value_01_4_01_4.html',1,'ranges::v3']]],
+  ['bind_5felement_3c_20std_3a_3areference_5fwrapper_3c_20t_20_3e_20_3e',['bind_element&lt; std::reference_wrapper&lt; T &gt; &gt;',['../structranges_1_1v3_1_1bind__element_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html',1,'ranges::v3']]],
+  ['bind_5ffront',['bind_front',['../structmeta_1_1bind__front.html',1,'meta']]],
   ['bitwise_5for',['bitwise_or',['../structranges_1_1v3_1_1bitwise__or.html',1,'ranges::v3']]],
   ['bounded_5ffn',['bounded_fn',['../structranges_1_1v3_1_1view_1_1bounded__fn.html',1,'ranges::v3::view']]],
   ['bounded_5fview',['bounded_view',['../structranges_1_1v3_1_1bounded__view.html',1,'ranges::v3']]],
   ['boundediterable',['BoundedIterable',['../structranges_1_1v3_1_1concepts_1_1_bounded_iterable.html',1,'ranges::v3::concepts']]],
-  ['boundedrange',['BoundedRange',['../structranges_1_1v3_1_1concepts_1_1_bounded_range.html',1,'ranges::v3::concepts']]]
+  ['boundedrange',['BoundedRange',['../structranges_1_1v3_1_1concepts_1_1_bounded_range.html',1,'ranges::v3::concepts']]],
+  ['box',['box',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20element_2c_20tag_2c_20true_20_3e',['box&lt; Element, Tag, true &gt;',['../structranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01true_01_4.html',1,'ranges::v3']]],
+  ['box_3c_20first_2c_20meta_3a_3asize_5ft_3c_201_20_3e_20_3e',['box&lt; First, meta::size_t&lt; 1 &gt; &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20second_2c_20meta_3a_3asize_5ft_3c_200_20_3e_20_3e',['box&lt; Second, meta::size_t&lt; 0 &gt; &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]]
 ];

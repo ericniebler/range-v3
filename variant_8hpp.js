@@ -6,8 +6,8 @@ var variant_8hpp =
     [ "get", "variant_8hpp.html#ga43a6a1d8d80c86412dce58df37b7824e", null ],
     [ "get", "variant_8hpp.html#ga75bd51c1388a3ac14b9805ee5583fd2c", null ],
     [ "get", "variant_8hpp.html#ga78fdb83b841b150147ff04b299117404", null ],
-    [ "operator!=", "variant_8hpp.html#ga16554a4e54662df08244a9a4cb26facd", null ],
-    [ "operator==", "variant_8hpp.html#gaef4b71a9b3729c28b78c1f2ea3ce1a4e", null ],
+    [ "operator!=", "variant_8hpp.html#ga43922d3404b9ed81a92dc5e96b00314d", null ],
+    [ "operator==", "variant_8hpp.html#ga7eb37c3fd2ee1e32bd9744afe89d96d4", null ],
     [ "set", "variant_8hpp.html#gaa2e4e1f79c5b350b02fdf83950d6ebef", null ],
     [ "unique_variant", "variant_8hpp.html#gaba99c6061242fb77918e824d84814b1a", null ]
 ];

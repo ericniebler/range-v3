@@ -1,10 +1,10 @@
 var group__group_concepts =
 [
     [ "Allocatable", "structranges_1_1v3_1_1concepts_1_1_allocatable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_allocatable.html#a7110416c98d3335efd62366a95006f29", null ]
+      [ "requires_", "group__group-concepts.html#ga7110416c98d3335efd62366a95006f29", null ]
     ] ],
     [ "Assignable", "structranges_1_1v3_1_1concepts_1_1_assignable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_assignable.html#aa4297a8a9266ee5a91393c810f35cd88", null ]
+      [ "requires_", "group__group-concepts.html#gaa4297a8a9266ee5a91393c810f35cd88", null ]
     ] ],
     [ "BidirectionalIterable", "structranges_1_1v3_1_1concepts_1_1_bidirectional_iterable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_bidirectional_iterable.html#a2aba4ebdfac4b2b3b56049146133ec56", null ]
@@ -16,12 +16,18 @@ var group__group_concepts =
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_bounded_iterable.html#a18a836efc3df125eb70a24fbbceab748", null ]
     ] ],
     [ "Common", "structranges_1_1v3_1_1concepts_1_1_common.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_common.html#a3eb1c0c7cbe1deefd8305c772b10d445", null ],
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_common.html#a67e9bb6bfd680146c3bd73dd7483ee75", null ],
-      [ "common_t", "structranges_1_1v3_1_1concepts_1_1_common.html#a71165248a647b58b5613ae60ace7fb7d", null ]
+      [ "requires_", "group__group-concepts.html#ga3eb1c0c7cbe1deefd8305c772b10d445", null ],
+      [ "requires_", "group__group-concepts.html#gaf21a3095f49a0b6789809944347cece4", null ],
+      [ "requires_", "group__group-concepts.html#ga20f4ab9768174f7d9100ad8643ff9652", null ],
+      [ "value_t", "group__group-concepts.html#gaaeb3ef675abddba4524e349151ca0867", null ]
+    ] ],
+    [ "CommonReference", "structranges_1_1v3_1_1concepts_1_1_common_reference.html", [
+      [ "requires_", "group__group-concepts.html#gacf4d4e2c3e7a2f0628572c2ddda04026", null ],
+      [ "requires_", "group__group-concepts.html#gae3c900dd7390977e47ad911b7f2d96d0", null ],
+      [ "reference_t", "group__group-concepts.html#ga95e79deac30824da52523c2135dcf99e", null ]
     ] ],
     [ "Constructible", "structranges_1_1v3_1_1concepts_1_1_constructible.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_constructible.html#adf6aa63d797626efa49dedaa0dddd9f2", null ]
+      [ "requires_", "group__group-concepts.html#gadf6aa63d797626efa49dedaa0dddd9f2", null ]
     ] ],
     [ "Container", "structranges_1_1v3_1_1concepts_1_1_container.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_container.html#a903b73b36f82cdc9303e144e1eaf9fd2", null ]
@@ -30,27 +36,28 @@ var group__group_concepts =
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_container_like__.html#a5806fd7625a16c750acec41ee10afd6b", null ]
     ] ],
     [ "Convertible", "structranges_1_1v3_1_1concepts_1_1_convertible.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_convertible.html#aa13aee71a6eaf82acdf906bce77d43e2", null ]
+      [ "requires_", "group__group-concepts.html#gaa13aee71a6eaf82acdf906bce77d43e2", null ]
     ] ],
+    [ "Copyable", "structranges_1_1v3_1_1concepts_1_1_copyable.html", null ],
     [ "CopyAssignable", "structranges_1_1v3_1_1concepts_1_1_copy_assignable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_copy_assignable.html#a0f17be75275598c8f83064176497286f", null ]
+      [ "requires_", "group__group-concepts.html#ga0f17be75275598c8f83064176497286f", null ]
     ] ],
     [ "CopyConstructible", "structranges_1_1v3_1_1concepts_1_1_copy_constructible.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_copy_constructible.html#a39569225cd759a6bff7b0455cc20007e", null ]
+      [ "requires_", "group__group-concepts.html#ga39569225cd759a6bff7b0455cc20007e", null ]
     ] ],
     [ "DefaultConstructible", "structranges_1_1v3_1_1concepts_1_1_default_constructible.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_default_constructible.html#a6f04aa1a9b2e999125adad9bc9bb30b7", null ]
+      [ "requires_", "group__group-concepts.html#ga6f04aa1a9b2e999125adad9bc9bb30b7", null ]
     ] ],
     [ "Derived", "structranges_1_1v3_1_1concepts_1_1_derived.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_derived.html#ab3ad5a660531ed7d2758a682d333b270", null ]
+      [ "requires_", "group__group-concepts.html#gab3ad5a660531ed7d2758a682d333b270", null ]
     ] ],
     [ "Destructible", "structranges_1_1v3_1_1concepts_1_1_destructible.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_destructible.html#a4e79078f17b41b576d10c32af06baacb", null ]
+      [ "requires_", "group__group-concepts.html#ga4e79078f17b41b576d10c32af06baacb", null ]
     ] ],
     [ "EqualityComparable", "structranges_1_1v3_1_1concepts_1_1_equality_comparable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_equality_comparable.html#a614ead75b0983c0ab50135e05d8ad8d1", null ],
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_equality_comparable.html#a54c74c904c63af728e32c2cab26bd923", null ],
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_equality_comparable.html#a1d28ba41d273683e56a8c1b086be5f38", null ]
+      [ "requires_", "group__group-concepts.html#ga614ead75b0983c0ab50135e05d8ad8d1", null ],
+      [ "requires_", "group__group-concepts.html#ga54c74c904c63af728e32c2cab26bd923", null ],
+      [ "requires_", "group__group-concepts.html#ga1d28ba41d273683e56a8c1b086be5f38", null ]
     ] ],
     [ "EraseableIterable", "structranges_1_1v3_1_1concepts_1_1_eraseable_iterable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_eraseable_iterable.html#af69ec1960c514e0aae02199bed309867", null ],
@@ -63,32 +70,27 @@ var group__group_concepts =
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_forward_iterator.html#aad9d52ba85b53c24310b47b5ccafefdd", null ]
     ] ],
     [ "Function", "structranges_1_1v3_1_1concepts_1_1_function.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_function.html#a34aed3eee786be6bac095e2d948b96ac", null ],
-      [ "result_t", "structranges_1_1v3_1_1concepts_1_1_function.html#a9a1bb28bde02da162d72deb6ae9ea41a", null ]
+      [ "requires_", "group__group-concepts.html#ga34aed3eee786be6bac095e2d948b96ac", null ],
+      [ "result_t", "group__group-concepts.html#ga9a1bb28bde02da162d72deb6ae9ea41a", null ]
     ] ],
     [ "Incrementable", "structranges_1_1v3_1_1concepts_1_1_incrementable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_incrementable.html#a11bfc019402c4f88b3d6df04f77f3b5c", null ]
     ] ],
     [ "IndirectlyCopyable", "structranges_1_1v3_1_1concepts_1_1_indirectly_copyable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_indirectly_copyable.html#aa86d3dbdcb108111dcfbb293a021323b", null ]
+      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_indirectly_copyable.html#a63093800e251d5460ee58f5535c79112", null ]
     ] ],
     [ "IndirectlyMovable", "structranges_1_1v3_1_1concepts_1_1_indirectly_movable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_indirectly_movable.html#ad11bd68687c5a500633df5b62a742549", null ]
-    ] ],
-    [ "IndirectlyProjectedCopyable", "structranges_1_1v3_1_1concepts_1_1_indirectly_projected_copyable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_indirectly_projected_copyable.html#a8a7f9c28819616b40c2e5a8cd8d225c3", null ]
-    ] ],
-    [ "IndirectlyProjectedMovable", "structranges_1_1v3_1_1concepts_1_1_indirectly_projected_movable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_indirectly_projected_movable.html#a8887a89023e969cf4395d17f809cd243", null ]
+      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_indirectly_movable.html#a588c7922c1f81fe186b11cc8a0b8bc15", null ]
     ] ],
     [ "IndirectlySwappable", "structranges_1_1v3_1_1concepts_1_1_indirectly_swappable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_indirectly_swappable.html#a51998be7ccdf807a5c9b570b566d8745", null ]
+      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_indirectly_swappable.html#aeb53ec368063deaf2d043edf85f9ad86", null ]
     ] ],
     [ "InputIterable", "structranges_1_1v3_1_1concepts_1_1_input_iterable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_input_iterable.html#ad2aead30fcc02ae541e113bd145c4041", null ],
       [ "category_t", "structranges_1_1v3_1_1concepts_1_1_input_iterable.html#a44d64462f673aa706053922fb9844868", null ],
-      [ "pointer_t", "structranges_1_1v3_1_1concepts_1_1_input_iterable.html#adb8aac59b36dc1c5d07a1e9e0c011e67", null ],
+      [ "common_reference_t", "structranges_1_1v3_1_1concepts_1_1_input_iterable.html#a20e2ed4222498f5b706dfa042480cc9e", null ],
       [ "reference_t", "structranges_1_1v3_1_1concepts_1_1_input_iterable.html#aab516afd1dcf99f24984e81b81d270ab", null ],
+      [ "rvalue_reference_t", "structranges_1_1v3_1_1concepts_1_1_input_iterable.html#aad59b759ef9dc1c019369cca3602eb79", null ],
       [ "value_t", "structranges_1_1v3_1_1concepts_1_1_input_iterable.html#a621aaaa11127d94451e307cbdea45526", null ]
     ] ],
     [ "InputIterator", "structranges_1_1v3_1_1concepts_1_1_input_iterator.html", [
@@ -98,7 +100,7 @@ var group__group_concepts =
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_insertable_iterable.html#a821f22ce6976c5d78e79bb6938a8c11c", null ]
     ] ],
     [ "Integral", "structranges_1_1v3_1_1concepts_1_1_integral.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_integral.html#a5b1657010ecc55389866602801d31917", null ]
+      [ "requires_", "group__group-concepts.html#ga5b1657010ecc55389866602801d31917", null ]
     ] ],
     [ "Invokable", "structranges_1_1v3_1_1concepts_1_1_invokable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_invokable.html#a40ddda937cc45899a38c9efc20728f4b", null ],
@@ -120,16 +122,20 @@ var group__group_concepts =
       [ "sentinel_t", "structranges_1_1v3_1_1concepts_1_1_iterable.html#a3edf94bb28132e3f41684de00c2135ab", null ]
     ] ],
     [ "IteratorRange", "structranges_1_1v3_1_1concepts_1_1_iterator_range.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_iterator_range.html#ac6edf3df885483451e30c9339e6a7189", null ]
+      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_iterator_range.html#aeeffc845750f59ca792a9cae7f443984", null ]
     ] ],
     [ "LvalueContainerLike", "structranges_1_1v3_1_1concepts_1_1_lvalue_container_like.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_lvalue_container_like.html#aea426d03c9a0d4b7d1b3477b9ea4c20a", null ]
     ] ],
+    [ "models", "structranges_1_1v3_1_1concepts_1_1models.html", null ],
+    [ "models< Concept(Args...), Ts...>", "structranges_1_1v3_1_1concepts_1_1models_3_01_concept_07_args_8_8_8_08_00_01_ts_8_8_8_4.html", null ],
+    [ "most_refined", "structranges_1_1v3_1_1concepts_1_1most__refined.html", null ],
+    [ "Movable", "structranges_1_1v3_1_1concepts_1_1_movable.html", null ],
     [ "MoveAssignable", "structranges_1_1v3_1_1concepts_1_1_move_assignable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_move_assignable.html#a6e103494fecde3a95eb4c4e958140a3e", null ]
+      [ "requires_", "group__group-concepts.html#ga6e103494fecde3a95eb4c4e958140a3e", null ]
     ] ],
     [ "MoveConstructible", "structranges_1_1v3_1_1concepts_1_1_move_constructible.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_move_constructible.html#af8f03de1b6335da64849ae3bfc840ad0", null ]
+      [ "requires_", "group__group-concepts.html#gaf8f03de1b6335da64849ae3bfc840ad0", null ]
     ] ],
     [ "MoveWritable", "structranges_1_1v3_1_1concepts_1_1_move_writable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_move_writable.html#aa3d3cbc26c6920f09f264acab7d2ad5d", null ]
@@ -138,13 +144,13 @@ var group__group_concepts =
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_output_iterable.html#a77017db47c6a15c26b08338ff6ae94ab", null ]
     ] ],
     [ "Predicate", "structranges_1_1v3_1_1concepts_1_1_predicate.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_predicate.html#a2fb6b1e015721a30d940ec86ae46dc4b", null ]
+      [ "requires_", "group__group-concepts.html#ga2fb6b1e015721a30d940ec86ae46dc4b", null ]
     ] ],
     [ "RandomAccessIterable", "structranges_1_1v3_1_1concepts_1_1_random_access_iterable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_random_access_iterable.html#a06972dc875c2a3cfe4232051c57a8fd1", null ]
     ] ],
     [ "RandomAccessIterator", "structranges_1_1v3_1_1concepts_1_1_random_access_iterator.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_random_access_iterator.html#ac642064f24844cd004565dc0fa4525cc", null ]
+      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_random_access_iterator.html#ab788a78bdc198d9584ab036d89f6065c", null ]
     ] ],
     [ "RandomNumberGenerator", "structranges_1_1v3_1_1concepts_1_1_random_number_generator.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_random_number_generator.html#aa484af314926008af012821f5eff749d", null ]
@@ -153,33 +159,35 @@ var group__group_concepts =
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_range.html#aa8be8240f977ef76d6600292f58e9c24", null ]
     ] ],
     [ "Readable", "structranges_1_1v3_1_1concepts_1_1_readable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_readable.html#a7c8342547353f86ccb7613db5495f939", null ],
-      [ "pointer_t", "structranges_1_1v3_1_1concepts_1_1_readable.html#aa443861d78f31b58197ac063f53460fe", null ],
+      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_readable.html#a22de2f5f0af781e4cb4377a6f5ae3331", null ],
+      [ "common_reference_t", "structranges_1_1v3_1_1concepts_1_1_readable.html#a7df85f8913c6d49c8e85fcdd03c4ed0a", null ],
       [ "reference_t", "structranges_1_1v3_1_1concepts_1_1_readable.html#af4ed4edcd897d6783cbfdba251399fc6", null ],
+      [ "rvalue_reference_t", "structranges_1_1v3_1_1concepts_1_1_readable.html#a775b25c4eb6d2d5bf4bd043d30efc858", null ],
       [ "value_t", "structranges_1_1v3_1_1concepts_1_1_readable.html#a750817155ea6f63e181c7028a78f403e", null ]
     ] ],
     [ "refines", "structranges_1_1v3_1_1concepts_1_1refines.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1refines.html#a94919c772cd183a77841a62d95871da3", null ],
-      [ "base_concepts_t", "structranges_1_1v3_1_1concepts_1_1refines.html#aa96b304cf52a0749cadd35e3ea66498d", null ],
-      [ "refines", "structranges_1_1v3_1_1concepts_1_1refines.html#a8cf2e4fc262018e216af6a8012e79b52", null ]
+      [ "requires_", "group__group-concepts.html#ga94919c772cd183a77841a62d95871da3", null ],
+      [ "base_concepts_t", "group__group-concepts.html#gaa96b304cf52a0749cadd35e3ea66498d", null ],
+      [ "refines", "group__group-concepts.html#ga8cf2e4fc262018e216af6a8012e79b52", null ]
     ] ],
+    [ "Regular", "structranges_1_1v3_1_1concepts_1_1_regular.html", null ],
     [ "RegularFunction", "structranges_1_1v3_1_1concepts_1_1_regular_function.html", null ],
     [ "Relation", "structranges_1_1v3_1_1concepts_1_1_relation.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_relation.html#a10e3b2925bbeb3f16c55461466af8ca9", null ],
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_relation.html#a020694aff18f78c9322aadbf7d89e2eb", null ],
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_relation.html#a2c502800bb707b499b498e35e2018509", null ]
+      [ "requires_", "group__group-concepts.html#ga10e3b2925bbeb3f16c55461466af8ca9", null ],
+      [ "requires_", "group__group-concepts.html#ga020694aff18f78c9322aadbf7d89e2eb", null ],
+      [ "requires_", "group__group-concepts.html#ga2c502800bb707b499b498e35e2018509", null ]
     ] ],
     [ "Same", "structranges_1_1v3_1_1concepts_1_1_same.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_same.html#af4227ab3d887b6f2af928e7f665c0bc7", null ]
+      [ "requires_", "group__group-concepts.html#gaf4227ab3d887b6f2af928e7f665c0bc7", null ]
     ] ],
     [ "SemiContainer", "structranges_1_1v3_1_1concepts_1_1_semi_container.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_semi_container.html#ae297851b34f412dbdda404993b90a92d", null ]
     ] ],
     [ "SemiRegular", "structranges_1_1v3_1_1concepts_1_1_semi_regular.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_semi_regular.html#a4573332acd568507fa1e818cbd9e691c", null ]
+      [ "requires_", "group__group-concepts.html#ga4573332acd568507fa1e818cbd9e691c", null ]
     ] ],
     [ "SignedIntegral", "structranges_1_1v3_1_1concepts_1_1_signed_integral.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_signed_integral.html#a0c3650c48239407b06be1af20a931c94", null ]
+      [ "requires_", "group__group-concepts.html#ga0c3650c48239407b06be1af20a931c94", null ]
     ] ],
     [ "SizedIterable", "structranges_1_1v3_1_1concepts_1_1_sized_iterable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_sized_iterable.html#a9597e53153e1801ca9e9482505a40d1c", null ],
@@ -196,21 +204,21 @@ var group__group_concepts =
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_sized_iterator_range_like__.html#a35a4834d5c521dad5d36319d369446dc", null ]
     ] ],
     [ "Swappable", "structranges_1_1v3_1_1concepts_1_1_swappable.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_swappable.html#a8635ff047ee6735dd7fb31a123591646", null ],
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_swappable.html#ab983b62adf165d7dd096c36318a6634c", null ]
+      [ "requires_", "group__group-concepts.html#ga8635ff047ee6735dd7fb31a123591646", null ],
+      [ "requires_", "group__group-concepts.html#gab983b62adf165d7dd096c36318a6634c", null ]
     ] ],
     [ "TotallyOrdered", "structranges_1_1v3_1_1concepts_1_1_totally_ordered.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_totally_ordered.html#af2645d8e02924a0d1960a4b4bc9fcdcc", null ],
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_totally_ordered.html#a797dfd00db77e2013d743020c08c3187", null ]
+      [ "requires_", "group__group-concepts.html#gaf2645d8e02924a0d1960a4b4bc9fcdcc", null ],
+      [ "requires_", "group__group-concepts.html#ga797dfd00db77e2013d743020c08c3187", null ]
     ] ],
     [ "Transform", "structranges_1_1v3_1_1concepts_1_1_transform.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_transform.html#a85fe44db4b5094b5956fb0dd7432b8b1", null ]
+      [ "requires_", "group__group-concepts.html#ga85fe44db4b5094b5956fb0dd7432b8b1", null ]
     ] ],
     [ "UniformRandomNumberGenerator", "structranges_1_1v3_1_1concepts_1_1_uniform_random_number_generator.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_uniform_random_number_generator.html#ac4c9a6448808adda0edb958168f2066a", null ]
     ] ],
     [ "UnsignedIntegral", "structranges_1_1v3_1_1concepts_1_1_unsigned_integral.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_unsigned_integral.html#a5ea0f8a9e97708a1c53ba6ada9c0bdb7", null ]
+      [ "requires_", "group__group-concepts.html#ga5ea0f8a9e97708a1c53ba6ada9c0bdb7", null ]
     ] ],
     [ "WeakInputIterator", "structranges_1_1v3_1_1concepts_1_1_weak_input_iterator.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_weak_input_iterator.html#a7a8c7173061889e853e669f78af6dca7", null ],
@@ -226,13 +234,21 @@ var group__group_concepts =
       [ "difference_t", "structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html#aec947220f537b311945269d46a177b5b", null ]
     ] ],
     [ "WeaklyOrdered", "structranges_1_1v3_1_1concepts_1_1_weakly_ordered.html", [
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_weakly_ordered.html#a190afae23a35f3a7c7e2e3f1b13c708c", null ],
-      [ "requires_", "structranges_1_1v3_1_1concepts_1_1_weakly_ordered.html#a87ea2442a0756208ddde3a8df1809aab", null ]
+      [ "requires_", "group__group-concepts.html#ga190afae23a35f3a7c7e2e3f1b13c708c", null ],
+      [ "requires_", "group__group-concepts.html#ga87ea2442a0756208ddde3a8df1809aab", null ]
     ] ],
     [ "Writable", "structranges_1_1v3_1_1concepts_1_1_writable.html", [
       [ "requires_", "structranges_1_1v3_1_1concepts_1_1_writable.html#a6cb422102991726dea7e3571276ed5a2", null ]
     ] ],
-    [ "difference_type", "structranges_1_1v3_1_1difference__type.html", null ],
+    [ "Projectable_", "structranges_1_1v3_1_1detail_1_1_projectable__.html", [
+      [ "type", "structranges_1_1v3_1_1detail_1_1_projectable__.html#abc925f9eb64ce7c768e0353ef0fb507b", null ]
+    ] ],
+    [ "projected_readable", "structranges_1_1v3_1_1detail_1_1projected__readable.html", [
+      [ "indirect_move", "structranges_1_1v3_1_1detail_1_1projected__readable.html#ac9e54ac1c16ca2bf53d57c2829ad50ca", null ],
+      [ "operator*", "structranges_1_1v3_1_1detail_1_1projected__readable.html#a29ce5d137ff4bfa6d56c72b82ba2da97", null ],
+      [ "reference", "structranges_1_1v3_1_1detail_1_1projected__readable.html#a5dd067f11c9e24ba276a7d98780646bc", null ],
+      [ "value_type", "structranges_1_1v3_1_1detail_1_1projected__readable.html#ad33bf112fcf9c6dfeb8d138f1d56e7d2", null ]
+    ] ],
     [ "is_range", "structranges_1_1v3_1_1is__range.html", null ],
     [ "is_range< std::initializer_list< T > >", "structranges_1_1v3_1_1is__range_3_01std_1_1initializer__list_3_01_t_01_4_01_4.html", null ],
     [ "is_range< std::multiset< Key, Compare, Alloc > >", "structranges_1_1v3_1_1is__range_3_01std_1_1multiset_3_01_key_00_01_compare_00_01_alloc_01_4_01_4.html", null ],
@@ -241,9 +257,6 @@ var group__group_concepts =
     [ "is_range< std::unordered_set< Key, Hash, Pred, Alloc > >", "structranges_1_1v3_1_1is__range_3_01std_1_1unordered__set_3_01_key_00_01_hash_00_01_pred_00_01_alloc_01_4_01_4.html", null ],
     [ "is_sized_iterable", "structranges_1_1v3_1_1is__sized__iterable.html", null ],
     [ "iterator_category_type", "structranges_1_1v3_1_1iterator__category__type.html", null ],
-    [ "pointer_type", "structranges_1_1v3_1_1pointer__type.html", null ],
-    [ "size_type", "structranges_1_1v3_1_1size__type.html", null ],
-    [ "value_type", "structranges_1_1v3_1_1value__type.html", null ],
     [ "ContainerLike_", "group__group-concepts.html#gadd8111e1b03f88a8c307ccf1fdd4ae31", null ],
     [ "SizedIterableLike_", "group__group-concepts.html#ga90a76c0a05c28b26b53e6ccfcf29dc71", null ]
 ];

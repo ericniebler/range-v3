@@ -1,11 +1,26 @@
 var functional_8hpp =
 [
+    [ "RegularInvokable", "structranges_1_1v3_1_1concepts_1_1_regular_invokable.html", null ],
+    [ "impl< Pipeable & >", "structranges_1_1v3_1_1pipeable__access_1_1impl_3_01_pipeable_01_6_01_4.html", null ],
+    [ "bind_element_t", "functional_8hpp.html#gace244f1d5a1de6d87beb17bf732e8435", null ],
+    [ "forward_ref_t", "functional_8hpp.html#ga14959a2e8ebddfa8189784ac3f077bc5", null ],
+    [ "Invokable", "functional_8hpp.html#gaaa022150288db403c88bd76ff3cd75c6", null ],
+    [ "invokable_t", "functional_8hpp.html#ga3225d2ae5344ae67f674ba292ef58dea", null ],
+    [ "InvokablePredicate", "functional_8hpp.html#gaf62ced4515cdc277245c3ea8af54e584", null ],
+    [ "InvokableRelation", "functional_8hpp.html#ga581d7629165494a467b107ae09480524", null ],
+    [ "InvokableTransform", "functional_8hpp.html#gaf02d3d6b55f3e0b30ed4547664ed93cf", null ],
     [ "is_reference_wrapper_t", "functional_8hpp.html#gacc447ba6daa05745259551c2d8b801b8", null ],
     [ "ref_t", "functional_8hpp.html#gaab5371edd53243858c10e58a1706db62", null ],
+    [ "reference_of_t", "functional_8hpp.html#ga6a7be004b08e94060090221828dae1c8", null ],
     [ "referent_of_t", "functional_8hpp.html#ga22396009c5f8e942f439abc5c1b76e1a", null ],
-    [ "not_", "functional_8hpp.html#ga96f82ad60be7e34fc2d213fc8db110c3", null ],
-    [ "protect", "functional_8hpp.html#ga64c3de8c98a3647d8dd38ecc290bbfaf", null ],
-    [ "ref", "functional_8hpp.html#gad3ba36f66e2dbc2468ec9a466dbc7e34", null ],
-    [ "save", "functional_8hpp.html#ga47f527226ef3a550e560fc2d31c760bf", null ],
-    [ "unwrap_reference", "functional_8hpp.html#gaa6bceaad1449d5660daa86733cf4790a", null ]
+    [ "RegularInvokable", "functional_8hpp.html#gad752c23fcc9fa9f8cdd41b1fa5d06fdb", null ],
+    [ "rref_t", "functional_8hpp.html#ga483bb0929a2a7b7a794c63387ff5ff43", null ],
+    [ "unwrap_args_t", "functional_8hpp.html#ga7ed1e1a844d0b83fe71a2839bc2d3829", null ],
+    [ "unwrap_reference_t", "functional_8hpp.html#ga6a060e5743cd7f42249ab97b17a4b441", null ],
+    [ "bind_forward", "functional_8hpp.html#gab883956b44d08a01d9d89216f083e284", null ],
+    [ "bind_forward", "functional_8hpp.html#gad2630a0b8ab3cb10b1d068aa943ab66f", null ],
+    [ "bind_forward< Pipe1 >", "functional_8hpp.html#ga5d4667fc736eefe1725f79db45dffac6", null ],
+    [ "forward_ref", "functional_8hpp.html#ga12f88d8605b77857d5a98f3d07126ca8", null ],
+    [ "operator|", "functional_8hpp.html#ga53c87d21af131e439c2c832ff5da6892", null ],
+    [ "operator|", "functional_8hpp.html#gaebe149738b7336a022bcdb5e076eee14", null ]
 ];

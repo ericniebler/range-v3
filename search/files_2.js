@@ -1,6 +1,8 @@
 var searchData=
 [
+  ['c_5fstr_2ehpp',['c_str.hpp',['../c__str_8hpp.html',1,'']]],
   ['common_5fiterator_2ehpp',['common_iterator.hpp',['../common__iterator_8hpp.html',1,'']]],
+  ['common_5ftuple_2ehpp',['common_tuple.hpp',['../common__tuple_8hpp.html',1,'']]],
   ['common_5ftype_2ehpp',['common_type.hpp',['../common__type_8hpp.html',1,'']]],
   ['compressed_5fpair_2ehpp',['compressed_pair.hpp',['../compressed__pair_8hpp.html',1,'']]],
   ['compressed_5ftuple_2ehpp',['compressed_tuple.hpp',['../compressed__tuple_8hpp.html',1,'']]],
@@ -8,8 +10,8 @@ var searchData=
   ['concepts_2ehpp',['concepts.hpp',['../action_2concepts_8hpp.html',1,'']]],
   ['concepts_2ehpp',['concepts.hpp',['../utility_2concepts_8hpp.html',1,'']]],
   ['const_2ehpp',['const.hpp',['../const_8hpp.html',1,'']]],
-  ['copy_2ehpp',['copy.hpp',['../algorithm_2copy_8hpp.html',1,'']]],
   ['copy_2ehpp',['copy.hpp',['../utility_2copy_8hpp.html',1,'']]],
+  ['copy_2ehpp',['copy.hpp',['../algorithm_2copy_8hpp.html',1,'']]],
   ['copy_5fbackward_2ehpp',['copy_backward.hpp',['../copy__backward_8hpp.html',1,'']]],
   ['copy_5fif_2ehpp',['copy_if.hpp',['../copy__if_8hpp.html',1,'']]],
   ['copy_5fn_2ehpp',['copy_n.hpp',['../copy__n_8hpp.html',1,'']]],

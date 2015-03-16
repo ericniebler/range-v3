@@ -1,0 +1,4 @@
+var structranges_1_1v3_1_1common__reference__base_3_01basic__iterator_3_01_cur_00_01_s_01_4_00_01bas71c58f2e196a24de908223a273336fdf =
+[
+    [ "type", "structranges_1_1v3_1_1common__reference__base_3_01basic__iterator_3_01_cur_00_01_s_01_4_00_01bas71c58f2e196a24de908223a273336fdf.html#a997d193e8e6c78c9ba9f6fe39937bfee", null ]
+];

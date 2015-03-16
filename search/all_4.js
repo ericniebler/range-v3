@@ -1,24 +1,24 @@
 var searchData=
 [
-  ['empty',['empty',['../group__group-meta.html#ga0ad87262de1337ce83d4a4fd34f88e31',1,'ranges::v3::meta::empty()'],['../group__group-core.html#ga5b1e16eeda1eace75d315eea26562fe3',1,'ranges::v3::empty()']]],
-  ['empty_2ehpp',['empty.hpp',['../empty_8hpp.html',1,'']]],
+  ['element',['Element',['../class_element.html',1,'']]],
+  ['empty',['empty',['../group__list.html#gaefc353c52b2ae6521cce4af15ffabdf1',1,'meta::v1::empty()'],['../group__lazy__list.html#gae1510c54d075eb467afb4f93d8b3cd7c',1,'meta::lazy::empty()']]],
   ['empty_2ehpp',['empty.hpp',['../view_2empty_8hpp.html',1,'']]],
+  ['empty_2ehpp',['empty.hpp',['../empty_8hpp.html',1,'']]],
   ['empty_5ffn',['empty_fn',['../structranges_1_1v3_1_1empty__fn.html',1,'ranges::v3']]],
   ['empty_5fview',['empty_view',['../structranges_1_1v3_1_1empty__view.html',1,'ranges::v3']]],
-  ['end',['end',['../structranges_1_1v3_1_1range__facade.html#a309acba1f0fcf88def930b10c3b7c05a',1,'ranges::v3::range_facade::end()'],['../structranges_1_1v3_1_1bounded__view.html#ae0c1e29d87c7eca86f8e4e08c9760f97',1,'ranges::v3::bounded_view::end()'],['../structranges_1_1v3_1_1drop__view.html#a0da892371657444b2fb83acf776255e9',1,'ranges::v3::drop_view::end()'],['../structranges_1_1v3_1_1drop__while__view.html#a34c6ebec3a1afa323dd14e666830d56c',1,'ranges::v3::drop_while_view::end()'],['../group__group-core.html#gad1b3568669864576b4f73d7032263620',1,'ranges::v3::end()']]],
+  ['end',['end',['../structranges_1_1v3_1_1range__facade.html#a8adc9a8f328eec7d3305511a0a86f8f1',1,'ranges::v3::range_facade']]],
   ['end_5ftag',['end_tag',['../structranges_1_1v3_1_1end__tag.html',1,'ranges::v3']]],
-  ['enumerate',['enumerate',['../group__group-core.html#gaea4cba33b3f10f828c5c3418a6b271a7',1,'ranges::v3']]],
   ['enumerate_5ffn',['enumerate_fn',['../structranges_1_1v3_1_1enumerate__fn.html',1,'ranges::v3']]],
-  ['equal',['equal',['../group__group-algorithms.html#ga231cf1ea1874a1589423358592df426d',1,'ranges::v3']]],
   ['equal_2ehpp',['equal.hpp',['../equal_8hpp.html',1,'']]],
   ['equal_5ffn',['equal_fn',['../structranges_1_1v3_1_1equal__fn.html',1,'ranges::v3']]],
-  ['equal_5frange',['equal_range',['../group__group-algorithms.html#gac13843b2f82cdad7348fa14de4bfac60',1,'ranges::v3']]],
   ['equal_5frange_2ehpp',['equal_range.hpp',['../equal__range_8hpp.html',1,'']]],
   ['equal_5frange_5ffn',['equal_range_fn',['../structranges_1_1v3_1_1equal__range__fn.html',1,'ranges::v3']]],
-  ['equal_5fto',['equal_to',['../group__group-meta.html#ga709f2b9dd37233eed2db348aaea3658c',1,'ranges::v3::meta']]],
   ['equal_5fto',['equal_to',['../structranges_1_1v3_1_1equal__to.html',1,'ranges::v3']]],
+  ['equal_5fto',['equal_to',['../group__math.html#gaaa92e9d2f8e0655cfbc4890019326985',1,'meta::v1::equal_to()'],['../group__lazy__math.html#ga08dbb6a5b9b7d84ecffc3e26a11248c6',1,'meta::lazy::equal_to()']]],
   ['equalitycomparable',['EqualityComparable',['../structranges_1_1v3_1_1concepts_1_1_equality_comparable.html',1,'ranges::v3::concepts']]],
   ['erase_2ehpp',['erase.hpp',['../erase_8hpp.html',1,'']]],
   ['eraseableiterable',['EraseableIterable',['../structranges_1_1v3_1_1concepts_1_1_eraseable_iterable.html',1,'ranges::v3::concepts']]],
-  ['eval',['eval',['../group__group-meta.html#ga3e1d55cb48a2b12215367da883544fbd',1,'ranges::v3::meta']]]
+  ['eval',['eval',['../group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6',1,'meta::v1::eval()'],['../group__lazy__invocation.html#ga81ba330cf49b69ac98897963c6799a54',1,'meta::lazy::eval()']]],
+  ['expects_5fwrapped_5freferences',['expects_wrapped_references',['../structranges_1_1v3_1_1expects__wrapped__references.html',1,'ranges::v3']]],
+  ['extension',['Extension',['../group__extension.html',1,'']]]
 ];

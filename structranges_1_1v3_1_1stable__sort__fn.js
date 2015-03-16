@@ -1,5 +1,5 @@
 var structranges_1_1v3_1_1stable__sort__fn =
 [
-    [ "operator()", "structranges_1_1v3_1_1stable__sort__fn.html#a4917ec1dbf5dd48c0e8011ae5238d098", null ],
-    [ "operator()", "structranges_1_1v3_1_1stable__sort__fn.html#a2fd79805bb170edd2b126b63befe7c40", null ]
+    [ "operator()", "structranges_1_1v3_1_1stable__sort__fn.html#a7c65997762901f5684053383b47f5d2f", null ],
+    [ "operator()", "structranges_1_1v3_1_1stable__sort__fn.html#a0afdb963c5ccb982dec37796b2c5c4dc", null ]
 ];

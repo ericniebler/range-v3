@@ -1,5 +1,5 @@
 var structranges_1_1v3_1_1partition__copy__fn =
 [
-    [ "operator()", "structranges_1_1v3_1_1partition__copy__fn.html#a8a536a38386d3f7e97bbfcd9729ddc2b", null ],
-    [ "operator()", "structranges_1_1v3_1_1partition__copy__fn.html#a1b66fffeaf98fc5592ef97efb18bcc8a", null ]
+    [ "operator()", "structranges_1_1v3_1_1partition__copy__fn.html#a15b1da3090fb36c6f4145215f432dd2f", null ],
+    [ "operator()", "structranges_1_1v3_1_1partition__copy__fn.html#ab512ed866d0e3902c0d8e8f175ef6cfd", null ]
 ];

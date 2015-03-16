@@ -1,44 +1,3 @@
-var NAVTREE =
-[
-  [ "Range-v3", "index.html", [
-    [ "User Manual", "index.html", [
-      [ "Preface", "index.html#tutorial-preface", [
-        [ "Installation", "index.html#tutorial-installation", null ],
-        [ "License", "index.html#tutorial-license", null ],
-        [ "Supported Compilers", "index.html#tutorial-compilers", null ]
-      ] ],
-      [ "Quick Start", "index.html#tutorial-quick-start", null ],
-      [ "Range Views", "index.html#range-views", null ]
-    ] ],
-    [ "Reference", "modules.html", "modules" ],
-    [ "Indexes", "usergroup0.html", [
-      [ "Methods", "functions.html", [
-        [ "All", "functions.html", null ],
-        [ "Functions", "functions_func.html", null ],
-        [ "Variables", "functions_vars.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
-      ] ],
-      [ "Classes", "annotated.html", "annotated" ],
-      [ "Files", "files.html", "files" ]
-    ] ]
-  ] ]
-];
-
-var NAVTREEINDEX =
-[
-".html",
-"group__group-algorithms.html#ga7597a423baddd37df3db649125b07da2",
-"group__group-views.html#ga166d16ef6a4f0decc9eaf5f427e67e0b",
-"move__backward_8hpp.html",
-"structranges_1_1v3_1_1any__input__range.html#adc5fad83c7e0875fa1365dca216c051b",
-"structranges_1_1v3_1_1concepts_1_1_weak_input_iterator.html#a7a8c7173061889e853e669f78af6dca7",
-"structranges_1_1v3_1_1make__invokable__fn.html#ad10174754b895af234639e3d45d7a5ac",
-"structranges_1_1v3_1_1remove__if__fn.html",
-"structranges_1_1v3_1_1view_1_1indirect__fn.html"
-];
-
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
 var navTreeSubIndices = new Array();
 
 function getData(varName)
@@ -146,7 +105,7 @@ function createIndent(o,domNode,node,level)
     node.expandToggle.onclick = function() {
       if (node.expanded) {
         $(node.getChildrenUL()).slideUp("fast");
-        node.plus_img.src = node.relpath+"ftv2pnode.png";
+        node.plus_img.src = node.relpath+"arrowright.png";
         node.expanded = false;
       } else {
         expandNode(o, node, false, false);
@@ -154,7 +113,7 @@ function createIndent(o,domNode,node,level)
     }
     node.expandToggle.appendChild(imgNode);
     domNode.appendChild(node.expandToggle);
-    imgNode.src = node.relpath+"ftv2pnode.png";
+    imgNode.src = node.relpath+"arrowright.png";
   } else {
     var span = document.createElement("span");
     span.style.display = 'inline-block';
@@ -310,9 +269,9 @@ function expandNode(o, node, imm, showRoot)
         $(node.getChildrenUL()).slideDown("fast");
       }
       if (node.isLast) {
-        node.plus_img.src = node.relpath+"ftv2mlastnode.png";
+        node.plus_img.src = node.relpath+"arrowdown.png";
       } else {
-        node.plus_img.src = node.relpath+"ftv2mnode.png";
+        node.plus_img.src = node.relpath+"arrowdown.png";
       }
       node.expanded = true;
     }
@@ -382,11 +341,7 @@ function showNode(o, node, index, hash)
         getNode(o, node);
       }
       $(node.getChildrenUL()).css({'display':'block'});
-      if (node.isLast) {
-        node.plus_img.src = node.relpath+"ftv2mlastnode.png";
-      } else {
-        node.plus_img.src = node.relpath+"ftv2mnode.png";
-      }
+      node.plus_img.src = node.relpath+"arrowdown.png";
       node.expanded = true;
       var n = node.children[o.breadcrumbs[index]];
       if (index+1<o.breadcrumbs.length) {
@@ -524,7 +479,7 @@ function initNavTree(toroot,relpath)
   o.node.expanded = false;
   o.node.isLast = true;
   o.node.plus_img = document.createElement("img");
-  o.node.plus_img.src = relpath+"ftv2pnode.png";
+  o.node.plus_img.src = relpath+"arrowright.png";
   o.node.plus_img.width = 16;
   o.node.plus_img.height = 22;
 

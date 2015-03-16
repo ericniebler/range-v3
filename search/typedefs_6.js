@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['greater',['greater',['../group__group-meta.html#ga4abf4f5d075a776237d03f065af3e8f1',1,'ranges::v3::meta']]],
-  ['greater_5fequal',['greater_equal',['../group__group-meta.html#ga7ba8b34057fdd67f06423b21b453c906',1,'ranges::v3::meta']]]
+  ['greater',['greater',['../group__math.html#ga40bfb35a0cae43b7629b9574eb3149b3',1,'meta::v1::greater()'],['../group__lazy__math.html#ga06a0006d217126915598da03720f55e2',1,'meta::lazy::greater()']]],
+  ['greater_5fequal',['greater_equal',['../group__math.html#gaa893dd7ba13b748541e21fb8d617a445',1,'meta::v1::greater_equal()'],['../group__lazy__math.html#ga4389b2bccbe207c70f8f7e8dcb7791fc',1,'meta::lazy::greater_equal()']]]
 ];

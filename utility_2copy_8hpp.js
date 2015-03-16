@@ -1,4 +1,4 @@
 var utility_2copy_8hpp =
 [
-    [ "copy", "utility_2copy_8hpp.html#gad722a0deecae60c4458bc3bcfa7caa5b", null ]
+    [ "operator|", "utility_2copy_8hpp.html#gaa57770e673a56982f02c16430f9569aa", null ]
 ];

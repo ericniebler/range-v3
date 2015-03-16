@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['metaprogramming',['Metaprogramming',['../group__group-meta.html',1,'']]]
+  ['datatype',['Datatype',['../group__datatype.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var structranges_1_1v3_1_1less =
 [
-    [ "operator()", "group__group-utility.html#ga59993c7f4ffc59c0e021e7d502caa793", null ]
+    [ "operator()", "structranges_1_1v3_1_1less.html#af17e602836b4de94f126bd4f976d3817", null ]
 ];

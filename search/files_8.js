@@ -7,7 +7,6 @@ var searchData=
   ['insert_2ehpp',['insert.hpp',['../insert_8hpp.html',1,'']]],
   ['integer_5fsequence_2ehpp',['integer_sequence.hpp',['../integer__sequence_8hpp.html',1,'']]],
   ['intersperse_2ehpp',['intersperse.hpp',['../intersperse_8hpp.html',1,'']]],
-  ['invokable_2ehpp',['invokable.hpp',['../invokable_8hpp.html',1,'']]],
   ['iota_2ehpp',['iota.hpp',['../numeric_2iota_8hpp.html',1,'']]],
   ['iota_2ehpp',['iota.hpp',['../view_2iota_8hpp.html',1,'']]],
   ['is_5finfinity_2ehpp',['is_infinity.hpp',['../is__infinity_8hpp.html',1,'']]],

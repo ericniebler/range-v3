@@ -1,6 +1,5 @@
 var structranges_1_1v3_1_1view_1_1group__by__fn =
 [
-    [ "group_by", "group__group-views.html#ga0d600dbaa768aadc9abc773d3b3e647a", null ],
-    [ "operator()", "structranges_1_1v3_1_1view_1_1group__by__fn.html#a8192d94a352200a7c57282e3fdda9dd3", null ],
-    [ "Concept", "structranges_1_1v3_1_1view_1_1group__by__fn.html#aafde94d7390c56fb386a612160c2c590", null ]
+    [ "operator()", "structranges_1_1v3_1_1view_1_1group__by__fn.html#a9188d80fbee3bf9c3fa730cc31a10c09", null ],
+    [ "Concept", "structranges_1_1v3_1_1view_1_1group__by__fn.html#a1ca501973b0e2850c2a5b6919066473f", null ]
 ];

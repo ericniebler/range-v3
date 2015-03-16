@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['views',['Views',['../group__group-views.html',1,'']]]
+  ['integer_20sequence',['Integer sequence',['../group__integral.html',1,'']]],
+  ['invocation',['Invocation',['../group__invocation.html',1,'']]]
 ];

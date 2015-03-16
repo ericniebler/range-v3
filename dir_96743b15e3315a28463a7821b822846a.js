@@ -1,9 +1,10 @@
 var dir_96743b15e3315a28463a7821b822846a =
 [
-    [ "adjacent_filter.hpp", "adjacent__filter_8hpp.html", null ],
+    [ "adjacent_remove_if.hpp", "adjacent__remove__if_8hpp.html", null ],
     [ "all.hpp", "view_2all_8hpp.html", "view_2all_8hpp" ],
     [ "any_range.hpp", "any__range_8hpp.html", null ],
     [ "bounded.hpp", "bounded_8hpp.html", "bounded_8hpp" ],
+    [ "c_str.hpp", "c__str_8hpp.html", null ],
     [ "concat.hpp", "concat_8hpp.html", null ],
     [ "const.hpp", "const_8hpp.html", null ],
     [ "counted.hpp", "counted_8hpp.html", null ],
@@ -26,12 +27,16 @@ var dir_96743b15e3315a28463a7821b822846a =
     [ "remove_if.hpp", "view_2remove__if_8hpp.html", null ],
     [ "repeat.hpp", "repeat_8hpp.html", null ],
     [ "repeat_n.hpp", "repeat__n_8hpp.html", null ],
-    [ "replace.hpp", "view_2replace_8hpp.html", null ],
-    [ "replace_if.hpp", "view_2replace__if_8hpp.html", null ],
+    [ "replace.hpp", "view_2replace_8hpp.html", [
+      [ "replacer_fn", "structranges_1_1v3_1_1detail_1_1replacer__fn.html", "structranges_1_1v3_1_1detail_1_1replacer__fn" ]
+    ] ],
+    [ "replace_if.hpp", "view_2replace__if_8hpp.html", [
+      [ "replacer_if_fn", "structranges_1_1v3_1_1detail_1_1replacer__if__fn.html", "structranges_1_1v3_1_1detail_1_1replacer__if__fn" ]
+    ] ],
     [ "reverse.hpp", "view_2reverse_8hpp.html", null ],
     [ "single.hpp", "single_8hpp.html", null ],
     [ "slice.hpp", "view_2slice_8hpp.html", null ],
-    [ "split.hpp", "split_8hpp.html", null ],
+    [ "split.hpp", "view_2split_8hpp.html", null ],
     [ "stride.hpp", "view_2stride_8hpp.html", null ],
     [ "tail.hpp", "tail_8hpp.html", null ],
     [ "take.hpp", "view_2take_8hpp.html", null ],
@@ -40,5 +45,6 @@ var dir_96743b15e3315a28463a7821b822846a =
     [ "transform.hpp", "view_2transform_8hpp.html", null ],
     [ "unique.hpp", "view_2unique_8hpp.html", null ],
     [ "view.hpp", "view_2view_8hpp.html", "view_2view_8hpp" ],
-    [ "zip.hpp", "zip_8hpp.html", null ]
+    [ "zip.hpp", "zip_8hpp.html", null ],
+    [ "zip_with.hpp", "zip__with_8hpp.html", null ]
 ];

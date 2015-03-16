@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['adl_5fbegin_5fend_5fdetail',['adl_begin_end_detail',['../namespaceranges_1_1v3_1_1adl__begin__end__detail.html',1,'ranges::v3']]]
+  ['extension',['extension',['../namespacemeta_1_1extension.html',1,'meta']]],
+  ['lazy',['lazy',['../namespacemeta_1_1lazy.html',1,'meta']]],
+  ['meta',['meta',['../namespacemeta.html',1,'']]]
 ];

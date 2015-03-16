@@ -1,5 +1,5 @@
 var structranges_1_1v3_1_1rotate__copy__fn =
 [
-    [ "operator()", "structranges_1_1v3_1_1rotate__copy__fn.html#a54fd75152a9250c8e2ab71993ff1bb79", null ],
-    [ "operator()", "structranges_1_1v3_1_1rotate__copy__fn.html#a628773ad0599ff32a8f0014ac7298535", null ]
+    [ "operator()", "structranges_1_1v3_1_1rotate__copy__fn.html#a14132ecf9443b7366aaaeab697fe8692", null ],
+    [ "operator()", "structranges_1_1v3_1_1rotate__copy__fn.html#a0d9e8dc9343693a1fb265d50a1bc51c5", null ]
 ];
