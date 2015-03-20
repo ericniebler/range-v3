@@ -25,7 +25,7 @@
 
 namespace ranges
 {
-    inline namespace v3 
+    inline namespace v3
     {
         // TODO Look at all the special cases handled by erase_if in Library Fundamentals 2
 
@@ -49,7 +49,7 @@ namespace ranges
                 {
                     template<typename Rng, typename C, typename P = ident,
                         typename I = range_iterator_t<Rng>>
-                    auto requires_(Rng rng, C pred, P proj = P{}) -> decltype(
+                    auto requires_(Rng&&, C&&, P&& = P{}) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardIterable, Rng>(),
                             concepts::model_of<concepts::EraseableIterable, Rng, I, I>(),

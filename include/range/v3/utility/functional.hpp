@@ -867,7 +867,7 @@ namespace ranges
                 using result_t = Function::result_t<invokable_t<Fun>, Args...>;
 
                 template<typename Fun, typename...Args>
-                auto requires_(Fun, Args...) -> decltype(
+                auto requires_(Fun&&, Args&&...) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Function, invokable_t<Fun>, Args...>()
                     ));
@@ -881,7 +881,7 @@ namespace ranges
               : refines<RegularInvokable>
             {
                 template<typename Fun, typename...Args>
-                auto requires_(Fun, Args...) -> decltype(
+                auto requires_(Fun&&, Args&&...) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Predicate, invokable_t<Fun>, Args...>()
                     ));
@@ -891,7 +891,7 @@ namespace ranges
               : refines<InvokablePredicate>
             {
                 template<typename Fun, typename T, typename U>
-                auto requires_(Fun, T, U) -> decltype(
+                auto requires_(Fun&&, T&&, U&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Relation, invokable_t<Fun>, T, U>()
                     ));
@@ -901,7 +901,7 @@ namespace ranges
               : refines<RegularInvokable>
             {
                 template<typename Fun, typename T>
-                auto requires_(Fun, T) -> decltype(
+                auto requires_(Fun&&, T&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Transform, invokable_t<Fun>, T>()
                     ));

@@ -48,7 +48,7 @@ namespace ranges
                     template<typename Rng, typename T, typename U,
                         typename I = range_iterator_t<Rng>,
                         typename D = range_difference_t<Rng>>
-                    auto requires_(Rng rng, T, U) -> decltype(
+                    auto requires_(Rng&&, T&&, U&&) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardIterable, Rng>(),
                             concepts::model_of<concepts::EraseableIterable, Rng, I, I>(),

@@ -47,7 +47,7 @@ namespace ranges
             struct RandomNumberGenerator
             {
                 template<typename Gen, typename D>
-                auto requires_(Gen rand, D d) -> decltype(
+                auto requires_(Gen&&, D&& d) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral, D>(),
                         concepts::convertible_to<D>(val<Gen>()(d))

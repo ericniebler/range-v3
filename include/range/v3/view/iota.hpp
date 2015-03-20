@@ -37,7 +37,7 @@ namespace ranges
               : refines<Incrementable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<T &>(--t),
                         concepts::has_type<T>(t--)
@@ -48,7 +48,7 @@ namespace ranges
               : refines<BidirectionalIncrementable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(t - t),
                         concepts::has_type<T &>(t += (t - t)),

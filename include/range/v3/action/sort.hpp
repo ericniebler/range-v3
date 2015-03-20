@@ -47,7 +47,7 @@ namespace ranges
                 {
                     template<typename Rng, typename C = ordered_less, typename P = ident,
                         typename I = range_iterator_t<Rng>>
-                    auto requires_(Rng rng, C pred = C{}, P proj = P{}) -> decltype(
+                    auto requires_(Rng&&, C&& = C{}, P&& = P{}) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardIterable, Rng>(),
                             concepts::is_true(Sortable<I, C, P>())

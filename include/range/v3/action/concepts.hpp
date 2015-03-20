@@ -51,7 +51,7 @@ namespace ranges
               : refines<ForwardIterable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DefaultConstructible, uncvref_t<T>>(),
                         concepts::model_of<Movable, uncvref_t<T>>(),
@@ -64,7 +64,7 @@ namespace ranges
               : refines<SemiContainer>
             {
                 template<typename T, typename I = detail::movable_input_iterator<range_value_t<T>>>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Constructible, uncvref_t<T>, I, I>()
                     ));
@@ -97,7 +97,7 @@ namespace ranges
               : refines<ForwardIterable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         detail::is_lvalue_container_like(std::forward<T>(t))
                     ));
