@@ -31,14 +31,8 @@ namespace meta
         template <template <typename...> class>
         struct quote;
 
-        template <template <typename...> class C>
-        struct quote_trait;
-
         template <typename T, template <T...> class F>
         struct quote_i;
-
-        template <typename T, template <T...> class C>
-        struct quote_trait_i;
 
         template <typename... Fs>
         struct compose;
@@ -48,6 +42,9 @@ namespace meta
 
         template <template <typename...> class C, typename... Ts>
         struct defer;
+
+        template <typename T, template <T...> class C, T... Is>
+        struct defer_i;
 
         namespace extension
         {

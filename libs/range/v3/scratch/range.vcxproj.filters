@@ -1168,6 +1168,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\meta.hpp">
       <Filter>Header Files\range\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\meta\meta_fwd.hpp">
+      <Filter>Header Files\meta</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

@@ -547,6 +547,35 @@ namespace meta
             using id = defer<id, T>;
         }
 
+        /// Compose the Alias Classes \p Fs in the parameter pack \p Ts.
+        /// \ingroup composition
+        template <typename... Fs>
+        struct compose
+        {
+        };
+
+        template <typename F0>
+        struct compose<F0>
+        {
+            template <typename... Ts>
+            using apply = apply<F0, Ts...>;
+        };
+
+        template <typename F0, typename... Fs>
+        struct compose<F0, Fs...>
+        {
+            template <typename... Ts>
+            using apply = apply<F0, apply<compose<Fs...>, Ts...>>;
+        };
+
+        namespace lazy
+        {
+            /// \sa 'meta::compose'
+            /// \ingroup lazy_composition
+            template <typename... Fns>
+            using compose = defer<compose, Fns...>;
+        }
+
         /// Turn a class template or alias template \p C into a Alias Class.
         /// \ingroup composition
         template <template <typename...> class C>
@@ -597,49 +626,12 @@ namespace meta
         /// Turn a trait \p C into a Alias Class.
         /// \ingroup composition
         template <template <typename...> class C>
-        struct quote_trait
-        {
-            template <typename... Ts>
-            using apply = eval<apply<quote<C>, Ts...>>;
-        };
+        using quote_trait = compose<quote<eval>, quote<C>>;
 
         /// Turn a trait \p C taking literals of type \p T into a Alias Class.
         /// \ingroup composition
         template <typename T, template <T...> class C>
-        struct quote_trait_i
-        {
-            template <typename... Ts>
-            using apply = eval<apply<quote_i<T, C>, Ts...>>;
-        };
-
-        /// Compose the Alias Classes \p Fs in the parameter pack \p Ts.
-        /// \ingroup composition
-        template <typename... Fs>
-        struct compose
-        {
-        };
-
-        template <typename F0>
-        struct compose<F0>
-        {
-            template <typename... Ts>
-            using apply = apply<F0, Ts...>;
-        };
-
-        template <typename F0, typename... Fs>
-        struct compose<F0, Fs...>
-        {
-            template <typename... Ts>
-            using apply = apply<F0, apply<compose<Fs...>, Ts...>>;
-        };
-
-        namespace lazy
-        {
-            /// \sa 'meta::compose'
-            /// \ingroup lazy_composition
-            template <typename... Fns>
-            using compose = defer<compose, Fns...>;
-        }
+        using quote_trait_i = compose<quote<eval>, quote_i<T, C>>;
 
         /// A Alias Class that partially applies the Alias Class
         /// \p F by binding the arguments \p Ts to the \e front of \p F.
@@ -2202,7 +2194,7 @@ namespace meta
         namespace detail
         {
             template <typename T, int = 0>
-            struct protect;
+            struct protect_;
 
             template <typename, int = 0>
             struct vararg_;
@@ -2212,7 +2204,7 @@ namespace meta
 
             // Returns which branch to evaluate
             template <typename If, typename... Ts>
-            using lazy_if_ = lazy::eval<defer<_if_, If, protect<Ts>...>>;
+            using lazy_if_ = lazy::eval<defer<_if_, If, protect_<Ts>...>>;
 
             template <typename A, typename T, typename F, typename Ts>
             struct subst1_
@@ -2269,7 +2261,7 @@ namespace meta
                 template <typename T, typename Args>
                 struct impl;
                 template <typename T, typename Args>
-                using lazy_impl_ = lazy::eval<defer<impl, T, protect<Args>>>;
+                using lazy_impl_ = lazy::eval<defer<impl, T, protect_<Args>>>;
                 template <typename, typename, typename = void>
                 struct subst_
                 {
@@ -2294,7 +2286,7 @@ namespace meta
                 {
                 };
                 template <typename T, typename Args>
-                struct impl<protect<T>, Args>
+                struct impl<protect_<T>, Args>
                 {
                     using type = T;
                 };
@@ -2310,14 +2302,14 @@ namespace meta
                 };
                 template <typename Bool, typename... Ts, typename Args>
                 struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
-                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect<std::false_type>>,
+                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect_<std::false_type>>,
                                       Args>,
                            Args>
                 {
                 };
                 template <typename Bool, typename... Ts, typename Args>
                 struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
-                    : impl<lazy_impl_<lazy_if_<Bool, protect<std::true_type>, lazy::or_<Ts...>>,
+                    : impl<lazy_impl_<lazy_if_<Bool, protect_<std::true_type>, lazy::or_<Ts...>>,
                                       Args>,
                            Args>
                 {
@@ -2349,13 +2341,6 @@ namespace meta
                 };
 
             public:
-// Work around GCC #64970
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if defined(__GNUC__) && !defined(__clang__)
-                template <typename... Ts>
-                using can_apply_ =
-                    and_<bool_<sizeof...(Ts) == arity>, has_type<impl<F, list<Ts..., F>>>>;
-#endif
                 template <typename... Ts>
                 using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
             };
@@ -2374,7 +2359,7 @@ namespace meta
                 template <typename Args>
                 using eval_impl_ = compose<quote<eval>, bind_back<quote<impl>, Args>>;
                 template <typename T, typename Args>
-                using lazy_impl_ = lazy::eval<defer<impl, T, protect<Args>>>;
+                using lazy_impl_ = lazy::eval<defer<impl, T, protect_<Args>>>;
                 template <template <typename...> class C, typename Args, typename Ts>
                 using try_subst_ = apply_list<quote<C>, join<transform<Ts, eval_impl_<Args>>>>;
                 template <typename, typename, typename = void>
@@ -2401,7 +2386,7 @@ namespace meta
                 {
                 };
                 template <typename T, typename Args>
-                struct impl<protect<T>, Args>
+                struct impl<protect_<T>, Args>
                 {
                     using type = list<T>;
                 };
@@ -2417,14 +2402,14 @@ namespace meta
                 };
                 template <typename Bool, typename... Ts, typename Args>
                 struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
-                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect<std::false_type>>,
+                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect_<std::false_type>>,
                                       Args>,
                            Args>
                 {
                 };
                 template <typename Bool, typename... Ts, typename Args>
                 struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
-                    : impl<lazy_impl_<lazy_if_<Bool, protect<std::true_type>, lazy::or_<Ts...>>,
+                    : impl<lazy_impl_<lazy_if_<Bool, protect_<std::true_type>, lazy::or_<Ts...>>,
                                       Args>,
                            Args>
                 {
@@ -2486,6 +2471,13 @@ namespace meta
         /// For defining variadic placeholders.
         template <typename T>
         using vararg = detail::vararg_<T>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // protect
+        /// For preventing the evaluation of a nested `defer`ed computation in a \c let or
+        /// \c lambda expression.
+        template <typename T>
+        using protect = detail::protect_<T>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // let
@@ -2586,8 +2578,7 @@ namespace meta
             // Work around GCC #64970
             // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
             template <template <typename...> class C, typename... Ts>
-            struct defer_<C, list<Ts...>,
-                          if_c<lambda<defer<C, Ts...>>::template can_apply_<>::value>>
+            struct defer_<C, list<Ts...>, if_<apply<lambda<is_valid<defer<C, Ts...>>>>>>
             {
                 using type = apply<lambda<defer<C, Ts...>>>;
             };

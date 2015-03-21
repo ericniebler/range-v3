@@ -76,8 +76,10 @@ namespace ranges
 
             template<typename T>
             struct value_type<T *, void>
-              : std::remove_cv<T>
-            {};
+              : meta::lazy::if_c<!std::is_void<T>::value, meta::eval<std::remove_cv<T>>>
+            {
+                // The meta::lazy::if_ is because void* is not Readable.
+            };
 
             template<typename T>
             struct value_type<T[], void>
@@ -94,7 +96,7 @@ namespace ranges
               : meta::lazy::if_<meta::not_<std::is_void<typename T::value_type>>,
                     typename T::value_type>
             {
-                // The use of meta::if_c is to accommodate output iterators that are
+                // The meta::lazy::if_ is to accommodate output iterators that are
                 // allowed to use void as their value type. We want treat output
                 // iterators as non-Readable. value_type<OutIt> should be
                 // SFINAE-friendly.
@@ -105,7 +107,7 @@ namespace ranges
               : meta::lazy::if_<meta::not_<std::is_void<typename T::element_type>>,
                     typename T::element_type>
             {
-                // The meta::if_c here is because shared_ptr<void> is not Readable.
+                // The meta::lazy::if_ is because shared_ptr<void> is not Readable.
             };
 
             template<typename T>
