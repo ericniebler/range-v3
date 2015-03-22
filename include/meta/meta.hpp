@@ -1384,6 +1384,36 @@ namespace meta
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
+        // pair
+        /// A list with exactly two elements
+        /// \ingroup list
+        template <typename F, typename S>
+        using pair = list<F, S>;
+
+        /// Retrieve the first element of the \c pair \p Pair
+        /// \ingroup list
+        template <typename Pair>
+        using first = front<Pair>;
+
+        /// Retrieve the first element of the \c pair \p Pair
+        /// \ingroup list
+        template <typename Pair>
+        using second = front<pop_front<Pair>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::first'
+            /// \ingroup lazy_list
+            template <typename Pair>
+            using first = defer<first, Pair>;
+
+            /// \sa 'meta::second'
+            /// \ingroup lazy_list
+            template <typename Pair>
+            using second = defer<second, Pair>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // find
         /// \cond
         namespace detail
@@ -1898,31 +1928,30 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename Predicate>
+            template <typename Pred>
             struct filter_
             {
                 template <typename State, typename A>
-                using apply =
-                    meta::if_<meta::apply<Predicate, A>, meta::push_back<State, A>, State>;
+                using apply = if_<apply<Pred, A>, push_back<State, A>, State>;
             };
         } // namespace detail
         /// \endcond
 
-        /// Returns a new meta::list where only those elements of \p List A that satisfy the
-        /// Alias Class \p Predicate such that `apply<Pred,A>::%value` is \c true are present.
-        /// That is, those elements that don't satisfy the \p Predicate are "removed".
+        /// Returns a new meta::list where only those elements of \p List that satisfy the
+        /// Alias Class \p Pred such that `apply<Pred,A>::%value` is \c true are present.
+        /// That is, those elements that don't satisfy the \p Pred are "removed".
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup transformation
-        template <typename List, typename Predicate>
-        using filter = meta::fold<List, meta::list<>, detail::filter_<Predicate>>;
+        template <typename List, typename Pred>
+        using filter = meta::fold<List, meta::list<>, detail::filter_<Pred>>;
 
         namespace lazy
         {
             /// \sa 'meta::filter'
             /// \ingroup lazy_transformation
-            template <typename List, typename Predicate>
-            using filter = defer<filter, List, Predicate>;
+            template <typename List, typename Pred>
+            using filter = defer<filter, List, Pred>;
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -2062,6 +2091,19 @@ namespace meta
             using reverse = defer<reverse, List>;
         }
 
+        /// Logically negate the result of Alias Class \p F.
+        /// \ingroup trait
+        template <typename F>
+        using not_fn = compose<quote<not_>, F>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::not_fn'
+            /// \ingroup lazy_trait
+            template <typename F>
+            using not_fn = defer<not_fn, F>;
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         // all_of
         /// A Boolean integral constant wrapper around \c true if `apply<F, A>::%value` is \c true
@@ -2070,7 +2112,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename F>
-        using all_of = empty<find_if<List, compose<quote<not_>, F>>>;
+        using all_of = empty<find_if<List, not_fn<F>>>;
 
         namespace lazy
         {
@@ -2186,6 +2228,102 @@ namespace meta
             /// \ingroup lazy_transformation
             template <typename List>
             using unique = defer<unique, List>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // partition
+        /// \cond
+        namespace detail
+        {
+            template <typename Pred>
+            struct partition_
+            {
+                template <typename, typename, typename = void>
+                struct impl
+                {
+                };
+                template <typename... Yes, typename... No, typename A>
+                struct impl<pair<list<Yes...>, list<No...>>, A,
+                            void_<bool_<apply<Pred, A>::type::value>>>
+                {
+                    using type = if_<apply<Pred, A>, pair<list<Yes..., A>, list<No...>>,
+                                     pair<list<Yes...>, list<No..., A>>>;
+                };
+                template <typename State, typename A>
+                using apply = eval<impl<State, A>>;
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Returns a pair of lists, where the elements of \p List that satisfy the
+        /// Alias Class \p Pred such that `apply<Pred,A>::%value` is \c true are present in the
+        /// first list and the rest are in the second.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup transformation
+        template <typename List, typename Pred>
+        using partition = fold<List, pair<list<>, list<>>, detail::partition_<Pred>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::partition'
+            /// \ingroup lazy_transformation
+            template <typename List, typename Pred>
+            using partition = defer<partition, List, Pred>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // sort
+        /// \cond
+        namespace detail
+        {
+            template <typename, typename, typename = void>
+            struct sort_
+            {
+            };
+            template <typename Pred>
+            struct sort_<list<>, Pred>
+            {
+                using type = list<>;
+            };
+            template <typename A, typename Pred>
+            struct sort_<list<A>, Pred>
+            {
+                using type = list<A>;
+            };
+            template <typename A, typename B, typename... List, typename Pred>
+            struct sort_<
+                list<A, B, List...>, Pred,
+                void_<eval<sort_<first<partition<list<B, List...>, bind_back<Pred, A>>>, Pred>>>>
+            {
+                using P = partition<list<B, List...>, bind_back<Pred, A>>;
+                using type =
+                    concat<eval<sort_<first<P>, Pred>>, list<A>, eval<sort_<second<P>, Pred>>>;
+            };
+        }
+        /// \endcond
+
+        // clang-format off
+        /// Return a new \c meta::list that is sorted according to Alias Class predicate \p Pred.
+        /// \par Complexity
+        /// Expected: \f$ O(N log N) \f$
+        /// Worst case: \f$ O(N^2) \f$.
+        /// \code
+        /// using L0 = list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
+        /// using L1 = meta::sort<L0, lambda<_a, _b, lazy::less<lazy::sizeof_<_a>, lazy::sizeof_<_b>>>>;
+        /// static_assert(std::is_same<L1, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>::value, "");
+        /// \endcode
+        /// \ingroup transformation
+        // clang-format on
+        template <typename List, typename Pred>
+        using sort = eval<detail::sort_<List, Pred>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::sort'
+            /// \ingroup lazy_transformation
+            template <typename List, typename Pred>
+            using sort = defer<sort, List, Pred>;
         }
 
         ////////////////////////////////////////////////////////////////////////////
