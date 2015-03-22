@@ -772,6 +772,34 @@ namespace meta
             using flip = defer<flip, F>;
         }
 
+        namespace detail
+        {
+            template <typename...>
+            struct on_
+            {
+            };
+            template <typename F, typename... Gs>
+            struct on_<F, Gs...>
+            {
+                template <typename... Ts>
+                using apply = apply<F, apply<compose<Gs...>, Ts>...>;
+            };
+        }
+
+        /// Use as `on<F, Gs...>`. Creates an Alias Class that applies Alias Class \c F to the
+        /// result of applying Alias Class `compose<Gs...>` to all the arguments.
+        /// \ingroup composition
+        template <typename... Fs>
+        using on = detail::on_<Fs...>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::on'
+            /// \ingroup lazy_composition
+            template <typename F, typename G>
+            using on = defer<on, F, G>;
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         // if_
         /// \cond
@@ -1944,7 +1972,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List, typename Pred>
-        using filter = meta::fold<List, meta::list<>, detail::filter_<Pred>>;
+        using filter = fold<List, list<>, detail::filter_<Pred>>;
 
         namespace lazy
         {
@@ -1980,8 +2008,7 @@ namespace meta
             struct for_each_fn
             {
                 template <class UnaryFunction, class... Args>
-                constexpr auto operator()(meta::list<Args...>,
-                                          UnaryFunction f) const -> UnaryFunction
+                constexpr auto operator()(list<Args...>, UnaryFunction f) const -> UnaryFunction
                 {
                     return (void)std::initializer_list<int>{(f(Args{}), void(), 0)...}, f;
                 }
@@ -2479,6 +2506,13 @@ namespace meta
                 };
 
             public:
+// Work around GCC #64970
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if defined(__GNUC__) && !defined(__clang__)
+                template <typename... Ts>
+                using can_apply_ =
+                    and_<bool_<sizeof...(Ts) == arity>, has_type<impl<F, list<Ts..., F>>>>;
+#endif
                 template <typename... Ts>
                 using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
             };
@@ -2580,7 +2614,7 @@ namespace meta
 
             public:
                 template <typename... Ts>
-                using apply = meta::apply<thunk, substitutions<Tags, list<Ts...>>>;
+                using apply = apply<thunk, substitutions<Tags, list<Ts...>>>;
             };
         }
         /// \endcond
@@ -2716,7 +2750,8 @@ namespace meta
             // Work around GCC #64970
             // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
             template <template <typename...> class C, typename... Ts>
-            struct defer_<C, list<Ts...>, if_<apply<lambda<is_valid<defer<C, Ts...>>>>>>
+            struct defer_<C, list<Ts...>,
+                          if_c<lambda<defer<C, Ts...>>::template can_apply_<>::value>>
             {
                 using type = apply<lambda<defer<C, Ts...>>>;
             };
@@ -2775,10 +2810,10 @@ namespace meta
         namespace detail
         {
             template <typename T, typename U>
-            using min_ = meta::if_<meta::less<U, T>, U, T>;
+            using min_ = if_<less<U, T>, U, T>;
 
             template <typename T, typename U>
-            using max_ = meta::if_<meta::less<U, T>, T, U>;
+            using max_ = if_<less<U, T>, T, U>;
         }
         /// \endcond
 
@@ -2835,9 +2870,9 @@ namespace meta
 
             template <typename T, std::size_t N>
             struct make_integer_sequence_
-                : integer_sequence_cat<meta::eval<make_integer_sequence_<T, N / 2>>,
-                                       meta::eval<make_integer_sequence_<T, N / 2>>,
-                                       meta::eval<make_integer_sequence_<T, N % 2>>>
+                : integer_sequence_cat<eval<make_integer_sequence_<T, N / 2>>,
+                                       eval<make_integer_sequence_<T, N / 2>>,
+                                       eval<make_integer_sequence_<T, N % 2>>>
             {
             };
 
@@ -2860,7 +2895,7 @@ namespace meta
         /// \f$ O(log(N)) \f$.
         /// \ingroup integral
         template <typename T, T N>
-        using make_integer_sequence = meta::eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
+        using make_integer_sequence = eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
 
         /// A container for a sequence of compile-time integer constants of type
         /// \c std::size_t
