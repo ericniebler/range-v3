@@ -69,7 +69,7 @@ namespace ranges
                 using difference_t = concepts::WeaklyIncrementable::difference_t<iterator_t<T>>;
 
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<IteratorRange>(begin(t), end(t))
                     ));
@@ -79,7 +79,7 @@ namespace ranges
               : refines<Iterable(_1)>
             {
                 template<typename T, typename V>
-                auto requires_(T, V) -> decltype(
+                auto requires_(T&&, V&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<OutputIterator, Iterable::iterator_t<T>, V>()
                     ));
@@ -105,7 +105,7 @@ namespace ranges
                 using common_reference_t = concepts::Readable::common_reference_t<iterator_t<T>>;
 
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<InputIterator>(begin(t))
                     ));
@@ -115,7 +115,7 @@ namespace ranges
               : refines<InputIterable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<ForwardIterator>(begin(t))
                     ));
@@ -125,7 +125,7 @@ namespace ranges
               : refines<ForwardIterable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<BidirectionalIterator>(begin(t))
                     ));
@@ -135,7 +135,7 @@ namespace ranges
               : refines<BidirectionalIterable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<RandomAccessIterator>(begin(t))
                     ));
@@ -145,7 +145,7 @@ namespace ranges
               : refines<Iterable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::same_type(begin(t), end(t))
                     ));
@@ -158,7 +158,7 @@ namespace ranges
                 using size_t = decltype(size(val<T>()));
 
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(size(t)),
                         concepts::is_true(is_sized_iterable<T>())
@@ -172,7 +172,7 @@ namespace ranges
               : refines<Iterable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(size(t))
                     ));
@@ -185,7 +185,7 @@ namespace ranges
               : refines<InputIterable>
             {
                 template<typename T>
-                auto requires_(T) -> decltype(
+                auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(
                             std::is_same<reference_t<detail::as_ref_t<T>>,
@@ -201,7 +201,7 @@ namespace ranges
               : refines<Iterable>
             {
                 template<typename T>
-                auto requires_(T t) -> decltype(
+                auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<SemiRegular, uncvref_t<T>>(),
                         concepts::is_true(is_range<T>())

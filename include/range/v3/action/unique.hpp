@@ -47,7 +47,7 @@ namespace ranges
                     template<typename Rng, typename C = equal_to, typename P = ident,
                         typename I = range_iterator_t<Rng>,
                         typename S = range_sentinel_t<Rng>>
-                    auto requires_(Rng rng, C pred = C{}, P proj = P{}) -> decltype(
+                        auto requires_(Rng&&, C&& = C{}, P&& = P{}) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardIterable, Rng>(),
                             concepts::model_of<concepts::EraseableIterable, Rng, I, S>(),

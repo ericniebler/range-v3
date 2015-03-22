@@ -59,7 +59,7 @@ namespace ranges
                 struct ConceptImpl
                 {
                     template<typename Rng, typename T>
-                    auto requires_(Rng rng, T t) -> decltype(
+                    auto requires_(Rng&& rng, T&&) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::InputIterable, Rng>(),
                             concepts::is_true(meta::or_<

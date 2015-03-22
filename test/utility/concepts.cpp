@@ -20,9 +20,16 @@
 #include <range/v3/utility/common_iterator.hpp>
 #include "../simple_test.hpp"
 
-struct noncopyable
+struct moveonly
 {
-    noncopyable(noncopyable const &) = delete;
+    moveonly(moveonly&&) = default;
+    moveonly& operator=(moveonly&&) = default;
+};
+
+struct nonmovable
+{
+    nonmovable(nonmovable const &) = delete;
+    nonmovable& operator=(nonmovable const &) = delete;
 };
 
 struct nondefaultconstructible
@@ -32,9 +39,23 @@ struct nondefaultconstructible
 
 static_assert(ranges::CopyAssignable<int>(), "");
 static_assert(!ranges::CopyAssignable<int const>(), "");
+static_assert(!ranges::CopyAssignable<moveonly>(), "");
+static_assert(!ranges::CopyAssignable<nonmovable>(), "");
 
 static_assert(ranges::CopyConstructible<int>(), "");
-static_assert(!ranges::CopyConstructible<noncopyable>(), "");
+static_assert(ranges::CopyConstructible<const int>(), "");
+static_assert(!ranges::CopyConstructible<moveonly>(), "");
+static_assert(!ranges::CopyConstructible<nonmovable>(), "");
+
+static_assert(ranges::MoveAssignable<int>(), "");
+static_assert(!ranges::MoveAssignable<int const>(), "");
+static_assert(ranges::MoveAssignable<moveonly>(), "");
+static_assert(!ranges::MoveAssignable<nonmovable>(), "");
+
+static_assert(ranges::MoveConstructible<int>(), "");
+static_assert(ranges::MoveConstructible<const int>(), "");
+static_assert(ranges::MoveConstructible<moveonly>(), "");
+static_assert(!ranges::MoveConstructible<nonmovable>(), "");
 
 static_assert(ranges::DefaultConstructible<int>(), "");
 static_assert(!ranges::DefaultConstructible<nondefaultconstructible>(), "");
@@ -73,6 +94,9 @@ struct NotDestructible
 };
 
 static_assert(ranges::Destructible<int>(), "");
+static_assert(ranges::Destructible<const int>(), "");
+static_assert(ranges::Destructible<moveonly>(), "");
+static_assert(ranges::Destructible<nonmovable>(), "");
 static_assert(!ranges::Destructible<NotDestructible>(), "");
 
 struct IntComparable

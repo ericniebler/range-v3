@@ -37,7 +37,7 @@ namespace ranges
               : refines<Function>
             {
                 template<typename Gen>
-                auto requires_(Gen rand) -> decltype(
+                auto requires_(Gen&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<UnsignedIntegral>(val<Gen>()())
                     ));

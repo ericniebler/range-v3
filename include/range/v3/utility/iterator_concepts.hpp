@@ -170,7 +170,7 @@ namespace ranges
                     ranges::common_reference_t<reference_t<I> &&, value_t<I> &>;
 
                 template<typename I>
-                auto requires_(I i) -> decltype(
+                auto requires_(I&&) -> decltype(
                     concepts::valid_expr(
                         // The value, reference and rvalue reference types are related
                         // through the CommonReference concept.
@@ -188,7 +188,7 @@ namespace ranges
               : refines<SemiRegular(_1)>
             {
                 template<typename Out, typename T>
-                auto requires_(Out o, T) -> decltype(
+                auto requires_(Out&& o, T&&) -> decltype(
                     concepts::valid_expr(
                         *o = std::move(val<T>())
                     ));
@@ -198,7 +198,7 @@ namespace ranges
               : refines<MoveWritable>
             {
                 template<typename Out, typename T>
-                auto requires_(Out o, T) -> decltype(
+                auto requires_(Out&& o, T&&) -> decltype(
                     concepts::valid_expr(
                         *o = val<T>()
                     ));
@@ -207,7 +207,7 @@ namespace ranges
             struct IndirectlyMovable
             {
                 template<typename I, typename O>
-                auto requires_(I i, O o) -> decltype(
+                auto requires_(I&&, O&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
                         concepts::model_of<SemiRegular, O>(),
@@ -224,7 +224,7 @@ namespace ranges
               : refines<IndirectlyMovable>
             {
                 template<typename I, typename O>
-                auto requires_(I i, O o) -> decltype(
+                auto requires_(I&&, O&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
                         concepts::model_of<SemiRegular, O>(),
@@ -239,7 +239,7 @@ namespace ranges
             struct IndirectlySwappable
             {
                 template<typename I1, typename I2>
-                auto requires_(I1 i1, I2 i2) -> decltype(
+                auto requires_(I1&& i1, I2&& i2) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I1>(),
                         concepts::model_of<Readable, I2>(),
@@ -258,7 +258,7 @@ namespace ranges
                 using difference_t = meta::eval<difference_type<I>>;
 
                 template<typename I>
-                auto requires_(I i) -> decltype(
+                auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<difference_t<I>>{}),
                         concepts::has_type<I &>(++i),
@@ -270,7 +270,7 @@ namespace ranges
               : refines<Regular, WeaklyIncrementable>
             {
                 template<typename I>
-                auto requires_(I i) -> decltype(
+                auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::has_type<I>(i++)
                     ));
@@ -280,7 +280,7 @@ namespace ranges
               : refines<WeaklyIncrementable, Copyable>
             {
                 template<typename I>
-                auto requires_(I i) -> decltype(
+                auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         *i
                     ));
@@ -308,7 +308,7 @@ namespace ranges
                 using category_t = meta::eval<ranges::iterator_category_type<I>>;
 
                 template<typename I>
-                auto requires_(I i) -> decltype(
+                auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived, category_t<I>, ranges::weak_input_iterator_tag>(),
                         concepts::model_of<Readable>(i++)
@@ -319,7 +319,7 @@ namespace ranges
               : refines<WeakInputIterator, Iterator, EqualityComparable>
             {
                 template<typename I>
-                auto requires_(I i) -> decltype(
+                auto requires_(I&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived, category_t<I>, ranges::input_iterator_tag>()
                     ));
@@ -329,7 +329,7 @@ namespace ranges
               : refines<InputIterator, Incrementable>
             {
                 template<typename I>
-                auto requires_(I) -> decltype(
+                auto requires_(I&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived, category_t<I>, ranges::forward_iterator_tag>()
                     ));
@@ -339,7 +339,7 @@ namespace ranges
               : refines<ForwardIterator>
             {
                 template<typename I>
-                auto requires_(I i) -> decltype(
+                auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived, category_t<I>, ranges::bidirectional_iterator_tag>(),
                         concepts::has_type<I &>(--i),
@@ -352,7 +352,7 @@ namespace ranges
               : refines<BidirectionalIterator, TotallyOrdered>
             {
                 template<typename I, typename V = common_reference_t<I>>
-                auto requires_(I i) -> decltype(
+                auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Derived, category_t<I>, ranges::random_access_iterator_tag>(),
                         concepts::model_of<SignedIntegral>(i - i),
@@ -614,7 +614,7 @@ namespace ranges
             struct IteratorRange
             {
                 template<typename I, typename S>
-                auto requires_(I i, S s) -> decltype(
+                auto requires_(I&& i, S&& s) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<WeakIterator, I>(),
                         concepts::model_of<Regular, S>(),
@@ -628,7 +628,7 @@ namespace ranges
               : refines<IteratorRange>
             {
               template<typename I, typename S>
-                auto requires_(I i, S s) -> decltype(
+                auto requires_(I&& i, S&& s) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(s - i),
                         concepts::same_type(s - i, i - s)
@@ -640,7 +640,7 @@ namespace ranges
             {
                 template<typename I, typename S,
                     meta::if_<std::is_same<I, S>, int> = 0>
-                auto requires_(I i, I s) -> decltype(
+                auto requires_(I&& i, I&& s) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(s - i)
                     ));
@@ -648,7 +648,7 @@ namespace ranges
                 template<typename I, typename S,
                     meta::if_c<!std::is_same<I, S>::value, int> = 0,
                     typename C = common_type_t<I, S>>
-                auto requires_(I i, S s) -> decltype(
+                auto requires_(I&& i, S&& s) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<SizedIteratorRange, I, I>(),
                         concepts::model_of<Common, I, S>(),
