@@ -41,12 +41,15 @@
 #include <range/v3/algorithm/heap_algorithm.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
 #include <range/v3/algorithm/is_partitioned.hpp>
+#include <range/v3/algorithm/is_sorted.hpp>
+#include <range/v3/algorithm/is_sorted_until.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/merge_move.hpp>
 #include <range/v3/algorithm/min_element.hpp>
+#include <range/v3/algorithm/minmax_element.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/move_backward.hpp>
