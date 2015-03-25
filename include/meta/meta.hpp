@@ -440,6 +440,27 @@ namespace meta
             {
                 using type = C<Is...>;
             };
+
+
+            template<typename, typename = void>
+            struct try_eval1_
+            {};
+
+            template<typename T>
+            struct try_eval1_<T, void_<eval<T>>>
+            {
+                using type = eval<T>;
+            };
+
+            template<typename, typename = void>
+            struct try_eval2_
+            {};
+
+            template<template<typename...> class C, typename...Ts>
+            struct try_eval2_<defer<C, Ts...>, void_<C<Ts...>>>
+            {
+                using type = C<Ts...>;
+            };
         } // namespace detail
         /// \endcond
 
@@ -489,6 +510,18 @@ namespace meta
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
         using defer_trait = lazy::eval<defer<C, Ts...>>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // unlambda
+        template<typename T>
+        struct unlambda
+            : detail::try_eval1_<T>
+        {};
+
+        template<template<typename...> class C, typename...Ts>
+        struct unlambda<defer<C, Ts...>>
+            : detail::try_eval2_<defer<C, Ts...>>
+        {};
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_trait_i

@@ -109,7 +109,7 @@ namespace ranges
                 typename = decltype(std::declval<Concept &>().template requires_<Ts...>(std::declval<Ts>()...))>
             auto models_(Concept *) ->
                 meta::apply_list<
-                    meta::quote<meta::lazy::fast_and>,
+                    meta::quote<meta::fast_and>,
                     meta::transform<
                         base_concepts_of_t<Concept>,
                         meta::bind_back<meta::quote<concepts::models>, Ts...>>>;
