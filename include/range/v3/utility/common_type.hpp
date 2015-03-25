@@ -226,7 +226,7 @@ namespace ranges
 
         template<typename T, typename U, typename... Vs>
         struct common_type<T, U, Vs...>
-          : meta::lazy::fold<meta::list<U, Vs...>, T, meta::quote<common_type_t>>
+          : meta::unlambda<meta::lazy::fold<meta::list<U, Vs...>, T, meta::quote<common_type_t>>>
         {};
     #else
         template<typename T, typename U>
@@ -374,7 +374,7 @@ namespace ranges
 
         template<typename T, typename U, typename... Vs>
         struct common_reference<T, U, Vs...>
-          : meta::lazy::fold<meta::list<U, Vs...>, T, meta::quote<common_reference_t>>
+          : meta::unlambda<meta::lazy::fold<meta::list<U, Vs...>, T, meta::quote<common_reference_t>>>
         {};
     #else
         template<typename T, typename U>
