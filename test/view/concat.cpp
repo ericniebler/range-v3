@@ -9,10 +9,13 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <array>
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/remove_if.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -65,6 +68,20 @@ int main()
     CHECK(*(end-=1) == "his");
     CHECK(*(end-=1) == "is");
     CHECK(*(end-=1) == "this");
+
+    {
+        const std::array<int, 3> a{{0, 1, 2}};
+        const std::array<int, 2> b{{3, 4}};
+        CHECK(equal(view::concat(a, b), {0, 1, 2, 3, 4}));
+
+        auto odd = [](int i) { return i % 2 != 0; };
+        auto even_filter = ranges::view::remove_if(odd);
+
+        auto f_rng0 = a | even_filter;
+        auto f_rng1 = b | even_filter;
+
+        CHECK(equal(view::concat(f_rng0, f_rng1), {0, 2, 4}));
+    }
 
     return test_result();
 }

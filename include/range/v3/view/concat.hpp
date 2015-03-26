@@ -65,15 +65,20 @@ namespace ranges
             static constexpr std::size_t cranges{sizeof...(Rngs)};
             std::tuple<Rngs...> rngs_;
 
+            template<bool IsConst>
             struct sentinel;
 
+            template<bool IsConst>
             struct cursor
             {
                 using difference_type = common_type_t<range_difference_t<Rngs>...>;
             private:
-                friend struct sentinel;
-                concat_view const *rng_;
-                tagged_variant<range_iterator_t<Rngs const>...> its_;
+                friend struct sentinel<IsConst>;
+                template<typename T>
+                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
+                using concat_view_t = constify_if<concat_view>;
+                concat_view_t *rng_;
+                tagged_variant<range_iterator_t<constify_if<Rngs>>...> its_;
 
                 template<std::size_t N>
                 void satisfy(meta::size_t<N>)
@@ -195,15 +200,15 @@ namespace ranges
             public:
                 //using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
                 // BUGBUG what about rvalue_reference and common_reference?
-                using reference = common_reference_t<range_reference_t<Rngs const>...>;
+                using reference = common_reference_t<range_reference_t<constify_if<Rngs>>...>;
                 using single_pass = meta::fast_or<SinglePass<range_iterator_t<Rngs>>...>;
                 cursor() = default;
-                cursor(concat_view const &rng, begin_tag)
+                cursor(concat_view_t &rng, begin_tag)
                   : rng_(&rng), its_{meta::size_t<0>{}, begin(std::get<0>(rng.rngs_))}
                 {
                     this->satisfy(meta::size_t<0>{});
                 }
-                cursor(concat_view const &rng, end_tag)
+                cursor(concat_view_t &rng, end_tag)
                   : rng_(&rng), its_{meta::size_t<cranges-1>{}, end(std::get<cranges-1>(rng.rngs_))}
                 {}
                 reference current() const
@@ -240,26 +245,41 @@ namespace ranges
                     return -cursor::distance_to_(meta::size_t<0>{}, that, *this);
                 }
             };
+            template<bool IsConst>
             struct sentinel
             {
             private:
-                range_sentinel_t<meta::back<meta::list<Rngs...>> const> end_;
+                template<typename T>
+                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
+                using concat_view_t = constify_if<concat_view>;
+                range_sentinel_t<constify_if<meta::back<meta::list<Rngs...>>>> end_;
             public:
                 sentinel() = default;
-                sentinel(concat_view const &rng, end_tag)
+                sentinel(concat_view_t &rng, end_tag)
                   : end_(end(std::get<cranges - 1>(rng.rngs_)))
                 {}
-                bool equal(cursor const &pos) const
+                bool equal(cursor<IsConst> const &pos) const
                 {
                     return pos.its_.which() == cranges - 1 &&
                         ranges::get<cranges - 1>(pos.its_) == end_;
                 }
             };
-            cursor begin_cursor() const
+            cursor<false> begin_cursor()
             {
                 return {*this, begin_tag{}};
             }
-            meta::if_<meta::and_c<(bool)BoundedIterable<Rngs>()...>, cursor, sentinel>
+            meta::if_<meta::and_c<(bool)BoundedIterable<Rngs>()...>, cursor<false>, sentinel<false>>
+            end_cursor()
+            {
+                return {*this, end_tag{}};
+            }
+            CONCEPT_REQUIRES(meta::and_c<(bool)Iterable<Rngs const>()...>())
+            cursor<true> begin_cursor() const
+            {
+                return {*this, begin_tag{}};
+            }
+            CONCEPT_REQUIRES(meta::and_c<(bool)Iterable<Rngs const>()...>())
+            meta::if_<meta::and_c<(bool)BoundedIterable<Rngs>()...>, cursor<true>, sentinel<true>>
             end_cursor() const
             {
                 return {*this, end_tag{}};
