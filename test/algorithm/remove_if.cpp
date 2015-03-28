@@ -188,6 +188,15 @@ int main()
         CHECK(ia[3].i == 4);
         CHECK(ia[4].i == 3);
         CHECK(ia[5].i == 4);
+
+        // Some tests for sanitizing an algorithm result
+        static_assert(std::is_same<decltype(r), ranges::dangling<S *>>::value, "");
+        auto r2 = ranges::sanitize(r);
+        static_assert(std::is_same<decltype(r2), ranges::dangling<>>::value, "");
+        auto r3 = ranges::sanitize(const_cast<decltype(r) const &>(r));
+        static_assert(std::is_same<decltype(r3), ranges::dangling<>>::value, "");
+        auto r4 = ranges::sanitize(std::move(r));
+        static_assert(std::is_same<decltype(r4), ranges::dangling<>>::value, "");
     }
 
     return ::test_result();

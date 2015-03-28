@@ -14,11 +14,13 @@
 #ifndef RANGES_V3_BEGIN_END_HPP
 #define RANGES_V3_BEGIN_END_HPP
 
+#include <utility>
 #include <iterator>
 #include <functional>
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/dangling.hpp>
 
 namespace ranges
 {
@@ -263,33 +265,6 @@ namespace ranges
         }
 
         /// \ingroup group-core
-        /// A wrapper for an iterator or a sentinel into a range that may
-        /// no longer be valid.
-        template<typename I>
-        struct dangling
-        {
-        private:
-            I it_;
-        public:
-            dangling() = default;
-            /// Implicit converting constructor
-            constexpr dangling(I it)
-              : it_(it)
-            {}
-            /// \return The iterator from which this \c dangling object was constructed.
-            /// \note The returned iterator may be invalid.
-            /// \pre
-            /// \li Either the range from which the iterator was obtained has not been
-            /// destructed yet, or else the range's iterators are permitted to outlive the
-            /// range, and
-            /// \li No operation that invalidates the iterator has been performed.
-            constexpr I get_unsafe() const
-            {
-                return it_;
-            }
-        };
-
-        /// \ingroup group-core
         struct safe_begin_fn
         {
             /// \return `begin(rng)` if \p rng is an lvalue; otherwise, it returns `begin(rng)`
@@ -316,24 +291,6 @@ namespace ranges
         };
 
         /// \ingroup group-core
-        struct get_unsafe_fn
-        {
-            /// \return \c t.get_unsafe() if \p t is an instance of `ranges::dangling`; otherwise,
-            /// return \p t.
-            template<typename T>
-            constexpr T operator()(T && t) const
-            {
-                return detail::forward<T>(t);
-            }
-            /// \override
-            template<typename T>
-            constexpr T operator()(dangling<T> t) const
-            {
-                return t.get_unsafe();
-            }
-        };
-
-        /// \ingroup group-core
         /// \return `begin(rng)` if `rng` is an lvalue; otherwise, it returns `begin(rng)`
         /// wrapped in \c ranges::dangling.
         namespace
@@ -347,14 +304,6 @@ namespace ranges
         namespace
         {
             constexpr auto&& safe_end = static_const<safe_end_fn>::value;
-        }
-
-        /// \ingroup group-core
-        /// \return \c t.get_unsafe() if \p t is an instance of `ranges::dangling`; otherwise,
-        /// return \p t.
-        namespace
-        {
-            constexpr auto&& get_unsafe = static_const<get_unsafe_fn>::value;
         }
     }
 }

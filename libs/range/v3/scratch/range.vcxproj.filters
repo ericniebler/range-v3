@@ -1171,6 +1171,9 @@
     <ClInclude Include="..\..\..\..\include\meta\meta_fwd.hpp">
       <Filter>Header Files\meta</Filter>
     </ClInclude>
+    <ClInclude Include="Header.h">
+      <Filter>Header Files\range\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

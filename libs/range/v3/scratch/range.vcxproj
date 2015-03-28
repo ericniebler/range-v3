@@ -434,6 +434,7 @@
     <ClInclude Include="..\..\..\..\test\simple_test.hpp" />
     <ClInclude Include="..\..\..\..\test\test_iterators.hpp" />
     <ClInclude Include="..\..\..\..\test\test_utils.hpp" />
+    <ClInclude Include="Header.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />

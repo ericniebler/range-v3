@@ -71,6 +71,9 @@ namespace ranges
         using adl_size_detail::size_fn;
         /// \endcond
 
+        template<typename I = void>
+        struct dangling;
+
         template<typename ...Ts>
         struct common_type;
 
