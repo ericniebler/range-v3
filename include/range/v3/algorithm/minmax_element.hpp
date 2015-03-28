@@ -95,7 +95,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& minmax_element = static_const<minmax_element_fn>::value;
+            constexpr auto&& minmax_element = static_const<with_braced_init_args<minmax_element_fn>>::value;
         }
 
         /// @}

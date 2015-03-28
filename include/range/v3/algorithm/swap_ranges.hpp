@@ -79,7 +79,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& swap_ranges = static_const<swap_ranges_fn>::value;
+            constexpr auto&& swap_ranges = static_const<with_braced_init_args<swap_ranges_fn>>::value;
         }
 
         /// @}

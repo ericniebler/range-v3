@@ -313,7 +313,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& nth_element = static_const<nth_element_fn>::value;
+            constexpr auto&& nth_element = static_const<with_braced_init_args<nth_element_fn>>::value;
         }
 
         /// @}

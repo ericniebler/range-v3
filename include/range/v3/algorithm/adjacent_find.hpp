@@ -68,7 +68,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& adjacent_find = static_const<adjacent_find_fn>::value;
+            constexpr auto&& adjacent_find = static_const<with_braced_init_args<adjacent_find_fn>>::value;
         }
 
         /// @}

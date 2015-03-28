@@ -59,7 +59,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& min_element = static_const<min_element_fn>::value;
+            constexpr auto&& min_element = static_const<with_braced_init_args<min_element_fn>>::value;
         }
 
         /// @}

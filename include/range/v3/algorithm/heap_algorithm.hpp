@@ -123,7 +123,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& is_heap_until = static_const<is_heap_until_fn>::value;
+            constexpr auto&& is_heap_until = static_const<with_braced_init_args<is_heap_until_fn>>::value;
         }
 
         struct is_heap_fn
@@ -284,7 +284,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& push_heap = static_const<push_heap_fn>::value;
+            constexpr auto&& push_heap = static_const<with_braced_init_args<push_heap_fn>>::value;
         }
         /// @}
 
@@ -342,7 +342,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& pop_heap = static_const<pop_heap_fn>::value;
+            constexpr auto&& pop_heap = static_const<with_braced_init_args<pop_heap_fn>>::value;
         }
 
         struct make_heap_fn
@@ -382,7 +382,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& make_heap = static_const<make_heap_fn>::value;
+            constexpr auto&& make_heap = static_const<with_braced_init_args<make_heap_fn>>::value;
         }
 
         struct sort_heap_fn
@@ -418,7 +418,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& sort_heap = static_const<sort_heap_fn>::value;
+            constexpr auto&& sort_heap = static_const<with_braced_init_args<sort_heap_fn>>::value;
         }
 
         /// @}

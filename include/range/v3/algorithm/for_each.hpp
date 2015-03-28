@@ -57,7 +57,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& for_each = static_const<for_each_fn>::value;
+            constexpr auto&& for_each = static_const<with_braced_init_args<for_each_fn>>::value;
         }
 
         /// @}

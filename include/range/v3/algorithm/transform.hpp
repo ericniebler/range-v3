@@ -139,7 +139,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& transform = static_const<transform_fn>::value;
+            constexpr auto&& transform = static_const<with_braced_init_args<transform_fn>>::value;
         }
 
         /// @}

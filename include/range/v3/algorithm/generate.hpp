@@ -54,7 +54,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& generate = static_const<generate_fn>::value;
+            constexpr auto&& generate = static_const<with_braced_init_args<generate_fn>>::value;
         }
 
         /// @}

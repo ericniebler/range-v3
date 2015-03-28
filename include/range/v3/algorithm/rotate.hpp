@@ -219,7 +219,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& rotate = static_const<rotate_fn>::value;
+            constexpr auto&& rotate = static_const<with_braced_init_args<rotate_fn>>::value;
         }
 
         /// @}

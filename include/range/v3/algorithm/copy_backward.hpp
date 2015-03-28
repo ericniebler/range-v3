@@ -63,7 +63,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& copy_backward = static_const<copy_backward_fn>::value;
+            constexpr auto&& copy_backward = static_const<with_braced_init_args<copy_backward_fn>>::value;
         }
 
         /// @}

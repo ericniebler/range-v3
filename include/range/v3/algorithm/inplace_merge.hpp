@@ -235,7 +235,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& inplace_merge = static_const<inplace_merge_fn>::value;
+            constexpr auto&& inplace_merge = static_const<with_braced_init_args<inplace_merge_fn>>::value;
         }
 
         /// @}

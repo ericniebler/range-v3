@@ -138,7 +138,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& set_union = static_const<set_union_fn>::value;
+            constexpr auto&& set_union = static_const<with_braced_init_args<set_union_fn>>::value;
         }
 
         struct set_intersection_fn
@@ -305,7 +305,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& set_symmetric_difference = static_const<set_symmetric_difference_fn>::value;
+            constexpr auto&& set_symmetric_difference = static_const<with_braced_init_args<set_symmetric_difference_fn>>::value;
         }
 
         /// @}

@@ -194,7 +194,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& search_n = static_const<search_n_fn>::value;
+            constexpr auto&& search_n = static_const<with_braced_init_args<search_n_fn>>::value;
         }
 
         /// @}

@@ -81,7 +81,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& partition_move = static_const<partition_move_fn>::value;
+            constexpr auto&& partition_move = static_const<with_braced_init_args<partition_move_fn>>::value;
         }
 
         /// @}

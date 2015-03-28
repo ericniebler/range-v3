@@ -249,7 +249,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& next_permutation = static_const<next_permutation_fn>::value;
+            constexpr auto&& next_permutation = static_const<with_braced_init_args<next_permutation_fn>>::value;
         }
 
         struct prev_permutation_fn
@@ -298,7 +298,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& prev_permutation = static_const<prev_permutation_fn>::value;
+            constexpr auto&& prev_permutation = static_const<with_braced_init_args<prev_permutation_fn>>::value;
         }
 
         /// @}

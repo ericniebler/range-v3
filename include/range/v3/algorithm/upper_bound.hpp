@@ -56,7 +56,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& upper_bound = static_const<upper_bound_fn>::value;
+            constexpr auto&& upper_bound = static_const<with_braced_init_args<upper_bound_fn>>::value;
         }
 
         /// @}

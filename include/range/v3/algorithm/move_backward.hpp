@@ -57,7 +57,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& move_backward = static_const<move_backward_fn>::value;
+            constexpr auto&& move_backward = static_const<with_braced_init_args<move_backward_fn>>::value;
         }
 
         /// @}

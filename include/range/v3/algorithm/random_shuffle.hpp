@@ -125,7 +125,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& random_shuffle = static_const<random_shuffle_fn>::value;
+            constexpr auto&& random_shuffle = static_const<with_braced_init_args<random_shuffle_fn>>::value;
         }
 
         /// @}

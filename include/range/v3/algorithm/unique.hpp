@@ -74,7 +74,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& unique = static_const<unique_fn>::value;
+            constexpr auto&& unique = static_const<with_braced_init_args<unique_fn>>::value;
         }
 
         /// @}

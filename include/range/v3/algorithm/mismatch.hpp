@@ -116,7 +116,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& mismatch = static_const<mismatch_fn>::value;
+            constexpr auto&& mismatch = static_const<with_braced_init_args<mismatch_fn>>::value;
         }
 
         // [*] In this case, the 'begin2' iterator is taken by universal reference. Why? So

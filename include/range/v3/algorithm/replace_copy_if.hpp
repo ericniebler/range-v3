@@ -71,7 +71,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& replace_copy_if = static_const<replace_copy_if_fn>::value;
+            constexpr auto&& replace_copy_if = static_const<with_braced_init_args<replace_copy_if_fn>>::value;
         }
 
         /// @}

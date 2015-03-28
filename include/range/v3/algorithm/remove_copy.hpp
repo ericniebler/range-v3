@@ -69,7 +69,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& remove_copy = static_const<remove_copy_fn>::value;
+            constexpr auto&& remove_copy = static_const<with_braced_init_args<remove_copy_fn>>::value;
         }
 
         /// @}

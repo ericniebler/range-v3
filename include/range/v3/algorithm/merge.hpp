@@ -100,7 +100,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& merge = static_const<merge_fn>::value;
+            constexpr auto&& merge = static_const<with_braced_init_args<merge_fn>>::value;
         }
 
         /// @}

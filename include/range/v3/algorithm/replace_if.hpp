@@ -64,7 +64,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& replace_if = static_const<replace_if_fn>::value;
+            constexpr auto&& replace_if = static_const<with_braced_init_args<replace_if_fn>>::value;
         }
 
         /// @}

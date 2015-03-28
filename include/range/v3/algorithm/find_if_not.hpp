@@ -70,7 +70,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& find_if_not = static_const<find_if_not_fn>::value;
+            constexpr auto&& find_if_not = static_const<with_braced_init_args<find_if_not_fn>>::value;
         }
 
         /// @}

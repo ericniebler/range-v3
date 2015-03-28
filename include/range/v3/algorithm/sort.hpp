@@ -212,7 +212,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& sort = static_const<sort_fn>::value;
+            constexpr auto&& sort = static_const<with_braced_init_args<sort_fn>>::value;
         }
 
         /// @}

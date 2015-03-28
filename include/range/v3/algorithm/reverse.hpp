@@ -74,7 +74,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& reverse = static_const<reverse_fn>::value;
+            constexpr auto&& reverse = static_const<with_braced_init_args<reverse_fn>>::value;
         }
 
         /// @}

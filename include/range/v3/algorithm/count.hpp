@@ -60,7 +60,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& count = static_const<with_braced_init_args<count_fn>>::value;
+            constexpr auto&& count = static_const<with_braced_init_args<with_braced_init_args<count_fn>>>::value;
         }
 
         /// @}

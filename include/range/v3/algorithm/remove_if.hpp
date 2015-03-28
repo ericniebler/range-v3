@@ -74,7 +74,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& remove_if = static_const<remove_if_fn>::value;
+            constexpr auto&& remove_if = static_const<with_braced_init_args<remove_if_fn>>::value;
         }
 
         /// @}

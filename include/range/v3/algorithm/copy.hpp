@@ -67,7 +67,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& copy = static_const<copy_fn>::value;
+            constexpr auto&& copy = static_const<with_braced_init_args<copy_fn>>::value;
         }
 
         /// @}

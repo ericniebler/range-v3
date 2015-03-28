@@ -56,7 +56,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& equal_range = static_const<equal_range_fn>::value;
+            constexpr auto&& equal_range = static_const<with_braced_init_args<equal_range_fn>>::value;
         }
 
         /// @}

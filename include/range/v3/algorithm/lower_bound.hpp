@@ -54,7 +54,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& lower_bound = static_const<lower_bound_fn>::value;
+            constexpr auto&& lower_bound = static_const<with_braced_init_args<lower_bound_fn>>::value;
         }
 
         /// @}

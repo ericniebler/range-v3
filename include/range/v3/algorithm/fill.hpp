@@ -50,7 +50,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& fill = static_const<fill_fn>::value;
+            constexpr auto&& fill = static_const<with_braced_init_args<fill_fn>>::value;
         }
 
         /// @}

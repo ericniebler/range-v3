@@ -92,7 +92,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& shuffle = static_const<shuffle_fn>::value;
+            constexpr auto&& shuffle = static_const<with_braced_init_args<shuffle_fn>>::value;
         }
 
         /// @}

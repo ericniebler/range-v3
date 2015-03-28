@@ -120,7 +120,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& partition = static_const<partition_fn>::value;
+            constexpr auto&& partition = static_const<with_braced_init_args<partition_fn>>::value;
         }
 
         /// @}

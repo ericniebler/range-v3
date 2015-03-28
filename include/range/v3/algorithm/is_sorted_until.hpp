@@ -75,7 +75,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
-            constexpr auto&& is_sorted_until = static_const<is_sorted_until_fn>::value;
+            constexpr auto&& is_sorted_until = static_const<with_braced_init_args<is_sorted_until_fn>>::value;
         }
 
         /// @}
