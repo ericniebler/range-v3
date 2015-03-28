@@ -198,7 +198,6 @@ namespace ranges
                     return std::distance(begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
             public:
-                //using reference = detail::real_common_type_t<range_reference_t<Rngs const>...>;
                 // BUGBUG what about rvalue_reference and common_reference?
                 using reference = common_reference_t<range_reference_t<constify_if<Rngs>>...>;
                 using single_pass = meta::fast_or<SinglePass<range_iterator_t<Rngs>>...>;

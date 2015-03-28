@@ -157,5 +157,17 @@ int main()
     CHECK(ia[4].i == 3);
     CHECK(ia[5].i == 4);
 
+    // Check rvalue range
+    S ia2[] = {S{0}, S{1}, S{2}, S{3}, S{4}, S{2}, S{3}, S{4}, S{2}};
+    constexpr unsigned sa2 = ranges::size(ia2);
+    auto r2 = ranges::remove(ranges::view::all(ia2), 2, &S::i);
+    CHECK(r2.get_unsafe() == ia2 + sa2-3);
+    CHECK(ia2[0].i == 0);
+    CHECK(ia2[1].i == 1);
+    CHECK(ia2[2].i == 3);
+    CHECK(ia2[3].i == 4);
+    CHECK(ia2[4].i == 3);
+    CHECK(ia2[5].i == 4);
+
     return ::test_result();
 }

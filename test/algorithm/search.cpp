@@ -199,5 +199,12 @@ int main()
         CHECK(it.count() == 0);
     }
 
+    // Test rvalue ranges
+    {
+        int ib[] = {0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 4};
+        int ie[] = {1, 2, 3};
+        CHECK(ranges::search(ranges::view::all(ib), ie).get_unsafe() == ib+4);
+    }
+
     return ::test_result();
 }

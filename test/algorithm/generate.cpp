@@ -56,6 +56,14 @@ test()
     CHECK(ia[3] == 8);
     CHECK(res.first == Iter(ia + n));
     CHECK(res.second.i_ == 9);
+
+    auto res2 = ranges::generate(std::move(rng), res.second);
+    CHECK(ia[0] == 9);
+    CHECK(ia[1] == 10);
+    CHECK(ia[2] == 11);
+    CHECK(ia[3] == 12);
+    CHECK(res2.first.get_unsafe() == Iter(ia + n));
+    CHECK(res2.second.i_ == 13);
 }
 
 void test2()

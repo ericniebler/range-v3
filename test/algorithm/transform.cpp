@@ -63,6 +63,23 @@ test1()
         CHECK(ib[3] == 4);
         CHECK(ib[4] == 5);
     }
+
+    {
+        int ia[] = {0, 1, 2, 3, 4};
+        constexpr unsigned sa = ranges::size(ia);
+        int ib[sa] = {0};
+        auto rng = ranges::make_range(InIter(ia), sentinel<int const *>(ia + sa));
+        auto r =
+            ranges::transform(std::move(rng), OutIter(ib),
+                              std::bind(std::plus<int>(), _1, 1));
+        CHECK(base(r.first.get_unsafe()) == ia + sa);
+        CHECK(base(r.second) == ib + sa);
+        CHECK(ib[0] == 1);
+        CHECK(ib[1] == 2);
+        CHECK(ib[2] == 3);
+        CHECK(ib[3] == 4);
+        CHECK(ib[4] == 5);
+    }
 }
 
 template<class InIter1, class InIter2, class OutIter>
@@ -127,11 +144,47 @@ test2()
         constexpr unsigned sa = ranges::size(ia);
         int ib[sa] = {1, 2, 3, 4, 5};
         auto rng0 = ranges::make_range(InIter1(ib), sentinel<int const *>(ib + sa));
+        auto r =
+            ranges::transform(std::move(rng0), InIter2(ia),
+                              OutIter(ib), std::minus<int>());
+        CHECK(base(std::get<0>(r).get_unsafe()) == ib + sa);
+        CHECK(base(std::get<1>(r)) == ia + sa);
+        CHECK(base(std::get<2>(r)) == ib + sa);
+        CHECK(ib[0] == 1);
+        CHECK(ib[1] == 1);
+        CHECK(ib[2] == 1);
+        CHECK(ib[3] == 1);
+        CHECK(ib[4] == 1);
+    }
+
+    {
+        int ia[] = {0, 1, 2, 3, 4};
+        constexpr unsigned sa = ranges::size(ia);
+        int ib[sa] = {1, 2, 3, 4, 5};
+        auto rng0 = ranges::make_range(InIter1(ib), sentinel<int const *>(ib + sa));
         auto rng1 = ranges::make_range(InIter2(ia), sentinel<int const *>(ia + sa));
         std::tuple<InIter1, InIter2, OutIter> r =
             ranges::transform(rng0, rng1, OutIter(ib), std::minus<int>());
         CHECK(base(std::get<0>(r)) == ib + sa);
         CHECK(base(std::get<1>(r)) == ia + sa);
+        CHECK(base(std::get<2>(r)) == ib + sa);
+        CHECK(ib[0] == 1);
+        CHECK(ib[1] == 1);
+        CHECK(ib[2] == 1);
+        CHECK(ib[3] == 1);
+        CHECK(ib[4] == 1);
+    }
+
+    {
+        int ia[] = {0, 1, 2, 3, 4};
+        constexpr unsigned sa = ranges::size(ia);
+        int ib[sa] = {1, 2, 3, 4, 5};
+        auto rng0 = ranges::make_range(InIter1(ib), sentinel<int const *>(ib + sa));
+        auto rng1 = ranges::make_range(InIter2(ia), sentinel<int const *>(ia + sa));
+        auto r =
+            ranges::transform(std::move(rng0), std::move(rng1), OutIter(ib), std::minus<int>());
+        CHECK(base(std::get<0>(r).get_unsafe()) == ib + sa);
+        CHECK(base(std::get<1>(r).get_unsafe()) == ia + sa);
         CHECK(base(std::get<2>(r)) == ib + sa);
         CHECK(ib[0] == 1);
         CHECK(ib[1] == 1);

@@ -136,6 +136,23 @@ int main()
             CHECK(x->i == i);
     }
 
+    // Check rvalue ranges
+    {
+        constexpr int N = 256;
+        constexpr int M = N/2-1;
+        S input[N];
+        U output[M];
+        for (int i = 0; i < N; ++i)
+            input[i].i = i;
+        std::random_shuffle(input, input+N);
+        auto r = ranges::partial_sort_copy(input, ranges::view::all(output), std::less<int>(), &S::i, &U::i);
+        U* e = output + std::min(N, M);
+        CHECK(r.get_unsafe() == e);
+        int i = 0;
+        for (U* x = output; x < e; ++x, ++i)
+            CHECK(x->i == i);
+    }
+
     // Check initialize_list
     {
         U output[9];

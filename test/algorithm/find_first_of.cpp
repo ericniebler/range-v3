@@ -102,6 +102,11 @@ void test_rng()
                              make_range(forward_iterator<const int*>(ib),
                              forward_iterator<const int*>(ib + sb))) ==
                              input_iterator<const int*>(ia+1));
+    CHECK(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa)),
+                             make_range(forward_iterator<const int*>(ib),
+                             forward_iterator<const int*>(ib + sb))).get_unsafe() ==
+                             input_iterator<const int*>(ia+1));
     int ic[] = {7};
     CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
@@ -117,6 +122,21 @@ void test_rng()
                              input_iterator<const int*>(ia))),
                              make_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic+1))) ==
+                             input_iterator<const int*>(ia));
+    CHECK(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa)),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic + 1))).get_unsafe() ==
+                             input_iterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa)),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic))).get_unsafe() ==
+                             input_iterator<const int*>(ia+sa));
+    CHECK(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia)),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic+1))).get_unsafe() ==
                              input_iterator<const int*>(ia));
 }
 

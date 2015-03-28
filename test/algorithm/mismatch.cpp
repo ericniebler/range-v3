@@ -58,10 +58,22 @@ void test_range()
     auto rng1 = ranges::make_range(Iter(ia), Sent(ia + sa));
     CHECK(ranges::mismatch(rng1, Iter(ib)) ==
                            Pair{Iter(ia+3),Iter(ib+3)});
+    auto r1 = ranges::mismatch(std::move(rng1), Iter(ib));
+    CHECK(r1.first.get_unsafe() == Iter(ia+3));
+    CHECK(r1.second == Iter(ib+3));
     auto rng2 = ranges::make_range(Iter(ia),Sent(ia + sa));
     auto rng3 = ranges::make_range(Iter(ib),Sent(ib + sa));
     CHECK(ranges::mismatch(rng2,rng3) ==
                            Pair{Iter(ia+3),Iter(ib+3)});
+    auto r2 = ranges::mismatch(std::move(rng2), std::move(rng3));
+    CHECK(r2.first.get_unsafe() == Iter(ia+3));
+    CHECK(r2.second.get_unsafe() == Iter(ib+3));
+    auto r3 = ranges::mismatch(rng2, std::move(rng3));
+    CHECK(r3.first == Iter(ia+3));
+    CHECK(r3.second.get_unsafe() == Iter(ib+3));
+    auto r4 = ranges::mismatch(std::move(rng2), rng3);
+    CHECK(r4.first.get_unsafe() == Iter(ia+3));
+    CHECK(r4.second == Iter(ib+3));
     auto rng4 = ranges::make_range(Iter(ia),Sent(ia + sa));
     auto rng5 = ranges::make_range(Iter(ib),Sent(ib + 2));
     CHECK(ranges::mismatch(rng4,rng5) ==

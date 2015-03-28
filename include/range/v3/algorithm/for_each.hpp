@@ -46,8 +46,8 @@ namespace ranges
 
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputIterable<Rng &>() && IndirectInvokable<F, Project<I, P>>())>
-            I operator()(Rng &rng, F fun, P proj = P{}) const
+                CONCEPT_REQUIRES_(InputIterable<Rng>() && IndirectInvokable<F, Project<I, P>>())>
+            range_safe_iterator_t<Rng> operator()(Rng &&rng, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));
             }

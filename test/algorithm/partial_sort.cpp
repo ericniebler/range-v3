@@ -72,6 +72,18 @@ test_larger_sorts(int N, int M)
         CHECK(array[i] == i);
 
     std::random_shuffle(array, array+N);
+    auto res3 = ranges::partial_sort(ranges::make_range(array, array+N), array+M);
+    CHECK(res3.get_unsafe() == array+N);
+    for(int i = 0; i < M; ++i)
+        CHECK(array[i] == i);
+
+    std::random_shuffle(array, array+N);
+    auto res4 = ranges::partial_sort(ranges::make_range(I{array}, S{array+N}), I{array+M});
+    CHECK(res4.get_unsafe().base() == array+N);
+    for(int i = 0; i < M; ++i)
+        CHECK(array[i] == i);
+
+    std::random_shuffle(array, array+N);
     res = ranges::partial_sort(array, array+M, array+N, std::greater<int>());
     CHECK(res == array+N);
     for(int i = 0; i < M; ++i)

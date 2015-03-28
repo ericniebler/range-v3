@@ -36,10 +36,13 @@ test_one(unsigned N, unsigned M)
     for (int i = 0; (unsigned)i < N; ++i)
         array[i] = i;
     std::random_shuffle(array.get(), array.get()+N);
-    ranges::nth_element(array.get(), array.get()+M, array.get()+N);
+    CHECK(ranges::nth_element(array.get(), array.get()+M, array.get()+N) == array.get()+N);
     CHECK((unsigned)array[M] == M);
     std::random_shuffle(array.get(), array.get()+N);
-    ranges::nth_element(::as_lvalue(ranges::make_range(array.get(), array.get()+N)), array.get()+M);
+    CHECK(ranges::nth_element(::as_lvalue(ranges::make_range(array.get(), array.get()+N)), array.get()+M) == array.get()+N);
+    CHECK((unsigned)array[M] == M);
+    std::random_shuffle(array.get(), array.get()+N);
+    CHECK(ranges::nth_element(ranges::make_range(array.get(), array.get()+N), array.get()+M).get_unsafe() == array.get()+N);
     CHECK((unsigned)array[M] == M);
     ranges::nth_element(array.get(), array.get()+N, array.get()+N); // begin, end, end
 }

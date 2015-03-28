@@ -22,6 +22,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <cstring>
 #include <utility>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/reverse_copy.hpp>
@@ -108,6 +109,13 @@ void test()
         P p4 = ranges::reverse_copy(::as_lvalue(ranges::make_range(Iter(id), Sent(id+sd))), OutIter(jd));
         ::check_equal(jd, {3, 2, 1, 0});
         CHECK(p4.first == Iter(id+sd));
+        CHECK(base(p4.second) == jd+sd);
+
+        // test rvalue ranges
+        std::memset(jd, 0, sizeof(jd));
+        auto p5 = ranges::reverse_copy(ranges::make_range(Iter(id), Sent(id+sd)), OutIter(jd));
+        ::check_equal(jd, {3, 2, 1, 0});
+        CHECK(p5.first.get_unsafe() == Iter(id+sd));
         CHECK(base(p4.second) == jd+sd);
     }
 }

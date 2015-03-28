@@ -83,12 +83,13 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng0 &>() &&
-                    Iterable<Rng1 &>() &&
+                    Iterable<Rng0>() &&
+                    Iterable<Rng1>() &&
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
-            std::tuple<I0, I1, O>
-            operator()(Rng0 &rng0, Rng1 &rng1, O out, C pred = C{}, P0 proj0 = P0{}, P1 proj1 = P1{}) const
+            std::tuple<range_safe_iterator_t<Rng0>, range_safe_iterator_t<Rng1>, O>
+            operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(out),
                     std::move(pred), std::move(proj0), std::move(proj1));

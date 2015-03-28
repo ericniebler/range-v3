@@ -142,6 +142,14 @@ test_range()
                                                                 Sent(ranges::begin(ia)))),
                                       is_odd()) == Iter(ia));
     }
+
+    // An rvalue range
+    {
+        const int ia[] = {1, 3, 5, 7, 9, 2};
+        CHECK(ranges::partition_point(ranges::make_range(Iter(ranges::begin(ia)),
+                                                         Sent(ranges::end(ia))),
+                                      is_odd()).get_unsafe() == Iter(ia + 5));
+    }
 }
 
 template <class Iter>

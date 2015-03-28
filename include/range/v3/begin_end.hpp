@@ -261,6 +261,101 @@ namespace ranges
         {
             constexpr auto&& crend = static_const<crend_fn>::value;
         }
+
+        /// \ingroup group-core
+        /// A wrapper for an iterator or a sentinel into a range that may
+        /// no longer be valid.
+        template<typename I>
+        struct dangling
+        {
+        private:
+            I it_;
+        public:
+            dangling() = default;
+            /// Implicit converting constructor
+            constexpr dangling(I it)
+              : it_(it)
+            {}
+            /// \return The iterator from which this \c dangling object was constructed.
+            /// \note The returned iterator may be invalid.
+            /// \pre
+            /// \li Either the range from which the iterator was obtained has not been
+            /// destructed yet, or else the range's iterators are permitted to outlive the
+            /// range, and
+            /// \li No operation that invalidates the iterator has been performed.
+            constexpr I get_unsafe() const
+            {
+                return it_;
+            }
+        };
+
+        /// \ingroup group-core
+        struct safe_begin_fn
+        {
+            /// \return `begin(rng)` if \p rng is an lvalue; otherwise, it returns `begin(rng)`
+            /// wrapped in \c ranges::dangling.
+            template<typename Rng, typename I = decltype(begin(std::declval<Rng>()))>
+            meta::if_<std::is_lvalue_reference<Rng>, I, dangling<I>>
+            constexpr operator()(Rng && rng) const
+            {
+                return begin(rng);
+            }
+        };
+
+        /// \ingroup group-core
+        struct safe_end_fn
+        {
+            /// \return `begin(rng)` if \p rng is an lvalue; otherwise, it returns `begin(rng)`
+            /// wrapped in \c ranges::dangling.
+            template<typename Rng, typename I = decltype(end(std::declval<Rng>()))>
+            meta::if_<std::is_lvalue_reference<Rng>, I, dangling<I>>
+            constexpr operator()(Rng && rng) const
+            {
+                return end(rng);
+            }
+        };
+
+        /// \ingroup group-core
+        struct get_unsafe_fn
+        {
+            /// \return \c t.get_unsafe() if \p t is an instance of `ranges::dangling`; otherwise,
+            /// return \p t.
+            template<typename T>
+            constexpr T operator()(T && t) const
+            {
+                return detail::forward<T>(t);
+            }
+            /// \override
+            template<typename T>
+            constexpr T operator()(dangling<T> t) const
+            {
+                return t.get_unsafe();
+            }
+        };
+
+        /// \ingroup group-core
+        /// \return `begin(rng)` if `rng` is an lvalue; otherwise, it returns `begin(rng)`
+        /// wrapped in \c ranges::dangling.
+        namespace
+        {
+            constexpr auto&& safe_begin = static_const<safe_begin_fn>::value;
+        }
+
+        /// \ingroup group-core
+        /// \return `end(rng)` if `rng` is an lvalue; otherwise, it returns `end(rng)`
+        /// wrapped in \c ranges::dangling.
+        namespace
+        {
+            constexpr auto&& safe_end = static_const<safe_end_fn>::value;
+        }
+
+        /// \ingroup group-core
+        /// \return \c t.get_unsafe() if \p t is an instance of `ranges::dangling`; otherwise,
+        /// return \p t.
+        namespace
+        {
+            constexpr auto&& get_unsafe = static_const<get_unsafe_fn>::value;
+        }
     }
 }
 

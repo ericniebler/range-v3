@@ -33,18 +33,27 @@ test_char()
 {
     const unsigned n = 4;
     char ca[n] = {0};
-    ranges::fill(Iter(ca), Sent(ca+n), char(1));
+    auto i = ranges::fill(Iter(ca), Sent(ca+n), char(1));
     CHECK(ca[0] == 1);
     CHECK(ca[1] == 1);
     CHECK(ca[2] == 1);
     CHECK(ca[3] == 1);
+    CHECK(i == Iter(ca + 4));
 
     auto rng = ranges::make_range(Iter(ca), Sent(ca+n));
-    ranges::fill(rng, char(2));
+    i = ranges::fill(rng, char(2));
     CHECK(ca[0] == 2);
-    CHECK(ca[2] == 2);
+    CHECK(ca[1] == 2);
     CHECK(ca[2] == 2);
     CHECK(ca[3] == 2);
+    CHECK(i == Iter(ca + 4));
+
+    auto j = ranges::fill(ranges::make_range(Iter(ca), Sent(ca+n)), char(3));
+    CHECK(ca[0] == 3);
+    CHECK(ca[1] == 3);
+    CHECK(ca[2] == 3);
+    CHECK(ca[3] == 3);
+    CHECK(j.get_unsafe() == Iter(ca + 4));
 }
 
 template <class Iter, class Sent = Iter>

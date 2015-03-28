@@ -61,6 +61,21 @@ test_iter(Iter first, Sent last)
         CHECK(p.first == last);
         CHECK(p.second == last);
     }
+
+    auto res = ranges::minmax_element(std::move(rng));
+    if (first != last)
+    {
+        for (Iter j = first; j != last; ++j)
+        {
+            CHECK(!(*j < *res.get_unsafe().first));
+            CHECK(!(*p.second < *j));
+        }
+    }
+    else
+    {
+        CHECK(res.get_unsafe().first == last);
+        CHECK(res.get_unsafe().second == last);
+    }
 }
 
 template <class Iter, class Sent = Iter>
@@ -129,6 +144,21 @@ test_iter_comp(Iter first, Sent last)
     {
         CHECK(p.first == last);
         CHECK(p.second == last);
+    }
+
+    auto res = ranges::minmax_element(std::move(rng), comp);
+    if (first != last)
+    {
+        for (Iter j = first; j != last; ++j)
+        {
+            CHECK(!comp(*j, *res.get_unsafe().first));
+            CHECK(!comp(*res.get_unsafe().second, *j));
+        }
+    }
+    else
+    {
+        CHECK(res.get_unsafe().first == last);
+        CHECK(res.get_unsafe().second == last);
     }
 }
 

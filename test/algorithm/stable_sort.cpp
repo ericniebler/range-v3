@@ -212,5 +212,21 @@ int main()
         }
     }
 
+    // Check rvalue range
+    {
+        std::vector<S> v(1000, S{});
+        for(int i = 0; (std::size_t)i < v.size(); ++i)
+        {
+            v[i].i = v.size() - i - 1;
+            v[i].j = i;
+        }
+        CHECK(ranges::stable_sort(ranges::view::all(v), std::less<int>{}, &S::i).get_unsafe() == v.end());
+        for(int i = 0; (std::size_t)i < v.size(); ++i)
+        {
+            CHECK(v[i].i == i);
+            CHECK((std::size_t)v[i].j == v.size() - i - 1);
+        }
+    }
+
     return ::test_result();
 }

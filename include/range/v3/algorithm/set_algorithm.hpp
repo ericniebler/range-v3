@@ -123,11 +123,11 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
-                typename Tup = std::tuple<I1, I2, O>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Iterable<Rng1 &>() && Iterable<Rng2 &>())>
-            Tup operator()(Rng1 & rng1, Rng2 & rng2, O out,
-                C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
+                    Iterable<Rng1>() && Iterable<Rng2>())>
+            std::tuple<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>, O>
+            operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
+                P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
                     std::move(pred), std::move(proj1), std::move(proj2));
@@ -229,8 +229,8 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Iterable<Rng1 &>() && Iterable<Rng2>())>
-            std::pair<I1, O> operator()(Rng1 & rng1, Rng2 && rng2, O out,
+                    Iterable<Rng1>() && Iterable<Rng2>())>
+            std::pair<range_safe_iterator_t<Rng1>, O> operator()(Rng1 &&rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
@@ -291,8 +291,9 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    Iterable<Rng1 &>() && Iterable<Rng2 &>())>
-            std::tuple<I1, I2, O> operator()(Rng1 & rng1, Rng2 & rng2, O out,
+                    Iterable<Rng1>() && Iterable<Rng2>())>
+            std::tuple<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>, O>
+            operator()(Rng1 &&rng1, Rng2 &&rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),

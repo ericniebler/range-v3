@@ -43,8 +43,8 @@ namespace ranges
             template<typename Rng, typename F,
                 typename O = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Function<F>() &&
-                    OutputIterable<Rng &, concepts::Function::result_t<F>>())>
-            std::pair<O, F> operator()(Rng & rng, F fun) const
+                    OutputIterable<Rng, concepts::Function::result_t<F>>())>
+            std::pair<range_safe_iterator_t<Rng>, F> operator()(Rng &&rng, F fun) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun));
             }

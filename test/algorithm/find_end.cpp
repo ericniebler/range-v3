@@ -58,8 +58,19 @@ test()
     CHECK(find_end(ir, make_range(Iter2(g), Sent2(g + 6))) == Iter1(ia));
     CHECK(find_end(ir, make_range(Iter2(h), Sent2(h + 7))) == Iter1(ia + sa));
     CHECK(find_end(ir, make_range(Iter2(b), Sent2(b))) == Iter1(ia + sa));
+
+    CHECK(find_end(std::move(ir), make_range(Iter2(b), Sent2(b + 1))).get_unsafe() == Iter1(ia + sa - 1));
+    CHECK(find_end(std::move(ir), make_range(Iter2(c), Sent2(c + 2))).get_unsafe() == Iter1(ia + 18));
+    CHECK(find_end(std::move(ir), make_range(Iter2(d), Sent2(d + 3))).get_unsafe() == Iter1(ia + 15));
+    CHECK(find_end(std::move(ir), make_range(Iter2(e), Sent2(e + 4))).get_unsafe() == Iter1(ia + 11));
+    CHECK(find_end(std::move(ir), make_range(Iter2(f), Sent2(f + 5))).get_unsafe() == Iter1(ia + 6));
+    CHECK(find_end(std::move(ir), make_range(Iter2(g), Sent2(g + 6))).get_unsafe() == Iter1(ia));
+    CHECK(find_end(std::move(ir), make_range(Iter2(h), Sent2(h + 7))).get_unsafe() == Iter1(ia + sa));
+    CHECK(find_end(std::move(ir), make_range(Iter2(b), Sent2(b))).get_unsafe() == Iter1(ia + sa));
+
     auto er = make_range(Iter1(ia), Sent1(ia));
     CHECK(find_end(er, make_range(Iter2(b), Sent2(b + 1))) == Iter1(ia));
+    CHECK(find_end(std::move(er), make_range(Iter2(b), Sent2(b + 1))).get_unsafe() == Iter1(ia));
 }
 
 struct count_equal

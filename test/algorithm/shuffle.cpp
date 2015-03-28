@@ -44,7 +44,7 @@ int main()
         std::minstd_rand g;
         ranges::shuffle(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa), g);
         CHECK(!ranges::equal(ia, orig));
-        ranges::shuffle(ib, ib+sa, g);
+        CHECK(ranges::shuffle(ib, ib+sa, g) == ib+sa);
         CHECK(!ranges::equal(ia, ib));
     }
 
@@ -60,8 +60,12 @@ int main()
         auto rng = ranges::make_range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
         ranges::shuffle(rng, g);
         CHECK(!ranges::equal(ia, orig));
-        ranges::shuffle(ib, g);
+        CHECK(ranges::shuffle(ib, g) == ranges::end(ib));
         CHECK(!ranges::equal(ia, ib));
+
+        ranges::iota(ia, 0);
+        CHECK(ranges::shuffle(std::move(rng), g).get_unsafe().base() == ranges::end(ia));
+        CHECK(!ranges::equal(ia, orig));
     }
 
     return ::test_result();

@@ -215,16 +215,19 @@ namespace ranges
                     h.reset(buf.first);
                 }
                 detail::merge_adaptive(std::move(begin), std::move(middle), len2_and_end.second,
-                    len1, len2_and_end.first, buf.first, buf.second, std::move(pred), std::move(proj));
+                    len1, len2_and_end.first, buf.first, buf.second, std::move(pred),
+                    std::move(proj));
                 return len2_and_end.second;
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(BidirectionalIterable<Rng &>() && Sortable<I, C, P>())>
-            I operator()(Rng &rng, I middle, C pred = C{}, P proj = P{}) const
+                CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && Sortable<I, C, P>())>
+            range_safe_iterator_t<Rng>
+            operator()(Rng &&rng, I middle, C pred = C{}, P proj = P{}) const
             {
-                return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred), std::move(proj));
+                return (*this)(begin(rng), std::move(middle), end(rng), std::move(pred),
+                    std::move(proj));
             }
         };
 

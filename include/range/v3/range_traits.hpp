@@ -60,6 +60,12 @@ namespace ranges
         template<typename Rng>
         using range_common_iterator_t = common_iterator<range_iterator_t<Rng>, range_sentinel_t<Rng>>;
 
+        template<typename Rng>
+        using range_safe_iterator_t = decltype(ranges::safe_begin(std::declval<Rng>()));
+
+        template<typename Rng>
+        using range_safe_sentinel_t = decltype(ranges::safe_end(std::declval<Rng>()));
+
         // Metafunctions
         template<typename Rng>
         using range_iterator = meta::defer<range_iterator_t, Rng>;

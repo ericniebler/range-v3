@@ -54,14 +54,13 @@ namespace ranges
         {
             template<typename I, typename S, typename Gen,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
-                                  Permutable<I>() &&
-                                  UniformRandomNumberGenerator<Gen>() &&
-                                  Convertible<
-                                      concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                                      concepts::WeaklyIncrementable::difference_t<I> >())>
+                    Permutable<I>() && UniformRandomNumberGenerator<Gen>() &&
+                    Convertible<
+                        concepts::UniformRandomNumberGenerator::result_t<Gen>,
+                        concepts::WeaklyIncrementable::difference_t<I>>())>
             I operator()(I begin, S end_, Gen && gen) const
             {
-                I end = ranges::next(begin, end_);
+                I end = ranges::next(begin, end_), orig = end;
                 auto d = end - begin;
                 if(d > 1)
                 {
@@ -74,17 +73,16 @@ namespace ranges
                             ranges::iter_swap(begin, begin + i);
                     }
                 }
-                return end;
+                return orig;
             }
 
-            template<typename Rng, typename Gen, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() &&
-                                  Permutable<I>() &&
-                                  UniformRandomNumberGenerator<Gen>() &&
-                                  Convertible<
-                                      concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                                      concepts::WeaklyIncrementable::difference_t<I> >())>
-            I operator()(Rng & rng, Gen && rand) const
+            template<typename Rng, typename Gen,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() && Permutable<I>() &&
+                    UniformRandomNumberGenerator<Gen>() && Convertible<
+                        concepts::UniformRandomNumberGenerator::result_t<Gen>,
+                        concepts::WeaklyIncrementable::difference_t<I>>())>
+            range_safe_iterator_t<Rng> operator()(Rng &&rng, Gen && rand) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));
             }

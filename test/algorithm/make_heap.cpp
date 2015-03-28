@@ -61,6 +61,11 @@ void test_3(int N)
     std::random_shuffle(ia, ia+N);
     CHECK(ranges::make_heap(::as_lvalue(ranges::make_range(ia, ia+N))) == ia+N);
     CHECK(std::is_heap(ia, ia+N));
+
+    std::random_shuffle(ia, ia+N);
+    CHECK(ranges::make_heap(ranges::make_range(ia, ia+N)).get_unsafe() == ia+N);
+    CHECK(std::is_heap(ia, ia+N));
+
     delete [] ia;
 }
 
@@ -72,6 +77,11 @@ void test_4(int N)
     std::random_shuffle(ia, ia+N);
     CHECK(ranges::make_heap(::as_lvalue(ranges::make_range(ia, sentinel<int*>(ia+N)))) == ia+N);
     CHECK(std::is_heap(ia, ia+N));
+
+    std::random_shuffle(ia, ia+N);
+    CHECK(ranges::make_heap(ranges::make_range(ia, sentinel<int*>(ia+N))).get_unsafe() == ia+N);
+    CHECK(std::is_heap(ia, ia+N));
+
     delete [] ia;
 }
 
@@ -105,6 +115,11 @@ void test_7(int N)
     std::random_shuffle(ia, ia+N);
     CHECK(ranges::make_heap(::as_lvalue(ranges::make_range(ia, ia+N)), std::greater<int>()) == ia+N);
     CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
+
+    std::random_shuffle(ia, ia+N);
+    CHECK(ranges::make_heap(ranges::make_range(ia, ia+N), std::greater<int>()).get_unsafe() == ia+N);
+    CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
+
     delete [] ia;
 }
 
@@ -116,6 +131,11 @@ void test_8(int N)
     std::random_shuffle(ia, ia+N);
     CHECK(ranges::make_heap(::as_lvalue(ranges::make_range(ia, sentinel<int*>(ia+N))), std::greater<int>()) == ia+N);
     CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
+
+    std::random_shuffle(ia, ia+N);
+    CHECK(ranges::make_heap(ranges::make_range(ia, sentinel<int*>(ia+N)), std::greater<int>()).get_unsafe() == ia+N);
+    CHECK(std::is_heap(ia, ia+N, std::greater<int>()));
+
     delete [] ia;
 }
 

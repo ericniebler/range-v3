@@ -142,6 +142,19 @@ void test_rng_4()
     CHECK(j[1] == 5);
     CHECK(j[2] == 6);
     CHECK(j[3] == 7);
+
+    auto r2 = ranges::swap_ranges(
+        ranges::make_range(Iter1(j), Sent1(j+4)),
+        ranges::make_range(Iter2(i), Sent2(i+3)));
+    CHECK(base(r2.first.get_unsafe()) == j+3);
+    CHECK(base(r2.second.get_unsafe()) == i+3);
+    CHECK(i[0] == 4);
+    CHECK(i[1] == 5);
+    CHECK(i[2] == 6);
+    CHECK(j[0] == 1);
+    CHECK(j[1] == 2);
+    CHECK(j[2] == 3);
+    CHECK(j[3] == 7);
 }
 
 template<class Iter1, class Iter2>

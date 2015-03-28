@@ -45,9 +45,9 @@ namespace ranges
 
             template<typename Rng, typename O,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(BidirectionalIterable<Rng &>() && BidirectionalIterator<O>() &&
+                CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && BidirectionalIterator<O>() &&
                     IndirectlyMovable<I, O>())>
-            std::pair<I, O> operator()(Rng &rng, O out) const
+            std::pair<range_safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));
             }

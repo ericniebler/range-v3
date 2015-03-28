@@ -174,21 +174,26 @@ namespace ranges
                 auto &&proj1 = invokable(proj1_);
                 auto &&proj2 = invokable(proj2_);
                 if(SizedIteratorRange<I1, S1>() && SizedIteratorRange<I2, S2>())
-                    return search_fn::sized_impl(std::move(begin1), std::move(end1), distance(begin1, end1),
-                        std::move(begin2), std::move(end2), distance(begin2, end2), pred, proj1, proj2);
+                    return search_fn::sized_impl(std::move(begin1), std::move(end1),
+                        distance(begin1, end1), std::move(begin2), std::move(end2),
+                        distance(begin2, end2), pred, proj1, proj2);
                 else
                     return search_fn::impl(std::move(begin1), std::move(end1),
                         std::move(begin2), std::move(end2), pred, proj1, proj2);
             }
 
             template<typename Rng1, typename Rng2, typename C = equal_to, typename P1 = ident,
-                typename P2 = ident, typename I1 = range_iterator_t<Rng1>, typename I2 = range_iterator_t<Rng2>,
+                typename P2 = ident,
+                typename I1 = range_iterator_t<Rng1>,
+                typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(
                     Searchable<I1, I2, C, P1, P2>() &&
-                    Iterable<Rng1 &>() &&
+                    Iterable<Rng1>() &&
                     Iterable<Rng2>()
                 )>
-            I1 operator()(Rng1 & rng1, Rng2 && rng2, C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
+            range_safe_iterator_t<Rng1>
+            operator()(Rng1 &&rng1, Rng2 &&rng2, C pred_ = C{}, P1 proj1_ = P1{},
+                P2 proj2_ = P2{}) const
             {
                 if(empty(rng2))
                     return begin(rng1);

@@ -59,7 +59,7 @@ namespace ranges
                      typename I1 = range_iterator_t<Rng1>,
                      CONCEPT_REQUIRES_(Iterable<Rng0>() && Iterable<Rng1>() &&
                         ForwardIterator<I1>() && AsymmetricallyComparable<I0, I1, R, P0, P1>())>
-            I0 operator()(Rng0 & rng0, Rng1 && rng1, R pred = R{}, P0 proj0 = P0{},
+            range_safe_iterator_t<Rng0> operator()(Rng0 &&rng0, Rng1 &&rng1, R pred = R{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
                 return (*this)(begin(rng0), end(rng0), begin(rng1), end(rng1), std::move(pred),

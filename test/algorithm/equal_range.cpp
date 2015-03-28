@@ -46,6 +46,16 @@ test(Iter first, Sent last, const T& value)
         CHECK(!(value < *j));
     for (Iter j = i.end(); j != last; ++j)
         CHECK(value < *j);
+
+    auto res = ranges::equal_range(ranges::make_range(first, last), value);
+    for (Iter j = first; j != res.get_unsafe().begin(); ++j)
+        CHECK(*j < value);
+    for (Iter j = res.get_unsafe().begin(); j != last; ++j)
+        CHECK(!(*j < value));
+    for (Iter j = first; j != res.get_unsafe().end(); ++j)
+        CHECK(!(value < *j));
+    for (Iter j = res.get_unsafe().end(); j != last; ++j)
+        CHECK(value < *j);
 }
 
 template <class Iter, class Sent = Iter>

@@ -124,6 +124,12 @@ void test_8(int N)
     std::make_heap(ia, ia+N, std::greater<int>());
     CHECK(ranges::sort_heap(::as_lvalue(ranges::make_range(ia, sentinel<int*>(ia+N))), std::greater<int>()) == ia+N);
     CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
+
+    std::random_shuffle(ia, ia+N);
+    std::make_heap(ia, ia+N, std::greater<int>());
+    CHECK(ranges::sort_heap(ranges::make_range(ia, sentinel<int*>(ia+N)), std::greater<int>()).get_unsafe() == ia+N);
+    CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
+
     delete [] ia;
 }
 

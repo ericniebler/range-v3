@@ -42,9 +42,9 @@ namespace ranges
 
             template<typename Rng, typename V, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Iterable<Rng &>() && BinarySearchable<I, V, C, P>())>
-            range<I>
-            operator()(Rng & rng, V const & val, C pred = C{}, P proj = P{}) const
+                CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V, C, P>())>
+            meta::if_<std::is_lvalue_reference<Rng>, range<I>, dangling<range<I>>>
+            operator()(Rng &&rng, V const & val, C pred = C{}, P proj = P{}) const
             {
                 static_assert(!is_infinite<Rng>::value, "Trying to binary search an infinite range");
                 return aux::equal_range_n(begin(rng), distance(rng), val, std::move(pred),

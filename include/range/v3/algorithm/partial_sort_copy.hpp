@@ -79,8 +79,9 @@ namespace ranges
                 typename I = range_iterator_t<InRng>,
                 typename O = range_iterator_t<OutRng>,
                 CONCEPT_REQUIRES_(PartialSortCopyConcept<I, O, C, PI, PO>() &&
-                    Iterable<InRng>() && Iterable<OutRng &>())>
-            O operator()(InRng && in_rng, OutRng & out_rng, C pred = C{}, PI in_proj = PI{},
+                    Iterable<InRng>() && Iterable<OutRng>())>
+            range_safe_iterator_t<OutRng>
+            operator()(InRng && in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
                 PO out_proj = PO{}) const
             {
                 return (*this)(begin(in_rng), end(in_rng), begin(out_rng), end(out_rng),

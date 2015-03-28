@@ -164,17 +164,19 @@ namespace ranges
                 auto &&pred = invokable(pred_);
                 auto &&proj = invokable(proj_);
                 if(SizedIteratorRange<I, S>())
-                    return search_n_fn::sized_impl(std::move(begin), std::move(end), distance(begin, end),
-                        count, val, pred, proj);
+                    return search_n_fn::sized_impl(std::move(begin), std::move(end),
+                        distance(begin, end), count, val, pred, proj);
                 else
-                    return search_n_fn::impl(std::move(begin), std::move(end), count, val, pred, proj);
+                    return search_n_fn::impl(std::move(begin), std::move(end), count, val, pred,
+                        proj);
             }
 
             template<typename Rng, typename V, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Iterable<Rng &>())>
-            I operator()(Rng & rng, iterator_difference_t<I> count, V const &val,
-                C pred_ = C{}, P proj_ = P{}) const
+                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Iterable<Rng>())>
+            range_safe_iterator_t<Rng>
+            operator()(Rng &&rng, iterator_difference_t<I> count, V const &val, C pred_ = C{},
+                P proj_ = P{}) const
             {
                 if(count <= 0)
                     return begin(rng);

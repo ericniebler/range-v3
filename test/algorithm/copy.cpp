@@ -43,14 +43,27 @@ int main()
     std::fill_n(out, size(out), std::make_pair(0, 0));
 
     using ranges::view::delimit;
-    char const *sz = "hello world";
-    char buf[50];
-    auto str = delimit(sz, '\0');
-    auto res3 = ranges::copy(str, buf);
-    *res3.second = '\0';
-    CHECK(res3.first == std::next(begin(str), std::strlen(sz)));
-    CHECK(res3.second == buf + std::strlen(sz));
-    CHECK(std::strcmp(sz, buf) == 0);
+    {
+        char const *sz = "hello world";
+        char buf[50];
+        auto str = delimit(sz, '\0');
+        auto res3 = ranges::copy(str, buf);
+        *res3.second = '\0';
+        CHECK(res3.first == std::next(begin(str), std::strlen(sz)));
+        CHECK(res3.second == buf + std::strlen(sz));
+        CHECK(std::strcmp(sz, buf) == 0);
+    }
+
+    {
+        char const *sz = "hello world";
+        char buf[50];
+        auto str = delimit(sz, '\0');
+        auto res3 = ranges::copy(std::move(str), buf);
+        *res3.second = '\0';
+        CHECK(res3.first.get_unsafe() == std::next(begin(str), std::strlen(sz)));
+        CHECK(res3.second == buf + std::strlen(sz));
+        CHECK(std::strcmp(sz, buf) == 0);
+    }
 
     return test_result();
 }

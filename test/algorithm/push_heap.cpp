@@ -124,5 +124,22 @@ int main()
     test_proj(1000);
     test_move_only(1000);
 
+    {
+        int const N = 1000;
+        S* ia = new S [N];
+        int* ib = new int [N];
+        for (int i = 0; i < N; ++i)
+            ia[i].i = i;
+        std::random_shuffle(ia, ia+N);
+        for (int i = 0; i <= N; ++i)
+        {
+            CHECK(ranges::push_heap(ranges::make_range(ia, ia+i), std::greater<int>(), &S::i).get_unsafe() == ia+i);
+            std::transform(ia, ia+i, ib, std::mem_fn(&S::i));
+            CHECK(std::is_heap(ib, ib+i, std::greater<int>()));
+        }
+        delete [] ia;
+        delete [] ib;
+    }
+
     return test_result();
 }

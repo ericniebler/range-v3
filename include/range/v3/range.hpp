@@ -115,11 +115,16 @@ namespace ranges
             {
                 return detail::unsafe_move(this->second);
             }
+            template<typename J = I,
+                CONCEPT_REQUIRES_(ForwardIterator<J>() && IteratorRange<J, S>())>
             void check() const
             {
-                RANGES_ASSERT(!ForwardIterator<I>() ||
-                    static_cast<iterator_size_t<I>>(iter_distance(first, second)) == third);
+                RANGES_ASSERT(static_cast<iterator_size_t<I>>(iter_distance(first, second)) == third);
             }
+            template<typename J = I,
+                CONCEPT_REQUIRES_(!ForwardIterator<J>() || !IteratorRange<J, S>())>
+            void check() const
+            {}
         public:
             using iterator = I;
             using sentinel = S;
@@ -216,10 +221,9 @@ namespace ranges
             }
 
             /// \return `{begin, end, size}`
-            template<typename I, typename S, typename Size>
-            sized_range<I, S> operator()(I begin, S end, Size size) const
+            template<typename I, typename S>
+            sized_range<I, S> operator()(I begin, S end, iterator_size_t<I> size) const
             {
-                CONCEPT_ASSERT(Integral<Size>());
                 CONCEPT_ASSERT(IteratorRange<I, S>());
                 return {std::move(begin), std::move(end), size};
             }

@@ -69,8 +69,9 @@ namespace ranges
 
             template<typename Rng, typename O0, typename O1, typename C, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(PartitionCopyable<I, O0, O1, C, P>() && Iterable<Rng &>())>
-            std::tuple<I, O0, O1> operator()(Rng &rng, O0 o0, O1 o1, C pred, P proj = P{}) const
+                CONCEPT_REQUIRES_(PartitionCopyable<I, O0, O1, C, P>() && Iterable<Rng>())>
+            std::tuple<range_safe_iterator_t<Rng>, O0, O1>
+            operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(o0), std::move(o1), std::move(pred),
                     std::move(proj));

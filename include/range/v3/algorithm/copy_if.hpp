@@ -55,10 +55,10 @@ namespace ranges
 
             template<typename Rng, typename O, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputIterable<Rng &>() && WeaklyIncrementable<O>() &&
+                CONCEPT_REQUIRES_(InputIterable<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectInvokablePredicate<F, Project<I, P> >() && IndirectlyCopyable<I, O>())>
-            std::pair<I, O>
-            operator()(Rng &rng, O out, F pred, P proj = P{}) const
+            std::pair<range_safe_iterator_t<Rng>, O>
+            operator()(Rng &&rng, O out, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));
             }

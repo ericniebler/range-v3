@@ -131,8 +131,9 @@ namespace ranges
             /// \overload
             template<typename Rng, typename O, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Iterable<Rng &>())>
-            std::pair<I, O> operator()(Rng & rng, O out, C pred = C{}, P proj = P{}) const
+                CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Iterable<Rng>())>
+            std::pair<range_safe_iterator_t<Rng>, O>
+            operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(begin(rng), end(rng), std::move(out),
                     std::move(pred), std::move(proj), iterator_concept<I>(), ForwardIterator<O>());

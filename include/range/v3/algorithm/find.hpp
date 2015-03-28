@@ -55,9 +55,9 @@ namespace ranges
             /// \overload
             template<typename Rng, typename V, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputIterable<Rng &>() &&
+                CONCEPT_REQUIRES_(InputIterable<Rng>() &&
                     IndirectInvokableRelation<equal_to, Project<I, P>, V const *>())>
-            I operator()(Rng &rng, V const &val, P proj = P{}) const
+            range_safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));
             }

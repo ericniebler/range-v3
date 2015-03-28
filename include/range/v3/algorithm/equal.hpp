@@ -87,7 +87,7 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = uncvref_t<I1Ref>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng0>() &&
+                    Iterable<Rng0>() && Iterator<I1>() &&
                     WeaklyComparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(Rng0 && rng0, I1Ref && begin1, C pred_ = C{}, P0 proj0_ = P0{},

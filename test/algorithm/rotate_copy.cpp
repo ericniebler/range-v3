@@ -301,5 +301,20 @@ int main()
     test<const int*, random_access_iterator<int*> >();
     test<const int*, int*>();
 
+    // test rvalue range
+    {
+        int rgi[] = {0,1,2,3,4,5};
+        int rgo[6] = {0};
+        auto r = ranges::rotate_copy(ranges::view::all(rgi), rgi+2, rgo);
+        CHECK(r.first.get_unsafe() == ranges::end(rgi));
+        CHECK(r.second == ranges::end(rgo));
+        CHECK(rgo[0] == 2);
+        CHECK(rgo[1] == 3);
+        CHECK(rgo[2] == 4);
+        CHECK(rgo[3] == 5);
+        CHECK(rgo[4] == 0);
+        CHECK(rgo[5] == 1);
+    }
+
     return ::test_result();
 }

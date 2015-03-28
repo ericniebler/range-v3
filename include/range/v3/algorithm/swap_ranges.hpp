@@ -68,7 +68,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterable<Rng1>() &&
                                   InputIterable<Rng2>() &&
                                   IndirectlySwappable<I1, I2>())>
-            std::pair<I1, I2> operator()(Rng1 & rng1, Rng2 & rng2) const
+            std::pair<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>>
+            operator()(Rng1 &&rng1, Rng2 &&rng2) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2));
             }

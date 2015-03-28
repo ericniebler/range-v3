@@ -90,6 +90,11 @@ void test()
         Iter i4 = ranges::reverse(::as_lvalue(ranges::make_range(Iter(id), Sent(id+sd))));
         ::check_equal(id, {3, 2, 1, 0});
         CHECK(i4 == Iter(id+sd));
+
+        // rvalue range
+        auto i5 = ranges::reverse(ranges::make_range(Iter(id), Sent(id+sd)));
+        ::check_equal(id, {0, 1, 2, 3});
+        CHECK(i5.get_unsafe() == Iter(id+sd));
     }
 }
 

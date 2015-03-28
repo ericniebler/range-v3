@@ -100,6 +100,17 @@ test1()
             CHECK(ia[i].get() == nullptr);
             CHECK(*ib[i] == i);
         }
+
+        ranges::move_backward(ib, ib+N, ia+N);
+
+        auto r2 = ranges::move_backward(ranges::make_range(InIter(ia), InIter(ia+N)), OutIter(ib+N));
+        CHECK(base(r2.first.get_unsafe()) == ia+N);
+        CHECK(base(r2.second) == ib);
+        for(int i = 0; i < N; ++i)
+        {
+            CHECK(ia[i].get() == nullptr);
+            CHECK(*ib[i] == i);
+        }
     }
 }
 

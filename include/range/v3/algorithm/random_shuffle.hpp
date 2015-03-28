@@ -67,7 +67,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Permutable<I>())>
             I operator()(I begin, S end_) const
             {
-                I end = ranges::next(begin, end_);
+                I end = ranges::next(begin, end_), orig = end;
                 auto d = end - begin;
                 if(d > 1)
                 {
@@ -81,7 +81,7 @@ namespace ranges
                             ranges::iter_swap(begin, begin + i);
                     }
                 }
-                return end;
+                return orig;
             }
 
             template<typename I, typename S, typename Gen,
@@ -90,7 +90,7 @@ namespace ranges
                                   RandomNumberGenerator<Gen, iterator_difference_t<I>>())>
             I operator()(I begin, S end_, Gen && rand) const
             {
-                I end = ranges::next(begin, end_);
+                I end = ranges::next(begin, end_), orig = end;
                 auto d = end - begin;
                 if(d > 1)
                 {
@@ -100,22 +100,22 @@ namespace ranges
                         ranges::iter_swap(begin, begin + i);
                     }
                 }
-                return end;
+                return orig;
             }
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
                                   Permutable<I>())>
-            I operator()(Rng & rng) const
+            range_safe_iterator_t<Rng> operator()(Rng &&rng) const
             {
                 return (*this)(begin(rng), end(rng));
             }
 
             template<typename Rng, typename Gen, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
                                   Permutable<I>() &&
                                   RandomNumberGenerator<Gen, iterator_difference_t<I>>())>
-            I operator()(Rng & rng, Gen && rand) const
+            range_safe_iterator_t<Rng> operator()(Rng &&rng, Gen && rand) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));
             }

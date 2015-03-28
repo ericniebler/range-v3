@@ -79,16 +79,32 @@ int main()
     test_rng<random_access_iterator<int*>, sentinel<int*> >();
 
     // test projection
-    using P = std::pair<int,std::string>;
-    P ia[] = {{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
-    P *i = ranges::replace_if(ia, [](int i){return i==2;}, std::make_pair(42,"42"),
-        &std::pair<int,std::string>::first);
-    CHECK(ia[0] == P{0,"0"});
-    CHECK(ia[1] == P{1,"1"});
-    CHECK(ia[2] == P{42,"42"});
-    CHECK(ia[3] == P{3,"3"});
-    CHECK(ia[4] == P{4,"4"});
-    CHECK(i == ranges::end(ia));
+    {
+        using P = std::pair<int,std::string>;
+        P ia[] = {{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
+        P *i = ranges::replace_if(ia, [](int i){return i==2;}, std::make_pair(42,"42"),
+            &std::pair<int,std::string>::first);
+        CHECK(ia[0] == P{0,"0"});
+        CHECK(ia[1] == P{1,"1"});
+        CHECK(ia[2] == P{42,"42"});
+        CHECK(ia[3] == P{3,"3"});
+        CHECK(ia[4] == P{4,"4"});
+        CHECK(i == ranges::end(ia));
+    }
+
+    // test rvalue range
+    {
+        using P = std::pair<int,std::string>;
+        P ia[] = {{0,"0"}, {1,"1"}, {2,"2"}, {3,"3"}, {4,"4"}};
+        auto i = ranges::replace_if(ranges::view::all(ia), [](int i){return i==2;}, std::make_pair(42,"42"),
+            &std::pair<int,std::string>::first);
+        CHECK(ia[0] == P{0,"0"});
+        CHECK(ia[1] == P{1,"1"});
+        CHECK(ia[2] == P{42,"42"});
+        CHECK(ia[3] == P{3,"3"});
+        CHECK(ia[4] == P{4,"4"});
+        CHECK(i.get_unsafe() == ranges::end(ia));
+    }
 
     return ::test_result();
 }

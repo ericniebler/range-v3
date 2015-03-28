@@ -398,5 +398,12 @@ int main()
         CHECK(ranges::is_sorted_until(as, std::greater<int>{}, &A::a) == ranges::next(ranges::begin(as),1));
     }
 
+    /// Rvalue range test:
+    {
+        A as[] = {{0}, {1}, {2}, {3}, {4}};
+        CHECK(ranges::is_sorted_until(ranges::view::all(as), std::less<int>{}, &A::a).get_unsafe() == ranges::end(as));
+        CHECK(ranges::is_sorted_until(ranges::view::all(as), std::greater<int>{}, &A::a).get_unsafe() == ranges::next(ranges::begin(as),1));
+    }
+
     return ::test_result();
 }

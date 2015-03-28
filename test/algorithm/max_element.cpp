@@ -49,6 +49,15 @@ test_iter(Iter first, Sent last)
     }
     else
         CHECK(i == last);
+
+    auto j = ranges::max_element(std::move(rng));
+    if (first != last)
+    {
+        for (Iter k = first; k != last; ++k)
+            CHECK(!(*j.get_unsafe() < *k));
+    }
+    else
+        CHECK(j.get_unsafe() == last);
 }
 
 template <class Iter, class Sent = Iter>
@@ -95,6 +104,15 @@ test_iter_comp(Iter first, Sent last)
     }
     else
         CHECK(i == last);
+
+    auto res = ranges::max_element(std::move(rng), std::greater<int>());
+    if (first != last)
+    {
+        for (Iter j = first; j != last; ++j)
+            CHECK(!std::greater<int>()(*res.get_unsafe(), *j));
+    }
+    else
+        CHECK(res.get_unsafe() == last);
 }
 
 template <class Iter, class Sent = Iter>

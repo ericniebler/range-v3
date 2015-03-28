@@ -93,7 +93,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng1>() &&
+                    Iterable<Rng1>() && Iterator<I2>() &&
                     InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
                 )>
             T operator()(Rng1 && rng1, I2Ref && begin2, T init, BOp1 bop1 = BOp1{},

@@ -147,5 +147,15 @@ int main()
     test<random_access_iterator<int*>, range_call>();
     test<int*, range_call>();
 
+    // Test rvalue range
+    {
+        int a[] = {0, 1, 1, 1, 2, 2, 2};
+        auto r = ranges::unique(ranges::view::all(a));
+        CHECK(r.get_unsafe() == a + 3);
+        CHECK(a[0] == 0);
+        CHECK(a[1] == 1);
+        CHECK(a[2] == 2);
+    }
+
     return ::test_result();
 }

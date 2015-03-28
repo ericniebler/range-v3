@@ -254,7 +254,7 @@ int main()
         int ir[] = {2, 4, 4};
         const int sr = sizeof(ir)/sizeof(ir[0]);
 
-        U * res = ranges::set_intersection(ia, ib, ic, std::less<int>(), &S::i, &T::j);
+        U * res = ranges::set_intersection(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK((res - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == 0);
     }

@@ -67,6 +67,19 @@ test_one_rng(unsigned N, unsigned M)
         CHECK(ia[N-1] == (int)N-1);
         CHECK(std::is_sorted(ia, ia+N));
     }
+
+    std::random_shuffle(ia, ia+N);
+    std::sort(ia, ia+M);
+    std::sort(ia+M, ia+N);
+    auto res2 = ranges::inplace_merge(ranges::make_range(Iter(ia), Sent(ia+N)), Iter(ia+M));
+    CHECK(res2.get_unsafe() == Iter(ia+N));
+    if(N > 0)
+    {
+        CHECK(ia[0] == 0);
+        CHECK(ia[N-1] == (int)N-1);
+        CHECK(std::is_sorted(ia, ia+N));
+    }
+
     delete [] ia;
 }
 
