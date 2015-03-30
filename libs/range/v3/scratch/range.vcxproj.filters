@@ -1171,7 +1171,7 @@
     <ClInclude Include="..\..\..\..\include\meta\meta_fwd.hpp">
       <Filter>Header Files\meta</Filter>
     </ClInclude>
-    <ClInclude Include="Header.h">
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\dangling.hpp">
       <Filter>Header Files\range\utility</Filter>
     </ClInclude>
   </ItemGroup>

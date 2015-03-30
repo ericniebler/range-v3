@@ -216,7 +216,7 @@ static_assert(fact2<3>::value == 6, "");
 static_assert(fact2<4>::value == 24, "");
 
 template<typename N>
-struct factorial : eval<
+struct factorial : let<
     if_c<N::value == 0,
          meta::size_t<1>,
          lazy::multiplies<N, factorial<lazy::dec<N>>>>>

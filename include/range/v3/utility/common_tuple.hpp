@@ -418,7 +418,8 @@ namespace ranges
                      typename TupleLike>
             struct common_type_tuple_like<T0<Ts...>, T1<Us...>, TupleLike,
                 meta::if_c<sizeof...(Ts) == sizeof...(Us)>>
-              : meta::lazy::apply<TupleLike, meta::lazy::eval<common_type<Ts, Us>>...>
+              : meta::lazy::let<
+                    meta::lazy::apply<TupleLike, meta::lazy::eval<common_type<Ts, Us>>...>>
             {};
 
             template<typename T, typename U>
@@ -484,7 +485,8 @@ namespace ranges
                      template<typename...> class T1, typename ...Us, typename TupleLike>
             struct common_ref_tuple_like<T0<Ts...>, T1<Us...>, TupleLike,
                 meta::if_c<sizeof...(Ts) == sizeof...(Us)>>
-              : meta::lazy::apply<TupleLike, meta::lazy::eval<common_reference<Ts, Us>>...>
+              : meta::lazy::let<
+                    meta::lazy::apply<TupleLike, meta::lazy::eval<common_reference<Ts, Us>>...>>
             {};
         }
 

@@ -363,11 +363,11 @@ namespace ranges
         template<typename T, typename U>
         struct common_reference<T, U>
           : meta::if_<
-                meta::lazy::and_<
+                meta::let<meta::lazy::and_<
                     meta::is_valid<detail::lazy_builtin_common_t<T, U>>,
                     meta::lazy::or_<
                         std::is_reference<detail::lazy_builtin_common_t<T, U>>,
-                        meta::not_<meta::has_type<detail::common_reference_base_<T, U>>>>>,
+                        meta::not_<meta::has_type<detail::common_reference_base_<T, U>>>>>>,
                 detail::lazy_builtin_common_t<T, U>,
                 detail::common_reference_base_<T, U>>
         {};

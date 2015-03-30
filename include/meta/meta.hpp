@@ -425,9 +425,15 @@ namespace meta
                 using type = std::true_type;
             };
 
-            template <template <typename...> class C, typename, typename = void>
+            template <template <typename...> class, typename, typename = void>
             struct defer_
             {
+            };
+
+            template <template <typename...> class C, typename... Ts>
+            struct defer_<C, list<Ts...>, void_<C<Ts...>>>
+            {
+                using type = C<Ts...>;
             };
 
             template <typename T, template <T...> class C, typename, typename = void>
@@ -666,24 +672,6 @@ namespace meta
             using bind_back = defer<bind_back, Fn, Ts...>;
         }
 
-        namespace detail
-        {
-            template <typename, typename, typename = void>
-            struct lazy_apply_
-            {
-            };
-            template <typename F, typename... Args>
-            struct lazy_apply_<F, list<Args...>, void_<apply<F, Args...>>>
-            {
-                using type = apply<F, Args...>;
-            };
-        }
-
-        template <typename F, typename... Args>
-        struct lazy_apply_wrap : detail::lazy_apply_<F, list<Args...>>
-        {
-        };
-
         /// Extend meta with your own datatypes.
         namespace extension
         {
@@ -696,13 +684,13 @@ namespace meta
             };
 
             template <typename F, template <typename...> class T, typename... Ts>
-            struct apply_list<F, T<Ts...>> : lazy_apply_wrap<F, Ts...>
+            struct apply_list<F, T<Ts...>> : lazy::apply<F, Ts...>
             {
             };
 
             template <typename F, typename T, T... Is>
             struct apply_list<F, integer_sequence<T, Is...>>
-                : lazy_apply_wrap<F, std::integral_constant<T, Is>...>
+                : lazy::apply<F, std::integral_constant<T, Is>...>
             {
             };
         }
@@ -755,7 +743,7 @@ namespace meta
             {
             };
             template <typename A, typename B, typename... Ts>
-            struct impl<A, B, Ts...> : lazy_apply_wrap<F, B, A, Ts...>
+            struct impl<A, B, Ts...> : lazy::apply<F, B, A, Ts...>
             {
             };
 
@@ -1817,7 +1805,7 @@ namespace meta
             template <typename Head, typename... List, typename State, typename Fun>
             struct reverse_fold_<list<Head, List...>, State, Fun,
                                  void_<eval<reverse_fold_<list<List...>, State, Fun>>>>
-                : lazy_apply_wrap<Fun, eval<reverse_fold_<list<List...>, State, Fun>>, Head>
+                : lazy::apply<Fun, eval<reverse_fold_<list<List...>, State, Fun>>, Head>
             {
             };
         } // namespace detail
@@ -2081,7 +2069,7 @@ namespace meta
             // Indirection here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename Sequence>
-            struct as_list_ : lazy_apply_wrap<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
+            struct as_list_ : lazy::apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
             {
             };
         } // namespace detail
@@ -2734,29 +2722,6 @@ namespace meta
             using _args_b = vararg<_b>;
             using _args_c = vararg<_c>;
         } // namespace placeholders
-
-        namespace detail
-        {
-// Accessing the nested ::type of any lazy:: computation is equivalent to
-// an evaluation with \c meta::let. This way, nested lazy computations get
-// evaluated recursively.
-#if !defined(__GNUC__) || defined(__clang__)
-            template <template <typename...> class C, typename... Ts>
-            struct defer_<C, list<Ts...>, void_<apply<lambda<defer<C, Ts...>>>>>
-            {
-                using type = apply<lambda<defer<C, Ts...>>>;
-            };
-#else
-            // Work around GCC #64970
-            // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-            template <template <typename...> class C, typename... Ts>
-            struct defer_<C, list<Ts...>,
-                          if_c<lambda<defer<C, Ts...>>::template can_apply_<>::value>>
-            {
-                using type = apply<lambda<defer<C, Ts...>>>;
-            };
-#endif
-        }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // cartesian_product
