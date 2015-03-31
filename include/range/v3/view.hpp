@@ -28,7 +28,6 @@
 #include <range/v3/view/drop.hpp>
 #include <range/v3/view/drop_while.hpp>
 #include <range/v3/view/empty.hpp>
-#include <range/v3/view/filter.hpp>
 #include <range/v3/view/for_each.hpp>
 #include <range/v3/view/generate.hpp>
 #include <range/v3/view/generate_n.hpp>
