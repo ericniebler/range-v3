@@ -18,6 +18,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/remove_if.hpp>
+#include <range/v3/detail/deprecated.hpp>
 
 namespace ranges
 {
