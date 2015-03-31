@@ -94,6 +94,7 @@ namespace ranges
                     {}
                     friend struct operator_brackets_const_proxy;
                 public:
+                    proxy(proxy const&) = default;
                     proxy const & operator=(proxy &) const = delete;
                     operator Ref() const
                     {
@@ -146,6 +147,7 @@ namespace ranges
                     {
                         return *it_;
                     }
+                    proxy (proxy const&) = default;
                     proxy const & operator=(proxy&) const = delete;
                     // BUGBUG assign from common reference? from rvalue reference?
                     proxy const & operator=(iterator_value_t<I> const & x) const
