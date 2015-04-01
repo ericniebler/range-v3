@@ -56,16 +56,4 @@
 #endif
 #endif
 
-#if __cplusplus > 201103
-#define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
-#else
-#if defined(__clang__) || defined(__GNUC__)
-#define RANGES_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
-#elif defined(_MSC_VER)
-#define RANGES_DEPRECATED(MSG) __declspec(deprecated(MSG))
-#else
-#define RANGES_DEPRECATED(MSG)
-#endif
-#endif
-
 #endif
