@@ -2379,9 +2379,8 @@ namespace meta
             using substitutions_ = push_back<
                 join<transform<
                     concat<As, repeat_n_c<size<Ts>{} + 2 - size<As>{}, back<As>>>,
-                    concat<Ts, list<back<As>, back<As>>>,
-                    compose<quote<eval>, bind_back<quote<subst1_>, back<As>,
-                                                   drop<Ts, minus<size<As>, meta::size_t<2>>>>>>>,
+                    concat<Ts, repeat_n_c<2, back<As>>>,
+                    bind_back<quote_trait<subst1_>, back<As>, drop_c<Ts, size<As>{} - 2>>>>,
                 list<back<As>>>;
 
             template <typename As, typename Ts>
@@ -2430,12 +2429,8 @@ namespace meta
                     using type = C<Is...>;
                 };
                 template <typename T, typename Args>
-                struct lookup
-                {
-                    using type = at<Args, reverse_find_index<Tags, T>>;
-                };
-                template <typename T, typename Args>
-                struct impl : if_<in<Tags, T>, lookup<T, Args>, id<T>>
+                struct impl : if_c<(reverse_find_index<Tags, T>() != npos()),
+                                   lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
                 {
                 };
                 template <typename T, typename Args>
@@ -2494,13 +2489,6 @@ namespace meta
                 };
 
             public:
-// Work around GCC #64970
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if defined(__GNUC__) && !defined(__clang__)
-                template <typename... Ts>
-                using can_apply_ =
-                    and_<bool_<sizeof...(Ts) == arity>, has_type<impl<F, list<Ts..., F>>>>;
-#endif
                 template <typename... Ts>
                 using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
             };
@@ -2517,7 +2505,7 @@ namespace meta
                 template <typename T, typename Args>
                 struct impl;
                 template <typename Args>
-                using eval_impl_ = compose<quote<eval>, bind_back<quote<impl>, Args>>;
+                using eval_impl_ = bind_back<quote_trait<impl>, Args>;
                 template <typename T, typename Args>
                 using lazy_impl_ = lazy::eval<defer<impl, T, protect_<Args>>>;
                 template <template <typename...> class C, typename Args, typename Ts>
@@ -2537,12 +2525,8 @@ namespace meta
                     using type = list<C<Is...>>;
                 };
                 template <typename T, typename Args>
-                struct lookup
-                {
-                    using type = at<Args, reverse_find_index<Tags, T>>;
-                };
-                template <typename T, typename Args>
-                struct impl : if_<in<Tags, T>, lookup<T, Args>, id<list<T>>>
+                struct impl : if_c<(reverse_find_index<Tags, T>() != npos()),
+                                   lazy::at<Args, reverse_find_index<Tags, T>>, id<list<T>>>
                 {
                 };
                 template <typename T, typename Args>
