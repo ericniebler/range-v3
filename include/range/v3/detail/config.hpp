@@ -56,6 +56,7 @@
 #endif
 #endif
 
+#ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
 #if __cplusplus > 201103
 #define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
 #else
@@ -66,6 +67,9 @@
 #else
 #define RANGES_DEPRECATED(MSG)
 #endif
+#endif
+#else
+#define RANGES_DEPRECATED(MSG)
 #endif
 
 #endif
