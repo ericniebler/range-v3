@@ -15,6 +15,10 @@
 #include <iostream>
 #include <typeinfo>
 
+#if __cplusplus >= 201402L
+#define RANGES_CPP_STD_14_OR_GREATER
+#endif
+
 namespace test_impl
 {
     inline int &test_failures()
