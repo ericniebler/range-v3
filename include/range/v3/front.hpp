@@ -30,6 +30,7 @@ namespace ranges
             /// \return `*begin(rng)`
             template<typename Rng,
                 CONCEPT_REQUIRES_(Iterable<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             range_reference_t<Rng> operator()(Rng &&rng) const
             {
                 return *begin(rng);

@@ -36,11 +36,13 @@ namespace ranges
         {
         private:
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<D, I> impl_r(Rng &rng, D d, concepts::Iterable*, concepts::Iterable*) const
             {
                 return iter_enumerate(begin(rng), end(rng), d);
             }
             template<typename Rng, typename D, typename I = range_iterator_t<Rng>>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<D, I> impl_r(Rng &rng, D d, concepts::BoundedIterable*, concepts::SizedIterable*) const
             {
                 return {static_cast<D>(size(rng)) + d, end(rng)};
@@ -51,6 +53,7 @@ namespace ranges
             template<typename Rng, typename D = range_difference_t<Rng>,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<D, I> operator()(Rng &&rng, D d = 0) const
             {
                 // Better not be trying to compute the distance of an infinite range:
@@ -71,11 +74,13 @@ namespace ranges
         {
         private:
             template<typename Rng, typename D>
+            RANGES_RELAXED_CONSTEXPR
             D impl_r(Rng &rng, D d, concepts::Iterable*) const
             {
                 return enumerate(rng, d).first;
             }
             template<typename Rng, typename D>
+            RANGES_RELAXED_CONSTEXPR
             D impl_r(Rng &rng, D d, concepts::SizedIterable*) const
             {
                 return static_cast<D>(size(rng)) + d;
@@ -85,6 +90,7 @@ namespace ranges
 
             template<typename Rng, typename D = range_difference_t<Rng>,
                 CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             D operator()(Rng &&rng, D d = 0) const
             {
                 // Better not be trying to compute the distance of an infinite range:
@@ -106,18 +112,21 @@ namespace ranges
         private:
             template<typename Rng,
                 CONCEPT_REQUIRES_(!is_infinite<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             int impl_r(Rng &rng, range_difference_t<Rng> n, concepts::Iterable*) const
             {
                 return iter_distance_compare(begin(rng), end(rng), n);
             }
             template<typename Rng,
                 CONCEPT_REQUIRES_(is_infinite<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             int impl_r(Rng &rng, range_difference_t<Rng> n, concepts::Iterable*) const
             {
                 // Infinite ranges are always compared to be larger than a finite number.
                 return 1;
             }
             template<typename Rng>
+            RANGES_RELAXED_CONSTEXPR
             int impl_r(Rng &rng, range_difference_t<Rng> n, concepts::SizedIterable*) const
             {
                 auto dist = distance(rng); // O(1) since rng is a SizedIterable
@@ -133,6 +142,7 @@ namespace ranges
 
             template<typename Rng,
                 CONCEPT_REQUIRES_(Iterable<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             int operator()(Rng &&rng, range_difference_t<Rng> n) const
             {
                 return this->impl_r(rng, n, sized_iterable_concept<Rng>());

@@ -35,6 +35,7 @@ namespace ranges
         private:
             template<typename I0, typename S0, typename I1, typename S1,
                 typename C, typename P0, typename P1>
+            RANGES_RELAXED_CONSTEXPR
             bool nocheck(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_,
                 P0 proj0_, P1 proj1_) const
             {
@@ -54,6 +55,7 @@ namespace ranges
                     IteratorRange<I0, S0>() &&
                     WeaklyComparable<I0, I1, C, P0, P1>()
                 )>
+            RANGES_RELAXED_CONSTEXPR
             bool operator()(I0 begin0, S0 end0, I1 begin1, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
@@ -72,6 +74,7 @@ namespace ranges
                     IteratorRange<I0, S0>() && IteratorRange<I1, S1>() &&
                     Comparable<I0, I1, C, P0, P1>()
                 )>
+            RANGES_RELAXED_CONSTEXPR
             bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
@@ -90,6 +93,7 @@ namespace ranges
                     Iterable<Rng0>() && Iterator<I1>() &&
                     WeaklyComparable<I0, I1, C, P0, P1>()
                 )>
+            RANGES_RELAXED_CONSTEXPR
             bool operator()(Rng0 && rng0, I1Ref && begin1, C pred_ = C{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const
             {
@@ -105,6 +109,7 @@ namespace ranges
                     Iterable<Rng0>() && Iterable<Rng1>() &&
                     Comparable<I0, I1, C, P0, P1>()
                 )>
+            RANGES_RELAXED_CONSTEXPR
             bool operator()(Rng0 && rng0, Rng1 && rng1, C pred_ = C{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const
             {

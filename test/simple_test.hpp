@@ -15,6 +15,9 @@
 #include <iostream>
 #include <typeinfo>
 
+// TODO: [constexpr] this macro increases the size of the testing matrix:
+// need to test in C++11 and C++14, but that might already be the case
+// (see tests that are currently already broken in C++14)
 #if __cplusplus >= 201402L
 #define RANGES_CPP_STD_14_OR_GREATER
 #endif

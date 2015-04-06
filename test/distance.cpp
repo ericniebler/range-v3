@@ -10,6 +10,7 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <array>
 #include <forward_list>
 #include <list>
 #include <vector>

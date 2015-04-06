@@ -21,8 +21,6 @@
 # define RANGES_ASSERT assert
 #endif
 
-
-
 #define RANGES_DECLTYPE_AUTO_RETURN(...)                        \
     -> decltype(__VA_ARGS__)                                    \
     { return (__VA_ARGS__); }                                   \
@@ -77,7 +75,7 @@
 #if __cplusplus > 201103
 #define RANGES_RELAXED_CONSTEXPR constexpr
 #else
-#define RANGES_RELAXED_CONSTEXPR
+#define RANGES_RELAXED_CONSTEXPR inline
 #endif
 
 #endif

@@ -32,7 +32,7 @@ namespace ranges
             struct null_pipe
             {
                 template<typename Rng>
-                void operator()(Rng &&) const
+                RANGES_RELAXED_CONSTEXPR void operator()(Rng &&) const
                 {}
             };
         }
@@ -47,7 +47,7 @@ namespace ranges
                 struct impl
                 {
                     template<typename...Ts, typename V = View>
-                    static auto bind(Ts &&...ts)
+                    static RANGES_RELAXED_CONSTEXPR auto bind(Ts &&...ts)
                     RANGES_DECLTYPE_AUTO_RETURN
                     (
                         V::bind(std::forward<Ts>(ts)...)
@@ -58,7 +58,7 @@ namespace ranges
             struct make_view_fn
             {
                 template<typename Fun>
-                view<Fun> operator()(Fun fun) const
+                RANGES_RELAXED_CONSTEXPR view<Fun> operator()(Fun fun) const
                 {
                     return {std::move(fun)};
                 }
@@ -89,7 +89,7 @@ namespace ranges
                 // Pipeing requires range arguments or lvalue containers.
                 template<typename Rng, typename Vw,
                     CONCEPT_REQUIRES_(ViewConcept<Rng>())>
-                static auto pipe(Rng && rng, Vw && v)
+                static RANGES_RELAXED_CONSTEXPR auto pipe(Rng && rng, Vw && v)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     v.view_(std::forward<Rng>(rng))
@@ -98,7 +98,7 @@ namespace ranges
                 // For better error messages:
                 template<typename Rng, typename Vw,
                     CONCEPT_REQUIRES_(!ViewConcept<Rng>())>
-                static void pipe(Rng &&, Vw &&)
+                static RANGES_RELAXED_CONSTEXPR void pipe(Rng &&, Vw &&)
                 {
                     CONCEPT_ASSERT_MSG(Iterable<Rng>(),
                         "The type Rng must be a model of the Iterable concept.");
@@ -112,21 +112,21 @@ namespace ranges
                 }
             #endif
             public:
-                view() = default;
-                view(View a)
+                RANGES_RELAXED_CONSTEXPR view() = default;
+                RANGES_RELAXED_CONSTEXPR view(View a)
                   : view_(std::move(a))
                 {}
                 // Calling directly requires range arguments or lvalue containers.
                 template<typename Rng, typename...Rest,
                     CONCEPT_REQUIRES_(ViewConcept<Rng, Rest...>())>
-                auto operator()(Rng && rng, Rest &&... rest) const
+                RANGES_RELAXED_CONSTEXPR auto operator()(Rng && rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     view_(std::forward<Rng>(rng), std::forward<Rest>(rest)...)
                 )
                 // Currying overload.
                 template<typename T, typename...Rest, typename V = View>
-                auto operator()(T && t, Rest &&... rest) const
+                RANGES_RELAXED_CONSTEXPR auto operator()(T && t, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_view(view_access::impl<V>::bind(view_, std::forward<T>(t),

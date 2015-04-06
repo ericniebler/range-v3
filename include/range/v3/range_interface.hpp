@@ -38,7 +38,7 @@ namespace ranges
                 To to;
                 template<typename F, typename T,
                     CONCEPT_REQUIRES_(Convertible<F, From>() && Convertible<T, To>())>
-                slice_bounds(F from, T to)
+                RANGES_RELAXED_CONSTEXPR slice_bounds(F from, T to)
                   : from(from), to(to)
                 {}
             };
@@ -50,7 +50,7 @@ namespace ranges
 
                 template<typename Other,
                     CONCEPT_REQUIRES_(Integral<Other>() && Convertible<Other, Int>())>
-                operator from_end_<Other> () const
+                RANGES_RELAXED_CONSTEXPR operator from_end_<Other> () const
                 {
                     return {static_cast<Other>(dist_)};
                 }
@@ -65,26 +65,26 @@ namespace ranges
           : private basic_range<Inf>
         {
         protected:
-            Derived & derived()
+            RANGES_RELAXED_CONSTEXPR Derived & derived()
             {
                 return static_cast<Derived &>(*this);
             }
             /// \overload
-            Derived const & derived() const
+            RANGES_RELAXED_CONSTEXPR Derived const & derived() const
             {
                 return static_cast<Derived const &>(*this);
             }
         public:
             // A few ways of testing whether a range can be empty:
-            bool empty() const
+            RANGES_RELAXED_CONSTEXPR bool empty() const
             {
                 return derived().begin() == derived().end();
             }
-            bool operator!() const
+            RANGES_RELAXED_CONSTEXPR bool operator!() const
             {
                 return empty();
             }
-            explicit operator bool() const
+            RANGES_RELAXED_CONSTEXPR explicit operator bool() const
             {
                 return !empty();
             }
@@ -92,42 +92,42 @@ namespace ranges
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() &&
                     SizedIteratorRange<range_iterator_t<D>, range_sentinel_t<D>>())>
-            range_size_t<D> size() const
+            RANGES_RELAXED_CONSTEXPR range_size_t<D> size() const
             {
                 return iter_size(derived().begin(), derived().end());
             }
             /// Access the first element in a range:
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            range_reference_t<D> front()
+            RANGES_RELAXED_CONSTEXPR range_reference_t<D> front()
             {
                 return *derived().begin();
             }
             /// \overload
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            range_reference_t<D const> front() const
+            RANGES_RELAXED_CONSTEXPR range_reference_t<D const> front() const
             {
                 return *derived().begin();
             }
             /// Access the last element in a range:
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D>() && BidirectionalRange<D>())>
-            range_reference_t<D> back()
+            RANGES_RELAXED_CONSTEXPR range_reference_t<D> back()
             {
                 return *prev(derived().end());
             }
             /// \overload
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D const>() && BidirectionalRange<D const>())>
-            range_reference_t<D const> back() const
+            RANGES_RELAXED_CONSTEXPR range_reference_t<D const> back() const
             {
                 return *prev(derived().end());
             }
             /// Simple indexing:
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>())>
-            auto operator[](range_difference_t<D> n) ->
+            RANGES_RELAXED_CONSTEXPR auto operator[](range_difference_t<D> n) ->
                 decltype(std::declval<D &>().begin()[n])
             {
                 return derived().begin()[n];
@@ -135,7 +135,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D const>())>
-            auto operator[](range_difference_t<D> n) const ->
+            RANGES_RELAXED_CONSTEXPR auto operator[](range_difference_t<D> n) const ->
                 decltype(std::declval<D const &>().begin()[n])
             {
                 return derived().begin()[n];
@@ -144,7 +144,7 @@ namespace ranges
             //      rng[{4,6}]
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<range_difference_t<D>> offs) ->
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<range_difference_t<D>> offs) ->
                 decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
             {
                 return Slice{}(derived(), offs.from, offs.to);
@@ -152,7 +152,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<range_difference_t<D>> offs) const ->
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<range_difference_t<D>> offs) const ->
                 decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
             {
                 return Slice{}(derived(), offs.from, offs.to);
@@ -161,7 +161,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<range_difference_t<D>,
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<range_difference_t<D>,
                 detail::from_end_<range_difference_t<D>>> offs) ->
                 decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
             {
@@ -170,7 +170,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<range_difference_t<D>,
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<range_difference_t<D>,
                 detail::from_end_<range_difference_t<D>>> offs) const ->
                 decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
             {
@@ -180,7 +180,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<detail::from_end_<range_difference_t<D>>,
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<detail::from_end_<range_difference_t<D>>,
                 detail::from_end_<range_difference_t<D>>> offs) ->
                 decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
             {
@@ -189,7 +189,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<detail::from_end_<range_difference_t<D>>,
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<detail::from_end_<range_difference_t<D>>,
                 detail::from_end_<range_difference_t<D>>> offs) const ->
                 decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
             {
@@ -199,7 +199,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<range_difference_t<D>, end_fn> offs) ->
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<range_difference_t<D>, end_fn> offs) ->
                 decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
             {
                 return Slice{}(derived(), offs.from, offs.to);
@@ -207,7 +207,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<range_difference_t<D>, end_fn> offs) const ->
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<range_difference_t<D>, end_fn> offs) const ->
                 decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
             {
                 return Slice{}(derived(), offs.from, offs.to);
@@ -216,7 +216,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<detail::from_end_<range_difference_t<D>>, end_fn> offs) ->
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<detail::from_end_<range_difference_t<D>>, end_fn> offs) ->
                 decltype(std::declval<Slice>()(std::declval<D &>(), offs.from, offs.to))
             {
                 return Slice{}(derived(), offs.from, offs.to);
@@ -224,7 +224,7 @@ namespace ranges
             /// \overload
             template<typename D = Derived, typename Slice = view::slice_fn,
                 CONCEPT_REQUIRES_(Same<D, Derived>())>
-            auto operator[](detail::slice_bounds<detail::from_end_<range_difference_t<D>>, end_fn> offs) const ->
+            RANGES_RELAXED_CONSTEXPR auto operator[](detail::slice_bounds<detail::from_end_<range_difference_t<D>>, end_fn> offs) const ->
                 decltype(std::declval<Slice>()(std::declval<D const &>(), offs.from, offs.to))
             {
                 return Slice{}(derived(), offs.from, offs.to);
@@ -233,7 +233,7 @@ namespace ranges
             template<typename Container, typename D = Derived,
                 typename Alloc = typename Container::allocator_type, // HACKHACK
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D, Container>())>
-            operator Container ()
+            RANGES_RELAXED_CONSTEXPR operator Container ()
             {
                 return ranges::to_<Container>(derived());
             }
@@ -241,7 +241,7 @@ namespace ranges
             template<typename Container, typename D = Derived,
                 typename Alloc = typename Container::allocator_type, // HACKHACK
                 CONCEPT_REQUIRES_(detail::ConvertibleToContainer<D const, Container>())>
-            operator Container () const
+            RANGES_RELAXED_CONSTEXPR operator Container () const
             {
                 return ranges::to_<Container>(derived());
             }

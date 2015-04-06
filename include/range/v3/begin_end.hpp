@@ -40,21 +40,25 @@ namespace ranges
             using std::rend;
 #else
             template<typename T, std::size_t N>
+            RANGES_RELAXED_CONSTEXPR
             std::reverse_iterator<T *> rbegin(T (&t)[N])
             {
                 return std::reverse_iterator<T *>(t + N);
             }
             template<typename T, std::size_t N>
+            RANGES_RELAXED_CONSTEXPR
             std::reverse_iterator<T *> rend(T (&t)[N])
             {
                 return std::reverse_iterator<T *>(t);
             }
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             std::reverse_iterator<T const *> rbegin(std::initializer_list<T> il)
             {
                 return std::reverse_iterator<T *>(il.end());
             }
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             std::reverse_iterator<T const *> rend(std::initializer_list<T> il)
             {
                 return std::reverse_iterator<T const *>(il.begin());
@@ -63,48 +67,56 @@ namespace ranges
 
             // A reference-wrapped Iterable is an Iterable
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto begin(std::reference_wrapper<T> ref) -> decltype(begin(ref.get()))
             {
                 return begin(ref.get());
             }
 
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto end(std::reference_wrapper<T> ref) -> decltype(end(ref.get()))
             {
                 return end(ref.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto begin(ranges::reference_wrapper<T, RValue> ref) -> decltype(begin(ref.get()))
             {
                 return begin(ref.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto end(ranges::reference_wrapper<T, RValue> ref) -> decltype(end(ref.get()))
             {
                 return end(ref.get());
             }
 
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto rbegin(std::reference_wrapper<T> ref) -> decltype(rbegin(ref.get()))
             {
                 return rbegin(ref.get());
             }
 
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto rend(std::reference_wrapper<T> ref) -> decltype(rend(ref.get()))
             {
                 return rend(ref.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto rbegin(ranges::reference_wrapper<T, RValue> ref) -> decltype(rbegin(ref.get()))
             {
                 return rbegin(ref.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto rend(ranges::reference_wrapper<T, RValue> ref) -> decltype(rend(ref.get()))
             {
                 return rend(ref.get());

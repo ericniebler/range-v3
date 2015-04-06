@@ -119,20 +119,20 @@ namespace ranges
             using iota_difference_t = meta::eval<iota_difference<Val>>;
 
             template<typename Val, CONCEPT_REQUIRES_(!Integral<Val>())>
-            iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)
+            constexpr iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)
             {
                 return v0 - v1;
             }
 
             template<typename Val, CONCEPT_REQUIRES_(SignedIntegral<Val>())>
-            iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)
+            constexpr iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)
             {
                 using D = iota_difference_t<Val>;
                 return (D) v0 - (D) v1;
             }
 
             template<typename Val, CONCEPT_REQUIRES_(UnsignedIntegral<Val>())>
-            iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)
+            constexpr iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)
             {
                 using D = iota_difference_t<Val>;
                 return (D) (v0 - v1);
@@ -157,45 +157,46 @@ namespace ranges
             Val2 to_;
             bool done_ = false;
 
-            Val current() const
+            constexpr Val current() const
             {
                 return from_;
             }
-            void next()
+            RANGES_RELAXED_CONSTEXPR void next()
             {
                 if(from_ == to_)
                     done_ = true;
                 else
                     ++from_;
             }
-            bool done() const
+            constexpr bool done() const
             {
                 return done_;
             }
             CONCEPT_REQUIRES(Incrementable<Val>())
-            bool equal(iota_view const &that) const
+            constexpr bool equal(iota_view const &that) const
             {
                 return that.from_ == from_;
             }
             CONCEPT_REQUIRES(BidirectionalIncrementable<Val>())
-            void prev()
+            RANGES_RELAXED_CONSTEXPR void prev()
             {
                 --from_;
             }
             CONCEPT_REQUIRES(RandomAccessIncrementable<Val>())
-            void advance(difference_type_ n)
+            RANGES_RELAXED_CONSTEXPR void advance(difference_type_ n)
             {
                 RANGES_ASSERT(detail::iota_minus(to_, from_) >= n);
                 from_ += n;
             }
             CONCEPT_REQUIRES(RandomAccessIncrementable<Val>())
+            RANGES_RELAXED_CONSTEXPR
             difference_type_ distance_to(iota_view const &that) const
             {
                 return detail::iota_minus(that.from_, from_);
             }
         public:
-            iota_view() = default;
-            iota_view(Val from, Val2 to)
+            constexpr iota_view() = default;
+            constexpr iota_view(Val from, Val2 to)
               : from_(std::move(from)), to_(std::move(to))
             {}
         };
@@ -211,11 +212,11 @@ namespace ranges
 
             Val value_;
 
-            Val current() const
+            RANGES_RELAXED_CONSTEXPR Val current() const
             {
                 return value_;
             }
-            void next()
+            RANGES_RELAXED_CONSTEXPR void next()
             {
                 ++value_;
             }
@@ -224,27 +225,31 @@ namespace ranges
                 return false;
             }
             CONCEPT_REQUIRES(Incrementable<Val>())
+            RANGES_RELAXED_CONSTEXPR
             bool equal(iota_view const &that) const
             {
                 return that.value_ == value_;
             }
             CONCEPT_REQUIRES(BidirectionalIncrementable<Val>())
+            RANGES_RELAXED_CONSTEXPR
             void prev()
             {
                 --value_;
             }
             CONCEPT_REQUIRES(RandomAccessIncrementable<Val>())
+            RANGES_RELAXED_CONSTEXPR
             void advance(difference_type_ n)
             {
                 value_ += n;
             }
             CONCEPT_REQUIRES(RandomAccessIncrementable<Val>())
+            RANGES_RELAXED_CONSTEXPR
             difference_type_ distance_to(iota_view const &that) const
             {
                 return detail::iota_minus(that.value_, value_);
             }
         public:
-            iota_view() = default;
+            constexpr iota_view() = default;
             constexpr explicit iota_view(Val value)
               : value_(detail::move(value))
             {}
@@ -256,13 +261,14 @@ namespace ranges
             {
             private:
                 template<typename Val>
-                static take_exactly_view<iota_view<Val>>
+                static RANGES_RELAXED_CONSTEXPR
+                take_exactly_view<iota_view<Val>>
                 impl(Val from, Val to, concepts::RandomAccessIncrementable *)
                 {
                     return {iota_view<Val>{std::move(from)}, detail::iota_minus(to, from) + 1};
                 }
                 template<typename Val, typename Val2>
-                static iota_view<Val, Val2>
+                static RANGES_RELAXED_CONSTEXPR iota_view<Val, Val2>
                 impl(Val from, Val2 to, concepts::WeaklyIncrementable *)
                 {
                     return {std::move(from), std::move(to)};
@@ -270,6 +276,7 @@ namespace ranges
             public:
                 template<typename Val,
                     CONCEPT_REQUIRES_(WeaklyIncrementable<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 iota_view<Val> operator()(Val value) const
                 {
                     CONCEPT_ASSERT(WeaklyIncrementable<Val>());
@@ -277,6 +284,7 @@ namespace ranges
                 }
                 template<typename Val, typename Val2,
                     CONCEPT_REQUIRES_(WeaklyIncrementable<Val>() && EqualityComparable<Val, Val2>())>
+                RANGES_RELAXED_CONSTEXPR
                 meta::if_<
                     meta::and_<RandomAccessIncrementable<Val>, Same<Val, Val2>>,
                     take_exactly_view<iota_view<Val>>,
@@ -289,6 +297,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
                     CONCEPT_REQUIRES_(!WeaklyIncrementable<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Val) const
                 {
                     CONCEPT_ASSERT_MSG(WeaklyIncrementable<Val>(),
@@ -298,6 +307,7 @@ namespace ranges
                 }
                 template<typename Val, typename Val2,
                     CONCEPT_REQUIRES_(!(WeaklyIncrementable<Val>() && EqualityComparable<Val, Val2>()))>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Val, Val2) const
                 {
                     CONCEPT_ASSERT_MSG(WeaklyIncrementable<Val>(),
@@ -324,12 +334,14 @@ namespace ranges
 
                 template<typename Val,
                     CONCEPT_REQUIRES_(Integral<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 iota_view<Val> operator()(Val value) const
                 {
                     return iota_view<Val>{value};
                 }
                 template<typename Val,
                     CONCEPT_REQUIRES_(Integral<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 take_exactly_view<iota_view<Val>> operator()(Val from, Val to) const
                 {
                     return {iota_view<Val>{from}, detail::iota_minus(to, from) + 1};
@@ -337,6 +349,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
                     CONCEPT_REQUIRES_(!Integral<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Val) const
                 {
                     CONCEPT_ASSERT_MSG(Integral<Val>(),
@@ -344,6 +357,7 @@ namespace ranges
                 }
                 template<typename Val,
                     CONCEPT_REQUIRES_(!Integral<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Val, Val) const
                 {
                     CONCEPT_ASSERT_MSG(Integral<Val>(),

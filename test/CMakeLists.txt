@@ -11,6 +11,9 @@ add_subdirectory(numeric)
 add_subdirectory(utility)
 add_subdirectory(view)
 
+add_executable(begin_end begin_end.cpp)
+add_test(test.begin_end begin_end)
+
 add_executable(container_conversion container_conversion.cpp)
 add_test(test.container_conversion container_conversion)
 
@@ -28,6 +31,9 @@ add_test(test.multiple multiple)
 
 add_executable(distance distance.cpp)
 add_test(test.distance distance)
+
+add_executable(size size.cpp)
+add_test(test.size size)
 
 add_executable(to_container to_container.cpp)
 add_test(test.to_container, to_container)

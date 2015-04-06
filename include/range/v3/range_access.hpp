@@ -82,63 +82,63 @@ namespace ranges
             };
 
             template<typename Rng>
-            static auto begin_cursor(Rng & rng, long)
+            static RANGES_RELAXED_CONSTEXPR auto begin_cursor(Rng & rng, long)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 rng.begin_cursor()
             )
             template<typename Rng>
-            static auto begin_cursor(Rng & rng, int)
+            static RANGES_RELAXED_CONSTEXPR auto begin_cursor(Rng & rng, int)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 static_cast<Rng const &>(rng).begin_cursor()
             )
             template<typename Rng>
-            static auto end_cursor(Rng & rng, long)
+            static RANGES_RELAXED_CONSTEXPR auto end_cursor(Rng & rng, long)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 rng.end_cursor()
             )
             template<typename Rng>
-            static auto end_cursor(Rng & rng, int)
+            static RANGES_RELAXED_CONSTEXPR auto end_cursor(Rng & rng, int)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 static_cast<Rng const &>(rng).end_cursor()
             )
 
             template<typename Rng>
-            static auto begin_adaptor(Rng & rng, long)
+            static RANGES_RELAXED_CONSTEXPR auto begin_adaptor(Rng & rng, long)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 rng.begin_adaptor()
             )
             template<typename Rng>
-            static auto begin_adaptor(Rng & rng, int)
+            static RANGES_RELAXED_CONSTEXPR auto begin_adaptor(Rng & rng, int)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 static_cast<Rng const &>(rng).begin_adaptor()
             )
             template<typename Rng>
-            static auto end_adaptor(Rng & rng, long)
+            static RANGES_RELAXED_CONSTEXPR auto end_adaptor(Rng & rng, long)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 rng.end_adaptor()
             )
             template<typename Rng>
-            static auto end_adaptor(Rng & rng, int)
+            static RANGES_RELAXED_CONSTEXPR auto end_adaptor(Rng & rng, int)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 static_cast<Rng const &>(rng).end_adaptor()
             )
 
             template<typename Cur>
-            static auto current(Cur const &pos)
+            static RANGES_RELAXED_CONSTEXPR auto current(Cur const &pos)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 pos.current()
             )
             template<typename Cur>
-            static auto next(Cur & pos)
+            static RANGES_RELAXED_CONSTEXPR auto next(Cur & pos)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 pos.next()
@@ -150,7 +150,7 @@ namespace ranges
                 pos.done()
             )
             template<typename Cur>
-            static auto equal(Cur const &pos0, Cur const &pos1)
+            static RANGES_RELAXED_CONSTEXPR auto equal(Cur const &pos0, Cur const &pos1)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 pos0.equal(pos1)
@@ -162,19 +162,19 @@ namespace ranges
                 end.equal(pos)
             )
             template<typename Cur>
-            static auto prev(Cur & pos)
+            static RANGES_RELAXED_CONSTEXPR auto prev(Cur & pos)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 pos.prev()
             )
             template<typename Cur, typename D>
-            static auto advance(Cur & pos, D n)
+            static RANGES_RELAXED_CONSTEXPR auto advance(Cur & pos, D n)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 pos.advance(n)
             )
             template<typename Cur>
-            static auto distance_to(Cur const &pos0, Cur const &pos1)
+            static RANGES_RELAXED_CONSTEXPR auto distance_to(Cur const &pos0, Cur const &pos1)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 pos0.distance_to(pos1)
@@ -242,12 +242,12 @@ namespace ranges
             using single_pass_t = typename single_pass<Cur>::type;
 
             template<typename Cur, typename S>
-            static Cur cursor(basic_iterator<Cur, S> it)
+            static RANGES_RELAXED_CONSTEXPR Cur cursor(basic_iterator<Cur, S> it)
             {
                 return std::move(it.pos());
             }
             template<typename S>
-            static S sentinel(basic_sentinel<S> s)
+            static RANGES_RELAXED_CONSTEXPR S sentinel(basic_sentinel<S> s)
             {
                 return std::move(s.end());
             }
