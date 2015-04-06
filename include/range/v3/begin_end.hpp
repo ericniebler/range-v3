@@ -32,26 +32,13 @@ namespace ranges
             using std::begin;
             using std::end;
 
-            template<typename T>
-            auto rbegin(T &t) -> decltype(t.rbegin())
-            {
-                return t.rbegin();
-            }
-            template<typename T>
-            auto rbegin(T const &t) -> decltype(t.rbegin())
-            {
-                return t.rbegin();
-            }
-            template<typename T>
-            auto rend(T &t) -> decltype(t.rend())
-            {
-                return t.rend();
-            }
-            template<typename T>
-            auto rend(T const &t) -> decltype(t.rend())
-            {
-                return t.rend();
-            }
+#if (__cplusplus >= 201402L) && \
+    ((defined(_LIBCXX_VERSION) && (_LIBCXX_VERSION >= 1101) && \
+      defined(_LIBCPP_STD_VER) && (_LIBCPP_STD_VER > 11)) || \
+    (defined(__GLIBCXX__) && (__GLIBCXX__ > 20141030)))
+            using std::rbegin;
+            using std::rend;
+#else
             template<typename T, std::size_t N>
             std::reverse_iterator<T *> rbegin(T (&t)[N])
             {
@@ -72,6 +59,7 @@ namespace ranges
             {
                 return std::reverse_iterator<T const *>(il.begin());
             }
+#endif
 
             // A reference-wrapped Iterable is an Iterable
             template<typename T>
@@ -124,81 +112,157 @@ namespace ranges
 
             struct begin_fn
             {
+            private:
                 template<typename Rng>
-                auto operator()(Rng && rng) const ->
+                static constexpr auto impl(Rng && rng, long)
+                    noexcept(noexcept(begin(rng))) ->
                     decltype(begin(rng))
                 {
                     return begin(rng);
+                }
+                template<typename Rng,
+                    meta::if_c<std::is_lvalue_reference<Rng>::value, int> = 0>
+                static constexpr auto impl(Rng && rng, int)
+                    noexcept(noexcept(rng.begin())) ->
+                    decltype(rng.begin())
+                {
+                    return rng.begin();
+                }
+            public:
+                template<typename Rng>
+                constexpr auto operator()(Rng && rng) const
+                    noexcept(noexcept(begin_fn::impl(static_cast<Rng &&>(rng), 0))) ->
+                    decltype(begin_fn::impl(static_cast<Rng &&>(rng), 0))
+                {
+                    return begin_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
             };
 
             struct end_fn
             {
+            private:
                 template<typename Rng>
-                auto operator()(Rng && rng) const ->
+                static constexpr auto impl(Rng && rng, long)
+                    noexcept(noexcept(end(rng))) ->
                     decltype(end(rng))
                 {
                     return end(rng);
+                }
+                template<typename Rng,
+                    meta::if_c<std::is_lvalue_reference<Rng>::value, int> = 0>
+                static constexpr auto impl(Rng && rng, int)
+                    noexcept(noexcept(rng.end())) ->
+                    decltype(rng.end())
+                {
+                    return rng.end();
+                }
+            public:
+                template<typename Rng>
+                constexpr auto operator()(Rng && rng) const
+                    noexcept(noexcept(end_fn::impl(static_cast<Rng &&>(rng), 0))) ->
+                    decltype(end_fn::impl(static_cast<Rng &&>(rng), 0))
+                {
+                    return end_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
             };
 
             struct rbegin_fn
             {
+            private:
                 template<typename Rng>
-                auto operator()(Rng && rng) const ->
+                static constexpr auto impl(Rng && rng, long)
+                    noexcept(noexcept(rbegin(rng))) ->
                     decltype(rbegin(rng))
                 {
                     return rbegin(rng);
+                }
+                template<typename Rng,
+                    meta::if_c<std::is_lvalue_reference<Rng>::value, int> = 0>
+                static constexpr auto impl(Rng && rng, int)
+                    noexcept(noexcept(rng.rbegin())) ->
+                    decltype(rng.rbegin())
+                {
+                    return rng.rbegin();
+                }
+            public:
+                template<typename Rng>
+                constexpr auto operator()(Rng && rng) const
+                    noexcept(noexcept(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))) ->
+                    decltype(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))
+                {
+                    return rbegin_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
             };
 
             struct rend_fn
             {
+            private:
                 template<typename Rng>
-                auto operator()(Rng && rng) const ->
+                static constexpr auto impl(Rng && rng, long)
+                    noexcept(noexcept(rend(rng))) ->
                     decltype(rend(rng))
                 {
                     return rend(rng);
+                }
+                template<typename Rng,
+                    meta::if_c<std::is_lvalue_reference<Rng>::value, int> = 0>
+                static constexpr auto impl(Rng && rng, int)
+                    noexcept(noexcept(rng.rend())) ->
+                    decltype(rng.rend())
+                {
+                    return rng.rend();
+                }
+            public:
+                template<typename Rng>
+                constexpr auto operator()(Rng && rng) const
+                    noexcept(noexcept(rend_fn::impl(static_cast<Rng &&>(rng), 0))) ->
+                    decltype(rend_fn::impl(static_cast<Rng &&>(rng), 0))
+                {
+                    return rend_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
             };
 
             struct cbegin_fn
             {
                 template<typename Rng>
-                auto operator()(Rng const & rng) const ->
-                    decltype(begin(rng))
+                constexpr auto operator()(Rng const & rng) const
+                    noexcept(noexcept(static_const<begin_fn>::value(rng))) ->
+                    decltype(static_const<begin_fn>::value(rng))
                 {
-                    return begin(rng);
+                    return static_const<begin_fn>::value(rng);
                 }
             };
 
             struct cend_fn
             {
                 template<typename Rng>
-                auto operator()(Rng const & rng) const ->
-                    decltype(end(rng))
+                constexpr auto operator()(Rng const & rng) const
+                    noexcept(noexcept(static_const<end_fn>::value(rng))) ->
+                    decltype(static_const<end_fn>::value(rng))
                 {
-                    return end(rng);
+                    return static_const<end_fn>::value(rng);
                 }
             };
 
             struct crbegin_fn
             {
                 template<typename Rng>
-                auto operator()(Rng const & rng) const ->
-                    decltype(rbegin(rng))
+                constexpr auto operator()(Rng const & rng) const
+                    noexcept(noexcept(static_const<rbegin_fn>::value(rng))) ->
+                    decltype(static_const<rbegin_fn>::value(rng))
                 {
-                    return rbegin(rng);
+                    return static_const<rbegin_fn>::value(rng);
                 }
             };
 
             struct crend_fn
             {
                 template<typename Rng>
-                auto operator()(Rng const & rng) const ->
-                    decltype(rend(rng))
+                constexpr auto operator()(Rng const & rng) const
+                    noexcept(noexcept(static_const<rend_fn>::value(rng))) ->
+                    decltype(static_const<rend_fn>::value(rng))
                 {
-                    return rend(rng);
+                    return static_const<rend_fn>::value(rng);
                 }
             };
         }

@@ -2647,15 +2647,6 @@ namespace meta
             {
                 using type = lazy::apply<lambda<Tag, eval<let_<Rest...>>>, Value>;
             };
-            template <typename T, typename = void>
-            struct eval_let_
-            {
-            };
-            template <typename Lambda, typename... Ts>
-            struct eval_let_<lazy::apply<Lambda, Ts...>, void_<apply<Lambda, Ts...>>>
-            {
-                using type = apply<Lambda, Ts...>;
-            };
         }
         /// \endcond
 
@@ -2675,7 +2666,7 @@ namespace meta
         /// \endcode
         /// \ingroup trait
         template <typename... As>
-        using let = eval<detail::eval_let_<eval<detail::let_<As...>>>>;
+        using let = eval<eval<detail::let_<As...>>>;
 
         namespace lazy
         {
