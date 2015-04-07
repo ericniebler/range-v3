@@ -35,7 +35,7 @@ namespace ranges
 #if (__cplusplus >= 201402L) && \
     ((defined(_LIBCXX_VERSION) && (_LIBCXX_VERSION >= 1101) && \
       defined(_LIBCPP_STD_VER) && (_LIBCPP_STD_VER > 11)) || \
-    (defined(__GLIBCXX__) && (__GLIBCXX__ > 20141030)))
+    (defined(__GLIBCXX__) && (__GLIBCXX__ >= 20150119)))
             using std::rbegin;
             using std::rend;
 #else
