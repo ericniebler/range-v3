@@ -130,6 +130,13 @@ int main()
         static_assert(!ranges::is_infinite<decltype(rng6)>::value, "");
         static_assert(ranges::equal(rng6, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19}), "");
         static_assert(size(rng6) == 10u, "");
+
+        constexpr auto rng7 = view::iota(10) | view::take(10) | view::reverse;
+        ::models<concepts::BoundedRange>(rng7);
+        ::models<concepts::SizedRange>(rng7);
+        static_assert(!ranges::is_infinite<decltype(rng7)>::value, "");
+        static_assert(ranges::equal(rng7, {19, 18, 17, 16, 15, 14, 13, 12, 11, 10}), "");
+        static_assert(size(rng7) == 10u, "");
     }
 #endif
 
