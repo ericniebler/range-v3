@@ -127,8 +127,7 @@ namespace ranges
                 RANGES_RELAXED_CONSTEXPR variant_data(meta::size_t<N>, U &&u)
                   : tail{meta::size_t<N - 1>{}, std::forward<U>(u)}
                 {}
-                ~variant_data()
-                {}
+                ~variant_data() = default;
                 void move(std::size_t n, variant_data &&that)
                 {
                     if(n == 0)
