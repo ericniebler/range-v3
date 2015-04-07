@@ -51,6 +51,7 @@ namespace ranges
         {
             template<typename Fun, typename T, std::size_t N,
                 typename = decltype(std::declval<Fun>()(std::declval<T &>(), meta::size_t<N>{}))>
+            RANGES_RELAXED_CONSTEXPR
             void apply_if(Fun &&fun, T &t, meta::size_t<N> u)
             {
                 std::forward<Fun>(fun)(t, u);
@@ -87,6 +88,8 @@ namespace ranges
                 }
             };
 
+            struct uninitialized_t_ {};
+
             template<typename T, typename ...Ts>
             union variant_data<T, Ts...>
             {
@@ -98,6 +101,7 @@ namespace ranges
 
                 head_t head;
                 tail_t tail;
+                uninitialized_t_ uninitialized;
 
                 template<typename This, typename Fun, std::size_t N>
                 static void apply_(This &this_, std::size_t n, Fun &&fun, meta::size_t<N> u)
@@ -108,17 +112,19 @@ namespace ranges
                         this_.tail.apply(n - 1, detail::forward<Fun>(fun), meta::size_t<N + 1>{});
                 }
             public:
-                variant_data()
+
+                RANGES_RELAXED_CONSTEXPR variant_data() : uninitialized{uninitialized_t_{}}
                 {}
                 // BUGBUG in-place construction?
                 template<typename U,
                     meta::if_<std::is_constructible<head_t, U>, int> = 0>
+                RANGES_RELAXED_CONSTEXPR
                 variant_data(meta::size_t<0>, U &&u)
                   : head(std::forward<U>(u))
                 {}
                 template<std::size_t N, typename U,
-                    meta::if_c<0 != N && std::is_constructible<tail_t, meta::size_t<N - 1>, U>::value, int> = 0>
-                variant_data(meta::size_t<N>, U &&u)
+                         meta::if_c<0 != N && std::is_constructible<tail_t, meta::size_t<N - 1>, U>::value, int> = 0>
+                RANGES_RELAXED_CONSTEXPR variant_data(meta::size_t<N>, U &&u)
                   : tail{meta::size_t<N - 1>{}, std::forward<U>(u)}
                 {}
                 ~variant_data()
@@ -138,6 +144,7 @@ namespace ranges
                         tail.copy(n - 1, that.tail);
                 }
                 template<typename U, typename...Us>
+                RANGES_RELAXED_CONSTEXPR
                 bool equal(std::size_t n, variant_data<U, Us...> const &that) const
                 {
                     if(n == 0)
@@ -146,11 +153,13 @@ namespace ranges
                         return tail.equal(n - 1, that.tail);
                 }
                 template<typename Fun, std::size_t N = 0>
+                RANGES_RELAXED_CONSTEXPR
                 void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{})
                 {
                     variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
                 template<typename Fun, std::size_t N = 0>
+                RANGES_RELAXED_CONSTEXPR
                 void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{}) const
                 {
                     variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
@@ -160,19 +169,22 @@ namespace ranges
             struct variant_core_access
             {
                 template<typename...Ts>
-                static variant_data<Ts...> &data(tagged_variant<Ts...> &var)
+                static RANGES_RELAXED_CONSTEXPR
+                variant_data<Ts...> &data(tagged_variant<Ts...> &var)
                 {
                     return var.data_;
                 }
 
                 template<typename...Ts>
-                static variant_data<Ts...> const &data(tagged_variant<Ts...> const &var)
+                static RANGES_RELAXED_CONSTEXPR
+                variant_data<Ts...> const &data(tagged_variant<Ts...> const &var)
                 {
                     return var.data_;
                 }
 
                 template<typename...Ts>
-                static variant_data<Ts...> &&data(tagged_variant<Ts...> &&var)
+                static RANGES_RELAXED_CONSTEXPR
+                variant_data<Ts...> &&data(tagged_variant<Ts...> &&var)
                 {
                     return std::move(var).data_;
                 }
@@ -204,7 +216,7 @@ namespace ranges
             private:
                 T &&t_;
             public:
-                construct_fun(T &&t)
+                RANGES_RELAXED_CONSTEXPR construct_fun(T &&t)
                   : t_(std::forward<T>(t))
                 {}
                 template<typename U,
@@ -221,7 +233,7 @@ namespace ranges
             private:
                 T *&t_;
             public:
-                get_fun(T *&t)
+                RANGES_RELAXED_CONSTEXPR get_fun(T *&t)
                   : t_(t)
                 {}
                 void operator()(T &t) const
@@ -237,21 +249,24 @@ namespace ranges
                 Var &var_;
                 Fun fun_;
                 template<typename T, std::size_t N>
+                RANGES_RELAXED_CONSTEXPR
                 void apply_(T &&t, meta::size_t<N> n, std::true_type) const
                 {
                     fun_(std::forward<T>(t), n);
                     var_.template set<N>(nullptr);
                 }
                 template<typename T, std::size_t N>
+                RANGES_RELAXED_CONSTEXPR
                 void apply_(T &&t, meta::size_t<N> n, std::false_type) const
                 {
                     var_.template set<N>(fun_(std::forward<T>(t), n));
                 }
             public:
-                apply_visitor(Fun &&fun, Var &var)
+                RANGES_RELAXED_CONSTEXPR apply_visitor(Fun &&fun, Var &var)
                   : var_(var), fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T &&t, meta::size_t<N> u) const
                 {
                     using result_t = result_of_t<Fun(T &&, meta::size_t<N>)>;
@@ -265,10 +280,11 @@ namespace ranges
             private:
                 Fun fun_;
             public:
-                apply_visitor(Fun &&fun)
+                RANGES_RELAXED_CONSTEXPR apply_visitor(Fun &&fun)
                   : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T &&t, meta::size_t<N> n) const
                 {
                     fun_(std::forward<T>(t), n);
@@ -281,11 +297,11 @@ namespace ranges
             private:
                 Fun fun_;
             public:
-                ignore2nd(Fun &&fun)
+                RANGES_RELAXED_CONSTEXPR ignore2nd(Fun &&fun)
                   : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, typename U>
-                auto operator()(T &&t, U &&) const ->
+                RANGES_RELAXED_CONSTEXPR auto operator()(T &&t, U &&) const ->
                     decltype(fun_(std::forward<T>(t)))
                 {
                     return fun_(std::forward<T>(t));
@@ -293,21 +309,25 @@ namespace ranges
             };
 
             template<typename Fun>
+            RANGES_RELAXED_CONSTEXPR
             apply_visitor<ignore2nd<Fun>> make_unary_visitor(Fun &&fun)
             {
                 return {std::forward<Fun>(fun)};
             }
             template<typename Fun, typename Var>
+            RANGES_RELAXED_CONSTEXPR
             apply_visitor<ignore2nd<Fun>, Var> make_unary_visitor(Fun &&fun, Var &var)
             {
                 return{std::forward<Fun>(fun), var};
             }
             template<typename Fun>
+            RANGES_RELAXED_CONSTEXPR
             apply_visitor<Fun> make_binary_visitor(Fun &&fun)
             {
                 return{std::forward<Fun>(fun)};
             }
             template<typename Fun, typename Var>
+            RANGES_RELAXED_CONSTEXPR
             apply_visitor<Fun, Var> make_binary_visitor(Fun &&fun, Var &var)
             {
                 return{std::forward<Fun>(fun), var};
@@ -322,15 +342,16 @@ namespace ranges
             private:
                 tagged_variant<To...> &var_;
             public:
-                unique_visitor(tagged_variant<To...> &var)
+                RANGES_RELAXED_CONSTEXPR unique_visitor(tagged_variant<To...> &var)
                   : var_(var)
                 {}
                 template<typename T, std::size_t N>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T &&t, meta::size_t<N>) const
                 {
                     using E = meta::at_c<meta::list<From...>, N>;
                     using F = meta::find<meta::list<To...>, E>;
-                    static constexpr std::size_t M = sizeof...(To) - F::size();
+                    constexpr std::size_t M = sizeof...(To) - F::size();
                     var_.template set<M>(std::forward<T>(t));
                 }
             };
@@ -363,21 +384,46 @@ namespace ranges
             private:
                 Fun fun_;
             public:
-                unwrap_ref_fun(Fun &&fun)
+                RANGES_RELAXED_CONSTEXPR unwrap_ref_fun(Fun &&fun)
                   : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(T &&t) const ->
                     decltype(fun_(unwrap_reference(std::forward<T>(t))))
                 {
                     return fun_(unwrap_reference(std::forward<T>(t)));
                 }
                 template<typename T, std::size_t N>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(T &&t, meta::size_t<N> n) const ->
                     decltype(fun_(unwrap_reference(std::forward<T>(t)), n))
                 {
                     return fun_(unwrap_reference(std::forward<T>(t)), n);
                 }
+            };
+
+
+            template<class T>
+            struct tagged_variant_without_trivial_destructor {
+                RANGES_RELAXED_CONSTEXPR tagged_variant_without_trivial_destructor() = default;
+                RANGES_RELAXED_CONSTEXPR tagged_variant_without_trivial_destructor(tagged_variant_without_trivial_destructor const&) = default;
+                RANGES_RELAXED_CONSTEXPR tagged_variant_without_trivial_destructor(tagged_variant_without_trivial_destructor &&) = default;
+                RANGES_RELAXED_CONSTEXPR tagged_variant_without_trivial_destructor& operator=(tagged_variant_without_trivial_destructor const&) = default;
+                RANGES_RELAXED_CONSTEXPR tagged_variant_without_trivial_destructor& operator=(tagged_variant_without_trivial_destructor &&) = default;
+
+                ~tagged_variant_without_trivial_destructor() {
+                    static_cast<T*>(this)->clear_();
+                }
+            };
+
+            struct tagged_variant_with_trivial_destructor {
+                RANGES_RELAXED_CONSTEXPR tagged_variant_with_trivial_destructor() = default;
+                RANGES_RELAXED_CONSTEXPR tagged_variant_with_trivial_destructor(tagged_variant_with_trivial_destructor const&) = default;
+                RANGES_RELAXED_CONSTEXPR tagged_variant_with_trivial_destructor(tagged_variant_with_trivial_destructor &&) = default;
+                RANGES_RELAXED_CONSTEXPR tagged_variant_with_trivial_destructor& operator=(tagged_variant_with_trivial_destructor const&) { return *this; }
+                RANGES_RELAXED_CONSTEXPR tagged_variant_with_trivial_destructor& operator=(tagged_variant_with_trivial_destructor &&) { return *this; };
+                ~tagged_variant_with_trivial_destructor() = default;
             };
         }
         /// \endcond
@@ -386,6 +432,9 @@ namespace ranges
         /// @{
         template<typename ...Ts>
         struct tagged_variant
+        : meta::if_<meta::all_of<meta::list<Ts...>, meta::quote<std::is_trivially_destructible>>,
+                    detail::tagged_variant_with_trivial_destructor,
+                    detail::tagged_variant_without_trivial_destructor<tagged_variant<Ts...>>>
         {
         private:
             friend struct detail::variant_core_access;
@@ -408,7 +457,7 @@ namespace ranges
             {}
             template<std::size_t N, typename U,
                 meta::if_<std::is_constructible<data_t, meta::size_t<N>, U>, int> = 0>
-            tagged_variant(meta::size_t<N> n, U &&u)
+            RANGES_RELAXED_CONSTEXPR tagged_variant(meta::size_t<N> n, U &&u)
               : which_(N), data_{n, detail::forward<U>(u)}
             {
                 static_assert(N < sizeof...(Ts), "");
@@ -451,34 +500,31 @@ namespace ranges
                 }
                 return *this;
             }
-            ~tagged_variant()
-            {
-                clear_();
-            }
+            ~tagged_variant() = default;
             static constexpr std::size_t size()
             {
                 return sizeof...(Ts);
             }
             template<std::size_t N, typename U,
                 meta::if_<std::is_constructible<data_t, meta::size_t<N>, U>, int> = 0>
-            void set(U &&u)
+            RANGES_RELAXED_CONSTEXPR void set(U &&u)
             {
                 clear_();
                 data_.apply(N, detail::make_unary_visitor(detail::construct_fun<U>{std::forward<U>(u)}));
                 which_ = N;
             }
-            bool is_valid() const
+            RANGES_RELAXED_CONSTEXPR bool is_valid() const
             {
                 return which() != (std::size_t)-1;
             }
-            std::size_t which() const
+            RANGES_RELAXED_CONSTEXPR std::size_t which() const
             {
                 return which_;
             }
             template<typename Fun,
                 typename Args = meta::transform<types_t, detail::add_ref_t>,
                 typename Result = detail::variant_result_t<Fun, Args>>
-            Result apply(Fun &&fun)
+            RANGES_RELAXED_CONSTEXPR Result apply(Fun &&fun)
             {
                 Result res;
                 data_.apply(which_, detail::make_unary_visitor(detail::unwrap_ref_fun<Fun>{std::forward<Fun>(fun)}, res));
@@ -487,7 +533,7 @@ namespace ranges
             template<typename Fun,
                 typename Args = meta::transform<types_t, detail::add_cref_t>,
                 typename Result = detail::variant_result_t<Fun, Args >>
-            Result apply(Fun &&fun) const
+            RANGES_RELAXED_CONSTEXPR Result apply(Fun &&fun) const
             {
                 Result res;
                 data_.apply(which_, detail::make_unary_visitor(detail::unwrap_ref_fun<Fun>{std::forward<Fun>(fun)}, res));
@@ -497,7 +543,7 @@ namespace ranges
             template<typename Fun,
                 typename Args = meta::transform<types_t, detail::add_ref_t>,
                 typename Result = detail::variant_result_i_t<Fun, Args>>
-            Result apply_i(Fun &&fun)
+            RANGES_RELAXED_CONSTEXPR Result apply_i(Fun &&fun)
             {
                 Result res;
                 data_.apply(which_, detail::make_binary_visitor(detail::unwrap_ref_fun<Fun>{std::forward<Fun>(fun)}, res));
@@ -506,7 +552,7 @@ namespace ranges
             template<typename Fun,
                 typename Args = meta::transform<types_t, detail::add_cref_t>,
                 typename Result = detail::variant_result_i_t<Fun, Args >>
-            Result apply_i(Fun &&fun) const
+            RANGES_RELAXED_CONSTEXPR Result apply_i(Fun &&fun) const
             {
                 Result res;
                 data_.apply(which_, detail::make_binary_visitor(detail::unwrap_ref_fun<Fun>{std::forward<Fun>(fun)}, res));
@@ -516,6 +562,7 @@ namespace ranges
 
         template<typename...Ts, typename...Us,
             CONCEPT_REQUIRES_(meta::and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
+        RANGES_RELAXED_CONSTEXPR
         bool operator==(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
             RANGES_ASSERT(lhs.which() < sizeof...(Ts));
@@ -526,6 +573,7 @@ namespace ranges
 
         template<typename...Ts, typename...Us,
             CONCEPT_REQUIRES_(meta::and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
+        RANGES_RELAXED_CONSTEXPR
         bool operator!=(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
             return !(lhs == rhs);
@@ -542,6 +590,7 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // get
         template<std::size_t N, typename...Ts>
+        RANGES_RELAXED_CONSTEXPR
         meta::apply<detail::add_ref_t, tagged_variant_element_t<N, tagged_variant<Ts...>>>
         get(tagged_variant<Ts...> &var)
         {
@@ -558,6 +607,7 @@ namespace ranges
         }
 
         template<std::size_t N, typename...Ts>
+        RANGES_RELAXED_CONSTEXPR
         meta::apply<detail::add_cref_t, tagged_variant_element_t<N, tagged_variant<Ts...>>>
         get(tagged_variant<Ts...> const &var)
         {
@@ -577,6 +627,7 @@ namespace ranges
         }
 
         template<std::size_t N, typename...Ts>
+        RANGES_RELAXED_CONSTEXPR
         meta::eval<std::add_rvalue_reference<tagged_variant_element_t<N, tagged_variant<Ts...>>>>
         get(tagged_variant<Ts...> &&var)
         {
@@ -595,6 +646,7 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // set
         template<std::size_t N, typename...Ts, typename U>
+        RANGES_RELAXED_CONSTEXPR
         void set(tagged_variant<Ts...> &var, U &&u)
         {
             var.template set<N>(std::forward<U>(u));
@@ -620,6 +672,7 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // unique_variant
         template<typename...Ts>
+        RANGES_RELAXED_CONSTEXPR
         tagged_variant_unique_t<tagged_variant<Ts...>>
         unique_variant(tagged_variant<Ts...> const &var)
         {
