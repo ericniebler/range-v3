@@ -16,6 +16,7 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/delimit.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -120,6 +121,17 @@ int main()
     ::models_not<concepts::BoundedRange>(rng9);
     ::models_not<concepts::SizedRange>(rng9);
     check_equal(rng9, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+
+#ifdef RANGES_CPP_STD_14_OR_GREATER
+    {
+        constexpr auto rng6 = view::iota(10) | view::take(10);
+        ::models<concepts::BoundedRange>(rng6);
+        ::models<concepts::SizedRange>(rng6);
+        static_assert(!ranges::is_infinite<decltype(rng6)>::value, "");
+        static_assert(ranges::equal(rng6, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19}), "");
+        static_assert(size(rng6) == 10u, "");
+    }
+#endif
 
     return test_result();
 }
