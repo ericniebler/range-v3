@@ -63,20 +63,20 @@ namespace ranges
             }
 
             template<typename...List>
-            union variant_data;
+            union variant_data_non_trivial;
 
             template<>
-            union variant_data<>
+            union variant_data_non_trivial<>
             {
-                void move(std::size_t, variant_data &&) const
+                void move(std::size_t, variant_data_non_trivial &&) const
                 {
                     RANGES_ASSERT(false);
                 }
-                void copy(std::size_t, variant_data const &) const
+                void copy(std::size_t, variant_data_non_trivial const &) const
                 {
                     RANGES_ASSERT(false);
                 }
-                bool equal(std::size_t, variant_data const &) const
+                bool equal(std::size_t, variant_data_non_trivial const &) const
                 {
                     RANGES_ASSERT(false);
                     return true;
@@ -86,18 +86,19 @@ namespace ranges
                 {
                     RANGES_ASSERT(false);
                 }
+                ~variant_data_non_trivial() = default;
             };
 
             struct uninitialized_t_ {};
 
             template<typename T, typename ...Ts>
-            union variant_data<T, Ts...>
+            union variant_data_non_trivial<T, Ts...>
             {
             private:
                 template<typename...Us>
                 friend union variant_data;
                 using head_t = decay_t<meta::if_<std::is_reference<T>, ref_t<T &>, T>>;
-                using tail_t = variant_data<Ts...>;
+                using tail_t = variant_data_non_trivial<Ts...>;
 
                 head_t head;
                 tail_t tail;
@@ -113,29 +114,29 @@ namespace ranges
                 }
             public:
 
-                RANGES_RELAXED_CONSTEXPR variant_data() : uninitialized{uninitialized_t_{}}
+                RANGES_RELAXED_CONSTEXPR variant_data_non_trivial() : uninitialized{uninitialized_t_{}}
                 {}
                 // BUGBUG in-place construction?
                 template<typename U,
                     meta::if_<std::is_constructible<head_t, U>, int> = 0>
                 RANGES_RELAXED_CONSTEXPR
-                variant_data(meta::size_t<0>, U &&u)
+                variant_data_non_trivial(meta::size_t<0>, U &&u)
                   : head(std::forward<U>(u))
                 {}
                 template<std::size_t N, typename U,
                          meta::if_c<0 != N && std::is_constructible<tail_t, meta::size_t<N - 1>, U>::value, int> = 0>
-                RANGES_RELAXED_CONSTEXPR variant_data(meta::size_t<N>, U &&u)
+                RANGES_RELAXED_CONSTEXPR variant_data_non_trivial(meta::size_t<N>, U &&u)
                   : tail{meta::size_t<N - 1>{}, std::forward<U>(u)}
                 {}
-                ~variant_data() = default;
-                void move(std::size_t n, variant_data &&that)
+                ~variant_data_non_trivial() {}
+                void move(std::size_t n, variant_data_non_trivial &&that)
                 {
                     if(n == 0)
                         ::new(static_cast<void *>(&head)) head_t(std::move(that).head);
                     else
                         tail.move(n - 1, std::move(that).tail);
                 }
-                void copy(std::size_t n, variant_data const &that)
+                void copy(std::size_t n, variant_data_non_trivial const &that)
                 {
                     if(n == 0)
                         ::new(static_cast<void *>(&head)) head_t(that.head);
@@ -144,7 +145,7 @@ namespace ranges
                 }
                 template<typename U, typename...Us>
                 RANGES_RELAXED_CONSTEXPR
-                bool equal(std::size_t n, variant_data<U, Us...> const &that) const
+                bool equal(std::size_t n, variant_data_non_trivial<U, Us...> const &that) const
                 {
                     if(n == 0)
                         return head == that.head;
@@ -155,15 +156,122 @@ namespace ranges
                 RANGES_RELAXED_CONSTEXPR
                 void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{})
                 {
-                    variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
+                    variant_data_non_trivial::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
                 template<typename Fun, std::size_t N = 0>
                 RANGES_RELAXED_CONSTEXPR
                 void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{}) const
                 {
-                    variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
+                    variant_data_non_trivial::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
             };
+
+           template<typename...List>
+            union variant_data_trivial;
+
+            template<>
+            union variant_data_trivial<>
+            {
+                void move(std::size_t, variant_data_trivial &&) const
+                {
+                    RANGES_ASSERT(false);
+                }
+                void copy(std::size_t, variant_data_trivial const &) const
+                {
+                    RANGES_ASSERT(false);
+                }
+                bool equal(std::size_t, variant_data_trivial const &) const
+                {
+                    RANGES_ASSERT(false);
+                    return true;
+                }
+                template<typename Fun, std::size_t N = 0>
+                void apply(std::size_t, Fun &&, meta::size_t<N> = meta::size_t<N>{}) const
+                {
+                    RANGES_ASSERT(false);
+                }
+                ~variant_data_trivial() = default;
+            };
+
+            template<typename T, typename ...Ts>
+            union variant_data_trivial<T, Ts...>
+            {
+            private:
+                template<typename...Us>
+                friend union variant_data_trivial;
+                using head_t = decay_t<meta::if_<std::is_reference<T>, ref_t<T &>, T>>;
+                using tail_t = variant_data_trivial<Ts...>;
+
+                head_t head;
+                tail_t tail;
+                uninitialized_t_ uninitialized;
+
+                template<typename This, typename Fun, std::size_t N>
+                static void apply_(This &this_, std::size_t n, Fun &&fun, meta::size_t<N> u)
+                {
+                    if(0 == n)
+                        detail::apply_if(detail::forward<Fun>(fun), this_.head, u);
+                    else
+                        this_.tail.apply(n - 1, detail::forward<Fun>(fun), meta::size_t<N + 1>{});
+                }
+            public:
+
+                RANGES_RELAXED_CONSTEXPR variant_data_trivial() : uninitialized{uninitialized_t_{}}
+                {}
+                // BUGBUG in-place construction?
+                template<typename U,
+                    meta::if_<std::is_constructible<head_t, U>, int> = 0>
+                RANGES_RELAXED_CONSTEXPR
+                variant_data_trivial(meta::size_t<0>, U &&u)
+                  : head(std::forward<U>(u))
+                {}
+                template<std::size_t N, typename U,
+                         meta::if_c<0 != N && std::is_constructible<tail_t, meta::size_t<N - 1>, U>::value, int> = 0>
+                RANGES_RELAXED_CONSTEXPR variant_data_trivial(meta::size_t<N>, U &&u)
+                  : tail{meta::size_t<N - 1>{}, std::forward<U>(u)}
+                {}
+                ~variant_data_trivial() = default;
+                void move(std::size_t n, variant_data_trivial &&that)
+                {
+                    if(n == 0)
+                        ::new(static_cast<void *>(&head)) head_t(std::move(that).head);
+                    else
+                        tail.move(n - 1, std::move(that).tail);
+                }
+                void copy(std::size_t n, variant_data_trivial const &that)
+                {
+                    if(n == 0)
+                        ::new(static_cast<void *>(&head)) head_t(that.head);
+                    else
+                        tail.copy(n - 1, that.tail);
+                }
+                template<typename U, typename...Us>
+                RANGES_RELAXED_CONSTEXPR
+                bool equal(std::size_t n, variant_data_trivial<U, Us...> const &that) const
+                {
+                    if(n == 0)
+                        return head == that.head;
+                    else
+                        return tail.equal(n - 1, that.tail);
+                }
+                template<typename Fun, std::size_t N = 0>
+                RANGES_RELAXED_CONSTEXPR
+                void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{})
+                {
+                    variant_data_trivial::apply_(*this, n, std::forward<Fun>(fun), u);
+                }
+                template<typename Fun, std::size_t N = 0>
+                RANGES_RELAXED_CONSTEXPR
+                void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{}) const
+                {
+                    variant_data_trivial::apply_(*this, n, std::forward<Fun>(fun), u);
+                }
+            };
+
+        template<typename... Ts>
+        using variant_data
+        = meta::if_<meta::all_of<meta::list<Ts...>, meta::quote<std::is_trivially_destructible>>,
+                    variant_data_trivial<Ts...>, variant_data_non_trivial<Ts...>>;
 
             struct variant_core_access
             {
@@ -436,6 +544,7 @@ namespace ranges
                     detail::tagged_variant_without_trivial_destructor<tagged_variant<Ts...>>>
         {
         private:
+            friend struct detail::tagged_variant_without_trivial_destructor<tagged_variant<Ts...>>;
             friend struct detail::variant_core_access;
             using types_t = meta::list<Ts...>;
             using data_t = detail::variant_data<Ts...>;
