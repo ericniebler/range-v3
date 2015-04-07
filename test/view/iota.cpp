@@ -74,14 +74,27 @@ int main()
 
 #ifdef RANGES_CPP_STD_14_OR_GREATER
     {
-        const constexpr auto srng = view::ints(0, 10);
+        constexpr auto srng1 = view::iota(0, 10);
         constexpr auto srng2 = view::ints(0, 10);
-        static_assert(ranges::size(srng) == 11, "");
-        static_assert(ranges::equal(srng, srng2), "");
-        static_assert(srng[0] == 0, "");
-        static_assert(srng[10] == 10, "");
-        static_assert(srng[0] == srng2[0], "");
-        static_assert(srng[10] == srng2[10], "");
+        constexpr auto srng3 = view::ints | view::take(11);
+        constexpr auto srng4 = view::ints(0) | view::take(11);
+        static_assert(ranges::size(srng1) == 11, "");
+        static_assert(ranges::size(srng2) == 11, "");
+        static_assert(ranges::size(srng3) == 11, "");
+        static_assert(ranges::size(srng4) == 11, "");
+
+        static_assert(ranges::equal(srng1, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}), "");
+        static_assert(ranges::equal(srng1, srng2), "");
+        static_assert(ranges::equal(srng1, srng3), "");
+        static_assert(ranges::equal(srng1, srng4), "");
+        static_assert(srng1[0] == 0, "");
+        static_assert(srng1[10] == 10, "");
+        static_assert(srng1[0] == srng2[0], "");
+        static_assert(srng1[10] == srng2[10], "");
+        static_assert(srng1[0] == srng3[0], "");
+        static_assert(srng1[10] == srng3[10], "");
+        static_assert(srng1[0] == srng4[0], "");
+        static_assert(srng1[10] == srng4[10], "");
     }
 #endif
 
