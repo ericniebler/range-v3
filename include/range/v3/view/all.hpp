@@ -63,6 +63,13 @@ namespace ranges
                     return std::forward<T>(t);
                 }
 
+
+                template<typename T>
+                static void from_iterable_static_assert() {
+                    static_assert(std::is_lvalue_reference<T>::value,
+                                  "Cannot get a view of a temporary container");
+                }
+
                 /// If it is container-like, turn it into an range, being careful
                 /// to preserve the Sized-ness of the iterable.
                 template<typename T,
@@ -70,12 +77,11 @@ namespace ranges
                     typename I = range_iterator_t<T>,
                     typename S = range_sentinel_t<T>,
                     typename SIC = sized_iterable_concept<T>,
-                         typename SIRC = sized_iterator_range_concept<I, S>>
+                    typename SIRC = sized_iterator_range_concept<I, S>,
+                    typename Assert = decltype(from_iterable_static_assert<T>())>
                 static RANGES_RELAXED_CONSTEXPR auto from_iterable(T && t, concepts::Iterable*) ->
                     decltype(all_fn::from_container(t, SIC(), SIRC()))
                 {
-                    // TODO: [constexpr] re-add this static assert
-                    // static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
                     return all_fn::from_container(t, SIC(), SIRC());
                 }
 

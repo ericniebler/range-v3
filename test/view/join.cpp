@@ -11,8 +11,11 @@
 
 // Work around strange glibc bug(?)
 #include <iosfwd>
-#if __cplusplus >= 201402L && defined(__GLIBCXX__)
+#include <range/v3/detail/config.hpp>
+#ifdef RANGES_CXX_GREATER_THAN_11
+#ifdef __GLIBCXX__
 int gets;
+#endif
 #endif
 
 #include <vector>

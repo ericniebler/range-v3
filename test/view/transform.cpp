@@ -126,7 +126,7 @@ int main()
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, std::string &&>());
     }
 
-#ifdef RANGES_CPP_STD_14_OR_GREATER
+#ifdef RANGES_CXX_GREATER_THAN_11
     {
         const constexpr auto srng = view::ints(0, 10);
         constexpr auto t_rng0 = srng | view::transform(times_two());

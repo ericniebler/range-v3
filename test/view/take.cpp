@@ -122,7 +122,7 @@ int main()
     ::models_not<concepts::SizedRange>(rng9);
     check_equal(rng9, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
-#ifdef RANGES_CPP_STD_14_OR_GREATER
+#ifdef RANGES_CXX_GREATER_THAN_11
     {
         constexpr auto rng6 = view::iota(10) | view::take(10);
         ::models<concepts::BoundedRange>(rng6);

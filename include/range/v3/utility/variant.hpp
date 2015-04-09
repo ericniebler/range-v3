@@ -89,8 +89,6 @@ namespace ranges
                 ~variant_data_non_trivial() = default;
             };
 
-            struct uninitialized_t_ {};
-
             template<typename T, typename ...Ts>
             union variant_data_non_trivial<T, Ts...>
             {
@@ -102,7 +100,6 @@ namespace ranges
 
                 head_t head;
                 tail_t tail;
-                uninitialized_t_ uninitialized;
 
                 template<typename This, typename Fun, std::size_t N>
                 static void apply_(This &this_, std::size_t n, Fun &&fun, meta::size_t<N> u)
@@ -113,9 +110,7 @@ namespace ranges
                         this_.tail.apply(n - 1, detail::forward<Fun>(fun), meta::size_t<N + 1>{});
                 }
             public:
-
-                RANGES_RELAXED_CONSTEXPR variant_data_non_trivial() : uninitialized{uninitialized_t_{}}
-                {}
+                variant_data_non_trivial() {}
                 // BUGBUG in-place construction?
                 template<typename U,
                     meta::if_<std::is_constructible<head_t, U>, int> = 0>
@@ -166,7 +161,9 @@ namespace ranges
                 }
             };
 
-           template<typename...List>
+            struct uninitialized_t_ {};
+
+            template<typename...List>
             union variant_data_trivial;
 
             template<>
@@ -216,7 +213,7 @@ namespace ranges
                 }
             public:
 
-                RANGES_RELAXED_CONSTEXPR variant_data_trivial() : uninitialized{uninitialized_t_{}}
+                RANGES_RELAXED_CONSTEXPR variant_data_trivial() : uninitialized{}
                 {}
                 // BUGBUG in-place construction?
                 template<typename U,

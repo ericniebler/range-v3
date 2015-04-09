@@ -50,17 +50,18 @@ namespace ranges
             private:
                 remove_if_view *rng_;
                 using adaptor_base::advance;
+                RANGES_RELAXED_CONSTEXPR
                 void satisfy(range_iterator_t<Rng> &it) const
                 {
                     it = find_if_not(std::move(it), ranges::end(rng_->mutable_base()),
                         std::ref(rng_->pred_));
                 }
             public:
-                adaptor() = default;
-                adaptor(remove_if_view &rng)
+                RANGES_RELAXED_CONSTEXPR adaptor() = default;
+                RANGES_RELAXED_CONSTEXPR adaptor(remove_if_view &rng)
                   : rng_(&rng)
                 {}
-                range_iterator_t<Rng> begin(remove_if_view &) const
+                RANGES_RELAXED_CONSTEXPR range_iterator_t<Rng> begin(remove_if_view &) const
                 {
                     auto &beg = rng_->begin_;
                     if(!beg)
@@ -70,52 +71,52 @@ namespace ranges
                     }
                     return *beg;
                 }
-                void next(range_iterator_t<Rng> &it) const
+                RANGES_RELAXED_CONSTEXPR void next(range_iterator_t<Rng> &it) const
                 {
                     this->satisfy(++it);
                 }
                 CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
-                void prev(range_iterator_t<Rng> &it) const
+                RANGES_RELAXED_CONSTEXPR void prev(range_iterator_t<Rng> &it) const
                 {
                     auto &&pred = rng_->pred_;
                     do --it; while(pred(*it));
                 }
             };
-            adaptor begin_adaptor()
+            RANGES_RELAXED_CONSTEXPR adaptor begin_adaptor()
             {
                 return {*this};
             }
             // TODO: if end is a sentinel, it holds an unnecessary pointer back to
             // this range.
-            adaptor end_adaptor()
+            RANGES_RELAXED_CONSTEXPR adaptor end_adaptor()
             {
                 return {*this};
             }
         public:
-            remove_if_view() = default;
-            remove_if_view(remove_if_view &&that)
+            RANGES_RELAXED_CONSTEXPR remove_if_view() = default;
+            RANGES_RELAXED_CONSTEXPR remove_if_view(remove_if_view &&that)
               : range_adaptor_t<remove_if_view>(std::move(that))
               , pred_(std::move(that).pred_)
               , begin_{}
             {}
-            remove_if_view(remove_if_view const &that)
+            RANGES_RELAXED_CONSTEXPR remove_if_view(remove_if_view const &that)
               : range_adaptor_t<remove_if_view>(that)
               , pred_(that.pred_)
               , begin_{}
             {}
-            remove_if_view(Rng rng, Pred pred)
+            RANGES_RELAXED_CONSTEXPR remove_if_view(Rng rng, Pred pred)
               : range_adaptor_t<remove_if_view>{std::move(rng)}
               , pred_(as_function(std::move(pred)))
               , begin_{}
             {}
-            remove_if_view& operator=(remove_if_view &&that)
+            RANGES_RELAXED_CONSTEXPR remove_if_view& operator=(remove_if_view &&that)
             {
                 this->range_adaptor_t<remove_if_view>::operator=(std::move(that));
                 pred_ = std::move(that).pred_;
                 begin_.reset();
                 return *this;
             }
-            remove_if_view& operator=(remove_if_view const &that)
+            RANGES_RELAXED_CONSTEXPR remove_if_view& operator=(remove_if_view const &that)
             {
                 this->range_adaptor_t<remove_if_view>::operator=(that);
                 pred_ = that.pred_;
@@ -126,15 +127,40 @@ namespace ranges
 
         namespace view
         {
+
+            // TODO: [constexpr] woraround std::bind not being constexpr
+            // a similar workaround is used in functional
+            template<typename Bind, typename Fun>
+            struct remove_if_binder {
+                Bind bind_;
+                Fun fun_;
+
+                RANGES_RELAXED_CONSTEXPR remove_if_binder() = default;
+                RANGES_RELAXED_CONSTEXPR remove_if_binder(remove_if_binder const&) = default;
+                RANGES_RELAXED_CONSTEXPR remove_if_binder& operator=(remove_if_binder const&) = default;
+                RANGES_RELAXED_CONSTEXPR remove_if_binder(remove_if_binder &&) = default;
+                RANGES_RELAXED_CONSTEXPR remove_if_binder& operator=(remove_if_binder &&) = default;
+
+
+                RANGES_RELAXED_CONSTEXPR remove_if_binder(Bind i, Fun f)
+                    : bind_(std::move(i)), fun_(std::move(f)) {}
+
+                template<class T>
+                RANGES_RELAXED_CONSTEXPR
+                auto operator()(T&& t) const RANGES_DECLTYPE_AUTO_RETURN(
+                    bind_(std::forward<T>(t), unwrap_reference(fun_))
+                )
+            };
+
             struct remove_if_fn
             {
             private:
                 friend view_access;
                 template<typename Pred>
-                static auto bind(remove_if_fn remove_if, Pred pred)
+                static RANGES_RELAXED_CONSTEXPR auto bind(remove_if_fn remove_if, Pred pred)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(remove_if, std::placeholders::_1, protect(std::move(pred))))
+                    make_pipeable(remove_if_binder<remove_if_fn, Pred>(remove_if, std::move(pred)))
                 )
             public:
                 template<typename Rng, typename Pred>
@@ -144,6 +170,7 @@ namespace ranges
 
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
+                RANGES_RELAXED_CONSTEXPR
                 remove_if_view<all_t<Rng>, Pred>
                 operator()(Rng && rng, Pred pred) const
                 {
@@ -152,6 +179,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Pred,
                     CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Rng &&, Pred) const
                 {
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),

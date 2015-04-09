@@ -15,13 +15,15 @@
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
 struct is_odd
 {
-    bool operator()(int i) const
+    constexpr bool operator()(int i) const
     {
         return (i % 2) == 1;
     }
@@ -29,7 +31,7 @@ struct is_odd
 
 struct is_even
 {
-    bool operator()(int i) const
+    constexpr bool operator()(int i) const
     {
         return (i % 2) == 0;
     }

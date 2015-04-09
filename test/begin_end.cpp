@@ -3,9 +3,13 @@
 #include <array>
 
 int main() {
-    constexpr auto a = ranges::view::iota(1,4);
 
-    constexpr auto b = ranges::begin(a);
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto a = ranges::view::iota(1,4);
+        constexpr auto b = ranges::begin(a);
+    }
+#endif
 
     return 0;
 }

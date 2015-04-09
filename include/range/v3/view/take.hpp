@@ -42,6 +42,7 @@ namespace ranges
             struct sentinel
             {
             public:
+<<<<<<< HEAD
                 using BaseRng = meta::apply<meta::add_const_if_c<IsConst>, Rng>;
                 using base_iterator = range_iterator_t<BaseRng>;
                 using base_sentinel = range_sentinel_t<BaseRng>;
@@ -52,6 +53,78 @@ namespace ranges
                   : sent_(sent)
                 {}
                 RANGES_RELAXED_CONSTEXPR bool equal(detail::counted_cursor<base_iterator> const &that) const
+=======
+                constexpr take_view_() = default;
+                RANGES_RELAXED_CONSTEXPR take_view_(Rng rng, difference_type_ n)
+                  : rng_(std::move(rng)), n_(n)
+                {
+                    RANGES_ASSERT(n >= 0);
+                }
+                constexpr range_size_t<Rng> size() const
+                {
+                    return static_cast<range_size_t<Rng>>(n_);
+                }
+#ifdef RANGES_CXX_GREATER_THAN_11
+                // note: constexpr member functions are const in C++11
+                constexpr Rng & base()
+                {
+                    return rng_;
+                }
+#endif
+                constexpr Rng const & base() const
+                {
+                    return rng_;
+                }
+            };
+
+            template<typename Rng>
+            struct take_view_<Rng, true>
+              : range_interface<take_view<Rng>>
+            {
+            private:
+                using difference_type_ = range_difference_t<Rng>;
+                Rng rng_;
+                difference_type_ n_;
+            public:
+                constexpr take_view_() = default;
+                RANGES_RELAXED_CONSTEXPR take_view_(Rng rng, difference_type_ n)
+                  : rng_(std::move(rng)), n_(n)
+                {
+                    RANGES_ASSERT(n >= 0);
+                }
+                RANGES_RELAXED_CONSTEXPR range_iterator_t<Rng> begin()
+                {
+                    return ranges::begin(rng_);
+                }
+                RANGES_RELAXED_CONSTEXPR range_iterator_t<Rng> end()
+                {
+                    return next(ranges::begin(rng_), n_);
+                }
+                template<typename BaseRng = Rng,
+                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                RANGES_RELAXED_CONSTEXPR range_iterator_t<BaseRng const> begin() const
+                {
+                    return ranges::begin(rng_);
+                }
+                template<typename BaseRng = Rng,
+                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                RANGES_RELAXED_CONSTEXPR range_iterator_t<BaseRng const> end() const
+                {
+                    return next(ranges::begin(rng_), n_);
+                }
+                constexpr range_size_t<Rng> size() const
+                {
+                    return static_cast<range_size_t<Rng>>(n_);
+                }
+#ifdef RANGES_CXX_GREATER_THAN_11
+                // note: constexpr member functions are const in C++11
+                constexpr Rng & base()
+                {
+                    return rng_;
+                }
+#endif
+                constexpr Rng const & base() const
+>>>>>>> Test all configurations (C++std/build/asan) with clang-3.4...3.7
                 {
                     return 0 == that.count() || that.base() == sent_;
                 }

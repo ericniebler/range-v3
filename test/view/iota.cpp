@@ -72,7 +72,7 @@ int main()
         ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
     }
 
-#ifdef RANGES_CPP_STD_14_OR_GREATER
+#ifdef RANGES_CXX_GREATER_THAN_11
     {
         constexpr auto srng1 = view::iota(0, 10);
         constexpr auto srng2 = view::ints(0, 10);

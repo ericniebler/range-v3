@@ -6,7 +6,7 @@ int main() {
   constexpr int ca1[4] = {1, 2, 3, 4};
   static_assert(ranges::size(ca1) == 4, "");
 
-#ifdef RANGES_CPP_STD_14_OR_GREATER
+#ifdef RANGES_CXX_GREATER_THAN_11
   constexpr std::array<int, 4> a1{{1, 2, 3, 4}};
   static_assert(ranges::size(a1) == 4, "");
 
