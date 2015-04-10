@@ -189,8 +189,8 @@ namespace ranges
                     IteratorRange<I, S>())>
             I operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 if(begin == end_)
                     return begin;
                 I end = ranges::next(begin, end_);

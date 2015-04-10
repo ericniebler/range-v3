@@ -39,7 +39,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident>
         using IsPartitionedable = meta::fast_and<
             InputIterator<I>,
-            IndirectInvokablePredicate<C, Project<I, P>>>;
+            IndirectCallablePredicate<C, Project<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -49,8 +49,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(IsPartitionedable<I, C, P>() && IteratorRange<I, S>())>
             bool operator()(I begin, S end, C pred_, P proj_ = P{}) const
             {
-                auto && pred = invokable(pred_);
-                auto && proj = invokable(proj_);
+                auto && pred = as_function(pred_);
+                auto && proj = as_function(proj_);
                 for(; begin != end; ++begin)
                     if(!pred(proj(*begin)))
                         break;

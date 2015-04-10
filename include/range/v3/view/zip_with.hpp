@@ -108,17 +108,17 @@ namespace ranges
 
             template<typename Fn>
             struct indirect_fn_
-              : private invokable_t<Fn>
+              : private function_type<Fn>
             {
             private:
-                using BaseFn = invokable_t<Fn>;
+                using BaseFn = function_type<Fn>;
 
                 BaseFn & base()                { return *this; }
                 BaseFn const & base() const    { return *this; }
             public:
                 indirect_fn_() = default;
                 indirect_fn_(Fn fn)
-                  : BaseFn(invokable(std::move(fn)))
+                  : BaseFn(as_function(std::move(fn)))
                 {}
                 // value_type (needs no impl)
                 template<typename ...Its>
@@ -166,7 +166,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_t<invokable_t<Fun>> fun_;
+            semiregular_t<function_type<Fun>> fun_;
             std::tuple<Rngs...> rngs_;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
             using size_type_ = meta::eval<std::make_unsigned<difference_type_>>;
@@ -176,7 +176,7 @@ namespace ranges
             {
             private:
                 friend sentinel;
-                using fun_ref_ = semiregular_ref_or_val_t<invokable_t<Fun>, true>;
+                using fun_ref_ = semiregular_ref_or_val_t<function_type<Fun>, true>;
                 fun_ref_ fun_;
                 std::tuple<range_iterator_t<Rngs>...> its_;
 
@@ -297,11 +297,11 @@ namespace ranges
         public:
             iter_zip_with_view() = default;
             explicit iter_zip_with_view(Rngs ...rngs)
-              : fun_(invokable(Fun{}))
+              : fun_(as_function(Fun{}))
               , rngs_{std::move(rngs)...}
             {}
             explicit iter_zip_with_view(Fun fun, Rngs ...rngs)
-              : fun_(invokable(std::move(fun)))
+              : fun_(as_function(std::move(fun)))
               , rngs_{std::move(rngs)...}
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool) SizedIterable<Rngs>()...>::value)
@@ -336,9 +336,9 @@ namespace ranges
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
                     InputIterable<Rngs>...,
-                    Invokable<Fun, range_iterator_t<Rngs>...>,
-                    Invokable<Fun, copy_tag, range_iterator_t<Rngs>...>,
-                    Invokable<Fun, move_tag, range_iterator_t<Rngs>...>>;
+                    Callable<Fun, range_iterator_t<Rngs>...>,
+                    Callable<Fun, copy_tag, range_iterator_t<Rngs>...>,
+                    Callable<Fun, move_tag, range_iterator_t<Rngs>...>>;
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
@@ -359,15 +359,15 @@ namespace ranges
                         "All of the objects passed to view::iter_zip_with must model the InputIterable "
                         "concept");
                     CONCEPT_ASSERT_MSG(
-                        Invokable<Fun, range_iterator_t<Rngs>...>(),
+                        Callable<Fun, range_iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with arguments "
                         "of the ranges' iterator types.");
                     CONCEPT_ASSERT_MSG(
-                        Invokable<Fun, copy_tag, range_iterator_t<Rngs>...>(),
+                        Callable<Fun, copy_tag, range_iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with "
                         "copy_tag and arguments of the ranges' iterator types.");
                     CONCEPT_ASSERT_MSG(
-                        Invokable<Fun, move_tag, range_iterator_t<Rngs>...>(),
+                        Callable<Fun, move_tag, range_iterator_t<Rngs>...>(),
                         "The function passed to view::iter_zip_with must be callable with "
                         "move_tag and arguments of the ranges' iterator types.");
                 }
@@ -386,7 +386,7 @@ namespace ranges
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
                     InputIterable<Rngs>...,
-                    Invokable<Fun, range_reference_t<Rngs> &&...>>;
+                    Callable<Fun, range_reference_t<Rngs> &&...>>;
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
@@ -407,7 +407,7 @@ namespace ranges
                         "All of the objects passed to view::zip_with must model the InputIterable "
                         "concept");
                     CONCEPT_ASSERT_MSG(
-                        Invokable<Fun, range_reference_t<Rngs> &&...>(),
+                        Callable<Fun, range_reference_t<Rngs> &&...>(),
                         "The function passed to view::zip_with must be callable with arguments "
                         "of the ranges' reference types.");
                 }

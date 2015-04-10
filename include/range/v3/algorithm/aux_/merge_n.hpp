@@ -59,9 +59,9 @@ namespace ranges
                            O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const
                 {
                     using T = std::tuple<I0, I1, O>;
-                    auto &&ir = invokable(r);
-                    auto &&ip0 = invokable(p0);
-                    auto &&ip1 = invokable(p1);
+                    auto &&ir = as_function(r);
+                    auto &&ip0 = as_function(p0);
+                    auto &&ip1 = as_function(p1);
                     auto n0orig = n0;
                     auto n1orig = n1;
                     auto b0 = uncounted(begin0);

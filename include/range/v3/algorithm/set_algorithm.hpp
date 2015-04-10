@@ -48,9 +48,9 @@ namespace ranges
             bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 for(; begin2 != end2; ++begin1)
                 {
                     if(begin1 == end1 || pred(proj2(*begin2), proj1(*begin1)))
@@ -92,9 +92,9 @@ namespace ranges
             Tup operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 for(; begin1 != end1; ++out)
                 {
                     if(begin2 == end2)
@@ -150,9 +150,9 @@ namespace ranges
             O operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 while(begin1 != end1 && begin2 != end2)
                 {
                     if(pred(proj1(*begin1), proj2(*begin2)))
@@ -201,9 +201,9 @@ namespace ranges
             std::pair<I1, O> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 while(begin1 != end1)
                 {
                     if(begin2 == end2)
@@ -254,9 +254,9 @@ namespace ranges
             std::tuple<I1, I2, O> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 while(begin1 != end1)
                 {
                     if(begin2 == end2)

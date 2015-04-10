@@ -42,7 +42,7 @@ namespace ranges
         template<typename I, typename V, typename C = equal_to, typename P = ident>
         using Searchnable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectInvokableRelation<C, Project<I, P>, V const *>>;
+            IndirectCallableRelation<C, Project<I, P>, V const *>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -161,8 +161,8 @@ namespace ranges
             {
                 if(count <= 0)
                     return begin;
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 if(SizedIteratorRange<I, S>())
                     return search_n_fn::sized_impl(std::move(begin), std::move(end),
                         distance(begin, end), count, val, pred, proj);
@@ -180,8 +180,8 @@ namespace ranges
             {
                 if(count <= 0)
                     return begin(rng);
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 if(SizedIterable<Rng>())
                     return search_n_fn::sized_impl(begin(rng), end(rng), distance(rng), count, val,
                         pred, proj);

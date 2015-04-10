@@ -43,9 +43,9 @@ namespace ranges
             I0 operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, R pred_ = R{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj0 = invokable(proj0_);
-                auto &&proj1 = invokable(proj1_);
+                auto &&pred = as_function(pred_);
+                auto &&proj0 = as_function(proj0_);
+                auto &&proj1 = as_function(proj1_);
                 for(; begin0 != end0; ++begin0)
                     for(auto tmp = begin1; tmp != end1; ++tmp)
                         if(pred(proj0(*begin0), proj1(*tmp)))

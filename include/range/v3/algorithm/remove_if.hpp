@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident>
         using RemovableIf = meta::fast_and<
             ForwardIterator<I>,
-            IndirectInvokablePredicate<C, Project<I, P>>,
+            IndirectCallablePredicate<C, Project<I, P>>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms
@@ -44,8 +44,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(RemovableIf<I, C, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred_, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 begin = find_if(std::move(begin), end, std::ref(pred), std::ref(proj));
                 if(begin != end)
                 {

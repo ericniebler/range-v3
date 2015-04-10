@@ -77,13 +77,13 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(Projectable<I, P>(),
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and rvalue reference type.");
-                    CONCEPT_ASSERT_MSG(IndirectInvokable<F, Project<I, P>>(),
+                    CONCEPT_ASSERT_MSG(IndirectCallable<F, Project<I, P>>(),
                         "The function argument to action::transform must be callable with "
                         "the result of the projection argument, or with objects of the range's "
                         "common reference type if no projection is specified.");
                     CONCEPT_ASSERT_MSG(Writable<range_iterator_t<Rng>,
-                            concepts::Invokable::result_t<F,
-                                concepts::Invokable::result_t<P, range_common_reference_t<Rng>>>>(),
+                            concepts::Callable::result_t<F,
+                                concepts::Callable::result_t<P, range_common_reference_t<Rng>>>>(),
                         "The result type of the function passed to action::transform must "
                         "be writable back into the source range.");
                 }

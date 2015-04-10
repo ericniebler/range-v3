@@ -31,7 +31,7 @@ namespace ranges
         template<typename I, typename O, typename C = equal_to, typename P = ident>
         using UniqueCopyable = meta::fast_and<
             InputIterator<I>,
-            IndirectInvokableRelation<C, Project<I, P>>,
+            IndirectCallableRelation<C, Project<I, P>>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>>;
 
@@ -44,8 +44,8 @@ namespace ranges
             static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::InputIterator*, std::false_type)
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 if(begin != end)
                 {
                     // Must save a copy into a local because we will need this value
@@ -71,8 +71,8 @@ namespace ranges
             static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::ForwardIterator*, std::false_type)
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 if(begin != end)
                 {
                     I tmp = begin;
@@ -96,8 +96,8 @@ namespace ranges
             static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::InputIterator*, std::true_type)
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 if(begin != end)
                 {
                     *out = *begin;
@@ -119,7 +119,7 @@ namespace ranges
             ///
             /// \pre InputRange is a model of the `InputRange` concept
             /// \pre `O` is a model of the `WeakOutputIterator` concept
-            /// \pre `C` is a model of the `InvokableRelation` concept
+            /// \pre `C` is a model of the `CallableRelation` concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && IteratorRange<I, S>())>
             std::pair<I, O> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const

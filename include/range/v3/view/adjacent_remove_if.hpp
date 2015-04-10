@@ -38,7 +38,7 @@ namespace ranges
         {
         private:
             friend range_access;
-            semiregular_t<invokable_t<F>> pred_;
+            semiregular_t<function_type<F>> pred_;
 
             struct adaptor : adaptor_base
             {
@@ -70,7 +70,7 @@ namespace ranges
             adjacent_remove_if_view() = default;
             adjacent_remove_if_view(Rng rng, F pred)
               : range_adaptor_t<adjacent_remove_if_view>{std::move(rng)}
-              , pred_(invokable(std::move(pred)))
+              , pred_(as_function(std::move(pred)))
             {}
         };
 
@@ -91,7 +91,7 @@ namespace ranges
                 template<typename Rng, typename F>
                 using Concept = meta::and_<
                     ForwardIterable<Rng>,
-                    IndirectInvokablePredicate<F, range_iterator_t<Rng>,
+                    IndirectCallablePredicate<F, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename F,
@@ -107,7 +107,7 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
                         "Rng must model the ForwardIterable concept");
-                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate<F, range_iterator_t<Rng>,
+                    CONCEPT_ASSERT_MSG(IndirectCallablePredicate<F, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>(),
                         "Function F must be callable with two arguments of the range's common "
                         "reference type, and it must return something convertible to bool.");

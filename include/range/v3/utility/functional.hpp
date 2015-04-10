@@ -145,7 +145,7 @@ namespace ranges
         {};
 
         /// \addtogroup group-utility
-        struct make_invokable_fn
+        struct as_function_fn
         {
         private:
             template<typename R, typename...Args>
@@ -186,11 +186,11 @@ namespace ranges
         /// \sa `make_invokable_fn`
         namespace
         {
-            constexpr auto&& invokable = static_const<make_invokable_fn>::value;
+            constexpr auto&& as_function = static_const<as_function_fn>::value;
         }
 
         template<typename T>
-        using invokable_t = decltype(invokable(std::declval<T>()));
+        using function_type = decltype(as_function(std::declval<T>()));
 
         template<typename Pred>
         struct logical_negate
@@ -293,13 +293,13 @@ namespace ranges
 
         template<typename Fn>
         struct overloaded<Fn>
-          : private invokable_t<Fn>
+          : private function_type<Fn>
         {
             overloaded() = default;
             constexpr overloaded(Fn fn)
-              : invokable_t<Fn>(invokable(std::move(fn)))
+              : function_type<Fn>(as_function(std::move(fn)))
             {}
-            using invokable_t<Fn>::operator();
+            using function_type<Fn>::operator();
         };
 
         template<typename First, typename...Rest>
@@ -861,67 +861,67 @@ namespace ranges
         /// @{
         namespace concepts
         {
-            struct Invokable
+            struct Callable
             {
                 template<typename Fun, typename...Args>
-                using result_t = Function::result_t<invokable_t<Fun>, Args...>;
+                using result_t = Function::result_t<function_type<Fun>, Args...>;
 
                 template<typename Fun, typename...Args>
                 auto requires_(Fun&&, Args&&...) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Function, invokable_t<Fun>, Args...>()
+                        concepts::model_of<Function, function_type<Fun>, Args...>()
                     ));
             };
 
-            struct RegularInvokable
-              : refines<Invokable>
+            struct RegularCallable
+              : refines<Callable>
             {};
 
-            struct InvokablePredicate
-              : refines<RegularInvokable>
+            struct CallablePredicate
+              : refines<RegularCallable>
             {
                 template<typename Fun, typename...Args>
                 auto requires_(Fun&&, Args&&...) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Predicate, invokable_t<Fun>, Args...>()
+                        concepts::model_of<Predicate, function_type<Fun>, Args...>()
                     ));
             };
 
-            struct InvokableRelation
-              : refines<InvokablePredicate>
+            struct CallableRelation
+              : refines<CallablePredicate>
             {
                 template<typename Fun, typename T, typename U>
                 auto requires_(Fun&&, T&&, U&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Relation, invokable_t<Fun>, T, U>()
+                        concepts::model_of<Relation, function_type<Fun>, T, U>()
                     ));
             };
 
-            struct InvokableTransform
-              : refines<RegularInvokable>
+            struct CallableTransform
+              : refines<RegularCallable>
             {
                 template<typename Fun, typename T>
                 auto requires_(Fun&&, T&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Transform, invokable_t<Fun>, T>()
+                        concepts::model_of<Transform, function_type<Fun>, T>()
                     ));
             };
         }
 
         template<typename Fun, typename...Args>
-        using Invokable = concepts::models<concepts::Invokable, Fun, Args...>;
+        using Callable = concepts::models<concepts::Callable, Fun, Args...>;
 
         template<typename Fun, typename...Args>
-        using RegularInvokable = concepts::models<concepts::RegularInvokable, Fun, Args...>;
+        using RegularCallable = concepts::models<concepts::RegularCallable, Fun, Args...>;
 
         template<typename Fun, typename...Args>
-        using InvokablePredicate = concepts::models<concepts::InvokablePredicate, Fun, Args...>;
+        using CallablePredicate = concepts::models<concepts::CallablePredicate, Fun, Args...>;
 
         template<typename Fun, typename T, typename U = T>
-        using InvokableRelation = concepts::models<concepts::InvokableRelation, Fun, T, U>;
+        using CallableRelation = concepts::models<concepts::CallableRelation, Fun, T, U>;
 
         template<typename F, typename T>
-        using InvokableTransform = concepts::models<concepts::InvokableTransform, F, T>;
+        using CallableTransform = concepts::models<concepts::CallableTransform, F, T>;
         /// @}
     }
 }

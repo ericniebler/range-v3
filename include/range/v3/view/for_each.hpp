@@ -59,8 +59,8 @@ namespace ranges
                 template<typename Rng, typename F>
                 using Concept = meta::and_<
                     Iterable<Rng>,
-                    IndirectInvokable<F, range_iterator_t<Rng>>,
-                    Iterable<concepts::Invokable::result_t<F, range_common_reference_t<Rng>>>>;
+                    IndirectCallable<F, range_iterator_t<Rng>>,
+                    Iterable<concepts::Callable::result_t<F, range_common_reference_t<Rng>>>>;
 
                 template<typename Rng, typename F,
                     CONCEPT_REQUIRES_(Concept<Rng, F>())>
@@ -77,10 +77,10 @@ namespace ranges
                 {
                     CONCEPT_ASSERT_MSG(Iterable<Rng>(),
                         "Rng is not a model of the Iterable concept.");
-                    CONCEPT_ASSERT_MSG(IndirectInvokable<F, range_iterator_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(IndirectCallable<F, range_iterator_t<Rng>>(),
                         "The function F is not callable with arguments of the type of the range's "
                         "common reference type.");
-                    CONCEPT_ASSERT_MSG(Iterable<concepts::Invokable::result_t<F,
+                    CONCEPT_ASSERT_MSG(Iterable<concepts::Callable::result_t<F,
                         range_common_reference_t<Rng>>>(),
                         "To use view::for_each, the function F must return a model of the Iterable "
                         "concept.");

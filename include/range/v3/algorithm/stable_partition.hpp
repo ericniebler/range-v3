@@ -48,7 +48,7 @@ namespace ranges
         using StablePartitionable = meta::fast_and<
             ForwardIterator<I>,
             Permutable<I>,
-            IndirectInvokablePredicate<C, Project<I, P>>>;
+            IndirectCallablePredicate<C, Project<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -266,8 +266,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred_, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 return stable_partition_fn::impl(std::move(begin), std::move(end), std::ref(pred),
                     std::ref(proj), iterator_concept<I>());
             }

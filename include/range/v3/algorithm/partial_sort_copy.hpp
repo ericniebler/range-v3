@@ -36,7 +36,7 @@ namespace ranges
             InputIterator<I>,
             RandomAccessIterator<O>,
             IndirectlyCopyable<I, O>,
-            IndirectInvokableRelation<C, Project<I, PI>, Project<O, PO>>,
+            IndirectCallableRelation<C, Project<I, PI>, Project<O, PO>>,
             Sortable<O, C, PO>>;
 
         /// \addtogroup group-algorithms
@@ -50,9 +50,9 @@ namespace ranges
             O operator()(I begin, SI end, O out_begin, SO out_end, C pred_ = C{}, PI in_proj_ = PI{},
                 PO out_proj_ = PO{}) const
             {
-                auto && pred = invokable(pred_);
-                auto && in_proj = invokable(in_proj_);
-                auto && out_proj = invokable(out_proj_);
+                auto && pred = as_function(pred_);
+                auto && in_proj = as_function(in_proj_);
+                auto && out_proj = as_function(out_proj_);
                 O r = out_begin;
                 if(r != out_end)
                 {

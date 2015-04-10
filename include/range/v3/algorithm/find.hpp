@@ -38,14 +38,14 @@ namespace ranges
             /// \pre `Rng` is a model of the `Iterable` concept
             /// \pre `I` is a model of the `InputIterator` concept
             /// \pre `S` is a model of the `Sentinel<I>` concept
-            /// \pre `P` is a model of the `Invokable<iterator_common_reference_t<I>>` concept
+            /// \pre `P` is a model of the `Callable<iterator_common_reference_t<I>>` concept
             /// \pre The ResultType of `P` is EqualityComparable with V
             template<typename I, typename S, typename V, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
-                    IndirectInvokableRelation<equal_to, Project<I, P>, V const *>())>
+                    IndirectCallableRelation<equal_to, Project<I, P>, V const *>())>
             I operator()(I begin, S end, V const &val, P proj_ = P{}) const
             {
-                auto &&proj = invokable(proj_);
+                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin)
                     if(proj(*begin) == val)
                         break;
@@ -56,7 +56,7 @@ namespace ranges
             template<typename Rng, typename V, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng>() &&
-                    IndirectInvokableRelation<equal_to, Project<I, P>, V const *>())>
+                    IndirectCallableRelation<equal_to, Project<I, P>, V const *>())>
             range_safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));

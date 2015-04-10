@@ -41,7 +41,7 @@ namespace ranges
         using Partitionable = meta::fast_and<
             ForwardIterator<I>,
             Permutable<I>,
-            IndirectInvokablePredicate<C, Project<I, P>>>;
+            IndirectCallablePredicate<C, Project<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -51,8 +51,8 @@ namespace ranges
             template<typename I, typename S, typename C, typename P>
             static I impl(I begin, S end, C pred_, P proj_, concepts::ForwardIterator*)
             {
-                auto && pred = invokable(pred_);
-                auto && proj = invokable(proj_);
+                auto && pred = as_function(pred_);
+                auto && proj = as_function(proj_);
                 while(true)
                 {
                     if(begin == end)
@@ -75,8 +75,8 @@ namespace ranges
             template<typename I, typename S, typename C, typename P>
             static I impl(I begin, S end_, C pred_, P proj_, concepts::BidirectionalIterator*)
             {
-                auto && pred = invokable(pred_);
-                auto && proj = invokable(proj_);
+                auto && pred = as_function(pred_);
+                auto && proj = as_function(proj_);
                 I end = ranges::next(begin, end_);
                 while(true)
                 {

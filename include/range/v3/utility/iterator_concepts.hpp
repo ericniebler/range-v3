@@ -445,12 +445,12 @@ namespace ranges
             struct projected_readable
             {
                 using value_type =
-                    decay_t<concepts::Invokable::result_t<Proj, concepts::Readable::value_t<I>>>;
+                    decay_t<concepts::Callable::result_t<Proj, concepts::Readable::value_t<I>>>;
                 using reference =
-                    concepts::Invokable::result_t<Proj, concepts::Readable::reference_t<I>>;
+                    concepts::Callable::result_t<Proj, concepts::Readable::reference_t<I>>;
                 reference operator*() const;
                 friend auto indirect_move(projected_readable const &) ->
-                    concepts::Invokable::result_t<Proj, concepts::Readable::rvalue_reference_t<I>>
+                    concepts::Callable::result_t<Proj, concepts::Readable::rvalue_reference_t<I>>
                 {
                     RANGES_ASSERT(false);
                     throw;
@@ -462,9 +462,9 @@ namespace ranges
             {
                 using type =
                     meta::fast_and<
-                        Invokable<Proj, concepts::Readable::value_t<I>>,
-                        Invokable<Proj, concepts::Readable::reference_t<I>>,
-                        Invokable<Proj, concepts::Readable::rvalue_reference_t<I>>>;
+                        Callable<Proj, concepts::Readable::value_t<I>>,
+                        Callable<Proj, concepts::Readable::reference_t<I>>,
+                        Callable<Proj, concepts::Readable::rvalue_reference_t<I>>>;
             };
         }
 
@@ -538,13 +538,13 @@ namespace ranges
                 I0, I1>>;
 
         template<typename C, typename ...Is>
-        using IndirectInvokable = IndirectFunction<invokable_t<C>, Is...>;
+        using IndirectCallable = IndirectFunction<function_type<C>, Is...>;
 
         template<typename C, typename ...Is>
-        using IndirectInvokablePredicate = IndirectPredicate<invokable_t<C>, Is...>;
+        using IndirectCallablePredicate = IndirectPredicate<function_type<C>, Is...>;
 
         template<typename C, typename I0, typename I1 = I0>
-        using IndirectInvokableRelation = IndirectRelation<invokable_t<C>, I0, I1>;
+        using IndirectCallableRelation = IndirectRelation<function_type<C>, I0, I1>;
 
         template<typename I, typename V = concepts::Readable::value_t<I>>
         using Permutable = meta::fast_and<
@@ -558,7 +558,7 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectInvokableRelation<C, Project<I0, P0>, Project<I1, P1>>,
+            IndirectCallableRelation<C, Project<I0, P0>, Project<I1, P1>>,
             IndirectlyCopyable<I0, Out>,
             IndirectlyCopyable<I1, Out>>;
 
@@ -568,28 +568,28 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectInvokableRelation<C, Project<I0, P0>, Project<I1, P1>>,
+            IndirectCallableRelation<C, Project<I0, P0>, Project<I1, P1>>,
             IndirectlyMovable<I0, Out>,
             IndirectlyMovable<I1, Out>>;
 
         template<typename I, typename C = ordered_less, typename P = ident>
         using Sortable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectInvokableRelation<C, Project<I, P>, Project<I, P>>,
+            IndirectCallableRelation<C, Project<I, P>, Project<I, P>>,
             Permutable<I>>;
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
         using BinarySearchable = meta::fast_and<
             ForwardIterator<I>,
             TotallyOrdered<V2>,
-            IndirectInvokableRelation<C, Project<I, P>, V2 const *>>;
+            IndirectCallableRelation<C, Project<I, P>, V2 const *>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
         using WeaklyAsymmetricallyComparable = meta::fast_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
-            IndirectInvokablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
+            IndirectCallablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
@@ -601,7 +601,7 @@ namespace ranges
             typename P2 = ident>
         using WeaklyComparable = meta::fast_and<
             WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
-            IndirectInvokableRelation<C, Project<I1, P1>, Project<I2, P2>>>;
+            IndirectCallableRelation<C, Project<I1, P1>, Project<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>

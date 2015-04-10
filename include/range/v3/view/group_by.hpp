@@ -43,7 +43,7 @@ namespace ranges
         private:
             friend range_access;
             Rng rng_;
-            semiregular_t<invokable_t<Fun>> fun_;
+            semiregular_t<function_type<Fun>> fun_;
 
             template<bool IsConst>
             struct cursor
@@ -52,12 +52,12 @@ namespace ranges
                 friend range_access; friend group_by_view;
                 range_iterator_t<Rng> cur_;
                 range_sentinel_t<Rng> last_;
-                semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun_;
+                semiregular_ref_or_val_t<function_type<Fun>, IsConst> fun_;
 
                 struct take_while_pred
                 {
                     range_iterator_t<Rng> first_;
-                    semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun_;
+                    semiregular_ref_or_val_t<function_type<Fun>, IsConst> fun_;
                     bool operator()(range_reference_t<Rng> ref) const
                     {
                         return fun_(*first_, ref);
@@ -80,7 +80,7 @@ namespace ranges
                 {
                     return cur_ == that.cur_;
                 }
-                cursor(semiregular_ref_or_val_t<invokable_t<Fun>, IsConst> fun, range_iterator_t<Rng> first,
+                cursor(semiregular_ref_or_val_t<function_type<Fun>, IsConst> fun, range_iterator_t<Rng> first,
                     range_sentinel_t<Rng> last)
                   : cur_(first), last_(last), fun_(fun)
                 {}
@@ -91,7 +91,7 @@ namespace ranges
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(Invokable<Fun const, range_common_reference_t<Rng>,
+            CONCEPT_REQUIRES(Callable<Fun const, range_common_reference_t<Rng>,
                 range_common_reference_t<Rng>>())
             cursor<true> begin_cursor() const
             {
@@ -121,7 +121,7 @@ namespace ranges
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
                     ForwardIterable<Rng>,
-                    IndirectInvokablePredicate<Fun, range_iterator_t<Rng>,
+                    IndirectCallablePredicate<Fun, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Fun,
@@ -139,7 +139,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
                         "The object on which view::group_by operates must be a model of the "
                         "ForwardIterable concept.");
-                    CONCEPT_ASSERT_MSG(IndirectInvokablePredicate<Fun, range_iterator_t<Rng>,
+                    CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Fun, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>(),
                         "The function passed to view::group_by must be callable with two arguments "
                         "of the range's common reference type, and its return type must be "

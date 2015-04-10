@@ -31,7 +31,7 @@ namespace ranges
         template<typename I, typename C, typename T, typename P = ident>
         using ReplaceIfable = meta::fast_and<
             InputIterator<I>,
-            IndirectInvokablePredicate<C, Project<I, P>>,
+            IndirectCallablePredicate<C, Project<I, P>>,
             Writable<I, T>>;
 
         /// \addtogroup group-algorithms
@@ -42,8 +42,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(ReplaceIfable<I, C, T, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred_, T const & new_value, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin)
                     if(pred(proj(*begin)))
                         *begin = new_value;

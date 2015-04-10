@@ -40,10 +40,10 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident,
             typename V = iterator_common_reference_t<I>,
-            typename X = concepts::Invokable::result_t<P, V>>
+            typename X = concepts::Callable::result_t<P, V>>
         using PartitionPointable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectInvokablePredicate<C, Project<I, P>>>;
+            IndirectCallablePredicate<C, Project<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -54,8 +54,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(PartitionPointable<I, C, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, C pred_, P proj_ = P{}) const
             {
-                auto && pred = invokable(pred_);
-                auto && proj = invokable(proj_);
+                auto && pred = as_function(pred_);
+                auto && proj = as_function(proj_);
                 auto len = distance(begin, end);
                 while(len != 0)
                 {

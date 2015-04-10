@@ -86,8 +86,8 @@ namespace ranges
                     std::ptrdiff_t buf_size, C pred_ = C{}, P proj_ = P{}) const
                 {
                     using D = iterator_difference_t<I>;
-                    auto &&pred = invokable(pred_);
-                    auto &&proj = invokable(proj_);
+                    auto &&pred = as_function(pred_);
+                    auto &&proj = as_function(proj_);
                     while(true)
                     {
                         // if middle == end, we're done

@@ -29,14 +29,14 @@ namespace ranges
     {
         template <typename I, typename O, typename BOp = plus, typename P = ident,
                   typename V = iterator_value_t<I>,
-                  typename X = concepts::Invokable::result_t<P, V>,
-                  typename Y = concepts::Invokable::result_t<BOp, X, X>>
+                  typename X = concepts::Callable::result_t<P, V>,
+                  typename Y = concepts::Callable::result_t<BOp, X, X>>
         using PartialSummable = meta::fast_and<
             InputIterator<I>,
             WeakOutputIterator<O, X>,
-            Invokable<P, V>,
+            Callable<P, V>,
             CopyConstructible<X>,
-            Invokable<BOp, X, X>,
+            Callable<BOp, X, X>,
             Assignable<X &, Y>>;
 
         struct partial_sum_fn
@@ -49,10 +49,10 @@ namespace ranges
             operator()(I begin, S end, O result, BOp bop_ = BOp{},
                        P proj_ = P{}) const
             {
-                auto &&bop = invokable(bop_);
-                auto &&proj = invokable(proj_);
+                auto &&bop = as_function(bop_);
+                auto &&proj = as_function(proj_);
                 using V = iterator_value_t<I>;
-                using X = concepts::Invokable::result_t<P, V>;
+                using X = concepts::Callable::result_t<P, V>;
                 coerce<V> v;
                 coerce<X> x;
 
@@ -77,10 +77,10 @@ namespace ranges
             operator()(I begin, S end, O result, S2 end_result, BOp bop_ = BOp{},
                        P proj_ = P{}) const
             {
-                auto &&bop = invokable(bop_);
-                auto &&proj = invokable(proj_);
+                auto &&bop = as_function(bop_);
+                auto &&proj = as_function(proj_);
                 using V = iterator_value_t<I>;
-                using X = concepts::Invokable::result_t<P, V>;
+                using X = concepts::Callable::result_t<P, V>;
                 coerce<V> v;
                 coerce<X> x;
 

@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename T, typename P = ident>
         using Removable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectInvokableRelation<equal_to, Project<I, P>, T const *>,
+            IndirectCallableRelation<equal_to, Project<I, P>, T const *>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms
@@ -44,7 +44,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Removable<I, T, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, T const &val, P proj_ = P{}) const
             {
-                auto &&proj = invokable(proj_);
+                auto &&proj = as_function(proj_);
                 begin = find(std::move(begin), end, val, std::ref(proj));
                 if(begin != end)
                 {

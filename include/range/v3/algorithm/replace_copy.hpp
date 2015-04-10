@@ -33,7 +33,7 @@ namespace ranges
             InputIterator<I>,
             WeakOutputIterator<O, T1>,
             IndirectlyCopyable<I, O>,
-            IndirectInvokableRelation<equal_to, Project<I, P>, T0 const *>>;
+            IndirectCallableRelation<equal_to, Project<I, P>, T0 const *>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -43,7 +43,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(ReplaceCopyable<I, O, T0, T1, P>() && IteratorRange<I, S>())>
             std::pair<I, O> operator()(I begin, S end, O out, T0 const & old_value, T1 const & new_value, P proj_ = {}) const
             {
-                auto &&proj = invokable(proj_);
+                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin, ++out)
                 {
                     auto &&x = *begin;

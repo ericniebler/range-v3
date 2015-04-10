@@ -38,7 +38,7 @@ namespace ranges
             WeaklyIncrementable<O1>,
             IndirectlyMovable<I, O0>,
             IndirectlyMovable<I, O1>,
-            IndirectInvokablePredicate<C, Project<I, P>>>;
+            IndirectCallablePredicate<C, Project<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -48,8 +48,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(PartitionMovable<I, O0, O1, C, P>() && IteratorRange<I, S>())>
             std::tuple<I, O0, O1> operator()(I begin, S end, O0 o0, O1 o1, C pred_, P proj_ = P{}) const
             {
-                auto && pred = invokable(pred_);
-                auto && proj = invokable(proj_);
+                auto && pred = as_function(pred_);
+                auto && proj = as_function(proj_);
                 for(; begin != end; ++begin)
                 {
                     if(pred(proj(*begin)))

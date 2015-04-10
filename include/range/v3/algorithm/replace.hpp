@@ -31,7 +31,7 @@ namespace ranges
         template<typename I, typename T0, typename T1, typename P = ident>
         using Replaceable = meta::fast_and<
             InputIterator<I>,
-            IndirectInvokableRelation<equal_to, Project<I, P>, T0 const *>,
+            IndirectCallableRelation<equal_to, Project<I, P>, T0 const *>,
             Writable<I, T1>>;
 
         /// \addtogroup group-algorithms
@@ -42,7 +42,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && IteratorRange<I, S>())>
             I operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj_ = {}) const
             {
-                auto &&proj = invokable(proj_);
+                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin)
                     if(proj(*begin) == old_value)
                         *begin = new_value;

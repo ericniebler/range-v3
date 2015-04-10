@@ -57,9 +57,9 @@ namespace ranges
             static bool four_iter_impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred_, P1 proj1_,
                 P2 proj2_)
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 // shorten sequences as much as possible by lopping of any equal parts
                 for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                     if(!pred(proj1(*begin1), proj2(*begin2)))
@@ -108,9 +108,9 @@ namespace ranges
             bool operator()(I1 begin1, S1 end1, I2 begin2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 // shorten sequences as much as possible by lopping of any equal parts
                 for(; begin1 != end1; ++begin1, ++begin2)
                     if(!pred(proj1(*begin1), proj2(*begin2)))
@@ -209,8 +209,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
             bool operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 if(begin == end_)
                     return false;
                 I end = ranges::next(begin, end_), i = end;
@@ -258,8 +258,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
             bool operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 if(begin == end_)
                     return false;
                 I end = ranges::next(begin, end_), i = end;

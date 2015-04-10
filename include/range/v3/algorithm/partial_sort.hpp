@@ -37,8 +37,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() && IteratorRange<I, S>())>
             I operator()(I begin, I middle, S end, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto && pred = invokable(pred_);
-                auto && proj = invokable(proj_);
+                auto && pred = as_function(pred_);
+                auto && proj = as_function(proj_);
 
                 make_heap(begin, middle, std::ref(pred), std::ref(proj));
                 auto const len = middle - begin;

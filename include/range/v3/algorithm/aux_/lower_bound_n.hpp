@@ -36,8 +36,8 @@ namespace ranges
                     P proj_ = P{}) const
                 {
                     RANGES_ASSERT(0 <= d);
-                    auto &&pred = invokable(pred_);
-                    auto &&proj = invokable(proj_);
+                    auto &&pred = as_function(pred_);
+                    auto &&proj = as_function(proj_);
                     while(0 != d)
                     {
                         auto half = d / 2;

@@ -32,7 +32,7 @@ namespace ranges
         using RemoveCopyable = meta::fast_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
-            IndirectInvokableRelation<equal_to, Project<I, P>, T const *>,
+            IndirectCallableRelation<equal_to, Project<I, P>, T const *>,
             IndirectlyCopyable<I, O>>;
 
         /// \addtogroup group-algorithms
@@ -43,7 +43,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(RemoveCopyable<I, O, T, P>() && IteratorRange<I, S>())>
             std::pair<I, O> operator()(I begin, S end, O out, T const &val, P proj_ = P{}) const
             {
-                auto &&proj = invokable(proj_);
+                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin)
                 {
                     auto &&x = *begin;

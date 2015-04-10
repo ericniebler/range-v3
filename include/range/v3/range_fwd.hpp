@@ -340,7 +340,7 @@ namespace ranges
         template<typename...Ts>
         struct compressed_tuple;
 
-        struct make_invokable_fn;
+        struct as_function_fn;
 
         template<typename Derived, bool Inf = false>
         struct range_interface;

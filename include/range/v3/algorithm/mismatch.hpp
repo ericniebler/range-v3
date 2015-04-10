@@ -37,7 +37,7 @@ namespace ranges
         using Mismatchable1 = meta::fast_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
-            IndirectInvokablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
+            IndirectCallablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
 
         /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
@@ -45,7 +45,7 @@ namespace ranges
         using Mismatchable2 = meta::fast_and<
             InputIterator<I1>,
             InputIterator<I2>,
-            IndirectInvokablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
+            IndirectCallablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -58,9 +58,9 @@ namespace ranges
             operator()(I1 begin1, S1 end1, I2 begin2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 for(; begin1 != end1; ++begin1, ++begin2)
                     if(!pred(proj1(*begin1), proj2(*begin2)))
                         break;
@@ -75,9 +75,9 @@ namespace ranges
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 for(; begin1 != end1 &&  begin2 != end2; ++begin1, ++begin2)
                     if(!pred(proj1(*begin1), proj2(*begin2)))
                         break;

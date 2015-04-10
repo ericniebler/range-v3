@@ -33,27 +33,27 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I, typename O, typename F, typename P = ident,
             typename V = iterator_common_reference_t<I>,
-            typename X = concepts::Invokable::result_t<P, V>,
-            typename Y = concepts::Invokable::result_t<F, X>>
+            typename X = concepts::Callable::result_t<P, V>,
+            typename Y = concepts::Callable::result_t<F, X>>
         using Transformable1 = meta::fast_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
-            IndirectInvokable<F, Project<I, P>>,
+            IndirectCallable<F, Project<I, P>>,
             Writable<O, Y>>;
 
         /// \ingroup group-concepts
         template<typename I0, typename I1, typename O, typename F,
             typename P0 = ident, typename P1 = ident,
             typename V0 = iterator_common_reference_t<I0>,
-            typename X0 = concepts::Invokable::result_t<P0, V0>,
+            typename X0 = concepts::Callable::result_t<P0, V0>,
             typename V1 = iterator_common_reference_t<I1>,
-            typename X1 = concepts::Invokable::result_t<P1, V1>,
-            typename Y = concepts::Invokable::result_t<F, X0, X1>>
+            typename X1 = concepts::Callable::result_t<P1, V1>,
+            typename Y = concepts::Callable::result_t<F, X0, X1>>
         using Transformable2 = meta::fast_and<
             InputIterator<I0>,
             WeakInputIterator<I1>,
             WeaklyIncrementable<O>,
-            IndirectInvokable<F, Project<I0, P0>, Project<I1, P1>>,
+            IndirectCallable<F, Project<I0, P0>, Project<I1, P1>>,
             Writable<O, Y>>;
 
         /// \addtogroup group-algorithms
@@ -65,8 +65,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(IteratorRange<I, S>() && Transformable1<I, O, F, P>())>
             std::pair<I, O> operator()(I begin, S end, O out, F fun_, P proj_ = P{}) const
             {
-                auto &&fun = invokable(fun_);
-                auto &&proj = invokable(proj_);
+                auto &&fun = as_function(fun_);
+                auto &&proj = as_function(proj_);
                 for(; begin != end; ++begin, ++out)
                     *out = fun(proj(*begin));
                 return {begin, out};
@@ -89,9 +89,9 @@ namespace ranges
             std::tuple<I0, I1, O> operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun_,
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
-                auto &&fun = invokable(fun_);
-                auto &&proj0 = invokable(proj0_);
-                auto &&proj1 = invokable(proj1_);
+                auto &&fun = as_function(fun_);
+                auto &&proj0 = as_function(proj0_);
+                auto &&proj1 = as_function(proj1_);
                 for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1, ++out)
                     *out = fun(proj0(*begin0), proj1(*begin1));
                 return std::tuple<I0, I1, O>{begin0, begin1, out};

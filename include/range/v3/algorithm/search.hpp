@@ -170,9 +170,9 @@ namespace ranges
             {
                 if(begin2 == end2)
                     return begin1;
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 if(SizedIteratorRange<I1, S1>() && SizedIteratorRange<I2, S2>())
                     return search_fn::sized_impl(std::move(begin1), std::move(end1),
                         distance(begin1, end1), std::move(begin2), std::move(end2),
@@ -197,9 +197,9 @@ namespace ranges
             {
                 if(empty(rng2))
                     return begin(rng1);
-                auto &&pred = invokable(pred_);
-                auto &&proj1 = invokable(proj1_);
-                auto &&proj2 = invokable(proj2_);
+                auto &&pred = as_function(pred_);
+                auto &&proj1 = as_function(proj1_);
+                auto &&proj2 = as_function(proj2_);
                 if(SizedIterable<Rng1>() && SizedIterable<Rng2>())
                     return search_fn::sized_impl(begin(rng1), end(rng1), distance(rng1),
                         begin(rng2), end(rng2), distance(rng2), pred, proj1, proj2);

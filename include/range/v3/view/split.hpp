@@ -46,7 +46,7 @@ namespace ranges
         private:
             friend range_access;
             Rng rng_;
-            semiregular_t<invokable_t<Fun>> fun_;
+            semiregular_t<function_type<Fun>> fun_;
 
             template<bool IsConst>
             struct cursor
@@ -57,7 +57,7 @@ namespace ranges
                 bool zero_;
                 range_iterator_t<Rng> cur_;
                 range_sentinel_t<Rng> last_;
-                using fun_ref_t = semiregular_ref_or_val_t<invokable_t<Fun>, IsConst>;
+                using fun_ref_t = semiregular_ref_or_val_t<function_type<Fun>, IsConst>;
                 fun_ref_t fun_;
 
                 struct search_pred
@@ -120,7 +120,7 @@ namespace ranges
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(Invokable<Fun const, range_iterator_t<Rng>, range_sentinel_t<Rng>>())
+            CONCEPT_REQUIRES(Callable<Fun const, range_iterator_t<Rng>, range_sentinel_t<Rng>>())
             cursor<true> begin_cursor() const
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};

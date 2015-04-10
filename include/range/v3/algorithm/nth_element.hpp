@@ -108,8 +108,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sortable<I, C, P>())>
             I operator()(I begin, I nth, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 I end = ranges::next(nth, end_), end_orig = end;
                 // C is known to be a reference type
                 using difference_type = iterator_difference_t<I>;

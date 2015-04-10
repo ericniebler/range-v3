@@ -42,7 +42,7 @@ namespace ranges
         template<typename I, typename C = ordered_less, typename P = ident>
         using IsHeapable = meta::fast_and<
             RandomAccessIterator<I>,
-            IndirectInvokableRelation<C, Project<I, P>>>;
+            IndirectCallableRelation<C, Project<I, P>>>;
 
         /// \cond
         namespace detail
@@ -54,8 +54,8 @@ namespace ranges
                 I operator()(I const begin_, iterator_difference_t<I> const n_, C pred_ = C{}, P proj_ = P{}) const
                 {
                     RANGES_ASSERT(0 <= n_);
-                    auto &&pred = invokable(pred_);
-                    auto &&proj = invokable(proj_);
+                    auto &&pred = as_function(pred_);
+                    auto &&proj = as_function(proj_);
                     iterator_difference_t<I> p = 0, c = 1;
                     I pp = begin_;
                     while(c < n_)
@@ -163,8 +163,8 @@ namespace ranges
                 {
                     if(len > 1)
                     {
-                        auto &&pred = invokable(pred_);
-                        auto &&proj = invokable(proj_);
+                        auto &&pred = as_function(pred_);
+                        auto &&proj = as_function(proj_);
                         I end = begin + len;
                         len = (len - 2) / 2;
                         I i = begin + len;
@@ -206,8 +206,8 @@ namespace ranges
                     child = 2 * child + 1;
                     I child_i = begin + child;
 
-                    auto &&pred = invokable(pred_);
-                    auto &&proj = invokable(proj_);
+                    auto &&pred = as_function(pred_);
+                    auto &&proj = as_function(proj_);
 
                     if((child + 1) < len && pred(proj(*child_i), proj(*(child_i + 1))))
                     {
@@ -351,8 +351,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 iterator_difference_t<I> const n = distance(begin, end);
                 if(n > 1)
                     // start from the first parent, there is no need to consider children
@@ -366,8 +366,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() && Sortable<I, C, P>())>
             range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 I begin = ranges::begin(rng);
                 iterator_difference_t<I> const n = distance(rng);
                 if(n > 1)
@@ -391,8 +391,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 iterator_difference_t<I> const n = distance(begin, end);
                 for(auto i = n; i > 1; --i)
                     detail::pop_heap_n(begin, i, std::ref(pred), std::ref(proj));
@@ -404,8 +404,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() && Sortable<I, C, P>())>
             range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
             {
-                auto &&pred = invokable(pred_);
-                auto &&proj = invokable(proj_);
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
                 I begin = ranges::begin(rng);
                 iterator_difference_t<I> const n = distance(rng);
                 for(auto i = n; i > 1; --i)
