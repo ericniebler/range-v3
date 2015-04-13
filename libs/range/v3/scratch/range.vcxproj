@@ -172,6 +172,7 @@
     <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\container_conversion.cpp" />
+    <ClCompile Include="..\..\..\..\test\getlines.cpp" />
     <ClCompile Include="..\..\..\..\test\multiple1.cpp" />
     <ClCompile Include="..\..\..\..\test\multiple2.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\accumulate.cpp" />
@@ -334,6 +335,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\distance.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\empty.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\front.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\getlines.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\istream_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\accumulate.hpp" />
