@@ -45,6 +45,7 @@ namespace ranges
             template<typename I, typename S, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     IndirectCallablePredicate<F, Project<I, P> >())>
+            RANGES_RELAXED_CONSTEXPR
             I operator()(I begin, S end, F pred_, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -59,7 +60,12 @@ namespace ranges
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+<<<<<<< HEAD
                     IndirectCallablePredicate<F, Project<I, P> >())>
+=======
+                    IndirectInvokablePredicate<F, Project<I, P> >())>
+            RANGES_RELAXED_CONSTEXPR
+>>>>>>> clean up binder + remove_if + find_if_not + addressof
             range_safe_iterator_t<Rng> operator()(Rng &&rng, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

@@ -520,7 +520,8 @@ namespace ranges
             using reference = meta::if_c<RValue, T &&, T &>;
             RANGES_RELAXED_CONSTEXPR reference_wrapper() = default;
             RANGES_RELAXED_CONSTEXPR reference_wrapper(reference t) noexcept
-              : t_(std::addressof(t))
+                    //: t_(std::addressof(t))
+                    : t_(&t)
             {}
             RANGES_RELAXED_CONSTEXPR reference get() const noexcept
             {
@@ -791,6 +792,28 @@ namespace ranges
                 decltype(bind_forward<Pipe1>(pipe1))>
                 (bind_forward<Pipe0>(pipe0), bind_forward<Pipe1>(pipe1)))
         )
+
+
+        // TODO: [constexpr] woraround std::bind not being constexpr
+        template<typename Bind, typename Fun>
+        struct binder_1 {
+            Bind bind_;
+            Fun fun_;
+
+            RANGES_RELAXED_CONSTEXPR binder_1() = default;
+            RANGES_RELAXED_CONSTEXPR binder_1(binder_1 const&) = default;
+            RANGES_RELAXED_CONSTEXPR binder_1& operator=(binder_1 const&) = default;
+            RANGES_RELAXED_CONSTEXPR binder_1(binder_1 &&) = default;
+            RANGES_RELAXED_CONSTEXPR binder_1& operator=(binder_1 &&) = default;
+            RANGES_RELAXED_CONSTEXPR binder_1(Bind i, Fun f)
+                : bind_(std::move(i)), fun_(std::move(f)) {}
+
+            template<class T>
+            RANGES_RELAXED_CONSTEXPR
+            auto operator()(T&& t) const RANGES_DECLTYPE_AUTO_RETURN(
+                bind_(std::forward<T>(t), unwrap_reference(fun_))
+            )
+        };
 
         /// \ingroup group-utility
         template<typename T>

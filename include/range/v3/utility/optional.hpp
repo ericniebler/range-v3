@@ -17,7 +17,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/variant.hpp>
-
+template <class T> struct dump;
 namespace ranges
 {
     inline namespace v3
@@ -29,7 +29,7 @@ namespace ranges
         private:
             tagged_variant<T, meta::nil_> data_;
         public:
-            RANGES_RELAXED_CONSTEXPR optional() = default;
+            RANGES_RELAXED_CONSTEXPR optional() : data_{} {}
             RANGES_RELAXED_CONSTEXPR optional(T t)
               : data_(meta::size_t<0>{}, std::move(t))
             {}

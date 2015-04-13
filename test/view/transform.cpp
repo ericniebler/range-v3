@@ -49,11 +49,10 @@ int main()
     models<concepts::RandomAccessRange>(rng);
     ::check_equal(rng, {true, false, true, false, true, false, true, false, true, false});
 
-    std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};
-// TODO: [constexpr] these tests break in C++14
-//   auto && rng2 = rgp | view::transform(&std::pair<int,int>::first);
-    has_type<int &>(*begin(rgi));
-//  has_type<int &>(*begin(rng2));
+    // TODO: [constexpr] these tests break in C++14
+    //    std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};
+    // auto && rng2 = rgp | view::transform(&std::pair<int,int>::first);
+    //  has_type<int &>(*begin(rng2));
     // CONCEPT_ASSERT(Same<range_value_t<decltype(rng2)>, int>());
     // CONCEPT_ASSERT(Same<decltype(iter_move(begin(rng2))), int &&>());
     // models<concepts::BoundedRange>(rng2);

@@ -51,7 +51,7 @@ namespace ranges
                 tagged_variant<I, S> data_;
                 bool is_sentinel() const
                 {
-                    RANGES_ASSERT(data_.is_valid());
+                    RANGES_ASSERT(data_);
                     return data_.which() == 1u;
                 }
                 I & it()

@@ -54,7 +54,7 @@ namespace ranges
                 void satisfy(range_iterator_t<Rng> &it) const
                 {
                     it = find_if_not(std::move(it), ranges::end(rng_->mutable_base()),
-                        std::ref(rng_->pred_));
+                                     ranges::ref(rng_->pred_));
                 }
             public:
                 RANGES_RELAXED_CONSTEXPR adaptor() = default;
@@ -128,30 +128,6 @@ namespace ranges
         namespace view
         {
 
-            // TODO: [constexpr] woraround std::bind not being constexpr
-            // a similar workaround is used in functional
-            template<typename Bind, typename Fun>
-            struct remove_if_binder {
-                Bind bind_;
-                Fun fun_;
-
-                RANGES_RELAXED_CONSTEXPR remove_if_binder() = default;
-                RANGES_RELAXED_CONSTEXPR remove_if_binder(remove_if_binder const&) = default;
-                RANGES_RELAXED_CONSTEXPR remove_if_binder& operator=(remove_if_binder const&) = default;
-                RANGES_RELAXED_CONSTEXPR remove_if_binder(remove_if_binder &&) = default;
-                RANGES_RELAXED_CONSTEXPR remove_if_binder& operator=(remove_if_binder &&) = default;
-
-
-                RANGES_RELAXED_CONSTEXPR remove_if_binder(Bind i, Fun f)
-                    : bind_(std::move(i)), fun_(std::move(f)) {}
-
-                template<class T>
-                RANGES_RELAXED_CONSTEXPR
-                auto operator()(T&& t) const RANGES_DECLTYPE_AUTO_RETURN(
-                    bind_(std::forward<T>(t), unwrap_reference(fun_))
-                )
-            };
-
             struct remove_if_fn
             {
             private:
@@ -160,7 +136,7 @@ namespace ranges
                 static RANGES_RELAXED_CONSTEXPR auto bind(remove_if_fn remove_if, Pred pred)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(remove_if_binder<remove_if_fn, Pred>(remove_if, std::move(pred)))
+                    make_pipeable(binder_1<remove_if_fn, Pred>(remove_if, std::move(pred)))
                 )
             public:
                 template<typename Rng, typename Pred>

@@ -42,7 +42,6 @@ namespace ranges
             struct sentinel
             {
             public:
-<<<<<<< HEAD
                 using BaseRng = meta::apply<meta::add_const_if_c<IsConst>, Rng>;
                 using base_iterator = range_iterator_t<BaseRng>;
                 using base_sentinel = range_sentinel_t<BaseRng>;
@@ -53,78 +52,6 @@ namespace ranges
                   : sent_(sent)
                 {}
                 RANGES_RELAXED_CONSTEXPR bool equal(detail::counted_cursor<base_iterator> const &that) const
-=======
-                constexpr take_view_() = default;
-                RANGES_RELAXED_CONSTEXPR take_view_(Rng rng, difference_type_ n)
-                  : rng_(std::move(rng)), n_(n)
-                {
-                    RANGES_ASSERT(n >= 0);
-                }
-                constexpr range_size_t<Rng> size() const
-                {
-                    return static_cast<range_size_t<Rng>>(n_);
-                }
-#ifdef RANGES_CXX_GREATER_THAN_11
-                // note: constexpr member functions are const in C++11
-                constexpr Rng & base()
-                {
-                    return rng_;
-                }
-#endif
-                constexpr Rng const & base() const
-                {
-                    return rng_;
-                }
-            };
-
-            template<typename Rng>
-            struct take_view_<Rng, true>
-              : range_interface<take_view<Rng>>
-            {
-            private:
-                using difference_type_ = range_difference_t<Rng>;
-                Rng rng_;
-                difference_type_ n_;
-            public:
-                constexpr take_view_() = default;
-                RANGES_RELAXED_CONSTEXPR take_view_(Rng rng, difference_type_ n)
-                  : rng_(std::move(rng)), n_(n)
-                {
-                    RANGES_ASSERT(n >= 0);
-                }
-                RANGES_RELAXED_CONSTEXPR range_iterator_t<Rng> begin()
-                {
-                    return ranges::begin(rng_);
-                }
-                RANGES_RELAXED_CONSTEXPR range_iterator_t<Rng> end()
-                {
-                    return next(ranges::begin(rng_), n_);
-                }
-                template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
-                RANGES_RELAXED_CONSTEXPR range_iterator_t<BaseRng const> begin() const
-                {
-                    return ranges::begin(rng_);
-                }
-                template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
-                RANGES_RELAXED_CONSTEXPR range_iterator_t<BaseRng const> end() const
-                {
-                    return next(ranges::begin(rng_), n_);
-                }
-                constexpr range_size_t<Rng> size() const
-                {
-                    return static_cast<range_size_t<Rng>>(n_);
-                }
-#ifdef RANGES_CXX_GREATER_THAN_11
-                // note: constexpr member functions are const in C++11
-                constexpr Rng & base()
-                {
-                    return rng_;
-                }
-#endif
-                constexpr Rng const & base() const
->>>>>>> Test all configurations (C++std/build/asan) with clang-3.4...3.7
                 {
                     return 0 == that.count() || that.base() == sent_;
                 }
@@ -169,30 +96,6 @@ namespace ranges
 
         namespace view
         {
-            // TODO: [constexpr] woraround std::bind not being constexpr
-            // a similar workaround is used in functional
-            template<typename Bind, typename Fun>
-            struct take_binder {
-                Bind bind_;
-                Fun fun_;
-
-                RANGES_RELAXED_CONSTEXPR take_binder() = default;
-                RANGES_RELAXED_CONSTEXPR take_binder(take_binder const&) = default;
-                RANGES_RELAXED_CONSTEXPR take_binder& operator=(take_binder const&) = default;
-                RANGES_RELAXED_CONSTEXPR take_binder(take_binder &&) = default;
-                RANGES_RELAXED_CONSTEXPR take_binder& operator=(take_binder &&) = default;
-
-
-                RANGES_RELAXED_CONSTEXPR take_binder(Bind i, Fun f)
-                    : bind_(std::move(i)), fun_(std::move(f)) {}
-
-                template<class T>
-                RANGES_RELAXED_CONSTEXPR
-                auto operator()(T&& t) const RANGES_DECLTYPE_AUTO_RETURN(
-                    bind_(std::forward<T>(t), unwrap_reference(fun_))
-                )
-            };
-
             struct take_fn
             {
             private:
@@ -222,7 +125,7 @@ namespace ranges
                 auto bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(take_binder<take_fn, Int>(take, to))
+                    make_pipeable(binder_1<take_fn, Int>(take, to))
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED

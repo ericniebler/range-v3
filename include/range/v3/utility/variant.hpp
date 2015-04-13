@@ -21,6 +21,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/addressof.hpp>
 
 namespace ranges
 {
@@ -198,12 +199,14 @@ namespace ranges
                 friend union variant_data_trivial;
                 using head_t = decay_t<meta::if_<std::is_reference<T>, ref_t<T &>, T>>;
                 using tail_t = variant_data_trivial<Ts...>;
+                using trivially_copy_assignable_types = meta::all_of<meta::list<T, Ts...>, meta::quote<std::is_trivially_copy_assignable>>;
 
                 head_t head;
                 tail_t tail;
                 uninitialized_t_ uninitialized;
 
                 template<typename This, typename Fun, std::size_t N>
+                RANGES_RELAXED_CONSTEXPR
                 static void apply_(This &this_, std::size_t n, Fun &&fun, meta::size_t<N> u)
                 {
                     if(0 == n)
@@ -228,13 +231,23 @@ namespace ranges
                   : tail{meta::size_t<N - 1>{}, std::forward<U>(u)}
                 {}
                 ~variant_data_trivial() = default;
-                void move(std::size_t n, variant_data_trivial &&that)
+                CONCEPT_REQUIRES(trivially_copy_assignable_types{})
+                RANGES_RELAXED_CONSTEXPR void move(std::size_t n, variant_data_trivial &&that)
+                {
+                    if(n == 0)
+                        *this = variant_data_trivial(meta::size_t<0>{}, std::move(that).head);
+                    else
+                        tail.move(n - 1, std::move(that).tail);
+                }
+                CONCEPT_REQUIRES(!trivially_copy_assignable_types{})
+                RANGES_RELAXED_CONSTEXPR void move(std::size_t n, variant_data_trivial &&that)
                 {
                     if(n == 0)
                         ::new(static_cast<void *>(&head)) head_t(std::move(that).head);
                     else
                         tail.move(n - 1, std::move(that).tail);
                 }
+
                 void copy(std::size_t n, variant_data_trivial const &that)
                 {
                     if(n == 0)
@@ -325,9 +338,9 @@ namespace ranges
                 {}
                 template<typename U,
                     meta::if_<std::is_constructible<U, T>, int> = 0>
-                void operator()(U &u) const
+                RANGES_RELAXED_CONSTEXPR void operator()(U &u) const
                 {
-                    ::new((void*)std::addressof(u)) U(std::forward<T>(t_));
+                    ::new((void*)addressof(u)) U(std::forward<T>(t_));
                 }
             };
 
@@ -340,9 +353,9 @@ namespace ranges
                 RANGES_RELAXED_CONSTEXPR get_fun(T *&t)
                   : t_(t)
                 {}
-                void operator()(T &t) const
+                RANGES_RELAXED_CONSTEXPR void operator()(T &t) const
                 {
-                    t_ = std::addressof(t);
+                    t_ = ranges::addressof(t);
                 }
             };
 
@@ -545,6 +558,8 @@ namespace ranges
             friend struct detail::variant_core_access;
             using types_t = meta::list<Ts...>;
             using data_t = detail::variant_data<Ts...>;
+            using trivially_destructible_elements
+                    = meta::all_of<types_t, meta::quote<std::is_trivially_destructible>>;
             std::size_t which_;
             data_t data_;
 
@@ -557,7 +572,7 @@ namespace ranges
                 }
             }
         public:
-            tagged_variant()
+            RANGES_RELAXED_CONSTEXPR tagged_variant()
               : which_((std::size_t)-1), data_{}
             {}
             template<std::size_t N, typename U,
@@ -585,9 +600,20 @@ namespace ranges
                     which_ = that.which_;
                 }
             }
+            CONCEPT_REQUIRES(!trivially_destructible_elements{})
             tagged_variant &operator=(tagged_variant &&that)
             {
                 clear_();
+                if(that.is_valid())
+                {
+                    data_.move(that.which_, std::move(that).data_);
+                    which_ = that.which_;
+                }
+                return *this;
+            }
+            CONCEPT_REQUIRES(trivially_destructible_elements{})
+            RANGES_RELAXED_CONSTEXPR tagged_variant &operator=(tagged_variant &&that)
+            {
                 if(that.is_valid())
                 {
                     data_.move(that.which_, std::move(that).data_);
@@ -611,7 +637,19 @@ namespace ranges
                 return sizeof...(Ts);
             }
             template<std::size_t N, typename U,
-                meta::if_<std::is_constructible<data_t, meta::size_t<N>, U>, int> = 0>
+                meta::if_c<std::is_constructible<data_t, meta::size_t<N>, U>{}
+            && trivially_destructible_elements{}, int> = 0>
+            RANGES_RELAXED_CONSTEXPR void set(U &&u)
+            {
+
+                *this = tagged_variant(meta::size_t<N>{}, std::forward<U>(u));
+                // // trivially destructible elements -> no need to clear_()
+                // data_.apply(N, detail::make_unary_visitor(detail::construct_fun<U>{std::forward<U>(u)}));
+                // which_ = N;
+            }
+            template<std::size_t N, typename U,
+                     meta::if_c<std::is_constructible<data_t, meta::size_t<N>, U>{}
+            && !trivially_destructible_elements{}, int> = 0>
             RANGES_RELAXED_CONSTEXPR void set(U &&u)
             {
                 clear_();
@@ -621,6 +659,9 @@ namespace ranges
             RANGES_RELAXED_CONSTEXPR bool is_valid() const
             {
                 return which() != (std::size_t)-1;
+            }
+            RANGES_RELAXED_CONSTEXPR explicit operator bool() const {
+                return is_valid();
             }
             RANGES_RELAXED_CONSTEXPR std::size_t which() const
             {
