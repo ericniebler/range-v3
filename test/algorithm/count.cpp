@@ -57,5 +57,12 @@ int main()
     CHECK(count(make_range(input_iterator<const S*>(sa),
                       sentinel<const S*>(sa)), 2, &S::i) == 0);
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(ranges::count({0, 1, 2, 1, 3, 1, 4}, 1)  == 3, "");
+        static_assert(ranges::count({0, 1, 2, 1, 3, 1, 4}, 5)  == 0, "");
+    }
+#endif
+
     return ::test_result();
 }
