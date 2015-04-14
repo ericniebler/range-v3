@@ -88,7 +88,7 @@ namespace ranges
                 ++first;
             }
             CONCEPT_REQUIRES(BidirectionalIterator<sentinel>())
-                    RANGES_RELAXED_CONSTEXPR void pop_back()
+            RANGES_RELAXED_CONSTEXPR void pop_back()
             {
                 --second;
             }

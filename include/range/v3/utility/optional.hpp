@@ -17,7 +17,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/variant.hpp>
-template <class T> struct dump;
+
 namespace ranges
 {
     inline namespace v3

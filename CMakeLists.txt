@@ -5,8 +5,8 @@ project(Range-v3 CXX)
 
 find_package(Doxygen)
 find_package(Git)
-include(CMakeDependentOption)
 
+# Select C++ standard to be used for compiling the tests (e.g. 11, 14, 17, 1z, 1y)
 if(RANGES_CXX_STD)
 else()
 set(RANGES_CXX_STD 11)
@@ -17,7 +17,6 @@ enable_testing()
 include_directories(include)
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-  # TODO: [constexpr] implement a switch for C++11/14 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -Wall -Wno-unused-function -ftemplate-backtrace-limit=0")
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
   set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")

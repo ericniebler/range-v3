@@ -233,7 +233,7 @@ namespace ranges
                 typename R = decltype(std::declval<A>().current(first)),
                 typename X =
                     meta::if_<std::is_reference<R>, meta::eval<std::remove_reference<R>> &&, R>>
-             X indirect_move_(detail::any) const
+            X indirect_move_(detail::any) const
                 noexcept(noexcept(X(static_cast<X &&>(std::declval<R>()))))
             {
                 using V = range_access::cursor_value_t<adaptor_cursor>;
