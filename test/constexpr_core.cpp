@@ -69,9 +69,8 @@ int main() {
         constexpr int a[4]{1, 2, 3, 4};
         static_assert(test_it(a) == 5, "");
         static_assert(test_cit(a) == 5, "");
-        // TODO: [constexpr] std::reverse_iterator is not constexpr
-        // static_assert(test_rit(a) == 5, "");
-        // static_assert(test_crit(a) == 5, "");
+        static_assert(test_rit(a) == 5, "");
+        static_assert(test_crit(a) == 5, "");
         static_assert(!ranges::empty(a), "");
         static_assert(ranges::front(a) == 1, "");
         static_assert(ranges::back(a) == 4, "");
@@ -82,11 +81,10 @@ int main() {
     { // initializer_list
         static_assert(test_it(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
         static_assert(test_cit(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
-        // TODO: [constexpr] std::reverse_iterator is not constexpr
-        // static_assert(test_rit(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
+        static_assert(test_rit(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
+        static_assert(test_crit(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
         static_assert(ranges::size(std::initializer_list<int>{1, 2, 3, 4}) == 4, "");
 
-        // TODO: [constexpr] if these return a reference then these references are dangling??
         static_assert(ranges::front(std::initializer_list<int>{1, 2, 3, 4}) == 1, "");
         static_assert(ranges::back(std::initializer_list<int>{1, 2, 3, 4}) == 4, "");
         static_assert(ranges::at(std::initializer_list<int>{1, 2, 3, 4}, 2) == 3, "");

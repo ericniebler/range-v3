@@ -23,6 +23,8 @@
 #define RANGES_V3_UTILITY_ADDRESSOF_HPP
 
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/static_const.hpp>
+#include <memory>
 
 namespace ranges
 {
