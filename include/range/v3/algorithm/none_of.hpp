@@ -35,6 +35,7 @@ namespace ranges
             template<typename I, typename S, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     IndirectCallablePredicate<F, Project<I, P>>())>
+            RANGES_RELAXED_CONSTEXPR
             bool
             operator()(I first, S last, F pred, P proj = P{}) const
             {
@@ -49,6 +50,7 @@ namespace ranges
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng>() && IndirectCallablePredicate<F, Project<I, P>>())>
+            RANGES_RELAXED_CONSTEXPR
             bool
             operator()(Rng &&rng, F pred, P proj = P{}) const
             {
