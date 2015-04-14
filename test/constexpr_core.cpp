@@ -23,9 +23,9 @@ constexpr auto test_r(R&& r) {
 }
 
 template<class R>
-constexpr auto test_rev(R&& r) {
-    auto beg = ranges::begin(r);
-    auto end = ranges::end(r);
+constexpr auto test_rev(R&& rng) {
+    auto beg = ranges::rbegin(rng);
+    auto end = ranges::rend(rng);
     --end;
     return (*beg) + (*end);
 }
@@ -51,6 +51,8 @@ int main() {
     {  // C-Array
         constexpr int a[4]{1, 2, 3, 4};
         static_assert(test_r(a) == 5, "");
+        // TODO: [constexpr] std::reverse_iterator is not constexpr
+        // static_assert(test_rev(a) == 5, "");
         static_assert(!ranges::empty(a), "");
         static_assert(ranges::front(a) == 1, "");
         static_assert(ranges::back(a) == 4, "");
@@ -60,6 +62,8 @@ int main() {
     }
     { // initializer_list
         static_assert(test_r(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
+        // TODO: [constexpr] std::reverse_iterator is not constexpr
+        // static_assert(test_rev(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
         static_assert(ranges::size(std::initializer_list<int>{1, 2, 3, 4}) == 4, "");
 
         // TODO: [constexpr] if these return a reference then these references are dangling??
