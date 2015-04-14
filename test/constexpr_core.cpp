@@ -15,7 +15,7 @@ RANGES_RELAXED_CONSTEXPR auto get_end(R const& r) {
 }
 
 template<class R>
-RANGES_RELAXED_CONSTEXPR auto test_r(R&& r) {
+RANGES_RELAXED_CONSTEXPR auto test_it(R&& r) {
    auto beg = ranges::begin(r);
    auto end = ranges::end(r);
    --end;
@@ -23,9 +23,25 @@ RANGES_RELAXED_CONSTEXPR auto test_r(R&& r) {
 }
 
 template<class R>
-RANGES_RELAXED_CONSTEXPR auto test_rev(R&& rng) {
+RANGES_RELAXED_CONSTEXPR auto test_cit(R&& r) {
+    auto beg = ranges::cbegin(r);
+    auto end = ranges::cend(r);
+    --end;
+    return (*beg) + (*end);
+}
+
+template<class R>
+RANGES_RELAXED_CONSTEXPR auto test_rit(R&& rng) {
     auto beg = ranges::rbegin(rng);
     auto end = ranges::rend(rng);
+    --end;
+    return (*beg) + (*end);
+}
+
+template<class R>
+RANGES_RELAXED_CONSTEXPR auto test_crit(R&& rng) {
+    auto beg = ranges::crbegin(rng);
+    auto end = ranges::crend(rng);
     --end;
     return (*beg) + (*end);
 }
@@ -41,7 +57,8 @@ int main() {
         static_assert(*beg == 1, "");
         constexpr auto end_m1 = --get_end(a);
         static_assert(*end_m1 == 4, "");
-        static_assert(test_r(a) == 5, "");
+        static_assert(test_it(a) == 5, "");
+        static_assert(test_cit(a) == 5, "");
         static_assert(!ranges::empty(a), "");
         static_assert(ranges::front(a) == 1, "");
         static_assert(ranges::back(a) == 4, "");
@@ -50,9 +67,11 @@ int main() {
     }
     {  // C-Array
         constexpr int a[4]{1, 2, 3, 4};
-        static_assert(test_r(a) == 5, "");
+        static_assert(test_it(a) == 5, "");
+        static_assert(test_cit(a) == 5, "");
         // TODO: [constexpr] std::reverse_iterator is not constexpr
-        // static_assert(test_rev(a) == 5, "");
+        // static_assert(test_rit(a) == 5, "");
+        // static_assert(test_crit(a) == 5, "");
         static_assert(!ranges::empty(a), "");
         static_assert(ranges::front(a) == 1, "");
         static_assert(ranges::back(a) == 4, "");
@@ -61,9 +80,10 @@ int main() {
 
     }
     { // initializer_list
-        static_assert(test_r(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
+        static_assert(test_it(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
+        static_assert(test_cit(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
         // TODO: [constexpr] std::reverse_iterator is not constexpr
-        // static_assert(test_rev(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
+        // static_assert(test_rit(std::initializer_list<int>{1, 2, 3, 4}) == 5, "");
         static_assert(ranges::size(std::initializer_list<int>{1, 2, 3, 4}) == 4, "");
 
         // TODO: [constexpr] if these return a reference then these references are dangling??
