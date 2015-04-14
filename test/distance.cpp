@@ -113,5 +113,34 @@ int main()
         test_infinite_range(view::ints(0u));
     }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto rng = view::iota(1, 10);
+        using Rng = decltype(rng);
+        constexpr auto bit = ranges::begin(rng);
+        using I = decltype(bit);
+        constexpr auto it = bit + 5;
+        constexpr auto eit = ranges::end(rng);
+        constexpr auto n = ranges::size(rng);
+        static_assert(n == 10, "");
+
+        static_assert(distance(bit, eit) == n, "");
+        static_assert(distance(it, eit) == 5, "");
+        static_assert(distance_compare(bit, eit, n) == 0, "");
+        static_assert(distance_compare(bit, eit, n - 1) > 0, "");
+        static_assert(distance_compare(bit, eit, n + 1) < 0, "");
+        static_assert(distance_compare(bit, eit, (std::numeric_limits<iterator_difference_t<I>>::min)()) > 0, "");
+         static_assert(distance_compare(bit, eit, (std::numeric_limits<iterator_difference_t<I>>::max)()) < 0, "");
+        static_assert(distance(rng) == n, "");
+        static_assert(distance_compare(rng, n) == 0, "");
+        static_assert(distance_compare(rng, n - 1) > 0, "");
+        static_assert(distance_compare(rng, n + 1) < 0, "");
+         static_assert(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) > 0, "");
+         static_assert(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) < 0, "");
+
+    }
+#endif
+
+
     return ::test_result();
 }
