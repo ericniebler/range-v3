@@ -36,12 +36,14 @@ namespace ranges
                 // tuple value
                 template<typename ...Its,
                     CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(copy_tag, Its...) const ->
                     std::tuple<iterator_value_t<Its>...>;
 
                 // tuple reference
                 template<typename ...Its,
                     CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(Its const &...its) const
                     noexcept(meta::and_c<noexcept(iterator_reference_t<Its>(*its))...>::value)
                 RANGES_DECLTYPE_AUTO_RETURN
@@ -52,6 +54,7 @@ namespace ranges
                 // tuple rvalue reference
                 template<typename ...Its,
                     CONCEPT_REQUIRES_(meta::and_<Readable<Its>...>() && sizeof...(Its) != 2)>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(move_tag, Its const &...its) const
                     noexcept(meta::and_c<
                         noexcept(iterator_rvalue_reference_t<Its>(iter_move(its)))...>::value)
@@ -63,12 +66,14 @@ namespace ranges
                 // pair value
                 template<typename It1, typename It2,
                     CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(copy_tag, It1, It2) const ->
                     std::pair<iterator_value_t<It1>, iterator_value_t<It2>>;
 
                 // pair reference
                 template<typename It1, typename It2,
                     CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(iterator_reference_t<It1>(*it1)) &&
                              noexcept(iterator_reference_t<It2>(*it2)))
@@ -80,6 +85,7 @@ namespace ranges
                 // pair rvalue reference
                 template<typename It1, typename It2,
                     CONCEPT_REQUIRES_(Readable<It1>() && Readable<It2>())>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(move_tag, It1 const &it1, It2 const &it2) const
                     noexcept(noexcept(iterator_rvalue_reference_t<It1>(iter_move(it1))) &&
                              noexcept(iterator_rvalue_reference_t<It2>(iter_move(it2))))
@@ -98,8 +104,8 @@ namespace ranges
         struct zip_view
           : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>
         {
-            zip_view() = default;
-            explicit zip_view(Rngs...rngs)
+            RANGES_RELAXED_CONSTEXPR zip_view() = default;
+            RANGES_RELAXED_CONSTEXPR explicit zip_view(Rngs...rngs)
               : iter_zip_with_view<detail::indirect_zip_fn_, Rngs...>{
                   detail::indirect_zip_fn_{}, std::move(rngs)...}
             {}
@@ -114,6 +120,7 @@ namespace ranges
 
                 template<typename...Rngs,
                     CONCEPT_REQUIRES_(Concept<Rngs...>())>
+                RANGES_RELAXED_CONSTEXPR
                 zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT(meta::and_<Iterable<Rngs>...>());
@@ -123,6 +130,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename...Rngs,
                     CONCEPT_REQUIRES_(!Concept<Rngs...>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Rngs &&... rngs) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),

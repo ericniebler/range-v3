@@ -15,6 +15,7 @@
 #include <sstream>
 #include <memory>
 #include <range/v3/core.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/zip.hpp>
 #include <range/v3/view/zip_with.hpp>
 #include <range/v3/view/map.hpp>
@@ -235,6 +236,36 @@ int main()
         auto it = x.begin();
         static_assert(noexcept(iter_move(it)), "");
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto rng1 = view::iota(1, 5);
+        constexpr auto rng2 = view::iota(6, 10);
+        constexpr auto rng3 = view::iota(11, 15);
+        constexpr auto zrng = view::zip(rng1, rng2);
+        constexpr auto beg = ranges::begin(zrng);
+        constexpr auto mit = beg + 3;
+        constexpr auto end = ranges::end(zrng);
+        static_assert((*beg).first == 1, "");
+        static_assert((*beg).second == 6, "");
+        static_assert((*mit).first == 4, "");
+        static_assert((*mit).second == 9, "");
+        static_assert(std::get<0>(*beg) == 1, "");
+        static_assert(std::get<1>(*beg) == 6, "");
+        static_assert(std::get<0>(*mit) == 4, "");
+        static_assert(std::get<1>(*mit) == 9, "");
+
+        constexpr auto zrng2 = view::zip(rng1, rng2, rng3);
+        constexpr auto beg2 = ranges::begin(zrng2);
+        constexpr auto mit2 = beg2 + 3;
+        static_assert(std::get<0>(*beg2) == 1, "");
+        static_assert(std::get<1>(*beg2) == 6, "");
+        static_assert(std::get<2>(*beg2) == 11, "");
+        static_assert(std::get<0>(*mit2) == 4, "");
+        static_assert(std::get<1>(*mit2) == 9, "");
+        static_assert(std::get<2>(*mit2) == 14, "");
+    }
+#endif
 
     return test_result();
 }

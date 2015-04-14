@@ -43,6 +43,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename U>
+                RANGES_RELAXED_CONSTEXPR
                 bool operator()(T const &t, U const &u) const
                 {
                     return static_cast<bool>(t == u);
@@ -52,6 +53,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T & t) const
                 {
                     --t;
@@ -61,6 +63,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T & t) const
                 {
                     ++t;
@@ -70,6 +73,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename D>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T & t, D d) const
                 {
                     advance(t, d);
@@ -79,6 +83,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(T const &t, T const &u) const ->
                     decltype(u - t)
                 {
@@ -89,6 +94,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename U>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(T const &t, U const &u) const ->
                     decltype(true ? t : u)
                 {
@@ -99,6 +105,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename U>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(T const &t, U const &u) const ->
                     decltype(true ? u : t)
                 {
@@ -184,8 +191,7 @@ namespace ranges
                 CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
                 RANGES_RELAXED_CONSTEXPR void advance(difference_type n)
                 {
-                    using std::placeholders::_1;
-                    tuple_for_each(its_, std::bind(detail::advance_, _1, n));
+                    tuple_for_each(its_, binder_1<decltype(detail::advance_), decltype(n)>(detail::advance_, n));
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
                 RANGES_RELAXED_CONSTEXPR difference_type distance_to(cursor const &that) const
@@ -212,6 +218,7 @@ namespace ranges
             public:
                 RANGES_RELAXED_CONSTEXPR sentinel() = default;
                 RANGES_RELAXED_CONSTEXPR sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
+                sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
                   : ends_(std::move(ends))
                 {}
                 RANGES_RELAXED_CONSTEXPR bool equal(cursor const &pos) const
