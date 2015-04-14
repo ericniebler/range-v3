@@ -8,14 +8,14 @@
 
 #ifdef RANGES_CXX_GREATER_THAN_11
 template<class R>
-constexpr auto get_end(R const& r) {
+RANGES_RELAXED_CONSTEXPR auto get_end(R const& r) {
     auto b = ranges::begin(r);
     ranges::advance(b, ranges::end(r));
     return b;
 }
 
 template<class R>
-constexpr auto test_r(R&& r) {
+RANGES_RELAXED_CONSTEXPR auto test_r(R&& r) {
    auto beg = ranges::begin(r);
    auto end = ranges::end(r);
    --end;
@@ -23,7 +23,7 @@ constexpr auto test_r(R&& r) {
 }
 
 template<class R>
-constexpr auto test_rev(R&& rng) {
+RANGES_RELAXED_CONSTEXPR auto test_rev(R&& rng) {
     auto beg = ranges::rbegin(rng);
     auto end = ranges::rend(rng);
     --end;
