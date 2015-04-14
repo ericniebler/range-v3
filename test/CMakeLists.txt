@@ -11,8 +11,8 @@ add_subdirectory(numeric)
 add_subdirectory(utility)
 add_subdirectory(view)
 
-add_executable(begin_end begin_end.cpp)
-add_test(test.begin_end begin_end)
+add_executable(constexpr_core constexpr_core.cpp)
+add_test(test.constexpr_core constexpr_core)
 
 add_executable(container_conversion container_conversion.cpp)
 add_test(test.container_conversion container_conversion)

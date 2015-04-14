@@ -67,6 +67,13 @@ namespace ranges
                 adl_advance_detail::advance_impl(i, n, iterator_concept<basic_iterator<Cur, Sent>>{});
             }
 
+            // constexpr version of advance for raw pointers
+            template<typename T>
+            RANGES_RELAXED_CONSTEXPR
+            void advance(T*& t, std::ptrdiff_t n) {
+                t += n;
+            }
+
             struct advance_fn
             {
             private:
