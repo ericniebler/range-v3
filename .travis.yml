@@ -105,7 +105,7 @@ matrix:
           packages: clang-3.7
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-precise
 
     - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
       os: linux
