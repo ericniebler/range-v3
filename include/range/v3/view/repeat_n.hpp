@@ -48,7 +48,6 @@ namespace ranges
                 Val value_;
                 std::size_t n_;
             public:
-                using single_pass = std::true_type;
                 cursor() = default;
                 cursor(Val value, std::size_t n)
                   : value_(std::move(value)), n_(n)
@@ -60,6 +59,10 @@ namespace ranges
                 constexpr bool done() const
                 {
                     return 0 == n_;
+                }
+                bool equal(cursor const &that) const
+                {
+                    return n_ == that.n_;
                 }
                 void next()
                 {

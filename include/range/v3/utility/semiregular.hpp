@@ -17,6 +17,7 @@
 #include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/get.hpp>
 #include <range/v3/utility/optional.hpp>
 
 namespace ranges
@@ -44,6 +45,16 @@ namespace ranges
             {
                 RANGES_ASSERT(!!t_);
                 return *t_;
+            }
+            semiregular &operator=(T const &t)
+            {
+                t_ = t;
+                return *this;
+            }
+            semiregular &operator=(T &&t)
+            {
+                t_ = std::move(t);
+                return *this;
             }
             operator T &()
             {
@@ -80,6 +91,24 @@ namespace ranges
                 SemiRegular<T>,
                 meta::if_c<IsConst, T, reference_wrapper<T>>,
                 reference_wrapper<meta::apply<meta::add_const_if_c<IsConst>, semiregular<T>>>>;
+
+        template<typename T>
+        T & get(meta::id_t<semiregular<T>> &t)
+        {
+            return t.get();
+        }
+
+        template<typename T>
+        T const & get(meta::id_t<semiregular<T>> const &t)
+        {
+            return t.get();
+        }
+
+        template<typename T>
+        T && get(meta::id_t<semiregular<T>> &&t)
+        {
+            return std::move(t.get());
+        }
         /// @}
     }
 }

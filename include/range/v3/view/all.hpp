@@ -66,6 +66,7 @@ namespace ranges
                 /// If it is container-like, turn it into an range, being careful
                 /// to preserve the Sized-ness of the iterable.
                 template<typename T,
+                    CONCEPT_REQUIRES_(!Range<T>()),
                     typename I = range_iterator_t<T>,
                     typename S = range_sentinel_t<T>,
                     typename SIC = sized_iterable_concept<T>,

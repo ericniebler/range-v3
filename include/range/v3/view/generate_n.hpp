@@ -38,52 +38,56 @@ namespace ranges
         {
         private:
             friend struct range_access;
-            optional<G> gen_;
+            using result_t = concepts::Function::result_t<G>;
+            semiregular_t<G> gen_;
+            semiregular_t<result_t> val_;
             std::size_t n_;
-            template<bool IsConst>
             struct cursor
             {
             private:
-                using gen_t = meta::apply<meta::add_const_if_c<IsConst>, G>;
-                gen_t *gen_;
+                generate_n_view *rng_;
                 std::size_t n_;
             public:
                 using single_pass = std::true_type;
                 cursor() = default;
-                cursor(gen_t &g, std::size_t n)
-                  : gen_(&g), n_(n)
+                cursor(generate_n_view &rng, std::size_t n)
+                  : rng_(&rng), n_(n)
                 {}
-                constexpr bool done() const
+                bool done() const
                 {
                     return 0 == n_;
                 }
-                auto current() const -> decltype((*gen_)())
+                result_t current() const
                 {
-                    return (*gen_)();
+                    return rng_->val_;
                 }
                 void next()
                 {
                     RANGES_ASSERT(0 != n_);
-                    --n_;
+                    if(0 != --n_)
+                        rng_->next();
                 }
             };
-            CONCEPT_REQUIRES(!Function<G const>())
-            cursor<false> begin_cursor()
+            void next()
             {
-                RANGES_ASSERT(!!gen_);
-                return {*gen_, n_};
+                val_ = gen_();
             }
-            CONCEPT_REQUIRES(Function<G const>())
-            cursor<true> begin_cursor() const
+            cursor begin_cursor()
             {
-                RANGES_ASSERT(!!gen_);
-                return {*gen_, n_};
+                return {*this, n_};
             }
         public:
             generate_n_view() = default;
             explicit generate_n_view(G g, std::size_t n)
-              : gen_(std::move(g)), n_(n)
-            {}
+              : gen_(std::move(g)), val_{}, n_(n)
+            {
+                if(0 != n)
+                    next();
+            }
+            result_t & cached()
+            {
+                return val_;
+            }
             std::size_t size() const
             {
                 return n_;

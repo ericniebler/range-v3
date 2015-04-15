@@ -75,6 +75,7 @@
     <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\example\calendar.cpp" />
     <ClCompile Include="..\..\..\..\example\comprehensions.cpp" />
     <ClCompile Include="..\..\..\..\example\fibonacci.cpp" />
     <ClCompile Include="..\..\..\..\perf\counted_insertion_sort.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\action\drop_while.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\erase.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\insert.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\action\join.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\push_back.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\push_front.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\remove_if.hpp" />
@@ -367,6 +369,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\counted_iterator.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\dangling.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\functional.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\get.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\infinity.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\integer_sequence.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\utility\is_infinity.hpp" />

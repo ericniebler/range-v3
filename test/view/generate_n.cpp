@@ -24,10 +24,6 @@ int main()
         auto fib = view::generate_n([&]()->int{int tmp = i; i += j; std::swap(i, j); return tmp;}, 10);
         CONCEPT_ASSERT(ranges::InputRange<decltype(fib)>());
         check_equal(fib, {0,1,1,2,3,5,8,13,21,34});
-        auto const &cfib = fib;
-        auto it = fib.begin();
-        auto cit = cfib.begin();
-        CONCEPT_ASSERT(ranges::Same<decltype(it), decltype(cit)>());
     }
 
     // Test for mutable-only generator functions

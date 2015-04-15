@@ -17,6 +17,7 @@
 #include <istream>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_facade.hpp>
+#include <range/v3/utility/semiregular.hpp>
 
 namespace ranges
 {
@@ -31,7 +32,7 @@ namespace ranges
         private:
             friend range_access;
             std::istream *sin_;
-            Val obj_;
+            semiregular_t<Val> obj_;
             struct cursor
             {
             private:
@@ -43,17 +44,21 @@ namespace ranges
                 {}
                 void next()
                 {
-                    *rng_->sin_ >> rng_->obj_;
+                    rng_->next();
                 }
                 Val const &current() const
                 {
-                    return rng_->obj_;
+                    return rng_->cached();
                 }
                 bool done() const
                 {
                     return !*rng_->sin_;
                 }
             };
+            void next()
+            {
+                *sin_ >> cached();
+            }
             cursor begin_cursor()
             {
                 return cursor{*this};
@@ -63,7 +68,7 @@ namespace ranges
             istream_range(std::istream &sin)
               : sin_(&sin), obj_{}
             {
-                *sin_ >> obj_; // prime the pump
+                next(); // prime the pump
             }
             Val & cached()
             {

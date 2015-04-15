@@ -49,6 +49,9 @@ namespace ranges
         {
             using iterator = I;
             using sentinel = S;
+        #ifndef RANGES_DOXYGEN_INVOKED
+            using const_iterator = I; // Mostly to avoid spurious errors in Boost.Range
+        #endif
             using compressed_pair<I, S>::first;
             using compressed_pair<I, S>::second;
 
@@ -128,6 +131,9 @@ namespace ranges
         public:
             using iterator = I;
             using sentinel = S;
+        #ifndef RANGES_DOXYGEN_INVOKED
+            using const_iterator = I; // Mostly to avoid spurious errors in Boost.Range
+        #endif
             using compressed_pair<I const, S const>::first;
             using compressed_pair<I const, S const>::second;
             iterator_size_t<I> const third;

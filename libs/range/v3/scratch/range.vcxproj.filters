@@ -539,6 +539,9 @@
     <ClCompile Include="..\..\..\..\test\getlines.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\example\calendar.cpp">
+      <Filter>Example Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
@@ -1179,6 +1182,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\getlines.hpp">
       <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\get.hpp">
+      <Filter>Header Files\range\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\action\join.hpp">
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

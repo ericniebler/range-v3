@@ -51,7 +51,12 @@ namespace ranges
                 RANGES_ASSERT(!!*this);
                 return ranges::get<0>(data_);
             }
-            optional &operator=(T t)
+            optional &operator=(T const &t)
+            {
+                ranges::set<0>(data_, t);
+                return *this;
+            }
+            optional &operator=(T &&t)
             {
                 ranges::set<0>(data_, std::move(t));
                 return *this;

@@ -20,6 +20,7 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/get.hpp>
 
 namespace ranges
 {
@@ -144,24 +145,6 @@ namespace ranges
         };
 
         // Get by tag type
-        template<typename Element>
-        Element & get(meta::eval<meta::id<Element>> & value)
-        {
-            return value;
-        }
-
-        template<typename Element>
-        Element const & get(meta::eval<meta::id<Element>> const & value)
-        {
-            return value;
-        }
-
-        template<typename Element>
-        Element && get(meta::eval<meta::id<Element>> && value)
-        {
-            return std::move(value);
-        }
-
         template<typename Tag, typename Element>
         Element & get(box<Element, Tag, false> & b)
         {
