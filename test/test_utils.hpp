@@ -65,7 +65,7 @@ void models_not(Types &&...)
 }
 
 template<typename T>
-T & as_lvalue(T && t)
+RANGES_RELAXED_CONSTEXPR T & as_lvalue(T && t)
 {
     return t;
 }
