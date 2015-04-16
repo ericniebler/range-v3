@@ -24,7 +24,9 @@
 template<typename Rng>
 RANGES_RELAXED_CONSTEXPR auto copy_rng(Rng&& input)  {
     ranges::array<int, 4> tmp{{0, 0, 0, 0}};
-    ranges::copy(input, ranges::begin(tmp));
+    auto res = ranges::copy(input, ranges::begin(tmp));
+    if (res.first != ranges::end(input)) { throw 0; };
+    if (res.second != ranges::end(tmp)) { throw 0; };
     return tmp;
 }
 #endif
@@ -80,7 +82,7 @@ int main()
 #ifdef RANGES_CXX_GREATER_THAN_11
     {
         constexpr auto a1 = copy_rng(ranges::array<int,4>{{0, 1, 2, 3}});
-        static_assert(ranges::equal(a1, {0,1,2,3}), "");
+        static_assert(ranges::equal(a1, {0, 1, 2, 3}), "");
     }
 #endif
 

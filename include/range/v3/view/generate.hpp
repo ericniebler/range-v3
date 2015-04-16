@@ -48,37 +48,37 @@ namespace ranges
                 generate_view *view_;
             public:
                 using single_pass = std::true_type;
-                cursor() = default;
-                cursor(generate_view &view)
+                RANGES_RELAXED_CONSTEXPR cursor() = default;
+                RANGES_RELAXED_CONSTEXPR cursor(generate_view &view)
                   : view_(&view)
                 {}
                 constexpr bool done() const
                 {
                     return false;
                 }
-                result_t current() const
+                RANGES_RELAXED_CONSTEXPR result_t current() const
                 {
                     return view_->val_;
                 }
-                void next()
+                RANGES_RELAXED_CONSTEXPR void next()
                 {
                     view_->next();
                 }
             };
-            void next()
+            RANGES_RELAXED_CONSTEXPR void next()
             {
                 val_ = gen_();
             }
-            cursor begin_cursor()
+            RANGES_RELAXED_CONSTEXPR cursor begin_cursor()
             {
                 return {*this};
             }
         public:
-            generate_view() = default;
-            explicit generate_view(G g)
+            RANGES_RELAXED_CONSTEXPR generate_view() = default;
+            RANGES_RELAXED_CONSTEXPR explicit generate_view(G g)
               : gen_(std::move(g)), val_(gen_())
             {}
-            result_t & cached()
+            RANGES_RELAXED_CONSTEXPR result_t & cached()
             {
                 return val_;
             }
@@ -95,6 +95,7 @@ namespace ranges
 
                 template<typename G,
                     CONCEPT_REQUIRES_(Concept<G>())>
+                RANGES_RELAXED_CONSTEXPR
                 generate_view<G> operator()(G g) const
                 {
                     return generate_view<G>{std::move(g)};
@@ -102,6 +103,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename G,
                     CONCEPT_REQUIRES_(!Concept<G>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(G) const
                 {
                     CONCEPT_ASSERT_MSG(Function<G>(),

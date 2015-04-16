@@ -38,10 +38,6 @@ struct gen {
     }
 };
 
-RANGES_RELAXED_CONSTEXPR bool constexpr_test() {
-    auto fib = view::generate_n(gen(), 10);
-    return ranges::equal(fib, {0,1,1,2,3,5,8,13,21,34});
-}
 #endif
 
 int main()
@@ -67,7 +63,8 @@ int main()
 
 #ifdef RANGES_CXX_GREATER_THAN_11
     {
-        static_assert(constexpr_test(), "");
+        static_assert(ranges::equal(view::generate_n(gen(), 10),  {0,1,1,2,3,5,8,13,21,34}), "");
+        static_assert(!ranges::equal(view::generate_n(gen(), 10),  {0,1,1,2,3,5,8,13,22,34}), "");
     }
 #endif
 

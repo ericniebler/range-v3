@@ -13,6 +13,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/repeat.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -26,6 +27,13 @@ int main()
     ::models<concepts::InputIterator>(rng.begin());
     ::models_not<concepts::ForwardIterator>(rng.begin());
     ::check_equal(rng, {9, 9, 9, 9, 9, 9, 9, 9, 9, 9});
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto rng = view::repeat(9) | view::take(10);
+        static_assert(ranges::equal(rng, {9, 9, 9, 9, 9, 9, 9, 9, 9, 9}), "");
+    }
+#endif
 
     return test_result();
 }

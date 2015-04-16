@@ -61,7 +61,7 @@ namespace ranges
                 ranges::set<0>(data_, t);
                 return *this;
             }
-            RANGES_RELAXED_CONSTEXPRoptional &operator=(T &&t)
+            RANGES_RELAXED_CONSTEXPR optional &operator=(T &&t)
             {
                 ranges::set<0>(data_, std::move(t));
                 return *this;

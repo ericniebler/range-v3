@@ -49,15 +49,15 @@ namespace ranges
                 std::size_t n_;
             public:
                 using single_pass = std::true_type;
-                RANGE_RELAXED_CONSTEXPR cursor() = default;
-                RANGE_RELAXED_CONSTEXPR cursor(generate_n_view &rng, std::size_t n)
+                RANGES_RELAXED_CONSTEXPR cursor() = default;
+                RANGES_RELAXED_CONSTEXPR cursor(generate_n_view &rng, std::size_t n)
                   : rng_(&rng), n_(n)
                 {}
-                bool done() const
+                RANGES_RELAXED_CONSTEXPR bool done() const
                 {
                     return 0 == n_;
                 }
-                RANGE_RELAXED_CONSTEXPR result_t current() const
+                RANGES_RELAXED_CONSTEXPR result_t current() const
                 {
                     return rng_->val_;
                 }
@@ -69,11 +69,11 @@ namespace ranges
                         rng_->next();
                 }
             };
-            RANGE_RELAXED_CONSTEXPR void next()
+            RANGES_RELAXED_CONSTEXPR void next()
             {
                 val_ = gen_();
             }
-            RANGE_RELAXED_CONSTEXPR cursor begin_cursor()
+            RANGES_RELAXED_CONSTEXPR cursor begin_cursor()
             {
                 return {*this, n_};
             }
@@ -81,12 +81,12 @@ namespace ranges
             RANGES_RELAXED_CONSTEXPR generate_n_view() : gen_{}, n_{} {}
             RANGES_RELAXED_CONSTEXPR
             explicit generate_n_view(G g, std::size_t n)
-              : gen_(std::move(g)), val_{}, n_(n)
+                    : gen_(std::move(g)), val_{}, n_(n)
             {
-                if(0 != n)
+                if(0 != n_)
                     next();
             }
-            RANGE_RELAXED_CONSTEXPR result_t & cached()
+            RANGES_RELAXED_CONSTEXPR result_t & cached()
             {
                 return val_;
             }

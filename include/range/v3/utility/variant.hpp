@@ -240,14 +240,22 @@ namespace ranges
                         tail.move(n - 1, std::move(that).tail);
                 }
                 CONCEPT_REQUIRES(!trivially_copy_assignable_types{})
-                RANGES_RELAXED_CONSTEXPR void move(std::size_t n, variant_data_trivial &&that)
+                void move(std::size_t n, variant_data_trivial &&that)
                 {
                     if(n == 0)
                         ::new(static_cast<void *>(&head)) head_t(std::move(that).head);
                     else
                         tail.move(n - 1, std::move(that).tail);
                 }
-
+                CONCEPT_REQUIRES(trivially_copy_assignable_types{})
+                RANGES_RELAXED_CONSTEXPR void copy(std::size_t n, variant_data_trivial const &that)
+                {
+                    if(n == 0)
+                        (*this) = variant_data_trivial(meta::size_t<0>{}, that.head);
+                    else
+                        tail.copy(n - 1, that.tail);
+                }
+                CONCEPT_REQUIRES(!trivially_copy_assignable_types{})
                 void copy(std::size_t n, variant_data_trivial const &that)
                 {
                     if(n == 0)
