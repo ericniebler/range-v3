@@ -191,6 +191,18 @@ add_test(test.alg.set_difference1, alg.set_difference1)
 add_executable(alg.set_difference2 set_difference2.cpp)
 add_test(test.alg.set_difference2, alg.set_difference2)
 
+add_executable(alg.set_difference3 set_difference3.cpp)
+add_test(test.alg.set_difference3, alg.set_difference3)
+
+add_executable(alg.set_difference4 set_difference4.cpp)
+add_test(test.alg.set_difference4, alg.set_difference4)
+
+add_executable(alg.set_difference5 set_difference5.cpp)
+add_test(test.alg.set_difference5, alg.set_difference5)
+
+add_executable(alg.set_difference6 set_difference6.cpp)
+add_test(test.alg.set_difference6, alg.set_difference6)
+
 add_executable(alg.set_intersection1 set_intersection1.cpp)
 add_test(test.alg.set_intersection1, alg.set_intersection1)
 
