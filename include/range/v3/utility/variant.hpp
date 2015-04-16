@@ -235,7 +235,7 @@ namespace ranges
                 RANGES_RELAXED_CONSTEXPR void move(std::size_t n, variant_data_trivial &&that)
                 {
                     if(n == 0)
-                        *this = variant_data_trivial(meta::size_t<0>{}, std::move(that).head);
+                        (*this) = variant_data_trivial(meta::size_t<0>{}, std::move(that).head);
                     else
                         tail.move(n - 1, std::move(that).tail);
                 }

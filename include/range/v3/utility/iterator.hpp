@@ -34,8 +34,6 @@ namespace ranges
         /// @{
         namespace adl_advance_detail
         {
-            using std::advance;
-
             template<typename I>
             RANGES_RELAXED_CONSTEXPR void advance_impl(I &i, iterator_difference_t<I> n, concepts::InputIterator *)
             {
@@ -67,11 +65,10 @@ namespace ranges
                 adl_advance_detail::advance_impl(i, n, iterator_concept<basic_iterator<Cur, Sent>>{});
             }
 
-            // constexpr version of advance for raw pointers
-            template<typename T>
-            RANGES_RELAXED_CONSTEXPR
-            void advance(T*& t, std::ptrdiff_t n) {
-                t += n;
+
+            template<class It>
+            RANGES_RELAXED_CONSTEXPR void advance(It& i, iterator_difference_t<It> n) {
+                return adl_advance_detail::advance_impl(i, n, iterator_concept<It>{});
             }
 
             struct advance_fn
@@ -95,9 +92,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(WeakIterator<I>())>
                 RANGES_RELAXED_CONSTEXPR void operator()(I &i, iterator_difference_t<I> n) const
                 {
-                    // Use ADL here to give custom iterator types (like counted_iterator)
-                    // a chance to optimize it (see view/counted.hpp)
-                    advance(i, n);
+                    ranges::adl_advance_detail::advance(i, n);
                 }
                 // Advance to a certain position:
                 template<typename I,
@@ -191,21 +186,21 @@ namespace ranges
                 CONCEPT_REQUIRES_(WeakIterator<I>())>
             RANGES_RELAXED_CONSTEXPR I operator()(I it, iterator_difference_t<I> n) const
             {
-                advance(it, n);
+                ranges::advance(it, n);
                 return it;
             }
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(IteratorRange<I, S>())>
             RANGES_RELAXED_CONSTEXPR I operator()(I it, S s) const
             {
-                advance(it, std::move(s));
+                ranges::advance(it, std::move(s));
                 return it;
             }
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(IteratorRange<I, S>())>
             RANGES_RELAXED_CONSTEXPR I operator()(I it, iterator_difference_t<I> n, S bound) const
             {
-                advance(it, n, std::move(bound));
+                ranges::advance(it, n, std::move(bound));
                 return it;
             }
         };

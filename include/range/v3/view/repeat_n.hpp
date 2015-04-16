@@ -48,11 +48,11 @@ namespace ranges
                 Val value_;
                 std::size_t n_;
             public:
-                cursor() = default;
-                cursor(Val value, std::size_t n)
+                RANGES_RELAXED_CONSTEXPR cursor() = default;
+                RANGES_RELAXED_CONSTEXPR cursor(Val value, std::size_t n)
                   : value_(std::move(value)), n_(n)
                 {}
-                Val current() const
+                RANGES_RELAXED_CONSTEXPR Val current() const
                 {
                     return value_;
                 }
@@ -60,22 +60,22 @@ namespace ranges
                 {
                     return 0 == n_;
                 }
-                bool equal(cursor const &that) const
+                RANGES_RELAXED_CONSTEXPR bool equal(cursor const &that) const
                 {
                     return n_ == that.n_;
                 }
-                void next()
+                RANGES_RELAXED_CONSTEXPR void next()
                 {
                     RANGES_ASSERT(0 != n_);
                     --n_;
                 }
             };
-            cursor begin_cursor() const
+            RANGES_RELAXED_CONSTEXPR cursor begin_cursor() const
             {
                 return {value_, n_};
             }
         public:
-            repeat_n_view() = default;
+            RANGES_RELAXED_CONSTEXPR repeat_n_view() = default;
             constexpr repeat_n_view(Val value, std::size_t n)
               : value_(detail::move(value)), n_(n)
             {}
@@ -91,6 +91,7 @@ namespace ranges
             {
                 template<typename Val,
                     CONCEPT_REQUIRES_(SemiRegular<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 repeat_n_view<Val> operator()(Val value, std::size_t n) const
                 {
                     return repeat_n_view<Val>{std::move(value), n};
@@ -98,6 +99,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
                     CONCEPT_REQUIRES_(!SemiRegular<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Val, std::size_t) const
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),

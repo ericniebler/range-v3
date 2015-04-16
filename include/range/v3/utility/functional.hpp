@@ -798,7 +798,8 @@ namespace ranges
         template<typename Bind, typename Fun>
         struct binder_1 {
             Bind bind_;
-            Fun fun_;
+            meta::if_<std::is_rvalue_reference<Fun>,
+                      meta::eval<std::remove_reference<Fun>>, Fun> fun_;
 
             RANGES_RELAXED_CONSTEXPR binder_1() = default;
             RANGES_RELAXED_CONSTEXPR binder_1(binder_1 const&) = default;

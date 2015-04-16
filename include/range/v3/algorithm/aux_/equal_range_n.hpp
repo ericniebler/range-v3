@@ -36,6 +36,7 @@ namespace ranges
             {
                 template<typename I, typename V, typename R = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V, R, P>())>
+                RANGES_RELAXED_CONSTEXPR
                 range<I>
                 operator()(I begin, iterator_difference_t<I> dist, V const & val, R pred_ = R{},
                     P proj_ = P{}) const
@@ -57,8 +58,8 @@ namespace ranges
                             dist = half;
                         }
                         else
-                            return {lower_bound_n(std::move(begin), half, val, std::ref(pred)),
-                                    upper_bound_n(next(middle), dist - half - 1, val, std::ref(pred))};
+                            return {lower_bound_n(std::move(begin), half, val, ranges::ref(pred)),
+                                    upper_bound_n(next(middle), dist - half - 1, val, ranges::ref(pred))};
                     }
                     return {begin, begin};
                 }

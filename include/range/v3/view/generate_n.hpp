@@ -78,7 +78,7 @@ namespace ranges
                 return {*this, n_};
             }
         public:
-            RANGES_RELAXED_CONSTEXPR generate_n_view() = default;
+            RANGES_RELAXED_CONSTEXPR generate_n_view() : gen_{}, n_{} {}
             RANGES_RELAXED_CONSTEXPR
             explicit generate_n_view(G g, std::size_t n)
               : gen_(std::move(g)), val_{}, n_(n)
