@@ -22,7 +22,7 @@ struct S
     int i_;
 };
 
-constexpr void void_f(int const&) {}
+constexpr int void_f(int const&) { return 3; }
 
 int main()
 {
