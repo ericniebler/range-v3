@@ -29,7 +29,12 @@ namespace ranges
         private:
             tagged_variant<T, meta::nil_> data_;
         public:
-            RANGES_RELAXED_CONSTEXPR optional() : data_{} {}
+            RANGES_RELAXED_CONSTEXPR optional() = default;
+            RANGES_RELAXED_CONSTEXPR optional(optional const&) = default;
+            RANGES_RELAXED_CONSTEXPR optional(optional && o) = default;
+            RANGES_RELAXED_CONSTEXPR optional& operator=(optional const&) = default;
+            RANGES_RELAXED_CONSTEXPR optional& operator=(optional &&) = default;
+
             RANGES_RELAXED_CONSTEXPR optional(T t)
               : data_(meta::size_t<0>{}, std::move(t))
             {}

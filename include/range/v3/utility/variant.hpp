@@ -582,7 +582,7 @@ namespace ranges
             {
                 static_assert(N < sizeof...(Ts), "");
             }
-            tagged_variant(tagged_variant &&that)
+            RANGES_RELAXED_CONSTEXPR tagged_variant(tagged_variant &&that)
               : tagged_variant{}
             {
                 if(that.is_valid())
@@ -591,7 +591,7 @@ namespace ranges
                     which_ = that.which_;
                 }
             }
-            tagged_variant(tagged_variant const &that)
+            RANGES_RELAXED_CONSTEXPR tagged_variant(tagged_variant const &that)
               : tagged_variant{}
             {
                 if(that.is_valid())
@@ -601,7 +601,7 @@ namespace ranges
                 }
             }
             CONCEPT_REQUIRES(!trivially_destructible_elements{})
-            tagged_variant &operator=(tagged_variant &&that)
+            RANGES_RELAXED_CONSTEXPR tagged_variant &operator=(tagged_variant &&that)
             {
                 clear_();
                 if(that.is_valid())
