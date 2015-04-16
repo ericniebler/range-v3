@@ -175,6 +175,7 @@ install:
 
 script:
   - ctest -VV
+  - ctest -VV -D MemoryCheck
 
 notifications:
   email: false

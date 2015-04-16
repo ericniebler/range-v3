@@ -13,6 +13,16 @@ set(RANGES_CXX_STD 11)
 endif()
 
 enable_testing()
+find_program(MEMORYCHECK_COMMAND valgrind)
+if(MEMORYCHECK_COMMAND-NOTFOUND)
+  message("[W] Valgrind not found")
+else()
+  if(H3_VERBOSE_CONFIGURE)
+    message("Valgrind: ${MEMORYCHECK_COMMAND}")
+  endif()
+  set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
+  include(Dart)
+endif()
 
 include_directories(include)
 
