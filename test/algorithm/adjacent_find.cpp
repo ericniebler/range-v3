@@ -10,6 +10,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <range/v3/core.hpp>
+#include <range/v3/utility/array.hpp>
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include "../simple_test.hpp"
 
@@ -26,5 +27,16 @@ int main()
     static_assert(std::is_same<std::pair<int,int>*,
                                decltype(ranges::adjacent_find(v2, ranges::equal_to{},
                                     &std::pair<int, int>::second))>::value, "");
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        using namespace ranges;
+        constexpr auto a1 = array<int, 5>{{0, 2, 2, 4, 6}};
+        static_assert(adjacent_find(begin(a1), end(a1)) == (begin(a1) + 1), "");
+        static_assert(adjacent_find(a1) == (begin(a1) + 1), "");
+        constexpr std::pair<int, int> a2[] = {{0, 0}, {0, 2}, {0, 2}, {0, 4}, {0, 6}};
+        static_assert(adjacent_find(a2, ranges::equal_to{}) == (begin(a2) + 1), "");
+    }
+#endif
     return test_result();
 }
