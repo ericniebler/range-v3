@@ -40,6 +40,7 @@ namespace ranges
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<I, O>
             operator()(I begin, iterator_difference_t<I> n, O out) const
             {

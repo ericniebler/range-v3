@@ -36,6 +36,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     WeaklyIncrementable<O>() && IndirectCallablePredicate<F, Project<I, P> >() &&
                     IndirectlyCopyable<I, O>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<I, O>
             operator()(I begin, S end, O out, F pred_, P proj_ = P{}) const
             {
@@ -57,6 +58,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectCallablePredicate<F, Project<I, P> >() && IndirectlyCopyable<I, O>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, O out, F pred, P proj = P{}) const
             {
