@@ -33,6 +33,7 @@ namespace ranges
         {
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+            RANGES_RELAXED_CONSTEXPR
             I next_to_if(I i, S s, std::true_type)
             {
                 return ranges::next(i, s);
@@ -40,6 +41,7 @@ namespace ranges
 
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+            RANGES_RELAXED_CONSTEXPR
             S next_to_if(I, S s, std::false_type)
             {
                 return s;
@@ -47,6 +49,7 @@ namespace ranges
 
             template<bool B, typename I, typename S,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+            RANGES_RELAXED_CONSTEXPR
             meta::if_c<B, I, S> next_to_if(I i, S s)
             {
                 return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
@@ -60,6 +63,7 @@ namespace ranges
         {
         private:
             template<typename I1, typename S1, typename I2, typename S2, typename R, typename P>
+            RANGES_RELAXED_CONSTEXPR
             static I1
             impl(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred_, P proj_,
                  concepts::ForwardIterator*, concepts::ForwardIterator*)
@@ -102,6 +106,7 @@ namespace ranges
             }
 
             template<typename I1, typename I2, typename R, typename P>
+            RANGES_RELAXED_CONSTEXPR
             static I1
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred_, P proj_,
                  concepts::BidirectionalIterator*, concepts::BidirectionalIterator*)
@@ -134,6 +139,7 @@ namespace ranges
             }
 
             template<typename I1, typename I2, typename R, typename P>
+            RANGES_RELAXED_CONSTEXPR
             static I1
             impl(I1 begin1, I1 end1, I2 begin2, I2 end2, R pred_, P proj_,
                  concepts::RandomAccessIterator*, concepts::RandomAccessIterator*)
@@ -169,6 +175,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(ForwardIterator<I1>() && IteratorRange<I1, S1>() &&
                     ForwardIterator<I2>() && IteratorRange<I2, S2>() &&
                     IndirectCallableRelation<R, Project<I1, P>, I2>())>
+            RANGES_RELAXED_CONSTEXPR
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const
             {
                 constexpr bool Bidi = BidirectionalIterator<I1>() && BidirectionalIterator<I2>();
@@ -184,6 +191,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(ForwardIterable<Rng1>() && ForwardIterable<Rng2>() &&
                     IndirectCallableRelation<R, Project<I1, P>, I2>())>
+            RANGES_RELAXED_CONSTEXPR
             range_safe_iterator_t<Rng1> operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),
