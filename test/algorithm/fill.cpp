@@ -23,6 +23,8 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/fill.hpp>
+#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/utility/array.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -76,6 +78,22 @@ test_int()
     CHECK(ia[3] == 2);
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+
+RANGES_RELAXED_CONSTEXPR auto fives() {
+    ranges::array<int, 4> a{{0}};
+    ranges::fill(a, 5);
+    return a;
+}
+
+RANGES_RELAXED_CONSTEXPR auto fives(int n) {
+    ranges::array<int, 4> a{{0}};
+    ranges::fill_n(ranges::begin(a), n, 5);
+    return a;
+}
+
+#endif
+
 int main()
 {
     test_char<forward_iterator<char*> >();
@@ -95,6 +113,14 @@ int main()
     test_int<forward_iterator<int*>, sentinel<int*> >();
     test_int<bidirectional_iterator<int*>, sentinel<int*> >();
     test_int<random_access_iterator<int*>, sentinel<int*> >();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(ranges::equal(fives(), {5, 5, 5, 5}), "");
+        static_assert(ranges::equal(fives(2), {5, 5, 0, 0}), "");
+        static_assert(!ranges::equal(fives(2), {5, 5, 5, 5}), "");
+    }
+#endif
 
     return ::test_result();
 }

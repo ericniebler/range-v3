@@ -32,6 +32,7 @@ namespace ranges
         {
             template<typename O, typename V,
                 CONCEPT_REQUIRES_(WeakOutputIterator<O, V>())>
+            RANGES_RELAXED_CONSTEXPR
             O operator()(O begin, iterator_difference_t<O> n, V const & val) const
             {
                 RANGES_ASSERT(n >= 0);
