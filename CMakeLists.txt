@@ -19,7 +19,6 @@ if(MEMORYCHECK_COMMAND-NOTFOUND)
 else()
   message("Valgrind: ${MEMORYCHECK_COMMAND}")
   set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
-  include(Dart)
 endif()
 
 include_directories(include)
