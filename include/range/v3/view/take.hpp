@@ -135,7 +135,6 @@ namespace ranges
                 }
             #endif
 
-                // BUGBUG view::take of a SizedIterable should model SizedIterable
             public:
                 template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
                 auto operator()(Rng && rng, range_difference_t<Rng> n) const

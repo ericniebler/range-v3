@@ -168,9 +168,7 @@ auto chunk(std::size_t n) {
 // Flattens a range of ranges by iterating the inner
 // ranges in round-robin fashion.
 template<class Rngs>
-class interleave_view
-  : public range_facade<interleave_view<Rngs>>
-{
+class interleave_view : public range_facade<interleave_view<Rngs>> {
     friend range_access;
     std::vector<range_value_t<Rngs>> rngs_;
     struct cursor;
@@ -186,23 +184,21 @@ public:
 
 template<class Rngs>
 struct interleave_view<Rngs>::cursor  {
-    using value_ = range_value_t<Rngs>;
-    using iterator_ = range_iterator_t<value_>;
     std::size_t n_;
-    std::vector<value_> const *rngs_;
-    std::vector<iterator_> its_;
+    std::vector<range_value_t<Rngs>> const *rngs_;
+    std::vector<range_iterator_t<range_value_t<Rngs>>> its_;
     decltype(auto) current() const {
         return *its_[n_];
     }
     void next() {
         if(0 == ((++n_) %= its_.size()))
-            transform(its_, its_.begin(), ranges::next);
+            for_each(its_, [](auto& it){ ++it; });
     }
     bool done() const {
         return n_ == 0 && its_.end() != mismatch(its_,
             view::transform(*rngs_, ranges::end), std::not_equal_to<>()).first;
     }
-    CONCEPT_REQUIRES(ForwardIterator<iterator_>())
+    CONCEPT_REQUIRES(ForwardIterable<range_value_t<Rngs>>())
     bool equal(cursor const& that) const {
         return n_ == that.n_ && its_ == that.its_;
     }
@@ -238,10 +234,8 @@ auto transpose_months() {
 }
 
 auto join_months() {
-    return view::transform([](/*Range<Range<string>>*/ auto rng) {
-        return rng | view::transform([](/*Range<string>*/ auto rng) {
-            return action::join(rng);
-        });
+    return view::transform([](/*Range<string>*/ auto rng) {
+        return action::join(rng);
     });
 }
 
@@ -266,13 +260,13 @@ int main(int argc, char *argv[]) try {
           | chunk(months_per_line)
             // Transpose the rows and columns of the size-by-side months:
           | transpose_months()
+            // Ungroup the side-by-side months:
+          | view::join
             // Join the strings of the transposed months:
-          | join_months()
-            // Flatten the result into a range of strings:
-          | view::join;
+          | join_months();
 
     // Write the result to stdout:
-    copy(calendar, ostream_iterator<>(cout, "\n"));
+    copy(calendar, ostream_iterator<>(std::cout, "\n"));
 }
 catch(std::exception &e) {
     std::cerr << "ERROR: Unhandled exception\n";

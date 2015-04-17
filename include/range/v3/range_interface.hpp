@@ -259,7 +259,8 @@ namespace ranges
                 return sout << ']';
             }
             /// \overload
-            template<bool B = true, typename Stream = meta::if_c<B, std::ostream>>
+            template<bool B = true, typename Stream = meta::if_c<B, std::ostream>,
+                typename D = Derived, CONCEPT_REQUIRES_(InputRange<D const>())>
             friend Stream &operator<<(Stream &sout, Derived const &rng)
             {
                 auto it = ranges::begin(rng);
@@ -270,6 +271,12 @@ namespace ranges
                 while(++it != e)
                     sout << ',' << *it;
                 return sout << ']';
+            }
+            /// \overload
+            template<bool B = true, typename Stream = meta::if_c<B, std::ostream>>
+            friend Stream &operator<<(Stream &sout, Derived &&rng)
+            {
+                return sout << rng;
             }
         };
         /// @}
