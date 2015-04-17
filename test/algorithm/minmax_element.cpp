@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/minmax_element.hpp>
+#include <range/v3/utility/array.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -223,6 +224,14 @@ int main()
     std::pair<S const *, S const *> ps = ranges::minmax_element(s, std::less<int>{}, &S::i);
     CHECK(ps.first->i == -4);
     CHECK(ps.second->i == 40);
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto a = ranges::array<int, 10>{{1, 2, 3, 4, -4, 5, 6, 40, 8, 9}};
+        static_assert(ranges::minmax_element(a).first == ranges::begin(a) + 4, "");
+        static_assert(ranges::minmax_element(a).second == ranges::begin(a) + 7, "");
+    }
+#endif
 
     return test_result();
 }
