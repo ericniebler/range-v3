@@ -8,7 +8,7 @@ matrix:
     - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
       os: linux
       compiler: clang34
-      addons: &clang35
+      addons: &clang34
         apt:
           packages: valgrind
           sources:
