@@ -188,7 +188,6 @@ before_install:
   - which valgrind
   - if [ -n "$CLANG_VERSION" ]; then sudo CXX=$CXX CC=$CC ./install_libcxx.sh; fi
 
-
 install:
   - cd $CHECKOUT_PATH
   - if [ ! -d build ]; then mkdir build; fi
