@@ -190,6 +190,12 @@ before_install:
 
 install:
   - cd $CHECKOUT_PATH
+
+  # Workaround for valgrind bug: https://bugs.kde.org/show_bug.cgi?id=326469.
+  # It is fixed in valgrind 3.10 so this won't be necessary if someone
+  # replaces the current valgrind (3.7) with valgrind-3.10
+  - sed -i 's/march=native/msse4.2/' CMakeLists.txt
+
   - if [ ! -d build ]; then mkdir build; fi
   - cd build
   - export CXX_FLAGS=""
@@ -199,10 +205,6 @@ install:
   - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
-  # Workaround for valgrind bug: https://bugs.kde.org/show_bug.cgi?id=326469.
-  # It is fixed in valgrind 3.10 so this won't be necessary if someone
-  # replaces the current valgrind (3.7) with valgrind-3.10
-  - sed -i 's/march=native/msse4.2/' CMakeLists.txt
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DMEMORYCHECK_COMMAND:FILEPATH=/usr/bin/valgrind
   - make VERBOSE=1
 
