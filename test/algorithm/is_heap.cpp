@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+#include <range/v3/utility/array.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -1048,6 +1049,15 @@ int main()
 
     // Test initializer_list
     CHECK(ranges::is_heap({S{0}, S{1}, S{1}, S{1}, S{1}, S{1}, S{1}}, std::greater<int>(), &S::i));
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto r1 = ranges::array<int, 7>{{0, 1, 1, 1, 1, 1, 1}};
+        static_assert(ranges::is_heap(r1, std::greater<int>{}), "");
+        static_assert(ranges::is_heap(ranges::begin(r1), ranges::end(r1),
+                                      std::greater<int>{}), "");
+    }
+#endif
 
     return ::test_result();
 }

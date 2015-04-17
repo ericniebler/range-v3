@@ -27,6 +27,7 @@
 
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+#include <range/v3/utility/array.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -1051,6 +1052,15 @@ int main()
     // Test rvalue range
     auto res = ranges::is_heap_until(ranges::view::all(i185), std::greater<int>(), &S::i);
     CHECK(res.get_unsafe() == i185+1);
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto r1 = ranges::array<int, 7>{{1, 0, 0, 0, 0, 0, 1}};
+        static_assert(ranges::is_heap_until(r1, std::greater<int>{}) == ranges::begin(r1) + 1, "");
+        static_assert(ranges::is_heap_until(ranges::begin(r1), ranges::end(r1),
+                                            std::greater<int>{}) == ranges::begin(r1) + 1, "");
+    }
+#endif
 
     return ::test_result();
 }

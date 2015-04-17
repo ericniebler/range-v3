@@ -51,6 +51,7 @@ namespace ranges
             {
                 template<typename I, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(IsHeapable<I, C, P>())>
+                RANGES_RELAXED_CONSTEXPR
                 I operator()(I const begin_, iterator_difference_t<I> const n_, C pred_ = C{}, P proj_ = P{}) const
                 {
                     RANGES_ASSERT(0 <= n_);
@@ -84,6 +85,7 @@ namespace ranges
             {
                 template<typename I, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(IsHeapable<I, C, P>())>
+                RANGES_RELAXED_CONSTEXPR
                 bool operator()(I begin, iterator_difference_t<I> n, C pred = C{}, P proj = P{}) const
                 {
                     return is_heap_until_n(begin, n, std::move(pred), std::move(proj)) == begin + n;
@@ -103,6 +105,7 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && IteratorRange<I, S>())>
+            RANGES_RELAXED_CONSTEXPR
             I operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 return detail::is_heap_until_n(std::move(begin), distance(begin, end), std::move(pred),
@@ -112,6 +115,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Iterable<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return detail::is_heap_until_n(begin(rng), distance(rng), std::move(pred),
@@ -130,6 +134,7 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && IteratorRange<I, S>())>
+            RANGES_RELAXED_CONSTEXPR
             bool operator()(I begin, S end, C pred = C{}, P proj = P{}) const
             {
                 return detail::is_heap_n(std::move(begin), distance(begin, end), std::move(pred),
@@ -139,6 +144,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(IsHeapable<I, C, P>() && Iterable<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return detail::is_heap_n(begin(rng), distance(rng), std::move(pred), std::move(proj));
