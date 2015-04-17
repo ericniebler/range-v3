@@ -35,6 +35,7 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+#include <range/v3/utility/array.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -117,6 +118,27 @@ void test_move_only(int N)
     delete [] ia;
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_RELAXED_CONSTEXPR bool test_constexpr() {
+    using namespace ranges;
+    bool r = true;
+    constexpr int N = 100;
+    array<int, N> ia{{0}};
+    for (int i = 0; i < N; ++i)
+        ia[i] = i;
+    for (int i = 0; i <= N; ++i)
+    {
+        if (push_heap(make_range(begin(ia), begin(ia)+i), std::greater<int>()).get_unsafe() != begin(ia) + i) {
+            r = false;
+        }
+        if (!is_heap(begin(ia), begin(ia) + i, std::greater<int>())) {
+            r = false;
+        }
+    }
+    return r;
+}
+#endif
+
 int main()
 {
     test(1000);
@@ -140,6 +162,12 @@ int main()
         delete [] ia;
         delete [] ib;
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return test_result();
 }
