@@ -539,11 +539,23 @@ namespace ranges
             struct take_fn;
         }
 
+        template<typename Rng>
+        struct take_exactly_view;
+
+        namespace view
+        {
+            struct take_exactly_fn;
+        }
+
+        template<typename Rng, typename Pred, bool Inf = is_infinite<Rng>::value>
+        struct iter_take_while_view;
+
         template<typename Rng, typename Pred, bool Inf = is_infinite<Rng>::value>
         struct take_while_view;
 
         namespace view
         {
+            struct iter_take_while_fn;
             struct take_while_fn;
         }
 

@@ -53,8 +53,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>
             std::pair<D, I> operator()(Rng &&rng, D d = 0) const
             {
-                static_assert(!is_infinite<Rng>::value,
-                    "Trying to compute the length of an infinite range!");
+                // Better not be trying to compute the distance of an infinite range:
+                RANGES_ASSERT(!is_infinite<Rng>::value);
                 return this->impl_r(rng, d, bounded_iterable_concept<Rng>(),
                     sized_iterable_concept<Rng>());
             }
@@ -87,8 +87,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(Integral<D>() && Iterable<Rng>())>
             D operator()(Rng &&rng, D d = 0) const
             {
-                static_assert(!is_infinite<Rng>::value,
-                    "Trying to compute the length of an infinite range!");
+                // Better not be trying to compute the distance of an infinite range:
+                RANGES_ASSERT(!is_infinite<Rng>::value);
                 return this->impl_r(rng, d, sized_iterable_concept<Rng>());
             }
         };

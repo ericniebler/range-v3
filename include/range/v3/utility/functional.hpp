@@ -21,6 +21,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/box.hpp>
+#include <range/v3/utility/move.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -330,6 +331,72 @@ namespace ranges
         namespace
         {
             constexpr auto&& overload = static_const<overload_fn>::value;
+        }
+
+        template<typename Fn>
+        struct indirected
+          : private function_type<Fn>
+        {
+        private:
+            using BaseFn = function_type<Fn>;
+
+            BaseFn & base()                { return *this; }
+            BaseFn const & base() const    { return *this; }
+        public:
+            indirected() = default;
+            indirected(Fn fn)
+              : BaseFn(as_function(std::move(fn)))
+            {}
+            // value_type (needs no impl)
+            template<typename ...Its>
+            auto operator()(copy_tag, Its ...its) const ->
+                detail::decay_t<decltype(std::declval<BaseFn &>()(*its...))>;
+            // Reference
+            template<typename ...Its>
+            auto operator()(Its ...its)
+                noexcept(noexcept(std::declval<BaseFn &>()(*its...))) ->
+                decltype(std::declval<BaseFn &>()(*its...))
+            {
+                return base()(*its...);
+            }
+            template<typename ...Its>
+            auto operator()(Its ...its) const
+                noexcept(noexcept(std::declval<BaseFn const &>()(*its...))) ->
+                decltype(std::declval<BaseFn const &>()(*its...))
+            {
+                return base()(*its...);
+            }
+            // Rvalue reference
+            template<typename ...Its>
+            auto operator()(move_tag, Its ...its)
+                noexcept(noexcept(aux::move(std::declval<BaseFn &>()(*its...)))) ->
+                aux::move_t<decltype(std::declval<BaseFn &>()(*its...))>
+            {
+                return aux::move(base()(*its...));
+            }
+            template<typename ...Its>
+            auto operator()(move_tag, Its ...its) const
+                noexcept(noexcept(aux::move(std::declval<BaseFn const &>()(*its...)))) ->
+                aux::move_t<decltype(std::declval<BaseFn const &>()(*its...))>
+            {
+                return aux::move(base()(*its...));
+            }
+        };
+
+        struct indirect_fn
+        {
+            template<typename Fn>
+            constexpr indirected<Fn> operator()(Fn fn) const
+            {
+                return indirected<Fn>{detail::move(fn)};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `indirect_fn`
+        namespace
+        {
+            constexpr auto&& indirect = static_const<indirect_fn>::value;
         }
 
         /// \cond

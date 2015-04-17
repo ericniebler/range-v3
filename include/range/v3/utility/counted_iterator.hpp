@@ -44,11 +44,11 @@ namespace ranges
                     {}
                     I base() const
                     {
-                        return this->get().it_;
+                        return this->get().base();
                     }
                     D count() const
                     {
-                        return this->get().n_;
+                        return this->get().count();
                     }
                 };
             private:
@@ -128,6 +128,14 @@ namespace ranges
                 distance_to(counted_cursor<I> const &that) const
                 {
                     return that.it_ - it_;
+                }
+                I base() const
+                {
+                    return it_;
+                }
+                D count() const
+                {
+                    return n_;
                 }
             };
 

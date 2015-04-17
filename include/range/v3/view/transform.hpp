@@ -107,12 +107,12 @@ namespace ranges
 
         template<typename Rng, typename Fun>
         struct transform_view
-          : iter_transform_view<Rng, detail::indirect_fn_<Fun>>
+          : iter_transform_view<Rng, indirected<Fun>>
         {
             transform_view() = default;
             transform_view(Rng rng, Fun fun)
-              : iter_transform_view<Rng, detail::indirect_fn_<Fun>>{std::move(rng),
-                    {std::move(fun)}}
+              : iter_transform_view<Rng, indirected<Fun>>{std::move(rng),
+                    indirect(std::move(fun))}
             {}
         };
 

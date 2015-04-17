@@ -218,6 +218,7 @@
     <ClCompile Include="..\..\..\..\test\view\split.cpp" />
     <ClCompile Include="..\..\..\..\test\view\stride.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\take_exactly.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take_while.cpp" />
     <ClCompile Include="..\..\..\..\test\view\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\view\unique.cpp" />
@@ -425,6 +426,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\stride.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\tail.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\take.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\take_exactly.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\take_while.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\tokenize.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\transform.hpp" />

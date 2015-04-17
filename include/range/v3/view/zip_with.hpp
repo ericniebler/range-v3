@@ -105,56 +105,6 @@ namespace ranges
                     return t < u ? u : t;
                 }
             } max_ {};
-
-            template<typename Fn>
-            struct indirect_fn_
-              : private function_type<Fn>
-            {
-            private:
-                using BaseFn = function_type<Fn>;
-
-                BaseFn & base()                { return *this; }
-                BaseFn const & base() const    { return *this; }
-            public:
-                indirect_fn_() = default;
-                indirect_fn_(Fn fn)
-                  : BaseFn(as_function(std::move(fn)))
-                {}
-                // value_type (needs no impl)
-                template<typename ...Its>
-                auto operator()(copy_tag, Its ...) const ->
-                    decay_t<result_of_t<BaseFn(iterator_reference_t<Its> &&...)>>;
-                // Reference
-                template<typename ...Its>
-                auto operator()(Its ...its) 
-                    noexcept(noexcept(std::declval<BaseFn &>()(*its...))) ->
-                    result_of_t<BaseFn &(iterator_reference_t<Its> &&...)>
-                {
-                    return base()(*its...);
-                }
-                template<typename ...Its>
-                auto operator()(Its ...its) const
-                    noexcept(noexcept(std::declval<BaseFn const &>()(*its...))) ->
-                    result_of_t<BaseFn const &(iterator_reference_t<Its> &&...)>
-                {
-                    return base()(*its...);
-                }
-                // Rvalue reference
-                template<typename ...Its>
-                auto operator()(move_tag, Its ...its)
-                    noexcept(noexcept(aux::move(std::declval<BaseFn &>()(*its...)))) ->
-                    aux::move_t<result_of_t<BaseFn &(iterator_reference_t<Its> &&...)>>
-                {
-                    return aux::move(base()(*its...));
-                }
-                template<typename ...Its>
-                auto operator()(move_tag, Its ...its) const
-                    noexcept(noexcept(aux::move(std::declval<BaseFn const &>()(*its...)))) ->
-                    aux::move_t<result_of_t<BaseFn const &(iterator_reference_t<Its> &&...)>>
-                {
-                    return aux::move(base()(*its...));
-                }
-            };
         } // namespace detail
         /// \endcond
 
@@ -316,15 +266,15 @@ namespace ranges
 
         template<typename Fun, typename...Rngs>
         struct zip_with_view
-          : iter_zip_with_view<detail::indirect_fn_<Fun>, Rngs...>
+          : iter_zip_with_view<indirected<Fun>, Rngs...>
         {
             zip_with_view() = default;
             explicit zip_with_view(Rngs ...rngs)
-              : iter_zip_with_view<detail::indirect_fn_<Fun>, Rngs...>{
+              : iter_zip_with_view<indirected<Fun>, Rngs...>{
                   {Fun{}}, std::move(rngs)...}
             {}
             explicit zip_with_view(Fun fun, Rngs ...rngs)
-              : iter_zip_with_view<detail::indirect_fn_<Fun>, Rngs...>{
+              : iter_zip_with_view<indirected<Fun>, Rngs...>{
                   {std::move(fun)}, std::move(rngs)...}
             {}
         };

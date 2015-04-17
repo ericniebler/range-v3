@@ -542,6 +542,9 @@
     <ClCompile Include="..\..\..\..\example\calendar.cpp">
       <Filter>Example Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\take_exactly.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
@@ -1188,6 +1191,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\join.hpp">
       <Filter>Header Files\range\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\take_exactly.hpp">
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

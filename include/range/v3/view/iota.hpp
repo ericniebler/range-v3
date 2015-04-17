@@ -24,7 +24,7 @@
 #include <range/v3/range_facade.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/take.hpp>
+#include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/delimit.hpp>
 
 namespace ranges
@@ -256,7 +256,7 @@ namespace ranges
             {
             private:
                 template<typename Val>
-                static take_view<iota_view<Val>>
+                static take_exactly_view<iota_view<Val>>
                 impl(Val from, Val to, concepts::RandomAccessIncrementable *)
                 {
                     return {iota_view<Val>{std::move(from)}, detail::iota_minus(to, from) + 1};
@@ -279,7 +279,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(WeaklyIncrementable<Val>() && EqualityComparable<Val, Val2>())>
                 meta::if_<
                     meta::and_<RandomAccessIncrementable<Val>, Same<Val, Val2>>,
-                    take_view<iota_view<Val>>,
+                    take_exactly_view<iota_view<Val>>,
                     iota_view<Val, Val2>>
                 operator()(Val from, Val2 to) const
                 {
@@ -330,7 +330,7 @@ namespace ranges
                 }
                 template<typename Val,
                     CONCEPT_REQUIRES_(Integral<Val>())>
-                take_view<iota_view<Val>> operator()(Val from, Val to) const
+                take_exactly_view<iota_view<Val>> operator()(Val from, Val to) const
                 {
                     return {iota_view<Val>{from}, detail::iota_minus(to, from) + 1};
                 }

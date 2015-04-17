@@ -15,6 +15,7 @@
 #include <range/v3/to_container.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/take.hpp>
 #include <range/v3/action/sort.hpp>
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"

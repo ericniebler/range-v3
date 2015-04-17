@@ -34,8 +34,8 @@ namespace ranges
         /// \addtogroup group-views
         /// @{
         template<typename Rng, typename Pred, bool Inf /*= is_infinite<Rng>::value*/>
-        struct take_while_view
-          : range_adaptor<take_while_view<Rng, Pred, Inf>, Rng, Inf>
+        struct iter_take_while_view
+          : range_adaptor<iter_take_while_view<Rng, Pred, Inf>, Rng, Inf>
         {
         private:
             friend range_access;
@@ -54,29 +54,78 @@ namespace ranges
                 {}
                 bool empty(range_iterator_t<Rng> it, range_sentinel_t<Rng> end) const
                 {
-                    return it == end || !pred_(*it);
+                    return it == end || !pred_(it);
                 }
             };
-
             sentinel_adaptor<false> end_adaptor()
             {
                 return {pred_};
             }
-            CONCEPT_REQUIRES(Callable<Pred const, range_common_reference_t<Rng>>())
+            CONCEPT_REQUIRES(Callable<Pred const, range_iterator_t<Rng const>>())
             sentinel_adaptor<true> end_adaptor() const
             {
                 return {pred_};
             }
         public:
+            iter_take_while_view() = default;
+            iter_take_while_view(Rng rng, Pred pred)
+              : range_adaptor_t<iter_take_while_view>{std::move(rng)}
+              , pred_(as_function(std::move(pred)))
+            {}
+        };
+
+        template<typename Rng, typename Pred, bool Inf /*= is_infinite<Rng>::value*/>
+        struct take_while_view
+          : iter_take_while_view<Rng, indirected<Pred>, Inf>
+        {
             take_while_view() = default;
             take_while_view(Rng rng, Pred pred)
-              : range_adaptor_t<take_while_view>{std::move(rng)}
-              , pred_(as_function(std::move(pred)))
+              : iter_take_while_view<Rng, indirected<Pred>, Inf>{std::move(rng),
+                    indirect(std::move(pred))}
             {}
         };
 
         namespace view
         {
+            struct iter_take_while_fn
+            {
+            private:
+                friend view_access;
+                template<typename Pred>
+                static auto bind(iter_take_while_fn iter_take_while, Pred pred)
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    make_pipeable(std::bind(iter_take_while, std::placeholders::_1,
+                        protect(std::move(pred))))
+                )
+            public:
+                template<typename Rng, typename Pred>
+                using Concept = meta::and_<
+                    InputIterable<Rng>,
+                    CallablePredicate<Pred, range_iterator_t<Rng>>>;
+
+                template<typename Rng, typename Pred,
+                    CONCEPT_REQUIRES_(Concept<Rng, Pred>())>
+                iter_take_while_view<all_t<Rng>, Pred> operator()(Rng && rng, Pred pred) const
+                {
+                    return {all(std::forward<Rng>(rng)), std::move(pred)};
+                }
+            #ifndef RANGES_DOXYGEN_INVOKED
+                template<typename Rng, typename Pred,
+                    CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
+                void operator()(Rng &&, Pred) const
+                {
+                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                        "The object on which view::take_while operates must be a model of the "
+                        "InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(CallablePredicate<Pred, range_iterator_t<Rng>>(),
+                        "The function passed to view::take_while must be callable with objects of "
+                        "the range's iterator type, and its result type must be convertible to "
+                        "bool.");
+                }
+            #endif
+            };
+
             struct take_while_fn
             {
             private:
@@ -115,6 +164,13 @@ namespace ranges
                 }
             #endif
             };
+
+            /// \relates iter_take_while_fn
+            /// \ingroup group-views
+            namespace
+            {
+                constexpr auto&& iter_take_while = static_const<view<iter_take_while_fn>>::value;
+            }
 
             /// \relates take_while_fn
             /// \ingroup group-views
