@@ -21,6 +21,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/numeric.hpp> // for accumulate
 #include <range/v3/begin_end.hpp>
+#include <range/v3/empty.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/view/transform.hpp>
