@@ -43,6 +43,13 @@
  25 26 27 28 29 30 31  29 30                 27 28 29 30 31
 // */
 
+// Credits:
+//   Thanks to H. S. Teoh for the article that served as the
+//     inspiration for this example:
+//     <http://wiki.dlang.org/Component_programming_with_ranges>
+//   Thanks to github's Arzar for bringing date::week_number
+//     to my attention.
+
 #include <string>
 #include <iostream>
 #include <boost/format.hpp>
@@ -80,7 +87,8 @@ auto by_month() {
 
 auto by_week() {
     return view::group_by([](date a, date b) {
-        return b.day_of_week() != greg::Sunday || a == b;
+        // ++a because week_numer is Mon-Sun and we want Sun-Sat
+        return (++a).week_number() == (++b).week_number();
     });
 }
 
@@ -185,7 +193,7 @@ public:
 template<class Rngs>
 struct interleave_view<Rngs>::cursor  {
     std::size_t n_;
-    std::vector<range_value_t<Rngs>> const *rngs_;
+    std::vector<range_value_t<Rngs>> *rngs_;
     std::vector<range_iterator_t<range_value_t<Rngs>>> its_;
     decltype(auto) current() const {
         return *its_[n_];
