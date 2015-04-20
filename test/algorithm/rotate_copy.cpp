@@ -257,6 +257,25 @@ struct S
     int i;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_RELAXED_CONSTEXPR bool constexpr_test() {
+    using namespace ranges;
+    int rgi[] = {0,1,2,3,4,5};
+    int rgo[6] = {0};
+    auto r = ranges::rotate_copy(ranges::view::all(rgi), rgi+2, rgo);
+    if(r.first.get_unsafe() != ranges::end(rgi)) { return false; }
+    if(r.second != ranges::end(rgo)) { return false; }
+    if(rgo[0] != 2) { return false; }
+    if(rgo[1] != 3) { return false; }
+    if(rgo[2] != 4) { return false; }
+    if(rgo[3] != 5) { return false; }
+    if(rgo[4] != 0) { return false; }
+    if(rgo[5] != 1) { return false; }
+
+    return true;
+}
+#endif
+
 int main()
 {
     test<forward_iterator<const int*>, output_iterator<int*> >();
@@ -315,6 +334,12 @@ int main()
         CHECK(rgo[4] == 0);
         CHECK(rgo[5] == 1);
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(constexpr_test(), "");
+    }
+#endif
 
     return ::test_result();
 }
