@@ -125,7 +125,7 @@ namespace ranges
                 auto bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(binder_1<take_fn, Int>(take, to))
+                    make_pipeable(binder_1<take_fn, Int>(take, n))
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED

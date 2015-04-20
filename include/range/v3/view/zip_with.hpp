@@ -217,7 +217,7 @@ namespace ranges
                 std::tuple<range_sentinel_t<Rngs>...> ends_;
             public:
                 RANGES_RELAXED_CONSTEXPR sentinel() = default;
-                RANGES_RELAXED_CONSTEXPR sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
+                RANGES_RELAXED_CONSTEXPR
                 sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
                   : ends_(std::move(ends))
                 {}

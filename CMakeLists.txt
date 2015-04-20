@@ -13,6 +13,7 @@ set(RANGES_CXX_STD 11)
 endif()
 
 enable_testing()
+include(CTest)
 find_program(MEMORYCHECK_COMMAND valgrind)
 if(MEMORYCHECK_COMMAND-NOTFOUND)
   message("[W] Valgrind not found")
