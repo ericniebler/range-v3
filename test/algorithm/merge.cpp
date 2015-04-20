@@ -18,7 +18,31 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/merge.hpp>
+#include <range/v3/algorithm/is_sorted.hpp>
+#include <range/v3/utility/array.hpp>
 #include "../simple_test.hpp"
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_RELAXED_CONSTEXPR bool constexpr_test() {
+    using namespace ranges;
+    constexpr unsigned N = 100;
+    array<int, N> ia{{0}};
+    array<int, N> ib{{0}};
+    array<int, 2*N> ic{{0}};
+    for(unsigned i = 0; i < N; ++i)
+        ia[i] = 2 * i;
+    for(unsigned i = 0; i < N; ++i)
+        ib[i] = 2 * i + 1;
+    auto r = merge(ia, ib, begin(ic));
+    if(std::get<0>(r) != end(ia)) { return false; }
+    if(std::get<1>(r) != end(ib)) { return false; }
+    if(std::get<2>(r) != end(ic)) { return false; }
+    if(ic[0] != 0) { return false; }
+    if(ic[2 * N - 1] != (int)(2 * N - 1)) { return false; }
+    if(!is_sorted(ic)) { return false; }
+    return true;
+}
+#endif
 
 int main()
 {
@@ -90,6 +114,12 @@ int main()
         auto r4 = ranges::sanitize(std::move(r));
         static_assert(std::is_same<decltype(r4), std::tuple<ranges::dangling<>, ranges::dangling<>, int *>>::value, "");
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(constexpr_test(), "");
+    }
+#endif
 
     return ::test_result();
 }

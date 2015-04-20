@@ -95,6 +95,10 @@ add_test(test.alg.max_element, alg.max_element)
 add_executable(alg.merge merge.cpp)
 add_test(test.alg.merge, alg.merge)
 
+add_executable(alg.merge_move merge_move.cpp)
+add_test(test.alg.merge_move, alg.merge_move)
+
+
 add_executable(alg.min_element min_element.cpp)
 add_test(test.alg.min_element, alg.min_element)
 
