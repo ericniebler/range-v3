@@ -219,7 +219,7 @@ install:
 
 script:
   - ctest -VV
-  - ctest -VV -D ExperimentalMemCheck
+  - if [ "$BUILD_TYPE" == "Release" ]; then ctest -VV -D ExperimentalMemCheck; fi
 
 notifications:
   email: false

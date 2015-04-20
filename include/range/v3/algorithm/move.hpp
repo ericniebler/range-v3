@@ -37,6 +37,7 @@ namespace ranges
             template<typename I, typename S, typename O,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     WeaklyIncrementable<O>() && IndirectlyMovable<I, O>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<I, O> operator()(I begin, S end, O out) const
             {
                 for(; begin != end; ++begin, ++out)
@@ -48,6 +49,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectlyMovable<I, O>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));

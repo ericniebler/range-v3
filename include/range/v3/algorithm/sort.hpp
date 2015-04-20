@@ -57,7 +57,8 @@ namespace ranges
         namespace detail
         {
             template<typename Val, typename C>
-            inline Val const &median(Val const &a, Val const &b, Val const &c, C &pred)
+            RANGES_RELAXED_CONSTEXPR
+            Val const &median(Val const &a, Val const &b, Val const &c, C &pred)
             {
                 if(pred(a, b))
                     if(pred(b, c))
@@ -75,7 +76,8 @@ namespace ranges
             }
 
             template<typename I, typename Val, typename C, typename P>
-            inline I unguarded_partition(I begin, I end, Val const &pivot, C &pred, P &proj)
+            RANGES_RELAXED_CONSTEXPR
+            I unguarded_partition(I begin, I end, Val const &pivot, C &pred, P &proj)
             {
                 while(true)
                 {
@@ -92,7 +94,8 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P>
-            inline void unguarded_linear_insert(I end, iterator_value_t<I> val, C &pred, P &proj)
+            RANGES_RELAXED_CONSTEXPR
+            void unguarded_linear_insert(I end, iterator_value_t<I> val, C &pred, P &proj)
             {
                 I next = prev(end);
                 while(pred(proj(val), proj(*next)))
@@ -105,7 +108,8 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P>
-            inline void linear_insert(I begin, I end, C &pred, P &proj)
+            RANGES_RELAXED_CONSTEXPR
+            void linear_insert(I begin, I end, C &pred, P &proj)
             {
                 iterator_value_t<I> val = iter_move(end);
                 if(pred(proj(val), proj(*begin)))
@@ -118,7 +122,8 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P>
-            inline void insertion_sort(I begin, I end, C &pred, P &proj)
+            RANGES_RELAXED_CONSTEXPR
+            void insertion_sort(I begin, I end, C &pred, P &proj)
             {
                 if(begin == end)
                     return;
@@ -127,7 +132,8 @@ namespace ranges
             }
 
             template<typename I, typename C, typename P>
-            inline void unguarded_insertion_sort(I begin, I end, C &pred, P &proj)
+            RANGES_RELAXED_CONSTEXPR
+            void unguarded_insertion_sort(I begin, I end, C &pred, P &proj)
             {
                 for(I i = begin; i != end; ++i)
                     detail::unguarded_linear_insert(i, iter_move(i), pred, proj);
@@ -147,6 +153,7 @@ namespace ranges
             static constexpr int introsort_threshold() { return 16; }
 
             template<typename I, typename C, typename P>
+            RANGES_RELAXED_CONSTEXPR
             static void final_insertion_sort(I begin, I end, C &pred, P &proj)
             {
                 if(end - begin > sort_fn::introsort_threshold())
@@ -159,6 +166,7 @@ namespace ranges
             }
 
             template<typename Size>
+            RANGES_RELAXED_CONSTEXPR
             static Size log2(Size n)
             {
                 Size k = 0;
@@ -168,6 +176,7 @@ namespace ranges
             }
 
             template<typename I, typename Size, typename C, typename P>
+            RANGES_RELAXED_CONSTEXPR
             static void introsort_loop(I begin, I end, Size depth_limit, C &pred, P &proj)
             {
                 while(end - begin > sort_fn::introsort_threshold())
@@ -187,6 +196,7 @@ namespace ranges
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() &&
                     IteratorRange<I, S>())>
+            RANGES_RELAXED_CONSTEXPR
             I operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -202,6 +212,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterable<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
