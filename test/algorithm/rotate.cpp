@@ -250,6 +250,22 @@ void test()
     CHECK(ig[5] == 2);
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_RELAXED_CONSTEXPR bool constexpr_test() {
+    int rgi[] = {0,1,2,3,4,5};
+    auto r = ranges::rotate(ranges::view::all(rgi), rgi+2);
+    if(r.get_unsafe().begin() != rgi+4) { return false; }
+    if(r.get_unsafe().end() != ranges::end(rgi)) { return false; }
+    if(rgi[0] != 2) { return false; }
+    if(rgi[1] != 3) { return false; }
+    if(rgi[2] != 4) { return false; }
+    if(rgi[3] != 5) { return false; }
+    if(rgi[4] != 0) { return false; }
+    if(rgi[5] != 1) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test<forward_iterator<int *>>();
@@ -273,6 +289,12 @@ int main()
         CHECK(rgi[4] == 0);
         CHECK(rgi[5] == 1);
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(constexpr_test(), "");
+    }
+#endif
 
     return ::test_result();
 }

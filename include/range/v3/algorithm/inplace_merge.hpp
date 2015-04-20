@@ -181,6 +181,16 @@ namespace ranges
                         }
                     }
                 }
+                template<typename I, typename C = ordered_less, typename P = ident,
+                         CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Sortable<I, C, P>())>
+                void operator()(I begin, I middle, I end, iterator_difference_t<I> len1,
+                                iterator_difference_t<I> len2, iterator_value_t<I> *buf,
+                                std::ptrdiff_t buf_size, C pred_ = C{}, P proj_ = P{}) const
+                {
+                    (*this)(buffered, std::move(begin), std::move(middle),
+                            std::move(end), len1, len2, buf, buf_size,
+                            std::move(pred_), std::move(proj_));
+                }
             };
 
             namespace
@@ -195,7 +205,6 @@ namespace ranges
                 RANGES_RELAXED_CONSTEXPR
                 I operator()(I begin, I middle, I end, C pred = C{}, P proj = P{}) const
                 {
-                    using value_type = iterator_value_t<I>;
                     auto len1 = distance(begin, middle);
                     auto len2_and_end = enumerate(middle, end);
                     merge_adaptive(merge_adaptive.unbuffered,

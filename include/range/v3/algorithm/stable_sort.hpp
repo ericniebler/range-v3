@@ -71,7 +71,7 @@ namespace ranges
                 I middle = begin + (end - begin) / 2;
                 stable_sort_fn::inplace_stable_sort(begin, middle, pred, proj);
                 stable_sort_fn::inplace_stable_sort(middle, end, pred, proj);
-                detail::inplace_merge_no_buffer(begin, middle, end, middle - begin, end - middle,
+                detail::inplace_merge_no_buffer(begin, middle, end, //, middle - begin, end - middle,
                     std::ref(pred), std::ref(proj));
             }
 
