@@ -50,5 +50,18 @@ int main()
     CHECK(!ranges::binary_search(a, 4, less(), &std::pair<int, int>::first));
     CHECK(!ranges::binary_search(c, 4, less(), &std::pair<int, int>::first));
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        using namespace ranges;
+        constexpr std::pair<int, int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
+
+        static_assert(binary_search(begin(a), end(a), a[0]), "");
+        static_assert(binary_search(begin(a), end(a), a[1], less()), "");
+        static_assert(binary_search(a, a[2]), "");
+        static_assert(binary_search(a, a[4], less()), "");
+        static_assert(!binary_search(a, std::make_pair(-1, -1), less()), "");
+    }
+#endif
+
     return test_result();
 }

@@ -14,6 +14,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/indirect.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -70,6 +71,32 @@ int main()
         auto ints = view::iota(Int{0}, Int{10});
         ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto srng1 = view::iota(0, 10);
+        constexpr auto srng2 = view::ints(0, 10);
+        constexpr auto srng3 = view::ints | view::take(11);
+        constexpr auto srng4 = view::ints(0) | view::take(11);
+        static_assert(ranges::size(srng1) == 11, "");
+        static_assert(ranges::size(srng2) == 11, "");
+        static_assert(ranges::size(srng3) == 11, "");
+        static_assert(ranges::size(srng4) == 11, "");
+
+        static_assert(ranges::equal(srng1, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}), "");
+        static_assert(ranges::equal(srng1, srng2), "");
+        static_assert(ranges::equal(srng1, srng3), "");
+        static_assert(ranges::equal(srng1, srng4), "");
+        static_assert(srng1[0] == 0, "");
+        static_assert(srng1[10] == 10, "");
+        static_assert(srng1[0] == srng2[0], "");
+        static_assert(srng1[10] == srng2[10], "");
+        static_assert(srng1[0] == srng3[0], "");
+        static_assert(srng1[10] == srng3[10], "");
+        static_assert(srng1[0] == srng4[0], "");
+        static_assert(srng1[10] == srng4[10], "");
+    }
+#endif
 
     return ::test_result();
 }

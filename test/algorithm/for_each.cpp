@@ -12,6 +12,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/utility/array.hpp>
 #include "../simple_test.hpp"
 
 struct S
@@ -20,6 +21,8 @@ struct S
     int *p_;
     int i_;
 };
+
+constexpr int void_f(int const&) { return 3; }
 
 int main()
 {
@@ -45,6 +48,13 @@ int main()
     sum = 0;
     CHECK(ranges::for_each(ranges::make_range(v1.begin(), v1.end()), fun).get_unsafe() == v1.end());
     CHECK(sum == 12);
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto rng = ranges::array<int, 4>{{0, 2, 4, 6}};
+        static_assert(ranges::for_each(rng, void_f) == ranges::end(rng), "");
+    }
+#endif
 
     return ::test_result();
 }

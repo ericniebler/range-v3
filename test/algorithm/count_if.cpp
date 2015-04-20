@@ -25,6 +25,8 @@ struct T
     bool m() { return b; }
 };
 
+constexpr bool even(int i) { return i % 2 == 0; }
+
 int main()
 {
     using namespace ranges;
@@ -73,6 +75,13 @@ int main()
                          sentinel<T*>(ta + size(ta))), &T::m) == 4);
     CHECK(count_if(make_range(input_iterator<T*>(ta),
                          sentinel<T*>(ta + size(ta))), &T::b) == 4);
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(ranges::count_if({0, 1, 2, 1, 3, 1, 4}, even)  == 3, "");
+        static_assert(ranges::count_if({1, 1, 3, 1}, even)  == 0, "");
+    }
+#endif
 
     return ::test_result();
 }

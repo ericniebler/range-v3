@@ -11,8 +11,11 @@
 
 // Work around strange glibc bug(?)
 #include <iosfwd>
-#if __cplusplus >= 201402L && defined(__GLIBCXX__)
+#include <range/v3/detail/config.hpp>
+#ifdef RANGES_CXX_GREATER_THAN_11
+#ifdef __GLIBCXX__
 int gets;
+#endif
 #endif
 
 #include <vector>
@@ -22,6 +25,7 @@ int gets;
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/generate_n.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -36,6 +40,41 @@ auto const make_input_rng = []
         },3);
     },3);
 };
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+
+struct gen {
+    int n;
+    // TODO: [constexpr] with this uncommented example fails to compile
+    // RANGES_RELAXED_CONSTEXPR gen(gen&&) = default;
+    // RANGES_RELAXED_CONSTEXPR gen(gen const&) = default;
+    // RANGES_RELAXED_CONSTEXPR gen& operator=(gen&&) = default;
+    // RANGES_RELAXED_CONSTEXPR gen& operator=(gen const&) = default;
+    RANGES_RELAXED_CONSTEXPR int operator()() { return n++; }
+};
+static_assert(std::is_trivially_copyable<gen>(), "");
+static_assert(std::is_trivially_copy_assignable<gen>(), "");
+static_assert(std::is_trivially_move_assignable<gen>(), "");
+static_assert(std::is_trivially_move_constructible<gen>(), "");
+
+struct gen_rng {
+    int n;
+    RANGES_RELAXED_CONSTEXPR auto operator()() {
+        int tmp = n;
+        n +=3;
+        return ranges::view::generate_n(gen{tmp}, 3);
+    }
+};
+
+struct make_irng {
+    RANGES_RELAXED_CONSTEXPR auto operator()() const
+    RANGES_DECLTYPE_AUTO_RETURN(
+      ranges::view::generate_n(gen_rng{0}, 3)
+    )
+};
+
+
+#endif
 
 int main()
 {
@@ -83,6 +122,13 @@ int main()
     models<concepts::SizedIterable>(rng4);
     CHECK(rng4.size() == 16u);
     CHECK(to_<std::string>(rng4) == "This is his face");
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+         static_assert(ranges::equal(make_irng()() | ranges::view::join, {0,1,2,3,4,5,6,7,8}), "");
+         static_assert(!ranges::equal(make_irng()() | ranges::view::join, {0,1,2,3,4,5,6,6,8}), "");
+    }
+#endif
 
     return ::test_result();
 }

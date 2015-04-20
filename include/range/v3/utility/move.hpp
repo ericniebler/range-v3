@@ -32,6 +32,7 @@ namespace ranges
             {
                 template<typename T,
                     typename U = meta::eval<std::remove_reference<T>>>
+                RANGES_RELAXED_CONSTEXPR
                 U && operator()(T && t) const noexcept
                 {
                     return static_cast<U &&>(t);
@@ -48,6 +49,7 @@ namespace ranges
             /// \ingroup group-utility
             /// \sa `move_fn`
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             meta::eval<std::remove_reference<T>> && operator|(T && t, move_fn move) noexcept
             {
                 return move(t);
@@ -68,8 +70,14 @@ namespace ranges
         {
             // Default indirect_move overload.
             template<typename I,
-                typename R = decltype(*std::declval<I>()),
-                typename U = meta::eval<std::remove_reference<R>>>
+                     typename R = decltype(*std::declval<I>()),
+                     typename Ret = aux::move_t<R>,
+                     typename Arg = I const&,
+                     typename Mov = decltype(aux::move(*std::declval<Arg>())),
+                     typename U = meta::eval<std::remove_reference<R>>
+                   , typename P = typename std::enable_if<std::is_convertible<Mov, Ret>::value>::type
+                   >
+            RANGES_RELAXED_CONSTEXPR
             aux::move_t<R> indirect_move(I const &i)
                 noexcept(std::is_reference<R>::value ||
                     std::is_nothrow_constructible<detail::decay_t<U>, U &&>::value)
@@ -80,9 +88,10 @@ namespace ranges
             struct indirect_move_fn
             {
                 template<typename I>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(I const &i) const
-                    noexcept(noexcept(indirect_move(i))) ->
-                    decltype(indirect_move(i))
+                    noexcept(noexcept(indirect_move(i)))
+                    -> decltype(indirect_move(i))
                 {
                     return indirect_move(i);
                 }

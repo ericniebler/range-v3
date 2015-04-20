@@ -26,6 +26,111 @@
 
 namespace rng = ranges;
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+
+RANGES_RELAXED_CONSTEXPR bool test_constexpr() {
+    using namespace ranges;
+    bool r = true;
+
+    int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
+    constexpr unsigned sa = size(ia);
+    int ib[] = {1, 3, 5, 7};
+    constexpr unsigned sb = size(ib);
+
+    if(!(rng::find_first_of(input_iterator<const int*>(ia),
+                             sentinel<const int*>(ia + sa),
+                             forward_iterator<const int*>(ib),
+                             sentinel<const int*>(ib + sb)) ==
+                             input_iterator<const int*>(ia+1))) { r = false; }
+    int ic[] = {7};
+    if(!(rng::find_first_of(input_iterator<const int*>(ia),
+                             sentinel<const int*>(ia + sa),
+                             forward_iterator<const int*>(ic),
+                             sentinel<const int*>(ic + 1)) ==
+                             input_iterator<const int*>(ia+sa))) { r = false; }
+    if(!(rng::find_first_of(input_iterator<const int*>(ia),
+                             sentinel<const int*>(ia + sa),
+                             forward_iterator<const int*>(ic),
+                             sentinel<const int*>(ic)) ==
+                             input_iterator<const int*>(ia+sa))) { r = false; }
+    if(!(rng::find_first_of(input_iterator<const int*>(ia),
+                             sentinel<const int*>(ia),
+                             forward_iterator<const int*>(ic),
+                             sentinel<const int*>(ic+1)) ==
+                             input_iterator<const int*>(ia))) { r = false; }
+
+  if(!(rng::find_first_of(input_iterator<const int*>(ia),
+                             sentinel<const int*>(ia + sa),
+                             forward_iterator<const int*>(ib),
+                             sentinel<const int*>(ib + sb),
+                             std::equal_to<int>()) ==
+                             input_iterator<const int*>(ia+1))) { r = false; }
+
+    if(!(rng::find_first_of(input_iterator<const int*>(ia),
+                             sentinel<const int*>(ia + sa),
+                             forward_iterator<const int*>(ic),
+                             sentinel<const int*>(ic + 1),
+                             std::equal_to<int>()) ==
+                             input_iterator<const int*>(ia+sa))) { r = false; }
+    if(!(rng::find_first_of(input_iterator<const int*>(ia),
+                             sentinel<const int*>(ia + sa),
+                             forward_iterator<const int*>(ic),
+                             sentinel<const int*>(ic),
+                             std::equal_to<int>()) ==
+                             input_iterator<const int*>(ia+sa))) { r = false; }
+    if(!(rng::find_first_of(input_iterator<const int*>(ia),
+                             sentinel<const int*>(ia),
+                             forward_iterator<const int*>(ic),
+                             sentinel<const int*>(ic+1),
+                             std::equal_to<int>()) ==
+                             input_iterator<const int*>(ia))) { r = false; }
+
+if(!(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa))),
+                             make_range(forward_iterator<const int*>(ib),
+                             forward_iterator<const int*>(ib + sb))) ==
+                             input_iterator<const int*>(ia+1))) { r = false; }
+    if(!(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa)),
+                             make_range(forward_iterator<const int*>(ib),
+                             forward_iterator<const int*>(ib + sb))).get_unsafe() ==
+                             input_iterator<const int*>(ia+1))) { r = false; }
+
+    if(!(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa))),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic + 1))) ==
+                             input_iterator<const int*>(ia+sa))) { r = false; }
+    if(!(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa))),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic))) ==
+                             input_iterator<const int*>(ia+sa))) { r = false; }
+    if(!(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia))),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic+1))) ==
+                             input_iterator<const int*>(ia))) { r = false; }
+    if(!(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa)),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic + 1))).get_unsafe() ==
+                             input_iterator<const int*>(ia+sa))) { r = false; }
+    if(!(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa)),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic))).get_unsafe() ==
+                             input_iterator<const int*>(ia+sa))) { r = false; }
+    if(!(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia)),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic+1))).get_unsafe() ==
+                             input_iterator<const int*>(ia))) { r = false; }
+
+    return r;
+}
+#endif
+
 void test_iter()
 {
     using namespace ranges;
@@ -221,5 +326,12 @@ int main()
     ::test_rng();
     ::test_rng_pred();
     ::test_rng_pred_proj();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
+
     return ::test_result();
 }

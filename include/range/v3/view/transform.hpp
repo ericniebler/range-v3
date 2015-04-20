@@ -58,48 +58,49 @@ namespace ranges
             public:
                 using value_type =
                     detail::decay_t<decltype(fun_(copy_tag{}, range_iterator_t<Rng>{}))>;
-                adaptor() = default;
-                adaptor(fun_ref_ fun)
+                RANGES_RELAXED_CONSTEXPR adaptor() = default;
+                RANGES_RELAXED_CONSTEXPR adaptor(fun_ref_ fun)
                   : fun_(std::move(fun))
                 {}
-                auto current(range_iterator_t<Rng> it) const
+                RANGES_RELAXED_CONSTEXPR auto current(range_iterator_t<Rng> it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     fun_(it)
                 )
-                auto indirect_move(range_iterator_t<Rng> it) const
+                RANGES_RELAXED_CONSTEXPR auto indirect_move(range_iterator_t<Rng> it) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     fun_(move_tag{}, it)
                 )
             };
 
-            adaptor<false> begin_adaptor()
+            RANGES_RELAXED_CONSTEXPR adaptor<false> begin_adaptor()
             {
                 return {fun_};
             }
-            meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
-            {
-                return {fun_};
-            }
-            CONCEPT_REQUIRES(Callable<Fun const, range_iterator_t<Rng>>())
-            adaptor<true> begin_adaptor() const
+            RANGES_RELAXED_CONSTEXPR meta::if_<use_sentinel_t, adaptor_base, adaptor<false>> end_adaptor()
             {
                 return {fun_};
             }
             CONCEPT_REQUIRES(Callable<Fun const, range_iterator_t<Rng>>())
+            RANGES_RELAXED_CONSTEXPR adaptor<true> begin_adaptor() const
+            {
+                return {fun_};
+            }
+            CONCEPT_REQUIRES(Callable<Fun const, range_iterator_t<Rng>>())
+            RANGES_RELAXED_CONSTEXPR
             meta::if_<use_sentinel_t, adaptor_base, adaptor<true>> end_adaptor() const
             {
                 return {fun_};
             }
         public:
-            iter_transform_view() = default;
-            iter_transform_view(Rng rng, Fun fun)
+            RANGES_RELAXED_CONSTEXPR iter_transform_view() = default;
+            RANGES_RELAXED_CONSTEXPR iter_transform_view(Rng rng, Fun fun)
               : range_adaptor_t<iter_transform_view>{std::move(rng)}
               , fun_(as_function(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
-            range_size_t<Rng> size() const
+            RANGES_RELAXED_CONSTEXPR range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
@@ -109,8 +110,8 @@ namespace ranges
         struct transform_view
           : iter_transform_view<Rng, indirected<Fun>>
         {
-            transform_view() = default;
-            transform_view(Rng rng, Fun fun)
+            RANGES_RELAXED_CONSTEXPR transform_view() = default;
+            RANGES_RELAXED_CONSTEXPR transform_view(Rng rng, Fun fun)
               : iter_transform_view<Rng, indirected<Fun>>{std::move(rng),
                     indirect(std::move(fun))}
             {}
@@ -118,16 +119,17 @@ namespace ranges
 
         namespace view
         {
+
             struct iter_transform_fn
             {
             private:
                 friend view_access;
+
                 template<typename Fun>
-                static auto bind(iter_transform_fn iter_transform, Fun fun)
+                static RANGES_RELAXED_CONSTEXPR auto bind(iter_transform_fn iter_transform, Fun fun)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(iter_transform, std::placeholders::_1,
-                        protect(std::move(fun))))
+                    make_pipeable(binder_1<iter_transform_fn, Fun>(std::move(iter_transform), std::move(fun)))
                 )
             public:
                 template<typename Rng, typename Fun>
@@ -139,7 +141,7 @@ namespace ranges
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
-                iter_transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
+                RANGES_RELAXED_CONSTEXPR iter_transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(std::forward<Rng>(rng)), std::move(fun)};
                 }
@@ -147,7 +149,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
-                void operator()(Rng && rng, Fun fun) const
+                RANGES_RELAXED_CONSTEXPR void operator()(Rng && rng, Fun fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The object on which view::iter_transform operates must be a model of the "
@@ -180,11 +182,10 @@ namespace ranges
             private:
                 friend view_access;
                 template<typename Fun>
-                static auto bind(transform_fn transform, Fun fun)
+                static RANGES_RELAXED_CONSTEXPR auto bind(transform_fn transform, Fun fun)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(transform, std::placeholders::_1,
-                        protect(std::move(fun))))
+                make_pipeable(binder_1<transform_fn, Fun>(std::move(transform), std::move(fun)))
                 )
             public:
                 template<typename Rng, typename Fun>
@@ -194,14 +195,14 @@ namespace ranges
 
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Rng, Fun>())>
-                transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
+                RANGES_RELAXED_CONSTEXPR transform_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(std::forward<Rng>(rng)), std::move(fun)};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
-                void operator()(Rng && rng, Fun fun) const
+                RANGES_RELAXED_CONSTEXPR void operator()(Rng && rng, Fun fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
                         "The object on which view::transform operates must be a model of the "

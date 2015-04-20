@@ -43,6 +43,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename U>
+                RANGES_RELAXED_CONSTEXPR
                 bool operator()(T const &t, U const &u) const
                 {
                     return static_cast<bool>(t == u);
@@ -52,6 +53,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T & t) const
                 {
                     --t;
@@ -61,6 +63,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T & t) const
                 {
                     ++t;
@@ -70,6 +73,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename D>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(T & t, D d) const
                 {
                     advance(t, d);
@@ -79,6 +83,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(T const &t, T const &u) const ->
                     decltype(u - t)
                 {
@@ -89,6 +94,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename U>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(T const &t, U const &u) const ->
                     decltype(true ? t : u)
                 {
@@ -99,6 +105,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename U>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(T const &t, U const &u) const ->
                     decltype(true ? u : t)
                 {
@@ -131,12 +138,14 @@ namespace ranges
                 std::tuple<range_iterator_t<Rngs>...> its_;
 
                 template<std::size_t...Is>
+                RANGES_RELAXED_CONSTEXPR
                 auto indirect_move_(meta::index_sequence<Is...>) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     fun_(move_tag{}, std::get<Is>(its_)...)
                 )
                 template<typename Sent>
+                RANGES_RELAXED_CONSTEXPR
                 friend auto indirect_move(basic_iterator<cursor, Sent> const &it)
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
@@ -151,20 +160,20 @@ namespace ranges
                 using value_type =
                     detail::decay_t<decltype(fun_(copy_tag{}, range_iterator_t<Rngs>{}...))>;
 
-                cursor() = default;
-                cursor(fun_ref_ fun, std::tuple<range_iterator_t<Rngs>...> its)
+                RANGES_RELAXED_CONSTEXPR cursor() = default;
+                RANGES_RELAXED_CONSTEXPR cursor(fun_ref_ fun, std::tuple<range_iterator_t<Rngs>...> its)
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
-                auto current() const
+                RANGES_RELAXED_CONSTEXPR auto current() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     tuple_apply(fun_, its_)
                 )
-                void next()
+                RANGES_RELAXED_CONSTEXPR void next()
                 {
                     tuple_for_each(its_, detail::inc);
                 }
-                bool equal(cursor const &that) const
+                RANGES_RELAXED_CONSTEXPR bool equal(cursor const &that) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
@@ -175,18 +184,17 @@ namespace ranges
                         [](bool a, bool b) { return a || b; });
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool) BidirectionalIterable<Rngs>()...>::value)
-                void prev()
+                RANGES_RELAXED_CONSTEXPR void prev()
                 {
                     tuple_for_each(its_, detail::dec);
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
-                void advance(difference_type n)
+                RANGES_RELAXED_CONSTEXPR void advance(difference_type n)
                 {
-                    using std::placeholders::_1;
-                    tuple_for_each(its_, std::bind(detail::advance_, _1, n));
+                    tuple_for_each(its_, binder_1<decltype(detail::advance_), decltype(n)>(detail::advance_, n));
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
-                difference_type distance_to(cursor const &that) const
+                RANGES_RELAXED_CONSTEXPR difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accommodate zippers of sequences of different length.
@@ -208,11 +216,12 @@ namespace ranges
             private:
                 std::tuple<range_sentinel_t<Rngs>...> ends_;
             public:
-                sentinel() = default;
+                RANGES_RELAXED_CONSTEXPR sentinel() = default;
+                RANGES_RELAXED_CONSTEXPR
                 sentinel(detail::any, std::tuple<range_sentinel_t<Rngs>...> ends)
                   : ends_(std::move(ends))
                 {}
-                bool equal(cursor const &pos) const
+                RANGES_RELAXED_CONSTEXPR bool equal(cursor const &pos) const
                 {
                     // By returning true if *any* of the iterators are equal, we allow
                     // zipped ranges to be of different lengths, stopping when the first
@@ -226,36 +235,36 @@ namespace ranges
 
             using are_bounded_t = meta::and_c<(bool) BoundedIterable<Rngs>()...>;
 
-            cursor begin_cursor()
+            RANGES_RELAXED_CONSTEXPR cursor begin_cursor()
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            meta::if_<are_bounded_t, cursor, sentinel> end_cursor()
+            RANGES_RELAXED_CONSTEXPR meta::if_<are_bounded_t, cursor, sentinel> end_cursor()
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
             CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
-            cursor begin_cursor() const
+            RANGES_RELAXED_CONSTEXPR cursor begin_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
             CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
-            meta::if_<are_bounded_t, cursor, sentinel> end_cursor() const
+            RANGES_RELAXED_CONSTEXPR meta::if_<are_bounded_t, cursor, sentinel> end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
         public:
-            iter_zip_with_view() = default;
-            explicit iter_zip_with_view(Rngs ...rngs)
+            RANGES_RELAXED_CONSTEXPR iter_zip_with_view() = default;
+            RANGES_RELAXED_CONSTEXPR explicit iter_zip_with_view(Rngs ...rngs)
               : fun_(as_function(Fun{}))
               , rngs_{std::move(rngs)...}
             {}
-            explicit iter_zip_with_view(Fun fun, Rngs ...rngs)
+            RANGES_RELAXED_CONSTEXPR explicit iter_zip_with_view(Fun fun, Rngs ...rngs)
               : fun_(as_function(std::move(fun)))
               , rngs_{std::move(rngs)...}
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool) SizedIterable<Rngs>()...>::value)
-            size_type_ size() const
+            RANGES_RELAXED_CONSTEXPR size_type_ size() const
             {
                 return tuple_foldl(
                     tuple_transform(rngs_, ranges::size),
@@ -268,12 +277,12 @@ namespace ranges
         struct zip_with_view
           : iter_zip_with_view<indirected<Fun>, Rngs...>
         {
-            zip_with_view() = default;
-            explicit zip_with_view(Rngs ...rngs)
+            RANGES_RELAXED_CONSTEXPR zip_with_view() = default;
+            RANGES_RELAXED_CONSTEXPR explicit zip_with_view(Rngs ...rngs)
               : iter_zip_with_view<indirected<Fun>, Rngs...>{
                   {Fun{}}, std::move(rngs)...}
             {}
-            explicit zip_with_view(Fun fun, Rngs ...rngs)
+            RANGES_RELAXED_CONSTEXPR explicit zip_with_view(Fun fun, Rngs ...rngs)
               : iter_zip_with_view<indirected<Fun>, Rngs...>{
                   {std::move(fun)}, std::move(rngs)...}
             {}
@@ -292,6 +301,7 @@ namespace ranges
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
+                RANGES_RELAXED_CONSTEXPR
                 iter_zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
                 {
                     return iter_zip_with_view<Fun, all_t<Rngs>...>{
@@ -303,6 +313,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Fun, typename...Rngs,
                     CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Fun, Rngs &&...) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
@@ -340,6 +351,7 @@ namespace ranges
 
                 template<typename...Rngs, typename Fun,
                     CONCEPT_REQUIRES_(Concept<Fun, Rngs...>())>
+                RANGES_RELAXED_CONSTEXPR
                 zip_with_view<Fun, all_t<Rngs>...> operator()(Fun fun, Rngs &&... rngs) const
                 {
                     return zip_with_view<Fun, all_t<Rngs>...>{
@@ -351,6 +363,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Fun, typename...Rngs,
                     CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Fun, Rngs &&...) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),

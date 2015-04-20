@@ -14,10 +14,12 @@
 #include <iterator>
 #include <functional>
 #include <range/v3/core.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/zip.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -28,6 +30,10 @@ struct is_odd
     {
         return (i % 2) == 1;
     }
+};
+
+struct times_two {
+    constexpr auto operator()(int i) const -> int { return i * 2; }
 };
 
 int main()
@@ -45,7 +51,6 @@ int main()
 
     std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};
     auto && rng2 = rgp | view::transform(&std::pair<int,int>::first);
-    has_type<int &>(*begin(rgi));
     has_type<int &>(*begin(rng2));
     CONCEPT_ASSERT(Same<range_value_t<decltype(rng2)>, int>());
     CONCEPT_ASSERT(Same<decltype(iter_move(begin(rng2))), int &&>());
@@ -118,6 +123,15 @@ int main()
         CONCEPT_ASSERT(Same<range_reference_t<R2>, std::string &>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, std::string &&>());
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        const constexpr auto srng = view::ints(0, 10);
+        constexpr auto t_rng0 = srng | view::transform(times_two());
+        static_assert(ranges::equal(t_rng0, {0,2,4,6,8,10,12,14,16,18,20}), "");
+        static_assert(t_rng0[2] == 4, "");
+    }
+#endif
 
     return test_result();
 }

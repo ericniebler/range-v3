@@ -38,6 +38,7 @@ namespace ranges
         {
         private:
             template<typename Fun, typename Tup, std::size_t...Is>
+            RANGES_RELAXED_CONSTEXPR
             static auto impl(Fun &&fun, Tup &&tup, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -45,6 +46,7 @@ namespace ranges
             )
         public:
             template<typename Fun, typename Tup>
+            RANGES_RELAXED_CONSTEXPR
             auto operator()(Fun &&fun, Tup &&tup) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -64,6 +66,7 @@ namespace ranges
         {
         private:
             template<typename Tup, typename Fun, std::size_t...Is>
+            RANGES_RELAXED_CONSTEXPR
             static auto impl1(Tup && tup, Fun fun, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -71,6 +74,7 @@ namespace ranges
                     fun(std::get<Is>(std::forward<Tup>(tup)))...}
             )
             template<typename Tup0, typename Tup1, typename Fun, std::size_t...Is>
+            RANGES_RELAXED_CONSTEXPR
             static auto impl2(Tup0 && tup0, Tup1 && tup1, Fun fun, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -81,6 +85,7 @@ namespace ranges
             )
         public:
             template<typename Tup, typename Fun>
+            RANGES_RELAXED_CONSTEXPR
             auto operator()(Tup && tup, Fun fun) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -88,6 +93,7 @@ namespace ranges
                     tuple_indices_t<Tup>{})
             )
             template<typename Tup0, typename Tup1, typename Fun>
+            RANGES_RELAXED_CONSTEXPR
             auto operator()(Tup0 && tup0, Tup1 && tup1, Fun fun) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -107,12 +113,14 @@ namespace ranges
         {
         private:
             template<typename Tup, typename Val, typename Fun>
+            RANGES_RELAXED_CONSTEXPR
             static Val impl(Tup &&, Val val, Fun)
             {
                 return val;
             }
             template<std::size_t I0, std::size_t...Is, typename Tup, typename Val, typename Fun,
                 typename Impl = tuple_foldl_fn>
+            RANGES_RELAXED_CONSTEXPR
             static auto impl(Tup && tup, Val val, Fun fun)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -121,6 +129,7 @@ namespace ranges
                     std::move(fun))
             )
             template<typename Tup, typename Val, typename Fun, std::size_t...Is>
+            RANGES_RELAXED_CONSTEXPR
             static auto impl2(Tup && tup, Val val, Fun fun, meta::index_sequence<Is...>)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -129,6 +138,7 @@ namespace ranges
             )
         public:
             template<typename Tup, typename Val, typename Fun>
+            RANGES_RELAXED_CONSTEXPR
             auto operator()(Tup && tup, Val val, Fun fun) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
@@ -148,6 +158,7 @@ namespace ranges
         {
         private:
             template<typename Tup, typename Fun, std::size_t...Is>
+            RANGES_RELAXED_CONSTEXPR
             static void impl(Tup && tup, Fun fun, meta::index_sequence<Is...>)
             {
                 (void)std::initializer_list<int>{
@@ -155,9 +166,10 @@ namespace ranges
             }
         public:
             template<typename Tup, typename Fun>
+            RANGES_RELAXED_CONSTEXPR
             Fun operator()(Tup && tup, Fun fun) const
             {
-                tuple_for_each_fn::impl(std::forward<Tup>(tup), std::ref(fun),
+                tuple_for_each_fn::impl(std::forward<Tup>(tup), ranges::ref(fun),
                     tuple_indices_t<Tup>{});
                 return fun;
             }
@@ -173,6 +185,7 @@ namespace ranges
         struct make_tuple_fn
         {
             template<typename ...Ts>
+            RANGES_RELAXED_CONSTEXPR
             auto operator()(Ts &&...ts) const
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (

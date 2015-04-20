@@ -34,6 +34,7 @@ namespace ranges
             template<typename O, typename F,
                 CONCEPT_REQUIRES_(Function<F>() &&
                     WeakOutputIterator<O, concepts::Function::result_t<F>>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<O, F> operator()(O begin, iterator_difference_t<O> n, F fun) const
             {
                 RANGES_ASSERT(n >= 0);

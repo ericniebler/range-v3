@@ -29,39 +29,44 @@ namespace ranges
         private:
             tagged_variant<T, meta::nil_> data_;
         public:
-            optional() = default;
-            optional(T t)
+            RANGES_RELAXED_CONSTEXPR optional() = default;
+            RANGES_RELAXED_CONSTEXPR optional(optional const&) = default;
+            RANGES_RELAXED_CONSTEXPR optional(optional && o) = default;
+            RANGES_RELAXED_CONSTEXPR optional& operator=(optional const&) = default;
+            RANGES_RELAXED_CONSTEXPR optional& operator=(optional &&) = default;
+
+            RANGES_RELAXED_CONSTEXPR optional(T t)
               : data_(meta::size_t<0>{}, std::move(t))
             {}
-            explicit operator bool() const
+            RANGES_RELAXED_CONSTEXPR explicit operator bool() const
             {
                 return data_.which() == 0;
             }
-            bool operator!() const
+            RANGES_RELAXED_CONSTEXPR bool operator!() const
             {
                 return data_.which() != 0;
             }
-            T & operator*()
+            RANGES_RELAXED_CONSTEXPR T & operator*()
             {
                 RANGES_ASSERT(!!*this);
                 return ranges::get<0>(data_);
             }
-            T const & operator*() const
+            RANGES_RELAXED_CONSTEXPR T const & operator*() const
             {
                 RANGES_ASSERT(!!*this);
                 return ranges::get<0>(data_);
             }
-            optional &operator=(T const &t)
+            RANGES_RELAXED_CONSTEXPR optional &operator=(T const &t)
             {
                 ranges::set<0>(data_, t);
                 return *this;
             }
-            optional &operator=(T &&t)
+            RANGES_RELAXED_CONSTEXPR optional &operator=(T &&t)
             {
                 ranges::set<0>(data_, std::move(t));
                 return *this;
             }
-            void reset()
+            RANGES_RELAXED_CONSTEXPR void reset()
             {
                 ranges::set<1>(data_, meta::nil_{});
             }

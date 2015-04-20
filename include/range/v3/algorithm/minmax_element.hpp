@@ -37,6 +37,7 @@ namespace ranges
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() &&
                     IndirectCallableRelation<C, Project<I, P>>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<I, I> operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);
@@ -84,6 +85,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardIterable<Rng>() &&
                     IndirectCallableRelation<C, Project<I, P>>())>
+            RANGES_RELAXED_CONSTEXPR
             meta::if_<std::is_lvalue_reference<Rng>, std::pair<I, I>, dangling<std::pair<I, I>>>
             operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {

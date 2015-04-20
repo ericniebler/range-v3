@@ -28,6 +28,7 @@
 
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/is_sorted_until.hpp>
+#include <range/v3/view/iota.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -404,6 +405,17 @@ int main()
         CHECK(ranges::is_sorted_until(ranges::view::all(as), std::less<int>{}, &A::a).get_unsafe() == ranges::end(as));
         CHECK(ranges::is_sorted_until(ranges::view::all(as), std::greater<int>{}, &A::a).get_unsafe() == ranges::next(ranges::begin(as),1));
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto a = ranges::view::iota(1,4);
+        constexpr auto b1 = ++ranges::begin(a);
+        constexpr auto end = ranges::end(a);
+        static_assert(ranges::is_sorted_until(a) == end, "");
+        static_assert(ranges::is_sorted_until(a, std::less<>{}) == end, "");
+        static_assert(ranges::is_sorted_until(a, std::greater<>{}) == b1, "");
+    }
+#endif
 
     return ::test_result();
 }

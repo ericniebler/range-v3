@@ -57,6 +57,7 @@ namespace ranges
             private:
                 join_view *rng_;
                 range_iterator_t<range_value_t<Rng>> it_;
+                RANGES_RELAXED_CONSTEXPR
                 void satisfy(range_iterator_t<Rng> &it)
                 {
                     auto &cur = rng_->cur_;
@@ -77,10 +78,12 @@ namespace ranges
                 }
             public:
                 using single_pass = std::true_type;
-                adaptor() = default;
+                RANGES_RELAXED_CONSTEXPR adaptor() = default;
+                RANGES_RELAXED_CONSTEXPR
                 adaptor(join_view &rng)
                   : rng_(&rng), it_{}
                 {}
+                RANGES_RELAXED_CONSTEXPR
                 range_iterator_t<Rng> begin(join_view &)
                 {
                     auto it = ranges::begin(rng_->mutable_base());
@@ -93,10 +96,11 @@ namespace ranges
                     }
                     return it;
                 }
+                RANGES_RELAXED_CONSTEXPR
                 bool equal(range_iterator_t<Rng> const &it, range_iterator_t<Rng> const &other_it,
                     adaptor const &other_adapt) const
                 {
-#if __cplusplus > 201103L
+#ifdef RANGES_CXX_GREATER_THAN_11
                     RANGES_ASSERT(rng_ == other_adapt.rng_);
                     return it == other_it && it_ == other_adapt.it_;
 #else
@@ -104,29 +108,34 @@ namespace ranges
                         (it == other_it && it_ == other_adapt.it_);
 #endif
                 }
+                RANGES_RELAXED_CONSTEXPR
                 void next(range_iterator_t<Rng> &it)
                 {
                     ++it_;
                     satisfy(it);
                 }
+                RANGES_RELAXED_CONSTEXPR
                 auto current(range_iterator_t<Rng> const &) const ->
                     decltype(*it_)
                 {
                     return *it_;
                 }
+                RANGES_RELAXED_CONSTEXPR
                 auto indirect_move(range_iterator_t<Rng> const &) const ->
                     decltype(ranges::indirect_move(it_))
                 {
                     return ranges::indirect_move(it_);
                 }
             };
+            RANGES_RELAXED_CONSTEXPR
             adaptor begin_adaptor()
             {
                 return {*this};
             }
+            RANGES_RELAXED_CONSTEXPR
             adaptor end_adaptor()
             {
-#if __cplusplus > 201103L
+#ifdef RANGES_CXX_GREATER_THAN_11
                 return {*this};
 #else
                 return {};
@@ -134,12 +143,13 @@ namespace ranges
             }
             // TODO: could support const iteration if range_reference_t<Rng> is a true reference.
         public:
-            join_view() = default;
-            explicit join_view(Rng rng)
+            RANGES_RELAXED_CONSTEXPR join_view() = default;
+            RANGES_RELAXED_CONSTEXPR explicit join_view(Rng rng)
               : range_adaptor_t<join_view>{std::move(rng)}, cur_{}
             {}
             CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardIterable<Rng>() &&
                              SizedIterable<range_value_t<Rng>>())
+            RANGES_RELAXED_CONSTEXPR
             size_t_ size() const
             {
                 return accumulate(view::transform(this->base(), ranges::size), size_t_{0});
@@ -173,6 +183,7 @@ namespace ranges
                 bool toggl_;
                 range_iterator_t<ValRng> val_it_;
                 range_iterator_t<range_value_t<Rng>> it_;
+                RANGES_RELAXED_CONSTEXPR
                 void satisfy(range_iterator_t<Rng> &it)
                 {
                     auto &cur = rng_->cur_;
@@ -203,10 +214,13 @@ namespace ranges
                 }
             public:
                 using single_pass = std::true_type;
+                RANGES_RELAXED_CONSTEXPR
                 adaptor() = default;
+                RANGES_RELAXED_CONSTEXPR
                 adaptor(join_view &rng)
                   : rng_(&rng), toggl_(true), val_it_{}, it_{}
                 {}
+                RANGES_RELAXED_CONSTEXPR
                 range_iterator_t<Rng> begin(join_view &)
                 {
                     auto it = ranges::begin(rng_->mutable_base());
@@ -219,10 +233,11 @@ namespace ranges
                     }
                     return it;
                 }
+                RANGES_RELAXED_CONSTEXPR
                 bool equal(range_iterator_t<Rng> const &it, range_iterator_t<Rng> const &other_it,
                     adaptor const &other_adapt) const
                 {
-#if __cplusplus > 201103L
+#ifdef RANGES_CXX_GREATER_THAN_11
                     RANGES_ASSERT(rng_ == other_adapt.rng_);
                     return it == other_it && toggl_ == other_adapt.toggl_ &&
                         (toggl_ ? it_ == other_adapt.it_ : val_it_ == other_adapt.val_it_);
@@ -232,11 +247,13 @@ namespace ranges
                             (toggl_ ? it_ == other_adapt.it_ : val_it_ == other_adapt.val_it_));
 #endif
                 }
+                RANGES_RELAXED_CONSTEXPR
                 void next(range_iterator_t<Rng> &it)
                 {
                     toggl_ ? (void)++it_ : (void)++val_it_;
                     satisfy(it);
                 }
+                RANGES_RELAXED_CONSTEXPR
                 auto current(range_iterator_t<Rng> const &) const ->
                     common_reference_t<
                         range_reference_t<range_value_t<Rng>>,
@@ -246,6 +263,7 @@ namespace ranges
                         return *it_;
                     return *val_it_;
                 }
+                RANGES_RELAXED_CONSTEXPR
                 auto indirect_move(range_iterator_t<Rng> const &) const ->
                     common_reference_t<
                         range_rvalue_reference_t<range_value_t<Rng>>,
@@ -256,13 +274,15 @@ namespace ranges
                     return ranges::indirect_move(val_it_);
                 }
             };
+            RANGES_RELAXED_CONSTEXPR
             adaptor begin_adaptor()
             {
                 return {*this};
             }
+            RANGES_RELAXED_CONSTEXPR
             adaptor end_adaptor()
             {
-#if __cplusplus > 201103L
+#ifdef RANGES_CXX_GREATER_THAN_11
                 return {*this};
 #else
                 return {};
@@ -270,13 +290,14 @@ namespace ranges
             }
             // TODO: could support const iteration if range_reference_t<Rng> is a true reference.
         public:
-            join_view() = default;
-            join_view(Rng rng, ValRng val)
+            RANGES_RELAXED_CONSTEXPR join_view() = default;
+            RANGES_RELAXED_CONSTEXPR join_view(Rng rng, ValRng val)
               : range_adaptor_t<join_view>{std::move(rng)}
               , cur_{}, val_(std::move(val))
             {}
             CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardIterable<Rng>() &&
                              SizedIterable<range_value_t<Rng>>() && SizedIterable<ValRng>())
+            RANGES_RELAXED_CONSTEXPR
             size_t_ size() const
             {
                 return accumulate(view::transform(this->mutable_base(), ranges::size), size_t_{0}) +
@@ -301,12 +322,14 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
+                RANGES_RELAXED_CONSTEXPR
                 join_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return join_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
                 template<typename Rng, typename Val = range_value_t<range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
+                RANGES_RELAXED_CONSTEXPR
                 join_view<all_t<Rng>, single_view<Val>> operator()(Rng && rng, meta::id_t<Val> v) const
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
@@ -317,6 +340,7 @@ namespace ranges
                 }
                 template<typename Rng, typename ValRng,
                     CONCEPT_REQUIRES_(JoinableIterable_<Rng>() && ForwardIterable<ValRng>())>
+                RANGES_RELAXED_CONSTEXPR
                 join_view<all_t<Rng>, all_t<ValRng>> operator()(Rng && rng, ValRng && val) const
                 {
                     CONCEPT_ASSERT_MSG(Common<range_value_t<ValRng>,
@@ -332,12 +356,14 @@ namespace ranges
                     return {all(std::forward<Rng>(rng)), all(std::forward<ValRng>(val))};
                 }
             private:
+                template <class T> struct dump;
                friend view_access;
                template<typename T, CONCEPT_REQUIRES_(!JoinableIterable_<T>())>
-               static auto bind(join_fn join, T && t)
+               static RANGES_RELAXED_CONSTEXPR auto bind(join_fn join, T && t)
                RANGES_DECLTYPE_AUTO_RETURN
                (
-                   make_pipeable(std::bind(join, std::placeholders::_1, bind_forward<T>(t)))
+                   make_pipeable(binder_1<join_fn, decltype(bind_forward<T>(t))>
+                                 (join, bind_forward<T>(t)))
                )
             };
 

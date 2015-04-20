@@ -32,6 +32,7 @@ namespace ranges
             {
                 template<typename I, typename V2, typename C = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V2, C, P>())>
+                RANGES_RELAXED_CONSTEXPR
                 I operator()(I begin, iterator_difference_t<I> d, V2 const &val, C pred_ = C{},
                     P proj_ = P{}) const
                 {

@@ -35,6 +35,7 @@ namespace ranges
             template<typename I, typename S, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() && WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<I, O> operator()(I begin, I middle, S end, O out) const
             {
                 auto res = copy(middle, std::move(end), std::move(out));
@@ -48,6 +49,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Iterable<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, I middle, O out) const
             {

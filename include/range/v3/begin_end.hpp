@@ -21,6 +21,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/dangling.hpp>
+#include <range/v3/utility/reverse_iterator.hpp>
 
 namespace ranges
 {
@@ -38,73 +39,60 @@ namespace ranges
     (defined(__GLIBCXX__) && (__GLIBCXX__ >= 20150119)))
             using std::rbegin;
             using std::rend;
-#else
-            template<typename T, std::size_t N>
-            std::reverse_iterator<T *> rbegin(T (&t)[N])
-            {
-                return std::reverse_iterator<T *>(t + N);
-            }
-            template<typename T, std::size_t N>
-            std::reverse_iterator<T *> rend(T (&t)[N])
-            {
-                return std::reverse_iterator<T *>(t);
-            }
-            template<typename T>
-            std::reverse_iterator<T const *> rbegin(std::initializer_list<T> il)
-            {
-                return std::reverse_iterator<T *>(il.end());
-            }
-            template<typename T>
-            std::reverse_iterator<T const *> rend(std::initializer_list<T> il)
-            {
-                return std::reverse_iterator<T const *>(il.begin());
-            }
 #endif
 
             // A reference-wrapped Iterable is an Iterable
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto begin(std::reference_wrapper<T> ref) -> decltype(begin(ref.get()))
             {
                 return begin(ref.get());
             }
 
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto end(std::reference_wrapper<T> ref) -> decltype(end(ref.get()))
             {
                 return end(ref.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto begin(ranges::reference_wrapper<T, RValue> ref) -> decltype(begin(ref.get()))
             {
                 return begin(ref.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto end(ranges::reference_wrapper<T, RValue> ref) -> decltype(end(ref.get()))
             {
                 return end(ref.get());
             }
 
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto rbegin(std::reference_wrapper<T> ref) -> decltype(rbegin(ref.get()))
             {
                 return rbegin(ref.get());
             }
 
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto rend(std::reference_wrapper<T> ref) -> decltype(rend(ref.get()))
             {
                 return rend(ref.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto rbegin(ranges::reference_wrapper<T, RValue> ref) -> decltype(rbegin(ref.get()))
             {
                 return rbegin(ref.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto rend(ranges::reference_wrapper<T, RValue> ref) -> decltype(rend(ref.get()))
             {
                 return rend(ref.get());
@@ -184,11 +172,23 @@ namespace ranges
                 {
                     return rng.rbegin();
                 }
+                template<typename T, std::size_t N>
+                static constexpr auto impl(T (&t)[N], int)
+                        noexcept -> ranges::reverse_iterator<T *>
+                {
+                    return ranges::reverse_iterator<T *>(t + N);
+                }
+                template<typename T>
+                static constexpr auto impl(std::initializer_list<T> il, int)
+                        noexcept -> ranges::reverse_iterator<T const *>
+                {
+                    return ranges::reverse_iterator<T const *>(il.end());
+                }
             public:
                 template<typename Rng>
                 constexpr auto operator()(Rng && rng) const
-                    noexcept(noexcept(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))) ->
-                    decltype(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))
+                     noexcept(noexcept(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))) ->
+                     decltype(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))
                 {
                     return rbegin_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
@@ -211,6 +211,18 @@ namespace ranges
                     decltype(rng.rend())
                 {
                     return rng.rend();
+                }
+                template<typename T, std::size_t N>
+                static constexpr auto impl(T (&t)[N], int)
+                        noexcept -> ranges::reverse_iterator<T *>
+                {
+                    return ranges::reverse_iterator<T *>(t);
+                }
+                template<typename T>
+                static constexpr auto impl(std::initializer_list<T> il, int)
+                        noexcept -> ranges::reverse_iterator<T const *>
+                {
+                    return ranges::reverse_iterator<T const *>(il.begin());
                 }
             public:
                 template<typename Rng>

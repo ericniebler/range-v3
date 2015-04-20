@@ -27,20 +27,27 @@ namespace ranges
         namespace adl_size_detail
         {
             template<typename Rng>
-            constexpr auto size_(Rng && rng, long) ->
+            RANGES_RELAXED_CONSTEXPR
+            // TODO: [constexpr] this was C++11 constexpr before,
+            // but iter_size is RELAXED_CONSTEXPR, so either make
+            // both C++11's constexpr or C++14
+            auto size_(Rng && rng, long) ->
                 decltype(iter_size(begin(rng), end(rng)))
             {
                 return iter_size(begin(rng), end(rng));
             }
 
             template<typename Rng>
-            auto size_(Rng && rng, int) ->
+            // TODO: [constexpr] is the member function size
+            // expected to be C++11 constexpr?
+            constexpr auto size_(Rng && rng, int) ->
                 decltype(rng.size())
             {
                 return rng.size();
             }
 
             template<typename Rng>
+            RANGES_RELAXED_CONSTEXPR
             auto size(Rng && rng) ->
                 decltype(adl_size_detail::size_(std::forward<Rng>(rng), 42))
             {
@@ -49,12 +56,14 @@ namespace ranges
 
             // A reference-wrapped Iterable
             template<typename T>
+            RANGES_RELAXED_CONSTEXPR
             auto size(std::reference_wrapper<T> t) -> decltype(size(t.get()))
             {
                 return size(t.get());
             }
 
             template<typename T, bool RValue>
+            RANGES_RELAXED_CONSTEXPR
             auto size(ranges::reference_wrapper<T, RValue> t) -> decltype(size(t.get()))
             {
                 return size(t.get());

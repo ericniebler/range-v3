@@ -33,6 +33,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Function<F>() &&
                     OutputIterator<O, concepts::Function::result_t<F>>() &&
                     IteratorRange<O, S>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<O, F> operator()(O begin, S end, F fun) const
             {
                 for(; begin != end; ++begin)
@@ -44,6 +45,7 @@ namespace ranges
                 typename O = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Function<F>() &&
                     OutputIterable<Rng, concepts::Function::result_t<F>>())>
+            RANGES_RELAXED_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, F> operator()(Rng &&rng, F fun) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun));

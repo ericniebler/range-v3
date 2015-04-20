@@ -29,6 +29,7 @@ namespace ranges
         namespace detail
         {
             template<typename ...Us, typename Tup, std::size_t...Is>
+            RANGES_RELAXED_CONSTEXPR
             std::tuple<Us...> to_std_tuple(Tup && tup, meta::index_sequence<Is...>)
             {
                 return std::tuple<Us...>{std::get<Is>(std::forward<Tup>(tup))...};
@@ -42,21 +43,22 @@ namespace ranges
         {
         private:
             template<typename That, std::size_t...Is>
+            RANGES_RELAXED_CONSTEXPR
             common_tuple(That && that, meta::index_sequence<Is...>)
               : std::tuple<Ts...>{std::get<Is>(std::forward<That>(that))...}
             {}
-            std::tuple<Ts...> & base() noexcept
+            RANGES_RELAXED_CONSTEXPR std::tuple<Ts...> & base() noexcept
             {
                 return *this;
             }
-            std::tuple<Ts...> const & base() const noexcept
+            RANGES_RELAXED_CONSTEXPR std::tuple<Ts...> const & base() const noexcept
             {
                 return *this;
             }
             struct element_assign_
             {
                 template<typename T, typename U>
-                int operator()(T &t, U &&u) const
+                RANGES_RELAXED_CONSTEXPR int operator()(T &t, U &&u) const
                 {
                     t = std::forward<U>(u);
                     return 0;
@@ -65,13 +67,13 @@ namespace ranges
         public:
             // Construction
             CONCEPT_REQUIRES(meta::and_c<(bool) DefaultConstructible<Ts>()...>::value)
-            common_tuple()
+            RANGES_RELAXED_CONSTEXPR common_tuple()
                 noexcept(meta::and_c<std::is_nothrow_default_constructible<Ts>::value...>::value)
               : std::tuple<Ts...>{}
             {}
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Constructible<Ts, Us &&>()...>::value)>
-            explicit common_tuple(Us &&... us)
+            RANGES_RELAXED_CONSTEXPR explicit common_tuple(Us &&... us)
                 noexcept(meta::and_c<std::is_nothrow_constructible<Ts, Us &&>::value...>::value)
               : std::tuple<Ts...>{std::forward<Us>(us)...}
             {}
@@ -97,6 +99,7 @@ namespace ranges
             // Assignment
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts &, Us &>()...>::value)>
+            RANGES_RELAXED_CONSTEXPR
             common_tuple &operator=(std::tuple<Us...> &that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
             {
@@ -105,6 +108,7 @@ namespace ranges
             }
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts &, Us const &>()...>::value)>
+            RANGES_RELAXED_CONSTEXPR
             common_tuple &operator=(std::tuple<Us...> const & that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
             {
@@ -113,6 +117,7 @@ namespace ranges
             }
             template<typename...Us,
                 CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts &, Us &&>()...>::value)>
+            RANGES_RELAXED_CONSTEXPR
             common_tuple &operator=(std::tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us &&>::value...>::value)
             {
@@ -146,24 +151,28 @@ namespace ranges
         // Logical operators
 #define LOGICAL_OP(OP, CONCEPT)\
             CONCEPT_REQUIRES(meta::and_c<(bool) CONCEPT<Ts>()...>::value)\
+            RANGES_RELAXED_CONSTEXPR \
             friend bool operator OP(common_tuple const &a, common_tuple const &b)\
             {\
                 return a.base() OP b.base();\
             }\
             template<typename...Us,\
                 CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
+            RANGES_RELAXED_CONSTEXPR \
             friend bool operator OP(common_tuple const &a, common_tuple<Us...> const &b)\
             {\
                 return a.base() OP b.base();\
             }\
             template<typename...Us,\
                 CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
+            RANGES_RELAXED_CONSTEXPR \
             friend bool operator OP(common_tuple const &a, std::tuple<Us...> const &b)\
             {\
                 return a.base() OP b;\
             }\
             template<typename...Us,\
                 CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
+            RANGES_RELAXED_CONSTEXPR \
             friend bool operator OP(std::tuple<Us...> const &a, common_tuple const &b)\
             {\
                 return a OP b.base();\
@@ -182,6 +191,7 @@ namespace ranges
         {
             using expects_wrapped_references = void;
             template<typename ...Args>
+            RANGES_RELAXED_CONSTEXPR
             common_tuple<bind_element_t<Args>...> operator()(Args &&... args) const
                 noexcept(meta::and_c<
                     std::is_nothrow_constructible<
@@ -205,6 +215,7 @@ namespace ranges
           : std::pair<F, S>
         {
         private:
+            RANGES_RELAXED_CONSTEXPR
             std::pair<F, S> const & base() const noexcept
             {
                 return *this;
@@ -219,6 +230,7 @@ namespace ranges
             {}
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Constructible<F, F2 &&>() && Constructible<S, S2 &&>())>
+            RANGES_RELAXED_CONSTEXPR
             common_pair(F2 &&f2, S2 &&s2)
                 noexcept(std::is_nothrow_constructible<F, F2 &&>::value &&
                     std::is_nothrow_constructible<S, S2 &&>::value)
@@ -275,6 +287,7 @@ namespace ranges
             // Assignment
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Assignable<F &, F2 &>() && Assignable<S &, S2 &>())>
+            RANGES_RELAXED_CONSTEXPR
             common_pair &operator=(std::pair<F2, S2> &that)
                 noexcept(std::is_nothrow_assignable<F &, F2 &>::value &&
                          std::is_nothrow_assignable<S &, S2 &>::value)
@@ -285,6 +298,7 @@ namespace ranges
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Assignable<F &, F2 const &>() && Assignable<S &, S2 const &>())>
+            RANGES_RELAXED_CONSTEXPR
             common_pair &operator=(std::pair<F2, S2> const & that)
                 noexcept(std::is_nothrow_assignable<F &, F2 const &>::value &&
                          std::is_nothrow_assignable<S &, S2 const &>::value)
@@ -295,6 +309,7 @@ namespace ranges
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(Assignable<F &, F2 &&>() && Assignable<S &, S2 &&>())>
+            RANGES_RELAXED_CONSTEXPR
             common_pair &operator=(std::pair<F2, S2> &&that)
                 noexcept(std::is_nothrow_assignable<F &, F2 &&>::value &&
                          std::is_nothrow_assignable<S &, S2 &&>::value)
@@ -306,71 +321,83 @@ namespace ranges
 
             // Logical operators
             CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
+            RANGES_RELAXED_CONSTEXPR
             friend bool operator ==(common_pair const &a, common_pair const &b)
             {
                 return a.first == b.first && a.second == b.second;
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
+            RANGES_RELAXED_CONSTEXPR
             friend bool operator ==(common_pair const &a, common_pair<F2, S2> const &b)
             {
                 return a.first == b.first && a.second == b.second;
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
+            RANGES_RELAXED_CONSTEXPR
             friend bool operator ==(common_pair const &a, std::pair<F2, S2> const &b)
             {
                 return a.first == b.first && a.second == b.second;
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
+            RANGES_RELAXED_CONSTEXPR
             friend bool operator ==(std::pair<F2, S2> const &a, common_pair const &b)
             {
                 return a.first == b.first && a.second == b.second;
             }
             CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
+            RANGES_RELAXED_CONSTEXPR
             friend bool operator <(common_pair const &a, common_pair const &b)
             {
                 return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
+            RANGES_RELAXED_CONSTEXPR
             friend bool operator <(common_pair const &a, common_pair<F2, S2> const &b)
             {
                 return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
+            RANGES_RELAXED_CONSTEXPR
             friend bool operator <(common_pair const &a, std::pair<F2, S2> const &b)
             {
                 return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
             }
             template<typename F2, typename S2,
                 CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
+            RANGES_RELAXED_CONSTEXPR
             friend bool operator <(std::pair<F2, S2> const &a, common_pair const &b)
             {
                 return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
             }
 #define LOGICAL_OP(OP, CONCEPT, RET)\
             CONCEPT_REQUIRES(CONCEPT<F>() && CONCEPT<S>())\
+            RANGES_RELAXED_CONSTEXPR\
             friend bool operator OP(common_pair const &a, common_pair const &b)\
             {\
                 return RET;\
             }\
             template<typename F2, typename S2,\
                 CONCEPT_REQUIRES_(CONCEPT<F, F2>() && CONCEPT<S, S2>())>\
+            RANGES_RELAXED_CONSTEXPR\
             friend bool operator OP(common_pair const &a, common_pair<F2, S2> const &b)\
             {\
                 return RET;\
             }\
             template<typename F2, typename S2,\
                 CONCEPT_REQUIRES_(CONCEPT<F, F2>() && CONCEPT<S, S2>())>\
+            RANGES_RELAXED_CONSTEXPR\
             friend bool operator OP(common_pair const &a, std::pair<F2, S2> const &b)\
             {\
                 return RET;\
             }\
             template<typename F2, typename S2,\
                 CONCEPT_REQUIRES_(CONCEPT<F, F2>() && CONCEPT<S, S2>())>\
+            RANGES_RELAXED_CONSTEXPR\
             friend bool operator OP(std::pair<F2, S2> const &a, common_pair const &b)\
             {\
                 return RET;\
@@ -389,6 +416,7 @@ namespace ranges
             template<typename First, typename Second,
                 typename F = bind_element_t<First>,
                 typename S = bind_element_t<Second>>
+            RANGES_RELAXED_CONSTEXPR
             common_pair<F, S> operator()(First && f, Second && s) const
                 noexcept(std::is_nothrow_constructible<F, unwrap_reference_t<First>>::value &&
                     std::is_nothrow_constructible<F, unwrap_reference_t<Second>>::value)

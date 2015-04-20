@@ -8,6 +8,12 @@ add_test(test.utility.common_type utility.common_type)
 add_executable(utility.functional functional.cpp)
 add_test(test.utility.functional utility.functional)
 
+add_executable(utility.variant variant.cpp)
+add_test(test.utility.variant utility.variant)
+
+add_executable(utility.reverse_iterator reverse_iterator.cpp)
+add_test(test.utility.reverse_iterator utility.reverse_iterator)
+
 add_executable(utility.swap swap.cpp)
 add_test(test.utility.swap utility.swap)
 

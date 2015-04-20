@@ -38,6 +38,7 @@ namespace ranges
         private:
             friend struct range_access;
             Val value_;
+      public: // TODO: [constexpr] should be private
             struct cursor
             {
             private:

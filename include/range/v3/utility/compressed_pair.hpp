@@ -33,7 +33,7 @@ namespace ranges
             struct first_base
             {
                 T first;
-                first_base() = default;
+                RANGES_RELAXED_CONSTEXPR first_base() = default;
                 template<typename U,
                     meta::if_<std::is_constructible<T, U &&>, int> = 0>
                 constexpr explicit first_base(U && u)
@@ -45,7 +45,7 @@ namespace ranges
             struct first_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>
             {
                 static T first;
-                first_base() = default;
+                RANGES_RELAXED_CONSTEXPR first_base() = default;
                 template<typename U,
                     meta::if_<std::is_constructible<T, U &&>, int> = 0>
                 constexpr explicit first_base(U &&)
@@ -59,7 +59,7 @@ namespace ranges
             struct second_base
             {
                 T second;
-                second_base() = default;
+                RANGES_RELAXED_CONSTEXPR second_base() = default;
                 template<typename U,
                     meta::if_<std::is_constructible<T, U &&>, int> = 0>
                 constexpr explicit second_base(U && u)
@@ -71,7 +71,7 @@ namespace ranges
             struct second_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>
             {
                 static T second;
-                second_base() = default;
+                RANGES_RELAXED_CONSTEXPR second_base() = default;
                 template<typename U,
                     meta::if_<std::is_constructible<T, U &&>, int> = 0>
                 constexpr explicit second_base(U &&)
@@ -93,7 +93,7 @@ namespace ranges
             using detail::first_base<First>::first;
             using detail::second_base<Second>::second;
 
-            compressed_pair() = default;
+            RANGES_RELAXED_CONSTEXPR compressed_pair() = default;
 
             constexpr compressed_pair(First f, Second s)
               : detail::first_base<First>{(First &&) f}

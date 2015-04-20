@@ -281,5 +281,11 @@ int main()
     static_assert(std::is_same<bool, decltype(ranges::equal({1, 2, 3, 4}, {1, 2, 3, 4}))>::value, "");
     static_assert(std::is_same<bool, decltype(ranges::equal({1, 2, 3, 4}, ranges::view::unbounded(p)))>::value, "");
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    static_assert(ranges::equal({1, 2, 3, 4}, {1, 2, 3, 4}), "");
+    static_assert(ranges::equal(std::initializer_list<int>{},
+                                std::initializer_list<int>{}), "");
+#endif
+
     return ::test_result();
 }

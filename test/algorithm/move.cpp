@@ -59,6 +59,43 @@ test()
     }
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+template<typename InIter, typename OutIter, typename Sent = InIter>
+RANGES_RELAXED_CONSTEXPR
+bool constexpr_test()
+{
+    {
+        constexpr int N = 1000;
+        int ia[N]{1};
+        for(int i = 0; i < N; ++i)
+            ia[i] = i;
+        int ib[N] = {0};
+
+        std::pair<InIter, OutIter> r = ranges::move(InIter(ia), Sent(ia+N), OutIter(ib));
+        if(base(r.first) != ia+N) { return false; }
+        if(base(r.second) != ib+N) { return false; }
+        for(int i = 0; i < N; ++i)
+            if(ia[i] != ib[i]) { return false; }
+    }
+
+    {
+        constexpr int N = 1000;
+        int ia[N]{1};
+        for(int i = 0; i < N; ++i)
+            ia[i] = i;
+        int ib[N] = {0};
+
+        std::pair<InIter, OutIter> r = ranges::move(as_lvalue(ranges::make_range(InIter(ia), Sent(ia+N))), OutIter(ib));
+        if(base(r.first) != ia+N) { return false; }
+        if(base(r.second) != ib+N) { return false; }
+        for(int i = 0; i < N; ++i)
+            if(ia[i] != ib[i]) { return false; }
+    }
+
+    return true;
+}
+#endif
+
 struct S
 {
     std::unique_ptr<int> p;
@@ -236,6 +273,69 @@ int main()
     test1<random_access_iterator<std::unique_ptr<int>*>, forward_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
     test1<random_access_iterator<std::unique_ptr<int>*>, bidirectional_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
     test1<random_access_iterator<std::unique_ptr<int>*>, random_access_iterator<std::unique_ptr<int>*>, sentinel<std::unique_ptr<int>*> >();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+    static_assert(constexpr_test<input_iterator<const int*>, output_iterator<int*> >(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, input_iterator<int*> >(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, forward_iterator<int*> >(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, bidirectional_iterator<int*> >(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, random_access_iterator<int*> >(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, int*>(), "");
+
+    static_assert(constexpr_test<forward_iterator<const int*>, output_iterator<int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, input_iterator<int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, forward_iterator<int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, bidirectional_iterator<int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, random_access_iterator<int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, int*>(), "");
+
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, output_iterator<int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, input_iterator<int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, forward_iterator<int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, bidirectional_iterator<int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, random_access_iterator<int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, int*>(), "");
+
+    static_assert(constexpr_test<random_access_iterator<const int*>, output_iterator<int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, input_iterator<int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, forward_iterator<int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, bidirectional_iterator<int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, random_access_iterator<int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, int*>(), "");
+
+    static_assert(constexpr_test<const int*, output_iterator<int*> >(), "");
+    static_assert(constexpr_test<const int*, input_iterator<int*> >(), "");
+    static_assert(constexpr_test<const int*, forward_iterator<int*> >(), "");
+    static_assert(constexpr_test<const int*, bidirectional_iterator<int*> >(), "");
+    static_assert(constexpr_test<const int*, random_access_iterator<int*> >(), "");
+    static_assert(constexpr_test<const int*, int*>(), "");
+
+    static_assert(constexpr_test<input_iterator<const int*>, output_iterator<int*>, sentinel<const int*>>(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, input_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, forward_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<input_iterator<const int*>, random_access_iterator<int*>, sentinel<const int*> >(), "");
+
+    static_assert(constexpr_test<forward_iterator<const int*>, output_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, input_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, forward_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<forward_iterator<const int*>, random_access_iterator<int*>, sentinel<const int*> >(), "");
+
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, output_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, input_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, forward_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<bidirectional_iterator<const int*>, random_access_iterator<int*>, sentinel<const int*> >(), "");
+
+    static_assert(constexpr_test<random_access_iterator<const int*>, output_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, input_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, forward_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, bidirectional_iterator<int*>, sentinel<const int*> >(), "");
+    static_assert(constexpr_test<random_access_iterator<const int*>, random_access_iterator<int*>, sentinel<const int*> >(), "");
+    }
+#endif
 
     return test_result();
 }

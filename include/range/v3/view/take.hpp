@@ -47,48 +47,48 @@ namespace ranges
                 using base_sentinel = range_sentinel_t<BaseRng>;
                 base_sentinel sent_;
             public:
-                sentinel() = default;
-                sentinel(base_sentinel sent)
+                RANGES_RELAXED_CONSTEXPR sentinel() = default;
+                RANGES_RELAXED_CONSTEXPR sentinel(base_sentinel sent)
                   : sent_(sent)
                 {}
-                bool equal(detail::counted_cursor<base_iterator> const &that) const
+                RANGES_RELAXED_CONSTEXPR bool equal(detail::counted_cursor<base_iterator> const &that) const
                 {
                     return 0 == that.count() || that.base() == sent_;
                 }
             };
 
-            detail::counted_cursor<range_iterator_t<Rng>> begin_cursor()
+            RANGES_RELAXED_CONSTEXPR detail::counted_cursor<range_iterator_t<Rng>> begin_cursor()
             {
                 return {ranges::begin(rng_), n_};
             }
             template<typename BaseRng = Rng,
                 CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
-            detail::counted_cursor<range_iterator_t<BaseRng const>> begin_cursor() const
+            RANGES_RELAXED_CONSTEXPR detail::counted_cursor<range_iterator_t<BaseRng const>> begin_cursor() const
             {
                 return {ranges::begin(rng_), n_};
             }
-            sentinel<false> end_cursor()
+            RANGES_RELAXED_CONSTEXPR sentinel<false> end_cursor()
             {
                 return {ranges::end(rng_)};
             }
             template<typename BaseRng = Rng,
                 CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
-            sentinel<true> end_cursor() const
+            RANGES_RELAXED_CONSTEXPR sentinel<true> end_cursor() const
             {
                 return {ranges::end(rng_)};
             }
         public:
-            take_view() = default;
-            take_view(Rng rng, difference_type_ n)
+            RANGES_RELAXED_CONSTEXPR take_view() = default;
+            RANGES_RELAXED_CONSTEXPR take_view(Rng rng, difference_type_ n)
               : rng_(std::move(rng)), n_(n)
             {
                 RANGES_ASSERT(n >= 0);
             }
-            Rng & base()
+            RANGES_RELAXED_CONSTEXPR Rng & base()
             {
                 return rng_;
             }
-            Rng const & base() const
+            RANGES_RELAXED_CONSTEXPR Rng const & base() const
             {
                 return rng_;
             }
@@ -103,6 +103,7 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!SizedIterable<Rng>() && !is_infinite<Rng>())>
+                RANGES_RELAXED_CONSTEXPR
                 static take_view<all_t<Rng>> invoke_(Rng && rng, range_difference_t<Rng> n)
                 {
                     return {all(std::forward<Rng>(rng)), n};
@@ -110,6 +111,7 @@ namespace ranges
 
                 template<typename Rng,
                     CONCEPT_REQUIRES_(SizedIterable<Rng>() || is_infinite<Rng>())>
+                RANGES_RELAXED_CONSTEXPR
                 static auto invoke_(Rng && rng, range_difference_t<Rng> n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -119,15 +121,16 @@ namespace ranges
                 )
 
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                static auto bind(take_fn take, Int n)
+                static RANGES_RELAXED_CONSTEXPR
+                auto bind(take_fn take, Int n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    make_pipeable(std::bind(take, std::placeholders::_1, n))
+                    make_pipeable(binder_1<take_fn, Int>(take, n))
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Int, CONCEPT_REQUIRES_(!Integral<Int>())>
-                static detail::null_pipe bind(take_fn, Int)
+                static RANGES_RELAXED_CONSTEXPR detail::null_pipe bind(take_fn, Int)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Int>(),
                         "The object passed to view::take must be a model of the Integral concept.");
@@ -137,6 +140,7 @@ namespace ranges
 
             public:
                 template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -145,7 +149,7 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T, CONCEPT_REQUIRES_(!InputIterable<Rng>())>
-                void operator()(Rng &&, T &&) const
+                RANGES_RELAXED_CONSTEXPR void operator()(Rng &&, T &&) const
                 {
                     CONCEPT_ASSERT_MSG(InputIterable<T>(),
                         "The object on which view::take operates must be a model of the InputIterable "

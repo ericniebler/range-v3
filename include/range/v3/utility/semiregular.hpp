@@ -32,45 +32,47 @@ namespace ranges
         private:
             optional<T> t_;
         public:
-            semiregular() = default;
-            semiregular(T f)
+            RANGES_RELAXED_CONSTEXPR semiregular() = default;
+            RANGES_RELAXED_CONSTEXPR semiregular(T f)
               : t_(std::move(f))
             {}
-            T & get()
+            RANGES_RELAXED_CONSTEXPR T & get()
             {
                 RANGES_ASSERT(!!t_);
                 return *t_;
             }
-            T const & get() const
+            RANGES_RELAXED_CONSTEXPR T const & get() const
             {
                 RANGES_ASSERT(!!t_);
                 return *t_;
             }
-            semiregular &operator=(T const &t)
+            RANGES_RELAXED_CONSTEXPR semiregular &operator=(T const &t)
             {
                 t_ = t;
                 return *this;
             }
-            semiregular &operator=(T &&t)
+            RANGES_RELAXED_CONSTEXPR semiregular &operator=(T &&t)
             {
                 t_ = std::move(t);
                 return *this;
             }
-            operator T &()
+            RANGES_RELAXED_CONSTEXPR operator T &()
             {
                 return get();
             }
-            operator T const &() const
+            RANGES_RELAXED_CONSTEXPR operator T const &() const
             {
                 return get();
             }
             template<typename...Args>
+            RANGES_RELAXED_CONSTEXPR
             auto operator()(Args &&...args) ->
                 decltype(std::declval<T &>()(std::forward<Args>(args)...))
             {
                 return get()(std::forward<Args>(args)...);
             }
             template<typename...Args>
+            RANGES_RELAXED_CONSTEXPR
             auto operator()(Args &&...args) const ->
                 decltype(std::declval<T const &>()(std::forward<Args>(args)...))
             {

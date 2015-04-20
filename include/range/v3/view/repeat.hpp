@@ -47,11 +47,11 @@ namespace ranges
             private:
                 Val value_;
             public:
-                cursor() = default;
-                cursor(Val value)
+                RANGES_RELAXED_CONSTEXPR cursor() = default;
+                RANGES_RELAXED_CONSTEXPR cursor(Val value)
                   : value_(value)
                 {}
-                Val current() const
+                RANGES_RELAXED_CONSTEXPR Val current() const
                 {
                     return value_;
                 }
@@ -59,15 +59,15 @@ namespace ranges
                 {
                     return false;
                 }
-                void next() const
+                RANGES_RELAXED_CONSTEXPR void next() const
                 {}
             };
-            cursor begin_cursor() const
+            RANGES_RELAXED_CONSTEXPR cursor begin_cursor() const
             {
                 return {value_};
             }
         public:
-            repeat_view() = default;
+            RANGES_RELAXED_CONSTEXPR repeat_view() = default;
             constexpr explicit repeat_view(Val value)
               : value_(detail::move(value))
             {}
@@ -79,6 +79,7 @@ namespace ranges
             {
                 template<typename Val,
                     CONCEPT_REQUIRES_(SemiRegular<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 repeat_view<Val> operator()(Val value) const
                 {
                     return repeat_view<Val>{std::move(value)};
@@ -86,6 +87,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
                     CONCEPT_REQUIRES_(!SemiRegular<Val>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Val) const
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),

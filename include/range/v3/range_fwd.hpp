@@ -149,17 +149,17 @@ namespace ranges
             template<typename T = void>
             struct any_
             {
-                any_() = default;
-                any_(T &&)
+                RANGES_RELAXED_CONSTEXPR any_() = default;
+                RANGES_RELAXED_CONSTEXPR any_(T &&)
                 {}
             };
 
             template<>
             struct any_<void>
             {
-                any_() = default;
+                RANGES_RELAXED_CONSTEXPR any_() = default;
                 template<typename T>
-                any_(T &&)
+                RANGES_RELAXED_CONSTEXPR any_(T &&)
                 {}
             };
 
@@ -168,6 +168,7 @@ namespace ranges
             struct value_init
             {
                 template<typename T>
+                RANGES_RELAXED_CONSTEXPR
                 operator T () const
                 {
                     return T{};

@@ -47,27 +47,31 @@ namespace ranges
             private:
                 reverse_view const *rng_;
             public:
-                adaptor() = default;
-                adaptor(reverse_view const &rng)
+                RANGES_RELAXED_CONSTEXPR adaptor() = default;
+                RANGES_RELAXED_CONSTEXPR adaptor(reverse_view const &rng)
                   : rng_(&rng)
                 {}
+                RANGES_RELAXED_CONSTEXPR
                 range_iterator_t<Rng> begin(reverse_view const &rng) const
                 {
                     auto it = ranges::end(rng.mutable_base());
                     ranges::advance(it, -1, ranges::begin(rng.mutable_base()));
                     return it;
                 }
+                RANGES_RELAXED_CONSTEXPR
                 void next(range_iterator_t<Rng> &it) const
                 {
                     if(0 != ranges::advance(it, -1, ranges::begin(rng_->mutable_base())))
                         it = ranges::end(rng_->mutable_base());
                 }
+                RANGES_RELAXED_CONSTEXPR
                 void prev(range_iterator_t<Rng> &it) const
                 {
                     if(0 != ranges::advance(it, 1, ranges::end(rng_->mutable_base())))
                         it = ranges::begin(rng_->mutable_base());
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+                RANGES_RELAXED_CONSTEXPR
                 void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n) const
                 {
                     if(n > 0)
@@ -76,7 +80,7 @@ namespace ranges
                         this->prev(it), ranges::advance(it, -n - 1);
                 }
                 CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
-                range_difference_t<Rng>
+                RANGES_RELAXED_CONSTEXPR range_difference_t<Rng>
                 distance_to(range_iterator_t<Rng> const &here, range_iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const
                 {
@@ -89,21 +93,21 @@ namespace ranges
                     return here - there;
                 }
             };
-            adaptor begin_adaptor() const
+            RANGES_RELAXED_CONSTEXPR adaptor begin_adaptor() const
             {
                 return {*this};
             }
-            adaptor end_adaptor() const
+            RANGES_RELAXED_CONSTEXPR adaptor end_adaptor() const
             {
                 return {*this};
             }
         public:
-            reverse_view() = default;
-            reverse_view(Rng rng)
+            RANGES_RELAXED_CONSTEXPR reverse_view() = default;
+            RANGES_RELAXED_CONSTEXPR reverse_view(Rng rng)
               : range_adaptor_t<reverse_view>{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedIterable<Rng>())
-            range_size_t<Rng> size() const
+            RANGES_RELAXED_CONSTEXPR range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
@@ -119,6 +123,7 @@ namespace ranges
                     BoundedIterable<Rng>>;
 
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
+                RANGES_RELAXED_CONSTEXPR
                 reverse_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return reverse_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
@@ -126,6 +131,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 // For error reporting
                 template<typename Rng, CONCEPT_REQUIRES_(!Concept<Rng>())>
+                RANGES_RELAXED_CONSTEXPR
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(BidirectionalIterable<Rng>(),

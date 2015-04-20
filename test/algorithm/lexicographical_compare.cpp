@@ -20,6 +20,7 @@
 
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/lexicographical_compare.hpp>
+#include <range/v3/utility/array.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -167,10 +168,50 @@ void test_iter_comp()
 }
 
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+
+RANGES_RELAXED_CONSTEXPR bool constexpr_test() {
+    bool r = true;
+    ranges::array<int, 4> ia{{1, 2, 3, 4}};
+    ranges::array<int, 3> ib{{1, 2, 3}};
+    unsigned sa = ranges::size(ia);
+    auto ia_b = ranges::begin(ia);
+    auto ia_e = ranges::end(ia);
+    auto ib_b = ranges::begin(ib);
+    auto ib_1 = ib_b + 1;
+    auto ib_2 = ib_b + 2;
+    auto ib_3 = ib_b + 3;
+
+    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_2))) { r = false; }
+    if(!(ranges::lexicographical_compare(ib_b, ib_2, ia_b, ia_e))) { r = false; }
+    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_3))) { r = false; }
+    if(!(ranges::lexicographical_compare(ib_b, ib_3, ia_b, ia_e))) { r = false; }
+    if(!(ranges::lexicographical_compare(ia_b, ia_e, ib_1, ib_3))) { r = false; }
+    if(!(!ranges::lexicographical_compare(ib_1, ib_3, ia_b, ia_e))) { r = false; }
+
+    typedef std::greater<int> C;
+    C c;
+    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_2, c))) { r = false; }
+    if(!(ranges::lexicographical_compare(ib_b, ib_2, ia_b, ia_e, c))) { r = false; }
+    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_b, ib_3, c))) { r = false; }
+    if(!(ranges::lexicographical_compare(ib_b, ib_3, ia_b, ia_e, c))) { r = false; }
+    if(!(!ranges::lexicographical_compare(ia_b, ia_e, ib_1, ib_3, c))) { r = false; }
+    if(!(ranges::lexicographical_compare(ib_1, ib_3, ia_b, ia_e, c))) { r = false; }
+    return r;
+}
+
+#endif
+
 int main()
 {
     test_iter();
     test_iter_comp();
 
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(constexpr_test(), "");
+    }
+#endif
     return test_result();
 }

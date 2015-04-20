@@ -17,6 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_traits.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -30,6 +31,7 @@ namespace ranges
             /// \return `*prev(end(rng))`
             template<typename Rng,
                 CONCEPT_REQUIRES_(BoundedIterable<Rng>() && BidirectionalIterable<Rng>())>
+            RANGES_RELAXED_CONSTEXPR
             range_reference_t<Rng> operator()(Rng &&rng) const
             {
                 return *prev(end(rng));

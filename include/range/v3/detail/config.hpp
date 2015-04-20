@@ -56,8 +56,16 @@
 #endif
 #endif
 
-#ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
 #if __cplusplus > 201103
+#define RANGES_CXX_GREATER_THAN_11
+#endif
+
+#if __cplusplus > 201402
+#define RANGES_CXX_GREATER_THAN_14
+#endif
+
+#ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
+#ifdef RANGES_CXX_GREATER_THAN_11
 #define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
 #else
 #if defined(__clang__) || defined(__GNUC__)
@@ -70,6 +78,12 @@
 #endif
 #else
 #define RANGES_DEPRECATED(MSG)
+#endif
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+#define RANGES_RELAXED_CONSTEXPR constexpr
+#else
+#define RANGES_RELAXED_CONSTEXPR inline
 #endif
 
 #endif

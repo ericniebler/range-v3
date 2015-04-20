@@ -28,6 +28,7 @@ namespace ranges
             struct filter_fn
             {
                 template<typename Rng, typename Pred>
+                RANGES_RELAXED_CONSTEXPR
                 remove_if_view<all_t<Rng>, logical_negate<Pred>>
                 operator()(Rng && rng, Pred pred) const
                 {
@@ -36,6 +37,7 @@ namespace ranges
                     return {all(std::forward<Rng>(rng)), not_(std::move(pred))};
                 }
                 template<typename Pred>
+                RANGES_RELAXED_CONSTEXPR
                 auto operator()(Pred pred) const ->
                     decltype(make_pipeable(std::bind(*this, std::placeholders::_1,
                         protect(std::move(pred)))))

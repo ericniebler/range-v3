@@ -53,6 +53,7 @@ namespace ranges
                     IteratorRange<I1, S1>() &&
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
+            RANGES_RELAXED_CONSTEXPR
             std::tuple<I0, I1, O>
             operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
@@ -87,6 +88,7 @@ namespace ranges
                     Iterable<Rng1>() &&
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
+            RANGES_RELAXED_CONSTEXPR
             std::tuple<range_safe_iterator_t<Rng0>, range_safe_iterator_t<Rng1>, O>
             operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
