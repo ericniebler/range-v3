@@ -219,7 +219,7 @@ install:
 
 script:
   - ctest -VV
-  - ctest -VV -D MemoryCheck
+  - ctest -VV -D ExperimentalMemCheck
 
 notifications:
   email: false
