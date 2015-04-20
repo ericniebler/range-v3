@@ -404,6 +404,7 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
+            RANGES_RELAXED_CONSTEXPR
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -417,6 +418,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessIterable<Rng &>() && Sortable<I, C, P>())>
+            RANGES_RELAXED_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
