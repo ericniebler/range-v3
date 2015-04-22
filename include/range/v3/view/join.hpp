@@ -65,7 +65,7 @@ namespace ranges
                     {
                         if(++it == end)
                         {
-#if __cplusplus == 201103L
+#ifndef RANGES_CXX_GREATER_THAN_11
                             rng_ = nullptr;
 #endif
                             it_ = detail::value_init{};
@@ -96,7 +96,7 @@ namespace ranges
                 bool equal(range_iterator_t<Rng> const &it, range_iterator_t<Rng> const &other_it,
                     adaptor const &other_adapt) const
                 {
-#if __cplusplus > 201103L
+#ifdef RANGES_CXX_GREATER_THAN_11
                     RANGES_ASSERT(rng_ == other_adapt.rng_);
                     return it == other_it && it_ == other_adapt.it_;
 #else
@@ -126,7 +126,7 @@ namespace ranges
             }
             adaptor end_adaptor()
             {
-#if __cplusplus > 201103L
+#ifdef RANGES_CXX_GREATER_THAN_11
                 return {*this};
 #else
                 return {};
@@ -184,7 +184,7 @@ namespace ranges
                         {
                             if(++it == end)
                             {
-#if __cplusplus == 201103L
+#ifndef RANGES_CXX_GREATER_THAN_11
                                 rng_ = nullptr;
 #endif
                                 it_ = detail::value_init{};
@@ -222,7 +222,7 @@ namespace ranges
                 bool equal(range_iterator_t<Rng> const &it, range_iterator_t<Rng> const &other_it,
                     adaptor const &other_adapt) const
                 {
-#if __cplusplus > 201103L
+#ifdef RANGES_CXX_GREATER_THAN_11
                     RANGES_ASSERT(rng_ == other_adapt.rng_);
                     return it == other_it && toggl_ == other_adapt.toggl_ &&
                         (toggl_ ? it_ == other_adapt.it_ : val_it_ == other_adapt.val_it_);
@@ -262,7 +262,7 @@ namespace ranges
             }
             adaptor end_adaptor()
             {
-#if __cplusplus > 201103L
+#ifdef RANGES_CXX_GREATER_THAN_11
                 return {*this};
 #else
                 return {};

@@ -32,7 +32,7 @@ namespace ranges
             using std::begin;
             using std::end;
 
-#if (__cplusplus >= 201402L) && \
+#if defined(RANGES_CXX_GREATER_THAN_11) && \
     ((defined(_LIBCXX_VERSION) && (_LIBCXX_VERSION >= 1101) && \
       defined(_LIBCPP_STD_VER) && (_LIBCPP_STD_VER > 11)) || \
     (defined(__GLIBCXX__) && (__GLIBCXX__ >= 20150119)))

@@ -56,8 +56,16 @@
 #endif
 #endif
 
-#ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
 #if __cplusplus > 201103
+#define RANGES_CXX_GREATER_THAN_11
+#endif
+
+#if __cplusplus > 201402
+#define RANGES_CXX_GREATER_THAN_14
+#endif
+
+#ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
+#ifdef RANGES_CXX_GREATER_THAN_11
 #define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
 #else
 #if defined(__clang__) || defined(__GNUC__)
@@ -70,6 +78,15 @@
 #endif
 #else
 #define RANGES_DEPRECATED(MSG)
+#endif
+
+// RANGES_CXX14_CONSTEXPR macro (see also BOOST_CXX14_CONSTEXPR)
+// Note: constexpr implies inline, to retain the same visibility
+// C++14 constexpr functions are inline in C++11
+#ifdef RANGES_CXX_GREATER_THAN_11
+#define RANGES_CXX14_CONSTEXPR constexpr
+#else
+#define RANGES_CXX14_CONSTEXPR inline
 #endif
 
 #endif

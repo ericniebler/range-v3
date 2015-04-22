@@ -150,7 +150,8 @@ int main()
     test<input_iterator<const int*>, const int*, bidirectional_iterator<int*> >();
     test<input_iterator<const int*>, const int*, random_access_iterator<int*> >();
     test<input_iterator<const int*>, const int*, int*>();
-
+#endif
+#ifdef SET_SYMMETRIC_DIFFERENCE_2
     test<forward_iterator<const int*>, input_iterator<const int*>, output_iterator<int*> >();
     test<forward_iterator<const int*>, input_iterator<const int*>, forward_iterator<int*> >();
     test<forward_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
@@ -180,9 +181,10 @@ int main()
     test<forward_iterator<const int*>, const int*, bidirectional_iterator<int*> >();
     test<forward_iterator<const int*>, const int*, random_access_iterator<int*> >();
     test<forward_iterator<const int*>, const int*, int*>();
-
+#endif
+#ifdef SET_SYMMETRIC_DIFFERENCE_3
     test<bidirectional_iterator<const int*>, input_iterator<const int*>, output_iterator<int*> >();
-    test<bidirectional_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
+    test<bidirectional_iterator<const int*>, input_iterator<const int*>, forward_iterator<int*> >();
     test<bidirectional_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
     test<bidirectional_iterator<const int*>, input_iterator<const int*>, random_access_iterator<int*> >();
     test<bidirectional_iterator<const int*>, input_iterator<const int*>, int*>();
@@ -198,9 +200,7 @@ int main()
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, bidirectional_iterator<int*> >();
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, random_access_iterator<int*> >();
     test<bidirectional_iterator<const int*>, bidirectional_iterator<const int*>, int*>();
-#endif
 
-#ifdef SET_SYMMETRIC_DIFFERENCE_2
     test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, output_iterator<int*> >();
     test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, forward_iterator<int*> >();
     test<bidirectional_iterator<const int*>, random_access_iterator<const int*>, bidirectional_iterator<int*> >();
@@ -212,9 +212,10 @@ int main()
     test<bidirectional_iterator<const int*>, const int*, bidirectional_iterator<int*> >();
     test<bidirectional_iterator<const int*>, const int*, random_access_iterator<int*> >();
     test<bidirectional_iterator<const int*>, const int*, int*>();
-
+#endif
+#ifdef SET_SYMMETRIC_DIFFERENCE_4
     test<random_access_iterator<const int*>, input_iterator<const int*>, output_iterator<int*> >();
-    test<random_access_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
+    test<random_access_iterator<const int*>, input_iterator<const int*>, forward_iterator<int*> >();
     test<random_access_iterator<const int*>, input_iterator<const int*>, bidirectional_iterator<int*> >();
     test<random_access_iterator<const int*>, input_iterator<const int*>, random_access_iterator<int*> >();
     test<random_access_iterator<const int*>, input_iterator<const int*>, int*>();
@@ -242,7 +243,8 @@ int main()
     test<random_access_iterator<const int*>, const int*, bidirectional_iterator<int*> >();
     test<random_access_iterator<const int*>, const int*, random_access_iterator<int*> >();
     test<random_access_iterator<const int*>, const int*, int*>();
-
+#endif
+#ifdef SET_SYMMETRIC_DIFFERENCE_5
     test<const int*, input_iterator<const int*>, output_iterator<int*> >();
     test<const int*, input_iterator<const int*>, bidirectional_iterator<int*> >();
     test<const int*, input_iterator<const int*>, bidirectional_iterator<int*> >();
@@ -272,7 +274,8 @@ int main()
     test<const int*, const int*, bidirectional_iterator<int*> >();
     test<const int*, const int*, random_access_iterator<int*> >();
     test<const int*, const int*, int*>();
-
+#endif
+#ifdef SET_SYMMETRIC_DIFFERENCE_6
     // Test projections
     {
         S ia[] = {S{1}, S{2}, S{2}, S{3}, S{3}, S{3}, S{4}, S{4}, S{4}, S{4}};
