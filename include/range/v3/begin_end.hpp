@@ -115,10 +115,10 @@ namespace ranges
             private:
                 template<typename Rng>
                 static constexpr auto impl(Rng && rng, long)
-                    noexcept(noexcept(begin(rng))) ->
-                    decltype(begin(rng))
+                    noexcept(noexcept(begin(static_cast<Rng &&>(rng)))) ->
+                    decltype(begin(static_cast<Rng &&>(rng)))
                 {
-                    return begin(rng);
+                    return begin(static_cast<Rng &&>(rng));
                 }
                 template<typename Rng,
                     meta::if_c<std::is_lvalue_reference<Rng>::value, int> = 0>
@@ -143,10 +143,10 @@ namespace ranges
             private:
                 template<typename Rng>
                 static constexpr auto impl(Rng && rng, long)
-                    noexcept(noexcept(end(rng))) ->
-                    decltype(end(rng))
+                    noexcept(noexcept(end(static_cast<Rng &&>(rng)))) ->
+                    decltype(end(static_cast<Rng &&>(rng)))
                 {
-                    return end(rng);
+                    return end(static_cast<Rng &&>(rng));
                 }
                 template<typename Rng,
                     meta::if_c<std::is_lvalue_reference<Rng>::value, int> = 0>
@@ -171,10 +171,10 @@ namespace ranges
             private:
                 template<typename Rng>
                 static constexpr auto impl(Rng && rng, long)
-                    noexcept(noexcept(rbegin(rng))) ->
-                    decltype(rbegin(rng))
+                    noexcept(noexcept(rbegin(static_cast<Rng &&>(rng)))) ->
+                    decltype(rbegin(static_cast<Rng &&>(rng)))
                 {
-                    return rbegin(rng);
+                    return rbegin(static_cast<Rng &&>(rng));
                 }
                 template<typename Rng,
                     meta::if_c<std::is_lvalue_reference<Rng>::value, int> = 0>
@@ -199,10 +199,10 @@ namespace ranges
             private:
                 template<typename Rng>
                 static constexpr auto impl(Rng && rng, long)
-                    noexcept(noexcept(rend(rng))) ->
-                    decltype(rend(rng))
+                    noexcept(noexcept(rend(static_cast<Rng &&>(rng)))) ->
+                    decltype(rend(static_cast<Rng &&>(rng)))
                 {
-                    return rend(rng);
+                    return rend(static_cast<Rng &&>(rng));
                 }
                 template<typename Rng,
                     meta::if_c<std::is_lvalue_reference<Rng>::value, int> = 0>

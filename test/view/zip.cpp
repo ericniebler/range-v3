@@ -74,7 +74,7 @@ int main()
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
-        using Rng = decltype(rng);
+        using Rng = decltype((rng));
         ::models<concepts::BoundedRange>(rng);
         ::models_not<concepts::SizedRange>(rng);
         CONCEPT_ASSERT(Same<

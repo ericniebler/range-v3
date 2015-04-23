@@ -50,7 +50,8 @@ int main()
     models_not<concepts::RandomAccessRange>(rng);
     ::check_equal(rng, {1,3,5,7,9});
     ::check_equal(rng | view::reverse, {9,7,5,3,1});
-    CHECK(&*begin(rng | view::reverse) == &rgi[8]);
+    auto tmp = rng | view::reverse;
+    CHECK(&*begin(tmp) == &rgi[8]);
 
     auto && rng2 = view::counted(rgi, 10) | view::remove_if(not_(is_odd()));
     has_type<int &>(*begin(rng2));

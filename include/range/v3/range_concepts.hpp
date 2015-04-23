@@ -60,10 +60,10 @@ namespace ranges
             {
                 // Associated types
                 template<typename T>
-                using iterator_t = decltype(begin(std::declval<T>()));
+                using iterator_t = decltype(begin(val<T>()));
 
                 template<typename T>
-                using sentinel_t = decltype(end(std::declval<T>()));
+                using sentinel_t = decltype(end(val<T>()));
 
                 template<typename T>
                 using difference_t = concepts::WeaklyIncrementable::difference_t<iterator_t<T>>;

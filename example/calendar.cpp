@@ -155,7 +155,7 @@ public:
       : n_(n), end_(end)
     {}
     auto current(range_iterator_t<Rng> it) const {
-        return view::take(make_range(it, end_), n_);
+        return view::take(make_range(std::move(it), end_), n_);
     }
     void next(range_iterator_t<Rng> &it) {
         ranges::advance(it, n_, end_);
@@ -235,12 +235,16 @@ auto transpose() {
     });
 }
 
+// In:  Range<Range<Range<string>>>
+// Out: Range<Range<Range<string>>>, transposing months.
 auto transpose_months() {
     return view::transform([](/*Range<Range<string>>*/ auto rng) {
         return rng | transpose();
     });
 }
 
+// In:  Range<Range<string>>
+// Out: Range<string>, joining the strings of the inner ranges
 auto join_months() {
     return view::transform([](/*Range<string>*/ auto rng) {
         return action::join(rng);
