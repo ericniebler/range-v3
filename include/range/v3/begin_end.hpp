@@ -333,7 +333,7 @@ namespace ranges
         {
             /// \return `begin(rng)` if \p rng is an lvalue; otherwise, it returns `begin(rng)`
             /// wrapped in \c ranges::dangling.
-            template<typename Rng, typename I = decltype(begin(std::declval<Rng>()))>
+            template<typename Rng, typename I = decltype(begin(std::declval<Rng &>()))>
             meta::if_<std::is_lvalue_reference<Rng>, I, dangling<I>>
             constexpr operator()(Rng && rng) const
             {
@@ -346,7 +346,7 @@ namespace ranges
         {
             /// \return `begin(rng)` if \p rng is an lvalue; otherwise, it returns `begin(rng)`
             /// wrapped in \c ranges::dangling.
-            template<typename Rng, typename I = decltype(end(std::declval<Rng>()))>
+            template<typename Rng, typename I = decltype(end(std::declval<Rng &>()))>
             meta::if_<std::is_lvalue_reference<Rng>, I, dangling<I>>
             constexpr operator()(Rng && rng) const
             {
