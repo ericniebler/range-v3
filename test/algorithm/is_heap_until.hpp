@@ -33,8 +33,8 @@
 
 void test()
 {
+#ifdef IS_HEAP_UNTIL_1
     auto is_heap_until = make_testable_1(ranges::is_heap_until);
-
     int i1[] = {0, 0};
     is_heap_until(i1, i1).check([&](int*r){CHECK(r == i1);});
 
@@ -277,6 +277,9 @@ void test()
     is_heap_until(i117, i117+6).check([&](int *r){ CHECK(r == i117+6); });
     is_heap_until(i118, i118+6).check([&](int *r){ CHECK(r == i118+6); });
     is_heap_until(i119, i119+6).check([&](int *r){ CHECK(r == i119+6); });
+#endif
+#ifdef IS_HEAP_UNTIL_2
+    auto is_heap_until = make_testable_1(ranges::is_heap_until);
     int i120[] = {0, 0, 0, 0, 0, 0, 0};
     int i121[] = {0, 0, 0, 0, 0, 0, 1};
     int i122[] = {0, 0, 0, 0, 0, 1, 0};
@@ -531,12 +534,13 @@ void test()
     is_heap_until(i244, i244+7).check([&](int *r){ CHECK(r == i244+7); });
     is_heap_until(i245, i245+7).check([&](int *r){ CHECK(r == i245+7); });
     is_heap_until(i246, i246+7).check([&](int *r){ CHECK(r == i246+7); });
+#endif
 }
 
 void test_pred()
 {
+#ifdef IS_HEAP_UNTIL_3
     auto is_heap_until = ::make_testable_1(ranges::is_heap_until);
-
     int i1[] = {0, 0};
     is_heap_until(i1, i1, std::greater<int>()).check([&](int *r){ CHECK(r == i1); });
     is_heap_until(i1, i1+1, std::greater<int>()).check([&](int *r){ CHECK(r == i1+1); });
@@ -777,6 +781,9 @@ void test_pred()
     is_heap_until(i117, i117+6, std::greater<int>()).check([&](int *r){ CHECK(r == i117+4); });
     is_heap_until(i118, i118+6, std::greater<int>()).check([&](int *r){ CHECK(r == i118+4); });
     is_heap_until(i119, i119+6, std::greater<int>()).check([&](int *r){ CHECK(r == i119+5); });
+#endif
+#ifdef IS_HEAP_UNTIL_4
+    auto is_heap_until = ::make_testable_1(ranges::is_heap_until);
     int i120[] = {0, 0, 0, 0, 0, 0, 0};
     int i121[] = {0, 0, 0, 0, 0, 0, 1};
     int i122[] = {0, 0, 0, 0, 0, 1, 0};
@@ -1031,6 +1038,7 @@ void test_pred()
     is_heap_until(i244, i244+7, std::greater<int>()).check([&](int *r){ CHECK(r == i244+5); });
     is_heap_until(i245, i245+7, std::greater<int>()).check([&](int *r){ CHECK(r == i245+5); });
     is_heap_until(i246, i246+7, std::greater<int>()).check([&](int *r){ CHECK(r == i246+6); });
+#endif
 }
 
 struct S

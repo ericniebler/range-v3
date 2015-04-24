@@ -11,7 +11,7 @@
 
 // Work around strange glibc bug(?)
 #include <iosfwd>
-#if __cplusplus >= 201402L && defined(__GLIBCXX__)
+#if defined(RANGES_CXX_GREATER_THAN_11) && defined(__GLIBCXX__)
 int gets;
 #endif
 

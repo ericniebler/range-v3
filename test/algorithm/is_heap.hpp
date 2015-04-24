@@ -34,8 +34,12 @@
 
 void test()
 {
-    auto is_heap = make_testable_1(ranges::is_heap);
 
+#if defined(IS_HEAP_1) || defined(IS_HEAP_2)
+    auto is_heap = make_testable_1(ranges::is_heap);
+#endif
+
+#ifdef IS_HEAP_1
     int i1[] = {0, 0};
     is_heap(i1, i1).check([&](bool r){ CHECK(r); });
     is_heap(i1, i1+1).check([&](bool r){ CHECK(r == (std::is_heap_until(i1, i1+1) == i1+1)); });
@@ -276,6 +280,8 @@ void test()
     is_heap(i117, i117+6).check([&](bool r){ CHECK(r == (std::is_heap_until(i117, i117+6) == i117+6)); });
     is_heap(i118, i118+6).check([&](bool r){ CHECK(r == (std::is_heap_until(i118, i118+6) == i118+6)); });
     is_heap(i119, i119+6).check([&](bool r){ CHECK(r == (std::is_heap_until(i119, i119+6) == i119+6)); });
+#endif
+#ifdef IS_HEAP_2
     int i120[] = {0, 0, 0, 0, 0, 0, 0};
     int i121[] = {0, 0, 0, 0, 0, 0, 1};
     int i122[] = {0, 0, 0, 0, 0, 1, 0};
@@ -530,12 +536,16 @@ void test()
     is_heap(i244, i244+7).check([&](bool r){ CHECK(r == (std::is_heap_until(i244, i244+7) == i244+7)); });
     is_heap(i245, i245+7).check([&](bool r){ CHECK(r == (std::is_heap_until(i245, i245+7) == i245+7)); });
     is_heap(i246, i246+7).check([&](bool r){ CHECK(r == (std::is_heap_until(i246, i246+7) == i246+7)); });
+#endif
 }
 
 void test_comp()
 {
+#if defined(IS_HEAP_3) || defined(IS_HEAP_4)
     auto is_heap = make_testable_1(ranges::is_heap);
+#endif
 
+#ifdef IS_HEAP_3
     int i1[] = {0, 0};
     is_heap(i1, i1, std::greater<int>()).check([&](bool r){ CHECK(r); });
     is_heap(i1, i1+1, std::greater<int>()).check([&](bool r){ CHECK(r == (std::is_heap_until(i1, i1+1, std::greater<int>()) == i1+1)); });
@@ -776,6 +786,8 @@ void test_comp()
     is_heap(i117, i117+6, std::greater<int>()).check([&](bool r){ CHECK(r == (std::is_heap_until(i117, i117+6, std::greater<int>()) == i117+6)); });
     is_heap(i118, i118+6, std::greater<int>()).check([&](bool r){ CHECK(r == (std::is_heap_until(i118, i118+6, std::greater<int>()) == i118+6)); });
     is_heap(i119, i119+6, std::greater<int>()).check([&](bool r){ CHECK(r == (std::is_heap_until(i119, i119+6, std::greater<int>()) == i119+6)); });
+#endif
+#ifdef IS_HEAP_4
     int i120[] = {0, 0, 0, 0, 0, 0, 0};
     int i121[] = {0, 0, 0, 0, 0, 0, 1};
     int i122[] = {0, 0, 0, 0, 0, 1, 0};
@@ -1030,6 +1042,7 @@ void test_comp()
     is_heap(i244, i244+7, std::greater<int>()).check([&](bool r){ CHECK(r == (std::is_heap_until(i244, i244+7, std::greater<int>()) == i244+7)); });
     is_heap(i245, i245+7, std::greater<int>()).check([&](bool r){ CHECK(r == (std::is_heap_until(i245, i245+7, std::greater<int>()) == i245+7)); });
     is_heap(i246, i246+7, std::greater<int>()).check([&](bool r){ CHECK(r == (std::is_heap_until(i246, i246+7, std::greater<int>()) == i246+7)); });
+#endif
 }
 
 struct S
