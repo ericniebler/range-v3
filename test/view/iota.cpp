@@ -69,7 +69,7 @@ int main()
     CHECK((static_cast<uint64_t>(std::numeric_limits<std::uint32_t>::max()) + 1) == ints.size());
 
     {
-        auto ints = view::iota(Int{0}, Int{11});
+        auto ints = view::closed_iota(Int{0}, Int{10});
         ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
     }
 
