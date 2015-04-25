@@ -46,9 +46,9 @@ void benchmark()
     auto all_triples =
         view::for_each(view::ints(1), [](int z)
         {
-            return view::for_each(view::ints(1, z), [=](int x)
+            return view::for_each(view::ints(1, z+1), [=](int x)
             {
-                return view::for_each(view::ints(x, z), [=](int y)
+                return view::for_each(view::ints(x, z+1), [=](int y)
                 {
                     return yield_if(x*x + y*y == z*z, std::make_tuple(x, y, z));
                 });
@@ -98,9 +98,9 @@ int main()
     auto triples =
         view::for_each(view::ints(1), [](int z)
         {
-            return view::for_each(view::ints(1, z), [=](int x)
+            return view::for_each(view::ints(1, z+1), [=](int x)
             {
-                return view::for_each(view::ints(x, z), [=](int y)
+                return view::for_each(view::ints(x, z+1), [=](int y)
                 {
                     return yield_if(x*x + y*y == z*z,
                         std::make_tuple(x, y, z));

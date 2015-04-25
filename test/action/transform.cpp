@@ -22,7 +22,7 @@ int main()
 {
     using namespace ranges;
 
-    std::vector<int> v = view::ints(0,9);
+    std::vector<int> v = view::ints(0,10);
 
     auto v0 = v | copy | action::transform([](int i){return i*i;});
     ::models<concepts::Same>(v, v0);

@@ -23,7 +23,7 @@ int main()
 {
     using namespace ranges;
 
-    std::vector<int> v = view::ints(0,99);
+    std::vector<int> v = view::ints(0,100);
 
     auto v2 = v | copy | action::slice(10,20);
     CHECK(size(v2) == 10u);

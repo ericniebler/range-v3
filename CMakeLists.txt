@@ -27,6 +27,7 @@ endif()
 
 include_directories(include)
 
+add_definitions(-DRANGES_SUPPRESS_IOTA_WARNING)
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -Wall -Wno-unused-function -ftemplate-backtrace-limit=0")
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")

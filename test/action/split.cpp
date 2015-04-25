@@ -20,7 +20,7 @@ int main()
 {
     using namespace ranges;
 
-    std::vector<int> v = view::ints(1,20);
+    std::vector<int> v = view::ints(1,21);
     std::vector<std::vector<int>> rgv = action::split(v, 10);
     CHECK(rgv.size() == 2u);
     ::check_equal(rgv[0], {1,2,3,4,5,6,7,8,9});
@@ -48,7 +48,7 @@ int main()
     CHECK(rgs[2] == "his");
     CHECK(rgs[3] == "face");
 
-    auto rgi = view::ints(1,20);
+    auto rgi = view::ints(1,21);
     std::vector<std::vector<int>> rgv3 = action::split(rgi, 10);
     CHECK(rgv3.size() == 2u);
     ::check_equal(rgv3[0], {1,2,3,4,5,6,7,8,9});

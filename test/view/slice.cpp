@@ -116,7 +116,7 @@ int main()
     }
 
     {
-        auto letters = view::iota('a','g');
+        auto letters = view::closed_iota('a','g');
         static_assert(RandomAccessRange<decltype(letters)>(), "");
         static_assert(BoundedRange<decltype(letters)>(), "");
         ::check_equal(letters[{2,end-2}], {'c','d','e'});

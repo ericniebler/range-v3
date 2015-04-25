@@ -46,7 +46,7 @@ int main()
     ::check_equal(m, {P{0,"0"}, P{1,"1"}, P{2,"2"}, P{3,"3"}, P{4,"4"}});
 
     // Another way to say the same thing, but with a range comprehension:
-    m = view::for_each(view::ints(0,4), [&](int i) {
+    m = view::for_each(view::ints(0,5), [&](int i) {
             return yield(std::make_pair(i, to_string(i)));
         });
     ::check_equal(m, {P{0,"0"}, P{1,"1"}, P{2,"2"}, P{3,"3"}, P{4,"4"}});

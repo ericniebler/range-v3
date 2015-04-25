@@ -76,7 +76,7 @@ CONCEPT_ASSERT(Incrementable<date>());
 
 auto dates_in_year(int year) {
     return view::iota(date{year,greg::Jan,1},
-                      date{year+1,greg::Jan,1}-day(1));
+                      date{year+1,greg::Jan,1});
 }
 
 auto by_month() {

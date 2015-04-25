@@ -26,7 +26,7 @@ int main()
 {
     using namespace ranges;
 
-    std::vector<int> v = view::ints(0,99);
+    std::vector<int> v = view::ints(0,100);
     random_shuffle(v);
     CHECK(!is_sorted(v));
 

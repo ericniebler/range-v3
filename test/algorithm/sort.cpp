@@ -299,7 +299,7 @@ int main()
     {
         using namespace ranges;
         std::vector<int> v0 =
-            view::for_each(view::ints(1,5) | view::reverse, [](int i){
+            view::for_each(view::ints(1,6) | view::reverse, [](int i){
                 return ranges::yield_from(view::repeat_n(i,i));
             });
         auto v1 = ranges::to_<std::vector<Int>>(

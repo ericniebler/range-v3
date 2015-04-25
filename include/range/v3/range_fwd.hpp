@@ -443,12 +443,16 @@ namespace ranges
             struct indirect_fn;
         }
 
-        template<typename T0, typename T1 = void>
+        template<typename From, typename To = void>
         struct iota_view;
+
+        template<typename From, typename To = void>
+        struct closed_iota_view;
 
         namespace view
         {
             struct iota_fn;
+            struct closed_iota_fn;
         }
 
         template<typename Rng, typename ValRng = void>
