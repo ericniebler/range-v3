@@ -221,6 +221,7 @@
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
     <ClCompile Include="..\..\..\..\test\view\any_range.cpp" />
     <ClCompile Include="..\..\..\..\test\view\bounded.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\chunk.cpp" />
     <ClCompile Include="..\..\..\..\test\view\concat.cpp" />
     <ClCompile Include="..\..\..\..\test\view\const.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
@@ -421,6 +422,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\bounded.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\chunk.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\concat.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp" />

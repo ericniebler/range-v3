@@ -89,6 +89,10 @@ namespace ranges
             {
                 return value;
             }
+            T exchange(T desired)
+            {
+                return value.exchange(desired);
+            }
             operator std::atomic<T> &() const &
             {
                 return value;
@@ -110,6 +114,10 @@ namespace ranges
                 return *this;
             }
             constexpr operator T() const
+            {
+                return v;
+            }
+            constexpr T exchange(T const &) const
             {
                 return v;
             }

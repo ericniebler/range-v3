@@ -11,6 +11,9 @@ add_test(test.view.any_range, view.any_range)
 add_executable(view.bounded bounded.cpp)
 add_test(test.view.bounded, view.bounded)
 
+add_executable(view.chunk chunk.cpp)
+add_test(test.view.chunk, view.chunk)
+
 add_executable(view.concat concat.cpp)
 add_test(test.view.concat, view.concat)
 

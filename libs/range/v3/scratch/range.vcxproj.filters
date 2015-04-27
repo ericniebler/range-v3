@@ -624,6 +624,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\set_union6.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\chunk.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
@@ -1279,6 +1282,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\algorithm\is_heap_until.hpp">
       <Filter>Test Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\chunk.hpp">
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
