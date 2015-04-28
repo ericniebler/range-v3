@@ -14,7 +14,8 @@ var group__trait =
     [ "id_t", "group__trait.html#gab777ee2056b8d97add9973a640ad021f", null ],
     [ "is_valid", "group__trait.html#ga2aa986837386ad289def903d9bbf83e7", null ],
     [ "lambda", "group__trait.html#ga288e095a9834eab7fedc8ce234afdd04", null ],
-    [ "let", "group__trait.html#gad71f527e438a2f5587adcdb1d2dccb17", null ],
+    [ "let", "group__trait.html#gad34f912696873f0230f1fd7e8207197c", null ],
+    [ "not_fn", "group__trait.html#ga676ce876dd98b658017dfbc3fe96ef3f", null ],
     [ "sizeof_", "group__trait.html#ga1c0fcb43133d9bc434fbec05b2efe1f6", null ],
     [ "void_", "group__trait.html#ga4c6104efe8c0ba55381ac435008fe0c0", null ]
 ];

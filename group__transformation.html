@@ -126,10 +126,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga1244fb98b5896eefbc5984baeac91611"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga1244fb98b5896eefbc5984baeac91611">meta::v1::drop_c</a> = eval&lt; detail::drop_&lt; List, <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; N &gt;&gt;&gt;</td></tr>
 <tr class="memdesc:ga1244fb98b5896eefbc5984baeac91611"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first <code>N</code> elements from <code>List</code>.  <a href="#ga1244fb98b5896eefbc5984baeac91611">More...</a><br /></td></tr>
 <tr class="separator:ga1244fb98b5896eefbc5984baeac91611"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0c03c3408eb95a89573ae7238582c111"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Predicate &gt; </td></tr>
-<tr class="memitem:ga0c03c3408eb95a89573ae7238582c111"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga0c03c3408eb95a89573ae7238582c111">meta::v1::filter</a> = <a class="el" href="group__transformation.html#ga99ebb5b7cf3b92b6510cf1cad5d6e01a">meta::fold</a>&lt; List, <a class="el" href="structmeta_1_1v1_1_1list.html">meta::list</a>&lt;&gt;, detail::filter_&lt; Predicate &gt;&gt;</td></tr>
-<tr class="memdesc:ga0c03c3408eb95a89573ae7238582c111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> A that satisfy the Alias Class <code>Predicate</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Predicate</code> are "removed".  <a href="#ga0c03c3408eb95a89573ae7238582c111">More...</a><br /></td></tr>
-<tr class="separator:ga0c03c3408eb95a89573ae7238582c111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga97539d2f08f69059d4a1f98f458c2377"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Pred &gt; </td></tr>
+<tr class="memitem:ga97539d2f08f69059d4a1f98f458c2377"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga97539d2f08f69059d4a1f98f458c2377">meta::v1::filter</a> = fold&lt; List, list&lt;&gt;, detail::filter_&lt; Pred &gt;&gt;</td></tr>
+<tr class="memdesc:ga97539d2f08f69059d4a1f98f458c2377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> that satisfy the Alias Class <code>Pred</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Pred</code> are "removed".  <a href="#ga97539d2f08f69059d4a1f98f458c2377">More...</a><br /></td></tr>
+<tr class="separator:ga97539d2f08f69059d4a1f98f458c2377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga99ebb5b7cf3b92b6510cf1cad5d6e01a"><td class="memTemplParams" colspan="2">template&lt;typename List , typename State , typename Fun &gt; </td></tr>
 <tr class="memitem:ga99ebb5b7cf3b92b6510cf1cad5d6e01a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga99ebb5b7cf3b92b6510cf1cad5d6e01a">meta::v1::fold</a> = eval&lt; detail::fold_&lt; List, State, Fun &gt;&gt;</td></tr>
 <tr class="memdesc:ga99ebb5b7cf3b92b6510cf1cad5d6e01a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Alias Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>.  <a href="#ga99ebb5b7cf3b92b6510cf1cad5d6e01a">More...</a><br /></td></tr>
@@ -138,6 +138,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga2c4e5cc96ecaecd24f6b2205ea12c652"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652">meta::v1::join</a> = apply_list&lt; quote&lt; concat &gt;, ListOfLists &gt;</td></tr>
 <tr class="memdesc:ga2c4e5cc96ecaecd24f6b2205ea12c652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins a list of lists into a single list.  <a href="#ga2c4e5cc96ecaecd24f6b2205ea12c652">More...</a><br /></td></tr>
 <tr class="separator:ga2c4e5cc96ecaecd24f6b2205ea12c652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Pred &gt; </td></tr>
+<tr class="memitem:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga8c6e6b4db3cd33e4f54d7bd36c649a66">meta::v1::partition</a> = fold&lt; List, pair&lt; list&lt;&gt;, list&lt;&gt;&gt;, detail::partition_&lt; Pred &gt;&gt;</td></tr>
+<tr class="memdesc:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of lists, where the elements of <code>List</code> that satisfy the Alias Class <code>Pred</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present in the first list and the rest are in the second.  <a href="#ga8c6e6b4db3cd33e4f54d7bd36c649a66">More...</a><br /></td></tr>
+<tr class="separator:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3f4cf859c53f95a742978a16c93d4512"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:ga3f4cf859c53f95a742978a16c93d4512"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga3f4cf859c53f95a742978a16c93d4512">meta::v1::pop_front</a> = eval&lt; detail::pop_front_&lt; List &gt;&gt;</td></tr>
 <tr class="memdesc:ga3f4cf859c53f95a742978a16c93d4512"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first element from the front of <code>List</code>.  <a href="#ga3f4cf859c53f95a742978a16c93d4512">More...</a><br /></td></tr>
@@ -166,6 +170,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gae756c66b5d658ced668cbde0f0076b15"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gae756c66b5d658ced668cbde0f0076b15">meta::v1::reverse_fold</a> = eval&lt; detail::reverse_fold_&lt; List, State, Fun &gt;&gt;</td></tr>
 <tr class="memdesc:gae756c66b5d658ced668cbde0f0076b15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Alias Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>.  <a href="#gae756c66b5d658ced668cbde0f0076b15">More...</a><br /></td></tr>
 <tr class="separator:gae756c66b5d658ced668cbde0f0076b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb0ffa1c28bd04a71adae30dc02ac000"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Pred &gt; </td></tr>
+<tr class="memitem:gacb0ffa1c28bd04a71adae30dc02ac000"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">meta::v1::sort</a> = eval&lt; detail::sort_&lt; List, Pred &gt;&gt;</td></tr>
+<tr class="memdesc:gacb0ffa1c28bd04a71adae30dc02ac000"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> that is sorted according to Alias Class predicate <code>Pred</code>.  <a href="#gacb0ffa1c28bd04a71adae30dc02ac000">More...</a><br /></td></tr>
+<tr class="separator:gacb0ffa1c28bd04a71adae30dc02ac000"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8666f91063c050fe79f817c03b81b3f"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:gae8666f91063c050fe79f817c03b81b3f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">meta::v1::transform</a> = eval&lt; detail::transform_&lt; Args...&gt;&gt;</td></tr>
 <tr class="memdesc:gae8666f91063c050fe79f817c03b81b3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Alias Class <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Alias Class, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise.  <a href="#gae8666f91063c050fe79f817c03b81b3f">More...</a><br /></td></tr>
@@ -280,21 +288,21 @@ template&lt;typename List , std::size_t N&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ga0c03c3408eb95a89573ae7238582c111"></a>
+<a class="anchor" id="ga97539d2f08f69059d4a1f98f458c2377"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename List , typename Predicate &gt; </div>
+template&lt;typename List , typename Pred &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__transformation.html#ga0c03c3408eb95a89573ae7238582c111">meta::v1::filter</a> = typedef <a class="el" href="group__transformation.html#ga99ebb5b7cf3b92b6510cf1cad5d6e01a">meta::fold</a>&lt;List, <a class="el" href="structmeta_1_1v1_1_1list.html">meta::list</a>&lt;&gt;, detail::filter_&lt;Predicate&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__transformation.html#ga97539d2f08f69059d4a1f98f458c2377">meta::v1::filter</a> = typedef fold&lt;List, list&lt;&gt;, detail::filter_&lt;Pred&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> A that satisfy the Alias Class <code>Predicate</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Predicate</code> are "removed". </p>
+<p>Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> that satisfy the Alias Class <code>Pred</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Pred</code> are "removed". </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_5.png"/>. </dd></dl>
 
 </div>
@@ -335,6 +343,25 @@ template&lt;typename ListOfLists &gt; </div>
 <p>Joins a list of lists into a single list. </p>
 <dl class="section pre"><dt>Precondition</dt><dd>The parameter must be an instantiation of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a>&lt;T</code>...&gt; where each <code>T</code> is itself an instantiation of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>. </dd></dl>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(L) $" src="form_0.png"/> where <img class="formulaInl" alt="$ L $" src="form_1.png"/> is the number of lists in the list of lists. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga8c6e6b4db3cd33e4f54d7bd36c649a66"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename List , typename Pred &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__transformation.html#ga8c6e6b4db3cd33e4f54d7bd36c649a66">meta::v1::partition</a> = typedef fold&lt;List, pair&lt;list&lt;&gt;, list&lt;&gt;&gt;, detail::partition_&lt;Pred&gt;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+
+<p>Returns a pair of lists, where the elements of <code>List</code> that satisfy the Alias Class <code>Pred</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present in the first list and the rest are in the second. </p>
+<dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_5.png"/>. </dd></dl>
 
 </div>
 </div>
@@ -469,6 +496,28 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Alias Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_5.png"/>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gacb0ffa1c28bd04a71adae30dc02ac000"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename List , typename Pred &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">meta::v1::sort</a> = typedef eval&lt;detail::sort_&lt;List, Pred&gt;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> that is sorted according to Alias Class predicate <code>Pred</code>. </p>
+<dl class="section user"><dt>Complexity</dt><dd>Expected: <img class="formulaInl" alt="$ O(N log N) $" src="form_10.png"/> Worst case: <img class="formulaInl" alt="$ O(N^2) $" src="form_4.png"/>. <div class="fragment"><div class="line"><span class="keyword">using</span> L0 = list&lt;char[5], char[3], char[2], char[6], char[1], char[5], char[10]&gt;;</div>
+<div class="line"><span class="keyword">using</span> L1 = <a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">meta::sort&lt;L0, lambda&lt;_a, _b, lazy::less&lt;lazy::sizeof_&lt;_a&gt;</a>, lazy::sizeof_&lt;_b&gt;&gt;&gt;&gt;;</div>
+<div class="line">static_assert(std::is_same&lt;L1, list&lt;<span class="keywordtype">char</span>[1], <span class="keywordtype">char</span>[2], <span class="keywordtype">char</span>[3], <span class="keywordtype">char</span>[5], <span class="keywordtype">char</span>[5], <span class="keywordtype">char</span>[6], <span class="keywordtype">char</span>[10]&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>

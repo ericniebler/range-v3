@@ -23,8 +23,8 @@ var searchData=
   ['bidirectionalrange',['BidirectionalRange',['../structranges_1_1v3_1_1concepts_1_1_bidirectional_range.html',1,'ranges::v3::concepts']]],
   ['binary_5fsearch_2ehpp',['binary_search.hpp',['../binary__search_8hpp.html',1,'']]],
   ['binary_5fsearch_5ffn',['binary_search_fn',['../structranges_1_1v3_1_1binary__search__fn.html',1,'ranges::v3']]],
-  ['bind_5fback',['bind_back',['../structmeta_1_1bind__back.html',1,'meta']]],
   ['bind_5fback',['bind_back',['../group__lazy__composition.html#gae41e4e74e99239ffb097b8be64e38350',1,'meta::lazy']]],
+  ['bind_5fback',['bind_back',['../structmeta_1_1bind__back.html',1,'meta']]],
   ['bind_5felement',['bind_element',['../structranges_1_1v3_1_1bind__element.html',1,'ranges::v3']]],
   ['bind_5felement_3c_20reference_5fwrapper_3c_20t_2c_20rvalue_20_3e_20_3e',['bind_element&lt; reference_wrapper&lt; T, RValue &gt; &gt;',['../structranges_1_1v3_1_1bind__element_3_01reference__wrapper_3_01_t_00_01_r_value_01_4_01_4.html',1,'ranges::v3']]],
   ['bind_5felement_3c_20std_3a_3areference_5fwrapper_3c_20t_20_3e_20_3e',['bind_element&lt; std::reference_wrapper&lt; T &gt; &gt;',['../structranges_1_1v3_1_1bind__element_3_01std_1_1reference__wrapper_3_01_t_01_4_01_4.html',1,'ranges::v3']]],
@@ -45,5 +45,6 @@ var searchData=
   ['box_2ehpp',['box.hpp',['../box_8hpp.html',1,'']]],
   ['box_3c_20element_2c_20tag_2c_20true_20_3e',['box&lt; Element, Tag, true &gt;',['../structranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01true_01_4.html',1,'ranges::v3']]],
   ['box_3c_20first_2c_20meta_3a_3asize_5ft_3c_201_20_3e_20_3e',['box&lt; First, meta::size_t&lt; 1 &gt; &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20offset_5ft_20_3e',['box&lt; offset_t &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20second_2c_20meta_3a_3asize_5ft_3c_200_20_3e_20_3e',['box&lt; Second, meta::size_t&lt; 0 &gt; &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]]
 ];

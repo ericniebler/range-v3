@@ -111,10 +111,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a21fb11899b042e9b73b8fb2e3a82652b"><td class="memTemplParams" colspan="2"><a class="anchor" id="a21fb11899b042e9b73b8fb2e3a82652b"></a>
-template&lt;typename I , typename O , typename BOp  = plus, typename P  = ident, typename V  = iterator_value_t&lt;I&gt;, typename X  = concepts::Invokable::result_t&lt;P, V&gt;, typename Y  = concepts::Invokable::result_t&lt;BOp, X, X&gt;&gt; </td></tr>
-<tr class="memitem:a21fb11899b042e9b73b8fb2e3a82652b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::PartialSummable</b> = <a class="el" href="group__logical.html#ga5cba587f3bb7feda51126b0fbaff8f2f">meta::fast_and</a>&lt; InputIterator&lt; I &gt;, WeakOutputIterator&lt; O, X &gt;, Invokable&lt; P, V &gt;, CopyConstructible&lt; X &gt;, Invokable&lt; BOp, X, X &gt;, Assignable&lt; X &amp;, Y &gt;&gt;</td></tr>
-<tr class="separator:a21fb11899b042e9b73b8fb2e3a82652b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1298d7498b363df58ad32644f5910f1"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa1298d7498b363df58ad32644f5910f1"></a>
+template&lt;typename I , typename O , typename BOp  = plus, typename P  = ident, typename V  = iterator_value_t&lt;I&gt;, typename X  = concepts::Callable::result_t&lt;P, V&gt;, typename Y  = concepts::Callable::result_t&lt;BOp, X, X&gt;&gt; </td></tr>
+<tr class="memitem:aa1298d7498b363df58ad32644f5910f1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::PartialSummable</b> = <a class="el" href="group__logical.html#ga5cba587f3bb7feda51126b0fbaff8f2f">meta::fast_and</a>&lt; InputIterator&lt; I &gt;, WeakOutputIterator&lt; O, X &gt;, Callable&lt; P, V &gt;, CopyConstructible&lt; X &gt;, Callable&lt; BOp, X, X &gt;, Assignable&lt; X &amp;, Y &gt;&gt;</td></tr>
+<tr class="separator:aa1298d7498b363df58ad32644f5910f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

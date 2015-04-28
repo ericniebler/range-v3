@@ -1,8 +1,5 @@
 var box_8hpp =
 [
-    [ "get", "box_8hpp.html#ga4aad5a34ef57e1913115d2676c1d87d3", null ],
-    [ "get", "box_8hpp.html#ga1cfe0a6127f6a46008b478abd599acc9", null ],
-    [ "get", "box_8hpp.html#ga844bae1512093312f08abde851c8aea5", null ],
     [ "get", "box_8hpp.html#gabf7ee7133a981f92dc1e4dccfe1798c1", null ],
     [ "get", "box_8hpp.html#ga2d47b3c7541412c2a304d40d7a576819", null ],
     [ "get", "box_8hpp.html#gae5d34e7803353a32a26bc04018f95579", null ],

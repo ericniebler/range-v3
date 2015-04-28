@@ -106,10 +106,10 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gad8ef2c02e6d34f01adf249e12f71fa60"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
-<tr class="memitem:gad8ef2c02e6d34f01adf249e12f71fa60"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gad8ef2c02e6d34f01adf249e12f71fa60">meta::v1::all_of</a> = empty&lt; find_if&lt; List, compose&lt; quote&lt; not_ &gt;, F &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:gad8ef2c02e6d34f01adf249e12f71fa60"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="#gad8ef2c02e6d34f01adf249e12f71fa60">More...</a><br /></td></tr>
-<tr class="separator:gad8ef2c02e6d34f01adf249e12f71fa60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga57811209246c496c046e4394001a569d"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
+<tr class="memitem:ga57811209246c496c046e4394001a569d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga57811209246c496c046e4394001a569d">meta::v1::all_of</a> = empty&lt; find_if&lt; List, not_fn&lt; F &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga57811209246c496c046e4394001a569d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="#ga57811209246c496c046e4394001a569d">More...</a><br /></td></tr>
+<tr class="separator:ga57811209246c496c046e4394001a569d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga232f130ccdba124b1cdd8dc2b498abd5"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
 <tr class="memitem:ga232f130ccdba124b1cdd8dc2b498abd5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga232f130ccdba124b1cdd8dc2b498abd5">meta::v1::any_of</a> = not_&lt; empty&lt; find_if&lt; List, F &gt;&gt;&gt;</td></tr>
 <tr class="memdesc:ga232f130ccdba124b1cdd8dc2b498abd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="#ga232f130ccdba124b1cdd8dc2b498abd5">More...</a><br /></td></tr>
@@ -156,14 +156,14 @@ Typedefs</h2></td></tr>
 <tr class="separator:gaa8a446af6e4b33b7c928aaf472c1ccfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="gad8ef2c02e6d34f01adf249e12f71fa60"></a>
+<a class="anchor" id="ga57811209246c496c046e4394001a569d"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename F &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#gad8ef2c02e6d34f01adf249e12f71fa60">meta::v1::all_of</a> = typedef empty&lt;find_if&lt;List, compose&lt;quote&lt;not_&gt;, F&gt;&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga57811209246c496c046e4394001a569d">meta::v1::all_of</a> = typedef empty&lt;find_if&lt;List, not_fn&lt;F&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

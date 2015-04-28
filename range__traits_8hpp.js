@@ -13,6 +13,8 @@ var range__traits_8hpp =
     [ "range_reference_t", "range__traits_8hpp.html#gaebdedbe9e1ecc32dc1bbe154b75eb894", null ],
     [ "range_rvalue_reference", "range__traits_8hpp.html#ga584c6c96c186e8dc87cfbaae942f53aa", null ],
     [ "range_rvalue_reference_t", "range__traits_8hpp.html#gaa59932a52477c64e340f409285cde2f6", null ],
+    [ "range_safe_iterator_t", "range__traits_8hpp.html#ga878fd9f5d9179a33bf507795292f8427", null ],
+    [ "range_safe_sentinel_t", "range__traits_8hpp.html#ga33757f16341a5158d16ba21f9ed13d99", null ],
     [ "range_sentinel", "range__traits_8hpp.html#gae938b2f261c2b7041090de103102bda3", null ],
     [ "range_sentinel_t", "range__traits_8hpp.html#gadd97c87835b5073dc1aafe1d050b8b16", null ],
     [ "range_size", "range__traits_8hpp.html#gadea9f0ffa2ad34f63d39c860ad287662", null ],

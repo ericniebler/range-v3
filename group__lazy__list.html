@@ -111,12 +111,18 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gae1510c54d075eb467afb4f93d8b3cd7c"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:gae1510c54d075eb467afb4f93d8b3cd7c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__list.html#gae1510c54d075eb467afb4f93d8b3cd7c">meta::lazy::empty</a> = defer&lt; empty, List &gt;</td></tr>
 <tr class="separator:gae1510c54d075eb467afb4f93d8b3cd7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad60562ea8e00ee3af2c76a89e418522d"><td class="memTemplParams" colspan="2">template&lt;typename Pair &gt; </td></tr>
+<tr class="memitem:gad60562ea8e00ee3af2c76a89e418522d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__list.html#gad60562ea8e00ee3af2c76a89e418522d">meta::lazy::first</a> = defer&lt; first, Pair &gt;</td></tr>
+<tr class="separator:gad60562ea8e00ee3af2c76a89e418522d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4a621dfb745c48413bf123ec444d13c1"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:ga4a621dfb745c48413bf123ec444d13c1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__list.html#ga4a621dfb745c48413bf123ec444d13c1">meta::lazy::front</a> = defer&lt; front, List &gt;</td></tr>
 <tr class="separator:ga4a621dfb745c48413bf123ec444d13c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa92a89fba24ac03db56deed0dbe44f60"><td class="memTemplParams" colspan="2">template&lt;typename N , typename T  = void&gt; </td></tr>
 <tr class="memitem:gaa92a89fba24ac03db56deed0dbe44f60"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__list.html#gaa92a89fba24ac03db56deed0dbe44f60">meta::lazy::repeat_n</a> = defer&lt; repeat_n, N, T &gt;</td></tr>
 <tr class="separator:gaa92a89fba24ac03db56deed0dbe44f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7288aa431c8cf586e18b8ca84fa9047f"><td class="memTemplParams" colspan="2">template&lt;typename Pair &gt; </td></tr>
+<tr class="memitem:ga7288aa431c8cf586e18b8ca84fa9047f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__list.html#ga7288aa431c8cf586e18b8ca84fa9047f">meta::lazy::second</a> = defer&lt; second, Pair &gt;</td></tr>
+<tr class="separator:ga7288aa431c8cf586e18b8ca84fa9047f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1af42ef18ec005ed873a5a59f4a14b05"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:ga1af42ef18ec005ed873a5a59f4a14b05"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__list.html#ga1af42ef18ec005ed873a5a59f4a14b05">meta::lazy::size</a> = defer&lt; size, List &gt;</td></tr>
 <tr class="separator:ga1af42ef18ec005ed873a5a59f4a14b05"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,6 +196,23 @@ template&lt;typename List &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="gad60562ea8e00ee3af2c76a89e418522d"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Pair &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__lazy__list.html#gad60562ea8e00ee3af2c76a89e418522d">meta::lazy::first</a> = typedef defer&lt;first, Pair&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd>'meta::first' </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ga4a621dfb745c48413bf123ec444d13c1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -221,6 +244,23 @@ template&lt;typename N , typename T  = void&gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'meta::repeat_n' </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga7288aa431c8cf586e18b8ca84fa9047f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Pair &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__lazy__list.html#ga7288aa431c8cf586e18b8ca84fa9047f">meta::lazy::second</a> = typedef defer&lt;second, Pair&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd>'meta::second' </dd></dl>
 
 </div>
 </div>

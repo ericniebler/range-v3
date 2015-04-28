@@ -111,10 +111,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:af6465207ff8698c3c93ac1924a1bc6ef"><td class="memTemplParams" colspan="2"><a class="anchor" id="af6465207ff8698c3c93ac1924a1bc6ef"></a>
-template&lt;typename I , typename T , typename Op  = plus, typename P  = ident, typename V  = iterator_value_t&lt;I&gt;, typename X  = concepts::Invokable::result_t&lt;P, V&gt;, typename Y  = concepts::Invokable::result_t&lt;Op, T, X&gt;&gt; </td></tr>
-<tr class="memitem:af6465207ff8698c3c93ac1924a1bc6ef"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Accumulateable</b> = <a class="el" href="group__logical.html#ga5cba587f3bb7feda51126b0fbaff8f2f">meta::fast_and</a>&lt; InputIterator&lt; I &gt;, Invokable&lt; P, V &gt;, Invokable&lt; Op, T, X &gt;, Assignable&lt; T &amp;, Y &gt;&gt;</td></tr>
-<tr class="separator:af6465207ff8698c3c93ac1924a1bc6ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae59fd0530c48548acb7d1f1d5777784d"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae59fd0530c48548acb7d1f1d5777784d"></a>
+template&lt;typename I , typename T , typename Op  = plus, typename P  = ident, typename V  = iterator_value_t&lt;I&gt;, typename X  = concepts::Callable::result_t&lt;P, V&gt;, typename Y  = concepts::Callable::result_t&lt;Op, T, X&gt;&gt; </td></tr>
+<tr class="memitem:ae59fd0530c48548acb7d1f1d5777784d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Accumulateable</b> = <a class="el" href="group__logical.html#ga5cba587f3bb7feda51126b0fbaff8f2f">meta::fast_and</a>&lt; InputIterator&lt; I &gt;, Callable&lt; P, V &gt;, Callable&lt; Op, T, X &gt;, Assignable&lt; T &amp;, Y &gt;&gt;</td></tr>
+<tr class="separator:ae59fd0530c48548acb7d1f1d5777784d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

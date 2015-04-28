@@ -29,5 +29,6 @@ var searchData=
   ['box',['box',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20element_2c_20tag_2c_20true_20_3e',['box&lt; Element, Tag, true &gt;',['../structranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01true_01_4.html',1,'ranges::v3']]],
   ['box_3c_20first_2c_20meta_3a_3asize_5ft_3c_201_20_3e_20_3e',['box&lt; First, meta::size_t&lt; 1 &gt; &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20offset_5ft_20_3e',['box&lt; offset_t &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20second_2c_20meta_3a_3asize_5ft_3c_200_20_3e_20_3e',['box&lt; Second, meta::size_t&lt; 0 &gt; &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]]
 ];

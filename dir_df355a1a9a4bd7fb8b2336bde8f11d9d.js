@@ -15,7 +15,12 @@ var dir_df355a1a9a4bd7fb8b2336bde8f11d9d =
     [ "concepts.hpp", "utility_2concepts_8hpp.html", "utility_2concepts_8hpp" ],
     [ "copy.hpp", "utility_2copy_8hpp.html", "utility_2copy_8hpp" ],
     [ "counted_iterator.hpp", "counted__iterator_8hpp.html", "counted__iterator_8hpp" ],
+    [ "dangling.hpp", "dangling_8hpp.html", [
+      [ "dangling< void >", "structranges_1_1v3_1_1dangling_3_01void_01_4.html", "structranges_1_1v3_1_1dangling_3_01void_01_4" ],
+      [ "tuple", "classstd_1_1tuple.html", null ]
+    ] ],
     [ "functional.hpp", "functional_8hpp.html", "functional_8hpp" ],
+    [ "get.hpp", "get_8hpp.html", "get_8hpp" ],
     [ "infinity.hpp", "infinity_8hpp.html", null ],
     [ "integer_sequence.hpp", "integer__sequence_8hpp.html", null ],
     [ "is_infinity.hpp", "is__infinity_8hpp.html", null ],

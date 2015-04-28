@@ -107,18 +107,18 @@ template&lt;typename T , typename U , typename... Rest&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ga3eb1c0c7cbe1deefd8305c772b10d445"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3eb1c0c7cbe1deefd8305c772b10d445"></a>
+<tr class="memitem:gab3b8af16a26b97e9420355fd9b433b36"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab3b8af16a26b97e9420355fd9b433b36"></a>
 template&lt;typename T , typename U , meta::if_&lt; std::is_same&lt; uncvref_t&lt; T &gt;, uncvref_t&lt; U &gt;&gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:ga3eb1c0c7cbe1deefd8305c772b10d445"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T, U) -&gt; void</td></tr>
-<tr class="separator:ga3eb1c0c7cbe1deefd8305c772b10d445"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf21a3095f49a0b6789809944347cece4"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaf21a3095f49a0b6789809944347cece4"></a>
+<tr class="memitem:gab3b8af16a26b97e9420355fd9b433b36"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, U &amp;&amp;) -&gt; void</td></tr>
+<tr class="separator:gab3b8af16a26b97e9420355fd9b433b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafa4eb09501b5fe1621bf9523bf68c923"><td class="memTemplParams" colspan="2"><a class="anchor" id="gafa4eb09501b5fe1621bf9523bf68c923"></a>
 template&lt;typename T , typename U , meta::if_c&lt;!std::is_same&lt; uncvref_t&lt; T &gt;, uncvref_t&lt; U &gt;&gt;::value, int &gt;  = 0, typename C  = value_t&lt;T, U&gt;, typename R  = common_reference_t&lt;T const &amp;, U const &amp;&gt;&gt; </td></tr>
-<tr class="memitem:gaf21a3095f49a0b6789809944347cece4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T t, U u) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_common_reference.html">CommonReference</a>, T const &amp;, U const &amp; &gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_common_reference.html">CommonReference</a>, C &amp;, R &gt;()))</td></tr>
-<tr class="separator:gaf21a3095f49a0b6789809944347cece4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga20f4ab9768174f7d9100ad8643ff9652"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga20f4ab9768174f7d9100ad8643ff9652"></a>
+<tr class="memitem:gafa4eb09501b5fe1621bf9523bf68c923"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, U &amp;&amp;) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_common_reference.html">CommonReference</a>, T const &amp;, U const &amp; &gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_common_reference.html">CommonReference</a>, C &amp;, R &gt;()))</td></tr>
+<tr class="separator:gafa4eb09501b5fe1621bf9523bf68c923"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48030069026c6e13e23cfb63f4a43c3c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga48030069026c6e13e23cfb63f4a43c3c"></a>
 template&lt;typename T , typename U , typename... Rest, typename Common_  = Common, typename C  = value_t&lt;T, U&gt;&gt; </td></tr>
-<tr class="memitem:ga20f4ab9768174f7d9100ad8643ff9652"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T t, U u, Rest...) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; Common_, T, U &gt;(), concepts::model_of&lt; Common_, C, Rest...&gt;()))</td></tr>
-<tr class="separator:ga20f4ab9768174f7d9100ad8643ff9652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48030069026c6e13e23cfb63f4a43c3c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, U &amp;&amp;, Rest &amp;&amp;...) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; Common_, T, U &gt;(), concepts::model_of&lt; Common_, C, Rest...&gt;()))</td></tr>
+<tr class="separator:ga48030069026c6e13e23cfb63f4a43c3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

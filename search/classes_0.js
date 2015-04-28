@@ -3,6 +3,7 @@ var searchData=
   ['accumulate_5ffn',['accumulate_fn',['../structranges_1_1v3_1_1accumulate__fn.html',1,'ranges::v3']]],
   ['action',['action',['../structranges_1_1v3_1_1action_1_1action.html',1,'ranges::v3::action']]],
   ['action_5faccess',['action_access',['../structranges_1_1v3_1_1action_1_1action__access.html',1,'ranges::v3::action']]],
+  ['adaptor',['adaptor',['../structranges_1_1v3_1_1chunk__view_1_1adaptor.html',1,'ranges::v3::chunk_view']]],
   ['adaptor_5fbase',['adaptor_base',['../structranges_1_1v3_1_1adaptor__base.html',1,'ranges::v3']]],
   ['adaptor_5fcursor',['adaptor_cursor',['../structranges_1_1v3_1_1adaptor__cursor.html',1,'ranges::v3']]],
   ['adaptor_5fsentinel',['adaptor_sentinel',['../structranges_1_1v3_1_1adaptor__sentinel.html',1,'ranges::v3']]],
@@ -23,6 +24,7 @@ var searchData=
   ['apply_5flist',['apply_list',['../structmeta_1_1v1_1_1extension_1_1apply__list.html',1,'meta::v1::extension']]],
   ['apply_5flist_3c_20f_2c_20integer_5fsequence_3c_20t_2c_20is_2e_2e_2e_3e_20_3e',['apply_list&lt; F, integer_sequence&lt; T, Is...&gt; &gt;',['../structmeta_1_1extension_1_1apply__list_3_01_f_00_01integer__sequence_3_01_t_00_01_is_8_8_8_4_01_4.html',1,'meta::extension']]],
   ['apply_5flist_3c_20f_2c_20t_3c_20ts_2e_2e_2e_3e_20_3e',['apply_list&lt; F, T&lt; Ts...&gt; &gt;',['../structmeta_1_1extension_1_1apply__list_3_01_f_00_01_t_3_01_ts_8_8_8_4_01_4.html',1,'meta::extension']]],
+  ['as_5ffunction_5ffn',['as_function_fn',['../structranges_1_1v3_1_1as__function__fn.html',1,'ranges::v3']]],
   ['assignable',['Assignable',['../structranges_1_1v3_1_1concepts_1_1_assignable.html',1,'ranges::v3::concepts']]],
   ['at_5ffn',['at_fn',['../structranges_1_1v3_1_1at__fn.html',1,'ranges::v3']]]
 ];

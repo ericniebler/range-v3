@@ -111,10 +111,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gab2bfe53eb76edeccd0f1ef3db45a582d"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab2bfe53eb76edeccd0f1ef3db45a582d"></a>
-template&lt;typename I , typename C , typename P  = ident, typename V  = iterator_common_reference_t&lt;I&gt;, typename X  = concepts::Invokable::result_t&lt;P, V&gt;&gt; </td></tr>
-<tr class="memitem:gab2bfe53eb76edeccd0f1ef3db45a582d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::PartitionPointable</b> = <a class="el" href="group__logical.html#ga5cba587f3bb7feda51126b0fbaff8f2f">meta::fast_and</a>&lt; ForwardIterator&lt; I &gt;, IndirectInvokablePredicate&lt; C, Project&lt; I, P &gt;&gt;&gt;</td></tr>
-<tr class="separator:gab2bfe53eb76edeccd0f1ef3db45a582d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab6c9c7b3d402c64bf8f2b7e4d1200c1b"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab6c9c7b3d402c64bf8f2b7e4d1200c1b"></a>
+template&lt;typename I , typename C , typename P  = ident, typename V  = iterator_common_reference_t&lt;I&gt;, typename X  = concepts::Callable::result_t&lt;P, V&gt;&gt; </td></tr>
+<tr class="memitem:gab6c9c7b3d402c64bf8f2b7e4d1200c1b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::PartitionPointable</b> = <a class="el" href="group__logical.html#ga5cba587f3bb7feda51126b0fbaff8f2f">meta::fast_and</a>&lt; ForwardIterator&lt; I &gt;, IndirectCallablePredicate&lt; C, Project&lt; I, P &gt;&gt;&gt;</td></tr>
+<tr class="separator:gab6c9c7b3d402c64bf8f2b7e4d1200c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

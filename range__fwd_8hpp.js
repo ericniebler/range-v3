@@ -11,6 +11,7 @@ var range__fwd_8hpp =
     [ "move_tag", "structranges_1_1v3_1_1move__tag.html", null ],
     [ "overloaded", "structranges_1_1v3_1_1overloaded.html", null ],
     [ "range_base", "structranges_1_1v3_1_1range__base.html", null ],
+    [ "take_view", "structranges_1_1v3_1_1take__view.html", "structranges_1_1v3_1_1take__view" ],
     [ "common_iterator", "range__fwd_8hpp.html#a0404db260e6a07436b9261bd6493afb6", null ],
     [ "common_reference_t", "range__fwd_8hpp.html#ad19454fcfc94da6123b631d5b5610f49", null ],
     [ "common_type_t", "range__fwd_8hpp.html#aa5907e0a109d6ea9f8324f1de1ca1f66", null ],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['pair',['pair',['../group__list.html#gaef65d81fa921b82861a9552cea6455aa',1,'meta::v1']]],
   ['partial_5fsort_2ehpp',['partial_sort.hpp',['../partial__sort_8hpp.html',1,'']]],
   ['partial_5fsort_5fcopy_2ehpp',['partial_sort_copy.hpp',['../partial__sort__copy_8hpp.html',1,'']]],
   ['partial_5fsort_5fcopy_5ffn',['partial_sort_copy_fn',['../structranges_1_1v3_1_1partial__sort__copy__fn.html',1,'ranges::v3']]],
@@ -9,6 +10,7 @@ var searchData=
   ['partial_5fsum_5ffn',['partial_sum_fn',['../structranges_1_1v3_1_1partial__sum__fn.html',1,'ranges::v3']]],
   ['partial_5fsum_5ffn',['partial_sum_fn',['../structranges_1_1v3_1_1view_1_1partial__sum__fn.html',1,'ranges::v3::view']]],
   ['partial_5fsum_5fview',['partial_sum_view',['../structranges_1_1v3_1_1partial__sum__view.html',1,'ranges::v3']]],
+  ['partition',['partition',['../group__transformation.html#ga8c6e6b4db3cd33e4f54d7bd36c649a66',1,'meta::v1::partition()'],['../group__lazy__transformation.html#ga6078403786c858cbe27aa509b7024671',1,'meta::lazy::partition()']]],
   ['partition_2ehpp',['partition.hpp',['../partition_8hpp.html',1,'']]],
   ['partition_5fcopy_2ehpp',['partition_copy.hpp',['../partition__copy_8hpp.html',1,'']]],
   ['partition_5fcopy_5ffn',['partition_copy_fn',['../structranges_1_1v3_1_1partition__copy__fn.html',1,'ranges::v3']]],

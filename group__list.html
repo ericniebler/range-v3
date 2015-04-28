@@ -133,6 +133,11 @@ template&lt;typename Sequence &gt; </td></tr>
 <tr class="memitem:gaefc353c52b2ae6521cce4af15ffabdf1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gaefc353c52b2ae6521cce4af15ffabdf1">meta::v1::empty</a> = bool_&lt; 0==size&lt; List &gt;::type::value &gt;</td></tr>
 <tr class="memdesc:gaefc353c52b2ae6521cce4af15ffabdf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">An Boolean integral constant wrapper around <code>true</code> if <code>List</code> is an empty type list; <code>false</code>, otherwise.  <a href="#gaefc353c52b2ae6521cce4af15ffabdf1">More...</a><br /></td></tr>
 <tr class="separator:gaefc353c52b2ae6521cce4af15ffabdf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9447487bb1ccdc8867d000c98f992e91"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9447487bb1ccdc8867d000c98f992e91"></a>
+template&lt;typename Pair &gt; </td></tr>
+<tr class="memitem:ga9447487bb1ccdc8867d000c98f992e91"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga9447487bb1ccdc8867d000c98f992e91">meta::v1::first</a> = front&lt; Pair &gt;</td></tr>
+<tr class="memdesc:ga9447487bb1ccdc8867d000c98f992e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the first element of the <code>pair</code> <code>Pair</code>. <br /></td></tr>
+<tr class="separator:ga9447487bb1ccdc8867d000c98f992e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga76ee33daea50a50b8231d77a41f2d4f2"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:ga76ee33daea50a50b8231d77a41f2d4f2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga76ee33daea50a50b8231d77a41f2d4f2">meta::v1::front</a> = eval&lt; detail::front_&lt; List &gt;&gt;</td></tr>
 <tr class="memdesc:ga76ee33daea50a50b8231d77a41f2d4f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the first element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>.  <a href="#ga76ee33daea50a50b8231d77a41f2d4f2">More...</a><br /></td></tr>
@@ -141,6 +146,11 @@ template&lt;typename Sequence &gt; </td></tr>
 using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__list.html#gaf2303760b403bf01328ec83c3396f228">meta::v1::npos</a> = <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; std::size_t(-1)&gt;</td></tr>
 <tr class="memdesc:gaf2303760b403bf01328ec83c3396f228"><td class="mdescLeft">&#160;</td><td class="mdescRight">A special value used to indicate no matches. It equals the maximum value representable by std::size_t. <br /></td></tr>
 <tr class="separator:gaf2303760b403bf01328ec83c3396f228"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaef65d81fa921b82861a9552cea6455aa"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaef65d81fa921b82861a9552cea6455aa"></a>
+template&lt;typename F , typename S &gt; </td></tr>
+<tr class="memitem:gaef65d81fa921b82861a9552cea6455aa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gaef65d81fa921b82861a9552cea6455aa">meta::v1::pair</a> = list&lt; F, S &gt;</td></tr>
+<tr class="memdesc:gaef65d81fa921b82861a9552cea6455aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list with exactly two elements. <br /></td></tr>
+<tr class="separator:gaef65d81fa921b82861a9552cea6455aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf343c443b2f37a0e4392c859254d3973"><td class="memTemplParams" colspan="2">template&lt;typename N , typename T  = void&gt; </td></tr>
 <tr class="memitem:gaf343c443b2f37a0e4392c859254d3973"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gaf343c443b2f37a0e4392c859254d3973">meta::v1::repeat_n</a> = eval&lt; detail::repeat_n_c_&lt; N::type::value, T &gt;&gt;</td></tr>
 <tr class="memdesc:gaf343c443b2f37a0e4392c859254d3973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments.  <a href="#gaf343c443b2f37a0e4392c859254d3973">More...</a><br /></td></tr>
@@ -149,6 +159,11 @@ using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gro
 <tr class="memitem:gaca47177121a9f49d5c567912bd6457c6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gaca47177121a9f49d5c567912bd6457c6">meta::v1::repeat_n_c</a> = eval&lt; detail::repeat_n_c_&lt; N, T &gt;&gt;</td></tr>
 <tr class="memdesc:gaca47177121a9f49d5c567912bd6457c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments.  <a href="#gaca47177121a9f49d5c567912bd6457c6">More...</a><br /></td></tr>
 <tr class="separator:gaca47177121a9f49d5c567912bd6457c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb2ecc3ad2551fb16535dc325e43cfaa"><td class="memTemplParams" colspan="2"><a class="anchor" id="gabb2ecc3ad2551fb16535dc325e43cfaa"></a>
+template&lt;typename Pair &gt; </td></tr>
+<tr class="memitem:gabb2ecc3ad2551fb16535dc325e43cfaa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gabb2ecc3ad2551fb16535dc325e43cfaa">meta::v1::second</a> = front&lt; pop_front&lt; Pair &gt;&gt;</td></tr>
+<tr class="memdesc:gabb2ecc3ad2551fb16535dc325e43cfaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the first element of the <code>pair</code> <code>Pair</code>. <br /></td></tr>
+<tr class="separator:gabb2ecc3ad2551fb16535dc325e43cfaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga853776d1d4331c11fc457b356c24e7c1"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga853776d1d4331c11fc457b356c24e7c1"></a>
 template&lt;typename List &gt; </td></tr>
 <tr class="memitem:ga853776d1d4331c11fc457b356c24e7c1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga853776d1d4331c11fc457b356c24e7c1">meta::v1::size</a> = <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; List::size()&gt;</td></tr>

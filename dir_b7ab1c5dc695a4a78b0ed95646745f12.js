@@ -15,6 +15,7 @@ var dir_b7ab1c5dc695a4a78b0ed95646745f12 =
     [ "distance.hpp", "distance_8hpp.html", null ],
     [ "empty.hpp", "empty_8hpp.html", null ],
     [ "front.hpp", "front_8hpp.html", null ],
+    [ "getlines.hpp", "getlines_8hpp.html", null ],
     [ "istream_range.hpp", "istream__range_8hpp.html", "istream__range_8hpp" ],
     [ "numeric.hpp", "numeric_8hpp.html", null ],
     [ "range.hpp", "range_8hpp.html", "range_8hpp" ],

@@ -103,10 +103,10 @@ Public Member Functions</h2></td></tr>
 template&lt;typename I , typename S , typename C  = ordered_less, typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(BidirectionalIterator&lt; I &gt;()&amp;&amp;Sortable&lt; I, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:ae8ac76b4a91269a97edd279fb5674028"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, I middle, S end, C pred=C{}, P proj=P{}) const </td></tr>
 <tr class="separator:ae8ac76b4a91269a97edd279fb5674028"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a386f7a9e543d4dd192b93ef3526a5643"><td class="memTemplParams" colspan="2"><a class="anchor" id="a386f7a9e543d4dd192b93ef3526a5643"></a>
-template&lt;typename Rng , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(BidirectionalIterable&lt; Rng &amp; &gt;()&amp;&amp;Sortable&lt; I, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a386f7a9e543d4dd192b93ef3526a5643"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, I middle, C pred=C{}, P proj=P{}) const </td></tr>
-<tr class="separator:a386f7a9e543d4dd192b93ef3526a5643"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91d4c217ad206bda4197c9624f6ce4bf"><td class="memTemplParams" colspan="2"><a class="anchor" id="a91d4c217ad206bda4197c9624f6ce4bf"></a>
+template&lt;typename Rng , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(BidirectionalIterable&lt; Rng &gt;()&amp;&amp;Sortable&lt; I, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a91d4c217ad206bda4197c9624f6ce4bf"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I middle, C pred=C{}, P proj=P{}) const </td></tr>
+<tr class="separator:a91d4c217ad206bda4197c9624f6ce4bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

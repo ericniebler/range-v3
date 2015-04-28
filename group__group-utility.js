@@ -7,6 +7,11 @@ var group__group_utility =
       [ "operator()", "structranges_1_1v3_1_1adl__advance__detail_1_1advance__fn.html#a9ca4bd3eb28393ce5e0fc206fc3cead5", null ],
       [ "operator()", "structranges_1_1v3_1_1adl__advance__detail_1_1advance__fn.html#aefd7a4dc2306ec9b9fb158da76c6067a", null ]
     ] ],
+    [ "as_function_fn", "structranges_1_1v3_1_1as__function__fn.html", [
+      [ "operator()", "structranges_1_1v3_1_1as__function__fn.html#a3a9eb874deca4365381c068010c1b08d", null ],
+      [ "operator()", "structranges_1_1v3_1_1as__function__fn.html#a485c2e80aa1e9c27ec3090393fa9c275", null ],
+      [ "operator()", "structranges_1_1v3_1_1as__function__fn.html#ab61a4a479c9ace0257cd38fe039c142d", null ]
+    ] ],
     [ "copy_fn", "structranges_1_1v3_1_1aux_1_1copy__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1aux_1_1copy__fn.html#a8f2e264ccf9922e74ce124c6e8af4274", null ]
     ] ],
@@ -161,6 +166,7 @@ var group__group_utility =
       [ "compressed_tuple", "structranges_1_1v3_1_1compressed__tuple.html#a0944b0c36bcd28ad30c40c6fe31a368f", null ]
     ] ],
     [ "constant", "structranges_1_1v3_1_1constant.html", [
+      [ "exchange", "structranges_1_1v3_1_1constant.html#a67ddf4930531c146e6c2a35d18d2b022", null ],
       [ "operator T", "structranges_1_1v3_1_1constant.html#a00342e0cda3c20d206cec7a3214286dd", null ],
       [ "operator=", "structranges_1_1v3_1_1constant.html#ab9f0167bac7b7d071df2ef4444a0a95e", null ],
       [ "operator=", "structranges_1_1v3_1_1constant.html#a693e0816d090cdf64878dcdc8fb3f680", null ],
@@ -178,6 +184,18 @@ var group__group_utility =
     ] ],
     [ "ident", "structranges_1_1v3_1_1ident.html", [
       [ "operator()", "structranges_1_1v3_1_1ident.html#a785baf6adae4ebdb85abe1b6a0a52988", null ]
+    ] ],
+    [ "indirect_fn", "structranges_1_1v3_1_1indirect__fn.html", [
+      [ "operator()", "structranges_1_1v3_1_1indirect__fn.html#a158bcd8302223218220c56d0fe9980be", null ]
+    ] ],
+    [ "indirected", "structranges_1_1v3_1_1indirected.html", [
+      [ "operator()", "structranges_1_1v3_1_1indirected.html#abdc9cde593e80ee6bde35812e7449ede", null ],
+      [ "operator()", "structranges_1_1v3_1_1indirected.html#a6359d20593962663ec96cf5715a28810", null ],
+      [ "operator()", "structranges_1_1v3_1_1indirected.html#a9a5187d47021882825709637f8b11f9d", null ],
+      [ "operator()", "structranges_1_1v3_1_1indirected.html#a5f28da2aaa12e138e69c639e7aebb104", null ],
+      [ "operator()", "structranges_1_1v3_1_1indirected.html#a3f011dd3408c24bfe862cbf725f39771", null ],
+      [ "indirected", "structranges_1_1v3_1_1indirected.html#a90342819e4ee29c79933e9edc6a9a553", null ],
+      [ "indirected", "structranges_1_1v3_1_1indirected.html#a72d27fc5b9697ece624096cb3b25775b", null ]
     ] ],
     [ "is_indirectly_swappable", "structranges_1_1v3_1_1is__indirectly__swappable.html", null ],
     [ "is_nothrow_indirectly_swappable", "structranges_1_1v3_1_1is__nothrow__indirectly__swappable.html", null ],
@@ -221,11 +239,6 @@ var group__group_utility =
       [ "operator()", "structranges_1_1v3_1_1make__compressed__tuple__fn.html#ac58c885cf72c7f93f41bfc81753d90e4", null ],
       [ "expects_wrapped_references", "structranges_1_1v3_1_1make__compressed__tuple__fn.html#a6afe62ac0949c9e7fdb6034c886af59e", null ]
     ] ],
-    [ "make_invokable_fn", "structranges_1_1v3_1_1make__invokable__fn.html", [
-      [ "operator()", "structranges_1_1v3_1_1make__invokable__fn.html#a32e1a2506b0ca5b2eb2208e68d6a896c", null ],
-      [ "operator()", "structranges_1_1v3_1_1make__invokable__fn.html#ad10174754b895af234639e3d45d7a5ac", null ],
-      [ "operator()", "structranges_1_1v3_1_1make__invokable__fn.html#ac4f163e1f70d139e3b270f9da062c275", null ]
-    ] ],
     [ "make_pipeable_fn", "structranges_1_1v3_1_1make__pipeable__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1make__pipeable__fn.html#a8a41e08532ac3f4740b653278b888ebd", null ]
     ] ],
@@ -252,6 +265,7 @@ var group__group_utility =
       [ "mutable_", "structranges_1_1v3_1_1mutable__.html#af2a8e9d38caca11b60bfdc4d9efd249f", null ]
     ] ],
     [ "mutable_< std::atomic< T > >", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html", [
+      [ "exchange", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html#ab712f22a9a66d3cc11066a7d55474530", null ],
       [ "operator std::atomic< T > &", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html#a00563b0dfbd350a6c9b0ae2f23adca5d", null ],
       [ "operator T", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html#a846b0bbd85a85d99869e3631601a7001", null ],
       [ "operator=", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html#aa24b55a8121a3a05969003ee9e27b87d", null ],
@@ -277,7 +291,8 @@ var group__group_utility =
       [ "operator!", "structranges_1_1v3_1_1optional.html#afef3957f44786740479b9dd9674277ed", null ],
       [ "operator*", "structranges_1_1v3_1_1optional.html#ae9f8a313cfbee4a7e3ac2b25d953a644", null ],
       [ "operator*", "structranges_1_1v3_1_1optional.html#a741ce4d53e28576c4af50899722f6f26", null ],
-      [ "operator=", "structranges_1_1v3_1_1optional.html#a05fb726375c86b9fd2dc34eb21f6db44", null ],
+      [ "operator=", "structranges_1_1v3_1_1optional.html#ad2e2e1db802de13bcca94b5d81b59de6", null ],
+      [ "operator=", "structranges_1_1v3_1_1optional.html#a11bd3f31a4679a4a59ec876c15597ccc", null ],
       [ "reset", "structranges_1_1v3_1_1optional.html#a80fb40b9815477ab70630b02418407b6", null ],
       [ "optional", "structranges_1_1v3_1_1optional.html#a91b8290a33b555a331403a82bff82096", null ],
       [ "optional", "structranges_1_1v3_1_1optional.html#a767cdd7e39d2277acdb0aab414633583", null ]
@@ -382,6 +397,8 @@ var group__group_utility =
       [ "operator T const &", "structranges_1_1v3_1_1semiregular.html#a30a55c68cc015dcadd8fcdd9b542fd62", null ],
       [ "operator()", "structranges_1_1v3_1_1semiregular.html#a3a4f08021da671015bd51f517582f539", null ],
       [ "operator()", "structranges_1_1v3_1_1semiregular.html#a2d5927cebacba7bef3ea0f7d0bc32b98", null ],
+      [ "operator=", "structranges_1_1v3_1_1semiregular.html#a00696bc1c38d5f07be191ac68db0c124", null ],
+      [ "operator=", "structranges_1_1v3_1_1semiregular.html#a179a2efe951c687d804e4617670cbbba", null ],
       [ "semiregular", "structranges_1_1v3_1_1semiregular.html#a6a8073289823e6ce4f86975f9e3633ce", null ],
       [ "semiregular", "structranges_1_1v3_1_1semiregular.html#a3e5be54397a3ef78a95277b4eb9588cf", null ]
     ] ],

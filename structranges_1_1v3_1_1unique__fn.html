@@ -103,10 +103,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6b8186490fab4d2a12ef293dc5c58425"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1unique__fn.html#a6b8186490fab4d2a12ef293dc5c58425">operator()</a> (I begin, S end, C pred_=C{}, P proj_=P{}) const </td></tr>
 <tr class="memdesc:a6b8186490fab4d2a12ef293dc5c58425"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>unique_fn::operator()</code>  <a href="#a6b8186490fab4d2a12ef293dc5c58425">More...</a><br /></td></tr>
 <tr class="separator:a6b8186490fab4d2a12ef293dc5c58425"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a578166d2f56e03eaa790a0ae7a68f8d5"><td class="memTemplParams" colspan="2"><a class="anchor" id="a578166d2f56e03eaa790a0ae7a68f8d5"></a>
-template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Sortable&lt; I, C, P &gt;()&amp;&amp;Iterable&lt; Rng &amp; &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a578166d2f56e03eaa790a0ae7a68f8d5"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;rng, C pred=C{}, P proj=P{}) const </td></tr>
-<tr class="separator:a578166d2f56e03eaa790a0ae7a68f8d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6aad04f7cedbbc8f7464264dbf68431"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac6aad04f7cedbbc8f7464264dbf68431"></a>
+template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Sortable&lt; I, C, P &gt;()&amp;&amp;Iterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:ac6aad04f7cedbbc8f7464264dbf68431"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred=C{}, P proj=P{}) const </td></tr>
+<tr class="separator:ac6aad04f7cedbbc8f7464264dbf68431"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a6b8186490fab4d2a12ef293dc5c58425"></a>
@@ -155,7 +155,7 @@ template&lt;typename I , typename S , typename C  = equal_to, typename P  = iden
 <dd>
 <code>S</code> is a model of the <code>Sentinel</code> concept </dd>
 <dd>
-<code>C</code> is a model of the <code>InvokableRelation</code> concept </dd></dl>
+<code>C</code> is a model of the <code>CallableRelation</code> concept </dd></dl>
 
 </div>
 </div>

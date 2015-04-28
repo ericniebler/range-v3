@@ -1,5 +1,6 @@
 var structranges_1_1v3_1_1constant =
 [
+    [ "exchange", "structranges_1_1v3_1_1constant.html#a67ddf4930531c146e6c2a35d18d2b022", null ],
     [ "operator T", "structranges_1_1v3_1_1constant.html#a00342e0cda3c20d206cec7a3214286dd", null ],
     [ "operator=", "structranges_1_1v3_1_1constant.html#ab9f0167bac7b7d071df2ef4444a0a95e", null ],
     [ "operator=", "structranges_1_1v3_1_1constant.html#a693e0816d090cdf64878dcdc8fb3f680", null ],

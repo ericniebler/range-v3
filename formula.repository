@@ -8,3 +8,4 @@
 \form#7:$ N $
 \form#8:$ M $
 \form#9:$ O(log(N)) $
+\form#10:$ O(N log N) $

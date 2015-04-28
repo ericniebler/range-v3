@@ -1,6 +1,9 @@
 var searchData=
 [
+  ['safe_5fbegin_5ffn',['safe_begin_fn',['../structranges_1_1v3_1_1safe__begin__fn.html',1,'ranges::v3']]],
+  ['safe_5fend_5ffn',['safe_end_fn',['../structranges_1_1v3_1_1safe__end__fn.html',1,'ranges::v3']]],
   ['same',['Same',['../structranges_1_1v3_1_1concepts_1_1_same.html',1,'ranges::v3::concepts']]],
+  ['sanitize_5ffn',['sanitize_fn',['../structranges_1_1v3_1_1sanitize__fn.html',1,'ranges::v3']]],
   ['search_5ffn',['search_fn',['../structranges_1_1v3_1_1search__fn.html',1,'ranges::v3']]],
   ['search_5fn_5ffn',['search_n_fn',['../structranges_1_1v3_1_1search__n__fn.html',1,'ranges::v3']]],
   ['semicontainer',['SemiContainer',['../structranges_1_1v3_1_1concepts_1_1_semi_container.html',1,'ranges::v3::concepts']]],

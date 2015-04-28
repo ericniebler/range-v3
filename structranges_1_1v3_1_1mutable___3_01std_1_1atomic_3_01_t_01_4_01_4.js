@@ -1,5 +1,6 @@
 var structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4 =
 [
+    [ "exchange", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html#ab712f22a9a66d3cc11066a7d55474530", null ],
     [ "operator std::atomic< T > &", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html#a00563b0dfbd350a6c9b0ae2f23adca5d", null ],
     [ "operator T", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html#a846b0bbd85a85d99869e3631601a7001", null ],
     [ "operator=", "structranges_1_1v3_1_1mutable___3_01std_1_1atomic_3_01_t_01_4_01_4.html#aa24b55a8121a3a05969003ee9e27b87d", null ],

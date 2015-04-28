@@ -107,14 +107,14 @@ template&lt;typename T , typename U , typename... Rest&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:gacf4d4e2c3e7a2f0628572c2ddda04026"><td class="memTemplParams" colspan="2"><a class="anchor" id="gacf4d4e2c3e7a2f0628572c2ddda04026"></a>
+<tr class="memitem:gadcc8b9efadcd9501121d736ff5fb318d"><td class="memTemplParams" colspan="2"><a class="anchor" id="gadcc8b9efadcd9501121d736ff5fb318d"></a>
 template&lt;typename T , typename U , typename C  = reference_t&lt;T, U&gt;&gt; </td></tr>
-<tr class="memitem:gacf4d4e2c3e7a2f0628572c2ddda04026"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T t, U u) -&gt; decltype(concepts::valid_expr(concepts::convertible_to&lt; C &gt;(val&lt; T &gt;()), concepts::convertible_to&lt; C &gt;(val&lt; U &gt;())))</td></tr>
-<tr class="separator:gacf4d4e2c3e7a2f0628572c2ddda04026"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae3c900dd7390977e47ad911b7f2d96d0"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae3c900dd7390977e47ad911b7f2d96d0"></a>
+<tr class="memitem:gadcc8b9efadcd9501121d736ff5fb318d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, U &amp;&amp;) -&gt; decltype(concepts::valid_expr(concepts::convertible_to&lt; C &gt;(val&lt; T &gt;()), concepts::convertible_to&lt; C &gt;(val&lt; U &gt;())))</td></tr>
+<tr class="separator:gadcc8b9efadcd9501121d736ff5fb318d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaba11e103d72c667deecf77526965b55"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaaba11e103d72c667deecf77526965b55"></a>
 template&lt;typename T , typename U , typename... Rest, typename CommonReference_  = CommonReference, typename C  = reference_t&lt;T, U&gt;&gt; </td></tr>
-<tr class="memitem:gae3c900dd7390977e47ad911b7f2d96d0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T t, U u, Rest...) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; CommonReference_, T, U &gt;(), concepts::model_of&lt; CommonReference_, C, Rest...&gt;()))</td></tr>
-<tr class="separator:gae3c900dd7390977e47ad911b7f2d96d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaba11e103d72c667deecf77526965b55"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, U &amp;&amp;, Rest &amp;&amp;...) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; CommonReference_, T, U &gt;(), concepts::model_of&lt; CommonReference_, C, Rest...&gt;()))</td></tr>
+<tr class="separator:gaaba11e103d72c667deecf77526965b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

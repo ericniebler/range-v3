@@ -125,12 +125,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1quote__i.html">meta::quote_i&lt; T, F &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template <code>F</code> taking literals of type <code>T</code> into a Alias Class.  <a href="structmeta_1_1quote__i.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1quote__trait.html">meta::quote_trait&lt; C &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> into a Alias Class.  <a href="structmeta_1_1quote__trait.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1quote__trait__i.html">meta::quote_trait_i&lt; T, C &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> taking literals of type <code>T</code> into a Alias Class.  <a href="structmeta_1_1quote__trait__i.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -139,6 +133,21 @@ template&lt;typename F , typename Q  = quote&lt;list&gt;&gt; </td></tr>
 <tr class="memitem:ga33a0c3a3abc067f23697140a343ea8cb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga33a0c3a3abc067f23697140a343ea8cb">meta::v1::curry</a> = compose&lt; F, Q &gt;</td></tr>
 <tr class="memdesc:ga33a0c3a3abc067f23697140a343ea8cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Alias Class that takes a bunch of arguments, bundles them into a type list, and then calls the Alias Class <code>F</code> with the type list <code>Q</code>. <br /></td></tr>
 <tr class="separator:ga33a0c3a3abc067f23697140a343ea8cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa1e91af5bb7608d60cfe8dc291729472"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa1e91af5bb7608d60cfe8dc291729472"></a>
+template&lt;typename... Fs&gt; </td></tr>
+<tr class="memitem:gaa1e91af5bb7608d60cfe8dc291729472"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaa1e91af5bb7608d60cfe8dc291729472">meta::v1::on</a> = detail::on_&lt; Fs...&gt;</td></tr>
+<tr class="memdesc:gaa1e91af5bb7608d60cfe8dc291729472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use as <code>on&lt;F, Gs...&gt;</code>. Creates an Alias Class that applies Alias Class <code>F</code> to the result of applying Alias Class <code>compose&lt;Gs...&gt;</code> to all the arguments. <br /></td></tr>
+<tr class="separator:gaa1e91af5bb7608d60cfe8dc291729472"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1aacfb8c082bfbad7e8003dc050c8b66"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1aacfb8c082bfbad7e8003dc050c8b66"></a>
+template&lt;template&lt; typename...&gt; class C&gt; </td></tr>
+<tr class="memitem:ga1aacfb8c082bfbad7e8003dc050c8b66"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::v1::quote_trait</a> = compose&lt; quote&lt; eval &gt;, quote&lt; C &gt;&gt;</td></tr>
+<tr class="memdesc:ga1aacfb8c082bfbad7e8003dc050c8b66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> into a Alias Class. <br /></td></tr>
+<tr class="separator:ga1aacfb8c082bfbad7e8003dc050c8b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga13320cb0420d160a731588aea8b5941e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga13320cb0420d160a731588aea8b5941e"></a>
+template&lt;typename T , template&lt; T...&gt; class C&gt; </td></tr>
+<tr class="memitem:ga13320cb0420d160a731588aea8b5941e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga13320cb0420d160a731588aea8b5941e">meta::v1::quote_trait_i</a> = compose&lt; quote&lt; eval &gt;, quote_i&lt; T, C &gt;&gt;</td></tr>
+<tr class="memdesc:ga13320cb0420d160a731588aea8b5941e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> taking literals of type <code>T</code> into a Alias Class. <br /></td></tr>
+<tr class="separator:ga13320cb0420d160a731588aea8b5941e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaec51f3c6c4ff9840001956f48ef750db"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaec51f3c6c4ff9840001956f48ef750db"></a>
 template&lt;typename F &gt; </td></tr>
 <tr class="memitem:gaec51f3c6c4ff9840001956f48ef750db"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaec51f3c6c4ff9840001956f48ef750db">meta::v1::uncurry</a> = bind_front&lt; quote&lt; apply_list &gt;, F &gt;</td></tr>

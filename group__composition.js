@@ -17,12 +17,9 @@ var group__composition =
     [ "quote_i", "structmeta_1_1quote__i.html", [
       [ "apply", "structmeta_1_1quote__i.html#afd6ecce3ed24b11915981e7e210ff981", null ]
     ] ],
-    [ "quote_trait", "structmeta_1_1quote__trait.html", [
-      [ "apply", "structmeta_1_1quote__trait.html#a474c3d79b5778d3cbbda380a6be74d3d", null ]
-    ] ],
-    [ "quote_trait_i", "structmeta_1_1quote__trait__i.html", [
-      [ "apply", "structmeta_1_1quote__trait__i.html#a958cd0b43a6073a1a5318456caf12289", null ]
-    ] ],
     [ "curry", "group__composition.html#ga33a0c3a3abc067f23697140a343ea8cb", null ],
+    [ "on", "group__composition.html#gaa1e91af5bb7608d60cfe8dc291729472", null ],
+    [ "quote_trait", "group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66", null ],
+    [ "quote_trait_i", "group__composition.html#ga13320cb0420d160a731588aea8b5941e", null ],
     [ "uncurry", "group__composition.html#gaec51f3c6c4ff9840001956f48ef750db", null ]
 ];

@@ -106,21 +106,21 @@ Public Types</h2></td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a4582cc232deb55d0e8105976b8318b01"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>difference_t</b> = concepts::WeaklyIncrementable::difference_t&lt; iterator_t&lt; T &gt;&gt;</td></tr>
 <tr class="separator:a4582cc232deb55d0e8105976b8318b01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae82aa102d629e14f7cfac9f0f572273c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae82aa102d629e14f7cfac9f0f572273c"></a>
+<tr class="memitem:a7770cba70e2d033926eff5ffc9bc332c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7770cba70e2d033926eff5ffc9bc332c"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae82aa102d629e14f7cfac9f0f572273c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>iterator_t</b> = decltype(begin(std::declval&lt; T &gt;()))</td></tr>
-<tr class="separator:ae82aa102d629e14f7cfac9f0f572273c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3edf94bb28132e3f41684de00c2135ab"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3edf94bb28132e3f41684de00c2135ab"></a>
+<tr class="memitem:a7770cba70e2d033926eff5ffc9bc332c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>iterator_t</b> = decltype(begin(val&lt; T &gt;()))</td></tr>
+<tr class="separator:a7770cba70e2d033926eff5ffc9bc332c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66604d79285beb85a45787cf2bd37814"><td class="memTemplParams" colspan="2"><a class="anchor" id="a66604d79285beb85a45787cf2bd37814"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a3edf94bb28132e3f41684de00c2135ab"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sentinel_t</b> = decltype(end(std::declval&lt; T &gt;()))</td></tr>
-<tr class="separator:a3edf94bb28132e3f41684de00c2135ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66604d79285beb85a45787cf2bd37814"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sentinel_t</b> = decltype(end(val&lt; T &gt;()))</td></tr>
+<tr class="separator:a66604d79285beb85a45787cf2bd37814"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aaa3df8859aeb84bd06207055ba93570e"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaa3df8859aeb84bd06207055ba93570e"></a>
+<tr class="memitem:af69cb7de329ff098a0f321cf54230f5d"><td class="memTemplParams" colspan="2"><a class="anchor" id="af69cb7de329ff098a0f321cf54230f5d"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aaa3df8859aeb84bd06207055ba93570e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T t) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_iterator_range.html">IteratorRange</a> &gt;(begin(t), end(t))))</td></tr>
-<tr class="separator:aaa3df8859aeb84bd06207055ba93570e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af69cb7de329ff098a0f321cf54230f5d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;t) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_iterator_range.html">IteratorRange</a> &gt;(begin(t), end(t))))</td></tr>
+<tr class="separator:af69cb7de329ff098a0f321cf54230f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -145,10 +145,15 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga288e095a9834eab7fedc8ce234afdd04"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga288e095a9834eab7fedc8ce234afdd04">meta::v1::lambda</a> = <a class="el" href="classmeta_1_1v1_1_1if__c.html">if_c</a>&lt;(sizeof...(Ts) &gt; 0), detail::lambda_&lt; list&lt; Ts...&gt;&gt;&gt;</td></tr>
 <tr class="memdesc:ga288e095a9834eab7fedc8ce234afdd04"><td class="mdescLeft">&#160;</td><td class="mdescRight">For creating anonymous Alias Classes.  <a href="#ga288e095a9834eab7fedc8ce234afdd04">More...</a><br /></td></tr>
 <tr class="separator:ga288e095a9834eab7fedc8ce234afdd04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad71f527e438a2f5587adcdb1d2dccb17"><td class="memTemplParams" colspan="2">template&lt;typename... As&gt; </td></tr>
-<tr class="memitem:gad71f527e438a2f5587adcdb1d2dccb17"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gad71f527e438a2f5587adcdb1d2dccb17">meta::v1::let</a> = eval&lt; detail::eval_let_&lt; eval&lt; detail::let_&lt; As...&gt;&gt;&gt;&gt;</td></tr>
-<tr class="memdesc:gad71f527e438a2f5587adcdb1d2dccb17"><td class="mdescLeft">&#160;</td><td class="mdescRight">A lexically scoped expression with local variables.  <a href="#gad71f527e438a2f5587adcdb1d2dccb17">More...</a><br /></td></tr>
-<tr class="separator:gad71f527e438a2f5587adcdb1d2dccb17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad34f912696873f0230f1fd7e8207197c"><td class="memTemplParams" colspan="2">template&lt;typename... As&gt; </td></tr>
+<tr class="memitem:gad34f912696873f0230f1fd7e8207197c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gad34f912696873f0230f1fd7e8207197c">meta::v1::let</a> = eval&lt; eval&lt; detail::let_&lt; As...&gt;&gt;&gt;</td></tr>
+<tr class="memdesc:gad34f912696873f0230f1fd7e8207197c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A lexically scoped expression with local variables.  <a href="#gad34f912696873f0230f1fd7e8207197c">More...</a><br /></td></tr>
+<tr class="separator:gad34f912696873f0230f1fd7e8207197c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga676ce876dd98b658017dfbc3fe96ef3f"></a>
+template&lt;typename F &gt; </td></tr>
+<tr class="memitem:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga676ce876dd98b658017dfbc3fe96ef3f">meta::v1::not_fn</a> = compose&lt; quote&lt; not_ &gt;, F &gt;</td></tr>
+<tr class="memdesc:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the result of Alias Class <code>F</code>. <br /></td></tr>
+<tr class="separator:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1c0fcb43133d9bc434fbec05b2efe1f6"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:ga1c0fcb43133d9bc434fbec05b2efe1f6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga1c0fcb43133d9bc434fbec05b2efe1f6">meta::v1::sizeof_</a> = <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; sizeof(T)&gt;</td></tr>
 <tr class="memdesc:ga1c0fcb43133d9bc434fbec05b2efe1f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias that computes the size of the type <code>T</code>.  <a href="#ga1c0fcb43133d9bc434fbec05b2efe1f6">More...</a><br /></td></tr>
@@ -196,18 +201,18 @@ template&lt;typename... Ts&gt; </div>
 <p>For creating anonymous Alias Classes. </p>
 <div class="fragment"><div class="line"><span class="keyword">using</span> L = lambda&lt;_a, _b, std::pair&lt;_b, std::pair&lt;_a, _a&gt;&gt;&gt;;</div>
 <div class="line"><span class="keyword">using</span> P = apply&lt;L, int, short&gt;;</div>
-<div class="line">static_assert(std::is_same&lt;P, std::pair&lt;<span class="keywordtype">short</span>, std::pair&lt;int, int&gt;&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line">static_assert(std::is_same&lt;P, <a class="code" href="group__list.html#gaef65d81fa921b82861a9552cea6455aa">std::pair</a>&lt;<span class="keywordtype">short</span>, std::pair&lt;int, int&gt;&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
 </div><!-- fragment --> 
 </div>
 </div>
-<a class="anchor" id="gad71f527e438a2f5587adcdb1d2dccb17"></a>
+<a class="anchor" id="gad34f912696873f0230f1fd7e8207197c"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... As&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__trait.html#gad71f527e438a2f5587adcdb1d2dccb17">meta::v1::let</a> = typedef eval&lt;detail::eval_let_&lt;eval&lt;detail::let_&lt;As...&gt;&gt;&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__trait.html#gad34f912696873f0230f1fd7e8207197c">meta::v1::let</a> = typedef eval&lt;eval&lt;detail::let_&lt;As...&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -216,7 +221,7 @@ template&lt;typename... As&gt; </div>
 
 <p>A lexically scoped expression with local variables. </p>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> List&gt;</div>
-<div class="line"><span class="keyword">using</span> find_index_ = <a class="code" href="group__trait.html#gad71f527e438a2f5587adcdb1d2dccb17">let</a>&lt;</div>
+<div class="line"><span class="keyword">using</span> find_index_ = <a class="code" href="group__trait.html#gad34f912696873f0230f1fd7e8207197c">let</a>&lt;</div>
 <div class="line">    var&lt;_a, List&gt;,</div>
 <div class="line">    var&lt;_b, lazy::find&lt;_a, T&gt;&gt;,</div>
 <div class="line">    <a class="code" href="group__lazy__logical.html#ga8c71ad12f7d1077e9680c19404ffe02c">lazy::if_</a>&lt;</div>

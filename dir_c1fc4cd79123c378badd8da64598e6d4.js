@@ -6,6 +6,7 @@ var dir_c1fc4cd79123c378badd8da64598e6d4 =
     [ "drop_while.hpp", "action_2drop__while_8hpp.html", null ],
     [ "erase.hpp", "erase_8hpp.html", "erase_8hpp" ],
     [ "insert.hpp", "insert_8hpp.html", "insert_8hpp" ],
+    [ "join.hpp", "action_2join_8hpp.html", null ],
     [ "push_back.hpp", "push__back_8hpp.html", null ],
     [ "push_front.hpp", "push__front_8hpp.html", null ],
     [ "remove_if.hpp", "action_2remove__if_8hpp.html", null ],

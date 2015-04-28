@@ -137,10 +137,10 @@ Quick Start</h1>
 <h3>Convenience</h3>
 <p>It's more convenient to pass a single range object to an algorithm than separate begin/end iterators. Compare:</p>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; v{<span class="comment">/*...*/</span>};</div>
-<div class="line">std::sort( v.begin(), v.end() );</div>
+<div class="line"><a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">std::sort</a>( v.begin(), v.end() );</div>
 </div><!-- fragment --><p>with</p>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; v{<span class="comment">/*...*/</span>};</div>
-<div class="line">ranges::sort( v );</div>
+<div class="line"><a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">ranges::sort</a>( v );</div>
 </div><!-- fragment --><p>Range v3 contains a full implementation of all the standard algorithms with range-based overloads for convenience.</p>
 <h3>Composability</h3>
 <p>Having a single range object permits <em>pipelines</em> of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by <em>views</em>, and eager mutation is handled by <em>actions</em>.</p>
@@ -169,13 +169,13 @@ Quick Start</h1>
 <p>Read data into a vector, sort it, and make it unique.</p>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> std::vector&lt;int&gt; read_data();</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
-<div class="line">std::vector&lt;int&gt; vi = read_data() | action::sort | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
+<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
 </div><!-- fragment --><p>Do the same to a <code>vector</code> that already contains some data:</p>
-<div class="fragment"><div class="line">vi = std::move(vi) | action::sort | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
+<div class="fragment"><div class="line">vi = std::move(vi) | <a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
 </div><!-- fragment --><p>Mutate the container in-place:</p>
-<div class="fragment"><div class="line">vi |= action::sort | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
+<div class="fragment"><div class="line">vi |= <a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
 </div><!-- fragment --><p>Same as above, but with function-call syntax instead of pipe syntax:</p>
-<div class="fragment"><div class="line"><a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>(action::sort(vi));</div>
+<div class="fragment"><div class="line"><a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>(<a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a>(vi));</div>
 </div><!-- fragment --><h2>Create Custom Ranges</h2>
 <p>Range v3 provides a utility for easily creating your own range types, called <code>range_facade</code>. The code below uses <code>range_facade</code> to create a range that traverses a null-terminated string:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="all_8hpp.html">range/v3/all.hpp</a>&gt;</span></div>
@@ -264,7 +264,7 @@ Quick Start</h1>
 <p>For instance, if you would like to write a function that takes an iterator/sentinel pair, you can write it like this:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class </span>Iter, <span class="keyword">class </span>Sent, <span class="keyword">class </span>Comp = <span class="comment">/*...some_default..*/</span>,</div>
 <div class="line">    CONCEPT_REQUIRES_(IteratorRange&lt;Iter, Sent&gt;())&gt;</div>
-<div class="line"><span class="keywordtype">void</span> my_algorithm(Iter first, Sent last, Comp comp = Comp{})</div>
+<div class="line"><span class="keywordtype">void</span> my_algorithm(Iter <a class="code" href="group__list.html#ga9447487bb1ccdc8867d000c98f992e91">first</a>, Sent last, Comp comp = Comp{})</div>
 <div class="line">{</div>
 <div class="line">    <span class="comment">// ...</span></div>
 <div class="line">}</div>
@@ -285,12 +285,14 @@ Range Views</h1>
 <p> The big advantage of ranges over iterators is their <em>composability</em>. They permit a functional style of programming where data is manipulated by passing it through a series of combinators. In addition, the combinators can be <em>lazy</em>, only doing work when the answer is requested, and <em>purely functional</em>, without mutating the original data. This makes it easier to reason about your code, especially when writing concurrent programs.</p>
 <p>Below is a list of the lazy range combinators, or <em>views</em>, that Range v3 provides, and a blurb about how each is intended to be used.</p>
 <dl>
-<dt><a class="el" href=""><code>view::adjacent_filter</code></a> </dt>
-<dd>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the first element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, <code>adjacent_filter</code> with <code>std::not_equal_to</code> filters out all the non-unique elements.) </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1adjacent__remove__if__fn.html"><code>view::adjacent_remove_if</code></a> </dt>
+<dd>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to false, the first element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, <code>adjacent_remove_if</code> with <code>std::equal_to</code> filters out all the non-unique elements.) </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1all__fn.html"><code>view::all</code></a> </dt>
 <dd>Return a range containing all the elements in the source. Useful for converting containers to ranges. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1bounded__fn.html"><code>view::bounded</code></a> </dt>
 <dd>Convert the source range to a <em>bounded</em> range, where the type of the <code>end</code> is the same as the <code>begin</code>. Useful for iterating over a range with C++'s range-based <code>for</code> loop. </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1chunk__fn.html"><code>view::chunk</code></a> </dt>
+<dd>Given a source range and an integer <em>N</em>, produce a range of contiguous ranges where each inner range has <em>N</em> contiguous elements. The final range may have fewer than <em>N</em> elements. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1concat__fn.html"><code>view::concat</code></a> </dt>
 <dd>Given <em>N</em> source ranges, produce a result range that is the concatenation of all of them. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1const__fn.html"><code>view::const_</code></a> </dt>
@@ -316,9 +318,9 @@ Range Views</h1>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1intersperse__fn.html"><code>view::intersperse</code></a> </dt>
 <dd>Given a source range and a value, return a new range where the value is inserted between contiguous elements from the source. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1ints__fn.html"><code>view::ints</code></a> </dt>
-<dd>Generate a range of monotonically increasing <code>int</code>s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (inclusive). </dd>
+<dd>Generate a range of monotonically increasing <code>int</code>s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (exclusive). </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1iota__fn.html"><code>view::iota</code></a> </dt>
-<dd>A generalization of <code>view::ints</code> that generates a sequence of monotonically increasing values of any incrementable type. </dd>
+<dd>A generalization of <code>view::ints</code> that generates a sequence of monotonically increasing values of any incrementable type. When specified with a single argument, the result is an infinite range beginning at the specified value. With two arguments, the values are assumed to denote a half-open range. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1join__fn.html"><code>view::join</code></a> </dt>
 <dd>Given a range of ranges, join them into a flattened sequence of elements. Optionally, you can specify a value or a range to be inserted between each source range. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1keys__fn.html"><code>view::keys</code></a> </dt>
