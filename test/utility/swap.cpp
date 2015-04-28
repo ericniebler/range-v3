@@ -18,6 +18,7 @@
 #include <tuple>
 #include <memory>
 #include <vector>
+#include <complex>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp> // for iter_swap, which uses indirect_swap
@@ -25,6 +26,12 @@
 #include <range/v3/to_container.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+
+template<typename T>
+struct S
+{
+    T t;
+};
 
 struct MoveOnlyString
 {
@@ -124,6 +131,17 @@ int main()
         ranges::iter_swap(rng.begin(), rng.begin()+2);
         ::check_equal(v0, {"c","b","a"});
         ::check_equal(v1, {"z","y","x"});
+    }
+
+    {
+        using T = std::complex<float>;
+        T s,t;
+        ranges::swap(s,t);
+    }
+    {
+        using T = S<std::complex<float>>;
+        T s,t;
+        ranges::swap(s,t);
     }
 
     return ::test_result();

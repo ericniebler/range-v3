@@ -70,7 +70,7 @@ namespace ranges
             {
                 using type = Val;
                 template<typename I>
-                static type apply(I const & i)
+                static RANGES_CXX14_CONSTEXPR type apply(I const & i)
                 {
                     return *i;
                 }
@@ -89,14 +89,17 @@ namespace ranges
                             iterator_value_t<I>,
                             private_>;
                     I const it_;
+                    RANGES_CXX14_CONSTEXPR
                     explicit proxy(I i)
                       : it_(std::move(i))
                     {}
                     friend struct operator_brackets_const_proxy;
                 public:
+                    RANGES_CXX14_CONSTEXPR
                     proxy(proxy const&) = default;
+                    RANGES_CXX14_CONSTEXPR
                     proxy const & operator=(proxy &) const = delete;
-                    operator Ref() const
+                    RANGES_CXX14_CONSTEXPR operator Ref() const
                     {
                         return *it_;
                     }
@@ -105,12 +108,12 @@ namespace ranges
                         return *it_;
                     }
                     CONCEPT_REQUIRES(Convertible<Ref, value_t>())
-                    operator value_t() const
+                    RANGES_CXX14_CONSTEXPR operator value_t() const
                     {
                         return *it_;
                     }
                 };
-                static type apply(I i)
+                static RANGES_CXX14_CONSTEXPR type apply(I i)
                 {
                     return type{std::move(i)};
                 }
@@ -129,12 +132,13 @@ namespace ranges
                             iterator_value_t<I>,
                             private_>;
                     I const it_;
+                    RANGES_CXX14_CONSTEXPR
                     explicit proxy(I i)
                       : it_(std::move(i))
                     {}
                     friend struct operator_brackets_proxy;
                 public:
-                    operator Ref() const
+                    RANGES_CXX14_CONSTEXPR operator Ref() const
                     {
                         return *it_;
                     }
@@ -143,25 +147,29 @@ namespace ranges
                         return *it_;
                     }
                     CONCEPT_REQUIRES(Convertible<Ref, value_t>())
-                    operator value_t() const
+                    RANGES_CXX14_CONSTEXPR operator value_t() const
                     {
                         return *it_;
                     }
+                    RANGES_CXX14_CONSTEXPR
                     proxy (proxy const&) = default;
+                    RANGES_CXX14_CONSTEXPR
                     proxy const & operator=(proxy&) const = delete;
                     // BUGBUG assign from common reference? from rvalue reference?
+                    RANGES_CXX14_CONSTEXPR
                     proxy const & operator=(iterator_value_t<I> const & x) const
                     {
                         *it_ = x;
                         return *this;
                     }
+                    RANGES_CXX14_CONSTEXPR
                     proxy const & operator=(iterator_value_t<I> && x) const
                     {
                         *it_ = std::move(x);
                         return *this;
                     }
                 };
-                static type apply(I i)
+                static RANGES_CXX14_CONSTEXPR type apply(I i)
                 {
                     return type{std::move(i)};
                 }
@@ -190,7 +198,9 @@ namespace ranges
             private:
                 mutable value_type value_;
             public:
+                RANGES_CXX14_CONSTEXPR
                 postfix_increment_proxy() = default;
+                RANGES_CXX14_CONSTEXPR
                 explicit postfix_increment_proxy(I const& x)
                   : value_(*x)
                 {}
@@ -198,7 +208,7 @@ namespace ranges
                 // (*r++).mutate(), but it imposes fewer assumptions about the
                 // behavior of the value_type.  In particular, recall that
                 // (*r).mutate() is legal if operator* returns by value.
-                value_type& operator*() const
+                RANGES_CXX14_CONSTEXPR value_type& operator*() const
                 {
                     return value_;
                 }
@@ -216,7 +226,9 @@ namespace ranges
                 mutable value_type value_;
                 I it_;
             public:
+                RANGES_CXX14_CONSTEXPR
                 writable_postfix_increment_proxy() = default;
+                RANGES_CXX14_CONSTEXPR
                 explicit writable_postfix_increment_proxy(I x)
                   : value_(*x)
                   , it_(std::move(x))
@@ -225,16 +237,19 @@ namespace ranges
                 // value_type(*r++) can work.  In this case, *r is the same as
                 // *r++, and the conversion operator below is used to ensure
                 // readability.
+                RANGES_CXX14_CONSTEXPR
                 writable_postfix_increment_proxy const & operator*() const
                 {
                     return *this;
                 }
                 // So that iter_move(r++) moves the cached value out
+                RANGES_CXX14_CONSTEXPR
                 friend value_type && indirect_move(writable_postfix_increment_proxy const &ref)
                 {
                     return std::move(ref.value_);
                 }
                 // Provides readability of *r++
+                RANGES_CXX14_CONSTEXPR
                 operator value_type &() const
                 {
                     return value_;
@@ -242,6 +257,7 @@ namespace ranges
                 // Provides writability of *r++
                 template<typename T,
                     CONCEPT_REQUIRES_(Writable<I, T>())>
+                RANGES_CXX14_CONSTEXPR
                 void operator=(T const &x) const
                 {
                     *it_ = x;
@@ -249,17 +265,20 @@ namespace ranges
                 // This overload just in case only non-const objects are writable
                 template<typename T,
                     CONCEPT_REQUIRES_(Writable<I, T>())>
+                RANGES_CXX14_CONSTEXPR
                 void operator=(T &x) const
                 {
                     *it_ = x;
                 }
                 template<typename T,
                     CONCEPT_REQUIRES_(MoveWritable<I, T>())>
+                RANGES_CXX14_CONSTEXPR
                 void operator=(T &&x) const
                 {
                     *it_ = std::move(x);
                 }
                 // Provides X(r++)
+                RANGES_CXX14_CONSTEXPR
                 operator I const &() const
                 {
                     return it_;
@@ -343,14 +362,17 @@ namespace ranges
             T t_;
         public:
             constexpr basic_mixin() = default;
+            RANGES_CXX14_CONSTEXPR
             basic_mixin(T t)
               : t_(std::move(t))
             {}
+            RANGES_CXX14_CONSTEXPR
             T &get() noexcept
             {
                 return t_;
             }
             /// \overload
+            RANGES_CXX14_CONSTEXPR
             T const &get() const noexcept
             {
                 return t_;
@@ -367,10 +389,12 @@ namespace ranges
             friend range_access;
             template<typename Cur, typename OtherSentinel>
             friend struct basic_iterator;
+            RANGES_CXX14_CONSTEXPR
             S &end() noexcept
             {
                 return this->detail::mixin_base<S>::get();
             }
+            RANGES_CXX14_CONSTEXPR
             S const &end() const noexcept
             {
                 return this->detail::mixin_base<S>::get();
@@ -378,8 +402,8 @@ namespace ranges
         private:
             using detail::mixin_base<S>::get;
         public:
-            basic_sentinel() = default;
-            basic_sentinel(S end)
+            RANGES_CXX14_CONSTEXPR basic_sentinel() = default;
+            RANGES_CXX14_CONSTEXPR basic_sentinel(S end)
               : detail::mixin_base<S>(std::move(end))
             {}
             using detail::mixin_base<S>::mixin_base;
@@ -411,11 +435,11 @@ namespace ranges
                     detail::cursor_concept_t<Cur>>;
 
             using detail::mixin_base<Cur>::get;
-            Cur &pos() noexcept
+            RANGES_CXX14_CONSTEXPR Cur &pos() noexcept
             {
                 return this->detail::mixin_base<Cur>::get();
             }
-            Cur const &pos() const noexcept
+            RANGES_CXX14_CONSTEXPR Cur const &pos() const noexcept
             {
                 return this->detail::mixin_base<Cur>::get();
             }
@@ -461,7 +485,7 @@ namespace ranges
                 detail::operator_brackets_dispatch<basic_iterator, value_type, reference, common_reference>;
         public:
             constexpr basic_iterator() = default;
-            basic_iterator(Cur pos)
+            RANGES_CXX14_CONSTEXPR basic_iterator(Cur pos)
               : detail::mixin_base<Cur>{std::move(pos)}
             {}
             template<typename OtherCur, typename OtherS,
@@ -471,17 +495,18 @@ namespace ranges
             {}
             // Mix in any additional constructors defined and exported by the cursor
             using detail::mixin_base<Cur>::mixin_base;
-            reference operator*() const
+            RANGES_CXX14_CONSTEXPR reference operator*() const
                 noexcept(noexcept(range_access::current(std::declval<basic_iterator const &>().pos())))
             {
                 return range_access::current(pos());
             }
+            RANGES_CXX14_CONSTEXPR
             basic_iterator& operator++()
             {
                 range_access::next(pos());
                 return *this;
             }
-            postfix_increment_result_t operator++(int)
+            RANGES_CXX14_CONSTEXPR postfix_increment_result_t operator++(int)
             {
                 postfix_increment_result_t tmp(*this);
                 ++*this;
@@ -519,12 +544,14 @@ namespace ranges
                 return !(left == right);
             }
             CONCEPT_REQUIRES(detail::BidirectionalCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             basic_iterator& operator--()
             {
                 range_access::prev(pos());
                 return *this;
             }
             CONCEPT_REQUIRES(detail::BidirectionalCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             basic_iterator operator--(int)
             {
                 basic_iterator tmp(*this);
@@ -532,36 +559,42 @@ namespace ranges
                 return tmp;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             basic_iterator& operator+=(difference_type n)
             {
                 range_access::advance(pos(), n);
                 return *this;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             friend basic_iterator operator+(basic_iterator left, difference_type n)
             {
                 left += n;
                 return left;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             friend basic_iterator operator+(difference_type n, basic_iterator right)
             {
                 right += n;
                 return right;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             basic_iterator& operator-=(difference_type n)
             {
                 range_access::advance(pos(), -n);
                 return *this;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             friend basic_iterator operator-(basic_iterator left, difference_type n)
             {
                 left -= n;
                 return left;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             friend difference_type operator-(basic_iterator const &left,
                 basic_iterator const &right)
             {
@@ -569,21 +602,25 @@ namespace ranges
             }
             // symmetric comparisons
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             friend bool operator<(basic_iterator const &left, basic_iterator const &right)
             {
                 return 0 < (right - left);
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             friend bool operator<=(basic_iterator const &left, basic_iterator const &right)
             {
                 return 0 <= (right - left);
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             friend bool operator>(basic_iterator const &left, basic_iterator const &right)
             {
                 return (right - left) < 0;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             friend bool operator>=(basic_iterator const &left, basic_iterator const &right)
             {
                 return (right - left) <= 0;
@@ -638,6 +675,7 @@ namespace ranges
                 return true;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            RANGES_CXX14_CONSTEXPR
             typename operator_brackets_dispatch_t::type
             operator[](difference_type n) const
             {
@@ -649,18 +687,21 @@ namespace ranges
         struct get_cursor_fn
         {
             template<typename Cur, typename Sent>
+            RANGES_CXX14_CONSTEXPR
             Cur &operator()(basic_iterator<Cur, Sent> &it) const noexcept
             {
                 detail::mixin_base<Cur> &mix = it;
                 return mix.get();
             }
             template<typename Cur, typename Sent>
+            RANGES_CXX14_CONSTEXPR
             Cur const &operator()(basic_iterator<Cur, Sent> const &it) const noexcept
             {
                 detail::mixin_base<Cur> const &mix = it;
                 return mix.get();
             }
             template<typename Cur, typename Sent>
+            RANGES_CXX14_CONSTEXPR
             Cur operator()(basic_iterator<Cur, Sent> &&it) const
                 noexcept(std::is_nothrow_copy_constructible<Cur>::value)
             {
