@@ -55,7 +55,20 @@
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
-#include <range/v3/all.hpp>
+#include <range/v3/core.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/view/group_by.hpp>
+#include <range/v3/view/transform.hpp>
+#include <range/v3/view/concat.hpp>
+#include <range/v3/view/single.hpp>
+#include <range/v3/view/repeat_n.hpp>
+#include <range/v3/view/take.hpp>
+#include <range/v3/view/join.hpp>
+#include <range/v3/view/all.hpp>
+#include <range/v3/action/join.hpp>
+#include <range/v3/algorithm/copy.hpp>
+#include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/algorithm/mismatch.hpp>
 
 namespace greg = boost::gregorian;
 using date = greg::date;

@@ -457,14 +457,11 @@ namespace ranges
               : sout_(&sout), delim_(delim)
             {}
             template<typename U,
-                meta::if_<
-                    meta::or_<
-                        std::is_void<T>,
-                        std::is_convertible<U, meta::eval<std::add_lvalue_reference<T const>>>>, int> = 0>
+                typename V = meta::if_<std::is_void<T>, U, T>,
+                meta::if_<std::is_convertible<U, V const &>, int> = 0>
             ostream_iterator const &operator=(U &&t) const
             {
                 RANGES_ASSERT(sout_);
-                using V = meta::if_<std::is_void<T>, U, T>;
                 *sout_ << static_cast<V const &>(t);
                 if(delim_)
                     *sout_ << delim_;

@@ -283,12 +283,14 @@ The big advantage of ranges over iterators is their *composability*. They permit
 Below is a list of the lazy range combinators, or *views*, that Range v3 provides, and a blurb about how each is intended to be used.
 
 <DL>
-<DT>\link ranges::v3::view::adjacent_filter_fn `view::adjacent_filter`\endlink</DT>
-  <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the first element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, `adjacent_filter` with `std::not_equal_to` filters out all the non-unique elements.)</DD>
+<DT>\link ranges::v3::view::adjacent_remove_if_fn `view::adjacent_remove_if`\endlink</DT>
+  <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to false, the first element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, `adjacent_remove_if` with `std::equal_to` filters out all the non-unique elements.)</DD>
 <DT>\link ranges::v3::view::all_fn `view::all`\endlink</DT>
   <DD>Return a range containing all the elements in the source. Useful for converting containers to ranges.</DD>
 <DT>\link ranges::v3::view::bounded_fn `view::bounded`\endlink</DT>
   <DD>Convert the source range to a *bounded* range, where the type of the `end` is the same as the `begin`. Useful for iterating over a range with C++'s range-based `for` loop.</DD>
+<DT>\link ranges::v3::view::chunk_fn `view::chunk`\endlink</DT>
+  <DD>Given a source range and an integer *N*, produce a range of contiguous ranges where each inner range has *N* contiguous elements. The final range may have fewer than *N* elements.</DD>
 <DT>\link ranges::v3::view::concat_fn `view::concat`\endlink</DT>
   <DD>Given *N* source ranges, produce a result range that is the concatenation of all of them.</DD>
 <DT>\link ranges::v3::view::const_fn `view::const_`\endlink</DT>
@@ -314,9 +316,9 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
 <DT>\link ranges::v3::view::intersperse_fn `view::intersperse`\endlink</DT>
   <DD>Given a source range and a value, return a new range where the value is inserted between contiguous elements from the source.</DD>
 <DT>\link ranges::v3::view::ints_fn `view::ints`\endlink</DT>
-  <DD>Generate a range of monotonically increasing `int`s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (inclusive).</DD>
+  <DD>Generate a range of monotonically increasing `int`s. When used without arguments, it generates the quasi-infinite range [0,1,2,3...]. It can also be called with a lower bound, or with a lower and upper bound (exclusive).</DD>
 <DT>\link ranges::v3::view::iota_fn `view::iota`\endlink</DT>
-  <DD>A generalization of `view::ints` that generates a sequence of monotonically increasing values of any incrementable type.</DD>
+  <DD>A generalization of `view::ints` that generates a sequence of monotonically increasing values of any incrementable type. When specified with a single argument, the result is an infinite range beginning at the specified value. With two arguments, the values are assumed to denote a half-open range.</DD>
 <DT>\link ranges::v3::view::join_fn `view::join`\endlink</DT>
   <DD>Given a range of ranges, join them into a flattened sequence of elements. Optionally, you can specify a value or a range to be inserted between each source range.</DD>
 <DT>\link ranges::v3::view::keys_fn `view::keys`\endlink</DT>

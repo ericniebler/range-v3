@@ -44,7 +44,7 @@ namespace ranges
             using offset_t =
                 meta::if_<
                     BidirectionalIterable<Rng>,
-                    mutable_<range_difference_t<Rng>>,
+                    range_difference_t<Rng>,
                     constant<range_difference_t<Rng>, 0>>;
             range_difference_t<Rng> n_;
             friend range_access;
@@ -70,17 +70,17 @@ namespace ranges
 
         template<typename Rng>
         struct chunk_view<Rng>::adaptor
-          : adaptor_base, private offset_t
+          : adaptor_base, private box<offset_t>
         {
         private:
             range_difference_t<Rng> n_;
             range_sentinel_t<Rng> end_;
-            offset_t & offset() {return *this;}
-            offset_t const & offset() const {return *this;}
+            offset_t & offset() {return ranges::get<offset_t>(*this);}
+            offset_t const & offset() const {return ranges::get<offset_t>(*this);}
         public:
             adaptor() = default;
             adaptor(range_difference_t<Rng> n, range_sentinel_t<Rng> end)
-              : offset_t{0}, n_(n), end_(end)
+              : box<offset_t>{0}, n_(n), end_(end)
             {}
             auto current(range_iterator_t<Rng> it) const ->
                 decltype(view::take(make_range(std::move(it), end_), n_))

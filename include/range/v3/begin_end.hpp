@@ -52,7 +52,7 @@ namespace ranges
             template<typename T>
             std::reverse_iterator<T const *> rbegin(std::initializer_list<T> il)
             {
-                return std::reverse_iterator<T *>(il.end());
+                return std::reverse_iterator<T const *>(il.end());
             }
             template<typename T>
             std::reverse_iterator<T const *> rend(std::initializer_list<T> il)

@@ -164,7 +164,7 @@ namespace ranges
             {
                 return detail::forward<T>(t);
             }
-            /// \override
+            /// \overload
             template<typename T>
             constexpr T operator()(dangling<T> t) const
             {
