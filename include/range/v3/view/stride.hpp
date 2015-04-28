@@ -47,17 +47,6 @@ namespace ranges
             using size_type_ = range_size_t<Rng>;
             using difference_type_ = range_difference_t<Rng>;
 
-            // Bidirectional stride iterators need a runtime boolean to keep track
-            // of when the offset variable is dirty and needs to be lazily calculated.
-            // Ditto for random-access stride iterators when the end is a sentinel.
-            // If the size of the range is known a priori, then the runtime boolean
-            // is always unnecessary.
-            using dirty_t =
-                meta::if_c<
-                    (BidirectionalIterable<Rng>() && !SizedIterable<Rng>()),
-                    mutable_<std::atomic<bool>>,
-                    constant<bool, false>>;
-
             // Bidirectional and random-access stride iterators need to remember how
             // far past they end they are, so that when they're decremented, they can
             // visit the correct elements.
@@ -69,41 +58,40 @@ namespace ranges
 
             difference_type_ stride_;
 
-            struct adaptor : adaptor_base, private dirty_t, private offset_t
+            struct adaptor : adaptor_base, private offset_t
             {
             private:
                 using iterator = ranges::range_iterator_t<Rng>;
                 stride_view const *rng_;
-                dirty_t & dirty() { return *this; }
-                dirty_t const & dirty() const { return *this; }
                 offset_t & offset() { return *this; }
                 offset_t const & offset() const { return *this; }
+                CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
                 void clean() const
                 {
-                    // Harmless race here. Two threads might compute offset and set it
-                    // independently, but the result would be the same.
-                    if(dirty())
+                    std::atomic<difference_type_> &off = offset();
+                    if(off == -1)
                     {
-                        do_clean();
-                        dirty() = false;
+                        difference_type_ expected = -1;
+                        // Set the offset if it's still -1. If not, leave it alone.
+                        (void) off.compare_exchange_strong(expected, calc_offset());
                     }
                 }
-                void do_clean() const
+                difference_type_ calc_offset() const
                 {
                     auto tmp = ranges::distance(rng_->base()) % rng_->stride_;
-                    offset() = 0 != tmp ? rng_->stride_ - tmp : tmp;
+                    return 0 != tmp ? rng_->stride_ - tmp : tmp;
                 }
             public:
                 adaptor() = default;
                 adaptor(stride_view const &rng, begin_tag)
-                  : dirty_t(false), offset_t(0), rng_(&rng)
+                  : offset_t(0), rng_(&rng)
                 {}
                 adaptor(stride_view const &rng, end_tag)
-                  : dirty_t(true), offset_t(0), rng_(&rng)
+                  : offset_t(-1), rng_(&rng)
                 {
                     // Opportunistic eager cleaning when we can do so in O(1)
                     if(BidirectionalIterable<Rng>() && SizedIterable<Rng>())
-                        do_clean();
+                        offset() = calc_offset();
                 }
                 void next(iterator &it)
                 {
@@ -189,7 +177,16 @@ namespace ranges
                 (
                     make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)))
                 )
+            public:
+                template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                stride_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> step) const
+                {
+                    return {all(std::forward<Rng>(rng)), step};
+                }
+
+                // For the purpose of better error messages:
             #ifndef RANGES_DOXYGEN_INVOKED
+            private:
                 template<typename Difference, CONCEPT_REQUIRES_(!Integral<Difference>())>
                 static detail::null_pipe bind(stride_fn, Difference &&)
                 {
@@ -199,16 +196,7 @@ namespace ranges
                         "difference type.");
                     return {};
                 }
-            #endif
-
             public:
-                template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
-                stride_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> step) const
-                {
-                    return {all(std::forward<Rng>(rng)), step};
-                }
-
-            #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,
                     CONCEPT_REQUIRES_(!InputIterable<Rng>())>
                 void operator()(Rng &&, T &&) const

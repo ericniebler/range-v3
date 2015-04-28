@@ -14,7 +14,6 @@
 #ifndef RANGES_V3_VIEW_CHUNK_HPP
 #define RANGES_V3_VIEW_CHUNK_HPP
 
-#include <atomic>
 #include <utility>
 #include <functional>
 #include <range/v3/range_fwd.hpp>
@@ -45,7 +44,7 @@ namespace ranges
             using offset_t =
                 meta::if_<
                     BidirectionalIterable<Rng>,
-                    mutable_<std::atomic<range_difference_t<Rng>>>,
+                    mutable_<range_difference_t<Rng>>,
                     constant<range_difference_t<Rng>, 0>>;
             range_difference_t<Rng> n_;
             friend range_access;
@@ -65,13 +64,13 @@ namespace ranges
             range_size_t<Rng> size() const
             {
                 auto sz = ranges::distance(this->base());
-                return sz / n_ + (0 != sz % n_);
+                return static_cast<range_size_t<Rng>>(sz / n_ + (0 != (sz % n_)));
             }
         };
 
         template<typename Rng>
         struct chunk_view<Rng>::adaptor
-          : adaptor_base, offset_t
+          : adaptor_base, private offset_t
         {
         private:
             range_difference_t<Rng> n_;
@@ -83,12 +82,17 @@ namespace ranges
             adaptor(range_difference_t<Rng> n, range_sentinel_t<Rng> end)
               : offset_t{0}, n_(n), end_(end)
             {}
-            auto current(range_iterator_t<Rng> it) const
-            RANGES_DECLTYPE_AUTO_RETURN(
-                view::take(make_range(std::move(it), end_), n_)
-            )
+            auto current(range_iterator_t<Rng> it) const ->
+                decltype(view::take(make_range(std::move(it), end_), n_))
+            {
+                RANGES_ASSERT(it != end_);
+                RANGES_ASSERT(0 == offset());
+                return view::take(make_range(std::move(it), end_), n_);
+            }
             void next(range_iterator_t<Rng> &it)
             {
+                RANGES_ASSERT(it != end_);
+                RANGES_ASSERT(0 == offset());
                 offset() = ranges::advance(it, n_, end_);
             }
             CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
@@ -130,7 +134,17 @@ namespace ranges
                 (
                     make_pipeable(std::bind(chunk, std::placeholders::_1, n))
                 )
+            public:
+                template<typename Rng,
+                    CONCEPT_REQUIRES_(ForwardIterable<Rng>())>
+                chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
+                {
+                    return {all(std::forward<Rng>(rng)), n};
+                }
+
+                // For the sake of better error messages:
             #ifndef RANGES_DOXYGEN_INVOKED
+            private:
                 template<typename Int,
                     CONCEPT_REQUIRES_(!Integral<Int>())>
                 static detail::null_pipe bind(chunk_fn, Int)
@@ -139,15 +153,7 @@ namespace ranges
                         "The object passed to view::chunk must be Integral");
                     return {};
                 }
-            #endif
             public:
-                template<typename Rng,
-                    CONCEPT_REQUIRES_(ForwardIterable<Rng>())>
-                chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
-                {
-                    return {all(std::forward<Rng>(rng)), n};
-                }
-            #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,
                     CONCEPT_REQUIRES_(!(ForwardIterable<Rng>() && Integral<T>()))>
                 void operator()(Rng &&, T) const
