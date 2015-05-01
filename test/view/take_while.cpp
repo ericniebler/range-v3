@@ -12,6 +12,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/generate.hpp>
 #include <range/v3/view/take_while.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -37,6 +38,25 @@ int main()
     ::check_equal(mutable_only, {0,1,2,3,4});
     CONCEPT_ASSERT(Range<decltype(mutable_only)>());
     CONCEPT_ASSERT(!Range<decltype(mutable_only) const>());
+
+    {
+        auto ns = view::generate([]() mutable {
+            static std::size_t N = 0;
+            return ++N;
+        });
+        auto rng = ns | view::take_while([](int i) { return i < 5; });
+        ::check_equal(rng, {1,2,3,4});
+    }
+
+    {
+        auto ns = view::generate([]() mutable {
+            static std::size_t N = 0;
+            return ++N;
+        });
+        auto rng = ns | view::take_while([](int i) mutable { return i < 5; });
+        ::check_equal(rng, {1,2,3,4});
+    }
+
 
     return test_result();
 }
