@@ -61,7 +61,7 @@ namespace ranges
             {
                 return {pred_};
             }
-            CONCEPT_REQUIRES(Callable<Pred const, range_iterator_t<Rng const>>())
+            CONCEPT_REQUIRES(Callable<Pred const, range_iterator_t<Rng>>())
             sentinel_adaptor<true> end_adaptor() const
             {
                 return {pred_};
