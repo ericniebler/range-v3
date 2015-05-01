@@ -56,29 +56,23 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Val, typename C>
-            inline Val const &median(Val const &a, Val const &b, Val const &c, C &pred)
+            template<typename I, typename C, typename P>
+            inline I unguarded_partition(I begin, I end, C &pred, P &proj)
             {
-                if(pred(a, b))
-                    if(pred(b, c))
-                        return b;
-                    else if(pred(a, c))
-                        return c;
-                    else
-                        return a;
-                else if(pred(a, c))
-                    return a;
-                else if(pred(b, c))
-                    return c;
-                else
-                    return b;
-            }
+                I mid = begin + (end - begin) / 2, last = ranges::prev(end);
+                auto &&x = *begin, &&y = *mid, &&z = *last;
+                auto &&a = proj((decltype(x) &&)x), &&b = proj((decltype(y) &&)y), &&c = proj((decltype(z) &&)z);
 
-            template<typename I, typename Val, typename C, typename P>
-            inline I unguarded_partition(I begin, I end, Val const &pivot, C &pred, P &proj)
-            {
+                // Find the median:
+                I pivot_pnt = pred(a, b)
+                  ? (pred(b, c) ? mid   : (pred(a, c) ? last : begin))
+                  : (pred(a, c) ? begin : (pred(b, c) ? last : mid  ));
+
+                // Do the partition:
                 while(true)
                 {
+                    auto &&v = *pivot_pnt;
+                    auto &&pivot = proj((decltype(v) &&)v);
                     while(pred(proj(*begin), pivot))
                         ++begin;
                     --end;
@@ -87,6 +81,7 @@ namespace ranges
                     if(!(begin < end))
                         return begin;
                     ranges::iter_swap(begin, end);
+                    pivot_pnt = pivot_pnt == begin ? end : (pivot_pnt == end ? begin : pivot_pnt);
                     ++begin;
                 }
             }
@@ -174,10 +169,7 @@ namespace ranges
                 {
                     if(depth_limit == 0)
                         return partial_sort(begin, end, end, std::ref(pred), std::ref(proj)), void();
-                    I cut = detail::unguarded_partition(begin, end,
-                        detail::median(proj(*begin), proj(*(begin + (end - begin) / 2)),
-                            proj(*(end - 1)), pred),
-                        pred, proj);
+                    I cut = detail::unguarded_partition(begin, end, pred, proj);
                     sort_fn::introsort_loop(cut, end, depth_limit - 1, pred, proj);
                     end = cut;
                 }
