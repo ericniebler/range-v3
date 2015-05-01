@@ -1,4 +1,7 @@
 
+add_executable(utility.basic_iterator basic_iterator.cpp)
+add_test(test.utility.basic_iterator utility.basic_iterator)
+
 add_executable(utility.concepts concepts.cpp)
 add_test(test.utility.concepts utility.concepts)
 

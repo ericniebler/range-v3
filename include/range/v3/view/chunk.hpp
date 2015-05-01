@@ -16,6 +16,7 @@
 
 #include <utility>
 #include <functional>
+#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range.hpp>

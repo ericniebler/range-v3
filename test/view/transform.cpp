@@ -104,9 +104,9 @@ int main()
         // Needlessly verbose -- a simple transform would do the same, but this
         // is an interesting test.
         auto proj = overload(
-            [](I i) -> std::string& {return i->first;},
+            [](I i) -> std::string& {return (*i).first;},
             [](copy_tag, I i) -> std::string {return {};},
-            [](move_tag, I i) -> std::string&& {return std::move(i->first);}
+            [](move_tag, I i) -> std::string&& {return std::move((*i).first);}
         );
         auto rng2 = rng | view::iter_transform(proj);
         move(rng2, ranges::back_inserter(res));

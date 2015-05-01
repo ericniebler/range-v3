@@ -50,8 +50,13 @@
 //   Thanks to github's Arzar for bringing date::week_number
 //     to my attention.
 
+#include <cstddef>
 #include <string>
+#include <vector>
+#include <utility>
 #include <iostream>
+#include <stdexcept>
+#include <functional>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>

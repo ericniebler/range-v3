@@ -302,46 +302,6 @@ namespace ranges
                         writable_postfix_increment_proxy<I>>,
                     I>;
 
-            // operator->() needs special support for input iterators to strictly meet the
-            // standard's requirements. If *i is not an lvalue reference type, we must still
-            // produce an lvalue to which a pointer can be formed.  We do that by
-            // returning a proxy object containing an instance of the reference object.
-            template<typename Ref, bool B = std::is_reference<Ref>::value>
-            struct operator_arrow_dispatch // proxy references
-            {
-            private:
-                struct proxy
-                {
-                private:
-                    Ref ref_;
-                public:
-                    explicit proxy(Ref x)
-                      : ref_(std::move(x))
-                    {}
-                    Ref* operator->()
-                    {
-                        return std::addressof(ref_);
-                    }
-                };
-            public:
-                using type = proxy;
-                static type apply(Ref x)
-                {
-                    return type{std::move(x)};
-                }
-            };
-
-            // NOTE: Below, Ref could be an rvalue reference or an lvalue reference.
-            template<typename Ref>
-            struct operator_arrow_dispatch<Ref, true>
-            {
-                using type = meta::eval<std::add_pointer<Ref>>;
-                static type apply(Ref x)
-                {
-                    return std::addressof(x);
-                }
-            };
-
             template<typename Cur, typename Enable = void>
             struct has_mixin
               : std::false_type
@@ -407,11 +367,11 @@ namespace ranges
             friend range_access;
             template<typename Cur, typename OtherSentinel>
             friend struct basic_iterator;
-            S &end()
+            S &end() noexcept
             {
                 return this->detail::mixin_base<S>::get();
             }
-            S const &end() const
+            S const &end() const noexcept
             {
                 return this->detail::mixin_base<S>::get();
             }
@@ -440,6 +400,8 @@ namespace ranges
         private:
             friend range_access;
             friend detail::mixin_base<Cur>;
+            template<typename OtherCur, typename OtherS>
+            friend struct basic_iterator;
             CONCEPT_ASSERT(detail::InputCursor<Cur>());
             using single_pass = range_access::single_pass_t<Cur>;
             using cursor_concept_t =
@@ -489,7 +451,7 @@ namespace ranges
             using value_type = range_access::cursor_value_t<Cur>;
             using iterator_category = decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
             using difference_type = range_access::cursor_difference_t<Cur>;
-            using pointer = meta::eval<detail::operator_arrow_dispatch<reference>>;
+            using pointer = meta::eval<std::add_pointer<reference>>;
             using common_reference = common_reference_t<reference &&, value_type &>;
         private:
             using postfix_increment_result_t =
@@ -502,16 +464,17 @@ namespace ranges
             basic_iterator(Cur pos)
               : detail::mixin_base<Cur>{std::move(pos)}
             {}
+            template<typename OtherCur, typename OtherS,
+                CONCEPT_REQUIRES_(Convertible<OtherCur, Cur>())>
+            basic_iterator(basic_iterator<OtherCur, OtherS> that)
+              : detail::mixin_base<Cur>{std::move(that.pos())}
+            {}
             // Mix in any additional constructors defined and exported by the cursor
             using detail::mixin_base<Cur>::mixin_base;
             reference operator*() const
                 noexcept(noexcept(range_access::current(std::declval<basic_iterator const &>().pos())))
             {
                 return range_access::current(pos());
-            }
-            pointer operator->() const
-            {
-                return detail::operator_arrow_dispatch<reference>::apply(**this);
             }
             basic_iterator& operator++()
             {
@@ -520,18 +483,20 @@ namespace ranges
             }
             postfix_increment_result_t operator++(int)
             {
-                postfix_increment_result_t tmp{*this};
+                postfix_increment_result_t tmp(*this);
                 ++*this;
                 return tmp;
             }
             // BUGBUG this doesn't handle weak iterators.
-            constexpr bool operator==(basic_iterator const &that) const
+            constexpr friend bool operator==(basic_iterator const &left,
+                basic_iterator const &right)
             {
-                return basic_iterator::equal_(that, _nullptr_v<std::is_same<Cur, S>>());
+                return left.equal_(right, _nullptr_v<std::is_same<Cur, S>>());
             }
-            constexpr bool operator!=(basic_iterator const &that) const
+            constexpr friend bool operator!=(basic_iterator const &left,
+                basic_iterator const &right)
             {
-                return !(*this == that);
+                return !(left == right);
             }
             friend constexpr bool operator==(basic_iterator const &left,
                 basic_sentinel<S> const &right)
@@ -562,7 +527,7 @@ namespace ranges
             CONCEPT_REQUIRES(detail::BidirectionalCursor<Cur>())
             basic_iterator operator--(int)
             {
-                basic_iterator tmp{*this};
+                basic_iterator tmp(*this);
                 --*this;
                 return tmp;
             }
@@ -597,30 +562,31 @@ namespace ranges
                 return left;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
-            difference_type operator-(basic_iterator const &right) const
+            friend difference_type operator-(basic_iterator const &left,
+                basic_iterator const &right)
             {
-                return range_access::distance_to(right.pos(), pos());
+                return range_access::distance_to(right.pos(), left.pos());
             }
             // symmetric comparisons
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
-            bool operator<(basic_iterator const &that) const
+            friend bool operator<(basic_iterator const &left, basic_iterator const &right)
             {
-                return 0 < (that - *this);
+                return 0 < (right - left);
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
-            bool operator<=(basic_iterator const &that) const
+            friend bool operator<=(basic_iterator const &left, basic_iterator const &right)
             {
-                return 0 <= (that - *this);
+                return 0 <= (right - left);
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
-            bool operator>(basic_iterator const &that) const
+            friend bool operator>(basic_iterator const &left, basic_iterator const &right)
             {
-                return (that - *this) < 0;
+                return (right - left) < 0;
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
-            bool operator>=(basic_iterator const &that) const
+            friend bool operator>=(basic_iterator const &left, basic_iterator const &right)
             {
-                return (that - *this) <= 0;
+                return (right - left) <= 0;
             }
             // asymmetric comparisons
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
@@ -699,7 +665,7 @@ namespace ranges
                 noexcept(std::is_nothrow_copy_constructible<Cur>::value)
             {
                 detail::mixin_base<Cur> &mix = it;
-                return mix.get();
+                return std::move(mix.get());
             }
         };
 

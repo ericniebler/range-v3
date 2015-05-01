@@ -59,7 +59,7 @@ int main()
     models<concepts::SizedRange>(rng3);
     using P = std::pair<int,int>;
     ::check_equal(rng3, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
-    CHECK(&begin(rng3)->first == &rgi[0]);
+    CHECK(&(*begin(rng3)).first == &rgi[0]);
     CHECK(rng3.size() == 4u);
 
     auto zip2 = view::zip(rgi, rgi) | view::move;
@@ -73,7 +73,7 @@ int main()
     models<concepts::SizedRange>(rng4);
     using P = std::pair<int,int>;
     ::check_equal(rng4, {P{1,1}, P{2,2}, P{3,3}, P{4,4}});
-    CHECK(&begin(rng4)->first == &rgi[0]);
+    CHECK(&(*begin(rng4)).first == &rgi[0]);
     CHECK(rng4.size() == 4u);
 
     return test_result();

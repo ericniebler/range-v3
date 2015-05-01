@@ -28,6 +28,27 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            template<typename A, typename B>
+            using UnambiguouslyConvertible =
+                meta::or_c<
+                    (bool)Same<A, B>(),
+                    Convertible<A, B>() && !Convertible<B, A>(),
+                    Convertible<B, A>() && !Convertible<A, B>()>;
+
+            template<typename A, typename B>
+            using UnambiguouslyConvertibleType =
+                meta::eval<
+                    meta::if_c<
+                        (bool)Same<A, B>(),
+                        meta::id<A>,
+                        meta::if_c<
+                            Convertible<A, B>() && !Convertible<B, A>(),
+                            meta::id<A>,
+                            meta::if_c<
+                                Convertible<B, A>() && !Convertible<A, B>(),
+                                meta::id<B>,
+                                meta::nil_>>>>;
+
             template<typename I, typename D /* = iterator_difference_t<I>*/>
             struct counted_cursor
             {
@@ -53,6 +74,8 @@ namespace ranges
                 };
             private:
                 friend struct counted_sentinel;
+                template<typename OtherI, typename OtherD>
+                friend struct counted_cursor;
                 using iterator_concept_ =
                     concepts::most_refined<meta::list<concepts::Iterator, concepts::WeakIterator>, I>;
                 I it_;
@@ -96,6 +119,11 @@ namespace ranges
                 counted_cursor() = default;
                 counted_cursor(I it, D n)
                   : it_(std::move(it)), n_(n)
+                {}
+                template<typename OtherI, typename OtherD,
+                    CONCEPT_REQUIRES_(Convertible<OtherI, I>() && Convertible<OtherD, D>())>
+                counted_cursor(counted_cursor<OtherI, OtherD> that)
+                  : it_(std::move(that.it_)), n_(std::move(that.n_))
                 {}
                 auto current() const -> decltype(*it_)
                 {
@@ -154,9 +182,12 @@ namespace ranges
         /// @{
 
         // For RandomAccessIterator, operator- will be defined by basic_iterator
-        template<typename I, typename D, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
-        iterator_difference_t<I>
-        operator-(counted_iterator<I, D> const &end, counted_iterator<I, D> const &begin)
+        template<typename I0, typename D0, typename I1, typename D1,
+            typename CI = detail::UnambiguouslyConvertibleType<I0, I1>,
+            CONCEPT_REQUIRES_(detail::UnambiguouslyConvertible<I0, I1>() &&
+                !RandomAccessIterator<CI>())>
+        iterator_difference_t<CI>
+        operator-(counted_iterator<I0, D0> const &end, counted_iterator<I1, D1> const &begin)
         {
             return begin.count() - end.count();
         }
@@ -173,8 +204,7 @@ namespace ranges
             return -begin.count();
         }
 
-        template<typename I>
-        iterator_difference_t<I> operator-(counted_sentinel const &, counted_sentinel const &)
+        inline std::ptrdiff_t operator-(counted_sentinel const &, counted_sentinel const &)
         {
             return 0;
         }
