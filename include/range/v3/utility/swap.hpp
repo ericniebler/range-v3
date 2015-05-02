@@ -10,6 +10,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
+// The implementation of swap (see below) has been adapted from libc++
+// (http://libcxx.llvm.org).
 
 #ifndef RANGES_V3_UTILITY_SWAP_HPP
 #define RANGES_V3_UTILITY_SWAP_HPP
@@ -46,6 +48,7 @@ namespace ranges
 
             // Forward-declarations first!
             template<typename First0, typename Second0, typename First1, typename Second1>
+            RANGES_CXX14_CONSTEXPR
             meta::if_c<is_swappable<First0, First1>::value &&
                        is_swappable<Second0, Second1>::value>
             swap(std::pair<First0, Second0> &&left, std::pair<First1, Second1> &&right)
@@ -53,6 +56,7 @@ namespace ranges
                          is_nothrow_swappable<Second0, Second1>::value);
 
             template<typename ...Ts, typename ...Us>
+            RANGES_CXX14_CONSTEXPR
             meta::if_c<meta::and_c<is_swappable<Ts, Us>::value...>::value>
             swap(std::tuple<Ts...> &&left, std::tuple<Us...> &&right)
                 noexcept(meta::and_c<is_nothrow_swappable<Ts, Us>::value...>::value);
@@ -61,6 +65,7 @@ namespace ranges
             struct swap_fn
             {
                 template<typename T, typename U>
+                RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_swappable<T, U>::value>
                 operator()(T && t, U && u) const noexcept(is_nothrow_swappable<T, U>::value)
                 {
@@ -87,6 +92,7 @@ namespace ranges
             {};
 
             template<typename First0, typename Second0, typename First1, typename Second1>
+            RANGES_CXX14_CONSTEXPR
             meta::if_c<is_swappable<First0, First1>::value &&
                        is_swappable<Second0, Second1>::value>
             swap(std::pair<First0, Second0> &&left, std::pair<First1, Second1> &&right)
@@ -98,6 +104,7 @@ namespace ranges
             }
 
             template<typename ...Ts, typename ...Us, std::size_t ...Is>
+            RANGES_CXX14_CONSTEXPR
             void tuple_swap_(std::tuple<Ts...> &&left, std::tuple<Us...> &&right, meta::index_sequence<Is...>)
             {
                 detail::ignore_unused(
@@ -105,6 +112,7 @@ namespace ranges
             }
 
             template<typename ...Ts, typename ...Us>
+            RANGES_CXX14_CONSTEXPR
             meta::if_c<meta::and_c<is_swappable<Ts, Us>::value...>::value>
             swap(std::tuple<Ts...> &&left, std::tuple<Us...> &&right)
                 noexcept(meta::and_c<is_nothrow_swappable<Ts, Us>::value...>::value)
@@ -131,6 +139,7 @@ namespace ranges
 
             // Forward-declarations first!
             template<typename Readable0, typename Readable1>
+            RANGES_CXX14_CONSTEXPR
             meta::if_c<
                 is_swappable<decltype(*std::declval<Readable0>()),
                              decltype(*std::declval<Readable1>())>::value>
@@ -139,6 +148,7 @@ namespace ranges
                                               decltype(*std::declval<Readable1>())>::value);
 
             template<typename Readable0, typename Readable1>
+            RANGES_CXX14_CONSTEXPR
             meta::if_c<
                 !is_swappable<
                     decltype(*std::declval<Readable0>()),
@@ -153,6 +163,7 @@ namespace ranges
             struct indirect_swap_fn
             {
                 template<typename Readable0, typename Readable1>
+                RANGES_CXX14_CONSTEXPR
                 meta::if_c<is_indirectly_swappable<Readable0, Readable1>::value>
                 operator()(Readable0 a, Readable1 b) const
                     noexcept(is_nothrow_indirectly_swappable<Readable0, Readable1>::value)
@@ -186,6 +197,7 @@ namespace ranges
             //    properly constrain std::iter_swap and rename this.
 
             template<typename Readable0, typename Readable1>
+            RANGES_CXX14_CONSTEXPR
             meta::if_c<
                 is_swappable<decltype(*std::declval<Readable0>()),
                              decltype(*std::declval<Readable1>())>::value>
@@ -197,6 +209,7 @@ namespace ranges
             }
 
             template<typename Readable0, typename Readable1>
+            RANGES_CXX14_CONSTEXPR
             meta::if_c<
                 !is_swappable<
                     decltype(*std::declval<Readable0>()),

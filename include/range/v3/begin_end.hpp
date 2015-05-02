@@ -21,6 +21,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/dangling.hpp>
+#include <range/v3/utility/iterator.hpp>
 
 namespace ranges
 {
@@ -192,6 +193,18 @@ namespace ranges
                 {
                     return rbegin_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
+                template<typename T, std::size_t N>
+                constexpr
+                ranges::reverse_iterator<T*> operator()(T (&t)[N]) const noexcept
+                {
+                    return ranges::reverse_iterator<T*>(t + N);
+                }
+                template<typename T>
+                constexpr
+                ranges::reverse_iterator<T const*> operator()(std::initializer_list<T> il) const noexcept
+                {
+                    return ranges::reverse_iterator<T const*>(il.end());
+                }
             };
 
             struct rend_fn
@@ -219,6 +232,18 @@ namespace ranges
                     decltype(rend_fn::impl(static_cast<Rng &&>(rng), 0))
                 {
                     return rend_fn::impl(static_cast<Rng &&>(rng), 0);
+                }
+                template<typename T, std::size_t N>
+                constexpr
+                ranges::reverse_iterator<T*> operator()(T (&t)[N]) const noexcept
+                {
+                    return ranges::reverse_iterator<T*>(t);
+                }
+                template<typename T>
+                constexpr
+                ranges::reverse_iterator<T const*> operator()(std::initializer_list<T> il) const noexcept
+                {
+                    return ranges::reverse_iterator<T const*>(il.begin());
                 }
             };
 

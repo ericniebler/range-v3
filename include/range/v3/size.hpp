@@ -34,6 +34,7 @@ namespace ranges
             }
 
             template<typename Rng>
+            constexpr
             auto size_(Rng && rng, int) ->
                 decltype(rng.size())
             {
@@ -41,6 +42,7 @@ namespace ranges
             }
 
             template<typename Rng>
+            constexpr
             auto size(Rng && rng) ->
                 decltype(adl_size_detail::size_(std::forward<Rng>(rng), 42))
             {
@@ -55,6 +57,7 @@ namespace ranges
             }
 
             template<typename T, bool RValue>
+            constexpr
             auto size(ranges::reference_wrapper<T, RValue> t) -> decltype(size(t.get()))
             {
                 return size(t.get());

@@ -411,6 +411,15 @@ namespace ranges
         using counted_sentinel =
             basic_sentinel<detail::counted_sentinel>;
 
+        namespace detail
+        {
+            template<typename I> struct reverse_cursor;
+        }
+
+        template<typename I>
+        using reverse_iterator = basic_iterator<detail::reverse_cursor<I>,
+                                                detail::reverse_cursor<I>>;
+
         template<typename T>
         struct empty_view;
 
