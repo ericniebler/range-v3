@@ -170,7 +170,7 @@ namespace ranges
                     if(depth_limit == 0)
                         return partial_sort(begin, end, end, std::ref(pred), std::ref(proj)), void();
                     I cut = detail::unguarded_partition(begin, end, pred, proj);
-                    sort_fn::introsort_loop(cut, end, depth_limit - 1, pred, proj);
+                    sort_fn::introsort_loop(cut, end, --depth_limit, pred, proj);
                     end = cut;
                 }
             }
