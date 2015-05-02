@@ -116,13 +116,13 @@ template <typename Durations> auto compute_mean(Durations &&durations) {
 template <typename Durations> auto compute_max(Durations &&durations) {
   return ranges::accumulate(
       durations, std::numeric_limits<long long>::min(),
-      [](auto acc, auto i) { return std::max(acc, i.count()); });
+      [](auto acc, auto i) { return std::max(acc, (long long)i.count()); });
 }
 
 template <typename Durations> auto compute_min(Durations &&durations) {
   return ranges::accumulate(
       durations, std::numeric_limits<long long>::max(),
-      [](auto acc, auto i) { return std::min(acc, i.count()); });
+      [](auto acc, auto i) { return std::min(acc, (long long)i.count()); });
 }
 
 template <typename Durations> auto compute_stddev(Durations &&durations) {
