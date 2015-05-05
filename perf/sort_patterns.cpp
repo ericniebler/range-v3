@@ -22,6 +22,8 @@
 #include <algorithm>
 #include <range/v3/all.hpp>
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+
 /// Creates an geometric infinite sequence starting at 1 where the
 /// successor is multiplied by \p V
 auto geometric_sequence(std::size_t V) {
@@ -244,3 +246,12 @@ int main() {
 
   return 0;
 }
+
+
+#else
+
+#pragma message("sort_patterns requires C++ 14 or greater")
+
+int main() { return 0; }
+
+#endif
