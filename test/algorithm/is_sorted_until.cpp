@@ -28,9 +28,11 @@
 
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/is_sorted_until.hpp>
+#include <range/v3/view/iota.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+#include "../array.hpp"
 
 /// Calls the iterator interface of the algorithm
 template <class Iter>
@@ -373,6 +375,20 @@ void test()
 
 struct A { int a; };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    array<int, 4> a{{1, 2, 3, 4}};
+    auto b = ranges::begin(a);
+    auto b1 = ++b;
+    auto end = ranges::end(a);
+    if(ranges::is_sorted_until(a) != end) { return false; }
+    if(ranges::is_sorted_until(a, std::less<>{}) != end) { return false; }
+    if(ranges::is_sorted_until(a, std::greater<>{}) != b1) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test<forward_iterator<const int*>, iter_call>();
@@ -404,6 +420,12 @@ int main()
         CHECK(ranges::is_sorted_until(ranges::view::all(as), std::less<int>{}, &A::a).get_unsafe() == ranges::end(as));
         CHECK(ranges::is_sorted_until(ranges::view::all(as), std::greater<int>{}, &A::a).get_unsafe() == ranges::next(ranges::begin(as),1));
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

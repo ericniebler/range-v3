@@ -29,6 +29,16 @@ struct S
     int i_;
 };
 
+constexpr bool is_three(int i) { return i == 3; }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+template<class Rng>
+RANGES_CXX14_CONSTEXPR bool contains_three(Rng r) {
+    auto it = ranges::find_if(r, is_three);
+    return it != ranges::end(r);
+}
+#endif
+
 int main()
 {
     using namespace ranges;
@@ -68,6 +78,13 @@ int main()
     CHECK(ps->i_ == 3);
     ps = find_if(sa, [](int i){return i == 10;}, &S::i_);
     CHECK(ps == end(sa));
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(contains_three(std::initializer_list<int>{0, 1, 2, 3}), "");
+        static_assert(!contains_three(std::initializer_list<int>{0, 1, 2}), "");
+    }
+#endif
 
     return ::test_result();
 }

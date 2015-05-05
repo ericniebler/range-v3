@@ -30,10 +30,11 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+#include "../array.hpp"
 
 struct is_odd
 {
-    bool operator()(const int& i) const {return i & 1;}
+    constexpr bool operator()(const int& i) const {return i & 1;}
 };
 
 template <class Iter, class Sent = Iter>
@@ -224,6 +225,14 @@ int main()
     // Test projections
     const S ia[] = {S{1}, S{3}, S{5}, S{2}, S{4}, S{6}};
     CHECK(ranges::partition_point(ia, is_odd(), &S::i) == ia + 3);
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr array<int, 6> a{{1, 3, 5, 2, 4, 6}};
+        static_assert(ranges::partition_point(a, is_odd())
+                      == ranges::begin(a) + 3, "");
+    }
+#endif
 
     return ::test_result();
 }

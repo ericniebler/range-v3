@@ -25,6 +25,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/random_shuffle.hpp>
+#include "../safe_int_swap.hpp"
 #include <range/v3/numeric/iota.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -32,11 +33,27 @@
 
 struct gen
 {
-    int operator()(int n)
+    constexpr int operator()(int n)
     {
         return n-1;
     }
 };
+
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    safe_int<int> ia[] = {1, 2, 3, 4};
+    const unsigned sa = sizeof(ia)/sizeof(ia[0]);
+    gen r;
+    auto rng = make_range(random_access_iterator<safe_int<int>*>(ia), sentinel<safe_int<int>*>(ia+sa));
+    if(random_shuffle(std::move(rng), r).get_unsafe().base() != ia+sa) { return false; }
+    if(!equal(ia, {3, 1, 2, 4})) { return false; }
+
+    return true;
+}
+#endif
 
 int main()
 {
@@ -89,6 +106,12 @@ int main()
         CHECK(ranges::random_shuffle(std::move(rng), r).get_unsafe().base() == ia+sa);
         check_equal(ia, {3, 1, 2, 4});
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

@@ -55,7 +55,7 @@ namespace ranges
             using compressed_pair<I, S>::first;
             using compressed_pair<I, S>::second;
 
-            range() = default;
+            RANGES_CXX14_CONSTEXPR range() = default;
             constexpr range(iterator begin, sentinel end)
               : compressed_pair<I, S>{detail::move(begin), detail::move(end)}
             {}
@@ -69,10 +69,12 @@ namespace ranges
             constexpr range(std::pair<X, Y> rng)
               : compressed_pair<I, S>{detail::move(rng.first), detail::move(rng.second)}
             {}
+            RANGES_CXX14_CONSTEXPR
             iterator begin() const
             {
                 return first;
             }
+            RANGES_CXX14_CONSTEXPR
             sentinel end() const
             {
                 return second;
@@ -83,11 +85,13 @@ namespace ranges
             {
                 return {first, second};
             }
+            RANGES_CXX14_CONSTEXPR
             void pop_front()
             {
                 ++first;
             }
             CONCEPT_REQUIRES(BidirectionalIterator<sentinel>())
+            RANGES_CXX14_CONSTEXPR
             void pop_back()
             {
                 --second;
@@ -110,22 +114,26 @@ namespace ranges
         private:
             template<typename X, typename Y>
             friend struct sized_range;
+            RANGES_CXX14_CONSTEXPR
             I && move_first()
             {
                 return detail::unsafe_move(this->first);
             }
+            RANGES_CXX14_CONSTEXPR
             S && move_second()
             {
                 return detail::unsafe_move(this->second);
             }
             template<typename J = I,
                 CONCEPT_REQUIRES_(ForwardIterator<J>() && IteratorRange<J, S>())>
+            RANGES_CXX14_CONSTEXPR
             void check() const
             {
                 RANGES_ASSERT(static_cast<iterator_size_t<I>>(iter_distance(first, second)) == third);
             }
             template<typename J = I,
                 CONCEPT_REQUIRES_(!ForwardIterator<J>() || !IteratorRange<J, S>())>
+            RANGES_CXX14_CONSTEXPR
             void check() const
             {}
         public:
@@ -141,32 +149,39 @@ namespace ranges
             constexpr sized_range()
               : compressed_pair<I const, S const>{}, third{}
             {}
+            RANGES_CXX14_CONSTEXPR
             sized_range(I begin, S end, iterator_size_t<I> size)
               : compressed_pair<I const, S const>{std::move(begin), std::move(end)}, third(size)
             {
                 check();
             }
+            RANGES_CXX14_CONSTEXPR
             sized_range(sized_range<I, S> const &rng)
               : compressed_pair<I const, S const>{rng.first, rng.second}, third(rng.third)
             {}
+            RANGES_CXX14_CONSTEXPR
             sized_range(sized_range<I, S> &&rng)
               : compressed_pair<I const, S const>{rng.move_first(), rng.move_second()}, third(rng.third)
             {}
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Convertible<X, I>() && Convertible<Y, S>())>
+            RANGES_CXX14_CONSTEXPR
             sized_range(std::pair<X, Y> rng, iterator_size_t<I> size)
               : sized_range{std::move(rng).first, std::move(rng).second, size}
             {}
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Convertible<X, I>() && Convertible<Y, S>())>
+            RANGES_CXX14_CONSTEXPR
             sized_range(range<X, Y> rng, iterator_size_t<I> size)
               : sized_range{std::move(rng).first, std::move(rng).second, size}
             {}
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Convertible<X, I>() && Convertible<Y, S>())>
+            RANGES_CXX14_CONSTEXPR
             sized_range(sized_range<X, Y> rng)
               : sized_range{rng.move_first(), rng.move_second(), rng.third}
             {}
+            RANGES_CXX14_CONSTEXPR
             sized_range &operator=(sized_range<I, S> const &rng)
             {
                 const_cast<I &>(first) = rng.first;
@@ -174,6 +189,7 @@ namespace ranges
                 const_cast<iterator_size_t<I> &>(third) = rng.third;
                 return *this;
             }
+            RANGES_CXX14_CONSTEXPR
             sized_range &operator=(sized_range<I, S> &&rng)
             {
                 const_cast<I &>(first) = rng.move_first();
@@ -183,6 +199,7 @@ namespace ranges
             }
             template<typename X, typename Y,
                 CONCEPT_REQUIRES_(Assignable<I &, X &&>() && Assignable<S &, Y &&>())>
+            RANGES_CXX14_CONSTEXPR
             sized_range &operator=(sized_range<X, Y> rng)
             {
                 const_cast<I &>(first) = rng.move_first();
@@ -190,14 +207,17 @@ namespace ranges
                 const_cast<iterator_size_t<I> &>(third) = rng.third;
                 return *this;
             }
+            RANGES_CXX14_CONSTEXPR
             iterator begin() const
             {
                 return first;
             }
+            RANGES_CXX14_CONSTEXPR
             sentinel end() const
             {
                 return second;
             }
+            RANGES_CXX14_CONSTEXPR
             iterator_size_t<I> size() const
             {
                 return third;
@@ -220,6 +240,7 @@ namespace ranges
         {
             /// \return `{begin, end}`
             template<typename I, typename S>
+            RANGES_CXX14_CONSTEXPR
             range<I, S> operator()(I begin, S end) const
             {
                 CONCEPT_ASSERT(IteratorRange<I, S>());
@@ -228,6 +249,7 @@ namespace ranges
 
             /// \return `{begin, end, size}`
             template<typename I, typename S>
+            RANGES_CXX14_CONSTEXPR
             sized_range<I, S> operator()(I begin, S end, iterator_size_t<I> size) const
             {
                 CONCEPT_ASSERT(IteratorRange<I, S>());

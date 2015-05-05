@@ -59,6 +59,43 @@ test()
     }
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+template<typename InIter, typename OutIter, typename Sent = InIter>
+RANGES_CXX14_CONSTEXPR
+bool test_constexpr()
+{
+    {
+        constexpr int N = 1000;
+        int ia[N]{1};
+        for(int i = 0; i < N; ++i)
+            ia[i] = i;
+        int ib[N] = {0};
+
+        std::pair<InIter, OutIter> r = ranges::move_backward(InIter(ia), Sent(ia+N), OutIter(ib+N));
+        if(base(r.first) != ia+N) { return false; }
+        if(base(r.second) != ib) { return false; }
+        for(int i = 0; i < N; ++i)
+            if(ia[i] != ib[i]) { return false; }
+    }
+
+    {
+        constexpr int N = 1000;
+        int ia[N]{1};
+        for(int i = 0; i < N; ++i)
+            ia[i] = i;
+        int ib[N] = {0};
+
+        std::pair<InIter, OutIter> r = ranges::move_backward(as_lvalue(ranges::make_range(InIter(ia), Sent(ia+N))), OutIter(ib+N));
+        if(base(r.first) != ia+N) { return false; }
+        if(base(r.second) != ib) { return false; }
+        for(int i = 0; i < N; ++i)
+            if(ia[i] != ib[i]) { return false; }
+    }
+
+    return true;
+}
+#endif
+
 struct S
 {
     std::unique_ptr<int> p;
@@ -139,6 +176,20 @@ int main()
     test1<std::unique_ptr<int>*, bidirectional_iterator<std::unique_ptr<int>*> >();
     test1<std::unique_ptr<int>*, random_access_iterator<std::unique_ptr<int>*> >();
     test1<std::unique_ptr<int>*, std::unique_ptr<int>*>();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    static_assert(test_constexpr<bidirectional_iterator<const int*>, bidirectional_iterator<int*> >(), "");
+    static_assert(test_constexpr<bidirectional_iterator<const int*>, random_access_iterator<int*> >(), "");
+    static_assert(test_constexpr<bidirectional_iterator<const int*>, int*>(), "");
+
+    static_assert(test_constexpr<random_access_iterator<const int*>, bidirectional_iterator<int*> >(), "");
+    static_assert(test_constexpr<random_access_iterator<const int*>, random_access_iterator<int*> >(), "");
+    static_assert(test_constexpr<random_access_iterator<const int*>, int*>(), "");
+
+    static_assert(test_constexpr<const int*, bidirectional_iterator<int*> >(), "");
+    static_assert(test_constexpr<const int*, random_access_iterator<int*> >(), "");
+    static_assert(test_constexpr<const int*, int*>(), "");
+#endif
 
     return test_result();
 }

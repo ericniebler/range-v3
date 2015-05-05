@@ -30,6 +30,7 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+#include "../array.hpp"
 
 void test()
 {
@@ -1046,6 +1047,14 @@ struct S
     int i;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    array<int, 7> i{{1, 0, 0, 0, 0, 0, 1}};
+    return ranges::is_heap_until(i, ranges::greater{}) == ranges::begin(i) + 1;
+}
+#endif
+
 int main()
 {
     test();
@@ -1059,6 +1068,12 @@ int main()
     // Test rvalue range
     auto res = ranges::is_heap_until(ranges::view::all(i185), std::greater<int>(), &S::i);
     CHECK(res.get_unsafe() == i185+1);
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/swap_ranges.hpp>
+#include "../safe_int_swap.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -186,6 +187,26 @@ void test()
     test_rng_4<Iter1, Iter2>();
 }
 
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    safe_int<int> i[3] = {1, 2, 3};
+    safe_int<int> j[3] = {4, 5, 6};
+    auto r = ranges::swap_ranges(i, j);
+    if(r.first != i+3) { return false; }
+    if(r.second != j+3) { return false; }
+    if(i[0] != 4) { return false; }
+    if(i[1] != 5) { return false; }
+    if(i[2] != 6) { return false; }
+    if(j[0] != 1) { return false; }
+    if(j[1] != 2) { return false; }
+    if(j[2] != 3) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test<forward_iterator<int*>, forward_iterator<int*> >();
@@ -228,5 +249,10 @@ int main()
     test_move_only<std::unique_ptr<int>*, random_access_iterator<std::unique_ptr<int>*> >();
     test_move_only<std::unique_ptr<int>*, std::unique_ptr<int>*>();
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
     return ::test_result();
 }

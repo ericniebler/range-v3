@@ -32,6 +32,7 @@ namespace ranges
             {
                 template<typename T,
                     typename U = meta::eval<std::remove_reference<T>>>
+                constexpr
                 U && operator()(T && t) const noexcept
                 {
                     return static_cast<U &&>(t);
@@ -48,6 +49,7 @@ namespace ranges
             /// \ingroup group-utility
             /// \sa `move_fn`
             template<typename T>
+            RANGES_CXX14_CONSTEXPR
             meta::eval<std::remove_reference<T>> && operator|(T && t, move_fn move) noexcept
             {
                 return move(t);
@@ -66,10 +68,37 @@ namespace ranges
         /// \cond
         namespace adl_move_detail
         {
+
+            constexpr struct valid_expr_t
+            {
+                template<typename ...T>
+                void operator()(T &&...) const;
+            }  valid_expr {};
+
+            struct IndirectlyMovable_
+            {
+                template<typename I,
+                         typename R = decltype(*std::declval<I>()),
+                         typename U = meta::eval<std::remove_reference<R>>//,
+                >
+                auto requires_(I const& i) -> decltype(
+                    valid_expr(
+                        aux::move_t<R>{aux::move(*i)}
+                    ));
+            };
+            template<typename I>
+            using IndirectlyMovable
+            = concepts::models<IndirectlyMovable_, I>;
+
             // Default indirect_move overload.
             template<typename I,
-                typename R = decltype(*std::declval<I>()),
-                typename U = meta::eval<std::remove_reference<R>>>
+                  typename R = decltype(*std::declval<I>()),
+                  typename U = meta::eval<std::remove_reference<R>>,
+                  typename std::enable_if<IndirectlyMovable<I>{}, int>::type = 0        //,
+            //          typename E
+            // = decltype(aux::move_t<R>{aux::move(*std::declval<I const&>())})
+            >
+            RANGES_CXX14_CONSTEXPR
             aux::move_t<R> indirect_move(I const &i)
                 noexcept(std::is_reference<R>::value ||
                     std::is_nothrow_constructible<detail::decay_t<U>, U &&>::value)
@@ -80,6 +109,7 @@ namespace ranges
             struct indirect_move_fn
             {
                 template<typename I>
+                RANGES_CXX14_CONSTEXPR
                 auto operator()(I const &i) const
                     noexcept(noexcept(indirect_move(i))) ->
                     decltype(indirect_move(i))

@@ -64,15 +64,18 @@ namespace ranges
         struct stable_sort_fn
         {
             template<typename I, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
             static void inplace_stable_sort(I begin, I end, C &pred, P &proj)
             {
-                if(end - begin < 15)
-                    return detail::insertion_sort(begin, end, pred, proj), void();
+                if(end - begin < 15) {
+                    detail::insertion_sort(begin, end, pred, proj);
+                    return;
+                }
                 I middle = begin + (end - begin) / 2;
                 stable_sort_fn::inplace_stable_sort(begin, middle, pred, proj);
                 stable_sort_fn::inplace_stable_sort(middle, end, pred, proj);
-                detail::inplace_merge_no_buffer(begin, middle, end, middle - begin, end - middle,
-                    std::ref(pred), std::ref(proj));
+                detail::inplace_merge_no_buffer(begin, middle, end,
+                    ranges::ref(pred), ranges::ref(proj));
             }
 
             template<typename I1, typename I2, typename D, typename C, typename P>
@@ -82,12 +85,12 @@ namespace ranges
                 while(end - begin >= two_step)
                 {
                     result = std::get<2>(merge_move(begin, begin + step_size, begin + step_size,
-                        begin + two_step, result, std::ref(pred), std::ref(proj), std::ref(proj)));
+                        begin + two_step, result, ranges::ref(pred), ranges::ref(proj), ranges::ref(proj)));
                     begin += two_step;
                 }
                 step_size = std::min(D(end - begin), step_size);
                 merge_move(begin, begin + step_size, begin + step_size, end, result,
-                    std::ref(pred), std::ref(proj), std::ref(proj));
+                    ranges::ref(pred), ranges::ref(proj), ranges::ref(proj));
             }
 
             static constexpr int merge_sort_chunk_size() { return 7; }
@@ -146,7 +149,7 @@ namespace ranges
                     stable_sort_fn::merge_sort_with_buffer(middle, end, buffer, pred, proj);
                 }
                 detail::merge_adaptive(begin, middle, end, middle - begin, end - middle,
-                    buffer, buffer_size, std::ref(pred), std::ref(proj));
+                    buffer, buffer_size, ranges::ref(pred), ranges::ref(proj));
             }
 
         public:
@@ -176,6 +179,28 @@ namespace ranges
             range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+            }
+
+            template<typename I, typename S, typename C = ordered_less, typename P = ident,
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() &&
+                    IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
+            I inplace(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
+            {
+                auto && pred = as_function(pred_);
+                auto && proj = as_function(proj_);
+                I end = ranges::next(begin, end_);
+                stable_sort_fn::inplace_stable_sort(begin, end, pred, proj);
+                return end;
+            }
+
+            template<typename Rng, typename C = ordered_less, typename P = ident,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
+            range_safe_iterator_t<Rng> inplace(Rng &&rng, C pred = C{}, P proj = P{}) const
+            {
+                return (*this).inplace(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
         };
 

@@ -33,6 +33,7 @@ namespace ranges
         {
         private:
             template<typename I>
+            RANGES_CXX14_CONSTEXPR
             static void impl(I begin, I end, concepts::BidirectionalIterator*)
             {
                 while(begin != end)
@@ -45,6 +46,7 @@ namespace ranges
             }
 
             template<typename I>
+            RANGES_CXX14_CONSTEXPR
             static void impl(I begin, I end, concepts::RandomAccessIterator*)
             {
                 if(begin != end)
@@ -55,6 +57,7 @@ namespace ranges
         public:
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Permutable<I>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end_) const
             {
                 I end = ranges::next(begin, end_);
@@ -64,6 +67,7 @@ namespace ranges
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && Permutable<I>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng) const
             {
                 return (*this)(begin(rng), end(rng));

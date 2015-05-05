@@ -14,7 +14,7 @@
 #include <range/v3/algorithm/all_of.hpp>
 #include "../simple_test.hpp"
 
-bool even(int n) { return n % 2 == 0; }
+constexpr bool even(int n) { return n % 2 == 0; }
 
 struct S {
   S(bool p) : test(p) { }
@@ -55,6 +55,13 @@ int main()
   CHECK(ranges::all_of({S(true), S(true), S(true)}, &S::p));
   CHECK(!ranges::all_of({S(false), S(true), S(false)}, &S::p));
   CHECK(!ranges::all_of({S(false), S(false), S(false)}, &S::p));
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+  static_assert(ranges::all_of({0, 2, 4, 6}, even), "");
+  static_assert(!ranges::all_of({0, 2, 4, 5}, even), "");
+  static_assert(!ranges::all_of({1, 3, 4, 7}, even), "");
+  static_assert(!ranges::all_of({1, 3, 5, 7}, even), "");
+#endif
 
   return ::test_result();
 }

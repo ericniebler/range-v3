@@ -207,6 +207,7 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
+            RANGES_CXX14_CONSTEXPR
             bool operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -239,6 +240,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && Sortable<I, C, P>())>
+            RANGES_CXX14_CONSTEXPR
             bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
@@ -256,6 +258,7 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
+            RANGES_CXX14_CONSTEXPR
             bool operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -288,6 +291,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && Sortable<I, C, P>())>
+            RANGES_CXX14_CONSTEXPR
             bool operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

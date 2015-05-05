@@ -199,6 +199,27 @@ struct S
     int i;
 };
 
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR int plus_one(int i) { return i + 1; }
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4};
+    constexpr unsigned sa = ranges::size(ia);
+    int ib[sa] = {0};
+    auto r = transform(ia, ib, plus_one);
+    if(r.first != ia + sa) { return false; }
+    if(r.second != ib + sa) { return false; }
+    if(ib[0] != 1) { return false; }
+    if(ib[1] != 2) { return false; }
+    if(ib[2] != 3) { return false; }
+    if(ib[3] != 4) { return false; }
+    if(ib[4] != 5) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test1<input_iterator<const int*>, output_iterator<int*> >();
@@ -423,6 +444,10 @@ int main()
         decltype(ranges::transform(s, i, p, binary, &S::i))>::value, "");
     static_assert(std::is_same<std::tuple<S const*, S const *, int*>,
         decltype(ranges::transform(s, s, p, binary, &S::i, &S::i))>::value, "");
-
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
     return ::test_result();
 }

@@ -13,7 +13,6 @@
 #ifndef RANGES_V3_ALGORITHM_GENERATE_N_HPP
 #define RANGES_V3_ALGORITHM_GENERATE_N_HPP
 
-#include <tuple>
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -34,6 +33,7 @@ namespace ranges
             template<typename O, typename F,
                 CONCEPT_REQUIRES_(Function<F>() &&
                     WeakOutputIterator<O, concepts::Function::result_t<F>>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<O, F> operator()(O begin, iterator_difference_t<O> n, F fun) const
             {
                 RANGES_ASSERT(n >= 0);

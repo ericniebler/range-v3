@@ -22,6 +22,10 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
+#include <range/v3/algorithm/sort.hpp>
+#include <range/v3/algorithm/is_sorted.hpp>
+#include "../safe_int_swap.hpp"
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -123,12 +127,49 @@ test()
     test<Iter>(1000);
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr() {
+    using namespace ranges;
+    constexpr int N = 100;
+    int Ms[] = {0, N/4, N/2, 3*N/4, N, 1, 2, 3};
+    for(auto M : Ms)
+    {
+        array<safe_int<int>, N> ia{{0}};
+        for (int i = 0; i < N; ++i)
+            ia[i] = N - 1 - i;
+        auto b = begin(ia);
+        auto e = end(ia);
+        auto m = begin(ia) + M;
+        sort(b, m);
+        sort(m, e);
+        auto res = inplace_merge.inplace(::as_lvalue(make_range(b, e)), m);
+        if (res != e) { return false; }
+        if (ia[0] != 0) { return false; }
+        if(ia[N - 1] != N-1) { return false; }
+        if(!is_sorted(ia)) { return false;}
+
+        auto res2 = inplace_merge.inplace(make_range(b, e), m);
+        if (res2.get_unsafe() != e) { return false; }
+        if (ia[0] != 0) { return false; }
+        if(ia[N - 1] != N-1) { return false; }
+        if(!is_sorted(ia)) { return false;}
+    }
+    return true;
+}
+#endif
+
 int main()
 {
     // test<forward_iterator<int*> >();
     test<bidirectional_iterator<int*> >();
     test<random_access_iterator<int*> >();
     test<int*>();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

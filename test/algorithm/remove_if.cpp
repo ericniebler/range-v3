@@ -126,6 +126,26 @@ struct S
     int i;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+constexpr bool equals_two(int i) { return i == 2; }
+
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int  ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
+    constexpr unsigned sa = ranges::size(ia);
+    auto r = ranges::remove_if(ia, equals_two);
+    if(r != ia + sa-3) { return false; }
+    if(ia[0] != 0) { return false; }
+    if(ia[1] != 1) { return false; }
+    if(ia[2] != 3) { return false; }
+    if(ia[3] != 4) { return false; }
+    if(ia[4] != 3) { return false; }
+    if(ia[5] != 4) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test_iter<forward_iterator<int*> >();
@@ -198,6 +218,12 @@ int main()
         auto r4 = ranges::sanitize(std::move(r));
         static_assert(std::is_same<decltype(r4), ranges::dangling<>>::value, "");
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

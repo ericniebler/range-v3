@@ -79,6 +79,26 @@ struct S
     int i;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int  ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
+    int  ib[6] = {0};
+    constexpr unsigned sa = ranges::size(ia);
+    auto r = ranges::remove_copy(ia, ib, 2);
+    if(r.first != ia + sa) { return false; }
+    if(r.second != ib + (sa-3)) { return false; }
+    if(ib[0] != 0) { return false; }
+    if(ib[1] != 1) { return false; }
+    if(ib[2] != 3) { return false; }
+    if(ib[3] != 4) { return false; }
+    if(ib[4] != 3) { return false; }
+    if(ib[5] != 4) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test<input_iterator<const int*>, output_iterator<int*>>();
@@ -175,6 +195,12 @@ int main()
         auto r4 = ranges::sanitize(std::move(r));
         static_assert(std::is_same<decltype(r4), std::pair<ranges::dangling<>, S *>>::value, "");
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

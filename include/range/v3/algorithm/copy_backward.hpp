@@ -37,6 +37,7 @@ namespace ranges
                     BidirectionalIterator<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I, O> operator()(I begin, S end_, O out) const
             {
                 I i = ranges::next(begin, end_), end = i;
@@ -52,6 +53,7 @@ namespace ranges
                     BidirectionalIterator<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
+            RANGES_CXX14_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, O out) const
             {

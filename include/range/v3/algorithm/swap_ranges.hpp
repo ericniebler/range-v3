@@ -34,6 +34,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
                                   WeakInputIterator<I2>() &&
                                   IndirectlySwappable<I1, I2>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I1, I2> operator()(I1Ref&& begin1, S1 end1, I2 begin2) const
             {
                 for(; begin1 != end1; ++begin1, ++begin2)
@@ -45,6 +46,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
                                   InputIterator<I2>() && IteratorRange<I2, S2>() &&
                                   IndirectlySwappable<I1, I2>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I1, I2> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
             {
                 for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
@@ -57,6 +59,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterable<Rng1>() &&
                                   WeakInputIterator<I2>() &&
                                   IndirectlySwappable<I1, I2>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I1, I2> operator()(Rng1 & rng1, I2 begin2) const
             {
                 return (*this)(begin(rng1), end(rng1), std::move(begin2));
@@ -68,6 +71,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterable<Rng1>() &&
                                   InputIterable<Rng2>() &&
                                   IndirectlySwappable<I1, I2>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>>
             operator()(Rng1 &&rng1, Rng2 &&rng2) const
             {

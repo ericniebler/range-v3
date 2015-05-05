@@ -41,6 +41,7 @@ namespace ranges
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I, O>
             operator()(I begin, S end, O out) const
             {
@@ -56,6 +57,7 @@ namespace ranges
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
+            RANGES_CXX14_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, O out) const
             {

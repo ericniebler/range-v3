@@ -43,6 +43,7 @@ namespace ranges
             template<typename I, typename S, typename V, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     IndirectCallableRelation<equal_to, Project<I, P>, V const *>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end, V const &val, P proj_ = P{}) const
             {
                 auto &&proj = as_function(proj_);
@@ -57,6 +58,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng>() &&
                     IndirectCallableRelation<equal_to, Project<I, P>, V const *>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));

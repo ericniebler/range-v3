@@ -35,12 +35,13 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, I middle, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);
                 auto && proj = as_function(proj_);
 
-                make_heap(begin, middle, std::ref(pred), std::ref(proj));
+                make_heap(begin, middle, ranges::ref(pred), ranges::ref(proj));
                 auto const len = middle - begin;
                 I i = middle;
                 for(; i != end; ++i)
@@ -48,16 +49,17 @@ namespace ranges
                     if(pred(proj(*i), proj(*begin)))
                     {
                         iter_swap(i, begin);
-                        detail::sift_down_n(begin, len, begin, std::ref(pred), std::ref(proj));
+                        detail::sift_down_n(begin, len, begin, ranges::ref(pred), ranges::ref(proj));
                     }
                 }
-                sort_heap(begin, middle, std::ref(pred), std::ref(proj));
+                sort_heap(begin, middle, ranges::ref(pred), ranges::ref(proj));
                 return i;
             }
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, I middle, C pred = C{},
                 P proj = P{}) const
             {

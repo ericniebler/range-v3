@@ -41,6 +41,7 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename C, typename P = ident,
                 CONCEPT_REQUIRES_(RemoveCopyableIf<I, O, C, P>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I, O> operator()(I begin, S end, O out, C pred_, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -60,6 +61,7 @@ namespace ranges
             template<typename Rng, typename O, typename C, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RemoveCopyableIf<I, O, C, P>() && InputIterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));

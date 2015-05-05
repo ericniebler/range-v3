@@ -41,6 +41,7 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename O, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
             static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::InputIterator*, std::false_type)
             {
@@ -68,6 +69,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename O, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
             static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::ForwardIterator*, std::false_type)
             {
@@ -93,6 +95,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename O, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
             static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::InputIterator*, std::true_type)
             {
@@ -122,6 +125,7 @@ namespace ranges
             /// \pre `C` is a model of the `CallableRelation` concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I, O> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),
@@ -132,6 +136,7 @@ namespace ranges
             template<typename Rng, typename O, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Iterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const
             {

@@ -28,9 +28,9 @@
 struct gen_test
 {
     int i_;
-    gen_test() = default;
-    gen_test(int i) : i_(i) {}
-    int operator()() {return i_++;}
+    RANGES_CXX14_CONSTEXPR gen_test() : i_{} {}
+    RANGES_CXX14_CONSTEXPR gen_test(int i) : i_(i) {}
+    RANGES_CXX14_CONSTEXPR int operator()() {return i_++;}
 };
 
 template <class Iter, class Sent = Iter>
@@ -61,6 +61,24 @@ void test2()
     CHECK(v[4] == 5);
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+template<class Iter, class Sent = Iter>
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    bool r = true;
+    const unsigned n = 4;
+    int ia[n] = {0};
+    std::pair<Iter, gen_test> res(ranges::generate_n(Iter(ia), n, gen_test(1)));
+    if(ia[0] != 1) { r = false; }
+    if(ia[1] != 2) { r = false; }
+    if(ia[2] != 3) { r = false; }
+    if(ia[3] != 4) { r = false; }
+    if(res.first != Iter(ia + n)) { r = false; }
+    if(res.second.i_ != 5) { r = false; }
+    return r;
+}
+#endif
+
 int main()
 {
     test<forward_iterator<int*> >();
@@ -73,6 +91,19 @@ int main()
     test<random_access_iterator<int*>, sentinel<int*> >();
 
     test2();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr<forward_iterator<int*> >(), "");
+        static_assert(test_constexpr<bidirectional_iterator<int*> >(), "");
+        static_assert(test_constexpr<random_access_iterator<int*> >(), "");
+        static_assert(test_constexpr<int*>(), "");
+
+        static_assert(test_constexpr<forward_iterator<int*>, sentinel<int*> >(), "");
+        static_assert(test_constexpr<bidirectional_iterator<int*>, sentinel<int*> >(), "");
+        static_assert(test_constexpr<random_access_iterator<int*>, sentinel<int*> >(), "");
+    }
+#endif
 
     return ::test_result();
 }

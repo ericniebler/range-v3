@@ -43,12 +43,13 @@ namespace ranges
             ///
             template<typename I, typename S, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
                 auto &&proj = as_function(proj_);
 
-                begin = adjacent_find(std::move(begin), end, std::ref(pred), std::ref(proj));
+                begin = adjacent_find(std::move(begin), end, ranges::ref(pred), ranges::ref(proj));
 
                 if(begin != end)
                 {
@@ -63,6 +64,7 @@ namespace ranges
             template<typename Rng, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && Iterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng>
             operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {

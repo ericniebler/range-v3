@@ -47,6 +47,7 @@ namespace ranges
                 typename PI = ident, typename PO = ident,
                 CONCEPT_REQUIRES_(PartialSortCopyConcept<I, O, C, PI, PO>() &&
                     IteratorRange<I, SI>() && IteratorRange<O, SO>())>
+            RANGES_CXX14_CONSTEXPR
             O operator()(I begin, SI end, O out_begin, SO out_end, C pred_ = C{}, PI in_proj_ = PI{},
                 PO out_proj_ = PO{}) const
             {
@@ -58,7 +59,7 @@ namespace ranges
                 {
                     for(; begin != end && r != out_end; ++begin, ++r)
                         *r = *begin;
-                    make_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
+                    make_heap(out_begin, r, ranges::ref(pred), ranges::ref(out_proj));
                     auto len = r - out_begin;
                     for(; begin != end; ++begin)
                     {
@@ -66,10 +67,10 @@ namespace ranges
                         if(pred(in_proj(x), out_proj(*out_begin)))
                         {
                             *out_begin = (decltype(x) &&) x;
-                            detail::sift_down_n(out_begin, len, out_begin, std::ref(pred), std::ref(out_proj));
+                            detail::sift_down_n(out_begin, len, out_begin, ranges::ref(pred), ranges::ref(out_proj));
                         }
                     }
-                    sort_heap(out_begin, r, std::ref(pred), std::ref(out_proj));
+                    sort_heap(out_begin, r, ranges::ref(pred), ranges::ref(out_proj));
                 }
                 return r;
             }
@@ -80,6 +81,7 @@ namespace ranges
                 typename O = range_iterator_t<OutRng>,
                 CONCEPT_REQUIRES_(PartialSortCopyConcept<I, O, C, PI, PO>() &&
                     Iterable<InRng>() && Iterable<OutRng>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<OutRng>
             operator()(InRng && in_rng, OutRng &&out_rng, C pred = C{}, PI in_proj = PI{},
                 PO out_proj = PO{}) const

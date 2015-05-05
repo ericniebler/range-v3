@@ -18,6 +18,7 @@
 #include <range/v3/view/iota.hpp>
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
+#include "./array.hpp"
 
 template <typename I, typename S>
 void test_iterators(I begin, S end, ranges::iterator_difference_t<I> n)
@@ -66,6 +67,46 @@ void test_infinite_range(Rng&& rng)
     }
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+
+RANGES_CXX14_CONSTEXPR bool test_constexpr() {
+    using namespace ranges;
+
+    auto rng = array<int, 10>{{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}};
+    using Rng = decltype(rng);
+    auto bit = ranges::begin(rng);
+    using I = decltype(bit);
+    auto it = bit + 5;
+    auto eit = ranges::end(rng);
+    auto n = ranges::size(rng);
+    auto en = ranges::enumerate(rng);
+    if(n != 10) { return false; }
+    if(distance(bit, eit) != n) { return false; }
+    if(distance(it, eit) != 5) { return false; }
+    if(distance_compare(bit, eit, n) != 0) { return false; }
+    if(distance_compare(bit, eit, n - 1) <= 0) { return false; }
+    if(distance_compare(bit, eit, n + 1) >= 0) { return false; }
+    if(distance_compare(bit, eit, (std::numeric_limits<iterator_difference_t<I>>::min)()) <= 0)
+    { return false; }
+    if(distance_compare(bit, eit, (std::numeric_limits<iterator_difference_t<I>>::max)()) >= 0)
+    { return false; }
+    if(distance(rng) != n) { return false; }
+    if(distance_compare(rng, n) != 0) { return false; }
+    if(distance_compare(rng, n - 1) <= 0) { return false; }
+    if(distance_compare(rng, n + 1) >= 0) { return false; }
+    if(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::min)()) <= 0)
+    { return false; }
+    if(distance_compare(rng, (std::numeric_limits<range_difference_t<Rng>>::max)()) >= 0)
+    { return false; }
+
+    if(en.first != 10) { return false; }
+    if(en.second != eit) { return false; }
+
+    return true;
+}
+
+#endif
+
 int main()
 {
     using namespace ranges;
@@ -111,6 +152,13 @@ int main()
     {
         test_infinite_range(view::ints(0u));
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
+
 
     return ::test_result();
 }

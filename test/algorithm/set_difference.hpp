@@ -124,6 +124,39 @@ struct U
     U& operator=(T t) { k = t.j; return *this;}
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
+    const int sa = sizeof(ia)/sizeof(ia[0]);
+    int ib[] = {2, 4, 4, 6};
+    const int sb = sizeof(ib)/sizeof(ib[0]);
+    int ic[20] = {0};
+    int ir[] = {1, 2, 3, 3, 3, 4, 4};
+    const int sr = sizeof(ir)/sizeof(ir[0]);
+
+    std::pair<int *, int *> res = set_difference(ia, {2, 4, 4, 6}, ic, less{});
+    if((res.first - ia) != sa) { return false; }
+    if((res.second - ic) != sr) { return false; }
+    if(lexicographical_compare(ic, res.second, ir, ir+sr, less{}) != 0) { return false; }
+    fill(ic, 0);
+
+    int irr[] = {6};
+    const int srr = sizeof(irr)/sizeof(irr[0]);
+    std::pair<int *, int *> res2 = set_difference(
+            ib,
+            {1, 2, 2, 3, 3, 3, 4, 4, 4, 4},
+            ic,
+            less{});
+    if((res2.first - ib) != sb) { return false; }
+    if((res2.second - ic) != srr) { return false; }
+    if(lexicographical_compare(ic, res2.second, irr, irr+srr, less{}) != 0) { return false; }
+
+    return true;
+}
+#endif
+
 int main()
 {
 #ifdef SET_DIFFERENCE_1
@@ -252,7 +285,8 @@ int main()
 #endif
 #ifdef SET_DIFFERENCE_5
     test<const int*, input_iterator<const int*>, output_iterator<int*> >();
-    test<const int*, input_iterator<const int*>, bidirectional_iterator<int*> >();    test<const int*, input_iterator<const int*>, bidirectional_iterator<int*> >();
+    test<const int*, input_iterator<const int*>, bidirectional_iterator<int*> >();
+    test<const int*, input_iterator<const int*>, forward_iterator<int*> >();
     test<const int*, input_iterator<const int*>, random_access_iterator<int*> >();
     test<const int*, input_iterator<const int*>, int*>();
 
@@ -326,7 +360,7 @@ int main()
         auto res2 = ranges::set_difference(ranges::view::all(ib), ranges::view::all(ia), ic, std::less<int>(), &T::j, &S::i);
         CHECK((res2.first.get_unsafe() - ib) == sb);
         CHECK((res2.second - ic) == srr);
-        CHECK(ranges::lexicographical_compare(ic, res2.second, ir, irr+srr, std::less<int>(), &U::k) == 0);
+        CHECK(ranges::lexicographical_compare(ic, res2.second, irr, irr+srr, std::less<int>(), &U::k) == 0);
     }
 
     // Test initializer list
@@ -358,8 +392,13 @@ int main()
             std::less<int>(), &T::j, &S::i);
         CHECK((res2.first - ib) == sb);
         CHECK((res2.second - ic) == srr);
-        CHECK(ranges::lexicographical_compare(ic, res2.second, ir, irr+srr, std::less<int>(), &U::k) == 0);
+        CHECK(ranges::lexicographical_compare(ic, res2.second, irr, irr+srr, std::less<int>(), &U::k) == 0);
     }
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 #endif
 
     return ::test_result();

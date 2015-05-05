@@ -135,6 +135,21 @@ void test()
     }
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int a[] = {0, 1, 1, 1, 2, 2, 2};
+    const unsigned sa = sizeof(a) / sizeof(a[0]);
+    auto r = unique(a, a + sa);
+    if(r != a + 3) { return false; }
+    if(a[0] != 0) { return false; }
+    if(a[1] != 1) { return false; }
+    if(a[2] != 2) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test<forward_iterator<int*>, iter_call>();
@@ -156,6 +171,10 @@ int main()
         CHECK(a[1] == 1);
         CHECK(a[2] == 2);
     }
-
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
     return ::test_result();
 }

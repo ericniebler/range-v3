@@ -27,6 +27,8 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+#include "../array.hpp"
+#include "../safe_int_swap.hpp"
 
 struct indirect_less
 {
@@ -130,6 +132,25 @@ struct S
     int i, j;
 };
 
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    array<ranges::safe_int<int>, 10> v{{0}};
+    for(int i = 0; (std::size_t)i < v.size(); ++i)
+    {
+        v[i] = v.size() - i - 1;
+    }
+    ranges::partial_sort(v, v.begin() + v.size()/2, ranges::less{});
+    for(int i = 0; (std::size_t)i < v.size()/2; ++i)
+    {
+        if (v[i] != i) { return false; };
+    }
+    return true;
+}
+#endif
+
+
 int main()
 {
     int i = 0;
@@ -170,6 +191,12 @@ int main()
             CHECK((std::size_t)v[i].j == v.size() - i - 1);
         }
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

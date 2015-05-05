@@ -26,6 +26,7 @@
 #include <utility>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/stable_partition.hpp>
+#include "../safe_int_swap.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -35,6 +36,11 @@ struct is_odd
     bool operator()(const int& i) const
     {
         return i & 1;
+    }
+    RANGES_CXX14_CONSTEXPR
+    bool operator()(const ranges::safe_int<int>& i) const
+    {
+        return i % ranges::safe_int<int>{2} != 0;
     }
 };
 
@@ -373,6 +379,27 @@ struct S
     std::pair<int,int> p;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    safe_int<int> ap[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4};
+    auto r = stable_partition.inplace(ap, is_odd());
+    if(r != ap + 4) { return false; }
+    if(ap[0] != 1) { return false; }
+    if(ap[1] != 1) { return false; }
+    if(ap[2] != 3) { return false; }
+    if(ap[3] != 3) { return false; }
+    if(ap[4] != 0) { return false; }
+    if(ap[5] != 0) { return false; }
+    if(ap[6] != 2) { return false; }
+    if(ap[7] != 2) { return false; }
+    if(ap[8] != 4) { return false; }
+    if(ap[9] != 4) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test_iter<forward_iterator<std::pair<int,int>*> >();
@@ -431,6 +458,12 @@ int main()
         CHECK(ap[8].p == P{4, 1});
         CHECK(ap[9].p == P{4, 2});
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

@@ -45,6 +45,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+            RANGES_CXX14_CONSTEXPR
             bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -67,6 +68,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
                     Iterable<Rng1>() && Iterable<Rng2>())>
+            RANGES_CXX14_CONSTEXPR
             bool operator()(Rng1 && rng1, Rng2 && rng2,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -89,6 +91,7 @@ namespace ranges
                 typename Tup = std::tuple<I1, I2, O>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+            RANGES_CXX14_CONSTEXPR
             Tup operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -125,6 +128,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Iterable<Rng1>() && Iterable<Rng2>())>
+            RANGES_CXX14_CONSTEXPR
             std::tuple<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>, O>
             operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
@@ -147,6 +151,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+            RANGES_CXX14_CONSTEXPR
             O operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -177,6 +182,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Iterable<Rng1>() && Iterable<Rng2>())>
+            RANGES_CXX14_CONSTEXPR
             O operator()(Rng1 && rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -198,6 +204,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I1, O> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -230,6 +237,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Iterable<Rng1>() && Iterable<Rng2>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng1>, O> operator()(Rng1 &&rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
@@ -251,6 +259,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+            RANGES_CXX14_CONSTEXPR
             std::tuple<I1, I2, O> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -292,6 +301,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Iterable<Rng1>() && Iterable<Rng2>())>
+            RANGES_CXX14_CONSTEXPR
             std::tuple<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>, O>
             operator()(Rng1 &&rng1, Rng2 &&rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const

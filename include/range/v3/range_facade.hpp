@@ -71,33 +71,39 @@ namespace ranges
             using range_facade_t = range_facade;
             using range_interface<Derived, Inf>::derived;
             // Default implementations
+            RANGES_CXX14_CONSTEXPR
             Derived begin_cursor() const
             {
                 return derived();
             }
+            RANGES_CXX14_CONSTEXPR
             default_sentinel end_cursor() const
             {
                 return {};
             }
         public:
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            RANGES_CXX14_CONSTEXPR
             detail::facade_iterator_t<D> begin()
             {
                 return {range_access::begin_cursor(derived(), 42)};
             }
             /// \overload
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            RANGES_CXX14_CONSTEXPR
             detail::facade_iterator_t<D const> begin() const
             {
                 return {range_access::begin_cursor(derived(), 42)};
             }
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            RANGES_CXX14_CONSTEXPR
             detail::facade_sentinel_t<D> end()
             {
                 return {range_access::end_cursor(derived(), 42)};
             }
             /// \overload
             template<typename D = Derived, CONCEPT_REQUIRES_(Same<D, Derived>())>
+            RANGES_CXX14_CONSTEXPR
             detail::facade_sentinel_t<D const> end() const
             {
                 return {range_access::end_cursor(derived(), 42)};

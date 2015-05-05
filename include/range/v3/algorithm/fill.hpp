@@ -30,6 +30,7 @@ namespace ranges
         {
             template<typename O, typename S, typename V,
                 CONCEPT_REQUIRES_(OutputIterator<O, V>() && IteratorRange<O, S>())>
+            RANGES_CXX14_CONSTEXPR
             O operator()(O begin, S end, V const & val) const
             {
                 for(; begin != end; ++begin)
@@ -40,6 +41,7 @@ namespace ranges
             template<typename Rng, typename V,
                 typename O = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(OutputIterable<Rng, V>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, V const & val) const
             {
                 return (*this)(begin(rng), end(rng), val);

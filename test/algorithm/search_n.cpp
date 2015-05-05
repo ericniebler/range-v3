@@ -158,6 +158,18 @@ struct S
     int i;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int  ia[] = {0, 1, 2, 2, 4, 5};
+    auto r = search_n(ia, 2, 2, equal_to{});
+    if(r != ia + 2) { return false; }
+
+    return true;
+}
+#endif
+
 int main()
 {
     test<forward_iterator<const int*>, forward_iterator<const int*> >();
@@ -196,6 +208,12 @@ int main()
         int ib[] = {0, 0, 1, 1, 2, 2};
         CHECK(ranges::search_n(ranges::view::all(ib), 2, 1).get_unsafe() == ib+2);
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

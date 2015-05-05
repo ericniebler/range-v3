@@ -40,6 +40,7 @@ namespace ranges
         {
             template<typename I, typename S, typename T0, typename T1, typename P = ident,
                 CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj_ = {}) const
             {
                 auto &&proj = as_function(proj_);
@@ -52,6 +53,7 @@ namespace ranges
             template<typename Rng, typename T0, typename T1, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Iterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng>
             operator()(Rng &&rng, T0 const & old_value, T1 const & new_value, P proj = {}) const
             {

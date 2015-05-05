@@ -54,6 +54,7 @@ namespace ranges
             template<typename I1, typename D1, typename I2, typename S2, typename D2,
                 typename C, typename P1, typename P2,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I1>())>
+            RANGES_CXX14_CONSTEXPR
             static I1 sized_impl(I1 const begin1_, I1 end1, D1 d1, I2 begin2, S2 end2, D2 d2,
                 C &pred, P1 &proj1, P2 &proj2)
             {
@@ -91,6 +92,7 @@ namespace ranges
 
             template<typename I1, typename S1, typename D1, typename I2, typename S2, typename D2,
                 typename C, typename P1, typename P2>
+            RANGES_CXX14_CONSTEXPR
             static I1 sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2, S2 end2, D2 d2,
                 C &pred, P1 &proj1, P2 &proj2)
             {
@@ -127,6 +129,7 @@ namespace ranges
             }
 
             template<typename I1, typename S1, typename I2, typename S2, typename C, typename P1, typename P2>
+            RANGES_CXX14_CONSTEXPR
             static I1 impl(I1 begin1, S1 end1, I2 begin2, S2 end2, C &pred, P1 &proj1, P2 &proj2)
             {
                 while(true)
@@ -165,6 +168,7 @@ namespace ranges
                     IteratorRange<I1, S1>() &&
                     IteratorRange<I2, S2>()
                 )>
+            RANGES_CXX14_CONSTEXPR
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -191,6 +195,7 @@ namespace ranges
                     Iterable<Rng1>() &&
                     Iterable<Rng2>()
                 )>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng1>
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const

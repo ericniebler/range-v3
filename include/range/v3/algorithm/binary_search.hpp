@@ -41,6 +41,7 @@ namespace ranges
             template<typename I, typename S, typename V2, typename C = ordered_less,
                 typename P = ident,
                 CONCEPT_REQUIRES_(IteratorRange<I, S>() && BinarySearchable<I, V2, C, P>())>
+            RANGES_CXX14_CONSTEXPR
             bool
             operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
             {
@@ -54,6 +55,7 @@ namespace ranges
             template<typename Rng, typename V2, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Iterable<Rng>() && BinarySearchable<I, V2, C, P>())>
+            RANGES_CXX14_CONSTEXPR
             bool
             operator()(Rng &&rng, V2 const &val, C pred = C{}, P proj = P{}) const
             {

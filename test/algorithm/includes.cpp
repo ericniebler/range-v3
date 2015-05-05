@@ -154,5 +154,12 @@ int main()
         ));
     }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(ranges::includes({1, 2, 2, 3, 3, 3, 4, 4, 4, 4}, {3, 3, 3},
+                      std::less<int>()), "");
+    }
+#endif
+
     return ::test_result();
 }
