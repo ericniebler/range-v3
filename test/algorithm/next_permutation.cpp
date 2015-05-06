@@ -27,6 +27,8 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/permutation.hpp>
+#include <range/v3/algorithm/equal.hpp>
+#include "../safe_int_swap.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -170,6 +172,21 @@ std::ostream &operator<<(std::ostream& sout, std::pair<int, c_str> p)
     return sout << "{" << p.first << "," << p.second.value << "}";
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    safe_int<int> ia[] = {6, 5, 4, 3, 2, 1};
+    next_permutation(ia, greater{});
+    if (!equal(ia, {6, 5, 4, 3, 1, 2})) { return false; }
+    next_permutation(ia, greater{});
+    if (!equal(ia, {6, 5, 4, 2, 3, 1})) { return false; }
+    next_permutation(ia, greater{});
+    if (!equal(ia, {6, 5, 4, 2, 1, 3})) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test_iter<bidirectional_iterator<int*> >();
@@ -211,6 +228,12 @@ int main()
     CHECK(ranges::next_permutation(ia, C(), &std::pair<int,c_str>::first));
     ::check_equal<std::pair<int, c_str>>(ia, {{6, {"six"}}, {5,{"five"}}, {4,{"four"}}, {2,{"two"}}, {1,{"one"}}, {3,{"three"}}});
     // etc..
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

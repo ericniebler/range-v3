@@ -41,6 +41,7 @@ namespace ranges
         {
             template<typename I, typename S, typename O,
                 CONCEPT_REQUIRES_(IteratorRange<I, S>() && ReverseCopyable<I, O>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I, O> operator()(I begin, S end_, O out) const
             {
                 I end = ranges::next(begin, end_), res = end;
@@ -52,6 +53,7 @@ namespace ranges
             template<typename Rng, typename O,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Iterable<Rng>() && ReverseCopyable<I, O>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));

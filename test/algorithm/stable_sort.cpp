@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/stable_sort.hpp>
+#include "../safe_int_swap.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -159,6 +160,27 @@ struct S
     int i, j;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    safe_int<int> ap[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4};
+    auto r = stable_sort.inplace(ap, greater{});
+    if(r != ap + 10) { return false; }
+    if(ap[0] != 4) { return false; }
+    if(ap[1] != 4) { return false; }
+    if(ap[2] != 3) { return false; }
+    if(ap[3] != 3) { return false; }
+    if(ap[4] != 2) { return false; }
+    if(ap[5] != 2) { return false; }
+    if(ap[6] != 1) { return false; }
+    if(ap[7] != 1) { return false; }
+    if(ap[8] != 0) { return false; }
+    if(ap[9] != 0) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     // test null range
@@ -228,5 +250,10 @@ int main()
         }
     }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
     return ::test_result();
 }

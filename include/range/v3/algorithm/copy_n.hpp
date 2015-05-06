@@ -13,7 +13,6 @@
 #ifndef RANGES_V3_ALGORITHM_COPY_N_HPP
 #define RANGES_V3_ALGORITHM_COPY_N_HPP
 
-#include <tuple>
 #include <utility>
 #include <functional>
 #include <range/v3/range_fwd.hpp>
@@ -40,6 +39,7 @@ namespace ranges
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I, O>
             operator()(I begin, iterator_difference_t<I> n, O out) const
             {

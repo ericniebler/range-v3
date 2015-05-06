@@ -13,13 +13,13 @@
 #ifndef RANGES_V3_UTILITY_FUNCTIONAL_HPP
 #define RANGES_V3_UTILITY_FUNCTIONAL_HPP
 
-#include <memory> // std::addressof
 #include <utility>
 #include <functional> // std::reference_wrapper
 #include <type_traits>
 #include <initializer_list>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/addressof.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/concepts.hpp>
@@ -61,10 +61,21 @@ namespace ranges
             }
         };
 
+        struct greater
+        {
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(WeaklyOrdered<T, U>() &&
+                                  EqualityComparable<T, U>())>
+            constexpr bool operator()(T && t, U && u) const
+            {
+                return (T &&) t > (U &&) u;
+            }
+        };
+
         struct ident
         {
             template<typename T>
-            T && operator()(T && t) const noexcept
+            constexpr T && operator()(T && t) const noexcept
             {
                 return (T &&) t;
             }
@@ -73,7 +84,7 @@ namespace ranges
         struct plus
         {
             template<typename T, typename U>
-            auto operator()(T && t, U && u) const ->
+            constexpr auto operator()(T && t, U && u) const ->
                 decltype((T &&) t + (U &&) u)
             {
                 return (T &&) t + (U &&) u;
@@ -83,7 +94,7 @@ namespace ranges
         struct minus
         {
             template<typename T, typename U>
-            auto operator()(T && t, U && u) const ->
+            constexpr auto operator()(T && t, U && u) const ->
                 decltype((T &&) t - (U &&) u)
             {
                 return (T &&) t - (U &&) u;
@@ -93,7 +104,7 @@ namespace ranges
         struct multiplies
         {
             template<typename T, typename U>
-            auto operator()(T && t, U && u) const ->
+            constexpr auto operator()(T && t, U && u) const ->
                 decltype((T &&) t * (U &&) u)
             {
                 return (T &&) t * (U &&) u;
@@ -103,7 +114,7 @@ namespace ranges
         struct bitwise_or
         {
             template<typename T, typename U>
-            auto operator()(T && t, U && u) const ->
+            constexpr auto operator()(T && t, U && u) const ->
                 decltype((T &&) t | (U &&) u)
             {
                 return (T &&) t | (U &&) u;
@@ -113,17 +124,17 @@ namespace ranges
         template<typename T>
         struct coerce
         {
-            T & operator()(T & t) const
+            constexpr T & operator()(T & t) const
             {
                 return t;
             }
             /// \overload
-            T const & operator()(T const & t) const
+            constexpr T const & operator()(T const & t) const
             {
                 return t;
             }
             /// \overload
-            T operator()(T && t) const
+            constexpr T operator()(T && t) const
             {
                 return (T &&) t;
             }
@@ -155,10 +166,13 @@ namespace ranges
             private:
                 R (*pfn_)(Args...);
             public:
+                RANGES_CXX14_CONSTEXPR
                 ptr_fn_() = default;
+                RANGES_CXX14_CONSTEXPR
                 explicit ptr_fn_(R (*pfn)(Args...))
                   : pfn_(pfn)
                 {}
+                RANGES_CXX14_CONSTEXPR
                 R operator()(Args...args) const
                 {
                     return (*pfn_)(std::forward<Args>(args)...);
@@ -166,6 +180,7 @@ namespace ranges
             };
         public:
             template<typename R, typename ...Args>
+            RANGES_CXX14_CONSTEXPR
             ptr_fn_<R, Args...> operator()(R (*p)(Args...)) const
             {
                 return ptr_fn_<R, Args...>(p);
@@ -176,6 +191,7 @@ namespace ranges
                 return std::mem_fn(p);
             }
             template<typename T, typename U = detail::decay_t<T>>
+            RANGES_CXX14_CONSTEXPR
             auto operator()(T && t) const ->
                 meta::if_c<!std::is_pointer<U>::value && !std::is_member_pointer<U>::value, T>
             {
@@ -347,7 +363,7 @@ namespace ranges
             indirected(Fn fn)
               : BaseFn(as_function(std::move(fn)))
             {}
-            // value_type (needs no impl)
+            // value_type
             template<typename ...Its>
             auto operator()(copy_tag, Its ...its) const ->
                 detail::decay_t<decltype(std::declval<BaseFn &>()(*its...))>;
@@ -519,25 +535,31 @@ namespace ranges
         public:
             using type = T;
             using reference = meta::if_c<RValue, T &&, T &>;
+            RANGES_CXX14_CONSTEXPR
             reference_wrapper() = default;
+            RANGES_CXX14_CONSTEXPR
             reference_wrapper(reference t) noexcept
-              : t_(std::addressof(t))
+              : t_(ranges::addressof(t))
             {}
+            RANGES_CXX14_CONSTEXPR
             reference get() const noexcept
             {
                 RANGES_ASSERT(nullptr != t_);
                 return static_cast<reference>(*t_);
             }
+            RANGES_CXX14_CONSTEXPR
             operator reference() const noexcept
             {
                 return get();
             }
             CONCEPT_REQUIRES(!RValue)
+            RANGES_CXX14_CONSTEXPR
             operator std::reference_wrapper<T> () const noexcept
             {
                 return {get()};
             }
             template<typename ...Args>
+            RANGES_CXX14_CONSTEXPR
             auto operator()(Args &&...args) const ->
                 decltype(std::declval<reference>()(std::declval<Args>()...))
             {
@@ -660,18 +682,21 @@ namespace ranges
         struct ref_fn : pipeable<ref_fn>
         {
             template<typename T, CONCEPT_REQUIRES_(!is_reference_wrapper_t<T>())>
+            RANGES_CXX14_CONSTEXPR
             reference_wrapper<T> operator()(T & t) const
             {
                 return {t};
             }
             /// \overload
             template<typename T, bool RValue>
+            RANGES_CXX14_CONSTEXPR
             reference_wrapper<T, RValue> operator()(reference_wrapper<T, RValue> t) const
             {
                 return t;
             }
             /// \overload
             template<typename T>
+            RANGES_CXX14_CONSTEXPR
             reference_wrapper<T> operator()(std::reference_wrapper<T> t) const
             {
                 return {t.get()};
@@ -894,6 +919,7 @@ namespace ranges
           : ImplFn
         {
         private:
+            RANGES_CXX14_CONSTEXPR
             ImplFn const & base() const
             {
                 return *this;
@@ -902,6 +928,7 @@ namespace ranges
             using ImplFn::operator();
 
             template<typename V0, typename...Args>
+            RANGES_CXX14_CONSTEXPR
             auto operator()(std::initializer_list<V0> &&rng0, Args &&...args) const ->
                 decltype(std::declval<ImplFn const &>()(std::move(rng0), std::declval<Args>()...))
             {
@@ -909,6 +936,7 @@ namespace ranges
             }
             /// \overload
             template<typename Rng0, typename V1, typename...Args>
+            RANGES_CXX14_CONSTEXPR
             auto operator()(Rng0 && rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
                 decltype(std::declval<ImplFn const &>()(std::declval<Rng0>(), std::move(rng1), std::declval<Args>()...))
             {
@@ -916,6 +944,7 @@ namespace ranges
             }
             /// \overload
             template<typename V0, typename V1, typename...Args>
+            RANGES_CXX14_CONSTEXPR
             auto operator()(std::initializer_list<V0> rng0, std::initializer_list<V1> &&rng1, Args &&...args) const ->
                 decltype(std::declval<ImplFn const &>()(std::move(rng0), std::move(rng1), std::declval<Args>()...))
             {

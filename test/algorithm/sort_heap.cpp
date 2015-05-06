@@ -27,6 +27,9 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/heap_algorithm.hpp>
+#include <range/v3/algorithm/is_sorted.hpp>
+#include "../safe_int_swap.hpp"
+#include "../array.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -173,6 +176,25 @@ void test_10(int N)
     delete [] ib;
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr() {
+    using namespace ranges;
+    bool r = true;
+    constexpr int N = 100;
+    array<safe_int<int>, N> ia{{0}};
+    for (int i = 0; i < N; ++i)
+        ia[i] = N - 1 - i;
+    make_heap(begin(ia), end(ia));
+    if(sort_heap(begin(ia), end(ia), ranges::less{}) != end(ia)) {
+        r = false;
+    }
+    if (!is_sorted(ia)) {
+        r = false;
+    }
+    return r;
+}
+#endif
+
 void test(int N)
 {
     test_1(N);
@@ -195,6 +217,12 @@ int main()
     test(1000);
     test_9(1000);
     test_10(1000);
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return test_result();
 }

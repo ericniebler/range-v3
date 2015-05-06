@@ -47,6 +47,7 @@ namespace ranges
         {
         private:
             template<typename I> // Forward
+            RANGES_CXX14_CONSTEXPR
             static range<I> rotate_left(I begin, I end)
             {
                 iterator_value_t<I> tmp = iter_move(begin);
@@ -56,6 +57,7 @@ namespace ranges
             }
 
             template<typename I> // Bidirectional
+            RANGES_CXX14_CONSTEXPR
             static range<I> rotate_right(I begin, I end)
             {
                 I lm1 = prev(end);
@@ -66,6 +68,7 @@ namespace ranges
             }
 
             template<typename I, typename S> // Forward
+            RANGES_CXX14_CONSTEXPR
             static range<I> rotate_forward(I begin, I middle, S end)
             {
                 I i = middle;
@@ -100,6 +103,7 @@ namespace ranges
             }
 
             template<typename D>
+            RANGES_CXX14_CONSTEXPR
             static D gcd(D x, D y)
             {
                 do
@@ -112,6 +116,7 @@ namespace ranges
             }
 
             template<typename I> // Random
+            RANGES_CXX14_CONSTEXPR
             static range<I> rotate_gcd(I begin, I middle, I end)
             {
                 auto const m1 = middle - begin;
@@ -143,12 +148,14 @@ namespace ranges
             }
 
             template<typename I, typename S>
+            RANGES_CXX14_CONSTEXPR
             static range<I> rotate_(I begin, I middle, S end, concepts::ForwardIterator*)
             {
                 return rotate_fn::rotate_forward(begin, middle, end);
             }
 
             template<typename I>
+            RANGES_CXX14_CONSTEXPR
             static range<I> rotate_(I begin, I middle, I end, concepts::ForwardIterator*)
             {
                 using value_type = iterator_value_t<I>;
@@ -161,6 +168,7 @@ namespace ranges
             }
 
             template<typename I>
+            RANGES_CXX14_CONSTEXPR
             static range<I> rotate_(I begin, I middle, I end, concepts::BidirectionalIterator*)
             {
                 using value_type = iterator_value_t<I>;
@@ -175,6 +183,7 @@ namespace ranges
             }
 
             template<typename I>
+            RANGES_CXX14_CONSTEXPR
             static range<I> rotate_(I begin, I middle, I end, concepts::RandomAccessIterator*)
             {
                 using value_type = iterator_value_t<I>;
@@ -192,6 +201,7 @@ namespace ranges
         public:
             template<typename I, typename S,
                 CONCEPT_REQUIRES_(Permutable<I>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             range<I> operator()(I begin, I middle, S end) const
             {
                 if(begin == middle)
@@ -208,6 +218,7 @@ namespace ranges
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Iterable<Rng>() && Permutable<I>())>
+            RANGES_CXX14_CONSTEXPR
             meta::if_<std::is_lvalue_reference<Rng>, range<I>, dangling<range<I>>>
             operator()(Rng &&rng, I middle) const
             {

@@ -213,6 +213,44 @@ void test_rng_pred_proj()
                              input_iterator<const S*>(ia));
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 0, 1, 2, 3};
+    constexpr unsigned sa = size(ia);
+    int ib[] = {1, 3, 5, 7};
+    constexpr unsigned sb = size(ib);
+    if(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa))),
+                             make_range(forward_iterator<const int*>(ib),
+                             forward_iterator<const int*>(ib + sb)),
+                             equal_to{}) !=
+                             input_iterator<const int*>(ia+1)) { return false; }
+    int ic[] = {7};
+    if(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa))),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic + 1)),
+                             equal_to{}) !=
+                             input_iterator<const int*>(ia+sa)) { return false; }
+    if(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia + sa))),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic)),
+                             equal_to{}) !=
+                             input_iterator<const int*>(ia+sa)) { return false; }
+    if(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+                             input_iterator<const int*>(ia))),
+                             make_range(forward_iterator<const int*>(ic),
+                             forward_iterator<const int*>(ic+1)),
+                             equal_to{}) !=
+                             input_iterator<const int*>(ia)) { return false; }
+
+    return true;
+}
+#endif
+
 
 int main()
 {
@@ -221,5 +259,10 @@ int main()
     ::test_rng();
     ::test_rng_pred();
     ::test_rng_pred_proj();
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
     return ::test_result();
 }

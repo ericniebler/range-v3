@@ -63,6 +63,7 @@ namespace ranges
             // Single-range variant
             template<typename I, typename S, typename O, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(IteratorRange<I, S>() && Transformable1<I, O, F, P>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<I, O> operator()(I begin, S end, O out, F fun_, P proj_ = P{}) const
             {
                 auto &&fun = as_function(fun_);
@@ -75,6 +76,7 @@ namespace ranges
             template<typename Rng, typename O, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Iterable<Rng>() && Transformable1<I, O, F, P>())>
+            RANGES_CXX14_CONSTEXPR
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, O out, F fun, P proj = P{}) const
             {
@@ -86,6 +88,7 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(IteratorRange<I0, S0>() && IteratorRange<I1, S1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())>
+            RANGES_CXX14_CONSTEXPR
             std::tuple<I0, I1, O> operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun_,
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
@@ -103,6 +106,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(Iterable<Rng0>() && Iterable<Rng1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())>
+            RANGES_CXX14_CONSTEXPR
             std::tuple<range_safe_iterator_t<Rng0>, range_safe_iterator_t<Rng1>, O>
             operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
@@ -115,6 +119,7 @@ namespace ranges
             template<typename I0, typename S0, typename I1, typename O, typename F,
                 typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(IteratorRange<I0, S0>() && Transformable2<I0, I1, O, F, P0, P1>())>
+            RANGES_CXX14_CONSTEXPR
             std::tuple<I0, I1, O> operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun,
                 P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {
@@ -127,6 +132,7 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 CONCEPT_REQUIRES_(Iterable<Rng0>() && Iterator<I1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())>
+            RANGES_CXX14_CONSTEXPR
             std::tuple<range_safe_iterator_t<Rng0>, I1, O> operator()(Rng0 &&rng0, I1Ref &&begin1,
                 O out, F fun, P0 proj0 = P0{}, P1 proj1 = P1{}) const
             {

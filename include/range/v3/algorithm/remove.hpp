@@ -42,10 +42,11 @@ namespace ranges
         {
             template<typename I, typename S, typename T, typename P = ident,
                 CONCEPT_REQUIRES_(Removable<I, T, P>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end, T const &val, P proj_ = P{}) const
             {
                 auto &&proj = as_function(proj_);
-                begin = find(std::move(begin), end, val, std::ref(proj));
+                begin = find(std::move(begin), end, val, ranges::ref(proj));
                 if(begin != end)
                 {
                     for(I i = next(begin); i != end; ++i)
@@ -63,6 +64,7 @@ namespace ranges
             template<typename Rng, typename T, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Removable<I, T, P>() && ForwardIterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, T const &val, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), val, std::move(proj));

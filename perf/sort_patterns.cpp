@@ -247,7 +247,6 @@ int main() {
   return 0;
 }
 
-
 #else
 
 #pragma message("sort_patterns requires C++ 14 or greater")

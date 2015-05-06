@@ -33,6 +33,7 @@ namespace ranges
             template<typename I, typename S, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     IndirectCallable<F, Project<I, P>>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end, F fun_, P proj_ = P{}) const
             {
                 auto &&fun = as_function(fun_);
@@ -47,6 +48,7 @@ namespace ranges
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputIterable<Rng>() && IndirectCallable<F, Project<I, P>>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));

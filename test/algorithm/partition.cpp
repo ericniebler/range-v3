@@ -26,13 +26,20 @@
 #include <utility>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partition.hpp>
+#include "../safe_int_swap.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+#include "../array.hpp"
 
 struct is_odd
 {
-    bool operator()(const int& i) const {return i & 1;}
+    constexpr bool operator()(const int& i) const {return i & 1;}
+    RANGES_CXX14_CONSTEXPR
+    bool operator()(const ranges::safe_int<int>& i) const
+    {
+        return i % ranges::safe_int<int>(2) != 0;
+    }
 };
 
 template <class Iter, class Sent = Iter>
@@ -176,6 +183,29 @@ struct S
     int i;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    array<safe_int<int>, 9> ia {{1, 2, 3, 4, 5, 6, 7, 8, 9}};
+    safe_int<int>* r = partition(ia, is_odd());
+    if(r != begin(ia) + 5) { return false; }
+    for (safe_int<int>* i = begin(ia); i < r; ++i)
+        if(!is_odd()(*i)) { return false; }
+    for (safe_int<int>* i = r; i < end(ia); ++i)
+        if(is_odd()(*i)) { return false; }
+
+    //Test rvalue range
+    auto r2 = partition(make_range(begin(ia), end(ia)), is_odd());
+    if(r2.get_unsafe() != begin(ia) + 5) { return false; }
+    for (safe_int<int>* i = begin(ia); i < r2.get_unsafe(); ++i)
+        if(!is_odd()(*i)) { return false; }
+    for (safe_int<int>* i = r2.get_unsafe(); i < end(ia); ++i)
+        if(is_odd()(*i)) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test_iter<forward_iterator<int*> >();
@@ -211,6 +241,12 @@ int main()
         CHECK(is_odd()(i->i));
     for (S* i = r2.get_unsafe(); i < ia+sa; ++i)
         CHECK(!is_odd()(i->i));
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

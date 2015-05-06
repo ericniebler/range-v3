@@ -32,7 +32,7 @@
 
 struct is_odd
 {
-    bool operator()(const int& i) const {return i & 1;}
+    RANGES_CXX14_CONSTEXPR bool operator()(const int& i) const {return i & 1;}
 };
 
 template <class Iter, class Sent = Iter>
@@ -126,6 +126,13 @@ int main()
 
     // Test initializer list
     CHECK( ranges::is_partitioned({S{1}, S{3}, S{5}, S{2}, S{4}, S{6}}, is_odd(), &S::i) );
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(ranges::is_partitioned({1,3,5,2,4,6}, is_odd()), "");
+        static_assert(!ranges::is_partitioned({1,3,1,2,5,6}, is_odd()), "");
+    }
+#endif
 
     return ::test_result();
 }

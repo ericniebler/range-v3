@@ -396,5 +396,14 @@ int main()
         CHECK(!ranges::is_sorted(as, std::greater<int>{}, &A::a));
     }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(ranges::is_sorted({0, 1, 2, 3}), "");
+        static_assert(ranges::is_sorted({0, 1, 2, 3}, std::less<>{}), "");
+        static_assert(!ranges::is_sorted({3, 2, 1, 0}), "");
+        static_assert(ranges::is_sorted({3, 2, 1, 0}, std::greater<>{}), "");
+    }
+#endif
+
     return ::test_result();
 }

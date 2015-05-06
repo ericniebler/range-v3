@@ -25,6 +25,7 @@
 #include <utility>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/reverse.hpp>
+#include "../safe_int_swap.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -98,6 +99,23 @@ void test()
     }
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+        using namespace ranges;
+        safe_int<int>  ia[] = {0, 1, 2, 3, 4};
+        constexpr unsigned sa = ranges::size(ia);
+        auto r = ranges::reverse(ia);
+        if(r != ia + sa) { return false; }
+        if(ia[0] != 4) { return false; }
+        if(ia[1] != 3) { return false; }
+        if(ia[2] != 2) { return false; }
+        if(ia[3] != 1) { return false; }
+        if(ia[4] != 0) { return false; }
+        return true;
+}
+#endif
+
 int main()
 {
     test<bidirectional_iterator<int *>>();
@@ -106,6 +124,12 @@ int main()
 
     test<bidirectional_iterator<int *>, sentinel<int*>>();
     test<random_access_iterator<int *>, sentinel<int*>>();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+            static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

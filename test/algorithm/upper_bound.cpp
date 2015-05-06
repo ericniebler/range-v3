@@ -54,5 +54,26 @@ int main()
     CHECK(ranges::upper_bound(ranges::view::all(a), 1, less(), &std::pair<int, int>::first).get_unsafe() == &a[4]);
     CHECK(ranges::upper_bound(ranges::view::all(c), 1, less(), &std::pair<int, int>::first).get_unsafe() == &c[4]);
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        using namespace ranges;
+        constexpr std::pair<int, int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
+
+        static_assert(aux::upper_bound_n(begin(a), size(a), a[0]) == &a[1], "");
+        static_assert(aux::upper_bound_n(begin(a), size(a), a[1], less()) == &a[2], "");
+
+        static_assert(upper_bound(begin(a), end(a), a[0]) == &a[1], "");
+        static_assert(upper_bound(begin(a), end(a), a[1], less()) == &a[2], "");
+        static_assert(upper_bound(a, a[2]) == &a[3], "");
+        static_assert(upper_bound(a, a[3], less()) == &a[4], "");
+
+        static_assert(upper_bound(a, std::make_pair(1, 3), less()) == &a[4], "");
+        // TODO: constexpr
+        // requires view::all to be constexpr
+        // static_assert(upper_bound(view::all(a), std::make_pair(1, 3), less()).get_unsafe() == &a[4], "");
+    }
+#endif
+
+
     return test_result();
 }

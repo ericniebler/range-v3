@@ -58,6 +58,25 @@ void test_rng()
     CHECK(base(i) == ia + sa);
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+constexpr bool equals_two(int i) { return i == 2; }
+
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int  ia[] = {0, 1, 2, 3, 4};
+    constexpr unsigned sa = ranges::size(ia);
+    auto r = ranges::replace_if(ia, equals_two, 42);
+    if(r != ia + sa) { return false; }
+    if(ia[0] != 0) { return false; }
+    if(ia[1] != 1) { return false; }
+    if(ia[2] != 42) { return false; }
+    if(ia[3] != 3) { return false; }
+    if(ia[4] != 4) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test_iter<forward_iterator<int*> >();
@@ -105,6 +124,12 @@ int main()
         CHECK(ia[4] == P{4,"4"});
         CHECK(i.get_unsafe() == ranges::end(ia));
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

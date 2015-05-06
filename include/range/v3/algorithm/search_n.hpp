@@ -51,6 +51,7 @@ namespace ranges
         private:
             template<typename I, typename D, typename V, typename C, typename P,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+            RANGES_CXX14_CONSTEXPR
             static I sized_impl(I const begin_, I end, D d, D count, V const &val,
                 C &pred, P &proj)
             {
@@ -87,6 +88,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename D, typename V, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
             static I sized_impl(I const begin_, S end, D const d_, D count,
                 V const &val, C &pred, P &proj)
             {
@@ -123,6 +125,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename D, typename V, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
             static I impl(I begin, S end, D count, V const &val, C &pred, P &proj)
             {
                 while(true)
@@ -156,6 +159,7 @@ namespace ranges
         public:
             template<typename I, typename S, typename V, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end, iterator_difference_t<I> count, V const &val,
                 C pred_ = C{}, P proj_ = P{}) const
             {
@@ -174,6 +178,7 @@ namespace ranges
             template<typename Rng, typename V, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Iterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng>
             operator()(Rng &&rng, iterator_difference_t<I> count, V const &val, C pred_ = C{},
                 P proj_ = P{}) const

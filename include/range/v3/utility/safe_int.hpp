@@ -118,11 +118,13 @@ namespace ranges
             {
                 return i_;
             }
+            RANGES_CXX14_CONSTEXPR
             SignedInteger get() const noexcept
             {
                 RANGES_ASSERT(is_finite());
                 return i_;
             }
+            RANGES_CXX14_CONSTEXPR
             explicit operator SignedInteger() const noexcept
             {
                 return get();
@@ -157,24 +159,28 @@ namespace ranges
                 // This handles infinity because of how we've define neg_inf_
                 return i_ == NaN_ ? NaN_ : -i_;
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator++() noexcept
             {
                 if(is_finite())
                     ++i_;
                 return *this;
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator++(int) noexcept
             {
                 auto tmp = *this;
                 ++*this;
                 return tmp;
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator--() noexcept
             {
                 if(is_finite())
                     --i_;
                 return *this;
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator--(int) noexcept
             {
                 auto tmp = *this;
@@ -224,11 +230,13 @@ namespace ranges
             {
                 return left + -right;
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator+=(safe_int that)
             {
                 *this = *this + that;
                 return *this;
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator-=(safe_int that)
             {
                 *this = *this - that;
@@ -242,6 +250,7 @@ namespace ranges
                        !left.is_finite() ? (right < 0 ? -left : left) :
                        left.i_ / right.i_;
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator/=(safe_int that)
             {
                 *this = *this / that;
@@ -251,6 +260,7 @@ namespace ranges
             {
                 return (left.is_finite() && right.is_finite()) ? left.i_ % right.i_ : NaN();
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator%=(safe_int that)
             {
                 *this = *this % that;
@@ -267,6 +277,7 @@ namespace ranges
                     // Do the multiplication
                     left.i_ * right.i_;
             }
+            RANGES_CXX14_CONSTEXPR
             safe_int & operator*=(safe_int that)
             {
                 *this = *this * that;

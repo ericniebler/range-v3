@@ -29,6 +29,21 @@ struct S
     int i_;
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+template<class Rng, class T>
+RANGES_CXX14_CONSTEXPR T ret_val(Rng r, T val) {
+    auto rng = r;
+    auto pi = ranges::find(rng, val);
+    return *pi;
+}
+template<class Rng, class T>
+RANGES_CXX14_CONSTEXPR bool found(Rng r, T val) {
+    auto rng = r;
+    auto pi = ranges::find(rng, val);
+    return pi != ranges::end(rng);
+}
+#endif
+
 int main()
 {
     using namespace ranges;
@@ -64,6 +79,14 @@ int main()
     CHECK(ps->i_ == 3);
     ps = find(sa, 10, &S::i_);
     CHECK(ps == end(sa));
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(ret_val(std::initializer_list<int>{1, 2}, 2) == 2, "");
+        static_assert(found(std::initializer_list<int>{1, 3, 4}, 4), "");
+        static_assert(!found(std::initializer_list<int>{1, 3, 4}, 5), "");
+    }
+#endif
 
     return ::test_result();
 }

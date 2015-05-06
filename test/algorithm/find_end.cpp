@@ -24,6 +24,57 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
+RANGES_CXX14_CONSTEXPR bool test_constexpr() {
+    using namespace ranges;
+    bool r = true;
+    int ia[] = {0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 0, 1, 2, 3, 0, 1, 2, 0, 1, 0};
+    auto ia_b = begin(ia);
+    auto ia_e = end(ia);
+
+    constexpr unsigned sa = size(ia);
+    int b[] = {0};
+    int c[] = {0, 1};
+    int d[] = {0, 1, 2};
+    int e[] = {0, 1, 2, 3};
+    int f[] = {0, 1, 2, 3, 4};
+    int g[] = {0, 1, 2, 3, 4, 5};
+    int h[] = {0, 1, 2, 3, 4, 5, 6};
+    if(!(find_end(ia_b, ia_e, begin(b), b + 1) == ia + sa - 1)) { r = false; }
+    if(!(find_end(ia_b, ia_e, begin(c), c + 2) == ia + 18)) { r = false; }
+    if(!(find_end(ia_b, ia_e, begin(d), d + 3) == ia + 15)) { r = false; }
+    if(!(find_end(ia_b, ia_e, begin(e), e + 4) == ia + 11)) { r = false; }
+    if(!(find_end(ia_b, ia_e, begin(f), f + 5) == ia + 6)) { r = false; }
+    if(!(find_end(ia_b, ia_e, begin(g), g + 6) == ia)) { r = false; }
+    if(!(find_end(ia_b, ia_e, begin(h), h + 7) == ia + sa)) { r = false; }
+    if(!(find_end(ia_b, ia_e, begin(b), b) == ia + sa)) { r = false; }
+    if(!(find_end(ia_b, ia_b, begin(b), b + 1) == ia)) { r = false; }
+
+    auto ir = make_range(ia_b, ia_e);
+    if(!(find_end(ir, make_range(begin(b), b + 1)) == ia + sa - 1)) { r = false; }
+    if(!(find_end(ir, make_range(begin(c), c + 2)) == ia + 18)) { r = false; }
+    if(!(find_end(ir, make_range(begin(d), d + 3)) == ia + 15)) { r = false; }
+    if(!(find_end(ir, make_range(begin(e), e + 4)) == ia + 11)) { r = false; }
+    if(!(find_end(ir, make_range(begin(f), f + 5)) == ia + 6)) { r = false; }
+    if(!(find_end(ir, make_range(begin(g), g + 6)) == ia)) { r = false; }
+    if(!(find_end(ir, make_range(begin(h), h + 7)) == ia + sa)) { r = false; }
+    if(!(find_end(ir, make_range(begin(b), b)) == ia + sa)) { r = false; }
+
+    if(!(find_end(std::move(ir), make_range(begin(b), b + 1)).get_unsafe() == ia + sa - 1)) { r = false; }
+    if(!(find_end(std::move(ir), make_range(begin(c), c + 2)).get_unsafe() == ia + 18)) { r = false; }
+    if(!(find_end(std::move(ir), make_range(begin(d), d + 3)).get_unsafe() == ia + 15)) { r = false; }
+    if(!(find_end(std::move(ir), make_range(begin(e), e + 4)).get_unsafe() == ia + 11)) { r = false; }
+    if(!(find_end(std::move(ir), make_range(begin(f), f + 5)).get_unsafe() == ia + 6)) { r = false; }
+    if(!(find_end(std::move(ir), make_range(begin(g), g + 6)).get_unsafe() == ia)) { r = false; }
+    if(!(find_end(std::move(ir), make_range(begin(h), h + 7)).get_unsafe() == ia + sa)) { r = false; }
+    if(!(find_end(std::move(ir), make_range(begin(b), b)).get_unsafe() == ia + sa)) { r = false; }
+
+    auto er = make_range(ia_b, ia);
+    if(!(find_end(er, make_range(b, b + 1)) == ia)) { r = false; }
+    if(!(find_end(std::move(er), make_range(b, b + 1)).get_unsafe() == ia)) { r = false; }
+    return r;
+}
+
+
 template <class Iter1, class Iter2, typename Sent1 = Iter1, typename Sent2 = Iter2>
 void
 test()
@@ -266,6 +317,13 @@ int main()
     test_proj<random_access_iterator<const S*>, forward_iterator<const int*>, sentinel<const S*>, sentinel<const int *> >();
     test_proj<random_access_iterator<const S*>, bidirectional_iterator<const int*>, sentinel<const S*>, sentinel<const int *> >();
     test_proj<random_access_iterator<const S*>, random_access_iterator<const int*>, sentinel<const S*>, sentinel<const int *> >();
+
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

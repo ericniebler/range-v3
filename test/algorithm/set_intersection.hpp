@@ -91,6 +91,23 @@ struct U
     U& operator=(T t) { k = t.j; return *this;}
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int ic[20] = {0};
+    int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
+    int ib[4] = {2, 4, 4, 6};
+    int ir[3] = {2, 4, 4};
+    constexpr int sr = size(ir);
+
+    int * res = set_intersection(ia, ib, ic, less{});
+    if((res - ic) != sr) { return false; }
+    if(lexicographical_compare(ic, res, ir, ir+sr, less{}) != 0) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
 #ifdef SET_INTERSECTION_1
@@ -275,6 +292,11 @@ int main()
         CHECK((res - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == 0);
     }
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 #endif
 
     return ::test_result();

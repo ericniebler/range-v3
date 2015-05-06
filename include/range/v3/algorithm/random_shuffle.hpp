@@ -88,6 +88,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
                                   Permutable<I>() &&
                                   RandomNumberGenerator<Gen, iterator_difference_t<I>>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end_, Gen && rand) const
             {
                 I end = ranges::next(begin, end_), orig = end;
@@ -106,6 +107,7 @@ namespace ranges
             template<typename Rng, typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
                                   Permutable<I>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng) const
             {
                 return (*this)(begin(rng), end(rng));
@@ -115,6 +117,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() &&
                                   Permutable<I>() &&
                                   RandomNumberGenerator<Gen, iterator_difference_t<I>>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, Gen && rand) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));

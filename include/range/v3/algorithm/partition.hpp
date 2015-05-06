@@ -49,6 +49,7 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
             static I impl(I begin, S end, C pred_, P proj_, concepts::ForwardIterator*)
             {
                 auto && pred = as_function(pred_);
@@ -73,6 +74,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
             static I impl(I begin, S end_, C pred_, P proj_, concepts::BidirectionalIterator*)
             {
                 auto && pred = as_function(pred_);
@@ -100,6 +102,7 @@ namespace ranges
         public:
             template<typename I, typename S, typename C, typename P = ident,
                 CONCEPT_REQUIRES_(Partitionable<I, C, P>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
             I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),
@@ -109,6 +112,7 @@ namespace ranges
             template<typename Rng, typename C, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Iterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
             range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(begin(rng), end(rng), std::move(pred),

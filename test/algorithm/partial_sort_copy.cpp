@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/partial_sort_copy.hpp>
+#include "../safe_int_swap.hpp"
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -107,6 +108,21 @@ struct U
     }
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    safe_int<int> output[9] = {0};
+    safe_int<int>* r = partial_sort_copy({5, 3, 4, 1, 8, 2, 6, 7, 0, 9}, output, less{});
+    safe_int<int>* e = output + 9;
+    if(r != e) { return false; }
+    safe_int<int> i = 0;
+    for (safe_int<int>* x = output; x < e; ++x, ++i)
+        if(*x != i) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     int i = 0;
@@ -165,6 +181,12 @@ int main()
         for (U* x = output; x < e; ++x, ++i)
             CHECK(x->i == i);
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

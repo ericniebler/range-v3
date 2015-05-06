@@ -120,6 +120,35 @@ void test()
     }
 }
 
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {0, 1, 2, 3, 4};
+    int  ib[5] = {0};
+    constexpr unsigned sa = ranges::size(ia);
+    auto r = ranges::reverse_copy(ia, ib);
+    if(r.first != ia + sa) { return false; }
+    if(r.second != ib + sa) { return false; }
+
+    if(ia[0] != 0) { return false; }
+    if(ia[1] != 1) { return false; }
+    if(ia[2] != 2) { return false; }
+    if(ia[3] != 3) { return false; }
+    if(ia[4] != 4) { return false; }
+
+
+    if(ib[0] != 4) { return false; }
+    if(ib[1] != 3) { return false; }
+    if(ib[2] != 2) { return false; }
+    if(ib[3] != 1) { return false; }
+    if(ib[4] != 0) { return false; }
+
+    return true;
+}
+#endif
+
 int main()
 {
     test<bidirectional_iterator<const int*>, output_iterator<int*> >();
@@ -157,6 +186,12 @@ int main()
     test<const int*, bidirectional_iterator<int*>, sentinel<const int *> >();
     test<const int*, random_access_iterator<int*>, sentinel<const int *> >();
     test<const int*, int*>();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

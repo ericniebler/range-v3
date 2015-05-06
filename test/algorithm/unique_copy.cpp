@@ -249,6 +249,31 @@ bool operator==(S l, S r)
     return l.i == r.i && l.j == r.j;
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int a[] = {0, 1, 1, 1, 2, 2, 2};
+    int b[] = {0, 0, 0};
+    const unsigned sa = sizeof(a) / sizeof(a[0]);
+    const unsigned sb = sizeof(b) / sizeof(b[0]);
+    auto r = unique_copy(a, b);
+    if(r.first != a + sa) { return false; }
+    if(r.second != b + sb) { return false; }
+    if(a[0] != 0) { return false; }
+    if(a[1] != 1) { return false; }
+    if(a[2] != 1) { return false; }
+    if(a[3] != 1) { return false; }
+    if(a[4] != 2) { return false; }
+    if(a[5] != 2) { return false; }
+    if(a[6] != 2) { return false; }
+    if(b[0] != 0) { return false; }
+    if(b[1] != 1) { return false; }
+    if(b[2] != 2) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test<input_iterator<const int*>, output_iterator<int*> >();
@@ -300,6 +325,10 @@ int main()
         CHECK(r.second == ib + 7);
         check_equal(ranges::make_range(ib, ib+7), {S{1,1},S{2,2},S{3,3},S{4,5},S{5,6},S{6,9},S{7,10}});
     }
-
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
     return ::test_result();
 }

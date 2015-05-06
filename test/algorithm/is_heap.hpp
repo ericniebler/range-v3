@@ -1062,5 +1062,11 @@ int main()
     // Test initializer_list
     CHECK(ranges::is_heap({S{0}, S{1}, S{1}, S{1}, S{1}, S{1}, S{1}}, std::greater<int>(), &S::i));
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(ranges::is_heap({0, 1, 1, 1, 1, 1, 1}, ranges::greater{}), "");
+    }
+#endif
+
     return ::test_result();
 }

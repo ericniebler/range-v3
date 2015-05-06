@@ -92,7 +92,7 @@ namespace ranges
                 RANGES_ASSERT(begin != end);
                 for(I lm1 = ranges::prev(end); begin != lm1; ++begin)
                 {
-                    I i = ranges::min_element(begin, end, std::ref(pred), std::ref(proj));
+                    I i = ranges::min_element(begin, end, ranges::ref(pred), ranges::ref(proj));
                     if(i != begin)
                         ranges::iter_swap(begin, i);
                 }

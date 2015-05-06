@@ -26,6 +26,7 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+#include "../array.hpp"
 
 void
 test_one(unsigned N, unsigned M)

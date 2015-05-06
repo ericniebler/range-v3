@@ -14,8 +14,21 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/algorithm/equal.hpp>
 #include <range/v3/view/delimit.hpp>
+#include "../array.hpp"
 #include "../simple_test.hpp"
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+template<typename Rng>
+RANGES_CXX14_CONSTEXPR auto copy_rng(Rng&& input)  {
+    array<int, 4> tmp{{0, 0, 0, 0}};
+    auto res = ranges::copy(input, ranges::begin(tmp));
+    if (res.first != ranges::end(input)) { throw 0; };
+    if (res.second != ranges::end(tmp)) { throw 0; };
+    return tmp;
+}
+#endif
 
 int main()
 {
@@ -64,6 +77,13 @@ int main()
         CHECK(res3.second == buf + std::strlen(sz));
         CHECK(std::strcmp(sz, buf) == 0);
     }
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        constexpr auto a1 = copy_rng(array<int,4>{{0, 1, 2, 3}});
+        static_assert(ranges::equal(a1, {0, 1, 2, 3}), "");
+    }
+#endif
 
     return test_result();
 }

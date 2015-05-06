@@ -22,6 +22,7 @@
 #include "./test_iterators.hpp"
 
 template<typename Val, typename Rng>
+RANGES_CXX14_CONSTEXPR
 void check_equal(Rng && actual, std::initializer_list<Val> expected)
 {
     auto begin0 = ranges::begin(actual);
@@ -34,6 +35,7 @@ void check_equal(Rng && actual, std::initializer_list<Val> expected)
 }
 
 template<typename Rng, typename Rng2>
+RANGES_CXX14_CONSTEXPR
 void check_equal(Rng && actual, Rng2&& expected)
 {
     auto begin0 = ranges::begin(actual);
@@ -47,24 +49,28 @@ void check_equal(Rng && actual, Rng2&& expected)
 }
 
 template<typename Expected, typename Actual>
+RANGES_CXX14_CONSTEXPR
 void has_type(Actual &&)
 {
     static_assert(std::is_same<Expected, Actual>::value, "Not the same");
 }
 
 template<typename Concept, typename ...Types>
+RANGES_CXX14_CONSTEXPR
 void models(Types &&...)
 {
     CONCEPT_ASSERT(ranges::concepts::models<Concept, Types...>());
 }
 
 template<typename Concept, typename ...Types>
+RANGES_CXX14_CONSTEXPR
 void models_not(Types &&...)
 {
     CONCEPT_ASSERT(!ranges::concepts::models<Concept, Types...>());
 }
 
 template<typename T>
+RANGES_CXX14_CONSTEXPR
 T & as_lvalue(T && t)
 {
     return t;

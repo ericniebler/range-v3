@@ -32,7 +32,7 @@
 
 struct is_odd
 {
-    bool operator()(const int& i) const {return i & 1;}
+    constexpr bool operator()(const int& i) const {return i & 1;}
 };
 
 template <class Iter, class Sent = Iter>
@@ -129,6 +129,30 @@ void test_rvalue()
     CHECK(r2[3].i == 8);
 }
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    const int ia[] = {1, 2, 3, 4, 6, 8, 5, 7};
+    int r1[10] = {0};
+    int r2[10] = {0};
+    typedef std::tuple<int const *, int*,  int*> P;
+    P p = partition_copy(ia, r1, r2, is_odd());
+    if(std::get<0>(p) != std::end(ia)) { return false; }
+    if(std::get<1>(p) != r1 + 4) { return false; }
+    if(r1[0] != 1) { return false; }
+    if(r1[1] != 3) { return false; }
+    if(r1[2] != 5) { return false; }
+    if(r1[3] != 7) { return false; }
+    if(std::get<2>(p) != r2 + 4) { return false; }
+    if(r2[0] != 2) { return false; }
+    if(r2[1] != 4) { return false; }
+    if(r2[2] != 6) { return false; }
+    if(r2[3] != 8) { return false; }
+    return true;
+}
+#endif
+
 int main()
 {
     test_iter<input_iterator<const int*> >();
@@ -139,6 +163,12 @@ int main()
 
     test_proj();
     test_rvalue();
+
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 
     return ::test_result();
 }

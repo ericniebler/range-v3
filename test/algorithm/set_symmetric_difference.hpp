@@ -118,6 +118,33 @@ struct U
     U& operator=(T t) { k = t.j; return *this;}
 };
 
+#ifdef RANGES_CXX_GREATER_THAN_11
+RANGES_CXX14_CONSTEXPR bool test_constexpr()
+{
+    using namespace ranges;
+    int ia[] = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
+    int ib[] = {2, 4, 4, 6};
+    int ic[20] = {0};
+    int ir[] = {1, 2, 3, 3, 3, 4, 4, 6};
+    const int sr = sizeof(ir)/sizeof(ir[0]);
+
+    auto res1 = set_symmetric_difference(ia, ib, ic, less{});
+    if(std::get<0>(res1) != end(ia)) { return false; }
+    if(std::get<1>(res1) != end(ib)) { return false; }
+    if((std::get<2>(res1) - begin(ic)) != sr) { return false; }
+    if(lexicographical_compare(ic, std::get<2>(res1), ir, ir+sr, less{}) != 0) { return false; }
+    fill(ic, 0);
+
+    auto res2 = set_symmetric_difference(ib, ia, ic, less{});
+    if(std::get<0>(res2) != end(ib)) { return false; }
+    if(std::get<1>(res2) != end(ia)) { return false; }
+    if(std::get<2>(res2) - begin(ic) != sr) { return false; }
+    if(lexicographical_compare(ic, std::get<2>(res2), ir, ir+sr, less{}) != 0) { return false; }
+
+    return true;
+}
+#endif
+
 int main()
 {
 #ifdef SET_SYMMETRIC_DIFFERENCE_1
@@ -319,6 +346,11 @@ int main()
         CHECK((std::get<2>(res2) - ic) == sr);
         CHECK(ranges::lexicographical_compare(ic, std::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == 0);
     }
+#ifdef RANGES_CXX_GREATER_THAN_11
+    {
+        static_assert(test_constexpr(), "");
+    }
+#endif
 #endif
 
     return ::test_result();

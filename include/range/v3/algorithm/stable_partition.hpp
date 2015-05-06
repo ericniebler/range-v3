@@ -56,6 +56,7 @@ namespace ranges
         {
         private:
             template<typename I, typename C, typename P, typename D, typename Pair>
+            RANGES_CXX14_CONSTEXPR
             static I impl(I begin, I end, C pred, P proj, D len, Pair p, concepts::ForwardIterator *fi)
             {
                 // *begin is known to be false
@@ -81,7 +82,7 @@ namespace ranges
                     auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
                     *buf = iter_move(begin);
                     ++buf;
-                    auto res = partition_move(next(begin), end, begin, buf, std::ref(pred), std::ref(proj));
+                    auto res = partition_move(next(begin), end, begin, buf, ranges::ref(pred), ranges::ref(proj));
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false
                     ranges::move(p.first, std::get<2>(res).base().base(), std::get<1>(res));
@@ -141,6 +142,51 @@ namespace ranges
                 return stable_partition_fn::impl(begin, len_end.second, pred, proj, len_end.first, p, fi);
             }
 
+
+            template<typename I, typename C, typename P, typename D>
+            static RANGES_CXX14_CONSTEXPR
+            I unbuffered_impl(I begin, I end, C pred, P proj, D len, concepts::BidirectionalIterator *bi)
+            {
+                I middle = begin;
+                D half = len / 2;  // half >= 2
+                advance(middle, half);
+                // recurse on [begin, middle-1], except reduce middle-1 until *(middle-1) is true, *begin know to be false
+                // F????????????????T
+                // f       m        l
+                I m1 = middle;
+                I begin_false = begin;
+                D len_half = half;
+                bool s_ = true;
+                while(!pred(proj(*--m1)))
+                {
+                    if(m1 == begin) {
+                        s_ = false;
+                        break;
+                    }
+                    --len_half;
+                }
+                // F???TFFF?????????T
+                // f   m1  m        l
+                if(s_)
+                begin_false = stable_partition_fn::unbuffered_impl(begin, m1, pred, proj, len_half, bi);
+                m1 = middle;
+                len_half = len - half;
+                while(pred(proj(*m1)))
+                {
+                    if(++m1 == end)
+                        return ranges::rotate(begin_false, middle, ++end).begin();
+                    --len_half;
+                }
+                // TTTFFFFFTTTF?????T
+                // f  ff   m  m1    l
+                I end_false = stable_partition_fn::unbuffered_impl(m1, end, pred, proj, len_half, bi);
+                // TTTFFFFFTTTTTFFFFF
+                // f  ff   m    sf  l
+                return ranges::rotate(begin_false, middle, end_false).begin();
+                // TTTTTTTTFFFFFFFFFF
+                //         |
+            }
+
             template<typename I, typename C, typename P, typename D, typename Pair>
             static I impl(I begin, I end, C pred, P proj, D len, Pair p, concepts::BidirectionalIterator *bi)
             {
@@ -174,7 +220,7 @@ namespace ranges
                     auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
                     *buf = iter_move(begin);
                     ++buf;
-                    auto res = partition_move(next(begin), end, begin, buf, std::ref(pred), std::ref(proj));
+                    auto res = partition_move(next(begin), end, begin, buf, ranges::ref(pred), ranges::ref(proj));
                     begin = std::get<1>(res);
                     // move *end, known to be true
                     *begin = iter_move(std::get<0>(res));
@@ -228,6 +274,36 @@ namespace ranges
             }
 
             template<typename I, typename S, typename C, typename P>
+            RANGES_CXX14_CONSTEXPR
+            static I unbuffered_impl(I begin, S end_, C pred, P proj,
+                                     concepts::BidirectionalIterator *bi)
+            {
+                // Either prove all true and return begin or point to first false
+                while(true)
+                {
+                    if(begin == end_)
+                        return begin;
+                    if(!pred(proj(*begin)))
+                        break;
+                    ++begin;
+                }
+                // begin points to first false, everything prior to begin is already set.
+                // Either prove [begin, end) is all false and return begin, or point end to last true
+                I end = ranges::next(begin, end_);
+                do
+                {
+                    if(begin == --end)
+                        return begin;
+                } while(!pred(proj(*end)));
+                // We now have a reduced range [begin, end]
+                // *begin is known to be false
+                // *end is known to be true
+                // len >= 2
+                auto len = distance(begin, end) + 1;
+                return stable_partition_fn::unbuffered_impl(begin, end, pred, proj, len, bi);
+            }
+
+            template<typename I, typename S, typename C, typename P>
             static I impl(I begin, S end_, C pred, P proj, concepts::BidirectionalIterator *bi)
             {
                 using difference_type = iterator_difference_t<I>;
@@ -268,8 +344,8 @@ namespace ranges
             {
                 auto &&pred = as_function(pred_);
                 auto &&proj = as_function(proj_);
-                return stable_partition_fn::impl(std::move(begin), std::move(end), std::ref(pred),
-                    std::ref(proj), iterator_concept<I>());
+                return stable_partition_fn::impl(std::move(begin), std::move(end), ranges::ref(pred),
+                    ranges::ref(proj), iterator_concept<I>());
             }
 
             // BUGBUG Can this be optimized if Rng has O1 size?
@@ -279,6 +355,28 @@ namespace ranges
             range_safe_iterator_t<Rng> operator()(Rng &&rng, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));
+            }
+
+            template<typename I, typename S, typename C, typename P = ident,
+                     CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && IteratorRange<I, S>())>
+            RANGES_CXX14_CONSTEXPR
+            I inplace(I begin, S end, C pred_, P proj_ = P{}) const
+            {
+                auto &&pred = as_function(pred_);
+                auto &&proj = as_function(proj_);
+                return stable_partition_fn::unbuffered_impl(std::move(begin), std::move(end),
+                                                            ranges::ref(pred), ranges::ref(proj),
+                                                            iterator_concept<I>());
+            }
+
+            // BUGBUG Can this be optimized if Rng has O1 size?
+            template<typename Rng, typename C, typename P = ident,
+                     typename I = range_iterator_t<Rng>,
+                     CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && Iterable<Rng>())>
+            RANGES_CXX14_CONSTEXPR
+            range_safe_iterator_t<Rng> inplace(Rng &&rng, C pred, P proj = P{}) const
+            {
+                return (*this).inplace(begin(rng), end(rng), std::move(pred), std::move(proj));
             }
         };
 
