@@ -9,11 +9,14 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <array>
+#include <vector>
 #include <iterator>
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/view/remove_if.hpp>
 #include <range/v3/view/counted.hpp>
+#include <range/v3/view/concat.hpp>
 #include <range/v3/view/reverse.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -78,6 +81,16 @@ int main()
     ::check_equal(mutable_rng, {1,3,5,7,9});
     CONCEPT_ASSERT(Range<decltype(mutable_rng)>());
     CONCEPT_ASSERT(!Range<decltype(mutable_rng) const>());
+
+    {
+        const std::array<int, 3> a{{0, 1, 2}};
+        const std::vector<int> b{3, 4, 5, 6};
+
+        auto r = view::concat(a, b);
+        auto f = [](int i) { return i != 1 && i != 5; };
+        auto r2 = r | view::remove_if(f);
+        ::check_equal(r2, {1,5});
+    }
 
     return test_result();
 }
