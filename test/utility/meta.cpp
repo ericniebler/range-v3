@@ -388,6 +388,24 @@ int main()
     // Check the _z user-defined literal:
     static_assert(42_z == 42, "");
 
+    // Check integer_range
+    {
+      constexpr std::size_t a
+          = meta::fold<meta::as_list<meta::integer_range<std::size_t, 0, 5>>,
+                       meta::size_t<0>, meta::quote<meta::plus>>{};
+
+        static_assert(a == 10, "");
+
+        constexpr std::size_t b
+          = meta::fold<meta::as_list<meta::integer_range<std::size_t, 5, 10>>,
+                       meta::size_t<0>, meta::quote<meta::plus>>{};
+
+        static_assert(b == 35, "");
+
+        using c = meta::integer_range<std::size_t, 5, 10>;
+        static_assert(std::is_same<c, meta::integer_sequence<std::size_t, 5, 6, 7, 8, 9>>{}, "");
+    }
+
     test_tuple_cat();
     return ::test_result();
 }

@@ -2868,6 +2868,28 @@ namespace meta
             return {};
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // integer_range
+        /// \cond
+        namespace detail
+        {
+            template <class T, T offset, class U> struct offset_integer_sequence_ {};
+
+            template <class T, T offset, T... Ts>
+            struct offset_integer_sequence_<T, offset, meta::integer_sequence<T, Ts...>>
+            {
+                using type = meta::integer_sequence<T, (Ts + offset)...>;
+            };
+        }  // namespace detail
+        /// \endcond
+
+        /// Makes the integer sequence [from, to).
+        /// \ingroup integral
+        template <class T, T from, T to>
+        using integer_range = meta::eval<
+            detail::offset_integer_sequence_<T, from,
+                                             meta::make_integer_sequence<T, to - from>>>;
+
         /// \cond
     } // namespace v1
     /// \endcond
