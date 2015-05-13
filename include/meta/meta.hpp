@@ -1998,7 +1998,7 @@ namespace meta
                 template <class UnaryFunction, class... Args>
                 constexpr auto operator()(list<Args...>, UnaryFunction f) const -> UnaryFunction
                 {
-                    return (void)std::initializer_list<int>{(f(Args{}), void(), 0)...}, f;
+                    return (void)std::initializer_list<int>{(f(Args{}), 0)...}, f;
                 }
             };
         } // namespace detail
