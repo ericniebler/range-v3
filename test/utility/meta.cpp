@@ -150,10 +150,12 @@ static_assert(std::is_same<reverse_find<L, int>, list<int, float>>::value, "");
 
 struct check_integral
 {
+    constexpr check_integral() {}
     template <class T>
-    void operator()(T &&)
+    constexpr T operator()(T && i) const
     {
         static_assert(std::is_integral<T>{}, "");
+        return i;
     }
 };
 
@@ -256,7 +258,9 @@ int main()
     // meta::for_each
     {
         using l = meta::list<int, long, short>;
-        meta::for_each(l{}, check_integral());
+        constexpr auto r = meta::for_each(l{}, check_integral());
+        static_assert(std::is_same<meta::eval<std::remove_cv<decltype(r)>>,
+                      check_integral>::value, "");
     }
 
     // meta::all_of with trivial lambda
