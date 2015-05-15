@@ -29,7 +29,7 @@ namespace ranges
         // Ordinarily, a view shouldn't contain its elements. This is so that copying
         // and assigning ranges is O(1), and also so that in the event of element
         // mutation, all the copies of the range see the mutation the same way. The
-        // repeat_view *does* own its lone element, though. This is OK because:
+        // repeat_n_view *does* own its lone element, though. This is OK because:
         //  - O(N) copying is fine when N==1 as it is in this case, and
         //  - The element is immutable, so there is no potential for incorrect
         //    semantics.

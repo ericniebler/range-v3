@@ -80,6 +80,7 @@
     <ClCompile Include="..\..\..\..\example\comprehensions.cpp" />
     <ClCompile Include="..\..\..\..\example\fibonacci.cpp" />
     <ClCompile Include="..\..\..\..\perf\counted_insertion_sort.cpp" />
+    <ClCompile Include="..\..\..\..\perf\sort_patterns.cpp" />
     <ClCompile Include="..\..\..\..\test\action\cont_concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\action\drop.cpp" />
     <ClCompile Include="..\..\..\..\test\action\drop_while.cpp" />

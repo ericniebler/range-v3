@@ -627,6 +627,9 @@
     <ClCompile Include="..\..\..\..\test\view\chunk.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\perf\sort_patterns.cpp">
+      <Filter>Perf Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">

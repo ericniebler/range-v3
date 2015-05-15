@@ -187,10 +187,6 @@ namespace ranges
                 {
                     return ptr_->equal(*that.ptr_);
                 }
-                void next()
-                {
-                    ptr_->next();
-                }
             };
 
             template<typename Ref>

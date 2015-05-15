@@ -411,6 +411,19 @@ namespace ranges
                   : Bind(std::move(bind))
                 {}
             };
+
+            template<typename Pipe0, typename Pipe1>
+            struct composed_pipe
+            {
+                Pipe0 pipe0_;
+                Pipe1 pipe1_;
+                template<typename Arg>
+                auto operator()(Arg && arg) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    std::forward<Arg>(arg) | pipe0_ | pipe1_
+                )
+            };
         }
         /// \endcond
 
@@ -482,33 +495,29 @@ namespace ranges
             // Default Pipe behavior just passes the argument to the pipe's function call
             // operator
             template<typename Arg, typename Pipe>
-            static auto pipe(Arg && arg, Pipe && pipe)
+            static auto pipe(Arg && arg, Pipe pipe)
             RANGES_DECLTYPE_AUTO_RETURN
             (
-                std::forward<Pipe>(pipe)(std::forward<Arg>(arg))
+                pipe(std::forward<Arg>(arg))
             )
         };
 
         // Evaluate the pipe with an argument
         template<typename Arg, typename Pipe,
             CONCEPT_REQUIRES_(!is_pipeable<Arg>() && is_pipeable<Pipe>())>
-        auto operator|(Arg && arg, Pipe && pipe)
+        auto operator|(Arg && arg, Pipe pipe)
         RANGES_DECLTYPE_AUTO_RETURN
         (
-            pipeable_access::impl<Pipe>::pipe(std::forward<Arg>(arg), std::forward<Pipe>(pipe))
+            pipeable_access::impl<Pipe>::pipe(std::forward<Arg>(arg), pipe)
         )
 
         // Compose two pipes
         template<typename Pipe0, typename Pipe1,
             CONCEPT_REQUIRES_(is_pipeable<Pipe0>() && is_pipeable<Pipe1>())>
-        auto operator|(Pipe0 && pipe0, Pipe1 && pipe1)
+        auto operator|(Pipe0 pipe0, Pipe1 pipe1)
         RANGES_DECLTYPE_AUTO_RETURN
         (
-            make_pipeable(std::bind(
-                bitwise_or{},
-                std::bind(bitwise_or{}, std::placeholders::_1, bind_forward<Pipe0>(pipe0)),
-                bind_forward<Pipe1>(pipe1)
-            ))
+            make_pipeable(detail::composed_pipe<Pipe0, Pipe1>{pipe0, pipe1})
         )
 
         template<typename T, bool RValue /* = false*/>
