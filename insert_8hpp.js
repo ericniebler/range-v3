@@ -1,4 +1,4 @@
 var insert_8hpp =
 [
-    [ "InsertableIterable", "insert_8hpp.html#ga367b0890c06381d15d296a5f7d2a7212", null ]
+    [ "InsertableRange", "insert_8hpp.html#ga66f5f9cb93dde473e14548126bd8e9cb", null ]
 ];

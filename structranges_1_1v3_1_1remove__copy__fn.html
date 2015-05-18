@@ -104,7 +104,7 @@ template&lt;typename I , typename S , typename O , typename T , typename P  = id
 <tr class="memitem:afeae93eec6578539c3545a57d6979832"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, O out, T const &amp;val, P proj_=P{}) const </td></tr>
 <tr class="separator:afeae93eec6578539c3545a57d6979832"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ea6a85f890d9b61ce11fd232bd8d20a"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5ea6a85f890d9b61ce11fd232bd8d20a"></a>
-template&lt;typename Rng , typename O , typename T , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RemoveCopyable&lt; I, O, T, P &gt;()&amp;&amp;InputIterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;typename Rng , typename O , typename T , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RemoveCopyable&lt; I, O, T, P &gt;()&amp;&amp;InputRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a5ea6a85f890d9b61ce11fd232bd8d20a"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; range_safe_iterator_t&lt; Rng &gt;, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, O out, T const &amp;val, P proj=P{}) const </td></tr>
 <tr class="separator:a5ea6a85f890d9b61ce11fd232bd8d20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

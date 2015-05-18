@@ -103,7 +103,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2034e6d3778bec1f54e74361baa77358"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1find__fn.html#a2034e6d3778bec1f54e74361baa77358">operator()</a> (I begin, S end, V const &amp;val, P proj_=P{}) const </td></tr>
 <tr class="memdesc:a2034e6d3778bec1f54e74361baa77358"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>find_fn::operator()</code>  <a href="#a2034e6d3778bec1f54e74361baa77358">More...</a><br /></td></tr>
 <tr class="separator:a2034e6d3778bec1f54e74361baa77358"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a454d954d402c10fffaad97140fb9e93e"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputIterable&lt; Rng &gt;()&amp;&amp;IndirectCallableRelation&lt; equal_to, Project&lt; I, P &gt;, V const * &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a454d954d402c10fffaad97140fb9e93e"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputRange&lt; Rng &gt;()&amp;&amp;IndirectCallableRelation&lt; equal_to, Project&lt; I, P &gt;, V const * &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a454d954d402c10fffaad97140fb9e93e"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1find__fn.html#a454d954d402c10fffaad97140fb9e93e">operator()</a> (Rng &amp;&amp;rng, V const &amp;val, P proj=P{}) const </td></tr>
 <tr class="separator:a454d954d402c10fffaad97140fb9e93e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -148,7 +148,7 @@ template&lt;typename I , typename S , typename V , typename P  = ident, int _con
 
 <p>template function <code>find_fn::operator()</code> </p>
 <p>range-based version of the <code>find</code> std algorithm</p>
-<dl class="section pre"><dt>Precondition</dt><dd><code>Rng</code> is a model of the <code>Iterable</code> concept </dd>
+<dl class="section pre"><dt>Precondition</dt><dd><code>Rng</code> is a model of the <code>Range</code> concept </dd>
 <dd>
 <code>I</code> is a model of the <code>InputIterator</code> concept </dd>
 <dd>
@@ -164,7 +164,7 @@ The ResultType of <code>P</code> is EqualityComparable with V </dd></dl>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng , typename V , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputIterable&lt; Rng &gt;()&amp;&amp;IndirectCallableRelation&lt; equal_to, Project&lt; I, P &gt;, V const * &gt;()), int &gt;::type  = 0&gt; </div>
+template&lt;typename Rng , typename V , typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputRange&lt; Rng &gt;()&amp;&amp;IndirectCallableRelation&lt; equal_to, Project&lt; I, P &gt;, V const * &gt;()), int &gt;::type  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">range_safe_iterator_t&lt;Rng&gt; ranges::v3::find_fn::operator() </td>

@@ -268,9 +268,9 @@ Quick Start</h1>
 <div class="line">{</div>
 <div class="line">    <span class="comment">// ...</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><p>You can then add an overload that take an Iterable:</p>
+</div><!-- fragment --><p>You can then add an overload that take a Range:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class </span>Rng, <span class="keyword">class </span>Comp = <span class="comment">/*...some_default..*/</span>,</div>
-<div class="line">    CONCEPT_REQUIRES_(Iterable&lt;Rng&gt;())&gt;</div>
+<div class="line">    CONCEPT_REQUIRES_(Range&lt;Rng&gt;())&gt;</div>
 <div class="line"><span class="keywordtype">void</span> my_algorithm(Rng &amp;&amp; rng, Comp comp = Comp{})</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordflow">return</span> my_algorithm(ranges::begin(rng), ranges::end(rng));</div>

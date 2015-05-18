@@ -104,7 +104,7 @@ template&lt;typename I , typename S , typename C  = ordered_less, typename P  = 
 <tr class="memitem:a9a5b2ab22a5b2ab81e3c10f846fe7bf1"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, I nth, S end_, C pred_=C{}, P proj_=P{}) const </td></tr>
 <tr class="separator:a9a5b2ab22a5b2ab81e3c10f846fe7bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8eeb46703a09fee6d1059a78fcaeab6b"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8eeb46703a09fee6d1059a78fcaeab6b"></a>
-template&lt;typename Rng , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessIterable&lt; Rng &gt;()&amp;&amp;Sortable&lt; I, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;typename Rng , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessRange&lt; Rng &gt;()&amp;&amp;Sortable&lt; I, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a8eeb46703a09fee6d1059a78fcaeab6b"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, I nth, C pred=C{}, P proj=P{}) const </td></tr>
 <tr class="separator:a8eeb46703a09fee6d1059a78fcaeab6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

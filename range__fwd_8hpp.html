@@ -148,6 +148,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1dangling.html">ranges::v3::dangling&lt; I &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for an iterator or a sentinel into a range that may no longer be valid.  <a href="structranges_1_1v3_1_1dangling.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1detail_1_1reverse__cursor.html">ranges::v3::detail::reverse_cursor&lt; I &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1difference__type.html">ranges::v3::difference_type&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1empty__view.html">ranges::v3::empty_view&lt; T &gt;</a></td></tr>
@@ -164,9 +166,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__infinite.html">ranges::v3::is_infinite&lt; Rng, Void &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__range.html">ranges::v3::is_range&lt; T, Enable &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__sized__range.html">ranges::v3::is_sized_range&lt; T, Enable &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__sized__iterable.html">ranges::v3::is_sized_iterable&lt; T, Enable &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1is__view.html">ranges::v3::is_view&lt; T, Enable &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1istream__range.html">ranges::v3::istream_range&lt; Val &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,8 +195,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range.html">ranges::v3::range&lt; I, S &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__adaptor.html">ranges::v3::range_adaptor&lt; Derived, BaseRng, Inf &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__base.html">ranges::v3::range_base</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__facade.html">ranges::v3::range_facade&lt; Derived, Inf &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,6 +229,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1unbounded__view.html">ranges::v3::unbounded_view&lt; I &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view_1_1view.html">ranges::v3::view::view&lt; View &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1view__base.html">ranges::v3::view_base</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1zip__view.html">ranges::v3::zip_view&lt; Rngs &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -278,6 +280,10 @@ template&lt;typename Rng , typename Val1 , typename Val2 &gt; </td></tr>
 template&lt;typename Sig &gt; </td></tr>
 <tr class="memitem:a4c4c504587167d966e0413803f3f10b2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::result_of_t</b> = typename std::result_of&lt; Sig &gt;::type</td></tr>
 <tr class="separator:a4c4c504587167d966e0413803f3f10b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37dcd80d32605a7c804475bae85cbd66"><td class="memTemplParams" colspan="2"><a class="anchor" id="a37dcd80d32605a7c804475bae85cbd66"></a>
+template&lt;typename I &gt; </td></tr>
+<tr class="memitem:a37dcd80d32605a7c804475bae85cbd66"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::reverse_iterator</b> = basic_iterator&lt; detail::reverse_cursor&lt; I &gt;, detail::reverse_cursor&lt; I &gt;&gt;</td></tr>
+<tr class="separator:a37dcd80d32605a7c804475bae85cbd66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee8b43d02406488b4f67484c7d99e91c"><td class="memTemplParams" colspan="2"><a class="anchor" id="aee8b43d02406488b4f67484c7d99e91c"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aee8b43d02406488b4f67484c7d99e91c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::rvalue_reference_wrapper</b> = reference_wrapper&lt; T, true &gt;</td></tr>

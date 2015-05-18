@@ -105,10 +105,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga6f5e6d9e70b24f552f1099b1208bca9e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6f5e6d9e70b24f552f1099b1208bca9e"></a>
-template&lt;typename I , typename D , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(!RandomAccessIterator&lt; I &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga6f5e6d9e70b24f552f1099b1208bca9e"><td class="memTemplItemLeft" align="right" valign="top">iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator-</b> (counted_iterator&lt; I, D &gt; const &amp;end, counted_iterator&lt; I, D &gt; const &amp;begin)</td></tr>
-<tr class="separator:ga6f5e6d9e70b24f552f1099b1208bca9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0cb3df8dceed16b93c79b2c35e53f453"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0cb3df8dceed16b93c79b2c35e53f453"></a>
+template&lt;typename I0 , typename D0 , typename I1 , typename D1 , typename CI  = detail::UnambiguouslyConvertibleType&lt;I0, I1&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(detail::UnambiguouslyConvertible&lt; I0, I1 &gt;()&amp;&amp;!RandomAccessIterator&lt; CI &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:ga0cb3df8dceed16b93c79b2c35e53f453"><td class="memTemplItemLeft" align="right" valign="top">iterator_difference_t&lt; CI &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator-</b> (counted_iterator&lt; I0, D0 &gt; const &amp;end, counted_iterator&lt; I1, D1 &gt; const &amp;begin)</td></tr>
+<tr class="separator:ga0cb3df8dceed16b93c79b2c35e53f453"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gace45810c24b63dc5da908692119b3227"><td class="memTemplParams" colspan="2"><a class="anchor" id="gace45810c24b63dc5da908692119b3227"></a>
 template&lt;typename I , typename D &gt; </td></tr>
 <tr class="memitem:gace45810c24b63dc5da908692119b3227"><td class="memTemplItemLeft" align="right" valign="top">iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator-</b> (counted_sentinel const &amp;end, counted_iterator&lt; I, D &gt; const &amp;begin)</td></tr>
@@ -117,10 +117,9 @@ template&lt;typename I , typename D &gt; </td></tr>
 template&lt;typename I , typename D &gt; </td></tr>
 <tr class="memitem:gaf5351a6a6a2ca0f397db9e78da10eee6"><td class="memTemplItemLeft" align="right" valign="top">iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator-</b> (counted_iterator&lt; I, D &gt; const &amp;begin, counted_sentinel const &amp;end)</td></tr>
 <tr class="separator:gaf5351a6a6a2ca0f397db9e78da10eee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacd12532e1d6500e0cd9f77544b961df9"><td class="memTemplParams" colspan="2"><a class="anchor" id="gacd12532e1d6500e0cd9f77544b961df9"></a>
-template&lt;typename I &gt; </td></tr>
-<tr class="memitem:gacd12532e1d6500e0cd9f77544b961df9"><td class="memTemplItemLeft" align="right" valign="top">iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator-</b> (counted_sentinel const &amp;, counted_sentinel const &amp;)</td></tr>
-<tr class="separator:gacd12532e1d6500e0cd9f77544b961df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga95d4c5706d744b5cb096e6893145c6a0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga95d4c5706d744b5cb096e6893145c6a0"></a>
+std::ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::operator-</b> (counted_sentinel const &amp;, counted_sentinel const &amp;)</td></tr>
+<tr class="separator:ga95d4c5706d744b5cb096e6893145c6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

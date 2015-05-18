@@ -19,8 +19,7 @@ var functional_8hpp =
     [ "unwrap_reference_t", "functional_8hpp.html#ga6a060e5743cd7f42249ab97b17a4b441", null ],
     [ "bind_forward", "functional_8hpp.html#gab883956b44d08a01d9d89216f083e284", null ],
     [ "bind_forward", "functional_8hpp.html#gad2630a0b8ab3cb10b1d068aa943ab66f", null ],
-    [ "bind_forward< Pipe1 >", "functional_8hpp.html#ga5d4667fc736eefe1725f79db45dffac6", null ],
     [ "forward_ref", "functional_8hpp.html#ga12f88d8605b77857d5a98f3d07126ca8", null ],
-    [ "operator|", "functional_8hpp.html#ga53c87d21af131e439c2c832ff5da6892", null ],
-    [ "operator|", "functional_8hpp.html#gaebe149738b7336a022bcdb5e076eee14", null ]
+    [ "operator|", "functional_8hpp.html#ga77b687fbebc266ac4e5fae7a989b6c98", null ],
+    [ "operator|", "functional_8hpp.html#ga140bb40ec8b29f58bcf9989b9f57225c", null ]
 ];

@@ -104,7 +104,7 @@ template&lt;typename I , typename S , typename O , int _concept_requires___LINE_
 <tr class="memitem:a48b94a1e4963e5c0906295a5b679fda9"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; I, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end_, O out) const </td></tr>
 <tr class="separator:a48b94a1e4963e5c0906295a5b679fda9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09874d19b210a949d785e4263c374d6e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a09874d19b210a949d785e4263c374d6e"></a>
-template&lt;typename Rng , typename O , typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(BidirectionalIterable&lt; Rng &gt;()&amp;&amp;BidirectionalIterator&lt; O &gt;()&amp;&amp;IndirectlyCopyable&lt; I, O &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;typename Rng , typename O , typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(BidirectionalRange&lt; Rng &gt;()&amp;&amp;BidirectionalIterator&lt; O &gt;()&amp;&amp;IndirectlyCopyable&lt; I, O &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a09874d19b210a949d785e4263c374d6e"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; range_safe_iterator_t&lt; Rng &gt;, O &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, O out) const </td></tr>
 <tr class="separator:a09874d19b210a949d785e4263c374d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

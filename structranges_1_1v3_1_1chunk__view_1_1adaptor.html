@@ -115,14 +115,14 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>adaptor</b> (range_difference_t&lt; Rng &gt; n, range_sentinel_t&lt; Rng &gt; end)</td></tr>
 <tr class="separator:a7e103e18ab3487950070f0a6e69c2e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cff8d9c2883da0d034a5f63334f7f14"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1cff8d9c2883da0d034a5f63334f7f14"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessIterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a1cff8d9c2883da0d034a5f63334f7f14"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>advance</b> (range_iterator_t&lt; Rng &gt; &amp;it, range_difference_t&lt; Rng &gt; n)</td></tr>
 <tr class="separator:a1cff8d9c2883da0d034a5f63334f7f14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a30575158331a94ddb1c99b809eacc0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a30575158331a94ddb1c99b809eacc0"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>current</b> (range_iterator_t&lt; Rng &gt; it) const -&gt; decltype(view::take(make_range(std::move(it), end_), n_))</td></tr>
 <tr class="separator:a7a30575158331a94ddb1c99b809eacc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9678add2b949b5a3820dc523f82044d7"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9678add2b949b5a3820dc523f82044d7"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessIterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a9678add2b949b5a3820dc523f82044d7"><td class="memTemplItemLeft" align="right" valign="top">range_difference_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>distance_to</b> (range_iterator_t&lt; Rng &gt; const &amp;here, range_iterator_t&lt; Rng &gt; const &amp;there, <a class="el" href="structranges_1_1v3_1_1chunk__view_1_1adaptor.html">adaptor</a> const &amp;that) const </td></tr>
 <tr class="separator:a9678add2b949b5a3820dc523f82044d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1aff64f82d77074f7a167eadff7e4aa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa1aff64f82d77074f7a167eadff7e4aa"></a>
@@ -135,7 +135,7 @@ template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_c
 void&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> (range_iterator_t&lt; Rng &gt; &amp;it)</td></tr>
 <tr class="separator:a3c1aa52d3f86456bb562efa9c31e44c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaffc34a45086a4b6c93815127ae2e5e0"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaffc34a45086a4b6c93815127ae2e5e0"></a>
-template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(BidirectionalIterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(BidirectionalRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:aaffc34a45086a4b6c93815127ae2e5e0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>prev</b> (range_iterator_t&lt; Rng &gt; &amp;it)</td></tr>
 <tr class="separator:aaffc34a45086a4b6c93815127ae2e5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structranges_1_1v3_1_1adaptor__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1v3_1_1adaptor__base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1v3_1_1adaptor__base.html">ranges::v3::adaptor_base</a></td></tr>

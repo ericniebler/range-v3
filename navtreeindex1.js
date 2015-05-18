@@ -1,16 +1,15 @@
 var NAVTREEINDEX1 =
 {
-"group__group-core.html#gab0d59e96bd91d7a5212c47978cd48cac":[1,2,47],
 "group__group-core.html#gab3baada25b879219f336584ac31b9c96":[1,2,37],
 "group__group-core.html#gac005d27c6d7cf8ac684466f96962c795":[1,2,39],
 "group__group-core.html#gad4881a64025bc7f3f2b6c6722c5584ed":[1,2,36],
 "group__group-core.html#gae219259a85154b42c9112c2d4b228134":[1,2,40],
 "group__group-utility.html":[1,1],
-"group__group-utility.html#ga12f88d8605b77857d5a98f3d07126ca8":[1,1,120],
-"group__group-utility.html#ga669d67c70e628549ec3a7d1992240352":[1,1,119],
-"group__group-utility.html#ga9057bf901da7bd0cbee599782d850354":[1,1,123],
-"group__group-utility.html#gaa57770e673a56982f02c16430f9569aa":[1,1,121],
-"group__group-utility.html#gaa9f636f78c6a0d03f8a061a67e320b03":[1,1,122],
+"group__group-utility.html#ga12f88d8605b77857d5a98f3d07126ca8":[1,1,122],
+"group__group-utility.html#ga669d67c70e628549ec3a7d1992240352":[1,1,121],
+"group__group-utility.html#ga9057bf901da7bd0cbee599782d850354":[1,1,125],
+"group__group-utility.html#gaa57770e673a56982f02c16430f9569aa":[1,1,123],
+"group__group-utility.html#gaa9f636f78c6a0d03f8a061a67e320b03":[1,1,124],
 "group__group-views.html":[1,4],
 "group__group-views.html#ga019dc8e1c43a4d374f41b9686fdd0b98":[1,4,62,0],
 "group__group-views.html#ga02cf4245ca9347fab184d3ab89516a2a":[1,4,46,10],
@@ -34,6 +33,7 @@ var NAVTREEINDEX1 =
 "group__group-views.html#ga97c5f3811b6bb00078456837786b2168":[1,4,46,15],
 "group__group-views.html#ga9a3af6ef594492da14ea1c7e3687f440":[1,4,92,2],
 "group__group-views.html#ga9a81f9c9b161c22c6c18976f1a03eb7f":[1,4,18,2],
+"group__group-views.html#ga9c2a0fb2e6d4dfacca304309c204e3a3":[1,4,62,1],
 "group__group-views.html#ga9fdf0485a96471de4b8a443b818f18c1":[1,4,58,1],
 "group__group-views.html#gaa23c4fedabcaea357b98d933959a9ba6":[1,4,15,0],
 "group__group-views.html#gaa359c1f672f25497c08a7b222f9153d6":[1,4,46,3],
@@ -43,7 +43,6 @@ var NAVTREEINDEX1 =
 "group__group-views.html#gac6ca9e878ddf0b69365a9b77bfc13f91":[1,4,46,13],
 "group__group-views.html#gacb2e38f612bd5bc291291df469317776":[1,4,46,6],
 "group__group-views.html#gade47fc2e22f5e99b35759404b351823c":[1,4,58,0],
-"group__group-views.html#gae219ef932a0cc05ad8b8378681f9f5ae":[1,4,62,1],
 "group__group-views.html#gaf30c9e1f795d2a31c859a8e30b5204ab":[1,4,46,8],
 "group__integral.html":[1,0,3,1],
 "group__integral.html#ga0dd3ffe632ede53173e2432aaba18e70":[1,0,3,1,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "index.html":[0],
 "index.html#range-views":[0,2],
 "index.html#tutorial-compilers":[0,0,2],
-"index.html#tutorial-installation":[0,0,0]
+"index.html#tutorial-installation":[0,0,0],
+"index.html#tutorial-license":[0,0,1]
 };

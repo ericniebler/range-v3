@@ -106,40 +106,40 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a87684d39b52a4003816bd425700bdc37"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a87684d39b52a4003816bd425700bdc37"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>assert</b> (from&lt;=distance(rng)+to.dist_)</td></tr>
 <tr class="separator:a87684d39b52a4003816bd425700bdc37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaede7a2c43cc4220c63cedb51d64749f"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaede7a2c43cc4220c63cedb51d64749f"></a>
-template&lt;typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputIterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:aaede7a2c43cc4220c63cedb51d64749f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; from, range_difference_t&lt; Rng &gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from, to-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;</td></tr>
-<tr class="separator:aaede7a2c43cc4220c63cedb51d64749f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29dee1b513c8e5916e05df0c74a9e136"><td class="memTemplParams" colspan="2"><a class="anchor" id="a29dee1b513c8e5916e05df0c74a9e136"></a>
-template&lt;typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputIterable&lt; Rng &gt;()&amp;&amp;SizedIterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a29dee1b513c8e5916e05df0c74a9e136"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; from, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from, distance(rng)+to.dist_-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;</td></tr>
-<tr class="separator:a29dee1b513c8e5916e05df0c74a9e136"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafeb005304f11b878fa5627d2e4d17ef"><td class="memTemplParams" colspan="2"><a class="anchor" id="aafeb005304f11b878fa5627d2e4d17ef"></a>
-template&lt;typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||((InputIterable&lt; Rng &gt;()&amp;&amp;SizedIterable&lt; Rng &gt;())||ForwardIterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:aafeb005304f11b878fa5627d2e4d17ef"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; from, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from.dist_, to.dist_-from.dist_, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;</td></tr>
-<tr class="separator:aafeb005304f11b878fa5627d2e4d17ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a735a8dc05636174e3dbdcef44630cf39"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a735a8dc05636174e3dbdcef44630cf39"></a>
-return&#160;</td><td class="memItemRight" valign="bottom"><b>slice_fn::invoke_</b> (std::forward&lt; Rng &gt;(rng), from, to-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;{})</td></tr>
-<tr class="separator:a735a8dc05636174e3dbdcef44630cf39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed8248a2f0f92890ab05128f43c81d6d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed8248a2f0f92890ab05128f43c81d6d"></a>
-return&#160;</td><td class="memItemRight" valign="bottom"><b>slice_fn::invoke_</b> (std::forward&lt; Rng &gt;(rng), from, distance(rng)+to.dist_-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">iterable_concept</a>&lt; Rng &gt;{})</td></tr>
-<tr class="separator:aed8248a2f0f92890ab05128f43c81d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac0adbf2a27bc7e11bfe4e218b43c5de"><td class="memTemplParams" colspan="2"><a class="anchor" id="aac0adbf2a27bc7e11bfe4e218b43c5de"></a>
+template&lt;typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:aac0adbf2a27bc7e11bfe4e218b43c5de"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; from, range_difference_t&lt; Rng &gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from, to-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">range_concept</a>&lt; Rng &gt;</td></tr>
+<tr class="separator:aac0adbf2a27bc7e11bfe4e218b43c5de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3382ddc0fa069cffee62e921acecff15"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3382ddc0fa069cffee62e921acecff15"></a>
+template&lt;typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputRange&lt; Rng &gt;()&amp;&amp;SizedRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a3382ddc0fa069cffee62e921acecff15"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, range_difference_t&lt; Rng &gt; from, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from, distance(rng)+to.dist_-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">range_concept</a>&lt; Rng &gt;</td></tr>
+<tr class="separator:a3382ddc0fa069cffee62e921acecff15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac37d2c670612c4c66b55db0ff0228d13"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac37d2c670612c4c66b55db0ff0228d13"></a>
+template&lt;typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||((InputRange&lt; Rng &gt;()&amp;&amp;SizedRange&lt; Rng &gt;())||ForwardRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:ac37d2c670612c4c66b55db0ff0228d13"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; from, detail::from_end_&lt; range_difference_t&lt; Rng &gt;&gt; to) const -&gt; decltype(slice_fn::invoke_(std::forward&lt; Rng &gt;(rng), from.dist_, to.dist_-from.dist_, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">range_concept</a>&lt; Rng &gt;</td></tr>
+<tr class="separator:ac37d2c670612c4c66b55db0ff0228d13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ddd8c07d49412d3f5e23d86905e5918"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2ddd8c07d49412d3f5e23d86905e5918"></a>
+return&#160;</td><td class="memItemRight" valign="bottom"><b>slice_fn::invoke_</b> (std::forward&lt; Rng &gt;(rng), from, to-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">range_concept</a>&lt; Rng &gt;{})</td></tr>
+<tr class="separator:a2ddd8c07d49412d3f5e23d86905e5918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe4c824451fd55cdfd8b6accbd1d5ed0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abe4c824451fd55cdfd8b6accbd1d5ed0"></a>
+return&#160;</td><td class="memItemRight" valign="bottom"><b>slice_fn::invoke_</b> (std::forward&lt; Rng &gt;(rng), from, distance(rng)+to.dist_-from, <a class="el" href="structranges_1_1v3_1_1concepts_1_1most__refined.html">range_concept</a>&lt; Rng &gt;{})</td></tr>
+<tr class="separator:abe4c824451fd55cdfd8b6accbd1d5ed0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ab4a382fa7e79b2a2ea3c6a7adaf0db9b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4a382fa7e79b2a2ea3c6a7adaf0db9b"></a>
 <a class="el" href="classint.html">int</a> <a class="el" href="classint.html">int</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_concept_requires___LINE__</b> = 42</td></tr>
 <tr class="separator:ab4a382fa7e79b2a2ea3c6a7adaf0db9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b63eece7163d898f3fbd82eb374cb53"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><b>bounded_iterable_concept&lt; Rng &gt;</b></td></tr>
-<tr class="separator:a7b63eece7163d898f3fbd82eb374cb53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0631577aa7d6335fcf3ef9499a725b9b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><b>bounded_range_concept&lt; Rng &gt;</b></td></tr>
+<tr class="separator:a0631577aa7d6335fcf3ef9499a725b9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a7b63eece7163d898f3fbd82eb374cb53"></a>
+<a class="anchor" id="a0631577aa7d6335fcf3ef9499a725b9b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ranges::v3::view::slice_fn::bounded_iterable_concept&lt; Rng &gt;</td>
+          <td class="memname">ranges::v3::view::slice_fn::bounded_range_concept&lt; Rng &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -149,12 +149,12 @@ Public Attributes</h2></td></tr>
 <div class="line">                        <span class="stringliteral">&quot;Can&#39;t index from the end of an infinite range!&quot;</span>);</div>
 <div class="line">                     assert (from.dist_ &lt;= to.dist_);</div>
 <div class="line">                    <span class="keywordflow">return</span> slice_fn::invoke_(std::forward&lt;Rng&gt;(rng), from.dist_,</div>
-<div class="line">                        to.dist_ - from.dist_, iterable_concept&lt;Rng&gt;{},</div>
-<div class="line">                        bounded_iterable_concept&lt;Rng&gt;{}());</div>
+<div class="line">                        to.dist_ - from.dist_, range_concept&lt;Rng&gt;{},</div>
+<div class="line">                        bounded_range_concept&lt;Rng&gt;{}());</div>
 <div class="line">                }</div>
 <div class="line">                </div>
 <div class="line">                <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Rng,</div>
-<div class="line">                    <span class="keywordtype">int</span>  _concept_requires___LINE__  = 42,   <span class="keyword">typename</span> std::enable_if&lt;   ( _concept_requires___LINE__  == 43) || ( InputIterable&lt;Rng&gt;() )</div>
+<div class="line">                    <span class="keywordtype">int</span>  _concept_requires___LINE__  = 42,   <span class="keyword">typename</span> std::enable_if&lt;   ( _concept_requires___LINE__  == 43) || ( InputRange&lt;Rng&gt;() )</div>
 </div><!-- fragment -->
 </div>
 </div>

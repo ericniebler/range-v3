@@ -139,7 +139,7 @@ template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;&
 <tr class="memitem:acc9b9c393df898452fe4a122cd4f6a40"><td class="memTemplItemLeft" align="right" valign="top">Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__interface.html#acc9b9c393df898452fe4a122cd4f6a40">operator&lt;&lt;</a> (Stream &amp;sout, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Derived</a> &amp;rng)</td></tr>
 <tr class="memdesc:acc9b9c393df898452fe4a122cd4f6a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a range to an ostream. <br /></td></tr>
 <tr class="separator:acc9b9c393df898452fe4a122cd4f6a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88724033bcf4e3fd0f29105faf1fff72"><td class="memTemplParams" colspan="2">template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;, typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputRange&lt; D const  &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a88724033bcf4e3fd0f29105faf1fff72"><td class="memTemplParams" colspan="2">template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;, typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputView&lt; D const  &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a88724033bcf4e3fd0f29105faf1fff72"><td class="memTemplItemLeft" align="right" valign="top">Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__interface.html#a88724033bcf4e3fd0f29105faf1fff72">operator&lt;&lt;</a> (Stream &amp;sout, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Derived</a> const &amp;rng)</td></tr>
 <tr class="separator:a88724033bcf4e3fd0f29105faf1fff72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1483593aff628d3c6a7bee911ea14621"><td class="memTemplParams" colspan="2">template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;&gt; </td></tr>
@@ -149,11 +149,11 @@ template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;&
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9a70ff78594ebfa2bf3dadf8c6e9ac10"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9a70ff78594ebfa2bf3dadf8c6e9ac10"></a>
-template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;BoundedRange&lt; D &gt;()&amp;&amp;BidirectionalRange&lt; D &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;BoundedView&lt; D &gt;()&amp;&amp;BidirectionalView&lt; D &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a9a70ff78594ebfa2bf3dadf8c6e9ac10"><td class="memTemplItemLeft" align="right" valign="top">range_reference_t&lt; D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__interface.html#a9a70ff78594ebfa2bf3dadf8c6e9ac10">back</a> ()</td></tr>
 <tr class="memdesc:a9a70ff78594ebfa2bf3dadf8c6e9ac10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the last element in a range: <br /></td></tr>
 <tr class="separator:a9a70ff78594ebfa2bf3dadf8c6e9ac10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96c0e095776d12dd5ec7d58e82d7578e"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;BoundedRange&lt; D const  &gt;()&amp;&amp;BidirectionalRange&lt; D const  &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a96c0e095776d12dd5ec7d58e82d7578e"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;BoundedView&lt; D const  &gt;()&amp;&amp;BidirectionalView&lt; D const  &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a96c0e095776d12dd5ec7d58e82d7578e"><td class="memTemplItemLeft" align="right" valign="top">range_reference_t&lt; D const  &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__interface.html#a96c0e095776d12dd5ec7d58e82d7578e">back</a> () const </td></tr>
 <tr class="separator:a96c0e095776d12dd5ec7d58e82d7578e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab429c130a261b8af5c275f2d726d2e8d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab429c130a261b8af5c275f2d726d2e8d"></a>
@@ -182,11 +182,11 @@ template&lt;typename Container , typename D  = Derived, typename Alloc  = typena
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!</b> () const </td></tr>
 <tr class="separator:ac5ff384bdc01a9438995736d9a6a3ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae3373faacc913b9ec8432d0b479f142"><td class="memTemplParams" colspan="2"><a class="anchor" id="aae3373faacc913b9ec8432d0b479f142"></a>
-template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;RandomAccessRange&lt; D &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;RandomAccessView&lt; D &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:aae3373faacc913b9ec8432d0b479f142"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__interface.html#aae3373faacc913b9ec8432d0b479f142">operator[]</a> (range_difference_t&lt; D &gt; n) -&gt; decltype(std::declval&lt; D &amp; &gt;().begin()[n])</td></tr>
 <tr class="memdesc:aae3373faacc913b9ec8432d0b479f142"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple indexing: <br /></td></tr>
 <tr class="separator:aae3373faacc913b9ec8432d0b479f142"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5b003be0051f271624bb1825990b67e"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;RandomAccessRange&lt; D const  &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:ac5b003be0051f271624bb1825990b67e"><td class="memTemplParams" colspan="2">template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;RandomAccessView&lt; D const  &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:ac5b003be0051f271624bb1825990b67e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__interface.html#ac5b003be0051f271624bb1825990b67e">operator[]</a> (range_difference_t&lt; D &gt; n) const -&gt; decltype(std::declval&lt; D const &amp; &gt;().begin()[n])</td></tr>
 <tr class="separator:ac5b003be0051f271624bb1825990b67e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c677c1f47b89191e80806ebe254ed9e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a0c677c1f47b89191e80806ebe254ed9e"></a>
@@ -242,7 +242,7 @@ Protected Member Functions</h2></td></tr>
 <div class="memtemplate">
 template&lt;typename Derived, bool Inf&gt; </div>
 <div class="memtemplate">
-template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;, typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputRange&lt; D const  &gt;()), int &gt;::type  = 0&gt; </div>
+template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;, typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(InputView&lt; D const  &gt;()), int &gt;::type  = 0&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -321,7 +321,7 @@ template&lt;bool B = true, typename Stream  = meta::if_c&lt;B, std::ostream&gt;&
 <div class="memtemplate">
 template&lt;typename Derived, bool Inf&gt; </div>
 <div class="memtemplate">
-template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;BoundedRange&lt; D const  &gt;()&amp;&amp;BidirectionalRange&lt; D const  &gt;()), int &gt;::type  = 0&gt; </div>
+template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;BoundedView&lt; D const  &gt;()&amp;&amp;BidirectionalView&lt; D const  &gt;()), int &gt;::type  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">range_reference_t&lt;D const&gt; <a class="el" href="structranges_1_1v3_1_1range__interface.html">ranges::v3::range_interface</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Derived</a>, Inf &gt;::back </td>
@@ -407,7 +407,7 @@ template&lt;typename Container , typename D  = Derived, typename Alloc  = typena
 <div class="memtemplate">
 template&lt;typename Derived, bool Inf&gt; </div>
 <div class="memtemplate">
-template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;RandomAccessRange&lt; D const  &gt;()), int &gt;::type  = 0&gt; </div>
+template&lt;typename D  = Derived, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Same&lt; D, Derived &gt;()&amp;&amp;RandomAccessView&lt; D const  &gt;()), int &gt;::type  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">auto <a class="el" href="structranges_1_1v3_1_1range__interface.html">ranges::v3::range_interface</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Derived</a>, Inf &gt;::operator[] </td>

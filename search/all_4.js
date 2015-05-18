@@ -17,7 +17,7 @@ var searchData=
   ['equal_5fto',['equal_to',['../group__math.html#gaaa92e9d2f8e0655cfbc4890019326985',1,'meta::v1::equal_to()'],['../group__lazy__math.html#ga08dbb6a5b9b7d84ecffc3e26a11248c6',1,'meta::lazy::equal_to()']]],
   ['equalitycomparable',['EqualityComparable',['../structranges_1_1v3_1_1concepts_1_1_equality_comparable.html',1,'ranges::v3::concepts']]],
   ['erase_2ehpp',['erase.hpp',['../erase_8hpp.html',1,'']]],
-  ['eraseableiterable',['EraseableIterable',['../structranges_1_1v3_1_1concepts_1_1_eraseable_iterable.html',1,'ranges::v3::concepts']]],
+  ['eraseablerange',['EraseableRange',['../structranges_1_1v3_1_1concepts_1_1_eraseable_range.html',1,'ranges::v3::concepts']]],
   ['eval',['eval',['../group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6',1,'meta::v1::eval()'],['../group__lazy__invocation.html#ga81ba330cf49b69ac98897963c6799a54',1,'meta::lazy::eval()']]],
   ['expects_5fwrapped_5freferences',['expects_wrapped_references',['../structranges_1_1v3_1_1expects__wrapped__references.html',1,'ranges::v3']]],
   ['extension',['Extension',['../group__extension.html',1,'']]]

@@ -104,7 +104,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6b8186490fab4d2a12ef293dc5c58425"><td class="mdescLeft">&#160;</td><td class="mdescRight">template function <code>unique_fn::operator()</code>  <a href="#a6b8186490fab4d2a12ef293dc5c58425">More...</a><br /></td></tr>
 <tr class="separator:a6b8186490fab4d2a12ef293dc5c58425"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6aad04f7cedbbc8f7464264dbf68431"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac6aad04f7cedbbc8f7464264dbf68431"></a>
-template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Sortable&lt; I, C, P &gt;()&amp;&amp;Iterable&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
+template&lt;typename Rng , typename C  = equal_to, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Sortable&lt; I, C, P &gt;()&amp;&amp;Range&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:ac6aad04f7cedbbc8f7464264dbf68431"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, C pred=C{}, P proj=P{}) const </td></tr>
 <tr class="separator:ac6aad04f7cedbbc8f7464264dbf68431"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -149,7 +149,7 @@ template&lt;typename I , typename S , typename C  = equal_to, typename P  = iden
 
 <p>template function <code>unique_fn::operator()</code> </p>
 <p>range-based version of the <code>unique</code> std algorithm</p>
-<dl class="section pre"><dt>Precondition</dt><dd><code>Rng</code> is a model of the <code>ForwardRange</code> concept </dd>
+<dl class="section pre"><dt>Precondition</dt><dd><code>Rng</code> is a model of the <code>ForwardView</code> concept </dd>
 <dd>
 <code>I</code> is a model of the <code>ForwardIterator</code> concept </dd>
 <dd>

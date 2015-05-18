@@ -305,22 +305,19 @@ template&lt;typename T , typename U  = meta::if_&lt;                std::is_lval
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gad2630a0b8ab3cb10b1d068aa943ab66f"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::bind_forward</b> (<a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::remove_reference&lt; T &gt;&gt; &amp;&amp;t) noexcept</td></tr>
 <tr class="separator:gad2630a0b8ab3cb10b1d068aa943ab66f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5d4667fc736eefe1725f79db45dffac6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga5d4667fc736eefe1725f79db45dffac6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::bind_forward&lt; Pipe1 &gt;</b> (pipe1))))</td></tr>
-<tr class="separator:ga5d4667fc736eefe1725f79db45dffac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga12f88d8605b77857d5a98f3d07126ca8"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga12f88d8605b77857d5a98f3d07126ca8"></a>
 template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga12f88d8605b77857d5a98f3d07126ca8"><td class="memTemplItemLeft" align="right" valign="top">forward_ref_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga12f88d8605b77857d5a98f3d07126ca8">ranges::v3::forward_ref</a> (U &amp;&amp;t) noexcept</td></tr>
 <tr class="memdesc:ga12f88d8605b77857d5a98f3d07126ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward arguments, wrapping lvalue and rvalue refs in ranges::reference_wrapper. <br /></td></tr>
 <tr class="separator:ga12f88d8605b77857d5a98f3d07126ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga53c87d21af131e439c2c832ff5da6892"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga53c87d21af131e439c2c832ff5da6892"></a>
+<tr class="memitem:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga77b687fbebc266ac4e5fae7a989b6c98"></a>
 template&lt;typename Arg , typename Pipe , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(!is_pipeable&lt; Arg &gt;()&amp;&amp;is_pipeable&lt; Pipe &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:ga53c87d21af131e439c2c832ff5da6892"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Arg &amp;&amp;arg, Pipe &amp;&amp;pipe) -&gt; decltype(pipeable_access::impl&lt; Pipe &gt;::pipe(std::forward&lt; Arg &gt;(arg), std::forward&lt; Pipe &gt;(pipe)))</td></tr>
-<tr class="separator:ga53c87d21af131e439c2c832ff5da6892"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaebe149738b7336a022bcdb5e076eee14"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaebe149738b7336a022bcdb5e076eee14"></a>
+<tr class="memitem:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Arg &amp;&amp;arg, Pipe pipe) -&gt; decltype(pipeable_access::impl&lt; Pipe &gt;::pipe(std::forward&lt; Arg &gt;(arg), pipe))</td></tr>
+<tr class="separator:ga77b687fbebc266ac4e5fae7a989b6c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga140bb40ec8b29f58bcf9989b9f57225c"></a>
 template&lt;typename Pipe0 , typename Pipe1 , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(is_pipeable&lt; Pipe0 &gt;()&amp;&amp;is_pipeable&lt; Pipe1 &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:gaebe149738b7336a022bcdb5e076eee14"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Pipe0 &amp;&amp;pipe0, Pipe1 &amp;&amp;pipe1) -&gt; decltype(make_pipeable(std::bind(bitwise_or</td></tr>
-<tr class="separator:gaebe149738b7336a022bcdb5e076eee14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator|</b> (Pipe0 pipe0, Pipe1 pipe1) -&gt; decltype(make_pipeable(detail::composed_pipe&lt; Pipe0, Pipe1 &gt;</td></tr>
+<tr class="separator:ga140bb40ec8b29f58bcf9989b9f57225c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

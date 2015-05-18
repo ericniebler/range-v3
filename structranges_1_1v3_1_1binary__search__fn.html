@@ -103,7 +103,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad768e385f53daf39cca1b2623a6e87e6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#ad768e385f53daf39cca1b2623a6e87e6">operator()</a> (I begin, S end, V2 const &amp;val, C pred=C{}, P proj=P{}) const </td></tr>
 <tr class="memdesc:ad768e385f53daf39cca1b2623a6e87e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">function template <code>binary_search_fn::operator()</code>  <a href="#ad768e385f53daf39cca1b2623a6e87e6">More...</a><br /></td></tr>
 <tr class="separator:ad768e385f53daf39cca1b2623a6e87e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a152a1b1c6dd44c3400771287b59f2c74"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Iterable&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a152a1b1c6dd44c3400771287b59f2c74"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a152a1b1c6dd44c3400771287b59f2c74"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1binary__search__fn.html#a152a1b1c6dd44c3400771287b59f2c74">operator()</a> (Rng &amp;&amp;rng, V2 const &amp;val, C pred=C{}, P proj=P{}) const </td></tr>
 <tr class="separator:a152a1b1c6dd44c3400771287b59f2c74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -154,7 +154,7 @@ template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, 
 
 <p>function template <code>binary_search_fn::operator()</code> </p>
 <p>range-based version of the <code>binary_search</code> std algorithm</p>
-<dl class="section pre"><dt>Precondition</dt><dd><code>Rng</code> is a model of the <code>Iterable</code> concept </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd><code>Rng</code> is a model of the <code>Range</code> concept </dd></dl>
 
 </div>
 </div>
@@ -162,7 +162,7 @@ template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Iterable&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </div>
+template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">bool ranges::v3::binary_search_fn::operator() </td>

@@ -121,10 +121,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af52e4dfaf9c84b01fca8545ee757d705"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af52e4dfaf9c84b01fca8545ee757d705"></a>
 <a class="el" href="structranges_1_1v3_1_1ostream__iterator.html">ostream_iterator</a>&lt; T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator++</b> (<a class="el" href="classint.html">int</a>)</td></tr>
 <tr class="separator:af52e4dfaf9c84b01fca8545ee757d705"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c5b36bf42c395e1bf78b5270bd94b71"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1c5b36bf42c395e1bf78b5270bd94b71"></a>
-template&lt;typename U , meta::if_&lt; meta::or_&lt; std::is_void&lt; T &gt;, std::is_convertible&lt; U, meta::eval&lt; std::add_lvalue_reference&lt; T const  &gt;&gt;&gt;&gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a1c5b36bf42c395e1bf78b5270bd94b71"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1ostream__iterator.html">ostream_iterator</a> const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (U &amp;&amp;t) const </td></tr>
-<tr class="separator:a1c5b36bf42c395e1bf78b5270bd94b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf7188c22e1ba99dc1a9e908dfac42a5"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaf7188c22e1ba99dc1a9e908dfac42a5"></a>
+template&lt;typename U , typename V  = meta::if_&lt;std::is_void&lt;T&gt;, U, T&gt;, meta::if_&lt; std::is_convertible&lt; U, V const &amp; &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:aaf7188c22e1ba99dc1a9e908dfac42a5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1ostream__iterator.html">ostream_iterator</a> const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (U &amp;&amp;t) const </td></tr>
+<tr class="separator:aaf7188c22e1ba99dc1a9e908dfac42a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f2aca29593221702f175aee3e6d2f15"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9f2aca29593221702f175aee3e6d2f15"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ostream_iterator</b> (std::basic_ostream&lt; Char, Traits &gt; &amp;sout, Char const *delim=nullptr)</td></tr>
 <tr class="separator:a9f2aca29593221702f175aee3e6d2f15"><td class="memSeparator" colspan="2">&#160;</td></tr>

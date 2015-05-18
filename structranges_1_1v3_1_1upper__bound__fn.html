@@ -103,7 +103,7 @@ Public Member Functions</h2></td></tr>
 template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, typename P  = ident, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(IteratorRange&lt; I, S &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:aa4def2e4c1d2d6ec5458c3d2bb448de4"><td class="memTemplItemLeft" align="right" valign="top">I&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (I begin, S end, V2 const &amp;val, C pred=C{}, P proj=P{}) const </td></tr>
 <tr class="separator:aa4def2e4c1d2d6ec5458c3d2bb448de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e7c44d6e00c9618d2692d64aefac13f"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Iterable&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a1e7c44d6e00c9618d2692d64aefac13f"><td class="memTemplParams" colspan="2">template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a1e7c44d6e00c9618d2692d64aefac13f"><td class="memTemplItemLeft" align="right" valign="top">range_safe_iterator_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1upper__bound__fn.html#a1e7c44d6e00c9618d2692d64aefac13f">operator()</a> (Rng &amp;&amp;rng, V2 const &amp;val, C pred=C{}, P proj=P{}) const </td></tr>
 <tr class="separator:a1e7c44d6e00c9618d2692d64aefac13f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -112,7 +112,7 @@ template&lt;typename I , typename S , typename V2 , typename C  = ordered_less, 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Iterable&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </div>
+template&lt;typename Rng , typename V2 , typename C  = ordered_less, typename P  = ident, typename I  = range_iterator_t&lt;Rng&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;BinarySearchable&lt; I, V2, C, P &gt;()), int &gt;::type  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">range_safe_iterator_t&lt;Rng&gt; ranges::v3::upper_bound_fn::operator() </td>
