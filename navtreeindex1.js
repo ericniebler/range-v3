@@ -46,11 +46,12 @@ var NAVTREEINDEX1 =
 "group__group-views.html#gaf30c9e1f795d2a31c859a8e30b5204ab":[1,4,46,8],
 "group__integral.html":[1,0,3,1],
 "group__integral.html#ga0dd3ffe632ede53173e2432aaba18e70":[1,0,3,1,4],
-"group__integral.html#ga1d44a46e5fd0ca836d62a1ea1c98f4dd":[1,0,3,1,5],
-"group__integral.html#ga414d9b5b7accad5a67059ce033bb2e04":[1,0,3,1,6],
+"group__integral.html#ga1d44a46e5fd0ca836d62a1ea1c98f4dd":[1,0,3,1,6],
+"group__integral.html#ga1e23f65e584df402ae35533934f09c73":[1,0,3,1,5],
+"group__integral.html#ga414d9b5b7accad5a67059ce033bb2e04":[1,0,3,1,7],
 "group__integral.html#ga6a5ec3ab240c254c40895268385cd080":[1,0,3,1,3],
-"group__integral.html#ga878079c524e6d2f43e2617b25a03d514":[1,0,3,1,7],
-"group__integral.html#ga88db71f6406d9fa677632a34f9594088":[1,0,3,1,8],
+"group__integral.html#ga878079c524e6d2f43e2617b25a03d514":[1,0,3,1,8],
+"group__integral.html#ga88db71f6406d9fa677632a34f9594088":[1,0,3,1,9],
 "group__integral.html#gaa763a888e2fa210d9558edae06a953e6":[1,0,3,1,2],
 "group__integral.html#gafdfad3ad3966809dd806d05950bc00a5":[1,0,3,1,1],
 "group__invocation.html":[1,0,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "index.html":[0],
 "index.html#range-views":[0,2],
 "index.html#tutorial-compilers":[0,0,2],
-"index.html#tutorial-installation":[0,0,0],
-"index.html#tutorial-license":[0,0,1]
+"index.html#tutorial-installation":[0,0,0]
 };

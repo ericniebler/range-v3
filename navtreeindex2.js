@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"index.html#tutorial-license":[0,0,1],
 "index.html#tutorial-preface":[0,0],
 "index.html#tutorial-quick-start":[0,1],
 "indirect_8hpp.html":[2,2,1,0,4,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "set__algorithm_8hpp.html":[2,2,1,0,1,61],
 "shuffle_8hpp.html":[2,2,1,0,1,62],
 "shuffle_8hpp.html#ga85094343cd0fb208c61ca7e4149b751c":[2,2,1,0,1,62,0],
-"single_8hpp.html":[2,2,1,0,4,31],
-"size_8hpp.html":[2,2,1,0,27]
+"single_8hpp.html":[2,2,1,0,4,31]
 };

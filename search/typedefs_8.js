@@ -8,5 +8,6 @@ var searchData=
   ['inc',['inc',['../group__lazy__math.html#ga6639f19bdf3a3ed8b1ba7f1a2f3266c3',1,'meta::lazy']]],
   ['index_5fsequence',['index_sequence',['../group__integral.html#ga6a5ec3ab240c254c40895268385cd080',1,'meta::v1']]],
   ['int_5f',['int_',['../group__integral.html#ga0dd3ffe632ede53173e2432aaba18e70',1,'meta::v1']]],
+  ['integer_5frange',['integer_range',['../group__integral.html#ga1e23f65e584df402ae35533934f09c73',1,'meta::v1']]],
   ['is_5fvalid',['is_valid',['../group__trait.html#ga2aa986837386ad289def903d9bbf83e7',1,'meta::v1']]]
 ];

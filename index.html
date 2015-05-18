@@ -352,7 +352,9 @@ Range Views</h1>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1tail__fn.html"><code>view::tail</code></a> </dt>
 <dd>Given a source range, return a new range without the first element. The range must have at least one element. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1take__fn.html"><code>view::take</code></a> </dt>
-<dd>Given a source range and an integral count, return a range consisting of the first <em>count</em> elements from the source range. The source range must have at least that many elements. </dd>
+<dd>Given a source range and an integral count, return a range consisting of the first <em>count</em> elements from the source range, or the complete range if it has fewer elements. (The result of <code>view::take</code> is not a <code>SizedRange</code>.) </dd>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1take__exactly__fn.html"><code>view::take_exactly</code></a> </dt>
+<dd>Given a source range and an integral count, return a range consisting of the first <em>count</em> elements from the source range. The source range must have at least that many elements. (The result of <code>view::take_exactly</code> is a <code>SizedRange</code>.) </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1take__while__fn.html"><code>view::take_while</code></a> </dt>
 <dd>Given a source range and a unary predicate, return a new range consisting of the elements from the front that satisfy the predicate. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1tokenize__fn.html"><code>view::tokenize</code></a> </dt>

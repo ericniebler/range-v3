@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"structranges_1_1v3_1_1concepts_1_1_writable.html":[1,6,72],
 "structranges_1_1v3_1_1concepts_1_1_writable.html#a218eade84623b460beed519fd6af6fd4":[1,6,72,0],
 "structranges_1_1v3_1_1concepts_1_1models.html":[1,6,36],
 "structranges_1_1v3_1_1concepts_1_1models_3_01_concept_07_args_8_8_8_08_00_01_ts_8_8_8_4.html":[1,6,37],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "structranges_1_1v3_1_1is__partitioned__fn.html#a58b3c13d87648f21dfcc03db3cb906cd":[1,3,27,0],
 "structranges_1_1v3_1_1is__partitioned__fn.html#a77cb00a979252f33caa3852c29017144":[1,3,27,1],
 "structranges_1_1v3_1_1is__permutation__fn.html":[1,3,28],
-"structranges_1_1v3_1_1is__permutation__fn.html#a1f18b54c590b89b0a6d58585d57d597c":[1,3,28,1],
-"structranges_1_1v3_1_1is__permutation__fn.html#a693da16ac8bf55fa55ecaba2ed0340a0":[1,3,28,2]
+"structranges_1_1v3_1_1is__permutation__fn.html#a1f18b54c590b89b0a6d58585d57d597c":[1,3,28,1]
 };

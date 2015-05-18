@@ -39,6 +39,7 @@ var searchData=
   ['insert_2ehpp',['insert.hpp',['../insert_8hpp.html',1,'']]],
   ['insertablerange',['InsertableRange',['../structranges_1_1v3_1_1concepts_1_1_insertable_range.html',1,'ranges::v3::concepts']]],
   ['int_5f',['int_',['../group__integral.html#ga0dd3ffe632ede53173e2432aaba18e70',1,'meta::v1']]],
+  ['integer_5frange',['integer_range',['../group__integral.html#ga1e23f65e584df402ae35533934f09c73',1,'meta::v1']]],
   ['integer_5fsequence',['integer_sequence',['../structmeta_1_1integer__sequence.html',1,'meta']]],
   ['integer_5fsequence',['integer_sequence',['../structmeta_1_1v1_1_1integer__sequence.html',1,'meta::v1']]],
   ['integer_5fsequence_2ehpp',['integer_sequence.hpp',['../integer__sequence_8hpp.html',1,'']]],
