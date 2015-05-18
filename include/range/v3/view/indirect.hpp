@@ -65,7 +65,7 @@ namespace ranges
             explicit indirect_view(Rng rng)
               : range_adaptor_t<indirect_view>{std::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
@@ -78,7 +78,7 @@ namespace ranges
             {
                 template<typename Rng>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     // Stricter than necessary because of the SemiRegular requirement,
                     // but maybe that's ok?
                     Readable<range_value_t<Rng>>>;
@@ -87,7 +87,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(Concept<Rng>())>
                 indirect_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    CONCEPT_ASSERT(InputIterable<Rng>());
+                    CONCEPT_ASSERT(InputRange<Rng>());
                     return indirect_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
@@ -95,8 +95,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng>())>
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
-                        "The argument to view::indirect must be a model of the InputIterable "
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                        "The argument to view::indirect must be a model of the InputRange "
                         "concept");
                     CONCEPT_ASSERT_MSG(Readable<range_value_t<Rng>>(),
                         "The value type of the range passed to view::indirect must be a model "

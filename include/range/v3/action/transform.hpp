@@ -35,7 +35,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename F, typename P = ident, CONCEPT_REQUIRES_(!Iterable<F>())>
+                template<typename F, typename P = ident, CONCEPT_REQUIRES_(!Range<F>())>
                 static auto bind(transform_fn transform, F fun, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -49,7 +49,7 @@ namespace ranges
                         typename I = range_iterator_t<Rng>>
                         auto requires_(Rng&&, F&&, P&& = P{}) -> decltype(
                         concepts::valid_expr(
-                            concepts::model_of<concepts::InputIterable, Rng>(),
+                            concepts::model_of<concepts::InputRange, Rng>(),
                             concepts::is_true(Transformable1<I, I, F, P>())
                         ));
                 };
@@ -70,9 +70,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, F, P>())>
                 void operator()(Rng &&, F &&, P && = P{}) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which action::transform operates must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     using I = range_iterator_t<Rng>;
                     CONCEPT_ASSERT_MSG(Projectable<I, P>(),
                         "The projection function must accept objects of the iterator's value type, "

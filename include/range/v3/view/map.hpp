@@ -62,7 +62,7 @@ namespace ranges
             {
                 template<typename Rng>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     detail::PairLike<range_value_t<Rng>>>;
 
                 template<typename Rng,
@@ -76,8 +76,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng>())>
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
-                        "The argument of view::keys must be a model of the InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                        "The argument of view::keys must be a model of the InputRange concept.");
                     CONCEPT_ASSERT_MSG(detail::PairLike<range_value_t<Rng>>(),
                         "The value type of the range passed to view::keys must look like a std::pair; "
                         "That is, it must have first and second data members.");
@@ -89,7 +89,7 @@ namespace ranges
             {
                 template<typename Rng>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     detail::PairLike<range_value_t<Rng>>>;
 
                 template<typename Rng,
@@ -103,8 +103,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng>())>
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
-                        "The argument of view::values must be a model of the InputIterable concept.");
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                        "The argument of view::values must be a model of the InputRange concept.");
                     CONCEPT_ASSERT_MSG(detail::PairLike<range_value_t<Rng>>(),
                         "The value type of the range passed to view::values must look like a std::pair; "
                         "That is, it must have first and second data members.");

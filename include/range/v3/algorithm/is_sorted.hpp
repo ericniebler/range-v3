@@ -32,9 +32,9 @@ namespace ranges
             ///
             /// range-based version of the \c is_sorted std algorithm
             ///
-            /// Works on ForwardRanges
+            /// Works on ForwardViews
             ///
-            /// \pre `Rng` is a model of the `ForwardRange` concept
+            /// \pre `Rng` is a model of the `ForwardView` concept
             /// \pre `I` is a model of the `ForwardIterator` concept
             /// \pre `S` is a model of the `Sentinel<I>` concept
             /// \pre `R` is a model of the `Relation<Value_Type<I>>` concept
@@ -50,7 +50,7 @@ namespace ranges
 
             template<typename Rng, typename R = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ForwardIterable<Rng>() &&
+                CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
                     IndirectCallableRelation<R, Project<I, P>>())>
             bool operator()(Rng &&rng, R rel = R{}, P proj = P{}) const
             {

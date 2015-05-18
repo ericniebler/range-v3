@@ -37,7 +37,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Iterable<C>())>
+                template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Range<C>())>
                 static auto bind(remove_if_fn remove_if, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -51,8 +51,8 @@ namespace ranges
                         typename I = range_iterator_t<Rng>>
                     auto requires_(Rng&&, C&&, P&& = P{}) -> decltype(
                         concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardIterable, Rng>(),
-                            concepts::model_of<concepts::EraseableIterable, Rng, I, I>(),
+                            concepts::model_of<concepts::ForwardRange, Rng>(),
+                            concepts::model_of<concepts::EraseableRange, Rng, I, I>(),
                             concepts::is_true(RemovableIf<I, C, P>())
                         ));
                 };
@@ -74,11 +74,11 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, C, P>())>
                 void operator()(Rng &&, C &&, P && = P{}) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::remove_if operates must be a model of the "
-                        "ForwardIterable concept.");
+                        "ForwardRange concept.");
                     using I = range_iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, I>(),
+                    CONCEPT_ASSERT_MSG(EraseableRange<Rng, I, I>(),
                         "The object on which action::remove_if operates must allow element "
                         "removal.");
                     CONCEPT_ASSERT_MSG(Projectable<I, P>(),

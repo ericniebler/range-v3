@@ -68,7 +68,7 @@ namespace ranges
 
             template<typename Rng, typename O0, typename O1, typename C, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(PartitionMovable<I, O0, O1, C, P>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(PartitionMovable<I, O0, O1, C, P>() && Range<Rng>())>
             std::tuple<range_safe_iterator_t<Rng>, O0, O1>
             operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const
             {

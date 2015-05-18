@@ -174,18 +174,18 @@ namespace ranges
                         false,
                         [](bool a, bool b) { return a || b; });
                 }
-                CONCEPT_REQUIRES(meta::and_c<(bool) BidirectionalIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(meta::and_c<(bool) BidirectionalRange<Rngs>()...>::value)
                 void prev()
                 {
                     tuple_for_each(its_, detail::dec);
                 }
-                CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessRange<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     using std::placeholders::_1;
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
-                CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessRange<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator
@@ -224,7 +224,7 @@ namespace ranges
                 }
             };
 
-            using are_bounded_t = meta::and_c<(bool) BoundedIterable<Rngs>()...>;
+            using are_bounded_t = meta::and_c<(bool) BoundedRange<Rngs>()...>;
 
             cursor begin_cursor()
             {
@@ -234,12 +234,12 @@ namespace ranges
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
+            CONCEPT_REQUIRES(meta::and_c<(bool) Range<Rngs const>()...>::value)
             cursor begin_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool) Iterable<Rngs const>()...>::value)
+            CONCEPT_REQUIRES(meta::and_c<(bool) Range<Rngs const>()...>::value)
             meta::if_<are_bounded_t, cursor, sentinel> end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};
@@ -254,7 +254,7 @@ namespace ranges
               : fun_(as_function(std::move(fun)))
               , rngs_{std::move(rngs)...}
             {}
-            CONCEPT_REQUIRES(meta::and_c<(bool) SizedIterable<Rngs>()...>::value)
+            CONCEPT_REQUIRES(meta::and_c<(bool) SizedRange<Rngs>()...>::value)
             size_type_ size() const
             {
                 return tuple_foldl(
@@ -285,7 +285,7 @@ namespace ranges
             {
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
-                    InputIterable<Rngs>...,
+                    InputRange<Rngs>...,
                     Callable<Fun, range_iterator_t<Rngs>...>,
                     Callable<Fun, copy_tag, range_iterator_t<Rngs>...>,
                     Callable<Fun, move_tag, range_iterator_t<Rngs>...>>;
@@ -305,8 +305,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>
                 void operator()(Fun, Rngs &&...) const
                 {
-                    CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
-                        "All of the objects passed to view::iter_zip_with must model the InputIterable "
+                    CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),
+                        "All of the objects passed to view::iter_zip_with must model the InputRange "
                         "concept");
                     CONCEPT_ASSERT_MSG(
                         Callable<Fun, range_iterator_t<Rngs>...>(),
@@ -335,7 +335,7 @@ namespace ranges
             {
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
-                    InputIterable<Rngs>...,
+                    InputRange<Rngs>...,
                     Callable<Fun, range_reference_t<Rngs> &&...>>;
 
                 template<typename...Rngs, typename Fun,
@@ -353,8 +353,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Fun, Rngs...>())>
                 void operator()(Fun, Rngs &&...) const
                 {
-                    CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
-                        "All of the objects passed to view::zip_with must model the InputIterable "
+                    CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),
+                        "All of the objects passed to view::zip_with must model the InputRange "
                         "concept");
                     CONCEPT_ASSERT_MSG(
                         Callable<Fun, range_reference_t<Rngs> &&...>(),

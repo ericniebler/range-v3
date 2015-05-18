@@ -47,7 +47,7 @@ namespace ranges
             friend range_access;
             semiregular_t<function_type<Fun>> fun_;
             using single_pass = SinglePass<range_iterator_t<Rng>>;
-            using use_sentinel_t = meta::or_<meta::not_<BoundedIterable<Rng>>, single_pass>;
+            using use_sentinel_t = meta::or_<meta::not_<BoundedRange<Rng>>, single_pass>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
@@ -112,7 +112,7 @@ namespace ranges
               : range_adaptor_t<partial_sum_view>{std::move(rng)}
               , fun_(as_function(std::move(fun)))
             {}
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
@@ -135,7 +135,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     IndirectCallable<Fun, range_iterator_t<Rng>, range_iterator_t<Rng>>,
                     Convertible<
                         concepts::Callable::result_t<Fun, range_common_reference_t<Rng>,
@@ -153,9 +153,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
                 void operator()(Rng && rng, Fun fun) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument passed to view::partial_sum must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     CONCEPT_ASSERT_MSG(IndirectCallable<Fun, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>(),
                         "The second argument passed to view::partial_sum must be callable with "

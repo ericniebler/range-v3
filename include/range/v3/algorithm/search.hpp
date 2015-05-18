@@ -188,8 +188,8 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(
                     Searchable<I1, I2, C, P1, P2>() &&
-                    Iterable<Rng1>() &&
-                    Iterable<Rng2>()
+                    Range<Rng1>() &&
+                    Range<Rng2>()
                 )>
             range_safe_iterator_t<Rng1>
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred_ = C{}, P1 proj1_ = P1{},
@@ -200,7 +200,7 @@ namespace ranges
                 auto &&pred = as_function(pred_);
                 auto &&proj1 = as_function(proj1_);
                 auto &&proj2 = as_function(proj2_);
-                if(SizedIterable<Rng1>() && SizedIterable<Rng2>())
+                if(SizedRange<Rng1>() && SizedRange<Rng2>())
                     return search_fn::sized_impl(begin(rng1), end(rng1), distance(rng1),
                         begin(rng2), end(rng2), distance(rng2), pred, proj1, proj2);
                 else

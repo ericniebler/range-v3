@@ -46,7 +46,7 @@ namespace ranges
 
             template<typename Rng, typename O, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Iterable<Rng>() && WeaklyIncrementable<O>() &&
+                CONCEPT_REQUIRES_(Range<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>())>
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, I middle, O out) const

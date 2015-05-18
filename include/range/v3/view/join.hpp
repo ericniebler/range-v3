@@ -45,8 +45,8 @@ namespace ranges
                 is_infinite<Rng>::value || is_infinite<range_value_t<Rng>>::value>
         {
         private:
-            CONCEPT_ASSERT(Iterable<Rng>());
-            CONCEPT_ASSERT(Iterable<range_value_t<Rng>>());
+            CONCEPT_ASSERT(Range<Rng>());
+            CONCEPT_ASSERT(Range<range_value_t<Rng>>());
             using size_t_ = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
 
             friend range_access;
@@ -138,8 +138,8 @@ namespace ranges
             explicit join_view(Rng rng)
               : range_adaptor_t<join_view>{std::move(rng)}, cur_{}
             {}
-            CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardIterable<Rng>() &&
-                             SizedIterable<range_value_t<Rng>>())
+            CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardRange<Rng>() &&
+                             SizedRange<range_value_t<Rng>>())
             size_t_ size() const
             {
                 return accumulate(view::transform(this->base(), ranges::size), size_t_{0});
@@ -153,9 +153,9 @@ namespace ranges
                 meta::or_<is_infinite<Rng>, is_infinite<range_value_t<Rng>>, is_infinite<ValRng>>::value>
         {
         private:
-            CONCEPT_ASSERT(InputIterable<Rng>());
-            CONCEPT_ASSERT(ForwardIterable<ValRng>());
-            CONCEPT_ASSERT(InputIterable<range_value_t<Rng>>());
+            CONCEPT_ASSERT(InputRange<Rng>());
+            CONCEPT_ASSERT(ForwardRange<ValRng>());
+            CONCEPT_ASSERT(InputRange<range_value_t<Rng>>());
             CONCEPT_ASSERT(Common<range_value_t<range_value_t<Rng>>, range_value_t<ValRng>>());
             CONCEPT_ASSERT(SemiRegular<concepts::Common::value_t<
                 range_value_t<range_value_t<Rng>>,
@@ -275,8 +275,8 @@ namespace ranges
               : range_adaptor_t<join_view>{std::move(rng)}
               , cur_{}, val_(std::move(val))
             {}
-            CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardIterable<Rng>() &&
-                             SizedIterable<range_value_t<Rng>>() && SizedIterable<ValRng>())
+            CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardRange<Rng>() &&
+                             SizedRange<range_value_t<Rng>>() && SizedRange<ValRng>())
             size_t_ size() const
             {
                 return accumulate(view::transform(this->mutable_base(), ranges::size), size_t_{0}) +
@@ -290,23 +290,23 @@ namespace ranges
             struct join_fn
             {
                 template<typename Rng>
-                using JoinableIterable_ = meta::and_<
-                    InputIterable<Rng>,
+                using JoinableRange_ = meta::and_<
+                    InputRange<Rng>,
                     // Only evaluate this one if the previous one succeeded
                     meta::lazy::apply<
                         meta::compose<
-                            meta::quote<InputIterable>,
+                            meta::quote<InputRange>,
                             meta::quote<range_value_t>>,
                         Rng>>;
 
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
+                    CONCEPT_REQUIRES_(JoinableRange_<Rng>())>
                 join_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return join_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
                 template<typename Rng, typename Val = range_value_t<range_value_t<Rng>>,
-                    CONCEPT_REQUIRES_(JoinableIterable_<Rng>())>
+                    CONCEPT_REQUIRES_(JoinableRange_<Rng>())>
                 join_view<all_t<Rng>, single_view<Val>> operator()(Rng && rng, meta::id_t<Val> v) const
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
@@ -316,7 +316,7 @@ namespace ranges
                     return {all(std::forward<Rng>(rng)), single(std::move(v))};
                 }
                 template<typename Rng, typename ValRng,
-                    CONCEPT_REQUIRES_(JoinableIterable_<Rng>() && ForwardIterable<ValRng>())>
+                    CONCEPT_REQUIRES_(JoinableRange_<Rng>() && ForwardRange<ValRng>())>
                 join_view<all_t<Rng>, all_t<ValRng>> operator()(Rng && rng, ValRng && val) const
                 {
                     CONCEPT_ASSERT_MSG(Common<range_value_t<ValRng>,
@@ -333,7 +333,7 @@ namespace ranges
                 }
             private:
                friend view_access;
-               template<typename T, CONCEPT_REQUIRES_(!JoinableIterable_<T>())>
+               template<typename T, CONCEPT_REQUIRES_(!JoinableRange_<T>())>
                static auto bind(join_fn join, T && t)
                RANGES_DECLTYPE_AUTO_RETURN
                (

@@ -90,7 +90,7 @@ namespace ranges
             public:
                 template<typename Rng, typename F>
                 using Concept = meta::and_<
-                    ForwardIterable<Rng>,
+                    ForwardRange<Rng>,
                     IndirectCallablePredicate<F, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>>;
 
@@ -105,8 +105,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, F>())>
                 void operator()(Rng &&, F) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
-                        "Rng must model the ForwardIterable concept");
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                        "Rng must model the ForwardRange concept");
                     CONCEPT_ASSERT_MSG(IndirectCallablePredicate<F, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>(),
                         "Function F must be callable with two arguments of the range's common "

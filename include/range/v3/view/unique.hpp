@@ -35,7 +35,7 @@ namespace ranges
             {
                 template<typename Rng>
                 using Concept = meta::and_<
-                    ForwardIterable<Rng>,
+                    ForwardRange<Rng>,
                     EqualityComparable<range_value_t<Rng>>>;
 
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
@@ -48,9 +48,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng>())>
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which view::unique operates must be a model the "
-                        "ForwardIterable concept.");
+                        "ForwardRange concept.");
                     CONCEPT_ASSERT_MSG(EqualityComparable<range_value_t<Rng>>(),
                         "The value type of the range passed to view::unique must be "
                         "EqualityComparable.");

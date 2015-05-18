@@ -367,7 +367,7 @@ namespace ranges
             using range_facade<Derived, Inf>::derived;
             // Mutable here. Const-correctness is enforced below by disabling
             // begin_cursor/end_cursor if "BaseRng const" does not model
-            // the Range concept.
+            // the View concept.
             mutable base_range_t rng_;
 
             base_range_t & mutable_base() const
@@ -401,7 +401,7 @@ namespace ranges
             // has const begin/end accessors. That disables the const begin()/end() accessors
             // in range_facade, meaning the derived range type only has mutable iterators.
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && View<base_range_t const>())>
             adaptor_cursor_t<D const> begin_cursor() const
             {
                 auto adapt = range_access::begin_adaptor(derived(), 42);
@@ -409,7 +409,7 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && Range<base_range_t const>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && View<base_range_t const>())>
             adaptor_sentinel_t<D const> end_cursor() const
             {
                 auto adapt = range_access::end_adaptor(derived(), 42);

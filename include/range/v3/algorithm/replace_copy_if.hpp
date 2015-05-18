@@ -58,7 +58,7 @@ namespace ranges
 
             template<typename Rng, typename O, typename C, typename T, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(ReplaceCopyIfable<I, O, C, T, P>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(ReplaceCopyIfable<I, O, C, T, P>() && Range<Rng>())>
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, O out, C pred, T const & new_value, P proj = {}) const
             {

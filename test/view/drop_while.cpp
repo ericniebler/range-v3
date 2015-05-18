@@ -22,8 +22,8 @@ int main()
     using namespace ranges;
     auto rng0 = view::iota(10) | view::drop_while([](int i) { return i < 25; });
     static_assert(is_infinite<decltype(rng0)>::value, "");
-    ::models<concepts::RandomAccessRange>(rng0);
-    ::models_not<concepts::BoundedRange>(rng0);
+    ::models<concepts::RandomAccessView>(rng0);
+    ::models_not<concepts::BoundedView>(rng0);
     ::models<concepts::RandomAccessIterator>(rng0.begin());
     auto b = rng0.begin();
     CHECK(*b == 25);
@@ -32,8 +32,8 @@ int main()
 
     std::list<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto rng1 = vi | view::drop_while([](int i) { return i != 50; });
-    ::models<concepts::BidirectionalRange>(rng1);
-    ::models<concepts::BoundedRange>(rng1);
+    ::models<concepts::BidirectionalView>(rng1);
+    ::models<concepts::BoundedView>(rng1);
     ::models<concepts::BidirectionalIterator>(rng1.begin());
     CHECK(rng1.begin() == rng1.end());
 
@@ -42,8 +42,8 @@ int main()
     int cnt = 0;
     auto mutable_only = view::drop_while(rgi, [cnt](int) mutable { return ++cnt <= 5;});
     ::check_equal(mutable_only, {5,6,7,8,9});
-    CONCEPT_ASSERT(Range<decltype(mutable_only)>());
-    CONCEPT_ASSERT(!Range<decltype(mutable_only) const>());
+    CONCEPT_ASSERT(View<decltype(mutable_only)>());
+    CONCEPT_ASSERT(!View<decltype(mutable_only) const>());
 
     return test_result();
 }

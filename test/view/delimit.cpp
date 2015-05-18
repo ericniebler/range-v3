@@ -23,10 +23,10 @@ int main()
 
     auto rng0 = view::iota(10) | view::delimit(25);
     ::check_equal(rng0, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
-    ::models<concepts::Range>(rng0);
-    ::models_not<concepts::BoundedRange>(rng0);
+    ::models<concepts::View>(rng0);
+    ::models_not<concepts::BoundedView>(rng0);
     ::models<concepts::RandomAccessIterator>(rng0.begin());
-    CONCEPT_ASSERT(RandomAccessRange<delimit_view<std::vector<int>, int>>());
+    CONCEPT_ASSERT(RandomAccessView<delimit_view<std::vector<int>, int>>());
 
     std::vector<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto rng1 = vi | view::delimit(50);

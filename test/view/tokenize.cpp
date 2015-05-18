@@ -18,20 +18,20 @@ int main()
 	::has_type<const std::sub_match<std::string::iterator>&>(*ranges::begin(rng));
 	::has_type<const std::sub_match<std::string::iterator>&>(*ranges::begin(crng));
 
-	::models<concepts::BoundedIterable>(rng);
-	::models<concepts::ForwardIterable>(rng);
-	::models_not<concepts::BidirectionalIterable>(rng);
-	::models_not<concepts::SizedIterable>(rng);
-	::models_not<concepts::OutputIterable>(rng);
+	::models<concepts::BoundedRange>(rng);
+	::models<concepts::ForwardRange>(rng);
+	::models_not<concepts::BidirectionalRange>(rng);
+	::models_not<concepts::SizedRange>(rng);
+	::models_not<concepts::OutputRange>(rng);
 
-	::models<concepts::BoundedIterable>(crng);
-	::models<concepts::ForwardIterable>(crng);
-	::models_not<concepts::BidirectionalIterable>(crng);
-	::models_not<concepts::SizedIterable>(crng);
-	::models_not<concepts::OutputIterable>(crng);
+	::models<concepts::BoundedRange>(crng);
+	::models<concepts::ForwardRange>(crng);
+	::models_not<concepts::BidirectionalRange>(crng);
+	::models_not<concepts::SizedRange>(crng);
+	::models_not<concepts::OutputRange>(crng);
 
-	// ::models<concepts::Range>(rng);
-	// ::models<concepts::Range>(crng);
+	// ::models<concepts::View>(rng);
+	// ::models<concepts::View>(crng);
 
 	return test_result();
 }

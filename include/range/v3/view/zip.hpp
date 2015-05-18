@@ -110,13 +110,13 @@ namespace ranges
             struct zip_fn
             {
                 template<typename ...Rngs>
-                using Concept = meta::and_<InputIterable<Rngs>...>;
+                using Concept = meta::and_<InputRange<Rngs>...>;
 
                 template<typename...Rngs,
                     CONCEPT_REQUIRES_(Concept<Rngs...>())>
                 zip_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
-                    CONCEPT_ASSERT(meta::and_<Iterable<Rngs>...>());
+                    CONCEPT_ASSERT(meta::and_<Range<Rngs>...>());
                     return zip_view<all_t<Rngs>...>{all(std::forward<Rngs>(rngs))...};
                 }
 
@@ -125,8 +125,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rngs...>())>
                 void operator()(Rngs &&... rngs) const
                 {
-                    CONCEPT_ASSERT_MSG(meta::and_<InputIterable<Rngs>...>(),
-                        "All of the objects passed to view::zip must model the InputIterable "
+                    CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),
+                        "All of the objects passed to view::zip must model the InputRange "
                         "concept");
                 }
             #endif

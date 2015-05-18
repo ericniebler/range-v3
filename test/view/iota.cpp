@@ -48,7 +48,7 @@ int main()
     auto chars = view::ints(std::numeric_limits<char>::min(),
                             std::numeric_limits<char>::max());
     static_assert(Same<int, range_difference_t<decltype(chars)>>(), "");
-    ::models<concepts::RandomAccessRange>(chars);
+    ::models<concepts::RandomAccessView>(chars);
 
     auto shorts = view::ints(std::numeric_limits<unsigned short>::min(),
                              std::numeric_limits<unsigned short>::max());

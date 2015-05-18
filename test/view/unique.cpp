@@ -26,8 +26,8 @@ int main()
 
     auto && rng = rgi | view::unique;
     has_type<int &>(*begin(rng));
-    models<concepts::BoundedRange>(rng);
-    models_not<concepts::SizedRange>(rng);
+    models<concepts::BoundedView>(rng);
+    models_not<concepts::SizedView>(rng);
     models<concepts::ForwardIterator>(begin(rng));
     models_not<concepts::BidirectionalIterator>(begin(rng));
     copy(rng, ranges::back_inserter(out));

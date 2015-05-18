@@ -41,10 +41,10 @@ namespace ranges
           : range_adaptor<chunk_view<Rng>, Rng>
         {
         private:
-            CONCEPT_ASSERT(ForwardIterable<Rng>());
+            CONCEPT_ASSERT(ForwardRange<Rng>());
             using offset_t =
                 meta::if_<
-                    BidirectionalIterable<Rng>,
+                    BidirectionalRange<Rng>,
                     range_difference_t<Rng>,
                     constant<range_difference_t<Rng>, 0>>;
             range_difference_t<Rng> n_;
@@ -61,7 +61,7 @@ namespace ranges
             {
                 RANGES_ASSERT(0 < n_);
             }
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 auto sz = ranges::distance(this->base());
@@ -96,20 +96,20 @@ namespace ranges
                 RANGES_ASSERT(0 == offset());
                 offset() = ranges::advance(it, n_, end_);
             }
-            CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
+            CONCEPT_REQUIRES(BidirectionalRange<Rng>())
             void prev(range_iterator_t<Rng> &it)
             {
                 ranges::advance(it, -n_ + offset());
                 offset() = 0;
             }
-            CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+            CONCEPT_REQUIRES(RandomAccessRange<Rng>())
             range_difference_t<Rng> distance_to(range_iterator_t<Rng> const &here,
                 range_iterator_t<Rng> const &there, adaptor const &that) const
             {
                 RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % n_);
                 return ((there - here) + that.offset() - offset()) / n_;
             }
-            CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+            CONCEPT_REQUIRES(RandomAccessRange<Rng>())
             void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n)
             {
                 if(0 < n)
@@ -137,7 +137,7 @@ namespace ranges
                 )
             public:
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(ForwardIterable<Rng>())>
+                    CONCEPT_REQUIRES_(ForwardRange<Rng>())>
                 chunk_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> n) const
                 {
                     return {all(std::forward<Rng>(rng)), n};
@@ -156,11 +156,11 @@ namespace ranges
                 }
             public:
                 template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!(ForwardIterable<Rng>() && Integral<T>()))>
+                    CONCEPT_REQUIRES_(!(ForwardRange<Rng>() && Integral<T>()))>
                 void operator()(Rng &&, T) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
-                        "The first argument to view::chunk must be a model of the ForwardIterable concept");
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
+                        "The first argument to view::chunk must be a model of the ForwardRange concept");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
                         "The second argument to view::chunk must be a model of the Integral concept");
                 }

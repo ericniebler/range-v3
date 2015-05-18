@@ -69,7 +69,7 @@ namespace ranges
                 template<typename Rng>
                 using ActionPipeConcept = meta::and_<
                     Function<Action, Rng>,
-                    Iterable<Rng>,
+                    Range<Rng>,
                     meta::not_<std::is_reference<Rng>>>;
                 // Pipeing requires things are passed by value.
                 template<typename Rng, typename Act,
@@ -85,8 +85,8 @@ namespace ranges
                     CONCEPT_REQUIRES_(!ActionPipeConcept<Rng>())>
                 static void pipe(Rng &&, Act &&)
                 {
-                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
-                        "The type Rng must be a model of the Iterable concept.");
+                    CONCEPT_ASSERT_MSG(Range<Rng>(),
+                        "The type Rng must be a model of the Range concept.");
                     // BUGBUG This isn't a very helpful message. This is probably the wrong place
                     // to put this check:
                     CONCEPT_ASSERT_MSG(Function<Action, Rng>(),
@@ -104,7 +104,7 @@ namespace ranges
                 {}
                 // Calling directly requires things are passed by reference.
                 template<typename Rng, typename...Rest,
-                    CONCEPT_REQUIRES_(Iterable<Rng &>() && Function<Action, Rng &, Rest &&...>())>
+                    CONCEPT_REQUIRES_(Range<Rng &>() && Function<Action, Rng &, Rest &&...>())>
                 auto operator()(Rng & rng, Rest &&... rest) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -121,7 +121,7 @@ namespace ranges
             };
 
             template<typename Rng, typename Action,
-                CONCEPT_REQUIRES_(is_pipeable<Action>() && Iterable<Rng &>() &&
+                CONCEPT_REQUIRES_(is_pipeable<Action>() && Range<Rng &>() &&
                     Function<bitwise_or, ref_t<Rng &> &&, Action>() &&
                     Same<ref_t<Rng &>,
                         concepts::Function::result_t<bitwise_or, ref_t<Rng &> &&, Action>>())>

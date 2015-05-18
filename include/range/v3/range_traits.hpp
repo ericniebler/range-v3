@@ -31,31 +31,31 @@ namespace ranges
 
         // Aliases (SFINAE-able)
         template<typename Rng>
-        using range_iterator_t = concepts::Range::iterator_t<Rng>;
+        using range_iterator_t = concepts::View::iterator_t<Rng>;
 
         template<typename Rng>
-        using range_sentinel_t = concepts::Range::sentinel_t<Rng>;
+        using range_sentinel_t = concepts::View::sentinel_t<Rng>;
 
         template<typename Rng>
-        using range_difference_t = concepts::Range::difference_t<Rng>;
+        using range_difference_t = concepts::View::difference_t<Rng>;
 
         template<typename Rng>
         using range_size_t = meta::eval<std::make_unsigned<range_difference_t<Rng>>>;
 
         template<typename Rng>
-        using range_value_t = concepts::InputRange::value_t<Rng>;
+        using range_value_t = concepts::InputView::value_t<Rng>;
 
         template<typename Rng>
-        using range_reference_t = concepts::InputRange::reference_t<Rng>;
+        using range_reference_t = concepts::InputView::reference_t<Rng>;
 
         template<typename Rng>
-        using range_rvalue_reference_t = concepts::InputRange::rvalue_reference_t<Rng>;
+        using range_rvalue_reference_t = concepts::InputView::rvalue_reference_t<Rng>;
 
         template<typename Rng>
-        using range_common_reference_t = concepts::InputRange::common_reference_t<Rng>;
+        using range_common_reference_t = concepts::InputView::common_reference_t<Rng>;
 
         template<typename Rng>
-        using range_category_t = concepts::InputRange::category_t<Rng>;
+        using range_category_t = concepts::InputView::category_t<Rng>;
 
         template<typename Rng>
         using range_common_iterator_t = common_iterator<range_iterator_t<Rng>, range_sentinel_t<Rng>>;

@@ -57,7 +57,7 @@ namespace ranges
                      typename P0 = ident, typename P1 = ident,
                      typename I0 = range_iterator_t<Rng0>,
                      typename I1 = range_iterator_t<Rng1>,
-                     CONCEPT_REQUIRES_(Iterable<Rng0>() && Iterable<Rng1>() &&
+                     CONCEPT_REQUIRES_(Range<Rng0>() && Range<Rng1>() &&
                         ForwardIterator<I1>() && AsymmetricallyComparable<I0, I1, R, P0, P1>())>
             range_safe_iterator_t<Rng0> operator()(Rng0 &&rng0, Rng1 &&rng1, R pred = R{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const

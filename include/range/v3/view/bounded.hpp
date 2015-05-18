@@ -59,17 +59,17 @@ namespace ranges
             {
                 return iterator{ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_REQUIRES(View<Rng const>())
             iterator begin() const
             {
                 return iterator{ranges::begin(rng_)};
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_REQUIRES(View<Rng const>())
             iterator end() const
             {
                 return iterator{ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedView<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(rng_);
@@ -89,24 +89,24 @@ namespace ranges
             struct bounded_fn
             {
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && !BoundedIterable<Rng>())>
+                    CONCEPT_REQUIRES_(Range<Rng>() && !BoundedRange<Rng>())>
                 bounded_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return bounded_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && BoundedIterable<Rng>())>
+                    CONCEPT_REQUIRES_(Range<Rng>() && BoundedRange<Rng>())>
                 all_t<Rng> operator()(Rng && rng) const
                 {
                     return all(std::forward<Rng>(rng));
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(!Iterable<Rng>())>
+                    CONCEPT_REQUIRES_(!Range<Rng>())>
                 void operator()(Rng && rng) const
                 {
-                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
-                        "Rng is not a model of the Iterable concept");
+                    CONCEPT_ASSERT_MSG(Range<Rng>(),
+                        "Rng is not a model of the Range concept");
                 }
             #endif
             };

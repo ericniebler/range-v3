@@ -120,7 +120,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
-                    ForwardIterable<Rng>,
+                    ForwardRange<Rng>,
                     IndirectCallablePredicate<Fun, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>>;
 
@@ -136,9 +136,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
                 void operator()(Rng &&, Fun) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which view::group_by operates must be a model of the "
-                        "ForwardIterable concept.");
+                        "ForwardRange concept.");
                     CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Fun, range_iterator_t<Rng>,
                         range_iterator_t<Rng>>(),
                         "The function passed to view::group_by must be callable with two arguments "

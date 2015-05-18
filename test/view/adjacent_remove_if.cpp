@@ -30,8 +30,8 @@ int main()
 
     auto && rng = rgi | view::adjacent_remove_if(std::equal_to<int>{});
     has_type<int &>(*begin(rng));
-    models<concepts::BoundedRange>(rng);
-    models_not<concepts::SizedRange>(rng);
+    models<concepts::BoundedView>(rng);
+    models_not<concepts::SizedView>(rng);
     models<concepts::ForwardIterator>(begin(rng));
     models_not<concepts::BidirectionalIterator>(begin(rng));
     CONCEPT_ASSERT(WeakOutputIterator<decltype(ranges::back_inserter(out)), int>());
@@ -42,18 +42,18 @@ int main()
     auto && rng2 = view::counted(rgi, 7)
       | view::adjacent_remove_if([&](int i, int j){return i == j && true_;});
     has_type<int &>(*begin(rng2));
-    models<concepts::ForwardRange>(rng2);
-    models<concepts::BoundedRange>(rng2);
-    models_not<concepts::SizedRange>(rng2);
+    models<concepts::ForwardView>(rng2);
+    models<concepts::BoundedView>(rng2);
+    models_not<concepts::SizedView>(rng2);
     models<concepts::ForwardIterator>(begin(rng2));
     models_not<concepts::BidirectionalIterator>(begin(rng2));
     ::check_equal(rng2, {1, 2, 3, 4});
 
     auto && rng3 = view::counted(forward_iterator<int*>(rgi), 7) | view::adjacent_remove_if(std::equal_to<int>{});
     has_type<int &>(*begin(rng3));
-    models<concepts::ForwardRange>(rng3);
-    models_not<concepts::BoundedRange>(rng3);
-    models_not<concepts::SizedRange>(rng3);
+    models<concepts::ForwardView>(rng3);
+    models_not<concepts::BoundedView>(rng3);
+    models_not<concepts::SizedView>(rng3);
     models<concepts::ForwardIterator>(begin(rng3));
     models_not<concepts::BidirectionalIterator>(begin(rng3));
     ::check_equal(rng3, {1, 2, 3, 4});

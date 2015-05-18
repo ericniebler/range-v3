@@ -42,7 +42,7 @@ int main()
     std::vector<int> vi{1,2,3,4};
 
     ranges::range<std::vector<int>::iterator> r0 {vi.begin(), vi.end()};
-    ::models<ranges::concepts::SizedRange>(r0);
+    ::models<ranges::concepts::SizedView>(r0);
     CHECK(r0.size() == 4u);
     CHECK(r0.first == vi.begin());
     CHECK(r0.second == vi.end());
@@ -55,8 +55,8 @@ int main()
 
     ranges::range<std::vector<int>::iterator, ranges::unreachable> r1 { r0.begin(), {} };
     static_assert(sizeof(r1) == sizeof(vi.begin()), "");
-    ::models<ranges::concepts::Range>(r1);
-    ::models_not<ranges::concepts::SizedRange>(r1);
+    ::models<ranges::concepts::View>(r1);
+    ::models_not<ranges::concepts::SizedView>(r1);
     CHECK(r1.first == vi.begin()+1);
     CHECK(r1.second == ranges::unreachable{});
     r1.second = ranges::unreachable{};
@@ -81,7 +81,7 @@ int main()
 
     std::list<int> li{1,2,3,4};
     ranges::sized_range<std::list<int>::iterator> l0 {li.begin(), li.end(), li.size()};
-    ::models<ranges::concepts::SizedRange>(l0);
+    ::models<ranges::concepts::SizedView>(l0);
     char* sz = test_pop_front(l0); (void) sz;
     CHECK(l0.first == li.begin());
     CHECK(l0.second == li.end());

@@ -35,7 +35,7 @@ namespace ranges
             }
 
             template<typename Rng, class T, typename O = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(OutputIterable<Rng &, T>() && WeaklyIncrementable<T>())>
+                CONCEPT_REQUIRES_(OutputRange<Rng &, T>() && WeaklyIncrementable<T>())>
             O operator()(Rng &rng, T val) const
             {
                 return (*this)(begin(rng), end(rng), std::move(val));

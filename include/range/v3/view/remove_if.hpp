@@ -74,7 +74,7 @@ namespace ranges
                 {
                     this->satisfy(++it);
                 }
-                CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
+                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
                 void prev(range_iterator_t<Rng> &it) const
                 {
                     auto &&pred = rng_->pred_;
@@ -139,7 +139,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     IndirectCallablePredicate<Pred, range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
@@ -154,9 +154,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
                 void operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument to view::remove_if must be a model of the "
-                        "InputIterable concept");
+                        "InputRange concept");
                     CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Pred, range_iterator_t<Rng>>(),
                         "The second argument to view::remove_if must be callable with "
                         "a value of the range, and the return type must be convertible "

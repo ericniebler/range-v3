@@ -106,7 +106,7 @@ namespace ranges
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
                     typename V2 = detail::decay_t<unwrap_reference_t<Val2>>>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     Same<V1, V2>,
                     EqualityComparable<V1, range_value_t<Rng>>,
                     Common<detail::decay_t<unwrap_reference_t<Val2 const &>>, range_value_t<Rng>>,
@@ -130,9 +130,9 @@ namespace ranges
                 {
                     using V1 = detail::decay_t<unwrap_reference_t<Val1>>;
                     using V2 = detail::decay_t<unwrap_reference_t<Val2>>;
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument to view::replace must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     CONCEPT_ASSERT_MSG(Same<V1, V2>(),
                         "The two values passed to view::replace must have the same type.");
                     CONCEPT_ASSERT_MSG(EqualityComparable<V1, range_value_t<Rng>>(),

@@ -88,7 +88,7 @@ namespace ranges
                 typename P2 = ident,
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>, // [*] See below
-                CONCEPT_REQUIRES_(InputIterable<Rng1>() && Iterator<I2>() &&
+                CONCEPT_REQUIRES_(InputRange<Rng1>() && Iterator<I2>() &&
                     Mismatchable1<I1, I2, C, P1, P2>())>
             std::pair<range_safe_iterator_t<Rng1>, I2>
             operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
@@ -102,7 +102,7 @@ namespace ranges
                 typename P2 = ident,
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
-                CONCEPT_REQUIRES_(InputIterable<Rng1>() && InputIterable<Rng2>() &&
+                CONCEPT_REQUIRES_(InputRange<Rng1>() && InputRange<Rng2>() &&
                     Mismatchable2<I1, I2, C, P1, P2>())>
             std::pair<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>>
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const

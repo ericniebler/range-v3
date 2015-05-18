@@ -223,12 +223,12 @@ namespace ranges
                 {
                     return its_ == pos.its_;
                 }
-                CONCEPT_REQUIRES(meta::and_c<(bool)BidirectionalIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(meta::and_c<(bool)BidirectionalRange<Rngs>()...>::value)
                 void prev()
                 {
                     its_.apply_i(prev_fun{this});
                 }
-                CONCEPT_REQUIRES(meta::and_c<(bool)RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(meta::and_c<(bool)RandomAccessRange<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     if(n > 0)
@@ -236,7 +236,7 @@ namespace ranges
                     else if(n < 0)
                         its_.apply_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessIterable<Rngs>()...>::value)
+                CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessRange<Rngs>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.which() <= that.its_.which())
@@ -267,18 +267,18 @@ namespace ranges
             {
                 return {*this, begin_tag{}};
             }
-            meta::if_<meta::and_c<(bool)BoundedIterable<Rngs>()...>, cursor<false>, sentinel<false>>
+            meta::if_<meta::and_c<(bool)BoundedRange<Rngs>()...>, cursor<false>, sentinel<false>>
             end_cursor()
             {
                 return {*this, end_tag{}};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool)Iterable<Rngs const>()...>())
+            CONCEPT_REQUIRES(meta::and_c<(bool)Range<Rngs const>()...>())
             cursor<true> begin_cursor() const
             {
                 return {*this, begin_tag{}};
             }
-            CONCEPT_REQUIRES(meta::and_c<(bool)Iterable<Rngs const>()...>())
-            meta::if_<meta::and_c<(bool)BoundedIterable<Rngs>()...>, cursor<true>, sentinel<true>>
+            CONCEPT_REQUIRES(meta::and_c<(bool)Range<Rngs const>()...>())
+            meta::if_<meta::and_c<(bool)BoundedRange<Rngs>()...>, cursor<true>, sentinel<true>>
             end_cursor() const
             {
                 return {*this, end_tag{}};
@@ -288,7 +288,7 @@ namespace ranges
             explicit concat_view(Rngs...rngs)
               : rngs_{std::move(rngs)...}
             {}
-            CONCEPT_REQUIRES(meta::and_c<(bool)SizedIterable<Rngs>()...>::value)
+            CONCEPT_REQUIRES(meta::and_c<(bool)SizedRange<Rngs>()...>::value)
             size_type_ size() const
             {
                 return tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});
@@ -302,8 +302,8 @@ namespace ranges
                 template<typename...Rngs>
                 concat_view<all_t<Rngs>...> operator()(Rngs &&... rngs) const
                 {
-                    static_assert(meta::and_c<(bool)InputIterable<Rngs>()...>::value,
-                        "Expecting Input Iterables");
+                    static_assert(meta::and_c<(bool)InputRange<Rngs>()...>::value,
+                        "Expecting Input Ranges");
                     return concat_view<all_t<Rngs>...>{all(std::forward<Rngs>(rngs))...};
                 }
             };

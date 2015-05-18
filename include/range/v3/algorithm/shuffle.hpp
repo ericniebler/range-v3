@@ -78,7 +78,7 @@ namespace ranges
 
             template<typename Rng, typename Gen,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>() && Permutable<I>() &&
+                CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Permutable<I>() &&
                     UniformRandomNumberGenerator<Gen>() && Convertible<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
                         concepts::WeaklyIncrementable::difference_t<I>>())>

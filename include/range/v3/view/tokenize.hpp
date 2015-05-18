@@ -58,7 +58,7 @@ namespace ranges
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
             }
-            CONCEPT_REQUIRES(Range<Rng const>())
+            CONCEPT_REQUIRES(View<Rng const>())
             iterator begin() const
             {
                 return {ranges::begin(rng_), ranges::end(rng_), rex_, subs_, flags_};
@@ -87,8 +87,8 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
-                    CONCEPT_ASSERT(BidirectionalIterable<Rng>());
-                    CONCEPT_ASSERT(BoundedIterable<Rng>());
+                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
+                    CONCEPT_ASSERT(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -102,8 +102,8 @@ namespace ranges
                     std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
-                    CONCEPT_ASSERT(BidirectionalIterable<Rng>());
-                    CONCEPT_ASSERT(BoundedIterable<Rng>());
+                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
+                    CONCEPT_ASSERT(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");
@@ -117,8 +117,8 @@ namespace ranges
                     std::initializer_list<int> subs, std::regex_constants::match_flag_type flags =
                         std::regex_constants::match_default) const
                 {
-                    CONCEPT_ASSERT(BidirectionalIterable<Rng>());
-                    CONCEPT_ASSERT(BoundedIterable<Rng>());
+                    CONCEPT_ASSERT(BidirectionalRange<Rng>());
+                    CONCEPT_ASSERT(BoundedRange<Rng>());
                     static_assert(std::is_same<range_value_t<Rng>,
                         typename std::remove_reference<Regex>::type::value_type>::value,
                         "The character range and the regex have different character types");

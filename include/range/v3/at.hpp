@@ -29,7 +29,7 @@ namespace ranges
         {
             /// \return `begin(rng)[n]`
             template<typename Rng,
-                CONCEPT_REQUIRES_(RandomAccessIterable<Rng>())>
+                CONCEPT_REQUIRES_(RandomAccessRange<Rng>())>
             RANGES_CXX14_CONSTEXPR
             auto operator()(Rng &&rng, range_difference_t<Rng> n) const ->
                 decltype(begin(rng)[n])

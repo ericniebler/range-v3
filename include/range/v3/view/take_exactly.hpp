@@ -34,7 +34,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng, bool IsRandomAccess = RandomAccessIterable<Rng>()>
+            template<typename Rng, bool IsRandomAccess = RandomAccessRange<Rng>()>
             struct take_exactly_view_
               : range_facade<take_exactly_view<Rng>, false>
             {
@@ -49,7 +49,7 @@ namespace ranges
                     return {ranges::begin(rng_), n_};
                 }
                 template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                    CONCEPT_REQUIRES_(Range<BaseRng const>())>
                 counted_cursor<range_iterator_t<BaseRng const>> begin_cursor() const
                 {
                     return {ranges::begin(rng_), n_};
@@ -103,13 +103,13 @@ namespace ranges
                     return next(ranges::begin(rng_), n_);
                 }
                 template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                    CONCEPT_REQUIRES_(Range<BaseRng const>())>
                 range_iterator_t<BaseRng const> begin() const
                 {
                     return ranges::begin(rng_);
                 }
                 template<typename BaseRng = Rng,
-                    CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                    CONCEPT_REQUIRES_(Range<BaseRng const>())>
                 range_iterator_t<BaseRng const> end() const
                 {
                     return next(ranges::begin(rng_), n_);
@@ -148,14 +148,14 @@ namespace ranges
 
                 template<typename Rng>
                 static take_exactly_view<all_t<Rng>>
-                invoke_(Rng && rng, range_difference_t<Rng> n, concepts::InputIterable*)
+                invoke_(Rng && rng, range_difference_t<Rng> n, concepts::InputRange*)
                 {
                     return {all(std::forward<Rng>(rng)), n};
                 }
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(!Range<Rng>() && std::is_lvalue_reference<Rng>())>
+                    CONCEPT_REQUIRES_(!View<Rng>() && std::is_lvalue_reference<Rng>())>
                 static range<range_iterator_t<Rng>>
-                invoke_(Rng && rng, range_difference_t<Rng> n, concepts::RandomAccessIterable*)
+                invoke_(Rng && rng, range_difference_t<Rng> n, concepts::RandomAccessRange*)
                 {
                     return {begin(rng), next(begin(rng), n)};
                 }
@@ -180,20 +180,20 @@ namespace ranges
 
             public:
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                    CONCEPT_REQUIRES_(InputRange<Rng>())>
                 auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    take_exactly_fn::invoke_(std::forward<Rng>(rng), n, iterable_concept<Rng>{})
+                    take_exactly_fn::invoke_(std::forward<Rng>(rng), n, range_concept<Rng>{})
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                    CONCEPT_REQUIRES_(!InputRange<Rng>())>
                 void operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<T>(),
-                        "The object on which view::take operates must be a model of the InputIterable "
+                    CONCEPT_ASSERT_MSG(InputRange<T>(),
+                        "The object on which view::take operates must be a model of the InputRange "
                         "concept.");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
                         "The second argument to view::take must be a model of the Integral concept.");

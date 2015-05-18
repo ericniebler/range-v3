@@ -51,12 +51,12 @@ int main()
         });
     ::check_equal(m, {P{0,"0"}, P{1,"1"}, P{2,"2"}, P{3,"3"}, P{4,"4"}});
 
-    CONCEPT_ASSERT(Iterable<std::set<int>>());
-    CONCEPT_ASSERT(!Range<std::set<int>>());
+    CONCEPT_ASSERT(Range<std::set<int>>());
+    CONCEPT_ASSERT(!View<std::set<int>>());
     std::set<int> s = view::ints | view::take(10);
     ::check_equal(s, {0,1,2,3,4,5,6,7,8,9});
 
-    static_assert(!ranges::is_range<std::initializer_list<int>>::value, "");
+    static_assert(!ranges::is_view<std::initializer_list<int>>::value, "");
 
     return ::test_result();
 }

@@ -187,7 +187,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Fun>
                 using FunctionConcept = meta::and_<
-                    ForwardIterable<Rng>,
+                    ForwardRange<Rng>,
                     Function<Fun, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
                     Convertible<
                         concepts::Function::result_t<Fun, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
@@ -195,13 +195,13 @@ namespace ranges
 
                 template<typename Rng>
                 using ElementConcept = meta::and_<
-                    ForwardIterable<Rng>,
+                    ForwardRange<Rng>,
                     Regular<range_value_t<Rng>>>;
 
                 template<typename Rng, typename Sub>
                 using SubRangeConcept = meta::and_<
-                    ForwardIterable<Rng>,
-                    ForwardIterable<Sub>,
+                    ForwardRange<Rng>,
+                    ForwardRange<Sub>,
                     EqualityComparable<range_value_t<Rng>, range_value_t<Sub>>>;
 
                 template<typename Rng, typename Fun,
@@ -228,14 +228,14 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Convertible<T, range_value_t<Rng>>())>
                 void operator()(Rng &&, T &&) const volatile
                 {
-                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which view::split operates must be a model of the "
-                        "ForwardIterable concept.");
+                        "ForwardRange concept.");
                     CONCEPT_ASSERT_MSG(Convertible<T, range_value_t<Rng>>(),
                         "The delimiter argument to view::split must be one of the following: "
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "
-                        "(2) A ForwardIterable whose value type is EqualityComparable to the input "
+                        "(2) A ForwardRange whose value type is EqualityComparable to the input "
                         "range's value type, or "
                         "(3) A Function that is callable with two arguments: the range's iterator "
                         "and sentinel, and that returns a std::pair<bool, D>, where D is the "

@@ -49,7 +49,7 @@ namespace ranges
                 return adl_size_detail::size_(std::forward<Rng>(rng), 42);
             }
 
-            // A reference-wrapped Iterable
+            // A reference-wrapped Range
             template<typename T>
             auto size(std::reference_wrapper<T> t) -> decltype(size(t.get()))
             {

@@ -35,7 +35,7 @@ namespace ranges
             ///
             /// range-based version of the \c find std algorithm
             ///
-            /// \pre `Rng` is a model of the `Iterable` concept
+            /// \pre `Rng` is a model of the `Range` concept
             /// \pre `I` is a model of the `InputIterator` concept
             /// \pre `S` is a model of the `Sentinel<I>` concept
             /// \pre `P` is a model of the `Callable<iterator_common_reference_t<I>>` concept
@@ -55,7 +55,7 @@ namespace ranges
             /// \overload
             template<typename Rng, typename V, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                CONCEPT_REQUIRES_(InputRange<Rng>() &&
                     IndirectCallableRelation<equal_to, Project<I, P>, V const *>())>
             range_safe_iterator_t<Rng> operator()(Rng &&rng, V const &val, P proj = P{}) const
             {

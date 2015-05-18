@@ -28,7 +28,7 @@ namespace ranges
         {
             /// \return `begin(rng) == end(rng)`
             template<typename Rng,
-                CONCEPT_REQUIRES_(Iterable<Rng>())>
+                CONCEPT_REQUIRES_(Range<Rng>())>
             RANGES_CXX14_CONSTEXPR
             bool operator()(Rng &&rng) const
             {

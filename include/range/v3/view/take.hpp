@@ -62,7 +62,7 @@ namespace ranges
                 return {ranges::begin(rng_), n_};
             }
             template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                CONCEPT_REQUIRES_(Range<BaseRng const>())>
             detail::counted_cursor<range_iterator_t<BaseRng const>> begin_cursor() const
             {
                 return {ranges::begin(rng_), n_};
@@ -72,7 +72,7 @@ namespace ranges
                 return {ranges::end(rng_)};
             }
             template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(Iterable<BaseRng const>())>
+                CONCEPT_REQUIRES_(Range<BaseRng const>())>
             sentinel<true> end_cursor() const
             {
                 return {ranges::end(rng_)};
@@ -102,14 +102,14 @@ namespace ranges
                 friend view_access;
 
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(!SizedIterable<Rng>() && !is_infinite<Rng>())>
+                    CONCEPT_REQUIRES_(!SizedRange<Rng>() && !is_infinite<Rng>())>
                 static take_view<all_t<Rng>> invoke_(Rng && rng, range_difference_t<Rng> n)
                 {
                     return {all(std::forward<Rng>(rng)), n};
                 }
 
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(SizedIterable<Rng>() || is_infinite<Rng>())>
+                    CONCEPT_REQUIRES_(SizedRange<Rng>() || is_infinite<Rng>())>
                 static auto invoke_(Rng && rng, range_difference_t<Rng> n)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -136,7 +136,7 @@ namespace ranges
             #endif
 
             public:
-                template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
                 auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -144,11 +144,11 @@ namespace ranges
                 )
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, typename T, CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                template<typename Rng, typename T, CONCEPT_REQUIRES_(!InputRange<Rng>())>
                 void operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<T>(),
-                        "The object on which view::take operates must be a model of the InputIterable "
+                    CONCEPT_ASSERT_MSG(InputRange<T>(),
+                        "The object on which view::take operates must be a model of the InputRange "
                         "concept.");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
                         "The second argument to view::take must be a model of the Integral concept.");

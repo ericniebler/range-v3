@@ -222,7 +222,7 @@ namespace ranges
 
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(BidirectionalIterable<Rng>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(BidirectionalRange<Rng>() && Sortable<I, C, P>())>
             range_safe_iterator_t<Rng>
             operator()(Rng &&rng, I middle, C pred = C{}, P proj = P{}) const
             {

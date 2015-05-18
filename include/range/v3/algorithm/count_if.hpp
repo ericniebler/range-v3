@@ -48,7 +48,7 @@ namespace ranges
 
             template<typename Rng, typename R, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputIterable<Rng>() && IndirectCallablePredicate<R, Project<I, P> >())>
+                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectCallablePredicate<R, Project<I, P> >())>
             iterator_difference_t<I>
             operator()(Rng &&rng, R pred, P proj = P{}) const
             {

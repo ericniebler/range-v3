@@ -173,7 +173,7 @@ namespace ranges
 
             template<typename Rng, typename V, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Range<Rng>())>
             range_safe_iterator_t<Rng>
             operator()(Rng &&rng, iterator_difference_t<I> count, V const &val, C pred_ = C{},
                 P proj_ = P{}) const
@@ -182,7 +182,7 @@ namespace ranges
                     return begin(rng);
                 auto &&pred = as_function(pred_);
                 auto &&proj = as_function(proj_);
-                if(SizedIterable<Rng>())
+                if(SizedRange<Rng>())
                     return search_n_fn::sized_impl(begin(rng), end(rng), distance(rng), count, val,
                         pred, proj);
                 else

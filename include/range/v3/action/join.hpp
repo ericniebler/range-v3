@@ -45,8 +45,8 @@ namespace ranges
             public:
                 template<typename Rng>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
-                    InputIterable<range_value_t<Rng>>,
+                    InputRange<Rng>,
+                    InputRange<range_value_t<Rng>>,
                     SemiRegular<join_value_t<Rng>>>;
 
                 template<typename Rng,
@@ -65,12 +65,12 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng>())>
                 void operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which action::join operates must be a model of the "
-                        "InputIterable concept.");
-                    CONCEPT_ASSERT_MSG(InputIterable<range_value_t<Rng>>(),
-                        "The Iterable on which action::join operates must have a value type that "
-                        "models the InputIterable concept.");
+                        "InputRange concept.");
+                    CONCEPT_ASSERT_MSG(InputRange<range_value_t<Rng>>(),
+                        "The Range on which action::join operates must have a value type that "
+                        "models the InputRange concept.");
                 }
             #endif
             };

@@ -48,8 +48,8 @@ namespace ranges
             tail_view(Rng rng)
               : rng_(std::forward<Rng>(rng))
             {
-                CONCEPT_ASSERT(InputIterable<Rng>());
-                RANGES_ASSERT(!ForwardIterable<Rng>() || !empty(rng_));
+                CONCEPT_ASSERT(InputRange<Rng>());
+                RANGES_ASSERT(!ForwardRange<Rng>() || !empty(rng_));
             }
             iterator begin() const
             {
@@ -59,7 +59,7 @@ namespace ranges
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedView<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(rng_) - 1;
@@ -78,19 +78,19 @@ namespace ranges
         {
             struct tail_fn
             {
-                template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
                 tail_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return tail_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
 
             #ifndef RANGES_DOXYGEN_INVOKED
-                template<typename Rng, CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(!InputRange<Rng>())>
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::tail is to operate must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                 }
             #endif
             };

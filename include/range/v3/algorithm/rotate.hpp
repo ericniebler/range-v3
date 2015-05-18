@@ -207,7 +207,7 @@ namespace ranges
             }
 
             template<typename Rng, typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(Iterable<Rng>() && Permutable<I>())>
+                CONCEPT_REQUIRES_(Range<Rng>() && Permutable<I>())>
             meta::if_<std::is_lvalue_reference<Rng>, range<I>, dangling<range<I>>>
             operator()(Rng &&rng, I middle) const
             {

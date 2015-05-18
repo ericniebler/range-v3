@@ -112,21 +112,21 @@ namespace ranges
             }
             /// Access the last element in a range:
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D>() && BidirectionalRange<D>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedView<D>() && BidirectionalView<D>())>
             range_reference_t<D> back()
             {
                 return *prev(derived().end());
             }
             /// \overload
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedRange<D const>() && BidirectionalRange<D const>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && BoundedView<D const>() && BidirectionalView<D const>())>
             range_reference_t<D const> back() const
             {
                 return *prev(derived().end());
             }
             /// Simple indexing:
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessView<D>())>
             auto operator[](range_difference_t<D> n) ->
                 decltype(std::declval<D &>().begin()[n])
             {
@@ -134,7 +134,7 @@ namespace ranges
             }
             /// \overload
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessRange<D const>())>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && RandomAccessView<D const>())>
             auto operator[](range_difference_t<D> n) const ->
                 decltype(std::declval<D const &>().begin()[n])
             {
@@ -260,7 +260,7 @@ namespace ranges
             }
             /// \overload
             template<bool B = true, typename Stream = meta::if_c<B, std::ostream>,
-                typename D = Derived, CONCEPT_REQUIRES_(InputRange<D const>())>
+                typename D = Derived, CONCEPT_REQUIRES_(InputView<D const>())>
             friend Stream &operator<<(Stream &sout, Derived const &rng)
             {
                 auto it = ranges::begin(rng);

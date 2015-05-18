@@ -117,7 +117,7 @@ namespace ranges
             ///
             /// range-based version of the `unique_copy` std algorithm
             ///
-            /// \pre InputRange is a model of the `InputRange` concept
+            /// \pre InputView is a model of the `InputView` concept
             /// \pre `O` is a model of the `WeakOutputIterator` concept
             /// \pre `C` is a model of the `CallableRelation` concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
@@ -131,7 +131,7 @@ namespace ranges
             /// \overload
             template<typename Rng, typename O, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Iterable<Rng>())>
+                CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Range<Rng>())>
             std::pair<range_safe_iterator_t<Rng>, O>
             operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const
             {

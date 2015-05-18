@@ -25,8 +25,8 @@ int main()
 
     std::vector<int> v = view::iota(0,11);
     auto rng1 = v | view::chunk(3);
-    ::models<concepts::RandomAccessIterable>(rng1);
-    ::models<concepts::SizedIterable>(rng1);
+    ::models<concepts::RandomAccessRange>(rng1);
+    ::models<concepts::SizedRange>(rng1);
     auto it1 = ranges::begin(rng1);
     ::check_equal(*it1++, {0,1,2});
     ::check_equal(*it1++, {3,4,5});
@@ -39,9 +39,9 @@ int main()
 
     std::forward_list<int> l = view::iota(0,11);
     auto rng2 = l | view::chunk(3);
-    ::models<concepts::ForwardIterable>(rng2);
-    ::models_not<concepts::BidirectionalIterable>(rng2);
-    ::models_not<concepts::SizedIterable>(rng2);
+    ::models<concepts::ForwardRange>(rng2);
+    ::models_not<concepts::BidirectionalRange>(rng2);
+    ::models_not<concepts::SizedRange>(rng2);
     auto it2 = ranges::begin(rng2);
     ::check_equal(*it2++, {0,1,2});
     ::check_equal(*it2++, {3,4,5});

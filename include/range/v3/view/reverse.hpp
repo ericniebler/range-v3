@@ -36,8 +36,8 @@ namespace ranges
           : range_adaptor<reverse_view<Rng>, Rng>
         {
         private:
-            CONCEPT_ASSERT(BidirectionalIterable<Rng>());
-            CONCEPT_ASSERT(BoundedIterable<Rng>());
+            CONCEPT_ASSERT(BidirectionalRange<Rng>());
+            CONCEPT_ASSERT(BoundedRange<Rng>());
             friend range_access;
 
             // A rather convoluted implementation to avoid the problem std::reverse_iterator
@@ -67,7 +67,7 @@ namespace ranges
                     if(0 != ranges::advance(it, 1, ranges::end(rng_->mutable_base())))
                         it = ranges::begin(rng_->mutable_base());
                 }
-                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 void advance(range_iterator_t<Rng> &it, range_difference_t<Rng> n) const
                 {
                     if(n > 0)
@@ -75,7 +75,7 @@ namespace ranges
                     else if(n < 0)
                         this->prev(it), ranges::advance(it, -n - 1);
                 }
-                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 range_difference_t<Rng>
                 distance_to(range_iterator_t<Rng> const &here, range_iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const
@@ -102,7 +102,7 @@ namespace ranges
             reverse_view(Rng rng)
               : range_adaptor_t<reverse_view>{std::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
@@ -115,8 +115,8 @@ namespace ranges
             {
                 template<typename Rng>
                 using Concept = meta::and_<
-                    BidirectionalIterable<Rng>,
-                    BoundedIterable<Rng>>;
+                    BidirectionalRange<Rng>,
+                    BoundedRange<Rng>>;
 
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
                 reverse_view<all_t<Rng>> operator()(Rng && rng) const
@@ -128,11 +128,11 @@ namespace ranges
                 template<typename Rng, CONCEPT_REQUIRES_(!Concept<Rng>())>
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(BidirectionalIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(BidirectionalRange<Rng>(),
                         "The object on which view::reverse operates must be a model of the "
-                        "BidirectionalIterable concept.");
-                    CONCEPT_ASSERT_MSG(BoundedIterable<Rng>(),
-                        "To reverse an iterable object, its end iterator must be a model of "
+                        "BidirectionalRange concept.");
+                    CONCEPT_ASSERT_MSG(BoundedRange<Rng>(),
+                        "To reverse a range object, its end iterator must be a model of "
                         "the BidirectionalIterator concept.");
                 }
             #endif

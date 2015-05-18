@@ -62,7 +62,7 @@ namespace ranges
             }
 #endif
 
-            // A reference-wrapped Iterable is an Iterable
+            // A reference-wrapped Range is an Range
             template<typename T>
             auto begin(std::reference_wrapper<T> ref) -> decltype(begin(ref.get()))
             {

@@ -124,7 +124,7 @@ namespace ranges
                 any_input_cursor() = default;
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_input_cursor>()),
-                    CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                    CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                       Same<Ref, range_reference_t<Rng>>())>
                 any_input_cursor(Rng &&rng, begin_tag)
                   : ptr_{new any_input_cursor_impl<range_iterator_t<Rng>>{begin(rng)}}
@@ -165,7 +165,7 @@ namespace ranges
                 any_input_sentinel() = default;
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_input_sentinel>()),
-                    CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                    CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                       Same<Ref, range_reference_t<Rng>>())>
                 any_input_sentinel(Rng &&rng, end_tag)
                   : ptr_{new any_input_sentinel_impl<range_sentinel_t<Rng>, range_iterator_t<Rng>>{end(rng)}}
@@ -225,7 +225,7 @@ namespace ranges
         }
         /// \endcond
 
-        /// \brief A type-erased InputRange
+        /// \brief A type-erased InputView
         /// \ingroup group-views
         template<typename Ref, bool Inf = false>
         struct any_input_range
@@ -246,7 +246,7 @@ namespace ranges
             any_input_range() = default;
             template<typename Rng,
                 CONCEPT_REQUIRES_(!Same<detail::decay_t<Rng>, any_input_range>()),
-                CONCEPT_REQUIRES_(InputIterable<Rng>() &&
+                CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                   Same<Ref, range_reference_t<Rng>>())>
             any_input_range(Rng && rng)
               : ptr_{new detail::any_input_range_impl<view::all_t<Rng>>{view::all(std::forward<Rng>(rng))}}

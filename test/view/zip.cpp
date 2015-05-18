@@ -75,8 +75,8 @@ int main()
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
         using Rng = decltype((rng));
-        ::models<concepts::BoundedRange>(rng);
-        ::models_not<concepts::SizedRange>(rng);
+        ::models<concepts::BoundedView>(rng);
+        ::models_not<concepts::SizedView>(rng);
         CONCEPT_ASSERT(Same<
             range_value_t<Rng>,
             std::tuple<int, std::string, std::string>>());
@@ -102,9 +102,9 @@ int main()
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str));
-        ::models<concepts::Range>(rng);
-        ::models_not<concepts::SizedRange>(rng);
-        ::models_not<concepts::BoundedRange>(rng);
+        ::models<concepts::View>(rng);
+        ::models_not<concepts::SizedView>(rng);
+        ::models_not<concepts::BoundedView>(rng);
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
         std::vector<V> expected;
@@ -118,8 +118,8 @@ int main()
     auto rnd_rng = view::zip(vi, vs);
     using Ref = range_reference_t<decltype(rnd_rng)>;
     static_assert(std::is_same<Ref, common_pair<int &,std::string const &>>::value, "");
-    ::models<concepts::BoundedRange>(rnd_rng);
-    ::models<concepts::SizedRange>(rnd_rng);
+    ::models<concepts::BoundedView>(rnd_rng);
+    ::models<concepts::SizedView>(rnd_rng);
     ::models<concepts::RandomAccessIterator>(begin(rnd_rng));
     auto tmp = cbegin(rnd_rng) + 3;
     CHECK(std::get<0>(*tmp) == 3);
@@ -157,7 +157,7 @@ int main()
         auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
 
         auto rng = view::zip(v0, v1);
-        ::models<concepts::RandomAccessIterable>(rng);
+        ::models<concepts::RandomAccessRange>(rng);
         std::vector<std::pair<MoveOnlyString, MoveOnlyString>> expected;
         move(rng, ranges::back_inserter(expected));
         ::check_equal(expected | view::keys, {"a","b","c"});

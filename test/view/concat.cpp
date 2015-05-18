@@ -26,7 +26,7 @@ int main()
     std::vector<std::string> his_face{"this", "is", "his", "face"};
     std::vector<std::string> another_mess{"another", "fine", "mess"};
     auto joined = view::concat(his_face, another_mess);
-    ::models<concepts::RandomAccessRange>(joined);
+    ::models<concepts::RandomAccessView>(joined);
     static_assert(std::is_same<range_reference_t<decltype(joined)>, std::string &>::value, "");
     CHECK(joined.size() == 7u);
     CHECK((joined.end() - joined.begin()) == 7);

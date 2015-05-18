@@ -51,8 +51,8 @@ namespace ranges
                         typename D = range_difference_t<Rng>>
                     auto requires_(Rng&&, T&&) -> decltype(
                         concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardIterable, Rng>(),
-                            concepts::model_of<concepts::EraseableIterable, Rng, I, S>(),
+                            concepts::model_of<concepts::ForwardRange, Rng>(),
+                            concepts::model_of<concepts::EraseableRange, Rng, I, S>(),
                             concepts::model_of<concepts::Convertible, T, D>()
                         ));
                 };
@@ -74,12 +74,12 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, T>())>
                 void operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::take operates must be a model of the "
-                        "ForwardIterable concept.");
+                        "ForwardRange concept.");
                     using I = range_iterator_t<Rng>;
                     using S = range_sentinel_t<Rng>;
-                    CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, S>(),
+                    CONCEPT_ASSERT_MSG(EraseableRange<Rng, I, S>(),
                         "The object on which action::take operates must allow element removal.");
                     CONCEPT_ASSERT_MSG(Convertible<T, range_difference_t<Rng>>(),
                         "The stride argument to action::take must be convertible to the range's "

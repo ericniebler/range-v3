@@ -20,7 +20,7 @@ int main()
     using namespace ranges;
 
     int rgi[6];
-    ::models<concepts::Iterable>(rgi);
+    ::models<concepts::Range>(rgi);
     ::models_not<concepts::SemiContainer>(rgi);
 
     std::array<int, 6> a;

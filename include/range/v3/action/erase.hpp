@@ -48,14 +48,14 @@ namespace ranges
             {
                 // TODO associative erase by key
                 template<typename Rng, typename I,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && ForwardIterator<I>())>
+                    CONCEPT_REQUIRES_(Range<Rng>() && ForwardIterator<I>())>
                 auto operator()(Rng && rng, I it) const ->
                     decltype(erase(std::forward<Rng>(rng), it))
                 {
                     return erase(std::forward<Rng>(rng), it);
                 }
                 template<typename Rng, typename I, typename S,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && ForwardIterator<I>() &&
+                    CONCEPT_REQUIRES_(Range<Rng>() && ForwardIterator<I>() &&
                         IteratorRange<I, S>())>
                 auto operator()(Rng && rng, I begin, S end) const ->
                     decltype(erase(std::forward<Rng>(rng), begin, end))
@@ -81,8 +81,8 @@ namespace ranges
         /// @{
         namespace concepts
         {
-            struct EraseableIterable
-              : refines<Iterable(_1)>
+            struct EraseableRange
+              : refines<Range(_1)>
             {
                 template<typename Rng, typename...Rest>
                 using result_t = decltype(ranges::erase(val<Rng>(), val<Rest>()...));
@@ -96,7 +96,7 @@ namespace ranges
         }
 
         template<typename Rng, typename...Rest>
-        using EraseableIterable = concepts::models<concepts::EraseableIterable, Rng, Rest...>;
+        using EraseableRange = concepts::models<concepts::EraseableRange, Rng, Rest...>;
         /// @}
     }
 }

@@ -136,11 +136,11 @@ namespace ranges
         template<typename T>
         struct difference_type;
 
-        struct range_base
+        struct view_base
         {};
 
         template<bool Inf>
-        struct basic_range : range_base
+        struct basic_range : view_base
         {};
 
         /// \cond
@@ -305,10 +305,10 @@ namespace ranges
         struct is_infinite;
 
         template<typename T, typename Enable = void>
-        struct is_range;
+        struct is_view;
 
         template<typename T, typename Enable = void>
-        struct is_sized_iterable;
+        struct is_sized_range;
 
         template<typename Cur>
         struct basic_mixin;

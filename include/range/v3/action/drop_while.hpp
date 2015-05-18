@@ -37,7 +37,7 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename Fun, CONCEPT_REQUIRES_(!Iterable<Fun>())>
+                template<typename Fun, CONCEPT_REQUIRES_(!Range<Fun>())>
                 static auto bind(drop_while_fn drop_while, Fun fun)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
@@ -50,9 +50,9 @@ namespace ranges
                         typename I = range_iterator_t<Rng>>
                     auto requires_(Rng&&, Fun&&) -> decltype(
                         concepts::valid_expr(
-                            concepts::model_of<concepts::ForwardIterable, Rng>(),
+                            concepts::model_of<concepts::ForwardRange, Rng>(),
                             concepts::is_true(IndirectCallablePredicate<Fun, range_iterator_t<Rng>>{}),
-                            concepts::model_of<concepts::EraseableIterable, Rng, I, I>()
+                            concepts::model_of<concepts::EraseableRange, Rng, I, I>()
                         ));
                 };
 
@@ -74,15 +74,15 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
                 void operator()(Rng &&, Fun &&) const
                 {
-                    CONCEPT_ASSERT_MSG(ForwardIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which action::drop_while operates must be a model of the "
-                        "ForwardIterable concept.");
+                        "ForwardRange concept.");
                     CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Fun, range_iterator_t<Rng>>(),
                         "The function passed to action::drop_while must be callable with objects "
                         "of the range's common reference type, and it must return something convertible to "
                         "bool.");
                     using I = range_iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(EraseableIterable<Rng, I, I>(),
+                    CONCEPT_ASSERT_MSG(EraseableRange<Rng, I, I>(),
                         "The object on which action::drop_while operates must allow element "
                         "removal.");
                 }

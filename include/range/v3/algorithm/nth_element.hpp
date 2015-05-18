@@ -298,7 +298,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    RandomAccessIterable<Rng>() &&
+                    RandomAccessRange<Rng>() &&
                     Sortable<I, C, P>()
                 )>
             range_safe_iterator_t<Rng>

@@ -64,7 +64,7 @@ namespace ranges
             explicit move_view(Rng rng)
               : range_adaptor_t<move_view>{std::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
@@ -76,18 +76,18 @@ namespace ranges
             struct move_fn
             {
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                    CONCEPT_REQUIRES_(InputRange<Rng>())>
                 move_view<all_t<Rng>> operator()(Rng && rng) const
                 {
                     return move_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                    CONCEPT_REQUIRES_(!InputRange<Rng>())>
                 void operator()(Rng &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
-                        "The argument passed to view::move must be a model of the InputIterable "
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                        "The argument passed to view::move must be a model of the InputRange "
                         "concept.");
                 }
             #endif

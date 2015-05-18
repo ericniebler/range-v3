@@ -71,7 +71,7 @@ namespace ranges
             explicit const_view(Rng rng)
               : range_adaptor_t<const_view>{std::move(rng)}
             {}
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
@@ -85,8 +85,8 @@ namespace ranges
                 template<typename Rng>
                 const_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
-                    CONCEPT_ASSERT_MSG(Iterable<Rng>(),
-                        "Rng must be a model of the Iterable concept");
+                    CONCEPT_ASSERT_MSG(Range<Rng>(),
+                        "Rng must be a model of the Range concept");
                     return const_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
             };

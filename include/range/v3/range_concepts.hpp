@@ -53,10 +53,10 @@ namespace ranges
         namespace concepts
         {
             ///
-            /// Iterable concepts below
+            /// Range concepts below
             ///
 
-            struct Iterable
+            struct Range
             {
                 // Associated types
                 template<typename T>
@@ -75,18 +75,18 @@ namespace ranges
                     ));
             };
 
-            struct OutputIterable
-              : refines<Iterable(_1)>
+            struct OutputRange
+              : refines<Range(_1)>
             {
                 template<typename T, typename V>
                 auto requires_(T&&, V&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<OutputIterator, Iterable::iterator_t<T>, V>()
+                        concepts::model_of<OutputIterator, Range::iterator_t<T>, V>()
                     ));
             };
 
-            struct InputIterable
-              : refines<Iterable>
+            struct InputRange
+              : refines<Range>
             {
                 // Associated types
                 template<typename T>
@@ -111,8 +111,8 @@ namespace ranges
                     ));
             };
 
-            struct ForwardIterable
-              : refines<InputIterable>
+            struct ForwardRange
+              : refines<InputRange>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -121,8 +121,8 @@ namespace ranges
                     ));
             };
 
-            struct BidirectionalIterable
-              : refines<ForwardIterable>
+            struct BidirectionalRange
+              : refines<ForwardRange>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -131,8 +131,8 @@ namespace ranges
                     ));
             };
 
-            struct RandomAccessIterable
-              : refines<BidirectionalIterable>
+            struct RandomAccessRange
+              : refines<BidirectionalRange>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -141,8 +141,8 @@ namespace ranges
                     ));
             };
 
-            struct BoundedIterable
-              : refines<Iterable>
+            struct BoundedRange
+              : refines<Range>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -151,8 +151,8 @@ namespace ranges
                     ));
             };
 
-            struct SizedIterable
-              : refines<Iterable>
+            struct SizedRange
+              : refines<Range>
             {
                 template<typename T>
                 using size_t = decltype(size(val<T>()));
@@ -161,15 +161,15 @@ namespace ranges
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Integral>(size(t)),
-                        concepts::is_true(is_sized_iterable<T>())
+                        concepts::is_true(is_sized_range<T>())
                     ));
             };
 
             /// INTERNAL ONLY
-            /// A type is SizedIterableLike_ if it is Iterable and ranges::size
+            /// A type is SizedRangeLike_ if it is Range and ranges::size
             /// can be called on it and it returns an Integral
-            struct SizedIterableLike_
-              : refines<Iterable>
+            struct SizedRangeLike_
+              : refines<Range>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -179,10 +179,10 @@ namespace ranges
             };
 
             /// INTERNAL ONLY
-            /// A type is ContainerLike_ if it is Iterable and the const-ness of its
+            /// A type is ContainerLike_ if it is Range and the const-ness of its
             /// reference type is sensitive to the const-ness of the Container
             struct ContainerLike_
-              : refines<InputIterable>
+              : refines<InputRange>
             {
                 template<typename T>
                 auto requires_(T&&) -> decltype(
@@ -194,81 +194,49 @@ namespace ranges
             };
 
             ///
-            /// Range concepts below
+            /// View concepts below
             ///
 
-            struct Range
-              : refines<Iterable>
+            struct View
+              : refines<Range>
             {
                 template<typename T>
                 auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<SemiRegular, uncvref_t<T>>(),
-                        concepts::is_true(is_range<T>())
+                        concepts::is_true(is_view<T>())
                     ));
             };
 
-            struct OutputRange
-              : refines<Range(_1), OutputIterable>
+            struct OutputView
+              : refines<View(_1), OutputRange>
             {};
 
-            struct InputRange
-              : refines<Range, InputIterable>
+            struct InputView
+              : refines<View, InputRange>
             {};
 
-            struct ForwardRange
-              : refines<InputRange, ForwardIterable>
+            struct ForwardView
+              : refines<InputView, ForwardRange>
             {};
 
-            struct BidirectionalRange
-              : refines<ForwardRange, BidirectionalIterable>
+            struct BidirectionalView
+              : refines<ForwardView, BidirectionalRange>
             {};
 
-            struct RandomAccessRange
-              : refines<BidirectionalRange, RandomAccessIterable>
+            struct RandomAccessView
+              : refines<BidirectionalView, RandomAccessRange>
             {};
 
             // Additional concepts for checking additional orthogonal properties
-            struct BoundedRange
-              : refines<Range, BoundedIterable>
+            struct BoundedView
+              : refines<View, BoundedRange>
             {};
 
-            struct SizedRange
-              : refines<Range, SizedIterable>
+            struct SizedView
+              : refines<View, SizedRange>
             {};
         }
-
-        template<typename T>
-        using Iterable = concepts::models<concepts::Iterable, T>;
-
-        template<typename T, typename V>
-        using OutputIterable = concepts::models<concepts::OutputIterable, T, V>;
-
-        template<typename T>
-        using InputIterable = concepts::models<concepts::InputIterable, T>;
-
-        template<typename T>
-        using ForwardIterable = concepts::models<concepts::ForwardIterable, T>;
-
-        template<typename T>
-        using BidirectionalIterable = concepts::models<concepts::BidirectionalIterable, T>;
-
-        template<typename T>
-        using RandomAccessIterable = concepts::models<concepts::RandomAccessIterable, T>;
-
-        template<typename T>
-        using BoundedIterable = concepts::models<concepts::BoundedIterable, T>;
-
-        template<typename T>
-        using SizedIterable = concepts::models<concepts::SizedIterable, T>;
-
-        /// INTERNAL ONLY
-        template<typename T>
-        using SizedIterableLike_ = concepts::models<concepts::SizedIterableLike_, T>;
-
-        /// INTERNAL ONLY
-        template<typename T>
-        using ContainerLike_ = concepts::models<concepts::ContainerLike_, T>;
 
         template<typename T>
         using Range = concepts::models<concepts::Range, T>;
@@ -288,53 +256,59 @@ namespace ranges
         template<typename T>
         using RandomAccessRange = concepts::models<concepts::RandomAccessRange, T>;
 
-        // Extra concepts:
         template<typename T>
         using BoundedRange = concepts::models<concepts::BoundedRange, T>;
 
         template<typename T>
         using SizedRange = concepts::models<concepts::SizedRange, T>;
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // iterable_concept
+        /// INTERNAL ONLY
         template<typename T>
-        using iterable_concept =
+        using SizedRangeLike_ = concepts::models<concepts::SizedRangeLike_, T>;
+
+        /// INTERNAL ONLY
+        template<typename T>
+        using ContainerLike_ = concepts::models<concepts::ContainerLike_, T>;
+
+        template<typename T>
+        using View = concepts::models<concepts::View, T>;
+
+        template<typename T, typename V>
+        using OutputView = concepts::models<concepts::OutputView, T, V>;
+
+        template<typename T>
+        using InputView = concepts::models<concepts::InputView, T>;
+
+        template<typename T>
+        using ForwardView = concepts::models<concepts::ForwardView, T>;
+
+        template<typename T>
+        using BidirectionalView = concepts::models<concepts::BidirectionalView, T>;
+
+        template<typename T>
+        using RandomAccessView = concepts::models<concepts::RandomAccessView, T>;
+
+        // Extra concepts:
+        template<typename T>
+        using BoundedView = concepts::models<concepts::BoundedView, T>;
+
+        template<typename T>
+        using SizedView = concepts::models<concepts::SizedView, T>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // range_concept
+        template<typename T>
+        using range_concept =
             concepts::most_refined<
                 meta::list<
-                    concepts::RandomAccessIterable,
-                    concepts::BidirectionalIterable,
-                    concepts::ForwardIterable,
-                    concepts::InputIterable>, T>;
+                    concepts::RandomAccessRange,
+                    concepts::BidirectionalRange,
+                    concepts::ForwardRange,
+                    concepts::InputRange>, T>;
 
         template<typename T>
-        using iterable_concept_t =
-            meta::eval<iterable_concept<T>>;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // bounded_iterable_concept
-        template<typename T>
-        using bounded_iterable_concept =
-            concepts::most_refined<
-                meta::list<
-                    concepts::BoundedIterable,
-                    concepts::Iterable>, T>;
-
-        template<typename T>
-        using bounded_iterable_concept_t =
-            meta::eval<bounded_iterable_concept<T>>;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // sized_iterable_concept
-        template<typename T>
-        using sized_iterable_concept =
-            concepts::most_refined<
-                meta::list<
-                    concepts::SizedIterable,
-                    concepts::Iterable>, T>;
-
-        template<typename T>
-        using sized_iterable_concept_t =
-            meta::eval<sized_iterable_concept<T>>;
+        using range_concept_t =
+            meta::eval<range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_range_concept
@@ -346,7 +320,8 @@ namespace ranges
                     concepts::Range>, T>;
 
         template<typename T>
-        using bounded_range_concept_t = meta::eval<bounded_range_concept<T>>;
+        using bounded_range_concept_t =
+            meta::eval<bounded_range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sized_range_concept
@@ -358,53 +333,78 @@ namespace ranges
                     concepts::Range>, T>;
 
         template<typename T>
-        using sized_range_concept_t = meta::eval<sized_range_concept<T>>;
+        using sized_range_concept_t =
+            meta::eval<sized_range_concept<T>>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // bounded_view_concept
+        template<typename T>
+        using bounded_view_concept =
+            concepts::most_refined<
+                meta::list<
+                    concepts::BoundedView,
+                    concepts::View>, T>;
+
+        template<typename T>
+        using bounded_view_concept_t = meta::eval<bounded_view_concept<T>>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // sized_view_concept
+        template<typename T>
+        using sized_view_concept =
+            concepts::most_refined<
+                meta::list<
+                    concepts::SizedView,
+                    concepts::View>, T>;
+
+        template<typename T>
+        using sized_view_concept_t = meta::eval<sized_view_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // range_concept
         template<typename T>
-        using range_concept =
+        using view_concept =
             concepts::most_refined<
                 meta::list<
-                    concepts::Range,
-                    concepts::Iterable>, T>;
+                    concepts::View,
+                    concepts::Range>, T>;
 
         template<typename T>
-        using range_concept_t = meta::eval<range_concept<T>>;
+        using view_concept_t = meta::eval<view_concept<T>>;
 
         /// @}
 
         /// \cond
         namespace detail
         {
-            // Something is a range if it's an Iterable and either:
+            // Something is a range if it's an Range and either:
             //  - It doesn't look like a container, or
-            //  - It's derived from range_base
+            //  - It's derived from view_base
             template<typename T>
-            struct is_range_impl_
+            struct is_view_impl_
               : std::integral_constant<
                     bool,
-                    Iterable<T>() && (!ContainerLike_<T>() || Derived<T, range_base>())
+                    Range<T>() && (!ContainerLike_<T>() || Derived<T, view_base>())
                 >
             {};
 
             template<typename T, std::size_t N>
-            struct is_range_impl_<T[N]>
+            struct is_view_impl_<T[N]>
               : std::false_type
             {};
 
-            // Something is a sized iterable if it looks like a sized iterable; i.e.,
+            // Something is a sized range if it looks like a sized range; i.e.,
             // if size(rng) compiles and returns an Integral
             template<typename T>
-            struct is_sized_iterable_impl_
+            struct is_sized_range_impl_
               : std::integral_constant<
                     bool,
-                    (SizedIterableLike_<T>())
+                    (SizedRangeLike_<T>())
                 >
             {};
 
             template<typename T, std::size_t N>
-            struct is_sized_iterable_impl_<T[N]>
+            struct is_sized_range_impl_<T[N]>
               : std::true_type
             {};
         }
@@ -415,45 +415,45 @@ namespace ranges
 
         // Specialize this if the default is wrong.
         template<typename T, typename Enable>
-        struct is_sized_iterable
+        struct is_sized_range
           : meta::if_<
                 std::is_same<T, uncvref_t<T>>,
-                detail::is_sized_iterable_impl_<T>,
-                is_sized_iterable<uncvref_t<T>>>
+                detail::is_sized_range_impl_<T>,
+                is_sized_range<uncvref_t<T>>>
         {};
 
         // Specialize this if the default is wrong.
         template<typename T, typename Enable>
-        struct is_range
+        struct is_view
           : meta::if_<
                 std::is_same<T, uncvref_t<T>>,
-                detail::is_range_impl_<T>,
-                is_range<uncvref_t<T>>>
+                detail::is_view_impl_<T>,
+                is_view<uncvref_t<T>>>
         {};
 
-        // By default, the is_range default heuristic guesses wrong for these container types:
+        // By default, the is_view default heuristic guesses wrong for these container types:
         template<typename T>
-        struct is_range<std::initializer_list<T>>
+        struct is_view<std::initializer_list<T>>
           : std::false_type
         {};
 
         template<class Key, class Compare, class Alloc>
-        struct is_range<std::set<Key, Compare, Alloc>>
+        struct is_view<std::set<Key, Compare, Alloc>>
           : std::false_type
         {};
 
         template<class Key, class Compare, class Alloc>
-        struct is_range<std::multiset<Key, Compare, Alloc>>
+        struct is_view<std::multiset<Key, Compare, Alloc>>
           : std::false_type
         {};
 
         template<class Key, class Hash, class Pred, class Alloc>
-        struct is_range<std::unordered_set<Key, Hash, Pred, Alloc>>
+        struct is_view<std::unordered_set<Key, Hash, Pred, Alloc>>
           : std::false_type
         {};
 
         template<class Key, class Hash, class Pred, class Alloc>
-        struct is_range<std::unordered_multiset<Key, Hash, Pred, Alloc>>
+        struct is_view<std::unordered_multiset<Key, Hash, Pred, Alloc>>
           : std::false_type
         {};
 

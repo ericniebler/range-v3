@@ -83,8 +83,8 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(
-                    Iterable<Rng0>() &&
-                    Iterable<Rng1>() &&
+                    Range<Rng0>() &&
+                    Range<Rng1>() &&
                     MergeMovable<I0, I1, O, C, P0, P1>()
                 )>
             std::tuple<range_safe_iterator_t<Rng0>, range_safe_iterator_t<Rng1>, O>

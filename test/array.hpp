@@ -279,6 +279,11 @@ namespace test {
     }
 }  // namespace test
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wmismatched-tags"
+
 namespace std
 {
 
@@ -294,5 +299,7 @@ class tuple_element<I, test::array<T, N> >
 };
 
 }  // namespace std
+
+#pragma GCC diagnostic pop
 
 #endif // RANGES_V3_TEST_ARRAY_HPP

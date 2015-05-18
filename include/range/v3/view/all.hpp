@@ -36,21 +36,21 @@ namespace ranges
             private:
                 template<typename T>
                 static range<range_iterator_t<T>, range_sentinel_t<T>>
-                from_container(T & t, concepts::Iterable*, concepts::IteratorRange*)
+                from_container(T & t, concepts::Range*, concepts::IteratorRange*)
                 {
                     return {begin(t), end(t)};
                 }
 
                 template<typename T>
                 static sized_range<range_iterator_t<T>, range_sentinel_t<T>>
-                from_container(T & t, concepts::SizedIterable*, concepts::IteratorRange*)
+                from_container(T & t, concepts::SizedRange*, concepts::IteratorRange*)
                 {
                     return {begin(t), end(t), size(t)};
                 }
 
                 template<typename T>
                 static range<range_iterator_t<T>, range_sentinel_t<T>>
-                from_container(T & t, concepts::SizedIterable*, concepts::SizedIteratorRange*)
+                from_container(T & t, concepts::SizedRange*, concepts::SizedIteratorRange*)
                 {
                     RANGES_ASSERT(size(t) == size(begin(t), end(t)));
                     return {begin(t), end(t)};
@@ -58,20 +58,20 @@ namespace ranges
 
                 /// If it's a range already, pass it though.
                 template<typename T>
-                static T from_iterable(T && t, concepts::Range*)
+                static T from_range(T && t, concepts::View*)
                 {
                     return std::forward<T>(t);
                 }
 
                 /// If it is container-like, turn it into an range, being careful
-                /// to preserve the Sized-ness of the iterable.
+                /// to preserve the Sized-ness of the range.
                 template<typename T,
-                    CONCEPT_REQUIRES_(!Range<T>()),
+                    CONCEPT_REQUIRES_(!View<T>()),
                     typename I = range_iterator_t<T>,
                     typename S = range_sentinel_t<T>,
-                    typename SIC = sized_iterable_concept<T>,
+                    typename SIC = sized_range_concept<T>,
                     typename SIRC = sized_iterator_range_concept<I, S>>
-                static auto from_iterable(T && t, concepts::Iterable*) ->
+                static auto from_range(T && t, concepts::Range*) ->
                     decltype(all_fn::from_container(t, SIC(), SIRC()))
                 {
                     static_assert(std::is_lvalue_reference<T>::value, "Cannot get a view of a temporary container");
@@ -82,15 +82,15 @@ namespace ranges
 
             public:
                 template<typename T,
-                    CONCEPT_REQUIRES_(Iterable<T>())>
+                    CONCEPT_REQUIRES_(Range<T>())>
                 auto operator()(T && t) const ->
-                    decltype(all_fn::from_iterable(std::forward<T>(t), range_concept<T>()))
+                    decltype(all_fn::from_range(std::forward<T>(t), view_concept<T>()))
                 {
-                    return all_fn::from_iterable(std::forward<T>(t), range_concept<T>());
+                    return all_fn::from_range(std::forward<T>(t), view_concept<T>());
                 }
 
                 template<typename T,
-                    CONCEPT_REQUIRES_(Iterable<T &>())>
+                    CONCEPT_REQUIRES_(Range<T &>())>
                 ranges::reference_wrapper<T> operator()(std::reference_wrapper<T> ref) const
                 {
                     return ranges::ref(ref.get());

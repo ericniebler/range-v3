@@ -48,7 +48,7 @@ namespace ranges
             template<typename Rng, typename O,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(
-                    BidirectionalIterable<Rng>() &&
+                    BidirectionalRange<Rng>() &&
                     BidirectionalIterator<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>

@@ -25,10 +25,10 @@ int main()
     std::vector<std::string> vs{"'allo", "'allo", "???"};
 
     auto x = vs | view::move;
-    CONCEPT_ASSERT(Same<bounded_range_concept_t<decltype(x)>, concepts::BoundedRange>());
-    CONCEPT_ASSERT(Same<sized_range_concept_t<decltype(x)>, concepts::SizedRange>());
-    ::models<concepts::BoundedRange>(x);
-    ::models<concepts::SizedRange>(x);
+    CONCEPT_ASSERT(Same<bounded_view_concept_t<decltype(x)>, concepts::BoundedView>());
+    CONCEPT_ASSERT(Same<sized_view_concept_t<decltype(x)>, concepts::SizedView>());
+    ::models<concepts::BoundedView>(x);
+    ::models<concepts::SizedView>(x);
     ::models<concepts::RandomAccessIterator>(x.begin());
     using I = decltype(x.begin());
     CONCEPT_ASSERT(Same<iterator_concept_t<I>, concepts::RandomAccessIterator>());

@@ -26,8 +26,8 @@ good men
     ::check_equal(ranges::getlines(sin), {"Now is", "the time", "for all", "good men"});
 
     using Rng = decltype(ranges::getlines(sin));
-    CONCEPT_ASSERT(ranges::InputRange<Rng>());
-    CONCEPT_ASSERT(!ranges::ForwardRange<Rng>());
+    CONCEPT_ASSERT(ranges::InputView<Rng>());
+    CONCEPT_ASSERT(!ranges::ForwardView<Rng>());
 
     return ::test_result();
 }

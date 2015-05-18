@@ -52,7 +52,7 @@ namespace ranges
             // visit the correct elements.
             using offset_t =
                 meta::if_<
-                    BidirectionalIterable<Rng>,
+                    BidirectionalRange<Rng>,
                     mutable_<std::atomic<difference_type_>>,
                     constant<difference_type_, 0>>;
 
@@ -65,7 +65,7 @@ namespace ranges
                 stride_view const *rng_;
                 offset_t & offset() { return *this; }
                 offset_t const & offset() const { return *this; }
-                CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
+                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
                 void clean() const
                 {
                     std::atomic<difference_type_> &off = offset();
@@ -90,7 +90,7 @@ namespace ranges
                   : offset_t(-1), rng_(&rng)
                 {
                     // Opportunistic eager cleaning when we can do so in O(1)
-                    if(BidirectionalIterable<Rng>() && SizedIterable<Rng>())
+                    if(BidirectionalRange<Rng>() && SizedRange<Rng>())
                         offset() = calc_offset();
                 }
                 void next(iterator &it)
@@ -100,7 +100,7 @@ namespace ranges
                     offset() = ranges::advance(it, rng_->stride_ + offset(),
                         ranges::end(rng_->mutable_base()));
                 }
-                CONCEPT_REQUIRES(BidirectionalIterable<Rng>())
+                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
                 void prev(iterator &it)
                 {
                     clean();
@@ -108,7 +108,7 @@ namespace ranges
                         ranges::begin(rng_->mutable_base()));
                     RANGES_ASSERT(0 == offset());
                 }
-                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 difference_type_ distance_to(iterator here, iterator there, adaptor const &that) const
                 {
                     clean();
@@ -117,7 +117,7 @@ namespace ranges
                     RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % rng_->stride_);
                     return ((there - here) + that.offset() - offset()) / rng_->stride_;
                 }
-                CONCEPT_REQUIRES(RandomAccessIterable<Rng>())
+                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 void advance(iterator &it, difference_type_ n)
                 {
                     if(n != 0)
@@ -134,17 +134,17 @@ namespace ranges
             {
                 return {*this, begin_tag{}};
             }
-            // If the underlying sequence object doesn't model BoundedIterable, then we can't
+            // If the underlying sequence object doesn't model BoundedRange, then we can't
             // decrement the end and there's no reason to adapt the sentinel. Strictly
             // speaking, we don't have to adapt the end iterator of Input and Forward
-            // Iterables, but in the interests of making the resulting stride view model
-            // BoundedRange, adapt it anyway.
-            CONCEPT_REQUIRES(!BoundedIterable<Rng>())
+            // Ranges, but in the interests of making the resulting stride view model
+            // BoundedView, adapt it anyway.
+            CONCEPT_REQUIRES(!BoundedRange<Rng>())
             adaptor_base end_adaptor() const
             {
                 return {};
             }
-            CONCEPT_REQUIRES(BoundedIterable<Rng>())
+            CONCEPT_REQUIRES(BoundedRange<Rng>())
             adaptor end_adaptor() const
             {
                 return {*this, end_tag{}};
@@ -157,7 +157,7 @@ namespace ranges
             {
                 RANGES_ASSERT(0 < stride_);
             }
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             size_type_ size() const
             {
                 return (ranges::size(this->base()) + static_cast<size_type_>(stride_) - 1) /
@@ -178,7 +178,7 @@ namespace ranges
                     make_pipeable(std::bind(stride, std::placeholders::_1, std::move(step)))
                 )
             public:
-                template<typename Rng, CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
                 stride_view<all_t<Rng>> operator()(Rng && rng, range_difference_t<Rng> step) const
                 {
                     return {all(std::forward<Rng>(rng)), step};
@@ -198,12 +198,12 @@ namespace ranges
                 }
             public:
                 template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!InputIterable<Rng>())>
+                    CONCEPT_REQUIRES_(!InputRange<Rng>())>
                 void operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object to be operated on by view::stride should be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
                         "The value to be used as the step in a call to view::stride must be a "
                         "model of the Integral concept that is convertible to the range's "

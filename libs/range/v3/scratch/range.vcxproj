@@ -200,7 +200,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\unique_copy.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\upper_bound.cpp" />
+    <ClCompile Include="..\..\..\..\test\constexpr_core.cpp" />
     <ClCompile Include="..\..\..\..\test\container_conversion.cpp" />
+    <ClCompile Include="..\..\..\..\test\distance.cpp" />
     <ClCompile Include="..\..\..\..\test\getlines.cpp" />
     <ClCompile Include="..\..\..\..\test\multiple1.cpp" />
     <ClCompile Include="..\..\..\..\test\multiple2.cpp" />
@@ -213,10 +215,12 @@
     <ClCompile Include="..\..\..\..\test\range_adaptor.cpp" />
     <ClCompile Include="..\..\..\..\test\range_facade.cpp" />
     <ClCompile Include="..\..\..\..\test\to_container.cpp" />
+    <ClCompile Include="..\..\..\..\test\utility\basic_iterator.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\common_type.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\functional.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\meta.cpp" />
+    <ClCompile Include="..\..\..\..\test\utility\reverse_iterator.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\swap.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_remove_if.cpp" />
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
@@ -249,6 +253,7 @@
     <ClCompile Include="..\..\..\..\test\view\take.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take_exactly.cpp" />
     <ClCompile Include="..\..\..\..\test\view\take_while.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\tokenize.cpp" />
     <ClCompile Include="..\..\..\..\test\view\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\view\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\view\zip.cpp" />
@@ -471,6 +476,7 @@
     <ClInclude Include="..\..\..\..\test\algorithm\set_intersection.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\set_symmetric_difference.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\set_union.hpp" />
+    <ClInclude Include="..\..\..\..\test\array.hpp" />
     <ClInclude Include="..\..\..\..\test\simple_test.hpp" />
     <ClInclude Include="..\..\..\..\test\test_iterators.hpp" />
     <ClInclude Include="..\..\..\..\test\test_utils.hpp" />

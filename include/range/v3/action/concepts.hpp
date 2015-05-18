@@ -48,14 +48,14 @@ namespace ranges
         {
             // std::array is a SemiContainer, native arrays are not.
             struct SemiContainer
-              : refines<ForwardIterable>
+              : refines<ForwardRange>
             {
                 template<typename T>
                 auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DefaultConstructible, uncvref_t<T>>(),
                         concepts::model_of<Movable, uncvref_t<T>>(),
-                        concepts::is_false(is_range<T>())
+                        concepts::is_false(is_view<T>())
                     ));
             };
 
@@ -94,7 +94,7 @@ namespace ranges
         namespace concepts
         {
             struct LvalueContainerLike
-              : refines<ForwardIterable>
+              : refines<ForwardRange>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(

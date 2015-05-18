@@ -31,7 +31,7 @@ namespace ranges
                 remove_if_view<all_t<Rng>, logical_negate<Pred>>
                 operator()(Rng && rng, Pred pred) const
                 {
-                    CONCEPT_ASSERT(Iterable<Rng>());
+                    CONCEPT_ASSERT(Range<Rng>());
                     CONCEPT_ASSERT(IndirectCallablePredicate<Pred, range_iterator_t<Rng>>());
                     return {all(std::forward<Rng>(rng)), not_(std::move(pred))};
                 }

@@ -148,7 +148,7 @@ auto layout_months() {
 //                       The last range may have fewer.
 template<class Rng>
 class chunk_view : public range_adaptor<chunk_view<Rng>, Rng> {
-    CONCEPT_ASSERT(ForwardIterable<Rng>());
+    CONCEPT_ASSERT(ForwardRange<Rng>());
     std::size_t n_;
     friend range_access;
     class adaptor;
@@ -224,7 +224,7 @@ struct interleave_view<Rngs>::cursor  {
         return n_ == 0 && its_.end() != mismatch(its_,
             view::transform(*rngs_, ranges::end), std::not_equal_to<>()).first;
     }
-    CONCEPT_REQUIRES(ForwardIterable<range_value_t<Rngs>>())
+    CONCEPT_REQUIRES(ForwardRange<range_value_t<Rngs>>())
     bool equal(cursor const& that) const {
         return n_ == that.n_ && its_ == that.its_;
     }
@@ -246,7 +246,7 @@ auto interleave() {
 auto transpose() {
     return make_pipeable([](auto&& rngs) {
         using Rngs = decltype(rngs);
-        CONCEPT_ASSERT(ForwardIterable<Rngs>());
+        CONCEPT_ASSERT(ForwardRange<Rngs>());
         return std::forward<Rngs>(rngs)
             | interleave()
             | chunk(distance(rngs));

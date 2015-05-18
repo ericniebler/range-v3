@@ -47,7 +47,7 @@ namespace ranges
             friend range_access;
             semiregular_t<function_type<Fun>> fun_;
             using use_sentinel_t =
-                meta::or_<meta::not_<BoundedIterable<Rng>>, SinglePass<range_iterator_t<Rng>>>;
+                meta::or_<meta::not_<BoundedRange<Rng>>, SinglePass<range_iterator_t<Rng>>>;
 
             template<bool IsConst>
             struct adaptor : adaptor_base
@@ -98,7 +98,7 @@ namespace ranges
               : range_adaptor_t<iter_transform_view>{std::move(rng)}
               , fun_(as_function(std::move(fun)))
             {}
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
@@ -132,7 +132,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     Callable<Fun, range_iterator_t<Rng>>,
                     Callable<Fun, copy_tag, range_iterator_t<Rng>>,
                     Callable<Fun, move_tag, range_iterator_t<Rng>>>;
@@ -149,9 +149,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
                 void operator()(Rng && rng, Fun fun) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::iter_transform operates must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     CONCEPT_ASSERT_MSG(
                         Callable<Fun, range_iterator_t<Rng>>(),
                         "The function passed to view::iter_transform must be callable with an argument "
@@ -189,7 +189,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Fun>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     Callable<Fun, range_reference_t<Rng> &&>>;
 
                 template<typename Rng, typename Fun,
@@ -203,9 +203,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
                 void operator()(Rng && rng, Fun fun) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::transform operates must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     CONCEPT_ASSERT_MSG(
                         Callable<Fun, range_reference_t<Rng> &&>(),
                         "The function passed to view::transform must be callable with an argument "

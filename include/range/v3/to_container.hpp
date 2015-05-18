@@ -40,8 +40,8 @@ namespace ranges
         {
             template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
             using ConvertibleToContainer = meta::fast_and<
-                Iterable<Cont>,
-                meta::not_<Range<Cont>>,
+                Range<Cont>,
+                meta::not_<View<Cont>>,
                 Movable<Cont>,
                 Convertible<range_value_t<Rng>, range_value_t<Cont>>,
                 Constructible<Cont, I, I>>;
@@ -52,7 +52,7 @@ namespace ranges
             {
                 template<typename Rng,
                     typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
-                    CONCEPT_REQUIRES_(Iterable<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
                 Cont operator()(Rng && rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
@@ -74,7 +74,7 @@ namespace ranges
             constexpr auto&& to_vector = static_const<detail::to_container_fn<meta::quote<std::vector>>>::value;
         }
 
-        /// \brief For initializing a container of the specified type with the elements of an Iterable
+        /// \brief For initializing a container of the specified type with the elements of an Range
         template<template<typename...> class ContT>
         detail::to_container_fn<meta::quote<ContT>> to_()
         {
@@ -84,7 +84,7 @@ namespace ranges
         /// \overload
         template<template<typename...> class ContT, typename Rng,
             typename Cont = meta::apply<meta::quote<ContT>, range_value_t<Rng>>,
-            CONCEPT_REQUIRES_(Iterable<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+            CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
         Cont to_(Rng && rng)
         {
             return std::forward<Rng>(rng) | ranges::to_<ContT>();
@@ -108,7 +108,7 @@ namespace ranges
 
         /// \overload
         template<typename Cont, typename Rng,
-            CONCEPT_REQUIRES_(Iterable<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+            CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
         Cont to_(Rng && rng)
         {
             return std::forward<Rng>(rng) | ranges::to_<Cont>();

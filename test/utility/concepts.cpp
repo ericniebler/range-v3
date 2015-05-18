@@ -72,15 +72,15 @@ static_assert(!ranges::BidirectionalIterator<int>(), "");
 static_assert(ranges::RandomAccessIterator<int*>(), "");
 static_assert(!ranges::RandomAccessIterator<int>(), "");
 
-static_assert(ranges::Range<ranges::istream_range<int>>(), "");
+static_assert(ranges::View<ranges::istream_range<int>>(), "");
 static_assert(ranges::InputIterator<ranges::range_iterator_t<ranges::istream_range<int>>>(), "");
-static_assert(!ranges::Range<int>(), "");
+static_assert(!ranges::View<int>(), "");
 
-static_assert(ranges::BoundedIterable<std::vector<int> >(), "");
-static_assert(!ranges::BoundedRange<std::vector<int>>(), "");
-static_assert(!ranges::BoundedRange<std::vector<int> &>(), "");
+static_assert(ranges::BoundedRange<std::vector<int> >(), "");
+static_assert(!ranges::BoundedView<std::vector<int>>(), "");
+static_assert(!ranges::BoundedView<std::vector<int> &>(), "");
 static_assert(ranges::RandomAccessIterator<ranges::range_iterator_t<std::vector<int> const &>>(), "");
-static_assert(!ranges::BoundedRange<ranges::istream_range<int>>(), "");
+static_assert(!ranges::BoundedView<ranges::istream_range<int>>(), "");
 
 static_assert(ranges::Predicate<std::less<int>, int, int>(), "");
 static_assert(!ranges::Predicate<std::less<int>, char*, int>(), "");
@@ -137,26 +137,26 @@ static_assert(ranges::WeaklyOrdered<IntComparable, int>(), "");
 
 static_assert(
     std::is_same<
-        ranges::bounded_iterable_concept_t<std::vector<int>>,
-        ranges::concepts::BoundedIterable
+        ranges::bounded_range_concept_t<std::vector<int>>,
+        ranges::concepts::BoundedRange
     >::value, "");
 
 static_assert(
     std::is_same<
-        ranges::sized_iterable_concept_t<std::vector<int>>,
-        ranges::concepts::SizedIterable
+        ranges::sized_range_concept_t<std::vector<int>>,
+        ranges::concepts::SizedRange
     >::value, "");
 
 static_assert(
     std::is_same<
-        ranges::bounded_range_concept_t<ranges::istream_range<int>>,
-        ranges::concepts::Range
+        ranges::bounded_view_concept_t<ranges::istream_range<int>>,
+        ranges::concepts::View
     >::value, "");
 
 static_assert(
     std::is_same<
-        ranges::sized_range_concept_t<ranges::istream_range<int>>,
-        ranges::concepts::Range
+        ranges::sized_view_concept_t<ranges::istream_range<int>>,
+        ranges::concepts::View
     >::value, "");
 
 int main()

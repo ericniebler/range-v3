@@ -39,8 +39,8 @@ int main()
     auto && rng = rgi | view::transform(is_odd());
     has_type<int &>(*begin(rgi));
     has_type<bool>(*begin(rng));
-    models<concepts::SizedRange>(rng);
-    models<concepts::RandomAccessRange>(rng);
+    models<concepts::SizedView>(rng);
+    models<concepts::RandomAccessView>(rng);
     ::check_equal(rng, {true, false, true, false, true, false, true, false, true, false});
 
     std::pair<int, int> rgp[] = {{1,1}, {2,2}, {3,3}, {4,4}, {5,5}, {6,6}, {7,7}, {8,8}, {9,9}, {10,10}};
@@ -49,9 +49,9 @@ int main()
     has_type<int &>(*begin(rng2));
     CONCEPT_ASSERT(Same<range_value_t<decltype(rng2)>, int>());
     CONCEPT_ASSERT(Same<decltype(iter_move(begin(rng2))), int &&>());
-    models<concepts::BoundedRange>(rng2);
-    models<concepts::SizedRange>(rng2);
-    models<concepts::RandomAccessRange>(rng2);
+    models<concepts::BoundedView>(rng2);
+    models<concepts::SizedView>(rng2);
+    models<concepts::RandomAccessView>(rng2);
     ::check_equal(rng2, {1,2,3,4,5,6,7,8,9,10});
     ::check_equal(rng2 | view::reverse, {10,9,8,7,6,5,4,3,2,1});
     CHECK(&*begin(rng2) == &rgp[0].first);
@@ -60,9 +60,9 @@ int main()
     auto && rng3 = view::counted(rgp, 10) | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rgi));
     has_type<int &>(*begin(rng3));
-    models<concepts::BoundedRange>(rng3);
-    models<concepts::SizedRange>(rng3);
-    models<concepts::RandomAccessRange>(rng3);
+    models<concepts::BoundedView>(rng3);
+    models<concepts::SizedView>(rng3);
+    models<concepts::RandomAccessView>(rng3);
     ::check_equal(rng3, {1,2,3,4,5,6,7,8,9,10});
     CHECK(&*begin(rng3) == &rgp[0].first);
     CHECK(rng3.size() == 10u);
@@ -71,10 +71,10 @@ int main()
                       | view::transform(&std::pair<int,int>::first);
     has_type<int &>(*begin(rgi));
     has_type<int &>(*begin(rng4));
-    models_not<concepts::BoundedRange>(rng4);
-    models<concepts::SizedRange>(rng4);
-    models<concepts::ForwardRange>(rng4);
-    models_not<concepts::BidirectionalRange>(rng4);
+    models_not<concepts::BoundedView>(rng4);
+    models<concepts::SizedView>(rng4);
+    models<concepts::ForwardView>(rng4);
+    models_not<concepts::BidirectionalView>(rng4);
     ::check_equal(rng4, {1,2,3,4,5,6,7,8,9,10});
     CHECK(&*begin(rng4) == &rgp[0].first);
     CHECK(rng4.size() == 10u);
@@ -87,8 +87,8 @@ int main()
     auto mutable_rng = view::transform(rgi, [cnt](int i) mutable { return cnt++;});
     ::check_equal(mutable_rng, {100,101,102,103,104,105,106,107,108,109});
     CHECK(cnt == 100);
-    CONCEPT_ASSERT(Range<decltype(mutable_rng)>());
-    CONCEPT_ASSERT(!Range<decltype(mutable_rng) const>());
+    CONCEPT_ASSERT(View<decltype(mutable_rng)>());
+    CONCEPT_ASSERT(!View<decltype(mutable_rng) const>());
 
     // Test iter_transform by transforming a zip view to select one element.
     {
@@ -96,7 +96,7 @@ int main()
         auto v1 = to_<std::vector<std::string>>({"x","y","z"});
 
         auto rng = view::zip(v0, v1);
-        ::models<concepts::RandomAccessIterable>(rng);
+        ::models<concepts::RandomAccessRange>(rng);
 
         std::vector<std::string> res;
         using R = decltype(rng);

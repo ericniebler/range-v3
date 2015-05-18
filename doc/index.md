@@ -255,11 +255,11 @@ For instance, if you would like to write a function that takes an iterator/senti
     }
 ~~~~~~~
 
-You can then add an overload that take an Iterable:
+You can then add an overload that take a Range:
 
 ~~~~~~~{.cpp}
     template<class Rng, class Comp = /*...some_default..*/,
-        CONCEPT_REQUIRES_(Iterable<Rng>())>
+        CONCEPT_REQUIRES_(Range<Rng>())>
     void my_algorithm(Rng && rng, Comp comp = Comp{})
     {
         return my_algorithm(ranges::begin(rng), ranges::end(rng));

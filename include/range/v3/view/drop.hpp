@@ -39,7 +39,7 @@ namespace ranges
         struct drop_view
           : range_interface<drop_view<Rng>, is_infinite<Rng>::value>
           , private meta::if_<
-                RandomAccessIterable<Rng>,
+                RandomAccessRange<Rng>,
                 meta::nil_,
                 box<optional<range_iterator_t<Rng>>, begin_tag>>
         {
@@ -84,37 +84,37 @@ namespace ranges
             {
                 rng_ = std::move(that).rng_;
                 n_ = that.n_;
-                this->dirty_(RandomAccessIterable<Rng>{});
+                this->dirty_(RandomAccessRange<Rng>{});
                 return *this;
             }
             drop_view& operator=(drop_view const &that)
             {
                 rng_ = that.rng_;
                 n_ = that.n_;
-                this->dirty_(RandomAccessIterable<Rng>{});
+                this->dirty_(RandomAccessRange<Rng>{});
                 return *this;
             }
             range_iterator_t<Rng> begin()
             {
-                return this->get_begin_(RandomAccessIterable<Rng>{});
+                return this->get_begin_(RandomAccessRange<Rng>{});
             }
             range_sentinel_t<Rng> end()
             {
                 return ranges::end(rng_);
             }
             template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(RandomAccessIterable<BaseRng const>())>
+                CONCEPT_REQUIRES_(RandomAccessRange<BaseRng const>())>
             range_iterator_t<BaseRng const> begin() const
             {
                 return this->get_begin_(std::true_type{});
             }
             template<typename BaseRng = Rng,
-                CONCEPT_REQUIRES_(RandomAccessIterable<BaseRng const>())>
+                CONCEPT_REQUIRES_(RandomAccessRange<BaseRng const>())>
             range_sentinel_t<BaseRng const> end() const
             {
                 return ranges::end(rng_);
             }
-            CONCEPT_REQUIRES(SizedIterable<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(rng_) - static_cast<range_size_t<Rng>>(n_);
@@ -154,31 +154,31 @@ namespace ranges
             #endif
                 template<typename Rng>
                 static drop_view<all_t<Rng>>
-                invoke_(Rng && rng, range_difference_t<Rng> n, concepts::InputIterable*)
+                invoke_(Rng && rng, range_difference_t<Rng> n, concepts::InputRange*)
                 {
                     return {all(std::forward<Rng>(rng)), n};
                 }
-                template<typename Rng, CONCEPT_REQUIRES_(!Range<Rng>() && std::is_lvalue_reference<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(!View<Rng>() && std::is_lvalue_reference<Rng>())>
                 static range<range_iterator_t<Rng>, range_sentinel_t<Rng>>
-                invoke_(Rng && rng, range_difference_t<Rng> n, concepts::RandomAccessIterable*)
+                invoke_(Rng && rng, range_difference_t<Rng> n, concepts::RandomAccessRange*)
                 {
                     return {next(begin(rng), n), end(rng)};
                 }
             public:
                 template<typename Rng,
-                    CONCEPT_REQUIRES_(InputIterable<Rng>())>
+                    CONCEPT_REQUIRES_(InputRange<Rng>())>
                 auto operator()(Rng && rng, range_difference_t<Rng> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    drop_fn::invoke_(std::forward<Rng>(rng), n, iterable_concept<Rng>{})
+                    drop_fn::invoke_(std::forward<Rng>(rng), n, range_concept<Rng>{})
                 )
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!(InputIterable<Rng>() && Integral<T>()))>
+                    CONCEPT_REQUIRES_(!(InputRange<Rng>() && Integral<T>()))>
                 void operator()(Rng &&, T) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
-                        "The first argument to view::drop must be a model of the InputIterable concept");
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
+                        "The first argument to view::drop must be a model of the InputRange concept");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
                         "The second argument to view::drop must be a model of the Integral concept");
                 }

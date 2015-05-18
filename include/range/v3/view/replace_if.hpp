@@ -110,7 +110,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Pred, typename Val>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     IndirectCallablePredicate<Pred, range_iterator_t<Rng>>,
                     Common<detail::decay_t<unwrap_reference_t<Val const &>>, range_value_t<Rng>>,
                     CommonReference<unwrap_reference_t<Val const &>, range_reference_t<Rng>>,
@@ -129,9 +129,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Pred, Val>())>
                 void operator()(Rng && rng, Pred pred, Val new_value) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::replace_if operates must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Pred, range_iterator_t<Rng>>(),
                         "The function passed to view::replace_if must be callable with "
                         "objects of the range's common reference type, and the result must be "

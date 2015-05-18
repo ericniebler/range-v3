@@ -101,7 +101,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     CallablePredicate<Pred, range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
@@ -115,9 +115,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
                 void operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::take_while operates must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     CONCEPT_ASSERT_MSG(CallablePredicate<Pred, range_iterator_t<Rng>>(),
                         "The function passed to view::take_while must be callable with objects of "
                         "the range's iterator type, and its result type must be convertible to "
@@ -140,7 +140,7 @@ namespace ranges
             public:
                 template<typename Rng, typename Pred>
                 using Concept = meta::and_<
-                    InputIterable<Rng>,
+                    InputRange<Rng>,
                     IndirectCallablePredicate<Pred, range_iterator_t<Rng>>>;
 
                 template<typename Rng, typename Pred,
@@ -154,9 +154,9 @@ namespace ranges
                     CONCEPT_REQUIRES_(!Concept<Rng, Pred>())>
                 void operator()(Rng &&, Pred) const
                 {
-                    CONCEPT_ASSERT_MSG(InputIterable<Rng>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::take_while operates must be a model of the "
-                        "InputIterable concept.");
+                        "InputRange concept.");
                     CONCEPT_ASSERT_MSG(IndirectCallablePredicate<Pred, range_iterator_t<Rng>>(),
                         "The function passed to view::take_while must be callable with objects of "
                         "the range's common reference type, and its result type must be "
