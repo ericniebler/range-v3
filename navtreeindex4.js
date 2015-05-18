@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"structranges_1_1v3_1_1basic__sentinel.html#a895b08e437317664b9c9f37962de5412":[1,1,9,0],
 "structranges_1_1v3_1_1basic__sentinel.html#aac4e8fde8b50ca487baa8350f14b7709":[1,1,9,1],
 "structranges_1_1v3_1_1basic__sentinel.html#adff8f09b32236881b1595c640eae7471":[1,1,9,3],
 "structranges_1_1v3_1_1begin__tag.html":[2,1,1,0,25],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html#a8e9f5313db9b5247999f048042852bcc":[1,6,70,1],
 "structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html#ab4909e550b327c7cfacea51215dddd3f":[1,6,70,2],
 "structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html#ac8d3967dfce976162d4640fa68f5504e":[1,6,70,0],
-"structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html#aec947220f537b311945269d46a177b5b":[1,6,70,3],
-"structranges_1_1v3_1_1concepts_1_1_weakly_ordered.html":[1,6,71]
+"structranges_1_1v3_1_1concepts_1_1_weakly_incrementable.html#aec947220f537b311945269d46a177b5b":[1,6,70,3]
 };

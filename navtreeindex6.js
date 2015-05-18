@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"structranges_1_1v3_1_1is__permutation__fn.html#a1f18b54c590b89b0a6d58585d57d597c":[1,3,28,1],
 "structranges_1_1v3_1_1is__permutation__fn.html#a693da16ac8bf55fa55ecaba2ed0340a0":[1,3,28,2],
 "structranges_1_1v3_1_1is__permutation__fn.html#a7b11b2eeaa325da2ccf665e2238f445c":[1,3,28,0],
 "structranges_1_1v3_1_1is__permutation__fn.html#a99c4a97869ef30779870db471fc774fb":[1,3,28,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "structranges_1_1v3_1_1prev__fn.html":[1,1,90],
 "structranges_1_1v3_1_1prev__fn.html#a56f5b6af9e62e6da7cd33084006ea605":[1,1,90,0],
 "structranges_1_1v3_1_1prev__permutation__fn.html":[1,3,52],
-"structranges_1_1v3_1_1prev__permutation__fn.html#a0c6878e3fed1b480483625c5db4380a3":[1,3,52,0],
-"structranges_1_1v3_1_1prev__permutation__fn.html#a230602722f66d1ee14d5654d7b6594d3":[1,3,52,1]
+"structranges_1_1v3_1_1prev__permutation__fn.html#a0c6878e3fed1b480483625c5db4380a3":[1,3,52,0]
 };

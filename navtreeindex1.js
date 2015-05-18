@@ -249,5 +249,5 @@ var NAVTREEINDEX1 =
 "index.html":[0],
 "index.html#range-views":[0,2],
 "index.html#tutorial-compilers":[0,0,2],
-"index.html#tutorial-installation":[0,0,0]
+"index.html#tutorial-examples":[0,3]
 };

@@ -101,6 +101,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 </li>
 <li class="level1"><a href="#tutorial-quick-start">Quick Start</a></li>
 <li class="level1"><a href="#range-views">Range Views</a></li>
+<li class="level1"><a href="#tutorial-examples">Examples</a></li>
 </ul>
 </div>
 <div class="textblock"><h1><a class="anchor" id="tutorial-preface"></a>
@@ -372,7 +373,316 @@ Range Views</h1>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1zip__with__fn.html"><code>view::zip_with</code></a> </dt>
 <dd>Given <em>N</em> ranges and a <em>N</em>-ary function, return a new range where <em>M</em><sup>th</sup> element is the result of calling the function on the <em>M</em><sup>th</sup> elements of all <em>N</em> ranges. </dd>
 </dl>
-</div></div><!-- contents -->
+<h1><a class="anchor" id="tutorial-examples"></a>
+Examples</h1>
+<hr/>
+<p>Below is a full example of a calendar program that, given a year, prints a formatted calendar to the console with 3 months per line. It demonstrates all the different parts of the Range-v3 library, including range view, action, and algorithms; as well as how to build custom ranges with <code>range_adaptor</code> and <code>range_facade</code>.</p>
+<div class="fragment"><div class="line"><span class="comment">// Range v3 library</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//  Copyright Eric Niebler 2013-2015</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//  Use, modification and distribution is subject to the</span></div>
+<div class="line"><span class="comment">//  Boost Software License, Version 1.0. (See accompanying</span></div>
+<div class="line"><span class="comment">//  file LICENSE_1_0.txt or copy at</span></div>
+<div class="line"><span class="comment">//  http://www.boost.org/LICENSE_1_0.txt)</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">// Project home: https://github.com/ericniebler/range-v3</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">// Usage:</span></div>
+<div class="line"><span class="comment">//     calendar 2015</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">// Output:</span></div>
+<div class="line"><span class="comment">/*</span></div>
+<div class="line"><span class="comment">        January              February                March</span></div>
+<div class="line"><span class="comment">              1  2  3   1  2  3  4  5  6  7   1  2  3  4  5  6  7</span></div>
+<div class="line"><span class="comment">  4  5  6  7  8  9 10   8  9 10 11 12 13 14   8  9 10 11 12 13 14</span></div>
+<div class="line"><span class="comment"> 11 12 13 14 15 16 17  15 16 17 18 19 20 21  15 16 17 18 19 20 21</span></div>
+<div class="line"><span class="comment"> 18 19 20 21 22 23 24  22 23 24 25 26 27 28  22 23 24 25 26 27 28</span></div>
+<div class="line"><span class="comment"> 25 26 27 28 29 30 31                        29 30 31</span></div>
+<div class="line"><span class="comment"></span></div>
+<div class="line"><span class="comment">         April                  May                  June</span></div>
+<div class="line"><span class="comment">           1  2  3  4                  1  2      1  2  3  4  5  6</span></div>
+<div class="line"><span class="comment">  5  6  7  8  9 10 11   3  4  5  6  7  8  9   7  8  9 10 11 12 13</span></div>
+<div class="line"><span class="comment"> 12 13 14 15 16 17 18  10 11 12 13 14 15 16  14 15 16 17 18 19 20</span></div>
+<div class="line"><span class="comment"> 19 20 21 22 23 24 25  17 18 19 20 21 22 23  21 22 23 24 25 26 27</span></div>
+<div class="line"><span class="comment"> 26 27 28 29 30        24 25 26 27 28 29 30  28 29 30</span></div>
+<div class="line"><span class="comment">                       31</span></div>
+<div class="line"><span class="comment">         July                 August               September</span></div>
+<div class="line"><span class="comment">           1  2  3  4                     1         1  2  3  4  5</span></div>
+<div class="line"><span class="comment">  5  6  7  8  9 10 11   2  3  4  5  6  7  8   6  7  8  9 10 11 12</span></div>
+<div class="line"><span class="comment"> 12 13 14 15 16 17 18   9 10 11 12 13 14 15  13 14 15 16 17 18 19</span></div>
+<div class="line"><span class="comment"> 19 20 21 22 23 24 25  16 17 18 19 20 21 22  20 21 22 23 24 25 26</span></div>
+<div class="line"><span class="comment"> 26 27 28 29 30 31     23 24 25 26 27 28 29  27 28 29 30</span></div>
+<div class="line"><span class="comment">                       30 31</span></div>
+<div class="line"><span class="comment">        October              November              December</span></div>
+<div class="line"><span class="comment">              1  2  3   1  2  3  4  5  6  7         1  2  3  4  5</span></div>
+<div class="line"><span class="comment">  4  5  6  7  8  9 10   8  9 10 11 12 13 14   6  7  8  9 10 11 12</span></div>
+<div class="line"><span class="comment"> 11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19</span></div>
+<div class="line"><span class="comment"> 18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26</span></div>
+<div class="line"><span class="comment"> 25 26 27 28 29 30 31  29 30                 27 28 29 30 31</span></div>
+<div class="line"><span class="comment">// */</span></div>
+<div class="line"></div>
+<div class="line"><span class="comment">// Credits:</span></div>
+<div class="line"><span class="comment">//   Thanks to H. S. Teoh for the article that served as the</span></div>
+<div class="line"><span class="comment">//     inspiration for this example:</span></div>
+<div class="line"><span class="comment">//     &lt;http://wiki.dlang.org/Component_programming_with_ranges&gt;</span></div>
+<div class="line"><span class="comment">//   Thanks to github&#39;s Arzar for bringing date::week_number</span></div>
+<div class="line"><span class="comment">//     to my attention.</span></div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;boost/format.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;boost/lexical_cast.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;boost/date_time/gregorian/gregorian.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="core_8hpp.html">range/v3/core.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="view_2iota_8hpp.html">range/v3/view/iota.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="group__by_8hpp.html">range/v3/view/group_by.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="view_2transform_8hpp.html">range/v3/view/transform.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="concat_8hpp.html">range/v3/view/concat.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="single_8hpp.html">range/v3/view/single.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="repeat__n_8hpp.html">range/v3/view/repeat_n.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="view_2take_8hpp.html">range/v3/view/take.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="view_2join_8hpp.html">range/v3/view/join.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="view_2all_8hpp.html">range/v3/view/all.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="action_2join_8hpp.html">range/v3/action/join.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="algorithm_2copy_8hpp.html">range/v3/algorithm/copy.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="algorithm_2for__each_8hpp.html">range/v3/algorithm/for_each.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="mismatch_8hpp.html">range/v3/algorithm/mismatch.hpp</a>&gt;</span></div>
+<div class="line"></div>
+<div class="line"><span class="keyword">namespace </span>greg = boost::gregorian;</div>
+<div class="line"><span class="keyword">using</span> date = greg::date;</div>
+<div class="line"><span class="keyword">using</span> day = greg::date_duration;</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
+<div class="line"><span class="keyword">using</span> std::cout;</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">namespace </span>boost { <span class="keyword">namespace </span>gregorian {</div>
+<div class="line">    date &amp;operator++(date &amp;d) { <span class="keywordflow">return</span> d = d + day(1); }</div>
+<div class="line">    date operator++(date &amp;d, <span class="keywordtype">int</span>) { <span class="keywordflow">return</span> ++d - day(1); }</div>
+<div class="line">}}</div>
+<div class="line"><span class="keyword">namespace </span><a class="code" href="namespaceranges.html">ranges</a> {</div>
+<div class="line">    <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span>difference_type&lt;date&gt; {</div>
+<div class="line">        <span class="keyword">using</span> type = date::duration_type::duration_rep::int_type;</div>
+<div class="line">    };</div>
+<div class="line">}</div>
+<div class="line">CONCEPT_ASSERT(Incrementable&lt;date&gt;());</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">auto</span> dates_in_year(<span class="keywordtype">int</span> year) {</div>
+<div class="line">    <span class="keywordflow">return</span> view::iota(date{year,greg::Jan,1},</div>
+<div class="line">                      date{year+1,greg::Jan,1});</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">auto</span> by_month() {</div>
+<div class="line">    <span class="keywordflow">return</span> view::group_by([](date a, date b) {</div>
+<div class="line">        <span class="keywordflow">return</span> a.month() == b.month();</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">auto</span> by_week() {</div>
+<div class="line">    <span class="keywordflow">return</span> view::group_by([](date a, date b) {</div>
+<div class="line">        <span class="comment">// ++a because week_numer is Mon-Sun and we want Sun-Sat</span></div>
+<div class="line">        <span class="keywordflow">return</span> (++a).week_number() == (++b).week_number();</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line">std::string format_day(date d) {</div>
+<div class="line">    <span class="keywordflow">return</span> boost::str(boost::format(<span class="stringliteral">&quot;%|3|&quot;</span>) % d.day());</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// In:  Range&lt;Range&lt;date&gt;&gt;: month grouped by weeks.</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;std::string&gt;: month with formatted weeks.</span></div>
+<div class="line"><span class="keyword">auto</span> format_weeks() {</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>([](<span class="comment">/*Range&lt;date&gt;*/</span> <span class="keyword">auto</span> week) {</div>
+<div class="line">        <span class="keywordflow">return</span> boost::str(boost::format(<span class="stringliteral">&quot;%1%%2%%|22t|&quot;</span>)</div>
+<div class="line">            % std::string((<span class="keywordtype">int</span>)<a class="code" href="group__list.html#ga76ee33daea50a50b8231d77a41f2d4f2">front</a>(week).day_of_week() * 3, <span class="charliteral">&#39; &#39;</span>)</div>
+<div class="line">            % (week | <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>(format_day) | <a class="code" href="group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652">action::join</a>));</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// Return a formatted string with the title of the month</span></div>
+<div class="line"><span class="comment">// corresponding to a date.</span></div>
+<div class="line">std::string month_title(date d) {</div>
+<div class="line">    <span class="keywordflow">return</span> boost::str(boost::format(<span class="stringliteral">&quot;%|=22|&quot;</span>)</div>
+<div class="line">        % d.month().as_long_string());</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// In:  Range&lt;Range&lt;date&gt;&gt;: year of months of days</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;Range&lt;std::string&gt;&gt;: year of months of formatted wks</span></div>
+<div class="line"><span class="keyword">auto</span> layout_months() {</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>([](<span class="comment">/*Range&lt;date&gt;*/</span> <span class="keyword">auto</span> month) {</div>
+<div class="line">        <span class="keywordtype">int</span> week_count = distance(month | by_week());</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code" href="group__transformation.html#gaf7be841db4ea7d88c3b00f3f2be03199">view::concat</a>(</div>
+<div class="line">            view::single(month_title(<a class="code" href="group__list.html#ga76ee33daea50a50b8231d77a41f2d4f2">front</a>(month))),</div>
+<div class="line">            month | by_week() | format_weeks(),</div>
+<div class="line">            <a class="code" href="group__list.html#gaf343c443b2f37a0e4392c859254d3973">view::repeat_n</a>(std::string(22,<span class="charliteral">&#39; &#39;</span>),6-week_count));</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// In:  Range&lt;T&gt;</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;Range&lt;T&gt;&gt;, where each inner range has $n$ elements.</span></div>
+<div class="line"><span class="comment">//                       The last range may have fewer.</span></div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng&gt;</div>
+<div class="line"><span class="keyword">class </span>chunk_view : <span class="keyword">public</span> range_adaptor&lt;chunk_view&lt;Rng&gt;, Rng&gt; {</div>
+<div class="line">    CONCEPT_ASSERT(ForwardRange&lt;Rng&gt;());</div>
+<div class="line">    <a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> n_;</div>
+<div class="line">    <span class="keyword">friend</span> range_access;</div>
+<div class="line">    <span class="keyword">class </span>adaptor;</div>
+<div class="line">    adaptor begin_adaptor() {</div>
+<div class="line">        <span class="keywordflow">return</span> adaptor{n_, ranges::end(this-&gt;base())};</div>
+<div class="line">    }</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    chunk_view() = <span class="keywordflow">default</span>;</div>
+<div class="line">    chunk_view(Rng rng, <a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> n)</div>
+<div class="line">      : range_adaptor_t&lt;chunk_view&gt;(<a class="code" href="namespacestd.html">std</a>::move(rng)), n_(n)</div>
+<div class="line">    {}</div>
+<div class="line">};</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng&gt;</div>
+<div class="line"><span class="keyword">class </span>chunk_view&lt;Rng&gt;::adaptor : <span class="keyword">public</span> adaptor_base {</div>
+<div class="line">    <a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> n_;</div>
+<div class="line">    range_sentinel_t&lt;Rng&gt; end_;</div>
+<div class="line">    <span class="keyword">using</span> adaptor_base::prev;</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    adaptor() = <span class="keywordflow">default</span>;</div>
+<div class="line">    adaptor(<a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> n, range_sentinel_t&lt;Rng&gt; end)</div>
+<div class="line">      : n_(n), end_(end)</div>
+<div class="line">    {}</div>
+<div class="line">    <span class="keyword">auto</span> current(range_iterator_t&lt;Rng&gt; it)<span class="keyword"> const </span>{</div>
+<div class="line">        <span class="keywordflow">return</span> view::take(make_range(std::move(it), end_), n_);</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordtype">void</span> next(range_iterator_t&lt;Rng&gt; &amp;it) {</div>
+<div class="line">        ranges::advance(it, n_, end_);</div>
+<div class="line">    }</div>
+<div class="line">};</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// In:  Range&lt;T&gt;</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;Range&lt;T&gt;&gt;, where each inner range has $n$ elements.</span></div>
+<div class="line"><span class="comment">//                       The last range may have fewer.</span></div>
+<div class="line"><span class="keyword">auto</span> chunk(<a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> n) {</div>
+<div class="line">    <span class="keywordflow">return</span> make_pipeable([=](<span class="keyword">auto</span>&amp;&amp; rng) {</div>
+<div class="line">        <span class="keyword">using</span> Rng = decltype(rng);</div>
+<div class="line">        <span class="keywordflow">return</span> chunk_view&lt;view::all_t&lt;Rng&gt;&gt;{</div>
+<div class="line">            view::all(std::forward&lt;Rng&gt;(rng)), n};</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// Flattens a range of ranges by iterating the inner</span></div>
+<div class="line"><span class="comment">// ranges in round-robin fashion.</span></div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rngs&gt;</div>
+<div class="line"><span class="keyword">class </span>interleave_view : <span class="keyword">public</span> range_facade&lt;interleave_view&lt;Rngs&gt;&gt; {</div>
+<div class="line">    <span class="keyword">friend</span> range_access;</div>
+<div class="line">    std::vector&lt;range_value_t&lt;Rngs&gt;&gt; rngs_;</div>
+<div class="line">    <span class="keyword">struct </span>cursor;</div>
+<div class="line">    cursor begin_cursor() {</div>
+<div class="line">        <span class="keywordflow">return</span> {0, &amp;rngs_, <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>(rngs_, ranges::begin)};</div>
+<div class="line">    }</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    interleave_view() = <span class="keywordflow">default</span>;</div>
+<div class="line">    <span class="keyword">explicit</span> interleave_view(Rngs rngs)</div>
+<div class="line">      : rngs_(<a class="code" href="namespacestd.html">std</a>::move(rngs))</div>
+<div class="line">    {}</div>
+<div class="line">};</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rngs&gt;</div>
+<div class="line"><span class="keyword">struct </span>interleave_view&lt;Rngs&gt;::cursor  {</div>
+<div class="line">    <a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> n_;</div>
+<div class="line">    std::vector&lt;range_value_t&lt;Rngs&gt;&gt; *rngs_;</div>
+<div class="line">    std::vector&lt;range_iterator_t&lt;range_value_t&lt;Rngs&gt;&gt;&gt; its_;</div>
+<div class="line">    decltype(<span class="keyword">auto</span>) current()<span class="keyword"> const </span>{</div>
+<div class="line">        <span class="keywordflow">return</span> *its_[n_];</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordtype">void</span> next() {</div>
+<div class="line">        <span class="keywordflow">if</span>(0 == ((++n_) %= its_.size()))</div>
+<div class="line">            <a class="code" href="group__runtime.html#ga4d1b825778809ff9c5f20c84d7f06a0f">for_each</a>(its_, [](<span class="keyword">auto</span>&amp; it){ ++it; });</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordtype">bool</span> done()<span class="keyword"> const </span>{</div>
+<div class="line">        <span class="keywordflow">return</span> n_ == 0 &amp;&amp; its_.end() != mismatch(its_,</div>
+<div class="line">            <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>(*rngs_, ranges::end), std::not_equal_to&lt;&gt;()).first;</div>
+<div class="line">    }</div>
+<div class="line">    CONCEPT_REQUIRES(ForwardRange&lt;range_value_t&lt;Rngs&gt;&gt;())</div>
+<div class="line">    bool equal(cursor const&amp; that)<span class="keyword"> const </span>{</div>
+<div class="line">        <span class="keywordflow">return</span> n_ == that.n_ &amp;&amp; its_ == that.its_;</div>
+<div class="line">    }</div>
+<div class="line">};</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// In:  Range&lt;Range&lt;T&gt;&gt;</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;T&gt;, flattened by walking the ranges</span></div>
+<div class="line"><span class="comment">//                round-robin fashion.</span></div>
+<div class="line"><span class="keyword">auto</span> interleave() {</div>
+<div class="line">    <span class="keywordflow">return</span> make_pipeable([](<span class="keyword">auto</span>&amp;&amp; rngs) {</div>
+<div class="line">        <span class="keyword">using</span> Rngs = decltype(rngs);</div>
+<div class="line">        <span class="keywordflow">return</span> interleave_view&lt;view::all_t&lt;Rngs&gt;&gt;(</div>
+<div class="line">            view::all(std::forward&lt;Rngs&gt;(rngs)));</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// In:  Range&lt;Range&lt;T&gt;&gt;</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;Range&lt;T&gt;&gt;, transposing the rows and columns.</span></div>
+<div class="line"><span class="keyword">auto</span> transpose() {</div>
+<div class="line">    <span class="keywordflow">return</span> make_pipeable([](<span class="keyword">auto</span>&amp;&amp; rngs) {</div>
+<div class="line">        <span class="keyword">using</span> Rngs = decltype(rngs);</div>
+<div class="line">        CONCEPT_ASSERT(ForwardRange&lt;Rngs&gt;());</div>
+<div class="line">        <span class="keywordflow">return</span> std::forward&lt;Rngs&gt;(rngs)</div>
+<div class="line">            | interleave()</div>
+<div class="line">            | chunk(distance(rngs));</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// In:  Range&lt;Range&lt;Range&lt;string&gt;&gt;&gt;</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;Range&lt;Range&lt;string&gt;&gt;&gt;, transposing months.</span></div>
+<div class="line"><span class="keyword">auto</span> transpose_months() {</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>([](<span class="comment">/*Range&lt;Range&lt;string&gt;&gt;*/</span> <span class="keyword">auto</span> rng) {</div>
+<div class="line">        <span class="keywordflow">return</span> rng | transpose();</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// In:  Range&lt;Range&lt;string&gt;&gt;</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;string&gt;, joining the strings of the inner ranges</span></div>
+<div class="line"><span class="keyword">auto</span> join_months() {</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>([](<span class="comment">/*Range&lt;string&gt;*/</span> <span class="keyword">auto</span> rng) {</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code" href="group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652">action::join</a>(rng);</div>
+<div class="line">    });</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[]) <span class="keyword">try</span> {</div>
+<div class="line">    <span class="keywordflow">if</span>(argc &lt; 2) {</div>
+<div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;Please enter the year to format.\n&quot;</span>;</div>
+<div class="line">        std::cerr &lt;&lt; boost::format(<span class="stringliteral">&quot;  Usage: %1% &lt;year&gt;\n&quot;</span>) % argv[0];</div>
+<div class="line">        <span class="keywordflow">return</span> 1;</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordtype">int</span> year = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(argv[1]);</div>
+<div class="line">    <span class="keywordtype">int</span> months_per_line = 3;</div>
+<div class="line"></div>
+<div class="line">    <span class="keyword">auto</span> calendar =</div>
+<div class="line">        <span class="comment">// Make a range of all the dates in a year:</span></div>
+<div class="line">        dates_in_year(year)</div>
+<div class="line">            <span class="comment">// Group the dates by month:</span></div>
+<div class="line">          | by_month()</div>
+<div class="line">            <span class="comment">// Format the month into a range of strings:</span></div>
+<div class="line">          | layout_months()</div>
+<div class="line">            <span class="comment">// Group the months that belong side-by-side:</span></div>
+<div class="line">          | chunk(months_per_line)</div>
+<div class="line">            <span class="comment">// Transpose the rows and columns of the size-by-side months:</span></div>
+<div class="line">          | transpose_months()</div>
+<div class="line">            <span class="comment">// Ungroup the side-by-side months:</span></div>
+<div class="line">          | <a class="code" href="group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652">view::join</a></div>
+<div class="line">            <span class="comment">// Join the strings of the transposed months:</span></div>
+<div class="line">          | join_months();</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Write the result to stdout:</span></div>
+<div class="line">    copy(calendar, ostream_iterator&lt;&gt;(std::cout, <span class="stringliteral">&quot;\n&quot;</span>));</div>
+<div class="line">}</div>
+<div class="line"><span class="keywordflow">catch</span>(std::exception &amp;e) {</div>
+<div class="line">    std::cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: Unhandled exception\n&quot;</span>;</div>
+<div class="line">    std::cerr &lt;&lt; <span class="stringliteral">&quot;  what(): &quot;</span> &lt;&lt; e.what();</div>
+<div class="line">    <span class="keywordflow">return</span> 1;</div>
+<div class="line">}</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

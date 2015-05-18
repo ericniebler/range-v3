@@ -8,7 +8,8 @@ var NAVTREE =
         [ "Supported Compilers", "index.html#tutorial-compilers", null ]
       ] ],
       [ "Quick Start", "index.html#tutorial-quick-start", null ],
-      [ "Range Views", "index.html#range-views", null ]
+      [ "Range Views", "index.html#range-views", null ],
+      [ "Examples", "index.html#tutorial-examples", null ]
     ] ],
     [ "Reference", "modules.html", "modules" ],
     [ "Indexes", "usergroup0.html", [
@@ -28,14 +29,14 @@ var NAVTREEINDEX =
 [
 ".html",
 "group__group-core.html#gab3baada25b879219f336584ac31b9c96",
-"index.html#tutorial-license",
-"size_8hpp.html",
-"structranges_1_1v3_1_1basic__sentinel.html#aac4e8fde8b50ca487baa8350f14b7709",
-"structranges_1_1v3_1_1concepts_1_1_writable.html",
-"structranges_1_1v3_1_1is__permutation__fn.html#a693da16ac8bf55fa55ecaba2ed0340a0",
-"structranges_1_1v3_1_1protect__fn.html",
-"structranges_1_1v3_1_1swap__ranges__fn.html#a570f8b30f7dad836cf0d45c032aa9941",
-"structranges_1_1v3_1_1view_1_1zip__with__fn.html"
+"index.html#tutorial-installation",
+"single_8hpp.html",
+"structranges_1_1v3_1_1basic__sentinel.html#a895b08e437317664b9c9f37962de5412",
+"structranges_1_1v3_1_1concepts_1_1_weakly_ordered.html",
+"structranges_1_1v3_1_1is__permutation__fn.html#a1f18b54c590b89b0a6d58585d57d597c",
+"structranges_1_1v3_1_1prev__permutation__fn.html#a230602722f66d1ee14d5654d7b6594d3",
+"structranges_1_1v3_1_1swap__ranges__fn.html#a080385041fde26941a5e730e48043bb9",
+"structranges_1_1v3_1_1view_1_1zip__fn.html#ae882690a9c742b6f2844eeacbee9e792"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"single_8hpp.html":[2,2,1,0,4,31],
 "size_8hpp.html":[2,2,1,0,27],
 "stable__partition_8hpp.html":[2,2,1,0,1,64],
 "stable__partition_8hpp.html#ga519a7e3e7c08338612cffeb50783ece2":[2,2,1,0,1,64,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "structranges_1_1v3_1_1basic__range.html":[2,1,1,0,23],
 "structranges_1_1v3_1_1basic__sentinel.html":[1,1,9],
 "structranges_1_1v3_1_1basic__sentinel.html#a469f0ac27901064dc4bbf9c8ed3b2a47":[1,1,9,2],
-"structranges_1_1v3_1_1basic__sentinel.html#a645e751abfa24b4d1b0c977200c72de6":[1,1,9,4],
-"structranges_1_1v3_1_1basic__sentinel.html#a895b08e437317664b9c9f37962de5412":[1,1,9,0]
+"structranges_1_1v3_1_1basic__sentinel.html#a645e751abfa24b4d1b0c977200c72de6":[1,1,9,4]
 };
