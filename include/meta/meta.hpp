@@ -1998,7 +1998,7 @@ namespace meta
                 template <class UnaryFunction, class... Args>
                 constexpr auto operator()(list<Args...>, UnaryFunction f) const -> UnaryFunction
                 {
-                    return (void)std::initializer_list<int>{(f(Args{}), void(), 0)...}, f;
+                    return (void)std::initializer_list<int>{((void)f(Args{}), 0)...}, f;
                 }
             };
         } // namespace detail
@@ -2868,6 +2868,29 @@ namespace meta
             return {};
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // integer_range
+        /// \cond
+        namespace detail
+        {
+            template <class T, T offset, class U>
+            struct offset_integer_sequence_
+            {};
+
+            template <class T, T offset, T... Ts>
+            struct offset_integer_sequence_<T, offset, meta::integer_sequence<T, Ts...>>
+            {
+                using type = meta::integer_sequence<T, (Ts + offset)...>;
+            };
+        }  // namespace detail
+        /// \endcond
+
+        /// Makes the integer sequence [from, to).
+        /// \ingroup integral
+        template <class T, T from, T to>
+        using integer_range = meta::eval<
+            detail::offset_integer_sequence_<T, from,
+                                             meta::make_integer_sequence<T, to - from>>>;
         /// \cond
     } // namespace v1
     /// \endcond
