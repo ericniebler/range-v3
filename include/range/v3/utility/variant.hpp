@@ -251,12 +251,13 @@ namespace ranges
                 apply_visitor(Fun &&fun, Var &var)
                   : var_(var), fun_(std::forward<Fun>(fun))
                 {}
-                template<typename T, std::size_t N>
-                void operator()(T &&t, meta::size_t<N> u) const
-                {
-                    using result_t = result_of_t<Fun(T &&, meta::size_t<N>)>;
-                    this->apply_(std::forward<T>(t), u, std::is_void<result_t>{});
-                }
+                template<typename T, std::size_t N,
+                         typename result_t = result_of_t<Fun(T &&, meta::size_t<N>)>>
+                auto operator()(T &&t, meta::size_t<N> u) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    this->apply_(std::forward<T>(t), u, std::is_void<result_t>{})
+                )
             };
 
             template<typename Fun>
@@ -269,10 +270,11 @@ namespace ranges
                   : fun_(std::forward<Fun>(fun))
                 {}
                 template<typename T, std::size_t N>
-                void operator()(T &&t, meta::size_t<N> n) const
-                {
-                    fun_(std::forward<T>(t), n);
-                }
+                auto operator()(T &&t, meta::size_t<N> n) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    fun_(std::forward<T>(t), n), void()
+                )
             };
 
             template<typename Fun>
