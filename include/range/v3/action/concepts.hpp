@@ -102,10 +102,35 @@ namespace ranges
                         detail::is_lvalue_container_like(std::forward<T>(t))
                     ));
             };
+
+            struct Reservable : refines<LvalueContainerLike> {
+                template <class T>
+                using size_type = decltype(std::declval<const T&>().size());
+
+                template <class C>
+                auto requires_(C&& c) -> decltype(
+                    concepts::model_of<Integral, size_type<C>>(),
+                    concepts::valid_expr((c.reserve(c.size()), 42))
+                );
+            };
+
+            struct RandomAccessReservable : refines<Reservable> {
+                template <class C>
+                auto requires_(C&& c) -> decltype(
+                    concepts::model_of<RandomAccessIterator, decltype(begin(c))>()
+                );
+            };
         }
 
         template<typename T>
         using LvalueContainerLike = concepts::models<concepts::LvalueContainerLike, T>;
+
+        template <class C>
+        using Reservable = concepts::models<concepts::Reservable, C>;
+
+        template <class C>
+        using RandomAccessReservable = concepts::models<concepts::RandomAccessReservable, C>;
+
         /// @}
     }
 }
