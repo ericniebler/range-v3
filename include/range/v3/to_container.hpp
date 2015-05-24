@@ -54,7 +54,8 @@ namespace ranges
                 template<typename Rng,
                     typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
-                                      !(Reservable<Cont>() && SizedRange<Rng>()))>
+                                      !(ReserveAndAssignable<Cont, range_common_iterator_t<Rng>>() &&
+                                        SizedRange<Rng>()))>
                 Cont operator()(Rng && rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
@@ -66,7 +67,8 @@ namespace ranges
                 template<typename Rng,
                     typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
-                                      Reservable<Cont>() && SizedRange<Rng>())>
+                                      ReserveAndAssignable<Cont, range_common_iterator_t<Rng>>() &&
+                                      SizedRange<Rng>())>
                 Cont operator()(Rng && rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
@@ -75,7 +77,7 @@ namespace ranges
 
                     Cont c;
                     c.reserve(size(rng));
-                    c.assign(I{begin(rng)}, I{end(rng)}); // FIXME: require assign
+                    c.assign(I{begin(rng)}, I{end(rng)});
                     return c;
                 }
             };

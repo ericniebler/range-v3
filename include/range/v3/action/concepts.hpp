@@ -90,6 +90,13 @@ namespace ranges
                 );
             };
 
+            struct ReserveAndAssignable : refines<Reservable(_1)> {
+                template <class C, class I>
+                auto requires_(C&& c, I&& i) -> decltype(
+                    concepts::valid_expr((c.assign(i, i), 42))
+                );
+            };
+
             struct RandomAccessReservable : refines<Reservable> {
                 template <class C>
                 auto requires_(C&& c) -> decltype(
@@ -100,6 +107,9 @@ namespace ranges
 
         template <class C>
         using Reservable = concepts::models<concepts::Reservable, C>;
+
+        template <class C, class I>
+        using ReserveAndAssignable = concepts::models<concepts::ReserveAndAssignable, C, I>;
 
         template <class C>
         using RandomAccessReservable = concepts::models<concepts::RandomAccessReservable, C>;
