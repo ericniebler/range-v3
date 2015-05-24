@@ -35,10 +35,10 @@ namespace ranges
             private:
                 friend action_access;
                 template<typename C, typename P = ident, CONCEPT_REQUIRES_(!Range<C>())>
-                static auto bind(sort_fn sort, C pred, P proj = P{})
+                static auto bind(unique_fn unique, C pred, P proj = P{})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    std::bind(sort, std::placeholders::_1, protect(std::move(pred)),
+                    std::bind(unique, std::placeholders::_1, protect(std::move(pred)),
                         protect(std::move(proj)))
                 )
             public:
