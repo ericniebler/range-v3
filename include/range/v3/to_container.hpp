@@ -20,6 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/action/concepts.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
@@ -52,14 +53,32 @@ namespace ranges
             {
                 template<typename Rng,
                     typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
-                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
+                                      !(ReserveAndAssignable<Cont, range_common_iterator_t<Rng>>() &&
+                                        SizedRange<Rng>()))>
                 Cont operator()(Rng && rng) const
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
                     using I = range_common_iterator_t<Rng>;
-                    // BUGBUG size may be known here, even though I may be an InputIterator
                     return Cont{I{begin(rng)}, I{end(rng)}};
+                }
+
+                template<typename Rng,
+                    typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
+                                      ReserveAndAssignable<Cont, range_common_iterator_t<Rng>>() &&
+                                      SizedRange<Rng>())>
+                Cont operator()(Rng && rng) const
+                {
+                    static_assert(!is_infinite<Rng>::value,
+                        "Attempt to convert an infinite range to a container.");
+                    using I = range_common_iterator_t<Rng>;
+
+                    Cont c;
+                    c.reserve(size(rng));
+                    c.assign(I{begin(rng)}, I{end(rng)});
+                    return c;
                 }
             };
         }
