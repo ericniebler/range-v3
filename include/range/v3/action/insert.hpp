@@ -78,44 +78,44 @@ namespace ranges
 
             template<typename Cont, typename P, typename I, typename S,
                 typename C = common_iterator<I, S>,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Iterator<P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Iterator<P>() && IteratorRange<I, S>() &&
+                                  !(RandomAccessReservable<Cont>() && SizedIteratorRange<I, S>()))>
             auto insert(Cont && cont, P p, I i, S j) ->
                 decltype(unwrap_reference(cont).insert(p, C{i}, C{j}))
             {
                 return unwrap_reference(cont).insert(p, C{i}, C{j});
             }
 
-            template<typename T, typename A, typename P, typename I, typename S,
+            template<typename Cont, typename P, typename I, typename S,
                 typename C = common_iterator<I, S>,
-                typename CP = typename std::vector<T, A>::const_iterator,
-                CONCEPT_REQUIRES_(Convertible<P, CP>() && SizedIteratorRange<I, S>())>
-            auto insert(std::vector<T, A>& vec, P p, I i, S j) ->
-                decltype(vec.insert(begin(vec), C{i}, C{j}))
+                CONCEPT_REQUIRES_(RandomAccessReservable<Cont>() && Iterator<P>() && SizedIteratorRange<I, S>())>
+            auto insert(Cont && cont, P p, I i, S j) ->
+                decltype(unwrap_reference(cont).insert(begin(unwrap_reference(cont)), C{i}, C{j}))
             {
-                auto const index = CP(p) - vec.begin();
-                vec.reserve(vec.size() + (j - i));
-                return vec.insert(begin(vec) + index, C{i}, C{j});
+                auto const index = p - unwrap_reference(cont).begin();
+                unwrap_reference(cont).reserve(unwrap_reference(cont).size() + (j - i));
+                return unwrap_reference(cont).insert(begin(unwrap_reference(cont)) + index, C{i}, C{j});
             }
 
             template<typename Cont, typename I, typename Rng,
                 typename C = range_common_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Iterator<I>() && Range<Rng>())>
+                CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && Iterator<I>() && Range<Rng>() &&
+                                  !(RandomAccessReservable<Cont>() && SizedRange<Rng>()))>
             auto insert(Cont && cont, I p, Rng && rng) ->
                 decltype(unwrap_reference(cont).insert(p, C{begin(rng)}, C{end(rng)}))
             {
                 return unwrap_reference(cont).insert(p, C{begin(rng)}, C{end(rng)});
             }
 
-            template<typename T, typename A, typename I, typename Rng,
+            template<typename Cont, typename I, typename Rng,
                 typename C = range_common_iterator_t<Rng>,
-                typename CI = typename std::vector<T, A>::const_iterator,
-                CONCEPT_REQUIRES_(Convertible<I, CI>() && SizedRange<Rng>())>
-            auto insert(std::vector<T, A>& vec, I p, Rng && rng) ->
-                decltype(vec.insert(begin(vec), C{begin(rng)}, C{end(rng)}))
+                CONCEPT_REQUIRES_(RandomAccessReservable<Cont>() && SizedRange<Rng>())>
+            auto insert(Cont && cont, I p, Rng && rng) ->
+                decltype(unwrap_reference(cont).insert(begin(unwrap_reference(cont)), C{begin(rng)}, C{end(rng)}))
             {
-                auto const index = CI(p) - vec.begin();
-                vec.reserve(vec.size() + size(rng));
-                return vec.insert(begin(vec) + index, C{begin(rng)}, C{end(rng)});
+                auto const index = p - begin(unwrap_reference(cont));
+                unwrap_reference(cont).reserve(unwrap_reference(cont).size() + size(rng));
+                return unwrap_reference(cont).insert(begin(unwrap_reference(cont)) + index, C{begin(rng)}, C{end(rng)});
             }
 
             struct insert_fn
