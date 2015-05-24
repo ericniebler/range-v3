@@ -44,7 +44,6 @@ namespace ranges
             {
             private:
                 adjacent_remove_if_view const *rng_;
-                using adaptor_base::prev;
             public:
                 adaptor() = default;
                 adaptor(adjacent_remove_if_view const &rng)
@@ -57,6 +56,7 @@ namespace ranges
                     it = adjacent_find(std::move(it), end, not_(std::ref(rng_->pred_)));
                     ranges::advance(it, 1, end);
                 }
+                void prev() = delete;
             };
             adaptor begin_adaptor() const
             {

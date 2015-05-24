@@ -56,7 +56,6 @@ namespace ranges
                 using partial_sum_view_t = meta::apply<meta::add_const_if_c<IsConst>, partial_sum_view>;
                 optional<range_value_t<Rng>> sum_;
                 partial_sum_view_t *rng_;
-                using adaptor_base::prev;
             public:
                 using single_pass = partial_sum_view::single_pass;
                 adaptor() = default;
@@ -78,6 +77,7 @@ namespace ranges
                         sum_ = rng_->fun_(R(*sum_), R(*it));
                     }
                 }
+                void prev() = delete;
             };
 
             adaptor<false> begin_adaptor()

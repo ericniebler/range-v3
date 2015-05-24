@@ -49,7 +49,6 @@ namespace ranges
             {
             private:
                 remove_if_view *rng_;
-                using adaptor_base::advance;
                 void satisfy(range_iterator_t<Rng> &it) const
                 {
                     it = find_if_not(std::move(it), ranges::end(rng_->mutable_base()),
@@ -80,6 +79,7 @@ namespace ranges
                     auto &&pred = rng_->pred_;
                     do --it; while(pred(*it));
                 }
+                void advance() = delete;
             };
             adaptor begin_adaptor()
             {
