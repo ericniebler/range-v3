@@ -85,11 +85,11 @@ namespace ranges
                 return unwrap_reference(cont).insert(p, C{i}, C{j});
             }
 
-            template<typename T, typename P, typename I, typename S,
+            template<typename T, typename A, typename P, typename I, typename S,
                 typename C = common_iterator<I, S>,
-                typename CP = typename std::vector<T>::const_iterator,
+                typename CP = typename std::vector<T, A>::const_iterator,
                 CONCEPT_REQUIRES_(Convertible<P, CP>() && SizedIteratorRange<I, S>())>
-            auto insert(std::vector<T>& vec, P p, I i, S j) ->
+            auto insert(std::vector<T, A>& vec, P p, I i, S j) ->
                 decltype(vec.insert(begin(vec), C{i}, C{j}))
             {
                 auto const index = CP(p) - vec.begin();
@@ -106,11 +106,11 @@ namespace ranges
                 return unwrap_reference(cont).insert(p, C{begin(rng)}, C{end(rng)});
             }
 
-            template<typename T, typename I, typename Rng,
+            template<typename T, typename A, typename I, typename Rng,
                 typename C = range_common_iterator_t<Rng>,
-                typename CI = typename std::vector<T>::const_iterator,
+                typename CI = typename std::vector<T, A>::const_iterator,
                 CONCEPT_REQUIRES_(Convertible<I, CI>() && SizedRange<Rng>())>
-            auto insert(std::vector<T>& vec, I p, Rng && rng) ->
+            auto insert(std::vector<T, A>& vec, I p, Rng && rng) ->
                 decltype(vec.insert(begin(vec), C{begin(rng)}, C{end(rng)}))
             {
                 auto const index = CI(p) - vec.begin();
