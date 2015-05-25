@@ -27,9 +27,9 @@ struct vector_like : std::vector<T> {
     size_type reservation_count{};
 
     void reserve(size_type n) {
-      ++reservation_count;
-      last_reservation = n;
       std::vector<T>::reserve(n);
+      last_reservation = n;
+      ++reservation_count;
     }
 };
 

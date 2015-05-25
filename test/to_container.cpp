@@ -30,9 +30,9 @@ struct vector_like : std::vector<T> {
     size_type reservation_count{};
 
     void reserve(size_type n) {
-      ++reservation_count;
-      last_reservation = n;
       std::vector<T>::reserve(n);
+      last_reservation = n;
+      ++reservation_count;
     }
 };
 
@@ -58,8 +58,8 @@ int main()
     const std::size_t N = 4096;
     auto vl = view::iota(0, int{N}) | to_<vector_like<int>>();
     static_assert((bool)Same<decltype(vl), vector_like<int>>(), "");
-    CHECK(vl.reservation_count, 1);
-    CHECK(vl.last_reservation, N);
+    CHECK(vl.reservation_count == std::size_t{1});
+    CHECK(vl.last_reservation == N);
 
     return ::test_result();
 }
