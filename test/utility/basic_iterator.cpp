@@ -62,6 +62,7 @@ int main()
     d = (a != b);
 
     detail::ignore_unused(
+        d,
         a < b,
         a <= b,
         a > b,
