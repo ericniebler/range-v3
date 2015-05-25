@@ -125,6 +125,7 @@ namespace ranges
         /// \ingroup group-algorithms
         namespace
         {
+            RANGES_DEPRECATED("The function templates random_shuffle are deprecated in C++14.")
             constexpr auto&& random_shuffle = static_const<with_braced_init_args<random_shuffle_fn>>::value;
         }
 
