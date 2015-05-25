@@ -147,7 +147,6 @@ int main()
 
     // Test initializer lists:
     CHECK(ranges::inner_product({1,2,3}, {4,5,6}, 0) == 32);
-    return ::test_result();
 
     // test projections:
     {
