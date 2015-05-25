@@ -110,11 +110,10 @@ void test13(It i, ranges::iterator_difference_t<It> n, It x) {
 }
 
 class A {
-  int data_;
+  int data_ = 1;
 
 public:
-  A() : data_(1) {}
-  ~A() { data_ = -1; }
+  A() = default;
 
   friend bool operator==(const A &x, const A &y) { return x.data_ == y.data_; }
 };
@@ -190,10 +189,9 @@ test23(It l, It r, bool x)
 
 class B
 {
-    int data_;
+    int data_ = 1;
   public:
-    B() : data_(1) {}
-    ~B() {data_ = -1;}
+    B() = default;
 
     int get() const {return data_;}
 
@@ -212,10 +210,10 @@ test24(It i, ranges::iterator_value_t<It> x)
 
 class C
 {
-    int data_;
+    int data_ = 1;
   public:
-    C(int d=1) : data_(d) {}
-    ~C() {data_ = -1;}
+    C(int d) : data_(d) {}
+    C() = default;
 
     int get() const {return data_;}
 
