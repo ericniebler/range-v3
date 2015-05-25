@@ -77,6 +77,48 @@ namespace ranges
         template<typename T>
         using Container = concepts::models<concepts::Container, T>;
 
+        namespace concepts
+        {
+            struct Reservable
+              : refines<Container>
+            {
+                template <typename T>
+                using size_type =
+                    decltype(std::declval<const T&>().size());
+
+                template <typename C>
+                auto requires_(C&& c) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Integral, size_type<C>>(),
+                        (c.reserve(c.size()), 42)
+                    ));
+            };
+
+            struct ReserveAndAssignable
+              : refines<Reservable(_1)>
+            {
+                template <typename C, typename I>
+                auto requires_(C&& c, I&& i) -> decltype(
+                    concepts::valid_expr(
+                        (c.assign(i, i), 42)
+                    ));
+            };
+
+            struct RandomAccessReservable
+              : refines<Reservable, RandomAccessRange> {};
+        }
+
+        template <typename C>
+        using Reservable = concepts::models<concepts::Reservable, C>;
+
+        template <typename C, typename I>
+        using ReserveAndAssignable =
+            concepts::models<concepts::ReserveAndAssignable, C, I>;
+
+        template <typename C>
+        using RandomAccessReservable =
+            concepts::models<concepts::RandomAccessReservable, C>;
+
         /// \cond
         namespace detail
         {
