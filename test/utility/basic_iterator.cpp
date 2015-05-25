@@ -58,10 +58,10 @@ int main()
     iterator<char const *> c(a);
 
     b = a;
-    bool d = a == b;
-    d = (a != b);
 
     detail::ignore_unused(
+        a == b,
+        a != b,
         a < b,
         a <= b,
         a > b,
