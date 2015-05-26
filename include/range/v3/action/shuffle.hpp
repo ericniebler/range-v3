@@ -35,7 +35,8 @@ namespace ranges
             {
             private:
                 friend action_access;
-                template<typename Gen>
+                template<typename Gen,
+                    CONCEPT_REQUIRES_(UniformRandomNumberGenerator<Gen>())>
                 static auto bind(shuffle_fn shuffle, Gen && gen)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
