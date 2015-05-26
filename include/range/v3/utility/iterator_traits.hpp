@@ -50,9 +50,6 @@ namespace ranges
 
         // Metafunctions
         template<typename I>
-        using iterator_category = meta::defer<iterator_category_t, I>;
-
-        template<typename I>
         using iterator_value = meta::defer<iterator_value_t, I>;
 
         template<typename I>

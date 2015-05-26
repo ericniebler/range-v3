@@ -21,6 +21,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
+#include <range/v3/utility/associated_types.hpp>
 
 namespace ranges
 {
@@ -124,30 +125,38 @@ namespace ranges
                     std::random_access_iterator_tag,
                     std::input_iterator_tag>;
             };
-
-            ////////////////////////////////////////////////////////////////////////////////////////
-            template<typename T, typename Enable = void>
-            struct iterator_category_type
-            {};
-
-            template<typename T>
-            struct iterator_category_type<T *, void>
-            {
-                using type = ranges::random_access_iterator_tag;
-            };
-
-            template<typename T>
-            struct iterator_category_type<T, meta::void_<typename T::iterator_category>>
-              : as_ranges_iterator_category<typename T::iterator_category>
-            {};
         }
         /// \endcond
 
         /// \addtogroup group-concepts
         /// @{
+        template<typename T, typename /*= void*/>
+        struct iterator_category
+        {};
+
         template<typename T>
-        struct iterator_category_type
-          : detail::iterator_category_type<uncvref_t<T>>
+        struct iterator_category<T *>
+          : meta::lazy::if_<std::is_object<T>, ranges::random_access_iterator_tag>
+        {};
+
+        template<typename T>
+        struct iterator_category<T const>
+          : iterator_category<T>
+        {};
+
+        template<typename T>
+        struct iterator_category<T volatile>
+          : iterator_category<T>
+        {};
+
+        template<typename T>
+        struct iterator_category<T const volatile>
+          : iterator_category<T>
+        {};
+
+        template<typename T>
+        struct iterator_category<T, meta::void_<typename T::iterator_category>>
+          : detail::as_ranges_iterator_category<typename T::iterator_category>
         {};
 
         namespace concepts
@@ -305,7 +314,7 @@ namespace ranges
                 // value_t from Readable
                 // distance_t from WeaklyIncrementable
                 template<typename I>
-                using category_t = meta::eval<ranges::iterator_category_type<I>>;
+                using category_t = meta::eval<ranges::iterator_category<I>>;
 
                 template<typename I>
                 auto requires_(I&& i) -> decltype(
