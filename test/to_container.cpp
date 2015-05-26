@@ -20,6 +20,22 @@
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
 
+template<typename T>
+struct vector_like : std::vector<T> {
+    using std::vector<T>::vector;
+
+    using typename std::vector<T>::size_type;
+
+    size_type last_reservation{};
+    size_type reservation_count{};
+
+    void reserve(size_type n) {
+      std::vector<T>::reserve(n);
+      last_reservation = n;
+      ++reservation_count;
+    }
+};
+
 int main()
 {
     using namespace ranges;
@@ -38,6 +54,12 @@ int main()
         | to_<std::vector<long>>() | action::sort(std::greater<int>{});
     static_assert((bool)Same<decltype(vec1), std::vector<long>>(), "");
     ::check_equal(vec1, {81,64,49,36,25,16,9,4,1,0});
+
+    const std::size_t N = 4096;
+    auto vl = view::iota(0, int{N}) | to_<vector_like<int>>();
+    static_assert((bool)Same<decltype(vl), vector_like<int>>(), "");
+    CHECK(vl.reservation_count == std::size_t{1});
+    CHECK(vl.last_reservation == N);
 
     return ::test_result();
 }

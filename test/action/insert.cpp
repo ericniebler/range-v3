@@ -17,6 +17,22 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+template<typename T>
+struct vector_like : std::vector<T> {
+    using std::vector<T>::vector;
+
+    using typename std::vector<T>::size_type;
+
+    size_type last_reservation{};
+    size_type reservation_count{};
+
+    void reserve(size_type n) {
+      std::vector<T>::reserve(n);
+      last_reservation = n;
+      ++reservation_count;
+    }
+};
+
 int main()
 {
     using namespace ranges;
@@ -51,6 +67,16 @@ int main()
 
     insert(ranges::ref(s), 14);
     ::check_equal(s, {0,2,4,6,8,10,12,14});
+
+    const std::size_t N = 1024;
+    vector_like<int> vl;
+    insert(vl, vl.end(), view::iota(0, int{N}));
+    CHECK(vl.reservation_count == std::size_t{1});
+    CHECK(vl.last_reservation == N);
+    auto r = view::iota(0, int{2 * N});
+    insert(vl, vl.begin() + 42, begin(r), end(r));
+    CHECK(vl.reservation_count == std::size_t{2});
+    CHECK(vl.last_reservation == 3 * N);
 
     return ::test_result();
 }
