@@ -19,6 +19,9 @@ add_test(test.act.push_back act.push_back)
 add_executable(act.remove_if remove_if.cpp)
 add_test(test.act.remove_if act.remove_if)
 
+add_executable(act.shuffle shuffle.cpp)
+add_test(test.act.shuffle act.shuffle)
+
 add_executable(act.slice slice.cpp)
 add_test(test.act.slice act.slice)
 

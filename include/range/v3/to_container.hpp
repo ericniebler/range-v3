@@ -20,6 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/action/concepts.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
@@ -50,6 +51,36 @@ namespace ranges
             struct to_container_fn
               : pipeable<to_container_fn<ContainerMetafunctionClass>>
             {
+            private:
+                template <typename C, typename R>
+                using ReserveConcept =
+                    meta::fast_and<
+                        ReserveAndAssignable<C, range_common_iterator_t<R>>,
+                        SizedRange<R>>;
+
+                template<typename Rng,
+                    typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
+                Cont impl(Rng && rng, std::false_type) const
+                {
+                    using I = range_common_iterator_t<Rng>;
+                    return Cont{I{begin(rng)}, I{end(rng)}};
+                }
+
+                template<typename Rng,
+                    typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
+                                      ReserveConcept<Cont, Rng>())>
+                Cont impl(Rng && rng, std::true_type) const
+                {
+                    Cont c;
+                    c.reserve(size(rng));
+                    using I = range_common_iterator_t<Rng>;
+                    c.assign(I{begin(rng)}, I{end(rng)});
+                    return c;
+                }
+
+            public:
                 template<typename Rng,
                     typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
@@ -57,9 +88,8 @@ namespace ranges
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
-                    using I = range_common_iterator_t<Rng>;
-                    // BUGBUG size may be known here, even though I may be an InputIterator
-                    return Cont{I{begin(rng)}, I{end(rng)}};
+
+                    return impl(std::forward<Rng>(rng), ReserveConcept<Cont, Rng>());
                 }
             };
         }
