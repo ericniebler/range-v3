@@ -179,8 +179,8 @@ RANGES_CXX14_CONSTEXPR auto test_non_member_f(Sequence1234&& a) -> bool {
 RANGES_CXX14_CONSTEXPR auto test_array() -> bool {
     test::array<int, 4> a{{1, 2, 3, 4}};
 
-    // auto beg = ranges::begin(a);
-    // auto three = ranges::next(beg, 2);
+    auto beg = ranges::begin(a);
+    auto three = ranges::next(beg, 2);
     // ranges::iter_swap(beg, three);
     // if (*beg != 3) { return false; }
     // if (*three != 1) { return false; }
