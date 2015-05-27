@@ -20,6 +20,7 @@
 
 #include <cassert>
 #include <memory>
+#include <random>
 #include <algorithm>
 #include <vector>
 #include <range/v3/core.hpp>
@@ -27,6 +28,8 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+
+namespace { std::mt19937 gen; }
 
 struct indirect_less
 {
@@ -47,61 +50,61 @@ test_larger_sorts(int N, int M)
     using I = random_access_iterator<int*>;
     using S = sentinel<int*>;
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     int *res = ranges::partial_sort(array, array+M, array+N);
     CHECK(res == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     I res2 = ranges::partial_sort(I{array}, I{array+M}, S{array+N});
     CHECK(res2.base() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     res = ranges::partial_sort(::as_lvalue(ranges::make_range(array, array+N)), array+M);
     CHECK(res == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     res2 = ranges::partial_sort(::as_lvalue(ranges::make_range(I{array}, S{array+N})), I{array+M});
     CHECK(res2.base() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     auto res3 = ranges::partial_sort(ranges::make_range(array, array+N), array+M);
     CHECK(res3.get_unsafe() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     auto res4 = ranges::partial_sort(ranges::make_range(I{array}, S{array+N}), I{array+M});
     CHECK(res4.get_unsafe().base() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     res = ranges::partial_sort(array, array+M, array+N, std::greater<int>());
     CHECK(res == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == N-i-1);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     res2 = ranges::partial_sort(I{array}, I{array+M}, S{array+N}, std::greater<int>());
     CHECK(res2.base() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == N-i-1);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     res = ranges::partial_sort(::as_lvalue(ranges::make_range(array, array+N)), array+M, std::greater<int>());
     CHECK(res == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == N-i-1);
 
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     res2 = ranges::partial_sort(::as_lvalue(ranges::make_range(I{array}, S{array+N})), I{array+M}, std::greater<int>());
     CHECK(res2.base() == array+N);
     for(int i = 0; i < M; ++i)

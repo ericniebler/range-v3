@@ -12,6 +12,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <random>
 #include <range/v3/all.hpp>
 
 class timer
@@ -121,10 +122,11 @@ std::unique_ptr<int> data(int i)
     return a;
 }
 
-void shuffle(int *a, int i)
+template<typename Gen>
+void shuffle(int *a, int i, Gen && rand)
 {
     auto rng = ranges::view::counted(a, i);
-    ranges::random_shuffle(rng);
+    rng |= ranges::action::shuffle(std::forward<Gen>(rand));
 }
 
 constexpr int cloops = 3;
@@ -132,11 +134,12 @@ constexpr int cloops = 3;
 template<typename I>
 void benchmark_n(int i)
 {
+    std::mt19937 gen;
     auto a = data(i);
     long ms = 0;
     for(int j = 0; j < cloops; ++j)
     {
-        ::shuffle(a.get(), i);
+        ::shuffle(a.get(), i, gen);
         timer t;
         insertion_sort_n(I{a.get()}, i);
         ms += t.elapsed().count();
@@ -147,11 +150,12 @@ void benchmark_n(int i)
 template<typename I>
 void benchmark_counted(int i)
 {
+    std::mt19937 gen;
     auto a = data(i);
     long ms = 0;
     for(int j = 0; j < cloops; ++j)
     {
-        ::shuffle(a.get(), i);
+        ::shuffle(a.get(), i, gen);
         timer t;
         insertion_sort(ranges::view::counted(I{a.get()}, i));
         ms += t.elapsed().count();

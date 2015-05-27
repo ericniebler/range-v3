@@ -157,7 +157,7 @@ namespace test {
             if (n >= N)
                 throw std::out_of_range("array::at");
             return elems_[n];
-        };
+        }
         RANGES_CXX14_CONSTEXPR const_reference at(size_type n) const
         {
             if (n >= N)
