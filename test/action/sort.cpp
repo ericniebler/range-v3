@@ -8,16 +8,18 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <array>
+#include <random>
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/take.hpp>
-#include <range/v3/algorithm/random_shuffle.hpp>
+#include <range/v3/algorithm/shuffle.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/is_sorted.hpp>
 #include <range/v3/algorithm/equal.hpp>
+#include <range/v3/action/shuffle.hpp>
 #include <range/v3/action/sort.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -25,9 +27,10 @@
 int main()
 {
     using namespace ranges;
+    std::mt19937 gen;
 
     std::vector<int> v = view::ints(0,100);
-    random_shuffle(v);
+    v |= action::shuffle(gen);
     CHECK(!is_sorted(v));
 
     auto v2 = v | copy | action::sort;
@@ -39,7 +42,7 @@ int main()
     v |= action::sort;
     CHECK(is_sorted(v));
 
-    random_shuffle(v);
+    v |= action::shuffle(gen);
     CHECK(!is_sorted(v));
 
     v = v | move | action::sort(std::less<int>());
@@ -48,7 +51,7 @@ int main()
 
     // Container algorithms can also be called directly
     // in which case they take and return by reference
-    random_shuffle(v);
+    shuffle(v, gen);
     CHECK(!is_sorted(v));
     auto & v3 = action::sort(v);
     CHECK(is_sorted(v));
