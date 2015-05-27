@@ -20,12 +20,15 @@
 
 #include <cassert>
 #include <memory>
+#include <random>
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/nth_element.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+
+namespace { std::mt19937 gen; }
 
 void
 test_one(unsigned N, unsigned M)
@@ -35,13 +38,13 @@ test_one(unsigned N, unsigned M)
     std::unique_ptr<int[]> array{new int[N]};
     for (int i = 0; (unsigned)i < N; ++i)
         array[i] = i;
-    std::random_shuffle(array.get(), array.get()+N);
+    std::shuffle(array.get(), array.get()+N, gen);
     CHECK(ranges::nth_element(array.get(), array.get()+M, array.get()+N) == array.get()+N);
     CHECK((unsigned)array[M] == M);
-    std::random_shuffle(array.get(), array.get()+N);
+    std::shuffle(array.get(), array.get()+N, gen);
     CHECK(ranges::nth_element(::as_lvalue(ranges::make_range(array.get(), array.get()+N)), array.get()+M) == array.get()+N);
     CHECK((unsigned)array[M] == M);
-    std::random_shuffle(array.get(), array.get()+N);
+    std::shuffle(array.get(), array.get()+N, gen);
     CHECK(ranges::nth_element(ranges::make_range(array.get(), array.get()+N), array.get()+M).get_unsafe() == array.get()+N);
     CHECK((unsigned)array[M] == M);
     ranges::nth_element(array.get(), array.get()+N, array.get()+N); // begin, end, end
@@ -86,7 +89,7 @@ int main()
     S ia[N];
     for(int i = 0; i < N; ++i)
         ia[i].i = ia[i].j = i;
-    std::random_shuffle(ia, ia+N);
+    std::shuffle(ia, ia+N, gen);
     ranges::nth_element(ia, ia+M, std::less<int>(), &S::i);
     CHECK(ia[M].i == M);
     CHECK(ia[M].j == M);
