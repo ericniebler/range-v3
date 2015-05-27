@@ -82,30 +82,27 @@ namespace ranges
             struct Reservable
               : refines<Container>
             {
-                template <typename T>
-                using size_type =
-                    decltype(std::declval<const T&>().size());
-
                 template <typename C>
-                auto requires_(C&& c) -> decltype(
+                using size_type =
+                    decltype(std::declval<const C&>().size());
+
+                template <typename C, typename S = size_type<C>>
+                auto requires_(C&& c, S&& s = S{}) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Integral, size_type<C>>(),
-                        (c.reserve(c.size()), 42)
+                        concepts::model_of<Integral, S>(),
+                        ((void)c.reserve(s), 42)
                     ));
             };
 
             struct ReserveAndAssignable
-              : refines<Reservable(_1)>
+              : refines<Reservable(_1), InputIterator(_2)>
             {
                 template <typename C, typename I>
                 auto requires_(C&& c, I&& i) -> decltype(
                     concepts::valid_expr(
-                        (c.assign(i, i), 42)
+                        ((void)c.assign(i, i), 42)
                     ));
             };
-
-            struct RandomAccessReservable
-              : refines<Reservable, RandomAccessRange> {};
         }
 
         template <typename C>
@@ -117,7 +114,7 @@ namespace ranges
 
         template <typename C>
         using RandomAccessReservable =
-            concepts::models<concepts::RandomAccessReservable, C>;
+            meta::fast_and<Reservable<C>, RandomAccessRange<C>>;
 
         /// \cond
         namespace detail
