@@ -40,7 +40,10 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct stride_view
-          : range_adaptor<stride_view<Rng>, Rng>
+          : range_adaptor<
+                stride_view<Rng>,
+                Rng,
+                is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
             friend range_access;

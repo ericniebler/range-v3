@@ -48,6 +48,17 @@ namespace ranges
                     return *it;
                 }
             };
+
+            template<typename State, typename Value>
+            using concat_cardinality =
+                std::integral_constant<cardinality,
+                    State::value == infinite || Value::value == infinite ?
+                        infinite :
+                        State::value == unknown || Value::value == unknown ?
+                            unknown :
+                            State::value == finite || Value::value == finite ?
+                                finite :
+                                static_cast<cardinality>(State::value + Value::value)>;
         }
         /// \endcond
 
@@ -56,7 +67,10 @@ namespace ranges
         template<typename...Rngs>
         struct concat_view
           : range_facade<concat_view<Rngs...>,
-                meta::or_c<is_infinite<Rngs>::value...>::value>
+                meta::fold<
+                    meta::list<range_cardinality<Rngs>...>,
+                    std::integral_constant<cardinality, static_cast<cardinality>(0)>,
+                    meta::quote<detail::concat_cardinality>>::value>
         {
         private:
             friend range_access;
@@ -118,7 +132,9 @@ namespace ranges
                     {
                         if(it == begin(std::get<N>(pos->rng_->rngs_)))
                         {
-                            ranges::set<N - 1>(pos->its_, end(std::get<N - 1>(pos->rng_->rngs_)));
+                            auto &&rng = std::get<N - 1>(pos->rng_->rngs_);
+                            ranges::set<N - 1>(pos->its_,
+                                ranges::next(ranges::begin(rng), ranges::end(rng)));
                             (*this)(ranges::get<N - 1>(pos->its_), meta::size_t<N - 1>{});
                         }
                         else
@@ -163,7 +179,9 @@ namespace ranges
                         auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
                         if(it == begin)
                         {
-                            ranges::set<N - 1>(pos->its_, end(std::get<N - 1>(pos->rng_->rngs_)));
+                            auto &&rng = std::get<N - 1>(pos->rng_->rngs_);
+                            ranges::set<N - 1>(pos->its_,
+                                ranges::next(ranges::begin(rng), ranges::end(rng)));
                             (*this)(ranges::get<N - 1>(pos->its_), meta::size_t<N - 1>{});
                         }
                         else
@@ -187,15 +205,15 @@ namespace ranges
                     if(from.its_.which() == N)
                     {
                         if(to.its_.which() == N)
-                            return std::distance(ranges::get<N>(from.its_), ranges::get<N>(to.its_));
-                        return std::distance(ranges::get<N>(from.its_), end(std::get<N>(from.rng_->rngs_))) +
+                            return distance(ranges::get<N>(from.its_), ranges::get<N>(to.its_));
+                        return distance(ranges::get<N>(from.its_), end(std::get<N>(from.rng_->rngs_))) +
                             cursor::distance_to_(meta::size_t<N + 1>{}, from, to);
                     }
                     if(from.its_.which() < N && to.its_.which() > N)
                         return distance(std::get<N>(from.rng_->rngs_)) +
                             cursor::distance_to_(meta::size_t<N + 1>{}, from, to);
                     RANGES_ASSERT(to.its_.which() == N);
-                    return std::distance(begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
+                    return distance(begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
             public:
                 // BUGBUG what about rvalue_reference and common_reference?
@@ -289,9 +307,11 @@ namespace ranges
               : rngs_{std::move(rngs)...}
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool)SizedRange<Rngs>()...>::value)
-            size_type_ size() const
+            constexpr size_type_ size() const
             {
-                return tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});
+                return range_cardinality<concat_view>::value >= 0 ?
+                    (size_type_)range_cardinality<concat_view>::value :
+                    tuple_foldl(tuple_transform(rngs_, ranges::size), size_type_{0}, plus{});
             }
         };
 

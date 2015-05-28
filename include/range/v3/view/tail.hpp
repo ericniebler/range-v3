@@ -36,7 +36,11 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct tail_view
-          : range_interface<tail_view<Rng>, is_infinite<Rng>::value>
+          : range_interface<
+                tail_view<Rng>,
+                (range_cardinality<Rng>::value > 0) ?
+                    (cardinality)(range_cardinality<Rng>::value - 1) :
+                    range_cardinality<Rng>::value>
         {
         private:
             Rng rng_;
@@ -81,6 +85,8 @@ namespace ranges
                 template<typename Rng, CONCEPT_REQUIRES_(InputRange<Rng>())>
                 tail_view<all_t<Rng>> operator()(Rng && rng) const
                 {
+                    static_assert(range_cardinality<Rng>::value != 0,
+                        "Can't take the tail of an empty range.");
                     return tail_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
 

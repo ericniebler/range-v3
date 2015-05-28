@@ -36,7 +36,7 @@ namespace ranges
 
         template<typename Rng>
         struct bounded_view
-          : range_interface<bounded_view<Rng>, is_infinite<Rng>::value>
+          : range_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
         {
         private:
             friend range_access;

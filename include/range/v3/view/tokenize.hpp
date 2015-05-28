@@ -35,7 +35,9 @@ namespace ranges
         /// @{
         template<typename Rng, typename Regex, typename SubMatchRange>
         struct tokenize_view
-          : range_interface<tokenize_view<Rng, Regex, SubMatchRange>>
+          : range_interface<
+                tokenize_view<Rng, Regex, SubMatchRange>,
+                is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
             Rng rng_;

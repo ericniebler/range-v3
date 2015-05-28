@@ -62,14 +62,14 @@ namespace ranges
             }
         };
 
-        template<typename Derived, bool Inf>
+        template<typename Derived, cardinality Cardinality>
         struct range_facade
-          : range_interface<Derived, Inf>
+          : range_interface<Derived, Cardinality>
         {
         protected:
             friend range_access;
             using range_facade_t = range_facade;
-            using range_interface<Derived, Inf>::derived;
+            using range_interface<Derived, Cardinality>::derived;
             // Default implementations
             Derived begin_cursor() const
             {

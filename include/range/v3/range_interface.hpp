@@ -60,9 +60,9 @@ namespace ranges
 
         /// \addtogroup group-core
         /// @{
-        template<typename Derived, bool Inf /* = false*/>
+        template<typename Derived, cardinality Cardinality /* = finite*/>
         struct range_interface
-          : private basic_range<Inf>
+          : basic_view<Cardinality>
         {
         protected:
             Derived & derived()
@@ -76,25 +76,27 @@ namespace ranges
             }
         public:
             // A few ways of testing whether a range can be empty:
-            bool empty() const
+            constexpr bool empty() const
             {
-                return derived().begin() == derived().end();
+                return Cardinality == 0 ? true : derived().begin() == derived().end();
             }
-            bool operator!() const
+            constexpr bool operator!() const
             {
                 return empty();
             }
-            explicit operator bool() const
+            constexpr explicit operator bool() const
             {
                 return !empty();
             }
             /// Access the size of the range, if it can be determined:
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() &&
-                    SizedIteratorRange<range_iterator_t<D>, range_sentinel_t<D>>())>
-            range_size_t<D> size() const
+                CONCEPT_REQUIRES_(Same<D, Derived>() && (Cardinality >= 0 ||
+                    SizedIteratorRange<range_iterator_t<D>, range_sentinel_t<D>>()))>
+            constexpr range_size_t<D> size() const
             {
-                return iter_size(derived().begin(), derived().end());
+                return Cardinality >= 0 ?
+                    (range_size_t<D>)Cardinality :
+                    iter_size(derived().begin(), derived().end());
             }
             /// Access the first element in a range:
             template<typename D = Derived,

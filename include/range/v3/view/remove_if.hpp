@@ -37,7 +37,10 @@ namespace ranges
         /// @{
         template<typename Rng, typename Pred>
         struct remove_if_view
-          : range_adaptor<remove_if_view<Rng, Pred>, Rng>
+          : range_adaptor<
+                remove_if_view<Rng, Pred>,
+                Rng,
+                is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
             friend range_access;

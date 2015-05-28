@@ -20,7 +20,7 @@ int main()
 {
     using namespace ranges;
 
-    any_input_range<int, true> ints = view::ints;
+    any_input_range<int> ints = view::ints;
     ::check_equal(ints | view::take(10), {0,1,2,3,4,5,6,7,8,9});
 
     any_input_range<int> ints2 = view::ints | view::take(10);

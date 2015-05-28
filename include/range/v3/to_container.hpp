@@ -88,7 +88,6 @@ namespace ranges
                 {
                     static_assert(!is_infinite<Rng>::value,
                         "Attempt to convert an infinite range to a container.");
-
                     return impl(std::forward<Rng>(rng), ReserveConcept<Cont, Rng>());
                 }
             };

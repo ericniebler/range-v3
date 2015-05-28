@@ -37,7 +37,7 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct drop_view
-          : range_interface<drop_view<Rng>, is_infinite<Rng>::value>
+          : range_interface<drop_view<Rng>, is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
           , private meta::if_<
                 RandomAccessRange<Rng>,
                 meta::nil_,

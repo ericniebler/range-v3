@@ -88,6 +88,7 @@
     <ClCompile Include="..\..\..\..\test\action\push_back.cpp" />
     <ClCompile Include="..\..\..\..\test\action\push_front.cpp" />
     <ClCompile Include="..\..\..\..\test\action\remove_if.cpp" />
+    <ClCompile Include="..\..\..\..\test\action\shuffle.cpp" />
     <ClCompile Include="..\..\..\..\test\action\slice.cpp" />
     <ClCompile Include="..\..\..\..\test\action\sort.cpp" />
     <ClCompile Include="..\..\..\..\test\action\split.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\action\push_back.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\push_front.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\remove_if.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\action\shuffle.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\slice.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\sort.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\action\split.hpp" />

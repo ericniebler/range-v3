@@ -27,7 +27,7 @@ namespace ranges
         /// @{
         template<typename Val>
         struct istream_range
-          : range_facade<istream_range<Val>>
+          : range_facade<istream_range<Val>, unknown>
         {
         private:
             friend range_access;

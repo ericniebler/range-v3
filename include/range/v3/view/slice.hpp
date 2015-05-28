@@ -73,7 +73,7 @@ namespace ranges
 
             template<typename Rng, bool IsRandomAccess = RandomAccessRange<Rng>()>
             struct slice_view_
-              : range_facade<slice_view<Rng>, false>
+              : range_facade<slice_view<Rng>, finite>
             {
             private:
                 friend range_access;
@@ -140,7 +140,7 @@ namespace ranges
 
             template<typename Rng>
             struct slice_view_<Rng, true>
-              : range_interface<slice_view<Rng>>
+              : range_interface<slice_view<Rng>, finite>
             {
             private:
                 using difference_type_ = range_difference_t<Rng>;

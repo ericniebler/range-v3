@@ -38,7 +38,10 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct chunk_view
-          : range_adaptor<chunk_view<Rng>, Rng>
+          : range_adaptor<
+                chunk_view<Rng>,
+                Rng,
+                is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
             CONCEPT_ASSERT(ForwardRange<Rng>());

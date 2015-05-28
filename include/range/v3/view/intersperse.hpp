@@ -38,7 +38,12 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct intersperse_view
-          : range_adaptor<intersperse_view<Rng>, Rng>
+          : range_adaptor<
+                intersperse_view<Rng>,
+                Rng,
+                (range_cardinality<Rng>::value > 0) ?
+                    static_cast<cardinality>(range_cardinality<Rng>::value * 2 - 1) :
+                    range_cardinality<Rng>::value>
         {
         private:
             friend range_access;

@@ -35,7 +35,7 @@ namespace ranges
         //    semantics.
         template<typename Val>
         struct repeat_n_view
-          : range_facade<repeat_n_view<Val>>
+          : range_facade<repeat_n_view<Val>, finite>
         {
         private:
             friend range_access;

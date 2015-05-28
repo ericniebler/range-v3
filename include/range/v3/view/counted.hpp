@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         template<typename I, typename D /* = iterator_difference_t<I>*/>
         struct counted_view
-          : range_facade<counted_view<I, D>>
+          : range_facade<counted_view<I, D>, finite>
         {
         private:
             friend range_access;

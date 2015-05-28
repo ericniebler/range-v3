@@ -34,7 +34,7 @@ namespace ranges
         /// @{
         template<typename G>
         struct generate_n_view
-          : range_facade<generate_n_view<G>>
+          : range_facade<generate_n_view<G>, finite>
         {
         private:
             friend struct range_access;

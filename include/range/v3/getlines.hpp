@@ -27,7 +27,7 @@ namespace ranges
         /// \addtogroup group-core
         /// @{
         struct getlines_range
-          : range_facade<getlines_range>
+          : range_facade<getlines_range, unknown>
         {
         private:
             friend range_access;

@@ -34,7 +34,10 @@ namespace ranges
         /// @{
         template<typename Rng, typename F>
         struct adjacent_remove_if_view
-          : range_adaptor<adjacent_remove_if_view<Rng, F>, Rng>
+          : range_adaptor<
+                adjacent_remove_if_view<Rng, F>,
+                Rng,
+                is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
             friend range_access;

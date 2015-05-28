@@ -34,7 +34,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Val>
         struct delimit_view
-          : range_adaptor<delimit_view<Rng, Val>, Rng>
+          : range_adaptor<delimit_view<Rng, Val>, Rng, is_finite<Rng>::value ? finite : unknown>
         {
         private:
             friend range_access;

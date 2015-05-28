@@ -79,7 +79,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T>
-                auto operator()(T const &t, T const &u) const ->
+                constexpr auto operator()(T const &t, T const &u) const ->
                     decltype(u - t)
                 {
                     return u - t;
@@ -89,7 +89,7 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename U>
-                auto operator()(T const &t, U const &u) const ->
+                constexpr auto operator()(T const &t, U const &u) const ->
                     decltype(true ? t : u)
                 {
                     return t < u ? t : u;
@@ -99,12 +99,23 @@ namespace ranges
             constexpr struct
             {
                 template<typename T, typename U>
-                auto operator()(T const &t, U const &u) const ->
+                constexpr auto operator()(T const &t, U const &u) const ->
                     decltype(true ? u : t)
                 {
                     return t < u ? u : t;
                 }
             } max_ {};
+
+            template<typename State, typename Value>
+            using zip_cardinality =
+                std::integral_constant<cardinality,
+                    State::value >= 0 || Value::value >= 0 ?
+                        (State::value >= 0 && Value::value >= 0 ? min_(State::value, Value::value) : finite) :
+                        State::value == finite || Value::value == finite ?
+                            finite :
+                            State::value == unknown || Value::value == unknown ?
+                                unknown :
+                                infinite>;
         } // namespace detail
         /// \endcond
 
@@ -112,7 +123,12 @@ namespace ranges
         /// @{
         template<typename Fun, typename...Rngs>
         struct iter_zip_with_view
-          : range_facade<iter_zip_with_view<Fun, Rngs...>, meta::and_<is_infinite<Rngs>...>::value>
+          : range_facade<
+                iter_zip_with_view<Fun, Rngs...>,
+                meta::fold<
+                    meta::list<range_cardinality<Rngs>...>,
+                    std::integral_constant<cardinality, infinite>,
+                    meta::quote<detail::zip_cardinality>>::value>
         {
         private:
             friend range_access;
@@ -255,12 +271,14 @@ namespace ranges
               , rngs_{std::move(rngs)...}
             {}
             CONCEPT_REQUIRES(meta::and_c<(bool) SizedRange<Rngs>()...>::value)
-            size_type_ size() const
+            constexpr size_type_ size() const
             {
-                return tuple_foldl(
-                    tuple_transform(rngs_, ranges::size),
-                    (std::numeric_limits<size_type_>::max)(),
-                    detail::min_);
+                return range_cardinality<iter_zip_with_view>::value >= 0 ?
+                    (size_type_)range_cardinality<iter_zip_with_view>::value :
+                    tuple_foldl(
+                        tuple_transform(rngs_, ranges::size),
+                        (std::numeric_limits<size_type_>::max)(),
+                        detail::min_);
             }
         };
 

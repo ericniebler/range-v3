@@ -33,9 +33,12 @@ namespace ranges
     {
         /// \addtogroup group-views
         /// @{
-        template<typename Rng, typename Pred, bool Inf /*= is_infinite<Rng>::value*/>
+        template<typename Rng, typename Pred>
         struct iter_take_while_view
-          : range_adaptor<iter_take_while_view<Rng, Pred, Inf>, Rng, Inf>
+          : range_adaptor<
+                iter_take_while_view<Rng, Pred>,
+                Rng,
+                is_finite<Rng>::value ? finite : unknown>
         {
         private:
             friend range_access;
@@ -74,13 +77,13 @@ namespace ranges
             {}
         };
 
-        template<typename Rng, typename Pred, bool Inf /*= is_infinite<Rng>::value*/>
+        template<typename Rng, typename Pred>
         struct take_while_view
-          : iter_take_while_view<Rng, indirected<Pred>, Inf>
+          : iter_take_while_view<Rng, indirected<Pred>>
         {
             take_while_view() = default;
             take_while_view(Rng rng, Pred pred)
-              : iter_take_while_view<Rng, indirected<Pred>, Inf>{std::move(rng),
+              : iter_take_while_view<Rng, indirected<Pred>>{std::move(rng),
                     indirect(std::move(pred))}
             {}
         };

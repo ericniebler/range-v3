@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_RANGE_FWD_HPP
 #define RANGES_V3_RANGE_FWD_HPP
 
+#include <climits>
 #include <utility>
 #include <type_traits>
 #include <meta/meta.hpp>
@@ -146,10 +147,6 @@ namespace ranges
         struct size_type;
 
         struct view_base
-        {};
-
-        template<bool Inf>
-        struct basic_range : view_base
         {};
 
         /// \cond
@@ -299,9 +296,6 @@ namespace ranges
         struct move_tag {};
 
         template<typename T>
-        struct iterator_category_type;
-
-        template<typename T>
         using uncvref_t =
             typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
@@ -310,8 +304,22 @@ namespace ranges
         struct ordered_less;
         struct ident;
 
+        enum cardinality
+        {
+            infinite = -3,
+            unknown = -2,
+            finite = -1,
+            _max_ = INT_MAX
+        };
+
         template<typename Rng, typename Void = void>
-        struct is_infinite;
+        struct range_cardinality;
+
+        template<typename Rng>
+        using is_finite = meta::bool_<range_cardinality<Rng>::value >= finite>;
+
+        template<typename Rng>
+        using is_infinite = meta::bool_<range_cardinality<Rng>::value == infinite>;
 
         template<typename T, typename Enable = void>
         struct is_view;
@@ -328,12 +336,16 @@ namespace ranges
         template<typename S>
         struct basic_sentinel;
 
-        template<typename Derived, bool Inf = false>
+        template<cardinality>
+        struct basic_view : view_base
+        {};
+
+        template<typename Derived, cardinality C = finite>
         struct range_facade;
 
         template<typename Derived,
                  typename BaseRng,
-                 bool Inf = is_infinite<BaseRng>::value>
+                 cardinality C = range_cardinality<BaseRng>::value>
         struct range_adaptor;
 
         template<typename I, typename S>
@@ -351,7 +363,7 @@ namespace ranges
 
         struct as_function_fn;
 
-        template<typename Derived, bool Inf = false>
+        template<typename Derived, cardinality = finite>
         struct range_interface;
 
         template<typename T>
@@ -569,10 +581,10 @@ namespace ranges
             struct take_exactly_fn;
         }
 
-        template<typename Rng, typename Pred, bool Inf = is_infinite<Rng>::value>
+        template<typename Rng, typename Pred>
         struct iter_take_while_view;
 
-        template<typename Rng, typename Pred, bool Inf = is_infinite<Rng>::value>
+        template<typename Rng, typename Pred>
         struct take_while_view;
 
         namespace view

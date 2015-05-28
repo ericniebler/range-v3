@@ -227,9 +227,9 @@ namespace ranges
 
         /// \brief A type-erased InputView
         /// \ingroup group-views
-        template<typename Ref, bool Inf = false>
+        template<typename Ref>
         struct any_input_range
-          : range_facade<any_input_range<Ref, Inf>, Inf>
+          : range_facade<any_input_range<Ref>, unknown>
         {
         private:
             friend range_access;
@@ -250,10 +250,7 @@ namespace ranges
                                   Same<Ref, range_reference_t<Rng>>())>
             any_input_range(Rng && rng)
               : ptr_{new detail::any_input_range_impl<view::all_t<Rng>>{view::all(std::forward<Rng>(rng))}}
-            {
-                static_assert(Inf == is_infinite<Rng>::value,
-                    "Rng finiteness does not match the Inf template parameter");
-            }
+            {}
             any_input_range(any_input_range &&) = default;
             any_input_range(any_input_range &that)
               : ptr_{that.ptr_->clone()}

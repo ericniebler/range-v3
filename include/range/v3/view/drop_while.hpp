@@ -37,7 +37,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Pred>
         struct drop_while_view
-          : range_interface<drop_while_view<Rng, Pred>, is_infinite<Rng>::value>
+          : range_interface<drop_while_view<Rng, Pred>, is_finite<Rng>::value ? finite : unknown>
        {
         private:
             friend range_access;

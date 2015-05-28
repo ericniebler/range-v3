@@ -35,6 +35,23 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
+        namespace detail
+        {
+            // Compute the cardinality of a joined range
+            template<typename Outer, typename Inner, typename Joiner = std::integral_constant<cardinality, static_cast<cardinality>(0)>>
+            using join_cardinality =
+                std::integral_constant<cardinality,
+                    Outer::value == infinite || Inner::value == infinite || (Joiner::value == infinite && Outer::value != 0 && Outer::value != 1) ?
+                        infinite :
+                        Outer::value == unknown || Inner::value == unknown || (Joiner::value == unknown && Outer::value != 0 && Outer::value != 1) ?
+                            unknown :
+                            Outer::value == finite || Inner::value == finite || (Joiner::value == finite && Outer::value != 0 && Outer::value != 1) ?
+                                finite :
+                                static_cast<cardinality>(Outer::value * Inner::value + (Outer::value == 0 ? 0 : (Outer::value - 1) * Joiner::value))>;
+        }
+        /// \endcond
+
         /// \addtogroup group-views
         /// @{
 
@@ -42,7 +59,9 @@ namespace ranges
         template<typename Rng>
         struct join_view<Rng, void>
           : range_adaptor<join_view<Rng, void>, Rng,
-                is_infinite<Rng>::value || is_infinite<range_value_t<Rng>>::value>
+                detail::join_cardinality<
+                    range_cardinality<Rng>,
+                    range_cardinality<range_value_t<Rng>>>::value>
         {
         private:
             CONCEPT_ASSERT(Range<Rng>());
@@ -119,6 +138,7 @@ namespace ranges
                 {
                     return ranges::indirect_move(it_);
                 }
+                void distance_to() = delete;
             };
             adaptor begin_adaptor()
             {
@@ -138,11 +158,12 @@ namespace ranges
             explicit join_view(Rng rng)
               : range_adaptor_t<join_view>{std::move(rng)}, cur_{}
             {}
-            CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardRange<Rng>() &&
-                             SizedRange<range_value_t<Rng>>())
-            size_t_ size() const
+            CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 && SizedRange<range_value_t<Rng>>())
+            constexpr size_t_ size() const
             {
-                return accumulate(view::transform(this->base(), ranges::size), size_t_{0});
+                return range_cardinality<join_view>::value >= 0 ?
+                    (size_t_)range_cardinality<join_view>::value :
+                    accumulate(view::transform(this->base(), ranges::size), size_t_{0});
             }
         };
 
@@ -150,7 +171,10 @@ namespace ranges
         template<typename Rng, typename ValRng>
         struct join_view
           : range_adaptor<join_view<Rng, ValRng>, Rng,
-                meta::or_<is_infinite<Rng>, is_infinite<range_value_t<Rng>>, is_infinite<ValRng>>::value>
+                detail::join_cardinality<
+                    range_cardinality<Rng>,
+                    range_cardinality<range_value_t<Rng>>,
+                    range_cardinality<ValRng>>::value>
         {
         private:
             CONCEPT_ASSERT(InputRange<Rng>());
@@ -255,6 +279,7 @@ namespace ranges
                         return ranges::indirect_move(it_);
                     return ranges::indirect_move(val_it_);
                 }
+                void distance_to() = delete;
             };
             adaptor begin_adaptor()
             {
@@ -275,13 +300,16 @@ namespace ranges
               : range_adaptor_t<join_view>{std::move(rng)}
               , cur_{}, val_(std::move(val))
             {}
-            CONCEPT_REQUIRES(!is_infinite<Rng>() && ForwardRange<Rng>() &&
-                             SizedRange<range_value_t<Rng>>() && SizedRange<ValRng>())
-            size_t_ size() const
+            CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 &&
+                SizedRange<range_value_t<Rng>>() && SizedRange<ValRng>())
+            constexpr size_t_ size() const
             {
-                return accumulate(view::transform(this->mutable_base(), ranges::size), size_t_{0}) +
-                    (ranges::empty(this->mutable_base()) ? 0 :
-                        ranges::size(val_) * (ranges::size(this->mutable_base()) - 1));
+                return range_cardinality<join_view>::value >= 0 ?
+                    (size_t_)range_cardinality<join_view>::value :
+                    accumulate(view::transform(this->mutable_base(), ranges::size), size_t_{0}) +
+                        (range_cardinality<Rng>::value == 0 ?
+                            0 :
+                            ranges::size(val_) * (range_cardinality<Rng>::value - 1));;
             }
         };
 

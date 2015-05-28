@@ -27,6 +27,7 @@
 int main()
 {
     using namespace ranges;
+
     std::vector<int> v = view::ints | view::take(10);
     ::check_equal(v, {0,1,2,3,4,5,6,7,8,9});
 

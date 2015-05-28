@@ -36,7 +36,7 @@ namespace ranges
         //    semantics.
         template<typename Val>
         struct repeat_view
-          : range_facade<repeat_view<Val>, true>
+          : range_facade<repeat_view<Val>, infinite>
         {
         private:
             Val value_;

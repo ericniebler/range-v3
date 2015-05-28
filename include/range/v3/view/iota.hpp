@@ -158,7 +158,7 @@ namespace ranges
         /// An iota view in a closed range with non-random access iota value type
         template<typename From, typename To /* = From */>
         struct closed_iota_view
-          : range_facade<closed_iota_view<From, To>>
+          : range_facade<closed_iota_view<From, To>, finite>
         {
         private:
             friend range_access;
@@ -213,7 +213,7 @@ namespace ranges
 
         template<typename From, typename To /* = void*/>
         struct iota_view
-          : range_facade<iota_view<From, To>>
+          : range_facade<iota_view<From, To>, finite>
         {
         private:
             friend range_access;
@@ -264,7 +264,7 @@ namespace ranges
 
         template<typename From>
         struct iota_view<From, void>
-          : range_facade<iota_view<From, void>, true>
+          : range_facade<iota_view<From, void>, infinite>
         {
         private:
             using incrementable_concept_t = ranges::incrementable_concept<From>;
@@ -442,11 +442,9 @@ namespace ranges
             }
 
             struct ints_fn
-              : private iota_view<int>
+              : iota_view<int>
             {
                 ints_fn() = default;
-                using iota_view<int>::begin;
-                using iota_view<int>::end;
 
                 template<typename Val,
                     CONCEPT_REQUIRES_(Integral<Val>())>

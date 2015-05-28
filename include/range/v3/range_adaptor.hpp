@@ -354,9 +354,9 @@ namespace ranges
                 adaptor_cursor<detail::adapted_iterator_t<D>, detail::begin_adaptor_t<D>>,
                 adaptor_sentinel<detail::adapted_sentinel_t<D>, detail::end_adaptor_t<D>>>;
 
-        template<typename Derived, typename BaseRng, bool Inf /*= is_infinite<BaseRng>::value*/>
+        template<typename Derived, typename BaseRng, cardinality Cardinality /*= range_cardinality<BaseRng>::value*/>
         struct range_adaptor
-          : range_facade<Derived, Inf>
+          : range_facade<Derived, Cardinality>
         {
         private:
             friend Derived;
@@ -364,7 +364,7 @@ namespace ranges
             friend adaptor_base;
             using range_adaptor_t = range_adaptor;
             using base_range_t = view::all_t<BaseRng>;
-            using range_facade<Derived, Inf>::derived;
+            using range_facade<Derived, Cardinality>::derived;
             // Mutable here. Const-correctness is enforced below by disabling
             // begin_cursor/end_cursor if "BaseRng const" does not model
             // the View concept.

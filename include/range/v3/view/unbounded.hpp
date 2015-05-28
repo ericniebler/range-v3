@@ -25,7 +25,7 @@ namespace ranges
         /// @{
         template<typename I>
         struct unbounded_view
-          : range_interface<unbounded_view<I>, true>
+          : range_interface<unbounded_view<I>, infinite>
         {
         private:
             I it_;

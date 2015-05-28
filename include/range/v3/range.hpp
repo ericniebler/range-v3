@@ -352,7 +352,7 @@ namespace ranges
             return detail::move(p).second;
         }
 
-        // TODO add specialization of is_infinite for when we can determine the range is infinite
+        // TODO add specialization of range_cardinality for when we can determine the range is infinite
 
         /// @}
     }

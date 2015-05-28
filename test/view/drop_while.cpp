@@ -21,7 +21,7 @@ int main()
 {
     using namespace ranges;
     auto rng0 = view::iota(10) | view::drop_while([](int i) { return i < 25; });
-    static_assert(is_infinite<decltype(rng0)>::value, "");
+    static_assert(range_cardinality<decltype(rng0)>::value == unknown, "");
     ::models<concepts::RandomAccessView>(rng0);
     ::models_not<concepts::BoundedView>(rng0);
     ::models<concepts::RandomAccessIterator>(rng0.begin());
@@ -32,6 +32,7 @@ int main()
 
     std::list<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto rng1 = vi | view::drop_while([](int i) { return i != 50; });
+    static_assert(range_cardinality<decltype(rng1)>::value == ranges::finite, "");
     ::models<concepts::BidirectionalView>(rng1);
     ::models<concepts::BoundedView>(rng1);
     ::models<concepts::BidirectionalIterator>(rng1.begin());

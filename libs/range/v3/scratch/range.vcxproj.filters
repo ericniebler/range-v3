@@ -645,6 +645,9 @@
     <ClCompile Include="..\..\..\..\test\view\tokenize.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\action\shuffle.cpp">
+      <Filter>Test Files\action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
@@ -1306,6 +1309,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\test\array.hpp">
       <Filter>Test Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\action\shuffle.hpp">
+      <Filter>Header Files\range\action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

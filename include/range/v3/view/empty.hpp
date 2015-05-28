@@ -23,7 +23,7 @@ namespace ranges
     {
         template<typename T>
         struct empty_view
-          : range_facade<empty_view<T>>
+          : range_facade<empty_view<T>, (cardinality)0>
         {
         private:
             friend range_access;
@@ -69,6 +69,10 @@ namespace ranges
             }
         public:
             empty_view() = default;
+            constexpr std::size_t size() const
+            {
+                return 0u;
+            }
         };
 
         namespace view

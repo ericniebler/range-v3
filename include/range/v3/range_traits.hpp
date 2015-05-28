@@ -94,20 +94,29 @@ namespace ranges
         template<typename Rng>
         using range_size = meta::defer<range_size_t, Rng>;
 
-        // User customization point for infinite ranges:
+        /// \cond
+        namespace detail
+        {
+            std::integral_constant<cardinality, finite> test_cardinality(void *);
+            template<cardinality Card>
+            std::integral_constant<cardinality, Card> test_cardinality(basic_view<Card> *);
+        }
+        /// \endcond
+
+        // User customization point for specifying the cardinality of ranges:
         template<typename Rng, typename Void /*= void*/>
-        struct is_infinite
-          : std::is_base_of<basic_range<true>, Rng>
+        struct range_cardinality
+          : decltype(detail::test_cardinality(static_cast<Rng *>(nullptr)))
         {};
 
         template<typename Rng>
-        struct is_infinite<Rng &>
-          : is_infinite<Rng>
+        struct range_cardinality<Rng &>
+          : range_cardinality<Rng>
         {};
 
         template<typename Rng>
-        struct is_infinite<Rng const>
-          : is_infinite<Rng>
+        struct range_cardinality<Rng const>
+          : range_cardinality<Rng>
         {};
 
         /// @}

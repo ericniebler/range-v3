@@ -38,7 +38,9 @@ namespace ranges
         /// @{
         template<typename Rng, typename Fun>
         struct group_by_view
-          : range_facade<group_by_view<Rng, Fun>>
+          : range_facade<
+                group_by_view<Rng, Fun>,
+                is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
         private:
             friend range_access;
