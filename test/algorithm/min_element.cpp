@@ -19,6 +19,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <memory>
+#include <random>
 #include <numeric>
 #include <algorithm>
 #include <range/v3/core.hpp>
@@ -26,6 +27,8 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+
+namespace { std::mt19937 gen; }
 
 template <class Iter, class Sent = Iter>
 void
@@ -66,7 +69,7 @@ test_iter(unsigned N)
 {
     std::unique_ptr<int[]> a{new int[N]};
     std::iota(a.get(), a.get()+N, 0);
-    std::random_shuffle(a.get(), a.get()+N);
+    std::shuffle(a.get(), a.get()+N, gen);
     test_iter(Iter(a.get()), Sent(a.get()+N));
 }
 
@@ -121,7 +124,7 @@ test_iter_comp(unsigned N)
 {
     std::unique_ptr<int[]> a{new int[N]};
     std::iota(a.get(), a.get()+N, 0);
-    std::random_shuffle(a.get(), a.get()+N);
+    std::shuffle(a.get(), a.get()+N, gen);
     test_iter_comp(Iter(a.get()), Sent(a.get()+N));
 }
 

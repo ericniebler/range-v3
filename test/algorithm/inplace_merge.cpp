@@ -20,11 +20,14 @@
 
 #include <cassert>
 #include <algorithm>
+#include <random>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+
+namespace { std::mt19937 gen; }
 
 template <class Iter, typename Sent = Iter>
 void
@@ -34,7 +37,7 @@ test_one_iter(unsigned N, unsigned M)
     int* ia = new int[N];
     for (unsigned i = 0; i < N; ++i)
         ia[i] = i;
-    std::random_shuffle(ia, ia+N);
+    std::shuffle(ia, ia+N, gen);
     std::sort(ia, ia+M);
     std::sort(ia+M, ia+N);
     auto res = ranges::inplace_merge(Iter(ia), Iter(ia+M), Sent(ia+N));
@@ -56,7 +59,7 @@ test_one_rng(unsigned N, unsigned M)
     int* ia = new int[N];
     for (unsigned i = 0; i < N; ++i)
         ia[i] = i;
-    std::random_shuffle(ia, ia+N);
+    std::shuffle(ia, ia+N, gen);
     std::sort(ia, ia+M);
     std::sort(ia+M, ia+N);
     auto res = ranges::inplace_merge(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia+N))), Iter(ia+M));
@@ -68,7 +71,7 @@ test_one_rng(unsigned N, unsigned M)
         CHECK(std::is_sorted(ia, ia+N));
     }
 
-    std::random_shuffle(ia, ia+N);
+    std::shuffle(ia, ia+N, gen);
     std::sort(ia, ia+M);
     std::sort(ia+M, ia+N);
     auto res2 = ranges::inplace_merge(ranges::make_range(Iter(ia), Sent(ia+N)), Iter(ia+M));
