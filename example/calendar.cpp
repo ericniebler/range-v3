@@ -59,6 +59,7 @@
 #include <functional>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/program_options.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
@@ -75,11 +76,11 @@
 #include <range/v3/algorithm/for_each.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
 
+namespace po = boost::program_options;
 namespace greg = boost::gregorian;
 using date = greg::date;
 using day = greg::date_duration;
 using namespace ranges;
-using std::cout;
 
 namespace boost { namespace gregorian {
     date &operator++(date &d) { return d = d + day(1); }
@@ -92,9 +93,13 @@ namespace ranges {
 }
 CONCEPT_ASSERT(Incrementable<date>());
 
-auto dates_in_year(int year) {
-    return view::iota(date{year,greg::Jan,1},
-                      date{year+1,greg::Jan,1});
+auto dates(unsigned short start, unsigned short stop) {
+    return view::iota(date{start,greg::Jan,1},
+                      date{stop,greg::Jan,1});
+}
+
+auto dates_from(unsigned short year) {
+    return view::iota(date{year,greg::Jan,1});
 }
 
 auto by_month() {
@@ -166,7 +171,6 @@ template<class Rng>
 class chunk_view<Rng>::adaptor : public adaptor_base {
     std::size_t n_;
     range_sentinel_t<Rng> end_;
-    using adaptor_base::prev;
 public:
     adaptor() = default;
     adaptor(std::size_t n, range_sentinel_t<Rng> end)
@@ -178,6 +182,7 @@ public:
     void next(range_iterator_t<Rng> &it) {
         ranges::advance(it, n_, end_);
     }
+    void prev() = delete;
 };
 
 // In:  Range<T>
@@ -269,19 +274,12 @@ auto join_months() {
     });
 }
 
-int main(int argc, char *argv[]) try {
-    if(argc < 2) {
-        std::cerr << "Please enter the year to format.\n";
-        std::cerr << boost::format("  Usage: %1% <year>\n") % argv[0];
-        return 1;
-    }
-
-    int year = boost::lexical_cast<int>(argv[1]);
-    int months_per_line = 3;
-
-    auto calendar =
-        // Make a range of all the dates in a year:
-        dates_in_year(year)
+// In:  Range<date>
+// Out: Range<string>, lines of formatted output
+auto format_calendar(std::size_t months_per_line) {
+    return make_pipeable([=](auto && rng) {
+        using Rng = decltype(rng);
+        return std::forward<Rng>(rng)
             // Group the dates by month:
           | by_month()
             // Format the month into a range of strings:
@@ -294,9 +292,53 @@ int main(int argc, char *argv[]) try {
           | view::join
             // Join the strings of the transposed months:
           | join_months();
+    });
+}
 
-    // Write the result to stdout:
-    copy(calendar, ostream_iterator<>(std::cout, "\n"));
+int main(int argc, char *argv[]) try {
+    // Declare the supported options.
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "produce help message")
+        ("start", po::value<unsigned short>(), "Year to start")
+        ("stop", po::value<std::string>(), "Year to stop")
+        ("per-line", po::value<std::size_t>()->default_value(3u), "Nbr of months per line")
+    ;
+
+    po::positional_options_description p;
+    p.add("start", 1).add("stop", 1);
+
+    po::variables_map vm;
+    po::store(po::command_line_parser(argc, argv).
+              options(desc).positional(p).run(), vm);
+    po::notify(vm);
+
+    if(vm.count("help") || 1 != vm.count("start")) {
+        std::cerr << desc << '\n';
+        return 1;
+    }
+
+    auto const start = vm["start"].as<unsigned short>();
+    auto const stop = 0 == vm.count("stop") ?
+        (unsigned short)(start + 1) :
+        vm["stop"].as<std::string>() == "never" ?
+            (unsigned short)-1 :
+            boost::lexical_cast<unsigned short>(vm["stop"].as<std::string>());
+    auto const months_per_line = vm["per-line"].as<std::size_t>();
+
+    if(stop != (unsigned short)-1 && stop <= start) {
+        std::cerr << "ERROR: The stop year must be larger than the start" << '\n';
+        return 1;
+    }
+
+    if((unsigned short)-1 != stop) {
+        copy(dates(start, stop) | format_calendar(months_per_line),
+            ostream_iterator<>(std::cout, "\n"));
+    }
+    else {
+        copy(dates_from(start) | format_calendar(months_per_line),
+            ostream_iterator<>(std::cout, "\n"));
+    }
 }
 catch(std::exception &e) {
     std::cerr << "ERROR: Unhandled exception\n";
