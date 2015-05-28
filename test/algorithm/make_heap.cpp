@@ -23,6 +23,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <memory>
+#include <random>
 #include <algorithm>
 #include <functional>
 #include <range/v3/core.hpp>
