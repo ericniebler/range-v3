@@ -20,6 +20,7 @@
 
 #include <cassert>
 #include <memory>
+#include <random>
 #include <vector>
 #include <algorithm>
 #include <range/v3/core.hpp>
@@ -35,6 +36,8 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+
+namespace { std::mt19937 gen; }
 
 // BUGBUG
 namespace std
@@ -145,7 +148,7 @@ test_larger_sorts(int N, int M)
     CHECK(ranges::sort(array, array+N) == array+N);
     CHECK(std::is_sorted(array, array+N));
     // test random pattern
-    std::random_shuffle(array, array+N);
+    std::shuffle(array, array+N, gen);
     CHECK(ranges::sort(array, array+N) == array+N);
     CHECK(std::is_sorted(array, array+N));
     // test sorted pattern

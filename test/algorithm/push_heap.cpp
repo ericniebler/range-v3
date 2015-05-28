@@ -31,6 +31,7 @@
 //   push_heap(Iter first, Iter last);
 
 #include <memory>
+#include <random>
 #include <algorithm>
 #include <functional>
 #include <range/v3/core.hpp>
@@ -39,6 +40,8 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
+namespace { std::mt19937 gen; }
+
 void test(int N)
 {
     auto push_heap = make_testable_1(ranges::push_heap);
@@ -46,7 +49,7 @@ void test(int N)
     int* ia = new int [N];
     for (int i = 0; i < N; ++i)
         ia[i] = i;
-    std::random_shuffle(ia, ia+N);
+    std::shuffle(ia, ia+N, gen);
     for (int i = 0; i <= N; ++i)
     {
         push_heap(ia, ia+i).check([&](int *r){CHECK(r == ia + i);});
@@ -62,7 +65,7 @@ void test_comp(int N)
     int* ia = new int [N];
     for (int i = 0; i < N; ++i)
         ia[i] = i;
-    std::random_shuffle(ia, ia+N);
+    std::shuffle(ia, ia+N, gen);
     for (int i = 0; i <= N; ++i)
     {
         push_heap(ia, ia+i, std::greater<int>()).check([&](int *r){CHECK(r == ia+i);});
@@ -84,7 +87,7 @@ void test_proj(int N)
     int* ib = new int [N];
     for (int i = 0; i < N; ++i)
         ia[i].i = i;
-    std::random_shuffle(ia, ia+N);
+    std::shuffle(ia, ia+N, gen);
     for (int i = 0; i <= N; ++i)
     {
         push_heap(ia, ia+i, std::greater<int>(), &S::i).check([&](S *r){CHECK(r == ia+i);});
@@ -108,7 +111,7 @@ void test_move_only(int N)
     std::unique_ptr<int>* ia = new std::unique_ptr<int> [N];
     for (int i = 0; i < N; ++i)
         ia[i].reset(new int(i));
-    std::random_shuffle(ia, ia+N);
+    std::shuffle(ia, ia+N, gen);
     for (int i = 0; i <= N; ++i)
     {
         push_heap(ia, ia+i, indirect_less()).check([&](std::unique_ptr<int> *r){CHECK(r == ia+i);});
@@ -130,7 +133,7 @@ int main()
         int* ib = new int [N];
         for (int i = 0; i < N; ++i)
             ia[i].i = i;
-        std::random_shuffle(ia, ia+N);
+        std::shuffle(ia, ia+N, gen);
         for (int i = 0; i <= N; ++i)
         {
             CHECK(ranges::push_heap(ranges::make_range(ia, ia+i), std::greater<int>(), &S::i).get_unsafe() == ia+i);

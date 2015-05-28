@@ -20,6 +20,7 @@
 
 #include <cassert>
 #include <memory>
+#include <random>
 #include <vector>
 #include <algorithm>
 #include <range/v3/core.hpp>
@@ -27,6 +28,8 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
+
+namespace { std::mt19937 gen; }
 
 template <class Iter>
 void
@@ -37,7 +40,7 @@ test_larger_sorts(int N, int M)
     int* output = new int[M];
     for (int i = 0; i < N; ++i)
         input[i] = i;
-    std::random_shuffle(input, input+N);
+    std::shuffle(input, input+N, gen);
     partial_sort_copy(Iter(input), Iter(input+N), output, output+M).check([&](int* r)
     {
         int* e = output + std::min(N, M);
@@ -45,7 +48,7 @@ test_larger_sorts(int N, int M)
         int i = 0;
         for (int* x = output; x < e; ++x, ++i)
             CHECK(*x == i);
-        std::random_shuffle(input, input+N);
+        std::shuffle(input, input+N, gen);
     });
     partial_sort_copy(Iter(input), Iter(input+N), output, output+M, std::greater<int>()).check([&](int* r)
     {
@@ -54,7 +57,7 @@ test_larger_sorts(int N, int M)
         int i = N-1;
         for (int* x = output; x < e; ++x, --i)
             CHECK(*x == i);
-        std::random_shuffle(input, input+N);
+        std::shuffle(input, input+N, gen);
     });
     delete [] output;
     delete [] input;
@@ -127,7 +130,7 @@ int main()
         U output[M];
         for (int i = 0; i < N; ++i)
             input[i].i = i;
-        std::random_shuffle(input, input+N);
+        std::shuffle(input, input+N, gen);
         U * r = ranges::partial_sort_copy(input, output, std::less<int>(), &S::i, &U::i);
         U* e = output + std::min(N, M);
         CHECK(r == e);
@@ -144,7 +147,7 @@ int main()
         U output[M];
         for (int i = 0; i < N; ++i)
             input[i].i = i;
-        std::random_shuffle(input, input+N);
+        std::shuffle(input, input+N, gen);
         auto r = ranges::partial_sort_copy(input, ranges::view::all(output), std::less<int>(), &S::i, &U::i);
         U* e = output + std::min(N, M);
         CHECK(r.get_unsafe() == e);
