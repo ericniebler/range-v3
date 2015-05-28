@@ -34,7 +34,7 @@ struct nonmovable
 
 struct nondefaultconstructible
 {
-    nondefaultconstructible(int) {};
+    nondefaultconstructible(int) {}
 };
 
 static_assert(ranges::CopyAssignable<int>(), "");
