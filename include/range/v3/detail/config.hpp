@@ -21,6 +21,17 @@
 # define RANGES_ASSERT assert
 #endif
 
+#ifndef RANGES_ENSURE_MSG
+# include <exception>
+# define RANGES_ENSURE_MSG(COND, MSG) \
+    ((COND) ? void() : (RANGES_ASSERT(!(true && MSG)), std::terminate()))
+#endif
+
+#ifndef RANGES_ENSURE
+# define RANGES_ENSURE(COND) \
+    RANGES_ENSURE_MSG(COND, #COND)
+#endif
+
 #define RANGES_DECLTYPE_AUTO_RETURN(...)                        \
     -> decltype(__VA_ARGS__)                                    \
     { return (__VA_ARGS__); }                                   \
