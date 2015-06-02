@@ -192,10 +192,9 @@ namespace ranges
                         }
                     }
                 };
-                static difference_type distance_to_(meta::size_t<cranges>, cursor const &, cursor const &)
+                [[noreturn]] static difference_type distance_to_(meta::size_t<cranges>, cursor const &, cursor const &)
                 {
-                    RANGES_ASSERT(false);
-                    return 0;
+                    RANGES_ENSURE(false);
                 }
                 template<std::size_t N>
                 static difference_type distance_to_(meta::size_t<N>, cursor const &from, cursor const &to)

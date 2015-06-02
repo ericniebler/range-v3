@@ -29,10 +29,9 @@ namespace ranges
             friend range_access;
             struct cursor
             {
-                T const & current() const
+                [[noreturn]] T const & current() const
                 {
-                    RANGES_ASSERT(false);
-                    return *reinterpret_cast<T const *>(this);
+                    RANGES_ENSURE(false);
                 }
                 constexpr bool done() const
                 {
@@ -42,13 +41,13 @@ namespace ranges
                 {
                     return true;
                 }
-                void next()
+                [[noreturn]] void next()
                 {
-                    RANGES_ASSERT(false);
+                    RANGES_ENSURE(false);
                 }
-                void prev()
+                [[noreturn]] void prev()
                 {
-                    RANGES_ASSERT(false);
+                    RANGES_ENSURE(false);
                 }
                 void advance(std::ptrdiff_t n)
                 {

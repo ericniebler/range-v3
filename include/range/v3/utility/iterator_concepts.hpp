@@ -458,11 +458,10 @@ namespace ranges
                 using reference =
                     concepts::Callable::result_t<Proj, concepts::Readable::reference_t<I>>;
                 reference operator*() const;
-                friend auto indirect_move(projected_readable const &) ->
+                [[noreturn]] friend auto indirect_move(projected_readable const &) ->
                     concepts::Callable::result_t<Proj, concepts::Readable::rvalue_reference_t<I>>
                 {
-                    RANGES_ASSERT(false);
-                    throw;
+                    RANGES_ENSURE(false);
                 }
             };
 

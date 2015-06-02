@@ -56,9 +56,9 @@ namespace ranges
                 std::forward<Fun>(fun)(t, u);
             }
 
-            inline void apply_if(any, any, any)
+            [[noreturn]] inline void apply_if(any, any, any)
             {
-                RANGES_ASSERT(false);
+                RANGES_ENSURE(false);
             }
 
             template<typename...List>
@@ -67,23 +67,22 @@ namespace ranges
             template<>
             union variant_data<>
             {
-                void move(std::size_t, variant_data &&) const
+                [[noreturn]] void move(std::size_t, variant_data &&) const
                 {
-                    RANGES_ASSERT(false);
+                    RANGES_ENSURE(false);
                 }
-                void copy(std::size_t, variant_data const &) const
+                [[noreturn]] void copy(std::size_t, variant_data const &) const
                 {
-                    RANGES_ASSERT(false);
+                    RANGES_ENSURE(false);
                 }
-                bool equal(std::size_t, variant_data const &) const
+                [[noreturn]] bool equal(std::size_t, variant_data const &) const
                 {
-                    RANGES_ASSERT(false);
-                    return true;
+                    RANGES_ENSURE(false);
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t, Fun &&, meta::size_t<N> = meta::size_t<N>{}) const
+                [[noreturn]] void apply(std::size_t, Fun &&, meta::size_t<N> = meta::size_t<N>{}) const
                 {
-                    RANGES_ASSERT(false);
+                    RANGES_ENSURE(false);
                 }
             };
 
@@ -189,7 +188,7 @@ namespace ranges
 
             struct assert_otherwise
             {
-                static void assert_false(any) { RANGES_ASSERT(false); }
+                [[noreturn]] static void assert_false(any) { RANGES_ENSURE(false); }
                 using fun_t = void(*)(any);
                 operator fun_t() const
                 {
