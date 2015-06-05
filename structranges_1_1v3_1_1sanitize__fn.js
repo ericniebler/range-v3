@@ -6,5 +6,8 @@ var structranges_1_1v3_1_1sanitize__fn =
     [ "operator()", "structranges_1_1v3_1_1sanitize__fn.html#aebf89cd7a59c066437d67f41204694e3", null ],
     [ "operator()", "structranges_1_1v3_1_1sanitize__fn.html#aece69a08e4eb7b865c90d8602ea990e8", null ],
     [ "operator()", "structranges_1_1v3_1_1sanitize__fn.html#aac7e4d8265cbb57b96f5a7d7c3971453", null ],
-    [ "operator()", "structranges_1_1v3_1_1sanitize__fn.html#a91c0ecaf24f14d82b2d517d04991cee6", null ]
+    [ "operator()", "structranges_1_1v3_1_1sanitize__fn.html#a91c0ecaf24f14d82b2d517d04991cee6", null ],
+    [ "operator()", "structranges_1_1v3_1_1sanitize__fn.html#ab696b7df9e793603fa548beb4bc8b208", null ],
+    [ "operator()", "structranges_1_1v3_1_1sanitize__fn.html#ad8687e732ccbaf7febe2d986da8aa8e2", null ],
+    [ "operator()", "structranges_1_1v3_1_1sanitize__fn.html#a4cd1066288ff002afd24895fb11c5da9", null ]
 ];

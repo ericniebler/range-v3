@@ -10,6 +10,7 @@ var dir_c1fc4cd79123c378badd8da64598e6d4 =
     [ "push_back.hpp", "push__back_8hpp.html", null ],
     [ "push_front.hpp", "push__front_8hpp.html", null ],
     [ "remove_if.hpp", "action_2remove__if_8hpp.html", null ],
+    [ "shuffle.hpp", "action_2shuffle_8hpp.html", null ],
     [ "slice.hpp", "action_2slice_8hpp.html", null ],
     [ "sort.hpp", "action_2sort_8hpp.html", null ],
     [ "split.hpp", "action_2split_8hpp.html", null ],

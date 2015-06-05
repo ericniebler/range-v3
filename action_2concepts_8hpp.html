@@ -104,6 +104,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_lvalue_container_like.html">ranges::v3::concepts::LvalueContainerLike</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_reservable.html">ranges::v3::concepts::Reservable</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_reserve_and_assignable.html">ranges::v3::concepts::ReserveAndAssignable</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_semi_container.html">ranges::v3::concepts::SemiContainer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -123,6 +127,18 @@ template&lt;typename T &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga17e9c6eb30d75301b1a4e5dc03af6a88"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::LvalueContainerLike</b> = concepts::models&lt; concepts::LvalueContainerLike, T &gt;</td></tr>
 <tr class="separator:ga17e9c6eb30d75301b1a4e5dc03af6a88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca6b534fc3b220aad6b052565a04b4e8"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaca6b534fc3b220aad6b052565a04b4e8"></a>
+template&lt;typename C &gt; </td></tr>
+<tr class="memitem:gaca6b534fc3b220aad6b052565a04b4e8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::RandomAccessReservable</b> = <a class="el" href="group__logical.html#ga5cba587f3bb7feda51126b0fbaff8f2f">meta::fast_and</a>&lt; Reservable&lt; C &gt;, RandomAccessRange&lt; C &gt;&gt;</td></tr>
+<tr class="separator:gaca6b534fc3b220aad6b052565a04b4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga00faed91544ca31e17df495282fe5c4e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga00faed91544ca31e17df495282fe5c4e"></a>
+template&lt;typename C &gt; </td></tr>
+<tr class="memitem:ga00faed91544ca31e17df495282fe5c4e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Reservable</b> = concepts::models&lt; concepts::Reservable, C &gt;</td></tr>
+<tr class="separator:ga00faed91544ca31e17df495282fe5c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9d239452071ceb6c41ab52676cae1946"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9d239452071ceb6c41ab52676cae1946"></a>
+template&lt;typename C , typename I &gt; </td></tr>
+<tr class="memitem:ga9d239452071ceb6c41ab52676cae1946"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::ReserveAndAssignable</b> = concepts::models&lt; concepts::ReserveAndAssignable, C, I &gt;</td></tr>
+<tr class="separator:ga9d239452071ceb6c41ab52676cae1946"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5f696e9bbd3d8a9a4bb6c79142c5e901"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga5f696e9bbd3d8a9a4bb6c79142c5e901"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga5f696e9bbd3d8a9a4bb6c79142c5e901"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::SemiContainer</b> = concepts::models&lt; concepts::SemiContainer, T &gt;</td></tr>

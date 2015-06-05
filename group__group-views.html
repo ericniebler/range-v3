@@ -112,7 +112,7 @@ Namespaces</h2></td></tr>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__remove__if__view.html">ranges::v3::adjacent_remove_if_view&lt; Rng, F &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1any__input__range.html">ranges::v3::any_input_range&lt; Ref, Inf &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1any__input__range.html">ranges::v3::any_input_range&lt; Ref &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type-erased InputView.  <a href="structranges_1_1v3_1_1any__input__range.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1bounded__view.html">ranges::v3::bounded_view&lt; Rng &gt;</a></td></tr>
@@ -152,7 +152,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iota__view_3_01_from_00_01void_01_4.html">ranges::v3::iota_view&lt; From, void &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iter__take__while__view.html">ranges::v3::iter_take_while_view&lt; Rng, Pred, Inf &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iter__take__while__view.html">ranges::v3::iter_take_while_view&lt; Rng, Pred &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1iter__transform__view.html">ranges::v3::iter_transform_view&lt; Rng, Fun &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,7 +188,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1take__exactly__view.html">ranges::v3::take_exactly_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1take__while__view.html">ranges::v3::take_while_view&lt; Rng, Pred, Inf &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1take__while__view.html">ranges::v3::take_while_view&lt; Rng, Pred &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1tokenize__view.html">ranges::v3::tokenize_view&lt; Rng, Regex, SubMatchRange &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -346,12 +346,12 @@ template&lt;typename... Ts, typename V  = View&gt; </td></tr>
 <tr class="memitem:ga2be8c2da5626bf18808c7bbd87aa3e88"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga2be8c2da5626bf18808c7bbd87aa3e88"></a>
 result_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cached</b> ()</td></tr>
 <tr class="separator:ga2be8c2da5626bf18808c7bbd87aa3e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga50a62cb73c067f7ff719ead389697b5b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga50a62cb73c067f7ff719ead389697b5b"></a>
-range_value_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::current</b> (range_iterator_t&lt; Rng &gt; it) const </td></tr>
-<tr class="separator:ga50a62cb73c067f7ff719ead389697b5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2254359e4f10acecc0e1bf093be55b74"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga2254359e4f10acecc0e1bf093be55b74"></a>
 result_t&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cursor::current</b> () const </td></tr>
 <tr class="separator:ga2254359e4f10acecc0e1bf093be55b74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga50a62cb73c067f7ff719ead389697b5b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga50a62cb73c067f7ff719ead389697b5b"></a>
+range_value_t&lt; Rng &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::intersperse_view&lt; Rng &gt;::cursor_adaptor::current</b> (range_iterator_t&lt; Rng &gt; it) const </td></tr>
+<tr class="separator:ga50a62cb73c067f7ff719ead389697b5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga656956e3cfdf1b3ab3223ccd65c0e202"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga656956e3cfdf1b3ab3223ccd65c0e202"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::generate_view&lt; G &gt;::cursor::cursor</b> (generate_view &amp;view)</td></tr>
 <tr class="separator:ga656956e3cfdf1b3ab3223ccd65c0e202"><td class="memSeparator" colspan="2">&#160;</td></tr>

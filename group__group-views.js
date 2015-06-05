@@ -7,13 +7,12 @@ var group__group_views =
       [ "adjacent_remove_if_view", "structranges_1_1v3_1_1adjacent__remove__if__view.html#a2573f54fea84aba447ef415f1b3b4b21", null ]
     ] ],
     [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html", [
-      [ "operator=", "structranges_1_1v3_1_1any__input__range.html#a34d36996ffd541bcd33c554f1be5f924", null ],
-      [ "operator=", "structranges_1_1v3_1_1any__input__range.html#adad3e10e8f4a4407a4b55b5ade78bdfa", null ],
-      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#afe5583907d2953c96aa37e9f8152297a", null ],
-      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#afcb97dc2de0d375eef1e28f22469a927", null ],
-      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#a0c6ac6900ca24b65aa7bcb62b1293834", null ],
-      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#a608cdd4f761f610fda4872d2c7a712a4", null ],
-      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#a8d48ecd280c702984a77bb4508285525", null ]
+      [ "operator=", "structranges_1_1v3_1_1any__input__range.html#a00f2fc65b5a8d91639d7465100e75a20", null ],
+      [ "operator=", "structranges_1_1v3_1_1any__input__range.html#a519da731b9585556cb1e540d493c3088", null ],
+      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#a54c3d69b4895deee0a7a8ffe1a2d9203", null ],
+      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#a042b031522fbf87db8f8f50969b89c0f", null ],
+      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#acba092532057a0964b21e7cf49e5e7f0", null ],
+      [ "any_input_range", "structranges_1_1v3_1_1any__input__range.html#a064bc6e3191ff1265120371c569fb7f8", null ]
     ] ],
     [ "bounded_view", "structranges_1_1v3_1_1bounded__view.html", [
       [ "base", "structranges_1_1v3_1_1bounded__view.html#a9f06bab54cd6e1f884690f47cdecb796", null ],
@@ -48,7 +47,7 @@ var group__group_views =
       [ "closed_iota_view", "structranges_1_1v3_1_1closed__iota__view.html#ab22ee6c6104dd2f8296ad56f86959f3d", null ]
     ] ],
     [ "concat_view", "structranges_1_1v3_1_1concat__view.html", [
-      [ "size", "structranges_1_1v3_1_1concat__view.html#aab7b5ad67c5eaeba61c5d9e379076817", null ],
+      [ "size", "structranges_1_1v3_1_1concat__view.html#aef358347f8c73d62f3d2f7551ca3884f", null ],
       [ "concat_view", "structranges_1_1v3_1_1concat__view.html#a37cef9103e61891b273a7d94b5e86b1f", null ],
       [ "concat_view", "structranges_1_1v3_1_1concat__view.html#a9bca0637eaeaa887fee17595facfa296", null ]
     ] ],
@@ -133,9 +132,9 @@ var group__group_views =
       [ "iota_view", "structranges_1_1v3_1_1iota__view_3_01_from_00_01void_01_4.html#aa63bb920eb0fd194fbe47d5e100f3ef4", null ]
     ] ],
     [ "iter_take_while_view", "structranges_1_1v3_1_1iter__take__while__view.html", [
-      [ "pred_", "structranges_1_1v3_1_1iter__take__while__view.html#afb5ba943b6e97e38f55bb9c89322f75e", null ],
-      [ "iter_take_while_view", "structranges_1_1v3_1_1iter__take__while__view.html#af2340551d4a75d58e454c1454e301a7c", null ],
-      [ "iter_take_while_view", "structranges_1_1v3_1_1iter__take__while__view.html#a5272b836726501d0ae31da6e3c518024", null ]
+      [ "pred_", "structranges_1_1v3_1_1iter__take__while__view.html#ae22b149ce1ee8a9c1c40ed4a395e5675", null ],
+      [ "iter_take_while_view", "structranges_1_1v3_1_1iter__take__while__view.html#a05f96048abcd1de1e6fa3b91e8742d8b", null ],
+      [ "iter_take_while_view", "structranges_1_1v3_1_1iter__take__while__view.html#aeccfc27557b30bca570c53515434b6ea", null ]
     ] ],
     [ "iter_transform_view", "structranges_1_1v3_1_1iter__transform__view.html", [
       [ "fun_", "structranges_1_1v3_1_1iter__transform__view.html#a469c64e0fc301e2df12de136fa210688", null ],
@@ -144,13 +143,13 @@ var group__group_views =
       [ "iter_transform_view", "structranges_1_1v3_1_1iter__transform__view.html#aa7723838db06643738cae00d06b2cd17", null ]
     ] ],
     [ "iter_zip_with_view", "structranges_1_1v3_1_1iter__zip__with__view.html", [
-      [ "size", "structranges_1_1v3_1_1iter__zip__with__view.html#a7c2c14ee04c034d19c574a31c683d527", null ],
+      [ "size", "structranges_1_1v3_1_1iter__zip__with__view.html#a0ca09733cc23af54515286a1daf9ea03", null ],
       [ "iter_zip_with_view", "structranges_1_1v3_1_1iter__zip__with__view.html#a5570a324772a759ba114658d984ea671", null ],
       [ "iter_zip_with_view", "structranges_1_1v3_1_1iter__zip__with__view.html#aa97e72971c177441a71bf0706c4298f7", null ],
       [ "iter_zip_with_view", "structranges_1_1v3_1_1iter__zip__with__view.html#ab97c89065b55b570881cb8cafeaa6388", null ]
     ] ],
     [ "join_view", "structranges_1_1v3_1_1join__view.html", [
-      [ "size", "structranges_1_1v3_1_1join__view.html#a113df4c70b943344f4a566ada19131fa", null ],
+      [ "size", "structranges_1_1v3_1_1join__view.html#a824c41db66f85c02f5042785f492ed1c", null ],
       [ "val_", "structranges_1_1v3_1_1join__view.html#a6e932fa704a418c5030eb099dd6e8430", null ],
       [ "cur_", "structranges_1_1v3_1_1join__view.html#a422d4497b37e3dc4c3e9c9ea2e19f1f1", null ],
       [ "join_view", "structranges_1_1v3_1_1join__view.html#adb4edb06e0e372f033f2e7989b4bda58", null ],
@@ -215,7 +214,7 @@ var group__group_views =
       [ "base", "structranges_1_1v3_1_1tail__view.html#a12d7f0f4b87eff5c59b10f42e5065543", null ],
       [ "begin", "structranges_1_1v3_1_1tail__view.html#afbd352f7be8ee2bb4723d4c51c8cb375", null ],
       [ "end", "structranges_1_1v3_1_1tail__view.html#ae542c206171c76a13f755d72775a0926", null ],
-      [ "size", "structranges_1_1v3_1_1tail__view.html#ae3f3dcf6e4290a2c38fe089ed5a8a9f4", null ],
+      [ "size", "structranges_1_1v3_1_1tail__view.html#ad88f8bf73a5a32fad7e2c96b1d7cde60", null ],
       [ "iterator", "structranges_1_1v3_1_1tail__view.html#a761d3e731b16b5e30c0b8aba9f2294c4", null ],
       [ "sentinel", "structranges_1_1v3_1_1tail__view.html#a6eec24bfabdef51d4465ad7e40b477b5", null ],
       [ "tail_view", "structranges_1_1v3_1_1tail__view.html#a07c9d7a42b2328ad5245d69d2f66457f", null ],
@@ -223,8 +222,8 @@ var group__group_views =
     ] ],
     [ "take_exactly_view", "structranges_1_1v3_1_1take__exactly__view.html", null ],
     [ "take_while_view", "structranges_1_1v3_1_1take__while__view.html", [
-      [ "take_while_view", "structranges_1_1v3_1_1take__while__view.html#a16f220e7b6db37f3c6447735e59a276d", null ],
-      [ "take_while_view", "structranges_1_1v3_1_1take__while__view.html#a3c0cdd7412d27dbe493f5e7f0b79ac3a", null ]
+      [ "take_while_view", "structranges_1_1v3_1_1take__while__view.html#a4fbbcdf48fc0dbf2b18f8a48b2673b1d", null ],
+      [ "take_while_view", "structranges_1_1v3_1_1take__while__view.html#a0590e08faa1e45cec89dbd7cf0c3b15c", null ]
     ] ],
     [ "tokenize_view", "structranges_1_1v3_1_1tokenize__view.html", [
       [ "base", "structranges_1_1v3_1_1tokenize__view.html#a13c6ccc80f6d6e3275aa14d5ece8a062", null ],

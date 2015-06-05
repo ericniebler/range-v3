@@ -1,5 +1,16 @@
 var NAVTREEINDEX1 =
 {
+"group__group-concepts.html#gaf5981a9685c7ccf7f6085acc4c833c77":[1,6,33,0],
+"group__group-concepts.html#gafa4eb09501b5fe1621bf9523bf68c923":[1,6,10,1],
+"group__group-core.html":[1,2],
+"group__group-core.html#ga1e0608aee3b230471bba14364d27f60f":[1,2,43],
+"group__group-core.html#ga21dccd922318b53ab5fc375ba0b161ef":[1,2,42],
+"group__group-core.html#ga224d07a6098c94b7a1468e8b1fe02aa7":[1,2,45],
+"group__group-core.html#ga3201530fdac5e69424f0a31aa3b96b2b":[1,2,38],
+"group__group-core.html#ga48fe919d5bedd95e5d54a851a32a258d":[1,2,46],
+"group__group-core.html#ga8f05e81086aa34f20df8299f5a7a73c8":[1,2,41],
+"group__group-core.html#gaa3c3c6d5397ec7d9b71cea471c178c7a":[1,2,44],
+"group__group-core.html#gab0d59e96bd91d7a5212c47978cd48cac":[1,2,47],
 "group__group-core.html#gab3baada25b879219f336584ac31b9c96":[1,2,37],
 "group__group-core.html#gac005d27c6d7cf8ac684466f96962c795":[1,2,39],
 "group__group-core.html#gad4881a64025bc7f3f2b6c6722c5584ed":[1,2,36],
@@ -238,16 +249,5 @@ var NAVTREEINDEX1 =
 "group__transformation.html#ga9fdd1de620c2a4853c174c5c8768f108":[1,0,2,1,21],
 "group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000":[1,0,2,1,17],
 "group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d":[1,0,2,1,19],
-"group__transformation.html#gae756c66b5d658ced668cbde0f0076b15":[1,0,2,1,16],
-"group__transformation.html#gae8666f91063c050fe79f817c03b81b3f":[1,0,2,1,18],
-"group__transformation.html#gaefcc79a06df21a497b76c2f5e0f87d81":[1,0,2,1,11],
-"group__transformation.html#gaf0914938cd913b83e46663ed6d89d908":[1,0,2,1,15],
-"group__transformation.html#gaf7be841db4ea7d88c3b00f3f2be03199":[1,0,2,1,3],
-"heap__algorithm_8hpp.html":[2,2,1,0,1,22],
-"heap__algorithm_8hpp.html#ga757b443bb0b0e126fc43cb7d0acf8a0c":[2,2,1,0,1,22,0],
-"index.html":[],
-"index.html":[0],
-"index.html#range-views":[0,2],
-"index.html#tutorial-compilers":[0,0,2],
-"index.html#tutorial-examples":[0,3]
+"group__transformation.html#gae756c66b5d658ced668cbde0f0076b15":[1,0,2,1,16]
 };

@@ -37,6 +37,13 @@ var group__group_actions =
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1remove__if__fn_1_1_concept_impl.html", [
       [ "requires_", "structranges_1_1v3_1_1action_1_1remove__if__fn_1_1_concept_impl.html#aae60937d36c3c414b0dd909c761a7770", null ]
     ] ],
+    [ "shuffle_fn", "structranges_1_1v3_1_1action_1_1shuffle__fn.html", [
+      [ "operator()", "structranges_1_1v3_1_1action_1_1shuffle__fn.html#a49b42ed7ba8dc2d35539d9c3c0e8ea21", null ],
+      [ "Concept", "structranges_1_1v3_1_1action_1_1shuffle__fn.html#afa491db51f09edb2b975d6c2dd2046d3", null ]
+    ] ],
+    [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1shuffle__fn_1_1_concept_impl.html", [
+      [ "requires_", "structranges_1_1v3_1_1action_1_1shuffle__fn_1_1_concept_impl.html#a67876ab49b72ad780d451f1fa4d785c9", null ]
+    ] ],
     [ "slice_fn", "structranges_1_1v3_1_1action_1_1slice__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1slice__fn.html#a569a2bdf19389261df8b826b9e17b0d0", null ],
       [ "Concept", "structranges_1_1v3_1_1action_1_1slice__fn.html#a615553606cf40997d57a90b813790ba0", null ]

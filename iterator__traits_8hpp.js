@@ -1,6 +1,5 @@
 var iterator__traits_8hpp =
 [
-    [ "iterator_category", "iterator__traits_8hpp.html#ga92b310830c3339722765d2272bbc0aa2", null ],
     [ "iterator_category_t", "iterator__traits_8hpp.html#gaed3625fc45c5b7e97dcefd773d4a2f8a", null ],
     [ "iterator_common_reference", "iterator__traits_8hpp.html#ga6f3fd063080ed2b7a2d30c714108c49d", null ],
     [ "iterator_common_reference_t", "iterator__traits_8hpp.html#gaa90a6f9058b077657fc50cb871ffb549", null ],

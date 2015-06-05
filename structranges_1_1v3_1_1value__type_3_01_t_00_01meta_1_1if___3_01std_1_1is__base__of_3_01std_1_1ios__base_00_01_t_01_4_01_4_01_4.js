@@ -1,0 +1,4 @@
+var structranges_1_1v3_1_1value__type_3_01_t_00_01meta_1_1if___3_01std_1_1is__base__of_3_01std_1_1ios__base_00_01_t_01_4_01_4_01_4 =
+[
+    [ "type", "structranges_1_1v3_1_1value__type_3_01_t_00_01meta_1_1if___3_01std_1_1is__base__of_3_01std_1_1ios__base_00_01_t_01_4_01_4_01_4.html#a54024eb7c024362b006aa8e0a1973626", null ]
+];

@@ -438,6 +438,7 @@ Examples</h1>
 <div class="line"><span class="preprocessor">#include &lt;functional&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;boost/format.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;boost/lexical_cast.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;boost/program_options.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;boost/date_time/gregorian/gregorian.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="core_8hpp.html">range/v3/core.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="view_2iota_8hpp.html">range/v3/view/iota.hpp</a>&gt;</span></div>
@@ -454,11 +455,11 @@ Examples</h1>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="algorithm_2for__each_8hpp.html">range/v3/algorithm/for_each.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="mismatch_8hpp.html">range/v3/algorithm/mismatch.hpp</a>&gt;</span></div>
 <div class="line"></div>
+<div class="line"><span class="keyword">namespace </span>po = boost::program_options;</div>
 <div class="line"><span class="keyword">namespace </span>greg = boost::gregorian;</div>
 <div class="line"><span class="keyword">using</span> date = greg::date;</div>
 <div class="line"><span class="keyword">using</span> day = greg::date_duration;</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
-<div class="line"><span class="keyword">using</span> std::cout;</div>
 <div class="line"></div>
 <div class="line"><span class="keyword">namespace </span>boost { <span class="keyword">namespace </span>gregorian {</div>
 <div class="line">    date &amp;operator++(date &amp;d) { <span class="keywordflow">return</span> d = d + day(1); }</div>
@@ -471,9 +472,13 @@ Examples</h1>
 <div class="line">}</div>
 <div class="line">CONCEPT_ASSERT(Incrementable&lt;date&gt;());</div>
 <div class="line"></div>
-<div class="line"><span class="keyword">auto</span> dates_in_year(<span class="keywordtype">int</span> year) {</div>
-<div class="line">    <span class="keywordflow">return</span> view::iota(date{year,greg::Jan,1},</div>
-<div class="line">                      date{year+1,greg::Jan,1});</div>
+<div class="line"><span class="keyword">auto</span> dates(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> start, <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> stop) {</div>
+<div class="line">    <span class="keywordflow">return</span> view::iota(date{start,greg::Jan,1},</div>
+<div class="line">                      date{stop,greg::Jan,1});</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">auto</span> dates_from(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> year) {</div>
+<div class="line">    <span class="keywordflow">return</span> view::iota(date{year,greg::Jan,1});</div>
 <div class="line">}</div>
 <div class="line"></div>
 <div class="line"><span class="keyword">auto</span> by_month() {</div>
@@ -545,7 +550,6 @@ Examples</h1>
 <div class="line"><span class="keyword">class </span>chunk_view&lt;Rng&gt;::adaptor : <span class="keyword">public</span> adaptor_base {</div>
 <div class="line">    <a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> n_;</div>
 <div class="line">    range_sentinel_t&lt;Rng&gt; end_;</div>
-<div class="line">    <span class="keyword">using</span> adaptor_base::prev;</div>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    adaptor() = <span class="keywordflow">default</span>;</div>
 <div class="line">    adaptor(<a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> n, range_sentinel_t&lt;Rng&gt; end)</div>
@@ -557,6 +561,7 @@ Examples</h1>
 <div class="line">    <span class="keywordtype">void</span> next(range_iterator_t&lt;Rng&gt; &amp;it) {</div>
 <div class="line">        ranges::advance(it, n_, end_);</div>
 <div class="line">    }</div>
+<div class="line">    <span class="keywordtype">void</span> prev() = <span class="keyword">delete</span>;</div>
 <div class="line">};</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// In:  Range&lt;T&gt;</span></div>
@@ -648,19 +653,12 @@ Examples</h1>
 <div class="line">    });</div>
 <div class="line">}</div>
 <div class="line"></div>
-<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[]) <span class="keyword">try</span> {</div>
-<div class="line">    <span class="keywordflow">if</span>(argc &lt; 2) {</div>
-<div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;Please enter the year to format.\n&quot;</span>;</div>
-<div class="line">        std::cerr &lt;&lt; boost::format(<span class="stringliteral">&quot;  Usage: %1% &lt;year&gt;\n&quot;</span>) % argv[0];</div>
-<div class="line">        <span class="keywordflow">return</span> 1;</div>
-<div class="line">    }</div>
-<div class="line"></div>
-<div class="line">    <span class="keywordtype">int</span> year = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(argv[1]);</div>
-<div class="line">    <span class="keywordtype">int</span> months_per_line = 3;</div>
-<div class="line"></div>
-<div class="line">    <span class="keyword">auto</span> calendar =</div>
-<div class="line">        <span class="comment">// Make a range of all the dates in a year:</span></div>
-<div class="line">        dates_in_year(year)</div>
+<div class="line"><span class="comment">// In:  Range&lt;date&gt;</span></div>
+<div class="line"><span class="comment">// Out: Range&lt;string&gt;, lines of formatted output</span></div>
+<div class="line"><span class="keyword">auto</span> format_calendar(<a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a> months_per_line) {</div>
+<div class="line">    <span class="keywordflow">return</span> make_pipeable([=](<span class="keyword">auto</span> &amp;&amp; rng) {</div>
+<div class="line">        <span class="keyword">using</span> Rng = decltype(rng);</div>
+<div class="line">        <span class="keywordflow">return</span> std::forward&lt;Rng&gt;(rng)</div>
 <div class="line">            <span class="comment">// Group the dates by month:</span></div>
 <div class="line">          | by_month()</div>
 <div class="line">            <span class="comment">// Format the month into a range of strings:</span></div>
@@ -673,9 +671,53 @@ Examples</h1>
 <div class="line">          | <a class="code" href="group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652">view::join</a></div>
 <div class="line">            <span class="comment">// Join the strings of the transposed months:</span></div>
 <div class="line">          | join_months();</div>
+<div class="line">    });</div>
+<div class="line">}</div>
 <div class="line"></div>
-<div class="line">    <span class="comment">// Write the result to stdout:</span></div>
-<div class="line">    copy(calendar, ostream_iterator&lt;&gt;(std::cout, <span class="stringliteral">&quot;\n&quot;</span>));</div>
+<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[]) <span class="keyword">try</span> {</div>
+<div class="line">    <span class="comment">// Declare the supported options.</span></div>
+<div class="line">    po::options_description desc(<span class="stringliteral">&quot;Allowed options&quot;</span>);</div>
+<div class="line">    desc.add_options()</div>
+<div class="line">        (<span class="stringliteral">&quot;help&quot;</span>, <span class="stringliteral">&quot;produce help message&quot;</span>)</div>
+<div class="line">        (<span class="stringliteral">&quot;start&quot;</span>, po::value&lt;unsigned short&gt;(), <span class="stringliteral">&quot;Year to start&quot;</span>)</div>
+<div class="line">        (<span class="stringliteral">&quot;stop&quot;</span>, po::value&lt;std::string&gt;(), <span class="stringliteral">&quot;Year to stop&quot;</span>)</div>
+<div class="line">        (<span class="stringliteral">&quot;per-line&quot;</span>, po::value&lt;std::size_t&gt;()-&gt;default_value(3u), <span class="stringliteral">&quot;Nbr of months per line&quot;</span>)</div>
+<div class="line">    ;</div>
+<div class="line"></div>
+<div class="line">    po::positional_options_description p;</div>
+<div class="line">    p.add(<span class="stringliteral">&quot;start&quot;</span>, 1).add(<span class="stringliteral">&quot;stop&quot;</span>, 1);</div>
+<div class="line"></div>
+<div class="line">    po::variables_map vm;</div>
+<div class="line">    po::store(po::command_line_parser(argc, argv).</div>
+<div class="line">              options(desc).positional(p).run(), vm);</div>
+<div class="line">    po::notify(vm);</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">if</span>(vm.count(<span class="stringliteral">&quot;help&quot;</span>) || 1 != vm.count(<span class="stringliteral">&quot;start&quot;</span>)) {</div>
+<div class="line">        std::cerr &lt;&lt; desc &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line">        <span class="keywordflow">return</span> 1;</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> start = vm[<span class="stringliteral">&quot;start&quot;</span>].as&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>&gt;();</div>
+<div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> stop = 0 == vm.count(<span class="stringliteral">&quot;stop&quot;</span>) ?</div>
+<div class="line">        (<span class="keywordtype">unsigned</span> short)(start + 1) :</div>
+<div class="line">        vm[<span class="stringliteral">&quot;stop&quot;</span>].as&lt;std::string&gt;() == <span class="stringliteral">&quot;never&quot;</span> ?</div>
+<div class="line">            (<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>)-1 :</div>
+<div class="line">            boost::lexical_cast&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>&gt;(vm[<span class="stringliteral">&quot;stop&quot;</span>].as&lt;std::string&gt;());</div>
+<div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> months_per_line = vm[<span class="stringliteral">&quot;per-line&quot;</span>].as&lt;<a class="code" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">std::size_t</a>&gt;();</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">if</span>(stop != (<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>)-1 &amp;&amp; stop &lt;= start) {</div>
+<div class="line">        std::cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: The stop year must be larger than the start&quot;</span> &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>
+<div class="line">        <span class="keywordflow">return</span> 1;</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">if</span>((<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>)-1 != stop) {</div>
+<div class="line">        copy(dates(start, stop) | format_calendar(months_per_line),</div>
+<div class="line">            ostream_iterator&lt;&gt;(std::cout, <span class="stringliteral">&quot;\n&quot;</span>));</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">else</span> {</div>
+<div class="line">        copy(dates_from(start) | format_calendar(months_per_line),</div>
+<div class="line">            ostream_iterator&lt;&gt;(std::cout, <span class="stringliteral">&quot;\n&quot;</span>));</div>
+<div class="line">    }</div>
 <div class="line">}</div>
 <div class="line"><span class="keywordflow">catch</span>(std::exception &amp;e) {</div>
 <div class="line">    std::cerr &lt;&lt; <span class="stringliteral">&quot;ERROR: Unhandled exception\n&quot;</span>;</div>
