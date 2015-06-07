@@ -361,7 +361,7 @@ namespace ranges
         using sized_view_concept_t = meta::eval<sized_view_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // range_concept
+        // view_concept
         template<typename T>
         using view_concept =
             concepts::most_refined<
@@ -377,7 +377,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            // Something is a range if it's an Range and either:
+            // Something is a view if it's a Range and either:
             //  - It doesn't look like a container, or
             //  - It's derived from view_base
             template<typename T>
