@@ -250,20 +250,20 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aaa06a88a4a1b9a488655bbabd51cd9b8"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaa06a88a4a1b9a488655bbabd51cd9b8"></a>
+<tr class="memitem:a0404db260e6a07436b9261bd6493afb6"><td class="memTemplParams" colspan="2"><a class="anchor" id="a0404db260e6a07436b9261bd6493afb6"></a>
 template&lt;typename I , typename S &gt; </td></tr>
-<tr class="memitem:aaa06a88a4a1b9a488655bbabd51cd9b8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_iterator</b> = <a class="el" href="group__logical.html#ga62fe40f22a901d7f470ad8e609b0db3e">meta::if_</a>&lt; std::is_same&lt; I, S &gt;, I, basic_iterator&lt; detail::common_cursor&lt; I, S &gt;&gt;&gt;</td></tr>
-<tr class="separator:aaa06a88a4a1b9a488655bbabd51cd9b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a418428f3d10bb1f372b442a2c3333963"><td class="memTemplParams" colspan="2"><a class="anchor" id="a418428f3d10bb1f372b442a2c3333963"></a>
+<tr class="memitem:a0404db260e6a07436b9261bd6493afb6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_iterator</b> = typename std::conditional&lt; std::is_same&lt; I, S &gt;::value, I, basic_iterator&lt; detail::common_cursor&lt; I, S &gt;&gt;&gt;::type</td></tr>
+<tr class="separator:a0404db260e6a07436b9261bd6493afb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad19454fcfc94da6123b631d5b5610f49"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad19454fcfc94da6123b631d5b5610f49"></a>
 template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:a418428f3d10bb1f372b442a2c3333963"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_reference_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; common_reference&lt; Ts...&gt;&gt;</td></tr>
-<tr class="separator:a418428f3d10bb1f372b442a2c3333963"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbb1f8ec0fc63c2e98613a78cafa83a9"><td class="memTemplParams" colspan="2"><a class="anchor" id="afbb1f8ec0fc63c2e98613a78cafa83a9"></a>
+<tr class="memitem:ad19454fcfc94da6123b631d5b5610f49"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_reference_t</b> = typename common_reference&lt; Ts...&gt;::type</td></tr>
+<tr class="separator:ad19454fcfc94da6123b631d5b5610f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5907e0a109d6ea9f8324f1de1ca1f66"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa5907e0a109d6ea9f8324f1de1ca1f66"></a>
 template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:afbb1f8ec0fc63c2e98613a78cafa83a9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_type_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; common_type&lt; Ts...&gt;&gt;</td></tr>
-<tr class="separator:afbb1f8ec0fc63c2e98613a78cafa83a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5907e0a109d6ea9f8324f1de1ca1f66"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_type_t</b> = typename common_type&lt; Ts...&gt;::type</td></tr>
+<tr class="separator:aa5907e0a109d6ea9f8324f1de1ca1f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bc59289e1a8abb6fa552893b26a9238"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1bc59289e1a8abb6fa552893b26a9238"></a>
-template&lt;typename I , typename D  = meta::eval&lt;difference_type&lt;I&gt;&gt;&gt; </td></tr>
+template&lt;typename I , typename D  = typename difference_type&lt;I&gt;::type&gt; </td></tr>
 <tr class="memitem:a1bc59289e1a8abb6fa552893b26a9238"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::counted_iterator</b> = basic_iterator&lt; detail::counted_cursor&lt; I, D &gt;, detail::counted_sentinel &gt;</td></tr>
 <tr class="separator:a1bc59289e1a8abb6fa552893b26a9238"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55a8eb382c969aa0d36cf2e7af6a44fe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a55a8eb382c969aa0d36cf2e7af6a44fe"></a>
@@ -289,10 +289,10 @@ template&lt;typename Rng , typename Pred , typename Val &gt; </td></tr>
 template&lt;typename Rng , typename Val1 , typename Val2 &gt; </td></tr>
 <tr class="memitem:a0cb5fe9804766430b5ae40d1c4845b76"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::replace_view</b> = iter_transform_view&lt; Rng, detail::replacer_fn&lt; Val1, Val2 &gt;&gt;</td></tr>
 <tr class="separator:a0cb5fe9804766430b5ae40d1c4845b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40f541fc2418b88fc307689a8c26978c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a40f541fc2418b88fc307689a8c26978c"></a>
+<tr class="memitem:a4c4c504587167d966e0413803f3f10b2"><td class="memTemplParams" colspan="2"><a class="anchor" id="a4c4c504587167d966e0413803f3f10b2"></a>
 template&lt;typename Sig &gt; </td></tr>
-<tr class="memitem:a40f541fc2418b88fc307689a8c26978c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::result_of_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::result_of&lt; Sig &gt;&gt;</td></tr>
-<tr class="separator:a40f541fc2418b88fc307689a8c26978c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c4c504587167d966e0413803f3f10b2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::result_of_t</b> = typename std::result_of&lt; Sig &gt;::type</td></tr>
+<tr class="separator:a4c4c504587167d966e0413803f3f10b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37dcd80d32605a7c804475bae85cbd66"><td class="memTemplParams" colspan="2"><a class="anchor" id="a37dcd80d32605a7c804475bae85cbd66"></a>
 template&lt;typename I &gt; </td></tr>
 <tr class="memitem:a37dcd80d32605a7c804475bae85cbd66"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::reverse_iterator</b> = basic_iterator&lt; detail::reverse_cursor&lt; I &gt;, detail::reverse_cursor&lt; I &gt;&gt;</td></tr>
@@ -301,10 +301,10 @@ template&lt;typename I &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aee8b43d02406488b4f67484c7d99e91c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::rvalue_reference_wrapper</b> = reference_wrapper&lt; T, true &gt;</td></tr>
 <tr class="separator:aee8b43d02406488b4f67484c7d99e91c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8f2a065c4a04bf814a1b763fe666d05"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae8f2a065c4a04bf814a1b763fe666d05"></a>
+<tr class="memitem:a78b943fbe5f1dc75a2b9abb829a27d2e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a78b943fbe5f1dc75a2b9abb829a27d2e"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae8f2a065c4a04bf814a1b763fe666d05"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::uncvref_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::remove_cv&lt; <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::remove_reference&lt; T &gt;&gt;&gt;&gt;</td></tr>
-<tr class="separator:ae8f2a065c4a04bf814a1b763fe666d05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78b943fbe5f1dc75a2b9abb829a27d2e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::uncvref_t</b> = typename std::remove_cv&lt; typename std::remove_reference&lt; T &gt;::type &gt;::type</td></tr>
+<tr class="separator:a78b943fbe5f1dc75a2b9abb829a27d2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5d181d51575a6f15ce0a2113154b24e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad5d181d51575a6f15ce0a2113154b24e"></a>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:ad5d181d51575a6f15ce0a2113154b24e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::unique_view</b> = adjacent_remove_if_view&lt; Rng, equal_to &gt;</td></tr>

@@ -1,5 +1,5 @@
 var structranges_1_1v3_1_1minmax__element__fn =
 [
-    [ "operator()", "structranges_1_1v3_1_1minmax__element__fn.html#ac524b74c13c509d768b9e64518577c0e", null ],
-    [ "operator()", "structranges_1_1v3_1_1minmax__element__fn.html#a872edc74c78442ee27c371549b86c08d", null ]
+    [ "operator()", "structranges_1_1v3_1_1minmax__element__fn.html#ae7ef87fb885c138392ef8a18cbdfb3fc", null ],
+    [ "operator()", "structranges_1_1v3_1_1minmax__element__fn.html#aa397588b76d9d55d4adaa661de0aec5a", null ]
 ];

@@ -123,19 +123,6 @@ var namespaceranges_1_1v3 =
       [ "replacer_if_fn", "structranges_1_1v3_1_1detail_1_1replacer__if__fn.html", "structranges_1_1v3_1_1detail_1_1replacer__if__fn" ],
       [ "reverse_cursor", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html", "structranges_1_1v3_1_1detail_1_1reverse__cursor" ]
     ] ],
-    [ "tag", null, [
-      [ "begin", "structranges_1_1v3_1_1tag_1_1begin.html", "structranges_1_1v3_1_1tag_1_1begin" ],
-      [ "end", "structranges_1_1v3_1_1tag_1_1end.html", "structranges_1_1v3_1_1tag_1_1end" ],
-      [ "fun", "structranges_1_1v3_1_1tag_1_1fun.html", "structranges_1_1v3_1_1tag_1_1fun" ],
-      [ "in", "structranges_1_1v3_1_1tag_1_1in.html", "structranges_1_1v3_1_1tag_1_1in" ],
-      [ "in1", "structranges_1_1v3_1_1tag_1_1in1.html", "structranges_1_1v3_1_1tag_1_1in1" ],
-      [ "in2", "structranges_1_1v3_1_1tag_1_1in2.html", "structranges_1_1v3_1_1tag_1_1in2" ],
-      [ "max", "structranges_1_1v3_1_1tag_1_1max.html", "structranges_1_1v3_1_1tag_1_1max" ],
-      [ "min", "structranges_1_1v3_1_1tag_1_1min.html", "structranges_1_1v3_1_1tag_1_1min" ],
-      [ "out", "structranges_1_1v3_1_1tag_1_1out.html", "structranges_1_1v3_1_1tag_1_1out" ],
-      [ "out1", "structranges_1_1v3_1_1tag_1_1out1.html", "structranges_1_1v3_1_1tag_1_1out1" ],
-      [ "out2", "structranges_1_1v3_1_1tag_1_1out2.html", "structranges_1_1v3_1_1tag_1_1out2" ]
-    ] ],
     [ "view", null, [
       [ "adjacent_remove_if_fn", "structranges_1_1v3_1_1view_1_1adjacent__remove__if__fn.html", "structranges_1_1v3_1_1view_1_1adjacent__remove__if__fn" ],
       [ "all_fn", "structranges_1_1v3_1_1view_1_1all__fn.html", "structranges_1_1v3_1_1view_1_1all__fn" ],
@@ -488,7 +475,6 @@ var namespaceranges_1_1v3 =
     [ "static_const", "structranges_1_1v3_1_1static__const.html", null ],
     [ "stride_view", "structranges_1_1v3_1_1stride__view.html", "structranges_1_1v3_1_1stride__view" ],
     [ "swap_ranges_fn", "structranges_1_1v3_1_1swap__ranges__fn.html", "structranges_1_1v3_1_1swap__ranges__fn" ],
-    [ "tagged", "structranges_1_1v3_1_1tagged.html", "structranges_1_1v3_1_1tagged" ],
     [ "tagged_variant", "structranges_1_1v3_1_1tagged__variant.html", "structranges_1_1v3_1_1tagged__variant" ],
     [ "tagged_variant_element", "structranges_1_1v3_1_1tagged__variant__element.html", null ],
     [ "tagged_variant_element< N, tagged_variant< Ts...> >", "structranges_1_1v3_1_1tagged__variant__element_3_01_n_00_01tagged__variant_3_01_ts_8_8_8_4_01_4.html", null ],

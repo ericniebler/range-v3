@@ -9,6 +9,7 @@ var searchData=
   ['intersperse_2ehpp',['intersperse.hpp',['../intersperse_8hpp.html',1,'']]],
   ['iota_2ehpp',['iota.hpp',['../numeric_2iota_8hpp.html',1,'']]],
   ['iota_2ehpp',['iota.hpp',['../view_2iota_8hpp.html',1,'']]],
+  ['is_5finfinity_2ehpp',['is_infinity.hpp',['../is__infinity_8hpp.html',1,'']]],
   ['is_5fpartitioned_2ehpp',['is_partitioned.hpp',['../is__partitioned_8hpp.html',1,'']]],
   ['is_5fsorted_2ehpp',['is_sorted.hpp',['../is__sorted_8hpp.html',1,'']]],
   ['is_5fsorted_5funtil_2ehpp',['is_sorted_until.hpp',['../is__sorted__until_8hpp.html',1,'']]],
