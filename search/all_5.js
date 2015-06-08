@@ -28,8 +28,8 @@ var searchData=
   ['flip',['flip',['../structmeta_1_1flip.html',1,'meta']]],
   ['fold',['fold',['../group__transformation.html#ga99ebb5b7cf3b92b6510cf1cad5d6e01a',1,'meta::v1::fold()'],['../group__lazy__transformation.html#ga070ce2658f0c4858a2b7b2c78d1646b7',1,'meta::lazy::fold()']]],
   ['for_5feach',['for_each',['../group__runtime.html#ga4d1b825778809ff9c5f20c84d7f06a0f',1,'meta::v1']]],
-  ['for_5feach_2ehpp',['for_each.hpp',['../view_2for__each_8hpp.html',1,'']]],
   ['for_5feach_2ehpp',['for_each.hpp',['../algorithm_2for__each_8hpp.html',1,'']]],
+  ['for_5feach_2ehpp',['for_each.hpp',['../view_2for__each_8hpp.html',1,'']]],
   ['for_5feach_5ffn',['for_each_fn',['../structranges_1_1v3_1_1view_1_1for__each__fn.html',1,'ranges::v3::view']]],
   ['for_5feach_5ffn',['for_each_fn',['../structranges_1_1v3_1_1for__each__fn.html',1,'ranges::v3']]],
   ['for_5feach_5fview',['for_each_view',['../structranges_1_1v3_1_1for__each__view.html',1,'ranges::v3']]],
@@ -41,6 +41,7 @@ var searchData=
   ['front',['front',['../structranges_1_1v3_1_1range__interface.html#aa34e667d1ba8db52bd9c97c484c87207',1,'ranges::v3::range_interface::front()'],['../structranges_1_1v3_1_1range__interface.html#acf33f1749ff8fbd581dad60c19a8d0a5',1,'ranges::v3::range_interface::front() const '],['../group__list.html#ga76ee33daea50a50b8231d77a41f2d4f2',1,'meta::v1::front()'],['../group__lazy__list.html#ga4a621dfb745c48413bf123ec444d13c1',1,'meta::lazy::front()']]],
   ['front_2ehpp',['front.hpp',['../front_8hpp.html',1,'']]],
   ['front_5ffn',['front_fn',['../structranges_1_1v3_1_1front__fn.html',1,'ranges::v3']]],
+  ['fun',['fun',['../structranges_1_1v3_1_1tag_1_1fun.html',1,'ranges::v3::tag']]],
   ['function',['Function',['../structranges_1_1v3_1_1concepts_1_1_function.html',1,'ranges::v3::concepts']]],
   ['function_5ftype',['function_type',['../classfunction__type.html',1,'']]],
   ['functional_2ehpp',['functional.hpp',['../functional_8hpp.html',1,'']]]

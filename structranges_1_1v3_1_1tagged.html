@@ -110,10 +110,38 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1tagged.html','')
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aafd5ee17a0e4ce60eeeb1a59034f5dac"><td class="memTemplParams" colspan="2"><a class="anchor" id="aafd5ee17a0e4ce60eeeb1a59034f5dac"></a>
-template&lt;typename U , typename  = decltype(std::declval&lt;Base&amp;&gt;() = std::declval&lt;U&gt;())&gt; </td></tr>
-<tr class="memitem:aafd5ee17a0e4ce60eeeb1a59034f5dac"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (U &amp;&amp;u)</td></tr>
-<tr class="separator:aafd5ee17a0e4ce60eeeb1a59034f5dac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7727e2018aa07d1db6f29886a4223a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af7727e2018aa07d1db6f29886a4223a7"></a>
+<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:af7727e2018aa07d1db6f29886a4223a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38649fab6d6f23f35d97673d7a42c36e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38649fab6d6f23f35d97673d7a42c36e"></a>
+<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> const &amp;)=default</td></tr>
+<tr class="separator:a38649fab6d6f23f35d97673d7a42c36e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63dfe06071648f1ac1345d3dd235352b"><td class="memTemplParams" colspan="2"><a class="anchor" id="a63dfe06071648f1ac1345d3dd235352b"></a>
+template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a63dfe06071648f1ac1345d3dd235352b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; &amp;&amp;that)</td></tr>
+<tr class="separator:a63dfe06071648f1ac1345d3dd235352b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a262fc0da580178846195e958fa30af90"><td class="memTemplParams" colspan="2"><a class="anchor" id="a262fc0da580178846195e958fa30af90"></a>
+template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a262fc0da580178846195e958fa30af90"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; const &amp;that)</td></tr>
+<tr class="separator:a262fc0da580178846195e958fa30af90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a646deab44715a81f27acc2cb6945c410"><td class="memTemplParams" colspan="2"><a class="anchor" id="a646deab44715a81f27acc2cb6945c410"></a>
+template&lt;typename U , typename  = meta::if_c&lt;!std::is_same&lt;tagged, detail::decay_t&lt;U&gt;&gt;::value&gt;, typename  = decltype(std::declval&lt;Base&amp;&gt;() = std::declval&lt;U&gt;())&gt; </td></tr>
+<tr class="memitem:a646deab44715a81f27acc2cb6945c410"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (U &amp;&amp;u)</td></tr>
+<tr class="separator:a646deab44715a81f27acc2cb6945c410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcd877c0d4710372868e9f10c2915c88"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abcd877c0d4710372868e9f10c2915c88"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:abcd877c0d4710372868e9f10c2915c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0710bc791c2c44a23c56a42743e7267"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af0710bc791c2c44a23c56a42743e7267"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> const &amp;)=default</td></tr>
+<tr class="separator:af0710bc791c2c44a23c56a42743e7267"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8b21f640552389e5024f173c7bef26f"><td class="memTemplParams" colspan="2"><a class="anchor" id="af8b21f640552389e5024f173c7bef26f"></a>
+template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
+<tr class="memitem:af8b21f640552389e5024f173c7bef26f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; &amp;&amp;that)</td></tr>
+<tr class="separator:af8b21f640552389e5024f173c7bef26f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d4b73d57b59800d8baa2f8bd9ad0c47"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3d4b73d57b59800d8baa2f8bd9ad0c47"></a>
+template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a3d4b73d57b59800d8baa2f8bd9ad0c47"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; const &amp;that)</td></tr>
+<tr class="separator:a3d4b73d57b59800d8baa2f8bd9ad0c47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

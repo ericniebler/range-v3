@@ -27,15 +27,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"group__group-core.html#ga21dccd922318b53ab5fc375ba0b161ef",
-"heap__algorithm_8hpp.html",
-"rotate__copy_8hpp.html",
-"structranges_1_1v3_1_1basic__iterator.html#abbb1f550e585c1ccecd061f25ab9c358",
-"structranges_1_1v3_1_1concepts_1_1_sized_range_like__.html#a8c36449318988a3f19a1dbe031fbc14f",
-"structranges_1_1v3_1_1inplace__merge__fn.html#a91d4c217ad206bda4197c9624f6ce4bf",
-"structranges_1_1v3_1_1overloaded_3_4.html",
-"structranges_1_1v3_1_1sized__range.html",
-"structranges_1_1v3_1_1view_1_1slice__fn.html#a0631577aa7d6335fcf3ef9499a725b9b"
+"group__group-concepts.html#gaf5981a9685c7ccf7f6085acc4c833c77",
+"group__transformation.html#gae8666f91063c050fe79f817c03b81b3f",
+"reverse__copy_8hpp.html",
+"structranges_1_1v3_1_1basic__iterator.html#aadd68575d733be0965e684f208280b51",
+"structranges_1_1v3_1_1concepts_1_1_sized_range.html#a3b709928d7bbf09ec4b302d549866e6f",
+"structranges_1_1v3_1_1inner__product__fn.html#a621ab5bd1257204944a0311c6d9f48db",
+"structranges_1_1v3_1_1overloaded_3_01_fn_01_4.html",
+"structranges_1_1v3_1_1single__view.html",
+"structranges_1_1v3_1_1view_1_1iter__transform__fn.html",
+"view_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -19,7 +19,6 @@ var dir_df355a1a9a4bd7fb8b2336bde8f11d9d =
     [ "get.hpp", "get_8hpp.html", "get_8hpp" ],
     [ "infinity.hpp", "infinity_8hpp.html", null ],
     [ "integer_sequence.hpp", "integer__sequence_8hpp.html", null ],
-    [ "is_infinity.hpp", "is__infinity_8hpp.html", null ],
     [ "iterator.hpp", "iterator_8hpp.html", "iterator_8hpp" ],
     [ "iterator_concepts.hpp", "iterator__concepts_8hpp.html", "iterator__concepts_8hpp" ],
     [ "iterator_traits.hpp", "iterator__traits_8hpp.html", "iterator__traits_8hpp" ],
@@ -30,6 +29,8 @@ var dir_df355a1a9a4bd7fb8b2336bde8f11d9d =
     [ "optional.hpp", "optional_8hpp.html", null ],
     [ "semiregular.hpp", "semiregular_8hpp.html", "semiregular_8hpp" ],
     [ "swap.hpp", "swap_8hpp.html", null ],
+    [ "tagged_pair.hpp", "tagged__pair_8hpp.html", "tagged__pair_8hpp" ],
+    [ "tagged_tuple.hpp", "tagged__tuple_8hpp.html", "tagged__tuple_8hpp" ],
     [ "tuple_algorithm.hpp", "tuple__algorithm_8hpp.html", "tuple__algorithm_8hpp" ],
     [ "unreachable.hpp", "unreachable_8hpp.html", null ],
     [ "variant.hpp", "variant_8hpp.html", "variant_8hpp" ]
