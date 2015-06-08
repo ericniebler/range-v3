@@ -39,6 +39,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/copy_n.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_tuple.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -53,12 +55,12 @@ namespace ranges
                     CONCEPT_REQUIRES_(
                         Mergeable<I0, I1, O, C, P0, P1>()
                     )>
-                std::tuple<I0, I1, O>
+                tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
                 operator()(I0 begin0, iterator_difference_t<I0> n0,
                            I1 begin1, iterator_difference_t<I1> n1,
                            O out, C r = C{}, P0 p0 = P0{}, P1 p1 = P1{}) const
                 {
-                    using T = std::tuple<I0, I1, O>;
+                    using T = tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>;
                     auto &&ir = as_function(r);
                     auto &&ip0 = as_function(p0);
                     auto &&ip1 = as_function(p1);

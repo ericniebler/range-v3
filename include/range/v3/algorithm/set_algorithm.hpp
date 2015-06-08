@@ -32,6 +32,9 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/utility/tagged_tuple.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -86,10 +89,10 @@ namespace ranges
         {
             template<typename I1, typename S1, typename I2, typename S2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
-                typename Tup = std::tuple<I1, I2, O>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
-            Tup operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
+            tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>
+            operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -100,7 +103,8 @@ namespace ranges
                     if(begin2 == end2)
                     {
                         auto tmp = copy(begin1, end1, out);
-                        return Tup{tmp.first, begin2, tmp.second};
+                        return make_tagged_tuple<tag::in1, tag::in2, tag::out>(tmp.first, begin2,
+                            tmp.second);
                     }
                     if(pred(proj2(*begin2), proj1(*begin1)))
                     {
@@ -116,7 +120,8 @@ namespace ranges
                     }
                 }
                 auto tmp = copy(begin2, end2, out);
-                return Tup{begin1, tmp.first, tmp.second};
+                return make_tagged_tuple<tag::in1, tag::in2, tag::out>(begin1, tmp.first,
+                    tmp.second);
             }
 
             template<typename Rng1, typename Rng2, typename O,
@@ -125,7 +130,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())>
-            std::tuple<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>, O>
+            tagged_tuple<tag::in1(range_safe_iterator_t<Rng1>), tag::in2(range_safe_iterator_t<Rng2>), tag::out(O)>
             operator()(Rng1 &&rng1, Rng2 &&rng2, O out, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {
@@ -198,7 +203,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
-            std::pair<I1, O> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
+            tagged_pair<tag::in1(I1), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -230,7 +235,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())>
-            std::pair<range_safe_iterator_t<Rng1>, O> operator()(Rng1 &&rng1, Rng2 && rng2, O out,
+            tagged_pair<tag::in1(range_safe_iterator_t<Rng1>), tag::out(O)> operator()(Rng1 &&rng1, Rng2 && rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(out),
@@ -251,7 +256,7 @@ namespace ranges
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
-            std::tuple<I1, I2, O> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
+            tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -262,7 +267,7 @@ namespace ranges
                     if(begin2 == end2)
                     {
                         auto tmp = copy(begin1, end1, out);
-                        return std::tuple<I1, I2, O>{tmp.first, begin2, tmp.second};
+                        return tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>{tmp.first, begin2, tmp.second};
                     }
                     if(pred(proj1(*begin1), proj2(*begin2)))
                     {
@@ -283,7 +288,7 @@ namespace ranges
                     }
                 }
                 auto tmp = copy(begin2, end2, out);
-                return std::tuple<I1, I2, O>{begin1, tmp.first, tmp.second};
+                return tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>{begin1, tmp.first, tmp.second};
             }
 
             template<typename Rng1, typename Rng2, typename O,
@@ -292,7 +297,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
                     Range<Rng1>() && Range<Rng2>())>
-            std::tuple<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>, O>
+            tagged_tuple<tag::in1(range_safe_iterator_t<Rng1>), tag::in2(range_safe_iterator_t<Rng2>), tag::out(O)>
             operator()(Rng1 &&rng1, Rng2 &&rng2, O out,
                 C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {

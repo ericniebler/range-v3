@@ -23,6 +23,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -54,7 +56,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mismatchable1<I1, I2, C, P1, P2>() && IteratorRange<I1, S1>())>
-            std::pair<I1, I2>
+            tagged_pair<tag::in1(I1), tag::in2(I2)>
             operator()(I1 begin1, S1 end1, I2 begin2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const
             {
@@ -71,7 +73,7 @@ namespace ranges
                 typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mismatchable2<I1, I2, C, P1, P2>() && IteratorRange<I1, S1>() &&
                     IteratorRange<I2, S2>())>
-            std::pair<I1, I2>
+            tagged_pair<tag::in1(I1), tag::in2(I2)>
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const
             {
@@ -90,7 +92,7 @@ namespace ranges
                 typename I2 = uncvref_t<I2Ref>, // [*] See below
                 CONCEPT_REQUIRES_(InputRange<Rng1>() && Iterator<I2>() &&
                     Mismatchable1<I1, I2, C, P1, P2>())>
-            std::pair<range_safe_iterator_t<Rng1>, I2>
+            tagged_pair<tag::in1(range_safe_iterator_t<Rng1>), tag::in2(I2)>
             operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
             {
@@ -104,7 +106,7 @@ namespace ranges
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(InputRange<Rng1>() && InputRange<Rng2>() &&
                     Mismatchable2<I1, I2, C, P1, P2>())>
-            std::pair<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>>
+            tagged_pair<tag::in1(range_safe_iterator_t<Rng1>), tag::in2(range_safe_iterator_t<Rng2>)>
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),

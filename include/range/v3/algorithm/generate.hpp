@@ -20,6 +20,8 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -33,7 +35,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Function<F>() &&
                     OutputIterator<O, concepts::Function::result_t<F>>() &&
                     IteratorRange<O, S>())>
-            std::pair<O, F> operator()(O begin, S end, F fun) const
+            tagged_pair<tag::out(O), tag::fun(F)> operator()(O begin, S end, F fun) const
             {
                 for(; begin != end; ++begin)
                     *begin = fun();
@@ -44,7 +46,8 @@ namespace ranges
                 typename O = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Function<F>() &&
                     OutputRange<Rng, concepts::Function::result_t<F>>())>
-            std::pair<range_safe_iterator_t<Rng>, F> operator()(Rng &&rng, F fun) const
+            tagged_pair<tag::out(range_safe_iterator_t<Rng>), tag::fun(F)>
+            operator()(Rng &&rng, F fun) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun));
             }

@@ -25,6 +25,8 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -37,11 +39,12 @@ namespace ranges
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() &&
                     IndirectCallableRelation<C, Project<I, P>>())>
-            std::pair<I, I> operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
+            tagged_pair<tag::min(I), tag::max(I)>
+            operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);
                 auto && proj = as_function(proj_);
-                std::pair<I, I> result{begin, begin};
+                tagged_pair<tag::min(I), tag::max(I)> result{begin, begin};
                 if(begin == end || ++begin == end)
                     return result;
                 if(pred(proj(*begin), proj(*result.first)))
@@ -84,7 +87,9 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
                     IndirectCallableRelation<C, Project<I, P>>())>
-            meta::if_<std::is_lvalue_reference<Rng>, std::pair<I, I>, dangling<std::pair<I, I>>>
+            meta::if_<std::is_lvalue_reference<Rng>,
+                tagged_pair<tag::min(I), tag::max(I)>,
+                dangling<tagged_pair<tag::min(I), tag::max(I)>>>
             operator()(Rng &&rng, C pred = C{}, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

@@ -23,6 +23,8 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -35,7 +37,7 @@ namespace ranges
             template<typename I, typename S, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() && WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>())>
-            std::pair<I, O> operator()(I begin, I middle, S end, O out) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, I middle, S end, O out) const
             {
                 auto res = copy(middle, std::move(end), std::move(out));
                 return {
@@ -48,7 +50,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>())>
-            std::pair<range_safe_iterator_t<Rng>, O>
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, I middle, O out) const
             {
                 return (*this)(begin(rng), std::move(middle), end(rng), std::move(out));

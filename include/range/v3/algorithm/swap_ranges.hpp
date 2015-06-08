@@ -20,6 +20,8 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -34,7 +36,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
                                   WeakInputIterator<I2>() &&
                                   IndirectlySwappable<I1, I2>())>
-            std::pair<I1, I2> operator()(I1Ref&& begin1, S1 end1, I2 begin2) const
+            tagged_pair<tag::in1(I1), tag::in2(I2)> operator()(I1Ref&& begin1, S1 end1, I2 begin2) const
             {
                 for(; begin1 != end1; ++begin1, ++begin2)
                     ranges::iter_swap(begin1, begin2);
@@ -45,7 +47,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
                                   InputIterator<I2>() && IteratorRange<I2, S2>() &&
                                   IndirectlySwappable<I1, I2>())>
-            std::pair<I1, I2> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
+            tagged_pair<tag::in1(I1), tag::in2(I2)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
             {
                 for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                     ranges::iter_swap(begin1, begin2);
@@ -57,7 +59,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputRange<Rng1>() &&
                                   WeakInputIterator<I2>() &&
                                   IndirectlySwappable<I1, I2>())>
-            std::pair<I1, I2> operator()(Rng1 & rng1, I2 begin2) const
+            tagged_pair<tag::in1(I1), tag::in2(I2)> operator()(Rng1 & rng1, I2 begin2) const
             {
                 return (*this)(begin(rng1), end(rng1), std::move(begin2));
             }
@@ -68,7 +70,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputRange<Rng1>() &&
                                   InputRange<Rng2>() &&
                                   IndirectlySwappable<I1, I2>())>
-            std::pair<range_safe_iterator_t<Rng1>, range_safe_iterator_t<Rng2>>
+            tagged_pair<tag::in1(range_safe_iterator_t<Rng1>), tag::in2(range_safe_iterator_t<Rng2>)>
             operator()(Rng1 &&rng1, Rng2 &&rng2) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2));

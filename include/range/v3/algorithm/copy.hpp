@@ -24,6 +24,8 @@
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/copy.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -41,7 +43,7 @@ namespace ranges
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
-            std::pair<I, O>
+            tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O out) const
             {
                 for(; begin != end; ++begin, ++out)
@@ -56,7 +58,7 @@ namespace ranges
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
-            std::pair<range_safe_iterator_t<Rng>, O>
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));

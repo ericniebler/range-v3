@@ -893,9 +893,6 @@
     <ClInclude Include="..\..\..\..\include\range\v3\utility\safe_int.hpp">
       <Filter>Header Files\range\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\utility\is_infinity.hpp">
-      <Filter>Header Files\range\utility</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\generate_n.hpp">
       <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
@@ -1312,6 +1309,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\action\shuffle.hpp">
       <Filter>Header Files\range\action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\tagged_tuple.hpp">
+      <Filter>Header Files\range\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\tagged_pair.hpp">
+      <Filter>Header Files\range\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\tagspec.hpp">
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

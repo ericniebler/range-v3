@@ -18,6 +18,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
 
 #ifndef RANGES_NO_STD_FORWARD_DECLARATIONS
 // Non-portable forward declarations of standard containers
@@ -151,6 +152,21 @@ namespace ranges
             {
                 return this->sanitize_tuple<std::tuple<result_t<Ts>...>>(std::move(tup),
                     meta::list<Ts...>{}, meta::make_index_sequence<sizeof...(Ts)>{});
+            }
+            template<typename Base, typename... Tags>
+            constexpr tagged<result_t<Base &>, Tags...> operator()(tagged<Base, Tags...> &tup) const
+            {
+                return (*this)(static_cast<Base &>(tup));
+            }
+            template<typename Base, typename... Tags>
+            constexpr tagged<result_t<Base const &>, Tags...> operator()(tagged<Base, Tags...> const &tup) const
+            {
+                return (*this)(static_cast<Base const &>(tup));
+            }
+            template<typename Base, typename... Tags>
+            constexpr tagged<result_t<Base &&>, Tags...> operator()(tagged<Base, Tags...> &&tup) const
+            {
+                return (*this)(static_cast<Base &&>(tup));
             }
         };
 

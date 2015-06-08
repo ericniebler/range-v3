@@ -22,6 +22,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -37,7 +39,7 @@ namespace ranges
                     BidirectionalIterator<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
-            std::pair<I, O> operator()(I begin, S end_, O out) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end_, O out) const
             {
                 I i = ranges::next(begin, end_), end = i;
                 while(begin != i)
@@ -52,7 +54,7 @@ namespace ranges
                     BidirectionalIterator<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
-            std::pair<range_safe_iterator_t<Rng>, O>
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));

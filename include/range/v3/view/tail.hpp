@@ -64,9 +64,11 @@ namespace ranges
                 return ranges::end(rng_);
             }
             CONCEPT_REQUIRES(SizedView<Rng>())
-            range_size_t<Rng> size() const
+            constexpr range_size_t<Rng> size() const
             {
-                return ranges::size(rng_) - 1;
+                return range_cardinality<Rng>::value > 0 ?
+                    (range_size_t<Rng>)range_cardinality<Rng>::value - 1 :
+                    ranges::size(rng_) - 1;
             }
             Rng & base()
             {

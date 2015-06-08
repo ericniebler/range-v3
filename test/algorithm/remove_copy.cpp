@@ -167,13 +167,13 @@ int main()
         CHECK(ib[5].i == 4);
 
         // Some tests for sanitizing an algorithm result
-        static_assert(std::is_same<decltype(r), std::pair<ranges::dangling<S *>, S *>>::value, "");
+        static_assert(std::is_same<decltype(r), ranges::tagged_pair<ranges::tag::in(ranges::dangling<S *>), ranges::tag::out(S *)>>::value, "");
         auto r2 = ranges::sanitize(r);
-        static_assert(std::is_same<decltype(r2), std::pair<ranges::dangling<>, S *>>::value, "");
+        static_assert(std::is_same<decltype(r2), ranges::tagged_pair<ranges::tag::in(ranges::dangling<>), ranges::tag::out(S *)>>::value, "");
         auto r3 = ranges::sanitize(const_cast<decltype(r) const &>(r));
-        static_assert(std::is_same<decltype(r3), std::pair<ranges::dangling<>, S *>>::value, "");
+        static_assert(std::is_same<decltype(r3), ranges::tagged_pair<ranges::tag::in(ranges::dangling<>), ranges::tag::out(S *)>>::value, "");
         auto r4 = ranges::sanitize(std::move(r));
-        static_assert(std::is_same<decltype(r4), std::pair<ranges::dangling<>, S *>>::value, "");
+        static_assert(std::is_same<decltype(r4), ranges::tagged_pair<ranges::tag::in(ranges::dangling<>), ranges::tag::out(S *)>>::value, "");
     }
 
     return ::test_result();

@@ -350,7 +350,9 @@ Below is a list of the lazy range combinators, or *views*, that Range v3 provide
 <DT>\link ranges::v3::view::tail_fn `view::tail`\endlink</DT>
   <DD>Given a source range, return a new range without the first element. The range must have at least one element.</DD>
 <DT>\link ranges::v3::view::take_fn `view::take`\endlink</DT>
-  <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range. The source range must have at least that many elements.</DD>
+  <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range, or the complete range if it has fewer elements. (The result of `view::take` is not a `SizedRange`.)</DD>
+<DT>\link ranges::v3::view::take_exactly_fn `view::take_exactly`\endlink</DT>
+  <DD>Given a source range and an integral count, return a range consisting of the first *count* elements from the source range. The source range must have at least that many elements. (The result of `view::take_exactly` is a `SizedRange`.)</DD>
 <DT>\link ranges::v3::view::take_while_fn `view::take_while`\endlink</DT>
   <DD>Given a source range and a unary predicate, return a new range consisting of the  elements from the front that satisfy the predicate.</DD>
 <DT>\link ranges::v3::view::tokenize_fn `view::tokenize`\endlink</DT>

@@ -23,6 +23,8 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -37,7 +39,7 @@ namespace ranges
             template<typename I, typename S, typename O,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     WeaklyIncrementable<O>() && IndirectlyMovable<I, O>())>
-            std::pair<I, O> operator()(I begin, S end, O out) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out) const
             {
                 for(; begin != end; ++begin, ++out)
                     *out = iter_move(begin);
@@ -48,7 +50,8 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectlyMovable<I, O>())>
-            std::pair<range_safe_iterator_t<Rng>, O> operator()(Rng &&rng, O out) const
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
+            operator()(Rng &&rng, O out) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out));
             }

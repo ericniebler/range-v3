@@ -417,11 +417,11 @@ int main()
     auto binary = [](int i, int j){return i + j; };
     S const s[] = {S{1}, S{2}, S{3}, S{4}};
     int const i[] = {1, 2, 3, 4};
-    static_assert(std::is_same<std::pair<S const*, int*>,
+    static_assert(std::is_same<ranges::tagged_pair<ranges::tag::in(S const*), ranges::tag::out(int*)>,
         decltype(ranges::transform(s, p, unary, &S::i))>::value, "");
-    static_assert(std::is_same<std::tuple<S const*, int const *, int*>,
+    static_assert(std::is_same<ranges::tagged_tuple<ranges::tag::in1(S const*), ranges::tag::in2(int const *), ranges::tag::out(int*)>,
         decltype(ranges::transform(s, i, p, binary, &S::i))>::value, "");
-    static_assert(std::is_same<std::tuple<S const*, S const *, int*>,
+    static_assert(std::is_same<ranges::tagged_tuple<ranges::tag::in1(S const*), ranges::tag::in2(S const *), ranges::tag::out(int*)>,
         decltype(ranges::transform(s, s, p, binary, &S::i, &S::i))>::value, "");
 
     return ::test_result();

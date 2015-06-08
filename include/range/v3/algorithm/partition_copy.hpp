@@ -25,6 +25,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_tuple.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -46,7 +48,8 @@ namespace ranges
         {
             template<typename I, typename S, typename O0, typename O1, typename C, typename P = ident,
                 CONCEPT_REQUIRES_(PartitionCopyable<I, O0, O1, C, P>() && IteratorRange<I, S>())>
-            std::tuple<I, O0, O1> operator()(I begin, S end, O0 o0, O1 o1, C pred_, P proj_ = P{}) const
+            tagged_tuple<tag::in(I), tag::out1(O0), tag::out2(O1)>
+            operator()(I begin, S end, O0 o0, O1 o1, C pred_, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);
                 auto && proj = as_function(proj_);
@@ -64,13 +67,13 @@ namespace ranges
                         ++o1;
                     }
                 }
-                return std::tuple<I, O0, O1>{begin, o0, o1};
+                return make_tagged_tuple<tag::in, tag::out1, tag::out2>(begin, o0, o1);
             }
 
             template<typename Rng, typename O0, typename O1, typename C, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(PartitionCopyable<I, O0, O1, C, P>() && Range<Rng>())>
-            std::tuple<range_safe_iterator_t<Rng>, O0, O1>
+            tagged_tuple<tag::in(range_safe_iterator_t<Rng>), tag::out1(O0), tag::out2(O1)>
             operator()(Rng &&rng, O0 o0, O1 o1, C pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(o0), std::move(o1), std::move(pred),

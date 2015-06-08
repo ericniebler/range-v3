@@ -25,6 +25,9 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/utility/tagged_tuple.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -63,7 +66,7 @@ namespace ranges
             // Single-range variant
             template<typename I, typename S, typename O, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(IteratorRange<I, S>() && Transformable1<I, O, F, P>())>
-            std::pair<I, O> operator()(I begin, S end, O out, F fun_, P proj_ = P{}) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, F fun_, P proj_ = P{}) const
             {
                 auto &&fun = as_function(fun_);
                 auto &&proj = as_function(proj_);
@@ -75,7 +78,7 @@ namespace ranges
             template<typename Rng, typename O, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Range<Rng>() && Transformable1<I, O, F, P>())>
-            std::pair<range_safe_iterator_t<Rng>, O>
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(fun), std::move(proj));
@@ -86,7 +89,7 @@ namespace ranges
                 typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(IteratorRange<I0, S0>() && IteratorRange<I1, S1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())>
-            std::tuple<I0, I1, O> operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun_,
+            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)> operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, F fun_,
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
                 auto &&fun = as_function(fun_);
@@ -94,7 +97,7 @@ namespace ranges
                 auto &&proj1 = as_function(proj1_);
                 for(; begin0 != end0 && begin1 != end1; ++begin0, ++begin1, ++out)
                     *out = fun(proj0(*begin0), proj1(*begin1));
-                return std::tuple<I0, I1, O>{begin0, begin1, out};
+                return tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>{begin0, begin1, out};
             }
 
             template<typename Rng0, typename Rng1, typename O, typename F,
@@ -103,7 +106,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 CONCEPT_REQUIRES_(Range<Rng0>() && Range<Rng1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())>
-            std::tuple<range_safe_iterator_t<Rng0>, range_safe_iterator_t<Rng1>, O>
+            tagged_tuple<tag::in1(range_safe_iterator_t<Rng0>), tag::in2(range_safe_iterator_t<Rng1>), tag::out(O)>
             operator()(Rng0 &&rng0, Rng1 &&rng1, O out, F fun, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {
@@ -114,9 +117,11 @@ namespace ranges
             // Double-range variant, 3-iterator version
             template<typename I0, typename S0, typename I1, typename O, typename F,
                 typename P0 = ident, typename P1 = ident,
-                CONCEPT_REQUIRES_(IteratorRange<I0, S0>() && Transformable2<I0, I1, O, F, P0, P1>())>
-            std::tuple<I0, I1, O> operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun,
-                P0 proj0 = P0{}, P1 proj1 = P1{}) const
+                CONCEPT_REQUIRES_(IteratorRange<I0, S0>() &&
+                    Transformable2<I0, I1, O, F, P0, P1>())>
+            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
+            operator()(I0 begin0, S0 end0, I1 begin1, O out, F fun, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const
             {
                 return (*this)(std::move(begin0), std::move(end0), std::move(begin1), unreachable{},
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));
@@ -127,8 +132,9 @@ namespace ranges
                 typename I0 = range_iterator_t<Rng0>,
                 CONCEPT_REQUIRES_(Range<Rng0>() && Iterator<I1>() &&
                     Transformable2<I0, I1, O, F, P0, P1>())>
-            std::tuple<range_safe_iterator_t<Rng0>, I1, O> operator()(Rng0 &&rng0, I1Ref &&begin1,
-                O out, F fun, P0 proj0 = P0{}, P1 proj1 = P1{}) const
+            tagged_tuple<tag::in1(range_safe_iterator_t<Rng0>), tag::in2(I1), tag::out(O)>
+            operator()(Rng0 &&rng0, I1Ref &&begin1, O out, F fun, P0 proj0 = P0{},
+                P1 proj1 = P1{}) const
             {
                 return (*this)(begin(rng0), end(rng0), std::forward<I1Ref>(begin1), unreachable{},
                     std::move(out), std::move(fun), std::move(proj0), std::move(proj1));

@@ -23,6 +23,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -36,7 +38,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
                     WeaklyIncrementable<O>() && IndirectCallablePredicate<F, Project<I, P> >() &&
                     IndirectlyCopyable<I, O>())>
-            std::pair<I, O>
+            tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O out, F pred_, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -57,7 +59,7 @@ namespace ranges
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && WeaklyIncrementable<O>() &&
                     IndirectCallablePredicate<F, Project<I, P> >() && IndirectlyCopyable<I, O>())>
-            std::pair<range_safe_iterator_t<Rng>, O>
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(out), std::move(pred), std::move(proj));

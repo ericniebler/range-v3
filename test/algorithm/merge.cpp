@@ -82,13 +82,21 @@ int main()
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
 
         // Some tests for sanitizing an algorithm result
-        static_assert(std::is_same<decltype(r), std::tuple<ranges::dangling<int *>, ranges::dangling<int *>, int *>>::value, "");
+        static_assert(std::is_same<decltype(r),
+            ranges::tagged_tuple<ranges::tag::in1(ranges::dangling<int *>),
+                                 ranges::tag::in2(ranges::dangling<int *>), ranges::tag::out(int *)>>::value, "");
         auto r2 = ranges::sanitize(r);
-        static_assert(std::is_same<decltype(r2), std::tuple<ranges::dangling<>, ranges::dangling<>, int *>>::value, "");
+        static_assert(std::is_same<decltype(r2),
+            ranges::tagged_tuple<ranges::tag::in1(ranges::dangling<>),
+                                 ranges::tag::in2(ranges::dangling<>), ranges::tag::out(int *)>>::value, "");
         auto r3 = ranges::sanitize(const_cast<decltype(r) const &>(r));
-        static_assert(std::is_same<decltype(r3), std::tuple<ranges::dangling<>, ranges::dangling<>, int *>>::value, "");
+        static_assert(std::is_same<decltype(r3),
+            ranges::tagged_tuple<ranges::tag::in1(ranges::dangling<>),
+                                 ranges::tag::in2(ranges::dangling<>), ranges::tag::out(int *)>>::value, "");
         auto r4 = ranges::sanitize(std::move(r));
-        static_assert(std::is_same<decltype(r4), std::tuple<ranges::dangling<>, ranges::dangling<>, int *>>::value, "");
+        static_assert(std::is_same<decltype(r4),
+            ranges::tagged_tuple<ranges::tag::in1(ranges::dangling<>),
+                                 ranges::tag::in2(ranges::dangling<>), ranges::tag::out(int *)>>::value, "");
     }
 
     return ::test_result();

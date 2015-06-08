@@ -22,6 +22,8 @@
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -34,7 +36,8 @@ namespace ranges
             template<typename O, typename F,
                 CONCEPT_REQUIRES_(Function<F>() &&
                     WeakOutputIterator<O, concepts::Function::result_t<F>>())>
-            std::pair<O, F> operator()(O begin, iterator_difference_t<O> n, F fun) const
+            tagged_pair<tag::out(O), tag::fun(F)>
+            operator()(O begin, iterator_difference_t<O> n, F fun) const
             {
                 RANGES_ASSERT(n >= 0);
                 auto norig = n;

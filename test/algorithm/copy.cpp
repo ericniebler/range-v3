@@ -30,6 +30,8 @@ int main()
     auto res = ranges::copy(begin(a), end(a), out);
     CHECK(res.first == end(a));
     CHECK(res.second == out + size(out));
+    CHECK(&res.first == &res.in());
+    CHECK(&res.second == &res.out());
     CHECK(std::equal(a, a + size(a), out));
 
     std::fill_n(out, size(out), std::make_pair(0, 0));

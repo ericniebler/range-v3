@@ -37,6 +37,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_tuple.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -53,7 +55,7 @@ namespace ranges
                     IteratorRange<I1, S1>() &&
                     MergeMovable<I0, I1, O, C, P0, P1>()
                 )>
-            std::tuple<I0, I1, O>
+            tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
             operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
@@ -75,7 +77,7 @@ namespace ranges
                 }
                 auto t0 = move(begin0, end0, out);
                 auto t1 = move(begin1, end1, t0.second);
-                return std::tuple<I0, I1, O>{t0.first, t1.first, t1.second};
+                return tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>{t0.first, t1.first, t1.second};
             }
 
             template<typename Rng0, typename Rng1, typename O, typename C = ordered_less,
@@ -87,7 +89,7 @@ namespace ranges
                     Range<Rng1>() &&
                     MergeMovable<I0, I1, O, C, P0, P1>()
                 )>
-            std::tuple<range_safe_iterator_t<Rng0>, range_safe_iterator_t<Rng1>, O>
+            tagged_tuple<tag::in1(range_safe_iterator_t<Rng0>), tag::in2(range_safe_iterator_t<Rng1>), tag::out(O)>
             operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},
                 P1 proj1 = P1{}) const
             {

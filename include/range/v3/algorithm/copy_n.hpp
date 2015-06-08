@@ -25,6 +25,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -40,7 +42,7 @@ namespace ranges
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>
-            std::pair<I, O>
+            tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, iterator_difference_t<I> n, O out) const
             {
                 RANGES_ASSERT(0 <= n);

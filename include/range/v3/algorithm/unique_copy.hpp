@@ -22,6 +22,8 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
+#include <range/v3/algorithm/tagspec.hpp>
 
 namespace ranges
 {
@@ -41,7 +43,7 @@ namespace ranges
         {
         private:
             template<typename I, typename S, typename O, typename C, typename P>
-            static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
+            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::InputIterator*, std::false_type)
             {
                 auto &&pred = as_function(pred_);
@@ -68,7 +70,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename O, typename C, typename P>
-            static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
+            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::ForwardIterator*, std::false_type)
             {
                 auto &&pred = as_function(pred_);
@@ -93,7 +95,7 @@ namespace ranges
             }
 
             template<typename I, typename S, typename O, typename C, typename P>
-            static std::pair<I, O> impl(I begin, S end, O out, C pred_, P proj_,
+            static tagged_pair<tag::in(I), tag::out(O)> impl(I begin, S end, O out, C pred_, P proj_,
                 concepts::InputIterator*, std::true_type)
             {
                 auto &&pred = as_function(pred_);
@@ -122,7 +124,7 @@ namespace ranges
             /// \pre `C` is a model of the `CallableRelation` concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && IteratorRange<I, S>())>
-            std::pair<I, O> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
+            tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),
                     std::move(pred), std::move(proj), iterator_concept<I>(), ForwardIterator<O>());
@@ -132,7 +134,7 @@ namespace ranges
             template<typename Rng, typename O, typename C = equal_to, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Range<Rng>())>
-            std::pair<range_safe_iterator_t<Rng>, O>
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(begin(rng), end(rng), std::move(out),
