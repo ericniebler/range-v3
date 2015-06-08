@@ -16,6 +16,7 @@
 #include <limits>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/take_while.hpp>
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
 
@@ -106,6 +107,10 @@ int main()
     {
         int a[] = {1, 2, 3, 4};
         test_iterators(a + 4, a, -4);
+    }
+
+    {
+        test_range(view::ints(0) | view::take_while([](int i) { return i < 4; }), 4);
     }
 
     {
