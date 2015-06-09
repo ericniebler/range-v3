@@ -29,16 +29,16 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<typename T, typename U>
+        template<typename T, typename U = T>
         struct is_swappable;
 
-        template<typename T, typename U>
+        template<typename T, typename U = T>
         struct is_nothrow_swappable;
 
-        template<typename T, typename U>
+        template<typename T, typename U = T>
         struct is_indirectly_swappable;
 
-        template<typename T, typename U>
+        template<typename T, typename U = T>
         struct is_nothrow_indirectly_swappable;
 
         /// \cond

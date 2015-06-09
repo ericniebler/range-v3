@@ -17,6 +17,7 @@
 #include <functional>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/swap.hpp>
 
 namespace ranges
 {
@@ -100,33 +101,50 @@ namespace ranges
             tagged(tagged const &) = default;
             tagged &operator=(tagged &&) = default;
             tagged &operator=(tagged const &) = default;
-            template <typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
+            template<typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
             tagged(tagged<Other, Tags...> &&that)
+                noexcept(noexcept(Base(static_cast<Other &&>(that))))
               : Base(static_cast<Other &&>(that))
             {}
-            template <typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
+            template<typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
             tagged(tagged<Other, Tags...> const &that)
               : Base(static_cast<Other const &>(that))
             {}
-            template <typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
+            template<typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
             tagged &operator=(tagged<Other, Tags...> &&that)
+                noexcept(noexcept(std::declval<Base &>() = static_cast<Other &&>(that)))
             {
                 static_cast<Base &>(*this) = static_cast<Other &&>(that);
                 return *this;
             }
-            template <typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
+            template<typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
             tagged &operator=(tagged<Other, Tags...> const &that)
             {
                 static_cast<Base &>(*this) = static_cast<Other const &>(that);
                 return *this;
             }
-            template <typename U,
+            template<typename U,
                 typename = meta::if_c<!std::is_same<tagged, detail::decay_t<U>>::value>,
-                typename = decltype(std::declval<Base&>() = std::declval<U>())>
+                typename = decltype(std::declval<Base &>() = std::declval<U>())>
             tagged &operator=(U && u)
+                noexcept(noexcept(std::declval<Base &>() = std::forward<U>(u)))
             {
-                static_cast<Base&>(*this) = std::forward<U>(u);
+                static_cast<Base &>(*this) = std::forward<U>(u);
                 return *this;
+            }
+            template<int tagged_dummy_ = 42>
+            meta::if_c<tagged_dummy_ == 43 || is_swappable<Base &>::value>
+            swap(tagged &that)
+                noexcept(is_nothrow_swappable<Base &>::value)
+            {
+                ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
+            }
+            template<int tagged_dummy_ = 42>
+            friend meta::if_c<tagged_dummy_ == 43 || is_swappable<Base &>::value>
+            swap(tagged &x, tagged &y)
+                noexcept(is_nothrow_swappable<Base &>::value)
+            {
+                x.swap(y);
             }
         };
 
