@@ -18,7 +18,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_access.hpp>
-#include <range/v3/range_interface.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/basic_iterator.hpp>
@@ -64,12 +64,12 @@ namespace ranges
 
         template<typename Derived, cardinality Cardinality>
         struct range_facade
-          : range_interface<Derived, Cardinality>
+          : view_interface<Derived, Cardinality>
         {
         protected:
             friend range_access;
             using range_facade_t = range_facade;
-            using range_interface<Derived, Cardinality>::derived;
+            using view_interface<Derived, Cardinality>::derived;
             // Default implementations
             Derived begin_cursor() const
             {

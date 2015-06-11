@@ -19,7 +19,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_interface.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/common_iterator.hpp>
@@ -36,7 +36,7 @@ namespace ranges
 
         template<typename Rng>
         struct bounded_view
-          : range_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
+          : view_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
         {
         private:
             friend range_access;

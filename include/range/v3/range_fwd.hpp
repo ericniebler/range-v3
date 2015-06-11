@@ -355,7 +355,7 @@ namespace ranges
         struct as_function_fn;
 
         template<typename Derived, cardinality = finite>
-        struct range_interface;
+        struct view_interface;
 
         template<typename T>
         struct istream_range;

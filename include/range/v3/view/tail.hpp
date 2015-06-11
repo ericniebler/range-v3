@@ -22,7 +22,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_interface.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
@@ -36,7 +36,7 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct tail_view
-          : range_interface<
+          : view_interface<
                 tail_view<Rng>,
                 (range_cardinality<Rng>::value > 0) ?
                     (cardinality)(range_cardinality<Rng>::value - 1) :
