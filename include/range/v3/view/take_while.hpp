@@ -20,7 +20,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -35,7 +35,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Pred>
         struct iter_take_while_view
-          : range_adaptor<
+          : view_adaptor<
                 iter_take_while_view<Rng, Pred>,
                 Rng,
                 is_finite<Rng>::value ? finite : unknown>
@@ -72,7 +72,7 @@ namespace ranges
         public:
             iter_take_while_view() = default;
             iter_take_while_view(Rng rng, Pred pred)
-              : range_adaptor_t<iter_take_while_view>{std::move(rng)}
+              : view_adaptor_t<iter_take_while_view>{std::move(rng)}
               , pred_(as_function(std::move(pred)))
             {}
         };

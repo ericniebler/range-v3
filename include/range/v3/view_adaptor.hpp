@@ -10,8 +10,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
-#ifndef RANGES_V3_RANGE_ADAPTOR_HPP
-#define RANGES_V3_RANGE_ADAPTOR_HPP
+#ifndef RANGES_V3_VIEW_ADAPTOR_HPP
+#define RANGES_V3_VIEW_ADAPTOR_HPP
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
@@ -82,7 +82,7 @@ namespace ranges
         using base_range_t = meta::eval<range_access::base_range<Derived>>;
 
         template<typename Derived>
-        using range_adaptor_t = meta::eval<range_access::range_adaptor<Derived>>;
+        using view_adaptor_t = meta::eval<range_access::view_adaptor<Derived>>;
 
         template<typename BaseIt, typename Adapt>
         struct adaptor_cursor;
@@ -355,14 +355,14 @@ namespace ranges
                 adaptor_sentinel<detail::adapted_sentinel_t<D>, detail::end_adaptor_t<D>>>;
 
         template<typename Derived, typename BaseRng, cardinality Cardinality /*= range_cardinality<BaseRng>::value*/>
-        struct range_adaptor
+        struct view_adaptor
           : view_facade<Derived, Cardinality>
         {
         private:
             friend Derived;
             friend range_access;
             friend adaptor_base;
-            using range_adaptor_t = range_adaptor;
+            using view_adaptor_t = view_adaptor;
             using base_range_t = view::all_t<BaseRng>;
             using view_facade<Derived, Cardinality>::derived;
             // Mutable here. Const-correctness is enforced below by disabling
@@ -417,8 +417,8 @@ namespace ranges
                 return {std::move(pos), std::move(adapt)};
             }
         public:
-            range_adaptor() = default;
-            constexpr range_adaptor(BaseRng && rng)
+            view_adaptor() = default;
+            constexpr view_adaptor(BaseRng && rng)
               : rng_(view::all(detail::forward<BaseRng>(rng)))
             {}
             base_range_t & base()

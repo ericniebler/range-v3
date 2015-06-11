@@ -20,8 +20,8 @@ add_test(test.constexpr_core constexpr_core)
 add_executable(view_facade view_facade.cpp)
 add_test(test.view_facade view_facade)
 
-add_executable(range_adaptor range_adaptor.cpp)
-add_test(test.range_adaptor range_adaptor)
+add_executable(view_adaptor view_adaptor.cpp)
+add_test(test.view_adaptor view_adaptor)
 
 add_executable(range range.cpp)
 add_test(test.range range)

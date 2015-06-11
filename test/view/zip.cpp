@@ -216,7 +216,7 @@ int main()
         CONCEPT_ASSERT(Same<range_reference_t<Zipped>, common_tuple<int &&> >());
     }
 
-    // This is actually a test of the logic of range_adaptor. Since the stride view
+    // This is actually a test of the logic of view_adaptor. Since the stride view
     // does not redefine the current member function, the base range's indirect_move
     // function gets picked up automatically.
     {

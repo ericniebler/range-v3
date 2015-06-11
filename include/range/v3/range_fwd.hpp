@@ -340,7 +340,7 @@ namespace ranges
         template<typename Derived,
                  typename BaseRng,
                  cardinality C = range_cardinality<BaseRng>::value>
-        struct range_adaptor;
+        struct view_adaptor;
 
         template<typename I, typename S>
         using common_iterator =

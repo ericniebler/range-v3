@@ -23,7 +23,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/empty.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/view/transform.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -58,7 +58,7 @@ namespace ranges
         // Join a range of ranges
         template<typename Rng>
         struct join_view<Rng, void>
-          : range_adaptor<join_view<Rng, void>, Rng,
+          : view_adaptor<join_view<Rng, void>, Rng,
                 detail::join_cardinality<
                     range_cardinality<Rng>,
                     range_cardinality<range_value_t<Rng>>>::value>
@@ -156,7 +156,7 @@ namespace ranges
         public:
             join_view() = default;
             explicit join_view(Rng rng)
-              : range_adaptor_t<join_view>{std::move(rng)}, cur_{}
+              : view_adaptor_t<join_view>{std::move(rng)}, cur_{}
             {}
             CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 && SizedRange<range_value_t<Rng>>())
             constexpr size_t_ size() const
@@ -170,7 +170,7 @@ namespace ranges
         // Join a range of ranges, inserting a range of values between them.
         template<typename Rng, typename ValRng>
         struct join_view
-          : range_adaptor<join_view<Rng, ValRng>, Rng,
+          : view_adaptor<join_view<Rng, ValRng>, Rng,
                 detail::join_cardinality<
                     range_cardinality<Rng>,
                     range_cardinality<range_value_t<Rng>>,
@@ -297,7 +297,7 @@ namespace ranges
         public:
             join_view() = default;
             join_view(Rng rng, ValRng val)
-              : range_adaptor_t<join_view>{std::move(rng)}
+              : view_adaptor_t<join_view>{std::move(rng)}
               , cur_{}, val_(std::move(val))
             {}
             CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 &&

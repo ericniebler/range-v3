@@ -18,7 +18,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -34,7 +34,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename F>
         struct adjacent_remove_if_view
-          : range_adaptor<
+          : view_adaptor<
                 adjacent_remove_if_view<Rng, F>,
                 Rng,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
@@ -72,7 +72,7 @@ namespace ranges
         public:
             adjacent_remove_if_view() = default;
             adjacent_remove_if_view(Rng rng, F pred)
-              : range_adaptor_t<adjacent_remove_if_view>{std::move(rng)}
+              : view_adaptor_t<adjacent_remove_if_view>{std::move(rng)}
               , pred_(as_function(std::move(pred)))
             {}
         };

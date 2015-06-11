@@ -269,9 +269,9 @@ namespace ranges
                 using type = typename RangeFacade::view_facade_t;
             };
             template<typename RangeAdaptor>
-            struct range_adaptor
+            struct view_adaptor
             {
-                using type = typename RangeAdaptor::range_adaptor_t;
+                using type = typename RangeAdaptor::view_adaptor_t;
             };
             /// endcond
         };

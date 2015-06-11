@@ -25,7 +25,7 @@
 #include <range/v3/front.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -41,7 +41,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Fun>
         struct partial_sum_view
-          : range_adaptor<partial_sum_view<Rng, Fun>, Rng>
+          : view_adaptor<partial_sum_view<Rng, Fun>, Rng>
         {
         private:
             friend range_access;
@@ -109,7 +109,7 @@ namespace ranges
         public:
             partial_sum_view() = default;
             partial_sum_view(Rng rng, Fun fun)
-              : range_adaptor_t<partial_sum_view>{std::move(rng)}
+              : view_adaptor_t<partial_sum_view>{std::move(rng)}
               , fun_(as_function(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())

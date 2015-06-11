@@ -17,7 +17,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -34,7 +34,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Val>
         struct delimit_view
-          : range_adaptor<delimit_view<Rng, Val>, Rng, is_finite<Rng>::value ? finite : unknown>
+          : view_adaptor<delimit_view<Rng, Val>, Rng, is_finite<Rng>::value ? finite : unknown>
         {
         private:
             friend range_access;
@@ -60,7 +60,7 @@ namespace ranges
         public:
             delimit_view() = default;
             delimit_view(Rng rng, Val value)
-              : range_adaptor_t<delimit_view>{std::move(rng)}
+              : view_adaptor_t<delimit_view>{std::move(rng)}
               , value_(std::move(value))
             {}
         };
