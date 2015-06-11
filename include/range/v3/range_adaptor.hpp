@@ -17,7 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/distance.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -356,7 +356,7 @@ namespace ranges
 
         template<typename Derived, typename BaseRng, cardinality Cardinality /*= range_cardinality<BaseRng>::value*/>
         struct range_adaptor
-          : range_facade<Derived, Cardinality>
+          : view_facade<Derived, Cardinality>
         {
         private:
             friend Derived;
@@ -364,7 +364,7 @@ namespace ranges
             friend adaptor_base;
             using range_adaptor_t = range_adaptor;
             using base_range_t = view::all_t<BaseRng>;
-            using range_facade<Derived, Cardinality>::derived;
+            using view_facade<Derived, Cardinality>::derived;
             // Mutable here. Const-correctness is enforced below by disabling
             // begin_cursor/end_cursor if "BaseRng const" does not model
             // the View concept.
@@ -399,7 +399,7 @@ namespace ranges
             }
             // Const-correctness is enforced here by only allowing these if the base range
             // has const begin/end accessors. That disables the const begin()/end() accessors
-            // in range_facade, meaning the derived range type only has mutable iterators.
+            // in view_facade, meaning the derived range type only has mutable iterators.
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && View<base_range_t const>())>
             adaptor_cursor_t<D const> begin_cursor() const

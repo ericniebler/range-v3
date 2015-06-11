@@ -73,7 +73,7 @@ namespace ranges
 
             template<typename Rng, bool IsRandomAccess = RandomAccessRange<Rng>()>
             struct slice_view_
-              : range_facade<slice_view<Rng>, finite>
+              : view_facade<slice_view<Rng>, finite>
             {
             private:
                 friend range_access;

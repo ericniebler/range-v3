@@ -36,7 +36,7 @@ namespace ranges
         {
             template<typename Rng, bool IsRandomAccess = RandomAccessRange<Rng>()>
             struct take_exactly_view_
-              : range_facade<take_exactly_view<Rng>, finite>
+              : view_facade<take_exactly_view<Rng>, finite>
             {
             private:
                 friend range_access;

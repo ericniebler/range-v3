@@ -199,7 +199,7 @@ auto chunk(std::size_t n) {
 // Flattens a range of ranges by iterating the inner
 // ranges in round-robin fashion.
 template<class Rngs>
-class interleave_view : public range_facade<interleave_view<Rngs>> {
+class interleave_view : public view_facade<interleave_view<Rngs>> {
     friend range_access;
     std::vector<range_value_t<Rngs>> rngs_;
     struct cursor;

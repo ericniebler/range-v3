@@ -21,7 +21,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -34,7 +34,7 @@ namespace ranges
         /// @{
         template<typename G>
         struct generate_n_view
-          : range_facade<generate_n_view<G>, finite>
+          : view_facade<generate_n_view<G>, finite>
         {
         private:
             friend struct range_access;

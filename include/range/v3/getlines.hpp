@@ -17,7 +17,7 @@
 #include <string>
 #include <istream>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -27,7 +27,7 @@ namespace ranges
         /// \addtogroup group-core
         /// @{
         struct getlines_range
-          : range_facade<getlines_range, unknown>
+          : view_facade<getlines_range, unknown>
         {
         private:
             friend range_access;

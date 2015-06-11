@@ -30,7 +30,7 @@ namespace ranges
     {
         template<typename Rng>
         struct take_view
-          : range_facade<take_view<Rng>, finite>
+          : view_facade<take_view<Rng>, finite>
         {
         private:
             friend range_access;

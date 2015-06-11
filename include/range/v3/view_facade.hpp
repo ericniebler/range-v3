@@ -10,8 +10,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
-#ifndef RANGES_V3_RANGE_FACADE_HPP
-#define RANGES_V3_RANGE_FACADE_HPP
+#ifndef RANGES_V3_VIEW_FACADE_HPP
+#define RANGES_V3_VIEW_FACADE_HPP
 
 #include <utility>
 #include <type_traits>
@@ -63,12 +63,12 @@ namespace ranges
         };
 
         template<typename Derived, cardinality Cardinality>
-        struct range_facade
+        struct view_facade
           : view_interface<Derived, Cardinality>
         {
         protected:
             friend range_access;
-            using range_facade_t = range_facade;
+            using view_facade_t = view_facade;
             using view_interface<Derived, Cardinality>::derived;
             // Default implementations
             Derived begin_cursor() const
@@ -105,7 +105,7 @@ namespace ranges
         };
 
         template<typename RangeFacade>
-        using range_facade_t = meta::eval<range_access::range_facade<RangeFacade>>;
+        using view_facade_t = meta::eval<range_access::view_facade<RangeFacade>>;
 
         /// @}
     }

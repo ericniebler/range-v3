@@ -21,7 +21,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -229,7 +229,7 @@ namespace ranges
         /// \ingroup group-views
         template<typename Ref>
         struct any_input_range
-          : range_facade<any_input_range<Ref>, unknown>
+          : view_facade<any_input_range<Ref>, unknown>
         {
         private:
             friend range_access;

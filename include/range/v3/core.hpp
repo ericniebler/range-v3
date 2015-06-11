@@ -18,7 +18,7 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/empty.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/range_adaptor.hpp>
 #include <range/v3/range_access.hpp>
 #include <range/v3/view_interface.hpp>

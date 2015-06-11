@@ -17,8 +17,8 @@ add_test(test.container_conversion container_conversion)
 add_executable(constexpr_core constexpr_core.cpp)
 add_test(test.constexpr_core constexpr_core)
 
-add_executable(range_facade range_facade.cpp)
-add_test(test.range_facade range_facade)
+add_executable(view_facade view_facade.cpp)
+add_test(test.view_facade view_facade)
 
 add_executable(range_adaptor range_adaptor.cpp)
 add_test(test.range_adaptor range_adaptor)

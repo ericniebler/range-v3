@@ -15,7 +15,7 @@
 #include "./test_utils.hpp"
 
 struct MyRange
-  : ranges::range_facade<MyRange>
+  : ranges::view_facade<MyRange>
 {
 private:
     friend struct ranges::range_access;

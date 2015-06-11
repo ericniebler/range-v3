@@ -335,7 +335,7 @@ namespace ranges
         {};
 
         template<typename Derived, cardinality C = finite>
-        struct range_facade;
+        struct view_facade;
 
         template<typename Derived,
                  typename BaseRng,

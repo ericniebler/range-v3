@@ -23,7 +23,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/variant.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -66,7 +66,7 @@ namespace ranges
         /// @{
         template<typename...Rngs>
         struct concat_view
-          : range_facade<concat_view<Rngs...>,
+          : view_facade<concat_view<Rngs...>,
                 meta::fold<
                     meta::list<range_cardinality<Rngs>...>,
                     std::integral_constant<cardinality, static_cast<cardinality>(0)>,

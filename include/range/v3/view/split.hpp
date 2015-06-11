@@ -22,7 +22,7 @@
 #include <range/v3/range.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -41,7 +41,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Fun>
         struct split_view
-          : range_facade<
+          : view_facade<
                 split_view<Rng, Fun>,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {
