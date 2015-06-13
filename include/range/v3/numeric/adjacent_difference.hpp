@@ -40,8 +40,8 @@ namespace ranges
             WeakOutputIterator<O, Y>,
             Callable<P, V>,
             Callable<BOp, X, X>,
-            CopyConstructible<X>,
-            MoveAssignable<X>>;
+            CopyConstructible<uncvref_t<X>>,
+            MoveAssignable<uncvref_t<X>>>;
 
         struct adjacent_difference_fn
         {
