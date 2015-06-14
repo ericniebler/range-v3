@@ -20,7 +20,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_interface.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -37,7 +37,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Pred>
         struct drop_while_view
-          : range_interface<drop_while_view<Rng, Pred>, is_finite<Rng>::value ? finite : unknown>
+          : view_interface<drop_while_view<Rng, Pred>, is_finite<Rng>::value ? finite : unknown>
        {
         private:
             friend range_access;

@@ -21,7 +21,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/view/all.hpp>
 
 namespace ranges
@@ -190,17 +190,17 @@ namespace ranges
             };
 
             template<typename Ref>
-            struct any_input_range_interface
+            struct any_input_view_interface
             {
-                virtual ~any_input_range_interface() {}
+                virtual ~any_input_view_interface() {}
                 virtual any_input_cursor<Ref> begin_cursor() const = 0;
                 virtual any_input_sentinel<Ref> end_cursor() const = 0;
-                virtual any_input_range_interface *clone() const = 0;
+                virtual any_input_view_interface *clone() const = 0;
             };
 
             template<typename Rng>
             struct any_input_range_impl
-              : any_input_range_interface<range_reference_t<Rng>>
+              : any_input_view_interface<range_reference_t<Rng>>
             {
             private:
                 Rng rng_;
@@ -217,7 +217,7 @@ namespace ranges
                 {
                     return {rng_, end_tag{}};
                 }
-                any_input_range_interface<range_reference_t<Rng>> *clone() const override
+                any_input_view_interface<range_reference_t<Rng>> *clone() const override
                 {
                     return new any_input_range_impl<Rng>{rng_};
                 }
@@ -229,11 +229,11 @@ namespace ranges
         /// \ingroup group-views
         template<typename Ref>
         struct any_input_range
-          : range_facade<any_input_range<Ref>, unknown>
+          : view_facade<any_input_range<Ref>, unknown>
         {
         private:
             friend range_access;
-            std::unique_ptr<detail::any_input_range_interface<Ref>> ptr_;
+            std::unique_ptr<detail::any_input_view_interface<Ref>> ptr_;
             detail::any_input_cursor<Ref> begin_cursor() const
             {
                 return ptr_->begin_cursor();

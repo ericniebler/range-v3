@@ -23,7 +23,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/take.hpp>
@@ -38,7 +38,7 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct chunk_view
-          : range_adaptor<
+          : view_adaptor<
                 chunk_view<Rng>,
                 Rng,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
@@ -60,7 +60,7 @@ namespace ranges
         public:
             chunk_view() = default;
             chunk_view(Rng rng, range_difference_t<Rng> n)
-              : range_adaptor_t<chunk_view>(std::move(rng)), n_(n)
+              : view_adaptor_t<chunk_view>(std::move(rng)), n_(n)
             {
                 RANGES_ASSERT(0 < n_);
             }

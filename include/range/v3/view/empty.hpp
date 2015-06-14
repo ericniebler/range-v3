@@ -15,7 +15,7 @@
 #define RANGES_V3_VIEW_EMPTY_HPP
 
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 
 namespace ranges
 {
@@ -23,7 +23,7 @@ namespace ranges
     {
         template<typename T>
         struct empty_view
-          : range_facade<empty_view<T>, (cardinality)0>
+          : view_facade<empty_view<T>, (cardinality)0>
         {
         private:
             friend range_access;

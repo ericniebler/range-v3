@@ -23,7 +23,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/optional.hpp>
@@ -41,7 +41,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Fun>
         struct iter_transform_view
-          : range_adaptor<iter_transform_view<Rng, Fun>, Rng>
+          : view_adaptor<iter_transform_view<Rng, Fun>, Rng>
         {
         private:
             friend range_access;
@@ -95,7 +95,7 @@ namespace ranges
         public:
             iter_transform_view() = default;
             iter_transform_view(Rng rng, Fun fun)
-              : range_adaptor_t<iter_transform_view>{std::move(rng)}
+              : view_adaptor_t<iter_transform_view>{std::move(rng)}
               , fun_(as_function(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())

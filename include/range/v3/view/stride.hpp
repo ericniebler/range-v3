@@ -24,7 +24,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -40,7 +40,7 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct stride_view
-          : range_adaptor<
+          : view_adaptor<
                 stride_view<Rng>,
                 Rng,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
@@ -155,7 +155,7 @@ namespace ranges
         public:
             stride_view() = default;
             stride_view(Rng rng, difference_type_ stride)
-              : range_adaptor_t<stride_view>{std::move(rng)}
+              : view_adaptor_t<stride_view>{std::move(rng)}
               , stride_(stride)
             {
                 RANGES_ASSERT(0 < stride_);

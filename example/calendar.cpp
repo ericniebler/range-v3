@@ -152,7 +152,7 @@ auto layout_months() {
 // Out: Range<Range<T>>, where each inner range has $n$ elements.
 //                       The last range may have fewer.
 template<class Rng>
-class chunk_view : public range_adaptor<chunk_view<Rng>, Rng> {
+class chunk_view : public view_adaptor<chunk_view<Rng>, Rng> {
     CONCEPT_ASSERT(ForwardRange<Rng>());
     std::size_t n_;
     friend range_access;
@@ -163,7 +163,7 @@ class chunk_view : public range_adaptor<chunk_view<Rng>, Rng> {
 public:
     chunk_view() = default;
     chunk_view(Rng rng, std::size_t n)
-      : range_adaptor_t<chunk_view>(std::move(rng)), n_(n)
+      : view_adaptor_t<chunk_view>(std::move(rng)), n_(n)
     {}
 };
 
@@ -199,7 +199,7 @@ auto chunk(std::size_t n) {
 // Flattens a range of ranges by iterating the inner
 // ranges in round-robin fashion.
 template<class Rngs>
-class interleave_view : public range_facade<interleave_view<Rngs>> {
+class interleave_view : public view_facade<interleave_view<Rngs>> {
     friend range_access;
     std::vector<range_value_t<Rngs>> rngs_;
     struct cursor;

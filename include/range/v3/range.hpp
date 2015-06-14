@@ -18,7 +18,7 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_interface.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
@@ -45,7 +45,7 @@ namespace ranges
         template<typename I, typename S /*= I*/>
         struct range
           : private compressed_pair<I, S>
-          , range_interface<range<I, S>>
+          , view_interface<range<I, S>>
         {
             using iterator = I;
             using sentinel = S;
@@ -105,7 +105,7 @@ namespace ranges
         template<typename I, typename S /* = I */>
         struct sized_range
           : private compressed_pair<I const, S const>
-          , range_interface<sized_range<I, S>>
+          , view_interface<sized_range<I, S>>
         {
         private:
             template<typename X, typename Y>

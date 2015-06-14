@@ -20,7 +20,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -37,7 +37,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Pred>
         struct remove_if_view
-          : range_adaptor<
+          : view_adaptor<
                 remove_if_view<Rng, Pred>,
                 Rng,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
@@ -97,30 +97,30 @@ namespace ranges
         public:
             remove_if_view() = default;
             remove_if_view(remove_if_view &&that)
-              : range_adaptor_t<remove_if_view>(std::move(that))
+              : view_adaptor_t<remove_if_view>(std::move(that))
               , pred_(std::move(that).pred_)
               , begin_{}
             {}
             remove_if_view(remove_if_view const &that)
-              : range_adaptor_t<remove_if_view>(that)
+              : view_adaptor_t<remove_if_view>(that)
               , pred_(that.pred_)
               , begin_{}
             {}
             remove_if_view(Rng rng, Pred pred)
-              : range_adaptor_t<remove_if_view>{std::move(rng)}
+              : view_adaptor_t<remove_if_view>{std::move(rng)}
               , pred_(as_function(std::move(pred)))
               , begin_{}
             {}
             remove_if_view& operator=(remove_if_view &&that)
             {
-                this->range_adaptor_t<remove_if_view>::operator=(std::move(that));
+                this->view_adaptor_t<remove_if_view>::operator=(std::move(that));
                 pred_ = std::move(that).pred_;
                 begin_.reset();
                 return *this;
             }
             remove_if_view& operator=(remove_if_view const &that)
             {
-                this->range_adaptor_t<remove_if_view>::operator=(that);
+                this->view_adaptor_t<remove_if_view>::operator=(that);
                 pred_ = that.pred_;
                 begin_.reset();
                 return *this;

@@ -20,7 +20,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -35,7 +35,7 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct move_view
-          : range_adaptor<move_view<Rng>, Rng>
+          : view_adaptor<move_view<Rng>, Rng>
         {
         private:
             friend range_access;
@@ -62,7 +62,7 @@ namespace ranges
         public:
             move_view() = default;
             explicit move_view(Rng rng)
-              : range_adaptor_t<move_view>{std::move(rng)}
+              : view_adaptor_t<move_view>{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const

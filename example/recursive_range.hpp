@@ -29,7 +29,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_interface.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/view/any_range.hpp>
@@ -50,7 +50,7 @@ namespace ranges
             std::function<any_input_range<int>()> fun_;
 
             struct impl
-              : range_interface<impl>
+              : view_interface<impl>
             {
             private:
                 friend recursive_range_fn;

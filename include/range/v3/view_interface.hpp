@@ -10,8 +10,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
-#ifndef RANGES_V3_RANGE_INTERFACE_HPP
-#define RANGES_V3_RANGE_INTERFACE_HPP
+#ifndef RANGES_V3_VIEW_INTERFACE_HPP
+#define RANGES_V3_VIEW_INTERFACE_HPP
 
 #include <iosfwd>
 #include <meta/meta.hpp>
@@ -61,7 +61,7 @@ namespace ranges
         /// \addtogroup group-core
         /// @{
         template<typename Derived, cardinality Cardinality /* = finite*/>
-        struct range_interface
+        struct view_interface
           : basic_view<Cardinality>
         {
         protected:

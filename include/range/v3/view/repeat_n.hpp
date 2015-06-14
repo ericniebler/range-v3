@@ -16,7 +16,7 @@
 
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -35,7 +35,7 @@ namespace ranges
         //    semantics.
         template<typename Val>
         struct repeat_n_view
-          : range_facade<repeat_n_view<Val>, finite>
+          : view_facade<repeat_n_view<Val>, finite>
         {
         private:
             friend range_access;

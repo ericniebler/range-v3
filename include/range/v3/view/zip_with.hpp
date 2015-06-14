@@ -24,7 +24,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -123,7 +123,7 @@ namespace ranges
         /// @{
         template<typename Fun, typename...Rngs>
         struct iter_zip_with_view
-          : range_facade<
+          : view_facade<
                 iter_zip_with_view<Fun, Rngs...>,
                 meta::fold<
                     meta::list<range_cardinality<Rngs>...>,

@@ -19,7 +19,7 @@
 
 template<typename BidiRange>
 struct my_reverse_view
-  : ranges::range_adaptor<my_reverse_view<BidiRange>, BidiRange>
+  : ranges::view_adaptor<my_reverse_view<BidiRange>, BidiRange>
 {
 private:
     CONCEPT_ASSERT(ranges::BidirectionalRange<BidiRange>());
@@ -71,15 +71,15 @@ private:
         return {};
     }
 public:
-    using ranges::range_adaptor_t<my_reverse_view>::range_adaptor_t;
+    using ranges::view_adaptor_t<my_reverse_view>::view_adaptor_t;
 };
 
 struct my_delimited_range
-  : ranges::range_adaptor<
+  : ranges::view_adaptor<
         my_delimited_range,
         ranges::delimit_view<ranges::istream_range<int>, int>>
 {
-    using range_adaptor_t::range_adaptor_t;
+    using view_adaptor_t::view_adaptor_t;
 };
 
 int main()

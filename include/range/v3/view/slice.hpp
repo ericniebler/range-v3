@@ -19,7 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_interface.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -73,7 +73,7 @@ namespace ranges
 
             template<typename Rng, bool IsRandomAccess = RandomAccessRange<Rng>()>
             struct slice_view_
-              : range_facade<slice_view<Rng>, finite>
+              : view_facade<slice_view<Rng>, finite>
             {
             private:
                 friend range_access;
@@ -140,7 +140,7 @@ namespace ranges
 
             template<typename Rng>
             struct slice_view_<Rng, true>
-              : range_interface<slice_view<Rng>, finite>
+              : view_interface<slice_view<Rng>, finite>
             {
             private:
                 using difference_type_ = range_difference_t<Rng>;

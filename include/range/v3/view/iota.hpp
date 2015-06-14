@@ -21,7 +21,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -158,7 +158,7 @@ namespace ranges
         /// An iota view in a closed range with non-random access iota value type
         template<typename From, typename To /* = From */>
         struct closed_iota_view
-          : range_facade<closed_iota_view<From, To>, finite>
+          : view_facade<closed_iota_view<From, To>, finite>
         {
         private:
             friend range_access;
@@ -213,7 +213,7 @@ namespace ranges
 
         template<typename From, typename To /* = void*/>
         struct iota_view
-          : range_facade<iota_view<From, To>, finite>
+          : view_facade<iota_view<From, To>, finite>
         {
         private:
             friend range_access;
@@ -264,7 +264,7 @@ namespace ranges
 
         template<typename From>
         struct iota_view<From, void>
-          : range_facade<iota_view<From, void>, infinite>
+          : view_facade<iota_view<From, void>, infinite>
         {
         private:
             using incrementable_concept_t = ranges::incrementable_concept<From>;

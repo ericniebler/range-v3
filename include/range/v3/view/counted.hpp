@@ -15,7 +15,7 @@
 
 #include <utility>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/range.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
@@ -31,7 +31,7 @@ namespace ranges
         /// @{
         template<typename I, typename D /* = iterator_difference_t<I>*/>
         struct counted_view
-          : range_facade<counted_view<I, D>, finite>
+          : view_facade<counted_view<I, D>, finite>
         {
         private:
             friend range_access;

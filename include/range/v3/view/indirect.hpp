@@ -21,7 +21,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
@@ -34,7 +34,7 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct indirect_view
-          : range_adaptor<indirect_view<Rng>, Rng>
+          : view_adaptor<indirect_view<Rng>, Rng>
         {
         private:
             friend range_access;
@@ -63,7 +63,7 @@ namespace ranges
         public:
             indirect_view() = default;
             explicit indirect_view(Rng rng)
-              : range_adaptor_t<indirect_view>{std::move(rng)}
+              : view_adaptor_t<indirect_view>{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const

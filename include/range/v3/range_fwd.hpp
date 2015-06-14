@@ -335,12 +335,12 @@ namespace ranges
         {};
 
         template<typename Derived, cardinality C = finite>
-        struct range_facade;
+        struct view_facade;
 
         template<typename Derived,
                  typename BaseRng,
                  cardinality C = range_cardinality<BaseRng>::value>
-        struct range_adaptor;
+        struct view_adaptor;
 
         template<typename I, typename S>
         using common_iterator =
@@ -355,7 +355,7 @@ namespace ranges
         struct as_function_fn;
 
         template<typename Derived, cardinality = finite>
-        struct range_interface;
+        struct view_interface;
 
         template<typename T>
         struct istream_range;

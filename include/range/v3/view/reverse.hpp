@@ -21,7 +21,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range_adaptor.hpp>
+#include <range/v3/view_adaptor.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 
@@ -33,7 +33,7 @@ namespace ranges
         /// @{
         template<typename Rng>
         struct reverse_view
-          : range_adaptor<reverse_view<Rng>, Rng>
+          : view_adaptor<reverse_view<Rng>, Rng>
         {
         private:
             CONCEPT_ASSERT(BidirectionalRange<Rng>());
@@ -100,7 +100,7 @@ namespace ranges
         public:
             reverse_view() = default;
             reverse_view(Rng rng)
-              : range_adaptor_t<reverse_view>{std::move(rng)}
+              : view_adaptor_t<reverse_view>{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const

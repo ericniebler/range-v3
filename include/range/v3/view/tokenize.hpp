@@ -20,7 +20,7 @@
 #include <type_traits>
 #include <initializer_list>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_interface.hpp>
+#include <range/v3/view_interface.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -35,7 +35,7 @@ namespace ranges
         /// @{
         template<typename Rng, typename Regex, typename SubMatchRange>
         struct tokenize_view
-          : range_interface<
+          : view_interface<
                 tokenize_view<Rng, Regex, SubMatchRange>,
                 is_finite<Rng>::value ? finite : range_cardinality<Rng>::value>
         {

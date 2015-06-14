@@ -16,7 +16,7 @@
 
 #include <istream>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/range_facade.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/semiregular.hpp>
 
 namespace ranges
@@ -27,7 +27,7 @@ namespace ranges
         /// @{
         template<typename Val>
         struct istream_range
-          : range_facade<istream_range<Val>, unknown>
+          : view_facade<istream_range<Val>, unknown>
         {
         private:
             friend range_access;
