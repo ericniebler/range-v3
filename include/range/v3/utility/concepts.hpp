@@ -542,7 +542,6 @@ namespace ranges
             };
 
             struct Function
-              : refines<Destructible(_1), CopyConstructible(_1)>
             {
                 template<typename Fun, typename ...Args>
                 using result_t = decltype(val<Fun>()(val<Args>()...));
@@ -552,6 +551,8 @@ namespace ranges
                     typename UnCvRefFun = meta::eval<std::remove_cv<UnRefFun>>>
                 auto requires_(Fun&& fun, Args&&... args) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Destructible, UnCvRefFun>(),
+                        concepts::model_of<CopyConstructible, UnCvRefFun>(),
                         concepts::has_type<UnRefFun *>(&fun),
                         concepts::has_type<UnCvRefFun *>(new UnCvRefFun(fun)),
                         (delete new UnCvRefFun(fun), 42),

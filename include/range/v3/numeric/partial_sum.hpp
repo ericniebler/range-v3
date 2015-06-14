@@ -35,9 +35,9 @@ namespace ranges
             InputIterator<I>,
             WeakOutputIterator<O, X>,
             Callable<P, V>,
-            CopyConstructible<X>,
+            CopyConstructible<uncvref_t<X>>,
             Callable<BOp, X, X>,
-            Assignable<X &, Y>>;
+            Assignable<uncvref_t<X> &, Y>>;
 
         struct partial_sum_fn
         {
