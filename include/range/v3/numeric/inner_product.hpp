@@ -43,7 +43,7 @@ namespace ranges
             Callable<P2, V2>,
             Callable<BOp2, X1, X2>,
             Callable<BOp1, T, Y2>,
-            Assignable<T &, Y2>>;
+            Assignable<T, Y2>>;
 
         struct inner_product_fn
         {

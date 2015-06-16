@@ -41,7 +41,7 @@ namespace ranges
             Callable<P, V>,
             Callable<BOp, X, X>,
             CopyConstructible<uncvref_t<X>>,
-            MoveAssignable<uncvref_t<X>>>;
+            Movable<uncvref_t<X>>>;
 
         struct adjacent_difference_fn
         {
