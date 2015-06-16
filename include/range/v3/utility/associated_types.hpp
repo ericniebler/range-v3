@@ -45,6 +45,11 @@ namespace ranges
         {};
 
         template<typename T>
+        struct difference_type<T, meta::if_<std::is_array<T>>>
+          : difference_type<detail::decay_t<T>>
+        {};
+
+        template<typename T>
         struct difference_type<T const>
           : difference_type<detail::decay_t<T>>
         {};
@@ -87,6 +92,11 @@ namespace ranges
         {
             // The meta::lazy::if_ is because void* and void(*)() are not Readable.
         };
+
+        template<typename T>
+        struct value_type<T, meta::if_<std::is_array<T>>>
+          : value_type<detail::decay_t<T>>
+        {};
 
         template<typename T>
         struct value_type<T const>

@@ -385,12 +385,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\numeric\partial_sum.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_access.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_concepts.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\range_facade.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_for.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\range_interface.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\size.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\to_container.hpp" />
@@ -474,6 +471,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\zip_with.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view_adaptor.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view_facade.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view_interface.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\is_heap.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\is_heap_until.hpp" />
     <ClInclude Include="..\..\..\..\test\algorithm\set_difference.hpp" />

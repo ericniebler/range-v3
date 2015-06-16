@@ -1241,22 +1241,13 @@
     <ClInclude Include="..\..\..\..\include\range\v3\range_access.hpp">
       <Filter>Header Files\range</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_adaptor.hpp">
-      <Filter>Header Files\range</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range_concepts.hpp">
-      <Filter>Header Files\range</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_facade.hpp">
       <Filter>Header Files\range</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range_for.hpp">
       <Filter>Header Files\range</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range_fwd.hpp">
-      <Filter>Header Files\range</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\range_interface.hpp">
       <Filter>Header Files\range</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\range_traits.hpp">
@@ -1318,6 +1309,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\tagspec.hpp">
       <Filter>Header Files\range\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view_adaptor.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view_facade.hpp">
+      <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view_interface.hpp">
+      <Filter>Header Files\range</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
