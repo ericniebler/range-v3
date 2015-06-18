@@ -37,7 +37,7 @@ namespace ranges
             Callable<P, V>,
             CopyConstructible<uncvref_t<X>>,
             Callable<BOp, X, X>,
-            Assignable<uncvref_t<X> &, Y>>;
+            Assignable<uncvref_t<X>, Y>>;
 
         struct partial_sum_fn
         {

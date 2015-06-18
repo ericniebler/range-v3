@@ -37,28 +37,28 @@ struct nondefaultconstructible
     nondefaultconstructible(int) {}
 };
 
-static_assert(ranges::CopyAssignable<int>(), "");
-static_assert(!ranges::CopyAssignable<int const>(), "");
-static_assert(!ranges::CopyAssignable<moveonly>(), "");
-static_assert(!ranges::CopyAssignable<nonmovable>(), "");
+static_assert(ranges::MoveConstructible<int>(), "");
+static_assert(ranges::MoveConstructible<const int>(), "");
+static_assert(ranges::MoveConstructible<moveonly>(), "");
+static_assert(!ranges::MoveConstructible<nonmovable>(), "");
 
 static_assert(ranges::CopyConstructible<int>(), "");
 static_assert(ranges::CopyConstructible<const int>(), "");
 static_assert(!ranges::CopyConstructible<moveonly>(), "");
 static_assert(!ranges::CopyConstructible<nonmovable>(), "");
 
-static_assert(ranges::MoveAssignable<int>(), "");
-static_assert(!ranges::MoveAssignable<int const>(), "");
-static_assert(ranges::MoveAssignable<moveonly>(), "");
-static_assert(!ranges::MoveAssignable<nonmovable>(), "");
+static_assert(ranges::Movable<int>(), "");
+static_assert(!ranges::Movable<int const>(), "");
+static_assert(ranges::Movable<moveonly>(), "");
+static_assert(!ranges::Movable<nonmovable>(), "");
 
-static_assert(ranges::MoveConstructible<int>(), "");
-static_assert(ranges::MoveConstructible<const int>(), "");
-static_assert(ranges::MoveConstructible<moveonly>(), "");
-static_assert(!ranges::MoveConstructible<nonmovable>(), "");
+static_assert(ranges::Copyable<int>(), "");
+static_assert(!ranges::Copyable<int const>(), "");
+static_assert(!ranges::Copyable<moveonly>(), "");
+static_assert(!ranges::Copyable<nonmovable>(), "");
 
-static_assert(ranges::DefaultConstructible<int>(), "");
-static_assert(!ranges::DefaultConstructible<nondefaultconstructible>(), "");
+static_assert(ranges::Constructible<int>(), "");
+static_assert(!ranges::Constructible<nondefaultconstructible>(), "");
 
 static_assert(ranges::InputIterator<int*>(), "");
 static_assert(!ranges::InputIterator<int>(), "");
@@ -95,6 +95,14 @@ struct NotDestructible
 
 static_assert(ranges::Destructible<int>(), "");
 static_assert(ranges::Destructible<const int>(), "");
+static_assert(!ranges::Destructible<void>(), "");
+static_assert(!ranges::Destructible<int&>(), "");
+static_assert(!ranges::Destructible<void()>(), "");
+static_assert(ranges::Destructible<void(*)()>(), "");
+static_assert(!ranges::Destructible<void(&)()>(), "");
+static_assert(!ranges::Destructible<int[2]>(), "");
+static_assert(ranges::Destructible<int(*)[2]>(), "");
+static_assert(!ranges::Destructible<int(&)[2]>(), "");
 static_assert(ranges::Destructible<moveonly>(), "");
 static_assert(ranges::Destructible<nonmovable>(), "");
 static_assert(!ranges::Destructible<NotDestructible>(), "");

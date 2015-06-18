@@ -182,7 +182,7 @@ namespace ranges
                 return *this;
             }
             template<typename X, typename Y,
-                CONCEPT_REQUIRES_(Assignable<I &, X &&>() && Assignable<S &, Y &&>())>
+                CONCEPT_REQUIRES_(Assignable<I, X &&>() && Assignable<S, Y &&>())>
             sized_range &operator=(sized_range<X, Y> rng)
             {
                 const_cast<I &>(first) = rng.move_first();

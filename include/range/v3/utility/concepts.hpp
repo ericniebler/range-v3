@@ -335,10 +335,13 @@ namespace ranges
 
             struct Destructible
             {
-                template<typename T>
-                auto requires_(T&&) -> decltype(
+                template<typename T, typename = meta::if_<std::is_object<T>>>
+                auto requires_(T&& t, T* p = nullptr) -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_destructible<T>{})
+                        (t.~T(), 42),
+                        concepts::has_type<T*>(&t),
+                        (delete p, 42),
+                        (delete[] p, 42)
                     ));
             };
 
@@ -348,27 +351,28 @@ namespace ranges
                 template<typename T, typename ...Us>
                 auto requires_(T&&, Us&&...) -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_constructible<T, Us...>{})
+                        T(std::declval<Us>()...),
+                        new T(std::declval<Us>()...)
                     ));
             };
 
-            struct DefaultConstructible
-              : refines<Destructible>
+            struct Initializable
             {
-                template<typename T>
-                auto requires_(T&&) -> decltype(
+                template<typename T, typename ...Us>
+                auto requires_(T&&, Us&&...) -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_default_constructible<T>{})
+                        T(std::declval<Us>()...),
+                        concepts::is_true(meta::or_<
+                            std::is_reference<T>, models<Constructible, T, Us...>>())
                     ));
             };
 
             struct MoveConstructible
-              : refines<Destructible>
             {
                 template<typename T>
                 auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_move_constructible<T>{})
+                        concepts::model_of<Constructible, T, T&&>()
                     ));
             };
 
@@ -378,45 +382,42 @@ namespace ranges
                 template<typename T>
                 auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_copy_constructible<T>{})
+                        concepts::model_of<Constructible, T, T&>(),
+                        concepts::model_of<Constructible, T, const T&>(),
+                        concepts::model_of<Constructible, T, const T&&>()
                     ));
             };
 
             struct Assignable
             {
                 template<typename T, typename U>
-                auto requires_(T&&, U&&) -> decltype(
+                auto requires_(T&& t, U&& u) -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_assignable<T &, U>{})
-                    ));
-            };
-
-            struct MoveAssignable
-            {
-                template<typename T>
-                auto requires_(T&&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_move_assignable<T>{})
-                    ));
-            };
-
-            struct CopyAssignable
-              : refines<MoveAssignable>
-            {
-                template<typename T>
-                auto requires_(T&&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::is_true(std::is_copy_assignable<T>{})
+                        concepts::has_type<T&>(t = static_cast<U&&>(u))
                     ));
             };
 
             struct Movable
-              : refines<MoveConstructible, MoveAssignable>
-            {};
+              : refines<MoveConstructible>
+            {
+                template<typename T>
+                auto requires_(T&&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Assignable, T, T&&>()
+                    ));
+            };
 
             struct Copyable
-              : refines<CopyConstructible, CopyAssignable>
-            {};
+              : refines<Movable, CopyConstructible>
+            {
+                template<typename T>
+                auto requires_(T&&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Assignable, T, T&>(),
+                        concepts::model_of<Assignable, T, const T&>(),
+                        concepts::model_of<Assignable, T, const T&&>()
+                    ));
+            };
 
             struct EqualityComparable
             {
@@ -498,26 +499,13 @@ namespace ranges
                     ));
             };
 
-            struct Allocatable
-            {
-                template<typename T>
-                auto requires_(T&&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::has_type<T *>(new T),
-                        ((delete new T), 42),
-                        concepts::has_type<T *>(new T[42]),
-                        ((delete[] new T[42]), 42)
-                    ));
-            };
-
             struct SemiRegular
-              : refines<DefaultConstructible, CopyConstructible, Destructible, CopyAssignable,
-                    Allocatable>
+              : refines<Copyable, Constructible>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
-                        concepts::has_type<T *>(&t)
+                        new T[42]
                     ));
             };
 
@@ -546,16 +534,10 @@ namespace ranges
                 template<typename Fun, typename ...Args>
                 using result_t = decltype(val<Fun>()(val<Args>()...));
 
-                template<typename Fun, typename ...Args,
-                    typename UnRefFun = meta::eval<std::remove_reference<Fun>>,
-                    typename UnCvRefFun = meta::eval<std::remove_cv<UnRefFun>>>
+                template<typename Fun, typename ...Args>
                 auto requires_(Fun&& fun, Args&&... args) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Destructible, UnCvRefFun>(),
-                        concepts::model_of<CopyConstructible, UnCvRefFun>(),
-                        concepts::has_type<UnRefFun *>(&fun),
-                        concepts::has_type<UnCvRefFun *>(new UnCvRefFun(fun)),
-                        (delete new UnCvRefFun(fun), 42),
+                        concepts::model_of<CopyConstructible, uncvref_t<Fun>>(),
                         (static_cast<void>(val<Fun>()(val<Args>()...)), 42)
                     ));
             };
@@ -655,8 +637,8 @@ namespace ranges
         template<typename T, typename...Us>
         using Constructible = concepts::models<concepts::Constructible, T, Us...>;
 
-        template<typename T>
-        using DefaultConstructible = concepts::models<concepts::DefaultConstructible, T>;
+        template<typename T, typename...Us>
+        using Initializable = concepts::models<concepts::Initializable, T, Us...>;
 
         template<typename T>
         using MoveConstructible = concepts::models<concepts::MoveConstructible, T>;
@@ -666,12 +648,6 @@ namespace ranges
 
         template<typename T, typename U>
         using Assignable = concepts::models<concepts::Assignable, T, U>;
-
-        template<typename T>
-        using MoveAssignable = concepts::models<concepts::MoveAssignable, T>;
-
-        template<typename T>
-        using CopyAssignable = concepts::models<concepts::CopyAssignable, T>;
 
         template<typename T>
         using Movable = concepts::models<concepts::Movable, T>;
@@ -687,9 +663,6 @@ namespace ranges
 
         template<typename T, typename U = T>
         using TotallyOrdered = concepts::models<concepts::TotallyOrdered, T, U>;
-
-        template<typename T>
-        using Allocatable = concepts::models<concepts::Allocatable, T>;
 
         template<typename T>
         using SemiRegular = concepts::models<concepts::SemiRegular, T>;

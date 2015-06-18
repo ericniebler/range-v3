@@ -444,20 +444,26 @@ namespace ranges
         {
         private:
             Cont *cont_;
+            struct proxy
+            {
+                Cont *cont_;
+                proxy &operator=(typename Cont::value_type v)
+                {
+                    cont_->push_back(std::move(v));
+                    return *this;
+                }
+            };
         public:
             using difference_type = std::ptrdiff_t;
-            back_insert_iterator() = default;
+            constexpr back_insert_iterator()
+              : cont_{}
+            {}
             explicit back_insert_iterator(Cont &cont) noexcept
               : cont_(&cont)
             {}
-            back_insert_iterator const &operator=(typename Cont::value_type v) const
+            proxy operator*() const
             {
-                cont_->push_back(std::move(v));
-                return *this;
-            }
-            back_insert_iterator const &operator*() const
-            {
-                return *this;
+                return {cont_};
             }
             back_insert_iterator &operator++()
             {
@@ -491,28 +497,33 @@ namespace ranges
         private:
             std::basic_ostream<Char, Traits> *sout_;
             Char const *delim_;
+            struct proxy
+            {
+                std::basic_ostream<Char, Traits> *sout_;
+                Char const *delim_;
+                template<typename U,
+                    typename V = meta::if_<std::is_void<T>, U, T>,
+                    meta::if_<std::is_convertible<U, V const &>, int> = 0>
+                proxy &operator=(U &&t)
+                {
+                    RANGES_ASSERT(sout_);
+                    *sout_ << static_cast<V const &>(t);
+                    if(delim_)
+                        *sout_ << delim_;
+                    return *this;
+                }
+            };
         public:
             using difference_type = std::ptrdiff_t;
             using char_type = Char;
             using traits_type = Traits;
             ostream_iterator() = default;
-            ostream_iterator(std::basic_ostream<Char, Traits> &sout, Char const *delim = nullptr)
+            ostream_iterator(std::basic_ostream<Char, Traits> &sout, Char const *delim = nullptr) noexcept
               : sout_(&sout), delim_(delim)
             {}
-            template<typename U,
-                typename V = meta::if_<std::is_void<T>, U, T>,
-                meta::if_<std::is_convertible<U, V const &>, int> = 0>
-            ostream_iterator const &operator=(U &&t) const
+            proxy operator*() const noexcept
             {
-                RANGES_ASSERT(sout_);
-                *sout_ << static_cast<V const &>(t);
-                if(delim_)
-                    *sout_ << delim_;
-                return *this;
-            }
-            ostream_iterator<T> const &operator*() const
-            {
-                return *this;
+                return {sout_, delim_};
             }
             ostream_iterator<T> &operator++()
             {
@@ -534,30 +545,39 @@ namespace ranges
                 friend struct reverse_cursor;
                 I it_;
             public:
-
                 struct mixin : basic_mixin<reverse_cursor>
                 {
-                    RANGES_CXX14_CONSTEXPR mixin() = default;
-                    RANGES_CXX14_CONSTEXPR mixin(reverse_cursor pos)
-                        : basic_mixin<reverse_cursor>{std::move(pos)}
+                    mixin() = default;
+                    RANGES_CXX14_CONSTEXPR
+                    mixin(reverse_cursor pos)
+                      : basic_mixin<reverse_cursor>{std::move(pos)}
                     {}
-                    RANGES_CXX14_CONSTEXPR mixin(I it) : mixin(reverse_cursor{it})
+                    RANGES_CXX14_CONSTEXPR
+                    mixin(I it)
+                      : mixin{reverse_cursor{it}}
                     {}
-                    RANGES_CXX14_CONSTEXPR I base() const
+                    RANGES_CXX14_CONSTEXPR
+                    I base() const
                     {
                         return this->get().base();
                     }
                 };
 
-                RANGES_CXX14_CONSTEXPR reverse_cursor(I it) : it_(std::move(it)) {}
-                template<typename U, CONCEPT_REQUIRES_(Convertible<U, I>{})>
-                RANGES_CXX14_CONSTEXPR reverse_cursor(reverse_cursor<U> const& u)
-                        : it_(u.base()) {}
-
-                RANGES_CXX14_CONSTEXPR reverse_cursor() = default;
+                reverse_cursor() = default;
+                RANGES_CXX14_CONSTEXPR
+                reverse_cursor(I it)
+                  : it_(std::move(it))
+                {}
+                template<typename U,
+                    CONCEPT_REQUIRES_(Convertible<U, I>())>
+                RANGES_CXX14_CONSTEXPR
+                reverse_cursor(reverse_cursor<U> const &u)
+                  : it_(u.base())
+                {}
 
                 RANGES_CXX14_CONSTEXPR
-                auto current() const -> decltype(*it_)
+                auto current() const ->
+                    decltype(*it_)
                 {
                     I tmp(it_);
                     return *(--tmp);
