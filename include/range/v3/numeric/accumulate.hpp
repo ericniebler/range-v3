@@ -34,7 +34,7 @@ namespace ranges
             InputIterator<I>,
             Callable<P, V>,
             Callable<Op, T, X>,
-            Assignable<T, Y>>;
+            Assignable<T&, Y>>;
 
         struct accumulate_fn
         {

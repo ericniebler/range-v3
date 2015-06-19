@@ -393,7 +393,7 @@ namespace ranges
                 template<typename T, typename U>
                 auto requires_(T&& t, U&& u) -> decltype(
                     concepts::valid_expr(
-                        concepts::has_type<T&>(t = static_cast<U&&>(u))
+                        concepts::has_type<T&>(static_cast<T&&>(t) = static_cast<U&&>(u))
                     ));
             };
 
@@ -403,7 +403,7 @@ namespace ranges
                 template<typename T>
                 auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Assignable, T, T&&>()
+                        concepts::model_of<Assignable, T&, T&&>()
                     ));
             };
 
@@ -413,9 +413,9 @@ namespace ranges
                 template<typename T>
                 auto requires_(T&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Assignable, T, T&>(),
-                        concepts::model_of<Assignable, T, const T&>(),
-                        concepts::model_of<Assignable, T, const T&&>()
+                        concepts::model_of<Assignable, T&, T&>(),
+                        concepts::model_of<Assignable, T&, const T&>(),
+                        concepts::model_of<Assignable, T&, const T&&>()
                     ));
             };
 

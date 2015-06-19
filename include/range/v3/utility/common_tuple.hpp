@@ -96,15 +96,15 @@ namespace ranges
 
             // Assignment
             template<typename...Us,
-                CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts, Us &>()...>::value)>
+                CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts &, Us &>()...>::value)>
             common_tuple &operator=(std::tuple<Us...> &that)
-                noexcept(meta::and_c<std::is_nothrow_assignable<Ts, Us &>::value...>::value)
+                noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us &>::value...>::value)
             {
                 (void)tuple_transform(base(), that, element_assign_{});
                 return *this;
             }
             template<typename...Us,
-                CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts, Us const &>()...>::value)>
+                CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts &, Us const &>()...>::value)>
             common_tuple &operator=(std::tuple<Us...> const & that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us const &>::value...>::value)
             {
@@ -112,7 +112,7 @@ namespace ranges
                 return *this;
             }
             template<typename...Us,
-                CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts, Us &&>()...>::value)>
+                CONCEPT_REQUIRES_(meta::and_c<(bool) Assignable<Ts &, Us &&>()...>::value)>
             common_tuple &operator=(std::tuple<Us...> &&that)
                 noexcept(meta::and_c<std::is_nothrow_assignable<Ts &, Us &&>::value...>::value)
             {
@@ -274,7 +274,7 @@ namespace ranges
 
             // Assignment
             template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(Assignable<F, F2 &>() && Assignable<S, S2 &>())>
+                CONCEPT_REQUIRES_(Assignable<F &, F2 &>() && Assignable<S &, S2 &>())>
             common_pair &operator=(std::pair<F2, S2> &that)
                 noexcept(std::is_nothrow_assignable<F &, F2 &>::value &&
                          std::is_nothrow_assignable<S &, S2 &>::value)
@@ -284,7 +284,7 @@ namespace ranges
                 return *this;
             }
             template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(Assignable<F, F2 const &>() && Assignable<S, S2 const &>())>
+                CONCEPT_REQUIRES_(Assignable<F &, F2 const &>() && Assignable<S &, S2 const &>())>
             common_pair &operator=(std::pair<F2, S2> const & that)
                 noexcept(std::is_nothrow_assignable<F &, F2 const &>::value &&
                          std::is_nothrow_assignable<S &, S2 const &>::value)
@@ -294,7 +294,7 @@ namespace ranges
                 return *this;
             }
             template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(Assignable<F, F2 &&>() && Assignable<S, S2 &&>())>
+                CONCEPT_REQUIRES_(Assignable<F &, F2 &&>() && Assignable<S &, S2 &&>())>
             common_pair &operator=(std::pair<F2, S2> &&that)
                 noexcept(std::is_nothrow_assignable<F &, F2 &&>::value &&
                          std::is_nothrow_assignable<S &, S2 &&>::value)
