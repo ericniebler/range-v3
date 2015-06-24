@@ -22,6 +22,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/associated_types.hpp>
+#include <range/v3/utility/nullptr_v.hpp>
 
 namespace ranges
 {
@@ -54,77 +55,59 @@ namespace ranges
         {
             ////////////////////////////////////////////////////////////////////////////////////////
             template<typename T>
-            struct as_ranges_iterator_category
-            {
-                using type = T;
-            };
+            T upgrade_iterator_category_(T *, void *);
 
-            template<>
-            struct as_ranges_iterator_category<std::input_iterator_tag>
-            {
-                using type = ranges::input_iterator_tag;
-            };
+            template<typename T>
+            ranges::input_iterator_tag upgrade_iterator_category_(T *, std::input_iterator_tag *);
 
-            template<>
-            struct as_ranges_iterator_category<std::forward_iterator_tag>
-            {
-                using type = ranges::forward_iterator_tag;
-            };
+            template<typename T>
+            ranges::forward_iterator_tag upgrade_iterator_category_(T *, std::forward_iterator_tag *);
 
-            template<>
-            struct as_ranges_iterator_category<std::bidirectional_iterator_tag>
-            {
-                using type = ranges::bidirectional_iterator_tag;
-            };
+            template<typename T>
+            ranges::bidirectional_iterator_tag upgrade_iterator_category_(T *, std::bidirectional_iterator_tag *);
 
-            template<>
-            struct as_ranges_iterator_category<std::random_access_iterator_tag>
+            template<typename T>
+            ranges::random_access_iterator_tag upgrade_iterator_category_(T *, std::random_access_iterator_tag *);
+
+            template<typename T>
+            struct upgrade_iterator_category
             {
-                using type = ranges::random_access_iterator_tag;
+                using type = decltype(detail::upgrade_iterator_category_(_nullptr_v<T>(), _nullptr_v<T>()));
             };
 
             ////////////////////////////////////////////////////////////////////////////////////////
+            template<typename T, typename B>
+            meta::nil_ downgrade_iterator_category_(T *, void *, B);
+
+            template<typename T, typename B>
+            meta::id<T>
+            downgrade_iterator_category_(T *, std::input_iterator_tag *, B);
+
+            template<typename T, typename B>
+            meta::id<T>
+            downgrade_iterator_category_(T *, std::output_iterator_tag *, B);
+
+            template<typename T, typename B>
+            meta::id<std::input_iterator_tag>
+            downgrade_iterator_category_(T *, ranges::input_iterator_tag *, B);
+
+            template<typename T>
+            meta::id<std::forward_iterator_tag>
+            downgrade_iterator_category_(T *, ranges::forward_iterator_tag *, std::true_type);
+
+            template<typename T>
+            meta::id<std::bidirectional_iterator_tag>
+            downgrade_iterator_category_(T *, ranges::bidirectional_iterator_tag *, std::true_type);
+
+            template<typename T>
+            meta::id<std::random_access_iterator_tag>
+            downgrade_iterator_category_(T *, ranges::random_access_iterator_tag *, std::true_type);
+
             template<typename Tag, typename Reference>
-            struct as_std_iterator_category;
-
-            template<typename Reference>
-            struct as_std_iterator_category<ranges::weak_input_iterator_tag, Reference>
-            {
-                // Not a valid C++14 iterator
-            };
-
-            template<typename Reference>
-            struct as_std_iterator_category<ranges::input_iterator_tag, Reference>
-            {
-                using type = std::input_iterator_tag;
-            };
-
-            template<typename Reference>
-            struct as_std_iterator_category<ranges::forward_iterator_tag, Reference>
-            {
-                using type = meta::if_<
-                    std::is_reference<Reference>,
-                    std::forward_iterator_tag,
-                    std::input_iterator_tag>;
-            };
-
-            template<typename Reference>
-            struct as_std_iterator_category<ranges::bidirectional_iterator_tag, Reference>
-            {
-                using type = meta::if_<
-                    std::is_reference<Reference>,
-                    std::bidirectional_iterator_tag,
-                    std::input_iterator_tag>;
-            };
-
-            template<typename Reference>
-            struct as_std_iterator_category<ranges::random_access_iterator_tag, Reference>
-            {
-                using type = meta::if_<
-                    std::is_reference<Reference>,
-                    std::random_access_iterator_tag,
-                    std::input_iterator_tag>;
-            };
+            struct downgrade_iterator_category
+              : decltype(detail::downgrade_iterator_category_(_nullptr_v<Tag>(), _nullptr_v<Tag>(),
+                    std::integral_constant<bool, std::is_reference<Reference>::value>()))
+            {};
         }
         /// \endcond
 
@@ -156,7 +139,7 @@ namespace ranges
 
         template<typename T>
         struct iterator_category<T, meta::void_<typename T::iterator_category>>
-          : detail::as_ranges_iterator_category<typename T::iterator_category>
+          : detail::upgrade_iterator_category<typename T::iterator_category>
         {};
 
         namespace concepts

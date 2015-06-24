@@ -747,7 +747,7 @@ namespace std
         using reference = typename iterator::reference;
         using iterator_category =
             ::meta::eval<
-                ::ranges::detail::as_std_iterator_category<
+                ::ranges::detail::downgrade_iterator_category<
                     typename iterator::iterator_category,
                     reference>>;
         using pointer = typename iterator::pointer;
