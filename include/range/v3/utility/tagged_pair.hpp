@@ -18,6 +18,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/swap.hpp>
+#include <range/v3/utility/functional.hpp>
 
 namespace ranges
 {
@@ -51,42 +52,10 @@ namespace ranges
             };
 
             template<typename T>
-            struct tag_spec
-            {};
-
-            template<typename Spec, typename Arg>
-            struct tag_spec<Spec(Arg)>
-            {
-                using type = Spec;
-            };
+            using tag_spec = meta::front<meta::as_list<T>>;
 
             template<typename T>
-            struct tag_elem
-            {};
-
-            template<typename Spec, typename Arg>
-            struct tag_elem<Spec(Arg)>
-            {
-                using type = Arg;
-            };
-
-            template<typename U, typename V = decay_t<U>>
-            struct tuplelike_elem
-            {
-                using type = V;
-            };
-
-            template<typename U, typename V>
-            struct tuplelike_elem<U, std::reference_wrapper<V>>
-            {
-                using type = V &;
-            };
-
-            template<typename U, typename V, bool RValue>
-            struct tuplelike_elem<U, ranges::reference_wrapper<V, RValue>>
-            {
-                using type = meta::if_c<RValue, V &&, V &>;
-            };
+            using tag_elem = meta::back<meta::as_list<T>>;
         }
         /// \endcond
 
@@ -150,16 +119,14 @@ namespace ranges
 
         template<typename F, typename S>
         using tagged_pair =
-            tagged<std::pair<meta::eval<detail::tag_elem<F>>, meta::eval<detail::tag_elem<S>>>,
-                   meta::eval<detail::tag_spec<F>>, meta::eval<detail::tag_spec<S>>>;
+            tagged<std::pair<detail::tag_elem<F>, detail::tag_elem<S>>,
+                   detail::tag_spec<F>, detail::tag_spec<S>>;
 
         template<typename Tag1, typename Tag2, typename T1, typename T2>
-        constexpr
-        tagged_pair<Tag1(meta::eval<detail::tuplelike_elem<T1>>),
-                    Tag2(meta::eval<detail::tuplelike_elem<T2>>)>
+        constexpr tagged_pair<Tag1(bind_element_t<T1>), Tag2(bind_element_t<T2>)>
         make_tagged_pair(T1 && t1, T2 && t2)
         {
-            return {std::forward<T1>(t1), std::forward<T2>(t2)};
+            return {detail::forward<T1>(t1), detail::forward<T2>(t2)};
         }
     }
 }

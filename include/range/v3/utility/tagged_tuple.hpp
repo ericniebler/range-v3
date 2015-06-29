@@ -26,16 +26,13 @@ namespace ranges
     {
         template<typename... Ts>
         using tagged_tuple =
-            tagged<std::tuple<meta::eval<detail::tag_elem<Ts>>...>,
-                   meta::eval<detail::tag_spec<Ts>>...>;
+            tagged<std::tuple<detail::tag_elem<Ts>...>, detail::tag_spec<Ts>...>;
 
         template<typename...Tags, typename...Ts>
-        constexpr
-        tagged_tuple<Tags(meta::eval<detail::tuplelike_elem<Ts>>)...>
+        constexpr tagged_tuple<Tags(bind_element_t<Ts>)...>
         make_tagged_tuple(Ts &&... ts)
         {
-            return tagged_tuple<Tags(meta::eval<detail::tuplelike_elem<Ts>>)...>{
-                std::forward<Ts>(ts)...};
+            return tagged_tuple<Tags(bind_element_t<Ts>)...>{detail::forward<Ts>(ts)...};
         }
     }
 }

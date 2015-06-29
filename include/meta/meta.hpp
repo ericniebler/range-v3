@@ -683,6 +683,11 @@ namespace meta
             {
             };
 
+            template <typename F, typename Ret, typename... Args>
+            struct apply_list<F, Ret(Args...)> : lazy::apply<F, Ret, Args...>
+            {
+            };
+
             template <typename F, template <typename...> class T, typename... Ts>
             struct apply_list<F, T<Ts...>> : lazy::apply<F, Ts...>
             {
@@ -942,6 +947,101 @@ namespace meta
             /// \ingroup lazy_logical
             template <typename... Bools>
             using fast_or = defer<fast_or, Bools...>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // fold
+        /// \cond
+        namespace detail
+        {
+            template <typename, typename, typename, typename = void>
+            struct fold_
+            {
+            };
+
+            template <typename State, typename Fun>
+            struct fold_<list<>, State, Fun>
+            {
+                using type = State;
+            };
+
+            template <typename Head, typename... List, typename State, typename Fun>
+            struct fold_<list<Head, List...>, State, Fun, void_<apply<Fun, State, Head>>>
+                : fold_<list<List...>, apply<Fun, State, Head>, Fun>
+            {
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Return a new \c meta::list constructed by doing a left fold of the list \p List using
+        /// binary Alias Class \p Fun and initial state \p State. That is, the \c State_N for
+        /// the list element \c A_N is computed by `Fun(State_N-1, A_N) -> State_N`.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup transformation
+        template <typename List, typename State, typename Fun>
+        using fold = eval<detail::fold_<List, State, Fun>>;
+
+        /// An alias for `meta::fold`.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup transformation
+        template <typename List, typename State, typename Fun>
+        using accumulate = fold<List, State, Fun>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::foldl'
+            /// \ingroup lazy_transformation
+            template <typename List, typename State, typename Fun>
+            using fold = defer<fold, List, State, Fun>;
+
+            /// \sa 'meta::accumulate'
+            /// \ingroup lazy_transformation
+            template <typename List, typename State, typename Fun>
+            using accumulate = defer<accumulate, List, State, Fun>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // reverse_fold
+        /// \cond
+        namespace detail
+        {
+            template <typename, typename, typename, typename = void>
+            struct reverse_fold_
+            {
+            };
+
+            template <typename State, typename Fun>
+            struct reverse_fold_<list<>, State, Fun>
+            {
+                using type = State;
+            };
+
+            template <typename Head, typename... List, typename State, typename Fun>
+            struct reverse_fold_<list<Head, List...>, State, Fun,
+                                 void_<eval<reverse_fold_<list<List...>, State, Fun>>>>
+                : lazy::apply<Fun, eval<reverse_fold_<list<List...>, State, Fun>>, Head>
+            {
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Return a new \c meta::list constructed by doing a right fold of the list \p List using
+        /// binary Alias Class \p Fun and initial state \p State. That is, the \c State_N for
+        /// the list element \c A_N is computed by `Fun(A_N, State_N+1) -> State_N`.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup transformation
+        template <typename List, typename State, typename Fun>
+        using reverse_fold = eval<detail::reverse_fold_<List, State, Fun>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::foldr'
+            /// \ingroup lazy_transformation
+            template <typename List, typename State, typename Fun>
+            using reverse_fold = defer<reverse_fold, List, State, Fun>;
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1380,6 +1480,39 @@ namespace meta
             template <typename List, typename T>
             using push_back = defer<push_back, List, T>;
         }
+        /// \cond
+        namespace detail
+        {
+            template <typename T, typename U>
+            using min_ = if_<less<U, T>, U, T>;
+
+            template <typename T, typename U>
+            using max_ = if_<less<U, T>, T, U>;
+        }
+        /// \endcond
+
+        /// An integral constant wrapper around the minimum of `Ts::type::value...`
+        /// \ingroup math
+        template <typename... Ts>
+        using min = fold<pop_front<list<Ts...>>, front<list<Ts...>>, quote<detail::min_>>;
+
+        /// An integral constant wrapper around the maximum of `Ts::type::value...`
+        /// \ingroup math
+        template <typename... Ts>
+        using max = fold<pop_front<list<Ts...>>, front<list<Ts...>>, quote<detail::max_>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::min'
+            /// \ingroup lazy_math
+            template <typename... Ts>
+            using min = defer<min, Ts...>;
+
+            /// \sa 'meta::max'
+            /// \ingroup lazy_math
+            template <typename... Ts>
+            using max = defer<max, Ts...>;
+        }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // empty
@@ -1430,48 +1563,104 @@ namespace meta
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // find
+        // find_index
         /// \cond
         namespace detail
         {
+            // With thanks to Peter Dimov:
+            constexpr std::size_t find_index_i_(bool const *const first, bool const *const last,
+                                                std::size_t N = 0)
+            {
+                return first == last ? npos::value : *first ? N
+                                                            : find_index_i_(first + 1, last, N + 1);
+            }
+
             template <typename List, typename T>
-            struct find_
+            struct find_index_
             {
             };
 
-            template <typename T>
-            struct find_<list<>, T>
+            template <typename V>
+            struct find_index_<list<>, V>
             {
-                using type = list<>;
+                using type = npos;
             };
 
-            template <typename Head, typename... List, typename T>
-            struct find_<list<Head, List...>, T> : find_<list<List...>, T>
+            template <typename... T, typename V>
+            struct find_index_<list<T...>, V>
             {
-            };
-
-            template <typename... List, typename T>
-            struct find_<list<T, List...>, T>
-            {
-                using type = list<T, List...>;
+                static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+                using type = size_t<find_index_i_(s_v, s_v + sizeof...(T))>;
             };
         } // namespace detail
         /// \endcond
 
-        /// Return the tail of the list \p List starting at the first occurrence of \p T, if any
-        /// such element exists; the empty list, otherwise.
+        /// Finds the index of the first occurrence of the type \p T within the list \p List.
+        /// Returns `#meta::npos` if the type \p T was not found.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
+        /// \sa `meta::npos`
         template <typename List, typename T>
-        using find = eval<detail::find_<List, T>>;
+        using find_index = eval<detail::find_index_<List, T>>;
 
         namespace lazy
         {
-            /// \sa 'meta::find'
+            /// \sa 'meta::find_index'
             /// \ingroup lazy_query
             template <typename List, typename T>
-            using find = defer<find, List, T>;
+            using find_index = defer<find_index, List, T>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // reverse_find_index
+        /// \cond
+        namespace detail
+        {
+            // With thanks to Peter Dimov:
+            constexpr std::size_t reverse_find_index_i_(bool const *const first,
+                                                        bool const *const last, std::size_t N)
+            {
+                return first == last
+                           ? npos::value
+                           : *(last - 1) ? N - 1 : reverse_find_index_i_(first, last - 1, N - 1);
+            }
+
+            template <typename List, typename T>
+            struct reverse_find_index_
+            {
+            };
+
+            template <typename V>
+            struct reverse_find_index_<list<>, V>
+            {
+                using type = npos;
+            };
+
+            template <typename... T, typename V>
+            struct reverse_find_index_<list<T...>, V>
+            {
+                static constexpr bool s_v[] = {std::is_same<T, V>::value...};
+                using type = size_t<reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T))>;
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Finds the index of the last occurrence of the type \p T within the list \p List. Returns
+        /// `#meta::npos` if the type \p T was not found.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup query
+        /// \sa `#meta::npos`
+        template <typename List, typename T>
+        using reverse_find_index = eval<detail::reverse_find_index_<List, T>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::reverse_find_index'
+            /// \ingroup lazy_query
+            template <typename List, typename T>
+            using reverse_find_index = defer<reverse_find_index, List, T>;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////
@@ -1504,13 +1693,29 @@ namespace meta
         }
         /// \endcond
 
+        /// Return the tail of the list \p List starting at the first occurrence of \p T, if any
+        /// such element exists; the empty list, otherwise.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup query
+        template <typename List, typename T>
+        using find = drop<List, min<find_index<List, T>, size<List>>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::find'
+            /// \ingroup lazy_query
+            template <typename List, typename T>
+            using find = defer<find, List, T>;
+        }
+
         /// Return the tail of the list \p List starting at the last occurrence of \p T, if any such
         /// element exists; the empty list, otherwise.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename T>
-        using reverse_find = eval<detail::reverse_find_<List, T>>;
+        using reverse_find = drop<List, min<reverse_find_index<List, T>, size<List>>>;
 
         namespace lazy
         {
@@ -1604,68 +1809,6 @@ namespace meta
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // find_index
-        /// \cond
-        namespace detail
-        {
-            template <typename List, typename T>
-            struct find_index_
-            {
-                static constexpr std::size_t i = List::size() - find<List, T>::size();
-                using type = if_c<i == List::size(), npos, size_t<i>>;
-            };
-        } // namespace detail
-        /// \endcond
-
-        /// Finds the index of the first occurrence of the type \p T within the list \p List.
-        /// Returns `#meta::npos` if the type \p T was not found.
-        /// \par Complexity
-        /// \f$ O(N) \f$.
-        /// \ingroup query
-        /// \sa `meta::npos`
-        template <typename List, typename T>
-        using find_index = eval<detail::find_index_<List, T>>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::find_index'
-            /// \ingroup lazy_query
-            template <typename List, typename T>
-            using find_index = defer<find_index, List, T>;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // reverse_find_index
-        /// \cond
-        namespace detail
-        {
-            template <typename List, typename T>
-            struct reverse_find_index_
-            {
-                static constexpr std::size_t i = List::size() - reverse_find<List, T>::size();
-                using type = if_c<i == List::size(), npos, size_t<i>>;
-            };
-        } // namespace detail
-        /// \endcond
-
-        /// Finds the index of the last occurrence of the type \p T within the list \p List. Returns
-        /// `#meta::npos` if the type \p T was not found.
-        /// \par Complexity
-        /// \f$ O(N) \f$.
-        /// \ingroup query
-        /// \sa `#meta::npos`
-        template <typename List, typename T>
-        using reverse_find_index = eval<detail::reverse_find_index_<List, T>>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::reverse_find_index'
-            /// \ingroup lazy_query
-            template <typename List, typename T>
-            using reverse_find_index = defer<reverse_find_index, List, T>;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
         // replace
         /// \cond
         namespace detail
@@ -1731,101 +1874,6 @@ namespace meta
             /// \ingroup lazy_transformation
             template <typename List, typename C, typename U>
             using replace_if = defer<replace_if, C, U>;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // fold
-        /// \cond
-        namespace detail
-        {
-            template <typename, typename, typename, typename = void>
-            struct fold_
-            {
-            };
-
-            template <typename State, typename Fun>
-            struct fold_<list<>, State, Fun>
-            {
-                using type = State;
-            };
-
-            template <typename Head, typename... List, typename State, typename Fun>
-            struct fold_<list<Head, List...>, State, Fun, void_<apply<Fun, State, Head>>>
-                : fold_<list<List...>, apply<Fun, State, Head>, Fun>
-            {
-            };
-        } // namespace detail
-        /// \endcond
-
-        /// Return a new \c meta::list constructed by doing a left fold of the list \p List using
-        /// binary Alias Class \p Fun and initial state \p State. That is, the \c State_N for
-        /// the list element \c A_N is computed by `Fun(State_N-1, A_N) -> State_N`.
-        /// \par Complexity
-        /// \f$ O(N) \f$.
-        /// \ingroup transformation
-        template <typename List, typename State, typename Fun>
-        using fold = eval<detail::fold_<List, State, Fun>>;
-
-        /// An alias for `meta::fold`.
-        /// \par Complexity
-        /// \f$ O(N) \f$.
-        /// \ingroup transformation
-        template <typename List, typename State, typename Fun>
-        using accumulate = fold<List, State, Fun>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::foldl'
-            /// \ingroup lazy_transformation
-            template <typename List, typename State, typename Fun>
-            using fold = defer<fold, List, State, Fun>;
-
-            /// \sa 'meta::accumulate'
-            /// \ingroup lazy_transformation
-            template <typename List, typename State, typename Fun>
-            using accumulate = defer<accumulate, List, State, Fun>;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // reverse_fold
-        /// \cond
-        namespace detail
-        {
-            template <typename, typename, typename, typename = void>
-            struct reverse_fold_
-            {
-            };
-
-            template <typename State, typename Fun>
-            struct reverse_fold_<list<>, State, Fun>
-            {
-                using type = State;
-            };
-
-            template <typename Head, typename... List, typename State, typename Fun>
-            struct reverse_fold_<list<Head, List...>, State, Fun,
-                                 void_<eval<reverse_fold_<list<List...>, State, Fun>>>>
-                : lazy::apply<Fun, eval<reverse_fold_<list<List...>, State, Fun>>, Head>
-            {
-            };
-        } // namespace detail
-        /// \endcond
-
-        /// Return a new \c meta::list constructed by doing a right fold of the list \p List using
-        /// binary Alias Class \p Fun and initial state \p State. That is, the \c State_N for
-        /// the list element \c A_N is computed by `Fun(A_N, State_N+1) -> State_N`.
-        /// \par Complexity
-        /// \f$ O(N) \f$.
-        /// \ingroup transformation
-        template <typename List, typename State, typename Fun>
-        using reverse_fold = eval<detail::reverse_fold_<List, State, Fun>>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::foldr'
-            /// \ingroup lazy_transformation
-            template <typename List, typename State, typename Fun>
-            using reverse_fold = defer<reverse_fold, List, State, Fun>;
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////
@@ -2746,40 +2794,6 @@ namespace meta
         using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
         /// \endcond
 
-        /// \cond
-        namespace detail
-        {
-            template <typename T, typename U>
-            using min_ = if_<less<U, T>, U, T>;
-
-            template <typename T, typename U>
-            using max_ = if_<less<U, T>, T, U>;
-        }
-        /// \endcond
-
-        /// An integral constant wrapper around the minimum of `Ts::type::value...`
-        /// \ingroup math
-        template <typename... Ts>
-        using min = fold<pop_front<list<Ts...>>, front<list<Ts...>>, quote<detail::min_>>;
-
-        /// An integral constant wrapper around the maximum of `Ts::type::value...`
-        /// \ingroup math
-        template <typename... Ts>
-        using max = fold<pop_front<list<Ts...>>, front<list<Ts...>>, quote<detail::max_>>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::max'
-            /// \ingroup lazy_math
-            template <typename... Ts>
-            using max = defer<max, Ts...>;
-
-            /// \sa 'meta::min'
-            /// \ingroup lazy_math
-            template <typename... Ts>
-            using min = defer<min, Ts...>;
-        }
-
         ///////////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
 
@@ -2875,22 +2889,22 @@ namespace meta
         {
             template <class T, T offset, class U>
             struct offset_integer_sequence_
-            {};
+            {
+            };
 
             template <class T, T offset, T... Ts>
             struct offset_integer_sequence_<T, offset, meta::integer_sequence<T, Ts...>>
             {
                 using type = meta::integer_sequence<T, (Ts + offset)...>;
             };
-        }  // namespace detail
+        } // namespace detail
         /// \endcond
 
         /// Makes the integer sequence [from, to).
         /// \ingroup integral
         template <class T, T from, T to>
         using integer_range = meta::eval<
-            detail::offset_integer_sequence_<T, from,
-                                             meta::make_integer_sequence<T, to - from>>>;
+            detail::offset_integer_sequence_<T, from, meta::make_integer_sequence<T, to - from>>>;
         /// \cond
     } // namespace v1
     /// \endcond
