@@ -37,15 +37,81 @@ struct nondefaultconstructible
     nondefaultconstructible(int) {}
 };
 
+struct NotDestructible
+{
+    ~NotDestructible() = delete;
+};
+
+struct IntComparable
+{
+    explicit operator int() const;
+
+    friend bool operator<(IntComparable, IntComparable);
+    friend bool operator>(IntComparable, IntComparable);
+    friend bool operator<=(IntComparable, IntComparable);
+    friend bool operator>=(IntComparable, IntComparable);
+
+    friend bool operator<(int, IntComparable);
+    friend bool operator<(IntComparable, int);
+    friend bool operator>(int, IntComparable);
+    friend bool operator>(IntComparable, int);
+    friend bool operator<=(int, IntComparable);
+    friend bool operator<=(IntComparable, int);
+    friend bool operator>=(int, IntComparable);
+    friend bool operator>=(IntComparable, int);
+};
+
+static_assert(ranges::Destructible<int>(), "");
+static_assert(ranges::Destructible<const int>(), "");
+static_assert(!ranges::Destructible<void>(), "");
+static_assert(ranges::Destructible<int&>(), "");
+static_assert(!ranges::Destructible<void()>(), "");
+static_assert(ranges::Destructible<void(*)()>(), "");
+static_assert(ranges::Destructible<void(&)()>(), "");
+static_assert(ranges::Destructible<int[]>(), "");
+static_assert(ranges::Destructible<int[2]>(), "");
+static_assert(ranges::Destructible<int(*)[2]>(), "");
+static_assert(ranges::Destructible<int(&)[2]>(), "");
+static_assert(ranges::Destructible<moveonly>(), "");
+static_assert(ranges::Destructible<nonmovable>(), "");
+static_assert(!ranges::Destructible<NotDestructible>(), "");
+
+static_assert(ranges::Constructible<int>(), "");
+static_assert(ranges::Constructible<int const>(), "");
+static_assert(!ranges::Constructible<int const &>(), "");
+static_assert(!ranges::Constructible<int ()>(), "");
+static_assert(!ranges::Constructible<int(&)()>(), "");
+static_assert(!ranges::Constructible<int[]>(), "");
+static_assert(ranges::Constructible<int[5]>(), "");
+static_assert(!ranges::Constructible<nondefaultconstructible>(), "");
+static_assert(ranges::Constructible<int const(&)[5], int(&)[5]>(), "");
+static_assert(!ranges::Constructible<int, int(&)[3]>(), "");
+
 static_assert(ranges::MoveConstructible<int>(), "");
 static_assert(ranges::MoveConstructible<const int>(), "");
+static_assert(ranges::MoveConstructible<int &>(), "");
+static_assert(ranges::MoveConstructible<int &&>(), "");
+static_assert(ranges::MoveConstructible<const int &>(), "");
+static_assert(ranges::MoveConstructible<const int &&>(), "");
 static_assert(ranges::MoveConstructible<moveonly>(), "");
 static_assert(!ranges::MoveConstructible<nonmovable>(), "");
+static_assert(ranges::MoveConstructible<nonmovable &>(), "");
+static_assert(ranges::MoveConstructible<nonmovable &&>(), "");
+static_assert(ranges::MoveConstructible<const nonmovable &>(), "");
+static_assert(ranges::MoveConstructible<const nonmovable &&>(), "");
 
 static_assert(ranges::CopyConstructible<int>(), "");
 static_assert(ranges::CopyConstructible<const int>(), "");
+static_assert(ranges::CopyConstructible<int &>(), "");
+static_assert(ranges::CopyConstructible<int &&>(), "");
+static_assert(ranges::CopyConstructible<const int &>(), "");
+static_assert(ranges::CopyConstructible<const int &&>(), "");
 static_assert(!ranges::CopyConstructible<moveonly>(), "");
 static_assert(!ranges::CopyConstructible<nonmovable>(), "");
+static_assert(ranges::CopyConstructible<nonmovable &>(), "");
+static_assert(ranges::CopyConstructible<nonmovable &&>(), "");
+static_assert(ranges::CopyConstructible<const nonmovable &>(), "");
+static_assert(ranges::CopyConstructible<const nonmovable &&>(), "");
 
 static_assert(ranges::Movable<int>(), "");
 static_assert(!ranges::Movable<int const>(), "");
@@ -56,9 +122,6 @@ static_assert(ranges::Copyable<int>(), "");
 static_assert(!ranges::Copyable<int const>(), "");
 static_assert(!ranges::Copyable<moveonly>(), "");
 static_assert(!ranges::Copyable<nonmovable>(), "");
-
-static_assert(ranges::Constructible<int>(), "");
-static_assert(!ranges::Constructible<nondefaultconstructible>(), "");
 
 static_assert(ranges::InputIterator<int*>(), "");
 static_assert(!ranges::InputIterator<int>(), "");
@@ -88,43 +151,14 @@ static_assert(!ranges::Predicate<std::less<int>, char*, int>(), "");
 static_assert(ranges::OutputIterator<int *, int>(), "");
 static_assert(!ranges::OutputIterator<int const *, int>(), "");
 
-struct NotDestructible
+struct XXX
 {
-    ~NotDestructible() = delete;
+    XXX() = default;
+    XXX(XXX&&) = delete;
+    explicit XXX(int) {}
 };
 
-static_assert(ranges::Destructible<int>(), "");
-static_assert(ranges::Destructible<const int>(), "");
-static_assert(!ranges::Destructible<void>(), "");
-static_assert(!ranges::Destructible<int&>(), "");
-static_assert(!ranges::Destructible<void()>(), "");
-static_assert(ranges::Destructible<void(*)()>(), "");
-static_assert(!ranges::Destructible<void(&)()>(), "");
-static_assert(!ranges::Destructible<int[2]>(), "");
-static_assert(ranges::Destructible<int(*)[2]>(), "");
-static_assert(!ranges::Destructible<int(&)[2]>(), "");
-static_assert(ranges::Destructible<moveonly>(), "");
-static_assert(ranges::Destructible<nonmovable>(), "");
-static_assert(!ranges::Destructible<NotDestructible>(), "");
-
-struct IntComparable
-{
-    explicit operator int() const;
-
-    friend bool operator<(IntComparable, IntComparable);
-    friend bool operator>(IntComparable, IntComparable);
-    friend bool operator<=(IntComparable, IntComparable);
-    friend bool operator>=(IntComparable, IntComparable);
-
-    friend bool operator<(int, IntComparable);
-    friend bool operator<(IntComparable, int);
-    friend bool operator>(int, IntComparable);
-    friend bool operator>(IntComparable, int);
-    friend bool operator<=(int, IntComparable);
-    friend bool operator<=(IntComparable, int);
-    friend bool operator>=(int, IntComparable);
-    friend bool operator>=(IntComparable, int);
-};
+static_assert(ranges::Constructible<XXX, int>(), "");
 
 namespace ranges
 {
