@@ -119,5 +119,44 @@ int main()
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, std::string &&>());
     }
 
+    // two range transform
+    {
+        auto v0 = to_<std::vector<std::string>>({"a","b","c"});
+        auto v1 = to_<std::vector<std::string>>({"x","y","z"});
+
+        auto rng = view::transform(v0, v1, [](std::string& s0, std::string& s1){return std::tie(s0, s1);});
+        using R = decltype(rng);
+        CONCEPT_ASSERT(Same<range_value_t<R>, std::tuple<std::string&, std::string&>>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, std::tuple<std::string&, std::string&>>());
+
+        using T = std::tuple<std::string, std::string>;
+        ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
+    }
+
+    // two range indirect transform
+    {
+        auto v0 = to_<std::vector<std::string>>({"a","b","c"});
+        auto v1 = to_<std::vector<std::string>>({"x","y","z"});
+        using I = std::vector<std::string>::iterator;
+
+        auto fun = overload(
+            [](I i, I j) -> std::tuple<std::string&, std::string&> {return std::tie(*i, *j);},
+            [](copy_tag, I i, I j) -> std::tuple<std::string, std::string> {return {};},
+            [](move_tag, I i, I j) -> std::tuple<std::string&&, std::string&&> {
+                return std::tuple<std::string&&, std::string&&>{std::move(*i), std::move(*j)};
+            }
+        );
+
+        auto rng = view::iter_transform(v0, v1, fun);
+        using R = decltype(rng);
+        CONCEPT_ASSERT(Same<range_value_t<R>, std::tuple<std::string, std::string>>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, std::tuple<std::string&, std::string&>>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, std::tuple<std::string&&, std::string&&>>());
+
+        using T = std::tuple<std::string, std::string>;
+        ::check_equal(rng, {T{"a","x"}, T{"b","y"}, T{"c","z"}});
+    }
+
     return test_result();
 }
