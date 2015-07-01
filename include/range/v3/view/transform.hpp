@@ -49,7 +49,7 @@ namespace ranges
                         c1 == unknown || c2 == unknown ?
                             unknown :
                             infinite;
-            };
+            }
         }
         /// \endcond
 
@@ -115,7 +115,7 @@ namespace ranges
               , fun_(as_function(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
-            range_size_t<Rng> size() const
+            constexpr range_size_t<Rng> size() const
             {
                 return ranges::size(this->base());
             }
