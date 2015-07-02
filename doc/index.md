@@ -136,7 +136,7 @@ Same as above, but with function-call syntax instead of pipe syntax:
 
 ## Create Custom Ranges
 
-Range v3 provides a utility for easily creating your own range types, called `range_facade`. The code below uses `range_facade` to create a range that traverses a null-terminated string:
+Range v3 provides a utility for easily creating your own range types, called `view_facade`. The code below uses `view_facade` to create a range that traverses a null-terminated string:
 
 ~~~~~~~{.cpp}
     #include <range/v3/all.hpp>
@@ -145,7 +145,7 @@ Range v3 provides a utility for easily creating your own range types, called `ra
     // A range that iterates over all the characters in a
     // null-terminated string.
     class c_string_range
-      : public range_facade<c_string_range>
+      : public view_facade<c_string_range>
     {
         friend range_access;
         char const * sz_;
@@ -161,7 +161,7 @@ Range v3 provides a utility for easily creating your own range types, called `ra
     };
 ~~~~~~~
 
-The `range_facade` class generates an iterator and begin/end member functions from the minimal interface provided by `c_string_range`. This is an example of a very simple range for which it is not necessary to separate the range itself from the thing that iterates the range. Future examples will show examples of more sophisticated ranges.
+The `view_facade` class generates an iterator and begin/end member functions from the minimal interface provided by `c_string_range`. This is an example of a very simple range for which it is not necessary to separate the range itself from the thing that iterates the range. Future examples will show examples of more sophisticated ranges.
 
 With `c_string_range`, you can now use algorithms to operate on null-terminated strings, as below:
 
@@ -181,14 +181,14 @@ With `c_string_range`, you can now use algorithms to operate on null-terminated 
 
 ## Adapting Ranges
 
-Often, a new range type is most easily expressed by adapting an existing range type. That's the case for many of the range views provided by the Range v3 library; for example, the `view::remove_if` and `view::transform` views. These are rich types with many moving parts, but thanks to a helper class called `range_adaptor`, they aren't hard to write.
+Often, a new range type is most easily expressed by adapting an existing range type. That's the case for many of the range views provided by the Range v3 library; for example, the `view::remove_if` and `view::transform` views. These are rich types with many moving parts, but thanks to a helper class called `view_adaptor`, they aren't hard to write.
 
 Below in roughly 2 dozen lines of code is the `transform` view, which takes one range and transforms all the elements with a unary function.
 
 ~~~~~~~{.cpp}
     // A class that adapts an existing range with a function
     template<class Rng, class Fun>
-    class transform_view : public range_adaptor<transform_view<Rng, Fun>, Rng>
+    class transform_view : public view_adaptor<transform_view<Rng, Fun>, Rng>
     {
         friend range_access;
         semiregular_t<Fun> fun_; // Make Fun model SemiRegular if it doesn't
@@ -209,7 +209,7 @@ Below in roughly 2 dozen lines of code is the `transform` view, which takes one 
     public:
         transform_view() = default;
         transform_view(Rng && rng, Fun fun)
-          : range_adaptor_t<transform_view>{std::forward<Rng>(rng)}
+          : view_adaptor_t<transform_view>{std::forward<Rng>(rng)}
           , fun_(std::move(fun))
         {}
     };
