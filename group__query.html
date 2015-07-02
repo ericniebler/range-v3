@@ -122,10 +122,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga97d3095903a1352b860be17cf828376e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga97d3095903a1352b860be17cf828376e">meta::v1::count_if</a> = fold&lt; List, <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; 0 &gt;, bind_back&lt; quote&lt; detail::count_if_fn &gt;, Fn &gt;&gt;</td></tr>
 <tr class="memdesc:ga97d3095903a1352b860be17cf828376e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of times the predicate <code>Fn</code> evaluates to true for all the elements in the list <code>List</code>.  <a href="#ga97d3095903a1352b860be17cf828376e">More...</a><br /></td></tr>
 <tr class="separator:ga97d3095903a1352b860be17cf828376e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0f8e7ffa8cb6e74cc219ebb932c8a9ae"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:ga0f8e7ffa8cb6e74cc219ebb932c8a9ae"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga0f8e7ffa8cb6e74cc219ebb932c8a9ae">meta::v1::find</a> = eval&lt; detail::find_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga0f8e7ffa8cb6e74cc219ebb932c8a9ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="#ga0f8e7ffa8cb6e74cc219ebb932c8a9ae">More...</a><br /></td></tr>
-<tr class="separator:ga0f8e7ffa8cb6e74cc219ebb932c8a9ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c7804b40eff7b3cfffbcca5fc7fd0a5"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:ga4c7804b40eff7b3cfffbcca5fc7fd0a5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga4c7804b40eff7b3cfffbcca5fc7fd0a5">meta::v1::find</a> = drop&lt; List, min&lt; find_index&lt; List, T &gt;, size&lt; List &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga4c7804b40eff7b3cfffbcca5fc7fd0a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="#ga4c7804b40eff7b3cfffbcca5fc7fd0a5">More...</a><br /></td></tr>
+<tr class="separator:ga4c7804b40eff7b3cfffbcca5fc7fd0a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga337d3918ccc0dc2675f6702068f9e0b8"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fun &gt; </td></tr>
 <tr class="memitem:ga337d3918ccc0dc2675f6702068f9e0b8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga337d3918ccc0dc2675f6702068f9e0b8">meta::v1::find_if</a> = eval&lt; detail::find_if_&lt; List, Fun &gt;&gt;</td></tr>
 <tr class="memdesc:ga337d3918ccc0dc2675f6702068f9e0b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="#ga337d3918ccc0dc2675f6702068f9e0b8">More...</a><br /></td></tr>
@@ -142,10 +142,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga93e64782b54089a3d4245dd5ca88a714"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga93e64782b54089a3d4245dd5ca88a714">meta::v1::none_of</a> = empty&lt; find_if&lt; List, F &gt;&gt;</td></tr>
 <tr class="memdesc:ga93e64782b54089a3d4245dd5ca88a714"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="#ga93e64782b54089a3d4245dd5ca88a714">More...</a><br /></td></tr>
 <tr class="separator:ga93e64782b54089a3d4245dd5ca88a714"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga46b2fca6ab6cb3aa3b1810366bdf104a"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:ga46b2fca6ab6cb3aa3b1810366bdf104a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga46b2fca6ab6cb3aa3b1810366bdf104a">meta::v1::reverse_find</a> = eval&lt; detail::reverse_find_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga46b2fca6ab6cb3aa3b1810366bdf104a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="#ga46b2fca6ab6cb3aa3b1810366bdf104a">More...</a><br /></td></tr>
-<tr class="separator:ga46b2fca6ab6cb3aa3b1810366bdf104a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9131450b1528f0aa9f9822616a358d9c"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:ga9131450b1528f0aa9f9822616a358d9c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga9131450b1528f0aa9f9822616a358d9c">meta::v1::reverse_find</a> = drop&lt; List, min&lt; reverse_find_index&lt; List, T &gt;, size&lt; List &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga9131450b1528f0aa9f9822616a358d9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="#ga9131450b1528f0aa9f9822616a358d9c">More...</a><br /></td></tr>
+<tr class="separator:ga9131450b1528f0aa9f9822616a358d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga43281604924810b44b961aa5d6139c49"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fun &gt; </td></tr>
 <tr class="memitem:ga43281604924810b44b961aa5d6139c49"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga43281604924810b44b961aa5d6139c49">meta::v1::reverse_find_if</a> = eval&lt; detail::reverse_find_if_&lt; List, Fun &gt;&gt;</td></tr>
 <tr class="memdesc:ga43281604924810b44b961aa5d6139c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="#ga43281604924810b44b961aa5d6139c49">More...</a><br /></td></tr>
@@ -232,14 +232,14 @@ template&lt;typename List , typename Fn &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ga0f8e7ffa8cb6e74cc219ebb932c8a9ae"></a>
+<a class="anchor" id="ga4c7804b40eff7b3cfffbcca5fc7fd0a5"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga0f8e7ffa8cb6e74cc219ebb932c8a9ae">meta::v1::find</a> = typedef eval&lt;detail::find_&lt;List, T&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga4c7804b40eff7b3cfffbcca5fc7fd0a5">meta::v1::find</a> = typedef drop&lt;List, min&lt;find_index&lt;List, T&gt;, size&lt;List&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -328,14 +328,14 @@ template&lt;typename List , typename F &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ga46b2fca6ab6cb3aa3b1810366bdf104a"></a>
+<a class="anchor" id="ga9131450b1528f0aa9f9822616a358d9c"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga46b2fca6ab6cb3aa3b1810366bdf104a">meta::v1::reverse_find</a> = typedef eval&lt;detail::reverse_find_&lt;List, T&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga9131450b1528f0aa9f9822616a358d9c">meta::v1::reverse_find</a> = typedef drop&lt;List, min&lt;reverse_find_index&lt;List, T&gt;, size&lt;List&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

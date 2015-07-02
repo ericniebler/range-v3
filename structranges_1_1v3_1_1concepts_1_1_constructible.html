@@ -110,10 +110,18 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1concepts_1_1_con
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:gad4fe44fa5f930ebc079f167931b90ec9"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad4fe44fa5f930ebc079f167931b90ec9"></a>
+<tr class="memitem:gaa8626215007f983fb80fc09b319de791"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa8626215007f983fb80fc09b319de791"></a>
+template&lt;typename T , typename  = meta::if_&lt;                        meta::or_&lt;                            detail::is_array_of_unknown_bound_&lt;uncvref_t&lt;T&gt;&gt;,                            std::is_reference&lt;T&gt;&gt;&gt;&gt; </td></tr>
+<tr class="memitem:gaa8626215007f983fb80fc09b319de791"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;)=delete</td></tr>
+<tr class="separator:gaa8626215007f983fb80fc09b319de791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2a1389970896c4fb190448ce8ee5d864"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2a1389970896c4fb190448ce8ee5d864"></a>
+template&lt;typename T , typename U , typename  = meta::if_&lt;std::is_same&lt;uncvref_t&lt;T&gt;, uncvref_t&lt;U&gt;&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ga2a1389970896c4fb190448ce8ee5d864"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, U &amp;&amp;) -&gt; decltype(concepts::valid_expr(T(concepts::val&lt; U &gt;())))</td></tr>
+<tr class="separator:ga2a1389970896c4fb190448ce8ee5d864"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga47e9790dc0cfd30253a51fa818294b0a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga47e9790dc0cfd30253a51fa818294b0a"></a>
 template&lt;typename T , typename... Us&gt; </td></tr>
-<tr class="memitem:gad4fe44fa5f930ebc079f167931b90ec9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, Us &amp;&amp;...) -&gt; decltype(concepts::valid_expr(concepts::is_true(std::is_constructible&lt; T, Us...&gt;</td></tr>
-<tr class="separator:gad4fe44fa5f930ebc079f167931b90ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga47e9790dc0cfd30253a51fa818294b0a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, Us &amp;&amp;...) -&gt; decltype(concepts::valid_expr(T</td></tr>
+<tr class="separator:ga47e9790dc0cfd30253a51fa818294b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structranges_1_1v3_1_1concepts_1_1refines"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1v3_1_1concepts_1_1refines')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1v3_1_1concepts_1_1refines.html">ranges::v3::concepts::refines&lt; Destructible(_1)&gt;</a></td></tr>
 <tr class="memitem:ga94919c772cd183a77841a62d95871da3 inherit pub_methods_structranges_1_1v3_1_1concepts_1_1refines"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga94919c772cd183a77841a62d95871da3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>requires_</b> (Ts &amp;&amp;...)</td></tr>

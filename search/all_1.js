@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['back',['back',['../structranges_1_1v3_1_1range__interface.html#a952abbfbaf7668cf14a7a0452e3f8c88',1,'ranges::v3::range_interface::back()'],['../structranges_1_1v3_1_1range__interface.html#aae10b5baf9513fdfee5606a415eb3438',1,'ranges::v3::range_interface::back() const '],['../group__list.html#ga28e2631149e08f0e9bcc878e618bf98a',1,'meta::v1::back()'],['../group__lazy__list.html#ga33e318b20924cc9b02b939632dca43be',1,'meta::lazy::back()']]],
+  ['back',['back',['../structranges_1_1v3_1_1view__interface.html#a8d6940231cb79af432a1b2f51c33f032',1,'ranges::v3::view_interface::back()'],['../structranges_1_1v3_1_1view__interface.html#a106d481f372b25770a15ecb48b5d54b1',1,'ranges::v3::view_interface::back() const '],['../group__list.html#ga28e2631149e08f0e9bcc878e618bf98a',1,'meta::v1::back()'],['../group__lazy__list.html#ga33e318b20924cc9b02b939632dca43be',1,'meta::lazy::back()']]],
   ['back_2ehpp',['back.hpp',['../back_8hpp.html',1,'']]],
   ['back_5ffn',['back_fn',['../structranges_1_1v3_1_1back__fn.html',1,'ranges::v3']]],
   ['back_5finsert_5fiterator',['back_insert_iterator',['../structranges_1_1v3_1_1back__insert__iterator.html',1,'ranges::v3']]],
   ['back_5finserter_5ffn',['back_inserter_fn',['../structranges_1_1v3_1_1back__inserter__fn.html',1,'ranges::v3']]],
-  ['base',['Base',['../class_base.html',1,'Base'],['../structranges_1_1v3_1_1range__adaptor.html#a25e7c2bd3fa7748264e5326eac2e4d41',1,'ranges::v3::range_adaptor::base()']]],
+  ['base',['Base',['../class_base.html',1,'Base'],['../structranges_1_1v3_1_1view__adaptor.html#af51534a5520e83e5da8543aa30be6bb8',1,'ranges::v3::view_adaptor::base()']]],
   ['basic_5fiterator',['basic_iterator',['../structranges_1_1v3_1_1basic__iterator.html',1,'ranges::v3']]],
   ['basic_5fiterator_2ehpp',['basic_iterator.hpp',['../basic__iterator_8hpp.html',1,'']]],
   ['basic_5fmixin',['basic_mixin',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3']]],
@@ -16,7 +16,7 @@ var searchData=
   ['basic_5fview',['basic_view',['../structranges_1_1v3_1_1basic__view.html',1,'ranges::v3']]],
   ['basic_5fview_3c_20cardinality_20_3e',['basic_view&lt; Cardinality &gt;',['../structranges_1_1v3_1_1basic__view.html',1,'ranges::v3']]],
   ['begin',['begin',['../structranges_1_1v3_1_1tag_1_1begin.html',1,'ranges::v3::tag']]],
-  ['begin',['begin',['../structranges_1_1v3_1_1range__facade.html#a188dd2279964b8d79a6c74086271972e',1,'ranges::v3::range_facade']]],
+  ['begin',['begin',['../structranges_1_1v3_1_1view__facade.html#af05b42676bc872990bf677009f36723a',1,'ranges::v3::view_facade']]],
   ['begin_5fend_2ehpp',['begin_end.hpp',['../begin__end_8hpp.html',1,'']]],
   ['begin_5ftag',['begin_tag',['../structranges_1_1v3_1_1begin__tag.html',1,'ranges::v3']]],
   ['bidirectional_5fiterator_5ftag',['bidirectional_iterator_tag',['../structranges_1_1v3_1_1bidirectional__iterator__tag.html',1,'ranges::v3']]],

@@ -104,6 +104,10 @@ Public Types</h2></td></tr>
 template&lt;typename Rng , typename Fun &gt; </td></tr>
 <tr class="memitem:a98fccf3b29d8879add3db8c4c83dccef"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept</b> = <a class="el" href="group__logical.html#ga605000e22ccf6f0d01a9b4de856f9c65">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Callable</a>&lt; Fun, range_reference_t&lt; Rng &gt; &amp;&amp; &gt;&gt;</td></tr>
 <tr class="separator:a98fccf3b29d8879add3db8c4c83dccef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58dea56051e189980a3de00a0ac03925"><td class="memTemplParams" colspan="2"><a class="anchor" id="a58dea56051e189980a3de00a0ac03925"></a>
+template&lt;typename Rng1 , typename Rng2 , typename Fun &gt; </td></tr>
+<tr class="memitem:a58dea56051e189980a3de00a0ac03925"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Concept2</b> = <a class="el" href="group__logical.html#ga605000e22ccf6f0d01a9b4de856f9c65">meta::and_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng1 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">InputRange</a>&lt; Rng2 &gt;, <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">Callable</a>&lt; Fun, range_reference_t&lt; Rng1 &gt; &amp;&amp;, range_reference_t&lt; Rng2 &gt; &amp;&amp; &gt;&gt;</td></tr>
+<tr class="separator:a58dea56051e189980a3de00a0ac03925"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -111,6 +115,10 @@ Public Member Functions</h2></td></tr>
 template&lt;typename Rng , typename Fun , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Concept&lt; Rng, Fun &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a85806e8c714d6f7c116c2eae21b32fde"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1transform__view.html">transform_view</a>&lt; all_t&lt; Rng &gt;, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng &amp;&amp;rng, Fun fun) const </td></tr>
 <tr class="separator:a85806e8c714d6f7c116c2eae21b32fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37591843b342d4672d3a9f4a9f6c1302"><td class="memTemplParams" colspan="2"><a class="anchor" id="a37591843b342d4672d3a9f4a9f6c1302"></a>
+template&lt;typename Rng1 , typename Rng2 , typename Fun , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Concept2&lt; Rng1, Rng2, Fun &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a37591843b342d4672d3a9f4a9f6c1302"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1transform2__view.html">transform2_view</a>&lt; all_t&lt; Rng1 &gt;, all_t&lt; Rng2 &gt;, Fun &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (Rng1 &amp;&amp;rng1, Rng2 &amp;&amp;rng2, Fun fun) const </td></tr>
+<tr class="separator:a37591843b342d4672d3a9f4a9f6c1302"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

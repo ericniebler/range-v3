@@ -106,17 +106,17 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:add63fa22c0ef41fb19b2f4a6d8cbd9e7"><td class="memTemplParams" colspan="2"><a class="anchor" id="add63fa22c0ef41fb19b2f4a6d8cbd9e7"></a>
+<tr class="memitem:a4a41d15dc63f390da6896dbb3e0ba797"><td class="memTemplParams" colspan="2"><a class="anchor" id="a4a41d15dc63f390da6896dbb3e0ba797"></a>
 template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:add63fa22c0ef41fb19b2f4a6d8cbd9e7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::tagged_tuple</b> = tagged&lt; <a class="el" href="classstd_1_1tuple.html">std::tuple</a>&lt; <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tag_elem&lt; Ts &gt;&gt;...&gt;, <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tag_spec&lt; Ts &gt;&gt;...&gt;</td></tr>
-<tr class="separator:add63fa22c0ef41fb19b2f4a6d8cbd9e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a41d15dc63f390da6896dbb3e0ba797"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::tagged_tuple</b> = tagged&lt; <a class="el" href="classstd_1_1tuple.html">std::tuple</a>&lt; detail::tag_elem&lt; Ts &gt;...&gt;, detail::tag_spec&lt; Ts &gt;...&gt;</td></tr>
+<tr class="separator:a4a41d15dc63f390da6896dbb3e0ba797"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a737ecfefb52f50d0c35a6c27f66f2ce7"><td class="memTemplParams" colspan="2"><a class="anchor" id="a737ecfefb52f50d0c35a6c27f66f2ce7"></a>
+<tr class="memitem:a13ca185e6494e2257efe0e1d991eb258"><td class="memTemplParams" colspan="2"><a class="anchor" id="a13ca185e6494e2257efe0e1d991eb258"></a>
 template&lt;typename... Tags, typename... Ts&gt; </td></tr>
-<tr class="memitem:a737ecfefb52f50d0c35a6c27f66f2ce7"><td class="memTemplItemLeft" align="right" valign="top">constexpr tagged_tuple&lt; Tags(<a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tuplelike_elem&lt; Ts &gt;&gt;)...&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_tagged_tuple</b> (Ts &amp;&amp;...ts)</td></tr>
-<tr class="separator:a737ecfefb52f50d0c35a6c27f66f2ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13ca185e6494e2257efe0e1d991eb258"><td class="memTemplItemLeft" align="right" valign="top">constexpr tagged_tuple&lt; Tags(bind_element_t&lt; Ts &gt;)...&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_tagged_tuple</b> (Ts &amp;&amp;...ts)</td></tr>
+<tr class="separator:a13ca185e6494e2257efe0e1d991eb258"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

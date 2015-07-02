@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['back',['back',['../structranges_1_1v3_1_1range__interface.html#a952abbfbaf7668cf14a7a0452e3f8c88',1,'ranges::v3::range_interface::back()'],['../structranges_1_1v3_1_1range__interface.html#aae10b5baf9513fdfee5606a415eb3438',1,'ranges::v3::range_interface::back() const ']]],
-  ['base',['base',['../structranges_1_1v3_1_1range__adaptor.html#a25e7c2bd3fa7748264e5326eac2e4d41',1,'ranges::v3::range_adaptor']]],
-  ['begin',['begin',['../structranges_1_1v3_1_1range__facade.html#a188dd2279964b8d79a6c74086271972e',1,'ranges::v3::range_facade']]]
+  ['back',['back',['../structranges_1_1v3_1_1view__interface.html#a8d6940231cb79af432a1b2f51c33f032',1,'ranges::v3::view_interface::back()'],['../structranges_1_1v3_1_1view__interface.html#a106d481f372b25770a15ecb48b5d54b1',1,'ranges::v3::view_interface::back() const ']]],
+  ['base',['base',['../structranges_1_1v3_1_1view__adaptor.html#af51534a5520e83e5da8543aa30be6bb8',1,'ranges::v3::view_adaptor']]],
+  ['begin',['begin',['../structranges_1_1v3_1_1view__facade.html#af05b42676bc872990bf677009f36723a',1,'ranges::v3::view_facade']]]
 ];

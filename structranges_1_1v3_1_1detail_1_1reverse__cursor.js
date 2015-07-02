@@ -8,7 +8,7 @@ var structranges_1_1v3_1_1detail_1_1reverse__cursor =
     [ "equal", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html#a8c48d38baa46c72cf31fb603f4a8029a", null ],
     [ "next", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html#acb54c7fcbd9ff285a8e39121b40276e7", null ],
     [ "prev", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html#a7a2d8c3bac2e04c2de2d7483461de7c8", null ],
+    [ "reverse_cursor", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html#aabf246bc6f5e40d1237e42bf1b73bd50", null ],
     [ "reverse_cursor", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html#aac70e0ec6d4e348d8d282fe5f07c6543", null ],
-    [ "reverse_cursor", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html#a190e7ac7362fdcfbd0486cebc1151429", null ],
-    [ "reverse_cursor", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html#aabf246bc6f5e40d1237e42bf1b73bd50", null ]
+    [ "reverse_cursor", "structranges_1_1v3_1_1detail_1_1reverse__cursor.html#a190e7ac7362fdcfbd0486cebc1151429", null ]
 ];

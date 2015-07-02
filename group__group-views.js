@@ -136,9 +136,14 @@ var group__group_views =
       [ "iter_take_while_view", "structranges_1_1v3_1_1iter__take__while__view.html#a05f96048abcd1de1e6fa3b91e8742d8b", null ],
       [ "iter_take_while_view", "structranges_1_1v3_1_1iter__take__while__view.html#aeccfc27557b30bca570c53515434b6ea", null ]
     ] ],
+    [ "iter_transform2_view", "structranges_1_1v3_1_1iter__transform2__view.html", [
+      [ "size", "structranges_1_1v3_1_1iter__transform2__view.html#a22f17d5db02c8da5e65620a023566fb3", null ],
+      [ "iter_transform2_view", "structranges_1_1v3_1_1iter__transform2__view.html#a05a8d9d4ef1fe5852b3427ececf87fad", null ],
+      [ "iter_transform2_view", "structranges_1_1v3_1_1iter__transform2__view.html#ac3d3cf58b6da8cba856688c8ef8ff0ac", null ]
+    ] ],
     [ "iter_transform_view", "structranges_1_1v3_1_1iter__transform__view.html", [
       [ "fun_", "structranges_1_1v3_1_1iter__transform__view.html#a469c64e0fc301e2df12de136fa210688", null ],
-      [ "size", "structranges_1_1v3_1_1iter__transform__view.html#a05ac379b60286d526d46ddb625c00a7a", null ],
+      [ "size", "structranges_1_1v3_1_1iter__transform__view.html#ad630a2dd23eeb04d04299cd496ec0d67", null ],
       [ "iter_transform_view", "structranges_1_1v3_1_1iter__transform__view.html#a1310ef03615ac3971cc077f1f520bd95", null ],
       [ "iter_transform_view", "structranges_1_1v3_1_1iter__transform__view.html#aa7723838db06643738cae00d06b2cd17", null ]
     ] ],
@@ -234,6 +239,10 @@ var group__group_views =
       [ "iterator", "structranges_1_1v3_1_1tokenize__view.html#a6eae339e1ef29beeb4b7a4a8ae05a985", null ],
       [ "tokenize_view", "structranges_1_1v3_1_1tokenize__view.html#a34f9ac67b1c682f0696c9ec2fb14052d", null ],
       [ "tokenize_view", "structranges_1_1v3_1_1tokenize__view.html#addeec17303f72a11d509cdb5a2b7977b", null ]
+    ] ],
+    [ "transform2_view", "structranges_1_1v3_1_1transform2__view.html", [
+      [ "transform2_view", "structranges_1_1v3_1_1transform2__view.html#a8459e877bce3f4b5e9a559ca87ec8080", null ],
+      [ "transform2_view", "structranges_1_1v3_1_1transform2__view.html#ac357b45febdd38f640a45929b78dd518", null ]
     ] ],
     [ "transform_view", "structranges_1_1v3_1_1transform__view.html", [
       [ "transform_view", "structranges_1_1v3_1_1transform__view.html#a1383c600ecd11ee2bdb817ececf7161d", null ],
@@ -346,7 +355,9 @@ var group__group_views =
     ] ],
     [ "iter_transform_fn", "structranges_1_1v3_1_1view_1_1iter__transform__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1view_1_1iter__transform__fn.html#a31c30c0b926baf2fbec8024a68c550b4", null ],
-      [ "Concept", "structranges_1_1v3_1_1view_1_1iter__transform__fn.html#a427ef9830f66cfb7f58805bbb423da99", null ]
+      [ "operator()", "structranges_1_1v3_1_1view_1_1iter__transform__fn.html#a34eedcb8e3ccaa7b5cf46a1adcf64a2d", null ],
+      [ "Concept", "structranges_1_1v3_1_1view_1_1iter__transform__fn.html#a427ef9830f66cfb7f58805bbb423da99", null ],
+      [ "Concept2", "structranges_1_1v3_1_1view_1_1iter__transform__fn.html#a240504d790682e218caf7899797561f8", null ]
     ] ],
     [ "iter_zip_with_fn", "structranges_1_1v3_1_1view_1_1iter__zip__with__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1view_1_1iter__zip__with__fn.html#ac7d464a67919a30aecbc5c03faf71260", null ],
@@ -444,7 +455,9 @@ var group__group_views =
     ] ],
     [ "transform_fn", "structranges_1_1v3_1_1view_1_1transform__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1view_1_1transform__fn.html#a85806e8c714d6f7c116c2eae21b32fde", null ],
-      [ "Concept", "structranges_1_1v3_1_1view_1_1transform__fn.html#a98fccf3b29d8879add3db8c4c83dccef", null ]
+      [ "operator()", "structranges_1_1v3_1_1view_1_1transform__fn.html#a37591843b342d4672d3a9f4a9f6c1302", null ],
+      [ "Concept", "structranges_1_1v3_1_1view_1_1transform__fn.html#a98fccf3b29d8879add3db8c4c83dccef", null ],
+      [ "Concept2", "structranges_1_1v3_1_1view_1_1transform__fn.html#a58dea56051e189980a3de00a0ac03925", null ]
     ] ],
     [ "unbounded_fn", "structranges_1_1v3_1_1view_1_1unbounded__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1view_1_1unbounded__fn.html#a5dff7e8f1f5bca9f4b3f40f6573102e9", null ]

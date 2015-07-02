@@ -124,17 +124,17 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aedc6e2676c154df01d86985e4b63dc14"><td class="memTemplParams" colspan="2"><a class="anchor" id="aedc6e2676c154df01d86985e4b63dc14"></a>
+<tr class="memitem:a78bbf20d439db0c4ac6609333c120f08"><td class="memTemplParams" colspan="2"><a class="anchor" id="a78bbf20d439db0c4ac6609333c120f08"></a>
 template&lt;typename F , typename S &gt; </td></tr>
-<tr class="memitem:aedc6e2676c154df01d86985e4b63dc14"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::tagged_pair</b> = tagged&lt; std::pair&lt; <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tag_elem&lt; F &gt;&gt;, <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tag_elem&lt; S &gt;&gt;&gt;, <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tag_spec&lt; F &gt;&gt;, <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tag_spec&lt; S &gt;&gt;&gt;</td></tr>
-<tr class="separator:aedc6e2676c154df01d86985e4b63dc14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78bbf20d439db0c4ac6609333c120f08"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::tagged_pair</b> = tagged&lt; std::pair&lt; detail::tag_elem&lt; F &gt;, detail::tag_elem&lt; S &gt;&gt;, detail::tag_spec&lt; F &gt;, detail::tag_spec&lt; S &gt;&gt;</td></tr>
+<tr class="separator:a78bbf20d439db0c4ac6609333c120f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a55ad377cb6abcdefab981500543115c0"><td class="memTemplParams" colspan="2"><a class="anchor" id="a55ad377cb6abcdefab981500543115c0"></a>
+<tr class="memitem:a85c47f81f2d1c0c143eb2f9a84b62bd1"><td class="memTemplParams" colspan="2"><a class="anchor" id="a85c47f81f2d1c0c143eb2f9a84b62bd1"></a>
 template&lt;typename Tag1 , typename Tag2 , typename T1 , typename T2 &gt; </td></tr>
-<tr class="memitem:a55ad377cb6abcdefab981500543115c0"><td class="memTemplItemLeft" align="right" valign="top">constexpr tagged_pair&lt; Tag1(<a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tuplelike_elem&lt; T1 &gt;&gt;), Tag2(<a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::tuplelike_elem&lt; T2 &gt;&gt;)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_tagged_pair</b> (T1 &amp;&amp;t1, T2 &amp;&amp;t2)</td></tr>
-<tr class="separator:a55ad377cb6abcdefab981500543115c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85c47f81f2d1c0c143eb2f9a84b62bd1"><td class="memTemplItemLeft" align="right" valign="top">constexpr tagged_pair&lt; Tag1(bind_element_t&lt; T1 &gt;), Tag2(bind_element_t&lt; T2 &gt;)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::make_tagged_pair</b> (T1 &amp;&amp;t1, T2 &amp;&amp;t2)</td></tr>
+<tr class="separator:a85c47f81f2d1c0c143eb2f9a84b62bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a83acf6caf817447460292b5261ab7c94"></a>

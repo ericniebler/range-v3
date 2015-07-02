@@ -177,14 +177,14 @@ Quick Start</h1>
 </div><!-- fragment --><p>Same as above, but with function-call syntax instead of pipe syntax:</p>
 <div class="fragment"><div class="line"><a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>(<a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a>(vi));</div>
 </div><!-- fragment --><h2>Create Custom Ranges</h2>
-<p>Range v3 provides a utility for easily creating your own range types, called <code>range_facade</code>. The code below uses <code>range_facade</code> to create a range that traverses a null-terminated string:</p>
+<p>Range v3 provides a utility for easily creating your own range types, called <code>view_facade</code>. The code below uses <code>view_facade</code> to create a range that traverses a null-terminated string:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="all_8hpp.html">range/v3/all.hpp</a>&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// A range that iterates over all the characters in a</span></div>
 <div class="line"><span class="comment">// null-terminated string.</span></div>
 <div class="line"><span class="keyword">class </span>c_string_range</div>
-<div class="line">  : <span class="keyword">public</span> range_facade&lt;c_string_range&gt;</div>
+<div class="line">  : <span class="keyword">public</span> view_facade&lt;c_string_range&gt;</div>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">friend</span> range_access;</div>
 <div class="line">    <span class="keywordtype">char</span> <span class="keyword">const</span> * sz_;</div>
@@ -198,7 +198,7 @@ Quick Start</h1>
 <div class="line">        assert(sz != <span class="keyword">nullptr</span>);</div>
 <div class="line">    }</div>
 <div class="line">};</div>
-</div><!-- fragment --><p>The <code>range_facade</code> class generates an iterator and begin/end member functions from the minimal interface provided by <code>c_string_range</code>. This is an example of a very simple range for which it is not necessary to separate the range itself from the thing that iterates the range. Future examples will show examples of more sophisticated ranges.</p>
+</div><!-- fragment --><p>The <code>view_facade</code> class generates an iterator and begin/end member functions from the minimal interface provided by <code>c_string_range</code>. This is an example of a very simple range for which it is not necessary to separate the range itself from the thing that iterates the range. Future examples will show examples of more sophisticated ranges.</p>
 <p>With <code>c_string_range</code>, you can now use algorithms to operate on null-terminated strings, as below:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"></div>
@@ -212,11 +212,11 @@ Quick Start</h1>
 <div class="line">    <span class="comment">// prints: h e l l o   w o r l d</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><h2>Adapting Ranges</h2>
-<p>Often, a new range type is most easily expressed by adapting an existing range type. That's the case for many of the range views provided by the Range v3 library; for example, the <code>view::remove_if</code> and <code>view::transform</code> views. These are rich types with many moving parts, but thanks to a helper class called <code>range_adaptor</code>, they aren't hard to write.</p>
+<p>Often, a new range type is most easily expressed by adapting an existing range type. That's the case for many of the range views provided by the Range v3 library; for example, the <code>view::remove_if</code> and <code>view::transform</code> views. These are rich types with many moving parts, but thanks to a helper class called <code>view_adaptor</code>, they aren't hard to write.</p>
 <p>Below in roughly 2 dozen lines of code is the <code>transform</code> view, which takes one range and transforms all the elements with a unary function.</p>
 <div class="fragment"><div class="line"><span class="comment">// A class that adapts an existing range with a function</span></div>
 <div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng, <span class="keyword">class</span> Fun&gt;</div>
-<div class="line"><span class="keyword">class </span>transform_view : <span class="keyword">public</span> range_adaptor&lt;transform_view&lt;Rng, Fun&gt;, Rng&gt;</div>
+<div class="line"><span class="keyword">class </span>transform_view : <span class="keyword">public</span> view_adaptor&lt;transform_view&lt;Rng, Fun&gt;, Rng&gt;</div>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">friend</span> range_access;</div>
 <div class="line">    semiregular_t&lt;Fun&gt; fun_; <span class="comment">// Make Fun model SemiRegular if it doesn&#39;t</span></div>
@@ -237,7 +237,7 @@ Quick Start</h1>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    transform_view() = <span class="keywordflow">default</span>;</div>
 <div class="line">    transform_view(Rng &amp;&amp; rng, Fun fun)</div>
-<div class="line">      : range_adaptor_t&lt;transform_view&gt;{std::forward&lt;Rng&gt;(rng)}</div>
+<div class="line">      : view_adaptor_t&lt;transform_view&gt;{std::forward&lt;Rng&gt;(rng)}</div>
 <div class="line">      , fun_(std::move(fun))</div>
 <div class="line">    {}</div>
 <div class="line">};</div>

@@ -27,16 +27,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"group__group-concepts.html#gaf5981a9685c7ccf7f6085acc4c833c77",
-"group__transformation.html#gae8666f91063c050fe79f817c03b81b3f",
-"reverse__copy_8hpp.html",
-"structranges_1_1v3_1_1basic__iterator.html#aadd68575d733be0965e684f208280b51",
-"structranges_1_1v3_1_1concepts_1_1_sized_range.html#a3b709928d7bbf09ec4b302d549866e6f",
-"structranges_1_1v3_1_1inner__product__fn.html#a621ab5bd1257204944a0311c6d9f48db",
-"structranges_1_1v3_1_1overloaded_3_01_fn_01_4.html",
-"structranges_1_1v3_1_1single__view.html",
-"structranges_1_1v3_1_1view_1_1iter__transform__fn.html",
-"view_8hpp.html"
+"group__group-concepts.html#gafee98891c01a53e20f2639a20cab4fea",
+"group__transformation.html#gaefcc79a06df21a497b76c2f5e0f87d81",
+"semiregular_8hpp.html#ga311acc141ac5e80a64c4187ce8fe2ebd",
+"structranges_1_1v3_1_1basic__iterator.html#af556877fc98e75ba0dd11a80db40bc68",
+"structranges_1_1v3_1_1concepts_1_1_weak_input_iterator.html",
+"structranges_1_1v3_1_1insert__fn.html#a8b21d7d0d54152acbd519bf976c6925c",
+"structranges_1_1v3_1_1partial__sort__fn.html#ab8260e5d5e2de26e31d6a7291d765c28",
+"structranges_1_1v3_1_1swap__ranges__fn.html",
+"structranges_1_1v3_1_1view_1_1slice__fn.html#aac0adbf2a27bc7e11bfe4e218b43c5de",
+"view__adaptor_8hpp.html#ga09105cf069b717b0cd738c070115fd58"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

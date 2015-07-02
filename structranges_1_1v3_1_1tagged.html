@@ -90,6 +90,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1tagged.html','')
 
 <div class="header">
   <div class="summary">
+<a href="#friends">Friends</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1tagged-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -108,6 +109,13 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1tagged.html','')
 </map>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:affc1fef2ea6ac2d5c22e8c13c1b93f45"><td class="memTemplParams" colspan="2"><a class="anchor" id="affc1fef2ea6ac2d5c22e8c13c1b93f45"></a>
+template&lt;int tagged_dummy_ = 42&gt; </td></tr>
+<tr class="memitem:affc1fef2ea6ac2d5c22e8c13c1b93f45"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga5e16dc224b7d73c30d681aa63c407b39">meta::if_c</a>&lt; tagged_dummy_==43||<a class="el" href="structranges_1_1v3_1_1is__swappable.html">is_swappable</a>&lt; <a class="el" href="class_base.html">Base</a> &amp; &gt;::value &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;x, <a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;y) noexcept(<a class="el" href="structranges_1_1v3_1_1is__nothrow__swappable.html">is_nothrow_swappable</a>&lt; <a class="el" href="class_base.html">Base</a> &amp; &gt;::value)</td></tr>
+<tr class="separator:affc1fef2ea6ac2d5c22e8c13c1b93f45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af7727e2018aa07d1db6f29886a4223a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af7727e2018aa07d1db6f29886a4223a7"></a>
@@ -116,28 +124,32 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a38649fab6d6f23f35d97673d7a42c36e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38649fab6d6f23f35d97673d7a42c36e"></a>
 <a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> const &amp;)=default</td></tr>
 <tr class="separator:a38649fab6d6f23f35d97673d7a42c36e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63dfe06071648f1ac1345d3dd235352b"><td class="memTemplParams" colspan="2"><a class="anchor" id="a63dfe06071648f1ac1345d3dd235352b"></a>
+<tr class="memitem:ae5f287691e46b609c7208adf4b5e4d92"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae5f287691e46b609c7208adf4b5e4d92"></a>
 template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a63dfe06071648f1ac1345d3dd235352b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; &amp;&amp;that)</td></tr>
-<tr class="separator:a63dfe06071648f1ac1345d3dd235352b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5f287691e46b609c7208adf4b5e4d92"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; &amp;&amp;that) noexcept(noexcept(std::declval&lt; <a class="el" href="class_base.html">Base</a> &amp; &gt;()=static_cast&lt; Other &amp;&amp; &gt;(that)))</td></tr>
+<tr class="separator:ae5f287691e46b609c7208adf4b5e4d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a262fc0da580178846195e958fa30af90"><td class="memTemplParams" colspan="2"><a class="anchor" id="a262fc0da580178846195e958fa30af90"></a>
 template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a262fc0da580178846195e958fa30af90"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; const &amp;that)</td></tr>
 <tr class="separator:a262fc0da580178846195e958fa30af90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a646deab44715a81f27acc2cb6945c410"><td class="memTemplParams" colspan="2"><a class="anchor" id="a646deab44715a81f27acc2cb6945c410"></a>
-template&lt;typename U , typename  = meta::if_c&lt;!std::is_same&lt;tagged, detail::decay_t&lt;U&gt;&gt;::value&gt;, typename  = decltype(std::declval&lt;Base&amp;&gt;() = std::declval&lt;U&gt;())&gt; </td></tr>
-<tr class="memitem:a646deab44715a81f27acc2cb6945c410"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (U &amp;&amp;u)</td></tr>
-<tr class="separator:a646deab44715a81f27acc2cb6945c410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9c5d30a526cffd8143f60e852a69b4c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab9c5d30a526cffd8143f60e852a69b4c"></a>
+template&lt;typename U , typename  = meta::if_c&lt;!std::is_same&lt;tagged, detail::decay_t&lt;U&gt;&gt;::value&gt;, typename  = decltype(std::declval&lt;Base &amp;&gt;() = std::declval&lt;U&gt;())&gt; </td></tr>
+<tr class="memitem:ab9c5d30a526cffd8143f60e852a69b4c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (U &amp;&amp;u) noexcept(noexcept(std::declval&lt; <a class="el" href="class_base.html">Base</a> &amp; &gt;()=std::forward&lt; U &gt;(u)))</td></tr>
+<tr class="separator:ab9c5d30a526cffd8143f60e852a69b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c8b660a349696a82d5a790d622980e8"><td class="memTemplParams" colspan="2"><a class="anchor" id="a7c8b660a349696a82d5a790d622980e8"></a>
+template&lt;int tagged_dummy_ = 42&gt; </td></tr>
+<tr class="memitem:a7c8b660a349696a82d5a790d622980e8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga5e16dc224b7d73c30d681aa63c407b39">meta::if_c</a>&lt; tagged_dummy_==43||<a class="el" href="structranges_1_1v3_1_1is__swappable.html">is_swappable</a>&lt; <a class="el" href="class_base.html">Base</a> &amp; &gt;::value &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>swap</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;that) noexcept(<a class="el" href="structranges_1_1v3_1_1is__nothrow__swappable.html">is_nothrow_swappable</a>&lt; <a class="el" href="class_base.html">Base</a> &amp; &gt;::value)</td></tr>
+<tr class="separator:a7c8b660a349696a82d5a790d622980e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcd877c0d4710372868e9f10c2915c88"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abcd877c0d4710372868e9f10c2915c88"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:abcd877c0d4710372868e9f10c2915c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0710bc791c2c44a23c56a42743e7267"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af0710bc791c2c44a23c56a42743e7267"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> const &amp;)=default</td></tr>
 <tr class="separator:af0710bc791c2c44a23c56a42743e7267"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8b21f640552389e5024f173c7bef26f"><td class="memTemplParams" colspan="2"><a class="anchor" id="af8b21f640552389e5024f173c7bef26f"></a>
+<tr class="memitem:aaf47fa0c1e1ad588ebaac6de07438894"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaf47fa0c1e1ad588ebaac6de07438894"></a>
 template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
-<tr class="memitem:af8b21f640552389e5024f173c7bef26f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; &amp;&amp;that)</td></tr>
-<tr class="separator:af8b21f640552389e5024f173c7bef26f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf47fa0c1e1ad588ebaac6de07438894"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; &amp;&amp;that) noexcept(noexcept(<a class="el" href="class_base.html">Base</a>(static_cast&lt; Other &amp;&amp; &gt;(that))))</td></tr>
+<tr class="separator:aaf47fa0c1e1ad588ebaac6de07438894"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d4b73d57b59800d8baa2f8bd9ad0c47"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3d4b73d57b59800d8baa2f8bd9ad0c47"></a>
 template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a3d4b73d57b59800d8baa2f8bd9ad0c47"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags...&gt; const &amp;that)</td></tr>
