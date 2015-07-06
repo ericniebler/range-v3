@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_VIEW_TAKE_HPP
 #define RANGES_V3_VIEW_TAKE_HPP
 
+#include <algorithm>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
