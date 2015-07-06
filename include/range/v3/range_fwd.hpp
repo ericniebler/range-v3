@@ -421,6 +421,14 @@ namespace ranges
         using counted_sentinel =
             basic_sentinel<detail::counted_sentinel>;
 
+        template<typename Rng>
+        struct cycled_view;
+
+        namespace view
+        {
+            struct cycle_fn;
+        }
+
         namespace detail
         {
             template<typename I> struct reverse_cursor;

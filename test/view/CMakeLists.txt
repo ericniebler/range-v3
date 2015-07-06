@@ -23,6 +23,9 @@ add_test(test.view.const, view.const)
 add_executable(view.counted counted.cpp)
 add_test(test.view.counted, view.counted)
 
+add_executable(view.cycle cycle.cpp)
+add_test(test.view.cycle, view.cycle)
+
 add_executable(view.delimit delimit.cpp)
 add_test(test.view.delimit, view.delimit)
 
