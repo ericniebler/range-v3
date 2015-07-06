@@ -147,7 +147,7 @@ namespace ranges
                 template<typename Rng, typename T, CONCEPT_REQUIRES_(!InputRange<Rng>())>
                 void operator()(Rng &&, T &&) const
                 {
-                    CONCEPT_ASSERT_MSG(InputRange<T>(),
+                    CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::take operates must be a model of the InputRange "
                         "concept.");
                     CONCEPT_ASSERT_MSG(Integral<T>(),
