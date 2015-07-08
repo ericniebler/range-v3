@@ -79,7 +79,7 @@ namespace ranges
         struct common_type;
 
         template<typename ...Ts>
-        using common_type_t = meta::eval<common_type<Ts...>>;
+        using common_type_t = meta::_t<common_type<Ts...>>;
 
         template<typename T, typename U, typename TQual, typename UQual>
         struct basic_common_reference;
@@ -88,10 +88,10 @@ namespace ranges
         struct common_reference;
 
         template<typename ...Ts>
-        using common_reference_t = meta::eval<common_reference<Ts...>>;
+        using common_reference_t = meta::_t<common_reference<Ts...>>;
 
         template<typename Sig>
-        using result_of_t = meta::eval<std::result_of<Sig>>;
+        using result_of_t = meta::_t<std::result_of<Sig>>;
 
         struct make_pipeable_fn;
 
@@ -183,13 +183,13 @@ namespace ranges
             struct make_compressed_pair_fn;
 
             template<typename T>
-            constexpr T && forward(meta::eval<std::remove_reference<T>> & t) noexcept
+            constexpr T && forward(meta::_t<std::remove_reference<T>> & t) noexcept
             {
                 return static_cast<T &&>(t);
             }
 
             template<typename T>
-            constexpr T && forward(meta::eval<std::remove_reference<T>> && t) noexcept
+            constexpr T && forward(meta::_t<std::remove_reference<T>> && t) noexcept
             {
                 // This is to catch way sketchy stuff like: forward<int const &>(42)
                 static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
@@ -197,22 +197,22 @@ namespace ranges
             }
 
             template<typename T>
-            constexpr meta::eval<std::remove_reference<T>> &&
+            constexpr meta::_t<std::remove_reference<T>> &&
             move(T && t) noexcept
             {
-                return static_cast<meta::eval<std::remove_reference<T>> &&>(t);
+                return static_cast<meta::_t<std::remove_reference<T>> &&>(t);
             }
 
             template<typename T>
-            using decay_t = meta::eval<std::decay<T>>;
+            using decay_t = meta::_t<std::decay<T>>;
 
-            template<typename T, typename R = meta::eval<std::remove_reference<T>>>
+            template<typename T, typename R = meta::_t<std::remove_reference<T>>>
             using as_ref_t =
-                meta::eval<std::add_lvalue_reference<meta::eval<std::remove_const<R>>>>;
+                meta::_t<std::add_lvalue_reference<meta::_t<std::remove_const<R>>>>;
 
-            template<typename T, typename R = meta::eval<std::remove_reference<T>>>
+            template<typename T, typename R = meta::_t<std::remove_reference<T>>>
             using as_cref_t =
-                meta::eval<std::add_lvalue_reference<meta::eval<std::add_const<R>>>>;
+                meta::_t<std::add_lvalue_reference<meta::_t<std::add_const<R>>>>;
 
             struct get_first;
             struct get_second;
@@ -229,7 +229,7 @@ namespace ranges
             template<typename I, typename S>
             struct common_cursor;
 
-            template<typename I, typename D = meta::eval<difference_type<I>>>
+            template<typename I, typename D = meta::_t<difference_type<I>>>
             struct counted_cursor;
 
             struct counted_sentinel;
@@ -272,7 +272,7 @@ namespace ranges
             };
 
             template<typename T>
-            using remove_rvalue_reference_t = meta::eval<remove_rvalue_reference<T>>;
+            using remove_rvalue_reference_t = meta::_t<remove_rvalue_reference<T>>;
         }
         /// \endcond
 
@@ -289,7 +289,7 @@ namespace ranges
 
         template<typename T>
         using uncvref_t =
-            meta::eval<std::remove_cv<meta::eval<std::remove_reference<T>>>>;
+            meta::_t<std::remove_cv<meta::_t<std::remove_reference<T>>>>;
 
         struct equal_to;
         struct less;
@@ -406,7 +406,7 @@ namespace ranges
             struct const_fn;
         }
 
-        template<typename I, typename D = meta::eval<difference_type<I>>>
+        template<typename I, typename D = meta::_t<difference_type<I>>>
         struct counted_view;
 
         namespace view
@@ -414,7 +414,7 @@ namespace ranges
             struct counted_fn;
         }
 
-        template<typename I, typename D = meta::eval<difference_type<I>>>
+        template<typename I, typename D = meta::_t<difference_type<I>>>
         using counted_iterator =
             basic_iterator<detail::counted_cursor<I, D>, detail::counted_sentinel>;
 

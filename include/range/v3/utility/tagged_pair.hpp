@@ -38,7 +38,7 @@ namespace ranges
                 struct collect_;
                 template<typename Type, std::size_t...Is, typename...Tags>
                 struct collect_<Type, meta::index_sequence<Is...>, Tags...>
-                  : Tags::template getter<Type, meta::eval<std::tuple_element<Is, Type>>, Is>...
+                  : Tags::template getter<Type, meta::_t<std::tuple_element<Is, Type>>, Is>...
                 {
                     collect_() = default;
                     collect_(const collect_&) = default;

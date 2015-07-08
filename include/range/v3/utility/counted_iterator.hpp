@@ -37,7 +37,7 @@ namespace ranges
 
             template<typename A, typename B>
             using UnambiguouslyConvertibleType =
-                meta::eval<
+                meta::_t<
                     meta::if_c<
                         (bool)Same<A, B>(),
                         meta::id<A>,

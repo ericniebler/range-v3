@@ -146,7 +146,7 @@ namespace ranges
             Rng1 rng1_;
             Rng2 rng2_;
             using difference_type_ = common_type_t<range_difference_t<Rng1>, range_difference_t<Rng2>>;
-            using size_type_ = meta::eval<std::make_unsigned<difference_type_>>;
+            using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
 
             struct sentinel;
             struct cursor

@@ -32,7 +32,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename T, typename U = meta::eval<std::remove_const<T>>>
+            template<typename T, typename U = meta::_t<std::remove_const<T>>>
             constexpr U && unsafe_move(T &t)
             {
                 return static_cast<U &&>(const_cast<U &>(t));

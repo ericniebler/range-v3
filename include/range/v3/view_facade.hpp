@@ -105,7 +105,7 @@ namespace ranges
         };
 
         template<typename RangeFacade>
-        using view_facade_t = meta::eval<range_access::view_facade<RangeFacade>>;
+        using view_facade_t = meta::_t<range_access::view_facade<RangeFacade>>;
 
         /// @}
     }

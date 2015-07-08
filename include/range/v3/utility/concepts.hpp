@@ -104,7 +104,7 @@ namespace ranges
             };
 
             template<typename Concept>
-            using base_concepts_of_t = meta::eval<base_concepts_of<Concept>>;
+            using base_concepts_of_t = meta::_t<base_concepts_of<Concept>>;
 
             template<typename...Ts>
             auto models_(any) ->
@@ -233,7 +233,7 @@ namespace ranges
             {};
 
             template<typename Concepts, typename...Ts>
-            using most_refined_t = meta::eval<most_refined<Concepts, Ts...>>;
+            using most_refined_t = meta::_t<most_refined<Concepts, Ts...>>;
 
             ////////////////////////////////////////////////////////////////////////////////////////////
             // Core language concepts
@@ -368,7 +368,7 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::is_true(meta::or_<
                             std::is_reference<T>,
-                            models<_ObjectDestructible, meta::eval<std::remove_all_extents<T>>>>())
+                            models<_ObjectDestructible, meta::_t<std::remove_all_extents<T>>>>())
                     ));
             };
 
@@ -398,7 +398,7 @@ namespace ranges
 
             struct MoveConstructible
             {
-                template<typename T, typename UnCvT = meta::eval<std::remove_cv<T>>>
+                template<typename T, typename UnCvT = meta::_t<std::remove_cv<T>>>
                 auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Constructible, T, UnCvT &&>()
@@ -408,7 +408,7 @@ namespace ranges
             struct CopyConstructible
               : refines<MoveConstructible>
             {
-                template<typename T, typename UnCvT = meta::eval<std::remove_cv<T>>>
+                template<typename T, typename UnCvT = meta::_t<std::remove_cv<T>>>
                 auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Constructible, T, UnCvT &>(),
@@ -429,7 +429,7 @@ namespace ranges
             struct Movable
               : refines<MoveConstructible>
             {
-                template<typename T, typename UnCvT = meta::eval<std::remove_cv<T>>>
+                template<typename T, typename UnCvT = meta::_t<std::remove_cv<T>>>
                 auto requires_(T && t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Assignable, T &, UnCvT &&>(),
@@ -441,7 +441,7 @@ namespace ranges
             struct Copyable
               : refines<Movable, CopyConstructible>
             {
-                template<typename T, typename UnCvT = meta::eval<std::remove_cv<T>>>
+                template<typename T, typename UnCvT = meta::_t<std::remove_cv<T>>>
                 auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Assignable, T &, UnCvT &>(),

@@ -79,10 +79,10 @@ namespace ranges
         /// \addtogroup group-core
         /// @{
         template<typename Derived>
-        using base_range_t = meta::eval<range_access::base_range<Derived>>;
+        using base_range_t = meta::_t<range_access::base_range<Derived>>;
 
         template<typename Derived>
-        using view_adaptor_t = meta::eval<range_access::view_adaptor<Derived>>;
+        using view_adaptor_t = meta::_t<range_access::view_adaptor<Derived>>;
 
         template<typename BaseIt, typename Adapt>
         struct adaptor_cursor;
@@ -232,7 +232,7 @@ namespace ranges
             template<typename A = Adapt,
                 typename R = decltype(std::declval<A>().current(first)),
                 typename X =
-                    meta::if_<std::is_reference<R>, meta::eval<std::remove_reference<R>> &&, R>>
+                    meta::if_<std::is_reference<R>, meta::_t<std::remove_reference<R>> &&, R>>
             X indirect_move_(detail::any) const
                 noexcept(noexcept(X(static_cast<X &&>(std::declval<R>()))))
             {

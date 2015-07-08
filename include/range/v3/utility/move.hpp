@@ -31,7 +31,7 @@ namespace ranges
             struct move_fn : move_tag
             {
                 template<typename T,
-                    typename U = meta::eval<std::remove_reference<T>>>
+                    typename U = meta::_t<std::remove_reference<T>>>
                 U && operator()(T && t) const noexcept
                 {
                     return static_cast<U &&>(t);
@@ -48,7 +48,7 @@ namespace ranges
             /// \ingroup group-utility
             /// \sa `move_fn`
             template<typename T>
-            meta::eval<std::remove_reference<T>> && operator|(T && t, move_fn move) noexcept
+            meta::_t<std::remove_reference<T>> && operator|(T && t, move_fn move) noexcept
             {
                 return move(t);
             }
@@ -59,8 +59,8 @@ namespace ranges
             using move_t =
                 meta::if_<
                     std::is_reference<R>,
-                    meta::eval<std::remove_reference<R>> &&,
-                    detail::decay_t<meta::eval<std::remove_reference<R>>>>;
+                    meta::_t<std::remove_reference<R>> &&,
+                    detail::decay_t<meta::_t<std::remove_reference<R>>>>;
         }
 
         /// \cond
@@ -69,7 +69,7 @@ namespace ranges
             // Default indirect_move overload.
             template<typename I,
                 typename R = decltype(*std::declval<I>()),
-                typename U = meta::eval<std::remove_reference<R>>>
+                typename U = meta::_t<std::remove_reference<R>>>
             aux::move_t<R> indirect_move(I const &i)
                 noexcept(std::is_reference<R>::value ||
                     std::is_nothrow_constructible<detail::decay_t<U>, U &&>::value)
@@ -101,7 +101,7 @@ namespace ranges
             template<typename I, typename O>
             meta::and_<
                 std::is_constructible<
-                    meta::eval<value_type<I>>,
+                    meta::_t<value_type<I>>,
                     decltype(indirect_move(std::declval<I>()))>,
                 std::is_assignable<
                     decltype(*std::declval<O>()),
@@ -115,7 +115,7 @@ namespace ranges
             template<typename I, typename O>
             meta::and_<
                 std::is_nothrow_constructible<
-                    meta::eval<value_type<I>>,
+                    meta::_t<value_type<I>>,
                     decltype(indirect_move(std::declval<I>()))>,
                 std::is_nothrow_assignable<
                     decltype(*std::declval<O>()),

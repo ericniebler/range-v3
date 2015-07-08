@@ -446,15 +446,15 @@ namespace ranges
         template<typename T,
             typename U = meta::if_<
                 std::is_lvalue_reference<T>,
-                std::reference_wrapper<meta::eval<std::remove_reference<T>>>,
+                std::reference_wrapper<meta::_t<std::remove_reference<T>>>,
                 T &&>>
-        U bind_forward(meta::eval<std::remove_reference<T>> & t) noexcept
+        U bind_forward(meta::_t<std::remove_reference<T>> & t) noexcept
         {
             return static_cast<U>(t);
         }
 
         template<typename T>
-        T && bind_forward(meta::eval<std::remove_reference<T>> && t) noexcept
+        T && bind_forward(meta::_t<std::remove_reference<T>> && t) noexcept
         {
             // This is to catch way sketchy stuff like: forward<int const &>(42)
             static_assert(!std::is_lvalue_reference<T>::value, "You didn't just do that!");
@@ -573,7 +573,7 @@ namespace ranges
         {};
 
         template<typename T>
-        using is_reference_wrapper_t = meta::eval<is_reference_wrapper<T>>;
+        using is_reference_wrapper_t = meta::_t<is_reference_wrapper<T>>;
 
         template<typename T>
         struct referent_of
@@ -607,7 +607,7 @@ namespace ranges
         {};
 
         template<typename T>
-        using referent_of_t = meta::eval<referent_of<T>>;
+        using referent_of_t = meta::_t<referent_of<T>>;
 
         template<typename T>
         struct reference_of
@@ -641,7 +641,7 @@ namespace ranges
         {};
 
         template<typename T>
-        using reference_of_t = meta::eval<reference_of<T>>;
+        using reference_of_t = meta::_t<reference_of<T>>;
 
         template<typename T>
         struct bind_element
@@ -664,7 +664,7 @@ namespace ranges
         };
 
         template<typename T>
-        using bind_element_t = meta::eval<bind_element<T>>;
+        using bind_element_t = meta::_t<bind_element<T>>;
 
         struct ref_fn : pipeable<ref_fn>
         {
@@ -761,7 +761,7 @@ namespace ranges
             meta::if_<
                 std::is_reference<T>,
                 reference_wrapper<
-                    meta::eval<std::remove_reference<T>>,
+                    meta::_t<std::remove_reference<T>>,
                     std::is_rvalue_reference<T>::value>,
                 T &&>;
 

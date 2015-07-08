@@ -15,6 +15,22 @@
 #ifndef META_FWD_HPP
 #define META_FWD_HPP
 
+#ifndef META_DISABLE_DEPRECATED_WARNINGS
+#ifdef __cpp_attribute_deprecated
+#define META_DEPRECATED(MSG) [[deprecated(MSG)]]
+#else
+#if defined(__clang__) || defined(__GNUC__)
+#define META_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
+#elif defined(_MSC_VER)
+#define META_DEPRECATED(MSG) __declspec(deprecated(MSG))
+#else
+#define META_DEPRECATED(MSG)
+#endif
+#endif
+#else
+#define META_DEPRECATED(MSG)
+#endif
+
 namespace meta
 {
     inline namespace v1

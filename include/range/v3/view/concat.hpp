@@ -75,7 +75,7 @@ namespace ranges
         private:
             friend range_access;
             using difference_type_ = common_type_t<range_difference_t<Rngs>...>;
-            using size_type_ = meta::eval<std::make_unsigned<difference_type_>>;
+            using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
             static constexpr std::size_t cranges{sizeof...(Rngs)};
             std::tuple<Rngs...> rngs_;
 

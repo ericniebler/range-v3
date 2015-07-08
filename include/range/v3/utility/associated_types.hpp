@@ -88,7 +88,7 @@ namespace ranges
 
         template<typename T>
         struct value_type<T *>
-          : meta::lazy::if_<std::is_object<T>, meta::eval<std::remove_cv<T>>>
+          : meta::lazy::if_<std::is_object<T>, meta::_t<std::remove_cv<T>>>
         {
             // The meta::lazy::if_ is because void* and void(*)() are not Readable.
         };

@@ -33,6 +33,23 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
+struct my_int
+{
+    int value;
+};
+
+bool compare(my_int lhs, my_int rhs)
+{
+    return lhs.value < rhs.value;
+}
+
+void not_totally_ordered()
+{
+    // This better compile!
+    std::vector<my_int> vec;
+    ranges::equal_range(vec, my_int{10}, compare);
+}
+
 template <class Iter, class Sent, class T>
 void
 test(Iter first, Sent last, const T& value)

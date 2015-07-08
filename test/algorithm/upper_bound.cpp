@@ -13,10 +13,28 @@
 //  Distributed under the MIT License(see accompanying file LICENSE_1_0_0.txt
 //  or a copy at http://stlab.adobe.com/licenses.html)
 
+#include <vector>
 #include <utility>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 #include "../simple_test.hpp"
+
+struct my_int
+{
+    int value;
+};
+
+bool compare(my_int lhs, my_int rhs)
+{
+    return lhs.value < rhs.value;
+}
+
+void not_totally_ordered()
+{
+    // This better compile!
+    std::vector<my_int> vec;
+    ranges::upper_bound(vec, my_int{10}, compare);
+}
 
 int main()
 {

@@ -221,7 +221,7 @@ namespace ranges
                     is_nothrow_indirectly_movable<Readable0, Readable1>::value &&
                     is_nothrow_indirectly_movable<Readable0, Readable1>::value)
             {
-                meta::eval<value_type<Readable0>> v0 = indirect_move(a);
+                meta::_t<value_type<Readable0>> v0 = indirect_move(a);
                 *a = indirect_move(b);
                 *b = std::move(v0);
             }

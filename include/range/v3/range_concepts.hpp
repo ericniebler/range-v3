@@ -308,7 +308,7 @@ namespace ranges
 
         template<typename T>
         using range_concept_t =
-            meta::eval<range_concept<T>>;
+            meta::_t<range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_range_concept
@@ -321,7 +321,7 @@ namespace ranges
 
         template<typename T>
         using bounded_range_concept_t =
-            meta::eval<bounded_range_concept<T>>;
+            meta::_t<bounded_range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sized_range_concept
@@ -334,7 +334,7 @@ namespace ranges
 
         template<typename T>
         using sized_range_concept_t =
-            meta::eval<sized_range_concept<T>>;
+            meta::_t<sized_range_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // bounded_view_concept
@@ -346,7 +346,7 @@ namespace ranges
                     concepts::View>, T>;
 
         template<typename T>
-        using bounded_view_concept_t = meta::eval<bounded_view_concept<T>>;
+        using bounded_view_concept_t = meta::_t<bounded_view_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // sized_view_concept
@@ -358,7 +358,7 @@ namespace ranges
                     concepts::View>, T>;
 
         template<typename T>
-        using sized_view_concept_t = meta::eval<sized_view_concept<T>>;
+        using sized_view_concept_t = meta::_t<sized_view_concept<T>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // view_concept
@@ -370,7 +370,7 @@ namespace ranges
                     concepts::Range>, T>;
 
         template<typename T>
-        using view_concept_t = meta::eval<view_concept<T>>;
+        using view_concept_t = meta::_t<view_concept<T>>;
 
         /// @}
 

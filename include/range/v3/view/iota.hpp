@@ -88,7 +88,7 @@ namespace ranges
                     concepts::WeaklyIncrementable>, T>;
 
         template<typename T>
-        using incrementable_concept_t = meta::eval<incrementable_concept<T>>;
+        using incrementable_concept_t = meta::_t<incrementable_concept<T>>;
 
         /// \cond
         namespace detail
@@ -109,7 +109,7 @@ namespace ranges
                 using type =
                     meta::if_<
                         meta::not_<std::is_same<Val, difference_t>>,
-                        meta::eval<std::make_signed<difference_t>>,
+                        meta::_t<std::make_signed<difference_t>>,
                         meta::if_c<
                             (bits < 8),
                             std::int_fast8_t,
@@ -128,7 +128,7 @@ namespace ranges
             {};
 
             template<typename Val>
-            using iota_difference_t = meta::eval<iota_difference<Val>>;
+            using iota_difference_t = meta::_t<iota_difference<Val>>;
 
             template<typename Val, CONCEPT_REQUIRES_(!Integral<Val>())>
             iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)

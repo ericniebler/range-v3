@@ -106,7 +106,7 @@ namespace ranges
 
             template<typename Rng>
             using all_t =
-                meta::eval<std::decay<decltype(all(std::declval<Rng>()))>>;
+                meta::_t<std::decay<decltype(all(std::declval<Rng>()))>>;
         }
         /// @}
     }

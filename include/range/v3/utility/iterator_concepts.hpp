@@ -149,7 +149,7 @@ namespace ranges
             {
                 // Associated types
                 template<typename I>
-                using value_t = meta::eval<value_type<I>>;
+                using value_t = meta::_t<value_type<I>>;
 
                 template<typename I>
                 using reference_t = decltype(*std::declval<I>());
@@ -247,7 +247,7 @@ namespace ranges
             {
                 // Associated types
                 template<typename I>
-                using difference_t = meta::eval<difference_type<I>>;
+                using difference_t = meta::_t<difference_type<I>>;
 
                 template<typename I>
                 auto requires_(I&& i) -> decltype(
@@ -297,7 +297,7 @@ namespace ranges
                 // value_t from Readable
                 // distance_t from WeaklyIncrementable
                 template<typename I>
-                using category_t = meta::eval<ranges::iterator_category<I>>;
+                using category_t = meta::_t<ranges::iterator_category<I>>;
 
                 template<typename I>
                 auto requires_(I&& i) -> decltype(
@@ -425,7 +425,7 @@ namespace ranges
                     concepts::WeakInputIterator>, T>;
 
         template<typename T>
-        using iterator_concept_t = meta::eval<iterator_concept<T>>;
+        using iterator_concept_t = meta::_t<iterator_concept<T>>;
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
@@ -572,7 +572,6 @@ namespace ranges
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
         using BinarySearchable = meta::fast_and<
             ForwardIterator<I>,
-            TotallyOrdered<V2>,
             IndirectCallableRelation<C, Project<I, P>, V2 const *>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
@@ -667,7 +666,7 @@ namespace ranges
                     concepts::IteratorRange>, I, S>;
 
         template<typename I, typename S = I>
-        using sized_iterator_range_concept_t = meta::eval<sized_iterator_range_concept<I, S>>;
+        using sized_iterator_range_concept_t = meta::_t<sized_iterator_range_concept<I, S>>;
         /// @}
     }
 }

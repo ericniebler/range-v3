@@ -310,7 +310,7 @@ namespace ranges
                         range_access::InputCursorConcept>, T>;
 
             template<typename T>
-            using cursor_concept_t = meta::eval<cursor_concept<T>>;
+            using cursor_concept_t = meta::_t<cursor_concept<T>>;
         }
         /// \endcond
     }

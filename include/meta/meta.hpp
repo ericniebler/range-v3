@@ -20,6 +20,13 @@
 #include <type_traits>
 #include <meta/meta_fwd.hpp>
 
+#if defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wdocumentation-deprecated-sync"
+#endif
+
 /// \defgroup meta Meta
 ///
 /// A tiny metaprogramming library
@@ -122,6 +129,41 @@ namespace meta
         struct nil_
         {
         };
+
+        /// "Evaluate" the trait \p T by returning the nested \c T::type
+        /// alias.
+        /// \ingroup invocation
+        template <typename T>
+        using eval //META_DEPRECATED("Please replace meta::eval with meta::_t") =
+            = typename T::type;
+
+        /// Type alias for \p T::type.
+        /// \ingroup invocation
+        template <typename T>
+        using _t = typename T::type;
+
+#if defined(__cpp_variable_templates) || defined(META_DOXYGEN_INVOKED)
+        /// Variable alias for \c T::type::value
+        /// \note Requires C++14 or greater.
+        /// \ingroup invocation
+        template <typename T>
+        constexpr typename T::type::value_type _v = T::type::value;
+#endif
+
+        /// Lazy versions of meta actions
+        namespace lazy
+        {
+            /// \sa `meta::eval`
+            /// \ingroup lazy_invocation
+            template <typename T>
+            using eval //META_DEPRECATED("Please replace meta::lazy::eval with meta::lazy::_t") =
+                = defer<eval, T>;
+
+            /// \sa `meta::_t`
+            /// \ingroup lazy_invocation
+            template <typename T>
+            using _t = defer<_t, T>;
+        }
 
         /// An integral constant wrapper for \c std::size_t.
         /// \ingroup integral
@@ -352,12 +394,6 @@ namespace meta
             using bit_not = defer<bit_not, T>;
         }
 
-        /// "Evaluate" the trait \p T by returning the nested \c T::type
-        /// alias.
-        /// \ingroup invocation
-        template <typename T>
-        using eval = typename T::type;
-
         /// Evaluate the Alias Class \p F with the arguments \p Args.
         /// \ingroup invocation
         template <typename F, typename... Args>
@@ -366,11 +402,6 @@ namespace meta
         /// Lazy versions of meta actions
         namespace lazy
         {
-            /// \sa `meta::eval`
-            /// \ingroup lazy_invocation
-            template <typename T>
-            using eval = defer<eval, T>;
-
             /// \sa `meta::apply`
             /// \ingroup lazy_invocation
             template <typename F, typename... Args>
@@ -394,7 +425,7 @@ namespace meta
 
         public:
             template <typename... Ts>
-            using apply = eval<impl<Ts...>>;
+            using apply = _t<impl<Ts...>>;
         };
 
         /// An alias for `void`.
@@ -453,7 +484,7 @@ namespace meta
         /// alias for `std::false_type`.
         /// \ingroup trait
         template <typename T>
-        using has_type = eval<detail::has_type_<T>>;
+        using has_type = _t<detail::has_type_<T>>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer
@@ -494,7 +525,7 @@ namespace meta
         /// \sa `defer`
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
-        using defer_trait = lazy::eval<defer<C, Ts...>>;
+        using defer_trait = lazy::_t<defer<C, Ts...>>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_trait_i
@@ -503,7 +534,7 @@ namespace meta
         /// \sa `defer`
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
-        using defer_trait_i = lazy::eval<defer_i<T, C, Is...>>;
+        using defer_trait_i = lazy::_t<defer_i<T, C, Is...>>;
 
         /// An alias that computes the size of the type \p T.
         /// \par Complexity
@@ -543,7 +574,7 @@ namespace meta
         /// An alias for type \p T. Useful in non-deduced contexts.
         /// \ingroup trait
         template <typename T>
-        using id_t = eval<id<T>>;
+        using id_t = _t<id<T>>;
 
         namespace lazy
         {
@@ -587,8 +618,10 @@ namespace meta
         template <template <typename...> class C>
         struct quote
         {
+            // Indirection through defer here needed to avoid Core issue 1430
+            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using apply = eval<defer<C, Ts...>>;
+            using apply = _t<defer<C, Ts...>>;
         };
 
         /// Turn a class template or alias template \p F taking literals of type \p T into a
@@ -597,19 +630,21 @@ namespace meta
         template <typename T, template <T...> class F>
         struct quote_i
         {
+            // Indirection through defer_i here needed to avoid Core issue 1430
+            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using apply = eval<defer_i<T, F, Ts::type::value...>>;
+            using apply = _t<defer_i<T, F, Ts::type::value...>>;
         };
 
         /// Turn a trait \p C into a Alias Class.
         /// \ingroup composition
         template <template <typename...> class C>
-        using quote_trait = compose<quote<eval>, quote<C>>;
+        using quote_trait = compose<quote<_t>, quote<C>>;
 
         /// Turn a trait \p C taking literals of type \p T into a Alias Class.
         /// \ingroup composition
         template <typename T, template <T...> class C>
-        using quote_trait_i = compose<quote<eval>, quote_i<T, C>>;
+        using quote_trait_i = compose<quote<_t>, quote_i<T, C>>;
 
         /// A Alias Class that partially applies the Alias Class
         /// \p F by binding the arguments \p Ts to the \e front of \p F.
@@ -676,7 +711,7 @@ namespace meta
         /// arguments.
         /// \ingroup invocation
         template <typename C, typename List>
-        using apply_list = eval<extension::apply_list<C, List>>;
+        using apply_list = _t<extension::apply_list<C, List>>;
 
         namespace lazy
         {
@@ -726,7 +761,7 @@ namespace meta
 
         public:
             template <typename... Ts>
-            using apply = eval<impl<Ts...>>;
+            using apply = _t<impl<Ts...>>;
         };
 
         namespace lazy
@@ -795,12 +830,12 @@ namespace meta
         /// Select one type or another depending on a compile-time Boolean.
         /// \ingroup logical
         template <typename... Args>
-        using if_ = eval<detail::_if_<Args...>>;
+        using if_ = _t<detail::_if_<Args...>>;
 
         /// Select one type or another depending on a compile-time Boolean.
         /// \ingroup logical
         template <bool If, typename... Args>
-        using if_c = eval<detail::_if_<bool_<If>, Args...>>;
+        using if_c = _t<detail::_if_<bool_<If>, Args...>>;
 
         namespace lazy
         {
@@ -873,7 +908,7 @@ namespace meta
         /// short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
-        using and_ = eval<detail::_and_<Bools...>>;
+        using and_ = _t<detail::_and_<Bools...>>;
 
         /// Logically or together all the Boolean parameters
         /// \ingroup logical
@@ -891,7 +926,7 @@ namespace meta
         /// short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
-        using or_ = eval<detail::_or_<Bools...>>;
+        using or_ = _t<detail::_or_<Bools...>>;
 
         namespace lazy
         {
@@ -952,7 +987,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List, typename State, typename Fun>
-        using fold = eval<detail::fold_<List, State, Fun>>;
+        using fold = _t<detail::fold_<List, State, Fun>>;
 
         /// An alias for `meta::fold`.
         /// \par Complexity
@@ -992,8 +1027,8 @@ namespace meta
 
             template <typename Head, typename... List, typename State, typename Fun>
             struct reverse_fold_<list<Head, List...>, State, Fun,
-                                 void_<eval<reverse_fold_<list<List...>, State, Fun>>>>
-                : lazy::apply<Fun, eval<reverse_fold_<list<List...>, State, Fun>>, Head>
+                                 void_<_t<reverse_fold_<list<List...>, State, Fun>>>>
+                : lazy::apply<Fun, _t<reverse_fold_<list<List...>, State, Fun>>, Head>
             {
             };
         } // namespace detail
@@ -1006,7 +1041,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List, typename State, typename Fun>
-        using reverse_fold = eval<detail::reverse_fold_<List, State, Fun>>;
+        using reverse_fold = _t<detail::reverse_fold_<List, State, Fun>>;
 
         namespace lazy
         {
@@ -1099,7 +1134,7 @@ namespace meta
         /// \f$ O(L) \f$ where \f$ L \f$ is the number of lists in the list of lists.
         /// \ingroup transformation
         template <typename... Lists>
-        using concat = eval<detail::concat_<Lists...>>;
+        using concat = _t<detail::concat_<Lists...>>;
 
         namespace lazy
         {
@@ -1135,8 +1170,8 @@ namespace meta
             template <std::size_t N, typename T>
             struct repeat_n_c_
             {
-                using type = concat<eval<repeat_n_c_<N / 2, T>>, eval<repeat_n_c_<N / 2, T>>,
-                                    eval<repeat_n_c_<N % 2, T>>>;
+                using type = concat<_t<repeat_n_c_<N / 2, T>>, _t<repeat_n_c_<N / 2, T>>,
+                                    _t<repeat_n_c_<N % 2, T>>>;
             };
 
             template <typename T>
@@ -1158,14 +1193,14 @@ namespace meta
         /// \f$ O(log N) \f$.
         /// \ingroup list
         template <typename N, typename T = void>
-        using repeat_n = eval<detail::repeat_n_c_<N::type::value, T>>;
+        using repeat_n = _t<detail::repeat_n_c_<N::type::value, T>>;
 
         /// Generate `list<T,T,T...T>` of size \p N arguments.
         /// \par Complexity
         /// \f$ O(log N) \f$.
         /// \ingroup list
         template <std::size_t N, typename T = void>
-        using repeat_n_c = eval<detail::repeat_n_c_<N, T>>;
+        using repeat_n_c = _t<detail::repeat_n_c_<N, T>>;
 
         namespace lazy
         {
@@ -1212,7 +1247,7 @@ namespace meta
         /// Amortized \f$ O(1) \f$.
         /// \ingroup list
         template <typename List, typename N>
-        using at = eval<detail::at_<List, N>>;
+        using at = _t<detail::at_<List, N>>;
 
         /// Return the \p N th element in the \c meta::list \p List.
         /// \par Complexity
@@ -1269,14 +1304,14 @@ namespace meta
         /// \f$ O(1) \f$.
         /// \ingroup transformation
         template <typename List, typename N>
-        using drop = eval<detail::drop_<List, N>>;
+        using drop = _t<detail::drop_<List, N>>;
 
         /// Return a new \c meta::list by removing the first \p N elements from \p List.
         /// \par Complexity
         /// \f$ O(1) \f$.
         /// \ingroup transformation
         template <typename List, std::size_t N>
-        using drop_c = eval<detail::drop_<List, meta::size_t<N>>>;
+        using drop_c = _t<detail::drop_<List, meta::size_t<N>>>;
 
         namespace lazy
         {
@@ -1309,7 +1344,7 @@ namespace meta
         /// \f$ O(1) \f$.
         /// \ingroup list
         template <typename List>
-        using front = eval<detail::front_<List>>;
+        using front = _t<detail::front_<List>>;
 
         namespace lazy
         {
@@ -1342,7 +1377,7 @@ namespace meta
         /// Amortized \f$ O(1) \f$.
         /// \ingroup list
         template <typename List>
-        using back = eval<detail::back_<List>>;
+        using back = _t<detail::back_<List>>;
 
         namespace lazy
         {
@@ -1375,7 +1410,7 @@ namespace meta
         /// \f$ O(1) \f$.
         /// \ingroup transformation
         template <typename List, typename T>
-        using push_front = eval<detail::push_front_<List, T>>;
+        using push_front = _t<detail::push_front_<List, T>>;
 
         namespace lazy
         {
@@ -1408,7 +1443,7 @@ namespace meta
         /// \f$ O(1) \f$.
         /// \ingroup transformation
         template <typename List>
-        using pop_front = eval<detail::pop_front_<List>>;
+        using pop_front = _t<detail::pop_front_<List>>;
 
         namespace lazy
         {
@@ -1443,7 +1478,7 @@ namespace meta
         /// complexity guarantees one would expect.
         /// \ingroup transformation
         template <typename List, typename T>
-        using push_back = eval<detail::push_back_<List, T>>;
+        using push_back = _t<detail::push_back_<List, T>>;
 
         namespace lazy
         {
@@ -1574,7 +1609,7 @@ namespace meta
         /// \ingroup query
         /// \sa `meta::npos`
         template <typename List, typename T>
-        using find_index = eval<detail::find_index_<List, T>>;
+        using find_index = _t<detail::find_index_<List, T>>;
 
         namespace lazy
         {
@@ -1625,7 +1660,7 @@ namespace meta
         /// \ingroup query
         /// \sa `#meta::npos`
         template <typename List, typename T>
-        using reverse_find_index = eval<detail::reverse_find_index_<List, T>>;
+        using reverse_find_index = _t<detail::reverse_find_index_<List, T>>;
 
         namespace lazy
         {
@@ -1728,7 +1763,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename Fun>
-        using find_if = eval<detail::find_if_<List, Fun>>;
+        using find_if = _t<detail::find_if_<List, Fun>>;
 
         namespace lazy
         {
@@ -1770,7 +1805,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename Fun>
-        using reverse_find_if = eval<detail::reverse_find_if_<List, Fun>>;
+        using reverse_find_if = _t<detail::reverse_find_if_<List, Fun>>;
 
         namespace lazy
         {
@@ -1804,7 +1839,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List, typename T, typename U>
-        using replace = eval<detail::replace_<List, T, U>>;
+        using replace = _t<detail::replace_<List, T, U>>;
 
         namespace lazy
         {
@@ -1838,7 +1873,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List, typename C, typename U>
-        using replace_if = eval<detail::replace_if_<List, C, U>>;
+        using replace_if = _t<detail::replace_if_<List, C, U>>;
 
         namespace lazy
         {
@@ -1949,7 +1984,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename... Args>
-        using transform = eval<detail::transform_<Args...>>;
+        using transform = _t<detail::transform_<Args...>>;
 
         namespace lazy
         {
@@ -2084,7 +2119,7 @@ namespace meta
         namespace detail
         {
             template <typename T>
-            using uncvref_t = eval<std::remove_cv<eval<std::remove_reference<T>>>>;
+            using uncvref_t = _t<std::remove_cv<_t<std::remove_reference<T>>>>;
 
             // Indirection here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
@@ -2099,7 +2134,7 @@ namespace meta
         /// \c meta::apply_list.
         /// \ingroup list
         template <typename Sequence>
-        using as_list = eval<detail::as_list_<Sequence>>;
+        using as_list = _t<detail::as_list_<Sequence>>;
 
         namespace lazy
         {
@@ -2285,7 +2320,7 @@ namespace meta
                                      pair<list<Yes...>, list<No..., A>>>;
                 };
                 template <typename State, typename A>
-                using apply = eval<impl<State, A>>;
+                using apply = _t<impl<State, A>>;
             };
         } // namespace detail
         /// \endcond
@@ -2329,11 +2364,11 @@ namespace meta
             template <typename A, typename B, typename... List, typename Pred>
             struct sort_<
                 list<A, B, List...>, Pred,
-                void_<eval<sort_<first<partition<list<B, List...>, bind_back<Pred, A>>>, Pred>>>>
+                void_<_t<sort_<first<partition<list<B, List...>, bind_back<Pred, A>>>, Pred>>>>
             {
                 using P = partition<list<B, List...>, bind_back<Pred, A>>;
                 using type =
-                    concat<eval<sort_<first<P>, Pred>>, list<A>, eval<sort_<second<P>, Pred>>>;
+                    concat<_t<sort_<first<P>, Pred>>, list<A>, _t<sort_<second<P>, Pred>>>;
             };
         }
         /// \endcond
@@ -2351,7 +2386,7 @@ namespace meta
         /// \ingroup transformation
         // clang-format on
         template <typename List, typename Pred>
-        using sort = eval<detail::sort_<List, Pred>>;
+        using sort = _t<detail::sort_<List, Pred>>;
 
         namespace lazy
         {
@@ -2377,7 +2412,7 @@ namespace meta
 
             // Returns which branch to evaluate
             template <typename If, typename... Ts>
-            using lazy_if_ = lazy::eval<defer<_if_, If, protect_<Ts>...>>;
+            using lazy_if_ = lazy::_t<defer<_if_, If, protect_<Ts>...>>;
 
             template <typename A, typename T, typename F, typename Ts>
             struct subst1_
@@ -2433,15 +2468,15 @@ namespace meta
                 template <typename T, typename Args>
                 struct impl;
                 template <typename T, typename Args>
-                using lazy_impl_ = lazy::eval<defer<impl, T, protect_<Args>>>;
+                using lazy_impl_ = lazy::_t<defer<impl, T, protect_<Args>>>;
                 template <typename, typename, typename = void>
                 struct subst_
                 {
                 };
                 template <template <typename...> class C, typename... Ts, typename Args>
-                struct subst_<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
+                struct subst_<defer<C, Ts...>, Args, void_<C<_t<impl<Ts, Args>>...>>>
                 {
-                    using type = C<eval<impl<Ts, Args>>...>;
+                    using type = C<_t<impl<Ts, Args>>...>;
                 };
                 template <typename T, template <T...> class C, T... Is, typename Args>
                 struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
@@ -2510,7 +2545,7 @@ namespace meta
 
             public:
                 template <typename... Ts>
-                using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
+                using apply = _t<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
             };
 
             // Lambda with variadic placeholder (broken out due to less efficient compile-time
@@ -2527,7 +2562,7 @@ namespace meta
                 template <typename Args>
                 using eval_impl_ = bind_back<quote_trait<impl>, Args>;
                 template <typename T, typename Args>
-                using lazy_impl_ = lazy::eval<defer<impl, T, protect_<Args>>>;
+                using lazy_impl_ = lazy::_t<defer<impl, T, protect_<Args>>>;
                 template <template <typename...> class C, typename Args, typename Ts>
                 using try_subst_ = apply_list<quote<C>, join<transform<Ts, eval_impl_<Args>>>>;
                 template <typename, typename, typename = void>
@@ -2600,7 +2635,7 @@ namespace meta
                 };
                 struct thunk
                 {
-                    template <typename S, typename R = eval<impl<back<Tags>, S>>>
+                    template <typename S, typename R = _t<impl<back<Tags>, S>>>
                     using apply = if_c<size<R>{} == 1, front<R>>;
                 };
 
@@ -2665,7 +2700,7 @@ namespace meta
             template <typename Tag, typename Value, typename... Rest>
             struct let_<var<Tag, Value>, Rest...>
             {
-                using type = lazy::apply<lambda<Tag, eval<let_<Rest...>>>, Value>;
+                using type = lazy::apply<lambda<Tag, _t<let_<Rest...>>>, Value>;
             };
         }
         /// \endcond
@@ -2686,7 +2721,7 @@ namespace meta
         /// \endcode
         /// \ingroup trait
         template <typename... As>
-        using let = eval<eval<detail::let_<As...>>>;
+        using let = _t<_t<detail::let_<As...>>>;
 
         namespace lazy
         {
@@ -2796,9 +2831,9 @@ namespace meta
 
             template <typename T, std::size_t N>
             struct make_integer_sequence_
-                : integer_sequence_cat<eval<make_integer_sequence_<T, N / 2>>,
-                                       eval<make_integer_sequence_<T, N / 2>>,
-                                       eval<make_integer_sequence_<T, N % 2>>>
+                : integer_sequence_cat<_t<make_integer_sequence_<T, N / 2>>,
+                                       _t<make_integer_sequence_<T, N / 2>>,
+                                       _t<make_integer_sequence_<T, N % 2>>>
             {
             };
 
@@ -2821,7 +2856,7 @@ namespace meta
         /// \f$ O(log(N)) \f$.
         /// \ingroup integral
         template <typename T, T N>
-        using make_integer_sequence = eval<detail::make_integer_sequence_<T, (std::size_t)N>>;
+        using make_integer_sequence = _t<detail::make_integer_sequence_<T, (std::size_t)N>>;
 
         /// A container for a sequence of compile-time integer constants of type
         /// \c std::size_t
@@ -2875,7 +2910,7 @@ namespace meta
         /// Makes the integer sequence [from, to).
         /// \ingroup integral
         template <class T, T from, T to>
-        using integer_range = meta::eval<
+        using integer_range = meta::_t< 
             detail::offset_integer_sequence_<T, from, meta::make_integer_sequence<T, to - from>>>;
         /// \cond
     } // namespace v1
@@ -3051,4 +3086,7 @@ namespace meta
 #endif
 /// \endcond
 
+#if defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 #endif

@@ -181,7 +181,7 @@ namespace ranges
                     iterator_writability_disabled<Val, Ref>,
                     meta::if_<
                         std::is_pod<Val>,
-                        operator_brackets_value<meta::eval<std::remove_const<Val>>>,
+                        operator_brackets_value<meta::_t<std::remove_const<Val>>>,
                         operator_brackets_const_proxy<I, Ref, CommonRef>>,
                     operator_brackets_proxy<I, Ref, CommonRef>>;
 
@@ -288,7 +288,7 @@ namespace ranges
             template<typename Ref, typename Val>
             using is_non_proxy_reference =
                 std::is_convertible<
-                    meta::eval<std::remove_reference<Ref>> const volatile *,
+                    meta::_t<std::remove_reference<Ref>> const volatile *,
                     Val const volatile *>;
 
             // A metafunction to choose the result type of postfix ++
@@ -339,7 +339,7 @@ namespace ranges
 
             template<typename Cur>
             using mixin_base =
-                meta::eval<meta::if_<has_mixin<Cur>, get_mixin<Cur>, meta::id<basic_mixin<Cur>>>>;
+                meta::_t<meta::if_<has_mixin<Cur>, get_mixin<Cur>, meta::id<basic_mixin<Cur>>>>;
 
             auto iter_cat(range_access::InputCursorConcept*) ->
                 ranges::input_iterator_tag;
@@ -475,7 +475,7 @@ namespace ranges
             using value_type = range_access::cursor_value_t<Cur>;
             using iterator_category = decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
             using difference_type = range_access::cursor_difference_t<Cur>;
-            using pointer = meta::eval<std::add_pointer<reference>>;
+            using pointer = meta::_t<std::add_pointer<reference>>;
             using common_reference = common_reference_t<reference &&, value_type &>;
         private:
             using postfix_increment_result_t =
@@ -722,12 +722,12 @@ namespace ranges
         // This is so that writable postfix proxy objects satisfy Readability
         template<typename T, typename I, typename Qual1, typename Qual2>
         struct basic_common_reference<T, detail::writable_postfix_increment_proxy<I>, Qual1, Qual2>
-          : basic_common_reference<T, iterator_value_t<I>, Qual1, qual::lvalue_ref_t>
+          : basic_common_reference<T, iterator_value_t<I>, Qual1, meta::quote_trait<std::add_lvalue_reference>>
         {};
 
         template<typename I, typename T, typename Qual1, typename Qual2>
         struct basic_common_reference<detail::writable_postfix_increment_proxy<I>, T, Qual1, Qual2>
-          : basic_common_reference<iterator_value_t<I>, T, qual::lvalue_ref_t, Qual2>
+          : basic_common_reference<iterator_value_t<I>, T, meta::quote_trait<std::add_lvalue_reference>, Qual2>
         {};
         /// \endcond
     }
@@ -746,7 +746,7 @@ namespace std
         using value_type = typename iterator::value_type;
         using reference = typename iterator::reference;
         using iterator_category =
-            ::meta::eval<
+            ::meta::_t<
                 ::ranges::detail::downgrade_iterator_category<
                     typename iterator::iterator_category,
                     reference>>;
