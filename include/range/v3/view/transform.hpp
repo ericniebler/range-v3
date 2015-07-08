@@ -235,14 +235,18 @@ namespace ranges
                 }
             };
 
-            using are_bounded_t =
-                meta::and_c<(bool) BoundedRange<Rng1>(), (bool) BoundedRange<Rng2>()>;
+            using end_cursor_t =
+                meta::if_c<
+                    BoundedRange<Rng1>() && BoundedRange<Rng2>() &&
+                        !SinglePass<Rng1>() && !SinglePass<Rng2>(),
+                    cursor,
+                    sentinel>;
 
             cursor begin_cursor()
             {
                 return {fun_, ranges::begin(rng1_), ranges::begin(rng2_)};
             }
-            meta::if_<are_bounded_t, cursor, sentinel> end_cursor()
+            end_cursor_t end_cursor()
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
@@ -252,7 +256,7 @@ namespace ranges
                 return {fun_, ranges::begin(rng1_), ranges::begin(rng2_)};
             }
             CONCEPT_REQUIRES(Range<Rng1 const>() && Range<Rng2 const>())
-            meta::if_<are_bounded_t, cursor, sentinel> end_cursor() const
+            end_cursor_t end_cursor() const
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }

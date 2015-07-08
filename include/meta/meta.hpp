@@ -587,22 +587,8 @@ namespace meta
         template <template <typename...> class C>
         struct quote
         {
-        private:
-            template <typename, typename = quote, typename = void>
-            struct impl
-            {
-            };
-            template <typename... Ts, template <typename...> class D>
-            struct impl<list<Ts...>, quote<D>, void_<D<Ts...>>>
-            {
-                using type = D<Ts...>;
-            };
-
-        public:
-            // Indirection here needed to avoid Core issue 1430
-            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using apply = eval<impl<list<Ts...>>>;
+            using apply = eval<defer<C, Ts...>>;
         };
 
         /// Turn a class template or alias template \p F taking literals of type \p T into a
@@ -611,22 +597,8 @@ namespace meta
         template <typename T, template <T...> class F>
         struct quote_i
         {
-        private:
-            template <typename, typename = quote_i, typename = void>
-            struct impl
-            {
-            };
-            template <typename... Ts, typename U, template <U...> class D>
-            struct impl<list<Ts...>, quote_i<U, D>, void_<D<Ts::type::value...>>>
-            {
-                using type = D<Ts::type::value...>;
-            };
-
-        public:
-            // Indirection here needed to avoid Core issue 1430
-            // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using apply = eval<impl<list<Ts...>>>;
+            using apply = eval<defer_i<T, F, Ts::type::value...>>;
         };
 
         /// Turn a trait \p C into a Alias Class.

@@ -165,10 +165,10 @@ namespace ranges
     template<> struct common_type<int, IntComparable> { using type = int; };
     template<> struct common_type<IntComparable, int> { using type = int; };
     template<typename TQual, typename UQual>
-    struct common_reference_base<int, IntComparable, TQual, UQual>
+    struct basic_common_reference<int, IntComparable, TQual, UQual>
         { using type = int; };
     template<typename TQual, typename UQual>
-    struct common_reference_base<IntComparable, int, TQual, UQual>
+    struct basic_common_reference<IntComparable, int, TQual, UQual>
         { using type = int; };
 }
 

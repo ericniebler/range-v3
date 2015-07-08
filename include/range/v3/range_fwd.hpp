@@ -82,7 +82,7 @@ namespace ranges
         using common_type_t = meta::eval<common_type<Ts...>>;
 
         template<typename T, typename U, typename TQual, typename UQual>
-        struct common_reference_base;
+        struct basic_common_reference;
 
         template<typename ...Ts>
         struct common_reference;
@@ -206,15 +206,13 @@ namespace ranges
             template<typename T>
             using decay_t = meta::eval<std::decay<T>>;
 
-            template<typename T>
+            template<typename T, typename R = meta::eval<std::remove_reference<T>>>
             using as_ref_t =
-                meta::eval<std::add_lvalue_reference<
-                    meta::eval<std::remove_const<meta::eval<std::remove_reference<T>>>>>>;
+                meta::eval<std::add_lvalue_reference<meta::eval<std::remove_const<R>>>>;
 
-            template<typename T>
+            template<typename T, typename R = meta::eval<std::remove_reference<T>>>
             using as_cref_t =
-                meta::eval<std::add_lvalue_reference<
-                    meta::eval<std::add_const<meta::eval<std::remove_reference<T>>>>>>;
+                meta::eval<std::add_lvalue_reference<meta::eval<std::add_const<R>>>>;
 
             struct get_first;
             struct get_second;

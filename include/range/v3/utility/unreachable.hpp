@@ -74,17 +74,17 @@ namespace ranges
         };
 
         template<typename T, typename TQual, typename UQual>
-        struct common_reference_base<T, unreachable, TQual, UQual>
+        struct basic_common_reference<T, unreachable, TQual, UQual>
         {
             using type = common_iterator<T, unreachable>;
         };
         template<typename T, typename TQual, typename UQual>
-        struct common_reference_base<unreachable, T, TQual, UQual>
+        struct basic_common_reference<unreachable, T, TQual, UQual>
         {
             using type = common_iterator<T, unreachable>;
         };
         template<typename TQual, typename UQual>
-        struct common_reference_base<unreachable, unreachable, TQual, UQual>
+        struct basic_common_reference<unreachable, unreachable, TQual, UQual>
         {
             using type = decltype(true ? std::declval<meta::apply<TQual, unreachable>>()
                                        : std::declval<meta::apply<UQual, unreachable>>());

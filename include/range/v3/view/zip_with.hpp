@@ -240,13 +240,17 @@ namespace ranges
                 }
             };
 
-            using are_bounded_t = meta::and_c<(bool) BoundedRange<Rngs>()...>;
+            using end_cursor_t =
+                meta::if_<
+                    meta::and_c<!!BoundedRange<Rngs>()..., !SinglePass<Rngs>()...>,
+                    cursor,
+                    sentinel>;
 
             cursor begin_cursor()
             {
                 return {fun_, tuple_transform(rngs_, begin)};
             }
-            meta::if_<are_bounded_t, cursor, sentinel> end_cursor()
+            end_cursor_t end_cursor()
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }
@@ -256,7 +260,7 @@ namespace ranges
                 return {fun_, tuple_transform(rngs_, begin)};
             }
             CONCEPT_REQUIRES(meta::and_c<(bool) Range<Rngs const>()...>::value)
-            meta::if_<are_bounded_t, cursor, sentinel> end_cursor() const
+            end_cursor_t end_cursor() const
             {
                 return {fun_, tuple_transform(rngs_, end)};
             }

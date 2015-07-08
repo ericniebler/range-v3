@@ -721,13 +721,13 @@ namespace ranges
         /// \cond
         // This is so that writable postfix proxy objects satisfy Readability
         template<typename T, typename I, typename Qual1, typename Qual2>
-        struct common_reference_base<T, detail::writable_postfix_increment_proxy<I>, Qual1, Qual2>
-          : common_reference_base<T, iterator_value_t<I>, Qual1, qual::lvalue_ref_t>
+        struct basic_common_reference<T, detail::writable_postfix_increment_proxy<I>, Qual1, Qual2>
+          : basic_common_reference<T, iterator_value_t<I>, Qual1, qual::lvalue_ref_t>
         {};
 
         template<typename I, typename T, typename Qual1, typename Qual2>
-        struct common_reference_base<detail::writable_postfix_increment_proxy<I>, T, Qual1, Qual2>
-          : common_reference_base<iterator_value_t<I>, T, qual::lvalue_ref_t, Qual2>
+        struct basic_common_reference<detail::writable_postfix_increment_proxy<I>, T, Qual1, Qual2>
+          : basic_common_reference<iterator_value_t<I>, T, qual::lvalue_ref_t, Qual2>
         {};
         /// \endcond
     }
