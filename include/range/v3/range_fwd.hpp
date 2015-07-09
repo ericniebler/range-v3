@@ -27,7 +27,7 @@
 /// Core range functionality
 
 /// \defgroup group-algorithms Algorithms
-/// Itetator- and range-based algorithms, like the standard algorithms
+/// Iterator- and range-based algorithms, like the standard algorithms
 
 /// \defgroup group-views Views
 /// Lazy, non-owning, non-mutating, composable range views
