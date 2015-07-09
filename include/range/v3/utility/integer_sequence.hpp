@@ -15,7 +15,7 @@
 #define RANGES_V3_UTILITY_INTEGER_SEQUENCE_HPP
 
 #if defined(__GNUC__) || defined(__clang__)
-#  warning "This header is deprecated. Please use: meta/meta.hpp"
+#  pragma message "This header is deprecated. Please use: meta/meta.hpp"
 #endif
 
 #include <range/v3/range_fwd.hpp>
