@@ -238,7 +238,8 @@ namespace ranges
                 }
                 bool equal(cursor const &pos) const
                 {
-                    return its_ == pos.its_;
+                    return its_.is_valid() == pos.its_.is_valid() &&
+                        (!its_.is_valid() || its_ == pos.its_);
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool)BidirectionalRange<Rngs>()...>::value)
                 void prev()
