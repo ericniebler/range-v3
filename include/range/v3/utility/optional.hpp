@@ -27,43 +27,39 @@ namespace ranges
         struct optional
         {
         private:
-            tagged_variant<T, meta::nil_> data_;
+            tagged_variant<meta::nil_, T> data_;
         public:
             optional() = default;
             optional(T t)
-              : data_(meta::size_t<0>{}, std::move(t))
+              : data_(meta::size_t<1>{}, std::move(t))
             {}
             explicit operator bool() const
-            {
-                return data_.which() == 0;
-            }
-            bool operator!() const
             {
                 return data_.which() != 0;
             }
             T & operator*()
             {
-                RANGES_ASSERT(!!*this);
-                return ranges::get<0>(data_);
+                RANGES_ASSERT(*this);
+                return ranges::get<1>(data_);
             }
             T const & operator*() const
             {
-                RANGES_ASSERT(!!*this);
-                return ranges::get<0>(data_);
+                RANGES_ASSERT(*this);
+                return ranges::get<1>(data_);
             }
             optional &operator=(T const &t)
             {
-                ranges::set<0>(data_, t);
+                ranges::set<1>(data_, t);
                 return *this;
             }
             optional &operator=(T &&t)
             {
-                ranges::set<0>(data_, std::move(t));
+                ranges::set<1>(data_, std::move(t));
                 return *this;
             }
             void reset()
             {
-                ranges::set<1>(data_, meta::nil_{});
+                ranges::set<0>(data_);
             }
         };
     }

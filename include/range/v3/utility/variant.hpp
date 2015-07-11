@@ -44,7 +44,8 @@ namespace ranges
         struct tagged_variant_element;
 
         template<std::size_t N, typename Var>
-        using tagged_variant_element_t = typename tagged_variant_element<N, Var>::type;
+        using tagged_variant_element_t =
+            meta::_t<tagged_variant_element<N, Var>>;
 
         /// \cond
         namespace detail
@@ -67,11 +68,9 @@ namespace ranges
             template<>
             union variant_data<>
             {
-                [[noreturn]] void move(std::size_t, variant_data &&) const
-                {
-                    RANGES_ENSURE(false);
-                }
-                [[noreturn]] void copy(std::size_t, variant_data const &) const
+                template <typename That,
+                    CONCEPT_REQUIRES_(Same<variant_data,uncvref_t<That>>())>
+                [[noreturn]] void move_copy_construct(std::size_t, That &&) const
                 {
                     RANGES_ENSURE(false);
                 }
@@ -109,32 +108,26 @@ namespace ranges
             public:
                 variant_data()
                 {}
-                // BUGBUG in-place construction?
-                template<typename U,
-                    meta::if_<std::is_constructible<head_t, U>, int> = 0>
-                variant_data(meta::size_t<0>, U &&u)
-                  : head(std::forward<U>(u))
+                template<typename ...Args,
+                    CONCEPT_REQUIRES_(Constructible<head_t, Args...>())>
+                variant_data(meta::size_t<0>, Args && ...args)
+                  : head(std::forward<Args>(args)...)
                 {}
-                template<std::size_t N, typename U,
-                    meta::if_c<0 != N && std::is_constructible<tail_t, meta::size_t<N - 1>, U>::value, int> = 0>
-                variant_data(meta::size_t<N>, U &&u)
-                  : tail{meta::size_t<N - 1>{}, std::forward<U>(u)}
+                template<std::size_t N, typename ...Args,
+                    CONCEPT_REQUIRES_(0 != N && Constructible<tail_t, meta::size_t<N - 1>, Args...>())>
+                variant_data(meta::size_t<N>, Args && ...args)
+                  : tail{meta::size_t<N - 1>{}, std::forward<Args>(args)...}
                 {}
                 ~variant_data()
                 {}
-                void move(std::size_t n, variant_data &&that)
+                template <typename That,
+                    CONCEPT_REQUIRES_(Same<variant_data, decay_t<That>>())>
+                void move_copy_construct(std::size_t n, That &&that)
                 {
                     if(n == 0)
-                        ::new(static_cast<void *>(&head)) head_t(std::move(that).head);
+                        ::new(static_cast<void *>(&head)) head_t(std::forward<That>(that).head);
                     else
-                        tail.move(n - 1, std::move(that).tail);
-                }
-                void copy(std::size_t n, variant_data const &that)
-                {
-                    if(n == 0)
-                        ::new(static_cast<void *>(&head)) head_t(that.head);
-                    else
-                        tail.copy(n - 1, that.tail);
+                        tail.move_copy_construct(n - 1, std::forward<That>(that).tail);
                 }
                 template<typename U, typename...Us>
                 bool equal(std::size_t n, variant_data<U, Us...> const &that) const
@@ -145,12 +138,12 @@ namespace ranges
                         return tail.equal(n - 1, that.tail);
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{})
+                void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = {})
                 {
                     variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
                 template<typename Fun, std::size_t N = 0>
-                void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = meta::size_t<N>{}) const
+                void apply(std::size_t n, Fun &&fun, meta::size_t<N> u = {}) const
                 {
                     variant_data::apply_(*this, n, std::forward<Fun>(fun), u);
                 }
@@ -197,20 +190,30 @@ namespace ranges
             };
 
             // Is there a less dangerous way?
-            template<typename T>
+            template<typename...Ts>
             struct construct_fun : assert_otherwise
             {
             private:
-                T &&t_;
+                std::tuple<Ts...> t_;
+
+                template<typename U, std::size_t ...Is,
+                    CONCEPT_REQUIRES_(Constructible<U, Ts...>())>
+                void construct(U &u, meta::index_sequence<Is...>)
+                {
+                    ::new((void*)std::addressof(u)) U(std::get<Is>(std::move(t_))...);
+                }
             public:
-                construct_fun(T &&t)
-                  : t_(std::forward<T>(t))
+                construct_fun(Ts ...ts)
+                  : t_{std::forward<Ts>(ts)...}
                 {}
                 template<typename U,
-                    meta::if_<std::is_constructible<U, T>, int> = 0>
+                    CONCEPT_REQUIRES_(Constructible<U, Ts...>())>
                 void operator()(U &u) const
                 {
-                    ::new((void*)std::addressof(u)) U(std::forward<T>(t_));
+                    // HACKHACKHACK: "workaround" the fact that the visitation
+                    // design does not allow for mutable visitors.
+                    auto& hack = const_cast<construct_fun&>(*this);
+                    hack.construct(u, meta::make_index_sequence<sizeof...(Ts)>{});
                 }
             };
 
@@ -403,53 +406,59 @@ namespace ranges
                     which_ = (std::size_t)-1;
                 }
             }
-        public:
-            tagged_variant()
-              : which_((std::size_t)-1), data_{}
+
+            template <typename That,
+                CONCEPT_REQUIRES_(Same<tagged_variant, detail::decay_t<That>>())>
+            void assign_(That &&that)
+            {
+                if(that.is_valid())
+                {
+                    data_.move_copy_construct(that.which_, std::forward<That>(that).data_);
+                    which_ = that.which_;
+                }
+            }
+
+            struct empty_tag { };
+            tagged_variant(empty_tag)
+              : which_((std::size_t)-1)
             {}
-            template<std::size_t N, typename U,
-                meta::if_<std::is_constructible<data_t, meta::size_t<N>, U>, int> = 0>
-            tagged_variant(meta::size_t<N> n, U &&u)
-              : which_(N), data_{n, detail::forward<U>(u)}
+
+        public:
+            CONCEPT_REQUIRES(!Constructible<data_t, meta::size_t<0>>())
+            tagged_variant()
+              : tagged_variant{empty_tag{}}
+            {}
+            CONCEPT_REQUIRES(Constructible<data_t, meta::size_t<0>>())
+            tagged_variant()
+              : tagged_variant{meta::size_t<0>{}}
+            {}
+            template<std::size_t N, typename...Args,
+                CONCEPT_REQUIRES_(Constructible<data_t, meta::size_t<N>, Args...>())>
+            tagged_variant(meta::size_t<N> n, Args &&...args)
+              : which_(N), data_{n, detail::forward<Args>(args)...}
             {
                 static_assert(N < sizeof...(Ts), "");
             }
             tagged_variant(tagged_variant &&that)
-              : tagged_variant{}
+              : tagged_variant{empty_tag{}}
             {
-                if(that.is_valid())
-                {
-                    data_.move(that.which_, std::move(that).data_);
-                    which_ = that.which_;
-                }
+                assign_(std::move(that));
             }
             tagged_variant(tagged_variant const &that)
-              : tagged_variant{}
+              : tagged_variant{empty_tag{}}
             {
-                if(that.is_valid())
-                {
-                    data_.copy(that.which_, that.data_);
-                    which_ = that.which_;
-                }
+                assign_(that);
             }
             tagged_variant &operator=(tagged_variant &&that)
             {
                 clear_();
-                if(that.is_valid())
-                {
-                    data_.move(that.which_, std::move(that).data_);
-                    which_ = that.which_;
-                }
+                assign_(std::move(that));
                 return *this;
             }
             tagged_variant &operator=(tagged_variant const &that)
             {
                 clear_();
-                if(that.is_valid())
-                {
-                    data_.copy(that.which_, that.data_);
-                    which_ = that.which_;
-                }
+                assign_(that);
                 return *this;
             }
             ~tagged_variant()
@@ -460,12 +469,12 @@ namespace ranges
             {
                 return sizeof...(Ts);
             }
-            template<std::size_t N, typename U,
-                meta::if_<std::is_constructible<data_t, meta::size_t<N>, U>, int> = 0>
-            void set(U &&u)
+            template<std::size_t N, typename ...Args,
+                CONCEPT_REQUIRES_(Constructible<data_t, meta::size_t<N>, Args...>())>
+            void set(Args &&...args)
             {
                 clear_();
-                data_.apply(N, detail::make_unary_visitor(detail::construct_fun<U>{std::forward<U>(u)}));
+                data_.apply(N, detail::make_unary_visitor(detail::construct_fun<Args&&...>{std::forward<Args>(args)...}));
                 which_ = N;
             }
             bool is_valid() const
@@ -519,8 +528,8 @@ namespace ranges
             CONCEPT_REQUIRES_(meta::and_c<(bool)EqualityComparable<Ts, Us>()...>::value)>
         bool operator==(tagged_variant<Ts...> const &lhs, tagged_variant<Us...> const &rhs)
         {
-            RANGES_ASSERT(lhs.which() < sizeof...(Ts));
-            RANGES_ASSERT(rhs.which() < sizeof...(Us));
+            RANGES_ASSERT(lhs.is_valid());
+            RANGES_ASSERT(rhs.is_valid());
             return lhs.which() == rhs.which() &&
                 detail::variant_core_access::data(lhs).equal(lhs.which(), detail::variant_core_access::data(rhs));
         }
@@ -595,10 +604,10 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // set
-        template<std::size_t N, typename...Ts, typename U>
-        void set(tagged_variant<Ts...> &var, U &&u)
+        template<std::size_t N, typename...Ts, typename...Args>
+        void set(tagged_variant<Ts...> &var, Args &&...args)
         {
-            var.template set<N>(std::forward<U>(u));
+            var.template set<N>(std::forward<Args>(args)...);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
