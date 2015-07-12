@@ -145,7 +145,7 @@ namespace ranges
         namespace concepts
         {
             struct Readable
-              : refines<SemiRegular>
+              : refines<Movable, Constructible>
             {
                 // Associated types
                 template<typename I>
@@ -177,7 +177,7 @@ namespace ranges
             };
 
             struct MoveWritable
-              : refines<SemiRegular(_1)>
+              : refines<Movable(_1), Constructible(_1)>
             {
                 template<typename Out, typename T>
                 auto requires_(Out&& o, T&&) -> decltype(

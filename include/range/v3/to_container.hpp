@@ -18,7 +18,6 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/action/concepts.hpp>
 

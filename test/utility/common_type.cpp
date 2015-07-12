@@ -68,7 +68,7 @@ int main()
     >::value, "");
 
     static_assert(std::is_same<
-        detail::builtin_common_t<common_pair<int, int> const &, std::pair<int, int> &>,
+        detail::_builtin_common_t<common_pair<int, int> const &, std::pair<int, int> &>,
         std::pair<int, int> const &
     >::value, "");
 
@@ -79,17 +79,17 @@ int main()
 
     // Some tests with noncopyable types
     static_assert(std::is_same<
-        detail::builtin_common_t<noncopyable const &, noncopyable>,
+        detail::_builtin_common_t<noncopyable const &, noncopyable>,
         noncopyable
     >::value, "");
 
     static_assert(std::is_same<
-        detail::builtin_common_t<noncopyable2 const &, noncopyable>,
+        detail::_builtin_common_t<noncopyable2 const &, noncopyable>,
         noncopyable
     >::value, "");
 
     static_assert(std::is_same<
-        detail::builtin_common_t<noncopyable const &, noncopyable2>,
+        detail::_builtin_common_t<noncopyable const &, noncopyable2>,
         noncopyable
     >::value, "");
 }

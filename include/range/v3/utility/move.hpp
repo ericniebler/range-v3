@@ -60,7 +60,7 @@ namespace ranges
                 meta::if_<
                     std::is_reference<R>,
                     meta::_t<std::remove_reference<R>> &&,
-                    detail::decay_t<meta::_t<std::remove_reference<R>>>>;
+                    detail::decay_t<R>>;
         }
 
         /// \cond

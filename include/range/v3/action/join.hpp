@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_ACTION_JOIN_HPP
 #define RANGES_V3_ACTION_JOIN_HPP
 
+#include <vector>
 #include <functional>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
