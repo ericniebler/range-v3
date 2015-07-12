@@ -1,7 +1,3 @@
-# Copyright Eric Niebler 2013-2015
-# Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
-
 # Strange, need to use static linking here or tests fail.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")

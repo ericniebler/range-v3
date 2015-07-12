@@ -33,7 +33,7 @@ namespace ranges
             struct compressed_tuple_data;
 
             template<std::size_t...Is, typename...Ts>
-            struct compressed_tuple_data<meta::index_sequence<Is...>, Ts...>
+            struct compressed_tuple_data<index_sequence<Is...>, Ts...>
               : box<Ts, std::integral_constant<std::size_t, Is>>...
             {
                 constexpr compressed_tuple_data() = default;

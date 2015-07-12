@@ -14,7 +14,6 @@
 #ifndef RANGES_V3_VIEW_TRANSFORM_HPP
 #define RANGES_V3_VIEW_TRANSFORM_HPP
 
-#include <algorithm>
 #include <utility>
 #include <iterator>
 #include <functional>

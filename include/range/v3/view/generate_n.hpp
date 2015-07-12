@@ -25,7 +25,6 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/semiregular.hpp>
 
 namespace ranges
 {
