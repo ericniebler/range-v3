@@ -248,6 +248,7 @@
     <ClCompile Include="..\..\..\..\test\view\repeat.cpp" />
     <ClCompile Include="..\..\..\..\test\view\replace.cpp" />
     <ClCompile Include="..\..\..\..\test\view\replace_if.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\reverse.cpp" />
     <ClCompile Include="..\..\..\..\test\view\slice.cpp" />
     <ClCompile Include="..\..\..\..\test\view\split.cpp" />
     <ClCompile Include="..\..\..\..\test\view\stride.cpp" />

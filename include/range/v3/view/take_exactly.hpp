@@ -34,7 +34,8 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng, bool IsRandomAccess = RandomAccessRange<Rng>()>
+            template<typename Rng,
+                bool IsRandomAccessBounded = RandomAccessRange<Rng>() && BoundedRange<Rng>()>
             struct take_exactly_view_
               : view_facade<take_exactly_view<Rng>, finite>
             {

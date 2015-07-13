@@ -73,7 +73,7 @@ int main()
     has_type<int>(iter_move(begin(rng4)));
     models<concepts::View>(rng4);
     models<concepts::SizedView>(rng4);
-    models<concepts::BoundedView>(rng4);
+    models_not<concepts::BoundedView>(rng4);
     models<concepts::RandomAccessIterator>(begin(rng4));
     ::check_equal(rng4, {0,1,2,3,4,42,6,7,8,9});
 

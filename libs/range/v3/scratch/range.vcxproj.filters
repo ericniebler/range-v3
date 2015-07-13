@@ -648,6 +648,9 @@
     <ClCompile Include="..\..\..\..\test\action\shuffle.cpp">
       <Filter>Test Files\action</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\reverse.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">

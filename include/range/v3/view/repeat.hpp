@@ -59,8 +59,20 @@ namespace ranges
                 {
                     return false;
                 }
-                void next() const
+                bool equal(cursor const &) const
+                {
+                    return true;
+                }
+                void next()
                 {}
+                void prev()
+                {}
+                void advance(std::ptrdiff_t)
+                {}
+                std::ptrdiff_t distance_to(cursor const &) const
+                {
+                    return 0;
+                }
             };
             cursor begin_cursor() const
             {

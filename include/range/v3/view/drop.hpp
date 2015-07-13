@@ -49,10 +49,12 @@ namespace ranges
             Rng rng_;
             difference_type_ n_;
 
+            // RandomAccessRange == true
             range_iterator_t<Rng> get_begin_(std::true_type) const
             {
                 return next(ranges::begin(rng_), n_);
             }
+            // RandomAccessRange == false
             range_iterator_t<Rng> get_begin_(std::false_type)
             {
                 auto &begin_ = ranges::get<begin_tag>(*this);
@@ -60,8 +62,10 @@ namespace ranges
                     begin_ = next(ranges::begin(rng_), n_);
                 return *begin_;
             }
-            void dirty_(std::true_type)
+            // RandomAccessRange == true
+            void dirty_(std::true_type) const
             {}
+            // RandomAccessRange == false
             void dirty_(std::false_type)
             {
                 auto &begin_ = ranges::get<begin_tag>(*this);

@@ -78,7 +78,7 @@ int main()
     CHECK(size(rng3b) == 11u);
 
     auto rng4 = view::iota(10) | view::take(10);
-    ::models<concepts::BoundedView>(rng4);
+    ::models_not<concepts::BoundedView>(rng4);
     ::models<concepts::SizedView>(rng4);
     static_assert(!ranges::is_infinite<decltype(rng4)>::value, "");
     ::check_equal(rng4, {10, 11, 12, 13, 14, 15, 16, 17, 18, 19});

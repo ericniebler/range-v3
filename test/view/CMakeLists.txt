@@ -74,6 +74,9 @@ add_test(test.view.replace, view.replace)
 add_executable(view.replace_if replace_if.cpp)
 add_test(test.view.replace_if, view.replace_if)
 
+add_executable(view.reverse reverse.cpp)
+add_test(test.view.reverse, view.reverse)
+
 add_executable(view.slice slice.cpp)
 add_test(test.view.slice, view.slice)
 

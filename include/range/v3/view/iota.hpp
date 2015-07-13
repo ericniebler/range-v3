@@ -318,7 +318,7 @@ namespace ranges
             {
             private:
                 template<typename From>
-                static take_exactly_view<iota_view<From>>
+                static detail::take_exactly_view_<iota_view<From>, true>
                 impl(From from, From to, concepts::RandomAccessIncrementable *)
                 {
                     return {iota_view<From>{std::move(from)}, detail::iota_minus(to, from)};
@@ -341,7 +341,7 @@ namespace ranges
                     WeaklyIncrementable<From>() && EqualityComparable<From, To>(),
                     meta::if_<
                         meta::and_<RandomAccessIncrementable<From>, Same<From, To>>,
-                        take_exactly_view<iota_view<From>>,
+                        detail::take_exactly_view_<iota_view<From>, true>,
                         iota_view<From, To>>>
                 operator()(From from, To to) const
                     RANGES_IOTA_WARNING_MESSAGE("The meaning of view::iota(x,y) has changed! It is no "
@@ -379,7 +379,7 @@ namespace ranges
                 WeaklyIncrementable<From>() && EqualityComparable<From, To>(),
                 meta::if_<
                     meta::and_<RandomAccessIncrementable<From>, Same<From, To>>,
-                    take_exactly_view<iota_view<From>>,
+                    detail::take_exactly_view_<iota_view<From>, true>,
                     iota_view<From, To>>>
             iota_fn::operator()(From from, To to) const
             {
@@ -390,7 +390,7 @@ namespace ranges
             {
             private:
                 template<typename From>
-                static take_exactly_view<iota_view<From>>
+                static detail::take_exactly_view_<iota_view<From>, true>
                 impl(From from, From to, concepts::RandomAccessIncrementable *)
                 {
                     return {iota_view<From>{std::move(from)}, detail::iota_minus(to, from) + 1};
@@ -406,7 +406,7 @@ namespace ranges
                     CONCEPT_REQUIRES_(WeaklyIncrementable<From>() && EqualityComparable<From, To>())>
                 meta::if_<
                     meta::and_<RandomAccessIncrementable<From>, Same<From, To>>,
-                    take_exactly_view<iota_view<From>>,
+                    detail::take_exactly_view_<iota_view<From>, true>,
                     closed_iota_view<From, To>>
                 operator()(From from, To to) const
                 {
@@ -455,7 +455,7 @@ namespace ranges
                 template<typename Val>
                 meta::if_c<
                     (bool)Integral<Val>(),
-                    take_exactly_view<iota_view<Val> > >
+                    detail::take_exactly_view_<iota_view<Val>, true>>
                 operator()(Val from, Val to) const
                     RANGES_IOTA_WARNING_MESSAGE("The meaning of view::ints(x,y) has changed! It is no "
                         "longer a closed sequence that includes 'y'. It is a half-open sequence that "
@@ -484,7 +484,7 @@ namespace ranges
             template<typename Val>
             meta::if_c<
                 (bool)Integral<Val>(),
-                take_exactly_view<iota_view<Val>>>
+                detail::take_exactly_view_<iota_view<Val>, true>>
             ints_fn::operator()(Val from, Val to) const
             {
                 return {iota_view<Val>{from}, detail::iota_minus(to, from)};
@@ -494,7 +494,7 @@ namespace ranges
             {
                 template<typename Val,
                     CONCEPT_REQUIRES_(Integral<Val>())>
-                take_exactly_view<iota_view<Val>> operator()(Val from, Val to) const
+                detail::take_exactly_view_<iota_view<Val>, true> operator()(Val from, Val to) const
                 {
                     return {iota_view<Val>{from}, detail::iota_minus(to, from) + 1};
                 }
