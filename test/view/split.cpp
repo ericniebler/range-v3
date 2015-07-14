@@ -14,6 +14,7 @@
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/empty.hpp>
+#include <range/v3/view/remove_if.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -125,6 +126,16 @@ int main()
             check_equal(*(next(begin(rng),2)), c_str("o"));
             check_equal(*(next(begin(rng),3)), c_str("w"));
         }
+    }
+
+    {
+      int a[] = {0, 2, 3, 1, 4, 5, 1, 6, 7};
+      auto rng = a | view::remove_if([](int i) { return i % 2 == 0; });
+      auto srng = view::split(rng, 1);
+      CHECK(distance(srng) == 3);
+      check_equal(*begin(srng), {3});
+      check_equal(*next(begin(srng), 1), {5});
+      check_equal(*next(begin(srng), 2), {7});
     }
 
     return test_result();

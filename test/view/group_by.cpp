@@ -14,6 +14,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/group_by.hpp>
+#include <range/v3/view/remove_if.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
@@ -74,6 +75,13 @@ int main()
         CHECK(distance(rng1) == 2);
         check_equal(*rng1.begin(), {P{1,1},P{1,1},P{1,2},P{1,2},P{1,2},P{1,2}});
         check_equal(*next(rng1.begin()), {P{2,2},P{2,2},P{2,3},P{2,3},P{2,3},P{2,3}});
+    }
+
+    {
+        int a[] = {0, 1, 2, 3, 4, 5};
+        auto rng = a | view::remove_if([](int n) { return n % 2 == 0; })
+          | view::group_by([](int, int) { return true; });
+        check_equal(*rng.begin(), {1, 3, 5});
     }
 
     return test_result();
