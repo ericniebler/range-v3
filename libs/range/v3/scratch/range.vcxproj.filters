@@ -651,6 +651,9 @@
     <ClCompile Include="..\..\..\..\test\view\reverse.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\cycle.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
@@ -1321,6 +1324,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view_interface.hpp">
       <Filter>Header Files\range</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\cycle.hpp">
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

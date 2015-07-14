@@ -10,10 +10,10 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#include <array>
 #include <list>
-#include <forward_list>
+#include <array>
 #include <memory>
+#include <forward_list>
 #include <range/v3/range_for.hpp>
 #include <range/v3/algorithm/count_if.hpp>
 #include <range/v3/view/cycle.hpp>
@@ -25,7 +25,8 @@
 
 using namespace ranges;
 
-template <typename Rng> void test_const_forward_range(Rng const &rng)
+template<typename Rng>
+void test_const_forward_range(Rng const &rng)
 {
     auto r = rng | view::cycle;
     static_assert(is_infinite<decltype(r)>{}, "");
@@ -65,7 +66,8 @@ template <typename Rng> void test_const_forward_range(Rng const &rng)
     ::check_equal(r | view::take(7), {0, 1, 2, 0, 1, 2, 0});
 }
 
-template <typename Rng> void test_const_forward_reversed_range(Rng const &rng)
+template<typename Rng>
+void test_const_forward_reversed_range(Rng const &rng)
 {
     test_const_forward_range(rng);
 
@@ -108,7 +110,8 @@ template <typename Rng> void test_const_forward_reversed_range(Rng const &rng)
     ::check_equal(r | view::take(7), {2, 1, 0, 2, 1, 0, 2});
 }
 
-template <typename Rng> void test_mutable_forward_range_reversed(Rng &rng)
+template<typename Rng>
+void test_mutable_forward_range_reversed(Rng &rng)
 {
     test_const_forward_reversed_range(rng);
     int count = 2;
@@ -116,19 +119,21 @@ template <typename Rng> void test_mutable_forward_range_reversed(Rng &rng)
     ::check_equal(rng | view::take_exactly(3), {6, 7, 8});
 }
 
-template <typename Rng> void test_forward_it(Rng const &rng)
+template<typename Rng>
+void test_forward_it(Rng const &rng)
 {
-  auto r = rng | view::cycle;
-  static_assert(ForwardRange<decltype(r)>{}, "");
-  auto f = begin(r);
-  static_assert(ForwardIterator<decltype(f)>{}, "");
+    auto r = rng | view::cycle;
+    static_assert(ForwardRange<decltype(r)>{}, "");
+    auto f = begin(r);
+    static_assert(ForwardIterator<decltype(f)>{}, "");
 
-  CHECK((*f) == 0);
-  auto n = next(f, 1);
-  CHECK((*n) == 1);
+    CHECK((*f) == 0);
+    auto n = next(f, 1);
+    CHECK((*n) == 1);
 }
 
-template <typename Rng> void test_bidirectional_it(Rng const &rng)
+template<typename Rng>
+void test_bidirectional_it(Rng const &rng)
 {
     test_forward_it(rng);
     auto r = rng | view::cycle;
@@ -145,7 +150,8 @@ template <typename Rng> void test_bidirectional_it(Rng const &rng)
     CHECK((--n) == f);
 }
 
-template <typename Rng> void test_random_access_it(Rng const &rng)
+template<typename Rng>
+void test_random_access_it(Rng const &rng)
 {
     test_bidirectional_it(rng);
     auto r = rng | view::cycle;
@@ -227,7 +233,6 @@ template <typename Rng> void test_random_access_it(Rng const &rng)
 
 int main()
 {
-
     // initializer list
     {
         auto il = {0, 1, 2};
@@ -263,13 +268,13 @@ int main()
 
     // forward list
     {
-      std::forward_list<int> l = {0, 1, 2};
-      test_forward_it(l);
-      test_const_forward_range(l);
+        std::forward_list<int> l = {0, 1, 2};
+        test_forward_it(l);
+        test_const_forward_range(l);
 
-      const std::forward_list<int> cl = {0, 1, 2};
-      test_forward_it(cl);
-      test_const_forward_range(cl);
+        const std::forward_list<int> cl = {0, 1, 2};
+        test_forward_it(cl);
+        test_const_forward_range(cl);
     }
 
     // move-only types
@@ -286,16 +291,17 @@ int main()
 
     // infinite
     {
-      int count = 0;
-      auto il = {0, 1, 2};
-      auto v = 10;
-      RANGES_FOR(auto&& i, il | view::cycle) {
-        if (count == 42) { break; }
-        v = i;
-        ++count;
-      }
-      CHECK(count == 42);
-      CHECK(v == 2);
+        int count = 0;
+        auto il = {0, 1, 2};
+        auto v = 10;
+        RANGES_FOR(auto&& i, il | view::cycle)
+        {
+            if (count == 42) { break; }
+            v = i;
+            ++count;
+        }
+        CHECK(count == 42);
+        CHECK(v == 2);
     }
 
     return test_result();

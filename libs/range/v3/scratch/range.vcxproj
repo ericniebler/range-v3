@@ -231,6 +231,7 @@
     <ClCompile Include="..\..\..\..\test\view\concat.cpp" />
     <ClCompile Include="..\..\..\..\test\view\const.cpp" />
     <ClCompile Include="..\..\..\..\test\view\counted.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\cycle.cpp" />
     <ClCompile Include="..\..\..\..\test\view\delimit.cpp" />
     <ClCompile Include="..\..\..\..\test\view\drop.cpp" />
     <ClCompile Include="..\..\..\..\test\view\drop_while.cpp" />
@@ -434,6 +435,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\concat.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\const.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\counted.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\cycle.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\c_str.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\delimit.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\drop.hpp" />

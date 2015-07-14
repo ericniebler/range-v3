@@ -25,6 +25,7 @@
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/chunk.hpp>
+#include <range/v3/view/cycle.hpp>
 #include <range/v3/view/delimit.hpp>
 #include <range/v3/view/drop.hpp>
 #include <range/v3/view/drop_while.hpp>

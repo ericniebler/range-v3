@@ -15,7 +15,7 @@
 
 #ifndef RANGES_V3_VIEW_CYCLE_HPP
 #define RANGES_V3_VIEW_CYCLE_HPP
-#include <utility>
+
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
@@ -32,38 +32,27 @@
 
 namespace ranges
 {
-
     inline namespace v3
     {
-
         /// \addtogroup group-views
         ///@{
-        template <typename Rng>
-        struct cycled_view : view_facade<cycled_view<Rng>, infinite>
+        template<typename Rng>
+        struct cycled_view
+          : view_facade<cycled_view<Rng>, infinite>
         {
-
         private:
             CONCEPT_ASSERT(ForwardRange<Rng>());
             friend range_access;
             Rng rng_;
 
-        public:
-            cycled_view() = default;
-            explicit cycled_view(Rng rng) : rng_(std::move(rng))
-            {
-            }
-
-        private:
-            template <bool IsConst>
+            template<bool IsConst>
             struct cursor
             {
             private:
-                template <typename T>
+                template<typename T>
                 using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
                 using cycled_view_t = constify_if<cycled_view>;
-            public:
-                using difference_type = range_difference_t<Rng>;
-                using reference = range_reference_t<constify_if<Rng>>;
+                using difference_type_ = range_difference_t<Rng>;
 
             private:
                 cycled_view_t *rng_;
@@ -72,80 +61,47 @@ namespace ranges
             public:
                 cursor() = default;
                 explicit cursor(cycled_view_t &rng)
-                    : rng_(&rng), it_(ranges::begin(rng.rng_))
-                {
-                }
-
+                  : rng_(&rng), it_(ranges::begin(rng.rng_))
+                {}
                 constexpr bool done() const
                 {
                     return false;
                 }
-
-                reference current() const
-                {
-                    return *it_;
-                }
-
-                void next()
-                {
-                    const auto end = ranges::end(rng_->rng_);
-                    if (it_ != end)
-                    {
-                        ++it_;
-                    }
-                    if (it_ == end)
-                    {
-                        it_ = ranges::begin(rng_->rng_);
-                    }
-                }
-
+                auto current() const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    *it_
+                )
                 bool equal(cursor const &pos) const
                 {
                     RANGES_ASSERT(rng_ == pos.rng_);
                     return it_ == pos.it_;
                 }
-
+                void next()
+                {
+                    auto const end = ranges::end(rng_->rng_);
+                    RANGES_ASSERT(it_ != end);
+                    if(++it_ == end)
+                        it_ = ranges::begin(rng_->rng_);
+                }
                 CONCEPT_REQUIRES(BidirectionalRange<Rng>{})
                 void prev()
                 {
-                    if (it_ == ranges::begin(rng_->rng_))
-                    {
+                    if(it_ == ranges::begin(rng_->rng_))
                         it_ = ranges::end(rng_->rng_);
-                    }
                     --it_;
                 }
-
                 CONCEPT_REQUIRES(RandomAccessRange<Rng>())
-                void advance(difference_type n)
+                void advance(difference_type_ n)
                 {
-                    if (n == difference_type{0})
-                    {
-                        return;
-                    }
-
-                    const auto begin = ranges::begin(rng_->rng_);
-                    const auto end = ranges::end(rng_->rng_);
-
-                    auto const N = end - begin;
-                    if (N == 0)
-                    {
-                        return;
-                    }
-
-                    auto pos = it_ - (begin + n);
-                    if (pos < 0 || pos >= N)
-                    {
-                      pos %= N;
-                      if (pos < 0)
-                      {
-                        pos += N;
-                      }
-                    }
-                    it_ = begin + pos;
+                    auto const begin = ranges::begin(rng_->rng_);
+                    auto const end = ranges::end(rng_->rng_);
+                    auto const d = end - begin;
+                    auto off = ((it_ - begin) + n) % d;
+                    it_ = begin + (off < 0 ? off + d : off);
                 }
-
                 CONCEPT_REQUIRES(RandomAccessRange<Rng>())
-                difference_type distance_to(cursor const &that) const
+                difference_type_ distance_to(cursor const &that) const
                 {
                     RANGES_ASSERT(that.rng_ == rng_);
                     return that.it_ - it_;
@@ -156,31 +112,39 @@ namespace ranges
             {
                 return cursor<false>{*this};
             }
+            CONCEPT_REQUIRES(Range<Rng const>())
             cursor<true> begin_cursor() const
             {
                 return cursor<true>{*this};
+            }
+
+        public:
+            cycled_view() = default;
+            explicit cycled_view(Rng rng)
+              : rng_(std::move(rng))
+            {
+                RANGES_ASSERT(ranges::distance(rng) != 0);
             }
         };
 
         namespace view
         {
-
             struct cycle_fn
             {
             private:
                 friend view_access;
-                template <class T>
+                template<class T>
                 using Concept = meta::and_<ForwardRange<T>, BoundedRange<T>>;
 
             public:
-                template <typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
                 cycled_view<all_t<Rng>> operator()(Rng &&rng) const
                 {
                     return cycled_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
 
 #ifndef RANGES_DOXYGEN_INVOKED
-                template <typename Rng, CONCEPT_REQUIRES_(!Concept<Rng>())>
+                template<typename Rng, CONCEPT_REQUIRES_(!Concept<Rng>())>
                 void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
@@ -195,13 +159,14 @@ namespace ranges
 
             /// \relates cycle_fn
             /// \ingroup group-views
-           namespace
-           {
-               constexpr auto &&cycle = static_const<view<cycle_fn>>::value;
-           }
+            namespace
+            {
+                constexpr auto &&cycle = static_const<view<cycle_fn>>::value;
+            }
 
        } // namespace view
        /// @}
     } // namespace v3
 } // namespace ranges
+
 #endif
