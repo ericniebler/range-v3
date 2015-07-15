@@ -94,7 +94,7 @@ namespace ranges
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
             }
             CONCEPT_REQUIRES(Callable<Fun const, range_common_reference_t<Rng>,
-                range_common_reference_t<Rng>>())
+                range_common_reference_t<Rng>>() && Range<Rng const>())
             cursor<true> begin_cursor() const
             {
                 return {fun_, ranges::begin(rng_), ranges::end(rng_)};
