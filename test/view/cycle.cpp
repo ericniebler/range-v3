@@ -20,6 +20,7 @@
 #include <range/v3/view/take.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/c_str.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
@@ -302,6 +303,26 @@ int main()
         }
         CHECK(count == 42);
         CHECK(v == 2);
+    }
+
+    // non-bounded
+    {
+        auto sz = view::c_str((char const *)"hi! ");
+        ::check_equal(
+            sz | view::cycle | view::take(10),
+            {'h','i','!',' ','h','i','!',' ','h','i'} );
+
+        auto rng = sz | view::cycle;
+        auto it = ranges::begin(rng);
+        CHECK(*it == 'h');
+        CHECK(*++it == 'i');
+        CHECK(*++it == '!');
+        CHECK(*++it == ' ');
+        CHECK(*++it == 'h');
+        CHECK(*--it == ' ');
+        CHECK(*--it == '!');
+        CHECK(*--it == 'i');
+        CHECK(*--it == 'h');
     }
 
     return test_result();

@@ -322,24 +322,19 @@ namespace ranges
                     I>;
 
             template<typename Cur, typename Enable = void>
-            struct has_mixin
-              : std::false_type
-            {};
+            struct mixin_base_
+            {
+                using type = basic_mixin<Cur>;
+            };
 
             template<typename Cur>
-            struct has_mixin<Cur, meta::void_<typename Cur::mixin>>
-              : std::true_type
-            {};
-
-            template<typename Cur>
-            struct get_mixin
+            struct mixin_base_<Cur, meta::void_<typename Cur::mixin>>
             {
                 using type = typename Cur::mixin;
             };
 
             template<typename Cur>
-            using mixin_base =
-                meta::_t<meta::if_<has_mixin<Cur>, get_mixin<Cur>, meta::id<basic_mixin<Cur>>>>;
+            using mixin_base = meta::_t<mixin_base_<Cur>>;
 
             auto iter_cat(range_access::InputCursorConcept*) ->
                 ranges::input_iterator_tag;
@@ -361,7 +356,10 @@ namespace ranges
         private:
             T t_;
         public:
-            constexpr basic_mixin() = default;
+            CONCEPT_REQUIRES(Constructible<T>())
+            constexpr basic_mixin()
+              : t_{}
+            {}
             RANGES_CXX14_CONSTEXPR
             basic_mixin(T t)
               : t_(std::move(t))

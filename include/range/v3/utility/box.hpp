@@ -18,9 +18,9 @@
 #include <utility>
 #include <cstdlib>
 #include <type_traits>
-#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/get.hpp>
+#include <range/v3/utility/concepts.hpp>
 
 namespace ranges
 {
@@ -33,7 +33,10 @@ namespace ranges
         struct mutable_
         {
             mutable T value;
-            constexpr mutable_() = default;
+            CONCEPT_REQUIRES(Constructible<T>())
+            constexpr mutable_()
+              : value{}
+            {}
             constexpr explicit mutable_(T const &t)
               : value(t)
             {}
@@ -130,10 +133,13 @@ namespace ranges
         {
             Element value;
 
-            box() = default;
+            CONCEPT_REQUIRES(Constructible<Element>())
+            constexpr box()
+              : value{}
+            {}
 
             template<typename E,
-                meta::if_<std::is_constructible<Element, E &&>, int> = 0>
+                CONCEPT_REQUIRES_(Constructible<Element, E &&>())>
             constexpr explicit box(E && e)
               : value(detail::forward<E>(e))
             {}
@@ -143,10 +149,13 @@ namespace ranges
         struct box<Element, Tag, true>
           : Element
         {
-            box() = default;
+            CONCEPT_REQUIRES(Constructible<Element>())
+            constexpr box()
+              : Element{}
+            {}
 
             template<typename E,
-                meta::if_<std::is_constructible<Element, E &&>, int> = 0>
+                CONCEPT_REQUIRES_(Constructible<Element, E &&>())>
             constexpr explicit box(E && e)
               : Element(detail::forward<E>(e))
             {}
