@@ -323,6 +323,11 @@ int main()
         CHECK(*--it == '!');
         CHECK(*--it == 'i');
         CHECK(*--it == 'h');
+
+        rng = sz | view::cycle;
+        it = ranges::begin(rng);
+        it += 4;
+        CHECK(*it == 'h');
     }
 
     return test_result();

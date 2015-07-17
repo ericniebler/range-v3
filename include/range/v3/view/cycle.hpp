@@ -81,14 +81,18 @@ namespace ranges
                 cycled_view_t *rng_;
                 range_iterator_t<constify_if<Rng>> it_;
 
-                range_iterator_t<constify_if<Rng>> get_end_(std::true_type) const
+                range_iterator_t<constify_if<Rng>> get_end_(std::true_type, bool = false) const
                 {
                     return ranges::end(rng_->rng_);
                 }
-                range_iterator_t<constify_if<Rng>> get_end_(std::false_type) const
+                template<bool CanBeEmpty = false>
+                range_iterator_t<constify_if<Rng>> get_end_(std::false_type, meta::bool_<CanBeEmpty> = {}) const
                 {
-                    RANGES_ASSERT(ranges::get<end_tag>(*rng_));
-                    return *ranges::get<end_tag>(*rng_);
+                    auto &end_ = ranges::get<end_tag>(*rng_);
+                    RANGES_ASSERT(CanBeEmpty || end_);
+                    if(CanBeEmpty && !end_)
+                        end_ = ranges::next(it_, ranges::end(rng_->rng_));
+                    return *end_;
                 }
                 void set_end_(std::true_type) const
                 {}
@@ -140,7 +144,7 @@ namespace ranges
                 void advance(difference_type_ n)
                 {
                     auto const begin = ranges::begin(rng_->rng_);
-                    auto const end = ranges::end(rng_->rng_);
+                    auto const end = this->get_end_(BoundedRange<Rng>(), meta::bool_<true>());
                     auto const d = end - begin;
                     auto const off = ((it_ - begin) + n) % d;
                     it_ = begin + (off < 0 ? off + d : off);
