@@ -36,9 +36,9 @@ int main()
     ::check_equal(rng0, {9,8,7,6,5,4,3,2,1,0});
     ::check_equal(rng0 | view::reverse, {0,1,2,3,4,5,6,7,8,9});
 
-    // Reverse another random-access, bounded, sized range
+    // Reverse another random-access, non-bounded, sized range
     auto cnt = view::counted(rgv.begin(), 10);
-    models<concepts::BoundedRange>(cnt);
+    models_not<concepts::BoundedRange>(cnt);
     auto const rng1 = rgv | view::reverse;
     models<concepts::View>(rng1);
     models<concepts::RandomAccessRange>(rng1);
@@ -48,7 +48,7 @@ int main()
     ::check_equal(rng1, {9,8,7,6,5,4,3,2,1,0});
     ::check_equal(rng1 | view::reverse, {0,1,2,3,4,5,6,7,8,9});
     
-    // Reverse a random-access, weak, non-sized range
+    // Reverse a random-access, non-bounded, non-sized range
     auto sz = view::c_str((char const*)"hello");
     auto rng2 = sz | view::reverse;
     models<concepts::View>(rng2);

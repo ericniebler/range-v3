@@ -202,28 +202,29 @@ namespace ranges
                 auto requires_(I&&, O&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
-                        concepts::model_of<SemiRegular, O>(),
-                        concepts::model_of<Convertible, Readable::rvalue_reference_t<I> &&,
-                            Readable::value_t<I>>(),
+                        concepts::model_of<Movable, Readable::value_t<I>>(),
+                        concepts::model_of<Constructible, Readable::value_t<I>,
+                            Readable::rvalue_reference_t<I> &&>(),
+                        concepts::model_of<Assignable, Readable::value_t<I> &,
+                            Readable::rvalue_reference_t<I> &&>(),
                         concepts::model_of<MoveWritable, O, Readable::rvalue_reference_t<I> &&>(),
                         concepts::model_of<MoveWritable, O, Readable::value_t<I> &&>()
                     ));
             };
 
-            // BUGBUG shouldn't this also require that I's value type is Semiregular?
-            // See unique_copy for InputIterators.
             struct IndirectlyCopyable
               : refines<IndirectlyMovable>
             {
                 template<typename I, typename O>
                 auto requires_(I&&, O&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Readable, I>(),
-                        concepts::model_of<SemiRegular, O>(),
-                        concepts::model_of<Convertible, Readable::reference_t<I> &&,
-                            Readable::value_t<I>>(),
+                        concepts::model_of<Copyable, Readable::value_t<I>>(),
+                        concepts::model_of<Constructible, Readable::value_t<I>,
+                            Readable::reference_t<I> &&>(),
+                        concepts::model_of<Assignable, Readable::value_t<I> &,
+                            Readable::reference_t<I> &&>(),
                         concepts::model_of<Writable, O, Readable::reference_t<I> &&>(),
-                        concepts::model_of<Writable, O, Readable::common_reference_t<I> &&>(),
+                        concepts::model_of<Writable, O, Readable::common_reference_t<I> &&>(), // BUGBUG why this?
                         concepts::model_of<Writable, O, Readable::value_t<I> const &>()
                     ));
             };

@@ -64,18 +64,19 @@ namespace ranges
         {
             struct counted_fn
             {
-                template<typename I, CONCEPT_REQUIRES_(!RandomAccessIterator<I>())>
+                template<typename I,
+                    CONCEPT_REQUIRES_(WeakIterator<I>())>
                 counted_view<I> operator()(I it, iterator_difference_t<I> n) const
                 {
-                    // Nothing wrong with a weak counted output iterator!
-                    CONCEPT_ASSERT(WeakIterator<I>());
                     return {std::move(it), n};
                 }
-
-                template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-                range<I> operator()(I it, iterator_difference_t<I> n) const
+                // TODO Once we support contiguous iterators, we can generalize this.
+                // (Note: it's not possible for RandomAccessIterators in general because
+                // of cyclic iterators.
+                template<typename T>
+                range<T*> operator()(T *t, std::ptrdiff_t n) const
                 {
-                    return {it, it + n};
+                    return {t, t + n};
                 }
             };
 

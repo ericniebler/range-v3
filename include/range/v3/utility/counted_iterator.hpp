@@ -81,14 +81,6 @@ namespace ranges
                 I it_;
                 D n_;
 
-                bool equal_(counted_cursor const &that, concepts::WeakIterator*) const
-                {
-                    return n_ == that.n_;
-                }
-                bool equal_(counted_cursor const &that, concepts::Iterator*) const
-                {
-                    return it_ == that.it_;
-                }
                 // Overload the advance algorithm for counted_iterators.
                 // This is much faster. This gets found by ADL because
                 // counted_cursor is an associated type of counted_iterator.
@@ -111,7 +103,9 @@ namespace ranges
                     return {i, j.count() - n};
                 }
             public:
-                counted_cursor() = default;
+                counted_cursor()
+                  : it_{}, n_{}
+                {}
                 counted_cursor(I it, D n)
                   : it_(std::move(it)), n_(n)
                 {}
@@ -129,10 +123,10 @@ namespace ranges
                     ++it_;
                     --n_;
                 }
-                CONCEPT_REQUIRES(EqualityComparable<D>() || Iterator<I>())
+                CONCEPT_REQUIRES(EqualityComparable<D>())
                 bool equal(counted_cursor const &that) const
                 {
-                    return this->equal_(that, iterator_concept_{});
+                    return n_ == that.n_;
                 }
                 CONCEPT_REQUIRES(BidirectionalIterator<I>())
                 void prev()
@@ -150,7 +144,7 @@ namespace ranges
                 iterator_difference_t<I>
                 distance_to(counted_cursor<I> const &that) const
                 {
-                    return that.it_ - it_;
+                    return n_ - that.n_;
                 }
                 I base() const
                 {

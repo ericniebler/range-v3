@@ -141,12 +141,10 @@ int main()
         using I = std::vector<std::string>::iterator;
 
         auto fun = overload(
-            [](I i, I j) -> std::tuple<std::string&, std::string&> {return std::tie(*i, *j);},
-            [](copy_tag, I i, I j) -> std::tuple<std::string, std::string> {return {};},
-            [](move_tag, I i, I j) -> std::tuple<std::string&&, std::string&&> {
-                return std::tuple<std::string&&, std::string&&>{std::move(*i), std::move(*j)};
-            }
-        );
+            [](I i, I j)           { return std::tie(*i, *j); },
+            [](copy_tag, I i, I j) { return std::tuple<std::string, std::string>{}; },
+            [](move_tag, I i, I j) { return std::tuple<std::string&&, std::string&&>{
+                std::move(*i), std::move(*j)}; } );
 
         auto rng = view::iter_transform(v0, v1, fun);
         using R = decltype(rng);
