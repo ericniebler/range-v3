@@ -91,7 +91,7 @@ namespace ranges
             constexpr repeat_n_view(Val value, std::ptrdiff_t n)
               : value_(detail::move(value)), n_(n)
             {
-                RANGES_ASSERT(0 <= n_)
+                RANGES_ASSERT(0 <= n_);
             }
             constexpr std::size_t size() const
             {
