@@ -89,10 +89,8 @@ namespace ranges
         public:
             repeat_n_view() = default;
             constexpr repeat_n_view(Val value, std::ptrdiff_t n)
-              : value_(detail::move(value)), n_(n)
-            {
-                RANGES_ASSERT(0 <= n_)
-            }
+              : value_(detail::move(value)), n_((RANGES_ASSERT(0 <= n), n))
+            {}
             constexpr std::size_t size() const
             {
                 return static_cast<std::size_t>(n_);
