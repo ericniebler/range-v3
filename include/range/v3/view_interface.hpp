@@ -37,7 +37,7 @@ namespace ranges
                 From from;
                 To to;
                 template<typename F, typename T,
-                    CONCEPT_REQUIRES_(Convertible<F, From>() && Convertible<T, To>())>
+                    CONCEPT_REQUIRES_(ConvertibleTo<F, From>() && ConvertibleTo<T, To>())>
                 slice_bounds(F from, T to)
                   : from(from), to(to)
                 {}
@@ -49,7 +49,7 @@ namespace ranges
                 Int dist_;
 
                 template<typename Other,
-                    CONCEPT_REQUIRES_(Integral<Other>() && Convertible<Other, Int>())>
+                    CONCEPT_REQUIRES_(Integral<Other>() && ExplicitlyConvertibleTo<Other, Int>())>
                 operator from_end_<Other> () const
                 {
                     return {static_cast<Other>(dist_)};

@@ -43,7 +43,7 @@ namespace ranges
                 Range<Cont>,
                 meta::not_<View<Cont>>,
                 Movable<Cont>,
-                Convertible<range_value_t<Rng>, range_value_t<Cont>>,
+                ConvertibleTo<range_value_t<Rng>, range_value_t<Cont>>,
                 Constructible<Cont, I, I>>;
 
             template<typename ContainerMetafunctionClass>

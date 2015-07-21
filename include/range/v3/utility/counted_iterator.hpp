@@ -32,8 +32,7 @@ namespace ranges
             using UnambiguouslyConvertible =
                 meta::or_c<
                     (bool)Same<A, B>(),
-                    Convertible<A, B>() && !Convertible<B, A>(),
-                    Convertible<B, A>() && !Convertible<A, B>()>;
+                    ConvertibleTo<A, B>() == !ConvertibleTo<B, A>()>;
 
             template<typename A, typename B>
             using UnambiguouslyConvertibleType =
@@ -42,10 +41,10 @@ namespace ranges
                         (bool)Same<A, B>(),
                         meta::id<A>,
                         meta::if_c<
-                            Convertible<A, B>() && !Convertible<B, A>(),
+                            ConvertibleTo<A, B>() && !ConvertibleTo<B, A>(),
                             meta::id<A>,
                             meta::if_c<
-                                Convertible<B, A>() && !Convertible<A, B>(),
+                                ConvertibleTo<B, A>() && !ConvertibleTo<A, B>(),
                                 meta::id<B>,
                                 meta::nil_>>>>;
 
@@ -110,7 +109,7 @@ namespace ranges
                   : it_(std::move(it)), n_(n)
                 {}
                 template<typename OtherI, typename OtherD,
-                    CONCEPT_REQUIRES_(Convertible<OtherI, I>() && Convertible<OtherD, D>())>
+                    CONCEPT_REQUIRES_(ConvertibleTo<OtherI, I>() && ConvertibleTo<OtherD, D>())>
                 counted_cursor(counted_cursor<OtherI, OtherD> that)
                   : it_(std::move(that.it_)), n_(std::move(that.n_))
                 {}

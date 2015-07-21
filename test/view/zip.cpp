@@ -86,7 +86,7 @@ int main()
         CONCEPT_ASSERT(Same<
             range_rvalue_reference_t<Rng>,
             common_tuple<int &&, std::string const &&, std::string const &&>>());
-        CONCEPT_ASSERT(Convertible<range_value_t<Rng> &&,
+        CONCEPT_ASSERT(ConvertibleTo<range_value_t<Rng> &&,
             range_rvalue_reference_t<Rng>>());
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));

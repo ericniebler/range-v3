@@ -55,9 +55,9 @@ namespace ranges
             template<typename I, typename S, typename Gen,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
                     Permutable<I>() && UniformRandomNumberGenerator<Gen>() &&
-                    Convertible<
+                    ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        concepts::WeaklyIncrementable::difference_t<I>>())>
+                        iterator_difference_t<I>>())>
             I operator()(I begin, S end_, Gen && gen) const
             {
                 I end = ranges::next(begin, end_), orig = end;
@@ -79,9 +79,9 @@ namespace ranges
             template<typename Rng, typename Gen,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Permutable<I>() &&
-                    UniformRandomNumberGenerator<Gen>() && Convertible<
+                    UniformRandomNumberGenerator<Gen>() && ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        concepts::WeaklyIncrementable::difference_t<I>>())>
+                        iterator_difference_t<I>>())>
             range_safe_iterator_t<Rng> operator()(Rng &&rng, Gen && rand) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));

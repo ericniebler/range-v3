@@ -162,8 +162,7 @@ namespace ranges
                 using difference_type =
                     common_type_t<range_difference_t<Rngs>...>;
                 using single_pass =
-                    meta::or_c<(bool) Derived<ranges::input_iterator_tag,
-                        range_category_t<Rngs>>()...>;
+                    meta::or_c<(bool) SinglePass<range_iterator_t<Rngs>>()...>;
                 using value_type =
                     detail::decay_t<decltype(fun_(copy_tag{}, range_iterator_t<Rngs>{}...))>;
 

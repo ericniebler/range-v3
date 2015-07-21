@@ -52,9 +52,9 @@ namespace ranges
                             concepts::model_of<concepts::RandomAccessRange, Rng>(),
                             concepts::is_true(Permutable<I>()),
                             concepts::is_true(UniformRandomNumberGenerator<Gen>()),
-                            concepts::is_true(Convertible<
+                            concepts::is_true(ConvertibleTo<
                                 concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                                concepts::WeaklyIncrementable::difference_t<I>>())
+                                iterator_difference_t<I>>())
                         ));
                 };
 
@@ -85,9 +85,9 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(UniformRandomNumberGenerator<Gen>(),
                         "The generator passed to action::shuffle must fulfill the "
                         "UniformRandomNumberGenerator concept.");
-                    CONCEPT_ASSERT_MSG(Convertible<
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
-                        concepts::WeaklyIncrementable::difference_t<I>>(),
+                        iterator_difference_t<I>>(),
                         "The random generator passed to action::shuffle has to have a return type "
                         "convertible to the container iterator difference type.");
                 }

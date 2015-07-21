@@ -28,7 +28,7 @@ struct cursor
     };
     cursor() = default;
     explicit cursor(I i) : it_(i) {}
-    template<class J, CONCEPT_REQUIRES_(ranges::Convertible<J, I>())>
+    template<class J, CONCEPT_REQUIRES_(ranges::ConvertibleTo<J, I>())>
     cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
     auto current() const -> decltype(*it_) { return *it_; }
