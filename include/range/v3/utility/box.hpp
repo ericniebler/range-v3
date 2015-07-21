@@ -33,7 +33,7 @@ namespace ranges
         struct mutable_
         {
             mutable T value;
-            CONCEPT_REQUIRES(Constructible<T>())
+            CONCEPT_REQUIRES(DefaultConstructible<T>())
             constexpr mutable_()
               : value{}
             {}
@@ -133,7 +133,7 @@ namespace ranges
         {
             Element value;
 
-            CONCEPT_REQUIRES(Constructible<Element>())
+            CONCEPT_REQUIRES(DefaultConstructible<Element>())
             constexpr box()
               : value{}
             {}
@@ -149,7 +149,7 @@ namespace ranges
         struct box<Element, Tag, true>
           : Element
         {
-            CONCEPT_REQUIRES(Constructible<Element>())
+            CONCEPT_REQUIRES(DefaultConstructible<Element>())
             constexpr box()
               : Element{}
             {}
