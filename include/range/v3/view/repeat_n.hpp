@@ -40,16 +40,16 @@ namespace ranges
         private:
             friend range_access;
             Val value_;
-            std::size_t n_;
+            std::ptrdiff_t n_;
 
             struct cursor
             {
             private:
                 Val value_;
-                std::size_t n_;
+                std::ptrdiff_t n_;
             public:
                 cursor() = default;
-                cursor(Val value, std::size_t n)
+                cursor(Val value, std::ptrdiff_t n)
                   : value_(std::move(value)), n_(n)
                 {}
                 Val current() const
@@ -69,6 +69,18 @@ namespace ranges
                     RANGES_ASSERT(0 != n_);
                     --n_;
                 }
+                void prev()
+                {
+                    ++n_;
+                }
+                void advance(std::ptrdiff_t n)
+                {
+                    n_ -= n;
+                }
+                std::ptrdiff_t distance_to(cursor const &that) const
+                {
+                    return n_ - that.n_;
+                }
             };
             cursor begin_cursor() const
             {
@@ -76,12 +88,14 @@ namespace ranges
             }
         public:
             repeat_n_view() = default;
-            constexpr repeat_n_view(Val value, std::size_t n)
+            constexpr repeat_n_view(Val value, std::ptrdiff_t n)
               : value_(detail::move(value)), n_(n)
-            {}
+            {
+                RANGES_ASSERT(0 <= n_)
+            }
             constexpr std::size_t size() const
             {
-                return n_;
+                return static_cast<std::size_t>(n_);
             }
         };
 
@@ -91,14 +105,14 @@ namespace ranges
             {
                 template<typename Val,
                     CONCEPT_REQUIRES_(SemiRegular<Val>())>
-                repeat_n_view<Val> operator()(Val value, std::size_t n) const
+                repeat_n_view<Val> operator()(Val value, std::ptrdiff_t n) const
                 {
                     return repeat_n_view<Val>{std::move(value), n};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
                     CONCEPT_REQUIRES_(!SemiRegular<Val>())>
-                void operator()(Val, std::size_t) const
+                void operator()(Val, std::ptrdiff_t) const
                 {
                     CONCEPT_ASSERT_MSG(SemiRegular<Val>(),
                         "The value passed to view::repeat_n must be SemiRegular; that is, it needs "

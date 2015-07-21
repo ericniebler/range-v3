@@ -109,7 +109,8 @@ namespace ranges
             range_difference_t<Rng> distance_to(range_iterator_t<Rng> const &here,
                 range_iterator_t<Rng> const &there, adaptor const &that) const
             {
-                RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % n_);
+                // This assertion is true for all range types except cyclic ranges:
+                //RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % n_);
                 return ((there - here) + that.offset() - offset()) / n_;
             }
             CONCEPT_REQUIRES(RandomAccessRange<Rng>())
