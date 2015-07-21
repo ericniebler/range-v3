@@ -145,7 +145,7 @@ namespace ranges
         namespace concepts
         {
             struct Readable
-              : refines<Movable, Constructible>
+              : refines<Movable, DefaultConstructible>
             {
                 // Associated types
                 template<typename I>
@@ -177,7 +177,7 @@ namespace ranges
             };
 
             struct MoveWritable
-              : refines<Movable(_1), Constructible(_1)>
+              : refines<Movable(_1), DefaultConstructible(_1)>
             {
                 template<typename Out, typename T>
                 auto requires_(Out&& o, T&&) -> decltype(
@@ -255,7 +255,7 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::is_true(std::is_integral<difference_t<I>>{}),
                         concepts::has_type<I &>(++i),
-                        ((i++), 42)
+                        ((void)i++, 42)
                     ));
             };
 
