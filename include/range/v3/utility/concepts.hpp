@@ -283,8 +283,9 @@ namespace ranges
                     typename C = reference_t<T, U>>
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<C>(val<T>()),
-                        concepts::convertible_to<C>(val<U>())
+                        concepts::model_of<Same, reference_t<T, U>, reference_t<U, T>>(),
+                        C(val<T>()),
+                        C(val<U>())
                     ));
 
                 template<typename T, typename U, typename...Rest,
@@ -310,11 +311,14 @@ namespace ranges
                 template<typename T, typename U,
                     meta::if_c<!std::is_same<uncvref_t<T>, uncvref_t<U>>::value, int> = 0,
                     typename C = value_t<T, U>,
-                    typename R = common_reference_t<T const &, U const &>>
+                    typename R = CommonReference::reference_t<T const &, U const &>>
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Same, value_t<T, U>, value_t<U, T>>(),
+                        C(val<T &&>()),
+                        C(val<U &&>()),
                         concepts::model_of<CommonReference, T const &, U const &>(),
-                        concepts::model_of<CommonReference, C &, R>()
+                        concepts::model_of<CommonReference, C &, R &&>()
                     ));
 
                 template<typename T, typename U, typename...Rest,
@@ -406,12 +410,12 @@ namespace ranges
                 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3351.pdf
                 template<typename T, typename U,
                     meta::if_c<!std::is_same<T, U>::value, int> = 0,
-                    typename C = common_type_t<T, U>>
+                    typename C = CommonReference::reference_t<T const &, U const &>>
                 auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<EqualityComparable, T>(),
                         concepts::model_of<EqualityComparable, U>(),
-                        concepts::model_of<Common, T, U>(),
+                        concepts::model_of<CommonReference, T const &, U const &>(),
                         concepts::model_of<EqualityComparable, C>(),
                         concepts::convertible_to<bool>(t == u),
                         concepts::convertible_to<bool>(u == t),
@@ -431,12 +435,13 @@ namespace ranges
                         concepts::convertible_to<bool>(t >= t)
                     ));
 
-                template<typename T, typename U, typename C = common_type_t<T, U>>
+                template<typename T, typename U,
+                    typename C = CommonReference::reference_t<T const &, U const &>>
                 auto requires_(T && t, U && u) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<WeaklyOrdered, T>(),
                         concepts::model_of<WeaklyOrdered, U>(),
-                        concepts::model_of<Common, T, U>(),
+                        concepts::model_of<CommonReference, T const &, U const &>(),
                         concepts::model_of<WeaklyOrdered, C>(),
                         concepts::convertible_to<bool>(t < u),
                         concepts::convertible_to<bool>(u < t),
@@ -698,12 +703,12 @@ namespace ranges
 
                 template<typename Fun, typename T, typename U,
                     meta::if_c<!std::is_same<T, U>::value, int> = 0,
-                    typename C = common_type_t<T, U>>
-                auto requires_(Fun&&, T &&, U &&) -> decltype(
+                    typename C = CommonReference::reference_t<T const &, U const &>>
+                auto requires_(Fun &&, T &&, U &&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Relation, Fun, T, T>(),
                         concepts::model_of<Relation, Fun, U, U>(),
-                        concepts::model_of<Common, T, U>(),
+                        concepts::model_of<CommonReference, T const &, U const &>(),
                         concepts::model_of<Relation, Fun, C, C>(),
                         concepts::model_of<Predicate, Fun, T, U>(),
                         concepts::model_of<Predicate, Fun, U, T>()
