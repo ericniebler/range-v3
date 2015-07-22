@@ -238,7 +238,8 @@ namespace ranges
             using end_cursor_t =
                 meta::if_c<
                     BoundedRange<Rng1>() && BoundedRange<Rng2>() &&
-                        !SinglePass<Rng1>() && !SinglePass<Rng2>(),
+                        !SinglePass<range_iterator_t<Rng1>>() &&
+                        !SinglePass<range_iterator_t<Rng2>>(),
                     cursor,
                     sentinel>;
 
