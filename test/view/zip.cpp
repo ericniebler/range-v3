@@ -69,13 +69,13 @@ int main()
     std::vector<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     std::vector<std::string> const vs{"hello", "goodbye", "hello", "goodbye"};
 
-    // All ranges
+    // All bounded ranges, but one single-pass
     {
         std::stringstream str{"john paul george ringo"};
         using V = std::tuple<int, std::string, std::string>;
         auto && rng = view::zip(vi, vs, istream<std::string>(str) | view::bounded);
         using Rng = decltype((rng));
-        ::models<concepts::BoundedView>(rng);
+        ::models_not<concepts::BoundedView>(rng);
         ::models_not<concepts::SizedView>(rng);
         CONCEPT_ASSERT(Same<
             range_value_t<Rng>,
@@ -90,7 +90,7 @@ int main()
             range_rvalue_reference_t<Rng>>());
         ::models<concepts::InputIterator>(begin(rng));
         ::models_not<concepts::ForwardIterator>(begin(rng));
-        std::vector<V> expected(begin(rng), end(rng));
+        auto expected = to_vector(rng);
         ::check_equal(expected, {V{0, "hello", "john"},
                                  V{1, "goodbye", "paul"},
                                  V{2, "hello", "george"},
