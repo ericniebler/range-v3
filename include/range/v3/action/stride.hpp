@@ -51,8 +51,8 @@ namespace ranges
                     auto requires_(Rng&&, T&&) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::EraseableRange, Rng, I, S>(),
-                            concepts::model_of<concepts::Convertible, T, D>(),
+                            concepts::model_of<concepts::ErasableRange, Rng, I, S>(),
+                            concepts::model_of<concepts::ConvertibleTo, T, D>(),
                             concepts::is_true(Permutable<I>())
                         ));
                 };
@@ -94,9 +94,9 @@ namespace ranges
                         "ForwardRange concept.");
                     using I = range_iterator_t<Rng>;
                     using S = range_sentinel_t<Rng>;
-                    CONCEPT_ASSERT_MSG(EraseableRange<Rng, I, S>(),
+                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, S>(),
                         "The object on which action::stride operates must allow element removal.");
-                    CONCEPT_ASSERT_MSG(Convertible<T, range_difference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_t<Rng>>(),
                         "The stride argument to action::stride must be convertible to the range's "
                         "difference type.");
                     CONCEPT_ASSERT_MSG(Permutable<I>(),

@@ -52,7 +52,7 @@ namespace ranges
                     auto requires_(Rng&&, C&&, P&& = P{}) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::EraseableRange, Rng, I, I>(),
+                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
                             concepts::is_true(RemovableIf<I, C, P>())
                         ));
                 };
@@ -78,7 +78,7 @@ namespace ranges
                         "The object on which action::remove_if operates must be a model of the "
                         "ForwardRange concept.");
                     using I = range_iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(EraseableRange<Rng, I, I>(),
+                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
                         "The object on which action::remove_if operates must allow element "
                         "removal.");
                     CONCEPT_ASSERT_MSG(Projectable<I, P>(),

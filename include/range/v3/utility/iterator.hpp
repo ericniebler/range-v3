@@ -569,7 +569,7 @@ namespace ranges
                   : it_(std::move(it))
                 {}
                 template<typename U,
-                    CONCEPT_REQUIRES_(Convertible<U, I>())>
+                    CONCEPT_REQUIRES_(ConvertibleTo<U, I>())>
                 RANGES_CXX14_CONSTEXPR
                 reverse_cursor(reverse_cursor<U> const &u)
                   : it_(u.base())

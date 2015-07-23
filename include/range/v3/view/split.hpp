@@ -188,7 +188,7 @@ namespace ranges
                 using FunctionConcept = meta::and_<
                     ForwardRange<Rng>,
                     Function<Fun, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
-                    Convertible<
+                    ConvertibleTo<
                         concepts::Function::result_t<Fun, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
                         std::pair<bool, range_difference_t<Rng>>>>;
 
@@ -224,13 +224,13 @@ namespace ranges
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename T,
-                    CONCEPT_REQUIRES_(!Convertible<T, range_value_t<Rng>>())>
+                    CONCEPT_REQUIRES_(!ConvertibleTo<T, range_value_t<Rng>>())>
                 void operator()(Rng &&, T &&) const volatile
                 {
                     CONCEPT_ASSERT_MSG(ForwardRange<Rng>(),
                         "The object on which view::split operates must be a model of the "
                         "ForwardRange concept.");
-                    CONCEPT_ASSERT_MSG(Convertible<T, range_value_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_value_t<Rng>>(),
                         "The delimiter argument to view::split must be one of the following: "
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "

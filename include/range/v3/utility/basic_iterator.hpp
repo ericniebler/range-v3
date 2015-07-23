@@ -107,7 +107,7 @@ namespace ranges
                     {
                         return *it_;
                     }
-                    CONCEPT_REQUIRES(Convertible<Ref, value_t>())
+                    CONCEPT_REQUIRES(ImplicitlyConvertibleTo<Ref, value_t>())
                     RANGES_CXX14_CONSTEXPR operator value_t() const
                     {
                         return *it_;
@@ -146,7 +146,7 @@ namespace ranges
                     {
                         return *it_;
                     }
-                    CONCEPT_REQUIRES(Convertible<Ref, value_t>())
+                    CONCEPT_REQUIRES(ImplicitlyConvertibleTo<Ref, value_t>())
                     RANGES_CXX14_CONSTEXPR operator value_t() const
                     {
                         return *it_;
@@ -314,7 +314,7 @@ namespace ranges
                         std::is_convertible<Ref, Val const &>,
                         // No forward iterator can have values that disappear
                         // before positions can be re-visited
-                        ranges::Derived<ranges::input_iterator_tag, Cat>>,
+                        meta::not_<DerivedFrom<Cat, ranges::forward_iterator_tag>>>,
                     meta::if_<
                         is_non_proxy_reference<Ref, Val>,
                         postfix_increment_proxy<I>,
@@ -487,7 +487,7 @@ namespace ranges
               : detail::mixin_base<Cur>{std::move(pos)}
             {}
             template<typename OtherCur, typename OtherS,
-                CONCEPT_REQUIRES_(Convertible<OtherCur, Cur>())>
+                CONCEPT_REQUIRES_(ConvertibleTo<OtherCur, Cur>())>
             basic_iterator(basic_iterator<OtherCur, OtherS> that)
               : detail::mixin_base<Cur>{std::move(that.pos())}
             {}

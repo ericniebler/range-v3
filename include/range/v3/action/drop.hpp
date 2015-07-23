@@ -51,8 +51,8 @@ namespace ranges
                     auto requires_(Rng&&, T&&) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::EraseableRange, Rng, I, I>(),
-                            concepts::model_of<concepts::Convertible, T, D>()
+                            concepts::model_of<concepts::ErasableRange, Rng, I, I>(),
+                            concepts::model_of<concepts::ConvertibleTo, T, D>()
                         ));
                 };
 
@@ -77,9 +77,9 @@ namespace ranges
                         "The object on which action::drop operates must be a model of the "
                         "ForwardRange concept.");
                     using I = range_iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(EraseableRange<Rng, I, I>(),
+                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
                         "The object on which action::drop operates must allow element removal.");
-                    CONCEPT_ASSERT_MSG(Convertible<T, range_difference_t<Rng>>(),
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<T, range_difference_t<Rng>>(),
                         "The count passed to action::drop must be an integral type.");
                 }
             #endif

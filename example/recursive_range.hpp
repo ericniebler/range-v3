@@ -110,7 +110,7 @@ namespace ranges
         public:
             template<typename Fun,
                 CONCEPT_REQUIRES_(Function<Fun>() &&
-                                  Convertible<
+                                  ConvertibleTo<
                                     concepts::Function::result_t<Fun>,
                                     any_input_range<Ref>
                                   >())>

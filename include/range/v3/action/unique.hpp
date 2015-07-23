@@ -50,7 +50,7 @@ namespace ranges
                         auto requires_(Rng&&, C&& = C{}, P&& = P{}) -> decltype(
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
-                            concepts::model_of<concepts::EraseableRange, Rng, I, S>(),
+                            concepts::model_of<concepts::ErasableRange, Rng, I, S>(),
                             concepts::is_true(Sortable<I, C, P>())
                         ));
                 };
@@ -78,7 +78,7 @@ namespace ranges
                         "ForwardRange concept.");
                     using I = range_iterator_t<Rng>;
                     using S = range_sentinel_t<Rng>;
-                    CONCEPT_ASSERT_MSG(EraseableRange<Rng, I, S>(),
+                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, S>(),
                         "The object on which action::unique operates must allow element "
                         "removal.");
                     CONCEPT_ASSERT_MSG(Projectable<I, P>(),

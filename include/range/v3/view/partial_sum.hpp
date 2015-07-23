@@ -137,7 +137,7 @@ namespace ranges
                 using Concept = meta::and_<
                     InputRange<Rng>,
                     IndirectCallable<Fun, range_iterator_t<Rng>, range_iterator_t<Rng>>,
-                    Convertible<
+                    ConvertibleTo<
                         concepts::Callable::result_t<Fun, range_common_reference_t<Rng>,
                             range_common_reference_t<Rng>>,
                         range_value_t<Rng>>>;
@@ -160,7 +160,7 @@ namespace ranges
                         range_iterator_t<Rng>>(),
                         "The second argument passed to view::partial_sum must be callable with "
                         "two values from the range passed as the first argument.");
-                    CONCEPT_ASSERT_MSG(Convertible<
+                    CONCEPT_ASSERT_MSG(ConvertibleTo<
                         concepts::Callable::result_t<Fun, range_common_reference_t<Rng>,
                         range_common_reference_t<Rng>>, range_value_t<Rng>>(),
                         "The return type of the function passed to view::partial_sum must be "

@@ -96,8 +96,8 @@ namespace ranges
                   : data_(meta::size_t<1>{}, std::move(se))
                 {}
                 template<typename I2, typename S2,
-                    CONCEPT_REQUIRES_(Convertible<I, I2>() &&
-                                      Convertible<S, S2>())>
+                    CONCEPT_REQUIRES_(ExplicitlyConvertibleTo<I, I2>() &&
+                                      ExplicitlyConvertibleTo<S, S2>())>
                 operator common_cursor<I2, S2>() const
                 {
                     return is_sentinel() ?

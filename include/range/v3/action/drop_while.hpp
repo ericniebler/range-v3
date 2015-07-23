@@ -52,7 +52,7 @@ namespace ranges
                         concepts::valid_expr(
                             concepts::model_of<concepts::ForwardRange, Rng>(),
                             concepts::is_true(IndirectCallablePredicate<Fun, range_iterator_t<Rng>>{}),
-                            concepts::model_of<concepts::EraseableRange, Rng, I, I>()
+                            concepts::model_of<concepts::ErasableRange, Rng, I, I>()
                         ));
                 };
 
@@ -82,7 +82,7 @@ namespace ranges
                         "of the range's common reference type, and it must return something convertible to "
                         "bool.");
                     using I = range_iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(EraseableRange<Rng, I, I>(),
+                    CONCEPT_ASSERT_MSG(ErasableRange<Rng, I, I>(),
                         "The object on which action::drop_while operates must allow element "
                         "removal.");
                 }

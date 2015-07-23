@@ -81,7 +81,7 @@ namespace ranges
         /// @{
         namespace concepts
         {
-            struct EraseableRange
+            struct ErasableRange
               : refines<Range(_1)>
             {
                 template<typename Rng, typename...Rest>
@@ -90,13 +90,13 @@ namespace ranges
                 template<typename Rng, typename...Rest>
                 auto requires_(Rng&&, Rest&&...) -> decltype(
                     concepts::valid_expr(
-                        (ranges::erase(val<Rng>(), val<Rest>()...), 42)
+                        ((void)ranges::erase(val<Rng>(), val<Rest>()...), 42)
                     ));
             };
         }
 
         template<typename Rng, typename...Rest>
-        using EraseableRange = concepts::models<concepts::EraseableRange, Rng, Rest...>;
+        using ErasableRange = concepts::models<concepts::ErasableRange, Rng, Rest...>;
         /// @}
     }
 }

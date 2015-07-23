@@ -249,14 +249,22 @@ namespace ranges
 
             struct Same
             {
-                template<typename T, typename U>
-                auto requires_(T &&, U &&) -> decltype(
+                template<typename ...Ts>
+                struct same : std::true_type {};
+                template<typename T, typename ...Us>
+                struct same<T, Us...> : meta::fast_and<std::is_same<T, Us>...> {};
+                template<typename ...Ts>
+                using same_t = meta::_t<same<Ts...>>;
+
+                template<typename ...Ts>
+                auto requires_(Ts &&...) -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(std::is_same<T, U>{})
+                        concepts::is_true(same_t<Ts...>{})
                     ));
             };
 
-            struct Convertible
+            /// \cond
+            struct ImplicitlyConvertibleTo
             {
                 template<typename T, typename U>
                 auto requires_(T &&, U &&) -> decltype(
@@ -265,7 +273,21 @@ namespace ranges
                     ));
             };
 
-            struct Derived
+            struct ExplicitlyConvertibleTo
+            {
+                template<typename T, typename U>
+                auto requires_(T && t, U &&) -> decltype(
+                    concepts::valid_expr(
+                        static_cast<U>(std::forward<T>(t))
+                    ));
+            };
+            /// \endcond
+
+            struct ConvertibleTo
+              : refines<ImplicitlyConvertibleTo, ExplicitlyConvertibleTo>
+            {};
+
+            struct DerivedFrom
             {
                 template<typename T, typename U>
                 auto requires_(T &&, U &&) -> decltype(
@@ -374,14 +396,14 @@ namespace ranges
                 template<typename T>
                 auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
-                        ((void)swap(val<T>(), val<T>()), 42)
+                        ((void)swap(std::declval<T>(), std::declval<T>()), 42)
                     ));
 
                 template<typename T, typename U>
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        ((void)swap(val<T>(), val<U>()), 42),
-                        ((void)swap(val<U>(), val<T>()), 42)
+                        ((void)swap(std::declval<T>(), std::declval<U>()), 42),
+                        ((void)swap(std::declval<U>(), std::declval<T>()), 42)
                     ));
             };
 
@@ -596,7 +618,7 @@ namespace ranges
                 auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Constructible, T, UnCvT &&>(),
-                        concepts::model_of<Convertible, UnCvT &&, T>()
+                        concepts::model_of<ImplicitlyConvertibleTo, UnCvT &&, T>()
                     ));
             };
 
@@ -608,12 +630,12 @@ namespace ranges
                     concepts::valid_expr(
                         // Spec requires these to be validated
                         concepts::model_of<Constructible, T, UnCvT const &>(),
-                        concepts::model_of<Convertible, UnCvT const &, T>(),
+                        concepts::model_of<ImplicitlyConvertibleTo, UnCvT const &, T>(),
                         // Spec does not require these to be validated
                         concepts::model_of<Constructible, T, UnCvT &>(),
-                        concepts::model_of<Convertible, UnCvT &, T>(),
+                        concepts::model_of<ImplicitlyConvertibleTo, UnCvT &, T>(),
                         concepts::model_of<Constructible, T, UnCvT const &&>(),
-                        concepts::model_of<Convertible, UnCvT const &&, T>()
+                        concepts::model_of<ImplicitlyConvertibleTo, UnCvT const &&, T>()
                     ));
             };
 
@@ -726,14 +748,22 @@ namespace ranges
             };
         }
 
-        template<typename T, typename U>
-        using Same = std::is_same<T, U>; // This handles void better than using the Same concept
+        template<typename ...Ts>
+        using Same = concepts::Same::same_t<Ts...>; // This handles void better than using the Same concept
 
         template<typename T, typename U>
-        using Convertible = concepts::models<concepts::Convertible, T, U>;
+        using ImplicitlyConvertibleTo =
+            concepts::models<concepts::ImplicitlyConvertibleTo, T, U>;
 
         template<typename T, typename U>
-        using Derived = concepts::models<concepts::Derived, T, U>;
+        using ExplicitlyConvertibleTo =
+            concepts::models<concepts::ExplicitlyConvertibleTo, T, U>;
+
+        template<typename T, typename U>
+        using ConvertibleTo = concepts::models<concepts::ConvertibleTo, T, U>;
+
+        template<typename T, typename U>
+        using DerivedFrom = concepts::models<concepts::DerivedFrom, T, U>;
 
         // This is an ugly hack around the fact that the core concept-checking
         // code doesn't handle void very well.
