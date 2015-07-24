@@ -80,9 +80,9 @@ namespace ranges
             {};
 
             template<typename T, typename U>
-            struct is_swappable_<T, U, meta::if_c<
-                std::is_void<decltype(swap(std::declval<T>(), std::declval<U>()))>::value &&
-                std::is_void<decltype(swap(std::declval<U>(), std::declval<T>()))>::value>>
+            struct is_swappable_<T, U, meta::void_<
+                decltype(swap(std::declval<T>(), std::declval<U>())),
+                decltype(swap(std::declval<U>(), std::declval<T>()))>>
               : std::true_type
             {};
 
