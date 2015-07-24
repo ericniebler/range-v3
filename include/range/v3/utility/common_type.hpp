@@ -251,16 +251,15 @@ namespace ranges
 
             template<typename T, typename U, typename = void>
             struct _common_reference2
-              : _basic_common_reference<T, U>
+              : meta::if_<
+                    meta::has_type<_basic_common_reference<T, U>>,
+                    _basic_common_reference<T, U>,
+                    common_type<T, U>>
             {};
 
             template<typename T, typename U>
-            struct _common_reference2<T, U, meta::void_<_builtin_common_t<T, U>>>
-              : meta::if_c<
-                    ( std::is_reference<_builtin_common_t<T, U>>::value ||
-                      !meta::has_type<_basic_common_reference<T, U>>::value ),
-                    _builtin_common<T, U>,
-                    _basic_common_reference<T, U>>
+            struct _common_reference2<T, U, meta::if_<std::is_reference<_builtin_common_t<T, U>>>>
+              : _builtin_common<T, U>
             {};
         }
         /// \endcond

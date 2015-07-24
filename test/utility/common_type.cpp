@@ -18,6 +18,23 @@ struct noncopyable
 struct noncopyable2 : noncopyable
 {};
 
+struct X {};
+struct Y {};
+struct Z {};
+namespace ranges
+{
+    template<>
+    struct common_type<X, Y>
+    {
+        using type = Z;
+    };
+    template<>
+    struct common_type<Y, X>
+    {
+        using type = Z;
+    };
+}
+
 int main()
 {
     using namespace ranges;
@@ -91,5 +108,10 @@ int main()
     static_assert(std::is_same<
         detail::_builtin_common_t<noncopyable const &, noncopyable2>,
         noncopyable
+    >::value, "");
+
+    static_assert(std::is_same<
+        common_reference_t<X &, Y const &>,
+        Z
     >::value, "");
 }
