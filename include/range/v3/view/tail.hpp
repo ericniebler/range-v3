@@ -55,10 +55,20 @@ namespace ranges
                 CONCEPT_ASSERT(InputRange<Rng>());
                 RANGES_ASSERT(!ForwardRange<Rng>() || !empty(rng_));
             }
+            iterator begin()
+            {
+                return next(ranges::begin(rng_));
+            }
+            CONCEPT_REQUIRES(Range<Rng const>())
             iterator begin() const
             {
                 return next(ranges::begin(rng_));
             }
+            sentinel end()
+            {
+                return ranges::end(rng_);
+            }
+            CONCEPT_REQUIRES(Range<Rng const>())
             sentinel end() const
             {
                 return ranges::end(rng_);

@@ -20,9 +20,6 @@
 #ifndef RANGES_V3_EXT_VIEW_RECURSIVE_RANGE_HPP
 #define RANGES_V3_EXT_VIEW_RECURSIVE_RANGE_HPP
 
-#ifndef __CYGWIN__
-#include <mutex>
-#endif
 #include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -55,46 +52,36 @@ namespace ranges
             private:
                 friend recursive_range_fn;
                 std::function<any_input_view<int>()> const *fun_;
-                mutable optional<any_input_view<int>> rng_;
-            #ifndef __CYGWIN__
-                mutable std::mutex mtx_;
-            #endif
-                any_input_view<int> const &rng() const
+                optional<any_input_view<int>> rng_;
+
+                any_input_view<int> &rng()
                 {
-                #ifndef __CYGWIN__
-                    std::lock_guard<std::mutex> lock{mtx_};
-                #endif
                     if(!rng_)
                         rng_ = (*fun_)();
                     return *rng_;
                 }
                 impl(std::function<any_input_view<int>()> const &fun)
                   : fun_(&fun), rng_{}
-                #ifndef __CYGWIN__
-                  , mtx_{}
-                #endif
                 {}
             public:
                 impl() = default;
                 impl(impl &&) = default;
                 impl(impl const &that)
-                  : fun_(that.fun_), rng_{}
-                #ifndef __CYGWIN__
-                  , mtx_{}
-                #endif
+                  : fun_(that.fun_)
+                  , rng_{}
                 {}
                 impl &operator=(impl &&) = default;
                 impl &operator=(impl const &that)
                 {
                     fun_ = that.fun_;
-                    rng_ = that.rng_;
+                    rng_.reset();
                     return *this;
                 }
-                range_iterator_t<any_input_view<int>> begin() const
+                range_iterator_t<any_input_view<int>> begin()
                 {
                     return ranges::begin(rng());
                 }
-                range_sentinel_t<any_input_view<int>> end() const
+                range_sentinel_t<any_input_view<int>> end()
                 {
                     return ranges::end(rng());
                 }
@@ -102,18 +89,11 @@ namespace ranges
                 {
                     return rng();
                 }
-                any_input_view<int> const & base() const
-                {
-                    return rng();
-                }
             };
         public:
             template<typename Fun,
                 CONCEPT_REQUIRES_(Function<Fun>() &&
-                                  ConvertibleTo<
-                                    concepts::Function::result_t<Fun>,
-                                    any_input_view<Ref>
-                                  >())>
+                    ConvertibleTo<concepts::Function::result_t<Fun>, any_input_view<Ref>>())>
             explicit recursive_range_fn(Fun fun)
               : fun_{[=](){return view::concat(fun(), view::empty<value_type>());}}
             {}

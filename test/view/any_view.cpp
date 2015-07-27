@@ -45,5 +45,10 @@ int main()
     CHECK(e.begin() == e.begin());
     CHECK(e.begin() == e.end());
 
+    range_iterator_t<any_view<int&>> i{},j{};
+    range_sentinel_t<any_view<int&>> k{};
+    CHECK(i == j);
+    CHECK(i == k);
+
     return test_result();
 }
