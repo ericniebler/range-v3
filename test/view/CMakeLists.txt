@@ -5,8 +5,8 @@ add_test(test.view.adjacent_remove_if, view.adjacent_remove_if)
 add_executable(view.all all.cpp)
 add_test(test.view.all, view.all)
 
-add_executable(view.any_range any_range.cpp)
-add_test(test.view.any_range, view.any_range)
+add_executable(view.any_view any_view.cpp)
+add_test(test.view.any_view, view.any_view)
 
 add_executable(view.bounded bounded.cpp)
 add_test(test.view.bounded, view.bounded)

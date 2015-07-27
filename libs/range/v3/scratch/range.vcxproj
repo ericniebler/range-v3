@@ -79,6 +79,7 @@
     <ClCompile Include="..\..\..\..\example\calendar.cpp" />
     <ClCompile Include="..\..\..\..\example\comprehensions.cpp" />
     <ClCompile Include="..\..\..\..\example\fibonacci.cpp" />
+    <ClCompile Include="..\..\..\..\example\n_queens.cpp" />
     <ClCompile Include="..\..\..\..\perf\counted_insertion_sort.cpp" />
     <ClCompile Include="..\..\..\..\perf\sort_patterns.cpp" />
     <ClCompile Include="..\..\..\..\test\action\cont_concepts.cpp" />
@@ -225,7 +226,7 @@
     <ClCompile Include="..\..\..\..\test\utility\swap.cpp" />
     <ClCompile Include="..\..\..\..\test\view\adjacent_remove_if.cpp" />
     <ClCompile Include="..\..\..\..\test\view\all.cpp" />
-    <ClCompile Include="..\..\..\..\test\view\any_range.cpp" />
+    <ClCompile Include="..\..\..\..\test\view\any_view.cpp" />
     <ClCompile Include="..\..\..\..\test\view\bounded.cpp" />
     <ClCompile Include="..\..\..\..\test\view\chunk.cpp" />
     <ClCompile Include="..\..\..\..\test\view\concat.cpp" />

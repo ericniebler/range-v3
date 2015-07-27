@@ -305,7 +305,7 @@ namespace ranges
                     typename C = reference_t<T, U>>
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Same, reference_t<T, U>, reference_t<U, T>>(),
+                        concepts::model_of<Same, C, reference_t<U, T>>(),
                         C(val<T>()),
                         C(val<U>())
                     ));
@@ -336,7 +336,7 @@ namespace ranges
                     typename R = CommonReference::reference_t<T const &, U const &>>
                 auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Same, value_t<T, U>, value_t<U, T>>(),
+                        concepts::model_of<Same, C, value_t<U, T>>(),
                         C(val<T &&>()),
                         C(val<U &&>()),
                         concepts::model_of<CommonReference, T const &, U const &>(),

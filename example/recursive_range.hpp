@@ -32,7 +32,7 @@
 #include <range/v3/view_interface.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/optional.hpp>
-#include <range/v3/view/any_range.hpp>
+#include <range/v3/view/any_view.hpp>
 #include <range/v3/view/empty.hpp>
 #include <range/v3/view/concat.hpp>
 
@@ -47,19 +47,19 @@ namespace ranges
         {
         private:
             using value_type = meta::_t<std::remove_reference<Ref>>;
-            std::function<any_input_range<int>()> fun_;
+            std::function<any_input_view<int>()> fun_;
 
             struct impl
               : view_interface<impl>
             {
             private:
                 friend recursive_range_fn;
-                std::function<any_input_range<int>()> const *fun_;
-                mutable optional<any_input_range<int>> rng_;
+                std::function<any_input_view<int>()> const *fun_;
+                mutable optional<any_input_view<int>> rng_;
             #ifndef __CYGWIN__
                 mutable std::mutex mtx_;
             #endif
-                any_input_range<int> const &rng() const
+                any_input_view<int> const &rng() const
                 {
                 #ifndef __CYGWIN__
                     std::lock_guard<std::mutex> lock{mtx_};
@@ -68,7 +68,7 @@ namespace ranges
                         rng_ = (*fun_)();
                     return *rng_;
                 }
-                impl(std::function<any_input_range<int>()> const &fun)
+                impl(std::function<any_input_view<int>()> const &fun)
                   : fun_(&fun), rng_{}
                 #ifndef __CYGWIN__
                   , mtx_{}
@@ -90,19 +90,19 @@ namespace ranges
                     rng_ = that.rng_;
                     return *this;
                 }
-                range_iterator_t<any_input_range<int>> begin() const
+                range_iterator_t<any_input_view<int>> begin() const
                 {
                     return ranges::begin(rng());
                 }
-                range_sentinel_t<any_input_range<int>> end() const
+                range_sentinel_t<any_input_view<int>> end() const
                 {
                     return ranges::end(rng());
                 }
-                any_input_range<int> & base()
+                any_input_view<int> & base()
                 {
                     return rng();
                 }
-                any_input_range<int> const & base() const
+                any_input_view<int> const & base() const
                 {
                     return rng();
                 }
@@ -112,7 +112,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(Function<Fun>() &&
                                   ConvertibleTo<
                                     concepts::Function::result_t<Fun>,
-                                    any_input_range<Ref>
+                                    any_input_view<Ref>
                                   >())>
             explicit recursive_range_fn(Fun fun)
               : fun_{[=](){return view::concat(fun(), view::empty<value_type>());}}

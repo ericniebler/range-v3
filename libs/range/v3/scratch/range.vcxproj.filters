@@ -510,9 +510,6 @@
     <ClCompile Include="..\..\..\..\test\view\split.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\view\any_range.cpp">
-      <Filter>Test Files\view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\intersperse.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -652,6 +649,12 @@
       <Filter>Test Files\view</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\cycle.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\example\n_queens.cpp">
+      <Filter>Example Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view\any_view.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
   </ItemGroup>
