@@ -44,17 +44,16 @@ namespace ranges
                 virtual ~any_object() {}
             };
 
-            template<class O>
-            struct object
-              : any_object
+            template<class T>
+            struct object : any_object
             {
             private:
-                O obj;
+                T obj;
             public:
                 object() = default;
-                object(O o) : obj(std::move(o)) {}
-                O &get() { return obj; }
-                O const &get() const { return obj; }
+                object(T o) : obj(std::move(o)) {}
+                T &get() { return obj; }
+                T const &get() const { return obj; }
             };
 
             template<typename Ref, category Cat = category::input>
@@ -212,43 +211,46 @@ namespace ranges
                   : ptr_{new any_cursor_impl<range_iterator_t<Rng>, Cat>{begin(rng)}}
                 {}
                 any_cursor(any_cursor &&) = default;
-                any_cursor(any_cursor &that)
-                  : ptr_{that.ptr_->clone()}
-                {}
                 any_cursor(any_cursor const &that)
-                  : ptr_{that.ptr_->clone()}
+                  : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
                 {}
                 any_cursor &operator=(any_cursor &&) = default;
                 any_cursor &operator=(any_cursor const &that)
                 {
-                    ptr_.reset(that.ptr_->clone());
+                    ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
                     return *this;
                 }
                 Ref current() const
                 {
+                    RANGES_ASSERT(ptr_);
                     return ptr_->current();
                 }
                 bool equal(any_cursor const &that) const
                 {
-                    return ptr_->equal(*that.ptr_);
+                    RANGES_ASSERT(!ptr_ == !that.ptr_);
+                    return (!ptr_ && !that.ptr_) || ptr_->equal(*that.ptr_);
                 }
                 void next()
                 {
+                    RANGES_ASSERT(ptr_);
                     ptr_->next();
                 }
                 CONCEPT_REQUIRES(Cat >= category::bidirectional)
                 void prev()
                 {
+                    RANGES_ASSERT(ptr_);
                     ptr_->prev();
                 }
                 CONCEPT_REQUIRES(Cat >= category::random_access)
                 void advance(std::ptrdiff_t n)
                 {
+                    RANGES_ASSERT(ptr_);
                     ptr_->advance(n);
                 }
                 CONCEPT_REQUIRES(Cat >= category::random_access)
                 std::ptrdiff_t distance_to(any_cursor const &that) const
                 {
+                    RANGES_ASSERT(ptr_ && that.ptr_);
                     return ptr_->distance_to(*that.ptr_);
                 }
             };
@@ -267,22 +269,20 @@ namespace ranges
                         end(rng)}}
                 {}
                 any_sentinel(any_sentinel &&) = default;
-                any_sentinel(any_sentinel &that)
-                  : ptr_{that.ptr_->clone()}
-                {}
                 any_sentinel(any_sentinel const &that)
-                  : ptr_{that.ptr_->clone()}
+                  : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
                 {}
                 any_sentinel &operator=(any_sentinel &&) = default;
                 any_sentinel &operator=(any_sentinel const &that)
                 {
-                    ptr_.reset(that.ptr_->clone());
+                    ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
                     return *this;
                 }
                 template<typename Ref, category Cat>
                 bool equal(any_cursor<Ref, Cat> const &that) const
                 {
-                    return ptr_->equal(that.ptr_->iter());
+                    RANGES_ASSERT(!ptr_ == !that.ptr_);
+                    return (!ptr_ && !that.ptr_) || ptr_->equal(that.ptr_->iter());
                 }
             };
 
@@ -290,8 +290,8 @@ namespace ranges
             struct any_view_interface
             {
                 virtual ~any_view_interface() {}
-                virtual any_cursor<Ref, Cat> begin_cursor() const = 0;
-                virtual any_sentinel end_cursor() const = 0;
+                virtual any_cursor<Ref, Cat> begin_cursor() = 0;
+                virtual any_sentinel end_cursor() = 0;
                 virtual any_view_interface *clone() const = 0;
             };
 
@@ -307,11 +307,11 @@ namespace ranges
                 any_view_impl(Rng rng)
                   : rng_(std::move(rng))
                 {}
-                any_cursor<Ref, Cat> begin_cursor() const
+                any_cursor<Ref, Cat> begin_cursor()
                 {
                     return {rng_, begin_tag{}};
                 }
-                any_sentinel end_cursor() const
+                any_sentinel end_cursor()
                 {
                     return {rng_, end_tag{}};
                 }
@@ -320,6 +320,11 @@ namespace ranges
                     return new any_view_impl<Rng, Cat>{rng_};
                 }
             };
+
+            constexpr category to_cat_(concepts::InputRange *) { return category::input; }
+            constexpr category to_cat_(concepts::ForwardRange *) { return category::forward; }
+            constexpr category to_cat_(concepts::BidirectionalRange *) { return category::bidirectional; }
+            constexpr category to_cat_(concepts::RandomAccessRange *) { return category::random_access; }
         }
         /// \endcond
 
@@ -332,13 +337,25 @@ namespace ranges
         private:
             friend range_access;
             std::unique_ptr<detail::any_view_interface<Ref, Cat>> ptr_;
-            detail::any_cursor<Ref, Cat> begin_cursor() const
+            detail::any_cursor<Ref, Cat> begin_cursor()
             {
-                return ptr_->begin_cursor();
+                return ptr_ ? ptr_->begin_cursor() : detail::value_init{};
             }
-            detail::any_sentinel end_cursor() const
+            detail::any_sentinel end_cursor()
             {
-                return ptr_->end_cursor();
+                return ptr_ ? ptr_->end_cursor() : detail::value_init{};
+            }
+            template<typename Rng>
+            any_view(Rng && rng, std::true_type)
+              : ptr_{new detail::any_view_impl<view::all_t<Rng>, Cat>{
+                    view::all(std::forward<Rng>(rng))}}
+            {}
+            template<typename Rng>
+            any_view(Rng &&, std::false_type)
+              : ptr_{}
+            {
+                static_assert(detail::to_cat_(range_concept<Rng>{}) >= Cat,
+                    "The range passed to any_view() does not model the requested category");
             }
         public:
             any_view() = default;
@@ -347,20 +364,17 @@ namespace ranges
                 CONCEPT_REQUIRES_(InputRange<Rng>() &&
                                   ConvertibleTo<range_reference_t<Rng>, Ref>())>
             any_view(Rng && rng)
-              : ptr_{new detail::any_view_impl<view::all_t<Rng>, Cat>{
-                    view::all(std::forward<Rng>(rng))}}
+              : any_view(std::forward<Rng>(rng),
+                  meta::bool_<detail::to_cat_(range_concept<Rng>{}) >= Cat>{})
             {}
             any_view(any_view &&) = default;
-            any_view(any_view &that)
-              : ptr_{that.ptr_->clone()}
-            {}
             any_view(any_view const &that)
-              : ptr_{that.ptr_->clone()}
+              : ptr_{that.ptr_ ? that.ptr_->clone() : nullptr}
             {}
             any_view &operator=(any_view &&) = default;
             any_view &operator=(any_view const &that)
             {
-                ptr_.reset(that.ptr_->clone());
+                ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
                 return *this;
             }
         };
