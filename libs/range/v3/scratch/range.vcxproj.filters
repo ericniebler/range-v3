@@ -1331,6 +1331,9 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view\cycle.hpp">
       <Filter>Header Files\range\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\utility\any.hpp">
+      <Filter>Test Files\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\CMakeLists.txt" />
