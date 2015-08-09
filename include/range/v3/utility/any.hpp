@@ -92,7 +92,7 @@ namespace ranges
                 impl(T o) : obj(std::move(o)) {}
                 T &get() { return obj; }
                 T const &get() const { return obj; }
-                interface *clone() const override
+                impl *clone() const override
                 {
                     return new impl{obj};
                 }
@@ -105,11 +105,10 @@ namespace ranges
             std::unique_ptr<interface> ptr_;
         public:
             any() noexcept = default;
-            template<typename T,
-                CONCEPT_REQUIRES_(Copyable<T>() &&
-                    !Same<detail::decay_t<T>, any>())>
-            any(T &&t)
-              : ptr_(new impl<detail::decay_t<T>>(std::forward<T>(t)))
+            template<typename TRef, typename T = detail::decay_t<TRef>,
+                CONCEPT_REQUIRES_(Copyable<T>() && !Same<T, any>())>
+            any(TRef &&t)
+              : ptr_(new impl<T>(std::forward<TRef>(t)))
             {}
             any(any &&) noexcept = default;
             any(any const &that)
@@ -121,12 +120,11 @@ namespace ranges
                 ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
                 return *this;
             }
-            template<typename T,
-                CONCEPT_REQUIRES_(Copyable<T>() &&
-                    !Same<detail::decay_t<T>, any>())>
-            any &operator=(T &&t)
+            template<typename TRef, typename T = detail::decay_t<TRef>,
+                CONCEPT_REQUIRES_(Copyable<T>() && !Same<T, any>())>
+            any &operator=(TRef &&t)
             {
-                any{std::forward<T>(t)}.swap(*this);
+                any{std::forward<TRef>(t)}.swap(*this);
                 return *this;
             }
             void clear() noexcept

@@ -34,6 +34,8 @@ namespace ranges
         /// \cond
         namespace detail
         {
+            // BUGBUG Per the discussion in https://github.com/ericniebler/stl2/issues/63, it's
+            // unclear if we can infer anything from RandomAccessRange<Rng>() && BoundedRange<Rng>()
             template<typename Rng,
                 bool IsRandomAccessBounded = RandomAccessRange<Rng>() && BoundedRange<Rng>()>
             struct take_exactly_view_

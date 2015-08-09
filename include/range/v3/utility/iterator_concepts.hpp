@@ -474,23 +474,24 @@ namespace ranges
         {
             // Return the value and reference types of an iterator in a list.
             template<typename I>
-            using readable_types =
+            using readable_types_ =
                 meta::list<concepts::Readable::value_t<I>, concepts::Readable::reference_t<I>>;
 
-            template<typename CombineFn, typename ApplyFn, typename...Is>
-            using indirect_apply_combine =
-                // Collect the list of results computed below with CombineFn
-                meta::apply_list<
-                    CombineFn,
-                    // Call ApplyFn with the cartesian product of the Readables' value and reference
-                    // types. In addition, call ApplyFn with the common_reference type of all the
-                    // Readables. Return all the results as a list.
-                    meta::transform<
-                        meta::push_back<
-                            meta::cartesian_product<
-                                meta::transform<meta::list<Is...>, meta::quote<readable_types>>>,
-                            meta::list<concepts::Readable::common_reference_t<Is>...>>,
-                        meta::bind_front<meta::quote<meta::apply_list>, ApplyFn>>>;
+            // Call ApplyFn with the cartesian product of the Readables' value and reference
+            // types. In addition, call ApplyFn with the common_reference type of all the
+            // Readables. Return all the results as a list.
+            template <class...Is>
+            using iter_args_lists_ =
+                meta::push_back<
+                    meta::cartesian_product<
+                        meta::transform<meta::list<Is...>, meta::quote<readable_types_>>>,
+                    meta::list<concepts::Readable::common_reference_t<Is>...>>;
+
+            template<typename ReduceFn, typename MapFn>
+            using iter_map_reduce_fn_ =
+                meta::compose<
+                    meta::uncurry<meta::on<ReduceFn, meta::uncurry<MapFn>>>,
+                    meta::quote<iter_args_lists_>>;
         }
 
         template<typename C, typename ...Is>
@@ -498,35 +499,35 @@ namespace ranges
             meta::fast_and<Readable<Is>...>,
             // C must be callable with the values and references read from the Is.
             meta::lazy::apply<
-                meta::quote<detail::indirect_apply_combine>,
-                meta::quote<meta::fast_and>,
-                meta::bind_front<meta::quote<Function>, C>,
+                detail::iter_map_reduce_fn_<
+                    meta::quote<meta::fast_and>,
+                    meta::bind_front<meta::quote<Function>, C>>,
                 Is...>,
             // In addition, the return types of the C invocations tried above must all
             // share a common reference type. (The lazy::apply is so that this doesn't get
             // evaluated unless C is truly callable as determined above.)
             meta::lazy::apply<
-                meta::quote<detail::indirect_apply_combine>,
-                meta::quote<CommonReference>,
-                meta::bind_front<meta::quote<concepts::Function::result_t>, C>,
+                detail::iter_map_reduce_fn_<
+                    meta::quote<CommonReference>,
+                    meta::bind_front<meta::quote<concepts::Function::result_t>, C>>,
                 Is...> >;
 
         template<typename C, typename ...Is>
         using IndirectPredicate = meta::and_<
             meta::fast_and<Readable<Is>...>,
             meta::lazy::apply<
-                meta::quote<detail::indirect_apply_combine>,
-                meta::quote<meta::fast_and>,
-                meta::bind_front<meta::quote<Predicate>, C>,
+                detail::iter_map_reduce_fn_<
+                    meta::quote<meta::fast_and>,
+                    meta::bind_front<meta::quote<Predicate>, C>>,
                 Is...>>;
 
         template<typename C, typename I0, typename I1 = I0>
         using IndirectRelation = meta::and_<
             meta::fast_and<Readable<I0>, Readable<I1>>,
             meta::lazy::apply<
-                meta::quote<detail::indirect_apply_combine>,
-                meta::quote<meta::fast_and>,
-                meta::bind_front<meta::quote<Relation>, C>,
+                detail::iter_map_reduce_fn_<
+                    meta::quote<meta::fast_and>,
+                    meta::bind_front<meta::quote<Relation>, C>>,
                 I0, I1>>;
 
         template<typename C, typename ...Is>
