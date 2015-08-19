@@ -42,7 +42,7 @@ namespace ranges
         template<typename I, typename V, typename C = equal_to, typename P = ident>
         using Searchnable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, Project<I, P>, V const *>>;
+            IndirectCallableRelation<C, Projected<I, P>, V const *>>;
 
         /// \addtogroup group-algorithms
         /// @{

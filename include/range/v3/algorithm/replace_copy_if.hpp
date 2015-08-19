@@ -35,7 +35,7 @@ namespace ranges
             InputIterator<I>,
             WeakOutputIterator<O, T>,
             IndirectlyCopyable<I, O>,
-            IndirectCallablePredicate<C, Project<I, P>>>;
+            IndirectCallablePredicate<C, Projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{

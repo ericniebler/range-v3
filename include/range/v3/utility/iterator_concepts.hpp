@@ -434,44 +434,6 @@ namespace ranges
 
         namespace detail
         {
-            template<typename I, typename Proj>
-            struct projected_readable
-            {
-                using value_type =
-                    decay_t<concepts::Callable::result_t<Proj, concepts::Readable::value_t<I>>>;
-                using reference =
-                    concepts::Callable::result_t<Proj, concepts::Readable::reference_t<I>>;
-                reference operator*() const;
-                [[noreturn]] friend auto indirect_move(projected_readable const &) ->
-                    concepts::Callable::result_t<Proj, concepts::Readable::rvalue_reference_t<I>>
-                {
-                    RANGES_ENSURE(false);
-                }
-            };
-
-            template<typename I, typename Proj>
-            struct Projectable_
-            {
-                using type =
-                    meta::fast_and<
-                        Callable<Proj, concepts::Readable::value_t<I>>,
-                        Callable<Proj, concepts::Readable::reference_t<I>>,
-                        Callable<Proj, concepts::Readable::rvalue_reference_t<I>>>;
-            };
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Composite concepts for use defining algorithms:
-        template<typename I, typename Proj>
-        using Projectable = meta::and_<
-            Readable<I>,
-            detail::Projectable_<I, Proj>>;
-
-        template<typename I, typename Proj>
-        using Project = meta::if_<Projectable<I, Proj>, detail::projected_readable<I, Proj>>;
-
-        namespace detail
-        {
             // Return the value and reference types of an iterator in a list.
             template<typename I>
             using readable_types_ =
@@ -487,7 +449,7 @@ namespace ranges
                         meta::transform<meta::list<Is...>, meta::quote<readable_types_>>>,
                     meta::list<concepts::Readable::common_reference_t<Is>...>>;
 
-            template<typename ReduceFn, typename MapFn>
+            template<typename MapFn, typename ReduceFn>
             using iter_map_reduce_fn_ =
                 meta::compose<
                     meta::uncurry<meta::on<ReduceFn, meta::uncurry<MapFn>>>,
@@ -500,16 +462,16 @@ namespace ranges
             // C must be callable with the values and references read from the Is.
             meta::lazy::apply<
                 detail::iter_map_reduce_fn_<
-                    meta::quote<meta::fast_and>,
-                    meta::bind_front<meta::quote<Function>, C>>,
+                    meta::bind_front<meta::quote<Function>, C>,
+                    meta::quote<meta::fast_and>>,
                 Is...>,
             // In addition, the return types of the C invocations tried above must all
             // share a common reference type. (The lazy::apply is so that this doesn't get
             // evaluated unless C is truly callable as determined above.)
             meta::lazy::apply<
                 detail::iter_map_reduce_fn_<
-                    meta::quote<CommonReference>,
-                    meta::bind_front<meta::quote<concepts::Function::result_t>, C>>,
+                    meta::bind_front<meta::quote<concepts::Function::result_t>, C>,
+                    meta::quote<CommonReference>>,
                 Is...> >;
 
         template<typename C, typename ...Is>
@@ -517,8 +479,8 @@ namespace ranges
             meta::fast_and<Readable<Is>...>,
             meta::lazy::apply<
                 detail::iter_map_reduce_fn_<
-                    meta::quote<meta::fast_and>,
-                    meta::bind_front<meta::quote<Predicate>, C>>,
+                    meta::bind_front<meta::quote<Predicate>, C>,
+                    meta::quote<meta::fast_and>>,
                 Is...>>;
 
         template<typename C, typename I0, typename I1 = I0>
@@ -526,8 +488,8 @@ namespace ranges
             meta::fast_and<Readable<I0>, Readable<I1>>,
             meta::lazy::apply<
                 detail::iter_map_reduce_fn_<
-                    meta::quote<meta::fast_and>,
-                    meta::bind_front<meta::quote<Relation>, C>>,
+                    meta::bind_front<meta::quote<Relation>, C>,
+                    meta::quote<meta::fast_and>>,
                 I0, I1>>;
 
         template<typename C, typename ...Is>
@@ -539,6 +501,26 @@ namespace ranges
         template<typename C, typename I0, typename I1 = I0>
         using IndirectCallableRelation = IndirectRelation<function_type<C>, I0, I1>;
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // Project struct, for "projecting" a Readable with a unary callable
+        namespace detail
+        {
+            template<typename I, typename Proj>
+            struct projected_readable
+            {
+                using value_type =
+                    decay_t<concepts::Callable::result_t<Proj, concepts::Readable::value_t<I>>>;
+                using reference =
+                    concepts::Callable::result_t<Proj, concepts::Readable::reference_t<I>>;
+                reference operator*() const;
+            };
+        }
+
+        template<typename I, typename Proj>
+        using Projected = meta::if_<IndirectCallable<Proj, I>, detail::projected_readable<I, Proj>>;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // Composite concepts for use defining algorithms:
         template<typename I, typename V = concepts::Readable::value_t<I>>
         using Permutable = meta::fast_and<
             ForwardIterator<I>,
@@ -551,7 +533,7 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectCallableRelation<C, Project<I0, P0>, Project<I1, P1>>,
+            IndirectCallableRelation<C, Projected<I0, P0>, Projected<I1, P1>>,
             IndirectlyCopyable<I0, Out>,
             IndirectlyCopyable<I1, Out>>;
 
@@ -561,27 +543,27 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectCallableRelation<C, Project<I0, P0>, Project<I1, P1>>,
+            IndirectCallableRelation<C, Projected<I0, P0>, Projected<I1, P1>>,
             IndirectlyMovable<I0, Out>,
             IndirectlyMovable<I1, Out>>;
 
         template<typename I, typename C = ordered_less, typename P = ident>
         using Sortable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, Project<I, P>, Project<I, P>>,
+            IndirectCallableRelation<C, Projected<I, P>, Projected<I, P>>,
             Permutable<I>>;
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
         using BinarySearchable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, Project<I, P>, V2 const *>>;
+            IndirectCallableRelation<C, Projected<I, P>, V2 const *>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
         using WeaklyAsymmetricallyComparable = meta::fast_and<
             InputIterator<I1>,
             WeakInputIterator<I2>,
-            IndirectCallablePredicate<C, Project<I1, P1>, Project<I2, P2>>>;
+            IndirectCallablePredicate<C, Projected<I1, P1>, Projected<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
@@ -593,7 +575,7 @@ namespace ranges
             typename P2 = ident>
         using WeaklyComparable = meta::fast_and<
             WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
-            IndirectCallableRelation<C, Project<I1, P1>, Project<I2, P2>>>;
+            IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>

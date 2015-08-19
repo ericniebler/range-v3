@@ -36,7 +36,7 @@ namespace ranges
             InputIterator<I>,
             RandomAccessIterator<O>,
             IndirectlyCopyable<I, O>,
-            IndirectCallableRelation<C, Project<I, PI>, Project<O, PO>>,
+            IndirectCallableRelation<C, Projected<I, PI>, Projected<O, PO>>,
             Sortable<O, C, PO>>;
 
         /// \addtogroup group-algorithms

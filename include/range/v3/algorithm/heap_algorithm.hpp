@@ -42,7 +42,7 @@ namespace ranges
         template<typename I, typename C = ordered_less, typename P = ident>
         using IsHeapable = meta::fast_and<
             RandomAccessIterator<I>,
-            IndirectCallableRelation<C, Project<I, P>>>;
+            IndirectCallableRelation<C, Projected<I, P>>>;
 
         /// \cond
         namespace detail

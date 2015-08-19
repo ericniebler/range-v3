@@ -43,7 +43,7 @@ namespace ranges
             typename X = concepts::Callable::result_t<P, V>>
         using PartitionPointable = meta::fast_and<
             ForwardIterator<I>,
-            IndirectCallablePredicate<C, Project<I, P>>>;
+            IndirectCallablePredicate<C, Projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{

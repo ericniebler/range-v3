@@ -39,7 +39,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident>
         using IsPartitionedable = meta::fast_and<
             InputIterator<I>,
-            IndirectCallablePredicate<C, Project<I, P>>>;
+            IndirectCallablePredicate<C, Projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{

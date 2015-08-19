@@ -36,7 +36,7 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename F, typename P = ident,
                 CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
-                    WeaklyIncrementable<O>() && IndirectCallablePredicate<F, Project<I, P> >() &&
+                    WeaklyIncrementable<O>() && IndirectCallablePredicate<F, Projected<I, P> >() &&
                     IndirectlyCopyable<I, O>())>
             tagged_pair<tag::in(I), tag::out(O)>
             operator()(I begin, S end, O out, F pred_, P proj_ = P{}) const
@@ -58,7 +58,7 @@ namespace ranges
             template<typename Rng, typename O, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && WeaklyIncrementable<O>() &&
-                    IndirectCallablePredicate<F, Project<I, P> >() && IndirectlyCopyable<I, O>())>
+                    IndirectCallablePredicate<F, Projected<I, P> >() && IndirectlyCopyable<I, O>())>
             tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
             operator()(Rng &&rng, O out, F pred, P proj = P{}) const
             {

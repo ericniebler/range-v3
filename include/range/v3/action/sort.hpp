@@ -74,10 +74,10 @@ namespace ranges
                         "The object on which action::sort operates must be a model of the "
                         "ForwardRange concept.");
                     using I = range_iterator_t<Rng>;
-                    CONCEPT_ASSERT_MSG(Projectable<I, P>(),
+                    CONCEPT_ASSERT_MSG(IndirectCallable<P, I>(),
                         "The projection function must accept objects of the iterator's value type, "
-                        "reference type, and rvalue reference type.");
-                    CONCEPT_ASSERT_MSG(IndirectCallableRelation<C, Project<I, P>>(),
+                        "reference type, and common reference type.");
+                    CONCEPT_ASSERT_MSG(IndirectCallableRelation<C, Projected<I, P>>(),
                         "The comparator passed to action::sort must accept objects returned "
                         "by the projection function, or of the range's value type if no projection "
                         "is specified.");

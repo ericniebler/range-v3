@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident>
         using RemovableIf = meta::fast_and<
             ForwardIterator<I>,
-            IndirectCallablePredicate<C, Project<I, P>>,
+            IndirectCallablePredicate<C, Projected<I, P>>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms

@@ -38,7 +38,7 @@ namespace ranges
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() &&
-                    IndirectCallableRelation<C, Project<I, P>>())>
+                    IndirectCallableRelation<C, Projected<I, P>>())>
             tagged_pair<tag::min(I), tag::max(I)>
             operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
@@ -86,7 +86,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng>() &&
-                    IndirectCallableRelation<C, Project<I, P>>())>
+                    IndirectCallableRelation<C, Projected<I, P>>())>
             meta::if_<std::is_lvalue_reference<Rng>,
                 tagged_pair<tag::min(I), tag::max(I)>,
                 dangling<tagged_pair<tag::min(I), tag::max(I)>>>

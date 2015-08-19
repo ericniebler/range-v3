@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename O, typename C = equal_to, typename P = ident>
         using UniqueCopyable = meta::fast_and<
             InputIterator<I>,
-            IndirectCallableRelation<C, Project<I, P>>,
+            IndirectCallableRelation<C, Projected<I, P>>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>>;
 

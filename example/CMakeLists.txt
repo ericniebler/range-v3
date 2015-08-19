@@ -4,6 +4,10 @@ add_test(test.example.comprehensions, comprehensions)
 add_executable(fibonacci fibonacci.cpp)
 add_test(test.example.fibonacci, fibonacci)
 
+#add_executable(n_queens n_queens.cpp)
+#add_test(test.example.n_queens, n_queens)
+#set_target_properties(n_queens PROPERTIES COMPILE_FLAGS "-std=gnu++14")
+
 # Guarded with a variable because:
 #  (a) The calendar example causes gcc to puke, and
 #  (b) It requires a fix for Boost.Range(!!!) that is

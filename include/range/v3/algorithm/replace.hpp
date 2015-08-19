@@ -31,7 +31,7 @@ namespace ranges
         template<typename I, typename T0, typename T1, typename P = ident>
         using Replaceable = meta::fast_and<
             InputIterator<I>,
-            IndirectCallableRelation<equal_to, Project<I, P>, T0 const *>,
+            IndirectCallableRelation<equal_to, Projected<I, P>, T0 const *>,
             Writable<I, T1>>;
 
         /// \addtogroup group-algorithms
