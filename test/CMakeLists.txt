@@ -5,6 +5,24 @@ endif()
 
 set(CMAKE_CXX_COMPILER_FLAGS "${CMAKE_CXX_COMPILER_FLAGS} -g")
 
+
+include(CMakeParseArguments)
+function(cxx_test)
+    set(options )
+    set(oneValueArgs PRETTY_NAME BIN_NAME)
+    set(multiValueArgs SOURCES LIBS)
+    CMAKE_PARSE_ARGUMENTS(OPT "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if (NOT OPT_PRETTY_NAME OR NOT OPT_BIN_NAME OR NOT OPT_SOURCES)
+        message(FATAL_ERROR "Arguments PRETTY_NAME, BIN_NAME, SOURCES are required!")
+    endif()
+
+    add_executable(${OPT_BIN_NAME} ${OPT_SOURCES})
+    target_link_libraries(${OPT_BIN_NAME} -pthread ${OPT_LIBS})
+    add_test(${OPT_PRETTY_NAME} ${OPT_BIN_NAME})
+endfunction()
+
+
 add_subdirectory(action)
 add_subdirectory(algorithm)
 add_subdirectory(numeric)
