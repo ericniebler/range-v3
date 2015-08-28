@@ -170,6 +170,10 @@ matrix:
       os: linux
       addons: *gcc49
 
+    - env: GCC_VERSION=4.9 BUILD_TYPE=Coverage CPP=11 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: *gcc49
+
     # Test gcc-5.0: C++11/14, Build=Debug/Release, ASAN=Off
     # - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
     #   os: linux
@@ -203,6 +207,7 @@ before_install:
   - which $CC
   - which valgrind
   - if [ -n "$CLANG_VERSION" ]; then sudo CXX=$CXX CC=$CC ./install_libcxx.sh; fi
+  - pip install --user cpp-coveralls
 
 install:
   - cd $CHECKOUT_PATH
@@ -229,6 +234,9 @@ script:
   # Valgrind runs for clang release builds only,
   # it fails when using gcc-4.9 + libstdc++-4.9.
   - if [ "$BUILD_TYPE" == "Release" ] && [ ! -n "$GCC_VERSION" ]; then ctest -VV -D ExperimentalMemCheck; fi
+
+after_success:
+  - if [ "$BUILD_TYPE" == "Coverage" ]; then ~/.local/bin/coveralls --repo_token "${COVERALLS_IO_TOKEN}" --exclude build/tests/gtest -E ".*CMake.*CompilerId.c" --gcov-options "\-lp" -r ../; fi
 
 notifications:
   email: false
