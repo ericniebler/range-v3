@@ -29,29 +29,56 @@ add_subdirectory(numeric)
 add_subdirectory(utility)
 add_subdirectory(view)
 
-add_executable(container_conversion container_conversion.cpp)
-add_test(test.container_conversion container_conversion)
+cxx_test(
+  PRETTY_NAME test.container_conversion
+  BIN_NAME container_conversion
+  SOURCES container_conversion.cpp
+)
 
-add_executable(constexpr_core constexpr_core.cpp)
-add_test(test.constexpr_core constexpr_core)
+cxx_test(
+  PRETTY_NAME test.constexpr_core
+  BIN_NAME constexpr_core
+  SOURCES constexpr_core.cpp
+)
 
-add_executable(view_facade view_facade.cpp)
-add_test(test.view_facade view_facade)
+cxx_test(
+  PRETTY_NAME test.view_facade
+  BIN_NAME view_facade
+  SOURCES view_facade.cpp
+)
 
-add_executable(view_adaptor view_adaptor.cpp)
-add_test(test.view_adaptor view_adaptor)
+cxx_test(
+  PRETTY_NAME test.view_adaptor
+  BIN_NAME view_adaptor
+  SOURCES view_adaptor.cpp
+)
 
-add_executable(range range.cpp)
-add_test(test.range range)
+cxx_test(
+  PRETTY_NAME test.range
+  BIN_NAME range
+  SOURCES range.cpp
+)
 
-add_executable(multiple multiple1.cpp multiple2.cpp)
-add_test(test.multiple multiple)
+cxx_test(
+  PRETTY_NAME test.multiple
+  BIN_NAME multiple
+  SOURCES multiple1.cpp multiple2.cpp
+)
 
-add_executable(distance distance.cpp)
-add_test(test.distance distance)
+cxx_test(
+  PRETTY_NAME test.distance
+  BIN_NAME distance
+  SOURCES distance.cpp
+)
 
-add_executable(to_container to_container.cpp)
-add_test(test.to_container, to_container)
+cxx_test(
+  PRETTY_NAME test.to_container
+  BIN_NAME to_container
+  SOURCES to_container.cpp
+)
 
-add_executable(getlines getlines.cpp)
-add_test(test.getlines, getlines)
+cxx_test(
+  PRETTY_NAME test.getlines
+  BIN_NAME getlines
+  SOURCES getlines.cpp
+)
