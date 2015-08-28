@@ -242,7 +242,9 @@ script:
   - if [ "$BUILD_TYPE" == "Release" ] && [ ! -n "$GCC_VERSION" ]; then ctest -VV -D ExperimentalMemCheck; fi
 
 after_success:
-  - if [ "$BUILD_TYPE" == "Coverage" ]; then ~/.local/bin/coveralls --repo_token "${COVERALLS_IO_TOKEN}" --exclude build/tests/gtest -E ".*CMake.*CompilerId.c" --gcov-options "\-lp" -r ../; fi
+  - export GCOV=/usr/bin/gcov
+  - if [ -n "$GCC_VERSION" ]; then export GCOV="$GCOV-$GCC_VERSION"; fi
+  - if [ "$BUILD_TYPE" == "Coverage" ]; then ~/.local/bin/coveralls --repo_token "${COVERALLS_IO_TOKEN}" --gcov "$GCOV" --exclude build/tests/gtest -E ".*CMake.*CompilerId.c" --gcov-options "\-lp" -r ../; fi
 
 notifications:
   email: false
