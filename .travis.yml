@@ -172,7 +172,13 @@ matrix:
 
     - env: GCC_VERSION=4.9 BUILD_TYPE=Coverage CPP=11 ASAN=Off LIBCXX=Off
       os: linux
-      addons: *gcc49
+      addons: &gcc49
+        apt:
+          packages:
+            - g++-4.9
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
 
     # Test gcc-5.0: C++11/14, Build=Debug/Release, ASAN=Off
     # - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
