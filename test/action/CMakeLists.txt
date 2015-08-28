@@ -1,47 +1,95 @@
-add_executable(act.concepts cont_concepts.cpp)
-add_test(test.act.concepts act.concepts)
+cxx_test(
+  PRETTY_NAME test.act.concepts
+  BIN_NAME act.concepts
+  SOURCES cont_concepts.cpp
+)
 
-add_executable(act.drop drop.cpp)
-add_test(test.act.drop act.drop)
+cxx_test(
+  PRETTY_NAME test.act.drop
+  BIN_NAME act.drop
+  SOURCES drop.cpp
+)
 
-add_executable(act.drop_while drop_while.cpp)
-add_test(test.act.drop_while act.drop_while)
+cxx_test(
+  PRETTY_NAME test.act.drop_while
+  BIN_NAME act.drop_while
+  SOURCES drop_while.cpp
+)
 
-add_executable(act.insert insert.cpp)
-add_test(test.act.insert act.insert)
+cxx_test(
+  PRETTY_NAME test.act.insert
+  BIN_NAME act.insert
+  SOURCES insert.cpp
+)
 
-add_executable(act.push_front push_front.cpp)
-add_test(test.act.push_front act.push_front)
+cxx_test(
+  PRETTY_NAME test.act.push_front
+  BIN_NAME act.push_front
+  SOURCES push_front.cpp
+)
 
-add_executable(act.push_back push_back.cpp)
-add_test(test.act.push_back act.push_back)
+cxx_test(
+  PRETTY_NAME test.act.push_back
+  BIN_NAME act.push_back
+  SOURCES push_back.cpp
+)
 
-add_executable(act.remove_if remove_if.cpp)
-add_test(test.act.remove_if act.remove_if)
+cxx_test(
+  PRETTY_NAME test.act.remove_if
+  BIN_NAME act.remove_if
+  SOURCES remove_if.cpp
+)
 
-add_executable(act.shuffle shuffle.cpp)
-add_test(test.act.shuffle act.shuffle)
+cxx_test(
+  PRETTY_NAME test.act.shuffle
+  BIN_NAME act.shuffle
+  SOURCES shuffle.cpp
+)
 
-add_executable(act.slice slice.cpp)
-add_test(test.act.slice act.slice)
+cxx_test(
+  PRETTY_NAME test.act.slice
+  BIN_NAME act.slice
+  SOURCES slice.cpp
+)
 
-add_executable(act.sort sort.cpp)
-add_test(test.act.sort act.sort)
+cxx_test(
+  PRETTY_NAME test.act.sort
+  BIN_NAME act.sort
+  SOURCES sort.cpp
+)
 
-add_executable(act.split split.cpp)
-add_test(test.act.split act.split)
+cxx_test(
+  PRETTY_NAME test.act.split
+  BIN_NAME act.split
+  SOURCES split.cpp
+)
 
-add_executable(act.stride stride.cpp)
-add_test(test.act.stride act.stride)
+cxx_test(
+  PRETTY_NAME test.act.stride
+  BIN_NAME act.stride
+  SOURCES stride.cpp
+)
 
-add_executable(act.take take.cpp)
-add_test(test.act.take act.take)
+cxx_test(
+  PRETTY_NAME test.act.take
+  BIN_NAME act.take
+  SOURCES take.cpp
+)
 
-add_executable(act.take_while take_while.cpp)
-add_test(test.act.take_while act.take_while)
+cxx_test(
+  PRETTY_NAME test.act.take_while
+  BIN_NAME act.take_while
+  SOURCES take_while.cpp
+)
 
-add_executable(act.transform transform.cpp)
-add_test(test.act.transform act.transform)
+cxx_test(
+  PRETTY_NAME test.act.transform
+  BIN_NAME act.transform
+  SOURCES transform.cpp
+)
 
-add_executable(act.unique unique.cpp)
-add_test(test.act.unique act.unique)
+cxx_test(
+  PRETTY_NAME test.act.unique
+  BIN_NAME act.unique
+  SOURCES unique.cpp
+)

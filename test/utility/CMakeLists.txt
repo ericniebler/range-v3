@@ -1,21 +1,42 @@
 
-add_executable(utility.basic_iterator basic_iterator.cpp)
-add_test(test.utility.basic_iterator utility.basic_iterator)
+cxx_test(
+  PRETTY_NAME test.utility.basic_iterator
+  BIN_NAME utility.basic_iterator
+  SOURCES basic_iterator.cpp
+)
 
-add_executable(utility.concepts concepts.cpp)
-add_test(test.utility.concepts utility.concepts)
+cxx_test(
+  PRETTY_NAME test.utility.concepts
+  BIN_NAME utility.concepts
+  SOURCES concepts.cpp
+)
 
-add_executable(utility.common_type common_type.cpp)
-add_test(test.utility.common_type utility.common_type)
+cxx_test(
+  PRETTY_NAME test.utility.common_type
+  BIN_NAME utility.common_type
+  SOURCES common_type.cpp
+)
 
-add_executable(utility.functional functional.cpp)
-add_test(test.utility.functional utility.functional)
+cxx_test(
+  PRETTY_NAME test.utility.functional
+  BIN_NAME utility.functional
+  SOURCES functional.cpp
+)
 
-add_executable(utility.reverse_iterator reverse_iterator.cpp)
-add_test(test.utility.reverse_iterator utility.reverse_iterator)
+cxx_test(
+  PRETTY_NAME test.utility.reverse_iterator
+  BIN_NAME utility.reverse_iterator
+  SOURCES reverse_iterator.cpp
+)
 
-add_executable(utility.swap swap.cpp)
-add_test(test.utility.swap utility.swap)
+cxx_test(
+  PRETTY_NAME test.utility.swap
+  BIN_NAME utility.swap
+  SOURCES swap.cpp
+)
 
-add_executable(utility.meta meta.cpp)
-add_test(test.utility.meta utility.meta)
+cxx_test(
+  PRETTY_NAME test.utility.meta
+  BIN_NAME utility.meta
+  SOURCES meta.cpp
+)

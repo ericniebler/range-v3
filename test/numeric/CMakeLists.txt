@@ -1,14 +1,30 @@
-add_executable(num.accumulate accumulate.cpp)
-add_test(test.num.accumulate num.accumulate)
 
-add_executable(num.adjacent_difference adjacent_difference.cpp)
-add_test(test.num.adjacent_difference num.adjacent_difference)
+cxx_test(
+  PRETTY_NAME test.num.accumulate
+  BIN_NAME num.accumulate
+  SOURCES accumulate.cpp
+)
 
-add_executable(num.inner_product inner_product.cpp)
-add_test(test.num.inner_product num.inner_product)
+cxx_test(
+  PRETTY_NAME test.num.adjacent_difference
+  BIN_NAME num.adjacent_difference
+  SOURCES adjacent_difference.cpp
+)
 
-add_executable(num.iota iota.cpp)
-add_test(test.num.iota num.iota)
+cxx_test(
+  PRETTY_NAME test.num.inner_product
+  BIN_NAME num.inner_product
+  SOURCES inner_product.cpp
+)
 
-add_executable(num.partial_sum partial_sum.cpp)
-add_test(test.num.partial_sum num.partial_sum)
+cxx_test(
+  PRETTY_NAME test.num.iota
+  BIN_NAME num.iota
+  SOURCES iota.cpp
+)
+
+cxx_test(
+  PRETTY_NAME test.num.partial_sum
+  BIN_NAME num.partial_sum
+  SOURCES partial_sum.cpp
+)

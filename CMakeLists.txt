@@ -9,8 +9,7 @@ find_package(Git)
 # Select C++ standard to be used for compiling the tests,
 # for example: 11, 14, 17, 1z, 1y, ...
 #
-if(RANGES_CXX_STD)
-else()
+if(NOT RANGES_CXX_STD)
   # Defaults to C++11 if not set:
   set(RANGES_CXX_STD 11) 
 endif()
@@ -29,28 +28,40 @@ include_directories(include)
 
 add_definitions(-DRANGES_SUPPRESS_IOTA_WARNING)
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything -Werror -pedantic-errors")                           
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Wno-error=deprecated")                  
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++98-compat -Wno-c++98-compat-pedantic")        
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-stack-address")                  
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable -Wno-unused-parameter")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-weak-vtables -Wno-padded")                       
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-global-constructors -Wno-exit-time-destructors") 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-shorten-64-to-32 -Wno-sign-conversion") 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-prototypes -Wno-missing-variable-declarations") 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-shadow -Wno-old-style-cast") 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-documentation -Wno-documentation-unknown-command") 
+  set(CXX_FLAGS_LIST
+    -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0
+    -Weverything -Werror -pedantic-errors
+    -Wno-error=deprecated-declarations -Wno-error=deprecated
+    -Wno-c++98-compat -Wno-c++98-compat-pedantic
+    -Wno-return-stack-address
+    -Wno-unused-variable -Wno-unused-parameter
+    -Wno-weak-vtables -Wno-padded
+    -Wno-global-constructors -Wno-exit-time-destructors
+    -Wno-shorten-64-to-32 -Wno-sign-conversion
+    -Wno-missing-prototypes -Wno-missing-variable-declarations
+    -Wno-shadow -Wno-old-style-cast
+    -Wno-documentation -Wno-documentation-unknown-command
+  )
+  string(REPLACE ";" " " CXX_FLAGS "${CXX_FLAGS_LIST}")
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
   set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_COVERAGE "--coverage -fkeep-inline-functions")
 elseif(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Werror -pedantic-errors")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-field-initializers")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
+  set(CXX_FLAGS_LIST
+    -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0
+    -Wall -Wextra -pedantic -Werror -pedantic-errors
+    -Wno-error=deprecated-declarations
+    -Wno-missing-field-initializers
+    -Wno-unused-parameter
+  )
+  string(REPLACE ";" " " CXX_FLAGS "${CXX_FLAGS_LIST}")
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_FLAGS}")
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
   set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_COVERAGE "--coverage -fkeep-inline-functions")
 # else()
 #   message(FATAL_ERROR "Unknown compiler.")
 endif()
