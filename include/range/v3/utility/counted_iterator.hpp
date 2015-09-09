@@ -196,6 +196,12 @@ namespace ranges
         {
             return 0;
         }
+
+        template<typename I, CONCEPT_REQUIRES_(WeakInputIterator<I>())>
+        counted_iterator<I> make_counted_iterator(I i, iterator_difference_t<I> n)
+        {
+            return counted_iterator<I>{std::move(i), n};
+        }
         /// @}
     }
 }

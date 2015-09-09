@@ -641,12 +641,6 @@ namespace ranges
                 return i;
             }
 
-            template<typename I>
-            constexpr I recounted(I const &, I i)
-            {
-                return i;
-            }
-
             struct uncounted_fn
             {
                 template<typename I>
@@ -666,14 +660,6 @@ namespace ranges
                     decltype(recounted((I&&)i, (J&&)j, n))
                 {
                     return recounted((I&&)i, (J&&)j, n);
-                }
-
-                template<typename I, typename J>
-                constexpr
-                auto operator()(I i, J j) const ->
-                    decltype(recounted((I&&)i, (J&&)j))
-                {
-                    return recounted((I&&)i, (J&&)j);
                 }
             };
         }
