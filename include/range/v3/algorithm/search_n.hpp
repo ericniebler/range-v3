@@ -49,43 +49,6 @@ namespace ranges
         struct search_n_fn
         {
         private:
-            template<typename I, typename D, typename V, typename C, typename P,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
-            static I sized_impl(I const begin_, I end, D d, D count, V const &val,
-                C &pred, P &proj)
-            {
-                if(d < count)
-                    return end;
-                auto begin = uncounted(begin_);
-                auto const s = uncounted(end - (count - 1)); // Start of pattern match can't go beyond here
-                while(true)
-                {
-                    // Find first element in sequence that matches val, with a mininum of loop checks
-                    while(true)
-                    {
-                        if(begin >= s)  // return the end if we've run out of room
-                            return end;
-                        if(pred(proj(*begin), val))
-                            break;
-                        ++begin;
-                    }
-                    // *begin matches val, now match elements after here
-                    auto m = begin;
-                    D c = 0;
-                    while(true)
-                    {
-                        if(++c == count)  // If pattern exhausted, begin is the answer (works for 1 element pattern)
-                            return recounted(begin_, std::move(begin));
-                        ++m;  // No need to check, we know we have room to match successfully
-                        if(!pred(proj(*m), val))  // if there is a mismatch, restart with a new begin
-                        {
-                            begin = next(std::move(m));
-                            break;
-                        }  // else there is a match, check next elements
-                    }
-                }
-            }
-
             template<typename I, typename S, typename D, typename V, typename C, typename P>
             static I sized_impl(I const begin_, S end, D const d_, D count,
                 V const &val, C &pred, P &proj)

@@ -51,44 +51,6 @@ namespace ranges
         struct search_fn
         {
         private:
-            template<typename I1, typename D1, typename I2, typename S2, typename D2,
-                typename C, typename P1, typename P2,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I1>())>
-            static I1 sized_impl(I1 const begin1_, I1 end1, D1 d1, I2 begin2, S2 end2, D2 d2,
-                C &pred, P1 &proj1, P2 &proj2)
-            {
-                if(d1 < d2)
-                    return end1;
-                auto begin1 = uncounted(begin1_);
-                auto const s = uncounted(end1 - (d2 - 1)); // Start of pattern match can't go beyond here
-                while(true)
-                {
-                    // Find begin element in sequence 1 that matches *begin2, with a mininum of loop checks
-                    while(true)
-                    {
-                        if(begin1 == s)  // return the end if we've run out of room
-                            return end1;
-                        if(pred(proj1(*begin1), proj2(*begin2)))
-                            break;
-                        ++begin1;
-                    }
-                    // *begin1 matches *begin2, now match elements after here
-                    auto m1 = begin1;
-                    I2 m2 = begin2;
-                    while(true)
-                    {
-                        if(++m2 == end2)  // If pattern exhausted, begin1 is the answer (works for 1 element pattern)
-                            return recounted(begin1_, std::move(begin1));
-                        ++m1;  // No need to check, we know we have room to match successfully
-                        if(!pred(proj1(*m1), proj2(*m2)))  // if there is a mismatch, restart with a new begin1
-                        {
-                            ++begin1;
-                            break;
-                        }  // else there is a match, check next elements
-                    }
-                }
-            }
-
             template<typename I1, typename S1, typename D1, typename I2, typename S2, typename D2,
                 typename C, typename P1, typename P2>
             static I1 sized_impl(I1 const begin1_, S1 end1, D1 const d1_, I2 begin2, S2 end2, D2 d2,
