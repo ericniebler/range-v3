@@ -193,7 +193,7 @@ struct Int
 {
     using difference_type = int;
     int i_;
-    Int(int i = 0) : i_(0) {}
+    Int(int i = 0) : i_(i) {}
     Int(Int && that) : i_(that.i_) { that.i_ = 0; }
     Int(Int const &) = delete;
     Int & operator=(Int && that)

@@ -82,7 +82,7 @@ namespace ranges
                             goto next_iter;
                     {
                         // Count number of *i in [f2, l2)
-                        iterator_difference_t<I1> c2 = 0;
+                        iterator_difference_t<I2> c2 = 0;
                         for(I2 j = begin2; j != end2; ++j)
                             if(pred(proj1(*i), proj2(*j)))
                                 ++c2;
@@ -132,7 +132,7 @@ namespace ranges
                             goto next_iter;
                     {
                         // Count number of *i in [f2, l2)
-                        iterator_difference_t<I1> c2 = 0;
+                        iterator_difference_t<I2> c2 = 0;
                         for(I2 j = begin2; j != end2; ++j)
                             if(pred(proj1(*i), proj2(*j)))
                                 ++c2;
