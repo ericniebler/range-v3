@@ -532,10 +532,11 @@ namespace ranges
                 // Avoid CWG DR1467.
                 template<typename T, typename U>
                 using DR1467 =
-#if defined(__clang__) && (__clang_major__ < 3 || ( __clang_major__ == 3 && __clang_minor__ <= 4))
+#if defined(__clang__) && (__clang_major__ < 3 || ( __clang_major__ == 3 && __clang_minor__ <= 4) || (__clang_major__ == 6 && __clang_minor__ == 0))
                   // 3.4 has a bug involving uniform initialization and conversion operators,
                   // so just avoid brace initialization in all cases for construction from a
                   // single argument.
+                  // also: Apple clang 3.5 seemingly still has the bug and reports its version incorrectly (__clang_major__ == 6 && __clang_minor__ == 0)
                   meta::bool_<true || std::is_same<T, U>::value>;
 #else
                   std::is_same<uncvref_t<T>, uncvref_t<U>>;
