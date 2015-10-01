@@ -121,11 +121,12 @@ matrix:
       addons: &clang37
         apt:
           packages:
+            - util-linux
             - clang-3.7
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
+            - llvm-toolchain-precise-3.7
 
     - env: CLANG_VERSION=3.7 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
       os: linux
