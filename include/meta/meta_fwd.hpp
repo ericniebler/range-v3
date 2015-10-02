@@ -15,6 +15,8 @@
 #ifndef META_FWD_HPP
 #define META_FWD_HPP
 
+#include <utility>
+
 #ifndef META_DISABLE_DEPRECATED_WARNINGS
 #ifdef __cpp_attribute_deprecated
 #define META_DEPRECATED(MSG) [[deprecated(MSG)]]
@@ -35,8 +37,12 @@ namespace meta
 {
     inline namespace v1
     {
+#ifdef __cpp_lib_integer_sequence
+        using std::integer_sequence;
+#else
         template <typename T, T...>
         struct integer_sequence;
+#endif
 
         template <typename... Ts>
         struct list;
