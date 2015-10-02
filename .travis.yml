@@ -15,6 +15,10 @@ script: cmake
 #
 matrix:
   include:
+    - env: BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
+      os: osx
+      compiler: clang
+
     # Test clang-3.4: C++11, Buidd=Debug/Release, ASAN=On/Off
     - env: CLANG_VERSION=3.4 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
       os: linux
@@ -197,6 +201,10 @@ matrix:
 # Install dependencies
 before_install:
   - export CHECKOUT_PATH=`pwd`;
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install valgrind; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install gnu-sed --with-default-names; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install gnu-which --with-default-names; fi
   - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
   - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
   - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
@@ -222,7 +230,7 @@ install:
   - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP -DMEMORYCHECK_COMMAND:FILEPATH=/usr/bin/valgrind
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DRANGES_CXX_STD=$CPP
   - make VERBOSE=1
 
 script:
