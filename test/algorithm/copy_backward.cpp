@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/copy_backward.hpp>
-#include <range/v3/view/delimit.hpp>
 #include "../simple_test.hpp"
 
 int main()

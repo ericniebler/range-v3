@@ -511,12 +511,12 @@ namespace ranges
                 return tmp;
             }
             // BUGBUG this doesn't handle weak iterators.
-            constexpr friend bool operator==(basic_iterator const &left,
+            friend constexpr bool operator==(basic_iterator const &left,
                 basic_iterator const &right)
             {
                 return left.equal_(right, _nullptr_v<std::is_same<Cur, S>>());
             }
-            constexpr friend bool operator!=(basic_iterator const &left,
+            friend constexpr bool operator!=(basic_iterator const &left,
                 basic_iterator const &right)
             {
                 return !(left == right);
