@@ -407,36 +407,21 @@ struct sentinel_type<I<It>, Sized>
 
 namespace ranges
 {
-    template<typename I0, bool S, typename I1>
-    struct common_type<sentinel<I0, S>, I1>
+    template<typename I0, bool B, typename I1>
+    struct common_type<sentinel<I0, B>, I1>
     {
-        using type = common_iterator<I1, sentinel<I0, S>>;
+        using type = common_iterator<I1, sentinel<I0, B>>;
     };
-    template<typename I0, typename I1, bool S>
-    struct common_type<I0, sentinel<I1, S>>
+    template<typename I0, typename I1, bool B>
+    struct common_type<I0, sentinel<I1, B>>
     {
-        using type = common_iterator<I0, sentinel<I1, S>>;
+        using type = common_iterator<I0, sentinel<I1, B>>;
     };
     template<typename I, bool B>
     struct common_type<sentinel<I, B>, sentinel<I, B>>
     {
-        using type = sentinel<I>;
-    };
-    template<typename I0, bool S, typename I1, typename TQual, typename UQual>
-    struct basic_common_reference<sentinel<I0, S>, I1, TQual, UQual>
-    {
-        using type = common_iterator<I1, sentinel<I0, S>>;
-    };
-    template<typename I0, typename I1, bool S, typename TQual, typename UQual>
-    struct basic_common_reference<I0, sentinel<I1, S>, TQual, UQual>
-    {
-        using type = common_iterator<I0, sentinel<I1, S>>;
-    };
-    template<typename I, bool B, typename TQual, typename UQual>
-    struct basic_common_reference<sentinel<I, B>, sentinel<I, B>, TQual, UQual>
-    {
-        using type = sentinel<I>;
+        using type = sentinel<I, B>;
     };
 }
 
-#endif  // ITERATORS_H
+#endif  // RANGES_TEST_ITERATORS_HPP

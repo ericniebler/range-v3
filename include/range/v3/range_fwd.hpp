@@ -358,8 +358,10 @@ namespace ranges
         template<typename T>
         struct istream_range;
 
+    #if RANGES_CXX_NO_VARIABLE_TEMPLATES
         template<typename T>
         istream_range<T> istream(std::istream & sin);
+    #endif
 
         template<typename I, typename S = I>
         struct range;
@@ -570,8 +572,18 @@ namespace ranges
             struct take_fn;
         }
 
+        namespace detail
+        {
+            template<typename Rng>
+            struct is_random_access_bounded_;
+
+            template<typename Rng,
+                bool IsRandomAccessBounded = is_random_access_bounded_<Rng>::value>
+            struct take_exactly_view_;
+        }
+
         template<typename Rng>
-        struct take_exactly_view;
+        using take_exactly_view = detail::take_exactly_view_<Rng>;
 
         namespace view
         {

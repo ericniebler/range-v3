@@ -18,6 +18,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view_facade.hpp>
 #include <range/v3/utility/semiregular.hpp>
+#include <range/v3/utility/static_const.hpp>
 
 namespace ranges
 {
@@ -76,13 +77,28 @@ namespace ranges
             }
         };
 
-        /// TODO use a variable template here when they're available
+    #if RANGES_CXX_NO_VARIABLE_TEMPLATES
         template<typename Val>
         istream_range<Val> istream(std::istream & sin)
         {
             return istream_range<Val>{sin};
         }
+    #else
+        template<typename Val>
+        struct istream_fn
+        {
+            istream_range<Val> operator()(std::istream & sin) const
+            {
+                return istream_range<Val>{sin};
+            }
+        };
 
+        namespace
+        {
+            template<typename Val>
+            constexpr auto && istream = static_const<istream_fn<Val>>::value;
+        }
+    #endif
         /// @}
     }
 }
