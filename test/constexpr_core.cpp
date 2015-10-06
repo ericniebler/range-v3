@@ -181,10 +181,13 @@ RANGES_CXX14_CONSTEXPR auto test_array() -> bool {
 
     auto beg = ranges::begin(a);
     auto three = ranges::next(beg, 2);
-    // ranges::iter_swap(beg, three);
-    // if (*beg != 3) { return false; }
-    // if (*three != 1) { return false; }
-    // ranges::iter_swap(beg, three);
+
+    if ((false)) {
+      ranges::iter_swap(beg, three);
+      if (*beg != 3) { return false; }
+      if (*three != 1) { return false; }
+      ranges::iter_swap(beg, three);
+    }
 
     if (!test_its(a)) { return false; }
     if (!test_cits(a)) { return false; }
