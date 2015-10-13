@@ -32,20 +32,35 @@ namespace ranges
 
             //
             // Concepts that the range cursor must model
-            // BUGBUG this doesn't handle weak cursors.
             //
-            struct InputCursorConcept
+            struct WeakCursor
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
-                        //t.done(),
-                        t.current(),
                         (t.next(), concepts::void_)
                     ));
             };
-            struct ForwardCursorConcept
-              : concepts::refines<InputCursorConcept>
+            struct WeakInputCursor
+              : concepts::refines<WeakCursor>
+            {
+                template<typename T>
+                auto requires_(T&& t) -> decltype(
+                    concepts::valid_expr(
+                        t.current()
+                    ));
+            };
+            struct InputCursor
+              : concepts::refines<WeakInputCursor>
+            {
+                template<typename T>
+                auto requires_(T&& t) -> decltype(
+                    concepts::valid_expr(
+                        t.done()
+                    ));
+            };
+            struct ForwardCursor
+              : concepts::refines<WeakInputCursor>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -53,8 +68,8 @@ namespace ranges
                         concepts::convertible_to<bool>(t.equal(t))
                     ));
             };
-            struct BidirectionalCursorConcept
-              : concepts::refines<ForwardCursorConcept>
+            struct BidirectionalCursor
+              : concepts::refines<ForwardCursor>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -62,8 +77,8 @@ namespace ranges
                         (t.prev(), concepts::void_)
                     ));
             };
-            struct RandomAccessCursorConcept
-              : concepts::refines<BidirectionalCursorConcept>
+            struct RandomAccessCursor
+              : concepts::refines<BidirectionalCursor>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -72,7 +87,7 @@ namespace ranges
                         (t.advance(t.distance_to(t)), concepts::void_)
                     ));
             };
-            struct InfiniteCursorConcept
+            struct InfiniteCursor
             {
                 template<typename T>
                 auto requires_(T&&) -> decltype(
@@ -281,33 +296,42 @@ namespace ranges
         namespace detail
         {
             template<typename T>
+            using WeakCursor =
+                concepts::models<range_access::WeakCursor, T>;
+
+            template<typename T>
+            using WeakInputCursor =
+                concepts::models<range_access::WeakInputCursor, T>;
+
+            template<typename T>
             using InputCursor =
-                concepts::models<range_access::InputCursorConcept, T>;
+                concepts::models<range_access::InputCursor, T>;
 
             template<typename T>
             using ForwardCursor =
-                concepts::models<range_access::ForwardCursorConcept, T>;
+                concepts::models<range_access::ForwardCursor, T>;
 
             template<typename T>
             using BidirectionalCursor =
-                concepts::models<range_access::BidirectionalCursorConcept, T>;
+                concepts::models<range_access::BidirectionalCursor, T>;
 
             template<typename T>
             using RandomAccessCursor =
-                concepts::models<range_access::RandomAccessCursorConcept, T>;
+                concepts::models<range_access::RandomAccessCursor, T>;
 
             template<typename T>
             using InfiniteCursor =
-                concepts::models<range_access::InfiniteCursorConcept, T>;
+                concepts::models<range_access::InfiniteCursor, T>;
 
             template<typename T>
             using cursor_concept =
                 concepts::most_refined<
                     meta::list<
-                        range_access::RandomAccessCursorConcept,
-                        range_access::BidirectionalCursorConcept,
-                        range_access::ForwardCursorConcept,
-                        range_access::InputCursorConcept>, T>;
+                        range_access::RandomAccessCursor,
+                        range_access::BidirectionalCursor,
+                        range_access::ForwardCursor,
+                        range_access::InputCursor,
+                        range_access::WeakInputCursor>, T>;
 
             template<typename T>
             using cursor_concept_t = meta::_t<cursor_concept<T>>;

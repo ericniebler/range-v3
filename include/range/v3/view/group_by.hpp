@@ -34,6 +34,10 @@ namespace ranges
 {
     inline namespace v3
     {
+        // TODO group_by could support Input ranges by keeping mutable state in
+        // the range itself. The group_by view would then be mutable-only and
+        // Input.
+
         /// \addtogroup group-views
         /// @{
         template<typename Rng, typename Fun>

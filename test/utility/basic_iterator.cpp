@@ -16,61 +16,123 @@
 
 #include <range/v3/utility/counted_iterator.hpp>
 
-template<typename I>
-struct cursor
+namespace test_weak_input
 {
-    I it_;
-    struct mixin : ranges::basic_mixin<cursor>
+    template<typename I>
+    struct cursor
     {
-        mixin() = default;
-        mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
-        mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+        I it_;
+        struct mixin : ranges::basic_mixin<cursor>
+        {
+            mixin() = default;
+            mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
+            mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+        };
+        cursor() = default;
+        explicit cursor(I i) : it_(i) {}
+        template<class J, CONCEPT_REQUIRES_(ranges::ConvertibleTo<J, I>())>
+        cursor(cursor<J> that) : it_(std::move(that.it_)) {}
+
+        auto current() const -> decltype(*it_) { return *it_; }
+        void next() { ++it_; }
     };
-    cursor() = default;
-    explicit cursor(I i) : it_(i) {}
-    template<class J, CONCEPT_REQUIRES_(ranges::ConvertibleTo<J, I>())>
-    cursor(cursor<J> that) : it_(std::move(that.it_)) {}
 
-    auto current() const -> decltype(*it_) { return *it_; }
-    bool equal(cursor<I> const &that) const  { return that.it_ == it_; }
-    void next() { ++it_; }
-    void prev() { --it_; }
-    void advance(ranges::iterator_difference_t<I> n) {
-        it_ += n;
+    CONCEPT_ASSERT(ranges::detail::WeakInputCursor<cursor<char*>>());
+
+    template<class I>
+    using iterator = ranges::basic_iterator<cursor<I>>;
+
+    static_assert(
+        std::is_same<
+            iterator<char*>::iterator_category,
+            ranges::weak_input_iterator_tag>::value,
+        "");
+
+    void test()
+    {
+        using namespace ranges;
+        using I = iterator<char const *>;
+
+        static const char sz[] = "hello world";
+        I i{sz};
+        CHECK(*i == 'h');
+        ++i;
+        CHECK(*i == 'e');
     }
-    ranges::iterator_difference_t<I> distance_to(cursor<I> const &that) const {
-        return that.it_ - it_;
+}
+
+namespace test_random_access
+{
+    template<typename I>
+    struct cursor
+    {
+        I it_;
+        struct mixin : ranges::basic_mixin<cursor>
+        {
+            mixin() = default;
+            mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
+            mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+        };
+        cursor() = default;
+        explicit cursor(I i) : it_(i) {}
+        template<class J, CONCEPT_REQUIRES_(ranges::ConvertibleTo<J, I>())>
+        cursor(cursor<J> that) : it_(std::move(that.it_)) {}
+
+        auto current() const -> decltype(*it_) { return *it_; }
+        bool equal(cursor<I> const &that) const  { return that.it_ == it_; }
+        void next() { ++it_; }
+        void prev() { --it_; }
+        void advance(ranges::iterator_difference_t<I> n) {
+            it_ += n;
+        }
+        ranges::iterator_difference_t<I> distance_to(cursor<I> const &that) const {
+            return that.it_ - it_;
+        }
+    };
+
+    CONCEPT_ASSERT(ranges::detail::RandomAccessCursor<cursor<char*>>());
+
+    template<class I>
+    using iterator = ranges::basic_iterator<cursor<I>>;
+
+    static_assert(
+        std::is_same<
+            iterator<char*>::iterator_category,
+            ranges::random_access_iterator_tag>::value,
+        "");
+
+    void test()
+    {
+        using namespace ranges;
+
+        iterator<char*> a(nullptr);
+        iterator<char const *> b(nullptr);
+        iterator<char const *> c(a);
+
+        b = a;
+        bool d = a == b;
+        d = (a != b);
+
+        detail::ignore_unused(
+            d,
+            a < b,
+            a <= b,
+            a > b,
+            a >= b,
+            (a-b),
+            (b-a),
+            (a-a),
+            (b-b));
     }
-};
-
-CONCEPT_ASSERT(ranges::detail::RandomAccessCursor<cursor<char*>>());
-
-template<class I>
-using iterator = ranges::basic_iterator<cursor<I>>;
+}
 
 int main()
 {
     using namespace ranges;
     std::cout << "\nTesting basic_iterator\n";
 
-    iterator<char*> a(nullptr);
-    iterator<char const *> b(nullptr);
-    iterator<char const *> c(a);
-
-    b = a;
-    bool d = a == b;
-    d = (a != b);
-
-    detail::ignore_unused(
-        d,
-        a < b,
-        a <= b,
-        a > b,
-        a >= b,
-        (a-b),
-        (b-a),
-        (a-a),
-        (b-b));
+    ::test_weak_input::test();
+    ::test_random_access::test();
 
     return ::test_result();
 }
