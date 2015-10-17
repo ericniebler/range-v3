@@ -99,7 +99,7 @@ Generate a sequence on the fly with a range comprehension and initialize a vecto
     using namespace ranges;
     std::vector<int> vi =
         view::for_each(view::ints(1,10), [](int i){
-            return yield_from(view::repeat(i,i));
+            return yield_from(view::repeat_n(i,i));
         });
     // vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}
 ~~~~~~~
