@@ -16,6 +16,7 @@
 
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
+#include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/variant.hpp>
 
 namespace ranges
@@ -23,6 +24,12 @@ namespace ranges
     inline namespace v3
     {
         /// \ingroup group-utility
+        struct in_place_t {};
+        namespace
+        {
+            constexpr auto &in_place = static_const<in_place_t>::value;
+        }
+
         template<typename T>
         struct optional
         {
@@ -32,6 +39,10 @@ namespace ranges
             optional() = default;
             optional(T t)
               : data_(meta::size_t<1>{}, std::move(t))
+            {}
+            template <typename...Args, CONCEPT_REQUIRES_(Constructible<T, Args...>())>
+            explicit optional(in_place_t, Args &&...args)
+              : data_(meta::size_t<1>{}, std::forward<Args>(args)...)
             {}
             explicit operator bool() const
             {
