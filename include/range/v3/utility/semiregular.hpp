@@ -36,6 +36,10 @@ namespace ranges
             semiregular(T f)
               : t_(std::move(f))
             {}
+            template<typename ...Args>
+            semiregular(in_place_t, Args &&...args)
+              : t_(in_place, std::forward<Args>(args)...)
+            {}
             T & get()
             {
                 RANGES_ASSERT(!!t_);
