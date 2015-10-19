@@ -64,10 +64,17 @@ namespace ranges
             {
                 return cursor{*this};
             }
+
+            istream_range(std::istream &sin, Val *)
+              : sin_(&sin), obj_{}
+            {}
+            istream_range(std::istream &sin, semiregular<Val> *)
+              : sin_(&sin), obj_{in_place}
+            {}
         public:
             istream_range() = default;
             istream_range(std::istream &sin)
-              : sin_(&sin), obj_{}
+              : istream_range(sin, _nullptr_v<semiregular_t<Val>>())
             {
                 next(); // prime the pump
             }
@@ -81,10 +88,12 @@ namespace ranges
         template<typename Val>
         istream_range<Val> istream(std::istream & sin)
         {
+            CONCEPT_ASSERT_MSG(DefaultConstructible<Val>(),
+               "Only DefaultConstructible types are extractable from streams.");
             return istream_range<Val>{sin};
         }
     #else
-        template<typename Val>
+        template<typename Val, CONCEPT_REQUIRES_(DefaultConstructible<Val>())>
         struct istream_fn
         {
             istream_range<Val> operator()(std::istream & sin) const

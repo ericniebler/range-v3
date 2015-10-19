@@ -37,3 +37,6 @@ add_test(test.to_container, to_container)
 
 add_executable(getlines getlines.cpp)
 add_test(test.getlines, getlines)
+
+add_executable(istream_range istream_range.cpp)
+add_test(test.istream_range, istream_range)
