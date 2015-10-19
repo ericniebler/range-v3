@@ -197,40 +197,27 @@ namespace ranges
         struct logical_negate
         {
         private:
-            Pred pred_;
+            using fn_t = meta::_t<std::decay<function_type<Pred>>>;
+            fn_t pred_;
         public:
             logical_negate() = default;
 
             explicit constexpr logical_negate(Pred pred)
-              : pred_((Pred &&) pred)
+              : pred_(as_function((Pred &&) pred))
             {}
 
-            template<typename T,
-                CONCEPT_REQUIRES_(Predicate<Pred, T>())>
-            bool operator()(T && t)
+            template<typename ...Args,
+                CONCEPT_REQUIRES_(Predicate<fn_t&, Args...>())>
+            bool operator()(Args &&...args)
             {
-                return !pred_((T &&) t);
+                return !pred_(((Args &&) args)...);
             }
             /// \overload
-            template<typename T,
-                CONCEPT_REQUIRES_(Predicate<Pred const, T>())>
-            constexpr bool operator()(T && t) const
+            template<typename ...Args,
+                CONCEPT_REQUIRES_(Predicate<fn_t const&, Args...>())>
+            constexpr bool operator()(Args &&...args) const
             {
-                return !pred_((T &&) t);
-            }
-            /// \overload
-            template<typename T, typename U,
-                CONCEPT_REQUIRES_(Predicate<Pred, T, U>())>
-            bool operator()(T && t, U && u)
-            {
-                return !pred_((T &&) t, (U &&) u);
-            }
-            /// \overload
-            template<typename T, typename U,
-                CONCEPT_REQUIRES_(Predicate<Pred const, T, U>())>
-            constexpr bool operator()(T && t, U && u) const
-            {
-                return !pred_((T &&) t, (U &&) u);
+                return !pred_(((Args &&) args)...);
             }
         };
 
