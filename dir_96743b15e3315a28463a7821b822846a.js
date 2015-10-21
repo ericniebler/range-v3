@@ -2,13 +2,14 @@ var dir_96743b15e3315a28463a7821b822846a =
 [
     [ "adjacent_remove_if.hpp", "adjacent__remove__if_8hpp.html", null ],
     [ "all.hpp", "view_2all_8hpp.html", "view_2all_8hpp" ],
-    [ "any_range.hpp", "any__range_8hpp.html", null ],
+    [ "any_view.hpp", "any__view_8hpp.html", "any__view_8hpp" ],
     [ "bounded.hpp", "bounded_8hpp.html", "bounded_8hpp" ],
     [ "c_str.hpp", "c__str_8hpp.html", null ],
     [ "chunk.hpp", "chunk_8hpp.html", null ],
     [ "concat.hpp", "concat_8hpp.html", null ],
     [ "const.hpp", "const_8hpp.html", null ],
     [ "counted.hpp", "counted_8hpp.html", null ],
+    [ "cycle.hpp", "cycle_8hpp.html", null ],
     [ "delimit.hpp", "delimit_8hpp.html", null ],
     [ "drop.hpp", "view_2drop_8hpp.html", null ],
     [ "drop_while.hpp", "view_2drop__while_8hpp.html", null ],
@@ -30,13 +31,9 @@ var dir_96743b15e3315a28463a7821b822846a =
     [ "remove_if.hpp", "view_2remove__if_8hpp.html", null ],
     [ "repeat.hpp", "repeat_8hpp.html", null ],
     [ "repeat_n.hpp", "repeat__n_8hpp.html", null ],
-    [ "replace.hpp", "view_2replace_8hpp.html", [
-      [ "replacer_fn", "structranges_1_1v3_1_1detail_1_1replacer__fn.html", "structranges_1_1v3_1_1detail_1_1replacer__fn" ]
-    ] ],
-    [ "replace_if.hpp", "view_2replace__if_8hpp.html", [
-      [ "replacer_if_fn", "structranges_1_1v3_1_1detail_1_1replacer__if__fn.html", "structranges_1_1v3_1_1detail_1_1replacer__if__fn" ]
-    ] ],
-    [ "reverse.hpp", "view_2reverse_8hpp.html", null ],
+    [ "replace.hpp", "view_2replace_8hpp.html", null ],
+    [ "replace_if.hpp", "view_2replace__if_8hpp.html", null ],
+    [ "reverse.hpp", "view_2reverse_8hpp.html", "view_2reverse_8hpp" ],
     [ "single.hpp", "single_8hpp.html", null ],
     [ "slice.hpp", "view_2slice_8hpp.html", null ],
     [ "split.hpp", "view_2split_8hpp.html", null ],

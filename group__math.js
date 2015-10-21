@@ -1,7 +1,7 @@
 var group__math =
 [
     [ "lazy", "group__lazy__math.html", "group__lazy__math" ],
-    [ "bit_and", "group__math.html#gaf4fc2482064faccdace4581406c32b34", null ],
+    [ "bit_and", "group__math.html#ga0370b94d27fd8006e9e66310d53dd11e", null ],
     [ "bit_not", "group__math.html#ga22aa42ab47581155e70a3c433da9bc4d", null ],
     [ "bit_or", "group__math.html#ga5445318fafce925c6ad571fed6ac9f93", null ],
     [ "bit_xor", "group__math.html#ga3403c25ab888b17bc652741f89430384", null ],
@@ -15,7 +15,7 @@ var group__math =
     [ "min", "group__math.html#ga8856b0ab96f633861ae7ae70774b4877", null ],
     [ "minus", "group__math.html#gada18524f967b9de93cf5b7422e99a963", null ],
     [ "modulus", "group__math.html#ga787755b6492499bb9f8b844893645ab1", null ],
-    [ "multiplies", "group__math.html#ga350d987b66489be654f8292170bd4420", null ],
+    [ "multiplies", "group__math.html#ga2b31b719e46771ff16e9999ceb39cd9a", null ],
     [ "negate", "group__math.html#ga10cb31ffd40e5e1f044d2750cc71d941", null ],
     [ "not_equal_to", "group__math.html#ga510b8eabfec956f5a23c0fc043537009", null ],
     [ "plus", "group__math.html#gacc5070554297f47683758f8890ad45c5", null ]

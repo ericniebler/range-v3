@@ -118,9 +118,6 @@ Public Member Functions</h2></td></tr>
 template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a1cff8d9c2883da0d034a5f63334f7f14"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>advance</b> (range_iterator_t&lt; Rng &gt; &amp;it, range_difference_t&lt; Rng &gt; n)</td></tr>
 <tr class="separator:a1cff8d9c2883da0d034a5f63334f7f14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a30575158331a94ddb1c99b809eacc0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a30575158331a94ddb1c99b809eacc0"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>current</b> (range_iterator_t&lt; Rng &gt; it) const -&gt; decltype(view::take(make_range(std::move(it), end_), n_))</td></tr>
-<tr class="separator:a7a30575158331a94ddb1c99b809eacc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9678add2b949b5a3820dc523f82044d7"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9678add2b949b5a3820dc523f82044d7"></a>
 template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessRange&lt; Rng &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a9678add2b949b5a3820dc523f82044d7"><td class="memTemplItemLeft" align="right" valign="top">range_difference_t&lt; Rng &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>distance_to</b> (range_iterator_t&lt; Rng &gt; const &amp;here, range_iterator_t&lt; Rng &gt; const &amp;there, <a class="el" href="structranges_1_1v3_1_1chunk__view_1_1adaptor.html">adaptor</a> const &amp;that) const </td></tr>
@@ -128,6 +125,9 @@ template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_c
 <tr class="memitem:aa1aff64f82d77074f7a167eadff7e4aa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa1aff64f82d77074f7a167eadff7e4aa"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>end_</b> (end)</td></tr>
 <tr class="separator:aa1aff64f82d77074f7a167eadff7e4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94d7589606ee1ce4cd04dd5d72ed8a34"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a94d7589606ee1ce4cd04dd5d72ed8a34"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (range_iterator_t&lt; Rng &gt; it) const -&gt; decltype(view::take(make_range(std::move(it), end_), n_))</td></tr>
+<tr class="separator:a94d7589606ee1ce4cd04dd5d72ed8a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b86b3246f606bfaf7475d3cd78bd9bd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b86b3246f606bfaf7475d3cd78bd9bd"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>n_</b> (n)</td></tr>
 <tr class="separator:a0b86b3246f606bfaf7475d3cd78bd9bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,10 +170,6 @@ Additional Inherited Members</h2></td></tr>
 template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessIterator&lt; I &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a1695f389acb81e225e74322c1338ddbf inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>advance</b> (I &amp;it, iterator_difference_t&lt; I &gt; n)</td></tr>
 <tr class="separator:a1695f389acb81e225e74322c1338ddbf inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31db682c370bbf046d3e8bafd3d6c6ce inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplParams" colspan="2"><a class="anchor" id="a31db682c370bbf046d3e8bafd3d6c6ce"></a>
-template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(WeakIterator&lt; I &gt;()), int &gt;::type  = 0&gt; </td></tr>
-<tr class="memitem:a31db682c370bbf046d3e8bafd3d6c6ce inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplItemLeft" align="right" valign="top">static iterator_reference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>current</b> (I const &amp;it, detail::adaptor_base_current_mem_fn={}) noexcept(noexcept(iterator_reference_t&lt; I &gt;(*it)))</td></tr>
-<tr class="separator:a31db682c370bbf046d3e8bafd3d6c6ce inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add7b4cccef5e51b5eaf42238c6efc9c2 inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplParams" colspan="2"><a class="anchor" id="add7b4cccef5e51b5eaf42238c6efc9c2"></a>
 template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(RandomAccessIterator&lt; I &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:add7b4cccef5e51b5eaf42238c6efc9c2 inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplItemLeft" align="right" valign="top">static iterator_difference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>distance_to</b> (I const &amp;it0, I const &amp;it1)</td></tr>
@@ -186,6 +182,10 @@ template&lt;typename I , typename S , int _concept_requires___LINE__ = 42, typen
 template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(Iterator&lt; I &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a5d369452774625741330ae8ea3a0df52 inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>equal</b> (I const &amp;it0, I const &amp;it1)</td></tr>
 <tr class="separator:a5d369452774625741330ae8ea3a0df52 inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37e3e0ffd8ccb352a2d36fcffafd5b5a inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplParams" colspan="2"><a class="anchor" id="a37e3e0ffd8ccb352a2d36fcffafd5b5a"></a>
+template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(WeakIterator&lt; I &gt;()), int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a37e3e0ffd8ccb352a2d36fcffafd5b5a inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplItemLeft" align="right" valign="top">static iterator_reference_t&lt; I &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> (I const &amp;it, detail::adaptor_base_current_mem_fn={}) noexcept(noexcept(iterator_reference_t&lt; I &gt;(*it)))</td></tr>
+<tr class="separator:a37e3e0ffd8ccb352a2d36fcffafd5b5a inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fad8436342cd06e73e4d17ce7014831 inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5fad8436342cd06e73e4d17ce7014831"></a>
 template&lt;typename I , int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(WeakIterator&lt; I &gt;()), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:a5fad8436342cd06e73e4d17ce7014831 inherit pub_static_methods_structranges_1_1v3_1_1adaptor__base"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>next</b> (I &amp;it)</td></tr>

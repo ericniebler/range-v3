@@ -1,6 +1,7 @@
 var searchData=
 [
   ['lazy',['lazy',['../group__lazy__composition.html',1,'']]],
+  ['lazy',['lazy',['../group__lazy__datatype.html',1,'']]],
   ['lazy',['lazy',['../group__lazy__invocation.html',1,'']]],
   ['lazy',['lazy',['../group__lazy__list.html',1,'']]],
   ['lazy',['lazy',['../group__lazy__logical.html',1,'']]],

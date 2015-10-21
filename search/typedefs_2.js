@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['cartesian_5fproduct',['cartesian_product',['../group__transformation.html#ga2d578451fd78fa018320d62dd8ce39c7',1,'meta::v1::cartesian_product()'],['../group__lazy__transformation.html#ga7618cffe976d0c5158c683c9186c4af0',1,'meta::lazy::cartesian_product()']]],
-  ['char_5f',['char_',['../group__integral.html#gaa763a888e2fa210d9558edae06a953e6',1,'meta::v1']]],
-  ['compose',['compose',['../group__lazy__composition.html#ga3174f1e6fadebf7d11f3934c93911706',1,'meta::lazy']]],
-  ['concat',['concat',['../group__transformation.html#gaf7be841db4ea7d88c3b00f3f2be03199',1,'meta::v1::concat()'],['../group__lazy__transformation.html#gab2a5a4b7b5c4542f2d2009a239c4fcea',1,'meta::lazy::concat()']]],
-  ['containerlike_5f',['ContainerLike_',['../group__group-concepts.html#gadd8111e1b03f88a8c307ccf1fdd4ae31',1,'ranges::v3']]],
-  ['count',['count',['../group__query.html#ga9fa1f8686a9a3fc11b635dc9b52cc28f',1,'meta::v1::count()'],['../group__lazy__query.html#ga8d8974d8214a6ad1271489013f5d7cde',1,'meta::lazy::count()']]],
-  ['count_5fif',['count_if',['../group__query.html#ga97d3095903a1352b860be17cf828376e',1,'meta::v1::count_if()'],['../group__lazy__query.html#ga1d2f04f804ba463d12b2802e736e0226',1,'meta::lazy::count_if()']]],
-  ['curry',['curry',['../group__composition.html#ga33a0c3a3abc067f23697140a343ea8cb',1,'meta::v1::curry()'],['../group__lazy__composition.html#ga55d2531f0d97cdbf4800f7d9f747396a',1,'meta::lazy::curry()']]]
+  ['back',['back',['../group__list.html#ga038a57a969530acd33d11e4f2ac458d2',1,'meta::v1::back()'],['../group__lazy__list.html#ga33e318b20924cc9b02b939632dca43be',1,'meta::lazy::back()']]],
+  ['bind_5fback',['bind_back',['../group__lazy__composition.html#gae41e4e74e99239ffb097b8be64e38350',1,'meta::lazy']]],
+  ['bind_5ffront',['bind_front',['../group__lazy__composition.html#ga0c923f50dbaede9cc03755903d65f984',1,'meta::lazy']]],
+  ['bit_5fand',['bit_and',['../group__math.html#ga0370b94d27fd8006e9e66310d53dd11e',1,'meta::v1::bit_and()'],['../group__lazy__math.html#gac5beeaf0a55dca594206a77c2c3520d0',1,'meta::lazy::bit_and()']]],
+  ['bit_5fnot',['bit_not',['../group__math.html#ga22aa42ab47581155e70a3c433da9bc4d',1,'meta::v1::bit_not()'],['../group__lazy__math.html#gacd324652050d5f60535ea469bdee8ba4',1,'meta::lazy::bit_not()']]],
+  ['bit_5for',['bit_or',['../group__math.html#ga5445318fafce925c6ad571fed6ac9f93',1,'meta::v1::bit_or()'],['../group__lazy__math.html#ga6a6c0ca1048b5a877938e8a2d0809134',1,'meta::lazy::bit_or()']]],
+  ['bit_5fxor',['bit_xor',['../group__math.html#ga3403c25ab888b17bc652741f89430384',1,'meta::v1::bit_xor()'],['../group__lazy__math.html#gaeabb12c687c3e43776deaa75bc49c83b',1,'meta::lazy::bit_xor()']]],
+  ['bool_5f',['bool_',['../group__integral.html#gafdfad3ad3966809dd806d05950bc00a5',1,'meta::v1']]]
 ];

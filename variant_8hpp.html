@@ -122,10 +122,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ac3606750ef96b3d33414b02653f86d03"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac3606750ef96b3d33414b02653f86d03"></a>
+<tr class="memitem:a55c27fb772cde4d8405377ff027c00d7"><td class="memTemplParams" colspan="2"><a class="anchor" id="a55c27fb772cde4d8405377ff027c00d7"></a>
 template&lt;std::size_t N, typename Var &gt; </td></tr>
-<tr class="memitem:ac3606750ef96b3d33414b02653f86d03"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::tagged_variant_element_t</b> = typename tagged_variant_element&lt; N, Var &gt;::type</td></tr>
-<tr class="separator:ac3606750ef96b3d33414b02653f86d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55c27fb772cde4d8405377ff027c00d7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::tagged_variant_element_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; tagged_variant_element&lt; N, Var &gt;&gt;</td></tr>
+<tr class="separator:a55c27fb772cde4d8405377ff027c00d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf9da20fdd2e17bfeb7887125747484f2"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaf9da20fdd2e17bfeb7887125747484f2"></a>
 template&lt;typename Var &gt; </td></tr>
 <tr class="memitem:gaf9da20fdd2e17bfeb7887125747484f2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::tagged_variant_unique_t</b> = typename tagged_variant_unique&lt; Var &gt;::type</td></tr>
@@ -141,10 +141,10 @@ template&lt;std::size_t N, typename... Ts&gt; </td></tr>
 template&lt;std::size_t N, typename... Ts&gt; </td></tr>
 <tr class="memitem:ga75bd51c1388a3ac14b9805ee5583fd2c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__invocation.html#ga67a68976eb8e00d1018c16cec76d782b">meta::apply</a>&lt; detail::add_cref_t, tagged_variant_element_t&lt; N, tagged_variant&lt; Ts...&gt; &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (tagged_variant&lt; Ts...&gt; const &amp;var)</td></tr>
 <tr class="separator:ga75bd51c1388a3ac14b9805ee5583fd2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga78fdb83b841b150147ff04b299117404"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga78fdb83b841b150147ff04b299117404"></a>
+<tr class="memitem:gae54e58991664e90e987a1f529c148bda"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae54e58991664e90e987a1f529c148bda"></a>
 template&lt;std::size_t N, typename... Ts&gt; </td></tr>
-<tr class="memitem:ga78fdb83b841b150147ff04b299117404"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::add_rvalue_reference&lt; tagged_variant_element_t&lt; N, tagged_variant&lt; Ts...&gt; &gt; &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (tagged_variant&lt; Ts...&gt; &amp;&amp;var)</td></tr>
-<tr class="separator:ga78fdb83b841b150147ff04b299117404"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae54e58991664e90e987a1f529c148bda"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::add_rvalue_reference&lt; tagged_variant_element_t&lt; N, tagged_variant&lt; Ts...&gt; &gt; &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (tagged_variant&lt; Ts...&gt; &amp;&amp;var)</td></tr>
+<tr class="separator:gae54e58991664e90e987a1f529c148bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga43922d3404b9ed81a92dc5e96b00314d"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga43922d3404b9ed81a92dc5e96b00314d"></a>
 template&lt;typename... Ts, typename... Us, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(meta::and_c&lt;(bool) EqualityComparable&lt; Ts, Us &gt;()...&gt;::value), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:ga43922d3404b9ed81a92dc5e96b00314d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator!=</b> (tagged_variant&lt; Ts...&gt; const &amp;lhs, tagged_variant&lt; Us...&gt; const &amp;rhs)</td></tr>
@@ -153,10 +153,10 @@ template&lt;typename... Ts, typename... Us, int _concept_requires___LINE__ = 42,
 template&lt;typename... Ts, typename... Us, int _concept_requires___LINE__ = 42, typename std::enable_if&lt; (_concept_requires___LINE__==43)||(meta::and_c&lt;(bool) EqualityComparable&lt; Ts, Us &gt;()...&gt;::value), int &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:ga7eb37c3fd2ee1e32bd9744afe89d96d4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::operator==</b> (tagged_variant&lt; Ts...&gt; const &amp;lhs, tagged_variant&lt; Us...&gt; const &amp;rhs)</td></tr>
 <tr class="separator:ga7eb37c3fd2ee1e32bd9744afe89d96d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa2e4e1f79c5b350b02fdf83950d6ebef"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa2e4e1f79c5b350b02fdf83950d6ebef"></a>
-template&lt;std::size_t N, typename... Ts, typename U &gt; </td></tr>
-<tr class="memitem:gaa2e4e1f79c5b350b02fdf83950d6ebef"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::set</b> (tagged_variant&lt; Ts...&gt; &amp;var, U &amp;&amp;u)</td></tr>
-<tr class="separator:gaa2e4e1f79c5b350b02fdf83950d6ebef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadcac1e8a7f393cae1c10210d7b855bef"><td class="memTemplParams" colspan="2"><a class="anchor" id="gadcac1e8a7f393cae1c10210d7b855bef"></a>
+template&lt;std::size_t N, typename... Ts, typename... Args&gt; </td></tr>
+<tr class="memitem:gadcac1e8a7f393cae1c10210d7b855bef"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::set</b> (tagged_variant&lt; Ts...&gt; &amp;var, Args &amp;&amp;...args)</td></tr>
+<tr class="separator:gadcac1e8a7f393cae1c10210d7b855bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaba99c6061242fb77918e824d84814b1a"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaba99c6061242fb77918e824d84814b1a"></a>
 template&lt;typename... Ts&gt; </td></tr>
 <tr class="memitem:gaba99c6061242fb77918e824d84814b1a"><td class="memTemplItemLeft" align="right" valign="top">tagged_variant_unique_t&lt; tagged_variant&lt; Ts...&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::unique_variant</b> (tagged_variant&lt; Ts...&gt; const &amp;var)</td></tr>

@@ -10,8 +10,9 @@ var searchData=
   ['all_2ehpp',['all.hpp',['../view_2all_8hpp.html',1,'']]],
   ['all_2ehpp',['all.hpp',['../all_8hpp.html',1,'']]],
   ['all_5fof_2ehpp',['all_of.hpp',['../all__of_8hpp.html',1,'']]],
+  ['any_2ehpp',['any.hpp',['../any_8hpp.html',1,'']]],
   ['any_5fof_2ehpp',['any_of.hpp',['../any__of_8hpp.html',1,'']]],
-  ['any_5frange_2ehpp',['any_range.hpp',['../any__range_8hpp.html',1,'']]],
+  ['any_5fview_2ehpp',['any_view.hpp',['../any__view_8hpp.html',1,'']]],
   ['associated_5ftypes_2ehpp',['associated_types.hpp',['../associated__types_8hpp.html',1,'']]],
   ['at_2ehpp',['at.hpp',['../at_8hpp.html',1,'']]]
 ];

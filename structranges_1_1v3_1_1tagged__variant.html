@@ -90,9 +90,8 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1tagged__variant.
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Instances and minimal complete definitions</a> &#124;
 <a href="#friends">Friends</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1tagged__variant-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ranges::v3::tagged_variant&lt; Ts &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__group-utility.html">Utility</a></div></div>  </div>
@@ -104,57 +103,6 @@ Friends</h2></td></tr>
 <tr class="memitem:a501b9191d20119fd05118e9a65e10fac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a501b9191d20119fd05118e9a65e10fac"></a>
 struct&#160;</td><td class="memItemRight" valign="bottom"><b>detail::variant_core_access</b></td></tr>
 <tr class="separator:a501b9191d20119fd05118e9a65e10fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a9c22c28f76f4edf8b4c9390bfb6c5ecc"><td class="memTemplParams" colspan="2"><a class="anchor" id="a9c22c28f76f4edf8b4c9390bfb6c5ecc"></a>
-template&lt;typename Fun , typename Args  = meta::transform&lt;types_t, detail::add_ref_t&gt;, typename Result  = detail::variant_result_t&lt;Fun, Args&gt;&gt; </td></tr>
-<tr class="memitem:a9c22c28f76f4edf8b4c9390bfb6c5ecc"><td class="memTemplItemLeft" align="right" valign="top">Result&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply</b> (Fun &amp;&amp;fun)</td></tr>
-<tr class="separator:a9c22c28f76f4edf8b4c9390bfb6c5ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf69fc3ebce1c9a0e5f3f8636d09cf29"><td class="memTemplParams" colspan="2"><a class="anchor" id="acf69fc3ebce1c9a0e5f3f8636d09cf29"></a>
-template&lt;typename Fun , typename Args  = meta::transform&lt;types_t, detail::add_cref_t&gt;, typename Result  = detail::variant_result_t&lt;Fun, Args &gt;&gt; </td></tr>
-<tr class="memitem:acf69fc3ebce1c9a0e5f3f8636d09cf29"><td class="memTemplItemLeft" align="right" valign="top">Result&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply</b> (Fun &amp;&amp;fun) const </td></tr>
-<tr class="separator:acf69fc3ebce1c9a0e5f3f8636d09cf29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb093bea32c78ead8b9d265b292d0930"><td class="memTemplParams" colspan="2"><a class="anchor" id="aeb093bea32c78ead8b9d265b292d0930"></a>
-template&lt;typename Fun , typename Args  = meta::transform&lt;types_t, detail::add_ref_t&gt;, typename Result  = detail::variant_result_i_t&lt;Fun, Args&gt;&gt; </td></tr>
-<tr class="memitem:aeb093bea32c78ead8b9d265b292d0930"><td class="memTemplItemLeft" align="right" valign="top">Result&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply_i</b> (Fun &amp;&amp;fun)</td></tr>
-<tr class="separator:aeb093bea32c78ead8b9d265b292d0930"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a342d8dbb5ee59449cefe4566e4e121a5"><td class="memTemplParams" colspan="2"><a class="anchor" id="a342d8dbb5ee59449cefe4566e4e121a5"></a>
-template&lt;typename Fun , typename Args  = meta::transform&lt;types_t, detail::add_cref_t&gt;, typename Result  = detail::variant_result_i_t&lt;Fun, Args &gt;&gt; </td></tr>
-<tr class="memitem:a342d8dbb5ee59449cefe4566e4e121a5"><td class="memTemplItemLeft" align="right" valign="top">Result&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply_i</b> (Fun &amp;&amp;fun) const </td></tr>
-<tr class="separator:a342d8dbb5ee59449cefe4566e4e121a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abffa6d3d3578ce51a47c6e5685fb13b7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abffa6d3d3578ce51a47c6e5685fb13b7"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_valid</b> () const </td></tr>
-<tr class="separator:abffa6d3d3578ce51a47c6e5685fb13b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c4ddb5a5df512ba88151331a6188439"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c4ddb5a5df512ba88151331a6188439"></a>
-<a class="el" href="structranges_1_1v3_1_1tagged__variant.html">tagged_variant</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged__variant.html">tagged_variant</a> &amp;&amp;that)</td></tr>
-<tr class="separator:a8c4ddb5a5df512ba88151331a6188439"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa64d8c110878cc3f19cd971e9b242a33"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa64d8c110878cc3f19cd971e9b242a33"></a>
-<a class="el" href="structranges_1_1v3_1_1tagged__variant.html">tagged_variant</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structranges_1_1v3_1_1tagged__variant.html">tagged_variant</a> const &amp;that)</td></tr>
-<tr class="separator:aa64d8c110878cc3f19cd971e9b242a33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f943b8b8bb037dde1aee6502c1d6d12"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3f943b8b8bb037dde1aee6502c1d6d12"></a>
-template&lt;std::size_t N, typename U , meta::if_&lt; std::is_constructible&lt; data_t, meta::size_t&lt; N &gt;, U &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a3f943b8b8bb037dde1aee6502c1d6d12"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set</b> (U &amp;&amp;u)</td></tr>
-<tr class="separator:a3f943b8b8bb037dde1aee6502c1d6d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dd1a0ff0bcc3e47308cd67e09a06b13"><td class="memTemplParams" colspan="2"><a class="anchor" id="a2dd1a0ff0bcc3e47308cd67e09a06b13"></a>
-template&lt;std::size_t N, typename U , meta::if_&lt; std::is_constructible&lt; data_t, meta::size_t&lt; N &gt;, U &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a2dd1a0ff0bcc3e47308cd67e09a06b13"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged_variant</b> (<a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; N &gt; n, U &amp;&amp;u)</td></tr>
-<tr class="separator:a2dd1a0ff0bcc3e47308cd67e09a06b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab34ae7610578f5d2a6ac331013805751"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab34ae7610578f5d2a6ac331013805751"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>tagged_variant</b> (<a class="el" href="structranges_1_1v3_1_1tagged__variant.html">tagged_variant</a> &amp;&amp;that)</td></tr>
-<tr class="separator:ab34ae7610578f5d2a6ac331013805751"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ecf7e102e8d45b1ac82444a4bd11897"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ecf7e102e8d45b1ac82444a4bd11897"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>tagged_variant</b> (<a class="el" href="structranges_1_1v3_1_1tagged__variant.html">tagged_variant</a> const &amp;that)</td></tr>
-<tr class="separator:a5ecf7e102e8d45b1ac82444a4bd11897"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d116a7638cfb7751e9a227c1f3fafe7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d116a7638cfb7751e9a227c1f3fafe7"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>which</b> () const </td></tr>
-<tr class="separator:a5d116a7638cfb7751e9a227c1f3fafe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a353bae5d10538500cf9ebab6fa23d226"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a353bae5d10538500cf9ebab6fa23d226"></a>
-static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> ()</td></tr>
-<tr class="separator:a353bae5d10538500cf9ebab6fa23d226"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

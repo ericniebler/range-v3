@@ -90,6 +90,8 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1concepts_1_1_sam
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Instances and minimal complete definitions</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1concepts_1_1_same-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -97,12 +99,26 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1concepts_1_1_sam
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Instances and minimal complete definitions</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_same_1_1same.html">same</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_same_1_1same_3_01_t_00_01_us_8_8_8_4.html">same&lt; T, Us...&gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:gad316d0ed5d0de4738623da46d74f961f"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad316d0ed5d0de4738623da46d74f961f"></a>
+template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:gad316d0ed5d0de4738623da46d74f961f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>same_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_same_1_1same.html">same</a>&lt; Ts...&gt;&gt;</td></tr>
+<tr class="separator:gad316d0ed5d0de4738623da46d74f961f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:gad49a8fc4892925901a63d31fc7486888"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad49a8fc4892925901a63d31fc7486888"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gad49a8fc4892925901a63d31fc7486888"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (T &amp;&amp;, U &amp;&amp;) -&gt; decltype(concepts::valid_expr(concepts::is_true(std::is_same&lt; T, U &gt;</td></tr>
-<tr class="separator:gad49a8fc4892925901a63d31fc7486888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc99ce5c51d4a2d25a757e4a424860ea"><td class="memTemplParams" colspan="2"><a class="anchor" id="gacc99ce5c51d4a2d25a757e4a424860ea"></a>
+template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:gacc99ce5c51d4a2d25a757e4a424860ea"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (Ts &amp;&amp;...) -&gt; decltype(concepts::valid_expr(concepts::is_true(same_t&lt; Ts...&gt;</td></tr>
+<tr class="separator:gacc99ce5c51d4a2d25a757e4a424860ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

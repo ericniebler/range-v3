@@ -137,10 +137,10 @@ Quick Start</h1>
 <h3>Convenience</h3>
 <p>It's more convenient to pass a single range object to an algorithm than separate begin/end iterators. Compare:</p>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; v{<span class="comment">/*...*/</span>};</div>
-<div class="line"><a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">std::sort</a>( v.begin(), v.end() );</div>
+<div class="line"><a class="code" href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">std::sort</a>( v.begin(), v.end() );</div>
 </div><!-- fragment --><p>with</p>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; v{<span class="comment">/*...*/</span>};</div>
-<div class="line"><a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">ranges::sort</a>( v );</div>
+<div class="line"><a class="code" href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">ranges::sort</a>( v );</div>
 </div><!-- fragment --><p>Range v3 contains a full implementation of all the standard algorithms with range-based overloads for convenience.</p>
 <h3>Composability</h3>
 <p>Having a single range object permits <em>pipelines</em> of operations. In a pipeline, a range is lazily adapted or eagerly mutated in some way, with the result immediately available for further adaptation or mutation. Lazy adaption is handled by <em>views</em>, and eager mutation is handled by <em>actions</em>.</p>
@@ -150,18 +150,18 @@ Quick Start</h1>
 <div class="fragment"><div class="line">std::vector&lt;int&gt; vi{1,2,3,4,5,6,7,8,9,10};</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line"><span class="keyword">auto</span> rng = vi | view::remove_if([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i % 2 == 1;})</div>
-<div class="line">              | <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> std::to_string(i);});</div>
+<div class="line">              | <a class="code" href="group__transformation.html#ga2a5143b94325ee6e6176004bc720bbe7">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> std::to_string(i);});</div>
 <div class="line"><span class="comment">// rng == {&quot;2&quot;,&quot;4&quot;,&quot;6&quot;,&quot;8&quot;,&quot;10&quot;};</span></div>
 </div><!-- fragment --><p>Generate an infinite list of integers starting at 1, square them, take the first 10, and sum them:</p>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line"><span class="keywordtype">int</span> sum = <a class="code" href="group__transformation.html#ga8eabba98e40ae21a7434a339896ae1c0">accumulate</a>(view::ints(1)</div>
-<div class="line">                   | <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;})</div>
+<div class="line">                   | <a class="code" href="group__transformation.html#ga2a5143b94325ee6e6176004bc720bbe7">view::transform</a>([](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;})</div>
 <div class="line">                   | view::take(10), 0);</div>
 </div><!-- fragment --><p>Generate a sequence on the fly with a range comprehension and initialize a vector with it:</p>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
 <div class="line">std::vector&lt;int&gt; vi =</div>
 <div class="line">    <a class="code" href="group__runtime.html#ga4d1b825778809ff9c5f20c84d7f06a0f">view::for_each</a>(view::ints(1,10), [](<span class="keywordtype">int</span> i){</div>
-<div class="line">        <span class="keywordflow">return</span> yield_from(view::repeat(i,i));</div>
+<div class="line">        <span class="keywordflow">return</span> yield_from(<a class="code" href="group__list.html#ga0913aa158984b189b613f2454e446f83">view::repeat_n</a>(i,i));</div>
 <div class="line">    });</div>
 <div class="line"><span class="comment">// vi == {1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,...}</span></div>
 </div><!-- fragment --><h4>Actions</h4>
@@ -169,13 +169,13 @@ Quick Start</h1>
 <p>Read data into a vector, sort it, and make it unique.</p>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> std::vector&lt;int&gt; read_data();</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespaceranges.html">ranges</a>;</div>
-<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
+<div class="line">std::vector&lt;int&gt; vi = read_data() | <a class="code" href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
 </div><!-- fragment --><p>Do the same to a <code>vector</code> that already contains some data:</p>
-<div class="fragment"><div class="line">vi = std::move(vi) | <a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
+<div class="fragment"><div class="line">vi = std::move(vi) | <a class="code" href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
 </div><!-- fragment --><p>Mutate the container in-place:</p>
-<div class="fragment"><div class="line">vi |= <a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
+<div class="fragment"><div class="line">vi |= <a class="code" href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">action::sort</a> | <a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>;</div>
 </div><!-- fragment --><p>Same as above, but with function-call syntax instead of pipe syntax:</p>
-<div class="fragment"><div class="line"><a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>(<a class="code" href="group__transformation.html#gacb0ffa1c28bd04a71adae30dc02ac000">action::sort</a>(vi));</div>
+<div class="fragment"><div class="line"><a class="code" href="group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d">action::unique</a>(<a class="code" href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">action::sort</a>(vi));</div>
 </div><!-- fragment --><h2>Create Custom Ranges</h2>
 <p>Range v3 provides a utility for easily creating your own range types, called <code>view_facade</code>. The code below uses <code>view_facade</code> to create a range that traverses a null-terminated string:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="all_8hpp.html">range/v3/all.hpp</a>&gt;</span></div>
@@ -188,7 +188,7 @@ Quick Start</h1>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">friend</span> range_access;</div>
 <div class="line">    <span class="keywordtype">char</span> <span class="keyword">const</span> * sz_;</div>
-<div class="line">    <span class="keywordtype">char</span> <span class="keyword">const</span> &amp; current()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *sz_; }</div>
+<div class="line">    <span class="keywordtype">char</span> <span class="keyword">const</span> &amp; <span class="keyword">get</span>() <span class="keyword">const</span> { <span class="keywordflow">return</span> *sz_; }</div>
 <div class="line">    <span class="keywordtype">bool</span> done()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *sz_ == <span class="charliteral">&#39;\0&#39;</span>; }</div>
 <div class="line">    <span class="keywordtype">void</span> next() { ++sz_; }</div>
 <div class="line"><span class="keyword">public</span>:</div>
@@ -227,7 +227,7 @@ Quick Start</h1>
 <div class="line">        adaptor() = <span class="keywordflow">default</span>;</div>
 <div class="line">        adaptor(semiregular_t&lt;Fun&gt; <span class="keyword">const</span> &amp;fun) : fun_(fun) {}</div>
 <div class="line">        <span class="comment">// Here is where we apply Fun to the elements:</span></div>
-<div class="line">        <span class="keyword">auto</span> current(range_iterator_t&lt;Rng&gt; it) <span class="keyword">const</span> -&gt; decltype(fun_(*it))</div>
+<div class="line">        <span class="keyword">auto</span> <span class="keyword">get</span>(range_iterator_t&lt;Rng&gt; it) <span class="keyword">const</span> -&gt; decltype(fun_(*it))</div>
 <div class="line">        {</div>
 <div class="line">            <span class="keywordflow">return</span> fun_(*it);</div>
 <div class="line">        }</div>
@@ -243,15 +243,15 @@ Quick Start</h1>
 <div class="line">};</div>
 <div class="line"></div>
 <div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> Rng, <span class="keyword">class</span> Fun&gt;</div>
-<div class="line">transform_view&lt;Rng, Fun&gt; <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">transform</a>(Rng &amp;&amp; rng, Fun fun)</div>
+<div class="line">transform_view&lt;Rng, Fun&gt; <a class="code" href="group__transformation.html#ga2a5143b94325ee6e6176004bc720bbe7">transform</a>(Rng &amp;&amp; rng, Fun fun)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordflow">return</span> {std::forward&lt;Rng&gt;(rng), std::move(fun)};</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Range transformation is achieved by defining a nested <code>adaptor</code> class that handles the transformation, and then defining <code>begin_adaptor</code> and <code>end_adaptor</code> members that return adaptors for the begin iterator and the end sentinel, respectively. The <code>adaptor</code> class has a <code>current</code> member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: <code>equal</code>, <code>next</code>, <code>prev</code>, <code>advance</code>, and <code>distance_to</code>; but the transform adaptor accepts the defaults defined in <code>adaptor_base</code>.</p>
+</div><!-- fragment --><p>Range transformation is achieved by defining a nested <code>adaptor</code> class that handles the transformation, and then defining <code>begin_adaptor</code> and <code>end_adaptor</code> members that return adaptors for the begin iterator and the end sentinel, respectively. The <code>adaptor</code> class has a <code>get</code> member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: <code>equal</code>, <code>next</code>, <code>prev</code>, <code>advance</code>, and <code>distance_to</code>; but the transform adaptor accepts the defaults defined in <code>adaptor_base</code>.</p>
 <p>With <code>transform_view</code>, we can print out the first 20 squares:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> main()</div>
 <div class="line">{</div>
-<div class="line">    <span class="keyword">auto</span> squares = <a class="code" href="group__transformation.html#gae8666f91063c050fe79f817c03b81b3f">::transform</a>(view::ints(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
+<div class="line">    <span class="keyword">auto</span> squares = <a class="code" href="group__transformation.html#ga2a5143b94325ee6e6176004bc720bbe7">::transform</a>(view::ints(1), [](<span class="keywordtype">int</span> i){<span class="keywordflow">return</span> i*i;});</div>
 <div class="line">    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i : squares | view::take(20))</div>
 <div class="line">        std::cout &lt;&lt; i &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
 <div class="line">    std::cout &lt;&lt; <span class="charliteral">&#39;\n&#39;</span>;</div>

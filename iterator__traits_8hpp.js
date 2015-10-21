@@ -10,7 +10,7 @@ var iterator__traits_8hpp =
     [ "iterator_rvalue_reference", "iterator__traits_8hpp.html#ga6199b5345edfe855f3dea341749ae14c", null ],
     [ "iterator_rvalue_reference_t", "iterator__traits_8hpp.html#ga9805418b69dd1f98972c2b4c227620ab", null ],
     [ "iterator_size", "iterator__traits_8hpp.html#gabd1492d181de09d17695a95c5c1a99d4", null ],
-    [ "iterator_size_t", "iterator__traits_8hpp.html#ga0fdbc78c8448f3eb5025ab9160a91f0a", null ],
+    [ "iterator_size_t", "iterator__traits_8hpp.html#gafc509dd2aa58918f403fd4cf6f123485", null ],
     [ "iterator_value", "iterator__traits_8hpp.html#gad6c5d055d7ff63e9a474177ff53517ef", null ],
     [ "iterator_value_t", "iterator__traits_8hpp.html#ga75f1c773461057e23afcfa44ad2bab7d", null ]
 ];

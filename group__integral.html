@@ -128,19 +128,19 @@ template&lt;int I&gt; </td></tr>
 <tr class="memitem:ga0dd3ffe632ede53173e2432aaba18e70"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga0dd3ffe632ede53173e2432aaba18e70">meta::v1::int_</a> = std::integral_constant&lt; <a class="el" href="classint.html">int</a>, I &gt;</td></tr>
 <tr class="memdesc:ga0dd3ffe632ede53173e2432aaba18e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>int</code>. <br /></td></tr>
 <tr class="separator:ga0dd3ffe632ede53173e2432aaba18e70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1e23f65e584df402ae35533934f09c73"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1e23f65e584df402ae35533934f09c73"></a>
+<tr class="memitem:ga3efb8280881d11317cda6ef16e42b495"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3efb8280881d11317cda6ef16e42b495"></a>
 template&lt;class T , T from, T to&gt; </td></tr>
-<tr class="memitem:ga1e23f65e584df402ae35533934f09c73"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga1e23f65e584df402ae35533934f09c73">meta::v1::integer_range</a> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; detail::offset_integer_sequence_&lt; T, from, <a class="el" href="group__integral.html#ga414d9b5b7accad5a67059ce033bb2e04">meta::make_integer_sequence</a>&lt; T, to-from &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:ga1e23f65e584df402ae35533934f09c73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the integer sequence [from, to). <br /></td></tr>
-<tr class="separator:ga1e23f65e584df402ae35533934f09c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3efb8280881d11317cda6ef16e42b495"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga3efb8280881d11317cda6ef16e42b495">meta::v1::integer_range</a> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; detail::offset_integer_sequence_&lt; T, from, <a class="el" href="group__integral.html#gaecc0e48186ab2b206efd842b8789cc1b">meta::make_integer_sequence</a>&lt; T, to-from &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga3efb8280881d11317cda6ef16e42b495"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the integer sequence [from, to). <br /></td></tr>
+<tr class="separator:ga3efb8280881d11317cda6ef16e42b495"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1d44a46e5fd0ca836d62a1ea1c98f4dd"><td class="memTemplParams" colspan="2">template&lt;std::size_t N&gt; </td></tr>
 <tr class="memitem:ga1d44a46e5fd0ca836d62a1ea1c98f4dd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga1d44a46e5fd0ca836d62a1ea1c98f4dd">meta::v1::make_index_sequence</a> = make_integer_sequence&lt; std::size_t, N &gt;</td></tr>
 <tr class="memdesc:ga1d44a46e5fd0ca836d62a1ea1c98f4dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>index_sequence</code> containing integer constants [0,1,2,...,N-1].  <a href="#ga1d44a46e5fd0ca836d62a1ea1c98f4dd">More...</a><br /></td></tr>
 <tr class="separator:ga1d44a46e5fd0ca836d62a1ea1c98f4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga414d9b5b7accad5a67059ce033bb2e04"><td class="memTemplParams" colspan="2">template&lt;typename T , T N&gt; </td></tr>
-<tr class="memitem:ga414d9b5b7accad5a67059ce033bb2e04"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga414d9b5b7accad5a67059ce033bb2e04">meta::v1::make_integer_sequence</a> = eval&lt; detail::make_integer_sequence_&lt; T,(std::size_t) N &gt;&gt;</td></tr>
-<tr class="memdesc:ga414d9b5b7accad5a67059ce033bb2e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code><a class="el" href="structmeta_1_1v1_1_1integer__sequence.html">integer_sequence</a></code> containing integer constants [0,1,2,...,N-1].  <a href="#ga414d9b5b7accad5a67059ce033bb2e04">More...</a><br /></td></tr>
-<tr class="separator:ga414d9b5b7accad5a67059ce033bb2e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaecc0e48186ab2b206efd842b8789cc1b"><td class="memTemplParams" colspan="2">template&lt;typename T , T N&gt; </td></tr>
+<tr class="memitem:gaecc0e48186ab2b206efd842b8789cc1b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#gaecc0e48186ab2b206efd842b8789cc1b">meta::v1::make_integer_sequence</a> = _t&lt; detail::make_integer_sequence_&lt; T,(std::size_t) N &gt;&gt;</td></tr>
+<tr class="memdesc:gaecc0e48186ab2b206efd842b8789cc1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code><a class="el" href="structmeta_1_1v1_1_1integer__sequence.html">integer_sequence</a></code> containing integer constants [0,1,2,...,N-1].  <a href="#gaecc0e48186ab2b206efd842b8789cc1b">More...</a><br /></td></tr>
+<tr class="separator:gaecc0e48186ab2b206efd842b8789cc1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga878079c524e6d2f43e2617b25a03d514"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga878079c524e6d2f43e2617b25a03d514"></a>
 template&lt;std::size_t N&gt; </td></tr>
 <tr class="memitem:ga878079c524e6d2f43e2617b25a03d514"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::v1::size_t</a> = std::integral_constant&lt; std::size_t, N &gt;</td></tr>
@@ -175,14 +175,14 @@ template&lt;std::size_t N&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ga414d9b5b7accad5a67059ce033bb2e04"></a>
+<a class="anchor" id="gaecc0e48186ab2b206efd842b8789cc1b"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T , T N&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__integral.html#ga414d9b5b7accad5a67059ce033bb2e04">meta::v1::make_integer_sequence</a> = typedef eval&lt;detail::make_integer_sequence_&lt;T, (std::size_t)N&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__integral.html#gaecc0e48186ab2b206efd842b8789cc1b">meta::v1::make_integer_sequence</a> = typedef _t&lt;detail::make_integer_sequence_&lt;T, (std::size_t)N&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

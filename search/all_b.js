@@ -1,27 +1,4 @@
 var searchData=
 [
-  ['lambda',['lambda',['../group__trait.html#ga288e095a9834eab7fedc8ce234afdd04',1,'meta::v1']]],
-  ['lazy',['lazy',['../group__lazy__composition.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__invocation.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__list.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__logical.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__math.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__query.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__trait.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__transformation.html',1,'']]],
-  ['lazy_5fyield_5fif_5ffn',['lazy_yield_if_fn',['../structranges_1_1v3_1_1lazy__yield__if__fn.html',1,'ranges::v3']]],
-  ['less',['less',['../structranges_1_1v3_1_1less.html',1,'ranges::v3']]],
-  ['less',['less',['../group__math.html#gacd744cad5667d4fbf03a38655a78154d',1,'meta::v1::less()'],['../group__lazy__math.html#gaf85374b7537a86261fd478a48dccd2cd',1,'meta::lazy::less()']]],
-  ['less_5fequal',['less_equal',['../group__math.html#ga0889688de74bf375555f4b04bcca6170',1,'meta::v1::less_equal()'],['../group__lazy__math.html#ga8e4ed5d5da1b769ae0ecfc2aa9729bc5',1,'meta::lazy::less_equal()']]],
-  ['let',['let',['../group__trait.html#gad34f912696873f0230f1fd7e8207197c',1,'meta::v1::let()'],['../group__lazy__trait.html#ga5355a955cf71163986bfdc7ad7c7e3e3',1,'meta::lazy::let()']]],
-  ['lexicographical_5fcompare_2ehpp',['lexicographical_compare.hpp',['../lexicographical__compare_8hpp.html',1,'']]],
-  ['lexicographical_5fcompare_5ffn',['lexicographical_compare_fn',['../structranges_1_1v3_1_1lexicographical__compare__fn.html',1,'ranges::v3']]],
-  ['list',['List',['../group__list.html',1,'']]],
-  ['list',['list',['../structmeta_1_1v1_1_1list.html',1,'meta::v1']]],
-  ['list',['list',['../structmeta_1_1list.html',1,'meta']]],
-  ['logical',['Logical',['../group__logical.html',1,'']]],
-  ['logical_5fnegate',['logical_negate',['../structranges_1_1v3_1_1logical__negate.html',1,'ranges::v3']]],
-  ['lower_5fbound_2ehpp',['lower_bound.hpp',['../lower__bound_8hpp.html',1,'']]],
-  ['lower_5fbound_5ffn',['lower_bound_fn',['../structranges_1_1v3_1_1lower__bound__fn.html',1,'ranges::v3']]],
-  ['lvaluecontainerlike',['LvalueContainerLike',['../structranges_1_1v3_1_1concepts_1_1_lvalue_container_like.html',1,'ranges::v3::concepts']]]
+  ['keys_5ffn',['keys_fn',['../structranges_1_1v3_1_1view_1_1keys__fn.html',1,'ranges::v3::view']]]
 ];

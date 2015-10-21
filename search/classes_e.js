@@ -25,8 +25,6 @@ var searchData=
   ['predicate',['Predicate',['../structranges_1_1v3_1_1concepts_1_1_predicate.html',1,'ranges::v3::concepts']]],
   ['prev_5ffn',['prev_fn',['../structranges_1_1v3_1_1prev__fn.html',1,'ranges::v3']]],
   ['prev_5fpermutation_5ffn',['prev_permutation_fn',['../structranges_1_1v3_1_1prev__permutation__fn.html',1,'ranges::v3']]],
-  ['projectable_5f',['Projectable_',['../structranges_1_1v3_1_1detail_1_1_projectable__.html',1,'ranges::v3::detail']]],
-  ['projected_5freadable',['projected_readable',['../structranges_1_1v3_1_1detail_1_1projected__readable.html',1,'ranges::v3::detail']]],
   ['protect_5ffn',['protect_fn',['../structranges_1_1v3_1_1protect__fn.html',1,'ranges::v3']]],
   ['push_5fheap_5ffn',['push_heap_fn',['../structranges_1_1v3_1_1push__heap__fn.html',1,'ranges::v3']]]
 ];

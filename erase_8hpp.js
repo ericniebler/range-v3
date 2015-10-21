@@ -1,4 +1,4 @@
 var erase_8hpp =
 [
-    [ "EraseableRange", "erase_8hpp.html#ga792879432e645da5bcecc77c38765d06", null ]
+    [ "ErasableRange", "erase_8hpp.html#ga6eefd775545bbaece88dcbc2e5ac4eb8", null ]
 ];

@@ -117,9 +117,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga669d67c70e628549ec3a7d1992240352"><td class="memTemplParams" colspan="2">template&lt;typename R &gt; </td></tr>
-<tr class="memitem:ga669d67c70e628549ec3a7d1992240352"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga669d67c70e628549ec3a7d1992240352">ranges::v3::aux::move_t</a> = <a class="el" href="group__logical.html#ga62fe40f22a901d7f470ad8e609b0db3e">meta::if_</a>&lt; std::is_reference&lt; R &gt;, <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::remove_reference&lt; R &gt;&gt; &amp;&amp;, detail::decay_t&lt; <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::remove_reference&lt; R &gt;&gt;&gt;&gt;</td></tr>
-<tr class="separator:ga669d67c70e628549ec3a7d1992240352"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83f98a16f7b7a8eda2a941d9c7878b18"><td class="memTemplParams" colspan="2">template&lt;typename R &gt; </td></tr>
+<tr class="memitem:ga83f98a16f7b7a8eda2a941d9c7878b18"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga83f98a16f7b7a8eda2a941d9c7878b18">ranges::v3::aux::move_t</a> = <a class="el" href="group__logical.html#gac8d9cee3981f8ae0cfad6829c1c1b247">meta::if_</a>&lt; std::is_reference&lt; R &gt;, <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::remove_reference&lt; R &gt;&gt; &amp;&amp;, detail::decay_t&lt; R &gt;&gt;</td></tr>
+<tr class="separator:ga83f98a16f7b7a8eda2a941d9c7878b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -131,20 +131,20 @@ template&lt;typename I , typename O &gt; </td></tr>
 template&lt;typename I , typename O &gt; </td></tr>
 <tr class="memitem:a95fa5cf9a4fdb21763d3fbdd11ecd916"><td class="memTemplItemLeft" align="right" valign="top">std::false_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::is_nothrow_indirectly_movable_</b> (long)</td></tr>
 <tr class="separator:a95fa5cf9a4fdb21763d3fbdd11ecd916"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa9f636f78c6a0d03f8a061a67e320b03"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gaa9f636f78c6a0d03f8a061a67e320b03"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::remove_reference&lt; T &gt; &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#gaa9f636f78c6a0d03f8a061a67e320b03">ranges::v3::aux::operator|</a> (T &amp;&amp;t, move_fn move) noexcept</td></tr>
-<tr class="separator:gaa9f636f78c6a0d03f8a061a67e320b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga666ada406594f0fc35648f34b069d5a7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga666ada406594f0fc35648f34b069d5a7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::remove_reference&lt; T &gt; &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-utility.html#ga666ada406594f0fc35648f34b069d5a7">ranges::v3::aux::operator|</a> (T &amp;&amp;t, move_fn move) noexcept</td></tr>
+<tr class="separator:ga666ada406594f0fc35648f34b069d5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a44c09d711c66ff77d68068feab27adde"><td class="memTemplParams" colspan="2"><a class="anchor" id="a44c09d711c66ff77d68068feab27adde"></a>
+<tr class="memitem:a13bcb4901817fad98b6a0715790af4ef"><td class="memTemplParams" colspan="2"><a class="anchor" id="a13bcb4901817fad98b6a0715790af4ef"></a>
 template&lt;typename I , typename O &gt; </td></tr>
-<tr class="memitem:a44c09d711c66ff77d68068feab27adde"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga605000e22ccf6f0d01a9b4de856f9c65">meta::and_</a>&lt; std::is_constructible&lt; <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; value_type&lt; I &gt; &gt;, decltype(indirect_move(std::declval&lt; I &gt;)))&gt;, std::is_assignable&lt; decltype(*std::declval&lt; O &gt;)), decltype(indirect_move(std::declval&lt; I &gt;)))&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::is_indirectly_movable_</b> (<a class="el" href="classint.html">int</a>)</td></tr>
-<tr class="separator:a44c09d711c66ff77d68068feab27adde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39f531f0d7698f5c627be1bd6f6911a4"><td class="memTemplParams" colspan="2"><a class="anchor" id="a39f531f0d7698f5c627be1bd6f6911a4"></a>
+<tr class="memitem:a13bcb4901817fad98b6a0715790af4ef"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#gad54cc50cad194e8a691315a89c65487a">meta::and_</a>&lt; std::is_constructible&lt; <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; value_type&lt; I &gt; &gt;, decltype(indirect_move(std::declval&lt; I &amp; &gt;)))&gt;, std::is_assignable&lt; decltype(*std::declval&lt; O &amp; &gt;)), decltype(indirect_move(std::declval&lt; I &amp; &gt;)))&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::is_indirectly_movable_</b> (<a class="el" href="classint.html">int</a>)</td></tr>
+<tr class="separator:a13bcb4901817fad98b6a0715790af4ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2baa0a4ca37ee85ace55ebb4ad10eeba"><td class="memTemplParams" colspan="2"><a class="anchor" id="a2baa0a4ca37ee85ace55ebb4ad10eeba"></a>
 template&lt;typename I , typename O &gt; </td></tr>
-<tr class="memitem:a39f531f0d7698f5c627be1bd6f6911a4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#ga605000e22ccf6f0d01a9b4de856f9c65">meta::and_</a>&lt; std::is_nothrow_constructible&lt; <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; value_type&lt; I &gt; &gt;, decltype(indirect_move(std::declval&lt; I &gt;)))&gt;, std::is_nothrow_assignable&lt; decltype(*std::declval&lt; O &gt;)), decltype(indirect_move(std::declval&lt; I &gt;)))&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::is_nothrow_indirectly_movable_</b> (<a class="el" href="classint.html">int</a>)</td></tr>
-<tr class="separator:a39f531f0d7698f5c627be1bd6f6911a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2baa0a4ca37ee85ace55ebb4ad10eeba"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__logical.html#gad54cc50cad194e8a691315a89c65487a">meta::and_</a>&lt; std::is_nothrow_constructible&lt; <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; value_type&lt; I &gt; &gt;, decltype(indirect_move(std::declval&lt; I &amp; &gt;)))&gt;, std::is_nothrow_assignable&lt; decltype(*std::declval&lt; O &amp; &gt;)), decltype(indirect_move(std::declval&lt; I &amp; &gt;)))&gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::detail::is_nothrow_indirectly_movable_</b> (<a class="el" href="classint.html">int</a>)</td></tr>
+<tr class="separator:a2baa0a4ca37ee85ace55ebb4ad10eeba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

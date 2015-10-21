@@ -9,5 +9,6 @@ var structranges_1_1v3_1_1semiregular =
     [ "operator=", "structranges_1_1v3_1_1semiregular.html#a00696bc1c38d5f07be191ac68db0c124", null ],
     [ "operator=", "structranges_1_1v3_1_1semiregular.html#a179a2efe951c687d804e4617670cbbba", null ],
     [ "semiregular", "structranges_1_1v3_1_1semiregular.html#a6a8073289823e6ce4f86975f9e3633ce", null ],
-    [ "semiregular", "structranges_1_1v3_1_1semiregular.html#a3e5be54397a3ef78a95277b4eb9588cf", null ]
+    [ "semiregular", "structranges_1_1v3_1_1semiregular.html#a3e5be54397a3ef78a95277b4eb9588cf", null ],
+    [ "semiregular", "structranges_1_1v3_1_1semiregular.html#a9e794a40ae6d2a5573973fd495b10b14", null ]
 ];

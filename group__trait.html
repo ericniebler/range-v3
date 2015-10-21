@@ -126,16 +126,16 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gad3906124930a00d7f3b3f1cb9d904111"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gad3906124930a00d7f3b3f1cb9d904111">meta::v1::alignof_</a> = <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; alignof(T)&gt;</td></tr>
 <tr class="memdesc:gad3906124930a00d7f3b3f1cb9d904111"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias that computes the alignment required for any instance of the type <code>T</code>.  <a href="#gad3906124930a00d7f3b3f1cb9d904111">More...</a><br /></td></tr>
 <tr class="separator:gad3906124930a00d7f3b3f1cb9d904111"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2d8bf03a70e7a9c21318b9349f337630"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2d8bf03a70e7a9c21318b9349f337630"></a>
+<tr class="memitem:gaa61716dadd7fd9b59d6406812d0d82f4"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa61716dadd7fd9b59d6406812d0d82f4"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga2d8bf03a70e7a9c21318b9349f337630"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga2d8bf03a70e7a9c21318b9349f337630">meta::v1::has_type</a> = eval&lt; detail::has_type_&lt; T &gt;&gt;</td></tr>
-<tr class="memdesc:ga2d8bf03a70e7a9c21318b9349f337630"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>std::true_type</code> if <code>T::type</code> exists and names a type; otherwise, it's an alias for <code>std::false_type</code>. <br /></td></tr>
-<tr class="separator:ga2d8bf03a70e7a9c21318b9349f337630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab777ee2056b8d97add9973a640ad021f"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab777ee2056b8d97add9973a640ad021f"></a>
+<tr class="memitem:gaa61716dadd7fd9b59d6406812d0d82f4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gaa61716dadd7fd9b59d6406812d0d82f4">meta::v1::has_type</a> = _t&lt; detail::has_type_&lt; T &gt;&gt;</td></tr>
+<tr class="memdesc:gaa61716dadd7fd9b59d6406812d0d82f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>std::true_type</code> if <code>T::type</code> exists and names a type; otherwise, it's an alias for <code>std::false_type</code>. <br /></td></tr>
+<tr class="separator:gaa61716dadd7fd9b59d6406812d0d82f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga10c0b84437b8cc1a8d475c1c660c653b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga10c0b84437b8cc1a8d475c1c660c653b"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gab777ee2056b8d97add9973a640ad021f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gab777ee2056b8d97add9973a640ad021f">meta::v1::id_t</a> = eval&lt; id&lt; T &gt;&gt;</td></tr>
-<tr class="memdesc:gab777ee2056b8d97add9973a640ad021f"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for type <code>T</code>. Useful in non-deduced contexts. <br /></td></tr>
-<tr class="separator:gab777ee2056b8d97add9973a640ad021f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga10c0b84437b8cc1a8d475c1c660c653b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga10c0b84437b8cc1a8d475c1c660c653b">meta::v1::id_t</a> = _t&lt; id&lt; T &gt;&gt;</td></tr>
+<tr class="memdesc:ga10c0b84437b8cc1a8d475c1c660c653b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for type <code>T</code>. Useful in non-deduced contexts. <br /></td></tr>
+<tr class="separator:ga10c0b84437b8cc1a8d475c1c660c653b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2aa986837386ad289def903d9bbf83e7"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2aa986837386ad289def903d9bbf83e7"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga2aa986837386ad289def903d9bbf83e7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga2aa986837386ad289def903d9bbf83e7">meta::v1::is_valid</a> = detail::is_valid_&lt; T &gt;</td></tr>
@@ -145,10 +145,10 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga288e095a9834eab7fedc8ce234afdd04"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga288e095a9834eab7fedc8ce234afdd04">meta::v1::lambda</a> = <a class="el" href="classmeta_1_1v1_1_1if__c.html">if_c</a>&lt;(sizeof...(Ts) &gt; 0), detail::lambda_&lt; list&lt; Ts...&gt;&gt;&gt;</td></tr>
 <tr class="memdesc:ga288e095a9834eab7fedc8ce234afdd04"><td class="mdescLeft">&#160;</td><td class="mdescRight">For creating anonymous Alias Classes.  <a href="#ga288e095a9834eab7fedc8ce234afdd04">More...</a><br /></td></tr>
 <tr class="separator:ga288e095a9834eab7fedc8ce234afdd04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad34f912696873f0230f1fd7e8207197c"><td class="memTemplParams" colspan="2">template&lt;typename... As&gt; </td></tr>
-<tr class="memitem:gad34f912696873f0230f1fd7e8207197c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gad34f912696873f0230f1fd7e8207197c">meta::v1::let</a> = eval&lt; eval&lt; detail::let_&lt; As...&gt;&gt;&gt;</td></tr>
-<tr class="memdesc:gad34f912696873f0230f1fd7e8207197c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A lexically scoped expression with local variables.  <a href="#gad34f912696873f0230f1fd7e8207197c">More...</a><br /></td></tr>
-<tr class="separator:gad34f912696873f0230f1fd7e8207197c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa435532ebfd257be0916b0db22a0c338"><td class="memTemplParams" colspan="2">template&lt;typename... As&gt; </td></tr>
+<tr class="memitem:gaa435532ebfd257be0916b0db22a0c338"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gaa435532ebfd257be0916b0db22a0c338">meta::v1::let</a> = _t&lt; _t&lt; detail::let_&lt; As...&gt;&gt;&gt;</td></tr>
+<tr class="memdesc:gaa435532ebfd257be0916b0db22a0c338"><td class="mdescLeft">&#160;</td><td class="mdescRight">A lexically scoped expression with local variables.  <a href="#gaa435532ebfd257be0916b0db22a0c338">More...</a><br /></td></tr>
+<tr class="separator:gaa435532ebfd257be0916b0db22a0c338"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga676ce876dd98b658017dfbc3fe96ef3f"></a>
 template&lt;typename F &gt; </td></tr>
 <tr class="memitem:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga676ce876dd98b658017dfbc3fe96ef3f">meta::v1::not_fn</a> = compose&lt; quote&lt; not_ &gt;, F &gt;</td></tr>
@@ -205,14 +205,14 @@ template&lt;typename... Ts&gt; </div>
 </div><!-- fragment --> 
 </div>
 </div>
-<a class="anchor" id="gad34f912696873f0230f1fd7e8207197c"></a>
+<a class="anchor" id="gaa435532ebfd257be0916b0db22a0c338"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... As&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__trait.html#gad34f912696873f0230f1fd7e8207197c">meta::v1::let</a> = typedef eval&lt;eval&lt;detail::let_&lt;As...&gt;&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__trait.html#gaa435532ebfd257be0916b0db22a0c338">meta::v1::let</a> = typedef _t&lt;_t&lt;detail::let_&lt;As...&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -221,7 +221,7 @@ template&lt;typename... As&gt; </div>
 
 <p>A lexically scoped expression with local variables. </p>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> List&gt;</div>
-<div class="line"><span class="keyword">using</span> find_index_ = <a class="code" href="group__trait.html#gad34f912696873f0230f1fd7e8207197c">let</a>&lt;</div>
+<div class="line"><span class="keyword">using</span> find_index_ = <a class="code" href="group__trait.html#gaa435532ebfd257be0916b0db22a0c338">let</a>&lt;</div>
 <div class="line">    var&lt;_a, List&gt;,</div>
 <div class="line">    var&lt;_b, lazy::find&lt;_a, T&gt;&gt;,</div>
 <div class="line">    <a class="code" href="group__lazy__logical.html#ga8c71ad12f7d1077e9680c19404ffe02c">lazy::if_</a>&lt;</div>

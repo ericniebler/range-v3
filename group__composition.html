@@ -138,16 +138,16 @@ template&lt;typename... Fs&gt; </td></tr>
 <tr class="memitem:gaa1e91af5bb7608d60cfe8dc291729472"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaa1e91af5bb7608d60cfe8dc291729472">meta::v1::on</a> = detail::on_&lt; Fs...&gt;</td></tr>
 <tr class="memdesc:gaa1e91af5bb7608d60cfe8dc291729472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use as <code>on&lt;F, Gs...&gt;</code>. Creates an Alias Class that applies Alias Class <code>F</code> to the result of applying Alias Class <code>compose&lt;Gs...&gt;</code> to all the arguments. <br /></td></tr>
 <tr class="separator:gaa1e91af5bb7608d60cfe8dc291729472"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1aacfb8c082bfbad7e8003dc050c8b66"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga1aacfb8c082bfbad7e8003dc050c8b66"></a>
+<tr class="memitem:ga24a2ad310e2d822a9be165e47e6270ac"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga24a2ad310e2d822a9be165e47e6270ac"></a>
 template&lt;template&lt; typename...&gt; class C&gt; </td></tr>
-<tr class="memitem:ga1aacfb8c082bfbad7e8003dc050c8b66"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::v1::quote_trait</a> = compose&lt; quote&lt; eval &gt;, quote&lt; C &gt;&gt;</td></tr>
-<tr class="memdesc:ga1aacfb8c082bfbad7e8003dc050c8b66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> into a Alias Class. <br /></td></tr>
-<tr class="separator:ga1aacfb8c082bfbad7e8003dc050c8b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga13320cb0420d160a731588aea8b5941e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga13320cb0420d160a731588aea8b5941e"></a>
+<tr class="memitem:ga24a2ad310e2d822a9be165e47e6270ac"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga24a2ad310e2d822a9be165e47e6270ac">meta::v1::quote_trait</a> = compose&lt; quote&lt; _t &gt;, quote&lt; C &gt;&gt;</td></tr>
+<tr class="memdesc:ga24a2ad310e2d822a9be165e47e6270ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> into a Alias Class. <br /></td></tr>
+<tr class="separator:ga24a2ad310e2d822a9be165e47e6270ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88622e1afa459a338ec6d5dde8340fef"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga88622e1afa459a338ec6d5dde8340fef"></a>
 template&lt;typename T , template&lt; T...&gt; class C&gt; </td></tr>
-<tr class="memitem:ga13320cb0420d160a731588aea8b5941e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga13320cb0420d160a731588aea8b5941e">meta::v1::quote_trait_i</a> = compose&lt; quote&lt; eval &gt;, quote_i&lt; T, C &gt;&gt;</td></tr>
-<tr class="memdesc:ga13320cb0420d160a731588aea8b5941e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> taking literals of type <code>T</code> into a Alias Class. <br /></td></tr>
-<tr class="separator:ga13320cb0420d160a731588aea8b5941e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88622e1afa459a338ec6d5dde8340fef"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga88622e1afa459a338ec6d5dde8340fef">meta::v1::quote_trait_i</a> = compose&lt; quote&lt; _t &gt;, quote_i&lt; T, C &gt;&gt;</td></tr>
+<tr class="memdesc:ga88622e1afa459a338ec6d5dde8340fef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> taking literals of type <code>T</code> into a Alias Class. <br /></td></tr>
+<tr class="separator:ga88622e1afa459a338ec6d5dde8340fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaec51f3c6c4ff9840001956f48ef750db"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaec51f3c6c4ff9840001956f48ef750db"></a>
 template&lt;typename F &gt; </td></tr>
 <tr class="memitem:gaec51f3c6c4ff9840001956f48ef750db"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaec51f3c6c4ff9840001956f48ef750db">meta::v1::uncurry</a> = bind_front&lt; quote&lt; apply_list &gt;, F &gt;</td></tr>

@@ -13,7 +13,7 @@ var group__group_actions =
       [ "Concept", "structranges_1_1v3_1_1action_1_1drop__fn.html#a45f0fa0ab252a063ed92efa2ffd7a54e", null ]
     ] ],
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1drop__fn_1_1_concept_impl.html", [
-      [ "requires_", "structranges_1_1v3_1_1action_1_1drop__fn_1_1_concept_impl.html#ac523c68d06994c4e744fc32189668df0", null ]
+      [ "requires_", "structranges_1_1v3_1_1action_1_1drop__fn_1_1_concept_impl.html#ae6c79dfbc7b4ed38fa7e160da9d5f121", null ]
     ] ],
     [ "drop_while_fn", "structranges_1_1v3_1_1action_1_1drop__while__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1drop__while__fn.html#ae47bf59e3c0623a7134e816d8dde39f6", null ],
@@ -35,21 +35,21 @@ var group__group_actions =
       [ "Concept", "structranges_1_1v3_1_1action_1_1remove__if__fn.html#a681ff093e8438073e32cd24fcb7ec986", null ]
     ] ],
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1remove__if__fn_1_1_concept_impl.html", [
-      [ "requires_", "structranges_1_1v3_1_1action_1_1remove__if__fn_1_1_concept_impl.html#aae60937d36c3c414b0dd909c761a7770", null ]
+      [ "requires_", "structranges_1_1v3_1_1action_1_1remove__if__fn_1_1_concept_impl.html#a7a5765d452db1207fe3d2cf69f731af6", null ]
     ] ],
     [ "shuffle_fn", "structranges_1_1v3_1_1action_1_1shuffle__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1shuffle__fn.html#a49b42ed7ba8dc2d35539d9c3c0e8ea21", null ],
       [ "Concept", "structranges_1_1v3_1_1action_1_1shuffle__fn.html#afa491db51f09edb2b975d6c2dd2046d3", null ]
     ] ],
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1shuffle__fn_1_1_concept_impl.html", [
-      [ "requires_", "structranges_1_1v3_1_1action_1_1shuffle__fn_1_1_concept_impl.html#a67876ab49b72ad780d451f1fa4d785c9", null ]
+      [ "requires_", "structranges_1_1v3_1_1action_1_1shuffle__fn_1_1_concept_impl.html#a356919d46efdee0f9cb7a9f52841ecb9", null ]
     ] ],
     [ "slice_fn", "structranges_1_1v3_1_1action_1_1slice__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1slice__fn.html#a569a2bdf19389261df8b826b9e17b0d0", null ],
       [ "Concept", "structranges_1_1v3_1_1action_1_1slice__fn.html#a615553606cf40997d57a90b813790ba0", null ]
     ] ],
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1slice__fn_1_1_concept_impl.html", [
-      [ "requires_", "structranges_1_1v3_1_1action_1_1slice__fn_1_1_concept_impl.html#a686587955f8b48c19335a557b1d2b58f", null ]
+      [ "requires_", "structranges_1_1v3_1_1action_1_1slice__fn_1_1_concept_impl.html#a521575fa4e66a985322e1b26d2135cc0", null ]
     ] ],
     [ "sort_fn", "structranges_1_1v3_1_1action_1_1sort__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1sort__fn.html#aae0ec21758ee2268ac886f330169b9cc", null ],
@@ -75,21 +75,21 @@ var group__group_actions =
       [ "Concept", "structranges_1_1v3_1_1action_1_1stride__fn.html#a97aa51a87e3479c2074fc3ffba0dbd20", null ]
     ] ],
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1stride__fn_1_1_concept_impl.html", [
-      [ "requires_", "structranges_1_1v3_1_1action_1_1stride__fn_1_1_concept_impl.html#a7453b3d0ffb2020c2bccd29622aece6d", null ]
+      [ "requires_", "structranges_1_1v3_1_1action_1_1stride__fn_1_1_concept_impl.html#a8b1d4c6e9003e499a55799ca27447e68", null ]
     ] ],
     [ "take_fn", "structranges_1_1v3_1_1action_1_1take__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1take__fn.html#af0996d2bf63c5065603c7f0b5c34bd47", null ],
       [ "Concept", "structranges_1_1v3_1_1action_1_1take__fn.html#ac1e3c4ebba882eaa9995250bb38109d5", null ]
     ] ],
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1take__fn_1_1_concept_impl.html", [
-      [ "requires_", "structranges_1_1v3_1_1action_1_1take__fn_1_1_concept_impl.html#a5ccc3f34d970d389a63d56a569d8cf81", null ]
+      [ "requires_", "structranges_1_1v3_1_1action_1_1take__fn_1_1_concept_impl.html#a3178728cbf89a1a0ed74f1f56d470ed0", null ]
     ] ],
     [ "take_while_fn", "structranges_1_1v3_1_1action_1_1take__while__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1take__while__fn.html#a3e675e5fee9307a21d2b71558084794c", null ],
       [ "Concept", "structranges_1_1v3_1_1action_1_1take__while__fn.html#a975a8e124bd38568a1ac8f3aa394ddd3", null ]
     ] ],
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1take__while__fn_1_1_concept_impl.html", [
-      [ "requires_", "structranges_1_1v3_1_1action_1_1take__while__fn_1_1_concept_impl.html#a753213624b27e01f84ad3017f148f32f", null ]
+      [ "requires_", "structranges_1_1v3_1_1action_1_1take__while__fn_1_1_concept_impl.html#a3baa27e18a2ad3ef84c1dc7c4ec03e78", null ]
     ] ],
     [ "transform_fn", "structranges_1_1v3_1_1action_1_1transform__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1action_1_1transform__fn.html#af4f50a560dd135c5e906370ebd4d0e34", null ],
@@ -103,6 +103,6 @@ var group__group_actions =
       [ "Concept", "structranges_1_1v3_1_1action_1_1unique__fn.html#ad23a1729113b4fb0529444348ce4330f", null ]
     ] ],
     [ "ConceptImpl", "structranges_1_1v3_1_1action_1_1unique__fn_1_1_concept_impl.html", [
-      [ "requires_", "structranges_1_1v3_1_1action_1_1unique__fn_1_1_concept_impl.html#a37323a73db348ad10ba3738a4e93526a", null ]
+      [ "requires_", "structranges_1_1v3_1_1action_1_1unique__fn_1_1_concept_impl.html#a18f2776ebda34048c40156061964e1e8", null ]
     ] ]
 ];

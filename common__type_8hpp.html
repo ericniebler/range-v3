@@ -91,8 +91,7 @@ $(document).ready(function(){initNavTree('common__type_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
 <div class="title">common_type.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -100,6 +99,9 @@ $(document).ready(function(){initNavTree('common__type_8hpp.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__common__reference.html">ranges::v3::basic_common_reference&lt; T, U, TQual, UQual &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users can specialize this to hook the <code>CommonReference</code> concept.  <a href="structranges_1_1v3_1_1basic__common__reference.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1common__reference.html">ranges::v3::common_reference&lt; Ts &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users can specialize this to hook the <code>CommonReference</code> concept.  <a href="structranges_1_1v3_1_1common__reference.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -108,9 +110,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1common__reference_3_01_t_00_01_u_01_4.html">ranges::v3::common_reference&lt; T, U &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1common__reference_3_01_t_00_01_u_00_01_vs_8_8_8_4.html">ranges::v3::common_reference&lt; T, U, Vs...&gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1common__reference__base.html">ranges::v3::common_reference_base&lt; T, U, TQual, UQual &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users can specialize this to hook the <code>CommonReference</code> concept.  <a href="structranges_1_1v3_1_1common__reference__base.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1common__type.html">ranges::v3::common_type&lt; Ts &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users should specialize this to hook the <code>Common</code> concept until <code>std</code> gets a SFINAE-friendly <code>std::common_type</code> and there's some sane way to deal with cv and ref qualifiers.  <a href="structranges_1_1v3_1_1common__type.html#details">More...</a><br /></td></tr>
@@ -129,24 +128,6 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespaceranges_1_1v3"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceranges_1_1v3.html">ranges::v3</a></td></tr>
 <tr class="memdesc:namespaceranges_1_1v3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protect a callable so that it can be safely used in a bind expression without accidentally becoming a "nested" bind. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a288a349ec38ae53d062e779f7b6f55d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a288a349ec38ae53d062e779f7b6f55d3"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::qual::const_lvalue_ref_t</b> = <a class="el" href="structmeta_1_1v1_1_1compose.html">meta::compose</a>&lt; <a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::quote_trait</a>&lt; std::add_lvalue_reference &gt;, <a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::quote_trait</a>&lt; std::add_const &gt;&gt;</td></tr>
-<tr class="separator:a288a349ec38ae53d062e779f7b6f55d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63ee24cf981433fe591f5b3f08589e2e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a63ee24cf981433fe591f5b3f08589e2e"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::qual::const_rvalue_ref_t</b> = <a class="el" href="structmeta_1_1v1_1_1compose.html">meta::compose</a>&lt; <a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::quote_trait</a>&lt; std::add_rvalue_reference &gt;, <a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::quote_trait</a>&lt; std::add_const &gt;&gt;</td></tr>
-<tr class="separator:a63ee24cf981433fe591f5b3f08589e2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a9d1236561ba70531f292bb38607442"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a9d1236561ba70531f292bb38607442"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::qual::lvalue_ref_t</b> = <a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::quote_trait</a>&lt; std::add_lvalue_reference &gt;</td></tr>
-<tr class="separator:a4a9d1236561ba70531f292bb38607442"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abeb173495612136615c6dbd1c7390f7b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abeb173495612136615c6dbd1c7390f7b"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::qual::rvalue_ref_t</b> = <a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::quote_trait</a>&lt; std::add_rvalue_reference &gt;</td></tr>
-<tr class="separator:abeb173495612136615c6dbd1c7390f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2595086ba1fe1a03a362084bfe0fb667"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2595086ba1fe1a03a362084bfe0fb667"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ranges::v3::qual::value_t</b> = <a class="el" href="group__composition.html#ga1aacfb8c082bfbad7e8003dc050c8b66">meta::quote_trait</a>&lt; <a class="el" href="structmeta_1_1v1_1_1id.html">meta::id</a> &gt;</td></tr>
-<tr class="separator:a2595086ba1fe1a03a362084bfe0fb667"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

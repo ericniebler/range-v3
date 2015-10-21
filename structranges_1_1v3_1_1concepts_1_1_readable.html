@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1concepts_1_1_rea
  <div class="center">
   <img src="structranges_1_1v3_1_1concepts_1_1_readable.png" usemap="#ranges::v3::concepts::Readable_map" alt=""/>
   <map id="ranges::v3::concepts::Readable_map" name="ranges::v3::concepts::Readable_map">
-<area href="structranges_1_1v3_1_1concepts_1_1refines.html" alt="ranges::v3::concepts::refines&lt; SemiRegular &gt;" shape="rect" coords="0,56,268,80"/>
+<area href="structranges_1_1v3_1_1concepts_1_1refines.html" alt="ranges::v3::concepts::refines&lt; Movable, DefaultConstructible &gt;" shape="rect" coords="0,56,369,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -115,19 +115,19 @@ Public Types</h2></td></tr>
 template&lt;typename I &gt; </td></tr>
 <tr class="memitem:a7df85f8913c6d49c8e85fcdd03c4ed0a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>common_reference_t</b> = ranges::common_reference_t&lt; reference_t&lt; I &gt; &amp;&amp;, value_t&lt; I &gt; &amp; &gt;</td></tr>
 <tr class="separator:a7df85f8913c6d49c8e85fcdd03c4ed0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4ed4edcd897d6783cbfdba251399fc6"><td class="memTemplParams" colspan="2"><a class="anchor" id="af4ed4edcd897d6783cbfdba251399fc6"></a>
+<tr class="memitem:abcd6506f0e527ab787a59d02300726e2"><td class="memTemplParams" colspan="2"><a class="anchor" id="abcd6506f0e527ab787a59d02300726e2"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:af4ed4edcd897d6783cbfdba251399fc6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reference_t</b> = decltype(*std::declval&lt; I &gt;())</td></tr>
-<tr class="separator:af4ed4edcd897d6783cbfdba251399fc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a775b25c4eb6d2d5bf4bd043d30efc858"><td class="memTemplParams" colspan="2"><a class="anchor" id="a775b25c4eb6d2d5bf4bd043d30efc858"></a>
+<tr class="memitem:abcd6506f0e527ab787a59d02300726e2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reference_t</b> = decltype(*std::declval&lt; I &amp; &gt;())</td></tr>
+<tr class="separator:abcd6506f0e527ab787a59d02300726e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a493e75e4e3094f6f2b7b47e81e50e608"><td class="memTemplParams" colspan="2"><a class="anchor" id="a493e75e4e3094f6f2b7b47e81e50e608"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:a775b25c4eb6d2d5bf4bd043d30efc858"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>rvalue_reference_t</b> = decltype(indirect_move(std::declval&lt; I &gt;()))</td></tr>
-<tr class="separator:a775b25c4eb6d2d5bf4bd043d30efc858"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a750817155ea6f63e181c7028a78f403e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a750817155ea6f63e181c7028a78f403e"></a>
+<tr class="memitem:a493e75e4e3094f6f2b7b47e81e50e608"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>rvalue_reference_t</b> = decltype(indirect_move(std::declval&lt; I &amp; &gt;()))</td></tr>
+<tr class="separator:a493e75e4e3094f6f2b7b47e81e50e608"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08b4fa33a53c7beec9de92a79028994f"><td class="memTemplParams" colspan="2"><a class="anchor" id="a08b4fa33a53c7beec9de92a79028994f"></a>
 template&lt;typename I &gt; </td></tr>
-<tr class="memitem:a750817155ea6f63e181c7028a78f403e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>value_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; <a class="el" href="structranges_1_1v3_1_1value__type.html">value_type</a>&lt; I &gt;&gt;</td></tr>
-<tr class="separator:a750817155ea6f63e181c7028a78f403e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_structranges_1_1v3_1_1concepts_1_1refines"><td colspan="2" onclick="javascript:toggleInherit('pub_types_structranges_1_1v3_1_1concepts_1_1refines')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="structranges_1_1v3_1_1concepts_1_1refines.html">ranges::v3::concepts::refines&lt; SemiRegular &gt;</a></td></tr>
+<tr class="memitem:a08b4fa33a53c7beec9de92a79028994f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>value_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; <a class="el" href="structranges_1_1v3_1_1value__type.html">value_type</a>&lt; I &gt;&gt;</td></tr>
+<tr class="separator:a08b4fa33a53c7beec9de92a79028994f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_structranges_1_1v3_1_1concepts_1_1refines"><td colspan="2" onclick="javascript:toggleInherit('pub_types_structranges_1_1v3_1_1concepts_1_1refines')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="structranges_1_1v3_1_1concepts_1_1refines.html">ranges::v3::concepts::refines&lt; Movable, DefaultConstructible &gt;</a></td></tr>
 <tr class="memitem:gaa96b304cf52a0749cadd35e3ea66498d inherit pub_types_structranges_1_1v3_1_1concepts_1_1refines"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaa96b304cf52a0749cadd35e3ea66498d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>base_concepts_t</b> = <a class="el" href="structmeta_1_1v1_1_1list.html">meta::list</a>&lt; Concepts...&gt;</td></tr>
 <tr class="separator:gaa96b304cf52a0749cadd35e3ea66498d inherit pub_types_structranges_1_1v3_1_1concepts_1_1refines"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,7 +138,7 @@ Public Member Functions</h2></td></tr>
 template&lt;typename I &gt; </td></tr>
 <tr class="memitem:aeba7acb392e27624ef93786a1e43f4ff"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires_</b> (I &amp;&amp;) -&gt; decltype(concepts::valid_expr(concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_common_reference.html">CommonReference</a>, reference_t&lt; I &gt; &amp;&amp;, value_t&lt; I &gt; &amp; &gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_common_reference.html">CommonReference</a>, reference_t&lt; I &gt; &amp;&amp;, rvalue_reference_t&lt; I &gt; &amp;&amp; &gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_common_reference.html">CommonReference</a>, rvalue_reference_t&lt; I &gt; &amp;&amp;, value_t&lt; I &gt; const &amp; &gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_same.html">Same</a>, ranges::common_reference_t&lt; reference_t&lt; I &gt;, value_t&lt; I &gt;&gt;, value_t&lt; I &gt;&gt;(), concepts::model_of&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_same.html">Same</a>, ranges::common_reference_t&lt; rvalue_reference_t&lt; I &gt;, value_t&lt; I &gt;&gt;, value_t&lt; I &gt;&gt;()))</td></tr>
 <tr class="separator:aeba7acb392e27624ef93786a1e43f4ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_structranges_1_1v3_1_1concepts_1_1refines"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1v3_1_1concepts_1_1refines')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1v3_1_1concepts_1_1refines.html">ranges::v3::concepts::refines&lt; SemiRegular &gt;</a></td></tr>
+<tr class="inherit_header pub_methods_structranges_1_1v3_1_1concepts_1_1refines"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structranges_1_1v3_1_1concepts_1_1refines')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structranges_1_1v3_1_1concepts_1_1refines.html">ranges::v3::concepts::refines&lt; Movable, DefaultConstructible &gt;</a></td></tr>
 <tr class="memitem:ga94919c772cd183a77841a62d95871da3 inherit pub_methods_structranges_1_1v3_1_1concepts_1_1refines"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga94919c772cd183a77841a62d95871da3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>requires_</b> (Ts &amp;&amp;...)</td></tr>
 <tr class="separator:ga94919c772cd183a77841a62d95871da3 inherit pub_methods_structranges_1_1v3_1_1concepts_1_1refines"><td class="memSeparator" colspan="2">&#160;</td></tr>

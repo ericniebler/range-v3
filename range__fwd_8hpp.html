@@ -106,6 +106,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__remove__if__view.html">ranges::v3::adjacent_remove_if_view&lt; Rng, F &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__common__reference.html">ranges::v3::basic_common_reference&lt; T, U, TQual, UQual &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users can specialize this to hook the <code>CommonReference</code> concept.  <a href="structranges_1_1v3_1_1basic__common__reference.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__iterator.html">ranges::v3::basic_iterator&lt; Cur, S &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__mixin.html">ranges::v3::basic_mixin&lt; T &gt;</a></td></tr>
@@ -123,9 +126,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1common__reference.html">ranges::v3::common_reference&lt; Ts &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users can specialize this to hook the <code>CommonReference</code> concept.  <a href="structranges_1_1v3_1_1common__reference.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1common__reference__base.html">ranges::v3::common_reference_base&lt; T, U, TQual, UQual &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users can specialize this to hook the <code>CommonReference</code> concept.  <a href="structranges_1_1v3_1_1common__reference__base.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1common__type.html">ranges::v3::common_type&lt; Ts &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users should specialize this to hook the <code>Common</code> concept until <code>std</code> gets a SFINAE-friendly <code>std::common_type</code> and there's some sane way to deal with cv and ref qualifiers.  <a href="structranges_1_1v3_1_1common__type.html#details">More...</a><br /></td></tr>
@@ -146,10 +146,10 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1counted__view.html">ranges::v3::counted_view&lt; I, D &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1cycled__view.html">ranges::v3::cycled_view&lt; Rng &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1dangling.html">ranges::v3::dangling&lt; I &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for an iterator or a sentinel into a range that may no longer be valid.  <a href="structranges_1_1v3_1_1dangling.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1detail_1_1reverse__cursor.html">ranges::v3::detail::reverse_cursor&lt; I &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1difference__type.html">ranges::v3::difference_type&lt; T, Enable &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,8 +213,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1stride__view.html">ranges::v3::stride_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1take__exactly__view.html">ranges::v3::take_exactly_view&lt; Rng &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1take__view.html">ranges::v3::take_view&lt; Rng &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1take__while__view.html">ranges::v3::take_while_view&lt; Rng, Pred &gt;</a></td></tr>
@@ -252,18 +250,18 @@ Namespaces</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:aaa06a88a4a1b9a488655bbabd51cd9b8"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaa06a88a4a1b9a488655bbabd51cd9b8"></a>
 template&lt;typename I , typename S &gt; </td></tr>
-<tr class="memitem:aaa06a88a4a1b9a488655bbabd51cd9b8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_iterator</b> = <a class="el" href="group__logical.html#ga62fe40f22a901d7f470ad8e609b0db3e">meta::if_</a>&lt; std::is_same&lt; I, S &gt;, I, basic_iterator&lt; detail::common_cursor&lt; I, S &gt;&gt;&gt;</td></tr>
+<tr class="memitem:aaa06a88a4a1b9a488655bbabd51cd9b8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_iterator</b> = <a class="el" href="group__logical.html#gac8d9cee3981f8ae0cfad6829c1c1b247">meta::if_</a>&lt; std::is_same&lt; I, S &gt;, I, basic_iterator&lt; detail::common_cursor&lt; I, S &gt;&gt;&gt;</td></tr>
 <tr class="separator:aaa06a88a4a1b9a488655bbabd51cd9b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a418428f3d10bb1f372b442a2c3333963"><td class="memTemplParams" colspan="2"><a class="anchor" id="a418428f3d10bb1f372b442a2c3333963"></a>
+<tr class="memitem:ac14a8d40a8f379f8bba366b75f0c614a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac14a8d40a8f379f8bba366b75f0c614a"></a>
 template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:a418428f3d10bb1f372b442a2c3333963"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_reference_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; common_reference&lt; Ts...&gt;&gt;</td></tr>
-<tr class="separator:a418428f3d10bb1f372b442a2c3333963"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbb1f8ec0fc63c2e98613a78cafa83a9"><td class="memTemplParams" colspan="2"><a class="anchor" id="afbb1f8ec0fc63c2e98613a78cafa83a9"></a>
+<tr class="memitem:ac14a8d40a8f379f8bba366b75f0c614a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_reference_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; common_reference&lt; Ts...&gt;&gt;</td></tr>
+<tr class="separator:ac14a8d40a8f379f8bba366b75f0c614a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73675dad085ebc4bd65c7a5ae54e299e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a73675dad085ebc4bd65c7a5ae54e299e"></a>
 template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:afbb1f8ec0fc63c2e98613a78cafa83a9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_type_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; common_type&lt; Ts...&gt;&gt;</td></tr>
-<tr class="separator:afbb1f8ec0fc63c2e98613a78cafa83a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73675dad085ebc4bd65c7a5ae54e299e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::common_type_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; common_type&lt; Ts...&gt;&gt;</td></tr>
+<tr class="separator:a73675dad085ebc4bd65c7a5ae54e299e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bc59289e1a8abb6fa552893b26a9238"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1bc59289e1a8abb6fa552893b26a9238"></a>
-template&lt;typename I , typename D  = meta::eval&lt;difference_type&lt;I&gt;&gt;&gt; </td></tr>
+template&lt;typename I , typename D  = meta::_t&lt;difference_type&lt;I&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a1bc59289e1a8abb6fa552893b26a9238"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::counted_iterator</b> = basic_iterator&lt; detail::counted_cursor&lt; I, D &gt;, detail::counted_sentinel &gt;</td></tr>
 <tr class="separator:a1bc59289e1a8abb6fa552893b26a9238"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55a8eb382c969aa0d36cf2e7af6a44fe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a55a8eb382c969aa0d36cf2e7af6a44fe"></a>
@@ -289,10 +287,10 @@ template&lt;typename Rng , typename Pred , typename Val &gt; </td></tr>
 template&lt;typename Rng , typename Val1 , typename Val2 &gt; </td></tr>
 <tr class="memitem:a0cb5fe9804766430b5ae40d1c4845b76"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::replace_view</b> = iter_transform_view&lt; Rng, detail::replacer_fn&lt; Val1, Val2 &gt;&gt;</td></tr>
 <tr class="separator:a0cb5fe9804766430b5ae40d1c4845b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40f541fc2418b88fc307689a8c26978c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a40f541fc2418b88fc307689a8c26978c"></a>
+<tr class="memitem:a20b87ca6f19d670d2911738a322534b0"><td class="memTemplParams" colspan="2"><a class="anchor" id="a20b87ca6f19d670d2911738a322534b0"></a>
 template&lt;typename Sig &gt; </td></tr>
-<tr class="memitem:a40f541fc2418b88fc307689a8c26978c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::result_of_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::result_of&lt; Sig &gt;&gt;</td></tr>
-<tr class="separator:a40f541fc2418b88fc307689a8c26978c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20b87ca6f19d670d2911738a322534b0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::result_of_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::result_of&lt; Sig &gt;&gt;</td></tr>
+<tr class="separator:a20b87ca6f19d670d2911738a322534b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37dcd80d32605a7c804475bae85cbd66"><td class="memTemplParams" colspan="2"><a class="anchor" id="a37dcd80d32605a7c804475bae85cbd66"></a>
 template&lt;typename I &gt; </td></tr>
 <tr class="memitem:a37dcd80d32605a7c804475bae85cbd66"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::reverse_iterator</b> = basic_iterator&lt; detail::reverse_cursor&lt; I &gt;, detail::reverse_cursor&lt; I &gt;&gt;</td></tr>
@@ -301,10 +299,14 @@ template&lt;typename I &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aee8b43d02406488b4f67484c7d99e91c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::rvalue_reference_wrapper</b> = reference_wrapper&lt; T, true &gt;</td></tr>
 <tr class="separator:aee8b43d02406488b4f67484c7d99e91c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8f2a065c4a04bf814a1b763fe666d05"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae8f2a065c4a04bf814a1b763fe666d05"></a>
+<tr class="memitem:gaee4076d16c12c015a0211d5dd97bd281"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaee4076d16c12c015a0211d5dd97bd281"></a>
+template&lt;typename Rng &gt; </td></tr>
+<tr class="memitem:gaee4076d16c12c015a0211d5dd97bd281"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::take_exactly_view</b> = detail::take_exactly_view_&lt; Rng &gt;</td></tr>
+<tr class="separator:gaee4076d16c12c015a0211d5dd97bd281"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab15cb7732fc23e05f0284d9a48a48eec"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab15cb7732fc23e05f0284d9a48a48eec"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae8f2a065c4a04bf814a1b763fe666d05"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::uncvref_t</b> = <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::remove_cv&lt; <a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::eval</a>&lt; std::remove_reference&lt; T &gt;&gt;&gt;&gt;</td></tr>
-<tr class="separator:ae8f2a065c4a04bf814a1b763fe666d05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab15cb7732fc23e05f0284d9a48a48eec"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::uncvref_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::remove_cv&lt; <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::remove_reference&lt; T &gt;&gt;&gt;&gt;</td></tr>
+<tr class="separator:ab15cb7732fc23e05f0284d9a48a48eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5d181d51575a6f15ce0a2113154b24e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad5d181d51575a6f15ce0a2113154b24e"></a>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:ad5d181d51575a6f15ce0a2113154b24e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::unique_view</b> = adjacent_remove_if_view&lt; Rng, equal_to &gt;</td></tr>
@@ -327,8 +329,7 @@ Enumerations</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ga21dccd922318b53ab5fc375ba0b161ef"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga21dccd922318b53ab5fc375ba0b161ef"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga21dccd922318b53ab5fc375ba0b161ef"><td class="memTemplItemLeft" align="right" valign="top">istream_range&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga21dccd922318b53ab5fc375ba0b161ef">ranges::v3::istream</a> (std::istream &amp;sin)</td></tr>
-<tr class="memdesc:ga21dccd922318b53ab5fc375ba0b161ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO use a variable template here when they're available. <br /></td></tr>
+<tr class="memitem:ga21dccd922318b53ab5fc375ba0b161ef"><td class="memTemplItemLeft" align="right" valign="top">istream_range&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::istream</b> (std::istream &amp;sin)</td></tr>
 <tr class="separator:ga21dccd922318b53ab5fc375ba0b161ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

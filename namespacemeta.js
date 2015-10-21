@@ -1,9 +1,5 @@
 var namespacemeta =
 [
-    [ "detail", null, [
-      [ "on_", "structmeta_1_1detail_1_1on__.html", null ],
-      [ "on_< F, Gs...>", "structmeta_1_1detail_1_1on___3_01_f_00_01_gs_8_8_8_4.html", "structmeta_1_1detail_1_1on___3_01_f_00_01_gs_8_8_8_4" ]
-    ] ],
     [ "extension", "namespacemeta_1_1extension.html", "namespacemeta_1_1extension" ],
     [ "v1", null, [
       [ "extension", null, [

@@ -114,26 +114,26 @@ Namespaces</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:gab884c9116821044e0dfb178f4e69072d"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab884c9116821044e0dfb178f4e69072d"></a>
 template&lt;typename T , bool IsConst = false&gt; </td></tr>
-<tr class="memitem:gab884c9116821044e0dfb178f4e69072d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_ref_or_val_t</b> = <a class="el" href="group__logical.html#ga62fe40f22a901d7f470ad8e609b0db3e">meta::if_</a>&lt; SemiRegular&lt; T &gt;, <a class="el" href="group__logical.html#ga5e16dc224b7d73c30d681aa63c407b39">meta::if_c</a>&lt; IsConst, T, reference_wrapper&lt; T &gt;&gt;, reference_wrapper&lt; <a class="el" href="group__invocation.html#ga67a68976eb8e00d1018c16cec76d782b">meta::apply</a>&lt; meta::add_const_if_c&lt; IsConst &gt;, semiregular&lt; T &gt;&gt;&gt;&gt;</td></tr>
+<tr class="memitem:gab884c9116821044e0dfb178f4e69072d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_ref_or_val_t</b> = <a class="el" href="group__logical.html#gac8d9cee3981f8ae0cfad6829c1c1b247">meta::if_</a>&lt; SemiRegular&lt; T &gt;, <a class="el" href="group__logical.html#gaa963e8a54e9af9024d797cadc0f5cec7">meta::if_c</a>&lt; IsConst, T, reference_wrapper&lt; T &gt;&gt;, reference_wrapper&lt; <a class="el" href="group__invocation.html#ga67a68976eb8e00d1018c16cec76d782b">meta::apply</a>&lt; meta::add_const_if_c&lt; IsConst &gt;, semiregular&lt; T &gt;&gt;&gt;&gt;</td></tr>
 <tr class="separator:gab884c9116821044e0dfb178f4e69072d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga311acc141ac5e80a64c4187ce8fe2ebd"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga311acc141ac5e80a64c4187ce8fe2ebd"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga311acc141ac5e80a64c4187ce8fe2ebd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_t</b> = <a class="el" href="group__logical.html#ga62fe40f22a901d7f470ad8e609b0db3e">meta::if_</a>&lt; SemiRegular&lt; T &gt;, T, semiregular&lt; T &gt;&gt;</td></tr>
+<tr class="memitem:ga311acc141ac5e80a64c4187ce8fe2ebd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::semiregular_t</b> = <a class="el" href="group__logical.html#gac8d9cee3981f8ae0cfad6829c1c1b247">meta::if_</a>&lt; SemiRegular&lt; T &gt;, T, semiregular&lt; T &gt;&gt;</td></tr>
 <tr class="separator:ga311acc141ac5e80a64c4187ce8fe2ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga63d0b7a22d91814395613e2239be77bb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga63d0b7a22d91814395613e2239be77bb"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga63d0b7a22d91814395613e2239be77bb"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gab777ee2056b8d97add9973a640ad021f">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; &amp;t)</td></tr>
+<tr class="memitem:ga63d0b7a22d91814395613e2239be77bb"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#ga10c0b84437b8cc1a8d475c1c660c653b">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; &amp;t)</td></tr>
 <tr class="separator:ga63d0b7a22d91814395613e2239be77bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa469a619986c94c18b5fac6ffc38b4b0"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memTemplItemLeft" align="right" valign="top">T const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gab777ee2056b8d97add9973a640ad021f">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; const &amp;t)</td></tr>
+<tr class="memitem:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memTemplItemLeft" align="right" valign="top">T const &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#ga10c0b84437b8cc1a8d475c1c660c653b">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; const &amp;t)</td></tr>
 <tr class="separator:gaa469a619986c94c18b5fac6ffc38b4b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga7ec2c66b74fde73e4192a69ffa01b1dd"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#gab777ee2056b8d97add9973a640ad021f">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; &amp;&amp;t)</td></tr>
+<tr class="memitem:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::get</b> (<a class="el" href="group__trait.html#ga10c0b84437b8cc1a8d475c1c660c653b">meta::id_t</a>&lt; semiregular&lt; T &gt;&gt; &amp;&amp;t)</td></tr>
 <tr class="separator:ga7ec2c66b74fde73e4192a69ffa01b1dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

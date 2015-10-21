@@ -20,6 +20,7 @@ var annotated =
     [ "function_type", "classfunction__type.html", null ],
     [ "ImplFn", "class_impl_fn.html", null ],
     [ "and_", "classmeta_1_1v1_1_1and__.html", null ],
+    [ "fast_and", "classmeta_1_1v1_1_1fast__and.html", null ],
     [ "if_", "classmeta_1_1v1_1_1if__.html", null ],
     [ "if_c", "classmeta_1_1v1_1_1if__c.html", null ],
     [ "offset_t", "classoffset__t.html", null ],

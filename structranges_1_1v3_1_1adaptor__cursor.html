@@ -107,7 +107,7 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1adaptor__cursor.
  <div class="center">
   <img src="structranges_1_1v3_1_1adaptor__cursor.png" usemap="#ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt;_map" alt=""/>
   <map id="ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt;_map" name="ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt;_map">
-<area href="structranges_1_1v3_1_1compressed__pair.html" alt="ranges::v3::compressed_pair&lt; BaseIter, Adapt &gt;" shape="rect" coords="0,0,286,24"/>
+<area href="structranges_1_1v3_1_1compressed__pair.html" alt="ranges::v3::compressed_pair&lt; BaseIter, Adapt &gt;" shape="rect" coords="0,0,395,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -122,15 +122,11 @@ Friends</h2></td></tr>
 template&lt;typename BaseSent , typename SentAdapt &gt; </td></tr>
 <tr class="memitem:ad1998db6c0a32c1c9b4dc41ec0d944eb"><td class="memTemplItemLeft" align="right" valign="top">struct&#160;</td><td class="memTemplItemRight" valign="bottom"><b>adaptor_sentinel</b></td></tr>
 <tr class="separator:ad1998db6c0a32c1c9b4dc41ec0d944eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a155fd48e294f5d2a03860bd8200ad740"><td class="memTemplParams" colspan="2"><a class="anchor" id="a155fd48e294f5d2a03860bd8200ad740"></a>
-template&lt;typename Sent , typename M  = mixin&gt; </td></tr>
-<tr class="memitem:a155fd48e294f5d2a03860bd8200ad740"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indirect_move</b> (<a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a>&lt; <a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a>, Sent &gt; const &amp;it) noexcept(noexcept(std::declval&lt; M const &amp; &gt;().<a class="el" href="group__group-core.html#gad4881a64025bc7f3f2b6c6722c5584ed">get</a>().indirect_move_(42))) -&gt; decltype(std::declval&lt; M const &amp; &gt;().<a class="el" href="group__group-core.html#gad4881a64025bc7f3f2b6c6722c5584ed">get</a>().indirect_move_(42))</td></tr>
-<tr class="separator:a155fd48e294f5d2a03860bd8200ad740"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a0725fd0abbfcd45d387509d09cb54c1a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0725fd0abbfcd45d387509d09cb54c1a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>single_pass</b> = <a class="el" href="group__logical.html#gafd1225b0f6ef9eaa60d2d08d2fb6c595">meta::or_</a>&lt; range_access::single_pass_t&lt; Adapt &gt;, SinglePass&lt; BaseIter &gt;&gt;</td></tr>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>single_pass</b> = <a class="el" href="group__logical.html#ga665ffdb3aca42c767792a713a5da618f">meta::or_</a>&lt; range_access::single_pass_t&lt; Adapt &gt;, SinglePass&lt; BaseIter &gt;&gt;</td></tr>
 <tr class="separator:a0725fd0abbfcd45d387509d09cb54c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -139,10 +135,6 @@ Public Member Functions</h2></td></tr>
 template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().advance(first, 0))&gt; </td></tr>
 <tr class="memitem:a583df5c37b11b53d7f3a65f2ff941f34"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>advance</b> (iterator_difference_t&lt; BaseIter &gt; n)</td></tr>
 <tr class="separator:a583df5c37b11b53d7f3a65f2ff941f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a002fe95ed6ecd1e00f82126a53220191"><td class="memTemplParams" colspan="2"><a class="anchor" id="a002fe95ed6ecd1e00f82126a53220191"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().current(first))&gt; </td></tr>
-<tr class="memitem:a002fe95ed6ecd1e00f82126a53220191"><td class="memTemplItemLeft" align="right" valign="top">R&#160;</td><td class="memTemplItemRight" valign="bottom"><b>current</b> () const noexcept(noexcept(R(std::declval&lt; A &gt;().current(first))))</td></tr>
-<tr class="separator:a002fe95ed6ecd1e00f82126a53220191"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5462b943147f2de757a4bd74dd2be927"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5462b943147f2de757a4bd74dd2be927"></a>
 template&lt;typename C  = adaptor_cursor&gt; </td></tr>
 <tr class="memitem:a5462b943147f2de757a4bd74dd2be927"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>distance_to</b> (<a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a> const &amp;that) const -&gt; decltype(std::declval&lt; C const &amp; &gt;().distance_to_(that, 42))</td></tr>
@@ -151,6 +143,22 @@ template&lt;typename C  = adaptor_cursor&gt; </td></tr>
 template&lt;typename C  = adaptor_cursor&gt; </td></tr>
 <tr class="memitem:a8524aff2b4c68226b558c775d142b6b5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>equal</b> (<a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a> const &amp;that) const -&gt; decltype(std::declval&lt; C const &amp; &gt;().equal_(that, 42))</td></tr>
 <tr class="separator:a8524aff2b4c68226b558c775d142b6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abda69f5101f7c10c47c5220b0cb18d9f"><td class="memTemplParams" colspan="2"><a class="anchor" id="abda69f5101f7c10c47c5220b0cb18d9f"></a>
+template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().get(first))&gt; </td></tr>
+<tr class="memitem:abda69f5101f7c10c47c5220b0cb18d9f"><td class="memTemplItemLeft" align="right" valign="top">R&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> () const noexcept(noexcept(R(std::declval&lt; A &gt;().get(first))))</td></tr>
+<tr class="separator:abda69f5101f7c10c47c5220b0cb18d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c9c54f74751b7e17edb5008dd5703f5"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8c9c54f74751b7e17edb5008dd5703f5"></a>
+template&lt;typename A  = Adapt, typename X  = decltype(std::declval&lt;A&gt;().indirect_move(first))&gt; </td></tr>
+<tr class="memitem:a8c9c54f74751b7e17edb5008dd5703f5"><td class="memTemplItemLeft" align="right" valign="top">X&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indirect_move_</b> (<a class="el" href="classint.html">int</a>) const noexcept(noexcept(std::declval&lt; A &gt;().indirect_move(first)))</td></tr>
+<tr class="separator:a8c9c54f74751b7e17edb5008dd5703f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64d7964b3dabb598f4b4f0d0eedb237d"><td class="memTemplParams" colspan="2"><a class="anchor" id="a64d7964b3dabb598f4b4f0d0eedb237d"></a>
+template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().get(first, detail::adaptor_base_current_mem_fn{})), typename X  = iterator_rvalue_reference_t&lt;BaseIter&gt;&gt; </td></tr>
+<tr class="memitem:a64d7964b3dabb598f4b4f0d0eedb237d"><td class="memTemplItemLeft" align="right" valign="top">X&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indirect_move_</b> (long) const noexcept(noexcept(X(ranges::indirect_move(first))))</td></tr>
+<tr class="separator:a64d7964b3dabb598f4b4f0d0eedb237d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a748b6992c7c3a8fc354187e500c5f219"><td class="memTemplParams" colspan="2"><a class="anchor" id="a748b6992c7c3a8fc354187e500c5f219"></a>
+template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().get(first)), typename X  = aux::move_t&lt;R&gt;&gt; </td></tr>
+<tr class="memitem:a748b6992c7c3a8fc354187e500c5f219"><td class="memTemplItemLeft" align="right" valign="top">X&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indirect_move_</b> (detail::any) const noexcept(noexcept(X(static_cast&lt; X &amp;&amp; &gt;(std::declval&lt; R &gt;()))))</td></tr>
+<tr class="separator:a748b6992c7c3a8fc354187e500c5f219"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6b652d5701a0ac2bee31f2b039dd867f"></a>
 template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().next(first))&gt; </td></tr>
 <tr class="memitem:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>next</b> ()</td></tr>
