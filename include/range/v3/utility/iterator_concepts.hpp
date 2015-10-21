@@ -152,10 +152,10 @@ namespace ranges
                 using value_t = meta::_t<value_type<I>>;
 
                 template<typename I>
-                using reference_t = decltype(*std::declval<I>());
+                using reference_t = decltype(*std::declval<I &>());
 
                 template<typename I>
-                using rvalue_reference_t = decltype(indirect_move(std::declval<I>()));
+                using rvalue_reference_t = decltype(indirect_move(std::declval<I &>()));
 
                 template<typename I>
                 using common_reference_t =

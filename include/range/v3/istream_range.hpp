@@ -47,7 +47,7 @@ namespace ranges
                 {
                     rng_->next();
                 }
-                Val const &current() const
+                Val const &get() const
                 {
                     return rng_->cached();
                 }

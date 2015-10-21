@@ -153,12 +153,6 @@
     <ClCompile Include="..\..\..\..\test\view\repeat.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\test\range_facade.cpp">
-      <Filter>Test Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\test\range_adaptor.cpp">
-      <Filter>Test Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\counted.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -657,6 +651,12 @@
     <ClCompile Include="..\..\..\..\test\view\any_view.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view_adaptor.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\view_facade.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">
@@ -985,9 +985,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_point.hpp">
       <Filter>Header Files\range\algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp">
-      <Filter>Header Files\range\view</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\partition_copy.hpp">
       <Filter>Header Files\range\algorithm</Filter>
@@ -1333,6 +1330,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\utility\any.hpp">
       <Filter>Test Files\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\view\any_view.hpp">
+      <Filter>Header Files\range\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

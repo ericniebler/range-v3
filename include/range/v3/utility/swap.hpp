@@ -141,18 +141,18 @@ namespace ranges
             template<typename Readable0, typename Readable1>
             RANGES_CXX14_CONSTEXPR
             meta::if_c<
-                is_swappable<decltype(*std::declval<Readable0>()),
-                             decltype(*std::declval<Readable1>())>::value>
+                is_swappable<decltype(*std::declval<Readable0 &>()),
+                             decltype(*std::declval<Readable1 &>())>::value>
             indirect_swap(Readable0 a, Readable1 b)
-                noexcept(is_nothrow_swappable<decltype(*std::declval<Readable0>()),
-                                              decltype(*std::declval<Readable1>())>::value);
+                noexcept(is_nothrow_swappable<decltype(*std::declval<Readable0 &>()),
+                                              decltype(*std::declval<Readable1 &>())>::value);
 
             template<typename Readable0, typename Readable1>
             RANGES_CXX14_CONSTEXPR
             meta::if_c<
                 !is_swappable<
-                    decltype(*std::declval<Readable0>()),
-                    decltype(*std::declval<Readable1>())>::value &&
+                    decltype(*std::declval<Readable0 &>()),
+                    decltype(*std::declval<Readable1 &>())>::value &&
                 is_indirectly_movable<Readable0, Readable1>::value &&
                 is_indirectly_movable<Readable1, Readable0>::value>
             indirect_swap(Readable0 a, Readable1 b)
@@ -199,11 +199,11 @@ namespace ranges
             template<typename Readable0, typename Readable1>
             RANGES_CXX14_CONSTEXPR
             meta::if_c<
-                is_swappable<decltype(*std::declval<Readable0>()),
-                             decltype(*std::declval<Readable1>())>::value>
+                is_swappable<decltype(*std::declval<Readable0 &>()),
+                             decltype(*std::declval<Readable1 &>())>::value>
             indirect_swap(Readable0 a, Readable1 b)
-                noexcept(is_nothrow_swappable<decltype(*std::declval<Readable0>()),
-                                              decltype(*std::declval<Readable1>())>::value)
+                noexcept(is_nothrow_swappable<decltype(*std::declval<Readable0 &>()),
+                                              decltype(*std::declval<Readable1 &>())>::value)
             {
                 swap(*a, *b);
             }
@@ -212,8 +212,8 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             meta::if_c<
                 !is_swappable<
-                    decltype(*std::declval<Readable0>()),
-                    decltype(*std::declval<Readable1>())>::value &&
+                    decltype(*std::declval<Readable0 &>()),
+                    decltype(*std::declval<Readable1 &>())>::value &&
                 is_indirectly_movable<Readable0, Readable1>::value &&
                 is_indirectly_movable<Readable1, Readable0>::value>
             indirect_swap(Readable0 a, Readable1 b)

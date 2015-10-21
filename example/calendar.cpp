@@ -176,7 +176,7 @@ public:
     adaptor(std::size_t n, range_sentinel_t<Rng> end)
       : n_(n), end_(end)
     {}
-    auto current(range_iterator_t<Rng> it) const {
+    auto get(range_iterator_t<Rng> it) const {
         return view::take(make_range(std::move(it), end_), n_);
     }
     void next(range_iterator_t<Rng> &it) {
@@ -218,7 +218,7 @@ struct interleave_view<Rngs>::cursor  {
     std::size_t n_;
     std::vector<range_value_t<Rngs>> *rngs_;
     std::vector<range_iterator_t<range_value_t<Rngs>>> its_;
-    decltype(auto) current() const {
+    decltype(auto) get() const {
         return *its_[n_];
     }
     void next() {

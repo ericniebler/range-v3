@@ -29,7 +29,7 @@ private:
         cursor(std::vector<int>::const_iterator it)
           : iter(it)
         {}
-        int const & current() const
+        int const & get() const
         {
             return *iter;
         }

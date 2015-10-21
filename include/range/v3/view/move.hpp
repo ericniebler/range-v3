@@ -42,7 +42,7 @@ namespace ranges
             struct adaptor : adaptor_base
             {
                 using value_type = range_value_t<Rng>;
-                range_rvalue_reference_t<Rng> current(range_iterator_t<Rng> it) const
+                range_rvalue_reference_t<Rng> get(range_iterator_t<Rng> it) const
                 {
                     return iter_move(it);
                 }

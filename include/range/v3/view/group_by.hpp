@@ -70,7 +70,7 @@ namespace ranges
                     }
                 };
                 take_while_view<range<range_iterator_t<Rng>, range_sentinel_t<Rng>>, take_while_pred>
-                current() const
+                get() const
                 {
                     return {{cur_, last_}, {cur_, fun_}};
                 }

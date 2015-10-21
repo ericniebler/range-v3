@@ -47,7 +47,7 @@ namespace ranges
                 {
                     rng_->next();
                 }
-                std::string const &current() const
+                std::string const &get() const
                 {
                     return rng_->str_;
                 }

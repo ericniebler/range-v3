@@ -113,7 +113,7 @@ namespace ranges
                 {
                     return false;
                 }
-                auto current() const
+                auto get() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     *it_

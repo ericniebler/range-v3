@@ -65,7 +65,7 @@ namespace ranges
                 adaptor(partial_sum_view_t &rng, range_value_t<Rng> sum)
                   : sum_(std::move(sum)), rng_(&rng)
                 {}
-                range_value_t<Rng> current(range_iterator_t<Rng> it) const
+                range_value_t<Rng> get(range_iterator_t<Rng> it) const
                 {
                     return *sum_;
                 }

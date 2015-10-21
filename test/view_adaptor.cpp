@@ -46,7 +46,7 @@ private:
         {
             ++it;
         }
-        ranges::range_reference_t<BidiRange> current(base_iterator_t it) const
+        ranges::range_reference_t<BidiRange> get(base_iterator_t it) const
         {
             return *ranges::prev(it);
         }

@@ -52,7 +52,7 @@ namespace ranges
                 cursor(Val value, std::ptrdiff_t n)
                   : value_(std::move(value)), n_(n)
                 {}
-                Val current() const
+                Val get() const
                 {
                     return value_;
                 }

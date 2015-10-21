@@ -68,7 +68,7 @@ namespace ranges
         {
             // Default indirect_move overload.
             template<typename I,
-                typename R = decltype(*std::declval<I>()),
+                typename R = decltype(*std::declval<I const &>()),
                 typename U = meta::_t<std::remove_reference<R>>>
             aux::move_t<R> indirect_move(I const &i)
                 noexcept(std::is_reference<R>::value ||
@@ -102,10 +102,10 @@ namespace ranges
             meta::and_<
                 std::is_constructible<
                     meta::_t<value_type<I>>,
-                    decltype(indirect_move(std::declval<I>()))>,
+                    decltype(indirect_move(std::declval<I &>()))>,
                 std::is_assignable<
-                    decltype(*std::declval<O>()),
-                    decltype(indirect_move(std::declval<I>()))>>
+                    decltype(*std::declval<O &>()),
+                    decltype(indirect_move(std::declval<I &>()))>>
             is_indirectly_movable_(int);
 
             template<typename I, typename O>
@@ -116,10 +116,10 @@ namespace ranges
             meta::and_<
                 std::is_nothrow_constructible<
                     meta::_t<value_type<I>>,
-                    decltype(indirect_move(std::declval<I>()))>,
+                    decltype(indirect_move(std::declval<I &>()))>,
                 std::is_nothrow_assignable<
-                    decltype(*std::declval<O>()),
-                    decltype(indirect_move(std::declval<I>()))>>
+                    decltype(*std::declval<O &>()),
+                    decltype(indirect_move(std::declval<I &>()))>>
             is_nothrow_indirectly_movable_(int);
 
             template<typename I, typename O>

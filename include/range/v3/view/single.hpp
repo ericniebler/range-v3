@@ -48,7 +48,7 @@ namespace ranges
                 cursor(Val value)
                   : value_(std::move(value)), done_(false)
                 {}
-                Val current() const
+                Val get() const
                 {
                     return value_;
                 }

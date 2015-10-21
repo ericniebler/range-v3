@@ -104,7 +104,7 @@ namespace ranges
                         common_cursor<I2, S2>{S2{se()}} :
                         common_cursor<I2, S2>{I2{it()}};
                 }
-                auto current() const -> decltype(*std::declval<I const &>())
+                auto get() const -> decltype(*std::declval<I const &>())
                 {
                     return *it();
                 }

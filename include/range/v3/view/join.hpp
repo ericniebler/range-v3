@@ -128,7 +128,7 @@ namespace ranges
                     ++it_;
                     satisfy(it);
                 }
-                auto current(range_iterator_t<Rng> const &) const ->
+                auto get(range_iterator_t<Rng> const &) const ->
                     decltype(*it_)
                 {
                     return *it_;
@@ -261,7 +261,7 @@ namespace ranges
                     toggl_ ? (void)++it_ : (void)++val_it_;
                     satisfy(it);
                 }
-                auto current(range_iterator_t<Rng> const &) const ->
+                auto get(range_iterator_t<Rng> const &) const ->
                     common_reference_t<
                         range_reference_t<range_value_t<Rng>>,
                         range_reference_t<ValRng>>

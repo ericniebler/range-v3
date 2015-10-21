@@ -58,7 +58,7 @@ namespace ranges
                 {
                     return 0 == n_;
                 }
-                result_t current() const
+                result_t get() const
                 {
                     return rng_->val_;
                 }

@@ -116,6 +116,19 @@ namespace ranges
                             State::value == unknown || Value::value == unknown ?
                                 unknown :
                                 infinite>;
+
+            // indirect_move is put here instead of in iter_transform2_view::cursor to
+            // work around gcc friend name injection bug.
+            template<typename Cursor, std::size_t Cnt>
+            struct zip_cursor_indirect_move
+            {
+                template<typename Sent>
+                friend auto indirect_move(basic_iterator<Cursor, Sent> const &it)
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    get_cursor(it).indirect_move_(meta::make_index_sequence<Cnt>{})
+                )
+            };
         } // namespace detail
         /// \endcond
 
@@ -139,6 +152,7 @@ namespace ranges
 
             struct sentinel;
             struct cursor
+              : detail::zip_cursor_indirect_move<cursor, sizeof...(Rngs)>
             {
             private:
                 friend sentinel;
@@ -146,18 +160,6 @@ namespace ranges
                 fun_ref_ fun_;
                 std::tuple<range_iterator_t<Rngs>...> its_;
 
-                template<std::size_t...Is>
-                auto indirect_move_(meta::index_sequence<Is...>) const
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    fun_(move_tag{}, std::get<Is>(its_)...)
-                )
-                template<typename Sent>
-                friend auto indirect_move(basic_iterator<cursor, Sent> const &it)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    get_cursor(it).indirect_move_(meta::make_index_sequence<sizeof...(Rngs)>{})
-                )
             public:
                 using difference_type =
                     common_type_t<range_difference_t<Rngs>...>;
@@ -170,7 +172,7 @@ namespace ranges
                 cursor(fun_ref_ fun, std::tuple<range_iterator_t<Rngs>...> its)
                   : fun_(std::move(fun)), its_(std::move(its))
                 {}
-                auto current() const
+                auto get() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     tuple_apply(fun_, its_)
@@ -216,6 +218,12 @@ namespace ranges
                             (std::numeric_limits<difference_type>::min)(),
                             detail::max_);
                 }
+                template<std::size_t...Is>
+                auto indirect_move_(meta::index_sequence<Is...>) const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    fun_(move_tag{}, std::get<Is>(its_)...)
+                )
             };
 
             struct sentinel

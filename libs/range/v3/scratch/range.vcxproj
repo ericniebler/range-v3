@@ -214,8 +214,6 @@
     <ClCompile Include="..\..\..\..\test\numeric\iota.cpp" />
     <ClCompile Include="..\..\..\..\test\numeric\partial_sum.cpp" />
     <ClCompile Include="..\..\..\..\test\range.cpp" />
-    <ClCompile Include="..\..\..\..\test\range_adaptor.cpp" />
-    <ClCompile Include="..\..\..\..\test\range_facade.cpp" />
     <ClCompile Include="..\..\..\..\test\to_container.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\basic_iterator.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\common_type.cpp" />
@@ -261,6 +259,8 @@
     <ClCompile Include="..\..\..\..\test\view\transform.cpp" />
     <ClCompile Include="..\..\..\..\test\view\unique.cpp" />
     <ClCompile Include="..\..\..\..\test\view\zip.cpp" />
+    <ClCompile Include="..\..\..\..\test\view_adaptor.cpp" />
+    <ClCompile Include="..\..\..\..\test\view_facade.cpp" />
     <ClCompile Include="range.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -431,7 +431,7 @@
     <ClInclude Include="..\..\..\..\include\range\v3\view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\adjacent_remove_if.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\all.hpp" />
-    <ClInclude Include="..\..\..\..\include\range\v3\view\any_range.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\view\any_view.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\bounded.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\chunk.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\view\concat.hpp" />

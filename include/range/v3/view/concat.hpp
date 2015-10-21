@@ -227,7 +227,7 @@ namespace ranges
                 cursor(concat_view_t &rng, end_tag)
                   : rng_(&rng), its_{meta::size_t<cranges-1>{}, end(std::get<cranges-1>(rng.rngs_))}
                 {}
-                reference current() const
+                reference get() const
                 {
                     // Kind of a dumb implementation. Surely there's a better way.
                     return ranges::get<0>(unique_variant(its_.apply(detail::deref_fun<reference>{})));

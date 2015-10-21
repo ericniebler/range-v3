@@ -75,7 +75,7 @@ namespace ranges
                 };
                 using reference_ =
                     indirect_view<take_while_view<iota_view<range_iterator_t<Rng>>, search_pred>>;
-                reference_ current() const
+                reference_ get() const
                 {
                     return reference_{{view::iota(cur_), {zero_, cur_, last_, fun_}}};
                 }

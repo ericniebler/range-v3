@@ -104,6 +104,9 @@
 /// \defgroup lazy_list lazy
 /// \ingroup list
 
+/// \defgroup lazy_datatype lazy
+/// \ingroup datatype
+
 /// \defgroup lazy_math lazy
 /// \ingroup math
 
@@ -2262,27 +2265,48 @@ namespace meta
             using in = defer<in, List, T>;
         }
 
+        namespace detail
+        {
+            template<typename List>
+            struct inherit_
+            {
+            };
+
+            template<typename ...List>
+            struct inherit_<list<List...>> : List...
+            {
+                using type = inherit_;
+            };
+        }
+
+        /// A type that inherits from all the types in the list
+        /// \pre The types in the list must be unique
+        /// \pre All the types in the list must be non-final class types
+        /// \ingroup datatype
+        template <typename List>
+        using inherit = meta::_t<detail::inherit_<List>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::inherit'
+            /// \ingroup lazy_datatype
+            template <typename List>
+            using inherit = defer<inherit, List>;
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         // set
         // Used to improve the performance of \c meta::unique.
         /// \cond
         namespace detail
         {
-            template <typename... Nodes>
-            struct root_ : Nodes...
-            {
-            };
-
-            template <typename... Ts>
-            using set_ = root_<id<Ts>...>;
-
             template <typename Set, typename T>
             struct in_
             {
             };
 
             template <typename... Set, typename T>
-            struct in_<list<Set...>, T> : std::is_base_of<id<T>, set_<Set...>>
+            struct in_<list<Set...>, T> : std::is_base_of<id<T>, inherit<list<id<Set>...>>>
             {
             };
 

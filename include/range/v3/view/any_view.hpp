@@ -61,7 +61,7 @@ namespace ranges
             {
                 virtual ~any_cursor_interface() {}
                 virtual any_object const &iter() const = 0;
-                virtual Ref current() const = 0;
+                virtual Ref get() const = 0;
                 virtual bool equal(any_cursor_interface const &) const = 0;
                 virtual void next() = 0;
                 virtual any_cursor_interface *clone_() const = 0;
@@ -125,7 +125,7 @@ namespace ranges
                 {
                     return it_;
                 }
-                Ref current() const
+                Ref get() const
                 {
                     return *it_.get();
                 }
@@ -220,10 +220,10 @@ namespace ranges
                     ptr_.reset(that.ptr_ ? that.ptr_->clone() : nullptr);
                     return *this;
                 }
-                Ref current() const
+                Ref get() const
                 {
                     RANGES_ASSERT(ptr_);
-                    return ptr_->current();
+                    return ptr_->get();
                 }
                 bool equal(any_cursor const &that) const
                 {

@@ -576,7 +576,7 @@ namespace ranges
                 {}
 
                 RANGES_CXX14_CONSTEXPR
-                auto current() const ->
+                auto get() const ->
                     decltype(*it_)
                 {
                     I tmp(it_);

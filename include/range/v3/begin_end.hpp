@@ -33,35 +33,6 @@ namespace ranges
             using std::begin;
             using std::end;
 
-#if defined(RANGES_CXX_GREATER_THAN_11) && \
-    ((defined(_LIBCXX_VERSION) && (_LIBCXX_VERSION >= 1101) && \
-      defined(_LIBCPP_STD_VER) && (_LIBCPP_STD_VER > 11)) || \
-    (defined(__GLIBCXX__) && (__GLIBCXX__ >= 20150119)))
-            using std::rbegin;
-            using std::rend;
-#else
-            template<typename T, std::size_t N>
-            std::reverse_iterator<T *> rbegin(T (&t)[N])
-            {
-                return std::reverse_iterator<T *>(t + N);
-            }
-            template<typename T, std::size_t N>
-            std::reverse_iterator<T *> rend(T (&t)[N])
-            {
-                return std::reverse_iterator<T *>(t);
-            }
-            template<typename T>
-            std::reverse_iterator<T const *> rbegin(std::initializer_list<T> il)
-            {
-                return std::reverse_iterator<T const *>(il.end());
-            }
-            template<typename T>
-            std::reverse_iterator<T const *> rend(std::initializer_list<T> il)
-            {
-                return std::reverse_iterator<T const *>(il.begin());
-            }
-#endif
-
             // A reference-wrapped Range is an Range
             template<typename T>
             auto begin(std::reference_wrapper<T> ref) -> decltype(begin(ref.get()))

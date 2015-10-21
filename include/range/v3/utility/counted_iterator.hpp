@@ -113,7 +113,7 @@ namespace ranges
                 counted_cursor(counted_cursor<OtherI, OtherD> that)
                   : it_(std::move(that.it_)), n_(std::move(that.n_))
                 {}
-                auto current() const -> decltype(*it_)
+                auto get() const -> decltype(*it_)
                 {
                     return *it_;
                 }

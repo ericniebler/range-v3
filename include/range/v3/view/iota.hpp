@@ -168,7 +168,7 @@ namespace ranges
             To to_;
             bool done_ = false;
 
-            From current() const
+            From get() const
             {
                 return from_;
             }
@@ -222,7 +222,7 @@ namespace ranges
             From from_;
             To to_;
 
-            From current() const
+            From get() const
             {
                 return from_;
             }
@@ -273,7 +273,7 @@ namespace ranges
 
             From value_;
 
-            From current() const
+            From get() const
             {
                 return value_;
             }

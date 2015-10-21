@@ -60,7 +60,7 @@ namespace ranges
                 cursor_adaptor(range_value_t<Rng> val, bool at_end)
                   : toggl_(!at_end), val_(std::move(val))
                 {}
-                range_value_t<Rng> current(range_iterator_t<Rng> it) const
+                range_value_t<Rng> get(range_iterator_t<Rng> it) const
                 {
                     return toggl_ ? *it : val_;
                 }

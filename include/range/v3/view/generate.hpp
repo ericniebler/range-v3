@@ -55,7 +55,7 @@ namespace ranges
                 {
                     return false;
                 }
-                result_t current() const
+                result_t get() const
                 {
                     return view_->val_;
                 }

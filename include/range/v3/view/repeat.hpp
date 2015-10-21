@@ -51,7 +51,7 @@ namespace ranges
                 cursor(Val value)
                   : value_(value)
                 {}
-                Val current() const
+                Val get() const
                 {
                     return value_;
                 }
