@@ -431,10 +431,12 @@ namespace ranges
             struct cycle_fn;
         }
 
+        /// \cond
         namespace detail
         {
             template<typename I> struct reverse_cursor;
         }
+        /// \endcond
 
         template<typename I>
         using reverse_iterator = basic_iterator<detail::reverse_cursor<I>,
@@ -572,6 +574,7 @@ namespace ranges
             struct take_fn;
         }
 
+        /// \cond
         namespace detail
         {
             template<typename Rng>
@@ -581,6 +584,7 @@ namespace ranges
                 bool IsRandomAccessBounded = is_random_access_bounded_<Rng>::value>
             struct take_exactly_view_;
         }
+        /// \endcond
 
         template<typename Rng>
         using take_exactly_view = detail::take_exactly_view_<Rng>;

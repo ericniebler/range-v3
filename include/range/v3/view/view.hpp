@@ -27,6 +27,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             struct null_pipe
@@ -36,6 +37,7 @@ namespace ranges
                 {}
             };
         }
+        /// \endcond
 
         namespace view
         {

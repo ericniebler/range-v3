@@ -776,6 +776,7 @@ namespace meta
             using flip = defer<flip, F>;
         }
 
+        /// \cond
         namespace detail
         {
             template <typename...>
@@ -789,6 +790,7 @@ namespace meta
                 using apply = apply<F, apply<compose<Gs...>, Ts>...>;
             };
         }
+        /// \endcond
 
         /// Use as `on<F, Gs...>`. Creates an Alias Class that applies Alias Class \c F to the
         /// result of applying Alias Class `compose<Gs...>` to all the arguments.
@@ -2265,6 +2267,9 @@ namespace meta
             using in = defer<in, List, T>;
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // inherit
+        /// \cond
         namespace detail
         {
             template<typename List>
@@ -2278,6 +2283,7 @@ namespace meta
                 using type = inherit_;
             };
         }
+        /// \endcond
 
         /// A type that inherits from all the types in the list
         /// \pre The types in the list must be unique

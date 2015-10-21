@@ -503,6 +503,7 @@ namespace ranges
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Project struct, for "projecting" a Readable with a unary callable
+        /// \cond
         namespace detail
         {
             template<typename I, typename Proj>
@@ -515,6 +516,7 @@ namespace ranges
                 reference operator*() const;
             };
         }
+        /// \endcond
 
         template<typename I, typename Proj>
         using Projected = meta::if_<IndirectCallable<Proj, I>, detail::projected_readable<I, Proj>>;

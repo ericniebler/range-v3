@@ -149,7 +149,7 @@ Range v3 provides a utility for easily creating your own range types, called `vi
     {
         friend range_access;
         char const * sz_;
-        char const & current() const { return *sz_; }
+        char const & get() const { return *sz_; }
         bool done() const { return *sz_ == '\0'; }
         void next() { ++sz_; }
     public:
@@ -199,7 +199,7 @@ Below in roughly 2 dozen lines of code is the `transform` view, which takes one 
             adaptor() = default;
             adaptor(semiregular_t<Fun> const &fun) : fun_(fun) {}
             // Here is where we apply Fun to the elements:
-            auto current(range_iterator_t<Rng> it) const -> decltype(fun_(*it))
+            auto get(range_iterator_t<Rng> it) const -> decltype(fun_(*it))
             {
                 return fun_(*it);
             }
@@ -221,7 +221,7 @@ Below in roughly 2 dozen lines of code is the `transform` view, which takes one 
     }
 ~~~~~~~
 
-Range transformation is achieved by defining a nested `adaptor` class that handles the transformation, and then defining `begin_adaptor` and `end_adaptor` members that return adaptors for the begin iterator and the end sentinel, respectively. The `adaptor` class has a `current` member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: `equal`, `next`, `prev`, `advance`, and `distance_to`; but the transform adaptor accepts the defaults defined in `adaptor_base`.
+Range transformation is achieved by defining a nested `adaptor` class that handles the transformation, and then defining `begin_adaptor` and `end_adaptor` members that return adaptors for the begin iterator and the end sentinel, respectively. The `adaptor` class has a `get` member that performs the transformation. It is passed an iterator to the current element. Other members are available for customization: `equal`, `next`, `prev`, `advance`, and `distance_to`; but the transform adaptor accepts the defaults defined in `adaptor_base`.
 
 With `transform_view`, we can print out the first 20 squares:
 

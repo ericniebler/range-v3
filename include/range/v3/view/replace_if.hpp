@@ -30,6 +30,7 @@ namespace ranges
 {
     inline namespace v3
     {
+        /// \cond
         namespace detail
         {
             template<typename Pred, typename Val>
@@ -91,6 +92,7 @@ namespace ranges
                 }
             };
         }
+        /// \endcond
 
         /// \addtogroup group-views
         /// @{

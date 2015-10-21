@@ -535,6 +535,7 @@ namespace ranges
             }
         };
 
+        /// \cond
         namespace detail
         {
             template<typename I>
@@ -617,6 +618,7 @@ namespace ranges
                 }
             };
         }  // namespace detail
+        /// \endcond
 
         template<typename I>
         RANGES_CXX14_CONSTEXPR

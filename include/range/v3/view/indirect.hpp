@@ -31,7 +31,6 @@ namespace ranges
 {
     inline namespace v3
     {
-        template<class X> struct undef;
         /// \addtogroup group-views
         /// @{
         template<typename Rng>
