@@ -30,6 +30,24 @@ struct Int
     bool operator!=(Int j) const { return i != j.i; }
 };
 
+template <typename Integral>
+void test_iota_minus() {
+  using namespace ranges;
+  using D = detail::iota_difference_t<Integral>;
+  using I = Integral;
+  Integral max = std::numeric_limits<Integral>::max();
+
+  CHECK(detail::iota_minus(I(0), I(0)) == D(0));
+  CHECK(detail::iota_minus(I(0), I(1)) == D(-1));
+  CHECK(detail::iota_minus(I(1), I(0)) ==  D(1));
+  CHECK(detail::iota_minus(I(1), I(1)) == D(0));
+
+  CHECK(detail::iota_minus(I(max - I(1)), I(max - I(1))) == D(0));
+  CHECK(detail::iota_minus(I(max - I(1)), I(max)) == D(-1));
+  CHECK(detail::iota_minus(I(max), I(max - I(1))) == D(1));
+  CHECK(detail::iota_minus(I(max), I(max)) == D(0));
+}
+
 int main()
 {
     using namespace ranges;
@@ -75,6 +93,18 @@ int main()
         auto ints = view::closed_iota(Int{0}, Int{10});
         ::check_equal(ints, {Int{0},Int{1},Int{2},Int{3},Int{4},Int{5},Int{6},Int{7},Int{8},Int{9},Int{10}});
         models_not<concepts::BoundedView>(ints);
+    }
+
+    {  // iota minus tests
+      test_iota_minus<int8_t>();
+      test_iota_minus<int16_t>();
+      test_iota_minus<int32_t>();
+      test_iota_minus<int64_t>();
+
+      test_iota_minus<uint8_t>();
+      test_iota_minus<uint16_t>();
+      test_iota_minus<uint32_t>();
+      test_iota_minus<uint64_t>();
     }
 
     return ::test_result();
