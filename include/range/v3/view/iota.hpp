@@ -147,7 +147,7 @@ namespace ranges
             iota_difference_t<Val> iota_minus(Val const &v0, Val const &v1)
             {
                 using D = iota_difference_t<Val>;
-                return (D) (v0 - v1);
+                return v0 < v1? - static_cast<D>(v1 - v0) : static_cast<D>(v0 - v1);
             }
         }
         /// \endcond
