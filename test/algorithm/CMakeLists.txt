@@ -108,14 +108,23 @@ add_test(test.alg.lower_bound, alg.lower_bound)
 add_executable(alg.make_heap make_heap.cpp)
 add_test(test.alg.make_heap, alg.make_heap)
 
+add_executable(alg.max max.cpp)
+add_test(test.alg.max, alg.max)
+
 add_executable(alg.max_element max_element.cpp)
 add_test(test.alg.max_element, alg.max_element)
 
 add_executable(alg.merge merge.cpp)
 add_test(test.alg.merge, alg.merge)
 
+add_executable(alg.min min.cpp)
+add_test(test.alg.min, alg.min)
+
 add_executable(alg.min_element min_element.cpp)
 add_test(test.alg.min_element, alg.min_element)
+
+add_executable(alg.minmax minmax.cpp)
+add_test(test.alg.minmax, alg.minmax)
 
 add_executable(alg.minmax_element minmax_element.cpp)
 add_test(test.alg.minmax_element, alg.minmax_element)
