@@ -34,15 +34,15 @@ namespace ranges
         struct optional
         {
         private:
-            tagged_variant<meta::nil_, T> data_;
+            variant<meta::nil_, T> data_;
         public:
             optional() = default;
             optional(T t)
-              : data_(meta::size_t<1>{}, std::move(t))
+              : data_(emplaced_index<1>, std::move(t))
             {}
             template <typename...Args, CONCEPT_REQUIRES_(Constructible<T, Args...>())>
             explicit optional(in_place_t, Args &&...args)
-              : data_(meta::size_t<1>{}, std::forward<Args>(args)...)
+              : data_(emplaced_index<1>, std::forward<Args>(args)...)
             {}
             explicit operator bool() const
             {
@@ -60,17 +60,17 @@ namespace ranges
             }
             optional &operator=(T const &t)
             {
-                ranges::set<1>(data_, t);
+                ranges::emplace<1>(data_, t);
                 return *this;
             }
             optional &operator=(T &&t)
             {
-                ranges::set<1>(data_, std::move(t));
+                ranges::emplace<1>(data_, std::move(t));
                 return *this;
             }
             void reset()
             {
-                ranges::set<0>(data_);
+                ranges::emplace<0>(data_);
             }
         };
     }

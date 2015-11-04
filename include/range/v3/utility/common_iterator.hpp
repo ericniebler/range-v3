@@ -48,7 +48,7 @@ namespace ranges
             private:
                 static_assert(!std::is_same<I, S>::value,
                               "Error: iterator and sentinel types are the same");
-                tagged_variant<I, S> data_;
+                variant<I, S> data_;
                 bool is_sentinel() const
                 {
                     RANGES_ASSERT(data_.is_valid());
@@ -90,10 +90,10 @@ namespace ranges
             public:
                 common_cursor() = default;
                 explicit common_cursor(I it)
-                  : data_(meta::size_t<0>{}, std::move(it))
+                  : data_(emplaced_index<0>, std::move(it))
                 {}
                 explicit common_cursor(S se)
-                  : data_(meta::size_t<1>{}, std::move(se))
+                  : data_(emplaced_index<1>, std::move(se))
                 {}
                 template<typename I2, typename S2,
                     CONCEPT_REQUIRES_(ExplicitlyConvertibleTo<I, I2>() &&

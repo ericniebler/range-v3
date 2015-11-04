@@ -494,7 +494,6 @@ namespace ranges
             template<typename OtherCur, typename OtherS>
             friend struct basic_iterator;
             CONCEPT_ASSERT(detail::WeakCursor<Cur>());
-            using is_weak_t = meta::not_<detail::Cursor<Cur>>;
             using assoc_types_ = detail::iterator_associated_types_base<Cur, S>;
             using typename assoc_types_::postfix_increment_result_t;
             using typename assoc_types_::cursor_concept_t;
@@ -575,37 +574,37 @@ namespace ranges
                 ++*this;
                 return tmp;
             }
-            CONCEPT_REQUIRES(!is_weak_t())
+            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator==(basic_iterator const &left,
                 basic_iterator const &right)
             {
                 return left.equal_(right, _nullptr_v<std::is_same<Cur, S>>());
             }
-            CONCEPT_REQUIRES(!is_weak_t())
+            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator!=(basic_iterator const &left,
                 basic_iterator const &right)
             {
                 return !(left == right);
             }
-            CONCEPT_REQUIRES(!is_weak_t())
+            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator==(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
                 return range_access::empty(left.pos(), right.end());
             }
-            CONCEPT_REQUIRES(!is_weak_t())
+            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator!=(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
                 return !(left == right);
             }
-            CONCEPT_REQUIRES(!is_weak_t())
+            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator==(basic_sentinel<S> const & left,
                 basic_iterator const &right)
             {
                 return range_access::empty(right.pos(), left.end());
             }
-            CONCEPT_REQUIRES(!is_weak_t())
+            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator!=(basic_sentinel<S> const &left,
                 basic_iterator const &right)
             {

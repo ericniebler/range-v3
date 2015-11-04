@@ -79,7 +79,6 @@
     <ClCompile Include="..\..\..\..\example\calendar.cpp" />
     <ClCompile Include="..\..\..\..\example\comprehensions.cpp" />
     <ClCompile Include="..\..\..\..\example\fibonacci.cpp" />
-    <ClCompile Include="..\..\..\..\example\n_queens.cpp" />
     <ClCompile Include="..\..\..\..\perf\counted_insertion_sort.cpp" />
     <ClCompile Include="..\..\..\..\perf\sort_patterns.cpp" />
     <ClCompile Include="..\..\..\..\test\action\cont_concepts.cpp" />
@@ -135,8 +134,11 @@
     <ClCompile Include="..\..\..\..\test\algorithm\lexicographical_compare.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\lower_bound.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\make_heap.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\max.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\max_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\merge.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\min.cpp" />
+    <ClCompile Include="..\..\..\..\test\algorithm\minmax.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\minmax_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\min_element.cpp" />
     <ClCompile Include="..\..\..\..\test\algorithm\mismatch.cpp" />
@@ -324,9 +326,12 @@
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\is_sorted_until.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lexicographical_compare.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\lower_bound.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\max.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\max_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\merge_move.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\min.hpp" />
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\minmax.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\minmax_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\min_element.hpp" />
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\mismatch.hpp" />

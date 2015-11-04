@@ -92,7 +92,7 @@ namespace ranges
                 using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
                 using concat_view_t = constify_if<concat_view>;
                 concat_view_t *rng_;
-                tagged_variant<range_iterator_t<constify_if<Rngs>>...> its_;
+                variant<range_iterator_t<constify_if<Rngs>>...> its_;
 
                 template<std::size_t N>
                 void satisfy(meta::size_t<N>)
@@ -100,7 +100,7 @@ namespace ranges
                     RANGES_ASSERT(its_.which() == N);
                     if(ranges::get<N>(its_) == end(std::get<N>(rng_->rngs_)))
                     {
-                        ranges::set<N + 1>(its_, begin(std::get<N + 1>(rng_->rngs_)));
+                        ranges::emplace<N + 1>(its_, begin(std::get<N + 1>(rng_->rngs_)));
                         this->satisfy(meta::size_t<N + 1>{});
                     }
                 }
@@ -133,7 +133,7 @@ namespace ranges
                         if(it == begin(std::get<N>(pos->rng_->rngs_)))
                         {
                             auto &&rng = std::get<N - 1>(pos->rng_->rngs_);
-                            ranges::set<N - 1>(pos->its_,
+                            ranges::emplace<N - 1>(pos->its_,
                                 ranges::next(ranges::begin(rng), ranges::end(rng)));
                             (*this)(ranges::get<N - 1>(pos->its_), meta::size_t<N - 1>{});
                         }
@@ -147,11 +147,15 @@ namespace ranges
                     difference_type n;
                     template<typename Iterator>
                     void operator()(Iterator &it, meta::size_t<cranges - 1>) const
+                    //template<typename Iterator>
+                    //void operator()(indexed<Iterator &, cranges - 1> it) const
                     {
                         ranges::advance(it, n);
                     }
                     template<typename Iterator, std::size_t N>
                     void operator()(Iterator &it, meta::size_t<N> which) const
+                    //template<typename Iterator, std::size_t N>
+                    //void operator()(indexed<Iterator &, N> it) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
                         // BUGBUG If distance(it, end) > n, then using bounded advance
@@ -180,7 +184,7 @@ namespace ranges
                         if(it == begin)
                         {
                             auto &&rng = std::get<N - 1>(pos->rng_->rngs_);
-                            ranges::set<N - 1>(pos->its_,
+                            ranges::emplace<N - 1>(pos->its_,
                                 ranges::next(ranges::begin(rng), ranges::end(rng)));
                             (*this)(ranges::get<N - 1>(pos->its_), meta::size_t<N - 1>{});
                         }
@@ -220,12 +224,12 @@ namespace ranges
                 using single_pass = meta::fast_or<SinglePass<range_iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(concat_view_t &rng, begin_tag)
-                  : rng_(&rng), its_{meta::size_t<0>{}, begin(std::get<0>(rng.rngs_))}
+                  : rng_(&rng), its_{emplaced_index<0>, begin(std::get<0>(rng.rngs_))}
                 {
                     this->satisfy(meta::size_t<0>{});
                 }
                 cursor(concat_view_t &rng, end_tag)
-                  : rng_(&rng), its_{meta::size_t<cranges-1>{}, end(std::get<cranges-1>(rng.rngs_))}
+                  : rng_(&rng), its_{emplaced_index<cranges-1>, end(std::get<cranges-1>(rng.rngs_))}
                 {}
                 reference get() const
                 {

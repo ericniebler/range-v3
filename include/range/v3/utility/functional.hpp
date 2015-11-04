@@ -39,6 +39,7 @@ namespace ranges
             {
                 return (T &&) t == (U &&) u;
             }
+            using is_transparent = void;
         };
 
         struct less
@@ -49,6 +50,7 @@ namespace ranges
             {
                 return (T &&) t < (U &&) u;
             }
+            using is_transparent = void;
         };
 
         struct ordered_less
@@ -59,6 +61,7 @@ namespace ranges
             {
                 return (T &&) t < (U &&) u;
             }
+            using is_transparent = void;
         };
 
         struct ident
@@ -68,6 +71,7 @@ namespace ranges
             {
                 return (T &&) t;
             }
+            using is_transparent = void;
         };
 
         struct plus
@@ -78,6 +82,7 @@ namespace ranges
             {
                 return (T &&) t + (U &&) u;
             }
+            using is_transparent = void;
         };
 
         struct minus
@@ -88,6 +93,7 @@ namespace ranges
             {
                 return (T &&) t - (U &&) u;
             }
+            using is_transparent = void;
         };
 
         struct multiplies
@@ -98,6 +104,7 @@ namespace ranges
             {
                 return (T &&) t * (U &&) u;
             }
+            using is_transparent = void;
         };
 
         struct bitwise_or
@@ -108,6 +115,7 @@ namespace ranges
             {
                 return (T &&) t | (U &&) u;
             }
+            using is_transparent = void;
         };
 
         template<typename T>
@@ -156,7 +164,7 @@ namespace ranges
                 R (*pfn_)(Args...);
             public:
                 ptr_fn_() = default;
-                explicit ptr_fn_(R (*pfn)(Args...))
+                constexpr explicit ptr_fn_(R (*pfn)(Args...))
                   : pfn_(pfn)
                 {}
                 R operator()(Args...args) const
@@ -166,7 +174,7 @@ namespace ranges
             };
         public:
             template<typename R, typename ...Args>
-            ptr_fn_<R, Args...> operator()(R (*p)(Args...)) const
+            constexpr ptr_fn_<R, Args...> operator()(R (*p)(Args...)) const
             {
                 return ptr_fn_<R, Args...>(p);
             }
@@ -176,10 +184,10 @@ namespace ranges
                 return std::mem_fn(p);
             }
             template<typename T, typename U = detail::decay_t<T>>
-            auto operator()(T && t) const ->
+            constexpr auto operator()(T && t) const ->
                 meta::if_c<!std::is_pointer<U>::value && !std::is_member_pointer<U>::value, T>
             {
-                return std::forward<T>(t);
+                return detail::forward<T>(t);
             }
         };
 
@@ -384,6 +392,57 @@ namespace ranges
         namespace
         {
             constexpr auto&& indirect = static_const<indirect_fn>::value;
+        }
+
+        template<typename Fn1, typename Fn2>
+        struct transformed
+          : private function_type<Fn1>
+          , private function_type<Fn2>
+        {
+        private:
+            using BaseFn1 = function_type<Fn1>;
+            using BaseFn2 = function_type<Fn2>;
+
+            BaseFn1 & fn1()              { return *this; }
+            BaseFn1 const & fn1() const  { return *this; }
+            BaseFn2 & fn2()              { return *this; }
+            BaseFn2 const & fn2() const  { return *this; }
+        public:
+            transformed() = default;
+            constexpr transformed(Fn1 fn1, Fn2 fn2)
+              : BaseFn1(as_function(detail::move(fn1)))
+              , BaseFn2(as_function(detail::move(fn2)))
+            {}
+            template<typename ...Args>
+            auto operator()(Args &&... args)
+              noexcept(noexcept(std::declval<BaseFn1 &>()(std::declval<BaseFn2 &>()(std::forward<Args>(args))...))) ->
+              decltype(std::declval<BaseFn1 &>()(std::declval<BaseFn2 &>()(std::forward<Args>(args))...))
+            {
+                return fn1()(fn2()(std::forward<Args>(args)...));
+            }
+            template<typename ...Args>
+            auto operator()(Args &&... args) const
+              noexcept(noexcept(std::declval<BaseFn1 const &>()(std::declval<BaseFn2 const &>()(std::forward<Args>(args))...))) ->
+              decltype(std::declval<BaseFn1 const &>()(std::declval<BaseFn2 const &>()(std::forward<Args>(args))...))
+            {
+                return fn1()(fn2()(std::forward<Args>(args)...));
+            }
+        };
+
+        struct on_fn
+        {
+            template<typename Fn1, typename Fn2>
+            constexpr transformed<Fn1, Fn2> operator()(Fn1 fn1, Fn2 fn2) const
+            {
+                return transformed<Fn1, Fn2>{detail::move(fn1), detail::move(fn2)};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `on_fn`
+        namespace
+        {
+            constexpr auto&& on = static_const<on_fn>::value;
         }
 
         /// \cond

@@ -645,9 +645,6 @@
     <ClCompile Include="..\..\..\..\test\view\cycle.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\example\n_queens.cpp">
-      <Filter>Example Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\test\view\any_view.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
@@ -656,6 +653,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\test\view_facade.cpp">
       <Filter>Test Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\max.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\min.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\test\algorithm\minmax.cpp">
+      <Filter>Test Files\algorithm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1333,6 +1339,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\range\v3\view\any_view.hpp">
       <Filter>Header Files\range\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\max.hpp">
+      <Filter>Header Files\range\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\min.hpp">
+      <Filter>Header Files\range\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\range\v3\algorithm\minmax.hpp">
+      <Filter>Header Files\range\algorithm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
