@@ -312,7 +312,7 @@ namespace ranges
                 auto operator()(T &&t, meta::size_t<N> n) const
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
-                    fn()(std::forward<T>(t), n), void()
+                    this->fn()(std::forward<T>(t), n), void()
                 )
             };
 
@@ -330,11 +330,11 @@ namespace ranges
                   : BaseFun(as_function(detail::move(fun)))
                 {}
                 template<typename T, typename U>
-                auto operator()(T &&t, U &&) const ->
-                    decltype(fn()(std::forward<T>(t)))
-                {
-                    return fn()(std::forward<T>(t));
-                }
+                auto operator()(T &&t, U &&) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    this->fn()(std::forward<T>(t))
+                )
             };
 
             template<typename Fun>
@@ -417,17 +417,17 @@ namespace ranges
                   : BaseFun(as_function(detail::move(fun)))
                 {}
                 template<typename T>
-                auto operator()(T &&t) const ->
-                    decltype(fn()(unwrap_reference(std::forward<T>(t))))
-                {
-                    return fn()(unwrap_reference(std::forward<T>(t)));
-                }
+                auto operator()(T &&t) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    this->fn()(unwrap_reference(std::forward<T>(t)))
+                )
                 template<typename T, std::size_t N>
-                auto operator()(T &&t, meta::size_t<N> n) const ->
-                    decltype(fn()(unwrap_reference(std::forward<T>(t)), n))
-                {
-                    return fn()(unwrap_reference(std::forward<T>(t)), n);
-                }
+                auto operator()(T &&t, meta::size_t<N> n) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    this->fn()(unwrap_reference(std::forward<T>(t)), n)
+                )
             };
         }
         /// \endcond
