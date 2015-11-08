@@ -60,7 +60,7 @@ namespace ranges
                 auto &&pred = as_function(pred_);
                 auto &&proj1 = as_function(proj1_);
                 auto &&proj2 = as_function(proj2_);
-                // shorten sequences as much as possible by lopping of any equal parts
+                // shorten sequences as much as possible by lopping off any equal parts
                 for(; begin1 != end1 && begin2 != end2; ++begin1, ++begin2)
                     if(!pred(proj1(*begin1), proj2(*begin2)))
                         goto not_done;
@@ -111,7 +111,7 @@ namespace ranges
                 auto &&pred = as_function(pred_);
                 auto &&proj1 = as_function(proj1_);
                 auto &&proj2 = as_function(proj2_);
-                // shorten sequences as much as possible by lopping of any equal parts
+                // shorten sequences as much as possible by lopping off any equal parts
                 for(; begin1 != end1; ++begin1, ++begin2)
                     if(!pred(proj1(*begin1), proj2(*begin2)))
                         goto not_done;
