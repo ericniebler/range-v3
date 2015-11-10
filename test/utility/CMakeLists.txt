@@ -11,6 +11,9 @@ add_test(test.utility.common_type utility.common_type)
 add_executable(utility.functional functional.cpp)
 add_test(test.utility.functional utility.functional)
 
+add_executable(utility.iterator iterator.cpp)
+add_test(test.utility.iterator utility.iterator)
+
 add_executable(utility.reverse_iterator reverse_iterator.cpp)
 add_test(test.utility.reverse_iterator utility.reverse_iterator)
 

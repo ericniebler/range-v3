@@ -663,6 +663,9 @@
     <ClCompile Include="..\..\..\..\test\algorithm\minmax.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\test\utility\iterator.cpp">
+      <Filter>Test Files\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\range\v3\algorithm\adjacent_find.hpp">

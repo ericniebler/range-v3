@@ -203,8 +203,7 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             I operator()(I it) const
             {
-                ++it;
-                return it;
+                return ++it;
             }
             template<typename I,
                 CONCEPT_REQUIRES_(WeakIterator<I>())>
@@ -447,7 +446,12 @@ namespace ranges
             struct proxy
             {
                 Cont *cont_;
-                proxy &operator=(typename Cont::value_type v)
+                proxy &operator=(typename Cont::value_type const &v)
+                {
+                    cont_->push_back(v);
+                    return *this;
+                }
+                proxy &operator=(typename Cont::value_type &&v)
                 {
                     cont_->push_back(std::move(v));
                     return *this;
@@ -461,7 +465,7 @@ namespace ranges
             explicit back_insert_iterator(Cont &cont) noexcept
               : cont_(&cont)
             {}
-            proxy operator*() const
+            proxy operator*() const noexcept
             {
                 return {cont_};
             }
@@ -469,7 +473,7 @@ namespace ranges
             {
                 return *this;
             }
-            back_insert_iterator &operator++(int)
+            back_insert_iterator operator++(int)
             {
                 return *this;
             }
@@ -489,6 +493,122 @@ namespace ranges
         namespace
         {
             constexpr auto&& back_inserter = static_const<back_inserter_fn>::value;
+        }
+
+        template<typename Cont>
+        struct front_insert_iterator
+        {
+        private:
+            Cont *cont_;
+            struct proxy
+            {
+                Cont *cont_;
+                proxy &operator=(typename Cont::value_type const &v)
+                {
+                    cont_->push_front(v);
+                    return *this;
+                }
+                proxy &operator=(typename Cont::value_type &&v)
+                {
+                    cont_->push_front(std::move(v));
+                    return *this;
+                }
+            };
+        public:
+            using difference_type = std::ptrdiff_t;
+            constexpr front_insert_iterator()
+              : cont_{}
+            {}
+            explicit front_insert_iterator(Cont &cont) noexcept
+              : cont_(&cont)
+            {}
+            proxy operator*() const noexcept
+            {
+                return {cont_};
+            }
+            front_insert_iterator &operator++()
+            {
+                return *this;
+            }
+            front_insert_iterator operator++(int)
+            {
+                return *this;
+            }
+        };
+
+        struct front_inserter_fn
+        {
+            template<typename Cont>
+            front_insert_iterator<Cont> operator()(Cont &cont) const
+            {
+                return front_insert_iterator<Cont>{cont};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `front_inserter_fn`
+        namespace
+        {
+            constexpr auto&& front_inserter = static_const<front_inserter_fn>::value;
+        }
+
+        template<typename Cont>
+        struct insert_iterator
+        {
+        private:
+            Cont *cont_;
+            typename Cont::iterator where_;
+            struct proxy
+            {
+                Cont *cont_;
+                typename Cont::iterator *where_;
+                proxy &operator=(typename Cont::value_type const &v)
+                {
+                    *where_ = next(cont_->insert(*where_, v));
+                    return *this;
+                }
+                proxy &operator=(typename Cont::value_type &&v)
+                {
+                    *where_ = next(cont_->insert(*where_, std::move(v)));
+                    return *this;
+                }
+            };
+        public:
+            using difference_type = std::ptrdiff_t;
+            constexpr insert_iterator()
+              : cont_{}, where_{}
+            {}
+            explicit insert_iterator(Cont &cont, typename Cont::iterator where) noexcept
+              : cont_(&cont), where_(where)
+            {}
+            proxy operator*() noexcept
+            {
+                return {cont_, &where_};
+            }
+            insert_iterator &operator++()
+            {
+                return *this;
+            }
+            insert_iterator operator++(int)
+            {
+                return *this;
+            }
+        };
+
+        struct inserter_fn
+        {
+            template<typename Cont>
+            insert_iterator<Cont> operator()(Cont &cont, typename Cont::iterator where) const
+            {
+                return insert_iterator<Cont>{cont, std::move(where)};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `inserter_fn`
+        namespace
+        {
+            constexpr auto&& inserter = static_const<inserter_fn>::value;
         }
 
         template<typename T = void, typename Char = char, typename Traits = std::char_traits<Char>>
@@ -525,11 +645,11 @@ namespace ranges
             {
                 return {sout_, delim_};
             }
-            ostream_iterator<T> &operator++()
+            ostream_iterator &operator++()
             {
                 return *this;
             }
-            ostream_iterator<T> &operator++(int)
+            ostream_iterator operator++(int)
             {
                 return *this;
             }

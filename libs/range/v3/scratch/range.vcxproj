@@ -221,6 +221,7 @@
     <ClCompile Include="..\..\..\..\test\utility\common_type.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\concepts.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\functional.cpp" />
+    <ClCompile Include="..\..\..\..\test\utility\iterator.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\meta.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\reverse_iterator.cpp" />
     <ClCompile Include="..\..\..\..\test\utility\swap.cpp" />
