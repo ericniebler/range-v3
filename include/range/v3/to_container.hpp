@@ -63,7 +63,7 @@ namespace ranges
                 Cont impl(Rng && rng, std::false_type) const
                 {
                     using I = range_common_iterator_t<Rng>;
-                    return Cont{I{begin(rng)}, I{end(rng)}};
+                    return Cont(I{begin(rng)}, I{end(rng)});
                 }
 
                 template<typename Rng,
