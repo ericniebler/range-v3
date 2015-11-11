@@ -241,7 +241,7 @@ namespace ranges
                 pos.move()
             )
             template<typename Cur, typename T>
-            static RANGES_CXX14_CONSTEXPR auto set(Cur const &pos, T &&t)
+            static RANGES_CXX14_CONSTEXPR auto set(Cur &pos, T &&t)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 pos.set((T &&) t)

@@ -25,6 +25,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/basic_iterator.hpp>
 
 namespace ranges
 {
@@ -438,46 +439,43 @@ namespace ranges
             constexpr auto&& iter_move = static_const<iter_move_fn>::value;
         }
 
-        template<typename Cont>
-        struct back_insert_iterator
+        namespace detail
         {
-        private:
-            Cont *cont_;
-            struct proxy
+            template<typename Cont>
+            struct back_insert_cursor
             {
+            private:
+                friend range_access;
                 Cont *cont_;
-                proxy &operator=(typename Cont::value_type const &v)
+                void next() const
+                {}
+                void set(typename Cont::value_type const &v) const
                 {
                     cont_->push_back(v);
-                    return *this;
                 }
-                proxy &operator=(typename Cont::value_type &&v)
+                void set(typename Cont::value_type &&v) const
                 {
                     cont_->push_back(std::move(v));
-                    return *this;
                 }
+                explicit back_insert_cursor(Cont &cont) noexcept
+                  : cont_(&cont)
+                {}
+            public:
+                struct mixin : basic_mixin<back_insert_cursor>
+                {
+                    mixin() = default;
+                    explicit mixin(Cont &cont) noexcept
+                      : basic_mixin<back_insert_cursor>{back_insert_cursor{cont}}
+                    {}
+                };
+                constexpr back_insert_cursor()
+                  : cont_{}
+                {}
             };
-        public:
-            using difference_type = std::ptrdiff_t;
-            constexpr back_insert_iterator()
-              : cont_{}
-            {}
-            explicit back_insert_iterator(Cont &cont) noexcept
-              : cont_(&cont)
-            {}
-            proxy operator*() const noexcept
-            {
-                return {cont_};
-            }
-            back_insert_iterator &operator++()
-            {
-                return *this;
-            }
-            back_insert_iterator operator++(int)
-            {
-                return *this;
-            }
-        };
+        }
+
+        template<typename Cont>
+        using back_insert_iterator = basic_iterator<detail::back_insert_cursor<Cont>>;
 
         struct back_inserter_fn
         {
@@ -495,46 +493,43 @@ namespace ranges
             constexpr auto&& back_inserter = static_const<back_inserter_fn>::value;
         }
 
-        template<typename Cont>
-        struct front_insert_iterator
+        namespace detail
         {
-        private:
-            Cont *cont_;
-            struct proxy
+            template<typename Cont>
+            struct front_insert_cursor
             {
+            private:
+                friend range_access;
                 Cont *cont_;
-                proxy &operator=(typename Cont::value_type const &v)
+                void next() const
+                {}
+                void set(typename Cont::value_type const &v) const
                 {
                     cont_->push_front(v);
-                    return *this;
                 }
-                proxy &operator=(typename Cont::value_type &&v)
+                void set(typename Cont::value_type &&v) const
                 {
                     cont_->push_front(std::move(v));
-                    return *this;
                 }
+                explicit front_insert_cursor(Cont &cont) noexcept
+                  : cont_(&cont)
+                {}
+            public:
+                struct mixin : basic_mixin<front_insert_cursor>
+                {
+                    mixin() = default;
+                    explicit mixin(Cont &cont) noexcept
+                      : basic_mixin<front_insert_cursor>{front_insert_cursor{cont}}
+                    {}
+                };
+                constexpr front_insert_cursor()
+                  : cont_{}
+                {}
             };
-        public:
-            using difference_type = std::ptrdiff_t;
-            constexpr front_insert_iterator()
-              : cont_{}
-            {}
-            explicit front_insert_iterator(Cont &cont) noexcept
-              : cont_(&cont)
-            {}
-            proxy operator*() const noexcept
-            {
-                return {cont_};
-            }
-            front_insert_iterator &operator++()
-            {
-                return *this;
-            }
-            front_insert_iterator operator++(int)
-            {
-                return *this;
-            }
-        };
+        }
+
+        template<typename Cont>
+        using front_insert_iterator = basic_iterator<detail::front_insert_cursor<Cont>>;
 
         struct front_inserter_fn
         {
@@ -552,48 +547,44 @@ namespace ranges
             constexpr auto&& front_inserter = static_const<front_inserter_fn>::value;
         }
 
-        template<typename Cont>
-        struct insert_iterator
+        namespace detail
         {
-        private:
-            Cont *cont_;
-            typename Cont::iterator where_;
-            struct proxy
+            template<typename Cont>
+            struct insert_cursor
             {
+            private:
+                friend range_access;
                 Cont *cont_;
-                typename Cont::iterator *where_;
-                proxy &operator=(typename Cont::value_type const &v)
+                typename Cont::iterator where_;
+                void next() const
+                {}
+                void set(typename Cont::value_type const &v)
                 {
-                    *where_ = next(cont_->insert(*where_, v));
-                    return *this;
+                    where_ = ranges::next(cont_->insert(where_, v));
                 }
-                proxy &operator=(typename Cont::value_type &&v)
+                void set(typename Cont::value_type &&v)
                 {
-                    *where_ = next(cont_->insert(*where_, std::move(v)));
-                    return *this;
+                    where_ = ranges::next(cont_->insert(where_, std::move(v)));
                 }
+                explicit insert_cursor(Cont &cont, typename Cont::iterator where) noexcept
+                  : cont_(&cont), where_(where)
+                {}
+            public:
+                struct mixin : basic_mixin<insert_cursor>
+                {
+                    mixin() = default;
+                    explicit mixin(Cont &cont, typename Cont::iterator where) noexcept
+                      : basic_mixin<insert_cursor>{insert_cursor{cont, std::move(where)}}
+                    {}
+                };
+                constexpr insert_cursor()
+                  : cont_{}, where_{}
+                {}
             };
-        public:
-            using difference_type = std::ptrdiff_t;
-            constexpr insert_iterator()
-              : cont_{}, where_{}
-            {}
-            explicit insert_iterator(Cont &cont, typename Cont::iterator where) noexcept
-              : cont_(&cont), where_(where)
-            {}
-            proxy operator*() noexcept
-            {
-                return {cont_, &where_};
-            }
-            insert_iterator &operator++()
-            {
-                return *this;
-            }
-            insert_iterator operator++(int)
-            {
-                return *this;
-            }
-        };
+        }
+
+        template<typename Cont>
+        using insert_iterator = basic_iterator<detail::insert_cursor<Cont>>;
 
         struct inserter_fn
         {

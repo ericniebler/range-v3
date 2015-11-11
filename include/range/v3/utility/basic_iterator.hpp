@@ -225,7 +225,7 @@ namespace ranges
             // The One Proxy Reference type to rule them all. basic_iterator uses this
             // as the return type of operator* when the cursor type has a set() member
             // function of the correct signature (i.e., if it can accept a value_type&&).
-            template<typename Cur>
+            template<typename Cur, bool Readable = (bool) ReadableCursor<Cur>()>
             struct basic_proxy_reference
               : cursor_traits<Cur>
                 // The following adds conversion operators to the common reference
@@ -238,8 +238,8 @@ namespace ranges
                             basic_proxy_reference<Cur>>>>
             {
             private:
-                Cur cur_;
-                template<typename OtherCur>
+                Cur *cur_;
+                template<typename OtherCur, bool OtherReadable>
                 friend struct basic_proxy_reference;
                 template<typename, typename>
                 friend struct proxy_reference_conversion;
@@ -254,110 +254,102 @@ namespace ranges
                 reference_t_ get_() const
                     noexcept(noexcept(reference_t_(range_access::get(std::declval<Cur const &>()))))
                 {
-                    return range_access::get(cur_);
+                    return range_access::get(*cur_);
                 }
                 template<typename T>
                 RANGES_CXX14_CONSTEXPR
-                void set_(T &&t) const
+                void set_(T &&t)
                 {
-                    range_access::set(cur_, (T &&) t);
+                    range_access::set(*cur_, (T &&) t);
                 }
             public:
                 basic_proxy_reference() = default;
-                basic_proxy_reference(basic_proxy_reference &&) = default;
                 basic_proxy_reference(basic_proxy_reference const &) = default;
                 template<typename OtherCur,
-                    CONCEPT_REQUIRES_(ConvertibleTo<OtherCur, Cur>())>
+                    CONCEPT_REQUIRES_(ConvertibleTo<OtherCur*, Cur*>())>
                 RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference(basic_proxy_reference<OtherCur> &&that)
-                    noexcept(noexcept(Cur(std::move(that.cur_))))
-                  : cur_(std::move(that.cur_))
-                {}
-                template<typename OtherCur,
-                    CONCEPT_REQUIRES_(ConvertibleTo<OtherCur, Cur>())>
-                RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference(basic_proxy_reference<OtherCur> const &that)
+                basic_proxy_reference(basic_proxy_reference<OtherCur> const &that) noexcept
                   : cur_(that.cur_)
                 {}
                 RANGES_CXX14_CONSTEXPR
-                explicit basic_proxy_reference(Cur cur)
-                    noexcept(noexcept(Cur(std::move(cur))))
-                  : cur_(std::move(cur))
+                explicit basic_proxy_reference(Cur &cur) noexcept
+                  : cur_(&cur)
                 {}
-                CONCEPT_REQUIRES(detail::ReadableCursor<Cur>())
+                CONCEPT_REQUIRES(ReadableCursor<Cur>())
                 RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference const &operator=(basic_proxy_reference &&that) const
+                basic_proxy_reference &operator=(basic_proxy_reference &&that)
                 {
                     return *this = that;
                 }
-                CONCEPT_REQUIRES(detail::ReadableCursor<Cur>())
+                CONCEPT_REQUIRES(ReadableCursor<Cur>())
                 RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference const &operator=(basic_proxy_reference const &that) const
+                basic_proxy_reference &operator=(basic_proxy_reference const &that)
                 {
                     this->set_(that.get_());
                     return *this;
                 }
                 template<typename OtherCur,
-                    CONCEPT_REQUIRES_(detail::ReadableCursor<OtherCur>() &&
-                        detail::WritableCursor<Cur, cursor_reference_t<OtherCur>>())>
+                    CONCEPT_REQUIRES_(ReadableCursor<OtherCur>() &&
+                        WritableCursor<Cur, cursor_reference_t<OtherCur>>())>
                 RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference const &operator=(basic_proxy_reference<OtherCur> &&that) const
+                basic_proxy_reference &operator=(basic_proxy_reference<OtherCur> &&that)
                 {
                     return *this = that;
                 }
                 template<typename OtherCur,
-                    CONCEPT_REQUIRES_(detail::ReadableCursor<OtherCur>() &&
-                        detail::WritableCursor<Cur, cursor_reference_t<OtherCur>>())>
+                    CONCEPT_REQUIRES_(ReadableCursor<OtherCur>() &&
+                        WritableCursor<Cur, cursor_reference_t<OtherCur>>())>
                 RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference const &operator=(basic_proxy_reference<OtherCur> const &that) const
+                basic_proxy_reference &operator=(basic_proxy_reference<OtherCur> const &that)
                 {
                     this->set_(that.get_());
                     return *this;
                 }
-                template<typename T, CONCEPT_REQUIRES_(WritableCursor<Cur, T>())>
+                template<typename T,
+                    CONCEPT_REQUIRES_(WritableCursor<Cur, T &&>())>
                 RANGES_CXX14_CONSTEXPR
-                basic_proxy_reference const &operator=(T &&t) const
+                basic_proxy_reference &operator=(T &&t)
                 {
                     this->set_((T &&) t);
                     return *this;
                 }
                 template<typename V = value_t_,
-                    CONCEPT_REQUIRES_(detail::ReadableCursor<Cur>() && EqualityComparable<V>())>
+                    CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator==(basic_proxy_reference const &x, value_t_ const &y)
                 {
                     return x.get_() == y;
                 }
                 template<typename V = value_t_,
-                    CONCEPT_REQUIRES_(detail::ReadableCursor<Cur>() && EqualityComparable<V>())>
+                    CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator!=(basic_proxy_reference const &x, value_t_ const &y)
                 {
                     return !(x == y);
                 }
                 template<typename V = value_t_,
-                    CONCEPT_REQUIRES_(detail::ReadableCursor<Cur>() && EqualityComparable<V>())>
+                    CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator==(value_t_ const &x, basic_proxy_reference const &y)
                 {
                     return x == y.get_();
                 }
                 template<typename V = value_t_,
-                    CONCEPT_REQUIRES_(detail::ReadableCursor<Cur>() && EqualityComparable<V>())>
+                    CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator!=(value_t_ const &x, basic_proxy_reference const &y)
                 {
                     return !(x == y);
                 }
                 template<typename V = value_t_,
-                    CONCEPT_REQUIRES_(detail::ReadableCursor<Cur>() && EqualityComparable<V>())>
+                    CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator==(basic_proxy_reference const &x, basic_proxy_reference const &y)
                 {
                     return x.get_() == y.get_();
                 }
                 template<typename V = value_t_,
-                    CONCEPT_REQUIRES_(detail::ReadableCursor<Cur>() && EqualityComparable<V>())>
+                    CONCEPT_REQUIRES_(ReadableCursor<Cur>() && EqualityComparable<V>())>
                 RANGES_CXX14_CONSTEXPR
                 friend bool operator!=(basic_proxy_reference const &x, basic_proxy_reference const &y)
                 {
@@ -382,13 +374,15 @@ namespace ranges
             private:
                 friend basic_iterator<Cur, S>;
                 using postfix_increment_result_t = basic_iterator<Cur, S>;
-                using reference = basic_proxy_reference<Cur>;
+                using reference_t = basic_proxy_reference<Cur>;
+                using const_reference_t = basic_proxy_reference<Cur const>;
                 using cursor_concept_t =
                     meta::if_<
                         Cursor<Cur>,
                         range_access::OutputCursor,
                         range_access::WeakOutputCursor>;
             public:
+                using reference = void;
                 using difference_type = range_access::cursor_difference_t<Cur>;
             };
 
@@ -399,13 +393,18 @@ namespace ranges
             private:
                 friend basic_iterator<Cur, S>;
                 using cursor_concept_t = detail::cursor_concept_t<Cur>;
-            public:
-                using reference =
+                using reference_t =
                     meta::if_<
-                        is_writable_cursor<Cur>,
-                        basic_proxy_reference<Cur>,
-                        cursor_reference_t<Cur>>;
+                        is_writable_cursor<Cur const>,
+                        basic_proxy_reference<Cur const>,
+                        meta::if_<
+                            is_writable_cursor<Cur>,
+                            basic_proxy_reference<Cur>,
+                            cursor_reference_t<Cur>>>;
+                using const_reference_t = reference_t;
+            public:
                 using value_type = range_access::cursor_value_t<Cur>;
+                using reference = reference_t;
                 using iterator_category =
                     decltype(detail::iter_cat(_nullptr_v<cursor_concept_t>()));
                 using pointer = meta::_t<std::add_pointer<reference>>;
@@ -497,6 +496,8 @@ namespace ranges
             using assoc_types_ = detail::iterator_associated_types_base<Cur, S>;
             using typename assoc_types_::postfix_increment_result_t;
             using typename assoc_types_::cursor_concept_t;
+            using typename assoc_types_::reference_t;
+            using typename assoc_types_::const_reference_t;
             RANGES_CXX14_CONSTEXPR Cur &pos() noexcept
             {
                 return this->range_access::mixin_base_t<Cur>::get();
@@ -527,7 +528,6 @@ namespace ranges
                 return basic_iterator::equal2_(that, _nullptr_v<cursor_concept_t>());
             }
         public:
-            using typename assoc_types_::reference;
             using typename assoc_types_::difference_type;
             constexpr basic_iterator() = default;
             RANGES_CXX14_CONSTEXPR basic_iterator(Cur pos)
@@ -543,24 +543,35 @@ namespace ranges
 
         private:
             RANGES_CXX14_CONSTEXPR
-            reference dereference_(std::true_type /*Writable cursor*/) const
-                noexcept(noexcept(reference(reference{std::declval<Cur const &>()})))
+            reference_t dereference_(std::true_type) noexcept
             {
-                return reference{pos()};
+                return reference_t{pos()};
             }
             RANGES_CXX14_CONSTEXPR
-            reference dereference_(std::false_type /*non-Writable cursor*/) const
+            const_reference_t dereference_(std::true_type) const noexcept
+            {
+                return const_reference_t{pos()};
+            }
+            RANGES_CXX14_CONSTEXPR
+            const_reference_t dereference_(std::false_type) const
                 noexcept(noexcept(range_access::get(std::declval<Cur const &>())))
             {
                 return range_access::get(pos());
             }
         public:
             RANGES_CXX14_CONSTEXPR
-            reference operator*() const
-                noexcept(noexcept(std::declval<basic_iterator const &>().
-                    dereference_(detail::is_writable_cursor<Cur>())))
+            reference_t operator*()
+                noexcept(noexcept(std::declval<basic_iterator &>().
+                    dereference_(detail::is_writable_cursor<Cur>{})))
             {
-                return this->dereference_(detail::is_writable_cursor<Cur>());
+                return this->dereference_(detail::is_writable_cursor<Cur>{});
+            }
+            RANGES_CXX14_CONSTEXPR
+            const_reference_t operator*() const
+                noexcept(noexcept(std::declval<basic_iterator const &>().
+                    dereference_(detail::is_writable_cursor<Cur>{})))
+            {
+                return this->dereference_(detail::is_writable_cursor<Cur>{});
             }
             RANGES_CXX14_CONSTEXPR
             basic_iterator& operator++()
@@ -743,7 +754,7 @@ namespace ranges
             }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
-            reference operator[](difference_type n) const
+            const_reference_t operator[](difference_type n) const
             {
                 return *(*this + n);
             }
@@ -822,29 +833,29 @@ namespace ranges
     {
         // common_reference specializations for basic_proxy_reference
         template<typename Cur, typename U, typename TQual, typename UQual>
-        struct basic_common_reference<detail::basic_proxy_reference<Cur>, U, TQual, UQual>
+        struct basic_common_reference<detail::basic_proxy_reference<Cur, true>, U, TQual, UQual>
           : basic_common_reference<detail::cursor_reference_t<Cur>, U, TQual, UQual>
         {};
         template<typename T, typename Cur, typename TQual, typename UQual>
-        struct basic_common_reference<T, detail::basic_proxy_reference<Cur>, TQual, UQual>
+        struct basic_common_reference<T, detail::basic_proxy_reference<Cur, true>, TQual, UQual>
           : basic_common_reference<T, detail::cursor_reference_t<Cur>, TQual, UQual>
         {};
         template<typename Cur1, typename Cur2, typename TQual, typename UQual>
-        struct basic_common_reference<detail::basic_proxy_reference<Cur1>, detail::basic_proxy_reference<Cur2>, TQual, UQual>
+        struct basic_common_reference<detail::basic_proxy_reference<Cur1, true>, detail::basic_proxy_reference<Cur2, true>, TQual, UQual>
           : basic_common_reference<detail::cursor_reference_t<Cur1>, detail::cursor_reference_t<Cur2>, TQual, UQual>
         {};
 
         // common_type specializations for basic_proxy_reference
         template<typename Cur, typename U>
-        struct common_type<detail::basic_proxy_reference<Cur>, U>
+        struct common_type<detail::basic_proxy_reference<Cur, true>, U>
           : common_type<range_access::cursor_value_t<Cur>, U>
         {};
         template<typename T, typename Cur>
-        struct common_type<T, detail::basic_proxy_reference<Cur>>
+        struct common_type<T, detail::basic_proxy_reference<Cur, true>>
           : common_type<T, range_access::cursor_value_t<Cur>>
         {};
         template<typename Cur1, typename Cur2>
-        struct common_type<detail::basic_proxy_reference<Cur1>, detail::basic_proxy_reference<Cur2>>
+        struct common_type<detail::basic_proxy_reference<Cur1, true>, detail::basic_proxy_reference<Cur2, true>>
           : common_type<range_access::cursor_value_t<Cur1>, range_access::cursor_value_t<Cur2>>
         {};
     }
