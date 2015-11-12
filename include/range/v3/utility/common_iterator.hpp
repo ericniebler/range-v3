@@ -17,6 +17,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view_facade.hpp>
+#include <range/v3/utility/basic_iterator.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/variant.hpp>
 
@@ -79,7 +80,7 @@ namespace ranges
                 friend iterator_difference_t<I>
                 operator-(common_iterator<I, S> const &end, common_iterator<I, S> const &begin)
                 {
-                    common_cursor const &this_ = begin.mixin::get(), &that = end.mixin::get();
+                    common_cursor const &this_ = get_cursor(begin), &that = get_cursor(end);
                     return that.is_sentinel() ?
                         (this_.is_sentinel() ? 0 : that.se() - this_.it()) :
                         (this_.is_sentinel() ?

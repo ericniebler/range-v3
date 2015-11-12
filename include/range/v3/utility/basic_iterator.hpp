@@ -434,6 +434,7 @@ namespace ranges
             basic_mixin(T t)
               : t_(std::move(t))
             {}
+        protected:
             RANGES_CXX14_CONSTEXPR
             T &get() noexcept
             {
@@ -490,6 +491,7 @@ namespace ranges
         private:
             friend range_access;
             friend range_access::mixin_base_t<Cur>;
+            friend struct get_cursor_fn;
             template<typename OtherCur, typename OtherS>
             friend struct basic_iterator;
             CONCEPT_ASSERT(detail::WeakCursor<Cur>());
@@ -767,23 +769,20 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             Cur &operator()(basic_iterator<Cur, Sent> &it) const noexcept
             {
-                range_access::mixin_base_t<Cur> &mix = it;
-                return mix.get();
+                return it.pos();
             }
             template<typename Cur, typename Sent>
             RANGES_CXX14_CONSTEXPR
             Cur const &operator()(basic_iterator<Cur, Sent> const &it) const noexcept
             {
-                range_access::mixin_base_t<Cur> const &mix = it;
-                return mix.get();
+                return it.pos();
             }
             template<typename Cur, typename Sent>
             RANGES_CXX14_CONSTEXPR
             Cur operator()(basic_iterator<Cur, Sent> &&it) const
                 noexcept(std::is_nothrow_copy_constructible<Cur>::value)
             {
-                range_access::mixin_base_t<Cur> &mix = it;
-                return std::move(mix.get());
+                return std::move(it.pos());
             }
         };
 
