@@ -2095,6 +2095,25 @@ namespace meta
         /// \endcond
 
         ///////////////////////////////////////////////////////////////////////////////////////////
+        // transpose
+        /// Given a list of lists of types \p ListOfLists, transpose the elements from the lists.
+        /// \par Complexity
+        /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and
+        /// \f$ M \f$ is the size of the inner lists.
+        /// \ingroup transformation
+        template <typename ListOfLists>
+        using transpose = fold<ListOfLists, repeat_n<size<front<ListOfLists>>, list<>>,
+                               bind_back<quote<transform>, quote<push_back>>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::transpose'
+            /// \ingroup lazy_transformation
+            template <typename ListOfLists>
+            using transpose = defer<transpose, ListOfLists>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // zip_with
         /// Given a list of lists of types \p ListOfLists and a Alias Class \p Fun, construct
         /// a new list by calling \p Fun with the elements from the lists pairwise.
@@ -2103,9 +2122,7 @@ namespace meta
         /// \f$ M \f$ is the size of the inner lists.
         /// \ingroup transformation
         template <typename Fun, typename ListOfLists>
-        using zip_with = transform<fold<ListOfLists, repeat_n<size<front<ListOfLists>>, Fun>,
-                                        bind_back<quote<transform>, quote<bind_front>>>,
-                                   quote<apply>>;
+        using zip_with = transform<transpose<ListOfLists>, uncurry<Fun>>;
 
         namespace lazy
         {
@@ -2124,7 +2141,7 @@ namespace meta
         /// is the size of the inner lists.
         /// \ingroup transformation
         template <typename ListOfLists>
-        using zip = zip_with<quote<list>, ListOfLists>;
+        using zip = transpose<ListOfLists>;
 
         namespace lazy
         {
