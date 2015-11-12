@@ -125,8 +125,8 @@ namespace ranges
             {
             private:
                 friend view_access;
-                template<typename Fun>
-                static auto bind(partial_sum_fn partial_sum, Fun fun)
+                template<typename Fun = plus>
+                static auto bind(partial_sum_fn partial_sum, Fun fun = {})
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(partial_sum, std::placeholders::_1,
