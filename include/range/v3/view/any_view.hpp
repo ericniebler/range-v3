@@ -41,7 +41,7 @@ namespace ranges
         {
             struct any_object
             {
-                virtual ~any_object() {}
+                virtual ~any_object() = default;
             };
 
             template<class T>
@@ -59,7 +59,7 @@ namespace ranges
             template<typename Ref, category Cat = category::input>
             struct any_cursor_interface
             {
-                virtual ~any_cursor_interface() {}
+                virtual ~any_cursor_interface() = default;
                 virtual any_object const &iter() const = 0;
                 virtual Ref get() const = 0;
                 virtual bool equal(any_cursor_interface const &) const = 0;
@@ -115,7 +115,23 @@ namespace ranges
                 template<typename S, typename II>
                 friend struct any_sentinel_impl;
                 using Ref = iterator_reference_t<I>;
+                using Input = any_cursor_interface<Ref, category::input>;
                 object<I> it_;
+
+                CONCEPT_REQUIRES(EqualityComparable<I>())
+                bool equal_(Input const &that) const
+                {
+                    any_cursor_impl const *pthat =
+                        dynamic_cast<any_cursor_impl const *>(&that);
+                    RANGES_ASSERT(pthat != nullptr);
+                    return pthat->it_.get() == it_.get();
+                }
+                CONCEPT_REQUIRES(!EqualityComparable<I>())
+                bool equal_(Input const &) const
+                {
+                    return true;
+                }
+
             public:
                 any_cursor_impl() = default;
                 any_cursor_impl(I it)
@@ -129,12 +145,9 @@ namespace ranges
                 {
                     return *it_.get();
                 }
-                bool equal(any_cursor_interface<Ref, category::input> const &that) const
+                bool equal(Input const &that) const
                 {
-                    any_cursor_impl const *pthat =
-                        dynamic_cast<any_cursor_impl const *>(&that);
-                    RANGES_ASSERT(pthat != nullptr);
-                    return pthat->it_.get() == it_.get();
+                    return equal_(that);
                 }
                 void next()
                 {
@@ -164,7 +177,7 @@ namespace ranges
 
             struct any_sentinel_interface
             {
-                virtual ~any_sentinel_interface() {}
+                virtual ~any_sentinel_interface() = default;
                 virtual bool equal(any_object const &) const = 0;
                 virtual any_sentinel_interface *clone() const = 0;
             };
@@ -289,7 +302,7 @@ namespace ranges
             template<typename Ref, category Cat>
             struct any_view_interface
             {
-                virtual ~any_view_interface() {}
+                virtual ~any_view_interface() = default;
                 virtual any_cursor<Ref, Cat> begin_cursor() = 0;
                 virtual any_sentinel end_cursor() = 0;
                 virtual any_view_interface *clone() const = 0;

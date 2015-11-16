@@ -40,7 +40,7 @@ namespace ranges
         using iterator_common_reference_t = concepts::Readable::common_reference_t<I>;
 
         template<typename I>
-        using iterator_category_t = concepts::WeakInputIterator::category_t<I>;
+        using iterator_category_t = concepts::InputIterator::category_t<I>;
 
         template<typename I>
         using iterator_difference_t = concepts::WeaklyIncrementable::difference_t<I>;

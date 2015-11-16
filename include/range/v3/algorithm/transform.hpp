@@ -54,7 +54,7 @@ namespace ranges
             typename Y = concepts::Callable::result_t<F, X0, X1>>
         using Transformable2 = meta::fast_and<
             InputIterator<I0>,
-            WeakInputIterator<I1>,
+            InputIterator<I1>,
             WeaklyIncrementable<O>,
             IndirectCallable<F, Projected<I0, P0>, Projected<I1, P1>>,
             Writable<O, Y>>;

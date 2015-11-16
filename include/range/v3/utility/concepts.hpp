@@ -410,6 +410,17 @@ namespace ranges
             ////////////////////////////////////////////////////////////////////////////////////////////
             // Comparison concepts
             ////////////////////////////////////////////////////////////////////////////////////////////
+            struct WeaklyEqualityComparable
+            {
+                template<typename T, typename U>
+                auto requires_(T && t, U && u) -> decltype(
+                    concepts::valid_expr(
+                        concepts::convertible_to<bool>(t == u),
+                        concepts::convertible_to<bool>(t != u),
+                        concepts::convertible_to<bool>(u == t),
+                        concepts::convertible_to<bool>(u != t)
+                    ));
+            };
 
             struct EqualityComparable
             {
@@ -422,10 +433,9 @@ namespace ranges
 
                 template<typename T, typename U,
                     meta::if_<std::is_same<T, U>, int> = 0>
-                auto requires_(T && t, U && u) -> decltype(
+                auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
-                        concepts::convertible_to<bool>(t == u),
-                        concepts::convertible_to<bool>(t != u)
+                        concepts::model_of<EqualityComparable, T>()
                     ));
 
                 // Cross-type equality comparison from N3351:
@@ -433,16 +443,13 @@ namespace ranges
                 template<typename T, typename U,
                     meta::if_c<!std::is_same<T, U>::value, int> = 0,
                     typename C = CommonReference::reference_t<T const &, U const &>>
-                auto requires_(T && t, U && u) -> decltype(
+                auto requires_(T &&, U &&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<EqualityComparable, T>(),
                         concepts::model_of<EqualityComparable, U>(),
+                        concepts::model_of<WeaklyEqualityComparable, T, U>(),
                         concepts::model_of<CommonReference, T const &, U const &>(),
-                        concepts::model_of<EqualityComparable, C>(),
-                        concepts::convertible_to<bool>(t == u),
-                        concepts::convertible_to<bool>(u == t),
-                        concepts::convertible_to<bool>(t != u),
-                        concepts::convertible_to<bool>(u != t)
+                        concepts::model_of<EqualityComparable, C>()
                     ));
             };
 
@@ -812,6 +819,9 @@ namespace ranges
 
         template<typename T>
         using Copyable = concepts::models<concepts::Copyable, T>;
+
+        template<typename T, typename U>
+        using WeaklyEqualityComparable = concepts::models<concepts::WeaklyEqualityComparable, T, U>;
 
         template<typename T, typename U = T>
         using EqualityComparable = concepts::models<concepts::EqualityComparable, T, U>;

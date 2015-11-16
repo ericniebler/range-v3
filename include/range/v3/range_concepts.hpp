@@ -90,7 +90,7 @@ namespace ranges
             {
                 // Associated types
                 template<typename T>
-                using category_t = concepts::WeakInputIterator::category_t<iterator_t<T>>;
+                using category_t = concepts::InputIterator::category_t<iterator_t<T>>;
 
                 template<typename T>
                 using value_t = concepts::Readable::value_t<iterator_t<T>>;
@@ -160,20 +160,7 @@ namespace ranges
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Integral>(size(t)),
-                        concepts::is_true(is_sized_range<T>())
-                    ));
-            };
-
-            /// INTERNAL ONLY
-            /// A type is SizedRangeLike_ if it is Range and ranges::size
-            /// can be called on it and it returns an Integral
-            struct SizedRangeLike_
-              : refines<Range>
-            {
-                template<typename T>
-                auto requires_(T&& t) -> decltype(
-                    concepts::valid_expr(
+                        concepts::is_false(disable_sized_range<uncvref_t<T>>()),
                         concepts::model_of<Integral>(size(t))
                     ));
             };
@@ -261,10 +248,6 @@ namespace ranges
 
         template<typename T>
         using SizedRange = concepts::models<concepts::SizedRange, T>;
-
-        /// INTERNAL ONLY
-        template<typename T>
-        using SizedRangeLike_ = concepts::models<concepts::SizedRangeLike_, T>;
 
         /// INTERNAL ONLY
         template<typename T>
@@ -392,21 +375,6 @@ namespace ranges
             struct is_view_impl_<T[N]>
               : std::false_type
             {};
-
-            // Something is a sized range if it looks like a sized range; i.e.,
-            // if size(rng) compiles and returns an Integral
-            template<typename T>
-            struct is_sized_range_impl_
-              : std::integral_constant<
-                    bool,
-                    (SizedRangeLike_<T>())
-                >
-            {};
-
-            template<typename T, std::size_t N>
-            struct is_sized_range_impl_<T[N]>
-              : std::true_type
-            {};
         }
         /// \endcond
 
@@ -414,13 +382,8 @@ namespace ranges
         /// @{
 
         // Specialize this if the default is wrong.
-        template<typename T, typename Enable>
-        struct is_sized_range
-          : meta::if_<
-                std::is_same<T, uncvref_t<T>>,
-                detail::is_sized_range_impl_<T>,
-                is_sized_range<uncvref_t<T>>>
-        {};
+        template<typename T>
+        struct disable_sized_range : std::false_type {};
 
         // Specialize this if the default is wrong.
         template<typename T, typename Enable>

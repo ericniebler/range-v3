@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename O, typename T0, typename T1, typename P = ident>
         using ReplaceCopyable = meta::fast_and<
             InputIterator<I>,
-            WeakOutputIterator<O, T1>,
+            OutputIterator<O, T1>,
             IndirectlyCopyable<I, O>,
             IndirectCallableRelation<equal_to, Projected<I, P>, T0 const *>>;
 

@@ -38,7 +38,7 @@ namespace ranges
         {
             template<typename I, typename O, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    WeakInputIterator<I>() &&
+                    InputIterator<I>() &&
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>

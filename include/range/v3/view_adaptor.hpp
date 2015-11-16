@@ -110,19 +110,19 @@ namespace ranges
             {
                 return ranges::end(rng.base());
             }
-            template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
+            template<typename I, CONCEPT_REQUIRES_(EqualityComparable<I>())>
             static bool equal(I const &it0, I const &it1)
             {
                 return it0 == it1;
             }
-            template<typename I, CONCEPT_REQUIRES_(WeakIterator<I>())>
+            template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
             static iterator_reference_t<I> get(I const &it,
                 detail::adaptor_base_current_mem_fn = {})
                 noexcept(noexcept(iterator_reference_t<I>(*it)))
             {
                 return *it;
             }
-            template<typename I, CONCEPT_REQUIRES_(WeakIterator<I>())>
+            template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
             static void next(I &it)
             {
                 ++it;

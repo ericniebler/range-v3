@@ -405,23 +405,4 @@ struct sentinel_type<I<It>, Sized>
     using type = sentinel<It, Sized>;
 };
 
-namespace ranges
-{
-    template<typename I0, bool B, typename I1>
-    struct common_type<sentinel<I0, B>, I1>
-    {
-        using type = common_iterator<I1, sentinel<I0, B>>;
-    };
-    template<typename I0, typename I1, bool B>
-    struct common_type<I0, sentinel<I1, B>>
-    {
-        using type = common_iterator<I0, sentinel<I1, B>>;
-    };
-    template<typename I, bool B>
-    struct common_type<sentinel<I, B>, sentinel<I, B>>
-    {
-        using type = sentinel<I, B>;
-    };
-}
-
 #endif  // RANGES_TEST_ITERATORS_HPP

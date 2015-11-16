@@ -34,7 +34,8 @@ int main()
     models_not<concepts::SizedView>(rng);
     models<concepts::ForwardIterator>(begin(rng));
     models_not<concepts::BidirectionalIterator>(begin(rng));
-    CONCEPT_ASSERT(WeakOutputIterator<decltype(ranges::back_inserter(out)), int>());
+    CONCEPT_ASSERT(OutputIterator<decltype(ranges::back_inserter(out)), int>());
+    CONCEPT_ASSERT(!EqualityComparable<decltype(ranges::back_inserter(out))>());
     copy(rng, ranges::back_inserter(out));
     ::check_equal(out, {1, 2, 3, 4});
 

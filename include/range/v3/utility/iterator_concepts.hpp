@@ -30,11 +30,7 @@ namespace ranges
     {
         /// \addtogroup group-core
         /// @{
-        struct weak_input_iterator_tag
-        {};
-
         struct input_iterator_tag
-          : weak_input_iterator_tag
         {};
 
         struct forward_iterator_tag
@@ -269,7 +265,7 @@ namespace ranges
                     ));
             };
 
-            struct WeakIterator
+            struct Iterator
               : refines<WeaklyIncrementable, Copyable>
             {
                 template<typename I>
@@ -279,20 +275,32 @@ namespace ranges
                     ));
             };
 
-            struct Iterator
-              : refines<WeakIterator, EqualityComparable>
+            struct IteratorRange
+              : refines<SemiRegular(_2), Iterator(_1),
+                        WeaklyEqualityComparable>
             {};
 
-            struct WeakOutputIterator
-              : refines<WeakIterator(_1), Writable>
-            {};
+            struct SizedIteratorRange
+              : refines<IteratorRange>
+            {
+                template<typename I, typename S,
+                    typename D = WeaklyIncrementable::difference_t<I>>
+                auto requires_(I&& i, S&& s) -> decltype(
+                    concepts::valid_expr(
+                        concepts::is_false(
+                            disable_sized_iterator_range<
+                                uncvref_t<I>, uncvref_t<S>>()),
+                        concepts::has_type<D>(s - i),
+                        concepts::has_type<D>(i - s)
+                    ));
+            };
 
             struct OutputIterator
-              : refines<WeakOutputIterator, Iterator(_1)>
+              : refines<Iterator(_1), Writable>
             {};
 
-            struct WeakInputIterator
-              : refines<WeakIterator, Readable>
+            struct InputIterator
+              : refines<Iterator, Readable>
             {
                 // Associated types
                 // value_t from Readable
@@ -303,23 +311,15 @@ namespace ranges
                 template<typename I>
                 auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<DerivedFrom, category_t<I>, ranges::weak_input_iterator_tag>(),
+                        concepts::model_of<DerivedFrom, category_t<I>, ranges::input_iterator_tag>(),
                         concepts::model_of<Readable>(i++)
                     ));
             };
 
-            struct InputIterator
-              : refines<WeakInputIterator, Iterator, EqualityComparable>
-            {
-                template<typename I>
-                auto requires_(I&&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<DerivedFrom, category_t<I>, ranges::input_iterator_tag>()
-                    ));
-            };
-
             struct ForwardIterator
-              : refines<InputIterator, Incrementable>
+              : refines<InputIterator, Incrementable, IteratorRange(_1, _1)>
+                // and technically EqualityComparable as well, which is subsumed
+                // (syntactically) by IteratorRange.
             {
                 template<typename I>
                 auto requires_(I&&) -> decltype(
@@ -342,14 +342,12 @@ namespace ranges
             };
 
             struct RandomAccessIterator
-              : refines<BidirectionalIterator, TotallyOrdered>
+              : refines<BidirectionalIterator, TotallyOrdered, SizedIteratorRange(_1, _1)>
             {
                 template<typename I, typename V = common_reference_t<I>>
                 auto requires_(I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<DerivedFrom, category_t<I>, ranges::random_access_iterator_tag>(),
-                        concepts::model_of<SignedIntegral>(i - i),
-                        concepts::has_type<difference_t<I>>(i - i),
                         concepts::has_type<I>(i + (i - i)),
                         concepts::has_type<I>((i - i) + i),
                         concepts::has_type<I>(i - (i - i)),
@@ -387,19 +385,16 @@ namespace ranges
         using Incrementable = concepts::models<concepts::Incrementable, T>;
 
         template<typename I>
-        using WeakIterator = concepts::models<concepts::WeakIterator, I>;
-
-        template<typename I>
         using Iterator = concepts::models<concepts::Iterator, I>;
 
-        template<typename Out, typename T>
-        using WeakOutputIterator = concepts::models<concepts::WeakOutputIterator, Out, T>;
+        template<typename I, typename S>
+        using IteratorRange = concepts::models<concepts::IteratorRange, I, S>;
+
+        template<typename I, typename S>
+        using SizedIteratorRange = concepts::models<concepts::SizedIteratorRange, I, S>;
 
         template<typename Out, typename T>
         using OutputIterator = concepts::models<concepts::OutputIterator, Out, T>;
-
-        template<typename I>
-        using WeakInputIterator = concepts::models<concepts::WeakInputIterator, I>;
 
         template<typename I>
         using InputIterator = concepts::models<concepts::InputIterator, I>;
@@ -422,15 +417,14 @@ namespace ranges
                     concepts::RandomAccessIterator,
                     concepts::BidirectionalIterator,
                     concepts::ForwardIterator,
-                    concepts::InputIterator,
-                    concepts::WeakInputIterator>, T>;
+                    concepts::InputIterator>, T>;
 
         template<typename T>
         using iterator_concept_t = meta::_t<iterator_concept<T>>;
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
-        using SinglePass = meta::fast_and<WeakInputIterator<I>, meta::not_<ForwardIterator<I>>>;
+        using SinglePass = meta::fast_and<Iterator<I>, meta::not_<ForwardIterator<I>>>;
 
         namespace detail
         {
@@ -541,7 +535,7 @@ namespace ranges
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident>
-        using MergeMovable = meta::fast_and<
+        using MoveMergeable = meta::fast_and<
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
@@ -562,91 +556,25 @@ namespace ranges
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using WeaklyAsymmetricallyComparable = meta::fast_and<
+        using AsymmetricallyComparable = meta::fast_and<
             InputIterator<I1>,
-            WeakInputIterator<I2>,
+            InputIterator<I2>,
             IndirectCallablePredicate<C, Projected<I1, P1>, Projected<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using AsymmetricallyComparable = meta::fast_and<
-            WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
-            InputIterator<I2>>;
-
-        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
-            typename P2 = ident>
-        using WeaklyComparable = meta::fast_and<
-            WeaklyAsymmetricallyComparable<I1, I2, C, P1, P2>,
+        using Comparable = meta::fast_and<
+            AsymmetricallyComparable<I1, I2, C, P1, P2>,
             IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>>;
 
-        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
-            typename P2 = ident>
-        using Comparable = meta::fast_and<
-            WeaklyComparable<I1, I2, C, P1, P2>,
-            InputIterator<I2>>;
-
-        namespace concepts
-        {
-            struct IteratorRange
-            {
-                template<typename I, typename S>
-                auto requires_(I&& i, S&& s) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<WeakIterator, I>(),
-                        concepts::model_of<Regular, S>(),
-                        concepts::model_of<EqualityComparable, I, S>()
-                    ));
-            };
-
-            // Detail, used only to constrain common_iterator::operator-, which
-            // is used by SizedIteratorRange
-            struct SizedIteratorRangeLike_
-              : refines<IteratorRange>
-            {
-              template<typename I, typename S>
-                auto requires_(I&& i, S&& s) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Integral>(s - i),
-                        concepts::same_type(s - i, i - s)
-                    ));
-            };
-
-            struct SizedIteratorRange
-              : refines<SizedIteratorRangeLike_>
-            {
-                template<typename I, typename S,
-                    meta::if_<std::is_same<I, S>, int> = 0>
-                auto requires_(I&& i, I&& s) -> void;
-
-                template<typename I, typename S,
-                    meta::if_c<!std::is_same<I, S>::value, int> = 0,
-                    typename C = common_type_t<I, S>>
-                auto requires_(I&& i, S&& s) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<SizedIteratorRange, I, I>(),
-                        concepts::model_of<Common, I, S>(),
-                        concepts::model_of<SizedIteratorRange, C, C>()
-                    ));
-            };
-        }
-
         template<typename I, typename S>
-        using IteratorRange = concepts::models<concepts::IteratorRange, I, S>;
-
-        template<typename I, typename S>
-        using SizedIteratorRangeLike_ = concepts::models<concepts::SizedIteratorRangeLike_, I, S>;
-
-        template<typename I, typename S>
-        using SizedIteratorRange = concepts::models<concepts::SizedIteratorRange, I, S>;
-
-        template<typename I, typename S = I>
         using sized_iterator_range_concept =
             concepts::most_refined<
                 meta::list<
                     concepts::SizedIteratorRange,
                     concepts::IteratorRange>, I, S>;
 
-        template<typename I, typename S = I>
+        template<typename I, typename S>
         using sized_iterator_range_concept_t = meta::_t<sized_iterator_range_concept<I, S>>;
         /// @}
     }

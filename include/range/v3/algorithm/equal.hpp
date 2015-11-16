@@ -52,7 +52,7 @@ namespace ranges
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
                     IteratorRange<I0, S0>() &&
-                    WeaklyComparable<I0, I1, C, P0, P1>()
+                    Comparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(I0 begin0, S0 end0, I1 begin1, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
@@ -88,7 +88,7 @@ namespace ranges
                 typename I1 = uncvref_t<I1Ref>,
                 CONCEPT_REQUIRES_(
                     Range<Rng0>() && Iterator<I1>() &&
-                    WeaklyComparable<I0, I1, C, P0, P1>()
+                    Comparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(Rng0 && rng0, I1Ref && begin1, C pred_ = C{}, P0 proj0_ = P0{},
                 P1 proj1_ = P1{}) const

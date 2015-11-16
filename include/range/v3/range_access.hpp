@@ -65,24 +65,6 @@ namespace ranges
               : mixin_base_2_<Cur>
             {};
 
-            struct HasDoneCursor_
-            {
-                template<typename T>
-                auto requires_(T&& t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<bool>(t.done())
-                    ));
-            };
-
-            struct HasEqualCursor_
-            {
-                template<typename T>
-                auto requires_(T&& t) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<bool>(t.equal(t))
-                    ));
-            };
-
         public:
             template<typename Cur>
             using single_pass_t = meta::_t<single_pass_<Cur>>;
@@ -93,7 +75,7 @@ namespace ranges
             //
             // Concepts that the range cursor must model
             //
-            struct WeakCursor
+            struct Cursor
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -101,16 +83,12 @@ namespace ranges
                         (t.next(), concepts::void_)
                     ));
             };
-            struct Cursor
-              : concepts::refines<WeakCursor>
+            struct HasEqualCursor
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
-                        concepts::is_true(
-                            meta::or_<
-                                concepts::models<HasDoneCursor_, T>,
-                                concepts::models<HasEqualCursor_, T> >())
+                        concepts::convertible_to<bool>(t.equal(t))
                     ));
             };
             struct ReadableCursor
@@ -145,20 +123,14 @@ namespace ranges
                         concepts::model_of<concepts::SignedIntegral>(s.distance_from(c))
                     ));
             };
-            struct WeakOutputCursor
-              : concepts::refines<WritableCursor, WeakCursor(concepts::_1)>
-            {};
             struct OutputCursor
-              : concepts::refines<WeakOutputCursor, Cursor(concepts::_1)>
-            {};
-            struct WeakInputCursor
-              : concepts::refines<WeakCursor, ReadableCursor>
+              : concepts::refines<WritableCursor, Cursor(concepts::_1)>
             {};
             struct InputCursor
-              : concepts::refines<WeakInputCursor, Cursor>
+              : concepts::refines<ReadableCursor, Cursor>
             {};
             struct ForwardCursor
-              : concepts::refines<WeakInputCursor, HasEqualCursor_>
+              : concepts::refines<InputCursor, HasEqualCursor>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
@@ -404,20 +376,20 @@ namespace ranges
         namespace detail
         {
             template<typename T>
+            using Cursor =
+                concepts::models<range_access::Cursor, T>;
+
+            template<typename T>
+            using HasEqualCursor =
+                concepts::models<range_access::HasEqualCursor, T>;
+
+            template<typename T>
             using ReadableCursor =
                 concepts::models<range_access::ReadableCursor, T>;
 
             template<typename T, typename U>
             using WritableCursor =
                 concepts::models<range_access::WritableCursor, T, U>;
-
-            template<typename T>
-            using WeakCursor =
-                concepts::models<range_access::WeakCursor, T>;
-
-            template<typename T>
-            using Cursor =
-                concepts::models<range_access::Cursor, T>;
 
             template<typename T>
             using SizedCursor =
@@ -428,16 +400,8 @@ namespace ranges
               concepts::models<range_access::SizedCursorRange, T, U>;
 
             template<typename T, typename U>
-            using WeakOutputCursor =
-                concepts::models<range_access::WeakOutputCursor, T, U>;
-
-            template<typename T, typename U>
             using OutputCursor =
                 concepts::models<range_access::OutputCursor, T, U>;
-
-            template<typename T>
-            using WeakInputCursor =
-                concepts::models<range_access::WeakInputCursor, T>;
 
             template<typename T>
             using InputCursor =
@@ -467,9 +431,7 @@ namespace ranges
                         range_access::BidirectionalCursor,
                         range_access::ForwardCursor,
                         range_access::InputCursor,
-                        range_access::WeakInputCursor,
-                        range_access::Cursor,
-                        range_access::WeakCursor>, T>;
+                        range_access::Cursor>, T>;
 
             template<typename T>
             using cursor_concept_t = meta::_t<cursor_concept<T>>;

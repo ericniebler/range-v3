@@ -58,7 +58,6 @@ int main()
     ::models<ranges::concepts::View>(r1);
     ::models_not<ranges::concepts::SizedView>(r1);
     CHECK(r1.first == vi.begin()+1);
-    CHECK(r1.second == ranges::unreachable{});
     r1.second = ranges::unreachable{};
 
     r0.pop_front();
@@ -72,12 +71,10 @@ int main()
 
     std::pair<std::vector<int>::iterator, ranges::unreachable> p1 = r1;
     CHECK(p1.first == vi.begin()+1);
-    CHECK(p1.second == ranges::unreachable{});
     static_assert(sizeof(p1) > sizeof(r1), "");
 
     ranges::range<std::vector<int>::iterator, ranges::unreachable> r2 { p1 };
     CHECK(r1.first == vi.begin()+1);
-    CHECK(r1.second == ranges::unreachable{});
 
     std::list<int> li{1,2,3,4};
     ranges::sized_range<std::list<int>::iterator> l0 {li.begin(), li.end(), li.size()};

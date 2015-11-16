@@ -19,7 +19,6 @@
 #include <utility>
 #include <type_traits>
 #include <meta/meta.hpp>
-#include <range/v3/utility/common_type.hpp>
 
 namespace ranges
 {
@@ -135,6 +134,9 @@ namespace ranges
         {
             using type = typename T::char_type;
         };
+
+        template<typename I, typename S>
+        struct disable_sized_iterator_range : std::false_type {};
         /// @}
     }
 }
