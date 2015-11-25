@@ -179,6 +179,8 @@ namespace ranges
                 }
             };
 
+            struct empty_variant_tag { };
+
             struct variant_core_access
             {
                 template<typename...Ts>
@@ -197,6 +199,12 @@ namespace ranges
                 static variant_data<Ts...> &&data(variant<Ts...> &&var)
                 {
                     return std::move(var).data_;
+                }
+
+                template<typename...Ts>
+                static variant<Ts...> make_empty(meta::id<variant<Ts...>>)
+                {
+                    return variant<Ts...>{empty_variant_tag{}};
                 }
             };
 
@@ -464,8 +472,7 @@ namespace ranges
                 }
             }
 
-            struct empty_tag { };
-            constexpr variant(empty_tag)
+            constexpr variant(detail::empty_variant_tag)
               : which_((std::size_t)-1)
             {}
 
@@ -476,18 +483,18 @@ namespace ranges
             {}
             template<std::size_t N, typename...Args,
                 CONCEPT_REQUIRES_(Constructible<data_t, meta::size_t<N>, Args...>())>
-            constexpr variant(RANGES_EMPLACED_INDEX_T(N) n, Args &&...args)
+            constexpr variant(RANGES_EMPLACED_INDEX_T(N), Args &&...args)
               : which_(N), data_{meta::size_t<N>{}, detail::forward<Args>(args)...}
             {
                 static_assert(N < sizeof...(Ts), "");
             }
             variant(variant &&that)
-              : variant{empty_tag{}}
+              : variant{detail::empty_variant_tag{}}
             {
                 this->assign_(std::move(that));
             }
             variant(variant const &that)
-              : variant{empty_tag{}}
+              : variant{detail::empty_variant_tag{}}
             {
                 this->assign_(that);
             }
@@ -533,12 +540,13 @@ namespace ranges
                 typename Result = detail::variant_result_t<Fun, Args>>
             Result apply(Fun fun)
             {
-                Result res;
+                auto res = detail::variant_core_access::make_empty(meta::id<Result>{});
                 data_.apply(
                     which_,
                     detail::make_unary_visitor(
                         detail::unwrap_ref_fun<Fun>{detail::move(fun)},
                         res));
+                RANGES_ASSERT(res.is_valid());
                 return res;
             }
             template<typename Fun,
@@ -546,12 +554,13 @@ namespace ranges
                 typename Result = detail::variant_result_t<Fun, Args>>
             Result apply(Fun fun) const
             {
-                Result res;
+                auto res = detail::variant_core_access::make_empty(meta::id<Result>{});
                 data_.apply(
                     which_,
                     detail::make_unary_visitor(
                         detail::unwrap_ref_fun<Fun>{detail::move(fun)},
                         res));
+                RANGES_ASSERT(res.is_valid());
                 return res;
             }
 
@@ -560,12 +569,13 @@ namespace ranges
                 typename Result = detail::variant_result_i_t<Fun, Args>>
             Result apply_i(Fun fun)
             {
-                Result res;
+                auto res = detail::variant_core_access::make_empty(meta::id<Result>{});
                 data_.apply(
                     which_,
                     detail::make_binary_visitor(
                         detail::unwrap_ref_fun<Fun>{detail::move(fun)},
                         res));
+                RANGES_ASSERT(res.is_valid());
                 return res;
             }
             template<typename Fun,
@@ -573,12 +583,13 @@ namespace ranges
                 typename Result = detail::variant_result_i_t<Fun, Args >>
             Result apply_i(Fun fun) const
             {
-                Result res;
+                auto res = detail::variant_core_access::make_empty(meta::id<Result>{});
                 data_.apply(
                     which_,
                     detail::make_binary_visitor(
                         detail::unwrap_ref_fun<Fun>{detail::move(fun)},
                         res));
+                RANGES_ASSERT(res.is_valid());
                 return res;
             }
         };
@@ -696,8 +707,9 @@ namespace ranges
             using From = variant<Ts...>;
             using To = variant_unique_t<From>;
             auto &data = detail::variant_core_access::data(var);
-            To res;
+            auto res = detail::variant_core_access::make_empty(meta::id<To>{});
             data.apply(var.which(), detail::unique_visitor<To, From>{res});
+            RANGES_ASSERT(res.is_valid());
             return res;
         }
         /// @}
