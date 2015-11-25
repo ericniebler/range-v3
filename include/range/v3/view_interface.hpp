@@ -258,7 +258,8 @@ namespace ranges
                 sout << '[' << *it;
                 while(++it != e)
                     sout << ',' << *it;
-                return sout << ']';
+                sout << ']';
+                return sout;
             }
             /// \overload
             template<bool B = true, typename Stream = meta::if_c<B, std::ostream>,
@@ -268,17 +269,22 @@ namespace ranges
                 auto it = ranges::begin(rng);
                 auto const e = ranges::end(rng);
                 if(it == e)
-                    return sout << "[]";
+                {
+                    sout << "[]";
+                    return sout;
+                }
                 sout << '[' << *it;
                 while(++it != e)
                     sout << ',' << *it;
-                return sout << ']';
+                sout << ']';
+                return sout;
             }
             /// \overload
             template<bool B = true, typename Stream = meta::if_c<B, std::ostream>>
             friend Stream &operator<<(Stream &sout, Derived &&rng)
             {
-                return sout << rng;
+                sout << rng;
+                return sout;
             }
         };
         /// @}
