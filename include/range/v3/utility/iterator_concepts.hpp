@@ -612,14 +612,11 @@ namespace ranges
             };
 
             struct SizedIteratorRange
-              : refines<IteratorRange>
+              : refines<SizedIteratorRangeLike_>
             {
                 template<typename I, typename S,
                     meta::if_<std::is_same<I, S>, int> = 0>
-                auto requires_(I&& i, I&& s) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Integral>(s - i)
-                    ));
+                auto requires_(I&& i, I&& s) -> void;
 
                 template<typename I, typename S,
                     meta::if_c<!std::is_same<I, S>::value, int> = 0,
@@ -628,9 +625,7 @@ namespace ranges
                     concepts::valid_expr(
                         concepts::model_of<SizedIteratorRange, I, I>(),
                         concepts::model_of<Common, I, S>(),
-                        concepts::model_of<SizedIteratorRange, C, C>(),
-                        concepts::model_of<Integral>(s - i),
-                        concepts::same_type(s - i, i - s)
+                        concepts::model_of<SizedIteratorRange, C, C>()
                     ));
             };
         }

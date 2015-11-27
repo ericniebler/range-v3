@@ -129,6 +129,22 @@ namespace ranges
                         (t.set((U &&) u), 42)
                     ));
             };
+            struct SizedCursor
+            {
+                template<typename T>
+                auto requires_(T&& t) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<concepts::SignedIntegral>(t.distance_to(t))
+                    ));
+            };
+            struct SizedCursorRange
+            {
+                template<typename C, typename S>
+                auto requires_(C&& c, S&& s) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<concepts::SignedIntegral>(s.distance_from(c))
+                    ));
+            };
             struct WeakOutputCursor
               : concepts::refines<WritableCursor, WeakCursor(concepts::_1)>
             {};
@@ -160,12 +176,11 @@ namespace ranges
                     ));
             };
             struct RandomAccessCursor
-              : concepts::refines<BidirectionalCursor>
+              : concepts::refines<BidirectionalCursor, SizedCursor>
             {
                 template<typename T>
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<concepts::SignedIntegral>(t.distance_to(t)),
                         (t.advance(t.distance_to(t)), concepts::void_)
                     ));
             };
@@ -283,16 +298,30 @@ namespace ranges
                 pos.advance(n)
             )
             template<typename Cur>
-            RANGES_CXX14_CONSTEXPR
-            static auto distance_to(Cur const &pos0, Cur const &pos1)
+            static RANGES_CXX14_CONSTEXPR auto distance_to(
+                Cur const &pos0, Cur const &pos1)
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 pos0.distance_to(pos1)
             )
+            template<typename Cur, typename S>
+            static RANGES_CXX14_CONSTEXPR auto distance_to(
+                Cur const &pos, S const &end)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                end.distance_from(pos)
+            )
+            template<typename Cur>
+            static RANGES_CXX14_CONSTEXPR auto distance_remaining(
+                Cur const &pos)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                pos.distance_remaining()
+            )
 
         private:
             template<typename Cur>
-            using random_access_cursor_difference_t =
+            using sized_cursor_difference_t =
                 decltype(range_access::distance_to(std::declval<Cur>(), std::declval<Cur>()));
 
             template<typename Cur, typename Enable = void>
@@ -302,9 +331,9 @@ namespace ranges
             };
 
             template<typename Cur>
-            struct cursor_difference2<Cur, meta::void_<random_access_cursor_difference_t<Cur>>>
+            struct cursor_difference2<Cur, meta::void_<sized_cursor_difference_t<Cur>>>
             {
-                using type = random_access_cursor_difference_t<Cur>;
+                using type = sized_cursor_difference_t<Cur>;
             };
 
             template<typename Cur, typename Enable = void>
@@ -389,6 +418,14 @@ namespace ranges
             template<typename T>
             using Cursor =
                 concepts::models<range_access::Cursor, T>;
+
+            template<typename T>
+            using SizedCursor =
+                concepts::models<range_access::SizedCursor, T>;
+
+            template<typename T, typename U>
+            using SizedCursorRange =
+              concepts::models<range_access::SizedCursorRange, T, U>;
 
             template<typename T, typename U>
             using WeakOutputCursor =

@@ -128,7 +128,13 @@ namespace ranges
 
         static_assert(std::is_trivial<constant<int, 0>>::value, "Expected constant to be trivial");
 
-        template<typename Element, typename Tag = Element, bool Empty = std::is_empty<Element>::value>
+        template<typename Element, typename Tag = Element,
+            bool Empty = std::is_empty<Element>::value &&
+#ifdef RANGES_CXX_GREATER_THAN_11
+                         !std::is_final<Element>::value>
+#else
+                         true>
+#endif
         struct box
         {
             Element value;
@@ -163,7 +169,7 @@ namespace ranges
 
         // Get by tag type
         template<typename Tag, typename Element>
-        Element & get(box<Element, Tag, false> & b)
+        constexpr Element & get(box<Element, Tag, false> & b)
         {
             return b.value;
         }
@@ -181,7 +187,7 @@ namespace ranges
         }
 
         template<typename Tag, typename Element>
-        Element & get(box<Element, Tag, true> & b)
+        constexpr Element & get(box<Element, Tag, true> & b)
         {
             return b;
         }
@@ -200,7 +206,7 @@ namespace ranges
 
         // Get by index
         template<std::size_t I, typename Element>
-        Element & get(box<Element, std::integral_constant<std::size_t, I>, false> & b)
+        constexpr Element & get(box<Element, std::integral_constant<std::size_t, I>, false> & b)
         {
             return b.value;
         }
@@ -218,7 +224,7 @@ namespace ranges
         }
 
         template<std::size_t I, typename Element>
-        Element & get(box<Element, std::integral_constant<std::size_t, I>, true> & b)
+        constexpr Element & get(box<Element, std::integral_constant<std::size_t, I>, true> & b)
         {
             return b;
         }

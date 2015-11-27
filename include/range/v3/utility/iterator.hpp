@@ -720,7 +720,7 @@ namespace ranges
                 {
                     it_ -= n;
                 }
-                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                CONCEPT_REQUIRES(SizedIteratorRange<I, I>())
                 RANGES_CXX14_CONSTEXPR
                 iterator_difference_t<I>
                 distance_to(reverse_cursor const &that) const

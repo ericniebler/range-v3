@@ -183,6 +183,7 @@ public:
         ranges::advance(it, n_, end_);
     }
     void prev() = delete;
+    void distance_to() = delete;
 };
 
 // In:  Range<T>

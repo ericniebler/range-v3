@@ -53,15 +53,6 @@ namespace ranges
 
         /// \addtogroup group-core
         /// @{
-        struct default_sentinel
-        {
-            template<typename Cur>
-            static constexpr bool equal(Cur const &pos)
-            {
-                return range_access::done(pos);
-            }
-        };
-
         template<typename Derived, cardinality Cardinality>
         struct view_facade
           : view_interface<Derived, Cardinality>
@@ -75,7 +66,7 @@ namespace ranges
             {
                 return derived();
             }
-            default_sentinel end_cursor() const
+            default_end_cursor end_cursor() const
             {
                 return {};
             }

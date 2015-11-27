@@ -111,7 +111,7 @@ namespace ranges
                         ranges::begin(rng_->mutable_base()));
                     RANGES_ASSERT(0 == offset());
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_REQUIRES(SizedIteratorRange<iterator, iterator>())
                 difference_type_ distance_to(iterator here, iterator there, adaptor const &that) const
                 {
                     clean();

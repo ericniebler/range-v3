@@ -93,10 +93,6 @@ namespace ranges
                 {
                     return {get_begin_(), count_};
                 }
-                detail::counted_sentinel end_cursor()
-                {
-                    return {};
-                }
             public:
                 slice_view_() = default;
                 slice_view_(slice_view_ &&that)
