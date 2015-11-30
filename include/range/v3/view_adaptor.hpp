@@ -137,7 +137,7 @@ namespace ranges
             {
                 it += n;
             }
-            template<typename I, CONCEPT_REQUIRES_(RandomAccessIterator<I>())>
+            template<typename I, CONCEPT_REQUIRES_(SizedIteratorRange<I, I>())>
             static iterator_difference_t<I> distance_to(I const &it0, I const &it1)
             {
                 return it1 - it0;

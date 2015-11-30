@@ -291,6 +291,68 @@ namespace test_move_only
     }
 }
 
+namespace test_forward_sized
+{
+    template<typename I>
+    struct cursor
+    {
+        I it_;
+        struct mixin : ranges::basic_mixin<cursor>
+        {
+            mixin() = default;
+            mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
+            mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+        };
+        cursor() = default;
+        explicit cursor(I i) : it_(i) {}
+        template<class J, CONCEPT_REQUIRES_(ranges::ConvertibleTo<J, I>())>
+        cursor(cursor<J> that) : it_(std::move(that.it_)) {}
+
+        auto get() const -> decltype(*it_) { return *it_; }
+        bool equal(cursor<I> const &that) const  { return that.it_ == it_; }
+        void next() { ++it_; }
+        ranges::iterator_difference_t<I> distance_to(cursor<I> const &that) const {
+            return that.it_ - it_;
+        }
+    };
+
+    CONCEPT_ASSERT(ranges::detail::SizedCursor<cursor<char*>>());
+    CONCEPT_ASSERT(ranges::detail::ForwardCursor<cursor<char*>>());
+
+    template<class I>
+    using iterator = ranges::basic_iterator<cursor<I>>;
+
+    static_assert(
+        std::is_same<
+            iterator<char*>::iterator_category,
+            ranges::forward_iterator_tag>::value,
+        "");
+
+    void test()
+    {
+        using namespace ranges;
+
+        iterator<char*> a(nullptr);
+        iterator<char const *> b(nullptr);
+        iterator<char const *> c(a);
+
+        b = a;
+        bool d = a == b;
+        d = (a != b);
+
+        detail::ignore_unused(
+            d,
+            a < b,
+            a <= b,
+            a > b,
+            a >= b,
+            (a-b),
+            (b-a),
+            (a-a),
+            (b-b));
+    }
+}
+
 int main()
 {
     using namespace ranges;
@@ -301,6 +363,7 @@ int main()
     ::test_weak_output::test();
     ::test_output::test();
     ::test_move_only::test();
+    ::test_forward_sized::test();
 
     return ::test_result();
 }

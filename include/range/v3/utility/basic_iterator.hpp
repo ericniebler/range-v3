@@ -18,6 +18,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_access.hpp>
+#include <range/v3/utility/box.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
@@ -421,30 +422,28 @@ namespace ranges
         /// @{
         ///
         template<typename T>
-        struct basic_mixin
+        struct basic_mixin : private box<T>
         {
-        private:
-            T t_;
         public:
             CONCEPT_REQUIRES(DefaultConstructible<T>())
             constexpr basic_mixin()
-              : t_{}
+              : box<T>{}
             {}
             RANGES_CXX14_CONSTEXPR
             basic_mixin(T t)
-              : t_(std::move(t))
+              : box<T>(std::move(t))
             {}
         protected:
             RANGES_CXX14_CONSTEXPR
             T &get() noexcept
             {
-                return t_;
+                return ranges::get<T>(*this);
             }
             /// \overload
             RANGES_CXX14_CONSTEXPR
             T const &get() const noexcept
             {
-                return t_;
+                return ranges::get<T>(*this);
             }
         };
 
@@ -473,14 +472,49 @@ namespace ranges
               : range_access::mixin_base_t<S>(std::move(end))
             {}
             using range_access::mixin_base_t<S>::mixin_base_t;
-            constexpr bool operator==(basic_sentinel<S> const &) const
+            constexpr bool operator==(basic_sentinel<S> const &) const noexcept
             {
                 return true;
             }
-            constexpr bool operator!=(basic_sentinel<S> const &) const
+            constexpr bool operator!=(basic_sentinel<S> const &) const noexcept
             {
                 return false;
             }
+            constexpr bool operator<(basic_sentinel<S> const &) const noexcept
+            {
+                return false;
+            }
+            constexpr bool operator<=(basic_sentinel<S> const &) const noexcept
+            {
+                return true;
+            }
+            constexpr bool operator>(basic_sentinel<S> const &) const noexcept
+            {
+                return false;
+            }
+            constexpr bool operator>=(basic_sentinel<S> const &) const noexcept
+            {
+                return true;
+            }
+            constexpr std::ptrdiff_t operator-(basic_sentinel<S> const &) const noexcept
+            {
+                return 0;
+            }
+        };
+
+        struct default_end_cursor
+        {
+            template<typename Cur>
+            static constexpr bool equal(Cur const &pos)
+            {
+                return range_access::done(pos);
+            }
+            template<typename Cur>
+            static constexpr auto distance_from(Cur const &pos)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                range_access::distance_remaining(pos)
+            )
         };
 
         template<typename Cur, typename S>
@@ -673,82 +707,96 @@ namespace ranges
                 left -= n;
                 return left;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             friend difference_type operator-(basic_iterator const &left,
                 basic_iterator const &right)
             {
                 return range_access::distance_to(right.pos(), left.pos());
             }
+            CONCEPT_REQUIRES(detail::SizedCursorRange<Cur, S>())
+            RANGES_CXX14_CONSTEXPR
+            friend difference_type operator-(basic_sentinel<S> const &left,
+                basic_iterator const& right)
+            {
+                return range_access::distance_to(right.pos(), left.end());
+            }
+            CONCEPT_REQUIRES(detail::SizedCursorRange<Cur, S>())
+            RANGES_CXX14_CONSTEXPR
+            friend difference_type operator-(basic_iterator const &left,
+                basic_sentinel<S> const& right)
+            {
+                return -range_access::distance_to(left.pos(), right.end());
+            }
             // symmetric comparisons
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             friend bool operator<(basic_iterator const &left, basic_iterator const &right)
             {
                 return 0 < (right - left);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             friend bool operator<=(basic_iterator const &left, basic_iterator const &right)
             {
                 return 0 <= (right - left);
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             friend bool operator>(basic_iterator const &left, basic_iterator const &right)
             {
                 return (right - left) < 0;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             friend bool operator>=(basic_iterator const &left, basic_iterator const &right)
             {
                 return (right - left) <= 0;
             }
             // asymmetric comparisons
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             friend constexpr bool operator<(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
                 return !range_access::empty(left.pos(), right.end());
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             friend constexpr bool operator<=(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
                 return true;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             friend constexpr bool operator>(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
                 return false;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             friend constexpr bool operator>=(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
                 return range_access::empty(left.pos(), right.end());
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             friend constexpr bool operator<(basic_sentinel<S> const &left,
                 basic_iterator const &right)
             {
                 return false;
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             friend constexpr bool operator<=(basic_sentinel<S> const &left,
                 basic_iterator const &right)
             {
                 return range_access::empty(right.pos(), left.end());
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             friend constexpr bool operator>(basic_sentinel<S> const &left,
                 basic_iterator const &right)
             {
                 return !range_access::empty(right.pos(), left.end());
             }
-            CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
+            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
             friend constexpr bool operator>=(basic_sentinel<S> const &left,
                 basic_iterator const &right)
             {

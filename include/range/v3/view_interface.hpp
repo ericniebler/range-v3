@@ -90,13 +90,18 @@ namespace ranges
             }
             /// Access the size of the range, if it can be determined:
             template<typename D = Derived,
-                CONCEPT_REQUIRES_(Same<D, Derived>() && (Cardinality >= 0 ||
-                    SizedIteratorRange<range_iterator_t<D>, range_sentinel_t<D>>()))>
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Cardinality >= 0)>
             constexpr range_size_t<D> size() const
             {
-                return Cardinality >= 0 ?
-                    (range_size_t<D>)Cardinality :
-                    iter_size(derived().begin(), derived().end());
+                return (range_size_t<D>)Cardinality;
+            }
+            template<typename D = Derived,
+                CONCEPT_REQUIRES_(Same<D, Derived>() && Cardinality < 0 &&
+                    SizedIteratorRange<range_iterator_t<const D>,
+                        range_sentinel_t<const D>>())>
+            constexpr range_size_t<D> size() const
+            {
+                return iter_size(derived().begin(), derived().end());
             }
             /// Access the first element in a range:
             template<typename D = Derived,

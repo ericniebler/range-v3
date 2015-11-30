@@ -232,8 +232,6 @@ namespace ranges
             template<typename I, typename D = meta::_t<difference_type<I>>>
             struct counted_cursor;
 
-            struct counted_sentinel;
-
             template<typename Int>
             struct from_end_;
 
@@ -416,12 +414,12 @@ namespace ranges
             struct counted_fn;
         }
 
+        struct default_end_cursor;
+        using default_sentinel = basic_sentinel<default_end_cursor>;
+
         template<typename I, typename D = meta::_t<difference_type<I>>>
         using counted_iterator =
-            basic_iterator<detail::counted_cursor<I, D>, detail::counted_sentinel>;
-
-        using counted_sentinel =
-            basic_sentinel<detail::counted_sentinel>;
+            basic_iterator<detail::counted_cursor<I, D>, default_end_cursor>;
 
         template<typename Rng>
         struct cycled_view;

@@ -214,7 +214,9 @@ namespace ranges
                     ranges::advance(it1_, n);
                     ranges::advance(it2_, n);
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng1>() && RandomAccessRange<Rng2>())
+                CONCEPT_REQUIRES(
+                    SizedIteratorRange<range_iterator_t<Rng1>, range_iterator_t<Rng1>>() &&
+                    SizedIteratorRange<range_iterator_t<Rng2>, range_iterator_t<Rng2>>())
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator

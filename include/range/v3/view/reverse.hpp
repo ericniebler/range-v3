@@ -118,7 +118,8 @@ namespace ranges
                     else if(n < 0)
                         this->prev(it), ranges::advance(it, -n - 1);
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_REQUIRES(
+                    SizedIteratorRange<range_iterator_t<Rng>, range_iterator_t<Rng>>())
                 range_difference_t<Rng>
                 distance_to(range_iterator_t<Rng> const &here, range_iterator_t<Rng> const &there,
                     adaptor const &other_adapt) const

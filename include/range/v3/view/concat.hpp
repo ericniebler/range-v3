@@ -257,7 +257,9 @@ namespace ranges
                     else if(n < 0)
                         its_.apply_i(advance_rev_fun{this, n});
                 }
-                CONCEPT_REQUIRES(meta::and_c<(bool) RandomAccessRange<Rngs>()...>::value)
+                CONCEPT_REQUIRES(meta::and_c<(bool)
+                    SizedIteratorRange<range_iterator_t<Rngs>,
+                        range_iterator_t<Rngs>>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     if(its_.which() <= that.its_.which())

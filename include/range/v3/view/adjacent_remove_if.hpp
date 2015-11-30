@@ -60,6 +60,7 @@ namespace ranges
                     ranges::advance(it, 1, end);
                 }
                 void prev() = delete;
+                void distance_to() = delete;
             };
             adaptor begin_adaptor() const
             {

@@ -43,10 +43,6 @@ namespace ranges
             {
                 return {it_, n_};
             }
-            detail::counted_sentinel end_cursor() const
-            {
-                return {};
-            }
         public:
             counted_view() = default;
             counted_view(I it, D n)

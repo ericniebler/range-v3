@@ -82,7 +82,8 @@ namespace ranges
                     if(toggl_)
                         --it;
                 }
-                CONCEPT_REQUIRES(RandomAccessRange<Rng>())
+                CONCEPT_REQUIRES(
+                    SizedIteratorRange<range_iterator_t<Rng>, range_iterator_t<Rng>>())
                 range_difference_t<Rng> distance_to(range_iterator_t<Rng> it,
                     range_iterator_t<Rng> other_it, cursor_adaptor const &other) const
                 {
