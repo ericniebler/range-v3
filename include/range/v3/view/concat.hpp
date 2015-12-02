@@ -97,7 +97,7 @@ namespace ranges
                 template<std::size_t N>
                 void satisfy(meta::size_t<N>)
                 {
-                    RANGES_ASSERT(its_.which() == N);
+                    RANGES_ASSERT(its_.index() == N);
                     if(ranges::get<N>(its_) == end(std::get<N>(rng_->rngs_)))
                     {
                         ranges::emplace<N + 1>(its_, begin(std::get<N + 1>(rng_->rngs_)));
@@ -106,7 +106,7 @@ namespace ranges
                 }
                 void satisfy(meta::size_t<cranges - 1>)
                 {
-                    RANGES_ASSERT(its_.which() == cranges - 1);
+                    RANGES_ASSERT(its_.index() == cranges - 1);
                 }
                 struct next_fun
                 {
@@ -203,19 +203,19 @@ namespace ranges
                 template<std::size_t N>
                 static difference_type distance_to_(meta::size_t<N>, cursor const &from, cursor const &to)
                 {
-                    if(from.its_.which() > N)
+                    if(from.its_.index() > N)
                         return cursor::distance_to_(meta::size_t<N + 1>{}, from, to);
-                    if(from.its_.which() == N)
+                    if(from.its_.index() == N)
                     {
-                        if(to.its_.which() == N)
+                        if(to.its_.index() == N)
                             return distance(ranges::get<N>(from.its_), ranges::get<N>(to.its_));
                         return distance(ranges::get<N>(from.its_), end(std::get<N>(from.rng_->rngs_))) +
                             cursor::distance_to_(meta::size_t<N + 1>{}, from, to);
                     }
-                    if(from.its_.which() < N && to.its_.which() > N)
+                    if(from.its_.index() < N && to.its_.index() > N)
                         return distance(std::get<N>(from.rng_->rngs_)) +
                             cursor::distance_to_(meta::size_t<N + 1>{}, from, to);
-                    RANGES_ASSERT(to.its_.which() == N);
+                    RANGES_ASSERT(to.its_.index() == N);
                     return distance(begin(std::get<N>(from.rng_->rngs_)), ranges::get<N>(to.its_));
                 }
             public:
@@ -262,7 +262,7 @@ namespace ranges
                         range_iterator_t<Rngs>>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
-                    if(its_.which() <= that.its_.which())
+                    if(its_.index() <= that.its_.index())
                         return cursor::distance_to_(meta::size_t<0>{}, *this, that);
                     return -cursor::distance_to_(meta::size_t<0>{}, that, *this);
                 }
@@ -282,7 +282,7 @@ namespace ranges
                 {}
                 bool equal(cursor<IsConst> const &pos) const
                 {
-                    return pos.its_.which() == cranges - 1 &&
+                    return pos.its_.index() == cranges - 1 &&
                         ranges::get<cranges - 1>(pos.its_) == end_;
                 }
             };

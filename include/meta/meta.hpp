@@ -1956,42 +1956,22 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename, typename, typename = void>
-            struct transform1_
-            {
-            };
-
-            template <typename... List, typename Fun>
-            struct transform1_<list<List...>, Fun, void_<list<apply<Fun, List>...>>>
-            {
-                using type = list<apply<Fun, List>...>;
-            };
-
-            template <typename, typename, typename, typename = void>
-            struct transform2_
-            {
-            };
-
-            template <typename... List0, typename... List1, typename Fun>
-            struct transform2_<list<List0...>, list<List1...>, Fun,
-                               void_<list<apply<Fun, List0, List1>...>>>
-            {
-                using type = list<apply<Fun, List0, List1>...>;
-            };
-
-            template <typename... Args>
+            template <typename, typename = void>
             struct transform_
             {
             };
 
-            template <typename List, typename Fun>
-            struct transform_<List, Fun> : transform1_<List, Fun>
+            template <typename... Ts, typename Fun>
+            struct transform_<list<list<Ts...>, Fun>, void_<apply<Fun, Ts>...>>
             {
+                using type = list<apply<Fun, Ts>...>;
             };
 
-            template <typename List0, typename List1, typename Fun>
-            struct transform_<List0, List1, Fun> : transform2_<List0, List1, Fun>
+            template <typename... Ts0, typename... Ts1, typename Fun>
+            struct transform_<list<list<Ts0...>, list<Ts1...>, Fun>,
+                              void_<apply<Fun, Ts0, Ts1>...>>
             {
+                using type = list<apply<Fun, Ts0, Ts1>...>;
             };
         } // namespace detail
         /// \endcond
@@ -2005,7 +1985,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename... Args>
-        using transform = _t<detail::transform_<Args...>>;
+        using transform = _t<detail::transform_<list<Args...>>>;
 
         namespace lazy
         {
@@ -2742,7 +2722,7 @@ namespace meta
         using protect = detail::protect_<T>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // let
+        // var
         /// For use when defining local variables in \c meta::let expressions
         /// \sa `meta::let`
         template <typename Tag, typename Value>

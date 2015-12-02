@@ -20,5 +20,8 @@ add_test(test.utility.reverse_iterator utility.reverse_iterator)
 add_executable(utility.swap swap.cpp)
 add_test(test.utility.swap utility.swap)
 
+add_executable(utility.variant variant.cpp)
+add_test(test.utility.variant utility.variant)
+
 add_executable(utility.meta meta.cpp)
 add_test(test.utility.meta utility.meta)
