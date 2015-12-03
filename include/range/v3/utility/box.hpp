@@ -130,7 +130,7 @@ namespace ranges
 
         template<typename Element, typename Tag = Element,
             bool Empty = std::is_empty<Element>::value &&
-#ifdef RANGES_CXX_GREATER_THAN_11
+#ifdef __cpp_lib_is_final
                          !std::is_final<Element>::value>
 #else
                          true>
