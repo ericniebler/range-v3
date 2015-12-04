@@ -81,12 +81,14 @@ int main()
         CONCEPT_ASSERT(!DefaultConstructible<variant<int&, std::string&>>());
         CHECK(v.index() == 0u);
         CHECK(get<0>(v) == 42);
+        CHECK(&get<0>(v) == &i);
         auto const & cv = v;
         get<0>(cv) = 24;
         CHECK(i == 24);
         v.emplace<1>(s);
         CHECK(v.index() == 1u);
         CHECK(get<1>(v) == "hello world");
+        CHECK(&get<1>(v) == &s);
         get<1>(cv) = "goodbye";
         CHECK(s == "goodbye");
     }
@@ -124,7 +126,7 @@ int main()
         auto fun = overload(
             [&sout](int&) {sout << "int";},
             [&sout](std::string&)->int {sout << "string"; return 42;});
-        variant<void, int> x = v.apply(fun);
+        variant<void, int> x = v.visit(fun);
         CHECK(sout.str() == "string");
         CHECK(x.index() == 1u);
         CHECK(get<1>(x) == 42);
@@ -138,7 +140,7 @@ int main()
         auto fun = overload(
             [&sout](int const&) {sout << "int";},
             [&sout](std::string&)->int {sout << "string"; return 42;});
-        variant<void, int> x = v.apply(fun);
+        variant<void, int> x = v.visit(fun);
         CHECK(sout.str() == "string");
         CHECK(x.index() == 1u);
         CHECK(get<1>(x) == 42);

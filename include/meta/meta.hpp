@@ -588,6 +588,28 @@ namespace meta
             using id = defer<id, T>;
         }
 
+        /// is
+        /// \cond
+        namespace detail
+        {
+            template <typename, template <typename...> class>
+            struct is_ : std::false_type
+            {
+            };
+
+            template <typename... Ts, template <typename...> class C>
+            struct is_<C<Ts...>, C> : std::true_type
+            {
+            };
+        }
+        /// \endcond
+
+        /// Test whether a type \c T is an instantiation of class
+        /// template \t C.
+        /// \ingroup trait
+        template <typename T, template <typename...> class C>
+        using is = _t<detail::is_<T, C>>;
+
         /// Compose the Alias Classes \p Fs in the parameter pack \p Ts.
         /// \ingroup composition
         template <typename... Fs>
@@ -2926,12 +2948,15 @@ namespace meta
         }
         /// \endcond
 
-        /// A user-defined literal that generates objects of type \c meta::size_t.
-        /// \ingroup integral
-        template <char... Chs>
-        constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>> operator"" _z()
+        inline namespace literals
         {
-            return {};
+            /// A user-defined literal that generates objects of type \c meta::size_t.
+            /// \ingroup integral
+            template <char... Chs>
+            constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>> operator"" _z()
+            {
+                return {};
+            }
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////

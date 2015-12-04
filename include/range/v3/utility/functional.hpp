@@ -24,6 +24,7 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/compressed_pair.hpp>
 
 namespace ranges
 {
@@ -247,23 +248,42 @@ namespace ranges
 
         template<typename Second, typename First>
         struct composed
-          : private box<Second, meta::size_t<0>>
-          , private box<First, meta::size_t<1>>
+          : private compressed_pair<function_type<First>, function_type<Second>>
         {
+        private:
+            template<typename A, typename B, typename...Ts>
+            static auto do_(A &a, B &b, std::false_type, Ts &&...ts)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                b(a((Ts &&) ts...))
+            )
+            template<typename A, typename B, typename...Ts>
+            static auto do_(A &a, B &b, std::true_type, Ts &&...ts)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                a((Ts &&) ts...),
+                b()
+            )
+        public:
             composed() = default;
             composed(Second second, First first)
-              : box<Second, meta::size_t<0>>{std::move(second)}
-              , box<First, meta::size_t<1>>{std::move(first)}
+              : compressed_pair<function_type<First>, function_type<Second>>{
+                    as_function(std::move(first)), as_function(std::move(second))}
             {}
-            template<typename...Ts>
+            template<typename...Ts,
+                typename FirstResultT = concepts::Function::result_t<First &, Ts &&...>>
             auto operator()(Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN(
-                ranges::get<0>(*this)(ranges::get<1>(*this)((Ts &&)ts)...)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                composed::do_(this->first, this->second, std::is_void<FirstResultT>{}, (Ts &&) ts...)
             )
-            template<typename...Ts>
+            template<typename...Ts,
+                typename FirstResultT = concepts::Function::result_t<First const &, Ts &&...>>
             auto operator()(Ts &&...ts) const
-            RANGES_DECLTYPE_AUTO_RETURN(
-                ranges::get<0>(*this)(ranges::get<1>(*this)((Ts &&)ts)...)
+            RANGES_DECLTYPE_AUTO_RETURN
+            (
+                composed::do_(detail::as_const(this->first), detail::as_const(this->second),
+                    std::is_void<FirstResultT>{}, (Ts &&) ts...)
             )
         };
 

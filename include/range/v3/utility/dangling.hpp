@@ -39,12 +39,7 @@ namespace ranges
         {
             template<typename T>
             struct is_dangling
-              : std::false_type
-            {};
-
-            template<typename T>
-            struct is_dangling<dangling<T>>
-              : std::true_type
+              : meta::is<T, dangling>
             {};
 
             template<typename T>

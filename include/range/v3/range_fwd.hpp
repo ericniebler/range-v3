@@ -207,6 +207,12 @@ namespace ranges
             }
 
             template<typename T>
+            T const &as_const(T const &t)
+            {
+                return t;
+            }
+
+            template<typename T>
             using decay_t = meta::_t<std::decay<T>>;
 
             template<typename T, typename R = meta::_t<std::remove_reference<T>>>
@@ -350,6 +356,12 @@ namespace ranges
 
         template<typename...Ts>
         struct compressed_tuple;
+
+        template<typename T>
+        struct bind_element;
+
+        template<typename T>
+        using bind_element_t = meta::_t<bind_element<T>>;
 
         struct as_function_fn;
 

@@ -112,87 +112,83 @@ namespace ranges
                 {
                     cursor *pos;
                     template<typename I, std::size_t N>
-                    void operator()(I &it, meta::size_t<N> which) const
+                    void operator()(indexed_element<I, N> it) const
                     {
-                        ++it;
-                        pos->satisfy(which);
+                        ++it.get();
+                        pos->satisfy(meta::size_t<N>{});
                     }
                 };
                 struct prev_fun
                 {
                     cursor *pos;
                     template<typename I>
-                    void operator()(I &it, meta::size_t<0>) const
+                    void operator()(indexed_element<I, 0> it) const
                     {
-                        RANGES_ASSERT(it != begin(std::get<0>(pos->rng_->rngs_)));
-                        --it;
+                        RANGES_ASSERT(it.get() != begin(std::get<0>(pos->rng_->rngs_)));
+                        --it.get();
                     }
                     template<typename I, std::size_t N>
-                    void operator()(I &it, meta::size_t<N>) const
+                    void operator()(indexed_element<I, N> it) const
                     {
-                        if(it == begin(std::get<N>(pos->rng_->rngs_)))
+                        if(it.get() == begin(std::get<N>(pos->rng_->rngs_)))
                         {
                             auto &&rng = std::get<N - 1>(pos->rng_->rngs_);
                             ranges::emplace<N - 1>(pos->its_,
                                 ranges::next(ranges::begin(rng), ranges::end(rng)));
-                            (*this)(ranges::get<N - 1>(pos->its_), meta::size_t<N - 1>{});
+                            pos->its_.visit_i(*this);
                         }
                         else
-                            --it;
+                            --it.get();
                     }
                 };
                 struct advance_fwd_fun
                 {
                     cursor *pos;
                     difference_type n;
-                    template<typename Iterator>
-                    void operator()(Iterator &it, meta::size_t<cranges - 1>) const
-                    //template<typename Iterator>
-                    //void operator()(indexed<Iterator &, cranges - 1> it) const
+                    template<typename I>
+                    void operator()(indexed_element<I, cranges - 1> it) const
                     {
-                        ranges::advance(it, n);
+                        ranges::advance(it.get(), n);
                     }
-                    template<typename Iterator, std::size_t N>
-                    void operator()(Iterator &it, meta::size_t<N> which) const
-                    //template<typename Iterator, std::size_t N>
-                    //void operator()(indexed<Iterator &, N> it) const
+                    template<typename I, std::size_t N>
+                    void operator()(indexed_element<I, N> it) const
                     {
                         auto end = ranges::end(std::get<N>(pos->rng_->rngs_));
                         // BUGBUG If distance(it, end) > n, then using bounded advance
                         // is O(n) when it need not be since the end iterator position
                         // is actually not interesting. Only the "rest" is needed, which
                         // can sometimes be O(1).
-                        auto rest = ranges::advance(it, n, std::move(end));
-                        pos->satisfy(which);
+                        auto rest = ranges::advance(it.get(), n, std::move(end));
+                        pos->satisfy(meta::size_t<N>{});
                         if(rest != 0)
-                            pos->its_.apply_i(advance_fwd_fun{pos, rest});
+                            pos->its_.visit_i(advance_fwd_fun{pos, rest});
                     }
                 };
                 struct advance_rev_fun
                 {
                     cursor *pos;
                     difference_type n;
-                    template<typename Iterator>
-                    void operator()(Iterator &it, meta::size_t<0>) const
+                    template<typename I>
+                    void operator()(indexed_element<I, 0> it) const
                     {
-                        ranges::advance(it, n);
+                        ranges::advance(it.get(), n);
                     }
-                    template<typename Iterator, std::size_t N>
-                    void operator()(Iterator &it, meta::size_t<N>) const
+                    template<typename I, std::size_t N>
+                    void operator()(indexed_element<I, N> it) const
                     {
                         auto begin = ranges::begin(std::get<N>(pos->rng_->rngs_));
-                        if(it == begin)
+                        if(it.get() == begin)
                         {
                             auto &&rng = std::get<N - 1>(pos->rng_->rngs_);
                             ranges::emplace<N - 1>(pos->its_,
                                 ranges::next(ranges::begin(rng), ranges::end(rng)));
-                            (*this)(ranges::get<N - 1>(pos->its_), meta::size_t<N - 1>{});
+                            pos->its_.visit_i(*this);
                         }
                         else
                         {
-                            auto rest = ranges::advance(it, n, std::move(begin));
+                            auto rest = ranges::advance(it.get(), n, std::move(begin));
                             if(rest != 0)
-                                pos->its_.apply_i(advance_rev_fun{pos, rest});
+                                pos->its_.visit_i(advance_rev_fun{pos, rest});
                         }
                     }
                 };
@@ -234,11 +230,11 @@ namespace ranges
                 reference get() const
                 {
                     // Kind of a dumb implementation. Surely there's a better way.
-                    return ranges::get<0>(unique_variant(its_.apply(detail::deref_fun<reference>{})));
+                    return ranges::get<0>(unique_variant(its_.visit(detail::deref_fun<reference>{})));
                 }
                 void next()
                 {
-                    its_.apply_i(next_fun{this});
+                    its_.visit_i(next_fun{this});
                 }
                 bool equal(cursor const &pos) const
                 {
@@ -247,15 +243,15 @@ namespace ranges
                 CONCEPT_REQUIRES(meta::and_c<(bool)BidirectionalRange<Rngs>()...>::value)
                 void prev()
                 {
-                    its_.apply_i(prev_fun{this});
+                    its_.visit_i(prev_fun{this});
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool)RandomAccessRange<Rngs>()...>::value)
                 void advance(difference_type n)
                 {
                     if(n > 0)
-                        its_.apply_i(advance_fwd_fun{this, n});
+                        its_.visit_i(advance_fwd_fun{this, n});
                     else if(n < 0)
-                        its_.apply_i(advance_rev_fun{this, n});
+                        its_.visit_i(advance_rev_fun{this, n});
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool)
                     SizedIteratorRange<range_iterator_t<Rngs>,
