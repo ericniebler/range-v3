@@ -225,6 +225,16 @@ namespace ranges
                         meta::as_list<meta::make_index_sequence<sizeof...(Ts)> >,
                         meta::quote<indexed_datum> > >;
 
+            struct get_datum_fn
+            {
+                template<typename T>
+                auto operator()(T &&t) const
+                RANGES_DECLTYPE_AUTO_RETURN
+                (
+                    t.get()
+                )
+            };
+
             struct indexed_element_fn
             {
                 template<typename T>
@@ -235,14 +245,14 @@ namespace ranges
                 )
             };
 
-            template<std::size_t N = 0, typename Fun, typename Proj = indexed_element_fn>
+            template<typename Fun, typename Proj = indexed_element_fn>
             void variant_visit_(variant_data_<>, std::size_t, Fun, Proj = {})
             {}
-            template<std::size_t N = 0, typename Data, typename Fun, typename Proj = indexed_element_fn>
+            template<typename Data, typename Fun, typename Proj = indexed_element_fn>
             void variant_visit_(Data &d, std::size_t n, Fun fun, Proj proj = {})
             {
                 0 == n ? (void) fun(proj(d.head)) :
-                    detail::variant_visit_<N + 1>(d.tail, n - 1, std::move(fun), std::move(proj));
+                    detail::variant_visit_(d.tail, n - 1, std::move(fun), std::move(proj));
             }
 
             struct empty_variant_tag
@@ -322,7 +332,7 @@ namespace ranges
                 template<typename U, std::size_t M>
                 [[noreturn]] meta::if_c<M != N> operator()(indexed_element<U, M>) const
                 {
-                    throw bad_variant_access("bad varaiant access");
+                    throw bad_variant_access("bad variant access");
                 }
                 template<typename U>
                 void operator()(indexed_element<U, N> t) const
@@ -375,17 +385,11 @@ namespace ranges
                 void operator()(indexed_element<T, N> t) const
                 {
                     using E = meta::at_c<meta::list<From...>, N>;
+                    static_assert(std::is_same<T const, E const>::value,
+                        "Is indexed_element broken?");
                     using F = meta::find<meta::list<To...>, E>;
                     static constexpr std::size_t M = sizeof...(To) - F::size();
-                    ranges::emplace<M>(*var_, t.get());
-                }
-                template<std::size_t N>
-                void operator()(indexed_element<void, N>) const
-                {
-                    using E = meta::at_c<meta::list<From...>, N>;
-                    using F = meta::find<meta::list<To...>, E>;
-                    static constexpr std::size_t M = sizeof...(To) - F::size();
-                    ranges::emplace<M>(*var_);
+                    compose(emplace_fn<variant<To...>, M>{var_}, get_datum_fn{})(t);
                 }
             };
 
@@ -417,16 +421,7 @@ namespace ranges
             template<typename Fun, typename T>
             using alt_result_t =
                 concepts::Function::result_t<Fun, indexed_element<T, 0>>;
-
-            struct unbox_fn
-            {
-                template<typename T>
-                auto operator()(T &&t) const
-                RANGES_DECLTYPE_AUTO_RETURN
-                (
-                    t.get()
-                )
-            };
+            using unbox_fn = detail::get_datum_fn;
 
             std::size_t index_;
             detail::variant_data<Ts...> data_;
@@ -569,41 +564,36 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // get
         template<std::size_t N, typename...Ts>
-        meta::_t<std::add_lvalue_reference<meta::_t<std::tuple_element<N, variant<Ts...>>>>>
+        meta::_t<std::add_lvalue_reference<meta::at_c<meta::list<Ts...>, N>>>
         get(variant<Ts...> &var)
         {
-            using elem_t = meta::_t<std::remove_reference<
-                meta::_t<std::tuple_element<N, variant<Ts...>>>>>;
+            using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::list<Ts...>, N>>>;
             elem_t *elem = nullptr;
-            detail::variant_visit_(detail::variant_core_access::data(var),
-                var.index(), detail::get_fn<elem_t, N>{&elem});
+            auto &data = detail::variant_core_access::data(var);
+            detail::variant_visit_(data, var.index(), detail::get_fn<elem_t, N>{&elem});
             return detail::variant_deref_(elem);
         }
 
         template<std::size_t N, typename...Ts>
-        meta::_t<std::add_lvalue_reference<
-            meta::_t<std::tuple_element<N, variant<Ts...> const>> const>>
+        meta::_t<std::add_lvalue_reference<meta::at_c<meta::list<Ts...>, N> const>>
         get(variant<Ts...> const &var)
         {
-            using elem_t = meta::_t<std::remove_reference<
-                meta::_t<std::tuple_element<N, variant<Ts...> const>>>>;
+            using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::list<Ts...>, N> const>>;
             elem_t *elem = nullptr;
-            detail::variant_visit_(detail::variant_core_access::data(var),
-                var.index(), detail::get_fn<elem_t, N>{&elem});
+            auto &data = detail::variant_core_access::data(var);
+            detail::variant_visit_(data, var.index(), detail::get_fn<elem_t, N>{&elem});
             return detail::variant_deref_(elem);
         }
 
         template<std::size_t N, typename...Ts>
-        meta::_t<std::add_rvalue_reference<meta::_t<std::tuple_element<N, variant<Ts...>>>>>
+        meta::_t<std::add_rvalue_reference<meta::at_c<meta::list<Ts...>, N>>>
         get(variant<Ts...> &&var)
         {
-            using elem_t = meta::_t<std::remove_reference<
-                meta::_t<std::tuple_element<N, variant<Ts...>>>>>;
+            using elem_t = meta::_t<std::remove_reference<meta::at_c<meta::list<Ts...>, N>>>;
             elem_t *elem = nullptr;
-            detail::variant_visit_(detail::variant_core_access::data(var),
-                var.index(), detail::get_fn<elem_t, N>{&elem});
-            using res_t = meta::_t<std::add_rvalue_reference<
-                meta::_t<std::tuple_element<N, variant<Ts...>>>>>;
+            auto &data = detail::variant_core_access::data(var);
+            detail::variant_visit_(data, var.index(), detail::get_fn<elem_t, N>{&elem});
+            using res_t = meta::_t<std::add_rvalue_reference<meta::at_c<meta::list<Ts...>, N>>>;
             return static_cast<res_t>(detail::variant_deref_(elem));
         }
 
@@ -624,10 +614,7 @@ namespace ranges
         template<typename ...Ts>
         struct variant_unique<variant<Ts...>>
         {
-            using type =
-                meta::apply_list<
-                    meta::quote<variant>,
-                    meta::unique<meta::list<Ts...>>>;
+            using type = meta::apply_list<meta::quote<variant>, meta::unique<meta::list<Ts...>>>;
         };
 
         template<typename Var>

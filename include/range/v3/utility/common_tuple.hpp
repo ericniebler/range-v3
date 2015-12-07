@@ -142,41 +142,36 @@ namespace ranges
             {
                 return detail::to_std_tuple<Us...>(std::move(*this), meta::make_index_sequence<sizeof...(Ts)>{});
             }
+        };
 
         // Logical operators
 #define LOGICAL_OP(OP, CONCEPT)\
-            CONCEPT_REQUIRES(meta::and_c<(bool) CONCEPT<Ts>()...>::value)\
-            friend bool operator OP(common_tuple const &a, common_tuple const &b)\
-            {\
-                return a.base() OP b.base();\
-            }\
-            template<typename...Us,\
-                CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
-            friend bool operator OP(common_tuple const &a, common_tuple<Us...> const &b)\
-            {\
-                return a.base() OP b.base();\
-            }\
-            template<typename...Us,\
-                CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
-            friend bool operator OP(common_tuple const &a, std::tuple<Us...> const &b)\
-            {\
-                return a.base() OP b;\
-            }\
-            template<typename...Us,\
-                CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
-            friend bool operator OP(std::tuple<Us...> const &a, common_tuple const &b)\
-            {\
-                return a OP b.base();\
-            }\
-            /**/
-            LOGICAL_OP(==, EqualityComparable)
-            LOGICAL_OP(!=, EqualityComparable)
-            LOGICAL_OP(<, TotallyOrdered)
-            LOGICAL_OP(<=, TotallyOrdered)
-            LOGICAL_OP(>, TotallyOrdered)
-            LOGICAL_OP(>=, TotallyOrdered)
+        template<typename...Ts, typename...Us,\
+            CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
+        bool operator OP(common_tuple<Ts...> const &a, common_tuple<Us...> const &b)\
+        {\
+            return a.base() OP b.base();\
+        }\
+        template<typename...Ts, typename...Us,\
+            CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
+        bool operator OP(std::tuple<Ts...> const &a, common_tuple<Us...> const &b)\
+        {\
+            return a OP b.base();\
+        }\
+        template<typename...Ts, typename...Us,\
+            CONCEPT_REQUIRES_(meta::and_c<(bool) CONCEPT<Ts, Us>()...>::value)>\
+        bool operator OP(common_tuple<Ts...> const &a, std::tuple<Us...> const &b)\
+        {\
+            return a.base() OP b;\
+        }\
+        /**/
+        LOGICAL_OP(==, EqualityComparable)
+        LOGICAL_OP(!=, EqualityComparable)
+        LOGICAL_OP(<, TotallyOrdered)
+        LOGICAL_OP(<=, TotallyOrdered)
+        LOGICAL_OP(>, TotallyOrdered)
+        LOGICAL_OP(>=, TotallyOrdered)
 #undef LOGICAL_OP
-        };
 
         struct make_common_tuple_fn
         {
@@ -303,85 +298,70 @@ namespace ranges
                 this->second = std::forward<S2>(that.second);
                 return *this;
             }
-
-            // Logical operators
-            CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
-            friend bool operator ==(common_pair const &a, common_pair const &b)
-            {
-                return a.first == b.first && a.second == b.second;
-            }
-            template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
-            friend bool operator ==(common_pair const &a, common_pair<F2, S2> const &b)
-            {
-                return a.first == b.first && a.second == b.second;
-            }
-            template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
-            friend bool operator ==(common_pair const &a, std::pair<F2, S2> const &b)
-            {
-                return a.first == b.first && a.second == b.second;
-            }
-            template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
-            friend bool operator ==(std::pair<F2, S2> const &a, common_pair const &b)
-            {
-                return a.first == b.first && a.second == b.second;
-            }
-            CONCEPT_REQUIRES(EqualityComparable<F>() && EqualityComparable<S>())
-            friend bool operator <(common_pair const &a, common_pair const &b)
-            {
-                return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
-            }
-            template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
-            friend bool operator <(common_pair const &a, common_pair<F2, S2> const &b)
-            {
-                return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
-            }
-            template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
-            friend bool operator <(common_pair const &a, std::pair<F2, S2> const &b)
-            {
-                return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
-            }
-            template<typename F2, typename S2,
-                CONCEPT_REQUIRES_(EqualityComparable<F, F2>() && EqualityComparable<S, S2>())>
-            friend bool operator <(std::pair<F2, S2> const &a, common_pair const &b)
-            {
-                return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
-            }
-#define LOGICAL_OP(OP, CONCEPT, RET)\
-            CONCEPT_REQUIRES(CONCEPT<F>() && CONCEPT<S>())\
-            friend bool operator OP(common_pair const &a, common_pair const &b)\
-            {\
-                return RET;\
-            }\
-            template<typename F2, typename S2,\
-                CONCEPT_REQUIRES_(CONCEPT<F, F2>() && CONCEPT<S, S2>())>\
-            friend bool operator OP(common_pair const &a, common_pair<F2, S2> const &b)\
-            {\
-                return RET;\
-            }\
-            template<typename F2, typename S2,\
-                CONCEPT_REQUIRES_(CONCEPT<F, F2>() && CONCEPT<S, S2>())>\
-            friend bool operator OP(common_pair const &a, std::pair<F2, S2> const &b)\
-            {\
-                return RET;\
-            }\
-            template<typename F2, typename S2,\
-                CONCEPT_REQUIRES_(CONCEPT<F, F2>() && CONCEPT<S, S2>())>\
-            friend bool operator OP(std::pair<F2, S2> const &a, common_pair const &b)\
-            {\
-                return RET;\
-            }\
-            /**/
-            LOGICAL_OP(!=, EqualityComparable, !(a == b))
-            LOGICAL_OP(<=, TotallyOrdered, !(b < a))
-            LOGICAL_OP(>, TotallyOrdered, (b < a))
-            LOGICAL_OP(>=, TotallyOrdered, !(a < b))
-#undef LOGICAL_OP
         };
+
+        // Logical operators
+        template<typename F1, typename S1, typename F2, typename S2,
+            CONCEPT_REQUIRES_(EqualityComparable<F1, F2>() && EqualityComparable<S1, S2>())>
+        bool operator ==(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        {
+            return a.first == b.first && a.second == b.second;
+        }
+        template<typename F1, typename S1, typename F2, typename S2,
+            CONCEPT_REQUIRES_(EqualityComparable<F1, F2>() && EqualityComparable<S1, S2>())>
+        bool operator ==(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
+        {
+            return a.first == b.first && a.second == b.second;
+        }
+        template<typename F1, typename S1, typename F2, typename S2,
+            CONCEPT_REQUIRES_(EqualityComparable<F1, F2>() && EqualityComparable<S1, S2>())>
+        bool operator ==(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        {
+            return a.first == b.first && a.second == b.second;
+        }
+        template<typename F1, typename S1, typename F2, typename S2,
+            CONCEPT_REQUIRES_(TotallyOrdered<F1, F2>() && TotallyOrdered<S1, S2>())>
+        bool operator <(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        {
+            return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
+        }
+        template<typename F1, typename S1, typename F2, typename S2,
+            CONCEPT_REQUIRES_(TotallyOrdered<F1, F2>() && TotallyOrdered<S1, S2>())>
+        bool operator <(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)
+        {
+            return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
+        }
+        template<typename F1, typename S1, typename F2, typename S2,
+            CONCEPT_REQUIRES_(TotallyOrdered<F1, F2>() && TotallyOrdered<S1, S2>())>
+        bool operator <(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)
+        {
+            return a.first < b.first || (!(b.first < a.first) && a.second < b.second);
+        }
+#define LOGICAL_OP(OP, CONCEPT, RET)\
+        template<typename F1, typename S1, typename F2, typename S2,\
+            CONCEPT_REQUIRES_(CONCEPT<F1, F2>() && CONCEPT<S1, S2>())>\
+        bool operator OP(common_pair<F1, S1> const &a, common_pair<F2, S2> const &b)\
+        {\
+            return RET;\
+        }\
+        template<typename F1, typename S1, typename F2, typename S2,\
+            CONCEPT_REQUIRES_(CONCEPT<F1, F2>() && CONCEPT<S1, S2>())>\
+        bool operator OP(std::pair<F1, S1> const &a, common_pair<F2, S2> const &b)\
+        {\
+            return RET;\
+        }\
+        template<typename F1, typename S1, typename F2, typename S2,\
+            CONCEPT_REQUIRES_(CONCEPT<F1, F2>() && CONCEPT<S1, S2>())>\
+        bool operator OP(common_pair<F1, S1> const &a, std::pair<F2, S2> const &b)\
+        {\
+            return RET;\
+        }\
+        /**/
+        LOGICAL_OP(!=, EqualityComparable, !(a == b))
+        LOGICAL_OP(<=, TotallyOrdered, !(b < a))
+        LOGICAL_OP(>, TotallyOrdered, (b < a))
+        LOGICAL_OP(>=, TotallyOrdered, !(a < b))
+#undef LOGICAL_OP
 
         struct make_common_pair_fn
         {
