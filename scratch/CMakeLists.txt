@@ -1,4 +1,4 @@
-add_executable(scratch range.cpp)
+add_executable(scratch scratch.cpp)
 
 # set_target_properties(
 #     scratch
