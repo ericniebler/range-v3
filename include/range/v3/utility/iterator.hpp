@@ -96,14 +96,10 @@ namespace ranges
                 RANGES_CXX14_CONSTEXPR
                 static D bounded_(I &it, D n, I bound, concepts::IteratorRange*,
                     concepts::BidirectionalIterator*);
-                template<typename I, typename D, typename S>
+                template<typename I, typename D, typename S, typename Concept>
                 RANGES_CXX14_CONSTEXPR
                 static D bounded_(I &it, D n, S bound, concepts::SizedIteratorRange*,
-                    concepts::InputIterator*);
-                template<typename I, typename D>
-                RANGES_CXX14_CONSTEXPR
-                static D bounded_(I &it, D n, I bound, concepts::SizedIteratorRange*,
-                    concepts::BidirectionalIterator*);
+                    Concept);
             public:
                 // Advance a certain number of steps:
                 template<typename I,
@@ -189,32 +185,17 @@ namespace ranges
                         --it;
                 return n;
             }
-            template<typename I, typename D, typename S>
+            template<typename I, typename D, typename S, typename Concept>
             RANGES_CXX14_CONSTEXPR
             D advance_fn::bounded_(I &it, D n, S bound, concepts::SizedIteratorRange*,
-                concepts::InputIterator*)
+                Concept)
             {
-                RANGES_ASSERT(0 <= n);
-                D d = bound - it;
-                RANGES_ASSERT(0 <= d);
-                if (d <= n)
-                {
-                    ranges::advance(it, std::move(bound));
-                    return n - d;
-                }
-                ranges::advance(it, n);
-                return 0;
-            }
-            template<typename I, typename D>
-            RANGES_CXX14_CONSTEXPR
-            D advance_fn::bounded_(I &it, D n, I bound, concepts::SizedIteratorRange*,
-                concepts::BidirectionalIterator*)
-            {
+                RANGES_ASSERT((Same<I, S>() || 0 <= n));
                 D d = bound - it;
                 RANGES_ASSERT(0 <= n ? 0 <= d : 0 >= d);
                 if(0 <= n ? n >= d : n <= d)
                 {
-                    it = std::move(bound);
+                    ranges::advance(it, std::move(bound));
                     return n - d;
                 }
                 ranges::advance(it, n);
@@ -390,7 +371,7 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             int impl_i(I begin, S end, iterator_difference_t<I> n, concepts::SizedIteratorRange*) const
             {
-                iterator_difference_t<I> dist = static_cast<iterator_difference_t<I>>(end - begin);
+                iterator_difference_t<I> dist = end - begin;
                 if (dist > n)
                     return  1;
                 else if (dist < n)
@@ -423,7 +404,7 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             iterator_size_t<I> operator()(I begin, S end) const
             {
-                auto n = static_cast<iterator_difference_t<I>>(end - begin);
+                iterator_difference_t<I> n = end - begin;
                 RANGES_ASSERT(0 <= n);
                 return static_cast<iterator_size_t<I>>(n);
             }

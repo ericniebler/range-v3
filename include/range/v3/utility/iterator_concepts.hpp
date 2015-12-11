@@ -318,8 +318,6 @@ namespace ranges
 
             struct ForwardIterator
               : refines<InputIterator, Incrementable, IteratorRange(_1, _1)>
-                // and technically EqualityComparable as well, which is subsumed
-                // (syntactically) by IteratorRange.
             {
                 template<typename I>
                 auto requires_(I&&) -> decltype(
