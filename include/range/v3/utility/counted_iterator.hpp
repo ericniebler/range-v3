@@ -74,8 +74,6 @@ namespace ranges
             private:
                 template<typename OtherI, typename OtherD>
                 friend struct counted_cursor;
-                using iterator_concept_ =
-                    concepts::most_refined<meta::list<concepts::Iterator, concepts::WeakIterator>, I>;
                 I it_;
                 D n_;
 
@@ -165,7 +163,7 @@ namespace ranges
         /// \addtogroup group-utility
         /// @{
 
-        template<typename I, CONCEPT_REQUIRES_(WeakInputIterator<I>())>
+        template<typename I, CONCEPT_REQUIRES_(Iterator<I>())>
         counted_iterator<I> make_counted_iterator(I i, iterator_difference_t<I> n)
         {
             return counted_iterator<I>{std::move(i), n};

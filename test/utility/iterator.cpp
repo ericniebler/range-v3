@@ -19,7 +19,8 @@ using namespace ranges;
 
 void test_insert_iterator()
 {
-    CONCEPT_ASSERT(WeakOutputIterator<insert_iterator<std::vector<int>>, int&&>());
+    CONCEPT_ASSERT(OutputIterator<insert_iterator<std::vector<int>>, int&&>());
+    CONCEPT_ASSERT(!EqualityComparable<insert_iterator<std::vector<int>>>());
     std::vector<int> vi{5,6,7,8};
     copy({1,2,3,4}, inserter(vi, vi.begin()+2));
     ::check_equal(vi, {5,6,1,2,3,4,7,8});

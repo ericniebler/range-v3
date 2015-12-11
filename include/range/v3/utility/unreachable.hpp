@@ -45,49 +45,6 @@ namespace ranges
             {
                 return true;
             }
-            constexpr bool operator==(unreachable) const
-            {
-                return true;
-            }
-            constexpr bool operator!=(unreachable) const
-            {
-                return false;
-            }
-        };
-
-        // Specializations of common_type for concept checking, needed because
-        // std::common_type is not SFINAE-friendly.
-        template<typename T>
-        struct common_type<T, unreachable>
-        {
-            using type = common_iterator<T, unreachable>;
-        };
-        template<typename T>
-        struct common_type<unreachable, T>
-        {
-            using type = common_iterator<T, unreachable>;
-        };
-        template<>
-        struct common_type<unreachable, unreachable>
-        {
-            using type = unreachable;
-        };
-
-        template<typename T, typename TQual, typename UQual>
-        struct basic_common_reference<T, unreachable, TQual, UQual>
-        {
-            using type = common_iterator<T, unreachable>;
-        };
-        template<typename T, typename TQual, typename UQual>
-        struct basic_common_reference<unreachable, T, TQual, UQual>
-        {
-            using type = common_iterator<T, unreachable>;
-        };
-        template<typename TQual, typename UQual>
-        struct basic_common_reference<unreachable, unreachable, TQual, UQual>
-        {
-            using type = decltype(true ? std::declval<meta::apply<TQual, unreachable>>()
-                                       : std::declval<meta::apply<UQual, unreachable>>());
         };
         /// @}
     }

@@ -70,13 +70,7 @@ namespace ranges
                     RANGES_ASSERT(is_sentinel());
                     return ranges::get<1>(data_);
                 }
-                // The iterators of view::bounded are sized if I and S are
-                // sized. This operator makes it so. It's templatized because
-                // SizedIteratorRangeLike_ is expressed in terms of operator-.
-                // The template breaks an cycle where templates are instantiated
-                // before their definitions are available.
-                template<typename I_ = I, typename S_ = S,
-                    CONCEPT_REQUIRES_(SizedIteratorRangeLike_<I_, S_>())>
+                CONCEPT_REQUIRES(SizedIteratorRange<I, S>() && SizedIteratorRange<I, I>())
                 friend iterator_difference_t<I>
                 operator-(common_iterator<I, S> const &end, common_iterator<I, S> const &begin)
                 {
@@ -110,7 +104,17 @@ namespace ranges
                     return *it();
                 }
                 template<typename I2, typename S2,
-                    CONCEPT_REQUIRES_(Common<I, I2>() && Common<S, S2>())>
+                    CONCEPT_REQUIRES_(IteratorRange<I, S2>() && IteratorRange<I2, S>() &&
+                        !EqualityComparable<I, I2>())>
+                bool equal(common_cursor<I2, S2> const &that) const
+                {
+                    return is_sentinel() ?
+                        (that.is_sentinel() || that.it() == se()) :
+                        (!that.is_sentinel() || it() == that.se());
+                }
+                template<typename I2, typename S2,
+                    CONCEPT_REQUIRES_(IteratorRange<I, S2>() && IteratorRange<I2, S>() &&
+                        EqualityComparable<I, I2>())>
                 bool equal(common_cursor<I2, S2> const &that) const
                 {
                     return is_sentinel() ?
@@ -126,46 +130,6 @@ namespace ranges
             };
         }
         /// \endcond
-
-        /// \addtogroup group-utility Utility
-        /// @{
-        ///
-        template<typename Cur, typename S>
-        struct common_type<basic_iterator<Cur, S>, basic_sentinel<S>>
-        {
-            using type =
-                common_iterator<
-                    basic_iterator<Cur, S>,
-                    basic_sentinel<S>>;
-        };
-
-        template<typename Cur, typename S>
-        struct common_type<basic_sentinel<S>, basic_iterator<Cur, S>>
-        {
-            using type =
-                common_iterator<
-                    basic_iterator<Cur, S>,
-                    basic_sentinel<S>>;
-        };
-
-        template<typename Cur, typename S, typename TQual, typename UQual>
-        struct basic_common_reference<basic_iterator<Cur, S>, basic_sentinel<S>, TQual, UQual>
-        {
-            using type =
-                common_iterator<
-                    basic_iterator<Cur, S>,
-                    basic_sentinel<S>>;
-        };
-
-        template<typename Cur, typename S, typename TQual, typename UQual>
-        struct basic_common_reference<basic_sentinel<S>, basic_iterator<Cur, S>, TQual, UQual>
-        {
-            using type =
-                common_iterator<
-                    basic_iterator<Cur, S>,
-                    basic_sentinel<S>>;
-        };
-        /// @}
     }
 }
 

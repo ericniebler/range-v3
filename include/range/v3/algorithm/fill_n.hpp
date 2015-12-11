@@ -31,7 +31,7 @@ namespace ranges
         struct fill_n_fn
         {
             template<typename O, typename V,
-                CONCEPT_REQUIRES_(WeakOutputIterator<O, V>())>
+                CONCEPT_REQUIRES_(OutputIterator<O, V>())>
             O operator()(O begin, iterator_difference_t<O> n, V const & val) const
             {
                 RANGES_ASSERT(n >= 0);

@@ -33,7 +33,7 @@ namespace ranges
                   typename Y = concepts::Callable::result_t<BOp, X, X>>
         using PartialSummable = meta::fast_and<
             InputIterator<I>,
-            WeakOutputIterator<O, X>,
+            OutputIterator<O, X>,
             Callable<P, V>,
             CopyConstructible<uncvref_t<X>>,
             Callable<BOp, X, X>,

@@ -39,7 +39,8 @@ namespace test_weak_input
         void next() { ++it_; }
     };
 
-    CONCEPT_ASSERT(ranges::detail::WeakInputCursor<cursor<char*>>());
+    CONCEPT_ASSERT(ranges::detail::InputCursor<cursor<char*>>());
+    CONCEPT_ASSERT(!ranges::detail::HasEqualCursor<cursor<char*>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
@@ -47,7 +48,10 @@ namespace test_weak_input
     static_assert(
         std::is_same<
             iterator<char*>::iterator_category,
-            ranges::weak_input_iterator_tag>::value,
+            ranges::input_iterator_tag>::value,
+        "");
+    static_assert(
+        !ranges::EqualityComparable<iterator<char*>>(),
         "");
 
     void test()
@@ -149,12 +153,14 @@ namespace test_weak_output
         explicit cursor(I i) : it_(i) {}
     };
 
-    CONCEPT_ASSERT(ranges::detail::WeakOutputCursor<cursor<char*>, char>());
+    CONCEPT_ASSERT(ranges::detail::OutputCursor<cursor<char*>, char>());
+    CONCEPT_ASSERT(!ranges::detail::HasEqualCursor<cursor<char*>>());
 
     template<class I>
     using iterator = ranges::basic_iterator<cursor<I>>;
 
-    CONCEPT_ASSERT(ranges::WeakOutputIterator<iterator<char*>, char>());
+    CONCEPT_ASSERT(ranges::OutputIterator<iterator<char*>, char>());
+    CONCEPT_ASSERT(!ranges::EqualityComparable<iterator<char*>>());
 
     void test()
     {

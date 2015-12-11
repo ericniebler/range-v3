@@ -30,21 +30,13 @@ namespace ranges
 {
     inline namespace v3
     {
-        // TODO Would be nice to use WeaklyComparable here, but that uses Relation instead
+        // TODO Would be nice to use Comparable here, but that uses Relation instead
         // of Predicate. Relation requires symmetry: is_valid(pred(a,b)) => is_valid(pred(b,a))
 
         /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Mismatchable1 = meta::fast_and<
-            InputIterator<I1>,
-            WeakInputIterator<I2>,
-            IndirectCallablePredicate<C, Projected<I1, P1>, Projected<I2, P2>>>;
-
-        /// \ingroup group-concepts
-        template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
-            typename P2 = ident>
-        using Mismatchable2 = meta::fast_and<
+        using Mismatchable = meta::fast_and<
             InputIterator<I1>,
             InputIterator<I2>,
             IndirectCallablePredicate<C, Projected<I1, P1>, Projected<I2, P2>>>;
@@ -55,7 +47,7 @@ namespace ranges
         {
             template<typename I1, typename S1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mismatchable1<I1, I2, C, P1, P2>() && IteratorRange<I1, S1>())>
+                CONCEPT_REQUIRES_(Mismatchable<I1, I2, C, P1, P2>() && IteratorRange<I1, S1>())>
             tagged_pair<tag::in1(I1), tag::in2(I2)>
             operator()(I1 begin1, S1 end1, I2 begin2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const
@@ -71,7 +63,7 @@ namespace ranges
 
             template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mismatchable2<I1, I2, C, P1, P2>() && IteratorRange<I1, S1>() &&
+                CONCEPT_REQUIRES_(Mismatchable<I1, I2, C, P1, P2>() && IteratorRange<I1, S1>() &&
                     IteratorRange<I2, S2>())>
             tagged_pair<tag::in1(I1), tag::in2(I2)>
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred_ = C{}, P1 proj1_ = P1{},
@@ -91,7 +83,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = uncvref_t<I2Ref>, // [*] See below
                 CONCEPT_REQUIRES_(InputRange<Rng1>() && Iterator<I2>() &&
-                    Mismatchable1<I1, I2, C, P1, P2>())>
+                    Mismatchable<I1, I2, C, P1, P2>())>
             tagged_pair<tag::in1(range_safe_iterator_t<Rng1>), tag::in2(I2)>
             operator()(Rng1 &&rng1, I2Ref &&begin2, C pred = C{}, P1 proj1 = P1{},
                 P2 proj2 = P2{}) const
@@ -105,7 +97,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(InputRange<Rng1>() && InputRange<Rng2>() &&
-                    Mismatchable2<I1, I2, C, P1, P2>())>
+                    Mismatchable<I1, I2, C, P1, P2>())>
             tagged_pair<tag::in1(range_safe_iterator_t<Rng1>), tag::in2(range_safe_iterator_t<Rng2>)>
             operator()(Rng1 &&rng1, Rng2 &&rng2, C pred = C{}, P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {

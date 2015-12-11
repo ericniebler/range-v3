@@ -53,7 +53,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     IteratorRange<I0, S0>() &&
                     IteratorRange<I1, S1>() &&
-                    MergeMovable<I0, I1, O, C, P0, P1>()
+                    MoveMergeable<I0, I1, O, C, P0, P1>()
                 )>
             tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>
             operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, O out, C pred_ = C{},
@@ -87,7 +87,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     Range<Rng0>() &&
                     Range<Rng1>() &&
-                    MergeMovable<I0, I1, O, C, P0, P1>()
+                    MoveMergeable<I0, I1, O, C, P0, P1>()
                 )>
             tagged_tuple<tag::in1(range_safe_iterator_t<Rng0>), tag::in2(range_safe_iterator_t<Rng1>), tag::out(O)>
             operator()(Rng0 &&rng0, Rng1 &&rng1, O out, C pred = C{}, P0 proj0 = P0{},

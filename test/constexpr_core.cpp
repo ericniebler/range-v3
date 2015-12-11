@@ -38,6 +38,21 @@ void advance(input_iterator<T> & i, ranges::iterator_difference_t<I> n) {
 
 // Test sequence 1,2,3,4
 template<typename It>
+RANGES_CXX14_CONSTEXPR auto test_it_back(It beg, It end,
+    ranges::concepts::BidirectionalIterator*) -> bool
+{
+    auto end_m1_2 = It{ranges::prev(end, 1)};
+    if (*end_m1_2 != 4) { return false; }
+    return true;
+}
+
+template<typename It, typename Concept>
+RANGES_CXX14_CONSTEXPR auto test_it_back(It, It, Concept) -> bool
+{
+    return true;
+}
+
+template<typename It>
 RANGES_CXX14_CONSTEXPR auto test_it_(It beg, It end) -> bool {
     if (*beg != 1) { return false; }
     if (ranges::distance(beg, end) != 4) { return false; }
@@ -45,11 +60,7 @@ RANGES_CXX14_CONSTEXPR auto test_it_(It beg, It end) -> bool {
     auto end_m1 = It{ranges::next(beg, 3)};
     if (*end_m1 != 4) { return false; }
 
-    if (std::is_convertible<ranges::iterator_concept<It>,
-                            ranges::concepts::BidirectionalIterator*>{}) {
-        auto end_m1_2 = It{ranges::prev(end, 1)};
-        if (*end_m1_2 != 4) { return false; }
-    }
+    if (!test_it_back(beg, end, ranges::iterator_concept<It>{})) { return false; }
     auto end2 = beg;
     ranges::advance(end2, end);
     if (end2 != end) { return false; }

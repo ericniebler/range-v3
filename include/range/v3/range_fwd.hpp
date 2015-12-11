@@ -323,8 +323,11 @@ namespace ranges
         template<typename T, typename Enable = void>
         struct is_view;
 
-        template<typename T, typename Enable = void>
-        struct is_sized_range;
+        template<typename R>
+        struct disable_sized_range;
+
+        template<typename I, typename S>
+        struct disable_sized_iterator_range;
 
         template<typename Cur>
         struct basic_mixin;

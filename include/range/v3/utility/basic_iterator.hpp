@@ -358,8 +358,6 @@ namespace ranges
                 }
             };
 
-            auto iter_cat(range_access::WeakInputCursor*) ->
-                ranges::weak_input_iterator_tag;
             auto iter_cat(range_access::InputCursor*) ->
                 ranges::input_iterator_tag;
             auto iter_cat(range_access::ForwardCursor*) ->
@@ -377,11 +375,7 @@ namespace ranges
                 using postfix_increment_result_t = basic_iterator<Cur, S>;
                 using reference_t = basic_proxy_reference<Cur>;
                 using const_reference_t = basic_proxy_reference<Cur const>;
-                using cursor_concept_t =
-                    meta::if_<
-                        Cursor<Cur>,
-                        range_access::OutputCursor,
-                        range_access::WeakOutputCursor>;
+                using cursor_concept_t = range_access::OutputCursor;
             public:
                 using reference = void;
                 using difference_type = range_access::cursor_difference_t<Cur>;
@@ -472,34 +466,6 @@ namespace ranges
               : range_access::mixin_base_t<S>(std::move(end))
             {}
             using range_access::mixin_base_t<S>::mixin_base_t;
-            constexpr bool operator==(basic_sentinel<S> const &) const noexcept
-            {
-                return true;
-            }
-            constexpr bool operator!=(basic_sentinel<S> const &) const noexcept
-            {
-                return false;
-            }
-            constexpr bool operator<(basic_sentinel<S> const &) const noexcept
-            {
-                return false;
-            }
-            constexpr bool operator<=(basic_sentinel<S> const &) const noexcept
-            {
-                return true;
-            }
-            constexpr bool operator>(basic_sentinel<S> const &) const noexcept
-            {
-                return false;
-            }
-            constexpr bool operator>=(basic_sentinel<S> const &) const noexcept
-            {
-                return true;
-            }
-            constexpr std::ptrdiff_t operator-(basic_sentinel<S> const &) const noexcept
-            {
-                return 0;
-            }
         };
 
         struct default_end_cursor
@@ -528,7 +494,7 @@ namespace ranges
             friend struct get_cursor_fn;
             template<typename OtherCur, typename OtherS>
             friend struct basic_iterator;
-            CONCEPT_ASSERT(detail::WeakCursor<Cur>());
+            CONCEPT_ASSERT(detail::Cursor<Cur>());
             using assoc_types_ = detail::iterator_associated_types_base<Cur, S>;
             using typename assoc_types_::postfix_increment_result_t;
             using typename assoc_types_::cursor_concept_t;
@@ -543,26 +509,6 @@ namespace ranges
                 return this->range_access::mixin_base_t<Cur>::get();
             }
 
-            // If the cursor models ForwardCursor, then positions are equality comparable.
-            // Otherwise, make all cursors are trivially equal.
-            constexpr bool equal2_(basic_iterator const&, range_access::InputCursor *) const
-            {
-                return true;
-            }
-            constexpr bool equal2_(basic_iterator const &that, range_access::ForwardCursor *) const
-            {
-                return range_access::equal(pos(), that.pos());
-            }
-            // For Bounded ranges:
-            constexpr bool equal_(basic_iterator const &that, std::true_type *) const
-            {
-                return range_access::equal(pos(), that.pos());
-            }
-            // For non-Bounded ranges:
-            constexpr bool equal_(basic_iterator const &that, std::false_type *) const
-            {
-                return basic_iterator::equal2_(that, _nullptr_v<cursor_concept_t>());
-            }
         public:
             using typename assoc_types_::difference_type;
             constexpr basic_iterator() = default;
@@ -621,37 +567,33 @@ namespace ranges
                 ++*this;
                 return tmp;
             }
-            CONCEPT_REQUIRES(detail::Cursor<Cur>())
+            CONCEPT_REQUIRES(detail::HasEqualCursor<Cur>())
             friend constexpr bool operator==(basic_iterator const &left,
                 basic_iterator const &right)
             {
-                return left.equal_(right, _nullptr_v<std::is_same<Cur, S>>());
+                return range_access::equal(left.pos(), right.pos());
             }
-            CONCEPT_REQUIRES(detail::Cursor<Cur>())
+            CONCEPT_REQUIRES(detail::HasEqualCursor<Cur>())
             friend constexpr bool operator!=(basic_iterator const &left,
                 basic_iterator const &right)
             {
                 return !(left == right);
             }
-            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator==(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
                 return range_access::empty(left.pos(), right.end());
             }
-            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator!=(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
                 return !(left == right);
             }
-            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator==(basic_sentinel<S> const & left,
                 basic_iterator const &right)
             {
                 return range_access::empty(right.pos(), left.end());
             }
-            CONCEPT_REQUIRES(detail::Cursor<Cur>())
             friend constexpr bool operator!=(basic_sentinel<S> const &left,
                 basic_iterator const &right)
             {
@@ -753,55 +695,6 @@ namespace ranges
             {
                 return (right - left) <= 0;
             }
-            // asymmetric comparisons
-            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
-            friend constexpr bool operator<(basic_iterator const &left,
-                basic_sentinel<S> const &right)
-            {
-                return !range_access::empty(left.pos(), right.end());
-            }
-            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
-            friend constexpr bool operator<=(basic_iterator const &left,
-                basic_sentinel<S> const &right)
-            {
-                return true;
-            }
-            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
-            friend constexpr bool operator>(basic_iterator const &left,
-                basic_sentinel<S> const &right)
-            {
-                return false;
-            }
-            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
-            friend constexpr bool operator>=(basic_iterator const &left,
-                basic_sentinel<S> const &right)
-            {
-                return range_access::empty(left.pos(), right.end());
-            }
-            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
-            friend constexpr bool operator<(basic_sentinel<S> const &left,
-                basic_iterator const &right)
-            {
-                return false;
-            }
-            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
-            friend constexpr bool operator<=(basic_sentinel<S> const &left,
-                basic_iterator const &right)
-            {
-                return range_access::empty(right.pos(), left.end());
-            }
-            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
-            friend constexpr bool operator>(basic_sentinel<S> const &left,
-                basic_iterator const &right)
-            {
-                return !range_access::empty(right.pos(), left.end());
-            }
-            CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
-            friend constexpr bool operator>=(basic_sentinel<S> const &left,
-                basic_iterator const &right)
-            {
-                return true;
-            }
             CONCEPT_REQUIRES(detail::RandomAccessCursor<Cur>())
             RANGES_CXX14_CONSTEXPR
             const_reference_t operator[](difference_type n) const
@@ -848,7 +741,7 @@ namespace ranges
             // Optionally support hooking iter_move when the cursor sports a
             // move() member function.
             template<typename C, typename S,
-                CONCEPT_REQUIRES_(WeakInputCursor<C>())>
+                CONCEPT_REQUIRES_(InputCursor<C>())>
             RANGES_CXX14_CONSTEXPR
             auto indirect_move(basic_iterator<C, S> const &it)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
