@@ -182,7 +182,7 @@ namespace ranges
                         range_iterator_t<Rng2>{}))>;
 
                 cursor() = default;
-                cursor(fun_ref_ fun, range_iterator_t<Rng2> it1, range_iterator_t<Rng2> it2)
+                cursor(fun_ref_ fun, range_iterator_t<Rng1> it1, range_iterator_t<Rng2> it2)
                   : fun_(std::move(fun)), it1_(std::move(it1)), it2_(std::move(it2))
                 {}
                 auto get() const
