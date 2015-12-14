@@ -19,6 +19,7 @@
 #include <utility>
 #include <type_traits>
 #include <meta/meta.hpp>
+#include <range/v3/range_fwd.hpp>
 
 namespace ranges
 {
