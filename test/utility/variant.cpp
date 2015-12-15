@@ -146,5 +146,26 @@ int main()
         CHECK(get<1>(x) == 42);
     }
 
+    // constexpr variant
+    {
+        constexpr variant<int, short> v{emplaced_index<1>, (short)2};
+        static_assert(v.index() == 1,"");
+        static_assert(v.valid(),"");
+    }
+
+    // Variant and arrays
+    {
+        variant<int[5], std::vector<int>> v{emplaced_index<0>, {1,2,3,4,5}};
+        int (&rgi)[5] = get<0>(v);
+        check_equal(rgi, {1,2,3,4,5});
+
+        variant<int[5], std::vector<int>> v2{emplaced_index<0>, {}};
+        int (&rgi2)[5] = get<0>(v2);
+        check_equal(rgi2, {0,0,0,0,0});
+
+        v2 = v;
+        check_equal(rgi2, {1,2,3,4,5});
+    }
+
     return ::test_result();
 }

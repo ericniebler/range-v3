@@ -594,16 +594,15 @@ namespace ranges
         public:
             using type = T;
             using reference = meta::if_c<RValue, T &&, T &>;
-            reference_wrapper() = default;
-            reference_wrapper(reference t) noexcept
+            constexpr reference_wrapper() = default;
+            constexpr reference_wrapper(reference t) noexcept
               : t_(std::addressof(t))
             {}
-            reference get() const noexcept
+            constexpr reference get() const noexcept
             {
-                RANGES_ASSERT(nullptr != t_);
                 return static_cast<reference>(*t_);
             }
-            operator reference() const noexcept
+            constexpr operator reference() const noexcept
             {
                 return get();
             }
@@ -613,7 +612,7 @@ namespace ranges
                 return {get()};
             }
             template<typename ...Args>
-            auto operator()(Args &&...args) const ->
+            constexpr auto operator()(Args &&...args) const ->
                 decltype(std::declval<reference>()(std::declval<Args>()...))
             {
                 return get()(std::forward<Args>(args)...);

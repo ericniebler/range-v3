@@ -78,7 +78,7 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////
         template<typename T>
         struct size_type
-          : meta::lazy::let<std::make_unsigned<meta::lazy::eval<difference_type<T>>>>
+          : meta::lazy::let<std::make_unsigned<meta::lazy::_t<difference_type<T>>>>
         {};
 
         ////////////////////////////////////////////////////////////////////////////////////////
