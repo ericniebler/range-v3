@@ -1319,6 +1319,9 @@
     <ClInclude Include="test\algorithm\set_union.hpp">
       <Filter>Test Files\algorithm</Filter>
     </ClInclude>
+    <ClInclude Include="include\range\v3\utility\fixed_vector.hpp">
+      <Filter>Header Files\range\v3\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

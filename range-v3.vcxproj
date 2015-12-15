@@ -1057,6 +1057,7 @@
     <ClInclude Include="include\range\v3\utility\copy.hpp" />
     <ClInclude Include="include\range\v3\utility\counted_iterator.hpp" />
     <ClInclude Include="include\range\v3\utility\dangling.hpp" />
+    <ClInclude Include="include\range\v3\utility\fixed_vector.hpp" />
     <ClInclude Include="include\range\v3\utility\functional.hpp" />
     <ClInclude Include="include\range\v3\utility\get.hpp" />
     <ClInclude Include="include\range\v3\utility\infinity.hpp" />

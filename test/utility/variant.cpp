@@ -15,6 +15,22 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+#include <range/v3/utility/fixed_vector.hpp>
+#include <range/v3/view/repeat_n.hpp>
+
+struct S
+{
+    static std::size_t s_instances;
+    S() {++s_instances;}
+    S(S const &) {++s_instances;}
+    S(S &&) {++s_instances;}
+    S &operator=(S &&) = default;
+    S &operator=(S const &) = default;
+    ~S() {--s_instances;}
+};
+
+std::size_t S::s_instances = 0;
+
 int main()
 {
     using namespace ranges;
@@ -165,6 +181,39 @@ int main()
 
         v2 = v;
         check_equal(rgi2, {1,2,3,4,5});
+    }
+
+    // fixed_vector
+    {
+        fixed_vector<S, 10> v{};
+        CHECK(v.size() == 0u);
+        CHECK(S::s_instances == 0u);
+        v = view::repeat_n(S{},5);
+        CHECK(v.size() == 5u);
+        CHECK(S::s_instances == 5u);
+        fixed_vector<S, 10> v2 = view::repeat_n(S{}, 6);
+        CHECK(v2.size() == 6u);
+        CHECK(S::s_instances == 11u);
+        v = v2;
+        CHECK(v.size() == 6u);
+        CHECK(S::s_instances == 12u);
+        v2 = view::repeat_n(S{}, 2);
+        CHECK(v2.size() == 2u);
+        CHECK(S::s_instances == 8u);
+
+        fixed_vector<int, 100> vi{1,2,3,4,5};
+        vi.insert(vi.begin() + 2, 42);
+        check_equal(vi, {1,2,42,3,4,5});
+        vi.insert(vi.end()-1,3u,55);
+        check_equal(vi, {1,2,42,3,4,55,55,55,5});
+
+        std::vector<int> stdvi{99,98,97,96};
+        vi.insert(vi.end()-3, stdvi.begin(), stdvi.end());
+        check_equal(vi, {1,2,42,3,4,55,99,98,97,96,55,55,5});
+
+        std::stringstream str{"11 22 33 44"};
+        vi.insert(vi.end()-2, std::istream_iterator<int>(str), std::istream_iterator<int>());
+        check_equal(vi, {1,2,42,3,4,55,99,98,97,96,55,11,22,33,44,55,5});
     }
 
     return ::test_result();
