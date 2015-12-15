@@ -9,8 +9,9 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#include <iostream>
+#include <vector>
 #include <sstream>
+#include <iostream>
 #include <range/v3/utility/variant.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
