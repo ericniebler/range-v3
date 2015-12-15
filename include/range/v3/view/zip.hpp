@@ -24,6 +24,8 @@
 #include <range/v3/utility/common_tuple.hpp>
 #include <range/v3/view/zip_with.hpp>
 
+#include <range/v3/detail/disable_warnings.hpp>
+
 namespace ranges
 {
     inline namespace v3
@@ -142,5 +144,7 @@ namespace ranges
         /// @}
     }
 }
+
+#include <range/v3/detail/re_enable_warnings.hpp>
 
 #endif
