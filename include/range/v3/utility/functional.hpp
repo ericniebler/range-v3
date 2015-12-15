@@ -25,6 +25,7 @@
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/compressed_pair.hpp>
+#include <range/v3/detail/disable_warnings.hpp>
 
 namespace ranges
 {
@@ -1066,5 +1067,7 @@ namespace ranges
         /// @}
     }
 }
+
+#include <range/v3/detail/re_enable_warnings.hpp>
 
 #endif
