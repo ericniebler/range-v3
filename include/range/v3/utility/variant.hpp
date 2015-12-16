@@ -111,6 +111,28 @@ namespace ranges
         {
             struct indexed_element_fn;
 
+            template<typename I, typename S, typename O,
+                CONCEPT_REQUIRES_(!SizedIteratorRange<I, S>())>
+            O uninitialized_copy(I first, S last, O out)
+            {
+                for(; first != last; ++first, ++out)
+                    ::new((void *) std::addressof(*out)) iterator_value_t<O>(*first);
+                return out;
+            }
+
+            template<typename I, typename S, typename O,
+                CONCEPT_REQUIRES_(SizedIteratorRange<I, S>())>
+            O uninitialized_copy(I first, S last, O out)
+            {
+                return std::uninitialized_copy_n(first, (last - first), out);
+            }
+
+            template<typename I, typename O>
+            O uninitialized_copy(I first, I last, O out)
+            {
+                return std::uninitialized_copy(first, last, out);
+            }
+
             template<typename T, typename Index>
             struct indexed_datum
             {
@@ -147,7 +169,20 @@ namespace ranges
             struct indexed_datum<T[N], Index>
             {
             private:
-                T data_[N];
+                union
+                {
+                    char c;
+                    T data_[N];
+                };
+                void fill_default_(T *p, std::true_type)
+                {
+                    for(; p != ranges::end(data_); ++p)
+                        ::new((void *) p) T{};
+                }
+                void fill_default_(T *p, std::false_type)
+                {
+                    RANGES_ASSERT(p == ranges::end(data_));
+                }
             public:
                 CONCEPT_REQUIRES(DefaultConstructible<T>())
                 constexpr indexed_datum(meta::nil_ = {})
@@ -163,24 +198,23 @@ namespace ranges
                 {
                     std::uninitialized_copy_n(that.data_, N, data_);
                 }
-                // \pre Requires ranges::size(r) == N
-                template<typename R,
-                    CONCEPT_REQUIRES_(SizedRange<R>() && InputRange<R>() &&
-                        Constructible<T, range_reference_t<R>>())>
-                explicit indexed_datum(R &&r)
-                {
-                    RANGES_ASSERT(ranges::size(r) == N);
-                    std::uninitialized_copy_n(ranges::begin(r), ranges::size(r), data_);
-                }
-                // \pre Requires (last - first) == N
+                // \pre Requires distance(first, last) <= N
+                // \pre Requires DefaultConstructible<T>() || distance(first, last) == N
                 template<typename I, typename S,
-                    CONCEPT_REQUIRES_(SizedIteratorRange<I, S>() && InputIterator<I>() &&
+                    CONCEPT_REQUIRES_(IteratorRange<I, S>() && InputIterator<I>() &&
                         Constructible<T, iterator_reference_t<I>>())>
                 indexed_datum(I first, S last)
                 {
-                    RANGES_ASSERT(N == (last - first));
-                    std::uninitialized_copy(first, last, data_);
+                    T *p = detail::uninitialized_copy(first, last, data_);
+                    this->fill_default_(p, DefaultConstructible<T>{});
                 }
+                // \pre Requires distance(r) <= N
+                // \pre Requires DefaultConstructible<T>() || distance(r) == N
+                template<typename R,
+                    CONCEPT_REQUIRES_(InputRange<R>() && Constructible<T, range_reference_t<R>&&>())>
+                explicit indexed_datum(R &&r)
+                  : indexed_datum{ranges::begin(r), ranges::end(r)}
+                {}
                 CONCEPT_REQUIRES(Assignable<T &, T &&>())
                 indexed_datum &operator=(indexed_datum &&that)
                 {
@@ -193,14 +227,14 @@ namespace ranges
                     ranges::copy(that.data_, data_);
                     return *this;
                 }
-                // \pre Requires ranges::distance(r) == N
+                // \pre Requires ranges::distance(r) <= N
                 template<typename R,
                     CONCEPT_REQUIRES_(InputRange<R>() &&
-                        Constructible<T, range_reference_t<R>>())>
+                        Assignable<T &, range_reference_t<R>&&>())>
                 indexed_datum &operator=(R &&r)
                 {
-                    RANGES_ASSERT(!ForwardRange<R>() || N == ranges::distance(r));
                     ranges::copy(r, data_);
+                    return *this;
                 }
                 RANGES_CXX14_CONSTEXPR indexed_element<T[N], Index::value> ref()
                 {
