@@ -17,6 +17,7 @@
 #include <memory>
 #include <iterator>
 #include <stdexcept>
+#include <initializer_list>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/algorithm/copy.hpp>
@@ -42,11 +43,24 @@ namespace ranges
             };
             std::size_t size_;
 
+            template<typename R>
+            fixed_vector &assign_range_(R &&r)
+            {
+                auto first = ranges::begin(r);
+                auto last = ranges::end(r);
+                std::size_t n = 0;
+                for(T *out = data(); first != last && n < size(); ++first, ++out, ++n)
+                    *out = *first;
+                for(; first != last; ++first, ++n)
+                    this->push_back(*first);
+                resize(n);
+                return *this;
+            }
             template<typename U>
             T *insert_one_(T const *where_, U &&value)
             {
                 RANGES_ASSERT(size() != N);
-                T *where = begin() + (where_ - begin());
+                T *where = next(begin(), where_);
                 if(where == end())
                     this->push_back(std::forward<U>(value));
                 else
@@ -60,13 +74,12 @@ namespace ranges
             T *insert_n_(T const *where_, std::size_t count, T const &value)
             {
                 RANGES_ASSERT(size() + count <= N);
-                T *where = begin() + (where_ - begin());
+                T *where = next(begin(), where_);
                 T *last = end();
                 auto pos = std::max(where, last - std::min(count, size()));
-                std::uninitialized_copy(std::make_move_iterator(pos),
+                auto x = std::uninitialized_copy(std::make_move_iterator(pos),
                     std::make_move_iterator(last), pos + count);
-                struct G { T *f, *l; ~G() { for(; f != l; --l) prev(l)->~T(); } } g{pos + count,
-                    last + count};
+                struct G { T *f, *l; ~G() { while(f != l) (--l)->~T(); } } g{pos + count, x};
                 std::uninitialized_fill(last, pos + count, value);
                 g.f = g.l = nullptr; // disarm the guard
                 size_ += count;
@@ -77,13 +90,12 @@ namespace ranges
             template<typename I, typename S>
             T *insert_range_(T const *where_, I first, S last, concepts::InputIterator*)
             {
-                T *where = begin() + (where_ - begin());
-                auto old = size();
-                struct G {std::size_t n; fixed_vector *p; ~G() { if(p) p->resize(n); }} g{old, this};
+                T *where = next(begin(), where_);
+                struct G {std::size_t n; fixed_vector *p; ~G() { if(p) p->resize(n); }} g{size(), this};
                 for(; first != last; ++first)
                     this->push_back(*first);
                 g.p = nullptr; // disarm the guard
-                ranges::rotate(where, begin() + old, end());
+                ranges::rotate(where, begin() + g.n, end());
                 return where;
             }
             template<typename I, typename S>
@@ -93,13 +105,12 @@ namespace ranges
                 std::size_t count;
                 std::tie(count, in_last) = enumerate(in_first, in_last_);
                 RANGES_ASSERT(size() + count <= N);
-                T *where = begin() + (where_ - begin());
+                T *where = next(begin(), where_);
                 T *last = end();
                 auto pos = std::max(where, last - std::min(count, size()));
-                std::uninitialized_copy(std::make_move_iterator(pos),
+                auto x = std::uninitialized_copy(std::make_move_iterator(pos),
                     std::make_move_iterator(last), pos + count);
-                struct G { T *f, *l; ~G() { for(; f != l; --l) prev(l)->~T(); } } g{pos + count,
-                    last + count};
+                struct G { T *f, *l; ~G() { while(f != l) (--l)->~T(); } } g{pos + count, x};
                 auto in_part = next(in_first, last - pos);
                 std::uninitialized_copy(in_part, in_last, last);
                 g.f = g.l = nullptr; // disarm the guard
@@ -128,9 +139,11 @@ namespace ranges
             {
                 size_ += std::uninitialized_copy_n(that.data(), that.size(), data()) - data();
             }
+            CONCEPT_REQUIRES(CopyConstructible<T>())
             fixed_vector(std::initializer_list<T> il) : size_(0)
             {
-                this->insert(begin(), il);
+                RANGES_ASSERT(N >= il.size());
+                size_ += std::uninitialized_copy_n(il.begin(), il.size(), data()) - data();
             }
             template<typename R,
                 CONCEPT_REQUIRES_(InputRange<R>() && Constructible<T, range_reference_t<R>&&>())>
@@ -140,11 +153,11 @@ namespace ranges
             }
             // \pre Requires (last - first) <= N
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(SizedIteratorRange<I, S>() && InputIterator<I>() &&
+                CONCEPT_REQUIRES_(IteratorRange<I, S>() && InputIterator<I>() &&
                     Constructible<T, iterator_reference_t<I>&&>())>
             fixed_vector(I first, S last) : size_(0)
             {
-                this->insert(begin(), first, last);
+                this->insert(begin(), (I &&) first, (S &&) last);
             }
             ~fixed_vector()
             {
@@ -169,25 +182,24 @@ namespace ranges
                 resize(that.size());
                 return *this;
             }
+            CONCEPT_REQUIRES(Movable<T>())
+            fixed_vector &operator=(std::initializer_list<T> il)
+            {
+                return this->assign_range_(il);
+            }
             template<typename R,
                 CONCEPT_REQUIRES_(InputRange<R>() && Constructible<T, range_reference_t<R>&&>() &&
                     Assignable<T &, range_reference_t<R>&&>())>
             fixed_vector &operator=(R &&r)
             {
-                auto first = ranges::begin(r);
-                auto last = ranges::end(r);
-                std::size_t n = 0;
-                for(T *out = data(); first != last && n < size(); ++first, ++out, ++n)
-                    *out = *first;
-                for(; first != last; ++first, ++n)
-                    this->push_back(*first);
-                resize(n);
-                return *this;
+                return this->assign_range_(std::forward<R>(r));
             }
+            CONCEPT_REQUIRES(Swappable<T &>())
             void swap(fixed_vector &that) noexcept(is_nothrow_swappable<T &>::value)
             {
                 ranges::swap_ranges(*this, that);
             }
+            CONCEPT_REQUIRES(Swappable<T &>())
             friend void swap(fixed_vector &lhs, fixed_vector &rhs)
                 noexcept(is_nothrow_swappable<T &>::value)
             {
