@@ -222,7 +222,7 @@ namespace ranges
 
         /// \overload
         template<std::size_t N, typename I, typename S,
-            CONCEPT_REQUIRES_(N == 3)>
+            CONCEPT_REQUIRES_(N == 2)>
         constexpr iterator_size_t<I> get(sized_iterator_range<I, S> const &p)
         {
             return p.size();
