@@ -18,7 +18,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_adaptor.hpp>
-#include <range/v3/range.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/unreachable.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -111,7 +111,7 @@ namespace ranges
 
                 template<typename I, typename Val,
                     CONCEPT_REQUIRES_(InputIterator<I>())>
-                delimit_view<range<I, unreachable>, Val>
+                delimit_view<iterator_range<I, unreachable>, Val>
                 operator()(I begin, Val value) const
                 {
                     return {{std::move(begin), {}}, std::move(value)};

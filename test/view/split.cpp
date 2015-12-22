@@ -31,7 +31,7 @@ struct starts_with_g
 };
 
 template<std::size_t N>
-ranges::range<char const*> c_str(char const (&sz)[N])
+ranges::iterator_range<char const*> c_str(char const (&sz)[N])
 {
     return {&sz[0], &sz[N-1]};
 }

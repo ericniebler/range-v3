@@ -96,49 +96,49 @@ test_range()
 {
     {
         const int ia[] = {2, 4, 6, 8, 10};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                                 Sent(ranges::end(ia)))),
                                       is_odd()) == Iter(ia));
     }
     {
         const int ia[] = {1, 2, 4, 6, 8};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                                 Sent(ranges::end(ia)))),
                                       is_odd()) == Iter(ia + 1));
     }
     {
         const int ia[] = {1, 3, 2, 4, 6};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                                 Sent(ranges::end(ia)))),
                                       is_odd()) == Iter(ia + 2));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                                 Sent(ranges::end(ia)))),
                                       is_odd()) == Iter(ia + 3));
     }
     {
         const int ia[] = {1, 3, 5, 7, 2, 4};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                                 Sent(ranges::end(ia)))),
                                       is_odd()) == Iter(ia + 4));
     }
     {
         const int ia[] = {1, 3, 5, 7, 9, 2};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                                 Sent(ranges::end(ia)))),
                                       is_odd()) == Iter(ia + 5));
     }
     {
         const int ia[] = {1, 3, 5, 7, 9, 11};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                                 Sent(ranges::end(ia)))),
                                       is_odd()) == Iter(ia + 6));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6, 7};
-        CHECK(ranges::partition_point(::as_lvalue(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(::as_lvalue(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                                 Sent(ranges::begin(ia)))),
                                       is_odd()) == Iter(ia));
     }
@@ -146,7 +146,7 @@ test_range()
     // An rvalue range
     {
         const int ia[] = {1, 3, 5, 7, 9, 2};
-        CHECK(ranges::partition_point(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(ranges::partition_point(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                          Sent(ranges::end(ia))),
                                       is_odd()).get_unsafe() == Iter(ia + 5));
     }

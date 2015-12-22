@@ -7,7 +7,7 @@
         CONCEPT_REQUIRES_(RandomAccessIterator<I>() &&
                             SizedIteratorRange<I, S>() &&
                             is_contiguous_iterator<I>())>
-    range<meta_apply<remove_reference, iterator_reference_t<I>> *>
+    iterator_range<std::add_pointer_t<iterator_reference_t<I>>>
     as_contiguous_range(I begin, S end)
     {
         if(begin == end)

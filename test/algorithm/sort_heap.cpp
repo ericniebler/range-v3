@@ -65,7 +65,7 @@ void test_3(int N)
         ia[i] = i;
     std::shuffle(ia, ia+N, gen);
     std::make_heap(ia, ia+N);
-    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_range(ia, ia+N))) == ia+N);
+    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+N))) == ia+N);
     CHECK(std::is_sorted(ia, ia+N));
     delete [] ia;
 }
@@ -77,7 +77,7 @@ void test_4(int N)
         ia[i] = i;
     std::shuffle(ia, ia+N, gen);
     std::make_heap(ia, ia+N);
-    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_range(ia, sentinel<int*>(ia+N)))) == ia+N);
+    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+N)))) == ia+N);
     CHECK(std::is_sorted(ia, ia+N));
     delete [] ia;
 }
@@ -113,7 +113,7 @@ void test_7(int N)
         ia[i] = i;
     std::shuffle(ia, ia+N, gen);
     std::make_heap(ia, ia+N, std::greater<int>());
-    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_range(ia, ia+N)), std::greater<int>()) == ia+N);
+    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+N)), std::greater<int>()) == ia+N);
     CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
     delete [] ia;
 }
@@ -125,12 +125,12 @@ void test_8(int N)
         ia[i] = i;
     std::shuffle(ia, ia+N, gen);
     std::make_heap(ia, ia+N, std::greater<int>());
-    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_range(ia, sentinel<int*>(ia+N))), std::greater<int>()) == ia+N);
+    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+N))), std::greater<int>()) == ia+N);
     CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
 
     std::shuffle(ia, ia+N, gen);
     std::make_heap(ia, ia+N, std::greater<int>());
-    CHECK(ranges::sort_heap(ranges::make_range(ia, sentinel<int*>(ia+N)), std::greater<int>()).get_unsafe() == ia+N);
+    CHECK(ranges::sort_heap(ranges::make_iterator_range(ia, sentinel<int*>(ia+N)), std::greater<int>()).get_unsafe() == ia+N);
     CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
 
     delete [] ia;

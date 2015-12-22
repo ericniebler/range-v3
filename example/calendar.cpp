@@ -177,7 +177,7 @@ public:
       : n_(n), end_(end)
     {}
     auto get(range_iterator_t<Rng> it) const {
-        return view::take(make_range(std::move(it), end_), n_);
+        return view::take(make_iterator_range(std::move(it), end_), n_);
     }
     void next(range_iterator_t<Rng> &it) {
         ranges::advance(it, n_, end_);
@@ -228,7 +228,7 @@ struct interleave_view<Rngs>::cursor  {
     }
     bool done() const {
         return n_ == 0 && its_.end() != mismatch(its_,
-            view::transform(*rngs_, ranges::end), std::not_equal_to<>()).first;
+            view::transform(*rngs_, ranges::end), std::not_equal_to<>()).in1();
     }
     CONCEPT_REQUIRES(ForwardRange<range_value_t<Rngs>>())
     bool equal(cursor const& that) const {

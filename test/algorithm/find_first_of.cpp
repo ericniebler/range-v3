@@ -97,45 +97,45 @@ void test_rng()
     static constexpr unsigned sa = size(ia);
     int ib[] = {1, 3, 5, 7};
     static constexpr unsigned sb = size(ib);
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
-                             make_range(forward_iterator<const int*>(ib),
+                             make_iterator_range(forward_iterator<const int*>(ib),
                              forward_iterator<const int*>(ib + sb))) ==
                              input_iterator<const int*>(ia+1));
-    CHECK(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa)),
-                             make_range(forward_iterator<const int*>(ib),
+                             make_iterator_range(forward_iterator<const int*>(ib),
                              forward_iterator<const int*>(ib + sb))).get_unsafe() ==
                              input_iterator<const int*>(ia+1));
     int ic[] = {7};
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic + 1))) ==
                              input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic))) ==
                              input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia))),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic+1))) ==
                              input_iterator<const int*>(ia));
-    CHECK(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa)),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic + 1))).get_unsafe() ==
                              input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa)),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic))).get_unsafe() ==
                              input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia)),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic+1))).get_unsafe() ==
                              input_iterator<const int*>(ia));
 }
@@ -147,28 +147,28 @@ void test_rng_pred()
     static constexpr unsigned sa = size(ia);
     int ib[] = {1, 3, 5, 7};
     static constexpr unsigned sb = size(ib);
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
-                             make_range(forward_iterator<const int*>(ib),
+                             make_iterator_range(forward_iterator<const int*>(ib),
                              forward_iterator<const int*>(ib + sb)),
                              std::equal_to<int>()) ==
                              input_iterator<const int*>(ia+1));
     int ic[] = {7};
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic + 1)),
                              std::equal_to<int>()) ==
                              input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia + sa))),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic)),
                              std::equal_to<int>()) ==
                              input_iterator<const int*>(ia+sa));
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const int*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const int*>(ia),
                              input_iterator<const int*>(ia))),
-                             make_range(forward_iterator<const int*>(ic),
+                             make_iterator_range(forward_iterator<const int*>(ic),
                              forward_iterator<const int*>(ic+1)),
                              std::equal_to<int>()) ==
                              input_iterator<const int*>(ia));
@@ -186,28 +186,28 @@ void test_rng_pred_proj()
     static constexpr unsigned sa = size(ia);
     S ib[] = {S{1}, S{3}, S{5}, S{7}};
     static constexpr unsigned sb = size(ib);
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const S*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const S*>(ia),
                              input_iterator<const S*>(ia + sa))),
-                             make_range(forward_iterator<const S*>(ib),
+                             make_iterator_range(forward_iterator<const S*>(ib),
                              forward_iterator<const S*>(ib + sb)),
                              std::equal_to<int>(), &S::i, &S::i) ==
                              input_iterator<const S*>(ia+1));
     S ic[] = {S{7}};
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const S*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const S*>(ia),
                              input_iterator<const S*>(ia + sa))),
-                             make_range(forward_iterator<const S*>(ic),
+                             make_iterator_range(forward_iterator<const S*>(ic),
                              forward_iterator<const S*>(ic + 1)),
                              std::equal_to<int>(), &S::i, &S::i) ==
                              input_iterator<const S*>(ia+sa));
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const S*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const S*>(ia),
                              input_iterator<const S*>(ia + sa))),
-                             make_range(forward_iterator<const S*>(ic),
+                             make_iterator_range(forward_iterator<const S*>(ic),
                              forward_iterator<const S*>(ic)),
                              std::equal_to<int>(), &S::i, &S::i) ==
                              input_iterator<const S*>(ia+sa));
-    CHECK(rng::find_first_of(as_lvalue(make_range(input_iterator<const S*>(ia),
+    CHECK(rng::find_first_of(as_lvalue(make_iterator_range(input_iterator<const S*>(ia),
                              input_iterator<const S*>(ia))),
-                             make_range(forward_iterator<const S*>(ic),
+                             make_iterator_range(forward_iterator<const S*>(ic),
                              forward_iterator<const S*>(ic+1)),
                              std::equal_to<int>(), &S::i, &S::i) ==
                              input_iterator<const S*>(ia));

@@ -88,7 +88,7 @@ namespace ranges
 
                 template<typename Rng>
                 constexpr auto operator()(Rng &&rng) const ->
-                    decltype(size(detail::forward<Rng>(rng)))
+                    detail::decay_t<decltype(size(detail::forward<Rng>(rng)))>
                 {
                     return size(detail::forward<Rng>(rng));
                 }
@@ -98,7 +98,7 @@ namespace ranges
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to `size`
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& size = static_const<adl_size_detail::size_fn>::value;
         }

@@ -380,10 +380,10 @@ namespace ranges
     #endif
 
         template<typename I, typename S = I>
-        struct range;
+        struct iterator_range;
 
         template<typename I, typename S = I>
-        struct sized_range;
+        struct sized_iterator_range;
 
         struct make_range_fn;
 

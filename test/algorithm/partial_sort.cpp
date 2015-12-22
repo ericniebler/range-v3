@@ -63,25 +63,25 @@ test_larger_sorts(int N, int M)
         CHECK(array[i] == i);
 
     std::shuffle(array, array+N, gen);
-    res = ranges::partial_sort(::as_lvalue(ranges::make_range(array, array+N)), array+M);
+    res = ranges::partial_sort(::as_lvalue(ranges::make_iterator_range(array, array+N)), array+M);
     CHECK(res == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
     std::shuffle(array, array+N, gen);
-    res2 = ranges::partial_sort(::as_lvalue(ranges::make_range(I{array}, S{array+N})), I{array+M});
+    res2 = ranges::partial_sort(::as_lvalue(ranges::make_iterator_range(I{array}, S{array+N})), I{array+M});
     CHECK(res2.base() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
     std::shuffle(array, array+N, gen);
-    auto res3 = ranges::partial_sort(ranges::make_range(array, array+N), array+M);
+    auto res3 = ranges::partial_sort(ranges::make_iterator_range(array, array+N), array+M);
     CHECK(res3.get_unsafe() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
 
     std::shuffle(array, array+N, gen);
-    auto res4 = ranges::partial_sort(ranges::make_range(I{array}, S{array+N}), I{array+M});
+    auto res4 = ranges::partial_sort(ranges::make_iterator_range(I{array}, S{array+N}), I{array+M});
     CHECK(res4.get_unsafe().base() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == i);
@@ -99,13 +99,13 @@ test_larger_sorts(int N, int M)
         CHECK(array[i] == N-i-1);
 
     std::shuffle(array, array+N, gen);
-    res = ranges::partial_sort(::as_lvalue(ranges::make_range(array, array+N)), array+M, std::greater<int>());
+    res = ranges::partial_sort(::as_lvalue(ranges::make_iterator_range(array, array+N)), array+M, std::greater<int>());
     CHECK(res == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == N-i-1);
 
     std::shuffle(array, array+N, gen);
-    res2 = ranges::partial_sort(::as_lvalue(ranges::make_range(I{array}, S{array+N})), I{array+M}, std::greater<int>());
+    res2 = ranges::partial_sort(::as_lvalue(ranges::make_iterator_range(I{array}, S{array+N})), I{array+M}, std::greater<int>());
     CHECK(res2.base() == array+N);
     for(int i = 0; i < M; ++i)
         CHECK(array[i] == N-i-1);

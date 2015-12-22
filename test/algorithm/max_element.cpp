@@ -43,7 +43,7 @@ test_iter(Iter first, Sent last)
     else
         CHECK(i == last);
 
-    auto rng = ranges::make_range(first, last);
+    auto rng = ranges::make_iterator_range(first, last);
     i = ranges::max_element(rng);
     if (first != last)
     {
@@ -98,7 +98,7 @@ test_iter_comp(Iter first, Sent last)
     else
         CHECK(i == last);
 
-    auto rng = ranges::make_range(first, last);
+    auto rng = ranges::make_iterator_range(first, last);
     i = ranges::max_element(rng, std::greater<int>());
     if (first != last)
     {

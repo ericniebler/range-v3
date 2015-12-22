@@ -102,9 +102,6 @@
     <ClCompile Include="test\multiple2.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\range.cpp">
-      <Filter>Test Files</Filter>
-    </ClCompile>
     <ClCompile Include="test\to_container.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
@@ -632,6 +629,9 @@
     </ClCompile>
     <ClCompile Include="scratch\scratch.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test\iterator_range.cpp">
+      <Filter>Test Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1318,6 +1318,9 @@
     </ClInclude>
     <ClInclude Include="test\algorithm\set_union.hpp">
       <Filter>Test Files\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="include\range\v3\iterator_range.hpp">
+      <Filter>Header Files\range\v3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

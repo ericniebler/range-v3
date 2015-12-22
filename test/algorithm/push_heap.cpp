@@ -136,7 +136,7 @@ int main()
         std::shuffle(ia, ia+N, gen);
         for (int i = 0; i <= N; ++i)
         {
-            CHECK(ranges::push_heap(ranges::make_range(ia, ia+i), std::greater<int>(), &S::i).get_unsafe() == ia+i);
+            CHECK(ranges::push_heap(ranges::make_iterator_range(ia, ia+i), std::greater<int>(), &S::i).get_unsafe() == ia+i);
             std::transform(ia, ia+i, ib, std::mem_fn(&S::i));
             CHECK(std::is_heap(ib, ib+i, std::greater<int>()));
         }

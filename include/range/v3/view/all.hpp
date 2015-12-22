@@ -17,7 +17,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_concepts.hpp>
-#include <range/v3/range.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/size.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -35,35 +35,35 @@ namespace ranges
             {
             private:
                 template<typename T>
-                static range<range_iterator_t<T>, range_sentinel_t<T>>
+                static iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
                 from_container(T & t, concepts::Range*, concepts::IteratorRange*)
                 {
                     return {begin(t), end(t)};
                 }
 
                 template<typename T>
-                static sized_range<range_iterator_t<T>, range_sentinel_t<T>>
+                static sized_iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
                 from_container(T & t, concepts::SizedRange*, concepts::IteratorRange*)
                 {
                     return {begin(t), end(t), size(t)};
                 }
 
                 template<typename T>
-                static range<range_iterator_t<T>, range_sentinel_t<T>>
+                static iterator_range<range_iterator_t<T>, range_sentinel_t<T>>
                 from_container(T & t, concepts::SizedRange*, concepts::SizedIteratorRange*)
                 {
                     RANGES_ASSERT(size(t) == size(begin(t), end(t)));
                     return {begin(t), end(t)};
                 }
 
-                /// If it's a range already, pass it though.
+                /// If it's a view already, pass it though.
                 template<typename T>
                 static T from_range(T && t, concepts::View*)
                 {
                     return std::forward<T>(t);
                 }
 
-                /// If it is container-like, turn it into an range, being careful
+                /// If it is container-like, turn it into a view, being careful
                 /// to preserve the Sized-ness of the range.
                 template<typename T,
                     CONCEPT_REQUIRES_(!View<T>()),

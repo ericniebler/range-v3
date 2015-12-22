@@ -23,8 +23,8 @@ add_test(test.view_facade view_facade)
 add_executable(view_adaptor view_adaptor.cpp)
 add_test(test.view_adaptor view_adaptor)
 
-add_executable(range range.cpp)
-add_test(test.range range)
+add_executable(iterator_range iterator_range.cpp)
+add_test(test.iterator_range iterator_range)
 
 add_executable(multiple multiple1.cpp multiple2.cpp)
 add_test(test.multiple multiple)

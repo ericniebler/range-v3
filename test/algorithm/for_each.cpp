@@ -43,7 +43,7 @@ int main()
     CHECK(sum == 24);
 
     sum = 0;
-    CHECK(ranges::for_each(ranges::make_range(v1.begin(), v1.end()), fun).get_unsafe() == v1.end());
+    CHECK(ranges::for_each(ranges::make_iterator_range(v1.begin(), v1.end()), fun).get_unsafe() == v1.end());
     CHECK(sum == 12);
 
     return ::test_result();

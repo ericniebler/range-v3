@@ -19,7 +19,7 @@
 #include <range/v3/distance.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/range.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/algorithm/aux_/lower_bound_n.hpp>
@@ -36,7 +36,7 @@ namespace ranges
             {
                 template<typename I, typename V, typename R = ordered_less, typename P = ident,
                     CONCEPT_REQUIRES_(BinarySearchable<I, V, R, P>())>
-                range<I>
+                iterator_range<I>
                 operator()(I begin, iterator_difference_t<I> dist, V const & val, R pred_ = R{},
                     P proj_ = P{}) const
                 {

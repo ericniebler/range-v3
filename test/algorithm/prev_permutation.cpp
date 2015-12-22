@@ -79,7 +79,7 @@ void test_range()
         do
         {
             std::copy(ia, ia+e, prev);
-            x = ranges::prev_permutation(ranges::make_range(Iter(ia), Sent(ia+e)));
+            x = ranges::prev_permutation(ranges::make_iterator_range(Iter(ia), Sent(ia+e)));
             if(e > 1)
             {
                 if(!x)
@@ -135,7 +135,7 @@ void test_range_comp()
         do
         {
             std::copy(ia, ia+e, prev);
-            x = ranges::prev_permutation(ranges::make_range(Iter(ia), Sent(ia+e)), C());
+            x = ranges::prev_permutation(ranges::make_iterator_range(Iter(ia), Sent(ia+e)), C());
             if(e > 1)
             {
                 if(!x)

@@ -52,7 +52,7 @@ void test_rng()
     int ia[] = {0, 1, 2, 3, 4};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
     int ib[sa] = {0};
-    auto rng = ranges::make_range(InIter(ia), Sent(ia+sa));
+    auto rng = ranges::make_iterator_range(InIter(ia), Sent(ia+sa));
     std::pair<InIter, OutIter> r = ranges::replace_copy_if(rng, OutIter(ib),
         [](int i){return 2==i;}, 5);
     CHECK(base(r.first) == ia + sa);

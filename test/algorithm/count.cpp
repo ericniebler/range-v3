@@ -33,11 +33,11 @@ int main()
     CHECK(count(input_iterator<const int*>(ia),
                 sentinel<const int*>(ia), 2) == 0);
 
-    CHECK(count(make_range(input_iterator<const int*>(ia),
+    CHECK(count(make_iterator_range(input_iterator<const int*>(ia),
                       sentinel<const int*>(ia + cia)), 2) == 3);
-    CHECK(count(make_range(input_iterator<const int*>(ia),
+    CHECK(count(make_iterator_range(input_iterator<const int*>(ia),
                       sentinel<const int*>(ia + cia)), 7) == 0);
-    CHECK(count(make_range(input_iterator<const int*>(ia),
+    CHECK(count(make_iterator_range(input_iterator<const int*>(ia),
                       sentinel<const int*>(ia)), 2) == 0);
 
     S sa[] = {{0}, {1}, {2}, {2}, {0}, {1}, {2}, {3}};
@@ -50,11 +50,11 @@ int main()
     CHECK(count(input_iterator<const S*>(sa),
                 sentinel<const S*>(sa), 2, &S::i) == 0);
 
-    CHECK(count(make_range(input_iterator<const S*>(sa),
+    CHECK(count(make_iterator_range(input_iterator<const S*>(sa),
                       sentinel<const S*>(sa + csa)), 2, &S::i) == 3);
-    CHECK(count(make_range(input_iterator<const S*>(sa),
+    CHECK(count(make_iterator_range(input_iterator<const S*>(sa),
                       sentinel<const S*>(sa + csa)), 7, &S::i) == 0);
-    CHECK(count(make_range(input_iterator<const S*>(sa),
+    CHECK(count(make_iterator_range(input_iterator<const S*>(sa),
                       sentinel<const S*>(sa)), 2, &S::i) == 0);
 
     return ::test_result();

@@ -36,7 +36,7 @@ void
 test_iter(Iter first, Sent last)
 {
     assert(first != last);
-    auto rng = ranges::make_range(first, last);
+    auto rng = ranges::make_iterator_range(first, last);
     auto v = ranges::max(rng);
     for (Iter i = first; i != last; ++i)
         CHECK(!(v < *i));
@@ -69,7 +69,7 @@ void
 test_iter_comp(Iter first, Sent last)
 {
     assert(first != last);
-    auto rng = ranges::make_range(first, last);
+    auto rng = ranges::make_iterator_range(first, last);
     auto comp = std::greater<int>();
     auto v = ranges::max(rng, comp);
     for (Iter i = first; i != last; ++i)

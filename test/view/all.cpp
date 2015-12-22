@@ -24,9 +24,9 @@ int main()
     std::vector<int> vi(begin(rgi), end(rgi));
     std::list<int> li(begin(rgi), end(rgi));
 
-    range<int *> x = view::all(rgi);
-    range<std::vector<int>::iterator> y = view::all(vi);
-    sized_range<std::list<int>::iterator> z = view::all(li);
+    iterator_range<int *> x = view::all(rgi);
+    iterator_range<std::vector<int>::iterator> y = view::all(vi);
+    sized_iterator_range<std::list<int>::iterator> z = view::all(li);
 
     x = view::all(x);
     y = view::all(y);

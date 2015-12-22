@@ -200,7 +200,7 @@ test_range()
     {  // check mixed
         P ap[] = { {0, 1}, {0, 2}, {1, 1}, {1, 2}, {2, 1}, {2, 2}, {3, 1}, {3, 2}, {4, 1}, {4, 2} };
         std::size_t size = ranges::size(ap);
-        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+size))), odd_first());
+        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+size))), odd_first());
         CHECK(base(r) == ap + 4);
         CHECK(ap[0] == P{1, 1});
         CHECK(ap[1] == P{1, 2});
@@ -216,7 +216,7 @@ test_range()
     {
         P ap[] = { {0, 1}, {0, 2}, {1, 1}, {1, 2}, {2, 1}, {2, 2}, {3, 1}, {3, 2}, {4, 1}, {4, 2} };
         std::size_t size = ranges::size(ap);
-        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+size))), odd_first());
+        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+size))), odd_first());
         CHECK(base(r) == ap + 4);
         CHECK(ap[0] == P{1, 1});
         CHECK(ap[1] == P{1, 2});
@@ -229,21 +229,21 @@ test_range()
         CHECK(ap[8] == P{4, 1});
         CHECK(ap[9] == P{4, 2});
         // check empty
-        r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap))), odd_first());
+        r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap))), odd_first());
         CHECK(base(r) == ap);
         // check one true
-        r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+1))), odd_first());
+        r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+1))), odd_first());
         CHECK(base(r) == ap+1);
         CHECK(ap[0] == P{1, 1});
         // check one false
-        r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap+4), Sent(ap+5))), odd_first());
+        r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap+4), Sent(ap+5))), odd_first());
         CHECK(base(r) == ap+4);
         CHECK(ap[4] == P{0, 1});
     }
     {  // check all false
         P ap[] = { {0, 1}, {0, 2}, {2, 1}, {2, 2}, {4, 1}, {4, 2}, {6, 1}, {6, 2}, {8, 1}, {8, 2} };
         std::size_t size = ranges::size(ap);
-        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+size))), odd_first());
+        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+size))), odd_first());
         CHECK(base(r) == ap);
         CHECK(ap[0] == P{0, 1});
         CHECK(ap[1] == P{0, 2});
@@ -259,7 +259,7 @@ test_range()
     {  // check all true
         P ap[] = { {1, 1}, {1, 2}, {3, 1}, {3, 2}, {5, 1}, {5, 2}, {7, 1}, {7, 2}, {9, 1}, {9, 2} };
         std::size_t size = ranges::size(ap);
-        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+size))), odd_first());
+        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+size))), odd_first());
         CHECK(base(r) == ap + size);
         CHECK(ap[0] == P{1, 1});
         CHECK(ap[1] == P{1, 2});
@@ -275,7 +275,7 @@ test_range()
     {  // check all false but first true
         P ap[] = { {1, 1}, {0, 2}, {2, 1}, {2, 2}, {4, 1}, {4, 2}, {6, 1}, {6, 2}, {8, 1}, {8, 2} };
         std::size_t size = ranges::size(ap);
-        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+size))), odd_first());
+        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+size))), odd_first());
         CHECK(base(r) == ap + 1);
         CHECK(ap[0] == P{1, 1});
         CHECK(ap[1] == P{0, 2});
@@ -291,7 +291,7 @@ test_range()
     {  // check all false but last true
         P ap[] = { {0, 1}, {0, 2}, {2, 1}, {2, 2}, {4, 1}, {4, 2}, {6, 1}, {6, 2}, {8, 1}, {1, 2} };
         std::size_t size = ranges::size(ap);
-        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+size))), odd_first());
+        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+size))), odd_first());
         CHECK(base(r) == ap + 1);
         CHECK(ap[0] == P{1, 2});
         CHECK(ap[1] == P{0, 1});
@@ -307,7 +307,7 @@ test_range()
     {  // check all true but first false
         P ap[] = { {0, 1}, {1, 2}, {3, 1}, {3, 2}, {5, 1}, {5, 2}, {7, 1}, {7, 2}, {9, 1}, {9, 2} };
         std::size_t size = ranges::size(ap);
-        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+size))), odd_first());
+        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+size))), odd_first());
         CHECK(base(r) == ap + size-1);
         CHECK(ap[0] == P{1, 2});
         CHECK(ap[1] == P{3, 1});
@@ -323,7 +323,7 @@ test_range()
     {  // check all true but last false
         P ap[] = { {1, 1}, {1, 2}, {3, 1}, {3, 2}, {5, 1}, {5, 2}, {7, 1}, {7, 2}, {9, 1}, {0, 2} };
         std::size_t size = ranges::size(ap);
-        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_range(Iter(ap), Sent(ap+size))), odd_first());
+        Iter r = ranges::stable_partition(::as_lvalue(ranges::make_iterator_range(Iter(ap), Sent(ap+size))), odd_first());
         CHECK(base(r) == ap + size-1);
         CHECK(ap[0] == P{1, 1});
         CHECK(ap[1] == P{1, 2});

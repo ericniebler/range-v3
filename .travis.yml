@@ -211,6 +211,7 @@ before_install:
   - which $CXX
   - which $CC
   - which valgrind
+  - $CXX --version
   - if [ -n "$CLANG_VERSION" ]; then sudo CXX=$CXX CC=$CC ./install_libcxx.sh; fi
 
 install:

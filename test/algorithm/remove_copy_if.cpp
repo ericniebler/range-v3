@@ -56,7 +56,7 @@ test_range()
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr unsigned sa = ranges::size(ia);
     int ib[sa];
-    std::pair<InIter, OutIter> r = ranges::remove_copy_if(::as_lvalue(ranges::make_range(InIter(ia), Sent(ia+sa))), OutIter(ib), [](int i){return i == 2;});
+    std::pair<InIter, OutIter> r = ranges::remove_copy_if(::as_lvalue(ranges::make_iterator_range(InIter(ia), Sent(ia+sa))), OutIter(ib), [](int i){return i == 2;});
     CHECK(base(r.first) == ia + sa);
     CHECK(base(r.second) == ib + sa-3);
     CHECK(ib[0] == 0);

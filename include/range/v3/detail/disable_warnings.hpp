@@ -15,3 +15,4 @@
 #  pragma GCC diagnostic ignored "-Wpragmas"
 #  pragma GCC diagnostic ignored "-Wshadow"
 #  pragma GCC diagnostic ignored "-Wundefined-internal"
+#  pragma GCC diagnostic ignored "-Wmisleading-indentation"

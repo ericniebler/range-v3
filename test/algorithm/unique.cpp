@@ -55,9 +55,9 @@ struct range_call
 
     template <class B, class E, class... Args>
     auto operator()(B &&It, E &&e, Args &&... args) const
-     -> ranges::range_iterator_t<decltype(ranges::make_range(begin_t{It}, sentinel_t{e}))>
+     -> ranges::range_iterator_t<decltype(ranges::make_iterator_range(begin_t{It}, sentinel_t{e}))>
     {
-        auto rng = ranges::make_range(begin_t{It}, sentinel_t{e});
+        auto rng = ranges::make_iterator_range(begin_t{It}, sentinel_t{e});
         return ranges::unique(rng, std::forward<Args>(args)...);
     }
 };
