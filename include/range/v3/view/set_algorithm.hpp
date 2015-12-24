@@ -55,7 +55,7 @@ namespace ranges
             
             template<typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2,
-                     typename Cursor, cardinality Cardinality>
+                     template<bool, typename...> class Cursor, cardinality Cardinality>
             struct set_algorithm_view
             : view_facade<
                     set_algorithm_view<Rng1, Rng2, C, P1, P2, Cursor, Cardinality>,
@@ -72,16 +72,17 @@ namespace ranges
     //            using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
 
                 struct sentinel;
-                using cursor = Cursor;
+                template<bool IsConst>
+                using cursor = Cursor<IsConst, Rng1, Rng2, C, P1, P2>;
 
-                cursor begin_cursor()
+                cursor<false> begin_cursor()
                 {
                     return {pred_, proj1_, proj2_,
                             ranges::begin(rng1_), ranges::end(rng1_),
                             ranges::begin(rng2_), ranges::end(rng2_)};
                 }
                 CONCEPT_REQUIRES(Range<Rng1 const>() && Range<Rng2 const>())
-                cursor begin_cursor() const
+                cursor<true> begin_cursor() const
                 {
                     return {pred_, proj1_, proj2_,
                             ranges::begin(rng1_), ranges::end(rng1_),
@@ -100,24 +101,31 @@ namespace ranges
             };
 
             
-            template<typename Rng1, typename Rng2,
+            template<bool IsConst,
+                     typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_difference_cursor
-                : detail::set_op_cursor_move<set_difference_cursor<Rng1, Rng2, C, P1, P2>>
+                : detail::set_op_cursor_move<set_difference_cursor<IsConst, Rng1, Rng2, C, P1, P2>>
             {
             private:
-                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, true>;
-                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, true>;
-                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, true>;
+                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
+                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, IsConst>;
+                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, IsConst>;
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
                 
-                range_iterator_t<Rng1> it1_;
-                range_sentinel_t<Rng1> end1_;
+                template<typename T>
+                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
                 
-                range_iterator_t<Rng2> it2_;
-                range_sentinel_t<Rng2> end2_;
+                using R1 = constify_if<Rng1>;
+                using R2 = constify_if<Rng2>;
+                
+                range_iterator_t<R1> it1_;
+                range_sentinel_t<R1> end1_;
+                
+                range_iterator_t<R2> it2_;
+                range_sentinel_t<R2> end2_;
             
                 void satisfy()
                 {
@@ -137,12 +145,12 @@ namespace ranges
                 }
                 
             public:
-                using value_type = range_value_t<Rng1>;
+                using value_type = range_value_t<constify_if<Rng1>>;
 
                 set_difference_cursor() = default;
                 set_difference_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
-                                      range_iterator_t<Rng1> it1, range_sentinel_t<Rng1> end1,
-                                      range_iterator_t<Rng2> it2, range_sentinel_t<Rng2> end2)
+                                      range_iterator_t<R1> it1, range_sentinel_t<R1> end1,
+                                      range_iterator_t<R2> it2, range_sentinel_t<R2> end2)
                   : pred_(std::move(pred)), proj1_(std::move(proj1)), proj2_(std::move(proj2)),
                     it1_(std::move(it1)), end1_(std::move(end1)), it2_(std::move(it2)), end2_(std::move(end2))
                 {
@@ -188,7 +196,7 @@ namespace ranges
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_difference_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
-                 detail::set_difference_cursor<Rng1, Rng2, C, P1, P2>,
+                 detail::set_difference_cursor,
                  detail::set_difference_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
@@ -268,24 +276,31 @@ namespace ranges
         
         namespace detail
         {
-            template<typename Rng1, typename Rng2,
+            template<bool IsConst,
+                     typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_intersection_cursor
-                : detail::set_op_cursor_move<set_intersection_cursor<Rng1, Rng2, C, P1, P2>>
+                : detail::set_op_cursor_move<set_intersection_cursor<IsConst, Rng1, Rng2, C, P1, P2>>
             {
             private:
-                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, true>;
-                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, true>;
-                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, true>;
+                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
+                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, IsConst>;
+                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, IsConst>;
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
                 
-                range_iterator_t<Rng1> it1_;
-                range_sentinel_t<Rng1> end1_;
+                template<typename T>
+                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
                 
-                range_iterator_t<Rng2> it2_;
-                range_sentinel_t<Rng2> end2_;
+                using R1 = constify_if<Rng1>;
+                using R2 = constify_if<Rng2>;
+
+                range_iterator_t<R1> it1_;
+                range_sentinel_t<R1> end1_;
+                
+                range_iterator_t<R2> it2_;
+                range_sentinel_t<R2> end2_;
                 
                 void satisfy()
                 {
@@ -304,12 +319,12 @@ namespace ranges
                 }
                 
             public:
-                using value_type = range_value_t<Rng1>;
+                using value_type = range_value_t<R1>;
 
                 set_intersection_cursor() = default;
                 set_intersection_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
-                                        range_iterator_t<Rng1> it1, range_sentinel_t<Rng1> end1,
-                                        range_iterator_t<Rng2> it2, range_sentinel_t<Rng2> end2)
+                                        range_iterator_t<R1> it1, range_sentinel_t<R1> end1,
+                                        range_iterator_t<R2> it2, range_sentinel_t<R2> end2)
                   : pred_(std::move(pred)), proj1_(std::move(proj1)), proj2_(std::move(proj2)),
                     it1_(std::move(it1)), end1_(std::move(end1)), it2_(std::move(it2)), end2_(std::move(end2))
                 {
@@ -354,7 +369,7 @@ namespace ranges
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_intersection_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
-                 detail::set_intersection_cursor<Rng1, Rng2, C, P1, P2>,
+                 detail::set_intersection_cursor,
                  detail::set_intersection_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
@@ -433,24 +448,31 @@ namespace ranges
         
         namespace detail
         {
-            template<typename Rng1, typename Rng2,
+            template<bool IsConst,
+                     typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_union_cursor
-                : detail::set_op_cursor_move<set_union_cursor<Rng1, Rng2, C, P1, P2>>
+                : detail::set_op_cursor_move<set_union_cursor<IsConst, Rng1, Rng2, C, P1, P2>>
             {
             private:
-                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, true>;
-                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, true>;
-                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, true>;
+                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
+                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, IsConst>;
+                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, IsConst>;
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
                 
-                range_iterator_t<Rng1> it1_;
-                range_sentinel_t<Rng1> end1_;
+                template<typename T>
+                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
                 
-                range_iterator_t<Rng2> it2_;
-                range_sentinel_t<Rng2> end2_;
+                using R1 = constify_if<Rng1>;
+                using R2 = constify_if<Rng2>;
+                
+                range_iterator_t<R1> it1_;
+                range_sentinel_t<R1> end1_;
+                
+                range_iterator_t<R2> it2_;
+                range_sentinel_t<R2> end2_;
                 
                 enum class state_t
                 {
@@ -474,16 +496,17 @@ namespace ranges
                 }
                 
             public:
-                using value_type = common_type_t<range_value_t<Rng1>, range_value_t<Rng2>>;
-                using reference_type = common_reference_t<range_reference_t<Rng1>, range_reference_t<Rng2>>;
-                using rvalue_reference_type = common_reference_t<range_rvalue_reference_t<Rng1>,
-                                                                 range_rvalue_reference_t<Rng2>>;
-                using single_pass = meta::fast_or<SinglePass<range_iterator_t<Rng1>>, SinglePass<range_iterator_t<Rng2>>>;
+                using value_type = common_type_t<range_value_t<R1>, range_value_t<R2>>;
+                using reference_type = common_reference_t<range_reference_t<R1>, range_reference_t<R2>>;
+                using rvalue_reference_type = common_reference_t<range_rvalue_reference_t<R1>,
+                                                                 range_rvalue_reference_t<R2>>;
+                using single_pass = meta::fast_or<SinglePass<range_iterator_t<R1>>,
+                                                  SinglePass<range_iterator_t<R2>>>;
 
                 set_union_cursor() = default;
                 set_union_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
-                                 range_iterator_t<Rng1> it1, range_sentinel_t<Rng1> end1,
-                                 range_iterator_t<Rng2> it2, range_sentinel_t<Rng2> end2)
+                                 range_iterator_t<R1> it1, range_sentinel_t<R1> end1,
+                                 range_iterator_t<R2> it2, range_sentinel_t<R2> end2)
                   : pred_(std::move(pred)), proj1_(std::move(proj1)), proj2_(std::move(proj2)),
                     it1_(std::move(it1)), end1_(std::move(end1)), it2_(std::move(it2)), end2_(std::move(end2)),
                     state(which_set())
@@ -562,7 +585,7 @@ namespace ranges
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_union_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
-                 detail::set_union_cursor<Rng1, Rng2, C, P1, P2>,
+                 detail::set_union_cursor,
                  detail::set_union_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
@@ -641,24 +664,32 @@ namespace ranges
         
         namespace detail
         {
-            template<typename Rng1, typename Rng2,
+            template<bool IsConst,
+                     typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_symmetric_difference_cursor
-                : detail::set_op_cursor_move<set_symmetric_difference_cursor<Rng1, Rng2, C, P1, P2>>
+                : detail::set_op_cursor_move<set_symmetric_difference_cursor<IsConst, Rng1, Rng2, C, P1, P2>>
             {
             private:
-                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, true>;
-                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, true>;
-                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, true>;
+                using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
+                using proj1_ref_ = semiregular_ref_or_val_t<function_type<P1>, IsConst>;
+                using proj2_ref_ = semiregular_ref_or_val_t<function_type<P2>, IsConst>;
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
                 
-                range_iterator_t<Rng1> it1_;
-                range_sentinel_t<Rng1> end1_;
+                template<typename T>
+                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
                 
-                range_iterator_t<Rng2> it2_;
-                range_sentinel_t<Rng2> end2_;
+                using R1 = constify_if<Rng1>;
+                using R2 = constify_if<Rng2>;
+
+                
+                range_iterator_t<R1> it1_;
+                range_sentinel_t<R1> end1_;
+                
+                range_iterator_t<R2> it2_;
+                range_sentinel_t<R2> end2_;
                 
                 enum class state_t
                 {
@@ -698,16 +729,16 @@ namespace ranges
                 }
                 
             public:
-                using value_type = common_type_t<range_value_t<Rng1>, range_value_t<Rng2>>;
-                using reference_type = common_reference_t<range_reference_t<Rng1>, range_reference_t<Rng2>>;
-                using rvalue_reference_type = common_reference_t<range_rvalue_reference_t<Rng1>,
-                                                                 range_rvalue_reference_t<Rng2>>;
-                using single_pass = meta::fast_or<SinglePass<range_iterator_t<Rng1>>, SinglePass<range_iterator_t<Rng2>>>;
+                using value_type = common_type_t<range_value_t<R1>, range_value_t<R2>>;
+                using reference_type = common_reference_t<range_reference_t<R1>, range_reference_t<R2>>;
+                using rvalue_reference_type = common_reference_t<range_rvalue_reference_t<R1>,
+                                                                 range_rvalue_reference_t<R2>>;
+                using single_pass = meta::fast_or<SinglePass<range_iterator_t<R1>>, SinglePass<range_iterator_t<R2>>>;
 
                 set_symmetric_difference_cursor() = default;
                 set_symmetric_difference_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
-                                                range_iterator_t<Rng1> it1, range_sentinel_t<Rng1> end1,
-                                                range_iterator_t<Rng2> it2, range_sentinel_t<Rng2> end2)
+                                                range_iterator_t<R1> it1, range_sentinel_t<R1> end1,
+                                                range_iterator_t<R2> it2, range_sentinel_t<R2> end2)
                   : pred_(std::move(pred)), proj1_(std::move(proj1)), proj2_(std::move(proj2)),
                     it1_(std::move(it1)), end1_(std::move(end1)), it2_(std::move(it2)), end2_(std::move(end2)),
                     state()
@@ -787,7 +818,7 @@ namespace ranges
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_symmetric_difference_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
-                 detail::set_symmetric_difference_cursor<Rng1, Rng2, C, P1, P2>,
+                 detail::set_symmetric_difference_cursor,
                  detail::set_symmetric_difference_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
