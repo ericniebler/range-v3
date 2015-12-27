@@ -48,10 +48,21 @@ namespace ranges
                                 meta::id<B>,
                                 meta::nil_>>>>;
 
-            template<typename I, typename D /* = iterator_difference_t<I>*/>
-            struct counted_cursor
+            template<typename I, bool IsReadable = (bool) Readable<I>()>
+            struct counted_cursor_types
+            {};
+
+            template<typename I>
+            struct counted_cursor_types<I, true>
             {
                 using single_pass = SinglePass<I>;
+                using value_type = iterator_value_t<I>;
+            };
+
+            template<typename I, typename D /* = iterator_difference_t<I>*/>
+            struct counted_cursor
+              : counted_cursor_types<I>
+            {
                 struct mixin
                   : basic_mixin<counted_cursor>
                 {
@@ -110,9 +121,16 @@ namespace ranges
                 counted_cursor(counted_cursor<OtherI, OtherD> that)
                   : it_(std::move(that.it_)), n_(std::move(that.n_))
                 {}
+                CONCEPT_REQUIRES(Readable<I>())
                 auto get() const -> decltype(*it_)
                 {
                     return *it_;
+                }
+                template<typename T,
+                    CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T &&>())>
+                void set(T &&t) const
+                {
+                    *it_ = (T &&) t;
                 }
                 bool done() const
                 {

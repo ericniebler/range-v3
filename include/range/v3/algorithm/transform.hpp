@@ -42,7 +42,7 @@ namespace ranges
             InputIterator<I>,
             WeaklyIncrementable<O>,
             IndirectCallable<F, Projected<I, P>>,
-            Writable<O, Y>>;
+            Writable<O, Y &&>>;
 
         /// \ingroup group-concepts
         template<typename I0, typename I1, typename O, typename F,
@@ -57,7 +57,7 @@ namespace ranges
             InputIterator<I1>,
             WeaklyIncrementable<O>,
             IndirectCallable<F, Projected<I0, P0>, Projected<I1, P1>>,
-            Writable<O, Y>>;
+            Writable<O, Y &&>>;
 
         /// \addtogroup group-algorithms
         /// @{

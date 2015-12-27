@@ -29,7 +29,7 @@ namespace ranges
         struct fill_fn
         {
             template<typename O, typename S, typename V,
-                CONCEPT_REQUIRES_(OutputIterator<O, V>() && IteratorRange<O, S>())>
+                CONCEPT_REQUIRES_(OutputIterator<O, V const &>() && IteratorRange<O, S>())>
             O operator()(O begin, S end, V const & val) const
             {
                 for(; begin != end; ++begin)
@@ -39,7 +39,7 @@ namespace ranges
 
             template<typename Rng, typename V,
                 typename O = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(OutputRange<Rng, V>())>
+                CONCEPT_REQUIRES_(OutputRange<Rng, V const &>())>
             range_safe_iterator_t<Rng> operator()(Rng &&rng, V const & val) const
             {
                 return (*this)(begin(rng), end(rng), val);

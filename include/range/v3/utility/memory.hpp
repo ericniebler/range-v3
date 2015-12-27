@@ -122,14 +122,16 @@ namespace ranges
             {
                 return *this;
             }
+            CONCEPT_REQUIRES(CopyConstructible<Val>())
             raw_storage_iterator const &operator=(Val const & val) const
             {
-                ::new(&*out_) Val(val);
+                ::new((void*) std::addressof(*out_)) Val(val);
                 return *this;
             }
+            CONCEPT_REQUIRES(MoveConstructible<Val>())
             raw_storage_iterator const &operator=(Val && val) const
             {
-                ::new(&*out_) Val(std::move(val));
+                ::new((void*) std::addressof(*out_)) Val(std::move(val));
                 return *this;
             }
             raw_storage_iterator &operator++()

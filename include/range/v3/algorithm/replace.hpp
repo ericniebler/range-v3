@@ -32,7 +32,7 @@ namespace ranges
         using Replaceable = meta::fast_and<
             InputIterator<I>,
             IndirectCallableRelation<equal_to, Projected<I, P>, T0 const *>,
-            Writable<I, T1>>;
+            Writable<I, T1 const &>>;
 
         /// \addtogroup group-algorithms
         /// @{

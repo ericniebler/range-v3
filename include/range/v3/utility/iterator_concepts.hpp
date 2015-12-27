@@ -172,18 +172,8 @@ namespace ranges
                     ));
             };
 
-            struct MoveWritable
-              : refines<Movable(_1), DefaultConstructible(_1)>
-            {
-                template<typename Out, typename T>
-                auto requires_(Out&& o, T&&) -> decltype(
-                    concepts::valid_expr(
-                        *o = std::move(val<T>())
-                    ));
-            };
-
             struct Writable
-              : refines<MoveWritable>
+              : refines<Movable(_1), DefaultConstructible(_1)>
             {
                 template<typename Out, typename T>
                 auto requires_(Out&& o, T&&) -> decltype(
@@ -198,13 +188,23 @@ namespace ranges
                 auto requires_(I&&, O&&) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<Readable, I>(),
+                        concepts::model_of<Writable, O, Readable::rvalue_reference_t<I> &&>()
+                    ));
+            };
+
+            struct IndirectlyMovableStorable
+              : refines<IndirectlyMovable>
+            {
+                template<typename I, typename O>
+                auto requires_(I&&, O&&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<IndirectlyMovable, I, O>(),
                         concepts::model_of<Movable, Readable::value_t<I>>(),
                         concepts::model_of<Constructible, Readable::value_t<I>,
                             Readable::rvalue_reference_t<I> &&>(),
                         concepts::model_of<Assignable, Readable::value_t<I> &,
                             Readable::rvalue_reference_t<I> &&>(),
-                        concepts::model_of<MoveWritable, O, Readable::rvalue_reference_t<I> &&>(),
-                        concepts::model_of<MoveWritable, O, Readable::value_t<I> &&>()
+                        concepts::model_of<Writable, O, Readable::value_t<I> &&>()
                     ));
             };
 
@@ -214,13 +214,22 @@ namespace ranges
                 template<typename I, typename O>
                 auto requires_(I&&, O&&) -> decltype(
                     concepts::valid_expr(
+                        concepts::model_of<Writable, O, Readable::reference_t<I> &&>()
+                    ));
+            };
+
+            struct IndirectlyCopyableStorable
+              : refines<IndirectlyMovableStorable, IndirectlyCopyable>
+            {
+                template<typename I, typename O>
+                auto requires_(I&&, O&&) -> decltype(
+                    concepts::valid_expr(
                         concepts::model_of<Copyable, Readable::value_t<I>>(),
                         concepts::model_of<Constructible, Readable::value_t<I>,
                             Readable::reference_t<I> &&>(),
                         concepts::model_of<Assignable, Readable::value_t<I> &,
                             Readable::reference_t<I> &&>(),
-                        concepts::model_of<Writable, O, Readable::reference_t<I> &&>(),
-                        concepts::model_of<Writable, O, Readable::common_reference_t<I> &&>(), // BUGBUG why this?
+                        concepts::model_of<Writable, O, Readable::common_reference_t<I> &&>(),
                         concepts::model_of<Writable, O, Readable::value_t<I> const &>()
                     ));
             };
@@ -362,16 +371,19 @@ namespace ranges
         using Readable = concepts::models<concepts::Readable, T>;
 
         template<typename Out, typename T>
-        using MoveWritable = concepts::models<concepts::MoveWritable, Out, T>;
-
-        template<typename Out, typename T>
         using Writable = concepts::models<concepts::Writable, Out, T>;
 
         template<typename I, typename O>
         using IndirectlyMovable = concepts::models<concepts::IndirectlyMovable, I, O>;
 
         template<typename I, typename O>
+        using IndirectlyMovableStorable = concepts::models<concepts::IndirectlyMovableStorable, I, O>;
+
+        template<typename I, typename O>
         using IndirectlyCopyable = concepts::models<concepts::IndirectlyCopyable, I, O>;
+
+        template<typename I, typename O>
+        using IndirectlyCopyableStorable = concepts::models<concepts::IndirectlyCopyableStorable, I, O>;
 
         template<typename I1, typename I2>
         using IndirectlySwappable = concepts::models<concepts::IndirectlySwappable, I1, I2>;
@@ -423,6 +435,29 @@ namespace ranges
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
         using SinglePass = meta::fast_and<Iterator<I>, meta::not_<ForwardIterator<I>>>;
+
+        namespace detail
+        {
+            template<typename I, bool IsReadable = (bool) Readable<I>()>
+            struct exclusively_writable_
+            {
+                template<typename T>
+                using apply = Writable<I, T>;
+            };
+
+            template<typename I>
+            struct exclusively_writable_<I, true>
+            {
+                template<typename T>
+                using apply =
+                    meta::and_<
+                        Writable<I, T>,
+                        meta::not_<Assignable<concepts::Readable::reference_t<I> &&, T>>>;
+            };
+        }
+
+        template<typename I, typename T>
+        using ExclusivelyWritable_ = meta::apply<detail::exclusively_writable_<I>, T>;
 
         namespace detail
         {
@@ -519,7 +554,7 @@ namespace ranges
         using Permutable = meta::fast_and<
             ForwardIterator<I>,
             Movable<V>,
-            IndirectlyMovable<I, I>>;
+            IndirectlyMovableStorable<I, I>>;
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident>

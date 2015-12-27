@@ -81,7 +81,7 @@ namespace ranges
                 template<typename T, typename V>
                 auto requires_(T&&, V&&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<OutputIterator, Range::iterator_t<T>, V>()
+                        concepts::model_of<OutputIterator, Range::iterator_t<T>, V &&>()
                     ));
             };
 

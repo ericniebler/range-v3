@@ -32,7 +32,7 @@ namespace ranges
         using ReplaceIfable = meta::fast_and<
             InputIterator<I>,
             IndirectCallablePredicate<C, Projected<I, P>>,
-            Writable<I, T>>;
+            Writable<I, T const &>>;
 
         /// \addtogroup group-algorithms
         /// @{

@@ -28,10 +28,21 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename I, typename S>
-            struct common_cursor
+            template<typename I, bool IsReadable = (bool) Readable<I>()>
+            struct common_cursor_types
+            {};
+
+            template<typename I>
+            struct common_cursor_types<I, true>
             {
                 using single_pass = SinglePass<I>;
+                using value_type = iterator_value_t<I>;
+            };
+
+            template<typename I, typename S>
+            struct common_cursor
+              : common_cursor_types<I>
+            {
                 struct mixin
                   : basic_mixin<common_cursor>
                 {
@@ -99,9 +110,16 @@ namespace ranges
                         common_cursor<I2, S2>{S2{se()}} :
                         common_cursor<I2, S2>{I2{it()}};
                 }
+                CONCEPT_REQUIRES(Readable<I>())
                 auto get() const -> decltype(*std::declval<I const &>())
                 {
                     return *it();
+                }
+                template<typename T,
+                    CONCEPT_REQUIRES_(ExclusivelyWritable_<I, T &&>())>
+                void set(T &&t) const
+                {
+                    *it() = (T &&) t;
                 }
                 template<typename I2, typename S2,
                     CONCEPT_REQUIRES_(IteratorRange<I, S2>() && IteratorRange<I2, S>() &&

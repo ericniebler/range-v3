@@ -755,6 +755,109 @@ namespace ranges
         }
         /// @}
 
+        namespace detail
+        {
+            template<typename I, bool IsReadable = (bool) Readable<I>()>
+            struct move_into_cursor_types
+            {};
+
+            template<typename I>
+            struct move_into_cursor_types<I, true>
+            {
+                using value_type = iterator_value_t<I>;
+                using single_pass = SinglePass<I>;
+            };
+
+            template<typename I>
+            struct move_into_cursor
+              : move_into_cursor_types<I>
+            {
+            private:
+                friend range_access;
+                I it_;
+                void next()
+                {
+                    ++it_;
+                }
+                template<typename T,
+                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
+                void set(T &&t) noexcept(noexcept(*it_ = std::move(t)))
+                {
+                    *it_ = std::move(t);
+                }
+                template<typename T,
+                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
+                void set(T &&t) const noexcept(noexcept(*it_ = std::move(t)))
+                {
+                    *it_ = std::move(t);
+                }
+                CONCEPT_REQUIRES(Readable<I>())
+                auto get() const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    *it_
+                )
+                CONCEPT_REQUIRES(ForwardIterator<I>())
+                bool equal_to(move_into_cursor const &that) const
+                {
+                    return it_ == that.it_;
+                }
+                CONCEPT_REQUIRES(BidirectionalIterator<I>())
+                void prev()
+                {
+                    --it_;
+                }
+                CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                void advance(iterator_difference_t<I> n)
+                {
+                    it_ += n;
+                }
+                CONCEPT_REQUIRES(SizedIteratorRange<I, I>())
+                iterator_difference_t<I> distance_to(move_into_cursor const &that) const
+                {
+                    return that.it_ - it_;
+                }
+                explicit move_into_cursor(I it)
+                  : it_(std::move(it))
+                {}
+            public:
+                struct mixin : basic_mixin<move_into_cursor>
+                {
+                    mixin() = default;
+                    explicit mixin(I it)
+                      : basic_mixin<move_into_cursor>{move_into_cursor{std::move(it)}}
+                    {}
+                    I base() const
+                    {
+                        move_into_cursor const &this_ = this->basic_mixin<move_into_cursor>::get();
+                        return this_.it_;
+                    }
+                };
+                constexpr move_into_cursor()
+                  : it_{}
+                {}
+            };
+        }
+
+        template<typename I>
+        using move_into_iterator = basic_iterator<detail::move_into_cursor<I>>;
+
+        struct move_into_fn
+        {
+            template<typename I>
+            constexpr move_into_iterator<I> operator()(I it) const
+            {
+                return move_into_iterator<I>{std::move(it)};
+            }
+        };
+
+        /// \ingroup group-utility
+        /// \sa `move_into_fn`
+        namespace
+        {
+            constexpr auto&& move_into = static_const<move_into_fn>::value;
+        }
+
         /// \cond
         namespace adl_uncounted_recounted_detail
         {
