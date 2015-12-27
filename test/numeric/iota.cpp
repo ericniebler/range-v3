@@ -41,7 +41,7 @@ void test()
 
     {
         int ia[] = {1, 2, 3, 4, 5};
-        auto rng = ranges::make_range(Iter(ia), Sent(ia + s));
+        auto rng = ranges::make_iterator_range(Iter(ia), Sent(ia + s));
         ranges::iota(rng, 5);
         CHECK(ranges::equal(ia, ir));
     }

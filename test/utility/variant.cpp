@@ -182,6 +182,17 @@ int main()
 
         v2 = v;
         check_equal(rgi2, {1,2,3,4,5});
+
+        struct T
+        {
+            T() = delete;
+            T(int) {}
+            T(T const &) = default;
+        };
+
+        // Should compile and not assert at runtime.
+        variant<T[5]> vrgt{emplaced_index<0>, {T{42},T{42},T{42},T{42},T{42}}};
+        (void) vrgt;
     }
 
     // fixed_vector

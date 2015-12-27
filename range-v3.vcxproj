@@ -173,6 +173,8 @@
     <ClCompile Include="scratch\scratch.cpp">
       <CppLanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c++1y</CppLanguageStandard>
       <CppLanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">c++1y</CppLanguageStandard>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="test\action\cont_concepts.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -678,6 +680,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="test\iterator_range.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="test\multiple1.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -703,10 +709,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="test\numeric\partial_sum.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="test\range.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -1030,13 +1032,13 @@
     <ClInclude Include="include\range\v3\front.hpp" />
     <ClInclude Include="include\range\v3\getlines.hpp" />
     <ClInclude Include="include\range\v3\istream_range.hpp" />
+    <ClInclude Include="include\range\v3\iterator_range.hpp" />
     <ClInclude Include="include\range\v3\numeric.hpp" />
     <ClInclude Include="include\range\v3\numeric\accumulate.hpp" />
     <ClInclude Include="include\range\v3\numeric\adjacent_difference.hpp" />
     <ClInclude Include="include\range\v3\numeric\inner_product.hpp" />
     <ClInclude Include="include\range\v3\numeric\iota.hpp" />
     <ClInclude Include="include\range\v3\numeric\partial_sum.hpp" />
-    <ClInclude Include="include\range\v3\range.hpp" />
     <ClInclude Include="include\range\v3\range_access.hpp" />
     <ClInclude Include="include\range\v3\range_concepts.hpp" />
     <ClInclude Include="include\range\v3\range_for.hpp" />

@@ -102,9 +102,6 @@
     <ClCompile Include="test\multiple2.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\range.cpp">
-      <Filter>Test Files</Filter>
-    </ClCompile>
     <ClCompile Include="test\to_container.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
@@ -633,6 +630,9 @@
     <ClCompile Include="scratch\scratch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test\iterator_range.cpp">
+      <Filter>Test Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\range\v3\action.hpp">
@@ -672,9 +672,6 @@
       <Filter>Header Files\range\v3</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\numeric.hpp">
-      <Filter>Header Files\range\v3</Filter>
-    </ClInclude>
-    <ClInclude Include="include\range\v3\range.hpp">
       <Filter>Header Files\range\v3</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\range_access.hpp">
@@ -1321,6 +1318,9 @@
     </ClInclude>
     <ClInclude Include="include\range\v3\utility\fixed_vector.hpp">
       <Filter>Header Files\range\v3\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\range\v3\iterator_range.hpp">
+      <Filter>Header Files\range\v3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

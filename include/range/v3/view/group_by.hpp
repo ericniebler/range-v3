@@ -19,7 +19,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/range.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
@@ -69,7 +69,7 @@ namespace ranges
                         return fun_(*first_, ref);
                     }
                 };
-                take_while_view<range<range_iterator_t<Rng>, range_sentinel_t<Rng>>, take_while_pred>
+                take_while_view<iterator_range<range_iterator_t<Rng>, range_sentinel_t<Rng>>, take_while_pred>
                 get() const
                 {
                     return {{cur_, last_}, {cur_, fun_}};

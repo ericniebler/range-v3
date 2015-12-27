@@ -100,4 +100,20 @@
 #define RANGES_CXX14_CONSTEXPR inline
 #endif
 
+#ifndef NDEBUG
+#define RANGES_NDEBUG_CONSTEXPR inline
+#else
+#define RANGES_NDEBUG_CONSTEXPR constexpr
+#endif
+
+// Workaround for GCC PR66957 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66957
+#if defined(__GNUC__) && !defined(__clang__) && \
+    ((__GNUC__ == 4 && __GNUC_MINOR__ == 9 && __GNUC_PATCHLEVEL__ >= 4) || \
+     (__GNUC__ == 5 && __GNUC_MINOR__ >= 3) || \
+     (__GNUC__ == 6))
+#define RANGES_GCC_BROKEN_CUSTPOINT inline
+#else
+#define RANGES_GCC_BROKEN_CUSTPOINT
+#endif
+
 #endif

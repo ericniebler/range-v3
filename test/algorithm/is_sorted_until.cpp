@@ -58,10 +58,10 @@ struct range_call
 
     template <class B, class E, class... Args>
     auto operator()(B &&It, E &&e, Args &&... args)
-     -> decltype(ranges::is_sorted_until(::as_lvalue(ranges::make_range(begin_t{It}, sentinel_t{e})),
+     -> decltype(ranges::is_sorted_until(::as_lvalue(ranges::make_iterator_range(begin_t{It}, sentinel_t{e})),
                                          std::forward<Args>(args)...))
     {
-        return ranges::is_sorted_until(::as_lvalue(ranges::make_range(begin_t{It}, sentinel_t{e})),
+        return ranges::is_sorted_until(::as_lvalue(ranges::make_iterator_range(begin_t{It}, sentinel_t{e})),
                                        std::forward<Args>(args)...);
     }
 };

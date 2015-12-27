@@ -47,15 +47,15 @@ void test()
     CHECK(ranges::accumulate(Iter(ia), Sent(ia+sc), 0) == 21);
     CHECK(ranges::accumulate(Iter(ia), Sent(ia+sc), 10) == 31);
 
-    using ranges::make_range;
-    CHECK(ranges::accumulate(make_range(Iter(ia), Sent(ia)), 0) == 0);
-    CHECK(ranges::accumulate(make_range(Iter(ia), Sent(ia)), 10) == 10);
-    CHECK(ranges::accumulate(make_range(Iter(ia), Sent(ia+1)), 0) == 1);
-    CHECK(ranges::accumulate(make_range(Iter(ia), Sent(ia+1)), 10) == 11);
-    CHECK(ranges::accumulate(make_range(Iter(ia), Sent(ia+2)), 0) == 3);
-    CHECK(ranges::accumulate(make_range(Iter(ia), Sent(ia+2)), 10) == 13);
-    CHECK(ranges::accumulate(make_range(Iter(ia), Sent(ia+sc)), 0) == 21);
-    CHECK(ranges::accumulate(make_range(Iter(ia), Sent(ia+sc)), 10) == 31);
+    using ranges::make_iterator_range;
+    CHECK(ranges::accumulate(make_iterator_range(Iter(ia), Sent(ia)), 0) == 0);
+    CHECK(ranges::accumulate(make_iterator_range(Iter(ia), Sent(ia)), 10) == 10);
+    CHECK(ranges::accumulate(make_iterator_range(Iter(ia), Sent(ia+1)), 0) == 1);
+    CHECK(ranges::accumulate(make_iterator_range(Iter(ia), Sent(ia+1)), 10) == 11);
+    CHECK(ranges::accumulate(make_iterator_range(Iter(ia), Sent(ia+2)), 0) == 3);
+    CHECK(ranges::accumulate(make_iterator_range(Iter(ia), Sent(ia+2)), 10) == 13);
+    CHECK(ranges::accumulate(make_iterator_range(Iter(ia), Sent(ia+sc)), 0) == 21);
+    CHECK(ranges::accumulate(make_iterator_range(Iter(ia), Sent(ia+sc)), 10) == 31);
 }
 
 int main()

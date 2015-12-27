@@ -757,21 +757,21 @@ int main()
         const int ia[] = {0, 1, 2, 3, 0, 5, 6, 2, 4, 4};
         const int ib[] = {4, 2, 3, 0, 1, 4, 0, 5, 6, 2};
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const int*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const int*>(ia),
                                    sentinel<const int*>(ia + sa)),
                                    forward_iterator<const int*>(ib)) == true);
 
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const int*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const int*>(ia),
                                    sentinel<const int*>(ia + sa)),
-                                   ranges::make_range(forward_iterator<const int*>(ib),
+                                   ranges::make_iterator_range(forward_iterator<const int*>(ib),
                                    sentinel<const int*>(ib + sa))) == true);
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const int*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const int*>(ia),
                                    sentinel<const int*>(ia + sa)),
-                                   ranges::make_range(forward_iterator<const int*>(ib + 1),
+                                   ranges::make_iterator_range(forward_iterator<const int*>(ib + 1),
                                    sentinel<const int*>(ib + sa))) == false);
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const int*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const int*>(ia),
                                    sentinel<const int*>(ia + sa)),
-                                   ranges::make_range(forward_iterator<const int*>(ib),
+                                   ranges::make_iterator_range(forward_iterator<const int*>(ib),
                                    sentinel<const int*>(ib + sa - 1))) == false);
     }
 
@@ -780,24 +780,24 @@ int main()
         const int ia[] = {0, 1, 2, 3, 0, 5, 6, 2, 4, 4};
         const int ib[] = {4, 2, 3, 0, 1, 4, 0, 5, 6, 2};
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const int*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const int*>(ia),
                                    sentinel<const int*>(ia + sa)),
                                    forward_iterator<const int*>(ib),
                                    std::equal_to<int const>()) == true);
 
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const int*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const int*>(ia),
                                    sentinel<const int*>(ia + sa)),
-                                   ranges::make_range(forward_iterator<const int*>(ib),
+                                   ranges::make_iterator_range(forward_iterator<const int*>(ib),
                                    sentinel<const int*>(ib + sa)),
                                    std::equal_to<int const>()) == true);
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const int*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const int*>(ia),
                                    sentinel<const int*>(ia + sa)),
-                                   ranges::make_range(forward_iterator<const int*>(ib + 1),
+                                   ranges::make_iterator_range(forward_iterator<const int*>(ib + 1),
                                    sentinel<const int*>(ib + sa)),
                                    std::equal_to<int const>()) == false);
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const int*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const int*>(ia),
                                    sentinel<const int*>(ia + sa)),
-                                   ranges::make_range(forward_iterator<const int*>(ib),
+                                   ranges::make_iterator_range(forward_iterator<const int*>(ib),
                                    sentinel<const int*>(ib + sa - 1)),
                                    std::equal_to<int const>()) == false);
     }
@@ -809,14 +809,14 @@ int main()
         const unsigned sa = sizeof(ia)/sizeof(ia[0]);
         CHECK(ranges::is_permutation(ia, &ib[0], std::equal_to<int const>(), &S::i, &T::i) == true);
         CHECK(ranges::is_permutation(ia, ib, std::equal_to<int const>(), &S::i, &T::i) == true);
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const S*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const S*>(ia),
                                    sentinel<const S*>(ia + sa)),
-                                   ranges::make_range(forward_iterator<const T*>(ib + 1),
+                                   ranges::make_iterator_range(forward_iterator<const T*>(ib + 1),
                                    sentinel<const T*>(ib + sa)),
                                    std::equal_to<int const>(), &S::i, &T::i) == false);
-        CHECK(ranges::is_permutation(ranges::make_range(forward_iterator<const S*>(ia),
+        CHECK(ranges::is_permutation(ranges::make_iterator_range(forward_iterator<const S*>(ia),
                                    sentinel<const S*>(ia + sa)),
-                                   ranges::make_range(forward_iterator<const T*>(ib),
+                                   ranges::make_iterator_range(forward_iterator<const T*>(ib),
                                    sentinel<const T*>(ib + sa - 1)),
                                    std::equal_to<int const>(), &S::i, &T::i) == false);
     }

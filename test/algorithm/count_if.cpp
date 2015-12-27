@@ -40,11 +40,11 @@ int main()
     CHECK(count_if(input_iterator<const int*>(ia),
                    sentinel<const int*>(ia), equals(2)) == 0);
 
-    CHECK(count_if(make_range(input_iterator<const int*>(ia),
+    CHECK(count_if(make_iterator_range(input_iterator<const int*>(ia),
                          sentinel<const int*>(ia + cia)), equals(2)) == 3);
-    CHECK(count_if(make_range(input_iterator<const int*>(ia),
+    CHECK(count_if(make_iterator_range(input_iterator<const int*>(ia),
                          sentinel<const int*>(ia + cia)), equals(7)) == 0);
-    CHECK(count_if(make_range(input_iterator<const int*>(ia),
+    CHECK(count_if(make_iterator_range(input_iterator<const int*>(ia),
                          sentinel<const int*>(ia)), equals(2)) == 0);
 
     S sa[] = {{0}, {1}, {2}, {2}, {0}, {1}, {2}, {3}};
@@ -57,11 +57,11 @@ int main()
     CHECK(count_if(input_iterator<const S*>(sa),
                    sentinel<const S*>(sa), equals(2), &S::i) == 0);
 
-    CHECK(count_if(make_range(input_iterator<const S*>(sa),
+    CHECK(count_if(make_iterator_range(input_iterator<const S*>(sa),
                          sentinel<const S*>(sa + csa)), equals(2), &S::i) == 3);
-    CHECK(count_if(make_range(input_iterator<const S*>(sa),
+    CHECK(count_if(make_iterator_range(input_iterator<const S*>(sa),
                          sentinel<const S*>(sa + csa)), equals(7), &S::i) == 0);
-    CHECK(count_if(make_range(input_iterator<const S*>(sa),
+    CHECK(count_if(make_iterator_range(input_iterator<const S*>(sa),
                          sentinel<const S*>(sa)), equals(2), &S::i) == 0);
 
     T ta[] = {{true}, {false}, {true}, {false}, {false}, {true}, {false}, {false}, {true}, {false}};
@@ -69,9 +69,9 @@ int main()
                    sentinel<T*>(ta + size(ta)), &T::m) == 4);
     CHECK(count_if(input_iterator<T*>(ta),
                    sentinel<T*>(ta + size(ta)), &T::b) == 4);
-    CHECK(count_if(make_range(input_iterator<T*>(ta),
+    CHECK(count_if(make_iterator_range(input_iterator<T*>(ta),
                          sentinel<T*>(ta + size(ta))), &T::m) == 4);
-    CHECK(count_if(make_range(input_iterator<T*>(ta),
+    CHECK(count_if(make_iterator_range(input_iterator<T*>(ta),
                          sentinel<T*>(ta + size(ta))), &T::b) == 4);
 
     return ::test_result();

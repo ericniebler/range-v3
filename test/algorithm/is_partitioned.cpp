@@ -77,31 +77,31 @@ test_range()
 {
     {
         const int ia[] = {1, 2, 3, 4, 5, 6};
-        CHECK(!ranges::is_partitioned(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(!ranges::is_partitioned(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                     Sent(ranges::end(ia))),
                                       is_odd()));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6};
-        CHECK( ranges::is_partitioned(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK( ranges::is_partitioned(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                     Sent(ranges::end(ia))),
                                       is_odd()));
     }
     {
         const int ia[] = {2, 4, 6, 1, 3, 5};
-        CHECK(!ranges::is_partitioned(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(!ranges::is_partitioned(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                     Sent(ranges::end(ia))),
                                       is_odd()));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6, 7};
-        CHECK(!ranges::is_partitioned(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK(!ranges::is_partitioned(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                     Sent(ranges::end(ia))),
                                       is_odd()));
     }
     {
         const int ia[] = {1, 3, 5, 2, 4, 6, 7};
-        CHECK( ranges::is_partitioned(ranges::make_range(Iter(ranges::begin(ia)),
+        CHECK( ranges::is_partitioned(ranges::make_iterator_range(Iter(ranges::begin(ia)),
                                                     Sent(ranges::begin(ia))),
                                       is_odd()));
     }

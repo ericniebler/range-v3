@@ -104,7 +104,7 @@ namespace ranges
                 template<typename Rng>
                 constexpr auto operator()(Rng && rng) const
                     noexcept(noexcept(begin_fn::impl(static_cast<Rng &&>(rng), 0))) ->
-                    decltype(begin_fn::impl(static_cast<Rng &&>(rng), 0))
+                    detail::decay_t<decltype(begin_fn::impl(static_cast<Rng &&>(rng), 0))>
                 {
                     return begin_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
@@ -132,7 +132,7 @@ namespace ranges
                 template<typename Rng>
                 constexpr auto operator()(Rng && rng) const
                     noexcept(noexcept(end_fn::impl(static_cast<Rng &&>(rng), 0))) ->
-                    decltype(end_fn::impl(static_cast<Rng &&>(rng), 0))
+                    detail::decay_t<decltype(end_fn::impl(static_cast<Rng &&>(rng), 0))>
                 {
                     return end_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
@@ -160,7 +160,7 @@ namespace ranges
                 template<typename Rng>
                 constexpr auto operator()(Rng && rng) const
                     noexcept(noexcept(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))) ->
-                    decltype(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))
+                    detail::decay_t<decltype(rbegin_fn::impl(static_cast<Rng &&>(rng), 0))>
                 {
                     return rbegin_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
@@ -200,7 +200,7 @@ namespace ranges
                 template<typename Rng>
                 constexpr auto operator()(Rng && rng) const
                     noexcept(noexcept(rend_fn::impl(static_cast<Rng &&>(rng), 0))) ->
-                    decltype(rend_fn::impl(static_cast<Rng &&>(rng), 0))
+                    detail::decay_t<decltype(rend_fn::impl(static_cast<Rng &&>(rng), 0))>
                 {
                     return rend_fn::impl(static_cast<Rng &&>(rng), 0);
                 }
@@ -266,14 +266,14 @@ namespace ranges
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `begin` free function
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& begin = static_const<begin_fn>::value;
         }
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `end` free function
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& end = static_const<end_fn>::value;
         }
@@ -281,7 +281,7 @@ namespace ranges
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `begin` free function
         /// with a const-qualified argument.
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& cbegin = static_const<cbegin_fn>::value;
         }
@@ -289,21 +289,21 @@ namespace ranges
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `end` free function
         /// with a const-qualified argument.
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& cend = static_const<cend_fn>::value;
         }
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `rbegin` free function
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& rbegin = static_const<rbegin_fn>::value;
         }
 
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `rend` free function
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& rend = static_const<rend_fn>::value;
         }
@@ -311,7 +311,7 @@ namespace ranges
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `rbegin` free function
         /// with a const-qualified argument.
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& crbegin = static_const<crbegin_fn>::value;
         }
@@ -319,7 +319,7 @@ namespace ranges
         /// \ingroup group-core
         /// \return The result of an unqualified call to the `rend` free function
         /// with a const-qualified argument.
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& crend = static_const<crend_fn>::value;
         }
@@ -353,7 +353,7 @@ namespace ranges
         /// \ingroup group-core
         /// \return `begin(rng)` if `rng` is an lvalue; otherwise, it returns `begin(rng)`
         /// wrapped in \c ranges::dangling.
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& safe_begin = static_const<safe_begin_fn>::value;
         }
@@ -361,7 +361,7 @@ namespace ranges
         /// \ingroup group-core
         /// \return `end(rng)` if `rng` is an lvalue; otherwise, it returns `end(rng)`
         /// wrapped in \c ranges::dangling.
-        namespace
+        RANGES_GCC_BROKEN_CUSTPOINT namespace
         {
             constexpr auto&& safe_end = static_const<safe_end_fn>::value;
         }

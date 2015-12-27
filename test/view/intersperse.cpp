@@ -19,12 +19,12 @@
 #include "../test_utils.hpp"
 
 template<std::size_t N>
-ranges::range<char const*> c_str(char const (&sz)[N])
+ranges::iterator_range<char const*> c_str(char const (&sz)[N])
 {
     return {&sz[0], &sz[N-1]};
 }
 
-ranges::delimit_view<ranges::range<char const *, ranges::unreachable>, char>
+ranges::delimit_view<ranges::iterator_range<char const *, ranges::unreachable>, char>
 c_str_(char const *sz)
 {
     return ranges::view::delimit(sz, '\0');

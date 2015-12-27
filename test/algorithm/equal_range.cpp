@@ -54,7 +54,7 @@ template <class Iter, class Sent, class T>
 void
 test(Iter first, Sent last, const T& value)
 {
-    ranges::range<Iter, Iter> i = ranges::equal_range(first, last, value);
+    ranges::iterator_range<Iter, Iter> i = ranges::equal_range(first, last, value);
     for (Iter j = first; j != i.begin(); ++j)
         CHECK(*j < value);
     for (Iter j = i.begin(); j != last; ++j)
@@ -64,7 +64,7 @@ test(Iter first, Sent last, const T& value)
     for (Iter j = i.end(); j != last; ++j)
         CHECK(value < *j);
 
-    auto res = ranges::equal_range(ranges::make_range(first, last), value);
+    auto res = ranges::equal_range(ranges::make_iterator_range(first, last), value);
     for (Iter j = first; j != res.get_unsafe().begin(); ++j)
         CHECK(*j < value);
     for (Iter j = res.get_unsafe().begin(); j != last; ++j)

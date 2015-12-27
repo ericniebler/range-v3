@@ -90,37 +90,37 @@ test_range_impl()
 {
     int ia[] = {0, 1, 2, 3, 4, 5};
     const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia), Sent2(ia))) ==Iter1(ia));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia), Sent2(ia+1))) ==Iter1(ia));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia+1), Sent2(ia+2))) ==Iter1(ia+1));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia+2), Sent2(ia+2))) ==Iter1(ia));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia+2), Sent2(ia+3))) ==Iter1(ia+2));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia+2), Sent2(ia+3))) ==Iter1(ia+2));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia))), ranges::make_range(Iter2(ia+2), Sent2(ia+3))) ==Iter1(ia));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia+sa-1), Sent2(ia+sa))) ==Iter1(ia+sa-1));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia+sa-3), Sent2(ia+sa))) ==Iter1(ia+sa-3));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa))), ranges::make_range(Iter2(ia), Sent2(ia+sa))) ==Iter1(ia));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+sa-1))), ranges::make_range(Iter2(ia), Sent2(ia+sa))) ==Iter1(ia+sa-1));
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ia), Sent1(ia+1))), ranges::make_range(Iter2(ia), Sent2(ia+sa))) ==Iter1(ia+1));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia), Sent2(ia))) ==Iter1(ia));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia), Sent2(ia+1))) ==Iter1(ia));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia+1), Sent2(ia+2))) ==Iter1(ia+1));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia+2), Sent2(ia+2))) ==Iter1(ia));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia+2), Sent2(ia+3))) ==Iter1(ia+2));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia+2), Sent2(ia+3))) ==Iter1(ia+2));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia))), ranges::make_iterator_range(Iter2(ia+2), Sent2(ia+3))) ==Iter1(ia));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia+sa-1), Sent2(ia+sa))) ==Iter1(ia+sa-1));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia+sa-3), Sent2(ia+sa))) ==Iter1(ia+sa-3));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa))), ranges::make_iterator_range(Iter2(ia), Sent2(ia+sa))) ==Iter1(ia));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+sa-1))), ranges::make_iterator_range(Iter2(ia), Sent2(ia+sa))) ==Iter1(ia+sa-1));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ia), Sent1(ia+1))), ranges::make_iterator_range(Iter2(ia), Sent2(ia+sa))) ==Iter1(ia+1));
     int ib[] = {0, 1, 2, 0, 1, 2, 3, 0, 1, 2, 3, 4};
     const unsigned sb = sizeof(ib)/sizeof(ib[0]);
     int ic[] = {1};
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ib), Sent1(ib+sb))), ranges::make_range(Iter2(ic), Sent2(ic+1))) ==Iter1(ib+1));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ib), Sent1(ib+sb))), ranges::make_iterator_range(Iter2(ic), Sent2(ic+1))) ==Iter1(ib+1));
     int id[] = {1, 2};
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ib), Sent1(ib+sb))), ranges::make_range(Iter2(id), Sent2(id+2))) ==Iter1(ib+1));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ib), Sent1(ib+sb))), ranges::make_iterator_range(Iter2(id), Sent2(id+2))) ==Iter1(ib+1));
     int ie[] = {1, 2, 3};
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ib), Sent1(ib+sb))), ranges::make_range(Iter2(ie), Sent2(ie+3))) ==Iter1(ib+4));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ib), Sent1(ib+sb))), ranges::make_iterator_range(Iter2(ie), Sent2(ie+3))) ==Iter1(ib+4));
     int ig[] = {1, 2, 3, 4};
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ib), Sent1(ib+sb))), ranges::make_range(Iter2(ig), Sent2(ig+4))) ==Iter1(ib+8));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ib), Sent1(ib+sb))), ranges::make_iterator_range(Iter2(ig), Sent2(ig+4))) ==Iter1(ib+8));
     int ih[] = {0, 1, 1, 1, 1, 2, 3, 0, 1, 2, 3, 4};
     const unsigned sh = sizeof(ih)/sizeof(ih[0]);
     int ii[] = {1, 1, 2};
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ih), Sent1(ih+sh))), ranges::make_range(Iter2(ii), Sent2(ii+3))) ==Iter1(ih+3));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ih), Sent1(ih+sh))), ranges::make_iterator_range(Iter2(ii), Sent2(ii+3))) ==Iter1(ih+3));
     int ij[] = {0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0};
     const unsigned sj = sizeof(ij)/sizeof(ij[0]);
     int ik[] = {0, 0, 0, 0, 1, 1, 1, 1, 0, 0};
     const unsigned sk = sizeof(ik)/sizeof(ik[0]);
-    CHECK(ranges::search(::as_lvalue(ranges::make_range(Iter1(ij), Sent1(ij+sj))), ranges::make_range(Iter2(ik), Sent2(ik+sk))) ==Iter1(ij+6));
+    CHECK(ranges::search(::as_lvalue(ranges::make_iterator_range(Iter1(ij), Sent1(ij+sj))), ranges::make_iterator_range(Iter2(ik), Sent2(ik+sk))) ==Iter1(ij+6));
 }
 
 template <class Iter1, class Iter2>

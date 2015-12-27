@@ -56,7 +56,7 @@ test_range()
     int ia[] = {0, 1, 2, 3, 4, 2, 3, 4, 2};
     constexpr unsigned sa = ranges::size(ia);
     using namespace std::placeholders;
-    Iter r = ranges::remove_if(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia+sa))), std::bind(std::equal_to<int>(), _1, 2));
+    Iter r = ranges::remove_if(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), std::bind(std::equal_to<int>(), _1, 2));
     CHECK(base(r) == ia + sa-3);
     CHECK(ia[0] == 0);
     CHECK(ia[1] == 1);
@@ -111,7 +111,7 @@ test_range_rvalue()
     ia[6].reset(new int(3));
     ia[7].reset(new int(4));
     ia[8].reset(new int(2));
-    Iter r = ranges::remove_if(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia+sa))), pred());
+    Iter r = ranges::remove_if(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+sa))), pred());
     CHECK(base(r) == ia + sa-3);
     CHECK(*ia[0] == 0);
     CHECK(*ia[1] == 1);

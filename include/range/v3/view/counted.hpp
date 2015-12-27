@@ -16,7 +16,7 @@
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view_facade.hpp>
-#include <range/v3/range.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -70,7 +70,7 @@ namespace ranges
                 // (Note: it's not possible for RandomAccessIterators in general because
                 // of cyclic iterators.
                 template<typename T>
-                range<T*> operator()(T *t, std::ptrdiff_t n) const
+                iterator_range<T*> operator()(T *t, std::ptrdiff_t n) const
                 {
                     return {t, t + n};
                 }

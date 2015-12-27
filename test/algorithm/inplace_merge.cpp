@@ -62,7 +62,7 @@ test_one_rng(unsigned N, unsigned M)
     std::shuffle(ia, ia+N, gen);
     std::sort(ia, ia+M);
     std::sort(ia+M, ia+N);
-    auto res = ranges::inplace_merge(::as_lvalue(ranges::make_range(Iter(ia), Sent(ia+N))), Iter(ia+M));
+    auto res = ranges::inplace_merge(::as_lvalue(ranges::make_iterator_range(Iter(ia), Sent(ia+N))), Iter(ia+M));
     CHECK(res == Iter(ia+N));
     if(N > 0)
     {
@@ -74,7 +74,7 @@ test_one_rng(unsigned N, unsigned M)
     std::shuffle(ia, ia+N, gen);
     std::sort(ia, ia+M);
     std::sort(ia+M, ia+N);
-    auto res2 = ranges::inplace_merge(ranges::make_range(Iter(ia), Sent(ia+N)), Iter(ia+M));
+    auto res2 = ranges::inplace_merge(ranges::make_iterator_range(Iter(ia), Sent(ia+N)), Iter(ia+M));
     CHECK(res2.get_unsafe() == Iter(ia+N));
     if(N > 0)
     {

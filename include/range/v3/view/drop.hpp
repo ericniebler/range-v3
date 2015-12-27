@@ -20,7 +20,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/range.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/box.hpp>
 #include <range/v3/utility/optional.hpp>
 #include <range/v3/utility/functional.hpp>
@@ -163,7 +163,7 @@ namespace ranges
                     return {all(std::forward<Rng>(rng)), n};
                 }
                 template<typename Rng, CONCEPT_REQUIRES_(!View<Rng>() && std::is_lvalue_reference<Rng>())>
-                static range<range_iterator_t<Rng>, range_sentinel_t<Rng>>
+                static iterator_range<range_iterator_t<Rng>, range_sentinel_t<Rng>>
                 invoke_(Rng && rng, range_difference_t<Rng> n, concepts::RandomAccessRange*)
                 {
                     return {next(begin(rng), n), end(rng)};

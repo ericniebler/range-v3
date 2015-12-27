@@ -32,6 +32,8 @@ namespace ranges
 {
     inline namespace v1
     {
+        /// \brief Like std::vector, but with a fixed-size buffer, guaranteed to do no dynamic
+        /// allocation ever.
         template<typename T, std::size_t N>
         struct fixed_vector
         {

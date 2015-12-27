@@ -19,7 +19,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
-#include <range/v3/range.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -154,7 +154,7 @@ namespace ranges
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!View<Rng>() && std::is_lvalue_reference<Rng>())>
-                static range<range_iterator_t<Rng>>
+                static iterator_range<range_iterator_t<Rng>>
                 invoke_(Rng && rng, range_difference_t<Rng> n, concepts::RandomAccessRange*)
                 {
                     return {begin(rng), next(begin(rng), n)};
