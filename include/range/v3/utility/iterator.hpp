@@ -753,8 +753,88 @@ namespace ranges
         {
             return reverse_iterator<I>(i);
         }
-        /// @}
 
+        using std::move_iterator;
+        using std::make_move_iterator;
+
+        template<typename S>
+        struct move_sentinel
+        {
+        private:
+            S sent_;
+        public:
+            constexpr move_sentinel()
+              : sent_{}
+            {}
+            constexpr explicit move_sentinel(S s)
+              : sent_(detail::move(s))
+            {}
+            template<typename OS,
+                CONCEPT_REQUIRES_(ConvertibleTo<OS, S>())>
+            constexpr explicit move_sentinel(move_sentinel<OS> const &that)
+              : sent_(that.base())
+            {}
+            template<typename OS,
+                CONCEPT_REQUIRES_(ConvertibleTo<OS, S>())>
+            move_sentinel &operator=(move_sentinel<OS> const &that)
+            {
+                sent_ = that.base();
+                return *this;
+            }
+            S base() const
+            {
+                return sent_;
+            }
+        };
+
+        template<typename I, typename S,
+            CONCEPT_REQUIRES_(IteratorRange<I, S>())>
+        bool operator==(move_iterator<I> const &i, move_sentinel<S> const &s)
+        {
+            return i.base() == s.base();
+        }
+        template<typename I, typename S,
+            CONCEPT_REQUIRES_(IteratorRange<I, S>())>
+        bool operator==(move_sentinel<S> const &s, move_iterator<S> const &i)
+        {
+            return s.base() == i.base();
+        }
+        template<typename I, typename S,
+            CONCEPT_REQUIRES_(IteratorRange<I, S>())>
+        bool operator!=(move_iterator<S> const &i, move_sentinel<S> const &s)
+        {
+            return i.base() != s.base();
+        }
+        template<typename I, typename S,
+            CONCEPT_REQUIRES_(IteratorRange<I, S>())>
+        bool operator!=(move_sentinel<S> const &s, move_iterator<S> const &i)
+        {
+            return s.base() != i.base();
+        }
+
+        struct make_move_sentinel_fn
+        {
+            template<typename I,
+                CONCEPT_REQUIRES_(InputIterator<I>())>
+            constexpr move_iterator<I> operator()(I i) const
+            {
+                return move_iterator<I>{detail::move(i)};
+            }
+
+            template<typename S,
+                CONCEPT_REQUIRES_(SemiRegular<S>() && !InputIterator<S>())>
+            constexpr move_sentinel<S> operator()(S s) const
+            {
+                return move_sentinel<S>{detail::move(s)};
+            }
+        };
+
+        namespace
+        {
+            constexpr auto &&make_move_sentinel = static_const<make_move_sentinel_fn>::value;
+        }
+
+        /// \cond
         namespace detail
         {
             template<typename I, bool IsReadable = (bool) Readable<I>()>
@@ -838,6 +918,7 @@ namespace ranges
                 {}
             };
         }
+        /// \endcond
 
         template<typename I>
         using move_into_iterator = basic_iterator<detail::move_into_cursor<I>>;
@@ -857,6 +938,7 @@ namespace ranges
         {
             constexpr auto&& move_into = static_const<move_into_fn>::value;
         }
+        /// @}
 
         /// \cond
         namespace adl_uncounted_recounted_detail
