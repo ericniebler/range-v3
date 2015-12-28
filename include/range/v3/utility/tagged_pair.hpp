@@ -57,8 +57,7 @@ namespace ranges
             template<typename T>
             using tag_elem = meta::back<meta::as_list<T>>;
 
-        #if defined(__GNUC__) && !defined(__clang__) && \
-            (__GNUC__ == 4 && __GNUC_MINOR__ == 9)
+        #if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 6)
             template<typename Base, typename...Tags>
             meta::if_c<is_swappable<Base &>::value>
             swap(tagged<Base, Tags...> &x, tagged<Base, Tags...> &y)
@@ -120,8 +119,7 @@ namespace ranges
                 ranges::swap(static_cast<Base &>(*this), static_cast<Base &>(that));
             }
             // Workaround for GCC PR66957 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66957
-        #if !defined(__GNUC__) || defined(__clang__) || \
-            !(__GNUC__ == 4 && __GNUC_MINOR__ == 9)
+        #if !defined(__GNUC__) || defined(__clang__) || !(__GNUC__ < 6)
             template<int tagged_dummy_ = 42>
             friend meta::if_c<tagged_dummy_ == 43 || is_swappable<Base &>::value>
             swap(tagged &x, tagged &y)
