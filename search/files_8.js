@@ -15,5 +15,6 @@ var searchData=
   ['istream_5frange_2ehpp',['istream_range.hpp',['../istream__range_8hpp.html',1,'']]],
   ['iterator_2ehpp',['iterator.hpp',['../iterator_8hpp.html',1,'']]],
   ['iterator_5fconcepts_2ehpp',['iterator_concepts.hpp',['../iterator__concepts_8hpp.html',1,'']]],
+  ['iterator_5frange_2ehpp',['iterator_range.hpp',['../iterator__range_8hpp.html',1,'']]],
   ['iterator_5ftraits_2ehpp',['iterator_traits.hpp',['../iterator__traits_8hpp.html',1,'']]]
 ];

@@ -12,6 +12,7 @@ var group__trait =
     [ "alignof_", "group__trait.html#gad3906124930a00d7f3b3f1cb9d904111", null ],
     [ "has_type", "group__trait.html#gaa61716dadd7fd9b59d6406812d0d82f4", null ],
     [ "id_t", "group__trait.html#ga10c0b84437b8cc1a8d475c1c660c653b", null ],
+    [ "is", "group__trait.html#gad78e6f54caea9380570b6859b5a24ea3", null ],
     [ "is_valid", "group__trait.html#ga2aa986837386ad289def903d9bbf83e7", null ],
     [ "lambda", "group__trait.html#ga288e095a9834eab7fedc8ce234afdd04", null ],
     [ "let", "group__trait.html#gaa435532ebfd257be0916b0db22a0c338", null ],

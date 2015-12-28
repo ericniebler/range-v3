@@ -1,16 +1,11 @@
 var searchData=
 [
   ['back_5ffn',['back_fn',['../structranges_1_1v3_1_1back__fn.html',1,'ranges::v3']]],
-  ['back_5finsert_5fiterator',['back_insert_iterator',['../structranges_1_1v3_1_1back__insert__iterator.html',1,'ranges::v3']]],
   ['back_5finserter_5ffn',['back_inserter_fn',['../structranges_1_1v3_1_1back__inserter__fn.html',1,'ranges::v3']]],
   ['bad_5fany_5fcast',['bad_any_cast',['../structranges_1_1v3_1_1bad__any__cast.html',1,'ranges::v3']]],
+  ['bad_5fvariant_5faccess',['bad_variant_access',['../structranges_1_1v3_1_1bad__variant__access.html',1,'ranges::v3']]],
   ['base',['Base',['../class_base.html',1,'']]],
   ['basic_5fcommon_5freference',['basic_common_reference',['../structranges_1_1v3_1_1basic__common__reference.html',1,'ranges::v3']]],
-  ['basic_5fcommon_5freference_3c_20basic_5fiterator_3c_20cur_2c_20s_20_3e_2c_20basic_5fsentinel_3c_20s_20_3e_2c_20tqual_2c_20uqual_20_3e',['basic_common_reference&lt; basic_iterator&lt; Cur, S &gt;, basic_sentinel&lt; S &gt;, TQual, UQual &gt;',['../structranges_1_1v3_1_1basic__common__reference_3_01basic__iterator_3_01_cur_00_01_s_01_4_00_01ba5dadefcdd4b0086bd17baeeb860f0a8a.html',1,'ranges::v3']]],
-  ['basic_5fcommon_5freference_3c_20basic_5fsentinel_3c_20s_20_3e_2c_20basic_5fiterator_3c_20cur_2c_20s_20_3e_2c_20tqual_2c_20uqual_20_3e',['basic_common_reference&lt; basic_sentinel&lt; S &gt;, basic_iterator&lt; Cur, S &gt;, TQual, UQual &gt;',['../structranges_1_1v3_1_1basic__common__reference_3_01basic__sentinel_3_01_s_01_4_00_01basic__itera1764ed16da099e342221f0a938c18e0d.html',1,'ranges::v3']]],
-  ['basic_5fcommon_5freference_3c_20t_2c_20unreachable_2c_20tqual_2c_20uqual_20_3e',['basic_common_reference&lt; T, unreachable, TQual, UQual &gt;',['../structranges_1_1v3_1_1basic__common__reference_3_01_t_00_01unreachable_00_01_t_qual_00_01_u_qual_01_4.html',1,'ranges::v3']]],
-  ['basic_5fcommon_5freference_3c_20unreachable_2c_20t_2c_20tqual_2c_20uqual_20_3e',['basic_common_reference&lt; unreachable, T, TQual, UQual &gt;',['../structranges_1_1v3_1_1basic__common__reference_3_01unreachable_00_01_t_00_01_t_qual_00_01_u_qual_01_4.html',1,'ranges::v3']]],
-  ['basic_5fcommon_5freference_3c_20unreachable_2c_20unreachable_2c_20tqual_2c_20uqual_20_3e',['basic_common_reference&lt; unreachable, unreachable, TQual, UQual &gt;',['../structranges_1_1v3_1_1basic__common__reference_3_01unreachable_00_01unreachable_00_01_t_qual_00_01_u_qual_01_4.html',1,'ranges::v3']]],
   ['basic_5fiterator',['basic_iterator',['../structranges_1_1v3_1_1basic__iterator.html',1,'ranges::v3']]],
   ['basic_5fmixin',['basic_mixin',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3']]],
   ['basic_5fmixin_3c_20adaptor_5fcursor_20_3e',['basic_mixin&lt; adaptor_cursor &gt;',['../structranges_1_1v3_1_1basic__mixin.html',1,'ranges::v3']]],
@@ -37,8 +32,9 @@ var searchData=
   ['boundedrange',['BoundedRange',['../structranges_1_1v3_1_1concepts_1_1_bounded_range.html',1,'ranges::v3::concepts']]],
   ['boundedview',['BoundedView',['../structranges_1_1v3_1_1concepts_1_1_bounded_view.html',1,'ranges::v3::concepts']]],
   ['box',['box',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20adaptor_5fcursor_20_3e',['box&lt; adaptor_cursor &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
+  ['box_3c_20adaptor_5fsentinel_20_3e',['box&lt; adaptor_sentinel &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20element_2c_20tag_2c_20true_20_3e',['box&lt; Element, Tag, true &gt;',['../structranges_1_1v3_1_1box_3_01_element_00_01_tag_00_01true_01_4.html',1,'ranges::v3']]],
-  ['box_3c_20first_2c_20meta_3a_3asize_5ft_3c_201_20_3e_20_3e',['box&lt; First, meta::size_t&lt; 1 &gt; &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
   ['box_3c_20offset_5ft_20_3e',['box&lt; offset_t &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]],
-  ['box_3c_20second_2c_20meta_3a_3asize_5ft_3c_200_20_3e_20_3e',['box&lt; Second, meta::size_t&lt; 0 &gt; &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]]
+  ['box_3c_20t_20_3e',['box&lt; T &gt;',['../structranges_1_1v3_1_1box.html',1,'ranges::v3']]]
 ];

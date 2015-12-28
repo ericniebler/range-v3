@@ -20,7 +20,7 @@ var namespacemeta =
     [ "bind_front", "structmeta_1_1bind__front.html", "structmeta_1_1bind__front" ],
     [ "compose", "structmeta_1_1compose.html", null ],
     [ "compose< F0 >", "structmeta_1_1compose_3_01_f0_01_4.html", "structmeta_1_1compose_3_01_f0_01_4" ],
-    [ "compose< F0, Fs...>", "structmeta_1_1compose_3_01_f0_00_01_fs_8_8_8_4.html", "structmeta_1_1compose_3_01_f0_00_01_fs_8_8_8_4" ],
+    [ "compose< F0, Fs... >", "structmeta_1_1compose_3_01_f0_00_01_fs_8_8_8_01_4.html", "structmeta_1_1compose_3_01_f0_00_01_fs_8_8_8_01_4" ],
     [ "defer", "structmeta_1_1defer.html", null ],
     [ "defer_i", "structmeta_1_1defer__i.html", null ],
     [ "flip", "structmeta_1_1flip.html", "structmeta_1_1flip" ],

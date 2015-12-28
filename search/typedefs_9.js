@@ -10,5 +10,6 @@ var searchData=
   ['inherit',['inherit',['../group__datatype.html#ga1ffd7d78a72afcc2fdee0def6cf48196',1,'meta::v1::inherit()'],['../group__lazy__datatype.html#ga63aa23e32b40c57e46637ca959ccbffb',1,'meta::lazy::inherit()']]],
   ['int_5f',['int_',['../group__integral.html#ga0dd3ffe632ede53173e2432aaba18e70',1,'meta::v1']]],
   ['integer_5frange',['integer_range',['../group__integral.html#ga3efb8280881d11317cda6ef16e42b495',1,'meta::v1']]],
+  ['is',['is',['../group__trait.html#gad78e6f54caea9380570b6859b5a24ea3',1,'meta::v1']]],
   ['is_5fvalid',['is_valid',['../group__trait.html#ga2aa986837386ad289def903d9bbf83e7',1,'meta::v1']]]
 ];

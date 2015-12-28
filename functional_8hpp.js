@@ -2,7 +2,6 @@ var functional_8hpp =
 [
     [ "RegularCallable", "structranges_1_1v3_1_1concepts_1_1_regular_callable.html", null ],
     [ "impl< Pipeable & >", "structranges_1_1v3_1_1pipeable__access_1_1impl_3_01_pipeable_01_6_01_4.html", null ],
-    [ "bind_element_t", "functional_8hpp.html#gaee532160e88da77b5a0327f093751cd2", null ],
     [ "Callable", "functional_8hpp.html#gacb28d17846c271166dcee181c22ca032", null ],
     [ "CallablePredicate", "functional_8hpp.html#ga262574fc00e4717f6c6dd7d967e77bc6", null ],
     [ "CallableRelation", "functional_8hpp.html#ga757a7229d8e6e55d4e952a5aa67ff9a3", null ],

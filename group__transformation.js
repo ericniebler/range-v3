@@ -18,8 +18,9 @@ var group__transformation =
     [ "reverse", "group__transformation.html#gaf0914938cd913b83e46663ed6d89d908", null ],
     [ "reverse_fold", "group__transformation.html#gaa6816cd6b7652594139625c950b32278", null ],
     [ "sort", "group__transformation.html#gab38f411ed92facc53b76e10896c77190", null ],
-    [ "transform", "group__transformation.html#ga2a5143b94325ee6e6176004bc720bbe7", null ],
+    [ "transform", "group__transformation.html#ga969c3c14071da215e4de751eb48e0c4a", null ],
+    [ "transpose", "group__transformation.html#ga5d133c662029de802c3dfd405d9535ce", null ],
     [ "unique", "group__transformation.html#gad96613af2fa2b8b09f7ba5c907cdd62d", null ],
-    [ "zip", "group__transformation.html#ga43fb2e2a696e12bb4253163ebf0b4350", null ],
-    [ "zip_with", "group__transformation.html#ga9fdd1de620c2a4853c174c5c8768f108", null ]
+    [ "zip", "group__transformation.html#ga519641361e1c1180e00ea0170a72f76b", null ],
+    [ "zip_with", "group__transformation.html#gaf78f27b57b1454f2dcf5ac1400a48057", null ]
 ];

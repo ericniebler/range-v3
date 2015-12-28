@@ -1,7 +1,6 @@
 var searchData=
 [
   ['random_5fshuffle_2ehpp',['random_shuffle.hpp',['../random__shuffle_8hpp.html',1,'']]],
-  ['range_2ehpp',['range.hpp',['../range_8hpp.html',1,'']]],
   ['range_5faccess_2ehpp',['range_access.hpp',['../range__access_8hpp.html',1,'']]],
   ['range_5fconcepts_2ehpp',['range_concepts.hpp',['../range__concepts_8hpp.html',1,'']]],
   ['range_5ffor_2ehpp',['range_for.hpp',['../range__for_8hpp.html',1,'']]],
@@ -19,8 +18,8 @@ var searchData=
   ['replace_2ehpp',['replace.hpp',['../view_2replace_8hpp.html',1,'']]],
   ['replace_5fcopy_2ehpp',['replace_copy.hpp',['../replace__copy_8hpp.html',1,'']]],
   ['replace_5fcopy_5fif_2ehpp',['replace_copy_if.hpp',['../replace__copy__if_8hpp.html',1,'']]],
-  ['replace_5fif_2ehpp',['replace_if.hpp',['../algorithm_2replace__if_8hpp.html',1,'']]],
   ['replace_5fif_2ehpp',['replace_if.hpp',['../view_2replace__if_8hpp.html',1,'']]],
+  ['replace_5fif_2ehpp',['replace_if.hpp',['../algorithm_2replace__if_8hpp.html',1,'']]],
   ['reverse_2ehpp',['reverse.hpp',['../view_2reverse_8hpp.html',1,'']]],
   ['reverse_2ehpp',['reverse.hpp',['../algorithm_2reverse_8hpp.html',1,'']]],
   ['reverse_5fcopy_2ehpp',['reverse_copy.hpp',['../reverse__copy_8hpp.html',1,'']]],

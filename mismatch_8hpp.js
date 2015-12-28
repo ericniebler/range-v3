@@ -1,5 +1,4 @@
 var mismatch_8hpp =
 [
-    [ "Mismatchable1", "mismatch_8hpp.html#gab39386acb780ab0a506f180203aea182", null ],
-    [ "Mismatchable2", "mismatch_8hpp.html#ga491314c85e757fc923b239f1e9da70f3", null ]
+    [ "Mismatchable", "mismatch_8hpp.html#ga4ca7b6ce440c8e42479d59d0bfa472b5", null ]
 ];

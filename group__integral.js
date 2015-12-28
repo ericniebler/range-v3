@@ -11,5 +11,5 @@ var group__integral =
     [ "make_index_sequence", "group__integral.html#ga1d44a46e5fd0ca836d62a1ea1c98f4dd", null ],
     [ "make_integer_sequence", "group__integral.html#gaecc0e48186ab2b206efd842b8789cc1b", null ],
     [ "size_t", "group__integral.html#ga878079c524e6d2f43e2617b25a03d514", null ],
-    [ "operator\"\"_z", "group__integral.html#ga88db71f6406d9fa677632a34f9594088", null ]
+    [ "operator\"\"_z", "group__integral.html#gaddea0d053893b5bec6ba3d75af70624e", null ]
 ];

@@ -1,13 +1,20 @@
 var variant_8hpp =
 [
-    [ "tagged_variant_element", "structranges_1_1v3_1_1tagged__variant__element.html", null ],
-    [ "tagged_variant_element_t", "variant_8hpp.html#a55c27fb772cde4d8405377ff027c00d7", null ],
-    [ "tagged_variant_unique_t", "variant_8hpp.html#gaf9da20fdd2e17bfeb7887125747484f2", null ],
-    [ "get", "variant_8hpp.html#ga43a6a1d8d80c86412dce58df37b7824e", null ],
-    [ "get", "variant_8hpp.html#ga75bd51c1388a3ac14b9805ee5583fd2c", null ],
-    [ "get", "variant_8hpp.html#gae54e58991664e90e987a1f529c148bda", null ],
-    [ "operator!=", "variant_8hpp.html#ga43922d3404b9ed81a92dc5e96b00314d", null ],
-    [ "operator==", "variant_8hpp.html#ga7eb37c3fd2ee1e32bd9744afe89d96d4", null ],
-    [ "set", "variant_8hpp.html#gadcac1e8a7f393cae1c10210d7b855bef", null ],
-    [ "unique_variant", "variant_8hpp.html#gaba99c6061242fb77918e824d84814b1a", null ]
+    [ "bad_variant_access", "structranges_1_1v3_1_1bad__variant__access.html", "structranges_1_1v3_1_1bad__variant__access" ],
+    [ "emplaced_index_t", "structranges_1_1v3_1_1emplaced__index__t.html", null ],
+    [ "emplaced_index_t", "structranges_1_1v3_1_1emplaced__index__t.html", null ],
+    [ "indexed_element", "structranges_1_1v3_1_1indexed__element.html", null ],
+    [ "indexed_element< T &&, Index >", "structranges_1_1v3_1_1indexed__element_3_01_t_01_6_6_00_01_index_01_4.html", null ],
+    [ "indexed_element< T &, Index >", "structranges_1_1v3_1_1indexed__element_3_01_t_01_6_00_01_index_01_4.html", null ],
+    [ "indexed_element< void, Index >", "structranges_1_1v3_1_1indexed__element_3_01void_00_01_index_01_4.html", "structranges_1_1v3_1_1indexed__element_3_01void_00_01_index_01_4" ],
+    [ "tuple_element< I, ranges::variant< Ts... > >", "structstd_1_1tuple__element_3_01_i_00_01ranges_1_1variant_3_01_ts_8_8_8_01_4_01_4.html", null ],
+    [ "tuple_size< ranges::variant< Ts... > >", "structstd_1_1tuple__size_3_01ranges_1_1variant_3_01_ts_8_8_8_01_4_01_4.html", null ],
+    [ "variant_unique_t", "variant_8hpp.html#ga0b410bdc99ae750cf5fe1dae19a99663", null ],
+    [ "emplace", "variant_8hpp.html#ga569f7fe85db900b780598f4675fbc3fc", null ],
+    [ "get", "variant_8hpp.html#ga4bb20d393859cc5f93e48bdea79d7b3d", null ],
+    [ "get", "variant_8hpp.html#ga7d1ee65221662e1560c91b8d22d525b3", null ],
+    [ "get", "variant_8hpp.html#gace074dab9b19ad40711c645506730669", null ],
+    [ "operator!=", "variant_8hpp.html#gaa4b4774a28e8b7bb8fed2d40a9808b78", null ],
+    [ "operator==", "variant_8hpp.html#ga3feea0b7f9ebc88a624c2b38eda0d4da", null ],
+    [ "unique_variant", "variant_8hpp.html#gacf6f6cbcf4bf32000d1e03e8ec48256a", null ]
 ];

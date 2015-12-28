@@ -32,7 +32,6 @@ var range__concepts_8hpp =
     [ "sized_view_concept", "range__concepts_8hpp.html#ga6d83aaf89e705d51e69d2985bcf1e331", null ],
     [ "sized_view_concept_t", "range__concepts_8hpp.html#ga06adfac285fecb20eae8b5122a139838", null ],
     [ "SizedRange", "range__concepts_8hpp.html#ga038383702bc122cfdd65be0a392776e1", null ],
-    [ "SizedRangeLike_", "range__concepts_8hpp.html#gaecc3de15983a78c11e17a7dfd2ba1032", null ],
     [ "SizedView", "range__concepts_8hpp.html#gafbd7f5e72946326caba4add42f5f6371", null ],
     [ "View", "range__concepts_8hpp.html#gac0180b632dfc7845c965d90d2f7d46e2", null ],
     [ "view_concept", "range__concepts_8hpp.html#gadb0f92847cb4aa95135956214c9b8566", null ],
