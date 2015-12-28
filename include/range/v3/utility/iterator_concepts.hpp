@@ -436,6 +436,7 @@ namespace ranges
         template<typename I>
         using SinglePass = meta::fast_and<Iterator<I>, meta::not_<ForwardIterator<I>>>;
 
+        /// \cond
         namespace detail
         {
             template<typename I, bool IsReadable = (bool) Readable<I>()>
@@ -455,6 +456,7 @@ namespace ranges
                         meta::not_<Assignable<concepts::Readable::reference_t<I> &&, T>>>;
             };
         }
+        /// \endcond
 
         template<typename I, typename T>
         using ExclusivelyWritable_ = meta::apply<detail::exclusively_writable_<I>, T>;

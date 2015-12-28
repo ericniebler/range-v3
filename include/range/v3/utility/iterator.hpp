@@ -455,6 +455,7 @@ namespace ranges
             constexpr auto&& iter_move = static_const<iter_move_fn>::value;
         }
 
+        /// \cond
         namespace detail
         {
             template<typename Cont>
@@ -489,6 +490,7 @@ namespace ranges
                 {}
             };
         }
+        /// \endcond
 
         template<typename Cont>
         using back_insert_iterator = basic_iterator<detail::back_insert_cursor<Cont>>;
@@ -509,6 +511,7 @@ namespace ranges
             constexpr auto&& back_inserter = static_const<back_inserter_fn>::value;
         }
 
+        /// \cond
         namespace detail
         {
             template<typename Cont>
@@ -543,6 +546,7 @@ namespace ranges
                 {}
             };
         }
+        /// \endcond
 
         template<typename Cont>
         using front_insert_iterator = basic_iterator<detail::front_insert_cursor<Cont>>;
@@ -563,6 +567,7 @@ namespace ranges
             constexpr auto&& front_inserter = static_const<front_inserter_fn>::value;
         }
 
+        /// \cond
         namespace detail
         {
             template<typename Cont>
@@ -598,6 +603,7 @@ namespace ranges
                 {}
             };
         }
+        /// \cond
 
         template<typename Cont>
         using insert_iterator = basic_iterator<detail::insert_cursor<Cont>>;
