@@ -749,6 +749,13 @@ namespace ranges
                 {
                     return it_ - that.base();
                 }
+                CONCEPT_REQUIRES(Readable<I>())
+                RANGES_CXX14_CONSTEXPR
+                friend iterator_rvalue_reference_t<I> indirect_move(reverse_iterator<I> const &it)
+                    noexcept(noexcept(iter_move(std::declval<I const &>())))
+                {
+                    return iter_move(get_cursor(it).it_);
+                }
             };
         }  // namespace detail
         /// \endcond
@@ -760,8 +767,90 @@ namespace ranges
             return reverse_iterator<I>(i);
         }
 
-        using std::move_iterator;
-        using std::make_move_iterator;
+        /// \cond
+        namespace detail
+        {
+            template<typename I>
+            struct move_cursor
+            {
+            private:
+                CONCEPT_ASSERT(InputIterator<I>());
+                friend range_access;
+                using single_pass = std::true_type;
+                //using single_pass = SinglePass<I>;
+                using value_type = iterator_value_t<I>;
+                using difference_type = iterator_difference_t<I>;
+                I it_;
+                constexpr move_cursor(I it)
+                  : it_(it)
+                {}
+                auto get() const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    iter_move(it_)
+                )
+                void next()
+                {
+                    ++it_;
+                }
+                bool equal(move_cursor const &that) const
+                {
+                    return it_ == that.it_;
+                }
+                //CONCEPT_REQUIRES(BidirectionalIterator<I>())
+                //void prev()
+                //{
+                //    --it_;
+                //}
+                //CONCEPT_REQUIRES(RandomAccessIterator<I>())
+                //void advance(iterator_difference_t<I> n)
+                //{
+                //    it_ += n;
+                //}
+                //CONCEPT_REQUIRES(SizedIteratorRange<I, I>())
+                //iterator_difference_t<I> distance_to(move_cursor const &that) const
+                //{
+                //    return that.it_ - it_;
+                //}
+                friend iterator_rvalue_reference_t<I> indirect_move(move_iterator<I> const &it)
+                    noexcept(noexcept(iter_move(std::declval<I const &>())))
+                {
+                    return iter_move(get_cursor(it).it_);
+                }
+            public:
+                struct mixin
+                  : basic_mixin<move_cursor>
+                {
+                    mixin() = default;
+                    constexpr explicit mixin(I it)
+                      : basic_mixin<move_cursor>{move_cursor(detail::move(it))}
+                    {}
+                    I base() const
+                    {
+                        return this->get().it_;
+                    }
+                };
+                constexpr move_cursor()
+                  : it_{}
+                {}
+            };
+        }
+        /// \endcond
+
+        struct make_move_iterator_fn
+        {
+            template<typename I,
+                CONCEPT_REQUIRES_(InputIterator<I>())>
+            constexpr move_iterator<I> operator()(I it) const
+            {
+                return move_iterator<I>{detail::move(it)};
+            }
+        };
+
+        namespace
+        {
+            constexpr auto &&make_move_iterator = static_const<make_move_iterator_fn>::value;
+        }
 
         template<typename S>
         struct move_sentinel
@@ -883,8 +972,8 @@ namespace ranges
                 (
                     *it_
                 )
-                CONCEPT_REQUIRES(ForwardIterator<I>())
-                bool equal_to(move_into_cursor const &that) const
+                CONCEPT_REQUIRES(InputIterator<I>())
+                bool equal(move_into_cursor const &that) const
                 {
                     return it_ == that.it_;
                 }
@@ -902,6 +991,13 @@ namespace ranges
                 iterator_difference_t<I> distance_to(move_into_cursor const &that) const
                 {
                     return that.it_ - it_;
+                }
+                CONCEPT_REQUIRES(Readable<I>())
+                RANGES_CXX14_CONSTEXPR
+                friend iterator_rvalue_reference_t<I> indirect_move(move_into_iterator<I> const &it)
+                    noexcept(noexcept(iter_move(std::declval<I const &>())))
+                {
+                    return iter_move(get_cursor(it).it_);
                 }
                 explicit move_into_cursor(I it)
                   : it_(std::move(it))
@@ -925,9 +1021,6 @@ namespace ranges
             };
         }
         /// \endcond
-
-        template<typename I>
-        using move_into_iterator = basic_iterator<detail::move_into_cursor<I>>;
 
         struct move_into_fn
         {

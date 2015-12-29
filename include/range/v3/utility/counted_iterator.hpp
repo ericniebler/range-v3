@@ -63,6 +63,7 @@ namespace ranges
             struct counted_cursor
               : counted_cursor_types<I>
             {
+                using difference_type = iterator_difference_t<I>;
                 struct mixin
                   : basic_mixin<counted_cursor>
                 {
@@ -108,6 +109,12 @@ namespace ranges
                 {
                     RANGES_ASSERT(!ForwardIterator<I>() || ranges::next(j.base(), n) == i);
                     return {i, j.count() - n};
+                }
+                CONCEPT_REQUIRES(Readable<I>())
+                friend iterator_rvalue_reference_t<I> indirect_move(counted_iterator<I, D> const &it)
+                    noexcept(noexcept(iter_move(std::declval<I const &>())))
+                {
+                    return iter_move(get_cursor(it).it_);
                 }
             public:
                 counted_cursor()

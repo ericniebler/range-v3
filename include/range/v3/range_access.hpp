@@ -31,38 +31,26 @@ namespace ranges
             /// \cond
 
         private:
-            template<typename T, typename Enable = void>
-            struct single_pass_2_
-            {
-                using type = std::false_type;
-            };
 
             template<typename T>
-            struct single_pass_2_<T, meta::void_<typename T::single_pass>>
-            {
-                using type = typename T::single_pass;
-            };
+            static std::false_type single_pass_2_(long);
+            template<typename T>
+            static typename T::single_pass single_pass_2_(int);
 
             template<typename T>
             struct single_pass_
-              : single_pass_2_<T>
-            {};
-
-            template<typename Cur, typename Enable = void>
-            struct mixin_base_2_
             {
-                using type = basic_mixin<Cur>;
+                using type = decltype(range_access::single_pass_2_<T>(42));
             };
 
-            template<typename Cur>
-            struct mixin_base_2_<Cur, meta::void_<typename Cur::mixin>>
-            {
-                using type = typename Cur::mixin;
-            };
+            template<typename T>
+            static meta::id<basic_mixin<T>> mixin_base_2_(long);
+            template<typename T>
+            static meta::id<typename T::mixin> mixin_base_2_(int);
 
             template<typename Cur>
             struct mixin_base_
-              : mixin_base_2_<Cur>
+              : decltype(range_access::mixin_base_2_<Cur>(42))
             {};
 
         public:
@@ -296,40 +284,32 @@ namespace ranges
             using sized_cursor_difference_t =
                 decltype(range_access::distance_to(std::declval<Cur>(), std::declval<Cur>()));
 
-            template<typename Cur, typename Enable = void>
-            struct cursor_difference2
-            {
-                using type = std::ptrdiff_t;
-            };
+            template<typename T>
+            static std::ptrdiff_t cursor_difference_2_(detail::any);
+            template<typename T>
+            static sized_cursor_difference_t<T> cursor_difference_2_(long);
+            template<typename T>
+            static typename T::difference_type cursor_difference_2_(int);
 
             template<typename Cur>
-            struct cursor_difference2<Cur, meta::void_<sized_cursor_difference_t<Cur>>>
+            struct cursor_difference
             {
-                using type = sized_cursor_difference_t<Cur>;
+                using type = decltype(range_access::cursor_difference_2_<Cur>(42));
             };
 
-            template<typename Cur, typename Enable = void>
-            struct cursor_difference
-              : cursor_difference2<Cur>
+            template<typename T>
+            using cursor_reference_t = decltype(std::declval<T const &>().get());
+
+            template<typename T>
+            static meta::id<uncvref_t<cursor_reference_t<T>>> cursor_value_2_(long);
+            template<typename T>
+            static meta::id<typename T::value_type> cursor_value_2_(int);
+
+            template<typename Cur>
+            struct cursor_value
+              : decltype(range_access::cursor_value_2_<Cur>(42))
             {};
 
-            template<typename Cur>
-            struct cursor_difference<Cur, meta::void_<typename Cur::difference_type>>
-            {
-                using type = typename Cur::difference_type;
-            };
-
-            template<typename Cur, typename Enable = void>
-            struct cursor_value
-            {
-                using type = uncvref_t<decltype(std::declval<Cur const &>().get())>;
-            };
-
-            template<typename Cur>
-            struct cursor_value<Cur, meta::void_<typename Cur::value_type>>
-            {
-                using type = typename Cur::value_type;
-            };
         public:
             template<typename Cur>
             using cursor_difference_t = typename cursor_difference<Cur>::type;
@@ -348,26 +328,30 @@ namespace ranges
                 return std::move(s.end());
             }
 
+        private:
+            template<typename RangeAdaptor>
+            static meta::id<typename RangeAdaptor::base_range_t> base_range_2_();
+            template<typename RangeFacade>
+            static meta::id<typename RangeFacade::view_facade_t> view_facade_2_();
+            template<typename RangeAdaptor>
+            static meta::id<typename RangeAdaptor::view_adaptor_t> view_adaptor_2_();
+        public:
             template<typename RangeAdaptor>
             struct base_range
-            {
-                using type = typename RangeAdaptor::base_range_t;
-            };
+              : decltype(range_access::base_range_2_<RangeAdaptor>())
+            {};
             template<typename RangeAdaptor>
             struct base_range<RangeAdaptor const>
-            {
-                using type = typename RangeAdaptor::base_range_t const;
-            };
+              : std::add_const<meta::_t<base_range<RangeAdaptor>>>
+            {};
             template<typename RangeFacade>
             struct view_facade
-            {
-                using type = typename RangeFacade::view_facade_t;
-            };
+              : decltype(range_access::view_facade_2_<RangeFacade>())
+            {};
             template<typename RangeAdaptor>
             struct view_adaptor
-            {
-                using type = typename RangeAdaptor::view_adaptor_t;
-            };
+              : decltype(range_access::view_adaptor_2_<RangeAdaptor>())
+            {};
             /// endcond
         };
         /// @}

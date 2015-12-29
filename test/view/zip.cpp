@@ -22,6 +22,7 @@
 #include <range/v3/view/stride.hpp>
 #include <range/v3/view/bounded.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/view/take_while.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -232,6 +233,18 @@ int main()
         std::unique_ptr<int> rg1[10], rg2[10];
         auto x = view::zip(rg1, rg2);
         std::pair<std::unique_ptr<int>, std::unique_ptr<int>> p = iter_move(x.begin());
+        auto it = x.begin();
+        static_assert(noexcept(iter_move(it)), "");
+    }
+
+    // Really a test for common_iterator's iter_move, but this is a good place for it.
+    {
+        std::unique_ptr<int> rg1[10], rg2[10];
+        auto rg3 = rg2 | view::take_while([](std::unique_ptr<int> &){return true;});
+        auto x = view::zip(rg1, rg3);
+        ::models_not<concepts::BoundedRange>(x);
+        auto y = x | view::bounded;
+        std::pair<std::unique_ptr<int>, std::unique_ptr<int>> p = iter_move(y.begin());
         auto it = x.begin();
         static_assert(noexcept(iter_move(it)), "");
     }

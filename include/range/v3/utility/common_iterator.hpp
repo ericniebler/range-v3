@@ -43,6 +43,7 @@ namespace ranges
             struct common_cursor
               : common_cursor_types<I>
             {
+                using difference_type = iterator_difference_t<I>;
                 struct mixin
                   : basic_mixin<common_cursor>
                 {
@@ -91,6 +92,14 @@ namespace ranges
                         (this_.is_sentinel() ?
                              that.it() - this_.se() :
                              that.it() - this_.it());
+                }
+                CONCEPT_REQUIRES(Readable<I>())
+                friend iterator_rvalue_reference_t<I> indirect_move(common_iterator<I, S> const &it)
+                    noexcept(noexcept(iter_move(std::declval<I const &>())))
+                {
+                    common_cursor const &cur = get_cursor(it);
+                    RANGES_ASSERT(!cur.is_sentinel());
+                    return iter_move(cur.it());
                 }
                 // BUGBUG TODO what about advance??
             public:
