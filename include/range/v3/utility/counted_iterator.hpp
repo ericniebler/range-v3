@@ -61,8 +61,12 @@ namespace ranges
 
             template<typename I, typename D /* = iterator_difference_t<I>*/>
             struct counted_cursor
-              : counted_cursor_types<I>
+              : private counted_cursor_types<I>
             {
+            private:
+                friend range_access;
+                template<typename OtherI, typename OtherD>
+                friend struct counted_cursor;
                 using difference_type = iterator_difference_t<I>;
                 struct mixin
                   : basic_mixin<counted_cursor>
@@ -83,9 +87,7 @@ namespace ranges
                         return this->get().count();
                     }
                 };
-            private:
-                template<typename OtherI, typename OtherD>
-                friend struct counted_cursor;
+
                 I it_;
                 D n_;
 
@@ -116,18 +118,6 @@ namespace ranges
                 {
                     return iter_move(get_cursor(it).it_);
                 }
-            public:
-                counted_cursor()
-                  : it_{}, n_{}
-                {}
-                counted_cursor(I it, D n)
-                  : it_(std::move(it)), n_(n)
-                {}
-                template<typename OtherI, typename OtherD,
-                    CONCEPT_REQUIRES_(ConvertibleTo<OtherI, I>() && ConvertibleTo<OtherD, D>())>
-                counted_cursor(counted_cursor<OtherI, OtherD> that)
-                  : it_(std::move(that.it_)), n_(std::move(that.n_))
-                {}
                 CONCEPT_REQUIRES(Readable<I>())
                 auto get() const -> decltype(*it_)
                 {
@@ -173,6 +163,18 @@ namespace ranges
                 {
                     return n_;
                 }
+            public:
+                counted_cursor()
+                  : it_{}, n_{}
+                {}
+                counted_cursor(I it, D n)
+                  : it_(std::move(it)), n_(n)
+                {}
+                template<typename OtherI, typename OtherD,
+                    CONCEPT_REQUIRES_(ConvertibleTo<OtherI, I>() && ConvertibleTo<OtherD, D>())>
+                counted_cursor(counted_cursor<OtherI, OtherD> that)
+                  : it_(std::move(that.it_)), n_(std::move(that.n_))
+                {}
                 I base() const
                 {
                     return it_;

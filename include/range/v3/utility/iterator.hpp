@@ -463,7 +463,17 @@ namespace ranges
             {
             private:
                 friend range_access;
+                struct mixin : basic_mixin<back_insert_cursor>
+                {
+                    mixin() = default;
+                    explicit mixin(Cont &cont) noexcept
+                      : basic_mixin<back_insert_cursor>{back_insert_cursor{cont}}
+                    {}
+                };
                 Cont *cont_;
+                explicit back_insert_cursor(Cont &cont) noexcept
+                  : cont_(&cont)
+                {}
                 void next() const
                 {}
                 void set(typename Cont::value_type const &v) const
@@ -474,17 +484,7 @@ namespace ranges
                 {
                     cont_->push_back(std::move(v));
                 }
-                explicit back_insert_cursor(Cont &cont) noexcept
-                  : cont_(&cont)
-                {}
             public:
-                struct mixin : basic_mixin<back_insert_cursor>
-                {
-                    mixin() = default;
-                    explicit mixin(Cont &cont) noexcept
-                      : basic_mixin<back_insert_cursor>{back_insert_cursor{cont}}
-                    {}
-                };
                 constexpr back_insert_cursor()
                   : cont_{}
                 {}
@@ -519,7 +519,17 @@ namespace ranges
             {
             private:
                 friend range_access;
+                struct mixin : basic_mixin<front_insert_cursor>
+                {
+                    mixin() = default;
+                    explicit mixin(Cont &cont) noexcept
+                      : basic_mixin<front_insert_cursor>{front_insert_cursor{cont}}
+                    {}
+                };
                 Cont *cont_;
+                explicit front_insert_cursor(Cont &cont) noexcept
+                  : cont_(&cont)
+                {}
                 void next() const
                 {}
                 void set(typename Cont::value_type const &v) const
@@ -530,17 +540,7 @@ namespace ranges
                 {
                     cont_->push_front(std::move(v));
                 }
-                explicit front_insert_cursor(Cont &cont) noexcept
-                  : cont_(&cont)
-                {}
             public:
-                struct mixin : basic_mixin<front_insert_cursor>
-                {
-                    mixin() = default;
-                    explicit mixin(Cont &cont) noexcept
-                      : basic_mixin<front_insert_cursor>{front_insert_cursor{cont}}
-                    {}
-                };
                 constexpr front_insert_cursor()
                   : cont_{}
                 {}
@@ -577,6 +577,16 @@ namespace ranges
                 friend range_access;
                 Cont *cont_;
                 typename Cont::iterator where_;
+                struct mixin : basic_mixin<insert_cursor>
+                {
+                    mixin() = default;
+                    explicit mixin(Cont &cont, typename Cont::iterator where) noexcept
+                      : basic_mixin<insert_cursor>{insert_cursor{cont, std::move(where)}}
+                    {}
+                };
+                explicit insert_cursor(Cont &cont, typename Cont::iterator where) noexcept
+                  : cont_(&cont), where_(where)
+                {}
                 void next() const
                 {}
                 void set(typename Cont::value_type const &v)
@@ -587,17 +597,7 @@ namespace ranges
                 {
                     where_ = ranges::next(cont_->insert(where_, std::move(v)));
                 }
-                explicit insert_cursor(Cont &cont, typename Cont::iterator where) noexcept
-                  : cont_(&cont), where_(where)
-                {}
             public:
-                struct mixin : basic_mixin<insert_cursor>
-                {
-                    mixin() = default;
-                    explicit mixin(Cont &cont, typename Cont::iterator where) noexcept
-                      : basic_mixin<insert_cursor>{insert_cursor{cont, std::move(where)}}
-                    {}
-                };
                 constexpr insert_cursor()
                   : cont_{}, where_{}
                 {}
@@ -675,10 +675,9 @@ namespace ranges
             struct reverse_cursor
             {
             private:
+                friend range_access;
                 template<typename OtherI>
                 friend struct reverse_cursor;
-                I it_;
-            public:
                 struct mixin : basic_mixin<reverse_cursor>
                 {
                     mixin() = default;
@@ -697,18 +696,12 @@ namespace ranges
                     }
                 };
 
-                reverse_cursor() = default;
+                I it_;
+
                 RANGES_CXX14_CONSTEXPR
                 reverse_cursor(I it)
                   : it_(std::move(it))
                 {}
-                template<typename U,
-                    CONCEPT_REQUIRES_(ConvertibleTo<U, I>())>
-                RANGES_CXX14_CONSTEXPR
-                reverse_cursor(reverse_cursor<U> const &u)
-                  : it_(u.base())
-                {}
-
                 RANGES_CXX14_CONSTEXPR
                 auto get() const ->
                     decltype(*it_)
@@ -756,6 +749,14 @@ namespace ranges
                 {
                     return iter_move(get_cursor(it).it_);
                 }
+            public:
+                reverse_cursor() = default;
+                template<typename U,
+                    CONCEPT_REQUIRES_(ConvertibleTo<U, I>())>
+                RANGES_CXX14_CONSTEXPR
+                reverse_cursor(reverse_cursor<U> const &u)
+                  : it_(u.base())
+                {}
             };
         }  // namespace detail
         /// \endcond
@@ -780,7 +781,22 @@ namespace ranges
                 //using single_pass = SinglePass<I>;
                 using value_type = iterator_value_t<I>;
                 using difference_type = iterator_difference_t<I>;
+
+                struct mixin
+                  : basic_mixin<move_cursor>
+                {
+                    mixin() = default;
+                    constexpr explicit mixin(I it)
+                      : basic_mixin<move_cursor>{move_cursor(detail::move(it))}
+                    {}
+                    I base() const
+                    {
+                        return this->get().it_;
+                    }
+                };
+
                 I it_;
+
                 constexpr move_cursor(I it)
                   : it_(it)
                 {}
@@ -818,18 +834,6 @@ namespace ranges
                     return iter_move(get_cursor(it).it_);
                 }
             public:
-                struct mixin
-                  : basic_mixin<move_cursor>
-                {
-                    mixin() = default;
-                    constexpr explicit mixin(I it)
-                      : basic_mixin<move_cursor>{move_cursor(detail::move(it))}
-                    {}
-                    I base() const
-                    {
-                        return this->get().it_;
-                    }
-                };
                 constexpr move_cursor()
                   : it_{}
                 {}
@@ -949,7 +953,24 @@ namespace ranges
             {
             private:
                 friend range_access;
+                struct mixin : basic_mixin<move_into_cursor>
+                {
+                    mixin() = default;
+                    explicit mixin(I it)
+                      : basic_mixin<move_into_cursor>{move_into_cursor{std::move(it)}}
+                    {}
+                    I base() const
+                    {
+                        move_into_cursor const &this_ = this->basic_mixin<move_into_cursor>::get();
+                        return this_.it_;
+                    }
+                };
+
                 I it_;
+
+                explicit move_into_cursor(I it)
+                  : it_(std::move(it))
+                {}
                 void next()
                 {
                     ++it_;
@@ -999,22 +1020,7 @@ namespace ranges
                 {
                     return iter_move(get_cursor(it).it_);
                 }
-                explicit move_into_cursor(I it)
-                  : it_(std::move(it))
-                {}
             public:
-                struct mixin : basic_mixin<move_into_cursor>
-                {
-                    mixin() = default;
-                    explicit mixin(I it)
-                      : basic_mixin<move_into_cursor>{move_into_cursor{std::move(it)}}
-                    {}
-                    I base() const
-                    {
-                        move_into_cursor const &this_ = this->basic_mixin<move_into_cursor>::get();
-                        return this_.it_;
-                    }
-                };
                 constexpr move_into_cursor()
                   : it_{}
                 {}

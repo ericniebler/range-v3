@@ -39,8 +39,7 @@ void test_move_iterator()
     ::check_equal(in, {"","","",""});
     ::check_equal(out, {"this","is","his","face"});
     ::models<concepts::InputIterator>((I&&)it);
-    static_assert(ranges::range_access::single_pass_t<ranges::detail::move_cursor<std::vector<std::string>::iterator>>::value, "");
-    //::models_not<concepts::ForwardIterator>((I&&)it);
+    ::models_not<concepts::ForwardIterator>((I&&)it);
 }
 
 int main()

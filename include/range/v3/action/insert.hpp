@@ -238,10 +238,9 @@ namespace ranges
             using ranges::insert;
         }
 
-        /// \addtogroup group-concepts
-        /// @{
         namespace concepts
         {
+            /// \ingroup group-concepts
             struct InsertableRange
               : refines<Range(_1)>
             {
@@ -253,9 +252,9 @@ namespace ranges
             };
         }
 
+        /// \ingroup group-concepts
         template<typename Rng, typename...Rest>
         using InsertableRange = concepts::models<concepts::InsertableRange, Rng, Rest...>;
-        /// @}
     }
 }
 

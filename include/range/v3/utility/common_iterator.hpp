@@ -41,8 +41,12 @@ namespace ranges
 
             template<typename I, typename S>
             struct common_cursor
-              : common_cursor_types<I>
+              : private common_cursor_types<I>
             {
+            private:
+                friend range_access;
+                static_assert(!std::is_same<I, S>::value,
+                              "Error: iterator and sentinel types are the same");
                 using difference_type = iterator_difference_t<I>;
                 struct mixin
                   : basic_mixin<common_cursor>
@@ -58,10 +62,15 @@ namespace ranges
                       : mixin(common_cursor{std::move(se)})
                     {}
                 };
-            private:
-                static_assert(!std::is_same<I, S>::value,
-                              "Error: iterator and sentinel types are the same");
+
                 variant<I, S> data_;
+
+                explicit common_cursor(I it)
+                  : data_(emplaced_index<0>, std::move(it))
+                {}
+                explicit common_cursor(S se)
+                  : data_(emplaced_index<1>, std::move(se))
+                {}
                 bool is_sentinel() const
                 {
                     RANGES_ASSERT(data_.valid());
@@ -101,24 +110,6 @@ namespace ranges
                     RANGES_ASSERT(!cur.is_sentinel());
                     return iter_move(cur.it());
                 }
-                // BUGBUG TODO what about advance??
-            public:
-                common_cursor() = default;
-                explicit common_cursor(I it)
-                  : data_(emplaced_index<0>, std::move(it))
-                {}
-                explicit common_cursor(S se)
-                  : data_(emplaced_index<1>, std::move(se))
-                {}
-                template<typename I2, typename S2,
-                    CONCEPT_REQUIRES_(ExplicitlyConvertibleTo<I, I2>() &&
-                                      ExplicitlyConvertibleTo<S, S2>())>
-                operator common_cursor<I2, S2>() const
-                {
-                    return is_sentinel() ?
-                        common_cursor<I2, S2>{S2{se()}} :
-                        common_cursor<I2, S2>{I2{it()}};
-                }
                 CONCEPT_REQUIRES(Readable<I>())
                 auto get() const -> decltype(*std::declval<I const &>())
                 {
@@ -153,6 +144,18 @@ namespace ranges
                 void next()
                 {
                     ++it();
+                }
+                // BUGBUG TODO what about advance??
+            public:
+                common_cursor() = default;
+                template<typename I2, typename S2,
+                    CONCEPT_REQUIRES_(ExplicitlyConvertibleTo<I, I2>() &&
+                                      ExplicitlyConvertibleTo<S, S2>())>
+                operator common_cursor<I2, S2>() const
+                {
+                    return is_sentinel() ?
+                        common_cursor<I2, S2>{S2{se()}} :
+                        common_cursor<I2, S2>{I2{it()}};
                 }
             };
         }
