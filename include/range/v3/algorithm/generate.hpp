@@ -33,7 +33,7 @@ namespace ranges
         {
             template<typename O, typename S, typename F,
                 CONCEPT_REQUIRES_(Function<F>() &&
-                    OutputIterator<O, concepts::Function::result_t<F>>() &&
+                    OutputIterator<O, concepts::Function::result_t<F> &&>() &&
                     IteratorRange<O, S>())>
             tagged_pair<tag::out(O), tag::fun(F)> operator()(O begin, S end, F fun) const
             {
@@ -45,7 +45,7 @@ namespace ranges
             template<typename Rng, typename F,
                 typename O = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(Function<F>() &&
-                    OutputRange<Rng, concepts::Function::result_t<F>>())>
+                    OutputRange<Rng, concepts::Function::result_t<F> &&>())>
             tagged_pair<tag::out(range_safe_iterator_t<Rng>), tag::fun(F)>
             operator()(Rng &&rng, F fun) const
             {

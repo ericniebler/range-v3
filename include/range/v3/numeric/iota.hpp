@@ -26,16 +26,17 @@ namespace ranges
         struct iota_fn
         {
             template<typename O, typename S, class T,
-                CONCEPT_REQUIRES_(OutputIterator<O, T>() && IteratorRange<O, S>() && WeaklyIncrementable<T>())>
+                CONCEPT_REQUIRES_(OutputIterator<O, T const &>() && IteratorRange<O, S>() &&
+                    WeaklyIncrementable<T>())>
             O operator()(O begin, S end, T val) const
             {
                 for(; begin != end; ++begin, ++val)
-                    *begin = val;
+                    *begin = detail::as_const(val);
                 return begin;
             }
 
             template<typename Rng, class T, typename O = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(OutputRange<Rng &, T>() && WeaklyIncrementable<T>())>
+                CONCEPT_REQUIRES_(OutputRange<Rng &, T const &>() && WeaklyIncrementable<T>())>
             O operator()(Rng &rng, T val) const
             {
                 return (*this)(begin(rng), end(rng), std::move(val));

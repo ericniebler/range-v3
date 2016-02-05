@@ -241,6 +241,12 @@ namespace ranges
             template<typename I, typename D = meta::_t<difference_type<I>>>
             struct counted_cursor;
 
+            template<typename I>
+            struct move_cursor;
+
+            template<typename I>
+            struct move_into_cursor;
+
             template<typename Int>
             struct from_end_;
 
@@ -438,6 +444,14 @@ namespace ranges
         template<typename I, typename D = meta::_t<difference_type<I>>>
         using counted_iterator =
             basic_iterator<detail::counted_cursor<I, D>, default_end_cursor>;
+
+        template<typename I>
+        using move_iterator =
+            basic_iterator<detail::move_cursor<I>, default_end_cursor>;
+
+        template<typename I>
+        using move_into_iterator =
+            basic_iterator<detail::move_into_cursor<I>, default_end_cursor>;
 
         template<typename Rng>
         struct cycled_view;

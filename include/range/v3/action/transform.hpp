@@ -83,7 +83,7 @@ namespace ranges
                         "common reference type if no projection is specified.");
                     CONCEPT_ASSERT_MSG(Writable<range_iterator_t<Rng>,
                             concepts::Callable::result_t<F,
-                                concepts::Callable::result_t<P, range_common_reference_t<Rng>>>>(),
+                                concepts::Callable::result_t<P, range_common_reference_t<Rng>>> &&>(),
                         "The result type of the function passed to action::transform must "
                         "be writable back into the source range.");
                 }

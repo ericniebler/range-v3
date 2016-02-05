@@ -81,7 +81,7 @@ namespace ranges
         // are private to prevent inadvertent violations of the class invariant.
         //
         // Class invariant:
-        //   distance(first, second) == size_
+        //   distance(begin(), end()) == size()
         //
         template<typename I, typename S /* = I */>
         struct sized_iterator_range
@@ -164,7 +164,8 @@ namespace ranges
         struct make_iterator_range_fn
         {
             /// \return `{begin, end}`
-            template<typename I, typename S>
+            template<typename I, typename S,
+                CONCEPT_REQUIRES_(IteratorRange<I, S>())>
             constexpr iterator_range<I, S> operator()(I begin, S end) const
             {
                 CONCEPT_ASSERT(IteratorRange<I, S>());
@@ -172,7 +173,8 @@ namespace ranges
             }
 
             /// \return `{begin, end, size}`
-            template<typename I, typename S>
+            template<typename I, typename S,
+                CONCEPT_REQUIRES_(IteratorRange<I, S>())>
             constexpr sized_iterator_range<I, S> operator()(I begin, S end, iterator_size_t<I> size) const
             {
                 CONCEPT_ASSERT(IteratorRange<I, S>());
@@ -244,44 +246,44 @@ namespace ranges
 /// \cond
 namespace std
 {
-    template<typename First, typename Second>
-    struct tuple_size< ::ranges::v3::iterator_range<First, Second>>
+    template<typename I, typename S>
+    struct tuple_size< ::ranges::v3::iterator_range<I, S>>
       : std::integral_constant<size_t, 2>
     {};
 
-    template<typename First, typename Second>
-    struct tuple_element<0, ::ranges::v3::iterator_range<First, Second>>
+    template<typename I, typename S>
+    struct tuple_element<0, ::ranges::v3::iterator_range<I, S>>
     {
-        using type = First;
+        using type = I;
     };
 
-    template<typename First, typename Second>
-    struct tuple_element<1, ::ranges::v3::iterator_range<First, Second>>
+    template<typename I, typename S>
+    struct tuple_element<1, ::ranges::v3::iterator_range<I, S>>
     {
-        using type = Second;
+        using type = S;
     };
 
-    template<typename First, typename Second>
-    struct tuple_size< ::ranges::v3::sized_iterator_range<First, Second>>
+    template<typename I, typename S>
+    struct tuple_size< ::ranges::v3::sized_iterator_range<I, S>>
       : std::integral_constant<size_t, 3>
     {};
 
-    template<typename First, typename Second>
-    struct tuple_element<0, ::ranges::v3::sized_iterator_range<First, Second>>
+    template<typename I, typename S>
+    struct tuple_element<0, ::ranges::v3::sized_iterator_range<I, S>>
     {
-        using type = First;
+        using type = I;
     };
 
-    template<typename First, typename Second>
-    struct tuple_element<1, ::ranges::v3::sized_iterator_range<First, Second>>
+    template<typename I, typename S>
+    struct tuple_element<1, ::ranges::v3::sized_iterator_range<I, S>>
     {
-        using type = Second;
+        using type = S;
     };
 
-    template<typename First, typename Second>
-    struct tuple_element<2, ::ranges::v3::sized_iterator_range<First, Second>>
+    template<typename I, typename S>
+    struct tuple_element<2, ::ranges::v3::sized_iterator_range<I, S>>
     {
-        using type = ranges::v3::iterator_size_t<First>;
+        using type = ranges::v3::iterator_size_t<I>;
     };
 }
 /// \endcond

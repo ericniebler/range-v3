@@ -102,7 +102,7 @@ namespace ranges
                 }
                 // Provides writability of *r++
                 template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, T>())>
+                    CONCEPT_REQUIRES_(Writable<I, T const &>())>
                 RANGES_CXX14_CONSTEXPR
                 void operator=(T const &x) const
                 {
@@ -110,14 +110,14 @@ namespace ranges
                 }
                 // This overload just in case only non-const objects are writable
                 template<typename T,
-                    CONCEPT_REQUIRES_(Writable<I, T>())>
+                    CONCEPT_REQUIRES_(Writable<I, T &>())>
                 RANGES_CXX14_CONSTEXPR
                 void operator=(T &x) const
                 {
                     *it_ = x;
                 }
                 template<typename T,
-                    CONCEPT_REQUIRES_(MoveWritable<I, T>())>
+                    CONCEPT_REQUIRES_(Writable<I, aux::move_t<T> &&>())>
                 RANGES_CXX14_CONSTEXPR
                 void operator=(T &&x) const
                 {

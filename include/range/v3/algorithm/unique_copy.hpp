@@ -35,7 +35,11 @@ namespace ranges
             InputIterator<I>,
             IndirectCallableRelation<C, Projected<I, P>>,
             WeaklyIncrementable<O>,
-            IndirectlyCopyable<I, O>>;
+            IndirectlyCopyable<I, O>,
+            meta::fast_or<
+                ForwardIterator<I>,
+                ForwardIterator<O>,
+                IndirectlyCopyableStorable<I, O>>>;
 
         /// \addtogroup group-algorithms
         /// @{

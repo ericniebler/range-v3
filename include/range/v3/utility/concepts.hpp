@@ -147,7 +147,7 @@ namespace ranges
             {};
             template<typename T>
             using avoid_empty_braces =
-              meta::_t<avoid_empty_braces_<uncvref_t<T>>>;
+                meta::_t<avoid_empty_braces_<uncvref_t<T>>>;
         }
         /// \endcond
 

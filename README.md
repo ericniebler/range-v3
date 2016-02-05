@@ -25,7 +25,7 @@ Supported Compilers
 
 The code is known to work on the following compilers:
 
-- clang 3.4.0 (C++14 support requires at least clang 3.5.0)
+- clang 3.5.2
 - GCC 4.9.0 (C++14 support requires GCC 5.2. Complex `constexpr` usage may be unreliable due to bugs in GCC, e.g. [PR67813](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67813), as witnessed by the failure of the constexpr-core test.)
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.

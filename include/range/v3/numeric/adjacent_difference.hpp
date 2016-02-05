@@ -36,8 +36,8 @@ namespace ranges
                   typename Y = concepts::Callable::result_t<BOp, X, X>>
         using AdjacentDifferentiable = meta::fast_and<
             InputIterator<I>,
-            OutputIterator<O, X>,
-            OutputIterator<O, Y>,
+            OutputIterator<O, X &&>,
+            OutputIterator<O, Y &&>,
             Callable<P, V>,
             Callable<BOp, X, X>,
             CopyConstructible<uncvref_t<X>>,
