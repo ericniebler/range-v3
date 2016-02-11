@@ -359,7 +359,8 @@ namespace ranges
         
             constexpr cardinality set_intersection_cardinality(cardinality c1, cardinality c2)
             {
-                return (c1 >= 0 || c1 == finite) || (c2 >= 0 || c2 == finite) ? finite : unknown;
+                return (c1 == unknown) || (c2 == unknown) ? unknown :
+                       (c1 >= 0 || c1 == finite) || (c2 >= 0 || c2 == finite) ? finite : unknown;
             }
             
         }
