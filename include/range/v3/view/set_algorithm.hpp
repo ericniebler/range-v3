@@ -184,9 +184,30 @@ namespace ranges
         
             constexpr cardinality set_difference_cardinality(cardinality c1, cardinality c2)
             {
+                return (c1 == unknown) ? unknown :
+                    (c1 >= 0) || (c1 == finite) ? finite : // else, c1 == infinite
+                        (c2 >= 0) || (c2 == finite) ? infinite : unknown;
+/*                
+                
+                if (c1 == unknown)
+                    return unknown;
+                
+                if (c1 == finite) || (c1 == finite)
+                    return finite;
+                
+                if (c1 == infinite)
+                    if (c2 >= 0) || (c2 == finite)
+                        return infinite;
+                
+                return unknown;
+                
+                
+                
+                
+                
                 return (c1 >= 0 || c1 == finite) ? finite :
                     c1 == unknown ? unknown : // c1 is infinite
-                        (c2 >= 0 || c2 == finite)  ? finite : unknown;
+                        (c2 >= 0 || c2 == finite)  ? finite : unknown;*/
             }
             
         }
