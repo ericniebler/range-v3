@@ -80,6 +80,9 @@ add_test(test.view.replace_if, view.replace_if)
 add_executable(view.reverse reverse.cpp)
 add_test(test.view.reverse, view.reverse)
 
+add_executable(view.set_intersection set_intersection.cpp)
+add_test(test.view.set_intersection, view.set_intersection)
+
 add_executable(view.slice slice.cpp)
 add_test(test.view.slice, view.slice)
 
