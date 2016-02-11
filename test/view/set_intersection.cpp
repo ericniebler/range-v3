@@ -129,13 +129,15 @@ int main()
 
     // test const ranges
     {
-        auto rng1 = view::const_(i1_finite);
-        auto rng2 = view::const_(i2_finite);
-        auto res = view::set_intersection(rng1, rng2);
-
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, const int&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res)>, const int&&> ());
+        auto res1 = view::set_intersection(view::const_(i1_finite), view::const_(i2_finite));
+        CONCEPT_ASSERT(Same<range_value_t<decltype(res1)>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<decltype(res1)>, const int&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res1)>, const int&&> ());
+        
+        auto res2 = view::set_intersection(view::const_(i1_finite), i2_finite);
+        CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<decltype(res2)>, const int&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, const int&&> ());
     }
 
 
