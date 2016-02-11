@@ -2,7 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
-//  Copyright Tomislav Ivek 2015
+//  Copyright Tomislav Ivek 2015-2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -25,7 +25,7 @@
 #include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/view_adaptor.hpp>
+#include <range/v3/view_facade.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/functional.hpp>
