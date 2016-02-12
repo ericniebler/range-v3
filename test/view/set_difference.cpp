@@ -207,6 +207,12 @@ int main()
         CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, int>());
         ::check_equal(res2, {-2, -1, 0, 2, 4, 5, 7, 9});
     }
+    
+    // WARNING: set_difference between two infinite ranges can create infinite loops!
+    // {
+    //     auto empty_range = view::set_difference(view::ints, view::ints);
+    //     begin(empty_range); // infinite loop!
+    // }
 
     return test_result();
 }
