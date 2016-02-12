@@ -64,6 +64,8 @@ int main()
         std::vector<int> diff;
         set_difference(i1_finite, i2_finite, back_inserter(diff));
         ::check_equal(res, diff);
+        
+        CHECK(&*begin(res) == &*(begin(i1_finite)));
     }
 
 
