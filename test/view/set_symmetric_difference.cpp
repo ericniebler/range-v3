@@ -1,5 +1,6 @@
 // Range v3 library
 //
+//  Copyright Eric Niebler 2014
 //  Copyright Tomislav Ivek 2015-2016
 //
 //  Use, modification and distribution is subject to the
@@ -9,7 +10,10 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <cstring>
+#include <string>
 #include <vector>
+#include <sstream>
 #include <range/v3/core.hpp>
 #include <range/v3/range_for.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
@@ -30,6 +34,39 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+struct MoveOnlyString
+{
+    char const *sz_;
+
+    MoveOnlyString(char const *sz = "")
+      : sz_(sz)
+    {}
+    MoveOnlyString(MoveOnlyString &&that)
+      : sz_(that.sz_)
+    {
+        that.sz_ = "";
+    }
+    MoveOnlyString(MoveOnlyString const &) = delete;
+    MoveOnlyString &operator=(MoveOnlyString &&that)
+    {
+        sz_ = that.sz_;
+        that.sz_ = "";
+        return *this;
+    }
+    MoveOnlyString &operator=(MoveOnlyString const &) = delete;
+    bool operator==(MoveOnlyString const &that) const
+    {
+        return 0 == std::strcmp(sz_, that.sz_);
+    }
+    bool operator!=(MoveOnlyString const &that) const
+    {
+        return !(*this == that);
+    }
+    friend std::ostream & operator<< (std::ostream &sout, MoveOnlyString const &str)
+    {
+        return sout << '"' << str.sz_ << '"';
+    }
+};
 
 
 int main()
@@ -243,6 +280,46 @@ int main()
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, B>());
         ::check_equal(res2, {B{-20}, B{-10}, B{-2}, B{-1}, B{0}, B{2}, B{3}, B{4}, B{5}, B{7}, B{9}, B{20}});
     }
+    
+    // move
+    {
+        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c","x"});
+        auto v1 = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+
+        auto rng = view::set_symmetric_difference(v0, v1);
+        std::vector<MoveOnlyString> expected;
+        move(rng, ranges::back_inserter(expected));
+        ::check_equal(expected, {"a","c","y","z"});
+        ::check_equal(v0, {"a","","c",""});
+        ::check_equal(v1, {"","","y","z"});
+        using R = decltype(rng);
+
+        CONCEPT_ASSERT(Same<range_value_t<R>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, MoveOnlyString &>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
+    }
+/*
+    {
+        auto const v = to_<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto rng = view::set_symmetric_difference(v, v);
+        using Rng = decltype(rng);
+        using I = range_iterator_t<Rng>;
+        CONCEPT_ASSERT(Readable<I>());
+        CONCEPT_ASSERT(Same<
+            range_value_t<Rng>,
+            std::pair<MoveOnlyString, MoveOnlyString>>());
+        CONCEPT_ASSERT(Same<
+            range_reference_t<Rng>,
+            common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
+        CONCEPT_ASSERT(Same<
+            range_rvalue_reference_t<Rng>,
+            common_pair<MoveOnlyString const &&, MoveOnlyString const &&>>());
+        CONCEPT_ASSERT(Same<
+            range_common_reference_t<Rng>,
+            common_pair<MoveOnlyString const &, MoveOnlyString const &>>());
+    }*/
+
+
 
     // WARNING: set_symmetric_difference between two infinite ranges can create infinite loops!
     // {
