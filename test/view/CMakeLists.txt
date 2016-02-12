@@ -86,6 +86,9 @@ add_test(test.view.set_difference, view.set_difference)
 add_executable(view.set_intersection set_intersection.cpp)
 add_test(test.view.set_intersection, view.set_intersection)
 
+add_executable(view.set_union set_union.cpp)
+add_test(test.view.set_union, view.set_union)
+
 add_executable(view.slice slice.cpp)
 add_test(test.view.slice, view.slice)
 
