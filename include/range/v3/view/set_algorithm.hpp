@@ -603,6 +603,9 @@ namespace ranges
                          typename I2 = range_iterator_t<Rng2>>
                 using Concept = meta::and_<
                     InputRange<Rng1>, InputRange<Rng2>,
+                    Common<range_value_t<Rng1>, range_value_t<Rng2>>,
+                    CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
+                    CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
                     IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
@@ -635,6 +638,12 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(InputRange<Rng2>(),
                         "The second parameter of view::set_union "
                         "must be a model of the InputRange concept.");
+                    CONCEPT_ASSERT_MSG(Common<range_value_t<Rng1>, range_value_t<Rng2>>(),
+                        "The value types of the two ranges must share a common type.");
+                    CONCEPT_ASSERT_MSG(CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>(),
+                        "The reference types of the two ranges must share a common reference.");
+                    CONCEPT_ASSERT_MSG(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
+                        "The rvalue reference types of the two ranges must share a common reference.");
                     CONCEPT_ASSERT_MSG(
                         IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>(),
                         "The predicate function passed to view::set_union "
