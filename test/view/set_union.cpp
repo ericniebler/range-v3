@@ -157,10 +157,10 @@ int main()
         static_assert(range_cardinality<decltype(res1)>::value == ranges::unknown, "Union of a finite and unknown cardinality set should have unknown cardinality!");
         
         auto res2 = view::set_union(rng0, i2_finite);
-        static_assert(range_cardinality<decltype(res2)>::value == ranges::unknown, "Union of an unknown cardinality and finite set should have unknown cardinality!");
+        static_assert(range_cardinality<decltype(res2)>::value == ranges::unknown, "Union of an unknown and finite cardinality set should have unknown cardinality!");
         
         auto res3 = view::set_union(i1_infinite, rng0);
-        static_assert(range_cardinality<decltype(res3)>::value == ranges::infinite, "Union of an unknown cardinality and finite set should have infinite cardinality!");
+        static_assert(range_cardinality<decltype(res3)>::value == ranges::infinite, "Union of an infinite and unknown cardinality set should have infinite cardinality!");
     
         auto res4 = view::set_union(rng0, i1_infinite);
         static_assert(range_cardinality<decltype(res4)>::value == ranges::infinite, "Union of an unknown and infinite cardinality set should have infinite cardinality!");
