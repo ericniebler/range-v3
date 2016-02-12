@@ -523,6 +523,7 @@ namespace ranges
                         
                         case state_t::SECOND:
                         case state_t::ONLY_SECOND:
+                        default:
                             return *it2_;
                     }
                 }
