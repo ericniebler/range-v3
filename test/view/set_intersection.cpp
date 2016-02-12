@@ -59,6 +59,8 @@ int main()
         static_assert(range_cardinality<decltype(res)>::value == ranges::finite, "Cardinality of intersection with a finite range should be finite!");
 
         ::check_equal(res, {2, 4, 4});
+        
+        CHECK(&*begin(res) == &*(begin(i1_finite) + 1));
     }
 
 
