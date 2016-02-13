@@ -520,18 +520,10 @@ namespace ranges
                 reference_type get() const
                 noexcept(noexcept(*it1_) && noexcept(*it2_))
                 {
-                    switch(state)
-                    {
-                        case state_t::FIRST:
-                        case state_t::FIRST_INC_SECOND:
-                        case state_t::ONLY_FIRST:
-                            return *it1_;
-                        
-                        case state_t::SECOND:
-                        case state_t::ONLY_SECOND:
-                        //default:
-                            return *it2_;
-                    }
+                    if(state == state_t::SECOND || state == state_t::ONLY_SECOND)
+                        return *it2_;
+                    else
+                        return *it1_;
                 }
                 void next()
                 {
@@ -574,17 +566,10 @@ namespace ranges
                 rvalue_reference_type indirect_move_() const
                 noexcept(noexcept(iter_move(it1_)) && noexcept(iter_move(it2_)))
                 {
-                    switch(state)
-                    {
-                        case state_t::FIRST:
-                        case state_t::FIRST_INC_SECOND:
-                        case state_t::ONLY_FIRST:
-                            return iter_move(it1_);
-
-                        case state_t::SECOND:
-                        case state_t::ONLY_SECOND:
-                            return iter_move(it2_);
-                    }
+                    if(state == state_t::SECOND || state == state_t::ONLY_SECOND)
+                        return iter_move(it2_);
+                    else
+                        return iter_move(it1_);
                 }
             };
         
@@ -773,17 +758,10 @@ namespace ranges
                 reference_type get() const
                 noexcept(noexcept(*it1_) && noexcept(*it2_))
                 {
-                    switch(state)
-                    {
-                        case state_t::FIRST:
-                        case state_t::ONLY_FIRST:
-                            return *it1_;
-
-                        case state_t::SECOND:
-                        case state_t::ONLY_SECOND:
-                        //default:
-                            return *it2_;
-                    }
+                    if(state == state_t::FIRST || state == state_t::ONLY_FIRST)
+                        return *it1_;
+                    else
+                        return *it2_;
                 }
                 void next()
                 {
@@ -817,16 +795,10 @@ namespace ranges
                 rvalue_reference_type indirect_move_() const
                 noexcept(noexcept(iter_move(it1_)) && noexcept(iter_move(it2_)))
                 {
-                    switch(state)
-                    {
-                        case state_t::FIRST:
-                        case state_t::ONLY_FIRST:
-                            return iter_move(it1_);
-
-                        case state_t::SECOND:
-                        case state_t::ONLY_SECOND:
-                            return iter_move(it2_);
-                    }
+                    if(state == state_t::SECOND || state == state_t::ONLY_SECOND)
+                        return iter_move(it2_);
+                    else
+                        return iter_move(it1_);
                 }
             };
         

@@ -100,12 +100,14 @@ int main()
         models<concepts::ForwardView>(res);
         models_not<concepts::RandomAccessView>(res);
         models_not<concepts::BoundedView>(res);
+        
+        using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, int&>());
+        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, int&>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), int&&>());
 
-        static_assert(range_cardinality<decltype(res)>::value == ranges::finite, "Cardinality of union of finite ranges should be finite!");
+        static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of union of finite ranges should be finite!");
 
         ::check_equal(res, {-3, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 6, 9});
         
@@ -128,20 +130,22 @@ int main()
         models<concepts::ForwardView>(res);
         models_not<concepts::RandomAccessView>(res);
         models_not<concepts::BoundedView>(res);
+        
+        using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>,
+        CONCEPT_ASSERT(Same<range_value_t<R>,
                             common_type_t<range_value_t<decltype(i1_infinite)>,
                                           range_value_t<decltype(i2_infinite)>>>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>,
+        CONCEPT_ASSERT(Same<range_reference_t<R>,
                             common_reference_t<range_reference_t<decltype(i1_infinite)>,
                                                range_reference_t<decltype(i2_infinite)>>
                            >());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res)>,
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>,
                             common_reference_t<range_rvalue_reference_t<decltype(i1_infinite)>,
                                                range_rvalue_reference_t<decltype(i2_infinite)>>
                            >());
 
-        static_assert(range_cardinality<decltype(res)>::value == ranges::infinite, "Cardinality of union of infinite ranges shold be infinite!");
+        static_assert(range_cardinality<R>::value == ranges::infinite, "Cardinality of union of infinite ranges shold be infinite!");
 
         ::check_equal(res | view::take(6), {0, 1, 3, 4, 6, 9});
 
@@ -159,12 +163,14 @@ int main()
         models<concepts::ForwardView>(res);
         models_not<concepts::RandomAccessView>(res);
         models_not<concepts::BoundedView>(res);
+        
+        using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, int>()); // our infinite range does not give out references
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res)>, int>());
+        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, int>()); // our infinite range does not give out references
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, int>());
 
-        static_assert(range_cardinality<decltype(res)>::value == ranges::infinite, "Cardinality of union with an infinite range should be infinite!");
+        static_assert(range_cardinality<R>::value == ranges::infinite, "Cardinality of union with an infinite range should be infinite!");
 
         ::check_equal(res | view::take(5), {0, 1, 2, 2, 3});
     }
@@ -176,12 +182,14 @@ int main()
         models<concepts::ForwardView>(res);
         models_not<concepts::RandomAccessView>(res);
         models_not<concepts::BoundedView>(res);
+        
+        using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, int>()); // our infinite range does not give out references
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res)>, int>());
+        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, int>()); // our infinite range does not give out references
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, int>());
 
-        static_assert(range_cardinality<decltype(res)>::value == ranges::infinite, "Cardinality of union with an infinite range should be infinite!");
+        static_assert(range_cardinality<R>::value == ranges::infinite, "Cardinality of union with an infinite range should be infinite!");
 
         ::check_equal(res | view::take(7), {-3, 0, 2, 3, 4, 4, 6});
     }
@@ -216,14 +224,16 @@ int main()
     // test const ranges
     {
         auto res1 = view::set_union(view::const_(i1_finite), view::const_(i2_finite));
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res1)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res1)>, const int&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res1)>, const int&&>());
+        using R1 = decltype(res1);
+        CONCEPT_ASSERT(Same<range_value_t<R1>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R1>, const int&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, const int&&>());
         
         auto res2 = view::set_union(view::const_(i1_finite), i2_finite);
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res2)>, const int&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, const int&&>());
+        using R2 = decltype(res2);
+        CONCEPT_ASSERT(Same<range_value_t<R2>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R2>, const int&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, const int&&>());
     }
 
 
@@ -259,9 +269,10 @@ int main()
     // sets with different element types, custom orderings
     {        
         auto res = view::set_union(b_finite, d_finite, [](const B& a, const D& b){ return a.val < b.val; });
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, B>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, B&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res)>, B&&>());
+        using R = decltype(res);
+        CONCEPT_ASSERT(Same<range_value_t<R>, B>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, B&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, B&&>());
         ::check_equal(res, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{6}, B{8}, B{20}});
         auto it = begin(res);
         CHECK(&*it == &*begin(b_finite));
@@ -276,9 +287,10 @@ int main()
                                     &B::val,
                                     &D::val
                                    );
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res1)>, B>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res1)>, B&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res1)>, B&&>());
+        using R1 = decltype(res1);
+        CONCEPT_ASSERT(Same<range_value_t<R1>, B>());
+        CONCEPT_ASSERT(Same<range_reference_t<R1>, B&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, B&&>());
         ::check_equal(res1, {B{-20}, B{-10}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{6}, B{8}, B{20}});
 
 
@@ -287,9 +299,10 @@ int main()
                                     ident(),
                                     [](const B& x){ return x.val; }
                                    );
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, B>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res2)>, B>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, B>());
+        using R2 = decltype(res2);
+        CONCEPT_ASSERT(Same<range_value_t<R2>, B>());
+        CONCEPT_ASSERT(Same<range_reference_t<R2>, B>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, B>());
         ::check_equal(res2, {B{-20}, B{-10}, B{-2}, B{-1}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{5}, B{6}, B{7}, B{8}, B{9}, B{20}});
     }
 

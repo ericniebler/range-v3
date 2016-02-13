@@ -88,16 +88,18 @@ int main()
     // intersection of two finite ranges
     {
         auto res = view::set_intersection(i1_finite, i2_finite);
-
+        
         models<concepts::ForwardView>(res);
         models_not<concepts::RandomAccessView>(res);
         models_not<concepts::BoundedView>(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, int&>());
+        using R = decltype(res);
+        
+        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, int&>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), int &&> ());
 
-        static_assert(range_cardinality<decltype(res)>::value == ranges::finite, "Cardinality of intersection with a finite range should be finite!");
+        static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of intersection with a finite range should be finite!");
 
         ::check_equal(res, {2, 4, 4});
         
@@ -113,11 +115,13 @@ int main()
         models_not<concepts::RandomAccessView>(res);
         models_not<concepts::BoundedView>(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, range_reference_t<decltype(i1_infinite)>>());
+        using R = decltype(res);
+        
+        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_infinite)>>());
 
-        static_assert(range_cardinality<decltype(res)>::value == ranges::unknown, "Cardinality of intersection of infinite ranges shold be unknown!");
+        static_assert(range_cardinality<R>::value == ranges::unknown, "Cardinality of intersection of infinite ranges shold be unknown!");
 
         ::check_equal(res | view::take(5), {0, 9, 36, 81, 144});
     }
@@ -130,12 +134,14 @@ int main()
         models<concepts::ForwardView>(res);
         models_not<concepts::RandomAccessView>(res);
         models_not<concepts::BoundedView>(res);
+        
+        using R = decltype(res);
 
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res)>, range_reference_t<decltype(i1_finite)>>());
+        CONCEPT_ASSERT(Same<range_value_t<R>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, range_reference_t<decltype(i1_finite)>>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_finite)>>());
 
-        static_assert(range_cardinality<decltype(res)>::value == ranges::finite, "Cardinality of intersection with a finite range shold be finite!");
+        static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of intersection with a finite range shold be finite!");
 
         ::check_equal(res | view::take(500), {1, 4});
 
@@ -146,10 +152,12 @@ int main()
         models<concepts::ForwardView>(res2);
         models_not<concepts::RandomAccessView>(res2);
         models_not<concepts::BoundedView>(res2);
+        
+        using R2 = decltype(res2);
 
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res2)>, range_reference_t<decltype(i1_infinite)>>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, range_rvalue_reference_t<decltype(i1_infinite)>>());
+        CONCEPT_ASSERT(Same<range_value_t<R2>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R2>, range_reference_t<decltype(i1_infinite)>>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, range_rvalue_reference_t<decltype(i1_infinite)>>());
 
         static_assert(range_cardinality<decltype(res2)>::value == ranges::finite, "Cardinality of intersection with a finite range shold be finite!");
 
@@ -173,14 +181,16 @@ int main()
     // test const ranges
     {
         auto res1 = view::set_intersection(view::const_(i1_finite), view::const_(i2_finite));
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res1)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res1)>, const int&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res1)>, const int&&> ());
+        using R1 = decltype(res1);
+        CONCEPT_ASSERT(Same<range_value_t<R1>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R1>, const int&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, const int&&> ());
         
         auto res2 = view::set_intersection(view::const_(i1_finite), i2_finite);
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, int>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res2)>, const int&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, const int&&> ());
+        using R2 = decltype(res2);
+        CONCEPT_ASSERT(Same<range_value_t<R2>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R2>, const int&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, const int&&> ());
     }
 
 
@@ -212,9 +222,10 @@ int main()
                                            &S::val,
                                            ident()
                                           );
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res1)>, S>());
-        CONCEPT_ASSERT(Same<range_reference_t<decltype(res1)>, S&>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res1)>, S&&> ());
+        using R1 = decltype(res1);
+        CONCEPT_ASSERT(Same<range_value_t<R1>, S>());
+        CONCEPT_ASSERT(Same<range_reference_t<R1>, S&>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R1>, S&&> ());
         ::check_equal(res1, {S{1}, S{3}, S{6}, S{8}});
 
 
@@ -223,14 +234,17 @@ int main()
                                            ident(),
                                            [](const S& x){ return x.val; }
                                           );
-        CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, int>());
+        using R2 = decltype(res2);
+        CONCEPT_ASSERT(Same<range_value_t<R2>, int>());
+        CONCEPT_ASSERT(Same<range_reference_t<R2>, int>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, int> ());
         ::check_equal(res2, {1, 3, 6, 8});
     }
 
     
     // move
     {
-        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c","x"});
+        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
         auto v1 = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
         auto res = view::set_intersection(v0, v1, [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
 
@@ -238,7 +252,7 @@ int main()
         move(res, back_inserter(expected));
 
         ::check_equal(expected, {"b","x"});
-        ::check_equal(v0, {"a","","c",""});
+        ::check_equal(v0, {"a","","b","c","","x"});
         ::check_equal(v1, {"b","x","y","z"});
  
         using R = decltype(res);
