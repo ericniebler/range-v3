@@ -9,7 +9,10 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <cstring>
+#include <string>
 #include <vector>
+#include <sstream>
 #include <range/v3/core.hpp>
 #include <range/v3/range_for.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
@@ -21,6 +24,7 @@
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/drop_while.hpp>
 #include <range/v3/view/iota.hpp>
+#include <range/v3/view/move.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/set_algorithm.hpp>
 #include <range/v3/view/stride.hpp>
@@ -29,6 +33,44 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+
+struct MoveOnlyString
+{
+    char const *sz_;
+
+    MoveOnlyString(char const *sz = "")
+    : sz_(sz)
+    {}
+    MoveOnlyString(MoveOnlyString &&that)
+    : sz_(that.sz_)
+    {
+        that.sz_ = "";
+    }
+    MoveOnlyString(MoveOnlyString const &) = delete;
+    MoveOnlyString &operator=(MoveOnlyString &&that)
+    {
+        sz_ = that.sz_;
+        that.sz_ = "";
+        return *this;
+    }
+    MoveOnlyString &operator=(MoveOnlyString const &) = delete;
+    bool operator==(MoveOnlyString const &that) const
+    {
+        return 0 == std::strcmp(sz_, that.sz_);
+    }
+    bool operator<(const MoveOnlyString &that) const
+    {
+        return std::strcmp(sz_, that.sz_) < 0;
+    }
+    bool operator!=(MoveOnlyString const &that) const
+    {
+        return !(*this == that);
+    }
+    friend std::ostream & operator<< (std::ostream &sout, MoveOnlyString const &str)
+    {
+        return sout << '"' << str.sz_ << '"';
+    }
+};
 
 
 int main()
@@ -250,7 +292,28 @@ int main()
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<decltype(res2)>, B>());
         ::check_equal(res2, {B{-20}, B{-10}, B{-2}, B{-1}, B{0}, B{1}, B{2}, B{3}, B{3}, B{4}, B{5}, B{6}, B{7}, B{8}, B{9}, B{20}});
     }
+
     
+    // move
+    {
+        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c","x"});
+        auto v1 = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+        auto res = view::set_union(v0, v1, [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
+        
+        std::vector<MoveOnlyString> expected;
+        move(res, back_inserter(expected));
+
+        ::check_equal(expected, {"a","b","c","x","y","z"});
+        ::check_equal(v0, {"","","",""});
+        ::check_equal(v1, {"b","x","",""});
+ 
+        using R = decltype(res);
+
+        CONCEPT_ASSERT(Same<range_value_t<R>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, MoveOnlyString &>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
+    }
+
 
     return test_result();
 }
