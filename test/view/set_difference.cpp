@@ -254,14 +254,14 @@ int main()
     {
         auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c","x"});
         auto v1 = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
-        auto res = view::set_symmetric_difference(v0, v1, [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
+        auto res = view::set_difference(v0, v1, [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
 
         std::vector<MoveOnlyString> expected;
         move(res, back_inserter(expected));
 
-        ::check_equal(expected, {"a","c","y","z"});
+        ::check_equal(expected, {"a","c"});
         ::check_equal(v0, {"","b","","x"});
-        ::check_equal(v1, {"b","x","",""});
+        ::check_equal(v1, {"b","x","y","z"});
  
         using R = decltype(res);
 
