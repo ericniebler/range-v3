@@ -68,8 +68,6 @@ namespace ranges
                 semiregular_t<function_type<P2>> proj2_;
                 Rng1 rng1_;
                 Rng2 rng2_;
-    //            using difference_type_ = common_type_t<range_difference_t<Rng1>, range_difference_t<Rng2>>;
-    //            using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
 
                 struct sentinel;
                 template<bool IsConst>
@@ -758,10 +756,10 @@ namespace ranges
                 reference_type get() const
                 noexcept(noexcept(*it1_) && noexcept(*it2_))
                 {
-                    if(state == state_t::FIRST || state == state_t::ONLY_FIRST)
-                        return *it1_;
-                    else
+                    if(state == state_t::SECOND || state == state_t::ONLY_SECOND)
                         return *it2_;
+                    else
+                        return *it1_;
                 }
                 void next()
                 {
