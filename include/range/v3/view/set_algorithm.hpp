@@ -164,7 +164,7 @@ namespace ranges
                 void next()
                 {
                     ++it1_;
-                    satisfy();        
+                    satisfy();
                 }
                 bool equal(set_difference_cursor const &that) const
                 {
@@ -477,7 +477,7 @@ namespace ranges
                 
                 enum class state_t
                 {
-                    FIRST, SECOND, ONLY_FIRST, ONLY_SECOND
+                    FIRST, FIRST_INC_SECOND, SECOND, ONLY_FIRST, ONLY_SECOND
                 } state;
                 
                 state_t which_set() const
@@ -490,6 +490,11 @@ namespace ranges
                         if(pred_(proj2_(*it2_), proj1_(*it1_)))
                             return state_t::SECOND;
                         
+                        // take care of the case when iter_move is made from it1_
+                        // so we need to test in advance when we still have access to unmoved-from *it1_
+                        if(!pred_(proj1_(*it1_), proj2_(*it2_)))
+                             return state_t::FIRST_INC_SECOND;
+
                         return state_t::FIRST;
                     }
                     
@@ -518,6 +523,7 @@ namespace ranges
                     switch(state)
                     {
                         case state_t::FIRST:
+                        case state_t::FIRST_INC_SECOND:
                         case state_t::ONLY_FIRST:
                             return *it1_;
                         
@@ -532,18 +538,25 @@ namespace ranges
                     switch(state)
                     {
                         case state_t::FIRST:
-                            if(!pred_(proj1_(*it1_), proj2_(*it2_)))
-                                ++it2_;
                             ++it1_;
                             state = which_set();
                             break;
+                            
+                        case state_t::FIRST_INC_SECOND:
+                            ++it2_;
+                            ++it1_;
+                            state = which_set();
+                            break;
+                        
                         case state_t::ONLY_FIRST:
                             ++it1_;
                             break;
+                            
                         case state_t::SECOND:
                             ++it2_;
                             state = which_set();
                             break;
+                            
                         case state_t::ONLY_SECOND:
                             ++it2_;
                             break;
@@ -564,6 +577,7 @@ namespace ranges
                     switch(state)
                     {
                         case state_t::FIRST:
+                        case state_t::FIRST_INC_SECOND:
                         case state_t::ONLY_FIRST:
                             return iter_move(it1_);
 
