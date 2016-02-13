@@ -9,7 +9,10 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
+#include <cstring>
+#include <string>
 #include <vector>
+#include <sstream>
 #include <range/v3/core.hpp>
 #include <range/v3/range_for.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
@@ -28,6 +31,44 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
+
+struct MoveOnlyString
+{
+    char const *sz_;
+
+    MoveOnlyString(char const *sz = "")
+    : sz_(sz)
+    {}
+    MoveOnlyString(MoveOnlyString &&that)
+    : sz_(that.sz_)
+    {
+        that.sz_ = "";
+    }
+    MoveOnlyString(MoveOnlyString const &) = delete;
+    MoveOnlyString &operator=(MoveOnlyString &&that)
+    {
+        sz_ = that.sz_;
+        that.sz_ = "";
+        return *this;
+    }
+    MoveOnlyString &operator=(MoveOnlyString const &) = delete;
+    bool operator==(MoveOnlyString const &that) const
+    {
+        return 0 == std::strcmp(sz_, that.sz_);
+    }
+    bool operator<(const MoveOnlyString &that) const
+    {
+        return std::strcmp(sz_, that.sz_) < 0;
+    }
+    bool operator!=(MoveOnlyString const &that) const
+    {
+        return !(*this == that);
+    }
+    friend std::ostream & operator<< (std::ostream &sout, MoveOnlyString const &str)
+    {
+        return sout << '"' << str.sz_ << '"';
+    }
+};
 
 
 int main()
@@ -185,6 +226,28 @@ int main()
         CONCEPT_ASSERT(Same<range_value_t<decltype(res2)>, int>());
         ::check_equal(res2, {1, 3, 6, 8});
     }
+
+    
+    // move
+    {
+        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c","x"});
+        auto v1 = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+        auto res = view::set_intersection(v0, v1, [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
+
+        std::vector<MoveOnlyString> expected;
+        move(res, back_inserter(expected));
+
+        ::check_equal(expected, {"b","x"});
+        ::check_equal(v0, {"a","","c",""});
+        ::check_equal(v1, {"b","x","y","z"});
+ 
+        using R = decltype(res);
+
+        CONCEPT_ASSERT(Same<range_value_t<R>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_reference_t<R>, MoveOnlyString &>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
+    }
+
 
     return test_result();
 }
