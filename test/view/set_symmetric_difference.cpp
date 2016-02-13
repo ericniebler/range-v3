@@ -307,12 +307,22 @@ int main()
         move(res, back_inserter(expected));
 
         ::check_equal(expected, {"a","b","c","x","y","z"});
-        
+        ::check_equal(v1, {"b","x","",""});
         //::check_equal(v0, {"","","b","","","x"});
+        
         // FIXME: why is v0 not equal to {"","","b","","","x"}?
         // the lazy view::set_symmetric_difference mimics the greedy set_symmetric_difference very closely!
         
-        ::check_equal(v1, {"b","x","",""});
+        auto v0_greedy = to_<std::vector<MoveOnlyString>>({"a","b","b","c","x","x"});
+        auto v1_greedy = to_<std::vector<MoveOnlyString>>({"b","x","y","z"});
+        std::vector<MoveOnlyString> expected_greedy;
+        set_symmetric_difference(v0_greedy, v1_greedy,
+                                 move_into(back_inserter(expected_greedy)),
+                                 [](const MoveOnlyString& a, const MoveOnlyString& b){return a<b;});
+        ::check_equal(expected_greedy, expected);
+        ::check_equal(v0_greedy, v0);
+        ::check_equal(v1_greedy, v1);
+
  
         using R = decltype(res);
 
