@@ -198,7 +198,7 @@ int main()
     struct B
     {
         int val;
-        B(int i): val{i} {};
+        B(int i): val{i} {}
         bool operator==(const B& other) const
         {
             return val == other.val;
@@ -207,8 +207,8 @@ int main()
     
     struct D: public B
     {
-        D(int i): B{i} {};
-        D(B b): B{std::move(b)} {};
+        D(int i): B{i} {}
+        D(B b): B{std::move(b)} {}
     };
     
     B b_finite[] = {B{-20}, B{-10}, B{1}, B{3}, B{3}, B{6}, B{8}, B{20}};
