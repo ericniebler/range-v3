@@ -46,6 +46,18 @@ auto twice(T t) -> decltype(ranges::view::concat(ranges::view::single(t), ranges
     return ranges::view::concat(ranges::view::single(t), ranges::view::single(t));
 }
 
+// https://github.com/ericniebler/range-v3/issues/283
+void test_issue_283()
+{
+    const std::vector<std::vector<int>> nums =
+    {
+        { 1, 2, 3 },
+        { 4, 5, 6 }
+    };
+    const std::vector<int> flat_nums = ranges::view::join( nums );
+    ::check_equal(flat_nums, {1,2,3,4,5,6});
+}
+
 int main()
 {
     using namespace ranges;
@@ -111,6 +123,8 @@ int main()
     models<concepts::SizedRange>(rng6);
     CHECK(rng6.size() == 4u);
     check_equal(rng6, {42,42,42,42});
+
+    test_issue_283();
 
     return ::test_result();
 }
