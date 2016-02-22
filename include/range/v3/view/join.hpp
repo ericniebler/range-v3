@@ -65,17 +65,17 @@ namespace ranges
         {
         private:
             CONCEPT_ASSERT(Range<Rng>());
-            CONCEPT_ASSERT(Range<range_value_t<Rng>>());
+            CONCEPT_ASSERT(Range<range_reference_t<Rng>>());
             using size_t_ = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
 
             friend range_access;
-            view::all_t<range_value_t<Rng>> cur_;
+            view::all_t<range_reference_t<Rng>> cur_;
 
             struct adaptor : adaptor_base
             {
             private:
                 join_view *rng_;
-                range_iterator_t<range_value_t<Rng>> it_;
+                range_iterator_t<range_reference_t<Rng>> it_;
                 void satisfy(range_iterator_t<Rng> &it)
                 {
                     auto &cur = rng_->cur_;
@@ -158,7 +158,7 @@ namespace ranges
             explicit join_view(Rng rng)
               : view_adaptor_t<join_view>{std::move(rng)}, cur_{}
             {}
-            CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 && SizedRange<range_value_t<Rng>>())
+            CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 && SizedRange<range_reference_t<Rng>>())
             constexpr size_t_ size() const
             {
                 return range_cardinality<join_view>::value >= 0 ?
@@ -179,15 +179,15 @@ namespace ranges
         private:
             CONCEPT_ASSERT(InputRange<Rng>());
             CONCEPT_ASSERT(ForwardRange<ValRng>());
-            CONCEPT_ASSERT(InputRange<range_value_t<Rng>>());
-            CONCEPT_ASSERT(Common<range_value_t<range_value_t<Rng>>, range_value_t<ValRng>>());
+            CONCEPT_ASSERT(InputRange<range_reference_t<Rng>>());
+            CONCEPT_ASSERT(Common<range_value_t<range_reference_t<Rng>>, range_value_t<ValRng>>());
             CONCEPT_ASSERT(SemiRegular<concepts::Common::value_t<
-                range_value_t<range_value_t<Rng>>,
+                range_value_t<range_reference_t<Rng>>,
                 range_value_t<ValRng>>>());
             using size_t_ = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
 
             friend range_access;
-            view::all_t<range_value_t<Rng>> cur_;
+            view::all_t<range_reference_t<Rng>> cur_;
             ValRng val_;
 
             struct adaptor : adaptor_base
@@ -196,7 +196,7 @@ namespace ranges
                 join_view *rng_;
                 bool toggl_;
                 range_iterator_t<ValRng> val_it_;
-                range_iterator_t<range_value_t<Rng>> it_;
+                range_iterator_t<range_reference_t<Rng>> it_;
                 void satisfy(range_iterator_t<Rng> &it)
                 {
                     auto &cur = rng_->cur_;
@@ -263,7 +263,7 @@ namespace ranges
                 }
                 auto get(range_iterator_t<Rng> const &) const ->
                     common_reference_t<
-                        range_reference_t<range_value_t<Rng>>,
+                        range_reference_t<range_reference_t<Rng>>,
                         range_reference_t<ValRng>>
                 {
                     if(toggl_)
@@ -272,7 +272,7 @@ namespace ranges
                 }
                 auto indirect_move(range_iterator_t<Rng> const &) const ->
                     common_reference_t<
-                        range_rvalue_reference_t<range_value_t<Rng>>,
+                        range_rvalue_reference_t<range_reference_t<Rng>>,
                         range_rvalue_reference_t<ValRng>>
                 {
                     if(toggl_)
@@ -301,7 +301,7 @@ namespace ranges
               , cur_{}, val_(std::move(val))
             {}
             CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 &&
-                SizedRange<range_value_t<Rng>>() && SizedRange<ValRng>())
+                SizedRange<range_reference_t<Rng>>() && SizedRange<ValRng>())
             constexpr size_t_ size() const
             {
                 return range_cardinality<join_view>::value >= 0 ?
@@ -324,7 +324,7 @@ namespace ranges
                     meta::lazy::apply<
                         meta::compose<
                             meta::quote<InputRange>,
-                            meta::quote<range_value_t>>,
+                            meta::quote<range_reference_t>>,
                         Rng>>;
 
                 template<typename Rng,
@@ -333,7 +333,7 @@ namespace ranges
                 {
                     return join_view<all_t<Rng>>{all(std::forward<Rng>(rng))};
                 }
-                template<typename Rng, typename Val = range_value_t<range_value_t<Rng>>,
+                template<typename Rng, typename Val = range_value_t<range_reference_t<Rng>>,
                     CONCEPT_REQUIRES_(JoinableRange_<Rng>())>
                 join_view<all_t<Rng>, single_view<Val>> operator()(Rng && rng, meta::id_t<Val> v) const
                 {
@@ -348,11 +348,11 @@ namespace ranges
                 join_view<all_t<Rng>, all_t<ValRng>> operator()(Rng && rng, ValRng && val) const
                 {
                     CONCEPT_ASSERT_MSG(Common<range_value_t<ValRng>,
-                        range_value_t<range_value_t<Rng>>>(),
+                        range_value_t<range_reference_t<Rng>>>(),
                         "To join a range of ranges with another range, all the ranges must have "
                         "a common value type.");
                     CONCEPT_ASSERT_MSG(SemiRegular<concepts::Common::value_t<
-                        range_value_t<ValRng>, range_value_t<range_value_t<Rng>>>>(),
+                        range_value_t<ValRng>, range_value_t<range_reference_t<Rng>>>>(),
                         "To join a range of ranges with another range, all the ranges must have "
                         "a common value type, and that value type must model the SemiRegular "
                         "concept; that is, it must have a default constructor, copy and move "
