@@ -417,17 +417,17 @@ namespace ranges
                 template<typename...Ts>
                 static constexpr variant_data<Ts...> &data(variant<Ts...> &var)
                 {
-                    return var.data_;
+                    return var.data_();
                 }
                 template<typename...Ts>
                 static constexpr variant_data<Ts...> const &data(variant<Ts...> const &var)
                 {
-                    return var.data_;
+                    return var.data_();
                 }
                 template<typename...Ts>
                 static constexpr variant_data<Ts...> &&data(variant<Ts...> &&var)
                 {
-                    return detail::move(var).data_;
+                    return detail::move(var.data_());
                 }
                 template<typename...Ts>
                 static variant<Ts...> make_empty(meta::id<variant<Ts...>>)
@@ -574,7 +574,8 @@ namespace ranges
         /// @{
         template<typename ...Ts>
         struct variant
-          : private detail::variant_base<variant<Ts...>>
+          : private detail::variant_data<Ts...>
+          , private detail::variant_base<variant<Ts...>>
         {
         private:
             friend struct detail::variant_core_access;
@@ -592,14 +593,26 @@ namespace ranges
                 concepts::Function::result_t<Fun, indexed_element<T, 0>>;
             using unbox_fn = detail::get_datum_fn;
 
-            detail::variant_data<Ts...> data_;
+            detail::variant_data<Ts...> &data_() &
+            {
+                return *this;
+            }
+            detail::variant_data<Ts...> const &data_() const &
+            {
+                return *this;
+            }
+            detail::variant_data<Ts...> &&data_() &&
+            {
+                return static_cast<detail::variant_data<Ts...> &&>(*this);
+            }
+
             std::size_t index_;
 
             void clear_()
             {
                 if(valid())
                 {
-                    detail::variant_visit_(index_, data_, detail::delete_fn{}, ident{});
+                    detail::variant_visit_(index_, data_(), detail::delete_fn{}, ident{});
                     index_ = (std::size_t)-1;
                 }
             }
@@ -607,10 +620,10 @@ namespace ranges
             void assign_(That &&that)
             {
                 if(that.valid())
-                    index_ = detail::variant_move_copy_(that.index_, data_, ((That &&) that).data_);
+                    index_ = detail::variant_move_copy_(that.index_, data_(), ((That &&) that).data_());
             }
             constexpr variant(detail::empty_variant_tag)
-              : index_((std::size_t)-1)
+              : detail::variant_data<Ts...>{}, index_((std::size_t)-1)
             {}
 
         public:
@@ -621,34 +634,38 @@ namespace ranges
             template<std::size_t N, typename...Args,
                 CONCEPT_REQUIRES_(Constructible<datum_t<N>, Args &&...>())>
             constexpr variant(RANGES_EMPLACED_INDEX_T(N), Args &&...args)
-              : data_{meta::size_t<N>{}, detail::forward<Args>(args)...}, index_(N)
+              : detail::variant_data<Ts...>{meta::size_t<N>{}
+              , detail::forward<Args>(args)...}, index_(N)
             {}
             template<std::size_t N, typename T,
                 CONCEPT_REQUIRES_(Constructible<datum_t<N>, std::initializer_list<T>>())>
             constexpr variant(RANGES_EMPLACED_INDEX_T(N), std::initializer_list<T> il)
-              : data_{meta::size_t<N>{}, detail::move(il)}, index_(N)
+              : detail::variant_data<Ts...>{meta::size_t<N>{}, detail::move(il)}
+              , index_(N)
             {}
             template<std::size_t N,
                 CONCEPT_REQUIRES_(Constructible<datum_t<N>, meta::nil_>())>
             constexpr variant(RANGES_EMPLACED_INDEX_T(N), meta::nil_)
-              : data_{meta::size_t<N>{}, meta::nil_{}}, index_(N)
+              : detail::variant_data<Ts...>{meta::size_t<N>{}, meta::nil_{}}, index_(N)
             {}
             variant(variant &&that)
-              : index_(detail::variant_move_copy_(that.index(), data_, detail::move(that.data_)))
+              : detail::variant_data<Ts...>{}
+              , index_(detail::variant_move_copy_(that.index(), data_(), detail::move(that.data_())))
             {}
             variant(variant const &that)
-              : index_(detail::variant_move_copy_(that.index(), data_, that.data_))
+              : detail::variant_data<Ts...>{}
+              , index_(detail::variant_move_copy_(that.index(), data_(), that.data_()))
             {}
             variant &operator=(variant &&that)
             {
-                // TODO do a simple move assign then index()==that.index()
+                // TODO do a simple move assign when index()==that.index()
                 this->clear_();
                 this->assign_(detail::move(that));
                 return *this;
             }
             variant &operator=(variant const &that)
             {
-                // TODO do a simple copy assign then index()==that.index()
+                // TODO do a simple copy assign when index()==that.index()
                 this->clear_();
                 this->assign_(that);
                 return *this;
@@ -663,7 +680,7 @@ namespace ranges
             {
                 this->clear_();
                 detail::construct_fn<N, Args&&...> fn{detail::forward<Args>(args)...};
-                detail::variant_visit_(N, data_, std::ref(fn), ident{});
+                detail::variant_visit_(N, data_(), std::ref(fn), ident{});
                 index_ = N;
             }
             constexpr bool valid() const
@@ -679,7 +696,7 @@ namespace ranges
             {
                 variant<alt_result_t<composed<Fun, unbox_fn>, Ts>...> res{
                     detail::empty_variant_tag{}};
-                detail::variant_visit_(index_, data_,
+                detail::variant_visit_(index_, data_(),
                     detail::make_variant_visitor(res, compose(detail::move(fun), unbox_fn{})));
                 return res;
             }
@@ -688,7 +705,7 @@ namespace ranges
             {
                 variant<alt_result_t<composed<Fun, unbox_fn>, add_const_t<Ts>>...> res{
                     detail::empty_variant_tag{}};
-                detail::variant_visit_(index_, data_,
+                detail::variant_visit_(index_, data_(),
                     detail::make_variant_visitor(res, compose(detail::move(fun), unbox_fn{})));
                 return res;
             }
@@ -696,7 +713,7 @@ namespace ranges
             variant<alt_result_t<Fun, Ts>...> visit_i(Fun fun)
             {
                 variant<alt_result_t<Fun, Ts>...> res{detail::empty_variant_tag{}};
-                detail::variant_visit_(index_, data_,
+                detail::variant_visit_(index_, data_(),
                     detail::make_variant_visitor(res, detail::move(fun)));
                 return res;
             }
@@ -704,7 +721,7 @@ namespace ranges
             variant<alt_result_t<Fun, add_const_t<Ts>>...> visit_i(Fun fun) const
             {
                 variant<alt_result_t<Fun, add_const_t<Ts>>...> res{detail::empty_variant_tag{}};
-                detail::variant_visit_(index_, data_,
+                detail::variant_visit_(index_, data_(),
                     detail::make_variant_visitor(res, detail::move(fun)));
                 return res;
             }
