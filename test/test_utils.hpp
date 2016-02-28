@@ -11,8 +11,10 @@
 #define RANGES_TEST_UTILS_HPP
 
 #include <algorithm>
+#include <cstring>
 #include <functional>
 #include <initializer_list>
+#include <ostream>
 #include <meta/meta.hpp>
 #include <range/v3/distance.hpp>
 #include <range/v3/begin_end.hpp>
@@ -242,5 +244,45 @@ test_range_algo_2<Algo, RvalueOK1, RvalueOK2> make_testable_2(Algo algo)
 {
     return test_range_algo_2<Algo, RvalueOK1, RvalueOK2>{algo};
 }
+
+// a simple type to test move semantics
+struct MoveOnlyString
+{
+    char const *sz_;
+
+    MoveOnlyString(char const *sz = "")
+    : sz_(sz)
+    {}
+    MoveOnlyString(MoveOnlyString &&that)
+    : sz_(that.sz_)
+    {
+        that.sz_ = "";
+    }
+    MoveOnlyString(MoveOnlyString const &) = delete;
+    MoveOnlyString &operator=(MoveOnlyString &&that)
+    {
+        sz_ = that.sz_;
+        that.sz_ = "";
+        return *this;
+    }
+    MoveOnlyString &operator=(MoveOnlyString const &) = delete;
+    bool operator==(MoveOnlyString const &that) const
+    {
+        return 0 == std::strcmp(sz_, that.sz_);
+    }
+    bool operator<(const MoveOnlyString &that) const
+    {
+        return std::strcmp(sz_, that.sz_) < 0;
+    }
+    bool operator!=(MoveOnlyString const &that) const
+    {
+        return !(*this == that);
+    }
+    friend std::ostream & operator<< (std::ostream &sout, MoveOnlyString const &str)
+    {
+        return sout << '"' << str.sz_ << '"';
+    }
+};
+
 
 #endif
