@@ -507,12 +507,12 @@ namespace ranges
                     meta::if_<std::is_object<T>, int> = 0>
                 auto requires_(T && t, T* const p = nullptr) -> decltype(
                     concepts::valid_expr(
-                        (t.~T(), 42),
+                        ((void)t.~T(), 42),
                         concepts::is_true(std::is_nothrow_destructible<T>()),
                         concepts::has_type<T*>(&t),
                         concepts::has_type<const T*>(&std::declval<const T&>()),
-                        (delete p, 42),
-                        (delete[] p, 42)
+                        ((void)delete p, 42),
+                        ((void)delete[] p, 42)
                     ));
             };
 
@@ -695,7 +695,7 @@ namespace ranges
                 auto requires_(Fun&& fun, Args&&... args) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<CopyConstructible, uncvref_t<Fun>>(),
-                        (static_cast<void>(val<Fun>()(val<Args>()...)), 42)
+                        ((void)val<Fun>()(val<Args>()...), 42)
                     ));
             };
 

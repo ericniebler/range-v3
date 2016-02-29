@@ -65,7 +65,7 @@ namespace ranges
                             concepts::is_true(meta::or_<
                                 Constructible<range_value_t<Rng>, T &&>,
                                 Range<T &&>>()),
-                            (push_back(rng, concepts::val<T>()), 42)
+                            ((void)push_back(rng, concepts::val<T>()), 42)
                         ));
                 };
 

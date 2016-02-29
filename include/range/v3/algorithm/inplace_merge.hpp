@@ -37,6 +37,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/swap.hpp>
+#include <range/v3/utility/nullptr_v.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 #include <range/v3/algorithm/move.hpp>
@@ -183,7 +184,7 @@ namespace ranges
                     iterator_difference_t<I> len2, C pred = C{}, P proj = P{}) const
                 {
                     merge_adaptive(std::move(begin), std::move(middle), std::move(end), len1, len2,
-                        nullptr, 0, std::move(pred), std::move(proj));
+                        _nullptr_v<iterator_value_t<I>>(), 0, std::move(pred), std::move(proj));
                 }
             };
 

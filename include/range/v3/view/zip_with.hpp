@@ -252,7 +252,7 @@ namespace ranges
             using end_cursor_t =
                 meta::if_<
                     meta::and_c<
-                        (bool) BoundedRange<Rngs>()...,
+                        meta::and_c<(bool) BoundedRange<Rngs>()...>::value,
                         !SinglePass<range_iterator_t<Rngs>>()...>,
                     cursor,
                     sentinel>;
@@ -318,7 +318,7 @@ namespace ranges
             {
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
-                    InputRange<Rngs>...,
+                    meta::and_<InputRange<Rngs>...>,
                     Callable<Fun, range_iterator_t<Rngs>...>,
                     Callable<Fun, copy_tag, range_iterator_t<Rngs>...>,
                     Callable<Fun, move_tag, range_iterator_t<Rngs>...>>;
@@ -368,7 +368,7 @@ namespace ranges
             {
                 template<typename Fun, typename ...Rngs>
                 using Concept = meta::and_<
-                    InputRange<Rngs>...,
+                    meta::and_<InputRange<Rngs>...>,
                     Callable<Fun, range_reference_t<Rngs> &&...>>;
 
                 template<typename...Rngs, typename Fun,

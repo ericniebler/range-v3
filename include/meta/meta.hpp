@@ -664,6 +664,21 @@ namespace meta
 
         /// Turn a trait \p C into a Alias Class.
         /// \ingroup composition
+    #if !defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8
+        template <template <typename...> class C>
+        struct quote_trait
+        {
+            template <typename... Ts>
+            using apply = _t<apply<quote<C>, Ts...>>;
+        };
+
+        template <typename T, template <T...> class C>
+        struct quote_trait_i
+        {
+            template <typename... Ts>
+            using apply = _t<apply<quote_i<T, C>, Ts...>>;
+        };
+    #else
         template <template <typename...> class C>
         using quote_trait = compose<quote<_t>, quote<C>>;
 
@@ -671,6 +686,7 @@ namespace meta
         /// \ingroup composition
         template <typename T, template <T...> class C>
         using quote_trait_i = compose<quote<_t>, quote_i<T, C>>;
+    #endif
 
         /// A Alias Class that partially applies the Alias Class
         /// \p F by binding the arguments \p Ts to the \e front of \p F.
