@@ -40,7 +40,7 @@ namespace ranges
     {
         /// ingroup group-concepts
         template<typename I, typename V, typename C = equal_to, typename P = ident>
-        using Searchnable = meta::fast_and<
+        using Searchnable = meta::strict_and<
             ForwardIterator<I>,
             IndirectCallableRelation<C, Projected<I, P>, V const *>>;
 

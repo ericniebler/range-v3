@@ -41,7 +41,7 @@ namespace ranges
         template<typename I, typename C, typename P = ident,
             typename V = iterator_common_reference_t<I>,
             typename X = concepts::Callable::result_t<P, V>>
-        using PartitionPointable = meta::fast_and<
+        using PartitionPointable = meta::strict_and<
             ForwardIterator<I>,
             IndirectCallablePredicate<C, Projected<I, P>>>;
 

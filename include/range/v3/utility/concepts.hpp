@@ -114,8 +114,8 @@ namespace ranges
             template<typename...Ts, typename Concept,
                 typename = decltype(std::declval<Concept &>().template requires_<Ts...>(std::declval<Ts>()...))>
             auto models_(Concept *) ->
-                meta::apply_list<
-                    meta::quote<meta::lazy::fast_and>,
+                meta::apply<
+                    meta::quote<meta::lazy::strict_and>,
                     meta::transform<
                         base_concepts_of_t<Concept>,
                         meta::bind_back<meta::quote<concepts::models>, Ts...>>>;
@@ -252,7 +252,7 @@ namespace ranges
                 template<typename ...Ts>
                 struct same : std::true_type {};
                 template<typename T, typename ...Us>
-                struct same<T, Us...> : meta::fast_and<std::is_same<T, Us>...> {};
+                struct same<T, Us...> : meta::strict_and<std::is_same<T, Us>...> {};
                 template<typename ...Ts>
                 using same_t = meta::_t<same<Ts...>>;
 
@@ -778,13 +778,13 @@ namespace ranges
         template<typename T, typename U, typename...Rest>
         using CommonReference =
             meta::or_<
-                meta::fast_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
+                meta::strict_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
                 concepts::models<concepts::CommonReference, T, U, Rest...>>;
 
         template<typename T, typename U, typename...Rest>
         using Common =
             meta::or_<
-                meta::fast_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
+                meta::strict_and<std::is_void<T>, std::is_void<U>, std::is_void<Rest>...>,
                 concepts::models<concepts::Common, T, U, Rest...>>;
 
         template<typename T>

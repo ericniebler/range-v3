@@ -434,7 +434,7 @@ namespace ranges
 
         // Generally useful to know if an iterator is single-pass or not:
         template<typename I>
-        using SinglePass = meta::fast_and<Iterator<I>, meta::not_<ForwardIterator<I>>>;
+        using SinglePass = meta::strict_and<Iterator<I>, meta::not_<ForwardIterator<I>>>;
 
         /// \cond
         namespace detail
@@ -443,14 +443,14 @@ namespace ranges
             struct exclusively_writable_
             {
                 template<typename T>
-                using apply = Writable<I, T>;
+                using invoke = Writable<I, T>;
             };
 
             template<typename I>
             struct exclusively_writable_<I, true>
             {
                 template<typename T>
-                using apply =
+                using invoke =
                     meta::and_<
                         Writable<I, T>,
                         meta::not_<Assignable<concepts::Readable::reference_t<I> &&, T>>>;
@@ -459,7 +459,7 @@ namespace ranges
         /// \endcond
 
         template<typename I, typename T>
-        using ExclusivelyWritable_ = meta::apply<detail::exclusively_writable_<I>, T>;
+        using ExclusivelyWritable_ = meta::invoke<detail::exclusively_writable_<I>, T>;
 
         namespace detail
         {
@@ -487,17 +487,17 @@ namespace ranges
 
         template<typename C, typename ...Is>
         using IndirectFunction = meta::and_<
-            meta::fast_and<Readable<Is>...>,
+            meta::strict_and<Readable<Is>...>,
             // C must be callable with the values and references read from the Is.
-            meta::lazy::apply<
+            meta::lazy::invoke<
                 detail::iter_map_reduce_fn_<
                     meta::bind_front<meta::quote<Function>, C>,
-                    meta::quote<meta::fast_and>>,
+                    meta::quote<meta::strict_and>>,
                 Is...>,
             // In addition, the return types of the C invocations tried above must all
-            // share a common reference type. (The lazy::apply is so that this doesn't get
+            // share a common reference type. (The lazy::invoke is so that this doesn't get
             // evaluated unless C is truly callable as determined above.)
-            meta::lazy::apply<
+            meta::lazy::invoke<
                 detail::iter_map_reduce_fn_<
                     meta::bind_front<meta::quote<concepts::Function::result_t>, C>,
                     meta::quote<CommonReference>>,
@@ -505,20 +505,20 @@ namespace ranges
 
         template<typename C, typename ...Is>
         using IndirectPredicate = meta::and_<
-            meta::fast_and<Readable<Is>...>,
-            meta::lazy::apply<
+            meta::strict_and<Readable<Is>...>,
+            meta::lazy::invoke<
                 detail::iter_map_reduce_fn_<
                     meta::bind_front<meta::quote<Predicate>, C>,
-                    meta::quote<meta::fast_and>>,
+                    meta::quote<meta::strict_and>>,
                 Is...>>;
 
         template<typename C, typename I0, typename I1 = I0>
         using IndirectRelation = meta::and_<
-            meta::fast_and<Readable<I0>, Readable<I1>>,
-            meta::lazy::apply<
+            meta::strict_and<Readable<I0>, Readable<I1>>,
+            meta::lazy::invoke<
                 detail::iter_map_reduce_fn_<
                     meta::bind_front<meta::quote<Relation>, C>,
-                    meta::quote<meta::fast_and>>,
+                    meta::quote<meta::strict_and>>,
                 I0, I1>>;
 
         template<typename C, typename ...Is>
@@ -553,14 +553,14 @@ namespace ranges
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
         template<typename I, typename V = concepts::Readable::value_t<I>>
-        using Permutable = meta::fast_and<
+        using Permutable = meta::strict_and<
             ForwardIterator<I>,
             Movable<V>,
             IndirectlyMovableStorable<I, I>>;
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident>
-        using Mergeable = meta::fast_and<
+        using Mergeable = meta::strict_and<
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
@@ -570,7 +570,7 @@ namespace ranges
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
             typename P0 = ident, typename P1 = ident>
-        using MoveMergeable = meta::fast_and<
+        using MoveMergeable = meta::strict_and<
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
@@ -579,26 +579,26 @@ namespace ranges
             IndirectlyMovable<I1, Out>>;
 
         template<typename I, typename C = ordered_less, typename P = ident>
-        using Sortable = meta::fast_and<
+        using Sortable = meta::strict_and<
             ForwardIterator<I>,
             IndirectCallableRelation<C, Projected<I, P>, Projected<I, P>>,
             Permutable<I>>;
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
-        using BinarySearchable = meta::fast_and<
+        using BinarySearchable = meta::strict_and<
             ForwardIterator<I>,
             IndirectCallableRelation<C, Projected<I, P>, V2 const *>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using AsymmetricallyComparable = meta::fast_and<
+        using AsymmetricallyComparable = meta::strict_and<
             InputIterator<I1>,
             InputIterator<I2>,
             IndirectCallablePredicate<C, Projected<I1, P1>, Projected<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Comparable = meta::fast_and<
+        using Comparable = meta::strict_and<
             AsymmetricallyComparable<I1, I2, C, P1, P2>,
             IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>>;
 

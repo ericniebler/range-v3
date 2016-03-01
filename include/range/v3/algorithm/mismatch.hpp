@@ -36,7 +36,7 @@ namespace ranges
         /// \ingroup group-concepts
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
-        using Mismatchable = meta::fast_and<
+        using Mismatchable = meta::strict_and<
             InputIterator<I1>,
             InputIterator<I2>,
             IndirectCallablePredicate<C, Projected<I1, P1>, Projected<I2, P2>>>;

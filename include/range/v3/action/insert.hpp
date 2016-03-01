@@ -131,7 +131,7 @@ namespace ranges
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 detail::insert_impl(std::forward<Cont>(cont), std::move(p), std::move(i), std::move(j),
-                                    meta::fast_and<RandomAccessReservable<Cont>, SizedIteratorRange<I, S>>{})
+                                    meta::strict_and<RandomAccessReservable<Cont>, SizedIteratorRange<I, S>>{})
             )
 
             template<typename Cont, typename I, typename Rng,
@@ -141,7 +141,7 @@ namespace ranges
             RANGES_DECLTYPE_AUTO_RETURN
             (
                 detail::insert_impl(std::forward<Cont>(cont), std::move(p), std::forward<Rng>(rng),
-                                    meta::fast_and<RandomAccessReservable<Cont>, SizedRange<Rng>>{})
+                                    meta::strict_and<RandomAccessReservable<Cont>, SizedRange<Rng>>{})
             )
 
             struct insert_fn

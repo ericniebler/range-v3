@@ -36,7 +36,7 @@ namespace ranges
                 typename X2 = concepts::Callable::result_t<P2, V2>,
                 typename Y2 = concepts::Callable::result_t<BOp2, X1, X2>,
                 typename Y1 = concepts::Callable::result_t<BOp1, T, Y2>>
-        using InnerProductable = meta::fast_and<
+        using InnerProductable = meta::strict_and<
             InputIterator<I1>,
             InputIterator<I2>,
             Callable<P1, V1>,

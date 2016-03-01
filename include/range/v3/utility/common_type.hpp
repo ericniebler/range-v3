@@ -252,14 +252,14 @@ namespace ranges
             template<typename T, typename U, typename = void>
             struct _common_reference2
               : meta::if_<
-                    meta::has_type<_basic_common_reference<T, U>>,
+                    meta::is_trait<_basic_common_reference<T, U>>,
                     _basic_common_reference<T, U>,
                     common_type<T, U>>
             {};
 
         #if 0 //!defined(__clang__) && __GNUC__ == 4 && __GNUC_MINOR__ <= 8
             template<typename T, typename U>
-            struct _common_reference2<T, U, meta::if_<meta::has_type<_builtin_common<T, U>>>>
+            struct _common_reference2<T, U, meta::if_<meta::is_trait<_builtin_common<T, U>>>>
               : _builtin_common<T, U>
             {};
         #else

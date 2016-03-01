@@ -83,7 +83,7 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                using reverse_view_t = meta::apply<meta::add_const_if_c<IsConst>, reverse_view>;
+                using reverse_view_t = meta::invoke<meta::add_const_if_c<IsConst>, reverse_view>;
                 reverse_view_t *rng_;
             public:
                 adaptor() = default;

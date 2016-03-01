@@ -32,7 +32,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O>
-        using ReverseCopyable = meta::fast_and<
+        using ReverseCopyable = meta::strict_and<
             BidirectionalIterator<I>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>>;

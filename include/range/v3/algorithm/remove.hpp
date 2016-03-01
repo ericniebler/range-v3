@@ -31,7 +31,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename T, typename P = ident>
-        using Removable = meta::fast_and<
+        using Removable = meta::strict_and<
             ForwardIterator<I>,
             IndirectCallableRelation<equal_to, Projected<I, P>, T const *>,
             Permutable<I>>;

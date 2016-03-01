@@ -38,7 +38,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident>
-        using Partitionable = meta::fast_and<
+        using Partitionable = meta::strict_and<
             ForwardIterator<I>,
             Permutable<I>,
             IndirectCallablePredicate<C, Projected<I, P>>>;

@@ -59,9 +59,6 @@ namespace meta
         template <typename... Fs>
         struct compose;
 
-        template <typename T>
-        struct always;
-
         template <template <typename...> class C, typename... Ts>
         struct defer;
 
@@ -71,7 +68,7 @@ namespace meta
         namespace extension
         {
             template <typename F, typename List>
-            struct apply_list;
+            struct apply;
         }
 
     } // inline namespace v1

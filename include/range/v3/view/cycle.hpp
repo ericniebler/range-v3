@@ -74,7 +74,7 @@ namespace ranges
             {
             private:
                 template<typename T>
-                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
                 using cycled_view_t = constify_if<cycled_view>;
                 using difference_type_ = range_difference_t<Rng>;
                 using iterator = range_iterator_t<constify_if<Rng>>;

@@ -39,7 +39,7 @@ namespace ranges
         namespace detail
         {
             template<typename Rng, typename Cont, typename I = range_common_iterator_t<Rng>>
-            using ConvertibleToContainer = meta::fast_and<
+            using ConvertibleToContainer = meta::strict_and<
                 Range<Cont>,
                 meta::not_<View<Cont>>,
                 Movable<Cont>,
@@ -53,12 +53,12 @@ namespace ranges
             private:
                 template <typename C, typename R>
                 using ReserveConcept =
-                    meta::fast_and<
+                    meta::strict_and<
                         ReserveAndAssignable<C, range_common_iterator_t<R>>,
                         SizedRange<R>>;
 
                 template<typename Rng,
-                    typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
                 Cont impl(Rng && rng, std::false_type) const
                 {
@@ -67,7 +67,7 @@ namespace ranges
                 }
 
                 template<typename Rng,
-                    typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>() &&
                                       ReserveConcept<Cont, Rng>())>
                 Cont impl(Rng && rng, std::true_type) const
@@ -81,7 +81,7 @@ namespace ranges
 
             public:
                 template<typename Rng,
-                    typename Cont = meta::apply<ContainerMetafunctionClass, range_value_t<Rng>>,
+                    typename Cont = meta::invoke<ContainerMetafunctionClass, range_value_t<Rng>>,
                     CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
                 Cont operator()(Rng && rng) const
                 {
@@ -111,7 +111,7 @@ namespace ranges
 
         /// \overload
         template<template<typename...> class ContT, typename Rng,
-            typename Cont = meta::apply<meta::quote<ContT>, range_value_t<Rng>>,
+            typename Cont = meta::invoke<meta::quote<ContT>, range_value_t<Rng>>,
             CONCEPT_REQUIRES_(Range<Rng>() && detail::ConvertibleToContainer<Rng, Cont>())>
         Cont to_(Rng && rng)
         {
@@ -120,7 +120,7 @@ namespace ranges
 
         /// \overload
         template<template<typename...> class ContT, typename T,
-            typename Cont = meta::apply<meta::quote<ContT>, T>,
+            typename Cont = meta::invoke<meta::quote<ContT>, T>,
             CONCEPT_REQUIRES_(detail::ConvertibleToContainer<std::initializer_list<T>, Cont>())>
         Cont to_(std::initializer_list<T> list)
         {
@@ -129,7 +129,7 @@ namespace ranges
 
         /// \overload
         template<typename Cont>
-        detail::to_container_fn<meta::always<Cont>> to_()
+        detail::to_container_fn<meta::id<Cont>> to_()
         {
             return {};
         }

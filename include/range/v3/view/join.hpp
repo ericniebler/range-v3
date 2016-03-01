@@ -321,7 +321,7 @@ namespace ranges
                 using JoinableRange_ = meta::and_<
                     InputRange<Rng>,
                     // Only evaluate this one if the previous one succeeded
-                    meta::lazy::apply<
+                    meta::lazy::invoke<
                         meta::compose<
                             meta::quote<InputRange>,
                             meta::quote<range_reference_t>>,

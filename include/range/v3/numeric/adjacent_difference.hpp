@@ -34,7 +34,7 @@ namespace ranges
                   typename V = iterator_value_t<I>,
                   typename X = concepts::Callable::result_t<P, V>,
                   typename Y = concepts::Callable::result_t<BOp, X, X>>
-        using AdjacentDifferentiable = meta::fast_and<
+        using AdjacentDifferentiable = meta::strict_and<
             InputIterator<I>,
             OutputIterator<O, X &&>,
             OutputIterator<O, Y &&>,

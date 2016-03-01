@@ -89,7 +89,7 @@ namespace ranges
             private:
                 friend struct sentinel<IsConst>;
                 template<typename T>
-                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
                 using concat_view_t = constify_if<concat_view>;
                 concat_view_t *rng_;
                 variant<range_iterator_t<constify_if<Rngs>>...> its_;
@@ -217,7 +217,7 @@ namespace ranges
             public:
                 // BUGBUG what about rvalue_reference and common_reference?
                 using reference = common_reference_t<range_reference_t<constify_if<Rngs>>...>;
-                using single_pass = meta::fast_or<SinglePass<range_iterator_t<Rngs>>...>;
+                using single_pass = meta::strict_or<SinglePass<range_iterator_t<Rngs>>...>;
                 cursor() = default;
                 cursor(concat_view_t &rng, begin_tag)
                   : rng_(&rng), its_{emplaced_index<0>, begin(std::get<0>(rng.rngs_))}
@@ -268,7 +268,7 @@ namespace ranges
             {
             private:
                 template<typename T>
-                using constify_if = meta::apply<meta::add_const_if_c<IsConst>, T>;
+                using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
                 using concat_view_t = constify_if<concat_view>;
                 range_sentinel_t<constify_if<meta::back<meta::list<Rngs...>>>> end_;
             public:

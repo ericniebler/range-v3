@@ -53,7 +53,7 @@ namespace ranges
             struct adaptor : adaptor_base
             {
             private:
-                using partial_sum_view_t = meta::apply<meta::add_const_if_c<IsConst>, partial_sum_view>;
+                using partial_sum_view_t = meta::invoke<meta::add_const_if_c<IsConst>, partial_sum_view>;
                 optional<range_value_t<Rng>> sum_;
                 partial_sum_view_t *rng_;
             public:

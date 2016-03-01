@@ -289,7 +289,7 @@ namespace ranges
             using variant_nil = indexed_datum<void, meta::npos>;
 
             template<typename Ts, bool Trivial =
-                meta::apply_list<
+                meta::apply<
                     meta::quote<meta::and_>,
                     meta::transform<Ts, meta::quote<std::is_trivially_destructible>>>::type::value>
             struct variant_data_
@@ -556,7 +556,7 @@ namespace ranges
             {}
 
             template<typename Variant, bool Trivial = std::is_trivially_destructible<
-                meta::apply_list<meta::quote<variant_data>, meta::as_list<Variant>>>::value>
+                meta::apply<meta::quote<variant_data>, meta::as_list<Variant>>>::value>
             struct variant_base
             {
                 ~variant_base()
@@ -799,7 +799,7 @@ namespace ranges
         template<typename ...Ts>
         struct variant_unique<variant<Ts...>>
         {
-            using type = meta::apply_list<meta::quote<variant>, meta::unique<meta::list<Ts...>>>;
+            using type = meta::apply<meta::quote<variant>, meta::unique<meta::list<Ts...>>>;
         };
 
         template<typename Var>

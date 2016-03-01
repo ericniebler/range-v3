@@ -31,7 +31,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C, typename P = ident>
-        using RemovableIf = meta::fast_and<
+        using RemovableIf = meta::strict_and<
             ForwardIterator<I>,
             IndirectCallablePredicate<C, Projected<I, P>>,
             Permutable<I>>;

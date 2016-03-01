@@ -31,7 +31,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename T0, typename T1, typename P = ident>
-        using ReplaceCopyable = meta::fast_and<
+        using ReplaceCopyable = meta::strict_and<
             InputIterator<I>,
             OutputIterator<O, T1 const &>,
             IndirectlyCopyable<I, O>,

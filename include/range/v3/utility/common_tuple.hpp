@@ -399,7 +399,7 @@ namespace ranges
             struct common_type_tuple_like<T0<Ts...>, T1<Us...>, TupleLike,
                 meta::if_c<sizeof...(Ts) == sizeof...(Us)>>
               : meta::lazy::let<
-                    meta::lazy::apply<TupleLike, meta::lazy::eval<common_type<Ts, Us>>...>>
+                    meta::lazy::invoke<TupleLike, meta::lazy::_t<common_type<Ts, Us>>...>>
             {};
 
             template<typename T, typename U>
@@ -466,7 +466,7 @@ namespace ranges
             struct common_ref_tuple_like<T0<Ts...>, T1<Us...>, TupleLike,
                 meta::if_c<sizeof...(Ts) == sizeof...(Us)>>
               : meta::lazy::let<
-                    meta::lazy::apply<TupleLike, meta::lazy::eval<common_reference<Ts, Us>>...>>
+                    meta::lazy::invoke<TupleLike, meta::lazy::_t<common_reference<Ts, Us>>...>>
             {};
         }
 
@@ -474,24 +474,24 @@ namespace ranges
         template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
         struct basic_common_reference<common_pair<F1, S1>, std::pair<F2, S2>, Qual1, Qual2>
           : detail::common_ref_tuple_like<
-                common_pair<meta::apply<Qual1, F1>, meta::apply<Qual1, S1>>,
-                std::pair<meta::apply<Qual2, F2>, meta::apply<Qual2, S2>>,
+                common_pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
+                std::pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
                 meta::quote<detail::make_common_pair>>
         {};
 
         template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
         struct basic_common_reference<std::pair<F1, S1>, common_pair<F2, S2>, Qual1, Qual2>
           : detail::common_ref_tuple_like<
-                std::pair<meta::apply<Qual1, F1>, meta::apply<Qual1, S1>>,
-                common_pair<meta::apply<Qual2, F2>, meta::apply<Qual2, S2>>,
+                std::pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
+                common_pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
                 meta::quote<detail::make_common_pair>>
         {};
 
         template<typename F1, typename S1, typename F2, typename S2, typename Qual1, typename Qual2>
         struct basic_common_reference<common_pair<F1, S1>, common_pair<F2, S2>, Qual1, Qual2>
           : detail::common_ref_tuple_like<
-                common_pair<meta::apply<Qual1, F1>, meta::apply<Qual1, S1>>,
-                common_pair<meta::apply<Qual2, F2>, meta::apply<Qual2, S2>>,
+                common_pair<meta::invoke<Qual1, F1>, meta::invoke<Qual1, S1>>,
+                common_pair<meta::invoke<Qual2, F2>, meta::invoke<Qual2, S2>>,
                 meta::quote<detail::make_common_pair>>
         {};
 
@@ -499,24 +499,24 @@ namespace ranges
         template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
         struct basic_common_reference<common_tuple<Ts...>, std::tuple<Us...>, Qual1, Qual2>
           : detail::common_ref_tuple_like<
-                common_tuple<meta::apply<Qual1, Ts>...>,
-                std::tuple<meta::apply<Qual2, Us>...>,
+                common_tuple<meta::invoke<Qual1, Ts>...>,
+                std::tuple<meta::invoke<Qual2, Us>...>,
                 meta::quote<detail::make_common_tuple>>
         {};
 
         template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
         struct basic_common_reference<std::tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>
           : detail::common_ref_tuple_like<
-                std::tuple<meta::apply<Qual1, Ts>...>,
-                common_tuple<meta::apply<Qual2, Us>...>,
+                std::tuple<meta::invoke<Qual1, Ts>...>,
+                common_tuple<meta::invoke<Qual2, Us>...>,
                 meta::quote<detail::make_common_tuple>>
         {};
 
         template<typename ...Ts, typename ...Us, typename Qual1, typename Qual2>
         struct basic_common_reference<common_tuple<Ts...>, common_tuple<Us...>, Qual1, Qual2>
           : detail::common_ref_tuple_like<
-                common_tuple<meta::apply<Qual1, Ts>...>,
-                common_tuple<meta::apply<Qual2, Us>...>,
+                common_tuple<meta::invoke<Qual1, Ts>...>,
+                common_tuple<meta::invoke<Qual2, Us>...>,
                 meta::quote<detail::make_common_tuple>>
         {};
         /// \endcond

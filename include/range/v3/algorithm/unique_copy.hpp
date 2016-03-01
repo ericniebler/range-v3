@@ -31,12 +31,12 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename C = equal_to, typename P = ident>
-        using UniqueCopyable = meta::fast_and<
+        using UniqueCopyable = meta::strict_and<
             InputIterator<I>,
             IndirectCallableRelation<C, Projected<I, P>>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>,
-            meta::fast_or<
+            meta::strict_or<
                 ForwardIterator<I>,
                 ForwardIterator<O>,
                 IndirectlyCopyableStorable<I, O>>>;

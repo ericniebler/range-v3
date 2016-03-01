@@ -38,7 +38,7 @@ namespace ranges
             typename V = iterator_common_reference_t<I>,
             typename X = concepts::Callable::result_t<P, V>,
             typename Y = concepts::Callable::result_t<F, X>>
-        using Transformable1 = meta::fast_and<
+        using Transformable1 = meta::strict_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
             IndirectCallable<F, Projected<I, P>>,
@@ -52,7 +52,7 @@ namespace ranges
             typename V1 = iterator_common_reference_t<I1>,
             typename X1 = concepts::Callable::result_t<P1, V1>,
             typename Y = concepts::Callable::result_t<F, X0, X1>>
-        using Transformable2 = meta::fast_and<
+        using Transformable2 = meta::strict_and<
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<O>,

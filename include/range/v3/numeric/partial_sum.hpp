@@ -31,7 +31,7 @@ namespace ranges
                   typename V = iterator_value_t<I>,
                   typename X = concepts::Callable::result_t<P, V>,
                   typename Y = concepts::Callable::result_t<BOp, X, X>>
-        using PartialSummable = meta::fast_and<
+        using PartialSummable = meta::strict_and<
             InputIterator<I>,
             OutputIterator<O, X &&>,
             Callable<P, V>,

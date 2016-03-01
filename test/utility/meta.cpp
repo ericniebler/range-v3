@@ -32,14 +32,14 @@ namespace tc_detail
 }
 
 template <typename... Tuples,
-          typename Res = apply_list<quote<std::tuple>, concat<as_list<Tuples>...>>>
+          typename Res = apply<quote<std::tuple>, concat<as_list<Tuples>...>>>
 Res tuple_cat(Tuples &&... tpls)
 {
     static constexpr std::size_t N = sizeof...(Tuples);
     // E.g. [0,0,0,2,2,2,3,3]
     using inner = join<
         transform<list<as_list<Tuples>...>,
-                  transform<as_list<make_index_sequence<N>>, quote<always>>, quote<transform>>>;
+                  transform<as_list<make_index_sequence<N>>, quote<id>>, quote<transform>>>;
     // E.g. [0,1,2,0,1,2,0,1]
     using outer = join<
         transform<list<as_list<Tuples>...>,
@@ -68,39 +68,39 @@ static_assert(none_of<list<int, short, long>, quote<std::is_floating_point>>::va
 static_assert(!any_of<list<int, short, long>, quote<std::is_floating_point>>::value, "");
 static_assert(any_of<list<int, short, long, float>, quote<std::is_floating_point>>::value, "");
 
-static_assert(std::is_same<apply<uncurry<curry<quote_trait<id>>>, std::tuple<int, short, double>>,
+static_assert(std::is_same<invoke<uncurry<curry<quote_trait<id>>>, std::tuple<int, short, double>>,
                            list<int, short, double>>::value,
               "");
 
 template <typename, typename, typename = void>
-struct can_apply_ : std::false_type
+struct can_invoke_ : std::false_type
 {
 };
 
 template <typename F, typename... As>
-struct can_apply_<F, meta::list<As...>, meta::void_<meta::apply<F, As...>>> : std::true_type
+struct can_invoke_<F, meta::list<As...>, meta::void_<meta::invoke<F, As...>>> : std::true_type
 {
 };
 
 template <typename F, typename... As>
-struct can_apply : can_apply_<F, meta::list<As...>>
+struct can_invoke : can_invoke_<F, meta::list<As...>>
 {
 };
 
-static_assert(can_apply<meta::quote<std::pair>, int, int>::value, "");
+static_assert(can_invoke<meta::quote<std::pair>, int, int>::value, "");
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
 #if !defined(__GNUC__) || defined(__clang__)
-static_assert(!can_apply<meta::quote<std::pair>, int, int, int>::value, "");
+static_assert(!can_invoke<meta::quote<std::pair>, int, int, int>::value, "");
 #endif
 
 // Sanity-check meta::lambda
 using Lambda0 = lambda<_a, _b, std::pair<_a, _b>>;
 using Lambda1 = lambda<_a, _b, std::pair<_b, _a>>;
 using Lambda2 = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
-using Pair0 = apply<Lambda0, int, short>;
-using Pair1 = apply<Lambda1, int, short>;
-using Pair2 = apply<Lambda2, int, short>;
+using Pair0 = invoke<Lambda0, int, short>;
+using Pair1 = invoke<Lambda1, int, short>;
+using Pair2 = invoke<Lambda2, int, short>;
 static_assert(std::is_same<Pair0, std::pair<int, short>>::value, "");
 static_assert(std::is_same<Pair1, std::pair<short, int>>::value, "");
 static_assert(std::is_same<Pair2, std::pair<short, std::pair<int, int>>>::value, "");
@@ -121,11 +121,11 @@ static_assert(
                                       meta::list<short, float>, meta::list<short, double>>>::value,
     "");
 
-static_assert(can_apply<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
+static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
 #if !defined(__GNUC__) || defined(__clang__)
-static_assert(!can_apply<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
+static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
 #endif
 
 template <typename List>
@@ -133,7 +133,7 @@ using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b>>>
 static_assert(std::is_same<rev<list<int, short, double>>, list<double, short, int>>::value, "");
 
 using uncvref_fn = lambda<_a, l::_t<std::remove_cv<l::_t<std::remove_reference<_a>>>>>;
-static_assert(std::is_same<apply<uncvref_fn, int const &>, int>::value, "");
+static_assert(std::is_same<invoke<uncvref_fn, int const &>, int>::value, "");
 
 using L = list<int, short, int, float>;
 static_assert(std::is_same<find<L, int>, list<int, short, int, float>>::value, "");
@@ -265,7 +265,7 @@ int main()
         using namespace meta::placeholders;
 
         using lambda = meta::lambda<_a, _b, meta::lazy::find_index<_b, _a>>;
-        using result = meta::apply<lambda, long, l>;
+        using result = meta::invoke<lambda, long, l>;
         static_assert(result{} == 1, "");
     }
 
@@ -283,7 +283,7 @@ int main()
         static_assert(meta::reverse_find_index<l2, double>{} == meta::npos{}, "");
 
         using lambda = meta::lambda<_a, _b, meta::lazy::reverse_find_index<_b, _a>>;
-        using result = meta::apply<lambda, long, l>;
+        using result = meta::invoke<lambda, long, l>;
         static_assert(result{} == 1, "");
     }
 
@@ -305,7 +305,7 @@ int main()
 
     // pathological lambda test
     {
-        using X = apply<lambda<_a, lambda_test<_a>>, int>;
+        using X = invoke<lambda<_a, lambda_test<_a>>, int>;
         static_assert(std::is_same<X, lambda_test<_a>>::value, "");
     }
 
@@ -325,37 +325,37 @@ int main()
 
     // lambda with variadic placeholders
     {
-        using X = apply<lambda<_args, list<_args>>, int, short, double>;
+        using X = invoke<lambda<_args, list<_args>>, int, short, double>;
         static_assert(std::is_same<X, list<int, short, double>>::value, "");
 
-        using X2 = apply<lambda<_a, lambda_test<_a>>, int>;
+        using X2 = invoke<lambda<_a, lambda_test<_a>>, int>;
         static_assert(std::is_same<X2, lambda_test<_a>>::value, "");
 
-        using Y = apply<lambda<_args, defer<std::pair, _args>>, int, short>;
+        using Y = invoke<lambda<_args, defer<std::pair, _args>>, int, short>;
         static_assert(std::is_same<Y, std::pair<int, short>>::value, "");
 
-        using Y2 = apply<lambda<_args, list<_args, list<_args>>>, int, short>;
+        using Y2 = invoke<lambda<_args, list<_args, list<_args>>>, int, short>;
         static_assert(std::is_same<Y2, list<int, short, list<int, short>>>::value, "");
 
-        using Z = apply<lambda<_a, _args, list<int, _args, double, _a>>, short *, short, float>;
+        using Z = invoke<lambda<_a, _args, list<int, _args, double, _a>>, short *, short, float>;
         static_assert(std::is_same<Z, list<int, short, float, double, short *>>::value, "");
 
         // Nesting variadic lambdas in non-variadic lambdas:
-        using A = apply<lambda<_a, lazy::apply<lambda<_b, _args, list<_args, _b>>, _a,
+        using A = invoke<lambda<_a, lazy::invoke<lambda<_b, _args, list<_args, _b>>, _a,
                                                lazy::_t<std::add_pointer<_a>>,
                                                lazy::_t<std::add_lvalue_reference<_a>>>>,
                         int>;
         static_assert(std::is_same<A, list<int *, int &, int>>::value, "");
 
         // Nesting non-variadic lambdas in variadic lambdas:
-        using B = apply<lambda<_a, _args, lazy::apply<lambda<_b, list<_b, _args, _a>>, _a>>, int,
+        using B = invoke<lambda<_a, _args, lazy::invoke<lambda<_b, list<_b, _args, _a>>, _a>>, int,
                         short, double>;
         static_assert(std::is_same<B, list<int, short, double, int>>::value, "");
 
         // Nesting variadic lambdas in variadic lambdas:
-        using ZZ = apply<
+        using ZZ = invoke<
             lambda<_a, _args_a,
-                   lazy::apply<lambda<_b, _args_b, list<_b, _a, list<_args_b>, list<_args_a>>>,
+                   lazy::invoke<lambda<_b, _args_b, list<_b, _a, list<_args_b>, list<_args_a>>>,
                                _args_a>>,
             int, short, float, double>;
         static_assert(
@@ -366,11 +366,11 @@ int main()
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
 #if !defined(__GNUC__) || defined(__clang__)
-        static_assert(!can_apply<lambda<_args, defer<std::pair, _args>>, int>::value, "");
-        static_assert(!can_apply<lambda<_args, defer<std::pair, _args>>, int, short, double>::value,
+        static_assert(!can_invoke<lambda<_args, defer<std::pair, _args>>, int>::value, "");
+        static_assert(!can_invoke<lambda<_args, defer<std::pair, _args>>, int, short, double>::value,
                       "");
-        static_assert(!can_apply<lambda<_a, defer<std::pair, _a, _a>>, int, short>::value, "");
-        static_assert(!can_apply<lambda<_a, _b, _c, _args, defer<std::pair, _a, _a>>>::value, "");
+        static_assert(!can_invoke<lambda<_a, defer<std::pair, _a, _a>>, int, short>::value, "");
+        static_assert(!can_invoke<lambda<_a, _b, _c, _args, defer<std::pair, _a, _a>>>::value, "");
 #endif
     }
 

@@ -40,7 +40,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename C = ordered_less, typename P = ident>
-        using IsHeapable = meta::fast_and<
+        using IsHeapable = meta::strict_and<
             RandomAccessIterator<I>,
             IndirectCallableRelation<C, Projected<I, P>>>;
 

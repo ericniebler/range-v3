@@ -31,7 +31,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename O, typename T, typename P = ident>
-        using RemoveCopyable = meta::fast_and<
+        using RemoveCopyable = meta::strict_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
             IndirectCallableRelation<equal_to, Projected<I, P>, T const *>,

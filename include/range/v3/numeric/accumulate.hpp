@@ -30,7 +30,7 @@ namespace ranges
             typename V = iterator_value_t<I>,
             typename X = concepts::Callable::result_t<P, V>,
             typename Y = concepts::Callable::result_t<Op, T, X>>
-        using Accumulateable = meta::fast_and<
+        using Accumulateable = meta::strict_and<
             InputIterator<I>,
             Callable<P, V>,
             Callable<Op, T, X>,

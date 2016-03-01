@@ -29,7 +29,7 @@ namespace ranges
     {
         /// \ingroup group-concepts
         template<typename I, typename T0, typename T1, typename P = ident>
-        using Replaceable = meta::fast_and<
+        using Replaceable = meta::strict_and<
             InputIterator<I>,
             IndirectCallableRelation<equal_to, Projected<I, P>, T0 const *>,
             Writable<I, T1 const &>>;

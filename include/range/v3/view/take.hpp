@@ -43,7 +43,7 @@ namespace ranges
             struct sentinel
             {
             public:
-                using BaseRng = meta::apply<meta::add_const_if_c<IsConst>, Rng>;
+                using BaseRng = meta::invoke<meta::add_const_if_c<IsConst>, Rng>;
                 using base_iterator = range_iterator_t<BaseRng>;
                 using base_sentinel = range_sentinel_t<BaseRng>;
                 base_sentinel sent_;
