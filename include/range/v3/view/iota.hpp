@@ -27,18 +27,6 @@
 #include <range/v3/view/take_exactly.hpp>
 #include <range/v3/view/delimit.hpp>
 
-#ifndef RANGES_SUPPRESS_IOTA_WARNING
-#ifdef __clang__
-#define RANGES_IOTA_WARNING_MESSAGE(MSG) __attribute__((__deprecated__("(Actually it's not deprecated, this is just an informational warning.) " MSG)))
-#elif defined(__GNUC__)
-#define RANGES_IOTA_WARNING_MESSAGE(MSG) __attribute__((__warning__(MSG)))
-#else
-#define RANGES_IOTA_WARNING_MESSAGE(MSG) /**/
-#endif
-#else
-#define RANGES_IOTA_WARNING_MESSAGE(MSG) /**/
-#endif
-
 namespace ranges
 {
     inline namespace v3
@@ -343,12 +331,7 @@ namespace ranges
                         meta::and_<RandomAccessIncrementable<From>, Same<From, To>>,
                         detail::take_exactly_view_<iota_view<From>, true>,
                         iota_view<From, To>>>
-                operator()(From from, To to) const
-                    RANGES_IOTA_WARNING_MESSAGE("The meaning of view::iota(x,y) has changed! It is no "
-                        "longer a closed sequence that includes 'y'. It is a half-open sequence that "
-                        "includes 'x' but excludes 'y'. Please change your code accordingly. You can "
-                        "change the upper bound or use view::closed_iota. (Define "
-                        "RANGES_SUPPRESS_IOTA_WARNING to turn off this warning.)");
+                operator()(From from, To to) const;
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename From,
@@ -456,12 +439,7 @@ namespace ranges
                 meta::if_c<
                     (bool)Integral<Val>(),
                     detail::take_exactly_view_<iota_view<Val>, true>>
-                operator()(Val from, Val to) const
-                    RANGES_IOTA_WARNING_MESSAGE("The meaning of view::ints(x,y) has changed! It is no "
-                        "longer a closed sequence that includes 'y'. It is a half-open sequence that "
-                        "includes 'x' but excludes 'y'. Please change your code accordingly. You can "
-                        "change the upper bound or use view::closed_ints. (Define "
-                        "RANGES_SUPPRESS_IOTA_WARNING to turn off this warning.)");
+                operator()(Val from, Val to) const;
 
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Val,
