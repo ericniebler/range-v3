@@ -445,7 +445,7 @@ namespace ranges
         struct basic_sentinel : range_access::mixin_base_t<S>
         {
             // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
-            #ifndef __GNUC__
+            #if !defined(__GNUC__) || defined(__clang__)
         private:
             #endif
             friend range_access;
@@ -461,6 +461,7 @@ namespace ranges
             {
                 return this->range_access::mixin_base_t<S>::get();
             }
+        public:
             basic_sentinel() = default;
             RANGES_CXX14_CONSTEXPR basic_sentinel(S end)
               : range_access::mixin_base_t<S>(std::move(end))

@@ -118,7 +118,7 @@ namespace ranges
                 view(View a)
                   : view_(std::move(a))
                 {}
-                // Calling directly requires range arguments or lvalue containers.
+                // Calling directly requires View arguments or lvalue containers.
                 template<typename Rng, typename...Rest,
                     CONCEPT_REQUIRES_(ViewConcept<Rng, Rest...>())>
                 auto operator()(Rng && rng, Rest &&... rest) const
