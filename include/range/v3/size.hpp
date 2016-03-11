@@ -63,29 +63,30 @@ namespace ranges
                 return size(t.get());
             }
 
-            // Built-in arrays
-            template<typename T, std::size_t N>
-            constexpr std::size_t size(T (&)[N])
-            {
-                return N;
-            }
-
-            template<typename T, std::size_t N>
-            constexpr std::size_t size(T const (&)[N])
-            {
-                return N;
-            }
-
-            template<typename T, std::size_t N>
-            constexpr std::size_t size(T (&&)[N])
-            {
-                return N;
-            }
-
             struct size_fn : iter_size_fn
             {
                 using iter_size_fn::operator();
 
+                // Built-in arrays
+                template<typename T, std::size_t N>
+                constexpr std::size_t operator()(T (&)[N]) const
+                {
+                    return N;
+                }
+
+                template<typename T, std::size_t N>
+                constexpr std::size_t operator()(T const (&)[N]) const
+                {
+                    return N;
+                }
+
+                template<typename T, std::size_t N>
+                constexpr std::size_t operator()(T (&&)[N]) const
+                {
+                    return N;
+                }
+
+                // Other
                 template<typename Rng>
                 constexpr auto operator()(Rng &&rng) const ->
                     detail::decay_t<decltype(size(detail::forward<Rng>(rng)))>
