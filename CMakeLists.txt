@@ -27,12 +27,21 @@ endif()
 
 include_directories(include)
 
-if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+# Clang/C2 will blow up with various parts of the standard library
+# if compiling with -std less than c++14.
+if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") AND
+   ("x${CMAKE_CXX_SIMULATE_ID}x" STREQUAL "xMSVCx") AND
+   ("${RANGES_CXX_STD}" STREQUAL "11"))
+  set(CMAKE_CXX_STANDARD 14)
+  set(RANGES_CXX_STD 14)
+endif()
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything -Werror -pedantic-errors")                           
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Wno-error=deprecated")                  
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++98-compat -Wno-c++98-compat-pedantic")        
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-stack-address")                  
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-stack-address -Wno-undef")                  
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable -Wno-unused-parameter")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-weak-vtables -Wno-padded")                       
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-global-constructors -Wno-exit-time-destructors") 
