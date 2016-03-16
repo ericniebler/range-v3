@@ -113,3 +113,6 @@ add_subdirectory(test)
 add_subdirectory(example)
 add_subdirectory(perf)
 add_subdirectory(scratch)
+
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX}
+        FILES_MATCHING PATTERN "*.hpp")
