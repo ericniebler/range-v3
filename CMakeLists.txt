@@ -114,5 +114,5 @@ add_subdirectory(example)
 add_subdirectory(perf)
 add_subdirectory(scratch)
 
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX}
+install(DIRECTORY include/ DESTINATION install
         FILES_MATCHING PATTERN "*.hpp")
