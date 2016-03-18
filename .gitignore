@@ -217,3 +217,7 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
+
+# Visual Studio stuff
+*.VC.db
+*.VC.opendb
