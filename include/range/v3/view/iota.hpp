@@ -309,7 +309,8 @@ namespace ranges
                 static detail::take_exactly_view_<iota_view<From>, true>
                 impl(From from, From to, concepts::RandomAccessIncrementable *)
                 {
-                    return {iota_view<From>{std::move(from)}, detail::iota_minus(to, from)};
+                    auto n = detail::iota_minus(std::move(to), from);
+                    return {iota_view<From>{std::move(from)}, n};
                 }
                 template<typename From, typename To>
                 static iota_view<From, To>
