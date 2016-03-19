@@ -48,7 +48,7 @@ namespace ranges
                 {}
 
                 template<typename I>
-                common_type_t<decay_t<unwrap_reference_t<Val const &>>, iterator_value_t<I>>
+                common_type_t<decay_t<unwrap_reference_t<Val const &>>, iterator_value_t<I>> &
                 operator()(copy_tag, I const &i) const;
 
                 template<typename I,

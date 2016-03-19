@@ -366,7 +366,7 @@ namespace ranges
             // value_type (needs no impl)
             template<typename ...Its>
             auto operator()(copy_tag, Its ...its) const ->
-                detail::decay_t<decltype(std::declval<BaseFn &>()(*its...))>;
+                decltype(std::declval<BaseFn &>()(*its...));
             // Reference
             template<typename ...Its>
             auto operator()(Its ...its)
