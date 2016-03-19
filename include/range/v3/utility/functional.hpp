@@ -159,6 +159,42 @@ namespace ranges
         struct as_function_fn
         {
         private:
+        #if __apple_build_version__
+            // Work around a bug in earlier versions of libc++ that
+            // shipped with Xcode
+            template<typename MemFn>
+            struct _mem_fn_wrap
+            {
+            private:
+                mutable MemFn fn_;
+            public:
+                explicit _mem_fn_wrap(MemFn fn)
+                  : fn_(std::move(fn))
+                {}
+                template<typename ...Ts>
+                auto operator()(Ts &&... ts) const ->
+                    decltype(fn_(std::forward<Ts>(ts)...))
+                {
+                    return fn_(std::forward<Ts>(ts)...);
+                }
+            };
+            template<typename MemFn>
+            _mem_fn_wrap<MemFn> _mem_fn_aux(MemFn fn) const
+            {
+                return _mem_fn_wrap<MemFn>(std::move(fn));
+            }
+            template<typename R, typename T>
+            auto _mem_fn(R T::* p) const -> decltype(_mem_fn_aux(std::mem_fn(p)))
+            {
+                return _mem_fn_aux(std::mem_fn(p));
+            }
+        #else
+            template<typename R, typename T>
+            auto _mem_fn(R T::* p) const -> decltype(std::mem_fn(p))
+            {
+                return std::mem_fn(p);
+            }
+        #endif
             template<typename R, typename...Args>
             struct ptr_fn_
             {
@@ -181,9 +217,9 @@ namespace ranges
                 return ptr_fn_<R, Args...>(p);
             }
             template<typename R, typename T>
-            auto operator()(R T::* p) const -> decltype(std::mem_fn(p))
+            auto operator()(R T::* p) const -> decltype(_mem_fn(p))
             {
-                return std::mem_fn(p);
+                return _mem_fn(p);
             }
             template<typename T, typename U = detail::decay_t<T>>
             constexpr auto operator()(T && t) const ->
