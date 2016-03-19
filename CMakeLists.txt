@@ -114,5 +114,5 @@ add_subdirectory(example)
 add_subdirectory(perf)
 add_subdirectory(scratch)
 
-install(DIRECTORY include/ DESTINATION install
+install(DIRECTORY include/ DESTINATION include
         FILES_MATCHING PATTERN "*.hpp")
