@@ -27,8 +27,8 @@ namespace test_weak_input
         struct mixin : ranges::basic_mixin<cursor>
         {
             mixin() = default;
-            mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
-            mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+            using ranges::basic_mixin<cursor>::basic_mixin;
+            mixin(I i) : mixin(cursor{i}) {}
         };
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
@@ -76,8 +76,8 @@ namespace test_random_access
         struct mixin : ranges::basic_mixin<cursor>
         {
             mixin() = default;
-            mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
-            mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+            using ranges::basic_mixin<cursor>::basic_mixin;
+            mixin(I i) : mixin(cursor{i}) {}
         };
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
@@ -146,8 +146,8 @@ namespace test_weak_output
         struct mixin : ranges::basic_mixin<cursor>
         {
             mixin() = default;
-            mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
-            mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+            using ranges::basic_mixin<cursor>::basic_mixin;
+            mixin(I i) : mixin(cursor{i}) {}
         };
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
@@ -190,8 +190,8 @@ namespace test_output
         struct mixin : ranges::basic_mixin<cursor>
         {
             mixin() = default;
-            mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
-            mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+            using ranges::basic_mixin<cursor>::basic_mixin;
+            mixin(I i) : mixin(cursor{i}) {}
         };
         cursor() = default;
         explicit cursor(I i) : it_(i) {}
@@ -258,8 +258,8 @@ namespace test_move_only
         struct mixin : ranges::basic_mixin<zip1_cursor>
         {
             mixin() = default;
-            mixin(zip1_cursor c) : ranges::basic_mixin<zip1_cursor>(c) {}
-            mixin(I i) : ranges::basic_mixin<zip1_cursor>(zip1_cursor{i}) {}
+            using ranges::basic_mixin<zip1_cursor>::basic_mixin;
+            mixin(I i) : mixin(zip1_cursor{i}) {}
         };
         zip1_cursor() = default;
         explicit zip1_cursor(I i) : it_(i) {}
@@ -306,8 +306,8 @@ namespace test_forward_sized
         struct mixin : ranges::basic_mixin<cursor>
         {
             mixin() = default;
-            mixin(cursor c) : ranges::basic_mixin<cursor>(c) {}
-            mixin(I i) : ranges::basic_mixin<cursor>(cursor{i}) {}
+            using ranges::basic_mixin<cursor>::basic_mixin;
+            mixin(I i) : mixin(cursor{i}) {}
         };
         cursor() = default;
         explicit cursor(I i) : it_(i) {}

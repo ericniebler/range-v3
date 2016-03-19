@@ -72,9 +72,7 @@ namespace ranges
                   : basic_mixin<counted_cursor>
                 {
                     mixin() = default;
-                    mixin(counted_cursor pos)
-                      : basic_mixin<counted_cursor>{std::move(pos)}
-                    {}
+                    using basic_mixin<counted_cursor>::basic_mixin;
                     mixin(I it, D n)
                       : mixin(counted_cursor{it, n})
                     {}

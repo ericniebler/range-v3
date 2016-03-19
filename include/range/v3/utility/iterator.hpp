@@ -466,6 +466,7 @@ namespace ranges
                 struct mixin : basic_mixin<back_insert_cursor>
                 {
                     mixin() = default;
+                    using basic_mixin<back_insert_cursor>::basic_mixin;
                     explicit mixin(Cont &cont) noexcept
                       : basic_mixin<back_insert_cursor>{back_insert_cursor{cont}}
                     {}
@@ -522,6 +523,7 @@ namespace ranges
                 struct mixin : basic_mixin<front_insert_cursor>
                 {
                     mixin() = default;
+                    using basic_mixin<front_insert_cursor>::basic_mixin;
                     explicit mixin(Cont &cont) noexcept
                       : basic_mixin<front_insert_cursor>{front_insert_cursor{cont}}
                     {}
@@ -580,6 +582,7 @@ namespace ranges
                 struct mixin : basic_mixin<insert_cursor>
                 {
                     mixin() = default;
+                    using basic_mixin<insert_cursor>::basic_mixin;
                     explicit mixin(Cont &cont, typename Cont::iterator where) noexcept
                       : basic_mixin<insert_cursor>{insert_cursor{cont, std::move(where)}}
                     {}
@@ -681,10 +684,7 @@ namespace ranges
                 struct mixin : basic_mixin<reverse_cursor>
                 {
                     mixin() = default;
-                    RANGES_CXX14_CONSTEXPR
-                    mixin(reverse_cursor pos)
-                      : basic_mixin<reverse_cursor>{std::move(pos)}
-                    {}
+                    using basic_mixin<reverse_cursor>::basic_mixin;
                     RANGES_CXX14_CONSTEXPR
                     mixin(I it)
                       : mixin{reverse_cursor{it}}
@@ -786,8 +786,9 @@ namespace ranges
                   : basic_mixin<move_cursor>
                 {
                     mixin() = default;
+                    using basic_mixin<move_cursor>::basic_mixin;
                     constexpr explicit mixin(I it)
-                      : basic_mixin<move_cursor>{move_cursor(detail::move(it))}
+                      : mixin{move_cursor(detail::move(it))}
                     {}
                     I base() const
                     {
@@ -956,8 +957,9 @@ namespace ranges
                 struct mixin : basic_mixin<move_into_cursor>
                 {
                     mixin() = default;
+                    using basic_mixin<move_into_cursor>::basic_mixin;
                     explicit mixin(I it)
-                      : basic_mixin<move_into_cursor>{move_into_cursor{std::move(it)}}
+                      : mixin{move_into_cursor{std::move(it)}}
                     {}
                     I base() const
                     {

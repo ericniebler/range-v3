@@ -52,9 +52,7 @@ namespace ranges
                   : basic_mixin<common_cursor>
                 {
                     mixin() = default;
-                    mixin(common_cursor pos)
-                      : basic_mixin<common_cursor>{std::move(pos)}
-                    {}
+                    using basic_mixin<common_cursor>::basic_mixin;
                     explicit mixin(I it)
                       : mixin(common_cursor{std::move(it)})
                     {}
