@@ -69,6 +69,7 @@ namespace ranges
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::model_of<concepts::SemiRegular, T>(),
+                        concepts::model_of<concepts::SemiRegular, mixin_base_t<T>>(),
                         concepts::model_of<concepts::Constructible, mixin_base_t<T>, T &&>(),
                         concepts::model_of<concepts::Constructible, mixin_base_t<T>, T const &>(),
                         (t.next(), concepts::void_)
