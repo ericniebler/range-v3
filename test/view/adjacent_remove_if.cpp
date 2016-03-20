@@ -14,6 +14,7 @@
 #include <functional>
 #include <range/v3/core.hpp>
 #include <range/v3/view/adjacent_remove_if.hpp>
+#include <range/v3/view/iota.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -58,6 +59,27 @@ int main()
     models<concepts::ForwardIterator>(begin(rng3));
     models_not<concepts::BidirectionalIterator>(begin(rng3));
     ::check_equal(rng3, {1, 2, 3, 4});
+
+    auto && rng4 = view::counted(forward_iterator<int*>(rgi), 7)
+      | view::adjacent_remove_if([](int,int){return true;});
+    has_type<int &>(*begin(rng4));
+    CHECK(*begin(rng4) == 4);
+    models<concepts::ForwardView>(rng4);
+    models_not<concepts::BoundedView>(rng4);
+    models_not<concepts::SizedView>(rng4);
+    models<concepts::ForwardIterator>(begin(rng4));
+    models_not<concepts::BidirectionalIterator>(begin(rng4));
+    ::check_equal(rng4, {4});
+
+    auto is_odd_then_even = [](int i, int j){return 1==i%2 && 0 == j%2;};
+    auto && rng5 = view::iota(0, 11) | view::adjacent_remove_if(is_odd_then_even);
+    has_type<int>(*begin(rng5));
+    models<concepts::ForwardView>(rng5);
+    models<concepts::BoundedView>(rng5);
+    models_not<concepts::SizedView>(rng5);
+    models<concepts::ForwardIterator>(begin(rng5));
+    models_not<concepts::BidirectionalIterator>(begin(rng5));
+    ::check_equal(rng5, {0,2,4,6,8,10});
 
     return test_result();
 }
