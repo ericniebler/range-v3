@@ -283,8 +283,10 @@ The big advantage of ranges over iterators is their *composability*. They permit
 Below is a list of the lazy range combinators, or *views*, that Range v3 provides, and a blurb about how each is intended to be used.
 
 <DL>
+<DT>\link ranges::v3::view::adjacent_filter_fn `view::adjacent_filter`\endlink</DT>
+  <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the second element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, `adjacent_filter` with `std::not_equal_to` filters out all the non-unique elements.)</DD>
 <DT>\link ranges::v3::view::adjacent_remove_if_fn `view::adjacent_remove_if`\endlink</DT>
-  <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to false, the first element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, `adjacent_remove_if` with `std::equal_to` filters out all the non-unique elements.)</DD>
+  <DD>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the first element of the pair is included in the result range; otherwise, it is skipped. The last element in the source range is always included.</DD>
 <DT>\link ranges::v3::view::all_fn `view::all`\endlink</DT>
   <DD>Return a range containing all the elements in the source. Useful for converting containers to ranges.</DD>
 <DT>\link ranges::v3::view::bounded_fn `view::bounded`\endlink</DT>
