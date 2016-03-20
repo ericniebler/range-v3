@@ -1322,6 +1322,9 @@
     <ClInclude Include="include\range\v3\iterator_range.hpp">
       <Filter>Header Files\range\v3</Filter>
     </ClInclude>
+    <ClInclude Include="include\range\v3\view\adjacent_filter.hpp">
+      <Filter>Header Files\range\v3\view</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

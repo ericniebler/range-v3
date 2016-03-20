@@ -304,6 +304,7 @@ namespace ranges
         using uncvref_t =
             meta::_t<std::remove_cv<meta::_t<std::remove_reference<T>>>>;
 
+        struct not_equal_to;
         struct equal_to;
         struct less;
         struct ordered_less;
@@ -401,7 +402,15 @@ namespace ranges
 
         // Views
         //
-        template<typename Rng, typename BinaryPredicate>
+        template<typename Rng, typename Pred>
+        struct adjacent_filter_view;
+
+        namespace view
+        {
+            struct adjacent_filter_fn;
+        }
+
+        template<typename Rng, typename Pred>
         struct adjacent_remove_if_view;
 
         namespace view
@@ -677,7 +686,7 @@ namespace ranges
         }
 
         template<typename Rng>
-        using unique_view = adjacent_remove_if_view<Rng, equal_to>;
+        using unique_view = adjacent_filter_view<Rng, not_equal_to>;
 
         namespace view
         {

@@ -44,6 +44,17 @@ namespace ranges
             using is_transparent = void;
         };
 
+        struct not_equal_to
+        {
+            template<typename T, typename U,
+                CONCEPT_REQUIRES_(EqualityComparable<T, U>())>
+            constexpr bool operator()(T && t, U && u) const
+            {
+                return (T &&) t != (U &&) u;
+            }
+            using is_transparent = void;
+        };
+
         struct less
         {
             template<typename T, typename U,

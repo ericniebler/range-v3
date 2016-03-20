@@ -1082,6 +1082,7 @@
     <ClInclude Include="include\range\v3\utility\unreachable.hpp" />
     <ClInclude Include="include\range\v3\utility\variant.hpp" />
     <ClInclude Include="include\range\v3\view.hpp" />
+    <ClInclude Include="include\range\v3\view\adjacent_filter.hpp" />
     <ClInclude Include="include\range\v3\view\adjacent_remove_if.hpp" />
     <ClInclude Include="include\range\v3\view\all.hpp" />
     <ClInclude Include="include\range\v3\view\any_view.hpp" />

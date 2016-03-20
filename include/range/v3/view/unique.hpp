@@ -19,7 +19,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/view/adjacent_remove_if.hpp>
+#include <range/v3/view/adjacent_filter.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
 
@@ -41,7 +41,7 @@ namespace ranges
                 template<typename Rng, CONCEPT_REQUIRES_(Concept<Rng>())>
                 unique_view<all_t<Rng>> operator()(Rng && rng) const
                 {
-                    return {all(std::forward<Rng>(rng)), equal_to{}};
+                    return {all(std::forward<Rng>(rng)), not_equal_to{}};
                 }
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
