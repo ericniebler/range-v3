@@ -102,12 +102,6 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gadda663a0ff02c3b06aa6d9943cb6ec93"><td class="memTemplParams" colspan="2">template&lt;typename... Bools&gt; </td></tr>
 <tr class="memitem:gadda663a0ff02c3b06aa6d9943cb6ec93"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#gadda663a0ff02c3b06aa6d9943cb6ec93">meta::lazy::and_</a> = defer&lt; <a class="el" href="classmeta_1_1v1_1_1and__.html">and_</a>, Bools... &gt;</td></tr>
 <tr class="separator:gadda663a0ff02c3b06aa6d9943cb6ec93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga541a40e931978143df208f3ac0c26dc4"><td class="memTemplParams" colspan="2">template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:ga541a40e931978143df208f3ac0c26dc4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#ga541a40e931978143df208f3ac0c26dc4">meta::lazy::fast_and</a> = defer&lt; <a class="el" href="classmeta_1_1v1_1_1fast__and.html">fast_and</a>, Bools... &gt;</td></tr>
-<tr class="separator:ga541a40e931978143df208f3ac0c26dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7a6a3ae3c1d8a65d5bbd9434b5186c50"><td class="memTemplParams" colspan="2">template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:ga7a6a3ae3c1d8a65d5bbd9434b5186c50"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#ga7a6a3ae3c1d8a65d5bbd9434b5186c50">meta::lazy::fast_or</a> = defer&lt; fast_or, Bools... &gt;</td></tr>
-<tr class="separator:ga7a6a3ae3c1d8a65d5bbd9434b5186c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8c71ad12f7d1077e9680c19404ffe02c"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:ga8c71ad12f7d1077e9680c19404ffe02c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#ga8c71ad12f7d1077e9680c19404ffe02c">meta::lazy::if_</a> = defer&lt; <a class="el" href="classmeta_1_1v1_1_1if__.html">if_</a>, Args... &gt;</td></tr>
 <tr class="separator:ga8c71ad12f7d1077e9680c19404ffe02c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,6 +114,12 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga0c3a4b02349080f4845f6ddd17590d71"><td class="memTemplParams" colspan="2">template&lt;typename... Bools&gt; </td></tr>
 <tr class="memitem:ga0c3a4b02349080f4845f6ddd17590d71"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#ga0c3a4b02349080f4845f6ddd17590d71">meta::lazy::or_</a> = defer&lt; or_, Bools... &gt;</td></tr>
 <tr class="separator:ga0c3a4b02349080f4845f6ddd17590d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa96f296171b326c822b0957d923a1c2a"><td class="memTemplParams" colspan="2">template&lt;typename... Bools&gt; </td></tr>
+<tr class="memitem:gaa96f296171b326c822b0957d923a1c2a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#gaa96f296171b326c822b0957d923a1c2a">meta::lazy::strict_and</a> = defer&lt; <a class="el" href="classmeta_1_1v1_1_1strict__and.html">strict_and</a>, Bools... &gt;</td></tr>
+<tr class="separator:gaa96f296171b326c822b0957d923a1c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2bd75ec536b973b15e7c97078a73705e"><td class="memTemplParams" colspan="2">template&lt;typename... Bools&gt; </td></tr>
+<tr class="memitem:ga2bd75ec536b973b15e7c97078a73705e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#ga2bd75ec536b973b15e7c97078a73705e">meta::lazy::strict_or</a> = defer&lt; strict_or, Bools... &gt;</td></tr>
+<tr class="separator:ga2bd75ec536b973b15e7c97078a73705e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="gadda663a0ff02c3b06aa6d9943cb6ec93"></a>
@@ -136,40 +136,6 @@ template&lt;typename... Bools&gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'meta::and_' </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga541a40e931978143df208f3ac0c26dc4"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename... Bools&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="group__lazy__logical.html#ga541a40e931978143df208f3ac0c26dc4">meta::lazy::fast_and</a> = typedef defer&lt;<a class="el" href="classmeta_1_1v1_1_1fast__and.html">fast_and</a>, Bools...&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd>'meta::fast_and' </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga7a6a3ae3c1d8a65d5bbd9434b5186c50"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename... Bools&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="group__lazy__logical.html#ga7a6a3ae3c1d8a65d5bbd9434b5186c50">meta::lazy::fast_or</a> = typedef defer&lt;fast_or, Bools...&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd>'meta::fast_or' </dd></dl>
 
 </div>
 </div>
@@ -238,6 +204,40 @@ template&lt;typename... Bools&gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'meta::or_' </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaa96f296171b326c822b0957d923a1c2a"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Bools&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__lazy__logical.html#gaa96f296171b326c822b0957d923a1c2a">meta::lazy::strict_and</a> = typedef defer&lt;<a class="el" href="classmeta_1_1v1_1_1strict__and.html">strict_and</a>, Bools...&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd>'meta::strict_and' </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga2bd75ec536b973b15e7c97078a73705e"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Bools&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__lazy__logical.html#ga2bd75ec536b973b15e7c97078a73705e">meta::lazy::strict_or</a> = typedef defer&lt;strict_or, Bools...&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd>'meta::strict_or' </dd></dl>
 
 </div>
 </div>

@@ -128,19 +128,19 @@ Typedefs</h2></td></tr>
 <tr class="separator:ga0af3cf777f15ebd865c84a17786a2d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga97539d2f08f69059d4a1f98f458c2377"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Pred &gt; </td></tr>
 <tr class="memitem:ga97539d2f08f69059d4a1f98f458c2377"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga97539d2f08f69059d4a1f98f458c2377">meta::v1::filter</a> = fold&lt; List, list&lt;&gt;, detail::filter_&lt; Pred &gt;&gt;</td></tr>
-<tr class="memdesc:ga97539d2f08f69059d4a1f98f458c2377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> that satisfy the Alias Class <code>Pred</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Pred</code> are "removed".  <a href="group__transformation.html#ga97539d2f08f69059d4a1f98f458c2377">More...</a><br /></td></tr>
+<tr class="memdesc:ga97539d2f08f69059d4a1f98f458c2377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> that satisfy the Callable <code>Pred</code> such that <code>invoke&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Pred</code> are "removed".  <a href="group__transformation.html#ga97539d2f08f69059d4a1f98f458c2377">More...</a><br /></td></tr>
 <tr class="separator:ga97539d2f08f69059d4a1f98f458c2377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabd83e265b7243d8ebb8f5b7a47ffe140"><td class="memTemplParams" colspan="2">template&lt;typename List , typename State , typename Fun &gt; </td></tr>
 <tr class="memitem:gabd83e265b7243d8ebb8f5b7a47ffe140"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gabd83e265b7243d8ebb8f5b7a47ffe140">meta::v1::fold</a> = _t&lt; detail::fold_&lt; List, State, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gabd83e265b7243d8ebb8f5b7a47ffe140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Alias Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>.  <a href="group__transformation.html#gabd83e265b7243d8ebb8f5b7a47ffe140">More...</a><br /></td></tr>
+<tr class="memdesc:gabd83e265b7243d8ebb8f5b7a47ffe140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Callable <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>.  <a href="group__transformation.html#gabd83e265b7243d8ebb8f5b7a47ffe140">More...</a><br /></td></tr>
 <tr class="separator:gabd83e265b7243d8ebb8f5b7a47ffe140"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2c4e5cc96ecaecd24f6b2205ea12c652"><td class="memTemplParams" colspan="2">template&lt;typename ListOfLists &gt; </td></tr>
-<tr class="memitem:ga2c4e5cc96ecaecd24f6b2205ea12c652"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652">meta::v1::join</a> = apply_list&lt; quote&lt; concat &gt;, ListOfLists &gt;</td></tr>
-<tr class="memdesc:ga2c4e5cc96ecaecd24f6b2205ea12c652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins a list of lists into a single list.  <a href="group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652">More...</a><br /></td></tr>
-<tr class="separator:ga2c4e5cc96ecaecd24f6b2205ea12c652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7c266ec5d099d159abdda6412278ae64"><td class="memTemplParams" colspan="2">template&lt;typename ListOfLists &gt; </td></tr>
+<tr class="memitem:ga7c266ec5d099d159abdda6412278ae64"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga7c266ec5d099d159abdda6412278ae64">meta::v1::join</a> = apply&lt; quote&lt; concat &gt;, ListOfLists &gt;</td></tr>
+<tr class="memdesc:ga7c266ec5d099d159abdda6412278ae64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins a list of lists into a single list.  <a href="group__transformation.html#ga7c266ec5d099d159abdda6412278ae64">More...</a><br /></td></tr>
+<tr class="separator:ga7c266ec5d099d159abdda6412278ae64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Pred &gt; </td></tr>
 <tr class="memitem:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga8c6e6b4db3cd33e4f54d7bd36c649a66">meta::v1::partition</a> = fold&lt; List, pair&lt; list&lt;&gt;, list&lt;&gt;&gt;, detail::partition_&lt; Pred &gt;&gt;</td></tr>
-<tr class="memdesc:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of lists, where the elements of <code>List</code> that satisfy the Alias Class <code>Pred</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present in the first list and the rest are in the second.  <a href="group__transformation.html#ga8c6e6b4db3cd33e4f54d7bd36c649a66">More...</a><br /></td></tr>
+<tr class="memdesc:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of lists, where the elements of <code>List</code> that satisfy the Callable <code>Pred</code> such that <code>invoke&lt;Pred,A&gt;::value</code> is <code>true</code> are present in the first list and the rest are in the second.  <a href="group__transformation.html#ga8c6e6b4db3cd33e4f54d7bd36c649a66">More...</a><br /></td></tr>
 <tr class="separator:ga8c6e6b4db3cd33e4f54d7bd36c649a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9712b1471f8c7c60fe3fc75941cd9329"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:ga9712b1471f8c7c60fe3fc75941cd9329"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga9712b1471f8c7c60fe3fc75941cd9329">meta::v1::pop_front</a> = _t&lt; detail::pop_front_&lt; List &gt;&gt;</td></tr>
@@ -160,7 +160,7 @@ Typedefs</h2></td></tr>
 <tr class="separator:gaabfca6a8b0177c7b1f37f5708ce5a69a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa368dc84a72b1d4b89b80b5d19063244"><td class="memTemplParams" colspan="2">template&lt;typename List , typename C , typename U &gt; </td></tr>
 <tr class="memitem:gaa368dc84a72b1d4b89b80b5d19063244"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaa368dc84a72b1d4b89b80b5d19063244">meta::v1::replace_if</a> = _t&lt; detail::replace_if_&lt; List, C, U &gt;&gt;</td></tr>
-<tr class="memdesc:gaa368dc84a72b1d4b89b80b5d19063244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all elements <code>A</code> of the list <code>List</code> for which <code>apply&lt;C,A&gt;::value</code> is <code>true</code> have been replaced with <code>U</code>.  <a href="group__transformation.html#gaa368dc84a72b1d4b89b80b5d19063244">More...</a><br /></td></tr>
+<tr class="memdesc:gaa368dc84a72b1d4b89b80b5d19063244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all elements <code>A</code> of the list <code>List</code> for which <code>invoke&lt;C,A&gt;::value</code> is <code>true</code> have been replaced with <code>U</code>.  <a href="group__transformation.html#gaa368dc84a72b1d4b89b80b5d19063244">More...</a><br /></td></tr>
 <tr class="separator:gaa368dc84a72b1d4b89b80b5d19063244"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf0914938cd913b83e46663ed6d89d908"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:gaf0914938cd913b83e46663ed6d89d908"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaf0914938cd913b83e46663ed6d89d908">meta::v1::reverse</a> = reverse_fold&lt; List, list&lt;&gt;, quote&lt; push_back &gt;&gt;</td></tr>
@@ -168,15 +168,15 @@ Typedefs</h2></td></tr>
 <tr class="separator:gaf0914938cd913b83e46663ed6d89d908"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa6816cd6b7652594139625c950b32278"><td class="memTemplParams" colspan="2">template&lt;typename List , typename State , typename Fun &gt; </td></tr>
 <tr class="memitem:gaa6816cd6b7652594139625c950b32278"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaa6816cd6b7652594139625c950b32278">meta::v1::reverse_fold</a> = _t&lt; detail::reverse_fold_&lt; List, State, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gaa6816cd6b7652594139625c950b32278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Alias Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>.  <a href="group__transformation.html#gaa6816cd6b7652594139625c950b32278">More...</a><br /></td></tr>
+<tr class="memdesc:gaa6816cd6b7652594139625c950b32278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Callable <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>.  <a href="group__transformation.html#gaa6816cd6b7652594139625c950b32278">More...</a><br /></td></tr>
 <tr class="separator:gaa6816cd6b7652594139625c950b32278"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab38f411ed92facc53b76e10896c77190"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Pred &gt; </td></tr>
 <tr class="memitem:gab38f411ed92facc53b76e10896c77190"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">meta::v1::sort</a> = _t&lt; detail::sort_&lt; List, Pred &gt;&gt;</td></tr>
-<tr class="memdesc:gab38f411ed92facc53b76e10896c77190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> that is sorted according to Alias Class predicate <code>Pred</code>.  <a href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">More...</a><br /></td></tr>
+<tr class="memdesc:gab38f411ed92facc53b76e10896c77190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> that is sorted according to Callable predicate <code>Pred</code>.  <a href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">More...</a><br /></td></tr>
 <tr class="separator:gab38f411ed92facc53b76e10896c77190"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga969c3c14071da215e4de751eb48e0c4a"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:ga969c3c14071da215e4de751eb48e0c4a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga969c3c14071da215e4de751eb48e0c4a">meta::v1::transform</a> = _t&lt; detail::transform_&lt; list&lt; Args... &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:ga969c3c14071da215e4de751eb48e0c4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Alias Class <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Alias Class, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise.  <a href="group__transformation.html#ga969c3c14071da215e4de751eb48e0c4a">More...</a><br /></td></tr>
+<tr class="memdesc:ga969c3c14071da215e4de751eb48e0c4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Callable <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Callable, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise.  <a href="group__transformation.html#ga969c3c14071da215e4de751eb48e0c4a">More...</a><br /></td></tr>
 <tr class="separator:ga969c3c14071da215e4de751eb48e0c4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5d133c662029de802c3dfd405d9535ce"><td class="memTemplParams" colspan="2">template&lt;typename ListOfLists &gt; </td></tr>
 <tr class="memitem:ga5d133c662029de802c3dfd405d9535ce"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga5d133c662029de802c3dfd405d9535ce">meta::v1::transpose</a> = fold&lt; ListOfLists, repeat_n&lt; size&lt; front&lt; ListOfLists &gt;&gt;, list&lt;&gt;&gt;, bind_back&lt; quote&lt; transform &gt;, quote&lt; push_back &gt;&gt;&gt;</td></tr>
@@ -192,7 +192,7 @@ Typedefs</h2></td></tr>
 <tr class="separator:ga519641361e1c1180e00ea0170a72f76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf78f27b57b1454f2dcf5ac1400a48057"><td class="memTemplParams" colspan="2">template&lt;typename Fun , typename ListOfLists &gt; </td></tr>
 <tr class="memitem:gaf78f27b57b1454f2dcf5ac1400a48057"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaf78f27b57b1454f2dcf5ac1400a48057">meta::v1::zip_with</a> = transform&lt; transpose&lt; ListOfLists &gt;, uncurry&lt; Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gaf78f27b57b1454f2dcf5ac1400a48057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code> and a Alias Class <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise.  <a href="group__transformation.html#gaf78f27b57b1454f2dcf5ac1400a48057">More...</a><br /></td></tr>
+<tr class="memdesc:gaf78f27b57b1454f2dcf5ac1400a48057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code> and a Callable <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise.  <a href="group__transformation.html#gaf78f27b57b1454f2dcf5ac1400a48057">More...</a><br /></td></tr>
 <tr class="separator:gaf78f27b57b1454f2dcf5ac1400a48057"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
@@ -306,7 +306,7 @@ template&lt;typename List , typename Pred &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> that satisfy the Alias Class <code>Pred</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Pred</code> are "removed". </p>
+<p>Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> that satisfy the Callable <code>Pred</code> such that <code>invoke&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Pred</code> are "removed". </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -325,19 +325,19 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Alias Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>. </p>
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Callable <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ga2c4e5cc96ecaecd24f6b2205ea12c652"></a>
+<a class="anchor" id="ga7c266ec5d099d159abdda6412278ae64"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename ListOfLists &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652">meta::v1::join</a> = typedef apply_list&lt;quote&lt;concat&gt;, ListOfLists&gt;</td>
+          <td class="memname">using <a class="el" href="group__transformation.html#ga7c266ec5d099d159abdda6412278ae64">meta::v1::join</a> = typedef apply&lt;quote&lt;concat&gt;, ListOfLists&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -364,7 +364,7 @@ template&lt;typename List , typename Pred &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Returns a pair of lists, where the elements of <code>List</code> that satisfy the Alias Class <code>Pred</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present in the first list and the rest are in the second. </p>
+<p>Returns a pair of lists, where the elements of <code>List</code> that satisfy the Callable <code>Pred</code> such that <code>invoke&lt;Pred,A&gt;::value</code> is <code>true</code> are present in the first list and the rest are in the second. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -460,7 +460,7 @@ template&lt;typename List , typename C , typename U &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all elements <code>A</code> of the list <code>List</code> for which <code>apply&lt;C,A&gt;::value</code> is <code>true</code> have been replaced with <code>U</code>. </p>
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all elements <code>A</code> of the list <code>List</code> for which <code>invoke&lt;C,A&gt;::value</code> is <code>true</code> have been replaced with <code>U</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -498,7 +498,7 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Alias Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>. </p>
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Callable <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -517,7 +517,7 @@ template&lt;typename List , typename Pred &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> that is sorted according to Alias Class predicate <code>Pred</code>. </p>
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> that is sorted according to Callable predicate <code>Pred</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd>Expected: <img class="formulaInl" alt="$ O(N log N) $" src="form_9.png"/> Worst case: <img class="formulaInl" alt="$ O(N^2) $" src="form_8.png"/>. <div class="fragment"><div class="line"><span class="keyword">using</span> L0 = list&lt;char[5], char[3], char[2], char[6], char[1], char[5], char[10]&gt;;</div>
 <div class="line"><span class="keyword">using</span> L1 = <a class="code" href="group__transformation.html#gab38f411ed92facc53b76e10896c77190">meta::sort&lt;L0, lambda&lt;_a, _b, lazy::less&lt;lazy::sizeof_&lt;_a&gt;</a>, lazy::sizeof_&lt;_b&gt;&gt;&gt;&gt;;</div>
 <div class="line">static_assert(std::is_same&lt;L1, list&lt;<span class="keywordtype">char</span>[1], <span class="keywordtype">char</span>[2], <span class="keywordtype">char</span>[3], <span class="keywordtype">char</span>[5], <span class="keywordtype">char</span>[5], <span class="keywordtype">char</span>[6], <span class="keywordtype">char</span>[10]&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
@@ -539,7 +539,7 @@ template&lt;typename... Args&gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Alias Class <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Alias Class, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise. </p>
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Callable <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Callable, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -615,7 +615,7 @@ template&lt;typename Fun , typename ListOfLists &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Given a list of lists of types <code>ListOfLists</code> and a Alias Class <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise. </p>
+<p>Given a list of lists of types <code>ListOfLists</code> and a Callable <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_5.png"/>, where <img class="formulaInl" alt="$ N $" src="form_6.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_7.png"/> is the size of the inner lists. </dd></dl>
 
 </div>

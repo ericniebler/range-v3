@@ -102,12 +102,12 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga5d4a0cc97311cd8cdc1903cd3cf43b60"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga5d4a0cc97311cd8cdc1903cd3cf43b60"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__invocation.html#ga5d4a0cc97311cd8cdc1903cd3cf43b60">meta::lazy::_t</a> = defer&lt; _t, T &gt;</td></tr>
 <tr class="separator:ga5d4a0cc97311cd8cdc1903cd3cf43b60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaff71005f5cbe42f7471af8426d78134c"><td class="memTemplParams" colspan="2">template&lt;typename F , typename... Args&gt; </td></tr>
-<tr class="memitem:gaff71005f5cbe42f7471af8426d78134c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__invocation.html#gaff71005f5cbe42f7471af8426d78134c">meta::lazy::apply</a> = defer&lt; apply, F, Args... &gt;</td></tr>
-<tr class="separator:gaff71005f5cbe42f7471af8426d78134c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga81ba330cf49b69ac98897963c6799a54"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga81ba330cf49b69ac98897963c6799a54"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__invocation.html#ga81ba330cf49b69ac98897963c6799a54">meta::lazy::eval</a> = defer&lt; eval, T &gt;</td></tr>
-<tr class="separator:ga81ba330cf49b69ac98897963c6799a54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1f5c15f8520a2aa16eee1d4da2d33926"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga1f5c15f8520a2aa16eee1d4da2d33926"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__invocation.html#ga1f5c15f8520a2aa16eee1d4da2d33926">meta::lazy::id</a> = defer&lt; id, T &gt;</td></tr>
+<tr class="separator:ga1f5c15f8520a2aa16eee1d4da2d33926"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae2ce92c73f97fd571560bca641674383"><td class="memTemplParams" colspan="2">template&lt;typename F , typename... Args&gt; </td></tr>
+<tr class="memitem:gae2ce92c73f97fd571560bca641674383"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__invocation.html#gae2ce92c73f97fd571560bca641674383">meta::lazy::invoke</a> = defer&lt; invoke, F, Args... &gt;</td></tr>
+<tr class="separator:gae2ce92c73f97fd571560bca641674383"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="ga5d4a0cc97311cd8cdc1903cd3cf43b60"></a>
@@ -127,37 +127,37 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="gaff71005f5cbe42f7471af8426d78134c"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename F , typename... Args&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="group__lazy__invocation.html#gaff71005f5cbe42f7471af8426d78134c">meta::lazy::apply</a> = typedef defer&lt;apply, F, Args...&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd><code>meta::apply</code> </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga81ba330cf49b69ac98897963c6799a54"></a>
+<a class="anchor" id="ga1f5c15f8520a2aa16eee1d4da2d33926"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__lazy__invocation.html#ga81ba330cf49b69ac98897963c6799a54">meta::lazy::eval</a> = typedef defer&lt;eval, T&gt;</td>
+          <td class="memname">using <a class="el" href="group__lazy__invocation.html#ga1f5c15f8520a2aa16eee1d4da2d33926">meta::lazy::id</a> = typedef defer&lt;id, T&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd><code>meta::eval</code> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="structmeta_1_1id.html" title="A trait that always returns its argument T. Also, a Callable that always returns T. ">meta::id</a></code> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gae2ce92c73f97fd571560bca641674383"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F , typename... Args&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__lazy__invocation.html#gae2ce92c73f97fd571560bca641674383">meta::lazy::invoke</a> = typedef defer&lt;invoke, F, Args...&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd><code>meta::invoke</code> </dd></dl>
 
 </div>
 </div>

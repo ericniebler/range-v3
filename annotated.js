@@ -5,10 +5,6 @@ var annotated =
       [ "concepts", null, [
         [ "InsertableRange", "structranges_1_1concepts_1_1_insertable_range.html", "structranges_1_1concepts_1_1_insertable_range" ]
       ] ],
-      [ "v1", null, [
-        [ "fixed_vector", "structranges_1_1v1_1_1fixed__vector.html", "structranges_1_1v1_1_1fixed__vector" ],
-        [ "small_vector", "structranges_1_1v1_1_1small__vector.html", "structranges_1_1v1_1_1small__vector" ]
-      ] ],
       [ "v3", "namespaceranges_1_1v3.html", "namespaceranges_1_1v3" ]
     ] ],
     [ "std", null, [
@@ -31,12 +27,13 @@ var annotated =
     [ "function_type", "classfunction__type.html", null ],
     [ "ImplFn", "class_impl_fn.html", null ],
     [ "and_", "classmeta_1_1v1_1_1and__.html", null ],
-    [ "fast_and", "classmeta_1_1v1_1_1fast__and.html", null ],
     [ "if_", "classmeta_1_1v1_1_1if__.html", null ],
     [ "if_c", "classmeta_1_1v1_1_1if__c.html", null ],
     [ "size_t", "classmeta_1_1v1_1_1size__t.html", null ],
+    [ "strict_and", "classmeta_1_1v1_1_1strict__and.html", null ],
     [ "offset_t", "classoffset__t.html", null ],
     [ "Pipeable", "class_pipeable.html", null ],
+    [ "Policy", "class_policy.html", null ],
     [ "tuple_element", "classtuple__element.html", null ],
     [ "tuple_size", "classtuple__size.html", null ]
 ];

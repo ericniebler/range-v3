@@ -1,5 +1,6 @@
 var dir_430ace4e06b36f8f8d8c26b2b291bcc4 =
 [
+    [ "adjacent_filter.hpp", "adjacent__filter_8hpp.html", null ],
     [ "adjacent_remove_if.hpp", "adjacent__remove__if_8hpp.html", null ],
     [ "all.hpp", "view_2all_8hpp.html", "view_2all_8hpp" ],
     [ "any_view.hpp", "any__view_8hpp.html", "any__view_8hpp" ],

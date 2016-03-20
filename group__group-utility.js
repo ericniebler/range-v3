@@ -9,7 +9,7 @@ var group__group_utility =
     ] ],
     [ "as_function_fn", "structranges_1_1v3_1_1as__function__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1as__function__fn.html#a11d589f38ceff03a8cef98ae2617235b", null ],
-      [ "operator()", "structranges_1_1v3_1_1as__function__fn.html#a261310cdc6dc50038b05c48fc78c5652", null ],
+      [ "operator()", "structranges_1_1v3_1_1as__function__fn.html#a96e7cab21dc56ce997837951110c98d9", null ],
       [ "operator()", "structranges_1_1v3_1_1as__function__fn.html#a0f2a225a481dd23f7c7222faf86f4c09", null ]
     ] ],
     [ "copy_fn", "structranges_1_1v3_1_1aux_1_1copy__fn.html", [
@@ -57,7 +57,9 @@ var group__group_utility =
       [ "basic_mixin", "structranges_1_1v3_1_1basic__mixin.html#adc087968a5072a156dafa83cc4dd529a", null ]
     ] ],
     [ "basic_sentinel", "structranges_1_1v3_1_1basic__sentinel.html", [
-      [ "basic_iterator", "structranges_1_1v3_1_1basic__sentinel.html#a895b08e437317664b9c9f37962de5412", null ]
+      [ "basic_iterator", "structranges_1_1v3_1_1basic__sentinel.html#a895b08e437317664b9c9f37962de5412", null ],
+      [ "basic_sentinel", "structranges_1_1v3_1_1basic__sentinel.html#adff8f09b32236881b1595c640eae7471", null ],
+      [ "basic_sentinel", "structranges_1_1v3_1_1basic__sentinel.html#a645e751abfa24b4d1b0c977200c72de6", null ]
     ] ],
     [ "bind_element", "structranges_1_1v3_1_1bind__element.html", null ],
     [ "bind_element< reference_wrapper< T, RValue > >", "structranges_1_1v3_1_1bind__element_3_01reference__wrapper_3_01_t_00_01_r_value_01_4_01_4.html", [
@@ -141,7 +143,7 @@ var group__group_utility =
       [ "operator()", "structranges_1_1v3_1_1indirect__fn.html#a158bcd8302223218220c56d0fe9980be", null ]
     ] ],
     [ "indirected", "structranges_1_1v3_1_1indirected.html", [
-      [ "operator()", "structranges_1_1v3_1_1indirected.html#a9698d6c140c396cf5c3ffe65fe58ecb4", null ],
+      [ "operator()", "structranges_1_1v3_1_1indirected.html#aed8a469c51c5539f5bd2d7767f9c457d", null ],
       [ "operator()", "structranges_1_1v3_1_1indirected.html#af1e5e48aacf281726f24f9560f964849", null ],
       [ "operator()", "structranges_1_1v3_1_1indirected.html#a002368b4f04ee531ec423bf8f80dbc5a", null ],
       [ "operator()", "structranges_1_1v3_1_1indirected.html#a82af63405c386a984be2e3ca86fa59ad", null ],
@@ -189,6 +191,9 @@ var group__group_utility =
     [ "make_compressed_tuple_fn", "structranges_1_1v3_1_1make__compressed__tuple__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1make__compressed__tuple__fn.html#aa0bfce1b1f5cc6f86c5d841716c350dd", null ],
       [ "expects_wrapped_references", "structranges_1_1v3_1_1make__compressed__tuple__fn.html#a6afe62ac0949c9e7fdb6034c886af59e", null ]
+    ] ],
+    [ "make_move_iterator_fn", "structranges_1_1v3_1_1make__move__iterator__fn.html", [
+      [ "operator()", "structranges_1_1v3_1_1make__move__iterator__fn.html#af1368458b5e9c01db355dab2d4e4e717", null ]
     ] ],
     [ "make_move_sentinel_fn", "structranges_1_1v3_1_1make__move__sentinel__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1make__move__sentinel__fn.html#aa7d8cf4654dc4a2870693c87ccfcd433", null ],
@@ -249,6 +254,10 @@ var group__group_utility =
       [ "operator()", "structranges_1_1v3_1_1next__fn.html#ac352a291dd930fa1858ca3dc2759b6e0", null ],
       [ "operator()", "structranges_1_1v3_1_1next__fn.html#a3a8ca2cf430c95300543da34818c5054", null ],
       [ "operator()", "structranges_1_1v3_1_1next__fn.html#a57ccefc13981298063f223befd512c09", null ]
+    ] ],
+    [ "not_equal_to", "structranges_1_1v3_1_1not__equal__to.html", [
+      [ "operator()", "structranges_1_1v3_1_1not__equal__to.html#a413281e68738c65a20d9a37260524211", null ],
+      [ "is_transparent", "structranges_1_1v3_1_1not__equal__to.html#a68f24eaaad3cd8557d1d3089257293b2", null ]
     ] ],
     [ "not_fn", "structranges_1_1v3_1_1not__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1not__fn.html#a8c24001f9720ea429297b521150cb63e", null ]
@@ -390,6 +399,11 @@ var group__group_utility =
       [ "variant", "structranges_1_1v3_1_1variant.html#aee6652060151137d2b7f64b99eed27f0", null ],
       [ "emplace", "structranges_1_1v3_1_1variant.html#af6f862f01f857079b1b532e3b3868b54", null ],
       [ "index", "structranges_1_1v3_1_1variant.html#acb3f60e7eeaf75c2eb2fa484136a46b4", null ],
+      [ "index_", "structranges_1_1v3_1_1variant.html#a3ea714d89d9893cc9960e3654e4395a8", null ],
+      [ "index_", "structranges_1_1v3_1_1variant.html#a3ea714d89d9893cc9960e3654e4395a8", null ],
+      [ "index_", "structranges_1_1v3_1_1variant.html#a3ea714d89d9893cc9960e3654e4395a8", null ],
+      [ "index_", "structranges_1_1v3_1_1variant.html#ac1cdc35c2ae0657e7ea442c28318cf2c", null ],
+      [ "index_", "structranges_1_1v3_1_1variant.html#af1d68ca3ba22a9c1a3bd7c271ff76a65", null ],
       [ "operator=", "structranges_1_1v3_1_1variant.html#a6e0ba6a698c9db8a950907c4f17251ce", null ],
       [ "operator=", "structranges_1_1v3_1_1variant.html#a297660a0ddbc1da0832cae26044e700f", null ],
       [ "valid", "structranges_1_1v3_1_1variant.html#a7dcae3ddbe867667a4152249e8214c79", null ],
@@ -406,7 +420,7 @@ var group__group_utility =
     ] ],
     [ "variant_unique", "structranges_1_1v3_1_1variant__unique.html", null ],
     [ "variant_unique< variant< Ts... > >", "structranges_1_1v3_1_1variant__unique_3_01variant_3_01_ts_8_8_8_01_4_01_4.html", [
-      [ "type", "structranges_1_1v3_1_1variant__unique_3_01variant_3_01_ts_8_8_8_01_4_01_4.html#a67f9aaed1a5ffb07d1b8a5c89e2f8d60", null ]
+      [ "type", "structranges_1_1v3_1_1variant__unique_3_01variant_3_01_ts_8_8_8_01_4_01_4.html#ae12b24259844fb59d9c57ddc5d0a7c1d", null ]
     ] ],
     [ "with_braced_init_args", "structranges_1_1v3_1_1with__braced__init__args.html", [
       [ "operator()", "structranges_1_1v3_1_1with__braced__init__args.html#a483a070fa7022eeee0817769082c2f10", null ],

@@ -8,7 +8,7 @@ var group__transformation =
     [ "drop_c", "group__transformation.html#ga0af3cf777f15ebd865c84a17786a2d03", null ],
     [ "filter", "group__transformation.html#ga97539d2f08f69059d4a1f98f458c2377", null ],
     [ "fold", "group__transformation.html#gabd83e265b7243d8ebb8f5b7a47ffe140", null ],
-    [ "join", "group__transformation.html#ga2c4e5cc96ecaecd24f6b2205ea12c652", null ],
+    [ "join", "group__transformation.html#ga7c266ec5d099d159abdda6412278ae64", null ],
     [ "partition", "group__transformation.html#ga8c6e6b4db3cd33e4f54d7bd36c649a66", null ],
     [ "pop_front", "group__transformation.html#ga9712b1471f8c7c60fe3fc75941cd9329", null ],
     [ "push_back", "group__transformation.html#gaaa75ca04ff50e00b8f6af54cefa35532", null ],

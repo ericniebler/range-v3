@@ -1,6 +1,5 @@
 var structranges_1_1v3_1_1view_1_1adjacent__filter__fn =
 [
-    [ "adjacent_filter", "group__group-views.html#ga9b15460d94d99748d739599a21dfd737", null ],
-    [ "operator()", "structranges_1_1v3_1_1view_1_1adjacent__filter__fn.html#a8f2bf4be45a79763013c89919fce85dc", null ],
-    [ "Concept", "structranges_1_1v3_1_1view_1_1adjacent__filter__fn.html#ab59ff32a0b121b2683908ead881c17f5", null ]
+    [ "operator()", "structranges_1_1v3_1_1view_1_1adjacent__filter__fn.html#af1af1b672970b8ce97b3e520f6f04b8f", null ],
+    [ "Concept", "structranges_1_1v3_1_1view_1_1adjacent__filter__fn.html#a0d6cc0c8cd8dc43f0dbe90f380d31ac3", null ]
 ];

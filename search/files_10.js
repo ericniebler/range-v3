@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['scope_2ehpp',['scope.hpp',['../scope_8hpp.html',1,'']]],
   ['search_2ehpp',['search.hpp',['../search_8hpp.html',1,'']]],
   ['search_5fn_2ehpp',['search_n.hpp',['../search__n_8hpp.html',1,'']]],
   ['semiregular_2ehpp',['semiregular.hpp',['../semiregular_8hpp.html',1,'']]],
@@ -18,8 +19,8 @@ var searchData=
   ['stable_5fpartition_2ehpp',['stable_partition.hpp',['../stable__partition_8hpp.html',1,'']]],
   ['stable_5fsort_2ehpp',['stable_sort.hpp',['../action_2stable__sort_8hpp.html',1,'']]],
   ['stable_5fsort_2ehpp',['stable_sort.hpp',['../algorithm_2stable__sort_8hpp.html',1,'']]],
-  ['stride_2ehpp',['stride.hpp',['../view_2stride_8hpp.html',1,'']]],
   ['stride_2ehpp',['stride.hpp',['../action_2stride_8hpp.html',1,'']]],
+  ['stride_2ehpp',['stride.hpp',['../view_2stride_8hpp.html',1,'']]],
   ['swap_2ehpp',['swap.hpp',['../swap_8hpp.html',1,'']]],
   ['swap_5franges_2ehpp',['swap_ranges.hpp',['../swap__ranges_8hpp.html',1,'']]]
 ];

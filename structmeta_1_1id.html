@@ -90,20 +90,25 @@ $(document).ready(function(){initNavTree('structmeta_1_1id.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Instances and minimal complete definitions</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="structmeta_1_1id-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">meta::id&lt; T &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__meta.html">Meta</a> &raquo; <a class="el" href="group__trait.html">Trait</a></div></div>  </div>
+<div class="title">meta::id&lt; T &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__meta.html">Meta</a> &raquo; <a class="el" href="group__trait.html">Trait</a><a class="el" href="group__meta.html">Meta</a> &raquo; <a class="el" href="group__trait.html">Trait</a> &raquo;  &#124; <a class="el" href="group__invocation.html">Invocation</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><h3>template&lt;typename T&gt;<br />
 struct meta::id&lt; T &gt;</h3>
 
-<p>A trait that always returns its argument <code>T</code>. </p>
+<p>A trait that always returns its argument <code>T</code>. Also, a Callable that always returns <code>T</code>. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:ace1a076cd41c026ff73eedb495573302"><td class="memTemplParams" colspan="2"><a class="anchor" id="ace1a076cd41c026ff73eedb495573302"></a>
+template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:ace1a076cd41c026ff73eedb495573302"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>invoke</b> = _t&lt; impl&lt; Ts... &gt;&gt;</td></tr>
+<tr class="separator:ace1a076cd41c026ff73eedb495573302"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4744d0e07e65c7f7430a29828ea61f94"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4744d0e07e65c7f7430a29828ea61f94"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = T</td></tr>
 <tr class="separator:a4744d0e07e65c7f7430a29828ea61f94"><td class="memSeparator" colspan="2">&#160;</td></tr>

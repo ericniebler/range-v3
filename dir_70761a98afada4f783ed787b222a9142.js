@@ -18,9 +18,6 @@ var dir_70761a98afada4f783ed787b222a9142 =
       [ "dangling< void >", "structranges_1_1v3_1_1dangling_3_01void_01_4.html", "structranges_1_1v3_1_1dangling_3_01void_01_4" ],
       [ "tuple", "classstd_1_1tuple.html", null ]
     ] ],
-    [ "fixed_vector.hpp", "fixed__vector_8hpp.html", [
-      [ "fixed_vector", "structranges_1_1v1_1_1fixed__vector.html", "structranges_1_1v1_1_1fixed__vector" ]
-    ] ],
     [ "functional.hpp", "functional_8hpp.html", "functional_8hpp" ],
     [ "get.hpp", "get_8hpp.html", "get_8hpp" ],
     [ "infinity.hpp", "infinity_8hpp.html", null ],
@@ -35,9 +32,10 @@ var dir_70761a98afada4f783ed787b222a9142 =
     [ "optional.hpp", "optional_8hpp.html", [
       [ "optional", "structranges_1_1v3_1_1optional.html", "structranges_1_1v3_1_1optional" ]
     ] ],
+    [ "scope.hpp", "scope_8hpp.html", "scope_8hpp" ],
     [ "semiregular.hpp", "semiregular_8hpp.html", "semiregular_8hpp" ],
     [ "small_vector.hpp", "small__vector_8hpp.html", [
-      [ "small_vector", "structranges_1_1v1_1_1small__vector.html", "structranges_1_1v1_1_1small__vector" ]
+      [ "small_vector", "structranges_1_1v3_1_1small__vector.html", "structranges_1_1v3_1_1small__vector" ]
     ] ],
     [ "swap.hpp", "swap_8hpp.html", null ],
     [ "tagged_pair.hpp", "tagged__pair_8hpp.html", "tagged__pair_8hpp" ],

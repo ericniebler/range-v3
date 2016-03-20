@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['lambda',['lambda',['../group__trait.html#ga288e095a9834eab7fedc8ce234afdd04',1,'meta::v1']]],
-  ['less',['less',['../group__math.html#gacd744cad5667d4fbf03a38655a78154d',1,'meta::v1::less()'],['../group__lazy__math.html#gaf85374b7537a86261fd478a48dccd2cd',1,'meta::lazy::less()']]],
-  ['less_5fequal',['less_equal',['../group__math.html#ga0889688de74bf375555f4b04bcca6170',1,'meta::v1::less_equal()'],['../group__lazy__math.html#ga8e4ed5d5da1b769ae0ecfc2aa9729bc5',1,'meta::lazy::less_equal()']]],
-  ['let',['let',['../group__trait.html#gaa435532ebfd257be0916b0db22a0c338',1,'meta::v1::let()'],['../group__lazy__trait.html#ga5355a955cf71163986bfdc7ad7c7e3e3',1,'meta::lazy::let()']]]
+  ['make_5findex_5fsequence',['make_index_sequence',['../group__integral.html#ga1d44a46e5fd0ca836d62a1ea1c98f4dd',1,'meta::v1']]],
+  ['make_5finteger_5fsequence',['make_integer_sequence',['../group__integral.html#gaecc0e48186ab2b206efd842b8789cc1b',1,'meta::v1']]],
+  ['max',['max',['../group__math.html#gab1e22f1c913933716fd6b186fbb2506d',1,'meta::v1::max()'],['../group__lazy__math.html#ga90ea080c869ea76ffbbbec8f0104c301',1,'meta::lazy::max()']]],
+  ['min',['min',['../group__math.html#ga8856b0ab96f633861ae7ae70774b4877',1,'meta::v1::min()'],['../group__lazy__math.html#ga0d21a8ba24624deeb6da506e9420983b',1,'meta::lazy::min()']]],
+  ['minus',['minus',['../group__math.html#gada18524f967b9de93cf5b7422e99a963',1,'meta::v1::minus()'],['../group__lazy__math.html#gadfe9a525a63cc8a7f8d60e6354f9fc38',1,'meta::lazy::minus()']]],
+  ['modulus',['modulus',['../group__math.html#ga787755b6492499bb9f8b844893645ab1',1,'meta::v1::modulus()'],['../group__lazy__math.html#ga06d5347f5ee6b1f0cfd6c99ca5c2eb14',1,'meta::lazy::modulus()']]],
+  ['move_5ft',['move_t',['../group__group-utility.html#ga83f98a16f7b7a8eda2a941d9c7878b18',1,'ranges::v3::aux']]],
+  ['multiplies',['multiplies',['../group__math.html#ga2b31b719e46771ff16e9999ceb39cd9a',1,'meta::v1::multiplies()'],['../group__lazy__math.html#ga28c4033e25cbe9496791de6bea80439a',1,'meta::lazy::multiplies()']]]
 ];

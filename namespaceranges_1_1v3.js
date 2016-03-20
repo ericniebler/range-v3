@@ -109,6 +109,11 @@ var namespaceranges_1_1v3 =
       [ "WeaklyOrdered", "structranges_1_1v3_1_1concepts_1_1_weakly_ordered.html", "structranges_1_1v3_1_1concepts_1_1_weakly_ordered" ],
       [ "Writable", "structranges_1_1v3_1_1concepts_1_1_writable.html", "structranges_1_1v3_1_1concepts_1_1_writable" ]
     ] ],
+    [ "detail", null, [
+      [ "_box", "structranges_1_1v3_1_1detail_1_1__box.html", "structranges_1_1v3_1_1detail_1_1__box" ],
+      [ "_coerce_ref_fn", "structranges_1_1v3_1_1detail_1_1__coerce__ref__fn.html", "structranges_1_1v3_1_1detail_1_1__coerce__ref__fn" ],
+      [ "on_exit_policy", "structranges_1_1v3_1_1detail_1_1on__exit__policy.html", "structranges_1_1v3_1_1detail_1_1on__exit__policy" ]
+    ] ],
     [ "tag", null, [
       [ "begin", "structranges_1_1v3_1_1tag_1_1begin.html", "structranges_1_1v3_1_1tag_1_1begin" ],
       [ "end", "structranges_1_1v3_1_1tag_1_1end.html", "structranges_1_1v3_1_1tag_1_1end" ],
@@ -123,6 +128,7 @@ var namespaceranges_1_1v3 =
       [ "out2", "structranges_1_1v3_1_1tag_1_1out2.html", "structranges_1_1v3_1_1tag_1_1out2" ]
     ] ],
     [ "view", null, [
+      [ "adjacent_filter_fn", "structranges_1_1v3_1_1view_1_1adjacent__filter__fn.html", "structranges_1_1v3_1_1view_1_1adjacent__filter__fn" ],
       [ "adjacent_remove_if_fn", "structranges_1_1v3_1_1view_1_1adjacent__remove__if__fn.html", "structranges_1_1v3_1_1view_1_1adjacent__remove__if__fn" ],
       [ "all_fn", "structranges_1_1v3_1_1view_1_1all__fn.html", "structranges_1_1v3_1_1view_1_1all__fn" ],
       [ "bounded_fn", "structranges_1_1v3_1_1view_1_1bounded__fn.html", "structranges_1_1v3_1_1view_1_1bounded__fn" ],
@@ -183,8 +189,9 @@ var namespaceranges_1_1v3 =
     [ "accumulate_fn", "structranges_1_1v3_1_1accumulate__fn.html", "structranges_1_1v3_1_1accumulate__fn" ],
     [ "adaptor_base", "structranges_1_1v3_1_1adaptor__base.html", "structranges_1_1v3_1_1adaptor__base" ],
     [ "adaptor_cursor", "structranges_1_1v3_1_1adaptor__cursor.html", "structranges_1_1v3_1_1adaptor__cursor" ],
-    [ "adaptor_sentinel", "structranges_1_1v3_1_1adaptor__sentinel.html", "structranges_1_1v3_1_1adaptor__sentinel" ],
+    [ "adaptor_sentinel", "structranges_1_1v3_1_1adaptor__sentinel.html", null ],
     [ "adjacent_difference_fn", "structranges_1_1v3_1_1adjacent__difference__fn.html", "structranges_1_1v3_1_1adjacent__difference__fn" ],
+    [ "adjacent_filter_view", "structranges_1_1v3_1_1adjacent__filter__view.html", "structranges_1_1v3_1_1adjacent__filter__view" ],
     [ "adjacent_find_fn", "structranges_1_1v3_1_1adjacent__find__fn.html", "structranges_1_1v3_1_1adjacent__find__fn" ],
     [ "adjacent_remove_if_view", "structranges_1_1v3_1_1adjacent__remove__if__view.html", "structranges_1_1v3_1_1adjacent__remove__if__view" ],
     [ "all_of_fn", "structranges_1_1v3_1_1all__of__fn.html", "structranges_1_1v3_1_1all__of__fn" ],
@@ -200,6 +207,7 @@ var namespaceranges_1_1v3 =
     [ "basic_common_reference", "structranges_1_1v3_1_1basic__common__reference.html", null ],
     [ "basic_iterator", "structranges_1_1v3_1_1basic__iterator.html", "structranges_1_1v3_1_1basic__iterator" ],
     [ "basic_mixin", "structranges_1_1v3_1_1basic__mixin.html", "structranges_1_1v3_1_1basic__mixin" ],
+    [ "basic_scope_exit", "classranges_1_1v3_1_1basic__scope__exit.html", "classranges_1_1v3_1_1basic__scope__exit" ],
     [ "basic_sentinel", "structranges_1_1v3_1_1basic__sentinel.html", "structranges_1_1v3_1_1basic__sentinel" ],
     [ "basic_view", "structranges_1_1v3_1_1basic__view.html", null ],
     [ "begin_tag", "structranges_1_1v3_1_1begin__tag.html", null ],
@@ -366,6 +374,7 @@ var namespaceranges_1_1v3 =
     [ "make_compressed_tuple_fn", "structranges_1_1v3_1_1make__compressed__tuple__fn.html", "structranges_1_1v3_1_1make__compressed__tuple__fn" ],
     [ "make_heap_fn", "structranges_1_1v3_1_1make__heap__fn.html", "structranges_1_1v3_1_1make__heap__fn" ],
     [ "make_iterator_range_fn", "structranges_1_1v3_1_1make__iterator__range__fn.html", "structranges_1_1v3_1_1make__iterator__range__fn" ],
+    [ "make_move_iterator_fn", "structranges_1_1v3_1_1make__move__iterator__fn.html", "structranges_1_1v3_1_1make__move__iterator__fn" ],
     [ "make_move_sentinel_fn", "structranges_1_1v3_1_1make__move__sentinel__fn.html", "structranges_1_1v3_1_1make__move__sentinel__fn" ],
     [ "make_pipeable_fn", "structranges_1_1v3_1_1make__pipeable__fn.html", "structranges_1_1v3_1_1make__pipeable__fn" ],
     [ "make_tuple_fn", "structranges_1_1v3_1_1make__tuple__fn.html", "structranges_1_1v3_1_1make__tuple__fn" ],
@@ -392,6 +401,7 @@ var namespaceranges_1_1v3 =
     [ "next_fn", "structranges_1_1v3_1_1next__fn.html", "structranges_1_1v3_1_1next__fn" ],
     [ "next_permutation_fn", "structranges_1_1v3_1_1next__permutation__fn.html", "structranges_1_1v3_1_1next__permutation__fn" ],
     [ "none_of_fn", "structranges_1_1v3_1_1none__of__fn.html", "structranges_1_1v3_1_1none__of__fn" ],
+    [ "not_equal_to", "structranges_1_1v3_1_1not__equal__to.html", "structranges_1_1v3_1_1not__equal__to" ],
     [ "not_fn", "structranges_1_1v3_1_1not__fn.html", "structranges_1_1v3_1_1not__fn" ],
     [ "nth_element_fn", "structranges_1_1v3_1_1nth__element__fn.html", "structranges_1_1v3_1_1nth__element__fn" ],
     [ "on_fn", "structranges_1_1v3_1_1on__fn.html", "structranges_1_1v3_1_1on__fn" ],
@@ -473,6 +483,7 @@ var namespaceranges_1_1v3 =
     [ "size_type", "structranges_1_1v3_1_1size__type.html", null ],
     [ "sized_iterator_range", "structranges_1_1v3_1_1sized__iterator__range.html", "structranges_1_1v3_1_1sized__iterator__range" ],
     [ "slice_view", "structranges_1_1v3_1_1slice__view.html", null ],
+    [ "small_vector", "structranges_1_1v3_1_1small__vector.html", "structranges_1_1v3_1_1small__vector" ],
     [ "sort_fn", "structranges_1_1v3_1_1sort__fn.html", "structranges_1_1v3_1_1sort__fn" ],
     [ "sort_heap_fn", "structranges_1_1v3_1_1sort__heap__fn.html", "structranges_1_1v3_1_1sort__heap__fn" ],
     [ "split_view", "structranges_1_1v3_1_1split__view.html", "structranges_1_1v3_1_1split__view" ],
@@ -497,6 +508,8 @@ var namespaceranges_1_1v3 =
     [ "unbounded_view", "structranges_1_1v3_1_1unbounded__view.html", "structranges_1_1v3_1_1unbounded__view" ],
     [ "unique_copy_fn", "structranges_1_1v3_1_1unique__copy__fn.html", "structranges_1_1v3_1_1unique__copy__fn" ],
     [ "unique_fn", "structranges_1_1v3_1_1unique__fn.html", "structranges_1_1v3_1_1unique__fn" ],
+    [ "unique_resource", "classranges_1_1v3_1_1unique__resource.html", "classranges_1_1v3_1_1unique__resource" ],
+    [ "unique_resource< R &, D >", "classranges_1_1v3_1_1unique__resource_3_01_r_01_6_00_01_d_01_4.html", "classranges_1_1v3_1_1unique__resource_3_01_r_01_6_00_01_d_01_4" ],
     [ "unreachable", "structranges_1_1v3_1_1unreachable.html", "structranges_1_1v3_1_1unreachable" ],
     [ "unwrap_reference_fn", "structranges_1_1v3_1_1unwrap__reference__fn.html", "structranges_1_1v3_1_1unwrap__reference__fn" ],
     [ "upper_bound_fn", "structranges_1_1v3_1_1upper__bound__fn.html", "structranges_1_1v3_1_1upper__bound__fn" ],

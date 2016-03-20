@@ -113,11 +113,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adaptor__cursor_1_1mixin.html">ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt;::mixin</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adaptor__sentinel.html">ranges::v3::adaptor_sentinel&lt; BaseSent, Adapt &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adaptor__sentinel_1_1mixin.html">ranges::v3::adaptor_sentinel&lt; BaseSent, Adapt &gt;::mixin</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1at__fn.html">ranges::v3::at_fn</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -366,10 +362,10 @@ template&lt;template&lt; typename... &gt; class ContT&gt; </td></tr>
 <tr class="memitem:ga1e0608aee3b230471bba14364d27f60f"><td class="memTemplItemLeft" align="right" valign="top">detail::to_container_fn&lt; <a class="el" href="structmeta_1_1v1_1_1quote.html">meta::quote</a>&lt; ContT &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga1e0608aee3b230471bba14364d27f60f">ranges::v3::to_</a> ()</td></tr>
 <tr class="memdesc:ga1e0608aee3b230471bba14364d27f60f"><td class="mdescLeft">&#160;</td><td class="mdescRight">For initializing a container of the specified type with the elements of an Range. <br /></td></tr>
 <tr class="separator:ga1e0608aee3b230471bba14364d27f60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa3c3c6d5397ec7d9b71cea471c178c7a"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class ContT, typename Rng , typename Cont  = meta::apply&lt;meta::quote&lt;ContT&gt;, range_value_t&lt;Rng&gt;&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;detail::ConvertibleToContainer&lt; Rng, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:gaa3c3c6d5397ec7d9b71cea471c178c7a"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class ContT, typename Rng , typename Cont  = meta::invoke&lt;meta::quote&lt;ContT&gt;, range_value_t&lt;Rng&gt;&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;detail::ConvertibleToContainer&lt; Rng, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:gaa3c3c6d5397ec7d9b71cea471c178c7a"><td class="memTemplItemLeft" align="right" valign="top">Cont&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#gaa3c3c6d5397ec7d9b71cea471c178c7a">ranges::v3::to_</a> (Rng &amp;&amp;rng)</td></tr>
 <tr class="separator:gaa3c3c6d5397ec7d9b71cea471c178c7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga224d07a6098c94b7a1468e8b1fe02aa7"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class ContT, typename T , typename Cont  = meta::apply&lt;meta::quote&lt;ContT&gt;, T&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(detail::ConvertibleToContainer&lt; std::initializer_list&lt; T &gt;, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:ga224d07a6098c94b7a1468e8b1fe02aa7"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class ContT, typename T , typename Cont  = meta::invoke&lt;meta::quote&lt;ContT&gt;, T&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(detail::ConvertibleToContainer&lt; std::initializer_list&lt; T &gt;, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
 <tr class="memitem:ga224d07a6098c94b7a1468e8b1fe02aa7"><td class="memTemplItemLeft" align="right" valign="top">Cont&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__group-core.html#ga224d07a6098c94b7a1468e8b1fe02aa7">ranges::v3::to_</a> (std::initializer_list&lt; T &gt; list)</td></tr>
 <tr class="separator:ga224d07a6098c94b7a1468e8b1fe02aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga48fe919d5bedd95e5d54a851a32a258d"><td class="memTemplParams" colspan="2">template&lt;typename Cont , typename Rng , int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;detail::ConvertibleToContainer&lt; Rng, Cont &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
@@ -463,7 +459,7 @@ template&lt;std::size_t N, typename I , typename S , int _concept_requires___LIN
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;template&lt; typename... &gt; class ContT, typename Rng , typename Cont  = meta::apply&lt;meta::quote&lt;ContT&gt;, range_value_t&lt;Rng&gt;&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;detail::ConvertibleToContainer&lt; Rng, Cont &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;template&lt; typename... &gt; class ContT, typename Rng , typename Cont  = meta::invoke&lt;meta::quote&lt;ContT&gt;, range_value_t&lt;Rng&gt;&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(Range&lt; Rng &gt;()&amp;&amp;detail::ConvertibleToContainer&lt; Rng, Cont &gt;()),   int   &gt;::type  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">Cont ranges::v3::to_ </td>
@@ -484,7 +480,7 @@ template&lt;template&lt; typename... &gt; class ContT, typename Rng , typename C
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;template&lt; typename... &gt; class ContT, typename T , typename Cont  = meta::apply&lt;meta::quote&lt;ContT&gt;, T&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(detail::ConvertibleToContainer&lt; std::initializer_list&lt; T &gt;, Cont &gt;()),   int   &gt;::type  = 0&gt; </div>
+template&lt;template&lt; typename... &gt; class ContT, typename T , typename Cont  = meta::invoke&lt;meta::quote&lt;ContT&gt;, T&gt;, int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(detail::ConvertibleToContainer&lt; std::initializer_list&lt; T &gt;, Cont &gt;()),   int   &gt;::type  = 0&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">Cont ranges::v3::to_ </td>

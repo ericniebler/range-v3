@@ -285,8 +285,10 @@ Range Views</h1>
 <p> The big advantage of ranges over iterators is their <em>composability</em>. They permit a functional style of programming where data is manipulated by passing it through a series of combinators. In addition, the combinators can be <em>lazy</em>, only doing work when the answer is requested, and <em>purely functional</em>, without mutating the original data. This makes it easier to reason about your code, especially when writing concurrent programs.</p>
 <p>Below is a list of the lazy range combinators, or <em>views</em>, that Range v3 provides, and a blurb about how each is intended to be used.</p>
 <dl>
+<dt><a class="el" href="structranges_1_1v3_1_1view_1_1adjacent__filter__fn.html"><code>view::adjacent_filter</code></a> </dt>
+<dd>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the second element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, <code>adjacent_filter</code> with <code>std::not_equal_to</code> filters out all the non-unique elements.) </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1adjacent__remove__if__fn.html"><code>view::adjacent_remove_if</code></a> </dt>
-<dd>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to false, the first element of the pair is included in the result range; otherwise, it is skipped. The first element in the source range is always included. (For instance, <code>adjacent_remove_if</code> with <code>std::equal_to</code> filters out all the non-unique elements.) </dd>
+<dd>For each pair of adjacent elements in a source range, evaluate the specified binary predicate. If the predicate evaluates to true, the first element of the pair is included in the result range; otherwise, it is skipped. The last element in the source range is always included. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1all__fn.html"><code>view::all</code></a> </dt>
 <dd>Return a range containing all the elements in the source. Useful for converting containers to ranges. </dd>
 <dt><a class="el" href="structranges_1_1v3_1_1view_1_1bounded__fn.html"><code>view::bounded</code></a> </dt>

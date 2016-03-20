@@ -20,6 +20,8 @@ var range__fwd_8hpp =
     [ "is_finite", "range__fwd_8hpp.html#a423bd0a30453b4032781b0b2176ff6a6", null ],
     [ "is_infinite", "range__fwd_8hpp.html#a8b82c1a142fc7fa96fa28feca507a300", null ],
     [ "keys_range_view", "range__fwd_8hpp.html#a4c3a14169c21ca35bcfccad937f20078", null ],
+    [ "move_into_iterator", "range__fwd_8hpp.html#a1e825b9c8d5b3924a8fc35f455ec6354", null ],
+    [ "move_iterator", "range__fwd_8hpp.html#ac162aa91a32f6501d4551d936fe2e497", null ],
     [ "replace_if_view", "range__fwd_8hpp.html#ad90750ab02331991df511bfd7f52535a", null ],
     [ "replace_view", "range__fwd_8hpp.html#a0cb5fe9804766430b5ae40d1c4845b76", null ],
     [ "result_of_t", "range__fwd_8hpp.html#a20b87ca6f19d670d2911738a322534b0", null ],
@@ -27,7 +29,7 @@ var range__fwd_8hpp =
     [ "rvalue_reference_wrapper", "range__fwd_8hpp.html#aee8b43d02406488b4f67484c7d99e91c", null ],
     [ "take_exactly_view", "range__fwd_8hpp.html#gaee4076d16c12c015a0211d5dd97bd281", null ],
     [ "uncvref_t", "range__fwd_8hpp.html#ab15cb7732fc23e05f0284d9a48a48eec", null ],
-    [ "unique_view", "range__fwd_8hpp.html#ad5d181d51575a6f15ce0a2113154b24e", null ],
+    [ "unique_view", "range__fwd_8hpp.html#a501681e747c02893f636ff596e2261c5", null ],
     [ "values_view", "range__fwd_8hpp.html#a04681ce34bca9d0c55232b76bde0ca23", null ],
     [ "cardinality", "range__fwd_8hpp.html#aa57d78a6a876b48324da8eb1c92e189d", [
       [ "infinite", "range__fwd_8hpp.html#aa57d78a6a876b48324da8eb1c92e189daf1e27636efc1132fbbfcc2d4b0520619", null ],

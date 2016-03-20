@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.10"/>
-<title>Range-v3: meta::quote_i&lt; T, F &gt; Struct Template Reference</title>
+<title>Range-v3: meta::quote_i&lt; T, C &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -93,21 +93,21 @@ $(document).ready(function(){initNavTree('structmeta_1_1quote__i.html','');});
 <a href="#pub-types">Public Types</a> &#124;
 <a href="structmeta_1_1quote__i-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">meta::quote_i&lt; T, F &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__meta.html">Meta</a> &raquo; <a class="el" href="group__trait.html">Trait</a> &raquo; <a class="el" href="group__composition.html">Composition</a></div></div>  </div>
+<div class="title">meta::quote_i&lt; T, C &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__meta.html">Meta</a> &raquo; <a class="el" href="group__trait.html">Trait</a> &raquo; <a class="el" href="group__composition.html">Composition</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<div class="textblock"><h3>template&lt;typename T, template&lt; T... &gt; class F&gt;<br />
-struct meta::quote_i&lt; T, F &gt;</h3>
+<div class="textblock"><h3>template&lt;typename T, template&lt; T... &gt; class C&gt;<br />
+struct meta::quote_i&lt; T, C &gt;</h3>
 
-<p>Turn a class template or alias template <code>F</code> taking literals of type <code>T</code> into a Alias Class. </p>
+<p>Turn a class template or alias template <code>C</code> taking literals of type <code>T</code> into a Callable. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a6b58b17ec1539f4ef6ea0ab682ed039c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6b58b17ec1539f4ef6ea0ab682ed039c"></a>
+<tr class="memitem:a6a090895821ad2a0a9df0f5301011228"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6a090895821ad2a0a9df0f5301011228"></a>
 template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:a6b58b17ec1539f4ef6ea0ab682ed039c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>apply</b> = _t&lt; <a class="el" href="structmeta_1_1defer__i.html">defer_i</a>&lt; T, F, Ts::type::value... &gt;&gt;</td></tr>
-<tr class="separator:a6b58b17ec1539f4ef6ea0ab682ed039c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a090895821ad2a0a9df0f5301011228"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>invoke</b> = _t&lt; <a class="el" href="structmeta_1_1defer__i.html">defer_i</a>&lt; T, C, Ts::type::value... &gt;&gt;</td></tr>
+<tr class="separator:a6a090895821ad2a0a9df0f5301011228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

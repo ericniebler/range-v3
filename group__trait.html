@@ -113,11 +113,8 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1always.html">meta::always&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Alias Class that always returns <code>T</code>.  <a href="structmeta_1_1always.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1id.html">meta::id&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A trait that always returns its argument <code>T</code>.  <a href="structmeta_1_1id.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A trait that always returns its argument <code>T</code>. Also, a Callable that always returns <code>T</code>.  <a href="structmeta_1_1id.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -126,11 +123,6 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gad3906124930a00d7f3b3f1cb9d904111"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gad3906124930a00d7f3b3f1cb9d904111">meta::v1::alignof_</a> = <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; alignof(T)&gt;</td></tr>
 <tr class="memdesc:gad3906124930a00d7f3b3f1cb9d904111"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias that computes the alignment required for any instance of the type <code>T</code>.  <a href="group__trait.html#gad3906124930a00d7f3b3f1cb9d904111">More...</a><br /></td></tr>
 <tr class="separator:gad3906124930a00d7f3b3f1cb9d904111"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa61716dadd7fd9b59d6406812d0d82f4"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa61716dadd7fd9b59d6406812d0d82f4"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gaa61716dadd7fd9b59d6406812d0d82f4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gaa61716dadd7fd9b59d6406812d0d82f4">meta::v1::has_type</a> = _t&lt; detail::has_type_&lt; T &gt;&gt;</td></tr>
-<tr class="memdesc:gaa61716dadd7fd9b59d6406812d0d82f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>std::true_type</code> if <code>T::type</code> exists and names a type; otherwise, it's an alias for <code>std::false_type</code>. <br /></td></tr>
-<tr class="separator:gaa61716dadd7fd9b59d6406812d0d82f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga10c0b84437b8cc1a8d475c1c660c653b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga10c0b84437b8cc1a8d475c1c660c653b"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga10c0b84437b8cc1a8d475c1c660c653b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga10c0b84437b8cc1a8d475c1c660c653b">meta::v1::id_t</a> = _t&lt; id&lt; T &gt;&gt;</td></tr>
@@ -140,6 +132,16 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gad78e6f54caea9380570b6859b5a24ea3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gad78e6f54caea9380570b6859b5a24ea3">meta::v1::is</a> = _t&lt; detail::is_&lt; T, C &gt;&gt;</td></tr>
 <tr class="memdesc:gad78e6f54caea9380570b6859b5a24ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">is  <a href="group__trait.html#gad78e6f54caea9380570b6859b5a24ea3">More...</a><br /></td></tr>
 <tr class="separator:gad78e6f54caea9380570b6859b5a24ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4ac11af334faf90586a7a41d4f289ef2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4ac11af334faf90586a7a41d4f289ef2"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4ac11af334faf90586a7a41d4f289ef2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga4ac11af334faf90586a7a41d4f289ef2">meta::v1::is_callable</a> = _t&lt; detail::is_callable_&lt; T &gt;&gt;</td></tr>
+<tr class="memdesc:ga4ac11af334faf90586a7a41d4f289ef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>std::true_type</code> if <code>T::invoke</code> exists and names a class template or alias template; otherwise, it's an alias for <code>std::false_type</code>. <br /></td></tr>
+<tr class="separator:ga4ac11af334faf90586a7a41d4f289ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadc8afe383c8dcdd935ac43031a813d47"><td class="memTemplParams" colspan="2"><a class="anchor" id="gadc8afe383c8dcdd935ac43031a813d47"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gadc8afe383c8dcdd935ac43031a813d47"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gadc8afe383c8dcdd935ac43031a813d47">meta::v1::is_trait</a> = _t&lt; detail::is_trait_&lt; T &gt;&gt;</td></tr>
+<tr class="memdesc:gadc8afe383c8dcdd935ac43031a813d47"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>std::true_type</code> if <code>T::type</code> exists and names a type; otherwise, it's an alias for <code>std::false_type</code>. <br /></td></tr>
+<tr class="separator:gadc8afe383c8dcdd935ac43031a813d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2aa986837386ad289def903d9bbf83e7"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2aa986837386ad289def903d9bbf83e7"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga2aa986837386ad289def903d9bbf83e7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga2aa986837386ad289def903d9bbf83e7">meta::v1::is_valid</a> = detail::is_valid_&lt; T &gt;</td></tr>
@@ -147,7 +149,7 @@ template&lt;typename T &gt; </td></tr>
 <tr class="separator:ga2aa986837386ad289def903d9bbf83e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga288e095a9834eab7fedc8ce234afdd04"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
 <tr class="memitem:ga288e095a9834eab7fedc8ce234afdd04"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga288e095a9834eab7fedc8ce234afdd04">meta::v1::lambda</a> = <a class="el" href="classmeta_1_1v1_1_1if__c.html">if_c</a>&lt;(sizeof...(Ts) &gt; 0), detail::lambda_&lt; list&lt; Ts... &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:ga288e095a9834eab7fedc8ce234afdd04"><td class="mdescLeft">&#160;</td><td class="mdescRight">For creating anonymous Alias Classes.  <a href="group__trait.html#ga288e095a9834eab7fedc8ce234afdd04">More...</a><br /></td></tr>
+<tr class="memdesc:ga288e095a9834eab7fedc8ce234afdd04"><td class="mdescLeft">&#160;</td><td class="mdescRight">For creating anonymous Callables.  <a href="group__trait.html#ga288e095a9834eab7fedc8ce234afdd04">More...</a><br /></td></tr>
 <tr class="separator:ga288e095a9834eab7fedc8ce234afdd04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa435532ebfd257be0916b0db22a0c338"><td class="memTemplParams" colspan="2">template&lt;typename... As&gt; </td></tr>
 <tr class="memitem:gaa435532ebfd257be0916b0db22a0c338"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gaa435532ebfd257be0916b0db22a0c338">meta::v1::let</a> = _t&lt; _t&lt; detail::let_&lt; As... &gt;&gt;&gt;</td></tr>
@@ -156,17 +158,17 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga676ce876dd98b658017dfbc3fe96ef3f"></a>
 template&lt;typename F &gt; </td></tr>
 <tr class="memitem:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga676ce876dd98b658017dfbc3fe96ef3f">meta::v1::not_fn</a> = compose&lt; quote&lt; not_ &gt;, F &gt;</td></tr>
-<tr class="memdesc:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the result of Alias Class <code>F</code>. <br /></td></tr>
+<tr class="memdesc:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the result of Callable <code>F</code>. <br /></td></tr>
 <tr class="separator:ga676ce876dd98b658017dfbc3fe96ef3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1c0fcb43133d9bc434fbec05b2efe1f6"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:ga1c0fcb43133d9bc434fbec05b2efe1f6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga1c0fcb43133d9bc434fbec05b2efe1f6">meta::v1::sizeof_</a> = <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; sizeof(T)&gt;</td></tr>
 <tr class="memdesc:ga1c0fcb43133d9bc434fbec05b2efe1f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias that computes the size of the type <code>T</code>.  <a href="group__trait.html#ga1c0fcb43133d9bc434fbec05b2efe1f6">More...</a><br /></td></tr>
 <tr class="separator:ga1c0fcb43133d9bc434fbec05b2efe1f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4c6104efe8c0ba55381ac435008fe0c0"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4c6104efe8c0ba55381ac435008fe0c0"></a>
+<tr class="memitem:ga3aa7dc47eb7c932d8f0a3df8285815d1"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga3aa7dc47eb7c932d8f0a3df8285815d1"></a>
 template&lt;typename... Ts&gt; </td></tr>
-<tr class="memitem:ga4c6104efe8c0ba55381ac435008fe0c0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga4c6104efe8c0ba55381ac435008fe0c0">meta::v1::void_</a> = apply&lt; always&lt; void &gt;, Ts... &gt;</td></tr>
-<tr class="memdesc:ga4c6104efe8c0ba55381ac435008fe0c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>void</code>. <br /></td></tr>
-<tr class="separator:ga4c6104efe8c0ba55381ac435008fe0c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3aa7dc47eb7c932d8f0a3df8285815d1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga3aa7dc47eb7c932d8f0a3df8285815d1">meta::v1::void_</a> = invoke&lt; id&lt; void &gt;, Ts... &gt;</td></tr>
+<tr class="memdesc:ga3aa7dc47eb7c932d8f0a3df8285815d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code>void</code>. <br /></td></tr>
+<tr class="separator:ga3aa7dc47eb7c932d8f0a3df8285815d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="gad3906124930a00d7f3b3f1cb9d904111"></a>
@@ -221,9 +223,9 @@ template&lt;typename... Ts&gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>For creating anonymous Alias Classes. </p>
+<p>For creating anonymous Callables. </p>
 <div class="fragment"><div class="line"><span class="keyword">using</span> L = lambda&lt;_a, _b, std::pair&lt;_b, std::pair&lt;_a, _a&gt;&gt;&gt;;</div>
-<div class="line"><span class="keyword">using</span> P = apply&lt;L, int, short&gt;;</div>
+<div class="line"><span class="keyword">using</span> P = invoke&lt;L, int, short&gt;;</div>
 <div class="line">static_assert(std::is_same&lt;P, <a class="code" href="group__list.html#gaef65d81fa921b82861a9552cea6455aa">std::pair</a>&lt;<span class="keywordtype">short</span>, std::pair&lt;int, int&gt;&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
 </div><!-- fragment --> 
 </div>

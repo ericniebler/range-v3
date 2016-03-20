@@ -113,6 +113,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1defer__i.html">meta::defer_i&lt; T, C, Is &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper that defers the instantiation of a template <code>C</code> with integral constant parameters <code>Is</code> in a <code>lambda</code> or <code>let</code> expression.  <a href="structmeta_1_1defer__i.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1id.html">meta::id&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A trait that always returns its argument <code>T</code>. Also, a Callable that always returns <code>T</code>.  <a href="structmeta_1_1id.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -121,16 +124,11 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga14ac2cd59266af09d75be10d00b260b7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::v1::_t</a> = typename T::type</td></tr>
 <tr class="memdesc:ga14ac2cd59266af09d75be10d00b260b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias for <code>T::type</code>. <br /></td></tr>
 <tr class="separator:ga14ac2cd59266af09d75be10d00b260b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga67a68976eb8e00d1018c16cec76d782b"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga67a68976eb8e00d1018c16cec76d782b"></a>
-template&lt;typename F , typename... Args&gt; </td></tr>
-<tr class="memitem:ga67a68976eb8e00d1018c16cec76d782b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__invocation.html#ga67a68976eb8e00d1018c16cec76d782b">meta::v1::apply</a> = typename F::template apply&lt; Args... &gt;</td></tr>
-<tr class="memdesc:ga67a68976eb8e00d1018c16cec76d782b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the Alias Class <code>F</code> with the arguments <code>Args</code>. <br /></td></tr>
-<tr class="separator:ga67a68976eb8e00d1018c16cec76d782b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6942d38777a61d78a48dbf2399799e9f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6942d38777a61d78a48dbf2399799e9f"></a>
+<tr class="memitem:ga932afb00ab4d1ee3f7a11818c66c115f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga932afb00ab4d1ee3f7a11818c66c115f"></a>
 template&lt;typename C , typename List &gt; </td></tr>
-<tr class="memitem:ga6942d38777a61d78a48dbf2399799e9f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__invocation.html#ga6942d38777a61d78a48dbf2399799e9f">meta::v1::apply_list</a> = _t&lt; extension::apply_list&lt; C, List &gt;&gt;</td></tr>
-<tr class="memdesc:ga6942d38777a61d78a48dbf2399799e9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the Alias Class <code>C</code> using the types in the type list <code>List</code> as arguments. <br /></td></tr>
-<tr class="separator:ga6942d38777a61d78a48dbf2399799e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga932afb00ab4d1ee3f7a11818c66c115f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__invocation.html#ga932afb00ab4d1ee3f7a11818c66c115f">meta::v1::apply</a> = _t&lt; extension::apply&lt; C, List &gt;&gt;</td></tr>
+<tr class="memdesc:ga932afb00ab4d1ee3f7a11818c66c115f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the Callable <code>C</code> using the types in the type list <code>List</code> as arguments. <br /></td></tr>
+<tr class="separator:ga932afb00ab4d1ee3f7a11818c66c115f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf50b5f93b4658006de587f99115c6f6b"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class C, typename... Ts&gt; </td></tr>
 <tr class="memitem:gaf50b5f93b4658006de587f99115c6f6b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__invocation.html#gaf50b5f93b4658006de587f99115c6f6b">meta::v1::defer_trait</a> = lazy::_t&lt; defer&lt; C, Ts... &gt;&gt;</td></tr>
 <tr class="memdesc:gaf50b5f93b4658006de587f99115c6f6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper that defers the instantiation of a trait <code>C</code> with type parameters <code>Ts</code> in a <code>lambda</code> or <code>let</code> expression.  <a href="group__invocation.html#gaf50b5f93b4658006de587f99115c6f6b">More...</a><br /></td></tr>
@@ -139,11 +137,11 @@ template&lt;typename C , typename List &gt; </td></tr>
 <tr class="memitem:ga97e76fc216c5ce179398bf37053953be"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__invocation.html#ga97e76fc216c5ce179398bf37053953be">meta::v1::defer_trait_i</a> = lazy::_t&lt; defer_i&lt; T, C, Is... &gt;&gt;</td></tr>
 <tr class="memdesc:ga97e76fc216c5ce179398bf37053953be"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper that defers the instantiation of a trait <code>C</code> with integral constant parameters <code>Is</code> in a <code>lambda</code> or <code>let</code> expression.  <a href="group__invocation.html#ga97e76fc216c5ce179398bf37053953be">More...</a><br /></td></tr>
 <tr class="separator:ga97e76fc216c5ce179398bf37053953be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga72bf5456a8f9008bec32e17966fc1cb6"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga72bf5456a8f9008bec32e17966fc1cb6"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ga72bf5456a8f9008bec32e17966fc1cb6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6">meta::v1::eval</a> = typename T::type</td></tr>
-<tr class="memdesc:ga72bf5456a8f9008bec32e17966fc1cb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Evaluate" the trait <code>T</code> by returning the nested <code>T::type</code> alias. <br /></td></tr>
-<tr class="separator:ga72bf5456a8f9008bec32e17966fc1cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64e47b31149b367d2de9e91874f5b52f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga64e47b31149b367d2de9e91874f5b52f"></a>
+template&lt;typename F , typename... Args&gt; </td></tr>
+<tr class="memitem:ga64e47b31149b367d2de9e91874f5b52f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__invocation.html#ga64e47b31149b367d2de9e91874f5b52f">meta::v1::invoke</a> = typename F::template invoke&lt; Args... &gt;</td></tr>
+<tr class="memdesc:ga64e47b31149b367d2de9e91874f5b52f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the Callable <code>F</code> with the arguments <code>Args</code>. <br /></td></tr>
+<tr class="separator:ga64e47b31149b367d2de9e91874f5b52f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="gaf50b5f93b4658006de587f99115c6f6b"></a>

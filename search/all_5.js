@@ -20,7 +20,6 @@ var searchData=
   ['equalitycomparable',['EqualityComparable',['../structranges_1_1v3_1_1concepts_1_1_equality_comparable.html',1,'ranges::v3::concepts']]],
   ['erasablerange',['ErasableRange',['../structranges_1_1v3_1_1concepts_1_1_erasable_range.html',1,'ranges::v3::concepts']]],
   ['erase_2ehpp',['erase.hpp',['../erase_8hpp.html',1,'']]],
-  ['eval',['eval',['../group__invocation.html#ga72bf5456a8f9008bec32e17966fc1cb6',1,'meta::v1::eval()'],['../group__lazy__invocation.html#ga81ba330cf49b69ac98897963c6799a54',1,'meta::lazy::eval()']]],
   ['expects_5fwrapped_5freferences',['expects_wrapped_references',['../structranges_1_1v3_1_1expects__wrapped__references.html',1,'ranges::v3']]],
   ['extension',['Extension',['../group__extension.html',1,'']]]
 ];

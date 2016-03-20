@@ -13,29 +13,9 @@ var group__group_core =
     ] ],
     [ "adaptor_cursor", "structranges_1_1v3_1_1adaptor__cursor.html", [
       [ "adaptor_sentinel", "structranges_1_1v3_1_1adaptor__cursor.html#ad1998db6c0a32c1c9b4dc41ec0d944eb", null ],
-      [ "advance", "structranges_1_1v3_1_1adaptor__cursor.html#a583df5c37b11b53d7f3a65f2ff941f34", null ],
-      [ "distance_to", "structranges_1_1v3_1_1adaptor__cursor.html#aaec45d5c58e6abfe140c5a096fd65a9d", null ],
-      [ "equal", "structranges_1_1v3_1_1adaptor__cursor.html#a1f711c90d0fe7796ed54191708a3cd5c", null ],
-      [ "get", "structranges_1_1v3_1_1adaptor__cursor.html#a02b43eae36df7ad36560fb5a97995840", null ],
-      [ "indirect_move_", "structranges_1_1v3_1_1adaptor__cursor.html#a13f5c7440c1c59bec717448c44ca4dc9", null ],
-      [ "indirect_move_", "structranges_1_1v3_1_1adaptor__cursor.html#aa7efadeda2570210b7ace381735f19e1", null ],
-      [ "indirect_move_", "structranges_1_1v3_1_1adaptor__cursor.html#a2af6c871acf6325c0bc9bb1421b1e1f0", null ],
-      [ "next", "structranges_1_1v3_1_1adaptor__cursor.html#a6b652d5701a0ac2bee31f2b039dd867f", null ],
-      [ "prev", "structranges_1_1v3_1_1adaptor__cursor.html#a421d9d3f4a0b8dba4657bff67c1e44f9", null ],
-      [ "single_pass", "structranges_1_1v3_1_1adaptor__cursor.html#a0725fd0abbfcd45d387509d09cb54c1a", null ]
+      [ "indirect_move", "structranges_1_1v3_1_1adaptor__cursor.html#ad6824ca5e691fb43196d6464d31ee557", null ]
     ] ],
-    [ "mixin", "structranges_1_1v3_1_1adaptor__cursor_1_1mixin.html", [
-      [ "base", "structranges_1_1v3_1_1adaptor__cursor_1_1mixin.html#a1e5b4afef252f2f9bcd0d69388eb35bc", null ],
-      [ "mixin", "structranges_1_1v3_1_1adaptor__cursor_1_1mixin.html#a75678467b45c869130a8b1216fb5bcee", null ]
-    ] ],
-    [ "adaptor_sentinel", "structranges_1_1v3_1_1adaptor__sentinel.html", [
-      [ "equal", "structranges_1_1v3_1_1adaptor__sentinel.html#a79858c50023ba3dd2e2932168cc82eed", null ],
-      [ "single_pass", "structranges_1_1v3_1_1adaptor__sentinel.html#ac608d5935848516798e876b725a7cf84", null ]
-    ] ],
-    [ "mixin", "structranges_1_1v3_1_1adaptor__sentinel_1_1mixin.html", [
-      [ "base", "structranges_1_1v3_1_1adaptor__sentinel_1_1mixin.html#a14693cc06ed32e7b110cbdc6d3ea232e", null ],
-      [ "mixin", "structranges_1_1v3_1_1adaptor__sentinel_1_1mixin.html#a0bcd01db543d1383962f302a44ba2975", null ]
-    ] ],
+    [ "adaptor_sentinel", "structranges_1_1v3_1_1adaptor__sentinel.html", null ],
     [ "at_fn", "structranges_1_1v3_1_1at__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1at__fn.html#a268d3226fa7f3b4e14f54a81da5caf60", null ]
     ] ],

@@ -1,6 +1,7 @@
 var structranges_1_1v3_1_1adjacent__remove__if__view =
 [
-    [ "pred_", "structranges_1_1v3_1_1adjacent__remove__if__view.html#ae23ccfb7de7fa5cdb50e8160571cd292", null ],
-    [ "adjacent_remove_if_view", "structranges_1_1v3_1_1adjacent__remove__if__view.html#a5fe71b9d3db27d394729b7aeb4c3ccef", null ],
-    [ "adjacent_remove_if_view", "structranges_1_1v3_1_1adjacent__remove__if__view.html#a2573f54fea84aba447ef415f1b3b4b21", null ]
+    [ "pred_", "structranges_1_1v3_1_1adjacent__remove__if__view.html#a2b094846e726d7818a523da9dbdb9f67", null ],
+    [ "adjacent_remove_if_view", "structranges_1_1v3_1_1adjacent__remove__if__view.html#a8f0d949adf05472a386caaba9e39d627", null ],
+    [ "adjacent_remove_if_view", "structranges_1_1v3_1_1adjacent__remove__if__view.html#a2fe95e2263c51ab3d44d11b074edff26", null ],
+    [ "adjacent_remove_if_view", "structranges_1_1v3_1_1adjacent__remove__if__view.html#a255d2cb8ceb8335213f657f4f2a76d31", null ]
 ];

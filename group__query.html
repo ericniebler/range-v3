@@ -108,11 +108,11 @@ Modules</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga57811209246c496c046e4394001a569d"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
 <tr class="memitem:ga57811209246c496c046e4394001a569d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga57811209246c496c046e4394001a569d">meta::v1::all_of</a> = empty&lt; find_if&lt; List, not_fn&lt; F &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:ga57811209246c496c046e4394001a569d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="group__query.html#ga57811209246c496c046e4394001a569d">More...</a><br /></td></tr>
+<tr class="memdesc:ga57811209246c496c046e4394001a569d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="group__query.html#ga57811209246c496c046e4394001a569d">More...</a><br /></td></tr>
 <tr class="separator:ga57811209246c496c046e4394001a569d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga232f130ccdba124b1cdd8dc2b498abd5"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
 <tr class="memitem:ga232f130ccdba124b1cdd8dc2b498abd5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga232f130ccdba124b1cdd8dc2b498abd5">meta::v1::any_of</a> = not_&lt; empty&lt; find_if&lt; List, F &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:ga232f130ccdba124b1cdd8dc2b498abd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="group__query.html#ga232f130ccdba124b1cdd8dc2b498abd5">More...</a><br /></td></tr>
+<tr class="memdesc:ga232f130ccdba124b1cdd8dc2b498abd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="group__query.html#ga232f130ccdba124b1cdd8dc2b498abd5">More...</a><br /></td></tr>
 <tr class="separator:ga232f130ccdba124b1cdd8dc2b498abd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9fa1f8686a9a3fc11b635dc9b52cc28f"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
 <tr class="memitem:ga9fa1f8686a9a3fc11b635dc9b52cc28f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga9fa1f8686a9a3fc11b635dc9b52cc28f">meta::v1::count</a> = fold&lt; List, <a class="el" href="group__integral.html#ga878079c524e6d2f43e2617b25a03d514">meta::size_t</a>&lt; 0 &gt;, bind_back&lt; quote&lt; detail::count_fn &gt;, T &gt;&gt;</td></tr>
@@ -128,7 +128,7 @@ Typedefs</h2></td></tr>
 <tr class="separator:ga4c7804b40eff7b3cfffbcca5fc7fd0a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaec309473b13c863b8c9674b71cb0d35"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fun &gt; </td></tr>
 <tr class="memitem:gaaec309473b13c863b8c9674b71cb0d35"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gaaec309473b13c863b8c9674b71cb0d35">meta::v1::find_if</a> = _t&lt; detail::find_if_&lt; List, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gaaec309473b13c863b8c9674b71cb0d35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="group__query.html#gaaec309473b13c863b8c9674b71cb0d35">More...</a><br /></td></tr>
+<tr class="memdesc:gaaec309473b13c863b8c9674b71cb0d35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>invoke&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="group__query.html#gaaec309473b13c863b8c9674b71cb0d35">More...</a><br /></td></tr>
 <tr class="separator:gaaec309473b13c863b8c9674b71cb0d35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga83bd59849281c9721378eaa658df0774"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
 <tr class="memitem:ga83bd59849281c9721378eaa658df0774"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga83bd59849281c9721378eaa658df0774">meta::v1::find_index</a> = _t&lt; detail::find_index_&lt; List, T &gt;&gt;</td></tr>
@@ -140,7 +140,7 @@ Typedefs</h2></td></tr>
 <tr class="separator:ga8ebff820dc422cffaf3a34a1cee7b020"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga93e64782b54089a3d4245dd5ca88a714"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
 <tr class="memitem:ga93e64782b54089a3d4245dd5ca88a714"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga93e64782b54089a3d4245dd5ca88a714">meta::v1::none_of</a> = empty&lt; find_if&lt; List, F &gt;&gt;</td></tr>
-<tr class="memdesc:ga93e64782b54089a3d4245dd5ca88a714"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="group__query.html#ga93e64782b54089a3d4245dd5ca88a714">More...</a><br /></td></tr>
+<tr class="memdesc:ga93e64782b54089a3d4245dd5ca88a714"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="group__query.html#ga93e64782b54089a3d4245dd5ca88a714">More...</a><br /></td></tr>
 <tr class="separator:ga93e64782b54089a3d4245dd5ca88a714"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9131450b1528f0aa9f9822616a358d9c"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
 <tr class="memitem:ga9131450b1528f0aa9f9822616a358d9c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga9131450b1528f0aa9f9822616a358d9c">meta::v1::reverse_find</a> = drop&lt; List, min&lt; reverse_find_index&lt; List, T &gt;, size&lt; List &gt;&gt;&gt;</td></tr>
@@ -148,7 +148,7 @@ Typedefs</h2></td></tr>
 <tr class="separator:ga9131450b1528f0aa9f9822616a358d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa9ef1afd77c7dff79d02a268858b9406"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fun &gt; </td></tr>
 <tr class="memitem:gaa9ef1afd77c7dff79d02a268858b9406"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gaa9ef1afd77c7dff79d02a268858b9406">meta::v1::reverse_find_if</a> = _t&lt; detail::reverse_find_if_&lt; List, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gaa9ef1afd77c7dff79d02a268858b9406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="group__query.html#gaa9ef1afd77c7dff79d02a268858b9406">More...</a><br /></td></tr>
+<tr class="memdesc:gaa9ef1afd77c7dff79d02a268858b9406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>invoke&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="group__query.html#gaa9ef1afd77c7dff79d02a268858b9406">More...</a><br /></td></tr>
 <tr class="separator:gaa9ef1afd77c7dff79d02a268858b9406"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7cca06a06833f777b5f4bdc8a5f9e7a2"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
 <tr class="memitem:ga7cca06a06833f777b5f4bdc8a5f9e7a2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga7cca06a06833f777b5f4bdc8a5f9e7a2">meta::v1::reverse_find_index</a> = _t&lt; detail::reverse_find_index_&lt; List, T &gt;&gt;</td></tr>
@@ -170,7 +170,7 @@ template&lt;typename List , typename F &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
+<p>A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -189,7 +189,7 @@ template&lt;typename List , typename F &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
+<p>A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -265,7 +265,7 @@ template&lt;typename List , typename Fun &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
+<p>Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>invoke&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -323,7 +323,7 @@ template&lt;typename List , typename F &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
+<p>A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>
@@ -361,7 +361,7 @@ template&lt;typename List , typename Fun &gt; </div>
 
 <p><code>#include &lt;meta/meta.hpp&gt;</code></p>
 
-<p>Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
+<p>Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>invoke&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
 
 </div>

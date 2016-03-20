@@ -104,7 +104,9 @@ $(document).ready(function(){initNavTree('range__fwd_8hpp.html','');});
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1action_1_1action.html">ranges::v3::action::action&lt; Action &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__remove__if__view.html">ranges::v3::adjacent_remove_if_view&lt; Rng, F &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__filter__view.html">ranges::v3::adjacent_filter_view&lt; Rng, Pred &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adjacent__remove__if__view.html">ranges::v3::adjacent_remove_if_view&lt; Rng, Pred &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1basic__common__reference.html">ranges::v3::basic_common_reference&lt; T, U, TQual, UQual &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Users can specialize this to hook the <code>CommonReference</code> concept.  <a href="structranges_1_1v3_1_1basic__common__reference.html#details">More...</a><br /></td></tr>
@@ -289,6 +291,14 @@ template&lt;typename Rng &gt; </td></tr>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:a4c3a14169c21ca35bcfccad937f20078"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::keys_range_view</b> = transform_view&lt; Rng, detail::get_first &gt;</td></tr>
 <tr class="separator:a4c3a14169c21ca35bcfccad937f20078"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e825b9c8d5b3924a8fc35f455ec6354"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1e825b9c8d5b3924a8fc35f455ec6354"></a>
+template&lt;typename I &gt; </td></tr>
+<tr class="memitem:a1e825b9c8d5b3924a8fc35f455ec6354"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::move_into_iterator</b> = basic_iterator&lt; detail::move_into_cursor&lt; I &gt;, default_end_cursor &gt;</td></tr>
+<tr class="separator:a1e825b9c8d5b3924a8fc35f455ec6354"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac162aa91a32f6501d4551d936fe2e497"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac162aa91a32f6501d4551d936fe2e497"></a>
+template&lt;typename I &gt; </td></tr>
+<tr class="memitem:ac162aa91a32f6501d4551d936fe2e497"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::move_iterator</b> = basic_iterator&lt; detail::move_cursor&lt; I &gt;, default_end_cursor &gt;</td></tr>
+<tr class="separator:ac162aa91a32f6501d4551d936fe2e497"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad90750ab02331991df511bfd7f52535a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad90750ab02331991df511bfd7f52535a"></a>
 template&lt;typename Rng , typename Pred , typename Val &gt; </td></tr>
 <tr class="memitem:ad90750ab02331991df511bfd7f52535a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::replace_if_view</b> = iter_transform_view&lt; Rng, detail::replacer_if_fn&lt; Pred, Val &gt;&gt;</td></tr>
@@ -317,10 +327,10 @@ template&lt;typename Rng &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ab15cb7732fc23e05f0284d9a48a48eec"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::uncvref_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::remove_cv&lt; <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::remove_reference&lt; T &gt;&gt;&gt;&gt;</td></tr>
 <tr class="separator:ab15cb7732fc23e05f0284d9a48a48eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5d181d51575a6f15ce0a2113154b24e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad5d181d51575a6f15ce0a2113154b24e"></a>
+<tr class="memitem:a501681e747c02893f636ff596e2261c5"><td class="memTemplParams" colspan="2"><a class="anchor" id="a501681e747c02893f636ff596e2261c5"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:ad5d181d51575a6f15ce0a2113154b24e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::unique_view</b> = adjacent_remove_if_view&lt; Rng, equal_to &gt;</td></tr>
-<tr class="separator:ad5d181d51575a6f15ce0a2113154b24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a501681e747c02893f636ff596e2261c5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::unique_view</b> = adjacent_filter_view&lt; Rng, not_equal_to &gt;</td></tr>
+<tr class="separator:a501681e747c02893f636ff596e2261c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04681ce34bca9d0c55232b76bde0ca23"><td class="memTemplParams" colspan="2"><a class="anchor" id="a04681ce34bca9d0c55232b76bde0ca23"></a>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:a04681ce34bca9d0c55232b76bde0ca23"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::values_view</b> = transform_view&lt; Rng, detail::get_second &gt;</td></tr>

@@ -3,9 +3,8 @@ var namespacemeta =
     [ "extension", "namespacemeta_1_1extension.html", "namespacemeta_1_1extension" ],
     [ "v1", null, [
       [ "extension", null, [
-        [ "apply_list", "structmeta_1_1v1_1_1extension_1_1apply__list.html", null ]
+        [ "apply", "structmeta_1_1v1_1_1extension_1_1apply.html", null ]
       ] ],
-      [ "always", "structmeta_1_1v1_1_1always.html", null ],
       [ "compose", "structmeta_1_1v1_1_1compose.html", null ],
       [ "defer", "structmeta_1_1v1_1_1defer.html", null ],
       [ "defer_i", "structmeta_1_1v1_1_1defer__i.html", null ],
@@ -15,7 +14,6 @@ var namespacemeta =
       [ "quote", "structmeta_1_1v1_1_1quote.html", null ],
       [ "quote_i", "structmeta_1_1v1_1_1quote__i.html", null ]
     ] ],
-    [ "always", "structmeta_1_1always.html", "structmeta_1_1always" ],
     [ "bind_back", "structmeta_1_1bind__back.html", "structmeta_1_1bind__back" ],
     [ "bind_front", "structmeta_1_1bind__front.html", "structmeta_1_1bind__front" ],
     [ "compose", "structmeta_1_1compose.html", null ],

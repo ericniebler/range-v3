@@ -92,8 +92,6 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1adaptor__cursor.
   <div class="summary">
 <a href="#nested-classes">Instances and minimal complete definitions</a> &#124;
 <a href="#friends">Friends</a> &#124;
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structranges_1_1v3_1_1adaptor__cursor-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__group-core.html">Core</a></div></div>  </div>
@@ -107,66 +105,20 @@ $(document).ready(function(){initNavTree('structranges_1_1v3_1_1adaptor__cursor.
  <div class="center">
   <img src="structranges_1_1v3_1_1adaptor__cursor.png" usemap="#ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt;_map" alt=""/>
   <map id="ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt;_map" name="ranges::v3::adaptor_cursor&lt; BaseIter, Adapt &gt;_map">
-<area href="structranges_1_1v3_1_1compressed__pair.html" alt="ranges::v3::compressed_pair&lt; BaseIter, Adapt &gt;" shape="rect" coords="0,0,395,24"/>
+<area href="structranges_1_1v3_1_1compressed__pair.html" alt="ranges::v3::compressed_pair&lt; BaseIter, Adapt &gt;" shape="rect" coords="0,0,286,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Instances and minimal complete definitions</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1adaptor__cursor_1_1mixin.html">mixin</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:ad1998db6c0a32c1c9b4dc41ec0d944eb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad1998db6c0a32c1c9b4dc41ec0d944eb"></a>
 template&lt;typename BaseSent , typename SentAdapt &gt; </td></tr>
 <tr class="memitem:ad1998db6c0a32c1c9b4dc41ec0d944eb"><td class="memTemplItemLeft" align="right" valign="top">struct&#160;</td><td class="memTemplItemRight" valign="bottom"><b>adaptor_sentinel</b></td></tr>
 <tr class="separator:ad1998db6c0a32c1c9b4dc41ec0d944eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a0725fd0abbfcd45d387509d09cb54c1a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0725fd0abbfcd45d387509d09cb54c1a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>single_pass</b> = <a class="el" href="group__logical.html#ga665ffdb3aca42c767792a713a5da618f">meta::or_</a>&lt; range_access::single_pass_t&lt; Adapt &gt;, SinglePass&lt; BaseIter &gt;&gt;</td></tr>
-<tr class="separator:a0725fd0abbfcd45d387509d09cb54c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a583df5c37b11b53d7f3a65f2ff941f34"><td class="memTemplParams" colspan="2"><a class="anchor" id="a583df5c37b11b53d7f3a65f2ff941f34"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().advance(first, 0))&gt; </td></tr>
-<tr class="memitem:a583df5c37b11b53d7f3a65f2ff941f34"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>advance</b> (iterator_difference_t&lt; BaseIter &gt; n)</td></tr>
-<tr class="separator:a583df5c37b11b53d7f3a65f2ff941f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaec45d5c58e6abfe140c5a096fd65a9d"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaec45d5c58e6abfe140c5a096fd65a9d"></a>
-template&lt;typename C  = adaptor_cursor&gt; </td></tr>
-<tr class="memitem:aaec45d5c58e6abfe140c5a096fd65a9d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>distance_to</b> (<a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a> const &amp;that) const  -&gt; decltype(std::declval&lt; C const &amp; &gt;().distance_to_(that, 42))                                        </td></tr>
-<tr class="separator:aaec45d5c58e6abfe140c5a096fd65a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f711c90d0fe7796ed54191708a3cd5c"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1f711c90d0fe7796ed54191708a3cd5c"></a>
-template&lt;typename C  = adaptor_cursor&gt; </td></tr>
-<tr class="memitem:a1f711c90d0fe7796ed54191708a3cd5c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>equal</b> (<a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a> const &amp;that) const  -&gt; decltype(std::declval&lt; C const &amp; &gt;().equal_(that, 42))                                        </td></tr>
-<tr class="separator:a1f711c90d0fe7796ed54191708a3cd5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02b43eae36df7ad36560fb5a97995840"><td class="memTemplParams" colspan="2"><a class="anchor" id="a02b43eae36df7ad36560fb5a97995840"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().get(first))&gt; </td></tr>
-<tr class="memitem:a02b43eae36df7ad36560fb5a97995840"><td class="memTemplItemLeft" align="right" valign="top">R&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> () const  noexcept(noexcept(R(std::declval&lt; A &gt;().get(first))))</td></tr>
-<tr class="separator:a02b43eae36df7ad36560fb5a97995840"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13f5c7440c1c59bec717448c44ca4dc9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a13f5c7440c1c59bec717448c44ca4dc9"></a>
-template&lt;typename A  = Adapt, typename X  = decltype(std::declval&lt;A&gt;().indirect_move(first))&gt; </td></tr>
-<tr class="memitem:a13f5c7440c1c59bec717448c44ca4dc9"><td class="memTemplItemLeft" align="right" valign="top">X&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indirect_move_</b> (<a class="el" href="classint.html">int</a>) const  noexcept(noexcept(std::declval&lt; A &gt;().indirect_move(first)))</td></tr>
-<tr class="separator:a13f5c7440c1c59bec717448c44ca4dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7efadeda2570210b7ace381735f19e1"><td class="memTemplParams" colspan="2"><a class="anchor" id="aa7efadeda2570210b7ace381735f19e1"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().get(first, detail::adaptor_base_current_mem_fn{})), typename X  = iterator_rvalue_reference_t&lt;BaseIter&gt;&gt; </td></tr>
-<tr class="memitem:aa7efadeda2570210b7ace381735f19e1"><td class="memTemplItemLeft" align="right" valign="top">X&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indirect_move_</b> (long) const  noexcept(noexcept(X(ranges::indirect_move(first))))</td></tr>
-<tr class="separator:aa7efadeda2570210b7ace381735f19e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2af6c871acf6325c0bc9bb1421b1e1f0"><td class="memTemplParams" colspan="2"><a class="anchor" id="a2af6c871acf6325c0bc9bb1421b1e1f0"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().get(first)), typename X  = aux::move_t&lt;R&gt;&gt; </td></tr>
-<tr class="memitem:a2af6c871acf6325c0bc9bb1421b1e1f0"><td class="memTemplItemLeft" align="right" valign="top">X&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indirect_move_</b> (detail::any) const  noexcept(noexcept(X(static_cast&lt; X &amp;&amp; &gt;(std::declval&lt; R &gt;()))))</td></tr>
-<tr class="separator:a2af6c871acf6325c0bc9bb1421b1e1f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6b652d5701a0ac2bee31f2b039dd867f"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().next(first))&gt; </td></tr>
-<tr class="memitem:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>next</b> ()</td></tr>
-<tr class="separator:a6b652d5701a0ac2bee31f2b039dd867f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a421d9d3f4a0b8dba4657bff67c1e44f9"></a>
-template&lt;typename A  = Adapt, typename R  = decltype(std::declval&lt;A&gt;().prev(first))&gt; </td></tr>
-<tr class="memitem:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>prev</b> ()</td></tr>
-<tr class="separator:a421d9d3f4a0b8dba4657bff67c1e44f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6824ca5e691fb43196d6464d31ee557"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad6824ca5e691fb43196d6464d31ee557"></a>
+template&lt;typename Sent &gt; </td></tr>
+<tr class="memitem:ad6824ca5e691fb43196d6464d31ee557"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>indirect_move</b> (<a class="el" href="structranges_1_1v3_1_1basic__iterator.html">basic_iterator</a>&lt; <a class="el" href="structranges_1_1v3_1_1adaptor__cursor.html">adaptor_cursor</a>, Sent &gt; const &amp;it) noexcept(noexcept(decltype(get_cursor(it).indirect_move_(42))(get_cursor(it).indirect_move_(42)))) -&gt; decltype(get_cursor(it).indirect_move_(42))</td></tr>
+<tr class="separator:ad6824ca5e691fb43196d6464d31ee557"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

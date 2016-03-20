@@ -108,22 +108,22 @@ Modules</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1bind__back.html">meta::bind_back&lt; F, Us &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Alias Class that partially applies the Alias Class <code>F</code> by binding the arguments <code>Us</code> to the <em>back</em> of <code>F</code>.  <a href="structmeta_1_1bind__back.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Callable that partially applies the Callable <code>F</code> by binding the arguments <code>Us</code> to the <em>back</em> of <code>F</code>.  <a href="structmeta_1_1bind__back.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1bind__front.html">meta::bind_front&lt; F, Ts &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Alias Class that partially applies the Alias Class <code>F</code> by binding the arguments <code>Ts</code> to the <em>front</em> of <code>F</code>.  <a href="structmeta_1_1bind__front.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Callable that partially applies the Callable <code>F</code> by binding the arguments <code>Ts</code> to the <em>front</em> of <code>F</code>.  <a href="structmeta_1_1bind__front.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1compose.html">meta::compose&lt; Fs &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compose the Alias Classes <code>Fs</code> in the parameter pack <code>Ts</code>.  <a href="structmeta_1_1compose.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compose the Callables <code>Fs</code> in the parameter pack <code>Ts</code>.  <a href="structmeta_1_1compose.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1flip.html">meta::flip&lt; F &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Alias Class that reverses the order of the first two arguments.  <a href="structmeta_1_1flip.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Callable that reverses the order of the first two arguments.  <a href="structmeta_1_1flip.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1quote.html">meta::quote&lt; C &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template <code>C</code> into a Alias Class.  <a href="structmeta_1_1quote.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template <code>C</code> into a Callable.  <a href="structmeta_1_1quote.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1quote__i.html">meta::quote_i&lt; T, F &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template <code>F</code> taking literals of type <code>T</code> into a Alias Class.  <a href="structmeta_1_1quote__i.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1quote__i.html">meta::quote_i&lt; T, C &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a class template or alias template <code>C</code> taking literals of type <code>T</code> into a Callable.  <a href="structmeta_1_1quote__i.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -131,29 +131,66 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga33a0c3a3abc067f23697140a343ea8cb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga33a0c3a3abc067f23697140a343ea8cb"></a>
 template&lt;typename F , typename Q  = quote&lt;list&gt;&gt; </td></tr>
 <tr class="memitem:ga33a0c3a3abc067f23697140a343ea8cb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga33a0c3a3abc067f23697140a343ea8cb">meta::v1::curry</a> = compose&lt; F, Q &gt;</td></tr>
-<tr class="memdesc:ga33a0c3a3abc067f23697140a343ea8cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Alias Class that takes a bunch of arguments, bundles them into a type list, and then calls the Alias Class <code>F</code> with the type list <code>Q</code>. <br /></td></tr>
+<tr class="memdesc:ga33a0c3a3abc067f23697140a343ea8cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Callable that takes a bunch of arguments, bundles them into a type list, and then calls the Callable <code>F</code> with the type list <code>Q</code>. <br /></td></tr>
 <tr class="separator:ga33a0c3a3abc067f23697140a343ea8cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa1e91af5bb7608d60cfe8dc291729472"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaa1e91af5bb7608d60cfe8dc291729472"></a>
 template&lt;typename... Fs&gt; </td></tr>
 <tr class="memitem:gaa1e91af5bb7608d60cfe8dc291729472"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaa1e91af5bb7608d60cfe8dc291729472">meta::v1::on</a> = detail::on_&lt; Fs... &gt;</td></tr>
-<tr class="memdesc:gaa1e91af5bb7608d60cfe8dc291729472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use as <code>on&lt;F, Gs...&gt;</code>. Creates an Alias Class that applies Alias Class <code>F</code> to the result of applying Alias Class <code>compose&lt;Gs...&gt;</code> to all the arguments. <br /></td></tr>
+<tr class="memdesc:gaa1e91af5bb7608d60cfe8dc291729472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use as <code>on&lt;F, Gs...&gt;</code>. Creates an Callable that applies Callable <code>F</code> to the result of applying Callable <code>compose&lt;Gs...&gt;</code> to all the arguments. <br /></td></tr>
 <tr class="separator:gaa1e91af5bb7608d60cfe8dc291729472"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga24a2ad310e2d822a9be165e47e6270ac"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga24a2ad310e2d822a9be165e47e6270ac"></a>
-template&lt;template&lt; typename... &gt; class C&gt; </td></tr>
+<tr class="memitem:ga24a2ad310e2d822a9be165e47e6270ac"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; class C&gt; </td></tr>
 <tr class="memitem:ga24a2ad310e2d822a9be165e47e6270ac"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga24a2ad310e2d822a9be165e47e6270ac">meta::v1::quote_trait</a> = compose&lt; quote&lt; _t &gt;, quote&lt; C &gt;&gt;</td></tr>
-<tr class="memdesc:ga24a2ad310e2d822a9be165e47e6270ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> into a Alias Class. <br /></td></tr>
+<tr class="memdesc:ga24a2ad310e2d822a9be165e47e6270ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait template <code>C</code> into a Callable.  <a href="group__composition.html#ga24a2ad310e2d822a9be165e47e6270ac">More...</a><br /></td></tr>
 <tr class="separator:ga24a2ad310e2d822a9be165e47e6270ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga88622e1afa459a338ec6d5dde8340fef"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga88622e1afa459a338ec6d5dde8340fef"></a>
-template&lt;typename T , template&lt; T... &gt; class C&gt; </td></tr>
+<tr class="memitem:ga88622e1afa459a338ec6d5dde8340fef"><td class="memTemplParams" colspan="2">template&lt;typename T , template&lt; T... &gt; class C&gt; </td></tr>
 <tr class="memitem:ga88622e1afa459a338ec6d5dde8340fef"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#ga88622e1afa459a338ec6d5dde8340fef">meta::v1::quote_trait_i</a> = compose&lt; quote&lt; _t &gt;, quote_i&lt; T, C &gt;&gt;</td></tr>
-<tr class="memdesc:ga88622e1afa459a338ec6d5dde8340fef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> taking literals of type <code>T</code> into a Alias Class. <br /></td></tr>
+<tr class="memdesc:ga88622e1afa459a338ec6d5dde8340fef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a trait <code>C</code> taking literals of type <code>T</code> into a Callable.  <a href="group__composition.html#ga88622e1afa459a338ec6d5dde8340fef">More...</a><br /></td></tr>
 <tr class="separator:ga88622e1afa459a338ec6d5dde8340fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaec51f3c6c4ff9840001956f48ef750db"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaec51f3c6c4ff9840001956f48ef750db"></a>
+<tr class="memitem:gaea9645285e3a732d7af0778f1d0b85d2"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaea9645285e3a732d7af0778f1d0b85d2"></a>
 template&lt;typename F &gt; </td></tr>
-<tr class="memitem:gaec51f3c6c4ff9840001956f48ef750db"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaec51f3c6c4ff9840001956f48ef750db">meta::v1::uncurry</a> = bind_front&lt; quote&lt; apply_list &gt;, F &gt;</td></tr>
-<tr class="memdesc:gaec51f3c6c4ff9840001956f48ef750db"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Alias Class that takes a type list, unpacks the types, and then calls the Alias Class <code>F</code> with the types. <br /></td></tr>
-<tr class="separator:gaec51f3c6c4ff9840001956f48ef750db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaea9645285e3a732d7af0778f1d0b85d2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__composition.html#gaea9645285e3a732d7af0778f1d0b85d2">meta::v1::uncurry</a> = bind_front&lt; quote&lt; apply &gt;, F &gt;</td></tr>
+<tr class="memdesc:gaea9645285e3a732d7af0778f1d0b85d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Callable that takes a type list, unpacks the types, and then calls the Callable <code>F</code> with the types. <br /></td></tr>
+<tr class="separator:gaea9645285e3a732d7af0778f1d0b85d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="ga24a2ad310e2d822a9be165e47e6270ac"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;template&lt; typename... &gt; class C&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__composition.html#ga24a2ad310e2d822a9be165e47e6270ac">meta::v1::quote_trait</a> = typedef compose&lt;quote&lt;_t&gt;, quote&lt;C&gt;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+
+<p>Turn a trait template <code>C</code> into a Callable. </p>
+<div class="fragment"><div class="line">static_assert(std::is_same&lt;<a class="code" href="group__invocation.html#ga64e47b31149b367d2de9e91874f5b52f">invoke</a>&lt;quote_trait&lt;std::add_const&gt;, <span class="keywordtype">int</span>&gt;, <span class="keywordtype">int</span> <span class="keyword">const</span>&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a class="anchor" id="ga88622e1afa459a338ec6d5dde8340fef"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , template&lt; T... &gt; class C&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__composition.html#ga88622e1afa459a338ec6d5dde8340fef">meta::v1::quote_trait_i</a> = typedef compose&lt;quote&lt;_t&gt;, quote_i&lt;T, C&gt;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+
+<p>Turn a trait <code>C</code> taking literals of type <code>T</code> into a Callable. </p>
+<dl class="section see"><dt>See also</dt><dd>'meta::quote_trait' </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
