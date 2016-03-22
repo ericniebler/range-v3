@@ -158,7 +158,7 @@ namespace ranges
             indirect_swap(Readable0 a, Readable1 b)
                 noexcept(
                     is_nothrow_indirectly_movable<Readable0, Readable1>::value &&
-                    is_nothrow_indirectly_movable<Readable0, Readable1>::value);
+                    is_nothrow_indirectly_movable<Readable1, Readable0>::value);
 
             struct indirect_swap_fn
             {
@@ -219,7 +219,7 @@ namespace ranges
             indirect_swap(Readable0 a, Readable1 b)
                 noexcept(
                     is_nothrow_indirectly_movable<Readable0, Readable1>::value &&
-                    is_nothrow_indirectly_movable<Readable0, Readable1>::value)
+                    is_nothrow_indirectly_movable<Readable1, Readable0>::value)
             {
                 meta::_t<value_type<Readable0>> v0 = indirect_move(a);
                 *a = indirect_move(b);
