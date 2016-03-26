@@ -9,7 +9,6 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 
-#include <cstring>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -29,39 +28,6 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-struct MoveOnlyString
-{
-    char const *sz_;
-
-    MoveOnlyString(char const *sz = "")
-      : sz_(sz)
-    {}
-    MoveOnlyString(MoveOnlyString &&that)
-      : sz_(that.sz_)
-    {
-        that.sz_ = "";
-    }
-    MoveOnlyString(MoveOnlyString const &) = delete;
-    MoveOnlyString &operator=(MoveOnlyString &&that)
-    {
-        sz_ = that.sz_;
-        that.sz_ = "";
-        return *this;
-    }
-    MoveOnlyString &operator=(MoveOnlyString const &) = delete;
-    bool operator==(MoveOnlyString const &that) const
-    {
-        return 0 == std::strcmp(sz_, that.sz_);
-    }
-    bool operator!=(MoveOnlyString const &that) const
-    {
-        return !(*this == that);
-    }
-    friend std::ostream & operator<< (std::ostream &sout, MoveOnlyString const &str)
-    {
-        return sout << '"' << str.sz_ << '"';
-    }
-};
 
 int main()
 {

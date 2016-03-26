@@ -89,7 +89,7 @@ namespace ranges
                     RANGES_ASSERT(is_sentinel());
                     return ranges::get<1>(data_);
                 }
-                CONCEPT_REQUIRES(SizedIteratorRange<I, S>() && SizedIteratorRange<I, I>())
+                CONCEPT_REQUIRES((bool)SizedIteratorRange<I, S>() && (bool)SizedIteratorRange<I, I>())
                 friend iterator_difference_t<I>
                 operator-(common_iterator<I, S> const &end, common_iterator<I, S> const &begin)
                 {
