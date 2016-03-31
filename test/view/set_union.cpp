@@ -287,7 +287,29 @@ int main()
         CONCEPT_ASSERT(Same<range_reference_t<R>, MoveOnlyString &>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R>, MoveOnlyString &&>());
     }
-
+    
+    // iterator (in)equality
+    {
+        int r1[] = {1, 2, 3};
+        int r2[] = {   2, 3, 4, 5};
+        auto res = view::set_union(r1, r2); // 1, 2, 3, 4, 5
+        
+        auto it1 = ranges::next(res.begin(), 3); // *it1 == 4, member iterator into r1 points to r1.end()
+        auto it2 = ranges::next(it1);            // *it2 == 5, member iterator into r1 also points to r1.end()
+        auto sentinel = res.end();
+        
+        CHECK(*it1 == 4);
+        CHECK(*it2 == 5);
+        
+        CHECK(it1 != it2); // should be different even though member iterators into r1 are the same
+        
+        CHECK(it1 != sentinel);
+        CHECK(ranges::next(it1, 2) == sentinel);
+        
+        CHECK(it2 != sentinel);
+        CHECK(ranges::next(it2, 1) == sentinel);
+    }
+    
 
     return test_result();
 }
