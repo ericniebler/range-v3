@@ -96,9 +96,9 @@ int main()
 
     // Move test 1
     {
-        variant<int, std::string> v{emplaced_index<1>, "hello world"};
+        variant<int, MoveOnlyString> v{emplaced_index<1>, "hello world"};
         CHECK(get<1>(v) == "hello world");
-        std::string s = get<1>(std::move(v));
+        MoveOnlyString s = get<1>(std::move(v));
         CHECK(s == "hello world");
         CHECK(get<1>(v) == "");
         v.emplace<1>("goodbye");
@@ -113,10 +113,10 @@ int main()
 
     // Move test 2
     {
-        std::string s = "hello world";
-        variant<std::string&> v{emplaced_index<0>, s};
+        MoveOnlyString s = "hello world";
+        variant<MoveOnlyString&> v{emplaced_index<0>, s};
         CHECK(get<0>(v) == "hello world");
-        std::string &s2 = get<0>(std::move(v));
+        MoveOnlyString &s2 = get<0>(std::move(v));
         CHECK(&s2 == &s);
     }
 

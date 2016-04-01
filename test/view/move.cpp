@@ -22,7 +22,10 @@
 int main()
 {
     using namespace ranges;
-    std::vector<std::string> vs{"'allo", "'allo", "???"};
+    std::vector<MoveOnlyString> vs;
+    vs.emplace_back("'allo");
+    vs.emplace_back("'allo");
+    vs.emplace_back("???");
 
     auto x = vs | view::move;
     CONCEPT_ASSERT(Same<bounded_view_concept_t<decltype(x)>, concepts::BoundedView>());
@@ -34,10 +37,10 @@ int main()
     CONCEPT_ASSERT(Same<iterator_concept_t<I>, concepts::RandomAccessIterator>());
     CONCEPT_ASSERT(Same<iterator_category_t<I>, ranges::random_access_iterator_tag>());
 
-    CHECK(std::strcmp((*x.begin()).c_str(), "'allo") == 0);
+    CHECK(bool(*x.begin() == "'allo"));
 
-    std::vector<std::string> vs2(x.begin(), x.end());
-    static_assert(std::is_same<std::string&&, decltype(*x.begin())>::value, "");
+    std::vector<MoveOnlyString> vs2(x.begin(), x.end());
+    static_assert(std::is_same<MoveOnlyString&&, decltype(*x.begin())>::value, "");
     ::check_equal(vs2, {"'allo", "'allo", "???"});
     ::check_equal(vs, {"", "", ""});
 

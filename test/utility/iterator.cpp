@@ -29,11 +29,15 @@ void test_insert_iterator()
 
 void test_move_iterator()
 {
-    std::vector<std::string> in{"this","is","his","face"};
-    std::vector<std::string> out;
+    std::vector<MoveOnlyString> in;
+    in.emplace_back("this");
+    in.emplace_back("is");
+    in.emplace_back("his");
+    in.emplace_back("face");
+    std::vector<MoveOnlyString> out;
     auto it = ranges::make_move_iterator(in.begin());
     using I = decltype(it);
-    CONCEPT_ASSERT(Same<I, ranges::move_iterator<std::vector<std::string>::iterator>>());
+    CONCEPT_ASSERT(Same<I, ranges::move_iterator<std::vector<MoveOnlyString>::iterator>>());
     ranges::copy(it, ranges::make_move_sentinel(in.end()),
         ranges::back_inserter(out));
     ::check_equal(in, {"","","",""});

@@ -89,21 +89,21 @@ int main()
 
     // Test iter_transform by transforming a zip view to select one element.
     {
-        auto v0 = to_<std::vector<std::string>>({"a","b","c"});
-        auto v1 = to_<std::vector<std::string>>({"x","y","z"});
+        auto v0 = to_<std::vector<MoveOnlyString>>({"a","b","c"});
+        auto v1 = to_<std::vector<MoveOnlyString>>({"x","y","z"});
 
         auto rng = view::zip(v0, v1);
         ::models<concepts::RandomAccessRange>(rng);
 
-        std::vector<std::string> res;
+        std::vector<MoveOnlyString> res;
         using R = decltype(rng);
         using I = range_iterator_t<R>;
         // Needlessly verbose -- a simple transform would do the same, but this
         // is an interesting test.
         auto proj = overload(
-            [](I i) -> std::string& {return (*i).first;},
-            [](copy_tag, I i) -> std::string {return {};},
-            [](move_tag, I i) -> std::string&& {return std::move((*i).first);}
+            [](I i) -> MoveOnlyString& {return (*i).first;},
+            [](copy_tag, I i) -> MoveOnlyString {return {};},
+            [](move_tag, I i) -> MoveOnlyString&& {return std::move((*i).first);}
         );
         auto rng2 = rng | view::iter_transform(proj);
         move(rng2, ranges::back_inserter(res));
@@ -111,9 +111,9 @@ int main()
         ::check_equal(v0, {"","",""});
         ::check_equal(v1, {"x","y","z"});
         using R2 = decltype(rng2);
-        CONCEPT_ASSERT(Same<range_value_t<R2>, std::string>());
-        CONCEPT_ASSERT(Same<range_reference_t<R2>, std::string &>());
-        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, std::string &&>());
+        CONCEPT_ASSERT(Same<range_value_t<R2>, MoveOnlyString>());
+        CONCEPT_ASSERT(Same<range_reference_t<R2>, MoveOnlyString &>());
+        CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, MoveOnlyString &&>());
     }
 
     // two range transform
