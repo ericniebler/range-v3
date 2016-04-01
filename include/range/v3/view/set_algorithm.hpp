@@ -555,7 +555,7 @@ namespace ranges
                 }
                 bool equal(set_union_cursor const &that) const
                 {
-                    return it1_ == that.it1_; // does not support comparing iterators from different ranges
+                    return (it1_ == that.it1_) && (it2_ == that.it2_); // does not support comparing iterators from different ranges
                 }
                 bool done() const
                 {
@@ -784,7 +784,7 @@ namespace ranges
                 }
                 bool equal(set_symmetric_difference_cursor const &that) const
                 {
-                    return it1_ == that.it1_; // does not support comparing iterators from different ranges
+                    return (it1_ == that.it1_) && (it2_ == that.it2_); // does not support comparing iterators from different ranges
                 }
                 bool done() const
                 {
