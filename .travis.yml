@@ -30,7 +30,7 @@ matrix:
       os: osx
       compiler: clang
 
-    # ASAN disabled for clang builds pending resolution of
+    # ASAN disabled for clang < 3.8 builds per resolution of
     #  https://llvm.org/bugs/show_bug.cgi?id=22757
 
     # Test clang-3.4: C++11, Build=Debug/Release, ASAN=On/Off
@@ -174,6 +174,47 @@ matrix:
     #   os: linux
     #   addons: *clang37
 
+    # Test clang-3.8: C++11/C++14, Build=Debug/Release, ASAN=On/Off
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Debug CPP=11 ASAN=On LIBCXX=On
+      os: linux
+      addons: &clang38
+        apt:
+          packages:
+            - util-linux
+            - clang-3.8
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
+      os: linux
+      addons: *clang38
+
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Debug CPP=14 ASAN=On LIBCXX=On
+      os: linux
+      addons: *clang38
+
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=14 ASAN=On LIBCXX=On
+      os: linux
+      addons: *clang38
+
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang38
+
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang38
+
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Debug CPP=14 ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang38
+
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=14 ASAN=Off LIBCXX=On
+      os: linux
+      addons: *clang38
+
     # Test gcc-4.8: C++11, Build=Debug/Release, ASAN=Off
     - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
       os: linux
@@ -219,13 +260,13 @@ matrix:
       os: linux
       addons: *gcc5
 
-    # - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
-    #   os: linux
-    #   addons: *gcc5
+    - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: *gcc5
 
-    # - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
-    #   os: linux
-    #   addons: *gcc5
+    - env: GCC_VERSION=5 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: *gcc5
 
     # - env: GCC_VERSION=5 BUILD_TYPE=Debug CPP=14 ASAN=On LIBCXX=Off
     #   os: linux
@@ -284,7 +325,8 @@ script:
   - ctest -VV
   # Valgrind runs for clang release builds only,
   # it fails when using gcc-4.9 + libstdc++-4.9.
-  - if [ "$BUILD_TYPE" == "Release" ] && [ ! -n "$GCC_VERSION" ]; then ctest -VV -D ExperimentalMemCheck; fi
+  # - if [ "$BUILD_TYPE" == "Release" ] && [ ! -n "$GCC_VERSION" ]; then ctest -VV -D ExperimentalMemCheck; fi
+  - if [ "$BUILD_TYPE" == "Release" ] && [ "$ASAN" == "Off" ]; then ctest -VV -D ExperimentalMemCheck; fi
 
 notifications:
   email: false
