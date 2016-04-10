@@ -18,12 +18,10 @@
 #define RANGES_V3_UTILITY_CONCEPTS_HPP
 
 #include <initializer_list>
-#include <iosfwd>
 #include <utility>
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/utility/swap.hpp>
-#include <range/v3/utility/associated_types.hpp>
 #include <range/v3/utility/common_type.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
 
@@ -211,7 +209,7 @@ namespace ranges
             // models
             template<typename Concept, typename...Ts>
             struct models
-              : meta::bool_<decltype(detail::models_<Ts...>(_nullptr_v<Concept>()))::type::value>
+              : meta::bool_<meta::_t<decltype(detail::models_<Ts...>(_nullptr_v<Concept>()))>::value>
             {};
 
             template<typename Concept, typename...Args, typename...Ts>

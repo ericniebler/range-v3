@@ -29,7 +29,7 @@ int main()
     std::vector<int> v(50);
     iota(v, 0);
 
-#if !defined(_MSC_VER) // MS ABI has limited EBO
+#if !defined(_WIN32) // MS ABI has limited EBO
     static_assert(
         sizeof((v|view::stride(3)).begin()) ==
         sizeof(void*)+sizeof(v.begin())+sizeof(std::ptrdiff_t),"");

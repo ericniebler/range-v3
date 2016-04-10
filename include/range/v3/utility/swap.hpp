@@ -179,9 +179,8 @@ namespace ranges
             {};
 
             template<typename T, typename U>
-            struct is_indirectly_swappable_<T, U, meta::if_c<
-                std::is_void<
-                    decltype(indirect_swap(std::declval<T>(), std::declval<U>()))>::value>>
+            struct is_indirectly_swappable_<T, U, meta::void_<
+                decltype(indirect_swap(std::declval<T>(), std::declval<U>()))>>
               : std::true_type
             {};
 
