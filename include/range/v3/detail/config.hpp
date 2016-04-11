@@ -116,4 +116,17 @@
 #define RANGES_GCC_BROKEN_CUSTPOINT
 #endif
 
+namespace ranges {
+    inline namespace v3 {
+        namespace detail {
+            namespace ebo_test {
+                struct empty1 {};
+                struct empty2 {};
+                struct refines : empty1, empty2 {};
+            }
+            constexpr bool broken_ebo = sizeof(ebo_test::refines) > sizeof(ebo_test::empty1);
+        }
+    }
+}
+
 #endif
