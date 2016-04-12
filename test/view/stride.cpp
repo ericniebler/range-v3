@@ -29,11 +29,10 @@ int main()
     std::vector<int> v(50);
     iota(v, 0);
 
-#if !defined(_WIN32) // MS ABI has limited EBO
-    static_assert(
-        sizeof((v|view::stride(3)).begin()) ==
-        sizeof(void*)+sizeof(v.begin())+sizeof(std::ptrdiff_t),"");
-#endif
+    if (!ranges::v3::detail::broken_ebo)
+        CHECK(
+            sizeof((v | view::stride(3)).begin()) ==
+            sizeof(void*) + sizeof(v.begin()) + sizeof(std::ptrdiff_t));
     ::check_equal(v | view::stride(3) | view::reverse,
                   {48, 45, 42, 39, 36, 33, 30, 27, 24, 21, 18, 15, 12, 9, 6, 3, 0});
 
