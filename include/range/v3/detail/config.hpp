@@ -122,7 +122,8 @@ namespace ranges {
             namespace ebo_test {
                 struct empty1 {};
                 struct empty2 {};
-                struct refines : empty1, empty2 {};
+                struct empty3 {};
+                struct refines : empty1, empty2, empty3 {};
             }
             constexpr bool broken_ebo = sizeof(ebo_test::refines) > sizeof(ebo_test::empty1);
         }
