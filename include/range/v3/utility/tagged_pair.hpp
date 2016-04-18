@@ -74,10 +74,18 @@ namespace ranges
           : Base
           , detail::getters::collect<tagged<Base, Tags...>, Tags...>
         {
-            using Base::Base;
             tagged() = default;
             tagged(tagged &&) = default;
             tagged(tagged const &) = default;
+            using Base::Base;
+            CONCEPT_REQUIRES(MoveConstructible<Base>())
+            tagged(Base && that)
+              : Base(std::move(that))
+            {}
+            CONCEPT_REQUIRES(CopyConstructible<Base>())
+            tagged(Base const & that)
+              : Base(that)
+            {}
             tagged &operator=(tagged &&) = default;
             tagged &operator=(tagged const &) = default;
             template<typename Other, typename = meta::if_<std::is_convertible<Other, Base>>>
