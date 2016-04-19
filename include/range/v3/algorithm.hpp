@@ -65,7 +65,6 @@
 #include <range/v3/algorithm/partition_move.hpp>
 #include <range/v3/algorithm/partition_point.hpp>
 #include <range/v3/algorithm/permutation.hpp>
-#include <range/v3/algorithm/random_shuffle.hpp>
 #include <range/v3/algorithm/remove.hpp>
 #include <range/v3/algorithm/remove_copy.hpp>
 #include <range/v3/algorithm/remove_copy_if.hpp>
