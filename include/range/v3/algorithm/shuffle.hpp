@@ -76,6 +76,16 @@ namespace ranges
                 return orig;
             }
 
+            template<typename I, typename S,
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
+                    Permutable<I>())>
+            I operator()(I begin, S end_) const
+            {
+                std::random_device rng;
+                std::mt19937 urng(rng());
+                return (*this)(begin, end_, urng);
+            }
+
             template<typename Rng, typename Gen,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Permutable<I>() &&
@@ -85,6 +95,14 @@ namespace ranges
             range_safe_iterator_t<Rng> operator()(Rng &&rng, Gen && rand) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));
+            }
+
+            template<typename Rng,
+                typename I = range_iterator_t<Rng>,
+                CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Permutable<I>())>
+            range_safe_iterator_t<Rng> operator()(Rng &&rng) const
+            {
+                return (*this)(begin(rng), end(rng));
             }
         };
 
