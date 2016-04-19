@@ -321,6 +321,19 @@ namespace ranges
             template<typename Cur>
             using cursor_value_t = typename cursor_value<Cur>::type;
 
+            template<typename BI,
+                CONCEPT_REQUIRES_(meta::is<meta::_t<std::decay<BI>>, basic_iterator>())>
+            static RANGES_CXX14_CONSTEXPR auto pos(BI&& it)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+                std::forward<BI>(it).pos()
+            )
+            template<typename BS,
+                CONCEPT_REQUIRES_(meta::is<meta::_t<std::decay<BS>>, basic_sentinel>())>
+            static RANGES_CXX14_CONSTEXPR auto end(BS&& s)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+                std::forward<BS>(s).end()
+            )
+
             template<typename Cur, typename S>
             static RANGES_CXX14_CONSTEXPR Cur cursor(basic_iterator<Cur, S> it)
             {
