@@ -448,20 +448,13 @@ namespace ranges
         template<typename S>
         struct basic_sentinel : range_access::mixin_base_t<S>
         {
-            // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=60799
-            #if !defined(__GNUC__) || defined(__clang__)
         private:
-            #endif
             friend range_access;
-            template<typename Cur, typename OtherSentinel>
-            friend struct basic_iterator;
-            RANGES_CXX14_CONSTEXPR
-            S &end() noexcept
+            RANGES_CXX14_CONSTEXPR S &end() noexcept
             {
                 return this->range_access::mixin_base_t<S>::get();
             }
-            RANGES_CXX14_CONSTEXPR
-            S const &end() const noexcept
+            constexpr S const &end() const noexcept
             {
                 return this->range_access::mixin_base_t<S>::get();
             }
@@ -495,10 +488,6 @@ namespace ranges
         {
         private:
             friend range_access;
-            friend range_access::mixin_base_t<Cur>;
-            friend struct get_cursor_fn;
-            template<typename OtherCur, typename OtherS>
-            friend struct basic_iterator;
             CONCEPT_ASSERT(detail::Cursor<Cur>());
             using assoc_types_ = detail::iterator_associated_types_base<Cur, S>;
             using typename assoc_types_::postfix_increment_result_t;
@@ -509,7 +498,7 @@ namespace ranges
             {
                 return this->range_access::mixin_base_t<Cur>::get();
             }
-            RANGES_CXX14_CONSTEXPR Cur const &pos() const noexcept
+            constexpr Cur const &pos() const noexcept
             {
                 return this->range_access::mixin_base_t<Cur>::get();
             }
@@ -523,8 +512,9 @@ namespace ranges
             template<typename OtherCur, typename OtherS,
                 CONCEPT_REQUIRES_(ConvertibleTo<OtherCur, Cur>() &&
                     Constructible<range_access::mixin_base_t<Cur>, OtherCur &&>())>
-            basic_iterator(basic_iterator<OtherCur, OtherS> that)
-              : range_access::mixin_base_t<Cur>{std::move(that.pos())}
+            RANGES_CXX14_CONSTEXPR
+	    basic_iterator(basic_iterator<OtherCur, OtherS> that)
+              : range_access::mixin_base_t<Cur>{range_access::pos(std::move(that))}
             {}
             // Mix in any additional constructors defined and exported by the cursor
             using range_access::mixin_base_t<Cur>::mixin_base_t;
@@ -588,7 +578,7 @@ namespace ranges
             friend constexpr bool operator==(basic_iterator const &left,
                 basic_sentinel<S> const &right)
             {
-                return range_access::empty(left.pos(), right.end());
+                return range_access::empty(left.pos(), range_access::end(right));
             }
             friend constexpr bool operator!=(basic_iterator const &left,
                 basic_sentinel<S> const &right)
@@ -598,7 +588,7 @@ namespace ranges
             friend constexpr bool operator==(basic_sentinel<S> const & left,
                 basic_iterator const &right)
             {
-                return range_access::empty(right.pos(), left.end());
+                return range_access::empty(right.pos(), range_access::end(left));
             }
             friend constexpr bool operator!=(basic_sentinel<S> const &left,
                 basic_iterator const &right)
@@ -667,14 +657,14 @@ namespace ranges
             friend difference_type operator-(basic_sentinel<S> const &left,
                 basic_iterator const& right)
             {
-                return range_access::distance_to(right.pos(), left.end());
+                return range_access::distance_to(right.pos(), range_access::end(left));
             }
             CONCEPT_REQUIRES(detail::SizedCursorRange<Cur, S>())
             RANGES_CXX14_CONSTEXPR
             friend difference_type operator-(basic_iterator const &left,
                 basic_sentinel<S> const& right)
             {
-                return -range_access::distance_to(left.pos(), right.end());
+                return -range_access::distance_to(left.pos(), range_access::end(right));
             }
             // symmetric comparisons
             CONCEPT_REQUIRES(detail::SizedCursor<Cur>())
@@ -716,20 +706,20 @@ namespace ranges
             RANGES_CXX14_CONSTEXPR
             Cur &operator()(basic_iterator<Cur, Sent> &it) const noexcept
             {
-                return it.pos();
+                return range_access::pos(it);
             }
             template<typename Cur, typename Sent>
             RANGES_CXX14_CONSTEXPR
             Cur const &operator()(basic_iterator<Cur, Sent> const &it) const noexcept
             {
-                return it.pos();
+                return range_access::pos(it);
             }
             template<typename Cur, typename Sent>
             RANGES_CXX14_CONSTEXPR
             Cur operator()(basic_iterator<Cur, Sent> &&it) const
-                noexcept(std::is_nothrow_copy_constructible<Cur>::value)
+                noexcept(std::is_nothrow_move_constructible<Cur>::value)
             {
-                return std::move(it.pos());
+                return range_access::pos(std::move(it));
             }
         };
 
