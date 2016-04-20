@@ -169,6 +169,7 @@ add_executable(alg.push_heap push_heap.cpp)
 add_test(test.alg.push_heap alg.push_heap)
 
 add_executable(alg.random_shuffle random_shuffle.cpp)
+set_target_properties(alg.random_shuffle PROPERTIES COMPILE_DEFINITIONS RANGES_DISABLE_DEPRECATED_WARNINGS)
 add_test(test.alg.random_shuffle, alg.random_shuffle)
 
 add_executable(alg.remove remove.cpp)
