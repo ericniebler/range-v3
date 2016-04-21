@@ -38,6 +38,7 @@
 #include <range/v3/view/group_by.hpp>
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/intersperse.hpp>
+#include <range/v3/view/ints.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/join.hpp>
 #include <range/v3/view/map.hpp>

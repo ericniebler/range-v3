@@ -23,6 +23,7 @@
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/drop_while.hpp>
 #include <range/v3/view/empty.hpp>
+#include <range/v3/view/ints.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/set_algorithm.hpp>

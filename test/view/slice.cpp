@@ -14,6 +14,7 @@
 #include <string>
 #include <sstream>
 #include <range/v3/core.hpp>
+#include <range/v3/view/ints.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/istream_range.hpp>
 #include <range/v3/view/slice.hpp>

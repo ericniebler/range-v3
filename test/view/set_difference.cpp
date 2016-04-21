@@ -21,6 +21,7 @@
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/const.hpp>
 #include <range/v3/view/drop_while.hpp>
+#include <range/v3/view/ints.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/move.hpp>
 #include <range/v3/view/reverse.hpp>

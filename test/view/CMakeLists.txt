@@ -50,6 +50,9 @@ add_test(test.view.indirect, view.indirect)
 add_executable(view.intersperse intersperse.cpp)
 add_test(test.view.intersperse, view.intersperse)
 
+add_executable(view.ints ints.cpp)
+add_test(test.view.ints, view.ints)
+
 add_executable(view.iota iota.cpp)
 add_test(test.view.iota, view.iota)
 

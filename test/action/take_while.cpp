@@ -9,7 +9,7 @@
 
 #include <vector>
 #include <range/v3/core.hpp>
-#include <range/v3/view/iota.hpp>
+#include <range/v3/view/ints.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/action/take_while.hpp>
 #include "../simple_test.hpp"

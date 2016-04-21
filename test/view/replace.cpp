@@ -14,7 +14,7 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/istream_range.hpp>
-#include <range/v3/view/iota.hpp>
+#include <range/v3/view/ints.hpp>
 #include <range/v3/view/replace.hpp>
 #include <range/v3/view/bounded.hpp>
 #include <range/v3/view/take.hpp>

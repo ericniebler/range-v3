@@ -27,7 +27,7 @@
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/view/for_each.hpp>
-#include <range/v3/view/iota.hpp>
+#include <range/v3/view/ints.hpp>
 #include <range/v3/view/repeat_n.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/zip.hpp>
