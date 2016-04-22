@@ -17,6 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 
+#if __cpp_range_based_for < 201603
 /// A range-based for macro, basically a hack until the build-in range-for can handle Ranges
 /// which have a different type for begin and end.
 /// \ingroup range-core
@@ -30,5 +31,9 @@
                 if(!(_range_v3_done = true)) {}                                                 \
                 else for(VAR_DECL = *_range_v3_begin; _range_v3_done; _range_v3_done = false)   \
     /**/
+
+#else
+#define RANGES_FOR(VAR_DECL, ...) for(VAR_DECL : (__VA_ARGS__))
+#endif
 
 #endif
