@@ -81,8 +81,8 @@ namespace ranges
                     Permutable<I>())>
             I operator()(I begin, S end_) const
             {
-                std::random_device rng;
-                std::mt19937 urng(rng());
+                RANGES_STATIC_THREAD_LOCAL std::random_device rng;
+                RANGES_STATIC_THREAD_LOCAL std::mt19937 urng(rng());
                 return (*this)(begin, end_, urng);
             }
 
