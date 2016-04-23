@@ -68,5 +68,29 @@ int main()
         CHECK(!ranges::equal(ia, orig));
     }
 
+    {
+        int ia[100];
+        int ib[100];
+        int orig[100];
+        ranges::iota(ia, 0);
+        ranges::iota(ib, 0);
+        ranges::iota(orig, 0);
+        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
+        ranges::shuffle(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
+        CHECK(!ranges::equal(ia, orig));
+        ranges::shuffle(ib, ranges::end(ib));
+        CHECK(!ranges::equal(ib, orig));
+        CHECK(!ranges::equal(ia, ib));
+    }
+
+    {
+        int ia[100];
+        int orig[100];
+        ranges::iota(ia, 0);
+        ranges::iota(orig, 0);
+        ranges::shuffle(ia);
+        CHECK(!ranges::equal(ia, orig));
+    }
+
     return ::test_result();
 }
