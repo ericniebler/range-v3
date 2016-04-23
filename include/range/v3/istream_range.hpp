@@ -84,7 +84,7 @@ namespace ranges
             }
         };
 
-    #if RANGES_CXX_NO_VARIABLE_TEMPLATES
+    #if !RANGES_CXX_VARIABLE_TEMPLATES
         template<typename Val>
         istream_range<Val> istream(std::istream & sin)
         {

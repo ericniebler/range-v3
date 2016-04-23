@@ -1,3 +1,7 @@
+#include <range/v3/detail/config.hpp>
+
+#if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14
+
 #include <range/v3/begin_end.hpp>
 #include <range/v3/empty.hpp>
 #include <range/v3/back.hpp>
@@ -6,9 +10,6 @@
 #include <range/v3/size.hpp>
 #include "array.hpp"
 #include "test_iterators.hpp"
-
-#ifdef RANGES_CXX_GREATER_THAN_11
-
 
 // This is necessary since advance is a customization point, std::advance is imported for
 // non-range-v3 iterators, and it is not constexpr:
@@ -248,15 +249,13 @@ RANGES_CXX14_CONSTEXPR auto test_init_list() -> bool {
 
     return true;
 }
-#endif
 
 int main() {
-
-#ifdef RANGES_CXX_GREATER_THAN_11
     static_assert(test_array(), "");
     static_assert(test_c_array(), "");
     static_assert(test_init_list(), "");
-#endif
-
-    return 0;
 }
+
+#else
+int main() {}
+#endif

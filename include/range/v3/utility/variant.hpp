@@ -46,7 +46,7 @@ namespace ranges
         {};
 
         /// \cond
-    #if RANGES_CXX_NO_VARIABLE_TEMPLATES
+    #if !RANGES_CXX_VARIABLE_TEMPLATES
         template<std::size_t I>
         inline emplaced_index_t<I> emplaced_index()
         {
