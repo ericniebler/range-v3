@@ -12,6 +12,10 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
+#include <range/v3/detail/config.hpp>
+
+#if RANGES_CXX_STD >= RANGES_CXX_STD_14
+
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -21,8 +25,6 @@
 #include <chrono>
 #include <algorithm>
 #include <range/v3/all.hpp>
-
-#ifdef RANGES_CXX_GREATER_THAN_11
 
 /// Creates an geometric infinite sequence starting at 1 where the
 /// successor is multiplied by \p V
@@ -238,20 +240,16 @@ int main() {
   print(even_odd_integer_sequence(), 20);
   print(organ_pipe_integer_sequence(), 20);
 
-
   benchmark_sort(random_uniform_integer_sequence(), max_size);
   benchmark_sort(ascending_integer_sequence(), max_size);
   benchmark_sort(descending_integer_sequence(), max_size);
   benchmark_sort(organ_pipe_integer_sequence(), max_size);
-
-  return 0;
 }
-
 
 #else
 
 #pragma message("sort_patterns requires C++ 14 or greater")
 
-int main() { return 0; }
+int main() {}
 
 #endif

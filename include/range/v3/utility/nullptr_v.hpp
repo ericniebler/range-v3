@@ -27,7 +27,7 @@ namespace ranges
             return nullptr;
         }
 
-    #if !RANGES_CXX_NO_VARIABLE_TEMPLATES
+    #if RANGES_CXX_VARIABLE_TEMPLATES
         /// \ingroup group-utility
         template<typename T>
         constexpr T *nullptr_v = nullptr;

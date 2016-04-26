@@ -17,18 +17,18 @@
 #include <iosfwd>
 
 #ifndef RANGES_ASSERT
-# include <cassert>
-# define RANGES_ASSERT assert
+#  include <cassert>
+#  define RANGES_ASSERT assert
 #endif
 
 #ifndef RANGES_ENSURE_MSG
-# include <exception>
-# define RANGES_ENSURE_MSG(COND, MSG) \
+#  include <exception>
+#  define RANGES_ENSURE_MSG(COND, MSG) \
     ((COND) ? void() : (RANGES_ASSERT(!(true && MSG)), std::terminate()))
 #endif
 
 #ifndef RANGES_ENSURE
-# define RANGES_ENSURE(COND) \
+#  define RANGES_ENSURE(COND) \
     RANGES_ENSURE_MSG(COND, #COND)
 #endif
 
@@ -52,12 +52,6 @@
 #define RANGES_END_NAMESPACE_STD }
 #endif
 
-#ifdef __clang__
-#define RANGES_CXX_NO_VARIABLE_TEMPLATES !__has_feature(cxx_variable_templates)
-#else
-#define RANGES_CXX_NO_VARIABLE_TEMPLATES 1
-#endif
-
 #ifndef RANGES_THREAD_LOCAL
 #if (defined(__clang__) && defined(__CYGWIN__)) || \
     (defined(__clang__) && defined(_LIBCPP_VERSION)) // BUGBUG avoid unresolved __cxa_thread_atexit
@@ -67,43 +61,101 @@
 #endif
 #endif
 
-#if __cplusplus > 201103
-#define RANGES_CXX_GREATER_THAN_11
+#define RANGES_CXX_FEATURE_CONCAT2(y, z) RANGES_CXX_ ## y ## _ ## z
+#define RANGES_CXX_FEATURE_CONCAT(y, z) RANGES_CXX_FEATURE_CONCAT2(y, z)
+#define RANGES_CXX_FEATURE(x) RANGES_CXX_FEATURE_CONCAT(x, RANGES_CXX_STD_NAME)
+
+#define RANGES_CXX_STD_11 201103
+#define RANGES_CXX_STD_14 201402
+#if __cplusplus >= RANGES_CXX_STD_14
+#  define RANGES_CXX_STD_NAME 14
+#  define RANGES_CXX_STD RANGES_CXX_STD_14
+#else
+#  define RANGES_CXX_STD_NAME 11
+#  define RANGES_CXX_STD RANGES_CXX_STD_11
 #endif
 
-#if __cplusplus > 201402
-#define RANGES_CXX_GREATER_THAN_14
+#define RANGES_CXX_VARIABLE_TEMPLATES_11 0
+#define RANGES_CXX_VARIABLE_TEMPLATES_14 201304
+#ifndef RANGES_CXX_VARIABLE_TEMPLATES
+#  ifdef __cpp_variable_templates
+#    define RANGES_CXX_VARIABLE_TEMPLATES __cpp_variable_templates
+#  else
+#    define RANGES_CXX_VARIABLE_TEMPLATES RANGES_CXX_FEATURE(VARIABLE_TEMPLATES)
+#  endif
+#endif
+
+#define RANGES_CXX_ATTRIBUTE_DEPRECATED_11 0
+#define RANGES_CXX_ATTRIBUTE_DEPRECATED_14 201309
+#ifndef RANGES_CXX_ATTRIBUTE_DEPRECATED
+#  ifdef __has_cpp_attribute
+#    define RANGES_CXX_ATTRIBUTE_DEPRECATED __has_cpp_attribute(deprecated)
+#  elif defined(__cpp_attribute_deprecated)
+#    define RANGES_CXX_ATTRIBUTE_DEPRECATED __cpp_attribute_deprecated
+#  else
+#    define RANGES_CXX_ATTRIBUTE_DEPRECATED RANGES_CXX_FEATURE(ATTRIBUTE_DEPRECATED)
+#  endif
 #endif
 
 #ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
-#ifdef RANGES_CXX_GREATER_THAN_11
-#define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
+#  if RANGES_CXX_ATTRIBUTE_DEPRECATED
+#    define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
+#  elif defined(__clang__) || defined(__GNUC__)
+#    define RANGES_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
+#  elif defined(_MSC_VER)
+#    define RANGES_DEPRECATED(MSG) __declspec(deprecated(MSG))
+#  else
+#    define RANGES_DEPRECATED(MSG)
+#  endif
 #else
-#if defined(__clang__) || defined(__GNUC__)
-#define RANGES_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
-#elif defined(_MSC_VER)
-#define RANGES_DEPRECATED(MSG) __declspec(deprecated(MSG))
-#else
-#define RANGES_DEPRECATED(MSG)
+#  define RANGES_DEPRECATED(MSG)
 #endif
-#endif
+
+#define RANGES_CXX_CONSTEXPR_11 200704
+#define RANGES_CXX_CONSTEXPR_14 201304
+#ifndef RANGES_CXX_CONSTEXPR
+#ifdef __cpp_constexpr
+#define RANGES_CXX_CONSTEXPR __cpp_constexpr
 #else
-#define RANGES_DEPRECATED(MSG)
+#define RANGES_CXX_CONSTEXPR RANGES_CXX_FEATURE(CONSTEXPR)
+#endif
 #endif
 
 // RANGES_CXX14_CONSTEXPR macro (see also BOOST_CXX14_CONSTEXPR)
 // Note: constexpr implies inline, to retain the same visibility
 // C++14 constexpr functions are inline in C++11
-#ifdef RANGES_CXX_GREATER_THAN_11
+#if RANGES_CXX_CONSTEXPR >= RANGES_CXX_CONSTEXPR_14
 #define RANGES_CXX14_CONSTEXPR constexpr
 #else
 #define RANGES_CXX14_CONSTEXPR inline
 #endif
 
-#ifndef NDEBUG
-#define RANGES_NDEBUG_CONSTEXPR inline
-#else
+#ifdef NDEBUG
 #define RANGES_NDEBUG_CONSTEXPR constexpr
+#else
+#define RANGES_NDEBUG_CONSTEXPR inline
+#endif
+
+#define RANGES_CXX_RANGE_BASED_FOR_11 200907
+#define RANGES_CXX_RANGE_BASED_FOR_14 RANGES_CXX_RANGE_BASED_FOR_11
+#define RANGES_CXX_RANGE_BASED_FOR_P0184 201603
+#ifndef RANGES_CXX_RANGE_BASED_FOR
+#ifdef __cpp_range_based_for
+#define RANGES_CXX_RANGE_BASED_FOR __cpp_range_based_for
+#else
+#define RANGES_CXX_RANGE_BASED_FOR RANGES_CXX_FEATURE(RANGE_BASED_FOR)
+#endif
+#endif
+
+#define RANGES_CXX_LIB_IS_FINAL_11 0
+#define RANGES_CXX_LIB_IS_FINAL_14 201402
+#ifndef RANGES_CXX_LIB_IS_FINAL
+#include <type_traits>
+#ifdef __cpp_lib_is_final
+#define RANGES_CXX_LIB_IS_FINAL __cpp_lib_is_final
+#else
+#define RANGES_CXX_LIB_IS_FINAL RANGES_CXX_FEATURE(LIB_IS_FINAL)
+#endif
 #endif
 
 // Workaround for https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70552

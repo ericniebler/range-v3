@@ -381,7 +381,7 @@ namespace ranges
         template<typename T>
         struct istream_range;
 
-    #if RANGES_CXX_NO_VARIABLE_TEMPLATES
+    #if !RANGES_CXX_VARIABLE_TEMPLATES
         template<typename T>
         istream_range<T> istream(std::istream & sin);
     #endif
