@@ -14,7 +14,7 @@
 
 #include <range/v3/detail/config.hpp>
 
-#if RANGES_CXX_STD >= 14
+#if RANGES_CXX_STD >= RANGES_CXX_STD_14
 
 #include <iostream>
 #include <iomanip>
