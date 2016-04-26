@@ -6,7 +6,7 @@ Range library for C++11/14/17. This code is the basis of [a formal proposal](htt
 About:
 ------
 
-Why does C++ need another range library? Simply put, the existing solutions haven't kept up with the rapid evolution of C++. Range v3 is a library for the future C++. Not only does it work well with today's C++ -- move semantics, lambdas, automatically deduced types and all -- it also anticipates tomorrow's C++ with Concepts Lite.
+Why does C++ need another range library? Simply put, the existing solutions haven't kept up with the rapid evolution of C++. Range v3 is a library for the future C++. Not only does it work well with today's C++ -- move semantics, lambdas, automatically deduced types and all -- it also anticipates tomorrow's C++ with Concepts.
 
 Range v3 forms the basis of a proposal to add range support to the standard library ([N4128: Ranges for the Standard Library](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4128.html)). It also will be the reference implementation for an upcoming Technical Specification. These are the first steps toward turning ranges into an international standard.
 
@@ -26,12 +26,11 @@ Supported Compilers
 The code is known to work on the following compilers:
 
 - clang 3.5.2
-- GCC 4.8.5 (C++14 support requires GCC 5.2. Complex `constexpr` usage may be unreliable due to bugs in GCC, e.g. [PR67813](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67813), as witnessed by the failure of the constexpr-core test.)
+- GCC 4.8.5 (C++14 support requires GCC 5.2; C++14 "extended constexpr" support is poor before 6.1.)
 
 **Development Status:** This code is fairly stable, well-tested, and suitable for casual use, although currently lacking documentation. No promise is made about support or long-term stability. This code *will* evolve without regard to backwards compatibility.
 
 **Build status (on Travis-CI):** [![Build Status](https://travis-ci.org/ericniebler/range-v3.svg?branch=master)](https://travis-ci.org/ericniebler/range-v3)
-**Deployment status (on biicode):** [![Build Status](https://webapi.biicode.com/v1/badges/manu343726/manu343726/range/master)](https://www.biicode.com/manu343726/range)
 
 Say Thanks!
 -----------

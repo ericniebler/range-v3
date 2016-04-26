@@ -6,14 +6,7 @@ project(Range-v3 CXX)
 find_package(Doxygen)
 find_package(Git)
 
-# Select C++ standard to be used for compiling the tests,
-# for example: 11, 14, 17, 1z, 1y, ...
-#
-if(RANGES_CXX_STD)
-else()
-  # Defaults to C++11 if not set:
-  set(RANGES_CXX_STD 11)
-endif()
+include_directories(include)
 
 enable_testing()
 include(CTest)
@@ -25,7 +18,13 @@ else()
   set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
 endif()
 
-include_directories(include)
+# Select C++ standard to be used for compiling the tests,
+# for example: 11, 14, 17, 1z, 1y, ...
+#
+if(NOT RANGES_CXX_STD)
+  # Defaults to C++11 if not set:
+  set(RANGES_CXX_STD 11)
+endif()
 
 # Clang/C2 will blow up with various parts of the standard library
 # if compiling with -std less than c++14.
@@ -62,24 +61,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3 -fstack-protector-all")
   set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -DNDEBUG")
 # else()
-#   message(FATAL_ERROR "Unknown compiler.")
-endif()
-
-
-add_subdirectory(doc)
-
-if(BIICODE)
-    ADD_BIICODE_TARGETS()
-
-    string(REPLACE " " ";" TARGET_CXX_FLAGS         ${CMAKE_CXX_FLAGS})
-    string(REPLACE " " ";" TARGET_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG})
-    string(REPLACE " " ";" TARGET_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
-
-    target_compile_options(${BII_BLOCK_TARGET} INTERFACE ${TARGET_CXX_FLAGS}
-                           $<$<CONFIG:Debug>:${TARGET_CXX_FLAGS_DEBUG}>
-                           $<$<CONFIG:Release>:${TARGET_CXX_FLAGS_RELEASE}>)
-
-    return()
+#   message(FATAL_ERROR "Unknown compiler. Good luck!")
 endif()
 
 #   range_v3_list_remove_glob(<list> <GLOB|GLOB_RECURSE> [globbing expressions]...)
@@ -111,10 +93,10 @@ if(NOT RANGE_V3_NO_HEADER_CHECK)
   endforeach()
 endif()
 
+add_subdirectory(doc)
 add_subdirectory(test)
 add_subdirectory(example)
 add_subdirectory(perf)
-add_subdirectory(scratch)
 
 install(DIRECTORY include/ DESTINATION include
         FILES_MATCHING PATTERN "*.hpp")
