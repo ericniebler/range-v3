@@ -98,7 +98,7 @@ namespace ranges
                     typename V1 = detail::decay_t<unwrap_reference_t<Val1>>,
                     typename V2 = detail::decay_t<unwrap_reference_t<Val2>>,
                     CONCEPT_REQUIRES_(!Same<V1, V2>())>
-                static detail::null_pipe bind(replace_fn replace, Val1, Val2)
+                static detail::null_pipe bind(replace_fn, Val1, Val2)
                 {
                     CONCEPT_ASSERT_MSG(Same<V1, V2>(),
                         "The two values passed to view::replace must have the same type.");
@@ -130,7 +130,7 @@ namespace ranges
                 // For error reporting
                 template<typename Rng, typename Val1, typename Val2,
                     CONCEPT_REQUIRES_(!Concept<Rng, Val1, Val2>())>
-                void operator()(Rng && rng, Val1 && old_value, Val2 && new_value) const
+                void operator()(Rng &&, Val1 &&, Val2 &&) const
                 {
                     using V1 = detail::decay_t<unwrap_reference_t<Val1>>;
                     using V2 = detail::decay_t<unwrap_reference_t<Val2>>;

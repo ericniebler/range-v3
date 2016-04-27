@@ -254,7 +254,7 @@ namespace ranges
                     make_pipeable(std::bind(slice, std::placeholders::_1, from, to))
                 )
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
-                static auto bind(slice_fn slice, Int from, end_fn)
+                static auto bind(slice_fn, Int from, end_fn)
                 RANGES_DECLTYPE_AUTO_RETURN
                 (
                     make_pipeable(std::bind(ranges::view::drop, std::placeholders::_1, from))

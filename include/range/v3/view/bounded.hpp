@@ -103,7 +103,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng,
                     CONCEPT_REQUIRES_(!Range<Rng>())>
-                void operator()(Rng && rng) const
+                void operator()(Rng &&) const
                 {
                     CONCEPT_ASSERT_MSG(Range<Rng>(),
                         "Rng is not a model of the Range concept");

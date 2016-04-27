@@ -493,7 +493,7 @@ namespace ranges
                 {
                     *t_ = std::addressof(t.get());
                 }
-                void operator()(indexed_element<void, N> t) const
+                void operator()(indexed_element<void, N>) const
                 {}
             };
 

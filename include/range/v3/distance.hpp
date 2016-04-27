@@ -112,7 +112,7 @@ namespace ranges
             }
             template<typename Rng,
                 CONCEPT_REQUIRES_(is_infinite<Rng>())>
-            int impl_r(Rng &rng, range_difference_t<Rng> n, concepts::Range*) const
+            int impl_r(Rng &, range_difference_t<Rng>, concepts::Range*) const
             {
                 // Infinite ranges are always compared to be larger than a finite number.
                 return 1;

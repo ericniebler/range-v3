@@ -55,7 +55,7 @@ namespace ranges
                     )>
                 I operator()(I begin0, iterator_difference_t<I> n0,
                              I begin1, iterator_difference_t<I> n1,
-                             B buff, C r = C{}, P p = P{}) const
+                             B buff, C r = C{}, P = P{}) const
                 {
                     copy_n(begin0, n0, buff);
                     return std::get<2>(merge_n(buff, n0, begin1, n1, begin0, r));

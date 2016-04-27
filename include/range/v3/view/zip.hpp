@@ -125,7 +125,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename...Rngs,
                     CONCEPT_REQUIRES_(!Concept<Rngs...>())>
-                void operator()(Rngs &&... rngs) const
+                void operator()(Rngs &&...) const
                 {
                     CONCEPT_ASSERT_MSG(meta::and_<InputRange<Rngs>...>(),
                         "All of the objects passed to view::zip must model the InputRange "

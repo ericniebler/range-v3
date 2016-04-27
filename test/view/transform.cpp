@@ -81,7 +81,7 @@ int main()
 
     // Test transform with a mutable lambda
     int cnt = 100;
-    auto mutable_rng = view::transform(rgi, [cnt](int i) mutable { return cnt++;});
+    auto mutable_rng = view::transform(rgi, [cnt](int) mutable { return cnt++;});
     ::check_equal(mutable_rng, {100,101,102,103,104,105,106,107,108,109});
     CHECK(cnt == 100);
     CONCEPT_ASSERT(View<decltype(mutable_rng)>());
@@ -102,7 +102,7 @@ int main()
         // is an interesting test.
         auto proj = overload(
             [](I i) -> MoveOnlyString& {return (*i).first;},
-            [](copy_tag, I i) -> MoveOnlyString {return {};},
+            [](copy_tag, I) -> MoveOnlyString {return {};},
             [](move_tag, I i) -> MoveOnlyString&& {return std::move((*i).first);}
         );
         auto rng2 = rng | view::iter_transform(proj);
@@ -139,7 +139,7 @@ int main()
 
         auto fun = overload(
             [](I i, I j)           { return std::tie(*i, *j); },
-            [](copy_tag, I i, I j) { return std::tuple<std::string, std::string>{}; },
+            [](copy_tag, I, I) { return std::tuple<std::string, std::string>{}; },
             [](move_tag, I i, I j) { return std::tuple<std::string&&, std::string&&>{
                 std::move(*i), std::move(*j)}; } );
 

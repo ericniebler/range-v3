@@ -104,7 +104,7 @@ namespace ranges
             };
             struct sentinel_adaptor : adaptor_base
             {
-                bool empty(range_iterator_t<Rng> it, cursor_adaptor const &other,
+                bool empty(range_iterator_t<Rng> it, cursor_adaptor const &,
                     range_sentinel_t<Rng> sent) const
                 {
                     return it == sent;
