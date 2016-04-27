@@ -149,7 +149,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Int,
                     CONCEPT_REQUIRES_(!Integral<Int>())>
-                static detail::null_pipe bind(drop_fn drop, Int)
+                static detail::null_pipe bind(drop_fn, Int)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Int>(),
                         "The object passed to view::drop must be Integral");

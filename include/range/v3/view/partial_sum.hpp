@@ -65,7 +65,7 @@ namespace ranges
                 adaptor(partial_sum_view_t &rng, range_value_t<Rng> sum)
                   : sum_(std::move(sum)), rng_(&rng)
                 {}
-                range_value_t<Rng> get(range_iterator_t<Rng> it) const
+                range_value_t<Rng> get(range_iterator_t<Rng>) const
                 {
                     return *sum_;
                 }
@@ -151,7 +151,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
-                void operator()(Rng && rng, Fun fun) const
+                void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The first argument passed to view::partial_sum must be a model of the "

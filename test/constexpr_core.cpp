@@ -39,7 +39,7 @@ void advance(input_iterator<T> & i, ranges::iterator_difference_t<I> n) {
 
 // Test sequence 1,2,3,4
 template<typename It>
-RANGES_CXX14_CONSTEXPR auto test_it_back(It beg, It end,
+RANGES_CXX14_CONSTEXPR auto test_it_back(It, It end,
     ranges::concepts::BidirectionalIterator*) -> bool
 {
     auto end_m1_2 = It{ranges::prev(end, 1)};

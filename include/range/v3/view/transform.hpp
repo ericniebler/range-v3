@@ -350,7 +350,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
-                void operator()(Rng && rng, Fun fun) const
+                void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::iter_transform operates must be a model of the "
@@ -371,7 +371,7 @@ namespace ranges
 
                 template<typename Rng1, typename Rng2, typename Fun,
                     CONCEPT_REQUIRES_(!Concept2<Rng1, Rng2, Fun>())>
-                void operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
+                void operator()(Rng1 &&, Rng2 &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
                         "The first object on which view::iter_transform operates must be a model of the "
@@ -444,7 +444,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
                 template<typename Rng, typename Fun,
                     CONCEPT_REQUIRES_(!Concept<Rng, Fun>())>
-                void operator()(Rng && rng, Fun fun) const
+                void operator()(Rng &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::transform operates must be a model of the "
@@ -457,7 +457,7 @@ namespace ranges
 
                 template<typename Rng1, typename Rng2, typename Fun,
                     CONCEPT_REQUIRES_(!Concept2<Rng1, Rng2, Fun>())>
-                void operator()(Rng1 && rng1, Rng2 && rng2, Fun fun) const
+                void operator()(Rng1 &&, Rng2 &&, Fun) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
                         "The first object on which view::transform operates must be a model of the "

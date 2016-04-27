@@ -181,6 +181,7 @@ namespace ranges
                 }
                 void fill_default_(T *p, std::false_type)
                 {
+                    (void)p;
                     RANGES_ASSERT(p == ranges::end(data_));
                 }
             public:
@@ -493,7 +494,7 @@ namespace ranges
                 {
                     *t_ = std::addressof(t.get());
                 }
-                void operator()(indexed_element<void, N> t) const
+                void operator()(indexed_element<void, N>) const
                 {}
             };
 

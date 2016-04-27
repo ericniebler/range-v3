@@ -233,8 +233,8 @@ namespace ranges
                     typename I1 = range_iterator_t<Rng1>,
                     typename I2 = range_iterator_t<Rng2>,
                     CONCEPT_REQUIRES_(!Concept<Rng1, Rng2, C, P1, P2>())>
-                void operator()(Rng1 && rng1, Rng2 && rng2,
-                    C pred, P1 proj1, P2 proj2) const
+                void operator()(Rng1 &&, Rng2 &&,
+                    C, P1, P2) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
                         "The first parameter of view::set_difference "
@@ -408,8 +408,8 @@ namespace ranges
                     typename I1 = range_iterator_t<Rng1>,
                     typename I2 = range_iterator_t<Rng2>,
                     CONCEPT_REQUIRES_(!Concept<Rng1, Rng2, C, P1, P2>())>
-                void operator()(Rng1 && rng1, Rng2 && rng2,
-                    C pred, P1 proj1, P2 proj2) const
+                void operator()(Rng1 &&, Rng2 &&,
+                    C, P1, P2) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
                         "The first parameter of view::set_intersection "
@@ -626,8 +626,8 @@ namespace ranges
                     typename I1 = range_iterator_t<Rng1>,
                     typename I2 = range_iterator_t<Rng2>,
                     CONCEPT_REQUIRES_(!Concept<Rng1, Rng2, C, P1, P2>())>
-                void operator()(Rng1 && rng1, Rng2 && rng2,
-                    C pred, P1 proj1, P2 proj2) const
+                void operator()(Rng1 &&, Rng2 &&,
+                    C, P1, P2) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
                         "The first parameter of view::set_union "
@@ -856,8 +856,8 @@ namespace ranges
                     typename I1 = range_iterator_t<Rng1>,
                     typename I2 = range_iterator_t<Rng2>,
                     CONCEPT_REQUIRES_(!Concept<Rng1, Rng2, C, P1, P2>())>
-                void operator()(Rng1 && rng1, Rng2 && rng2,
-                    C pred, P1 proj1, P2 proj2) const
+                void operator()(Rng1 &&, Rng2 &&,
+                    C, P1, P2) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng1>(),
                         "The first parameter of view::set_symmetric_difference "

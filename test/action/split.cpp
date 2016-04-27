@@ -27,7 +27,7 @@ int main()
     ::check_equal(rgv[1], {11,12,13,14,15,16,17,18,19,20});
 
     using I = std::vector<int>::iterator;
-    std::vector<std::vector<int>> rgv2 = action::split(v, [](I b, I e){return std::make_pair(0 == (*b)%2,1);});
+    std::vector<std::vector<int>> rgv2 = action::split(v, [](I b, I){return std::make_pair(0 == (*b)%2,1);});
     CHECK(rgv2.size() == 10u);
     ::check_equal(rgv2[0], {1});
     ::check_equal(rgv2[1], {3});

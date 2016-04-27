@@ -131,7 +131,7 @@ namespace ranges
                 // For error reporting
                 template<typename Rng, typename Pred, typename Val,
                     CONCEPT_REQUIRES_(!Concept<Rng, Pred, Val>())>
-                void operator()(Rng && rng, Pred pred, Val new_value) const
+                void operator()(Rng &&, Pred, Val) const
                 {
                     CONCEPT_ASSERT_MSG(InputRange<Rng>(),
                         "The object on which view::replace_if operates must be a model of the "
