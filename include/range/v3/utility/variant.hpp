@@ -181,6 +181,7 @@ namespace ranges
                 }
                 void fill_default_(T *p, std::false_type)
                 {
+                    (void)p;
                     RANGES_ASSERT(p == ranges::end(data_));
                 }
             public:

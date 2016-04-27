@@ -64,11 +64,13 @@ public:
     RANGES_CXX14_CONSTEXPR It base() const { return it_; }
     RANGES_CXX14_CONSTEXPR friend bool operator==(const sentinel& x, const sentinel& y)
     {
+        (void)x; (void)y;
         assert(x.it_ == y.it_);
         return true;
     }
     RANGES_CXX14_CONSTEXPR friend bool operator!=(const sentinel& x, const sentinel& y)
     {
+        (void)x; (void)y;
         assert(x.it_ == y.it_);
         return false;
     }

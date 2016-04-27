@@ -152,6 +152,7 @@ namespace ranges
                     operator()(range_iterator_t<Rng> cur, range_sentinel_t<Rng> end) const
                     {
                         using P = std::pair<bool, range_difference_t<Rng>>;
+                        (void)end;
                         RANGES_ASSERT(cur != end);
                         return *cur == val_ ? P{true, 1} : P{false, 0};
                     }
