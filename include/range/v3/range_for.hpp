@@ -17,7 +17,7 @@
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 
-#if RANGES_CXX_RANGE_BASED_FOR < RANGES_CXX_RANGE_BASED_FOR_P0184
+#if RANGES_CXX_RANGE_BASED_FOR < RANGES_CXX_RANGE_BASED_FOR_17
 /// A range-based for macro, basically a hack until the build-in range-for can handle Ranges
 /// which have a different type for begin and end.
 /// \ingroup range-core

@@ -878,7 +878,11 @@ namespace ranges
         >::type = 0>                                                                \
     /**/
 
-#define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed")
+#if RANGES_CXX_STATIC_ASSERT >= RANGES_CXX_STATIC_ASSERT_17
+#define CONCEPT_ASSERT static_assert
+#else
+#define CONCEPT_ASSERT(...) static_assert((__VA_ARGS__), "Concept check failed: " #__VA_ARGS__)
+#endif
 /// @}
 
 #define CONCEPT_ASSERT_MSG static_assert
