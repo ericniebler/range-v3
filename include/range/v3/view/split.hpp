@@ -23,6 +23,7 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_facade.hpp>
+#include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -32,6 +33,7 @@
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/indirect.hpp>
 #include <range/v3/view/take_while.hpp>
+#include <range/v3/algorithm/find_if_not.hpp>
 
 namespace ranges
 {
@@ -87,11 +89,11 @@ namespace ranges
                     zero_ = false;
                     for(; cur_ != last_; ++cur_)
                     {
-                        std::pair<bool, range_difference_t<Rng>> p = fun_(cur_, last_);
+                        auto p = fun_(cur_, last_);
                         if(p.first)
                         {
-                            advance(cur_, p.second);
-                            zero_ = (0 == p.second);
+                            zero_ = (cur_ == p.second);
+                            cur_ = p.second;
                             return;
                         }
                     }
@@ -108,8 +110,8 @@ namespace ranges
                   : cur_(first), last_(last), fun_(fun)
                 {
                     // For skipping an initial zero-length match
-                    auto p = fun(first, last);
-                    zero_ = p.first && 0 == p.second;
+                    auto p = fun(first, ranges::next(first));
+                    zero_ = p.first && first == p.second;
                 }
             public:
                 cursor() = default;
@@ -144,17 +146,28 @@ namespace ranges
                 (
                     make_pipeable(std::bind(split, std::placeholders::_1, bind_forward<T>(t)))
                 )
+                template<typename Rng, typename Pred>
+                struct predicate_pred
+                {
+                    semiregular_t<function_type<Pred>> pred_;
+                    std::pair<bool, range_iterator_t<Rng>>
+                    operator()(range_iterator_t<Rng> cur, range_sentinel_t<Rng> end) const
+                    {
+                        auto where = ranges::find_if_not(cur, end, std::ref(pred_));
+                        return std::make_pair(cur != where, where);
+                    }
+                };
                 template<typename Rng>
                 struct element_pred
                 {
                     range_value_t<Rng> val_;
-                    std::pair<bool, range_difference_t<Rng>>
+                    std::pair<bool, range_iterator_t<Rng>>
                     operator()(range_iterator_t<Rng> cur, range_sentinel_t<Rng> end) const
                     {
-                        using P = std::pair<bool, range_difference_t<Rng>>;
-                        (void)end;
+                        using P = std::pair<bool, range_iterator_t<Rng>>;
                         RANGES_ASSERT(cur != end);
-                        return *cur == val_ ? P{true, 1} : P{false, 0};
+                        (void)end;
+                        return *cur == val_ ? P{true, ranges::next(cur)} : P{false, cur};
                     }
                 };
                 template<typename Rng, typename Sub>
@@ -166,21 +179,21 @@ namespace ranges
                     subrange_pred(Sub && sub)
                       : sub_(all(std::forward<Sub>(sub))), len_(distance(sub_))
                     {}
-                    std::pair<bool, range_difference_t<Rng>>
+                    std::pair<bool, range_iterator_t<Rng>>
                     operator()(range_iterator_t<Rng> cur, range_sentinel_t<Rng> end) const
                     {
                         RANGES_ASSERT(cur != end);
-                        if(SizedIteratorRange<range_iterator_t<Rng>, range_sentinel_t<Rng>>() && 
+                        if(SizedIteratorRange<range_iterator_t<Rng>, range_sentinel_t<Rng>>() &&
                             distance(cur, end) < len_)
-                            return {false, 0};
+                            return {false, cur};
                         auto pat_cur = ranges::begin(sub_);
                         auto pat_end = ranges::end(sub_);
                         for(;; ++cur, ++pat_cur)
                         {
                             if(pat_cur == pat_end)
-                                return {true, len_};
+                                return {true, cur};
                             if(cur == end || !(*cur == *pat_cur))
-                                return {false, 0};
+                                return {false, cur};
                         }
                     }
                 };
@@ -191,7 +204,12 @@ namespace ranges
                     Function<Fun, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
                     ConvertibleTo<
                         concepts::Function::result_t<Fun, range_iterator_t<Rng>, range_sentinel_t<Rng>>,
-                        std::pair<bool, range_difference_t<Rng>>>>;
+                        std::pair<bool, range_iterator_t<Rng>>>>;
+
+                template<typename Rng, typename Fun>
+                using PredicateConcept = meta::and_<
+                    ForwardRange<Rng>,
+                    Predicate<Fun, range_reference_t<Rng>>>;
 
                 template<typename Rng>
                 using ElementConcept = meta::and_<
@@ -209,6 +227,12 @@ namespace ranges
                 split_view<all_t<Rng>, Fun> operator()(Rng && rng, Fun fun) const
                 {
                     return {all(std::forward<Rng>(rng)), std::move(fun)};
+                }
+                template<typename Rng, typename Fun,
+                    CONCEPT_REQUIRES_(PredicateConcept<Rng, Fun>())>
+                split_view<all_t<Rng>, predicate_pred<Rng, Fun>> operator()(Rng && rng, Fun fun) const
+                {
+                    return {all(std::forward<Rng>(rng)), predicate_pred<Rng, Fun>{as_function(std::move(fun))}};
                 }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(ElementConcept<Rng>())>
@@ -236,10 +260,12 @@ namespace ranges
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "
                         "(2) A ForwardRange whose value type is EqualityComparable to the input "
-                        "range's value type, or "
-                        "(3) A Function that is callable with two arguments: the range's iterator "
-                        "and sentinel, and that returns a std::pair<bool, D>, where D is the "
-                        "input range's difference_type.");
+                        "range's value type, "
+                        "(3) A Predicate that is callable with one argument of the range's reference "
+                        "type, or "
+                        "(4) A Function that is callable with two arguments: the range's iterator "
+                        "and sentinel, and that returns a std::pair<bool, I>, where I is the "
+                        "input range's iterator type.");
                 }
             #endif
             };

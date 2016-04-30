@@ -8,6 +8,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <vector>
+#include <cctype>
 #include <range/v3/core.hpp>
 #include <range/v3/view/iota.hpp>
 #include <range/v3/view/c_str.hpp>
@@ -27,7 +28,7 @@ int main()
     ::check_equal(rgv[1], {11,12,13,14,15,16,17,18,19,20});
 
     using I = std::vector<int>::iterator;
-    std::vector<std::vector<int>> rgv2 = action::split(v, [](I b, I){return std::make_pair(0 == (*b)%2,1);});
+    std::vector<std::vector<int>> rgv2 = action::split(v, [](I b, I){return std::make_pair(0 == (*b)%2,next(b));});
     CHECK(rgv2.size() == 10u);
     ::check_equal(rgv2[0], {1});
     ::check_equal(rgv2[1], {3});
@@ -53,6 +54,20 @@ int main()
     CHECK(rgv3.size() == 2u);
     ::check_equal(rgv3[0], {1,2,3,4,5,6,7,8,9});
     ::check_equal(rgv3[1], {11,12,13,14,15,16,17,18,19,20});
+
+    {
+        std::string str("now  is \t the\ttime");
+        auto toks = action::split(str, (int(*)(int))&std::isspace);
+        static_assert(std::is_same<decltype(toks), std::vector<std::string>>::value, "");
+        CHECK(toks.size() == 4u);
+        if(toks.size() == 4u)
+        {
+            CHECK(toks[0] == "now");
+            CHECK(toks[1] == "is");
+            CHECK(toks[2] == "the");
+            CHECK(toks[3] == "time");
+        }
+    }
 
     return ::test_result();
 }

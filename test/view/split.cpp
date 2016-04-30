@@ -10,6 +10,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 
 #include <string>
+#include <cctype>
 #include <range/v3/core.hpp>
 #include <range/v3/view/counted.hpp>
 #include <range/v3/view/split.hpp>
@@ -22,11 +23,9 @@
 struct starts_with_g
 {
     template<typename I, typename S>
-    std::pair<bool, std::ptrdiff_t> operator()(I b, S) const
+    std::pair<bool, I> operator()(I b, S) const
     {
-        if(*b == 'g')
-            return {true, 0};
-        return {false, 0};
+        return {*b == 'g', b};
     }
 };
 
@@ -136,6 +135,19 @@ int main()
       check_equal(*begin(srng), {3});
       check_equal(*next(begin(srng), 1), {5});
       check_equal(*next(begin(srng), 2), {7});
+    }
+
+    {
+        std::string str("now  is \t the\ttime");
+        auto rng = view::split(str, (int(*)(int))&std::isspace);
+        CHECK(distance(rng) == 4);
+        if(distance(rng) == 4)
+        {
+            check_equal(*(next(begin(rng),0)), c_str("now"));
+            check_equal(*(next(begin(rng),1)), c_str("is"));
+            check_equal(*(next(begin(rng),2)), c_str("the"));
+            check_equal(*(next(begin(rng),3)), c_str("time"));
+        }
     }
 
     return test_result();

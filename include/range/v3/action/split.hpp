@@ -55,6 +55,13 @@ namespace ranges
                     return view::split(rng, std::move(fun))
                          | view::transform(to_<split_value_t<Rng>>()) | to_vector;
                 }
+                template<typename Rng, typename Fun,
+                    CONCEPT_REQUIRES_(view::split_fn::PredicateConcept<Rng, Fun>())>
+                std::vector<split_value_t<Rng>> operator()(Rng && rng, Fun fun) const
+                {
+                    return view::split(rng, std::move(fun))
+                         | view::transform(to_<split_value_t<Rng>>()) | to_vector;
+                }
                 template<typename Rng,
                     CONCEPT_REQUIRES_(view::split_fn::ElementConcept<Rng>())>
                 std::vector<split_value_t<Rng>> operator()(Rng && rng, range_value_t<Rng> val) const
@@ -83,9 +90,11 @@ namespace ranges
                         "(1) A single element of the range's value type, where the value type is a "
                         "model of the Regular concept, "
                         "(2) A ForwardRange whose value type is EqualityComparable to the input "
-                        "range's value type, or "
-                        "(3) A Function that is callable with two arguments: the range's iterator "
-                        "and sentinel, and that returns a std::pair<bool, D>, where D is the "
+                        "range's value type, "
+                        "(3) A Predicate that is callable with one argument of the range's reference "
+                        "type, or "
+                        "(4) A Function that is callable with two arguments: the range's iterator "
+                        "and sentinel, and that returns a std::pair<bool, I>, where I is the "
                         "input range's difference_type.");
                 }
             #endif
