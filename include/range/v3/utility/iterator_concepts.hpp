@@ -615,4 +615,24 @@ namespace ranges
     }
 }
 
+
+#ifdef _GLIBCXX_DEBUG
+// HACKHACK: workaround underconstrained operator- for libstdc++ debug iterator wrapper
+// by intentionally creating an ambiguity when the wrapped types don't support the
+// necessary operation.
+#include <debug/safe_iterator.h>
+
+namespace __gnu_debug
+{
+    template <class I1, class I2, class Seq,
+      CONCEPT_REQUIRES_(!::ranges::SizedIteratorRange<I1, I2>())>
+    void operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &){}
+
+    template <class I1, class Seq,
+      CONCEPT_REQUIRES_(!::ranges::SizedIteratorRange<I1, I1>())>
+    void operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &){}
+}
+
+#endif
+
 #endif // RANGES_V3_UTILITY_ITERATOR_CONCEPTS_HPP
