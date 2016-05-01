@@ -194,8 +194,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_random_access_range.html">ranges::v3::concepts::RandomAccessRange</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_random_number_generator.html">ranges::v3::concepts::RandomNumberGenerator</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_range.html">ranges::v3::concepts::Range</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structranges_1_1v3_1_1concepts_1_1_range.html" title="Range concepts below. ">Range</a> concepts below.  <a href="structranges_1_1v3_1_1concepts_1_1_range.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -320,7 +318,7 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga410bb8a09f3df9b18b3c931cc463ca07"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga410bb8a09f3df9b18b3c931cc463ca07"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_ASSERT</b>(...)&#160;&#160;&#160;static_assert((__VA_ARGS__), &quot;Concept check failed&quot;)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_ASSERT</b>(...)&#160;&#160;&#160;static_assert((__VA_ARGS__), &quot;Concept check failed: &quot; #__VA_ARGS__)</td></tr>
 <tr class="separator:ga410bb8a09f3df9b18b3c931cc463ca07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga760b3e0557658eb36e2b98877e6156a3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCEPT_REQUIRES</b>(...)                                                                                                          </td></tr>
 <tr class="separator:ga760b3e0557658eb36e2b98877e6156a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -692,10 +690,6 @@ template&lt;typename C &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gabd56dac1d49f3f515823556463b7a2ba"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::RandomAccessView</b> = concepts::models&lt; concepts::RandomAccessView, T &gt;</td></tr>
 <tr class="separator:gabd56dac1d49f3f515823556463b7a2ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad69797c2bde43e04851bcfe798ac64a6"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad69797c2bde43e04851bcfe798ac64a6"></a>
-template&lt;typename Gen , typename D &gt; </td></tr>
-<tr class="memitem:gad69797c2bde43e04851bcfe798ac64a6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::RandomNumberGenerator</b> = concepts::models&lt; concepts::RandomNumberGenerator, Gen, D &gt;</td></tr>
-<tr class="separator:gad69797c2bde43e04851bcfe798ac64a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga75e0a7fd9304d3d805fc190b293ac154"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga75e0a7fd9304d3d805fc190b293ac154"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga75e0a7fd9304d3d805fc190b293ac154"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ranges::v3::Range</b> = concepts::models&lt; concepts::Range, T &gt;</td></tr>

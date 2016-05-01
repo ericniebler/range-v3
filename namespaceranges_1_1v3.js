@@ -81,7 +81,6 @@ var namespaceranges_1_1v3 =
       [ "RandomAccessIterator", "structranges_1_1v3_1_1concepts_1_1_random_access_iterator.html", "structranges_1_1v3_1_1concepts_1_1_random_access_iterator" ],
       [ "RandomAccessRange", "structranges_1_1v3_1_1concepts_1_1_random_access_range.html", "structranges_1_1v3_1_1concepts_1_1_random_access_range" ],
       [ "RandomAccessView", "structranges_1_1v3_1_1concepts_1_1_random_access_view.html", null ],
-      [ "RandomNumberGenerator", "structranges_1_1v3_1_1concepts_1_1_random_number_generator.html", "structranges_1_1v3_1_1concepts_1_1_random_number_generator" ],
       [ "Range", "structranges_1_1v3_1_1concepts_1_1_range.html", "structranges_1_1v3_1_1concepts_1_1_range" ],
       [ "Readable", "structranges_1_1v3_1_1concepts_1_1_readable.html", "structranges_1_1v3_1_1concepts_1_1_readable" ],
       [ "refines", "structranges_1_1v3_1_1concepts_1_1refines.html", "structranges_1_1v3_1_1concepts_1_1refines" ],
@@ -112,7 +111,10 @@ var namespaceranges_1_1v3 =
     [ "detail", null, [
       [ "_box", "structranges_1_1v3_1_1detail_1_1__box.html", "structranges_1_1v3_1_1detail_1_1__box" ],
       [ "_coerce_ref_fn", "structranges_1_1v3_1_1detail_1_1__coerce__ref__fn.html", "structranges_1_1v3_1_1detail_1_1__coerce__ref__fn" ],
-      [ "on_exit_policy", "structranges_1_1v3_1_1detail_1_1on__exit__policy.html", "structranges_1_1v3_1_1detail_1_1on__exit__policy" ]
+      [ "on_exit_policy", "structranges_1_1v3_1_1detail_1_1on__exit__policy.html", "structranges_1_1v3_1_1detail_1_1on__exit__policy" ],
+      [ "set_intersection_cursor", "structranges_1_1v3_1_1detail_1_1set__intersection__cursor.html", "structranges_1_1v3_1_1detail_1_1set__intersection__cursor" ],
+      [ "set_symmetric_difference_cursor", "structranges_1_1v3_1_1detail_1_1set__symmetric__difference__cursor.html", "structranges_1_1v3_1_1detail_1_1set__symmetric__difference__cursor" ],
+      [ "set_union_cursor", "structranges_1_1v3_1_1detail_1_1set__union__cursor.html", "structranges_1_1v3_1_1detail_1_1set__union__cursor" ]
     ] ],
     [ "tag", null, [
       [ "begin", "structranges_1_1v3_1_1tag_1_1begin.html", "structranges_1_1v3_1_1tag_1_1begin" ],
@@ -167,6 +169,10 @@ var namespaceranges_1_1v3 =
       [ "replace_fn", "structranges_1_1v3_1_1view_1_1replace__fn.html", "structranges_1_1v3_1_1view_1_1replace__fn" ],
       [ "replace_if_fn", "structranges_1_1v3_1_1view_1_1replace__if__fn.html", "structranges_1_1v3_1_1view_1_1replace__if__fn" ],
       [ "reverse_fn", "structranges_1_1v3_1_1view_1_1reverse__fn.html", "structranges_1_1v3_1_1view_1_1reverse__fn" ],
+      [ "set_difference_fn", "structranges_1_1v3_1_1view_1_1set__difference__fn.html", "structranges_1_1v3_1_1view_1_1set__difference__fn" ],
+      [ "set_intersection_fn", "structranges_1_1v3_1_1view_1_1set__intersection__fn.html", "structranges_1_1v3_1_1view_1_1set__intersection__fn" ],
+      [ "set_symmetric_difference_fn", "structranges_1_1v3_1_1view_1_1set__symmetric__difference__fn.html", "structranges_1_1v3_1_1view_1_1set__symmetric__difference__fn" ],
+      [ "set_union_fn", "structranges_1_1v3_1_1view_1_1set__union__fn.html", "structranges_1_1v3_1_1view_1_1set__union__fn" ],
       [ "single_fn", "structranges_1_1v3_1_1view_1_1single__fn.html", "structranges_1_1v3_1_1view_1_1single__fn" ],
       [ "slice_fn", "structranges_1_1v3_1_1view_1_1slice__fn.html", "structranges_1_1v3_1_1view_1_1slice__fn" ],
       [ "split_fn", "structranges_1_1v3_1_1view_1_1split__fn.html", "structranges_1_1v3_1_1view_1_1split__fn" ],
@@ -432,7 +438,6 @@ var namespaceranges_1_1v3 =
     [ "protect_fn", "structranges_1_1v3_1_1protect__fn.html", "structranges_1_1v3_1_1protect__fn" ],
     [ "push_heap_fn", "structranges_1_1v3_1_1push__heap__fn.html", "structranges_1_1v3_1_1push__heap__fn" ],
     [ "random_access_iterator_tag", "structranges_1_1v3_1_1random__access__iterator__tag.html", null ],
-    [ "random_shuffle_fn", "structranges_1_1v3_1_1random__shuffle__fn.html", "structranges_1_1v3_1_1random__shuffle__fn" ],
     [ "range_cardinality", "structranges_1_1v3_1_1range__cardinality.html", null ],
     [ "range_cardinality< Rng & >", "structranges_1_1v3_1_1range__cardinality_3_01_rng_01_6_01_4.html", null ],
     [ "range_cardinality< Rng const  >", "structranges_1_1v3_1_1range__cardinality_3_01_rng_01const_01_01_4.html", null ],

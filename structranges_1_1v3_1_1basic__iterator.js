@@ -1,7 +1,5 @@
 var structranges_1_1v3_1_1basic__iterator =
 [
-    [ "basic_iterator", "structranges_1_1v3_1_1basic__iterator.html#a895b08e437317664b9c9f37962de5412", null ],
-    [ "get_cursor_fn", "structranges_1_1v3_1_1basic__iterator.html#a7a86ebc277ea679c6a558767937ecceb", null ],
     [ "operator!=", "structranges_1_1v3_1_1basic__iterator.html#a0b06ebbab4cdfe370465bc234a90b365", null ],
     [ "operator!=", "structranges_1_1v3_1_1basic__iterator.html#aa064b5edf00748b898be674b10b3e6f7", null ],
     [ "operator!=", "structranges_1_1v3_1_1basic__iterator.html#a7c6831a986a4f4647d49eb314a49886a", null ],

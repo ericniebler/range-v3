@@ -228,12 +228,6 @@ var group__group_algorithms =
       [ "operator()", "structranges_1_1v3_1_1push__heap__fn.html#a1183778a2ce4990c15537e244e7600e0", null ],
       [ "operator()", "structranges_1_1v3_1_1push__heap__fn.html#a8be0c7603e773d0514165565d409b0a6", null ]
     ] ],
-    [ "random_shuffle_fn", "structranges_1_1v3_1_1random__shuffle__fn.html", [
-      [ "operator()", "structranges_1_1v3_1_1random__shuffle__fn.html#ac432d4e7353e8e585375fe30723d2834", null ],
-      [ "operator()", "structranges_1_1v3_1_1random__shuffle__fn.html#afb4f550f1b4c01c9acfb6828ab68600f", null ],
-      [ "operator()", "structranges_1_1v3_1_1random__shuffle__fn.html#a0b8b9480294a99bfe3efc09ca11cf79b", null ],
-      [ "operator()", "structranges_1_1v3_1_1random__shuffle__fn.html#a508642a0b5e408d2686a9929c4807ad0", null ]
-    ] ],
     [ "remove_copy_fn", "structranges_1_1v3_1_1remove__copy__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1remove__copy__fn.html#acc3699d2678c8007bd2842d9470ee093", null ],
       [ "operator()", "structranges_1_1v3_1_1remove__copy__fn.html#a9a073930b4901c928a847285d494e7c5", null ]
@@ -308,7 +302,9 @@ var group__group_algorithms =
     ] ],
     [ "shuffle_fn", "structranges_1_1v3_1_1shuffle__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1shuffle__fn.html#a04c2d7614b94eb1822117ecae0c720ab", null ],
-      [ "operator()", "structranges_1_1v3_1_1shuffle__fn.html#a150d5864cf002c6d681685fc290d6d55", null ]
+      [ "operator()", "structranges_1_1v3_1_1shuffle__fn.html#adef6316de0a36090feb319404a65b836", null ],
+      [ "operator()", "structranges_1_1v3_1_1shuffle__fn.html#a150d5864cf002c6d681685fc290d6d55", null ],
+      [ "operator()", "structranges_1_1v3_1_1shuffle__fn.html#a192b460ac0c3916d85bb053929090ad4", null ]
     ] ],
     [ "sort_fn", "structranges_1_1v3_1_1sort__fn.html", [
       [ "operator()", "structranges_1_1v3_1_1sort__fn.html#ab56d9175a5da089ae5c111af3f300c19", null ],

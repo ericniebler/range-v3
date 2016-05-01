@@ -168,7 +168,7 @@ template&lt;typename List , typename F &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -187,7 +187,7 @@ template&lt;typename List , typename F &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -206,7 +206,7 @@ template&lt;typename List , typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Count the number of times a type <code>T</code> appears in the list <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -225,7 +225,7 @@ template&lt;typename List , typename Fn &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Count the number of times the predicate <code>Fn</code> evaluates to true for all the elements in the list <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -244,7 +244,7 @@ template&lt;typename List , typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return the tail of the list <code>List</code> starting at the first occurrence of <code>T</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -263,7 +263,7 @@ template&lt;typename List , typename Fun &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>invoke&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -282,7 +282,7 @@ template&lt;typename List , typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Finds the index of the first occurrence of the type <code>T</code> within the list <code>List</code>. Returns <code>#meta::npos</code> if the type <code>T</code> was not found. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>.</dd></dl>
@@ -302,7 +302,7 @@ template&lt;typename List , typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>A Boolean integral constant wrapper around <code>true</code> if there is at least one occurrence of <code>T</code> in <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -321,7 +321,7 @@ template&lt;typename List , typename F &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>invoke&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -340,7 +340,7 @@ template&lt;typename List , typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return the tail of the list <code>List</code> starting at the last occurrence of <code>T</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -359,7 +359,7 @@ template&lt;typename List , typename Fun &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>invoke&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>. </dd></dl>
@@ -378,7 +378,7 @@ template&lt;typename List , typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;meta/meta.hpp&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
 <p>Finds the index of the last occurrence of the type <code>T</code> within the list <code>List</code>. Returns <code>#meta::npos</code> if the type <code>T</code> was not found. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_1.png"/>.</dd></dl>

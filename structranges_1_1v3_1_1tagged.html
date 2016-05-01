@@ -147,6 +147,14 @@ template&lt;int tagged_dummy_ = 42&gt; </td></tr>
 <tr class="memitem:af0710bc791c2c44a23c56a42743e7267"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af0710bc791c2c44a23c56a42743e7267"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a> const &amp;)=default</td></tr>
 <tr class="separator:af0710bc791c2c44a23c56a42743e7267"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac175c56313ca47e56351b7546c3af687"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac175c56313ca47e56351b7546c3af687"></a>
+template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(MoveConstructible&lt; Base &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:ac175c56313ca47e56351b7546c3af687"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="class_base.html">Base</a> &amp;&amp;that)</td></tr>
+<tr class="separator:ac175c56313ca47e56351b7546c3af687"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a331a0fd365688f4dc263b9710c7db6da"><td class="memTemplParams" colspan="2"><a class="anchor" id="a331a0fd365688f4dc263b9710c7db6da"></a>
+template&lt;int _concept_requires___LINE__ = 42, typename std::enable_if&lt;      (_concept_requires___LINE__==43)||(CopyConstructible&lt; Base &gt;()),   int   &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a331a0fd365688f4dc263b9710c7db6da"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="class_base.html">Base</a> const &amp;that)</td></tr>
+<tr class="separator:a331a0fd365688f4dc263b9710c7db6da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18b6dbda6f674c0d4bf44367ce97d456"><td class="memTemplParams" colspan="2"><a class="anchor" id="a18b6dbda6f674c0d4bf44367ce97d456"></a>
 template&lt;typename Other , typename  = meta::if_&lt;std::is_convertible&lt;Other, Base&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a18b6dbda6f674c0d4bf44367ce97d456"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tagged</b> (<a class="el" href="structranges_1_1v3_1_1tagged.html">tagged</a>&lt; Other, Tags... &gt; &amp;&amp;that) noexcept(noexcept(<a class="el" href="class_base.html">Base</a>(static_cast&lt; Other &amp;&amp; &gt;(that))))</td></tr>

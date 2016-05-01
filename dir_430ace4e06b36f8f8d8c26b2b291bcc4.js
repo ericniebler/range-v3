@@ -35,6 +35,7 @@ var dir_430ace4e06b36f8f8d8c26b2b291bcc4 =
     [ "replace.hpp", "view_2replace_8hpp.html", null ],
     [ "replace_if.hpp", "view_2replace__if_8hpp.html", null ],
     [ "reverse.hpp", "view_2reverse_8hpp.html", "view_2reverse_8hpp" ],
+    [ "set_algorithm.hpp", "view_2set__algorithm_8hpp.html", "view_2set__algorithm_8hpp" ],
     [ "single.hpp", "single_8hpp.html", null ],
     [ "slice.hpp", "view_2slice_8hpp.html", null ],
     [ "split.hpp", "view_2split_8hpp.html", null ],

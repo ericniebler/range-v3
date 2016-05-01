@@ -10,6 +10,8 @@ var structranges_1_1v3_1_1tagged =
     [ "tagged", "structranges_1_1v3_1_1tagged.html#ab36fc6966637aa479ecfa1216030ce2d", null ],
     [ "tagged", "structranges_1_1v3_1_1tagged.html#abcd877c0d4710372868e9f10c2915c88", null ],
     [ "tagged", "structranges_1_1v3_1_1tagged.html#af0710bc791c2c44a23c56a42743e7267", null ],
+    [ "tagged", "structranges_1_1v3_1_1tagged.html#ac175c56313ca47e56351b7546c3af687", null ],
+    [ "tagged", "structranges_1_1v3_1_1tagged.html#a331a0fd365688f4dc263b9710c7db6da", null ],
     [ "tagged", "structranges_1_1v3_1_1tagged.html#a18b6dbda6f674c0d4bf44367ce97d456", null ],
     [ "tagged", "structranges_1_1v3_1_1tagged.html#acd25979c5d3feeb36c16fb2ebdde799c", null ]
 ];

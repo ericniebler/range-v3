@@ -599,8 +599,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1random__access__iterator__tag.html">random_access_iterator_tag</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1random__shuffle__fn.html">random_shuffle_fn</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structranges_1_1v3_1_1range__cardinality_3_01_rng_01_6_01_4.html">range_cardinality&lt; Rng &amp; &gt;</a></td></tr>
@@ -1308,10 +1306,6 @@ template&lt;typename C &gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gabd56dac1d49f3f515823556463b7a2ba"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>RandomAccessView</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_random_access_view.html">concepts::RandomAccessView</a>, T &gt;</td></tr>
 <tr class="separator:gabd56dac1d49f3f515823556463b7a2ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad69797c2bde43e04851bcfe798ac64a6"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad69797c2bde43e04851bcfe798ac64a6"></a>
-template&lt;typename Gen , typename D &gt; </td></tr>
-<tr class="memitem:gad69797c2bde43e04851bcfe798ac64a6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>RandomNumberGenerator</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_random_number_generator.html">concepts::RandomNumberGenerator</a>, Gen, D &gt;</td></tr>
-<tr class="separator:gad69797c2bde43e04851bcfe798ac64a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga75e0a7fd9304d3d805fc190b293ac154"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga75e0a7fd9304d3d805fc190b293ac154"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga75e0a7fd9304d3d805fc190b293ac154"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Range</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_range.html">concepts::Range</a>, T &gt;</td></tr>
@@ -1396,10 +1390,10 @@ template&lt;typename Rng &gt; </td></tr>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:gadea9f0ffa2ad34f63d39c860ad287662"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>range_size</b> = <a class="el" href="structmeta_1_1v1_1_1defer.html">meta::defer</a>&lt; range_size_t, Rng &gt;</td></tr>
 <tr class="separator:gadea9f0ffa2ad34f63d39c860ad287662"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4bbc61c4de0c99ad2af011de61979e49"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4bbc61c4de0c99ad2af011de61979e49"></a>
+<tr class="memitem:ga4c5ae462f61978be4e6cfb243502d692"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga4c5ae462f61978be4e6cfb243502d692"></a>
 template&lt;typename Rng &gt; </td></tr>
-<tr class="memitem:ga4bbc61c4de0c99ad2af011de61979e49"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>range_size_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; std::make_unsigned&lt; range_difference_t&lt; Rng &gt;&gt;&gt;</td></tr>
-<tr class="separator:ga4bbc61c4de0c99ad2af011de61979e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c5ae462f61978be4e6cfb243502d692"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>range_size_t</b> = <a class="el" href="group__invocation.html#ga14ac2cd59266af09d75be10d00b260b7">meta::_t</a>&lt; <a class="el" href="group__logical.html#gaa963e8a54e9af9024d797cadc0f5cec7">meta::if_c</a>&lt; (bool) <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SizedRange</a>&lt; Rng &gt;(), <a class="el" href="structmeta_1_1v1_1_1defer.html">meta::defer</a>&lt; concepts::SizedRange::size_t, Rng &gt;, std::make_unsigned&lt; range_difference_t&lt; Rng &gt;&gt;&gt;&gt;</td></tr>
+<tr class="separator:ga4c5ae462f61978be4e6cfb243502d692"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabe1be208adf6d72d5c4b1fc77ce71efa"><td class="memTemplParams" colspan="2"><a class="anchor" id="gabe1be208adf6d72d5c4b1fc77ce71efa"></a>
 template&lt;typename Rng &gt; </td></tr>
 <tr class="memitem:gabe1be208adf6d72d5c4b1fc77ce71efa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>range_value</b> = <a class="el" href="structmeta_1_1v1_1_1defer.html">meta::defer</a>&lt; range_value_t, Rng &gt;</td></tr>
@@ -1537,6 +1531,22 @@ template&lt;typename T , bool IsConst = false&gt; </td></tr>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga311acc141ac5e80a64c4187ce8fe2ebd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>semiregular_t</b> = <a class="el" href="group__logical.html#gac8d9cee3981f8ae0cfad6829c1c1b247">meta::if_</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">SemiRegular</a>&lt; T &gt;, T, <a class="el" href="structranges_1_1v3_1_1semiregular.html">semiregular</a>&lt; T &gt;&gt;</td></tr>
 <tr class="separator:ga311acc141ac5e80a64c4187ce8fe2ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a995e1a1052c157ce80a81db4ff723fda"><td class="memTemplParams" colspan="2"><a class="anchor" id="a995e1a1052c157ce80a81db4ff723fda"></a>
+template&lt;typename Rng1 , typename Rng2 , typename C , typename P1 , typename P2 &gt; </td></tr>
+<tr class="memitem:a995e1a1052c157ce80a81db4ff723fda"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_difference_view</b> = detail::set_algorithm_view&lt; Rng1, Rng2, C, P1, P2, detail::set_difference_cursor, detail::set_difference_cardinality(<a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a>&lt; Rng1 &gt;::value, <a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a>&lt; Rng2 &gt;::value)&gt;</td></tr>
+<tr class="separator:a995e1a1052c157ce80a81db4ff723fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2fc89f715e7631c389355655a4097a0"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae2fc89f715e7631c389355655a4097a0"></a>
+template&lt;typename Rng1 , typename Rng2 , typename C , typename P1 , typename P2 &gt; </td></tr>
+<tr class="memitem:ae2fc89f715e7631c389355655a4097a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_intersection_view</b> = detail::set_algorithm_view&lt; Rng1, Rng2, C, P1, P2, <a class="el" href="structranges_1_1v3_1_1detail_1_1set__intersection__cursor.html">detail::set_intersection_cursor</a>, detail::set_intersection_cardinality(<a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a>&lt; Rng1 &gt;::value, <a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a>&lt; Rng2 &gt;::value)&gt;</td></tr>
+<tr class="separator:ae2fc89f715e7631c389355655a4097a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5841234054433e1bd801f3707a980b2e"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5841234054433e1bd801f3707a980b2e"></a>
+template&lt;typename Rng1 , typename Rng2 , typename C , typename P1 , typename P2 &gt; </td></tr>
+<tr class="memitem:a5841234054433e1bd801f3707a980b2e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_symmetric_difference_view</b> = detail::set_algorithm_view&lt; Rng1, Rng2, C, P1, P2, <a class="el" href="structranges_1_1v3_1_1detail_1_1set__symmetric__difference__cursor.html">detail::set_symmetric_difference_cursor</a>, detail::set_symmetric_difference_cardinality(<a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a>&lt; Rng1 &gt;::value, <a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a>&lt; Rng2 &gt;::value)&gt;</td></tr>
+<tr class="separator:a5841234054433e1bd801f3707a980b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab10f77efe7930f792c0898f499100f03"><td class="memTemplParams" colspan="2"><a class="anchor" id="ab10f77efe7930f792c0898f499100f03"></a>
+template&lt;typename Rng1 , typename Rng2 , typename C , typename P1 , typename P2 &gt; </td></tr>
+<tr class="memitem:ab10f77efe7930f792c0898f499100f03"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_union_view</b> = detail::set_algorithm_view&lt; Rng1, Rng2, C, P1, P2, <a class="el" href="structranges_1_1v3_1_1detail_1_1set__union__cursor.html">detail::set_union_cursor</a>, detail::set_union_cardinality(<a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a>&lt; Rng1 &gt;::value, <a class="el" href="structranges_1_1v3_1_1range__cardinality.html">range_cardinality</a>&lt; Rng2 &gt;::value)&gt;</td></tr>
+<tr class="separator:ab10f77efe7930f792c0898f499100f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae6be884a50d38fc8c5723e84a79295eb"><td class="memTemplParams" colspan="2"><a class="anchor" id="gae6be884a50d38fc8c5723e84a79295eb"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gae6be884a50d38fc8c5723e84a79295eb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>SignedIntegral</b> = <a class="el" href="structranges_1_1v3_1_1concepts_1_1models.html">concepts::models</a>&lt; <a class="el" href="structranges_1_1v3_1_1concepts_1_1_signed_integral.html">concepts::SignedIntegral</a>, T &gt;</td></tr>

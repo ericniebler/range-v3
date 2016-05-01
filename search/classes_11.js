@@ -1,12 +1,10 @@
 var searchData=
 [
   ['random_5faccess_5fiterator_5ftag',['random_access_iterator_tag',['../structranges_1_1v3_1_1random__access__iterator__tag.html',1,'ranges::v3']]],
-  ['random_5fshuffle_5ffn',['random_shuffle_fn',['../structranges_1_1v3_1_1random__shuffle__fn.html',1,'ranges::v3']]],
   ['randomaccessincrementable',['RandomAccessIncrementable',['../structranges_1_1v3_1_1concepts_1_1_random_access_incrementable.html',1,'ranges::v3::concepts']]],
   ['randomaccessiterator',['RandomAccessIterator',['../structranges_1_1v3_1_1concepts_1_1_random_access_iterator.html',1,'ranges::v3::concepts']]],
   ['randomaccessrange',['RandomAccessRange',['../structranges_1_1v3_1_1concepts_1_1_random_access_range.html',1,'ranges::v3::concepts']]],
   ['randomaccessview',['RandomAccessView',['../structranges_1_1v3_1_1concepts_1_1_random_access_view.html',1,'ranges::v3::concepts']]],
-  ['randomnumbergenerator',['RandomNumberGenerator',['../structranges_1_1v3_1_1concepts_1_1_random_number_generator.html',1,'ranges::v3::concepts']]],
   ['range',['Range',['../structranges_1_1v3_1_1concepts_1_1_range.html',1,'ranges::v3::concepts']]],
   ['range_5fcardinality',['range_cardinality',['../structranges_1_1v3_1_1range__cardinality.html',1,'ranges::v3']]],
   ['range_5fcardinality_3c_20rng_20_26_20_3e',['range_cardinality&lt; Rng &amp; &gt;',['../structranges_1_1v3_1_1range__cardinality_3_01_rng_01_6_01_4.html',1,'ranges::v3']]],
@@ -92,8 +90,8 @@ var searchData=
   ['repeat_5fview',['repeat_view',['../structranges_1_1v3_1_1repeat__view.html',1,'ranges::v3']]],
   ['replace_5fcopy_5ffn',['replace_copy_fn',['../structranges_1_1v3_1_1replace__copy__fn.html',1,'ranges::v3']]],
   ['replace_5fcopy_5fif_5ffn',['replace_copy_if_fn',['../structranges_1_1v3_1_1replace__copy__if__fn.html',1,'ranges::v3']]],
-  ['replace_5ffn',['replace_fn',['../structranges_1_1v3_1_1replace__fn.html',1,'ranges::v3']]],
   ['replace_5ffn',['replace_fn',['../structranges_1_1v3_1_1view_1_1replace__fn.html',1,'ranges::v3::view']]],
+  ['replace_5ffn',['replace_fn',['../structranges_1_1v3_1_1replace__fn.html',1,'ranges::v3']]],
   ['replace_5fif_5ffn',['replace_if_fn',['../structranges_1_1v3_1_1replace__if__fn.html',1,'ranges::v3']]],
   ['replace_5fif_5ffn',['replace_if_fn',['../structranges_1_1v3_1_1view_1_1replace__if__fn.html',1,'ranges::v3::view']]],
   ['reservable',['Reservable',['../structranges_1_1v3_1_1concepts_1_1_reservable.html',1,'ranges::v3::concepts']]],
