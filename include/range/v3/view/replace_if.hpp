@@ -48,8 +48,12 @@ namespace ranges
                 {}
 
                 template<typename I>
+                [[noreturn]]
                 common_type_t<decay_t<unwrap_reference_t<Val const &>>, iterator_value_t<I>> &
-                operator()(copy_tag, I const &i) const;
+                operator()(copy_tag, I const &) const
+                {
+                    RANGES_ENSURE(false);
+                }
 
                 template<typename I,
                     CONCEPT_REQUIRES_(!Callable<Pred const, iterator_reference_t<I>>())>

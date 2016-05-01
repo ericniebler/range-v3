@@ -412,8 +412,12 @@ namespace ranges
             {}
             // value_type (needs no impl)
             template<typename ...Its>
-            auto operator()(copy_tag, Its ...its) const ->
-                decltype(std::declval<BaseFn &>()(*its...));
+            [[noreturn]] auto operator()(copy_tag, Its ...its) const ->
+                decltype(std::declval<BaseFn &>()(*its...))
+            {
+                RANGES_ENSURE(false);
+            }
+
             // Reference
             template<typename ...Its>
             auto operator()(Its ...its)
@@ -429,6 +433,7 @@ namespace ranges
             {
                 return base()(*its...);
             }
+
             // Rvalue reference
             template<typename ...Its>
             auto operator()(move_tag, Its ...its)

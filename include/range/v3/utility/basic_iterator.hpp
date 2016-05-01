@@ -513,7 +513,7 @@ namespace ranges
                 CONCEPT_REQUIRES_(ConvertibleTo<OtherCur, Cur>() &&
                     Constructible<range_access::mixin_base_t<Cur>, OtherCur &&>())>
             RANGES_CXX14_CONSTEXPR
-	    basic_iterator(basic_iterator<OtherCur, OtherS> that)
+            basic_iterator(basic_iterator<OtherCur, OtherS> that)
               : range_access::mixin_base_t<Cur>{range_access::pos(std::move(that))}
             {}
             // Mix in any additional constructors defined and exported by the cursor
