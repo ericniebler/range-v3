@@ -412,8 +412,8 @@ namespace ranges
             {}
             // value_type (needs no impl)
             template<typename ...Its>
-            [[noreturn]] auto operator()(copy_tag, Its ...its) const ->
-                decltype(std::declval<BaseFn &>()(*its...))
+            [[noreturn]] auto operator()(copy_tag, Its ...) const ->
+                decltype(std::declval<BaseFn &>()(*std::declval<Its>()...))
             {
                 RANGES_ENSURE(false);
             }
