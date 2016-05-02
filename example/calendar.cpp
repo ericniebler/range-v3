@@ -110,7 +110,7 @@ auto by_month() {
 
 auto by_week() {
     return view::group_by([](date a, date b) {
-        // ++a because week_numer is Mon-Sun and we want Sun-Sat
+        // ++a because week_number is Mon-Sun and we want Sun-Sat
         return (++a).week_number() == (++b).week_number();
     });
 }

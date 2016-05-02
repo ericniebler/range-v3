@@ -625,14 +625,14 @@ namespace ranges
 namespace __gnu_debug
 {
     template <class I1, class I2, class Seq,
-        CONCEPT_REQUIRES_(!::ranges::SizedIteratorRange<I1, I2>())>
-    ::ranges::iterator_difference_t<I1>
-        operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) = delete;
+        CONCEPT_REQUIRES_(!::ranges::SizedIteratorRange<I2, I1>())>
+    void operator-(
+        _Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) = delete;
 
     template <class I1, class Seq,
         CONCEPT_REQUIRES_(!::ranges::SizedIteratorRange<I1, I1>())>
-    ::ranges::iterator_difference_t<I1>
-        operator-(_Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;
+    void operator-(
+        _Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;
 }
 
 #endif
