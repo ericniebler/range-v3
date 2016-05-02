@@ -254,13 +254,7 @@ namespace ranges
             void ignore_unused(Ts &&...)
             {}
 
-#if !defined(__GLIBCXX__)
-            template<typename T>
-            using is_trivially_copy_assignable = std::is_trivially_copy_assignable<T>;
-
-            template<typename T>
-            using is_trivially_move_assignable = std::is_trivially_move_assignable<T>;
-#else
+#if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ < 5)
             template<typename T>
             struct is_trivially_copy_assignable
               : std::is_trivial<T>
@@ -270,6 +264,12 @@ namespace ranges
             struct is_trivially_move_assignable
               : std::is_trivial<T>
             {};
+#else
+            template<typename T>
+            using is_trivially_copy_assignable = std::is_trivially_copy_assignable<T>;
+
+            template<typename T>
+            using is_trivially_move_assignable = std::is_trivially_move_assignable<T>;
 #endif
 
             template<typename T>
@@ -391,8 +391,6 @@ namespace ranges
 
         template<typename I, typename S = I>
         struct sized_iterator_range;
-
-        struct make_range_fn;
 
         template<typename T, bool RValue = false>
         struct reference_wrapper;
