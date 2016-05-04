@@ -161,7 +161,7 @@ namespace ranges
                 auto requires_(T&& t) -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(disable_sized_range<uncvref_t<T>>()),
-                        concepts::model_of<Integral>(size(t))
+                        size(t)
                     ));
             };
 
