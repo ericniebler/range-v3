@@ -1090,16 +1090,6 @@ namespace ranges
                         concepts::model_of<Relation, function_type<Fun>, T, U>()
                     ));
             };
-
-            struct CallableTransform
-              : refines<RegularCallable>
-            {
-                template<typename Fun, typename T>
-                auto requires_(Fun&&, T&&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Transform, function_type<Fun>, T>()
-                    ));
-            };
         }
 
         template<typename Fun, typename...Args>
@@ -1113,9 +1103,6 @@ namespace ranges
 
         template<typename Fun, typename T, typename U = T>
         using CallableRelation = concepts::models<concepts::CallableRelation, Fun, T, U>;
-
-        template<typename F, typename T>
-        using CallableTransform = concepts::models<concepts::CallableTransform, F, T>;
         /// @}
     }
 }

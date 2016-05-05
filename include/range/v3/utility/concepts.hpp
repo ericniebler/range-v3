@@ -742,16 +742,6 @@ namespace ranges
                         concepts::model_of<Predicate, Fun, U, T>()
                     ));
             };
-
-            struct Transform
-              : refines<RegularFunction>
-            {
-                template<typename F, typename T>
-                auto requires_(F &&, T &&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::convertible_to<T>(val<F>()(val<T>()))
-                    ));
-            };
         }
 
         template<typename ...Ts>
@@ -850,9 +840,6 @@ namespace ranges
 
         template<typename Fun, typename T, typename U = T>
         using Relation = concepts::models<concepts::Relation, Fun, T, U>;
-
-        template<typename F, typename T>
-        using Transform = concepts::models<concepts::Transform, F, T>;
     }
 }
 
