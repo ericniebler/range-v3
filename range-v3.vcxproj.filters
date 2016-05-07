@@ -1082,9 +1082,6 @@
     <ClInclude Include="include\range\v3\utility\infinity.hpp">
       <Filter>Header Files\range\v3\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\range\v3\utility\integer_sequence.hpp">
-      <Filter>Header Files\range\v3\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\range\v3\utility\iterator.hpp">
       <Filter>Header Files\range\v3\utility</Filter>
     </ClInclude>

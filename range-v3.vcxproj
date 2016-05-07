@@ -1079,7 +1079,6 @@
     <ClInclude Include="include\range\v3\utility\functional.hpp" />
     <ClInclude Include="include\range\v3\utility\get.hpp" />
     <ClInclude Include="include\range\v3\utility\infinity.hpp" />
-    <ClInclude Include="include\range\v3\utility\integer_sequence.hpp" />
     <ClInclude Include="include\range\v3\utility\iterator.hpp" />
     <ClInclude Include="include\range\v3\utility\iterator_concepts.hpp" />
     <ClInclude Include="include\range\v3\utility\iterator_traits.hpp" />
