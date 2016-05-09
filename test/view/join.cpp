@@ -109,7 +109,6 @@ int main()
     static_assert(range_cardinality<decltype(rng5)>::value == 4, "");
     models<concepts::SizedRange>(rng5);
     CHECK(rng5.size() == 4u);
-    static_assert(rng5.size() == 4u, "");
     check_equal(rng5, {42,42,42,42});
 
     auto rng6 = view::join(twice(view::repeat_n(42, 2)));
