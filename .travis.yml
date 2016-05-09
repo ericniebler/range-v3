@@ -215,6 +215,10 @@ matrix:
       os: linux
       addons: *clang38
 
+    - env: CLANG_VERSION=3.8 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: *clang38
+
     # Test gcc-4.8: C++11, Build=Debug/Release, ASAN=Off
     - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
       os: linux
