@@ -238,10 +238,9 @@ namespace ranges
 }
 
 // The standard is inconsistent about whether these are classes or structs
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wpragmas"
-#pragma GCC diagnostic ignored "-Wmismatched-tags"
+RANGES_DIAGNOSTIC_PUSH
+RANGES_DIAGNOSTIC_IGNORE_PRAGMAS
+RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
 
 /// \cond
 namespace std
@@ -288,6 +287,6 @@ namespace std
 }
 /// \endcond
 
-#pragma GCC diagnostic pop
+RANGES_DIAGNOSTIC_POP
 
 #endif

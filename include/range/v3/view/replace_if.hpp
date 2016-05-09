@@ -26,7 +26,7 @@
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
 
-#include <range/v3/detail/disable_warnings.hpp>
+RANGES_DISABLE_WARNINGS
 
 namespace ranges
 {
@@ -171,6 +171,6 @@ namespace ranges
     }
 }
 
-#include <range/v3/detail/re_enable_warnings.hpp>
+RANGES_RE_ENABLE_WARNINGS
 
 #endif

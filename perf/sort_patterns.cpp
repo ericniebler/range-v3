@@ -14,7 +14,8 @@
 
 #include <range/v3/detail/config.hpp>
 
-#if RANGES_CXX_STD >= RANGES_CXX_STD_14
+#if RANGES_CXX_RETURN_TYPE_DEDUCTION >= RANGES_CXX_RETURN_TYPE_DEDUCTION_14 && \
+    RANGES_CXX_GENERIC_LAMBDAS >= RANGES_CXX_GENERIC_LAMBDAS_14
 
 #include <iostream>
 #include <iomanip>
@@ -248,7 +249,7 @@ int main() {
 
 #else
 
-#pragma message("sort_patterns requires C++ 14 or greater")
+#pragma message("sort_patterns requires C++14 return type deduction and generic lambdas")
 
 int main() {}
 
