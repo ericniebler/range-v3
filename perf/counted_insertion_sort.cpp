@@ -17,35 +17,39 @@
 
 class timer
 {
-private:
-    std::chrono::high_resolution_clock::time_point start_;
 public:
+    using clock_t = std::chrono::high_resolution_clock;
+    using duration_t = clock_t::time_point::duration;
+
     timer()
     {
         reset();
     }
     void reset()
     {
-        start_ = std::chrono::high_resolution_clock::now();
+        start_ = clock_t::now();
     }
-    std::chrono::milliseconds elapsed() const
+    duration_t elapsed() const
     {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::high_resolution_clock::now() - start_);
+        return clock_t::now() - start_;
     }
     friend std::ostream &operator<<(std::ostream &sout, timer const &t)
     {
         return sout << t.elapsed().count() << "ms";
     }
+private:
+    clock_t::time_point start_;
 };
+
+template<typename D>
+std::chrono::milliseconds::rep to_millis(D d) {
+  return std::chrono::duration_cast<std::chrono::milliseconds>(d).count();
+}
 
 template<typename It>
 struct forward_iterator
 {
     It it_;
-
-    template<typename U>
-    friend struct forward_iterator;
 public:
     typedef          std::forward_iterator_tag                 iterator_category;
     typedef typename std::iterator_traits<It>::value_type      value_type;
@@ -53,8 +57,8 @@ public:
     typedef It                                                 pointer;
     typedef typename std::iterator_traits<It>::reference       reference;
 
-    forward_iterator() : it_() {}
-    explicit forward_iterator(It it) : it_(it) {}
+    forward_iterator() = default;
+    explicit forward_iterator(It it) : it_(std::move(it)) {}
 
     reference operator*() const {return *it_;}
     pointer operator->() const {return it_;}
@@ -136,15 +140,15 @@ void benchmark_n(int i)
 {
     std::mt19937 gen;
     auto a = data(i);
-    long ms = 0;
+    timer::duration_t ms = {};
     for(int j = 0; j < cloops; ++j)
     {
         ::shuffle(a.get(), i, gen);
         timer t;
         insertion_sort_n(I{a.get()}, i);
-        ms += t.elapsed().count();
+        ms += t.elapsed();
     }
-    std::cout << (int)((double)ms/cloops) << std::endl;
+    std::cout << to_millis(ms/cloops) << std::endl;
 }
 
 template<typename I>
@@ -152,15 +156,15 @@ void benchmark_counted(int i)
 {
     std::mt19937 gen;
     auto a = data(i);
-    long ms = 0;
+    timer::duration_t ms = {};
     for(int j = 0; j < cloops; ++j)
     {
         ::shuffle(a.get(), i, gen);
         timer t;
         insertion_sort(ranges::view::counted(I{a.get()}, i));
-        ms += t.elapsed().count();
+        ms += t.elapsed();
     }
-    std::cout << (int)((double)ms/cloops) << std::endl;
+    std::cout << to_millis(ms/cloops) << std::endl;
 }
 
 int main(int argc, char *argv[])
