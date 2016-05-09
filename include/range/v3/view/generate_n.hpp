@@ -14,18 +14,16 @@
 #ifndef RANGES_V3_VIEW_GENERATE_N_HPP
 #define RANGES_V3_VIEW_GENERATE_N_HPP
 
-#include <utility>
 #include <type_traits>
+#include <utility>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
-#include <range/v3/size.hpp>
-#include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/view_facade.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
-#include <range/v3/utility/semiregular.hpp>
 
 namespace ranges
 {

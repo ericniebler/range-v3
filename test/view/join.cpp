@@ -23,6 +23,16 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
+template<typename T, std::size_t N>
+struct input_array
+{
+    T elements_[N];
+
+    input_iterator<T*> begin() { return input_iterator<T*>{elements_ + 0}; }
+    input_iterator<T*> end() { return input_iterator<T*>{elements_ + N}; }
+    constexpr std::size_t size() const { return N; }
+};
+
 static int N = 0;
 auto const make_input_rng = []
 {
@@ -96,20 +106,19 @@ int main()
     auto rng3 = view::join(vs);
     static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
     models_not<concepts::SizedRange>(rng3);
-    models_not<concepts::SizedIteratorRange>(begin(rng3), end(rng3));
+    CONCEPT_ASSERT(!SizedIteratorRange<decltype(begin(rng3)), decltype(end(rng3))>());
     CHECK(to_<std::string>(rng3) == "Thisishisface");
 
     auto rng4 = view::join(vs, ' ');
     static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
     models_not<concepts::SizedRange>(rng4);
-    models_not<concepts::SizedIteratorRange>(begin(rng4), end(rng4));
+    CONCEPT_ASSERT(!SizedIteratorRange<decltype(begin(rng4)), decltype(end(rng4))>());
     CHECK(to_<std::string>(rng4) == "This is his face");
 
     auto rng5 = view::join(twice(twice(42)));
     static_assert(range_cardinality<decltype(rng5)>::value == 4, "");
     models<concepts::SizedRange>(rng5);
     CHECK(rng5.size() == 4u);
-    static_assert(rng5.size() == 4u, "");
     check_equal(rng5, {42,42,42,42});
 
     auto rng6 = view::join(twice(view::repeat_n(42, 2)));
@@ -119,6 +128,13 @@ int main()
     check_equal(rng6, {42,42,42,42});
 
     test_issue_283();
+
+    {
+        input_array<std::string, 4> some_strings = {{"This","is","his","face"}};
+        models<concepts::InputRange>(some_strings);
+        models<concepts::SizedRange>(some_strings);
+        models_not<concepts::SizedRange>(some_strings | view::join);
+    }
 
     return ::test_result();
 }
