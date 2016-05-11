@@ -50,6 +50,11 @@
 //   Thanks to github's Arzar for bringing date::week_number
 //     to my attention.
 
+#include <range/v3/detail/config.hpp>
+
+#if RANGES_CXX_RETURN_TYPE_DEDUCTION >= RANGES_CXX_RETURN_TYPE_DEDUCTION_14 && \
+    RANGES_CXX_GENERIC_LAMBDAS >= RANGES_CXX_GENERIC_LAMBDAS_14
+
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -346,3 +351,8 @@ catch(std::exception &e) {
     std::cerr << "  what(): " << e.what();
     return 1;
 }
+
+#else
+#pragma message("calendar requires C++14 return type deduction and generic lambdas")
+int main() {}
+#endif

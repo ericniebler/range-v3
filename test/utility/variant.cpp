@@ -172,6 +172,7 @@ int main()
             T() = delete;
             T(int) {}
             T(T const &) = default;
+            T &operator=(T const &) = default;
         };
 
         // Should compile and not assert at runtime.

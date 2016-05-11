@@ -1028,12 +1028,6 @@
     <ClInclude Include="include\range\v3\detail\config.hpp">
       <Filter>Header Files\range\v3\detail</Filter>
     </ClInclude>
-    <ClInclude Include="include\range\v3\detail\disable_warnings.hpp">
-      <Filter>Header Files\range\v3\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="include\range\v3\detail\re_enable_warnings.hpp">
-      <Filter>Header Files\range\v3\detail</Filter>
-    </ClInclude>
     <ClInclude Include="include\range\v3\utility\any.hpp">
       <Filter>Header Files\range\v3\utility</Filter>
     </ClInclude>

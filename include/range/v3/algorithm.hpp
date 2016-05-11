@@ -14,7 +14,8 @@
 #ifndef RANGES_V3_ALGORITHM_HPP
 #define RANGES_V3_ALGORITHM_HPP
 
-#include <range/v3/detail/disable_warnings.hpp>
+#include <range/v3/detail/config.hpp>
+RANGES_DISABLE_WARNINGS
 
 #include <range/v3/algorithm/adjacent_find.hpp>
 #include <range/v3/algorithm/all_of.hpp>
@@ -98,6 +99,6 @@
 #include <range/v3/algorithm/aux_/sort_n_with_buffer.hpp>
 #include <range/v3/algorithm/aux_/upper_bound_n.hpp>
 
-#include <range/v3/detail/re_enable_warnings.hpp>
+RANGES_RE_ENABLE_WARNINGS
 
 #endif
