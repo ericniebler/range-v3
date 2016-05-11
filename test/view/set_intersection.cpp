@@ -82,7 +82,7 @@ int main()
         CONCEPT_ASSERT(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_infinite)>>());
 
-        static_assert(range_cardinality<R>::value == ranges::unknown, "Cardinality of intersection of infinite ranges shold be unknown!");
+        static_assert(range_cardinality<R>::value == ranges::unknown, "Cardinality of intersection of infinite ranges should be unknown!");
 
         ::check_equal(res | view::take(5), {0, 9, 36, 81, 144});
     }
@@ -102,7 +102,7 @@ int main()
         CONCEPT_ASSERT(Same<range_reference_t<R>, range_reference_t<decltype(i1_finite)>>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_finite)>>());
 
-        static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of intersection with a finite range shold be finite!");
+        static_assert(range_cardinality<R>::value == ranges::finite, "Cardinality of intersection with a finite range should be finite!");
 
         ::check_equal(res | view::take(500), {1, 4});
 
@@ -120,7 +120,7 @@ int main()
         CONCEPT_ASSERT(Same<range_reference_t<R2>, range_reference_t<decltype(i1_infinite)>>());
         CONCEPT_ASSERT(Same<range_rvalue_reference_t<R2>, range_rvalue_reference_t<decltype(i1_infinite)>>());
 
-        static_assert(range_cardinality<decltype(res2)>::value == ranges::finite, "Cardinality of intersection with a finite range shold be finite!");
+        static_assert(range_cardinality<decltype(res2)>::value == ranges::finite, "Cardinality of intersection with a finite range should be finite!");
 
         ::check_equal(res2 | view::take(500), {6, 9});
     }
