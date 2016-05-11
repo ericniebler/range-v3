@@ -14,13 +14,16 @@
 #include <sstream>
 #include <range/v3/core.hpp>
 #include <range/v3/istream_range.hpp>
-#include <range/v3/view/stride.hpp>
+#include <range/v3/view/move.hpp>
 #include <range/v3/view/reverse.hpp>
+#include <range/v3/view/stride.hpp>
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/numeric.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
+#include "../test_iterators.hpp"
 
 int main()
 {
@@ -64,6 +67,12 @@ int main()
     CHECK((it0 - it1) == -10);
     CHECK((it0 - it0) == 0);
     CHECK((it1 - it1) == 0);
+
+    {
+        const auto n = 4;
+        auto rng = v | view::move | view::stride(2);
+        CHECK((next(begin(rng), n) - begin(rng)) == n);
+    }
 
     return ::test_result();
 }

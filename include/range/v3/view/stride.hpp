@@ -69,15 +69,21 @@ namespace ranges
                 offset_t & offset() { return *this; }
                 offset_t const & offset() const { return *this; }
                 CONCEPT_REQUIRES(BidirectionalRange<Rng>())
-                void clean() const
+                difference_type_ clean() const
                 {
-                    std::atomic<difference_type_> &off = offset();
-                    if(off == -1)
+                    std::atomic<difference_type_>& off = offset();
+                    difference_type_ o = off;
+                    if(o == -1)
                     {
-                        difference_type_ expected = -1;
                         // Set the offset if it's still -1. If not, leave it alone.
-                        (void) off.compare_exchange_strong(expected, calc_offset());
+                        (void) off.compare_exchange_strong(o, calc_offset());
                     }
+                    return o;
+                }
+                CONCEPT_REQUIRES(!BidirectionalRange<Rng>())
+                difference_type_ clean() const
+                {
+                    return 0;
                 }
                 difference_type_ calc_offset() const
                 {
@@ -98,38 +104,46 @@ namespace ranges
                 }
                 void next(iterator &it)
                 {
-                    RANGES_ASSERT(0 == offset());
+                    difference_type_ off = offset();
+                    RANGES_ASSERT(0 == off);
                     RANGES_ASSERT(it != ranges::end(rng_->mutable_base()));
-                    offset() = ranges::advance(it, rng_->stride_ + offset(),
+                    offset() = ranges::advance(it, rng_->stride_ + off,
                         ranges::end(rng_->mutable_base()));
                 }
                 CONCEPT_REQUIRES(BidirectionalRange<Rng>())
                 void prev(iterator &it)
                 {
-                    clean();
-                    offset() = ranges::advance(it, -rng_->stride_ + offset(),
+                    difference_type_ off = clean();
+                    offset() = off = ranges::advance(it, -rng_->stride_ + off,
                         ranges::begin(rng_->mutable_base()));
-                    RANGES_ASSERT(0 == offset());
+                    RANGES_ASSERT(0 == off);
                 }
                 CONCEPT_REQUIRES(SizedIteratorRange<iterator, iterator>())
                 difference_type_ distance_to(iterator here, iterator there, adaptor const &that) const
                 {
-                    clean();
-                    that.clean();
                     RANGES_ASSERT(rng_ == that.rng_);
-                    RANGES_ASSERT(0 == ((there - here) + that.offset() - offset()) % rng_->stride_);
-                    return ((there - here) + that.offset() - offset()) / rng_->stride_;
+                    difference_type_ delta = (there - here) + (that.clean() - clean());
+                    if(BidirectionalIterator<iterator>())
+                    {
+                        RANGES_ASSERT(0 == delta % rng_->stride_);
+                    }
+                    else
+                    {
+                        delta += rng_->stride_ - 1;
+                    }
+                    return delta / rng_->stride_;
                 }
                 CONCEPT_REQUIRES(RandomAccessRange<Rng>())
                 void advance(iterator &it, difference_type_ n)
                 {
-                    if(n != 0)
-                        clean();
+                    if(0 == n)
+                        return;
+                    difference_type_ off = clean();
                     if(0 < n)
-                        offset() = ranges::advance(it, n * rng_->stride_ + offset(),
+                        offset() = ranges::advance(it, n * rng_->stride_ + off,
                             ranges::end(rng_->mutable_base()));
                     else if(0 > n)
-                        offset() = ranges::advance(it, n * rng_->stride_ + offset(),
+                        offset() = ranges::advance(it, n * rng_->stride_ + off,
                             ranges::begin(rng_->mutable_base()));
                 }
             };
