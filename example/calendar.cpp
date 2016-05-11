@@ -81,6 +81,15 @@
 #include <range/v3/algorithm/for_each.hpp>
 #include <range/v3/algorithm/mismatch.hpp>
 
+#if defined(__GNUC__) && !defined(__clang__)
+// GCC miscompiles this program if several of the generic lambdas are captureless.
+// I hesitate to call it a compiler bug, since it may be intended behavior. (See
+// discussion at https://github.com/ericniebler/range-v3/issues/357).
+#define CAPTURE_SOMETHING x=42
+#else
+#define CAPTURE_SOMETHING
+#endif
+
 namespace po = boost::program_options;
 namespace greg = boost::gregorian;
 using date = greg::date;
@@ -127,7 +136,7 @@ std::string format_day(date d) {
 // In:  Range<Range<date>>: month grouped by weeks.
 // Out: Range<std::string>: month with formatted weeks.
 auto format_weeks() {
-    return view::transform([](/*Range<date>*/ auto week) {
+    return view::transform([CAPTURE_SOMETHING](/*Range<date>*/ auto week) {
         return boost::str(boost::format("%1%%2%%|22t|")
             % std::string((int)front(week).day_of_week() * 3, ' ')
             % (week | view::transform(format_day) | action::join));
@@ -144,7 +153,7 @@ std::string month_title(date d) {
 // In:  Range<Range<date>>: year of months of days
 // Out: Range<Range<std::string>>: year of months of formatted wks
 auto layout_months() {
-    return view::transform([](/*Range<date>*/ auto month) {
+    return view::transform([CAPTURE_SOMETHING](/*Range<date>*/ auto month) {
         int week_count = distance(month | by_week());
         return view::concat(
             view::single(month_title(front(month))),
@@ -255,7 +264,7 @@ auto interleave() {
 // In:  Range<Range<T>>
 // Out: Range<Range<T>>, transposing the rows and columns.
 auto transpose() {
-    return make_pipeable([](auto&& rngs) {
+    return make_pipeable([CAPTURE_SOMETHING](auto&& rngs) {
         using Rngs = decltype(rngs);
         CONCEPT_ASSERT(ForwardRange<Rngs>());
         return std::forward<Rngs>(rngs)
@@ -267,7 +276,7 @@ auto transpose() {
 // In:  Range<Range<Range<string>>>
 // Out: Range<Range<Range<string>>>, transposing months.
 auto transpose_months() {
-    return view::transform([](/*Range<Range<string>>*/ auto rng) {
+    return view::transform([CAPTURE_SOMETHING](/*Range<Range<string>>*/ auto rng) {
         return rng | transpose();
     });
 }
@@ -275,7 +284,7 @@ auto transpose_months() {
 // In:  Range<Range<string>>
 // Out: Range<string>, joining the strings of the inner ranges
 auto join_months() {
-    return view::transform([](/*Range<string>*/ auto rng) {
+    return view::transform([CAPTURE_SOMETHING](/*Range<string>*/ auto rng) {
         return action::join(rng);
     });
 }
