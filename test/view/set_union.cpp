@@ -106,7 +106,7 @@ int main()
                                                range_rvalue_reference_t<decltype(i2_infinite)>>
                            >());
 
-        static_assert(range_cardinality<R>::value == ranges::infinite, "Cardinality of union of infinite ranges shold be infinite!");
+        static_assert(range_cardinality<R>::value == ranges::infinite, "Cardinality of union of infinite ranges should be infinite!");
 
         ::check_equal(res | view::take(6), {0, 1, 3, 4, 6, 9});
 

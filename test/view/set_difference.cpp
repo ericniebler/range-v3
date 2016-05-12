@@ -88,7 +88,7 @@ int main()
         CONCEPT_ASSERT(Same<range_reference_t<R>, range_reference_t<decltype(i1_infinite)>>());
         CONCEPT_ASSERT(Same<decltype(iter_move(begin(res))), range_rvalue_reference_t<decltype(i1_infinite)>>());
 
-        static_assert(range_cardinality<R>::value == ranges::unknown, "Cardinality of difference of infinite ranges shold be unknown!");
+        static_assert(range_cardinality<R>::value == ranges::unknown, "Cardinality of difference of infinite ranges should be unknown!");
 
         ::check_equal(res | view::take(5), {3, 6, 12, 15, 18});
 
