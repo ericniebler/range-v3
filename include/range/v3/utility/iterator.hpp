@@ -824,11 +824,11 @@ namespace ranges
                 //{
                 //    it_ += n;
                 //}
-                //CONCEPT_REQUIRES(SizedIteratorRange<I, I>())
-                //iterator_difference_t<I> distance_to(move_cursor const &that) const
-                //{
-                //    return that.it_ - it_;
-                //}
+                CONCEPT_REQUIRES(SizedIteratorRange<I, I>())
+                iterator_difference_t<I> distance_to(move_cursor const &that) const
+                {
+                    return that.it_ - it_;
+                }
                 friend iterator_rvalue_reference_t<I> indirect_move(move_iterator<I> const &it)
                     noexcept(noexcept(iter_move(std::declval<I const &>())))
                 {
