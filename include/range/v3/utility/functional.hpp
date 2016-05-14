@@ -377,42 +377,52 @@ namespace ranges
 
         template<typename Second, typename First>
         struct composed
+          : private compressed_pair<function_type<First>, function_type<Second>>
         {
         private:
-            compressed_pair<function_box_t<First>, function_box_t<Second>> funs_;
-
             template<typename A, typename B, typename...Ts>
             static auto do_(A &a, B &b, std::false_type, Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 b(a((Ts &&) ts...))
             )
             template<typename A, typename B, typename...Ts>
             static auto do_(A &a, B &b, std::true_type, Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                a((Ts &&) ts...),
-                b()
+                (a((Ts &&) ts...),
+                 b())
             )
         public:
             composed() = default;
             composed(Second second, First first)
-              : funs_{as_function(std::move(first)), as_function(std::move(second))}
+              : composed::compressed_pair{
+                    as_function(std::move(first)),
+                    as_function(std::move(second))}
             {}
             template<typename...Ts,
-                typename FirstResultT = concepts::Function::result_t<First &, Ts &&...>>
+                typename FirstResultT =
+                    concepts::Function::result_t<function_type<First> &, Ts &&...>>
             auto operator()(Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                composed::do_(funs_.first, funs_.second, std::is_void<FirstResultT>{}, (Ts &&) ts...)
+                composed::do_(
+                    composed::compressed_pair::first,
+                    composed::compressed_pair::second,
+                    std::is_void<FirstResultT>{},
+                    (Ts &&) ts...)
             )
             template<typename...Ts,
-                typename FirstResultT = concepts::Function::result_t<First const &, Ts &&...>>
+                typename FirstResultT =
+                    concepts::Function::result_t<function_type<First> const &, Ts &&...>>
             auto operator()(Ts &&...ts) const
-            RANGES_DECLTYPE_AUTO_RETURN
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                composed::do_(detail::as_const(funs_.first), detail::as_const(funs_.second),
-                    std::is_void<FirstResultT>{}, (Ts &&) ts...)
+                composed::do_(
+                    detail::as_const(composed::compressed_pair::first),
+                    detail::as_const(composed::compressed_pair::second),
+                    std::is_void<FirstResultT>{},
+                    (Ts &&) ts...)
             )
         };
 
@@ -438,7 +448,7 @@ namespace ranges
 
         template<typename First, typename...Rest>
         struct overloaded<First, Rest...>
-          : private compressed_pair<function_type<First>, overloaded<Rest...>> 
+          : private compressed_pair<function_type<First>, overloaded<Rest...>>
         {
             overloaded() = default;
             constexpr overloaded(First first, Rest... rest)
@@ -448,23 +458,27 @@ namespace ranges
             {}
             template<typename... Args>
             auto operator()(Args&&...args)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
                 overloaded::compressed_pair::first(detail::forward<Args>(args)...)
             )
             template<typename... Args>
             auto operator()(Args&&...args) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
                 detail::as_const(overloaded::compressed_pair::first)(
                     detail::forward<Args>(args)...)
             )
             template<typename... Args>
             auto operator()(Args&&...args)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
                 overloaded::compressed_pair::second(detail::forward<Args>(args)...)
             )
             template<typename... Args>
             auto operator()(Args&&...args) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT(
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
                 detail::as_const(overloaded::compressed_pair::second)(
                     detail::forward<Args>(args)...)
             )
