@@ -627,9 +627,6 @@
     <ClCompile Include="test\view\zip.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
-    <ClCompile Include="scratch\scratch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="test\iterator_range.cpp">
       <Filter>Test Files</Filter>
     </ClCompile>
@@ -1043,16 +1040,10 @@
     <ClInclude Include="include\range\v3\utility\common_iterator.hpp">
       <Filter>Header Files\range\v3\utility</Filter>
     </ClInclude>
-    <ClInclude Include="include\range\v3\utility\common_tuple.hpp">
-      <Filter>Header Files\range\v3\utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\range\v3\utility\common_type.hpp">
       <Filter>Header Files\range\v3\utility</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\utility\compressed_pair.hpp">
-      <Filter>Header Files\range\v3\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="include\range\v3\utility\compressed_tuple.hpp">
       <Filter>Header Files\range\v3\utility</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\utility\concepts.hpp">
@@ -1331,6 +1322,9 @@
     <ClInclude Include="include\range\v3\view\set_algorithm.hpp">
       <Filter>Header Files\range\v3\view</Filter>
     </ClInclude>
+    <ClInclude Include="include\range\v3\utility\common_tuple.hpp">
+      <Filter>Header Files\range\v3\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -1385,9 +1379,6 @@
     </Text>
     <Text Include="test\view\CMakeLists.txt">
       <Filter>Test Files\view</Filter>
-    </Text>
-    <Text Include="scratch\CMakeLists.txt">
-      <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

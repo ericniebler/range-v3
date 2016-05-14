@@ -175,7 +175,6 @@ namespace ranges
 
         struct make_common_tuple_fn
         {
-            using expects_wrapped_references = void;
             template<typename ...Args>
             common_tuple<bind_element_t<Args>...> operator()(Args &&... args) const
                 noexcept(meta::and_c<
@@ -365,7 +364,6 @@ namespace ranges
 
         struct make_common_pair_fn
         {
-            using expects_wrapped_references = void;
             template<typename First, typename Second,
                 typename F = bind_element_t<First>,
                 typename S = bind_element_t<Second>>

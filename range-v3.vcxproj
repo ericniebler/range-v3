@@ -170,12 +170,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="scratch\scratch.cpp">
-      <CppLanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c++1y</CppLanguageStandard>
-      <CppLanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">c++1y</CppLanguageStandard>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="test\action\cont_concepts.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -1069,7 +1063,6 @@
     <ClInclude Include="include\range\v3\utility\common_tuple.hpp" />
     <ClInclude Include="include\range\v3\utility\common_type.hpp" />
     <ClInclude Include="include\range\v3\utility\compressed_pair.hpp" />
-    <ClInclude Include="include\range\v3\utility\compressed_tuple.hpp" />
     <ClInclude Include="include\range\v3\utility\concepts.hpp" />
     <ClInclude Include="include\range\v3\utility\copy.hpp" />
     <ClInclude Include="include\range\v3\utility\counted_iterator.hpp" />
@@ -1178,7 +1171,6 @@
     <Text Include="doc\CMakeLists.txt" />
     <Text Include="example\CMakeLists.txt" />
     <Text Include="LICENSE.txt" />
-    <Text Include="scratch\CMakeLists.txt" />
     <Text Include="test\action\CMakeLists.txt" />
     <Text Include="test\algorithm\CMakeLists.txt" />
     <Text Include="test\CMakeLists.txt" />
