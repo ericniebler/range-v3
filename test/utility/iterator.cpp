@@ -35,15 +35,21 @@ void test_move_iterator()
     in.emplace_back("his");
     in.emplace_back("face");
     std::vector<MoveOnlyString> out;
-    auto it = ranges::make_move_iterator(in.begin());
-    using I = decltype(it);
+    auto first = ranges::make_move_iterator(in.begin());
+    using I = decltype(first);
+    CONCEPT_ASSERT(InputIterator<I>());
+    CONCEPT_ASSERT(!ForwardIterator<I>());
     CONCEPT_ASSERT(Same<I, ranges::move_iterator<std::vector<MoveOnlyString>::iterator>>());
-    ranges::copy(it, ranges::make_move_sentinel(in.end()),
-        ranges::back_inserter(out));
+    auto last = ranges::make_move_sentinel(in.end());
+    using S = decltype(last);
+    CONCEPT_ASSERT(IteratorRange<I, S>());
+    CONCEPT_ASSERT(SizedIteratorRange<I, I>());
+    CHECK((first - first) == 0);
+    CONCEPT_ASSERT(SizedIteratorRange<I, S>());
+    CHECK(static_cast<std::size_t>(last - first) == in.size());
+    ranges::copy(first, last, ranges::back_inserter(out));
     ::check_equal(in, {"","","",""});
     ::check_equal(out, {"this","is","his","face"});
-    ::models<concepts::InputIterator>((I&&)it);
-    ::models_not<concepts::ForwardIterator>((I&&)it);
 }
 
 int main()
