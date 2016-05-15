@@ -251,6 +251,60 @@ namespace ranges
         template<typename T>
         using function_type = decltype(as_function(std::declval<T>()));
 
+        /// \addtogroup group-concepts
+        /// @{
+        namespace concepts
+        {
+            struct Callable
+            {
+                template<typename Fun, typename...Args>
+                using result_t = Function::result_t<function_type<Fun>, Args...>;
+
+                template<typename Fun, typename...Args>
+                auto requires_(Fun&&, Args&&...) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Function, function_type<Fun>, Args...>()
+                    ));
+            };
+
+            struct RegularCallable
+              : refines<Callable>
+            {};
+
+            struct CallablePredicate
+              : refines<RegularCallable>
+            {
+                template<typename Fun, typename...Args>
+                auto requires_(Fun&&, Args&&...) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Predicate, function_type<Fun>, Args...>()
+                    ));
+            };
+
+            struct CallableRelation
+              : refines<CallablePredicate>
+            {
+                template<typename Fun, typename T, typename U>
+                auto requires_(Fun&&, T&&, U&&) -> decltype(
+                    concepts::valid_expr(
+                        concepts::model_of<Relation, function_type<Fun>, T, U>()
+                    ));
+            };
+        }
+
+        template<typename Fun, typename...Args>
+        using Callable = concepts::models<concepts::Callable, Fun, Args...>;
+
+        template<typename Fun, typename...Args>
+        using RegularCallable = concepts::models<concepts::RegularCallable, Fun, Args...>;
+
+        template<typename Fun, typename...Args>
+        using CallablePredicate = concepts::models<concepts::CallablePredicate, Fun, Args...>;
+
+        template<typename Fun, typename T, typename U = T>
+        using CallableRelation = concepts::models<concepts::CallableRelation, Fun, T, U>;
+        /// @}
+
         template<typename Pred>
         struct logical_negate
         {
@@ -295,6 +349,32 @@ namespace ranges
             constexpr auto&& not_ = static_const<not_fn>::value;
         }
 
+        // Lambdas are *not*:
+        // - aggregates             ([expr.prim.lambda]/p3)
+        // - literal types          ([expr.prim.lambda]/p3)
+        // - default constructible  ([expr.prim.lambda]/p20)
+        // - copy assignable        ([expr.prim.lambda]/p20)
+        template<typename Fn>
+        using could_be_lambda_ =
+            meta::bool_<
+               // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71116
+               //!std::is_literal_type<Fn>::value &&
+               !std::is_default_constructible<Fn>::value &&
+               !std::is_copy_assignable<Fn>::value>;
+
+        template<typename Fn, typename Tag = Fn>
+        using function_box_t =
+            box_if<
+                function_type<Fn>,
+                Tag
+        // GCC 6 finds empty lambdas' implicit conversion to function pointer when doing overload
+        // resolution for function calls. That causes hard errors.
+        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71117
+        #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 6
+              , !could_be_lambda_<Fn>::value
+        #endif
+            >;
+
         template<typename Second, typename First>
         struct composed
           : private compressed_pair<function_type<First>, function_type<Second>>
@@ -302,37 +382,47 @@ namespace ranges
         private:
             template<typename A, typename B, typename...Ts>
             static auto do_(A &a, B &b, std::false_type, Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
                 b(a((Ts &&) ts...))
             )
             template<typename A, typename B, typename...Ts>
             static auto do_(A &a, B &b, std::true_type, Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                a((Ts &&) ts...),
-                b()
+                (a((Ts &&) ts...),
+                 b())
             )
         public:
             composed() = default;
             composed(Second second, First first)
-              : compressed_pair<function_type<First>, function_type<Second>>{
-                    as_function(std::move(first)), as_function(std::move(second))}
+              : composed::compressed_pair{
+                    as_function(std::move(first)),
+                    as_function(std::move(second))}
             {}
             template<typename...Ts,
-                typename FirstResultT = concepts::Function::result_t<First &, Ts &&...>>
+                typename FirstResultT =
+                    concepts::Function::result_t<function_type<First> &, Ts &&...>>
             auto operator()(Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                composed::do_(this->first, this->second, std::is_void<FirstResultT>{}, (Ts &&) ts...)
+                composed::do_(
+                    composed::compressed_pair::first,
+                    composed::compressed_pair::second,
+                    std::is_void<FirstResultT>{},
+                    (Ts &&) ts...)
             )
             template<typename...Ts,
-                typename FirstResultT = concepts::Function::result_t<First const &, Ts &&...>>
+                typename FirstResultT =
+                    concepts::Function::result_t<function_type<First> const &, Ts &&...>>
             auto operator()(Ts &&...ts) const
-            RANGES_DECLTYPE_AUTO_RETURN
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
             (
-                composed::do_(detail::as_const(this->first), detail::as_const(this->second),
-                    std::is_void<FirstResultT>{}, (Ts &&) ts...)
+                composed::do_(
+                    detail::as_const(composed::compressed_pair::first),
+                    detail::as_const(composed::compressed_pair::second),
+                    std::is_void<FirstResultT>{},
+                    (Ts &&) ts...)
             )
         };
 
@@ -356,33 +446,52 @@ namespace ranges
         struct overloaded<>
         {};
 
-        template<typename Fn>
-        struct overloaded<Fn>
-          : private function_type<Fn>
-        {
-            overloaded() = default;
-            constexpr overloaded(Fn fn)
-              : function_type<Fn>(as_function(std::move(fn)))
-            {}
-            using function_type<Fn>::operator();
-        };
-
         template<typename First, typename...Rest>
         struct overloaded<First, Rest...>
-          : private overloaded<First>
-          , private overloaded<Rest...>
+          : private compressed_pair<function_type<First>, overloaded<Rest...>>
         {
             overloaded() = default;
             constexpr overloaded(First first, Rest... rest)
-              : overloaded<First>{detail::move(first)}
-              , overloaded<Rest...>{detail::move(rest)...}
+              : overloaded::compressed_pair{
+                    as_function(detail::move(first)),
+                    overloaded<Rest...>{detail::move(rest)...}}
             {}
-            using overloaded<First>::operator();
-            using overloaded<Rest...>::operator();
+            template<typename... Args>
+            auto operator()(Args&&...args)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                overloaded::compressed_pair::first(detail::forward<Args>(args)...)
+            )
+            template<typename... Args>
+            auto operator()(Args&&...args) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::as_const(overloaded::compressed_pair::first)(
+                    detail::forward<Args>(args)...)
+            )
+            template<typename... Args>
+            auto operator()(Args&&...args)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                overloaded::compressed_pair::second(detail::forward<Args>(args)...)
+            )
+            template<typename... Args>
+            auto operator()(Args&&...args) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::as_const(overloaded::compressed_pair::second)(
+                    detail::forward<Args>(args)...)
+            )
         };
 
         struct overload_fn
         {
+            template<typename Fn>
+            constexpr function_type<Fn> operator()(Fn fn) const
+            {
+                return as_function(detail::move(fn));
+            }
+
             template<typename ...Fns>
             constexpr overloaded<Fns...> operator()(Fns... fns) const
             {
@@ -399,17 +508,17 @@ namespace ranges
 
         template<typename Fn>
         struct indirected
-          : private function_type<Fn>
+          : private function_box_t<Fn, meta::size_t<0>>
         {
         private:
             using BaseFn = function_type<Fn>;
 
-            BaseFn & base()                { return *this; }
-            BaseFn const & base() const    { return *this; }
+            BaseFn & base()                { return ranges::get<0>(*this); }
+            BaseFn const & base() const    { return ranges::get<0>(*this); }
         public:
             indirected() = default;
             indirected(Fn fn)
-              : BaseFn(as_function(std::move(fn)))
+              : indirected::box(as_function(std::move(fn)))
             {}
             // value_type (needs no impl)
             template<typename ...Its>
@@ -470,22 +579,22 @@ namespace ranges
 
         template<typename Fn1, typename Fn2>
         struct transformed
-          : private function_type<Fn1>
-          , private function_type<Fn2>
+          : private function_box_t<Fn1, meta::size_t<0>>
+          , private function_box_t<Fn2, meta::size_t<1>>
         {
         private:
             using BaseFn1 = function_type<Fn1>;
             using BaseFn2 = function_type<Fn2>;
 
-            BaseFn1 & fn1()              { return *this; }
-            BaseFn1 const & fn1() const  { return *this; }
-            BaseFn2 & fn2()              { return *this; }
-            BaseFn2 const & fn2() const  { return *this; }
+            BaseFn1 & fn1()              { return ranges::get<0>(*this); }
+            BaseFn1 const & fn1() const  { return ranges::get<0>(*this); }
+            BaseFn2 & fn2()              { return ranges::get<1>(*this); }
+            BaseFn2 const & fn2() const  { return ranges::get<1>(*this); }
         public:
             transformed() = default;
             constexpr transformed(Fn1 fn1, Fn2 fn2)
-              : BaseFn1(as_function(detail::move(fn1)))
-              , BaseFn2(as_function(detail::move(fn2)))
+              : function_box_t<Fn1, meta::size_t<0>>(as_function(detail::move(fn1)))
+              , function_box_t<Fn2, meta::size_t<1>>(as_function(detail::move(fn2)))
             {}
             template<typename ...Args>
             auto operator()(Args &&... args)
@@ -695,40 +804,6 @@ namespace ranges
         using is_reference_wrapper_t = meta::_t<is_reference_wrapper<T>>;
 
         template<typename T>
-        struct referent_of
-        {};
-
-        template<typename T, bool RValue>
-        struct referent_of<reference_wrapper<T, RValue>>
-        {
-            using type = T;
-        };
-
-        template<typename T>
-        struct referent_of<std::reference_wrapper<T>>
-        {
-            using type = T;
-        };
-
-        template<typename T>
-        struct referent_of<T &>
-          : meta::if_<is_reference_wrapper<T>, referent_of<T>, meta::id<T>>
-        {};
-
-        template<typename T>
-        struct referent_of<T &&>
-          : meta::if_<is_reference_wrapper<T>, referent_of<T>, meta::id<T>>
-        {};
-
-        template<typename T>
-        struct referent_of<T const>
-          : referent_of<T>
-        {};
-
-        template<typename T>
-        using referent_of_t = meta::_t<referent_of<T>>;
-
-        template<typename T>
         struct reference_of
         {};
 
@@ -874,93 +949,6 @@ namespace ranges
         template<typename T>
         using unwrap_reference_t = decltype(unwrap_reference(std::declval<T>()));
 
-        /// \ingroup group-utility
-        template<typename T>
-        using forward_ref_t =
-            meta::if_<
-                std::is_reference<T>,
-                reference_wrapper<
-                    meta::_t<std::remove_reference<T>>,
-                    std::is_rvalue_reference<T>::value>,
-                T &&>;
-
-        /// Forward arguments, wrapping lvalue and rvalue refs in ranges::reference_wrapper.
-        /// \ingroup group-utility
-        template<typename T, typename U>
-        forward_ref_t<T> forward_ref(U && t) noexcept
-        {
-            // This is to catch way sketchy stuff like: forward<int const &>(42)
-            //static_assert(std::is_same<T &, U>::value, "You didn't just do that!");
-            return static_cast<forward_ref_t<T>>((T &&) t);
-        }
-
-        /// \cond
-        namespace detail
-        {
-            template<typename F>
-            struct unwrap_args_fn
-              : private box<F, meta::size_t<0>>
-            {
-                using expects_wrapped_references = void;
-                unwrap_args_fn() = default;
-                explicit unwrap_args_fn(F f)
-                  : box<F, meta::size_t<0>>{std::move(f)}
-                {}
-                template<typename...Args>
-                auto operator()(Args &&...args) ->
-                    decltype(std::declval<F &>()(unwrap_reference(std::forward<Args>(args))...))
-                {
-                    return ranges::get<0>(*this)(unwrap_reference(std::forward<Args>(args))...);
-                }
-                template<typename...Args>
-                auto operator()(Args &&...args) const ->
-                    decltype(std::declval<F const &>()(unwrap_reference(std::forward<Args>(args))...))
-                {
-                    return ranges::get<0>(*this)(unwrap_reference(std::forward<Args>(args))...);
-                }
-            };
-
-            template<typename T, typename Enable = void>
-            struct expects_wrapped_references_
-              : std::false_type
-            {};
-
-            template<typename T>
-            struct expects_wrapped_references_<T, meta::void_<typename T::expects_wrapped_references>>
-              : std::true_type
-            {};
-        }
-        /// \endcond
-
-        template<typename T>
-        struct expects_wrapped_references
-          : detail::expects_wrapped_references_<uncvref_t<T>>
-        {};
-
-        struct make_unwrap_args_fn
-        {
-            template<typename F, CONCEPT_REQUIRES_(!expects_wrapped_references<F>::value)>
-            detail::unwrap_args_fn<F> operator()(F f) const
-            {
-                return detail::unwrap_args_fn<F>{std::move(f)};
-            }
-            template<typename F, CONCEPT_REQUIRES_(expects_wrapped_references<F>::value)>
-            F operator()(F f) const
-            {
-                return std::move(f);
-            }
-        };
-
-        /// \ingroup group-utility
-        /// \sa `make_unwrap_args_fn`
-        namespace
-        {
-            constexpr auto&& make_unwrap_args = static_const<make_unwrap_args_fn>::value;
-        }
-
-        template<typename F>
-        using unwrap_args_t = decltype(make_unwrap_args(std::declval<F>()));
-
         /// \cond
         namespace detail
         {
@@ -1050,60 +1038,6 @@ namespace ranges
                 return base()(std::move(rng0), std::move(rng1), std::forward<Args>(args)...);
             }
         };
-        /// @}
-
-        /// \addtogroup group-concepts
-        /// @{
-        namespace concepts
-        {
-            struct Callable
-            {
-                template<typename Fun, typename...Args>
-                using result_t = Function::result_t<function_type<Fun>, Args...>;
-
-                template<typename Fun, typename...Args>
-                auto requires_(Fun&&, Args&&...) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Function, function_type<Fun>, Args...>()
-                    ));
-            };
-
-            struct RegularCallable
-              : refines<Callable>
-            {};
-
-            struct CallablePredicate
-              : refines<RegularCallable>
-            {
-                template<typename Fun, typename...Args>
-                auto requires_(Fun&&, Args&&...) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Predicate, function_type<Fun>, Args...>()
-                    ));
-            };
-
-            struct CallableRelation
-              : refines<CallablePredicate>
-            {
-                template<typename Fun, typename T, typename U>
-                auto requires_(Fun&&, T&&, U&&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<Relation, function_type<Fun>, T, U>()
-                    ));
-            };
-        }
-
-        template<typename Fun, typename...Args>
-        using Callable = concepts::models<concepts::Callable, Fun, Args...>;
-
-        template<typename Fun, typename...Args>
-        using RegularCallable = concepts::models<concepts::RegularCallable, Fun, Args...>;
-
-        template<typename Fun, typename...Args>
-        using CallablePredicate = concepts::models<concepts::CallablePredicate, Fun, Args...>;
-
-        template<typename Fun, typename T, typename U = T>
-        using CallableRelation = concepts::models<concepts::CallableRelation, Fun, T, U>;
         /// @}
     }
 }

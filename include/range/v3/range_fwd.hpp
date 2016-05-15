@@ -378,9 +378,6 @@ namespace ranges
         template<typename First, typename Second>
         struct compressed_pair;
 
-        template<typename...Ts>
-        struct compressed_tuple;
-
         template<typename T>
         struct bind_element;
 

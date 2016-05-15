@@ -29,7 +29,11 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename T, typename = void>
+            template<typename T>
+            using is_ebo_able =
+                meta::and_<std::is_empty<T>, std::is_trivial<T>, std::is_default_constructible<T>>;
+
+            template<typename T, bool EBOable = is_ebo_able<T>::value>
             struct first_base
             {
                 T first;
@@ -42,7 +46,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct first_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>
+            struct first_base<T, true>
             {
                 static T first;
                 first_base() = default;
@@ -53,9 +57,9 @@ namespace ranges
             };
 
             template<typename T>
-            T first_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>::first{};
+            T first_base<T, true>::first{};
 
-            template<typename T, typename Enable = void>
+            template<typename T, bool EBOable = is_ebo_able<T>::value>
             struct second_base
             {
                 T second;
@@ -68,7 +72,7 @@ namespace ranges
             };
 
             template<typename T>
-            struct second_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>
+            struct second_base<T, true>
             {
                 static T second;
                 second_base() = default;
@@ -79,7 +83,7 @@ namespace ranges
             };
 
             template<typename T>
-            T second_base<T, meta::if_<meta::and_<std::is_empty<T>, std::is_trivial<T>>>>::second{};
+            T second_base<T, true>::second{};
         }
         /// \endcond
 
@@ -119,7 +123,6 @@ namespace ranges
 
         struct make_compressed_pair_fn
         {
-            using expects_wrapped_references = void;
             template<typename First, typename Second>
             constexpr auto operator()(First && f, Second && s) const ->
                 compressed_pair<bind_element_t<First>, bind_element_t<Second>>
