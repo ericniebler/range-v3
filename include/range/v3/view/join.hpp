@@ -23,10 +23,11 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/empty.hpp>
 #include <range/v3/range_traits.hpp>
-#include <range/v3/view_adaptor.hpp>
-#include <range/v3/view/transform.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/variant.hpp>
+#include <range/v3/view_facade.hpp>
+#include <range/v3/view/transform.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/single.hpp>
@@ -39,8 +40,8 @@ namespace ranges
         namespace detail
         {
             // Compute the cardinality of a joined range
-            template<typename Outer, typename Inner, typename Joiner = std::integral_constant<cardinality, static_cast<cardinality>(0)>>
-            using join_cardinality =
+            template<typename Outer, typename Inner, typename Joiner>
+            using join_cardinality_ =
                 std::integral_constant<cardinality,
                     Outer::value == infinite || Inner::value == infinite || (Joiner::value == infinite && Outer::value != 0 && Outer::value != 1) ?
                         infinite :
@@ -49,6 +50,12 @@ namespace ranges
                             Outer::value == finite || Inner::value == finite || (Joiner::value == finite && Outer::value != 0 && Outer::value != 1) ?
                                 finite :
                                 static_cast<cardinality>(Outer::value * Inner::value + (Outer::value == 0 ? 0 : (Outer::value - 1) * Joiner::value))>;
+            template<typename Range, typename JoinRange = void>
+            using join_cardinality =
+                join_cardinality_<range_cardinality<Range>, range_cardinality<range_reference_t<Range>>,
+                    meta::if_<std::is_same<void, JoinRange>,
+                        std::integral_constant<cardinality, static_cast<cardinality>(0)>,
+                        range_cardinality<JoinRange>>>;
         }
         /// \endcond
 
@@ -58,259 +65,235 @@ namespace ranges
         // Join a range of ranges
         template<typename Rng>
         struct join_view<Rng, void>
-          : view_adaptor<join_view<Rng, void>, Rng,
-                detail::join_cardinality<
-                    range_cardinality<Rng>,
-                    range_cardinality<range_value_t<Rng>>>::value>
+          : view_facade<join_view<Rng, void>, detail::join_cardinality<Rng>::value>
         {
+            CONCEPT_ASSERT(InputRange<Rng>());
+            CONCEPT_ASSERT(InputRange<range_reference_t<Rng>>());
+            using size_type = common_type_t<range_size_t<Rng>, range_size_t<range_reference_t<Rng>>>;
+
+            join_view() = default;
+            explicit join_view(Rng rng)
+              : outer_(view::all(std::move(rng)))
+            {}
+            CONCEPT_REQUIRES(detail::join_cardinality<Rng>::value >= 0)
+            constexpr size_type size() const
+            {
+                return detail::join_cardinality<Rng>::value;
+            }
+            CONCEPT_REQUIRES(detail::join_cardinality<Rng>::value < 0 &&
+                range_cardinality<Rng>::value >= 0 && ForwardRange<Rng>() &&
+                SizedRange<range_reference_t<Rng>>())
+            size_type size() const
+            {
+                return accumulate(view::transform(outer_, ranges::size), size_type{0});
+            }
         private:
-            CONCEPT_ASSERT(Range<Rng>());
-            CONCEPT_ASSERT(Range<range_reference_t<Rng>>());
-            using size_t_ = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
-
             friend range_access;
-            view::all_t<range_reference_t<Rng>> cur_;
+            using Outer = view::all_t<Rng>;
+            using Inner = view::all_t<range_reference_t<Outer>>;
 
-            struct adaptor : adaptor_base
+            Outer outer_{};
+            Inner inner_{};
+
+            class cursor
             {
             private:
-                join_view *rng_;
-                range_iterator_t<range_reference_t<Rng>> it_;
-                void satisfy(range_iterator_t<Rng> &it)
+                join_view* rng_ = nullptr;
+                range_iterator_t<Outer> outer_it_{};
+                range_iterator_t<Inner> inner_it_{};
+
+                void satisfy()
                 {
-                    auto &cur = rng_->cur_;
-                    auto const end = ranges::end(rng_->mutable_base());
-                    while(it_ == ranges::end(cur))
+                    while (inner_it_ == ranges::end(rng_->inner_) &&
+                         ++outer_it_ != ranges::end(rng_->outer_))
                     {
-                        if(++it == end)
-                        {
-#if RANGES_CXX_STD == RANGES_CXX_STD_11
-                            rng_ = nullptr;
-#endif
-                            it_ = detail::value_init{};
-                            break;
-                        }
-                        cur = view::all(*it);
-                        it_ = ranges::begin(cur);
+                        rng_->inner_ = view::all(*outer_it_);
+                        inner_it_ = ranges::begin(rng_->inner_);
                     }
                 }
             public:
                 using single_pass = std::true_type;
-                adaptor() = default;
-                adaptor(join_view &rng)
-                  : rng_(&rng), it_{}
-                {}
-                range_iterator_t<Rng> begin(join_view &)
+                cursor() = default;
+                cursor(join_view &rng)
+                  : rng_{&rng}
+                  , outer_it_(ranges::begin(rng.outer_))
                 {
-                    auto it = ranges::begin(rng_->mutable_base());
-                    auto const end = ranges::end(rng_->mutable_base());
-                    if(it != end)
+                    if (outer_it_ != ranges::end(rng_->outer_))
                     {
-                        rng_->cur_ = view::all(*it);
-                        it_ = ranges::begin(rng_->cur_);
-                        satisfy(it);
+                        rng.inner_ = view::all(*outer_it_);
+                        inner_it_ = ranges::begin(rng.inner_);
+                        satisfy();
                     }
-                    return it;
                 }
-                bool equal(range_iterator_t<Rng> const &it, range_iterator_t<Rng> const &other_it,
-                    adaptor const &other_adapt) const
+                bool done() const
                 {
-#if RANGES_CXX_STD > RANGES_CXX_STD_11
-                    RANGES_ASSERT(rng_ == other_adapt.rng_);
-                    return it == other_it && it_ == other_adapt.it_;
-#else
-                    return (!rng_ && !other_adapt.rng_) ||
-                        (it == other_it && it_ == other_adapt.it_);
-#endif
+                    return outer_it_ == ranges::end(rng_->outer_);
                 }
-                void next(range_iterator_t<Rng> &it)
+                void next()
                 {
-                    ++it_;
-                    satisfy(it);
+                    RANGES_ASSERT(inner_it_ != ranges::end(rng_->inner_));
+                    ++inner_it_;
+                    satisfy();
                 }
-                auto get(range_iterator_t<Rng> const &) const ->
-                    decltype(*it_)
-                {
-                    return *it_;
-                }
-                auto indirect_move(range_iterator_t<Rng> const &) const ->
-                    decltype(ranges::indirect_move(it_))
-                {
-                    return ranges::indirect_move(it_);
-                }
-                void distance_to() = delete;
+                auto get() const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    *inner_it_
+                )
+                auto indirect_move() const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    iter_move(inner_it_)
+                )
             };
-            adaptor begin_adaptor()
+            cursor begin_cursor()
             {
-                return {*this};
-            }
-            adaptor end_adaptor()
-            {
-#if RANGES_CXX_STD > RANGES_CXX_STD_11
-                return {*this};
-#else
-                return {};
-#endif
+                return cursor{*this};
             }
             // TODO: could support const iteration if range_reference_t<Rng> is a true reference.
-        public:
-            join_view() = default;
-            explicit join_view(Rng rng)
-              : view_adaptor_t<join_view>{std::move(rng)}, cur_{}
-            {}
-            CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 && SizedRange<range_reference_t<Rng>>())
-            constexpr size_t_ size() const
-            {
-                return range_cardinality<join_view>::value >= 0 ?
-                    (size_t_)range_cardinality<join_view>::value :
-                    accumulate(view::transform(this->base(), ranges::size), size_t_{0});
-            }
         };
 
         // Join a range of ranges, inserting a range of values between them.
         template<typename Rng, typename ValRng>
         struct join_view
-          : view_adaptor<join_view<Rng, ValRng>, Rng,
-                detail::join_cardinality<
-                    range_cardinality<Rng>,
-                    range_cardinality<range_value_t<Rng>>,
-                    range_cardinality<ValRng>>::value>
+          : view_facade<join_view<Rng, ValRng>, detail::join_cardinality<Rng, ValRng>::value>
         {
-        private:
             CONCEPT_ASSERT(InputRange<Rng>());
-            CONCEPT_ASSERT(ForwardRange<ValRng>());
             CONCEPT_ASSERT(InputRange<range_reference_t<Rng>>());
+            CONCEPT_ASSERT(ForwardRange<ValRng>());
             CONCEPT_ASSERT(Common<range_value_t<range_reference_t<Rng>>, range_value_t<ValRng>>());
             CONCEPT_ASSERT(SemiRegular<concepts::Common::value_t<
                 range_value_t<range_reference_t<Rng>>,
                 range_value_t<ValRng>>>());
-            using size_t_ = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
+            using size_type = common_type_t<range_size_t<Rng>, range_size_t<range_value_t<Rng>>>;
 
-            friend range_access;
-            view::all_t<range_reference_t<Rng>> cur_;
-            ValRng val_;
-
-            struct adaptor : adaptor_base
-            {
-            private:
-                join_view *rng_;
-                bool toggl_;
-                range_iterator_t<ValRng> val_it_;
-                range_iterator_t<range_reference_t<Rng>> it_;
-                void satisfy(range_iterator_t<Rng> &it)
-                {
-                    auto &cur = rng_->cur_;
-                    auto &val = rng_->val_;
-                    auto const end = ranges::end(rng_->mutable_base());
-                    while(toggl_ ? it_ == ranges::end(cur) : val_it_ == ranges::end(val))
-                    {
-                        if(toggl_)
-                        {
-                            if(++it == end)
-                            {
-#if RANGES_CXX_STD == RANGES_CXX_STD_11
-                                rng_ = nullptr;
-#endif
-                                it_ = detail::value_init{};
-                                break;
-                            }
-                            toggl_ = false;
-                            val_it_ = ranges::begin(val);
-                        }
-                        else
-                        {
-                            toggl_ = true;
-                            cur = view::all(*it);
-                            it_ = ranges::begin(cur);
-                        }
-                    }
-                }
-            public:
-                using single_pass = std::true_type;
-                adaptor() = default;
-                adaptor(join_view &rng)
-                  : rng_(&rng), toggl_(true), val_it_{}, it_{}
-                {}
-                range_iterator_t<Rng> begin(join_view &)
-                {
-                    auto it = ranges::begin(rng_->mutable_base());
-                    auto const end = ranges::end(rng_->mutable_base());
-                    if(it != end)
-                    {
-                        rng_->cur_ = view::all(*it);
-                        it_ = ranges::begin(rng_->cur_);
-                        satisfy(it);
-                    }
-                    return it;
-                }
-                bool equal(range_iterator_t<Rng> const &it, range_iterator_t<Rng> const &other_it,
-                    adaptor const &other_adapt) const
-                {
-#if RANGES_CXX_STD > RANGES_CXX_STD_11
-                    RANGES_ASSERT(rng_ == other_adapt.rng_);
-                    return it == other_it && toggl_ == other_adapt.toggl_ &&
-                        (toggl_ ? it_ == other_adapt.it_ : val_it_ == other_adapt.val_it_);
-#else
-                    return (!rng_ && !other_adapt.rng_) ||
-                        (it == other_it && toggl_ == other_adapt.toggl_ &&
-                            (toggl_ ? it_ == other_adapt.it_ : val_it_ == other_adapt.val_it_));
-#endif
-                }
-                void next(range_iterator_t<Rng> &it)
-                {
-                    toggl_ ? (void)++it_ : (void)++val_it_;
-                    satisfy(it);
-                }
-                auto get(range_iterator_t<Rng> const &) const ->
-                    common_reference_t<
-                        range_reference_t<range_reference_t<Rng>>,
-                        range_reference_t<ValRng>>
-                {
-                    if(toggl_)
-                        return *it_;
-                    return *val_it_;
-                }
-                auto indirect_move(range_iterator_t<Rng> const &) const ->
-                    common_reference_t<
-                        range_rvalue_reference_t<range_reference_t<Rng>>,
-                        range_rvalue_reference_t<ValRng>>
-                {
-                    if(toggl_)
-                        return ranges::indirect_move(it_);
-                    return ranges::indirect_move(val_it_);
-                }
-                void distance_to() = delete;
-            };
-            adaptor begin_adaptor()
-            {
-                return {*this};
-            }
-            adaptor end_adaptor()
-            {
-#if RANGES_CXX_STD > RANGES_CXX_STD_11
-                return {*this};
-#else
-                return {};
-#endif
-            }
-            // TODO: could support const iteration if range_reference_t<Rng> is a true reference.
-        public:
             join_view() = default;
             join_view(Rng rng, ValRng val)
-              : view_adaptor_t<join_view>{std::move(rng)}
-              , cur_{}, val_(std::move(val))
+              : outer_(view::all(std::move(rng)))
+              , val_(view::all(std::move(val)))
             {}
-            CONCEPT_REQUIRES(range_cardinality<Rng>::value >= 0 &&
-                SizedRange<range_reference_t<Rng>>() && SizedRange<ValRng>())
-            constexpr size_t_ size() const
+            CONCEPT_REQUIRES(detail::join_cardinality<Rng, ValRng>::value >= 0)
+            constexpr size_type size() const
             {
-                return range_cardinality<join_view>::value >= 0 ?
-                    (size_t_)range_cardinality<join_view>::value :
-                    accumulate(view::transform(this->mutable_base(), ranges::size), size_t_{0}) +
+                return detail::join_cardinality<Rng, ValRng>::value;
+            }
+            CONCEPT_REQUIRES(detail::join_cardinality<Rng, ValRng>::value < 0 &&
+                range_cardinality<Rng>::value >= 0 && ForwardRange<Rng>() &&
+                SizedRange<range_reference_t<Rng>>() && SizedRange<ValRng>())
+            size_type size() const
+            {
+                return accumulate(view::transform(outer_, ranges::size), size_type{0}) +
                         (range_cardinality<Rng>::value == 0 ?
                             0 :
                             ranges::size(val_) * (range_cardinality<Rng>::value - 1));;
             }
+        private:
+            friend range_access;
+            using Outer = view::all_t<Rng>;
+            using Inner = view::all_t<range_reference_t<Outer>>;
+
+            Outer outer_{};
+            Inner inner_{};
+            view::all_t<ValRng> val_{};
+
+            class cursor
+            {
+                join_view* rng_ = nullptr;
+                range_iterator_t<Outer> outer_it_{};
+                variant<range_iterator_t<ValRng>, range_iterator_t<Inner>> cur_{};
+
+                void satisfy()
+                {
+                    while (true)
+                    {
+                        if (cur_.index() == 0)
+                        {
+                            if (ranges::get<0>(cur_) != ranges::end(rng_->val_))
+                                break;
+                            rng_->inner_ = view::all(*outer_it_);
+                            ranges::emplace<1>(cur_, ranges::begin(rng_->inner_));
+                        }
+                        else
+                        {
+                            if (ranges::get<1>(cur_) != ranges::end(rng_->inner_))
+                                break;
+                            if (++outer_it_ == ranges::end(rng_->outer_))
+                                break;
+                            ranges::emplace<0>(cur_, ranges::begin(rng_->val_));
+                        }
+                    }
+                }
+            public:
+                using value_type = common_type_t<
+                    range_value_t<Inner>, range_value_t<ValRng>>;
+                using reference = common_reference_t<
+                    range_reference_t<Inner>, range_reference_t<ValRng>>;
+                using rvalue_reference = common_reference_t<
+                    range_rvalue_reference_t<Inner>, range_rvalue_reference_t<ValRng>>;
+                using single_pass = std::true_type;
+                cursor() = default;
+                cursor(join_view &rng)
+                  : rng_{&rng}
+                  , outer_it_(ranges::begin(rng.outer_))
+                {
+                    if (outer_it_ != ranges::end(rng_->outer_))
+                    {
+                        rng.inner_ = view::all(*outer_it_);
+                        ranges::emplace<1>(cur_, ranges::begin(rng.inner_));
+                        satisfy();
+                    }
+                }
+                bool done() const
+                {
+                    return outer_it_ == ranges::end(rng_->outer_);
+                }
+                void next()
+                {
+                    // visit(cur_, [](auto& it){ ++it; });
+                    if (cur_.index() == 0)
+                    {
+                        auto& it = ranges::get<0>(cur_);
+                        RANGES_ASSERT(it != ranges::end(rng_->val_));
+                        ++it;
+                    }
+                    else
+                    {
+                        auto& it = ranges::get<1>(cur_);
+                        RANGES_ASSERT(it != ranges::end(rng_->inner_));
+                        ++it;
+                    }
+                    satisfy();
+                }
+                reference get() const
+                {
+                    // return visit(cur_, [](auto& it) -> reference { return *it; });
+                    if (cur_.index() == 0)
+                    {
+                        return *ranges::get<0>(cur_);
+                    }
+                    else
+                    {
+                        return *ranges::get<1>(cur_);
+                    }
+                }
+                rvalue_reference indirect_move() const
+                {
+                    // return visit(cur_, [](auto& it) -> rvalue_reference { return iter_move(it); });
+                    if (cur_.index() == 0)
+                    {
+                        return iter_move(ranges::get<0>(cur_));
+                    }
+                    else
+                    {
+                        return iter_move(ranges::get<1>(cur_));
+                    }
+                }
+            };
+            cursor begin_cursor()
+            {
+                return {*this};
+            }
+            // TODO: could support const iteration if range_reference_t<Rng> is a true reference.
         };
 
         namespace view
