@@ -34,7 +34,7 @@ namespace ranges
         struct mutable_
         {
             mutable T value;
-            CONCEPT_REQUIRES(DefaultConstructible<T>())
+            CONCEPT_REQUIRES(std::is_default_constructible<T>::value)
             constexpr mutable_()
               : value{}
             {}
@@ -137,13 +137,13 @@ namespace ranges
             Element value;
 
         public:
-            CONCEPT_REQUIRES(DefaultConstructible<Element>())
+            CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
             constexpr box()
               : value{}
             {}
 
             template<typename E,
-                CONCEPT_REQUIRES_(Constructible<Element, E &&>())>
+                CONCEPT_REQUIRES_(std::is_constructible<Element, E &&>::value)>
             constexpr explicit box(E && e)
               : value(detail::forward<E>(e))
             {}
@@ -166,13 +166,13 @@ namespace ranges
         struct box<Element, Tag, true>
           : private Element
         {
-            CONCEPT_REQUIRES(DefaultConstructible<Element>())
+            CONCEPT_REQUIRES(std::is_default_constructible<Element>::value)
             constexpr box()
               : Element{}
             {}
 
             template<typename E,
-                CONCEPT_REQUIRES_(Constructible<Element, E &&>())>
+                CONCEPT_REQUIRES_(std::is_constructible<Element, E &&>::value)>
             constexpr explicit box(E && e)
               : Element(detail::forward<E>(e))
             {}
