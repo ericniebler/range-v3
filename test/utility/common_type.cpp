@@ -117,4 +117,10 @@ int main()
         common_reference_t<X &, Y const &>,
         Z
     >::value, "");
+
+    {
+        // Regression test for #367
+        using CP = common_pair<int, int>;
+        CONCEPT_ASSERT(Same<common_type_t<CP, CP>, CP>());
+    }
 }
