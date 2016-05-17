@@ -74,5 +74,11 @@ int main()
         CHECK((next(begin(rng), n) - begin(rng)) == n);
     }
 
+    {
+        // Regression test #368
+        int n = 42;
+        (void)ranges::view::stride(n);
+    }
+
     return ::test_result();
 }

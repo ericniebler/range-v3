@@ -205,7 +205,7 @@ namespace ranges
             #ifndef RANGES_DOXYGEN_INVOKED
             private:
                 template<typename Difference, CONCEPT_REQUIRES_(!Integral<Difference>())>
-                static detail::null_pipe bind(stride_fn, Difference &&)
+                static detail::null_pipe bind(stride_fn, const Difference &)
                 {
                     CONCEPT_ASSERT_MSG(Integral<Difference>(),
                         "The value to be used as the step in a call to view::stride must be a "
