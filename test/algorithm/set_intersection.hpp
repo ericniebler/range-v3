@@ -46,14 +46,14 @@ test()
                      Iter2(ib), Iter2(ib+sb), OutIter(ic)).check([&](OutIter ce)
         {
             CHECK((base(ce) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(ce), ir, ir+sr) == 0);
+            CHECK(std::lexicographical_compare(ic, base(ce), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         });
     set_intersection(Iter1(ib), Iter1(ib+sb),
                      Iter2(ia), Iter2(ia+sa), OutIter(ic)).check([&](OutIter ce)
         {
             CHECK((base(ce) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(ce), ir, ir+sr) == 0);
+            CHECK(std::lexicographical_compare(ic, base(ce), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         });
 
@@ -62,14 +62,14 @@ test()
                      Iter2(ib), Iter2(ib+sb), OutIter(ic), std::less<int>()).check([&](OutIter ce)
         {
             CHECK((base(ce) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(ce), ir, ir+sr) == 0);
+            CHECK(std::lexicographical_compare(ic, base(ce), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         });
     set_intersection(Iter1(ib), Iter1(ib+sb),
                      Iter2(ia), Iter2(ia+sa), OutIter(ic), std::less<int>()).check([&](OutIter ce)
         {
             CHECK((base(ce) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(ce), ir, ir+sr) == 0);
+            CHECK(std::lexicographical_compare(ic, base(ce), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         });
 }
@@ -259,7 +259,7 @@ int main()
 
         U * res = ranges::set_intersection(ranges::view::all(ia), ranges::view::all(ib), ic, std::less<int>(), &S::i, &T::j);
         CHECK((res - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == 0);
+        CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == false);
     }
 
     // Test initializer lists
@@ -273,7 +273,7 @@ int main()
             {T{2}, T{4}, T{4}, T{6}},
             ic, std::less<int>(), &S::i, &T::j);
         CHECK((res - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == 0);
+        CHECK(ranges::lexicographical_compare(ic, res, ir, ir+sr, std::less<int>(), &U::k) == false);
     }
 #endif
 

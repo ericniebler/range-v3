@@ -46,7 +46,7 @@ test_iter()
         check([&](std::tuple<Iter1, Iter2, OutIter> res)
         {
             CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
+            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         }
     );
@@ -55,7 +55,7 @@ test_iter()
         check([&](std::tuple<Iter1, Iter2, OutIter> res)
         {
             CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
+            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         }
     );
@@ -79,7 +79,7 @@ test_comp()
         check([&](std::tuple<Iter1, Iter2, OutIter> res)
         {
             CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
+            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         }
     );
@@ -88,7 +88,7 @@ test_comp()
         check([&](std::tuple<Iter1, Iter2, OutIter> res)
         {
             CHECK((base(std::get<2>(res)) - ic) == sr);
-            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == 0);
+            CHECK(std::lexicographical_compare(ic, base(std::get<2>(res)), ir, ir+sr) == false);
             ranges::fill(ic, 0);
         }
     );
@@ -287,13 +287,13 @@ int main()
         std::tuple<S *, T *, U *> res1 =
             ranges::set_symmetric_difference(ia, ib, ic, std::less<int>(), &S::i, &T::j);
         CHECK((std::get<2>(res1) - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res1), ir, ir+sr, std::less<int>(), &U::k) == 0);
+        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res1), ir, ir+sr, std::less<int>(), &U::k) == false);
         ranges::fill(ic, U{0});
 
         std::tuple<T *, S *, U *> res2 =
             ranges::set_symmetric_difference(ib, ia, ic, std::less<int>(), &T::j, &S::i);
         CHECK((std::get<2>(res2) - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == 0);
+        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == false);
     }
 
     // Test rvalue ranges
@@ -309,7 +309,7 @@ int main()
         CHECK(std::get<0>(res1).get_unsafe() == ranges::end(ia));
         CHECK(std::get<1>(res1).get_unsafe() == ranges::end(ib));
         CHECK((std::get<2>(res1) - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res1), ir, ir+sr, std::less<int>(), &U::k) == 0);
+        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res1), ir, ir+sr, std::less<int>(), &U::k) == false);
         ranges::fill(ic, U{0});
 
         auto res2 =
@@ -317,7 +317,7 @@ int main()
         CHECK(std::get<0>(res2).get_unsafe() == ranges::end(ib));
         CHECK(std::get<1>(res2).get_unsafe() == ranges::end(ia));
         CHECK((std::get<2>(res2) - ic) == sr);
-        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == 0);
+        CHECK(ranges::lexicographical_compare(ic, std::get<2>(res2), ir, ir+sr, std::less<int>(), &U::k) == false);
     }
 #endif
 
