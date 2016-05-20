@@ -228,7 +228,9 @@
 #endif // MSVC/Generic configuration switch
 
 #ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
-#if RANGES_CXX_ATTRIBUTE_DEPRECATED
+#if RANGES_CXX_ATTRIBUTE_DEPRECATED && \
+   !((defined(__clang__) || defined(__GNUC__)) && \
+     RANGES_CXX_STD < RANGES_CXX_STD_14)
 #define RANGES_DEPRECATED(MSG) [[deprecated(MSG)]]
 #elif defined(__clang__) || defined(__GNUC__)
 #define RANGES_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
