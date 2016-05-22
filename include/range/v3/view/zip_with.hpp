@@ -116,19 +116,6 @@ namespace ranges
                             State::value == unknown || Value::value == unknown ?
                                 unknown :
                                 infinite>;
-
-            // indirect_move is put here instead of in iter_transform2_view::cursor to
-            // work around gcc friend name injection bug.
-            template<typename Cursor, std::size_t Cnt>
-            struct zip_cursor_indirect_move
-            {
-                template<typename Sent>
-                friend auto indirect_move(basic_iterator<Cursor, Sent> const &it)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    get_cursor(it).indirect_move_(meta::make_index_sequence<Cnt>{})
-                )
-            };
         } // namespace detail
         /// \endcond
 
@@ -152,7 +139,6 @@ namespace ranges
 
             struct sentinel;
             struct cursor
-              : detail::zip_cursor_indirect_move<cursor, sizeof...(Rngs)>
             {
             private:
                 friend sentinel;
@@ -221,11 +207,19 @@ namespace ranges
                             detail::max_);
                 }
                 template<std::size_t...Is>
-                auto indirect_move_(meta::index_sequence<Is...>) const
+                auto move_(meta::index_sequence<Is...>) const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     fun_(move_tag{}, std::get<Is>(its_)...)
                 )
+                auto move() const
+                    noexcept(noexcept(std::declval<cursor const&>().move_(
+                        meta::make_index_sequence<sizeof...(Rngs)>{}))) ->
+                    decltype(std::declval<cursor const&>().move_(
+                        meta::make_index_sequence<sizeof...(Rngs)>{}))
+                {
+                    return move_(meta::make_index_sequence<sizeof...(Rngs)>{});
+                }
             };
 
             struct sentinel
