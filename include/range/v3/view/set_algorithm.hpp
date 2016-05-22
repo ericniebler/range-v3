@@ -40,19 +40,6 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            // indirect_move is put here instead of in set_??_view::cursor to
-            // work around gcc friend name injection bug.
-            template<typename Cursor>
-            struct set_op_cursor_move
-            {
-                template<typename Sent>
-                friend auto indirect_move(basic_iterator<Cursor, Sent> const &it)
-                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-                (
-                    get_cursor(it).indirect_move_()
-                )
-            };
-            
             template<typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2,
                      template<bool, typename...> class Cursor, cardinality Cardinality>
@@ -97,12 +84,11 @@ namespace ranges
                 {}
             };
 
-            
+
             template<bool IsConst,
                      typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_difference_cursor
-                : detail::set_op_cursor_move<set_difference_cursor<IsConst, Rng1, Rng2, C, P1, P2>>
             {
             private:
                 using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
@@ -111,19 +97,19 @@ namespace ranges
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
-                
+
                 template<typename T>
                 using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
-                
+
                 using R1 = constify_if<Rng1>;
                 using R2 = constify_if<Rng2>;
-                
+
                 range_iterator_t<R1> it1_;
                 range_sentinel_t<R1> end1_;
-                
+
                 range_iterator_t<R2> it2_;
                 range_sentinel_t<R2> end2_;
-            
+
                 void satisfy()
                 {
                     while(it1_ != end1_)
@@ -133,19 +119,19 @@ namespace ranges
 
                         if(pred_(proj1_(*it1_), proj2_(*it2_)))
                             return;
-                        
+
                         if(!pred_(proj2_(*it2_), proj1_(*it1_)))
                             ++it1_;
-                        
+
                         ++it2_;
                     }
                 }
-                
+
             public:
                 using value_type = range_value_t<constify_if<Rng1>>;
                 using single_pass = meta::strict_or<SinglePass<range_iterator_t<R1>>,
                                                     SinglePass<range_iterator_t<R2>>>;
-                
+
                 set_difference_cursor() = default;
                 set_difference_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
                                       range_iterator_t<R1> it1, range_sentinel_t<R1> end1,
@@ -173,24 +159,24 @@ namespace ranges
                 {
                     return it1_ == end1_;
                 }
-                auto indirect_move_() const
+                auto move() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     iter_move(it1_)
                 )
             };
-        
+
             constexpr cardinality set_difference_cardinality(cardinality c1, cardinality c2)
             {
                 return (c1 == unknown) ? unknown :
                     (c1 >= 0) || (c1 == finite) ? finite : // else, c1 == infinite
                         (c2 >= 0) || (c2 == finite) ? infinite : unknown;
             }
-            
+
         }
         /// \endcond
 
-        
+
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_difference_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
@@ -198,7 +184,7 @@ namespace ranges
                  detail::set_difference_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
-        
+
         namespace view
         {
             struct set_difference_fn
@@ -268,17 +254,16 @@ namespace ranges
             }
         }
         /// @}
-        
-        
-        
-        
+
+
+
+
         namespace detail
         {
             template<bool IsConst,
                      typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_intersection_cursor
-                : detail::set_op_cursor_move<set_intersection_cursor<IsConst, Rng1, Rng2, C, P1, P2>>
             {
             private:
                 using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
@@ -287,19 +272,19 @@ namespace ranges
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
-                
+
                 template<typename T>
                 using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
-                
+
                 using R1 = constify_if<Rng1>;
                 using R2 = constify_if<Rng2>;
 
                 range_iterator_t<R1> it1_;
                 range_sentinel_t<R1> end1_;
-                
+
                 range_iterator_t<R2> it2_;
                 range_sentinel_t<R2> end2_;
-                
+
                 void satisfy()
                 {
                     while(it1_ != end1_ && it2_ != end2_)
@@ -315,12 +300,12 @@ namespace ranges
                         }
                     }
                 }
-                
+
             public:
                 using value_type = range_value_t<R1>;
                 using single_pass = meta::strict_or<SinglePass<range_iterator_t<R1>>,
                                                     SinglePass<range_iterator_t<R2>>>;
-                
+
                 set_intersection_cursor() = default;
                 set_intersection_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
                                         range_iterator_t<R1> it1, range_sentinel_t<R1> end1,
@@ -339,7 +324,7 @@ namespace ranges
                 {
                     ++it1_;
                     ++it2_;
-                    satisfy();        
+                    satisfy();
                 }
                 bool equal(set_intersection_cursor const &that) const
                 {
@@ -349,23 +334,23 @@ namespace ranges
                 {
                     return (it1_ == end1_) || (it2_ == end2_);
                 }
-                auto indirect_move_() const
+                auto move() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     iter_move(it1_)
                 )
             };
-        
+
             constexpr cardinality set_intersection_cardinality(cardinality c1, cardinality c2)
             {
                 return (c1 == unknown) || (c2 == unknown) ? unknown :
                        (c1 >= 0 || c1 == finite) || (c2 >= 0 || c2 == finite) ? finite : unknown;
             }
-            
+
         }
         /// \endcond
-        
-        
+
+
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_intersection_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
@@ -373,7 +358,7 @@ namespace ranges
                  detail::set_intersection_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
-        
+
         namespace view
         {
             struct set_intersection_fn
@@ -443,16 +428,15 @@ namespace ranges
             }
         }
         /// @}
-        
-        
-        
+
+
+
         namespace detail
         {
             template<bool IsConst,
                      typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_union_cursor
-                : detail::set_op_cursor_move<set_union_cursor<IsConst, Rng1, Rng2, C, P1, P2>>
             {
             private:
                 using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
@@ -461,34 +445,34 @@ namespace ranges
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
-                
+
                 template<typename T>
                 using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
-                
+
                 using R1 = constify_if<Rng1>;
                 using R2 = constify_if<Rng2>;
-                
+
                 range_iterator_t<R1> it1_;
                 range_sentinel_t<R1> end1_;
-                
+
                 range_iterator_t<R2> it2_;
                 range_sentinel_t<R2> end2_;
-                
+
                 enum class state_t
                 {
                     FIRST, FIRST_INC_SECOND, SECOND, ONLY_FIRST, ONLY_SECOND
                 } state;
-                
+
                 state_t which_set() const
                 {
                     if(it1_ != end1_)
                     {
                         if(it2_ == end2_)
                             return state_t::ONLY_FIRST;
-                        
+
                         if(pred_(proj2_(*it2_), proj1_(*it1_)))
                             return state_t::SECOND;
-                        
+
                         // take care of the case when iter_move is made from it1_
                         // so we need to test in advance when we still have access to unmoved-from *it1_
                         if(!pred_(proj1_(*it1_), proj2_(*it2_)))
@@ -496,10 +480,10 @@ namespace ranges
 
                         return state_t::FIRST;
                     }
-                    
+
                     return state_t::ONLY_SECOND;
                 }
-                
+
             public:
                 using value_type = common_type_t<range_value_t<R1>, range_value_t<R2>>;
                 using reference_type = common_reference_t<range_reference_t<R1>, range_reference_t<R2>>;
@@ -532,22 +516,22 @@ namespace ranges
                             ++it1_;
                             state = which_set();
                             break;
-                            
+
                         case state_t::FIRST_INC_SECOND:
                             ++it2_;
                             ++it1_;
                             state = which_set();
                             break;
-                        
+
                         case state_t::ONLY_FIRST:
                             ++it1_;
                             break;
-                            
+
                         case state_t::SECOND:
                             ++it2_;
                             state = which_set();
                             break;
-                            
+
                         case state_t::ONLY_SECOND:
                             ++it2_;
                             break;
@@ -561,7 +545,7 @@ namespace ranges
                 {
                     return (it1_ == end1_) && (it2_ == end2_);
                 }
-                rvalue_reference_type indirect_move_() const
+                rvalue_reference_type move() const
                 noexcept(noexcept(iter_move(it1_)) && noexcept(iter_move(it2_)))
                 {
                     if(state == state_t::SECOND || state == state_t::ONLY_SECOND)
@@ -570,17 +554,17 @@ namespace ranges
                         return iter_move(it1_);
                 }
             };
-        
+
             constexpr cardinality set_union_cardinality(cardinality c1, cardinality c2)
             {
                 return (c1 == infinite) || (c2 == infinite) ? infinite :
                     (c1 == unknown) || (c2 == unknown) ? unknown : finite;
             }
-        
+
         }
         /// \endcond
 
-        
+
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_union_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
@@ -588,7 +572,7 @@ namespace ranges
                  detail::set_union_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
-        
+
         namespace view
         {
             struct set_union_fn
@@ -667,16 +651,15 @@ namespace ranges
             }
         }
         /// @}
-        
-        
-        
+
+
+
         namespace detail
         {
             template<bool IsConst,
                      typename Rng1, typename Rng2,
                      typename C, typename P1, typename P2>
             struct set_symmetric_difference_cursor
-                : detail::set_op_cursor_move<set_symmetric_difference_cursor<IsConst, Rng1, Rng2, C, P1, P2>>
             {
             private:
                 using pred_ref_ = semiregular_ref_or_val_t<function_type<C>, IsConst>;
@@ -685,25 +668,25 @@ namespace ranges
                 pred_ref_ pred_;
                 proj1_ref_ proj1_;
                 proj2_ref_ proj2_;
-                
+
                 template<typename T>
                 using constify_if = meta::invoke<meta::add_const_if_c<IsConst>, T>;
-                
+
                 using R1 = constify_if<Rng1>;
                 using R2 = constify_if<Rng2>;
 
-                
+
                 range_iterator_t<R1> it1_;
                 range_sentinel_t<R1> end1_;
-                
+
                 range_iterator_t<R2> it2_;
                 range_sentinel_t<R2> end2_;
-                
+
                 enum class state_t
                 {
                     FIRST, SECOND, ONLY_FIRST, ONLY_SECOND
                 } state;
-                
+
                 void satisfy()
                 {
                     while(it1_ != end1_)
@@ -713,7 +696,7 @@ namespace ranges
                             state = state_t::ONLY_FIRST;
                             return;
                         }
-                        
+
                         if(pred_(proj1_(*it1_), proj2_(*it2_)))
                         {
                             state = state_t::FIRST;
@@ -735,7 +718,7 @@ namespace ranges
                     }
                     state = state_t::ONLY_SECOND;
                 }
-                
+
             public:
                 using value_type = common_type_t<range_value_t<R1>, range_value_t<R2>>;
                 using reference_type = common_reference_t<range_reference_t<R1>, range_reference_t<R2>>;
@@ -743,7 +726,7 @@ namespace ranges
                                                                  range_rvalue_reference_t<R2>>;
                 using single_pass = meta::strict_or<SinglePass<range_iterator_t<R1>>,
                                                     SinglePass<range_iterator_t<R2>>>;
-                
+
                 set_symmetric_difference_cursor() = default;
                 set_symmetric_difference_cursor(pred_ref_ pred, proj1_ref_ proj1, proj2_ref_ proj2,
                                                 range_iterator_t<R1> it1, range_sentinel_t<R1> end1,
@@ -790,7 +773,7 @@ namespace ranges
                 {
                     return (it1_ == end1_) && (it2_ == end2_);
                 }
-                rvalue_reference_type indirect_move_() const
+                rvalue_reference_type move() const
                 noexcept(noexcept(iter_move(it1_)) && noexcept(iter_move(it2_)))
                 {
                     if(state == state_t::SECOND || state == state_t::ONLY_SECOND)
@@ -799,18 +782,18 @@ namespace ranges
                         return iter_move(it1_);
                 }
             };
-        
+
             constexpr cardinality set_symmetric_difference_cardinality(cardinality c1, cardinality c2)
             {
                 return (c1 == unknown) || (c2 == unknown) ? unknown :
                     (c1 == infinite) != (c2 == infinite) ? infinite :
                         (c1 == infinite) && (c2 == infinite) ? unknown : finite;
             }
-        
+
         }
         /// \endcond
 
-        
+
         template<typename Rng1, typename Rng2,
                  typename C, typename P1, typename P2>
         using set_symmetric_difference_view = detail::set_algorithm_view<Rng1, Rng2, C, P1, P2,
@@ -818,7 +801,7 @@ namespace ranges
                  detail::set_symmetric_difference_cardinality(
                     range_cardinality<Rng1>::value,
                     range_cardinality<Rng2>::value)>;
-        
+
         namespace view
         {
             struct set_symmetric_difference_fn
@@ -897,7 +880,7 @@ namespace ranges
             }
         }
         /// @}
-        
+
     }
 }
 
