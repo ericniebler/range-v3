@@ -11,6 +11,9 @@ add_subdirectory(numeric)
 add_subdirectory(utility)
 add_subdirectory(view)
 
+add_executable(config config.cpp)
+add_test(test.config config)
+
 add_executable(container_conversion container_conversion.cpp)
 add_test(test.container_conversion container_conversion)
 
