@@ -207,10 +207,12 @@ namespace ranges
             }
 
             template<typename T>
-            T const &as_const(T const &t)
+            constexpr T const &as_const(T & t) noexcept
             {
                 return t;
             }
+            template<typename T>
+            void as_const(T const &&) = delete;
 
             template<typename T>
             using decay_t = meta::_t<std::decay<T>>;
@@ -262,7 +264,7 @@ namespace ranges
                 template <class T, class Arg = T>
                 struct is_trivially_move_assignable
                   : meta::bool_<__is_trivially_assignable(T &, Arg &&)>
-                {};  
+                {};
              #elif defined(__GNUC__) && !defined(__clang__) && __GNUC__ < 5
                 template<typename T>
                 using is_trivially_copy_assignable = std::is_trivial<T>;
@@ -279,12 +281,12 @@ namespace ranges
                     template<typename T>
                     using is_final = meta::bool_<__is_final(T)>;
                 #else
-                    using std::is_final;          
+                    using std::is_final;
                 #endif
-            #else 
+            #else
                 template<typename T>
                 using is_final = std::false_type;
-            #endif 
+            #endif
 
             template<typename T>
             struct remove_rvalue_reference
