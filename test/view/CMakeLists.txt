@@ -1,4 +1,3 @@
-
 add_executable(view.adjacent_remove_if adjacent_remove_if.cpp)
 add_test(test.view.adjacent_remove_if, view.adjacent_remove_if)
 
@@ -110,10 +109,8 @@ add_test(test.view.take_exactly, view.take_exactly)
 add_executable(view.take_while take_while.cpp)
 add_test(test.view.take_while, view.take_while)
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    add_executable(view.tokenize tokenize.cpp)
-    add_test(test.view.tokenize, view.tokenize)
-endif()
+add_executable(view.tokenize tokenize.cpp)
+add_test(test.view.tokenize, view.tokenize)
 
 add_executable(view.transform transform.cpp)
 add_test(test.view.transform, view.transform)
@@ -123,7 +120,3 @@ add_test(test.view.unique, view.unique)
 
 add_executable(view.zip zip.cpp)
 add_test(test.view.zip, view.zip)
-
-# set_target_properties(
-#     view.zip
-#     PROPERTIES COMPILE_FLAGS "-std=c++1y")
