@@ -140,7 +140,7 @@ namespace ranges
                 (
                     *inner_it_
                 )
-                auto indirect_move() const
+                auto move() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
                 (
                     iter_move(inner_it_)
@@ -276,7 +276,7 @@ namespace ranges
                         return *ranges::get<1>(cur_);
                     }
                 }
-                rvalue_reference indirect_move() const
+                rvalue_reference move() const
                 {
                     // return visit(cur_, [](auto& it) -> rvalue_reference { return iter_move(it); });
                     if (cur_.index() == 0)

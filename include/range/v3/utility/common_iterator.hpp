@@ -101,15 +101,14 @@ namespace ranges
                              that.it() - this_.it());
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                friend iterator_rvalue_reference_t<I> indirect_move(common_iterator<I, S> const &it)
+                iterator_rvalue_reference_t<I> move() const
                     noexcept(noexcept(iter_move(std::declval<I const &>())))
                 {
-                    common_cursor const &cur = get_cursor(it);
-                    RANGES_ASSERT(!cur.is_sentinel());
-                    return iter_move(cur.it());
+                    RANGES_ASSERT(!is_sentinel());
+                    return iter_move(it());
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                auto get() const -> decltype(*std::declval<I const &>())
+                iterator_reference_t<I> get() const
                 {
                     return *it();
                 }
