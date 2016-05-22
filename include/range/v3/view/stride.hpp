@@ -68,8 +68,7 @@ namespace ranges
                 stride_view const *rng_;
                 offset_t & offset() { return *this; }
                 offset_t const & offset() const { return *this; }
-                CONCEPT_REQUIRES(BidirectionalRange<Rng>())
-                difference_type_ clean() const
+                difference_type_ clean_(std::true_type) const
                 {
                     std::atomic<difference_type_>& off = offset();
                     difference_type_ o = off;
@@ -80,10 +79,13 @@ namespace ranges
                     }
                     return o;
                 }
-                CONCEPT_REQUIRES(!BidirectionalRange<Rng>())
-                difference_type_ clean() const
+                difference_type_ clean_(std::false_type) const
                 {
                     return 0;
+                }
+                difference_type_ clean() const
+                {
+                    return clean_(BidirectionalRange<Rng>());
                 }
                 difference_type_ calc_offset() const
                 {
