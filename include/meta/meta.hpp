@@ -490,6 +490,9 @@ namespace meta
             {
                 using type = C<Is...>;
             };
+
+            template <typename T>
+            using _t_t = _t<_t<T>>;
         } // namespace detail
         /// \endcond
 
@@ -544,16 +547,16 @@ namespace meta
         /// \sa `defer`
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
-        using defer_trait = lazy::_t<defer<C, Ts...>>;
+        using defer_trait = defer<detail::_t_t, detail::defer_<C, list<Ts...>>>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_trait_i
         /// A wrapper that defers the instantiation of a trait \p C with integral constant
         /// parameters \p Is in a \c lambda or \c let expression.
-        /// \sa `defer`
+        /// \sa `defer_i`
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
-        using defer_trait_i = lazy::_t<defer_i<T, C, Is...>>;
+        using defer_trait_i = defer<detail::_t_t, detail::defer_i_<T, C, integer_sequence<T, Is...>>>;
 
         /// An alias that computes the size of the type \p T.
         /// \par Complexity
