@@ -168,7 +168,7 @@ class chunk_view : public view_adaptor<chunk_view<Rng>, Rng> {
 public:
     chunk_view() = default;
     chunk_view(Rng rng, std::size_t n)
-      : view_adaptor_t<chunk_view>(std::move(rng)), n_(n)
+      : chunk_view::view_adaptor(std::move(rng)), n_(n)
     {}
 };
 

@@ -93,25 +93,25 @@ namespace ranges
         public:
             adjacent_remove_if_view() = default;
             adjacent_remove_if_view(adjacent_remove_if_view const &that)
-              : view_adaptor_t<adjacent_remove_if_view>(that)
+              : adjacent_remove_if_view::view_adaptor(that)
               , pred_(that.pred_)
               , begin_{}
             {}
             adjacent_remove_if_view(Rng rng, Pred pred)
-              : view_adaptor_t<adjacent_remove_if_view>{std::move(rng)}
+              : adjacent_remove_if_view::view_adaptor{std::move(rng)}
               , pred_(as_function(std::move(pred)))
               , begin_{}
             {}
             adjacent_remove_if_view& operator=(adjacent_remove_if_view &&that)
             {
-                this->view_adaptor_t<adjacent_remove_if_view>::operator=(std::move(that));
+                this->adjacent_remove_if_view::view_adaptor::operator=(std::move(that));
                 pred_ = std::move(that).pred_;
                 begin_.reset();
                 return *this;
             }
             adjacent_remove_if_view& operator=(adjacent_remove_if_view const &that)
             {
-                this->view_adaptor_t<adjacent_remove_if_view>::operator=(that);
+                this->adjacent_remove_if_view::view_adaptor::operator=(that);
                 pred_ = that.pred_;
                 begin_.reset();
                 return *this;

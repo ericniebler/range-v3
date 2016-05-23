@@ -60,7 +60,7 @@ namespace ranges
         public:
             delimit_view() = default;
             delimit_view(Rng rng, Val value)
-              : view_adaptor_t<delimit_view>{std::move(rng)}
+              : delimit_view::view_adaptor{std::move(rng)}
               , value_(std::move(value))
             {}
         };

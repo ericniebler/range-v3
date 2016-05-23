@@ -127,7 +127,7 @@ namespace ranges
         public:
             intersperse_view() = default;
             intersperse_view(Rng rng, range_value_t<Rng> val)
-              : view_adaptor_t<intersperse_view>{std::move(rng)}, val_(std::move(val))
+              : intersperse_view::view_adaptor{std::move(rng)}, val_(std::move(val))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const

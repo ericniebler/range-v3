@@ -109,7 +109,7 @@ namespace ranges
         public:
             partial_sum_view() = default;
             partial_sum_view(Rng rng, Fun fun)
-              : view_adaptor_t<partial_sum_view>{std::move(rng)}
+              : partial_sum_view::view_adaptor{std::move(rng)}
               , fun_(as_function(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())

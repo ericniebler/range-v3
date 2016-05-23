@@ -64,7 +64,7 @@ namespace ranges
         public:
             indirect_view() = default;
             explicit indirect_view(Rng rng)
-              : view_adaptor_t<indirect_view>{std::move(rng)}
+              : indirect_view::view_adaptor{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const

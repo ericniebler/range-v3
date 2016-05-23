@@ -111,7 +111,7 @@ namespace ranges
         public:
             iter_transform_view() = default;
             iter_transform_view(Rng rng, Fun fun)
-              : view_adaptor_t<iter_transform_view>{std::move(rng)}
+              : iter_transform_view::view_adaptor{std::move(rng)}
               , fun_(as_function(std::move(fun)))
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())

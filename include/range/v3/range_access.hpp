@@ -350,8 +350,6 @@ namespace ranges
             static meta::id<typename RangeAdaptor::base_range_t> base_range_2_();
             template<typename RangeFacade>
             static meta::id<typename RangeFacade::view_facade_t> view_facade_2_();
-            template<typename RangeAdaptor>
-            static meta::id<typename RangeAdaptor::view_adaptor_t> view_adaptor_2_();
         public:
             template<typename RangeAdaptor>
             struct base_range
@@ -364,10 +362,6 @@ namespace ranges
             template<typename RangeFacade>
             struct view_facade
               : decltype(range_access::view_facade_2_<RangeFacade>())
-            {};
-            template<typename RangeAdaptor>
-            struct view_adaptor
-              : decltype(range_access::view_adaptor_2_<RangeAdaptor>())
             {};
             /// endcond
         };

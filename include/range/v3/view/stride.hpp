@@ -171,7 +171,7 @@ namespace ranges
         public:
             stride_view() = default;
             stride_view(Rng rng, difference_type_ stride)
-              : view_adaptor_t<stride_view>{std::move(rng)}
+              : stride_view::view_adaptor{std::move(rng)}
               , stride_(stride)
             {
                 RANGES_ASSERT(0 < stride_);

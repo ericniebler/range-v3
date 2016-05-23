@@ -76,7 +76,7 @@ namespace ranges
         public:
             adjacent_filter_view() = default;
             adjacent_filter_view(Rng rng, Pred pred)
-              : view_adaptor_t<adjacent_filter_view>{std::move(rng)}
+              : adjacent_filter_view::view_adaptor{std::move(rng)}
               , pred_(as_function(std::move(pred)))
             {}
        };
