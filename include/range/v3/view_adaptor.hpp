@@ -419,8 +419,14 @@ namespace ranges
                 auto pos = adapt.end(derived());
                 return {std::move(pos), std::move(adapt)};
             }
+        protected:
+            ~view_adaptor() = default;
         public:
             view_adaptor() = default;
+            view_adaptor(view_adaptor &&) = default;
+            view_adaptor(view_adaptor const &) = default;
+            view_adaptor &operator=(view_adaptor &&) = default;
+            view_adaptor &operator=(view_adaptor const &) = default;
             constexpr view_adaptor(BaseRng && rng)
               : rng_(view::all(detail::forward<BaseRng>(rng)))
             {}

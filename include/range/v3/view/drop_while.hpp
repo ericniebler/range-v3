@@ -38,10 +38,9 @@ namespace ranges
         template<typename Rng, typename Pred>
         struct drop_while_view
           : view_interface<drop_while_view<Rng, Pred>, is_finite<Rng>::value ? finite : unknown>
-       {
+        {
         private:
             friend range_access;
-            using difference_type_ = range_difference_t<Rng>;
             Rng rng_;
             semiregular_t<function_type<Pred>> pred_;
             optional<range_iterator_t<Rng>> begin_;
@@ -55,10 +54,12 @@ namespace ranges
         public:
             drop_while_view() = default;
             drop_while_view(drop_while_view &&that)
-              : rng_(std::move(that).rng_), pred_(std::move(that).pred_), begin_{}
+              : drop_while_view::view_interface(std::move(that))
+              , rng_(std::move(that).rng_), pred_(std::move(that).pred_), begin_{}
             {}
             drop_while_view(drop_while_view const &that)
-              : rng_(that.rng_), pred_(that.pred_), begin_{}
+              : drop_while_view::view_interface(that)
+              , rng_(that.rng_), pred_(that.pred_), begin_{}
             {}
             drop_while_view(Rng rng, Pred pred)
               : rng_(std::move(rng)), pred_(as_function(std::move(pred))), begin_{}

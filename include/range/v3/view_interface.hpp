@@ -74,7 +74,13 @@ namespace ranges
             {
                 return static_cast<Derived const &>(*this);
             }
+            ~view_interface() = default;
         public:
+            view_interface() = default;
+            view_interface(view_interface &&) = default;
+            view_interface(view_interface const &) = default;
+            view_interface &operator=(view_interface &&) = default;
+            view_interface &operator=(view_interface const &) = default;
             // A few ways of testing whether a range can be empty:
             constexpr bool empty() const
             {
