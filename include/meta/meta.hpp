@@ -547,7 +547,7 @@ namespace meta
         /// \sa `defer`
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
-        using defer_trait = defer<detail::_t_t, defer<C, Ts...>>;
+        using defer_trait = defer<detail::_t_t, detail::defer_<C, list<Ts...>>>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_trait_i
@@ -556,7 +556,7 @@ namespace meta
         /// \sa `defer_i`
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
-        using defer_trait_i = defer<detail::_t_t, defer_i<T, C, Is...>>;
+        using defer_trait_i = defer<detail::_t_t, detail::defer_i_<T, C, integer_sequence<T, Is...>>>;
 
         /// An alias that computes the size of the type \p T.
         /// \par Complexity
