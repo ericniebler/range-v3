@@ -76,9 +76,6 @@ endmacro()
 if(NOT RANGE_V3_NO_HEADER_CHECK)
   include(CheckIncludeFileCXX)
   file(GLOB_RECURSE RANGE_V3_PUBLIC_HEADERS "${CMAKE_SOURCE_DIR}/include/*.hpp")
-  range_v3_list_remove_glob(RANGE_V3_PUBLIC_HEADERS GLOB_RECURSE
-    "${CMAKE_SOURCE_DIR}/include/range/v3/detail/re_enable_warnings.hpp"
-    )
 
   foreach(_header IN LISTS RANGE_V3_PUBLIC_HEADERS)
     file(RELATIVE_PATH _relative "${CMAKE_SOURCE_DIR}/include" "${_header}")
