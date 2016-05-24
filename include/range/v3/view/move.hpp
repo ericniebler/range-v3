@@ -62,7 +62,7 @@ namespace ranges
         public:
             move_view() = default;
             explicit move_view(Rng rng)
-              : view_adaptor_t<move_view>{std::move(rng)}
+              : move_view::view_adaptor{std::move(rng)}
             {}
             CONCEPT_REQUIRES(SizedRange<Rng>())
             range_size_t<Rng> size() const

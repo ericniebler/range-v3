@@ -72,7 +72,7 @@ namespace ranges
         public:
             iter_take_while_view() = default;
             iter_take_while_view(Rng rng, Pred pred)
-              : view_adaptor_t<iter_take_while_view>{std::move(rng)}
+              : iter_take_while_view::view_adaptor{std::move(rng)}
               , pred_(as_function(std::move(pred)))
             {}
         };

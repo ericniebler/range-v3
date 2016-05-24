@@ -165,26 +165,26 @@ namespace ranges
         public:
             reverse_view() = default;
             reverse_view(reverse_view &&that)
-              : view_adaptor_t<reverse_view>{std::move(that)}
+              : reverse_view::view_adaptor{std::move(that)}
               , detail::reverse_end_<Rng>{}
             {}
             reverse_view(reverse_view const &that)
-              : view_adaptor_t<reverse_view>{that}
+              : reverse_view::view_adaptor{that}
               , detail::reverse_end_<Rng>{}
             {}
             explicit reverse_view(Rng rng)
-              : view_adaptor_t<reverse_view>{std::move(rng)}
+              : reverse_view::view_adaptor{std::move(rng)}
               , detail::reverse_end_<Rng>{}
             {}
             reverse_view& operator=(reverse_view &&that)
             {
-                this->view_adaptor_t<reverse_view>::operator=(std::move(that));
+                this->reverse_view::view_adaptor::operator=(std::move(that));
                 this->dirty_(BoundedRange<Rng>{});
                 return *this;
             }
             reverse_view& operator=(reverse_view const &that)
             {
-                this->view_adaptor_t<reverse_view>::operator=(that);
+                this->reverse_view::view_adaptor::operator=(that);
                 this->dirty_(BoundedRange<Rng>{});
                 return *this;
             }

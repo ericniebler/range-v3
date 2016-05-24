@@ -209,7 +209,7 @@ Below in roughly 2 dozen lines of code is the `transform` view, which takes one 
     public:
         transform_view() = default;
         transform_view(Rng && rng, Fun fun)
-          : view_adaptor_t<transform_view>{std::forward<Rng>(rng)}
+          : transform_view::view_adaptor{std::forward<Rng>(rng)}
           , fun_(std::move(fun))
         {}
     };

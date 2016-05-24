@@ -100,30 +100,30 @@ namespace ranges
         public:
             remove_if_view() = default;
             remove_if_view(remove_if_view &&that)
-              : view_adaptor_t<remove_if_view>(std::move(that))
+              : remove_if_view::view_adaptor(std::move(that))
               , pred_(std::move(that).pred_)
               , begin_{}
             {}
             remove_if_view(remove_if_view const &that)
-              : view_adaptor_t<remove_if_view>(that)
+              : remove_if_view::view_adaptor(that)
               , pred_(that.pred_)
               , begin_{}
             {}
             remove_if_view(Rng rng, Pred pred)
-              : view_adaptor_t<remove_if_view>{std::move(rng)}
+              : remove_if_view::view_adaptor{std::move(rng)}
               , pred_(as_function(std::move(pred)))
               , begin_{}
             {}
             remove_if_view& operator=(remove_if_view &&that)
             {
-                this->view_adaptor_t<remove_if_view>::operator=(std::move(that));
+                this->remove_if_view::view_adaptor::operator=(std::move(that));
                 pred_ = std::move(that).pred_;
                 begin_.reset();
                 return *this;
             }
             remove_if_view& operator=(remove_if_view const &that)
             {
-                this->view_adaptor_t<remove_if_view>::operator=(that);
+                this->remove_if_view::view_adaptor::operator=(that);
                 pred_ = that.pred_;
                 begin_.reset();
                 return *this;

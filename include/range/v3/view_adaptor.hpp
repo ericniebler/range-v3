@@ -81,9 +81,6 @@ namespace ranges
         template<typename Derived>
         using base_range_t = meta::_t<range_access::base_range<Derived>>;
 
-        template<typename Derived>
-        using view_adaptor_t = meta::_t<range_access::view_adaptor<Derived>>;
-
         template<typename BaseIt, typename Adapt>
         struct adaptor_cursor;
 
@@ -369,7 +366,6 @@ namespace ranges
             friend Derived;
             friend range_access;
             friend adaptor_base;
-            using view_adaptor_t = view_adaptor;
             using base_range_t = view::all_t<BaseRng>;
             using view_facade<Derived, Cardinality>::derived;
             // Mutable here. Const-correctness is enforced below by disabling
@@ -423,8 +419,14 @@ namespace ranges
                 auto pos = adapt.end(derived());
                 return {std::move(pos), std::move(adapt)};
             }
+        protected:
+            ~view_adaptor() = default;
         public:
             view_adaptor() = default;
+            view_adaptor(view_adaptor &&) = default;
+            view_adaptor(view_adaptor const &) = default;
+            view_adaptor &operator=(view_adaptor &&) = default;
+            view_adaptor &operator=(view_adaptor const &) = default;
             constexpr view_adaptor(BaseRng && rng)
               : rng_(view::all(detail::forward<BaseRng>(rng)))
             {}

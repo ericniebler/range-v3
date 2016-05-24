@@ -60,7 +60,7 @@ namespace ranges
         public:
             chunk_view() = default;
             chunk_view(Rng rng, range_difference_t<Rng> n)
-              : view_adaptor_t<chunk_view>(std::move(rng)), n_(n)
+              : chunk_view::view_adaptor(std::move(rng)), n_(n)
             {
                 RANGES_ASSERT(0 < n_);
             }
