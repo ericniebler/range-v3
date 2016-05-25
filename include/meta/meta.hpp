@@ -406,13 +406,13 @@ namespace meta
         template <typename T>
         struct id
         {
-        private:
+            /// \cond
             // Redirect through decltype for compilers that have not
             // yet implemented CWG 1558:
             // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
             static id impl(void*);
+            /// \endcond
 
-        public:
             using type = T;
 
             template <typename... Ts>
