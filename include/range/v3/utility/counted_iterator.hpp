@@ -111,10 +111,10 @@ namespace ranges
                     return {i, j.count() - n};
                 }
                 CONCEPT_REQUIRES(Readable<I>())
-                friend iterator_rvalue_reference_t<I> indirect_move(counted_iterator<I, D> const &it)
+                iterator_rvalue_reference_t<I> move() const
                     noexcept(noexcept(iter_move(std::declval<I const &>())))
                 {
-                    return iter_move(get_cursor(it).it_);
+                    return iter_move(it_);
                 }
                 CONCEPT_REQUIRES(Readable<I>())
                 auto get() const -> decltype(*it_)

@@ -678,6 +678,7 @@ namespace ranges
             struct reverse_cursor
             {
             private:
+                CONCEPT_ASSERT(BidirectionalIterator<I>());
                 friend range_access;
                 template<typename OtherI>
                 friend struct reverse_cursor;
@@ -742,13 +743,12 @@ namespace ranges
                 {
                     return it_ - that.base();
                 }
-                CONCEPT_REQUIRES(Readable<I>())
                 RANGES_CXX14_CONSTEXPR
-                friend iterator_rvalue_reference_t<I> indirect_move(reverse_iterator<I> const &it)
-                    noexcept(noexcept(iter_move(std::declval<I const &>())))
-                {
-                    return iter_move(get_cursor(it).it_);
-                }
+                auto move() const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    iter_move(it_)
+                )
             public:
                 reverse_cursor() = default;
                 template<typename U,
@@ -829,11 +829,11 @@ namespace ranges
                 {
                     return that.it_ - it_;
                 }
-                friend iterator_rvalue_reference_t<I> indirect_move(move_iterator<I> const &it)
-                    noexcept(noexcept(iter_move(std::declval<I const &>())))
-                {
-                    return iter_move(get_cursor(it).it_);
-                }
+                auto move() const
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    iter_move(it_)
+                )
             public:
                 constexpr move_cursor()
                   : it_{}
@@ -1017,10 +1017,10 @@ namespace ranges
                 }
                 CONCEPT_REQUIRES(Readable<I>())
                 RANGES_CXX14_CONSTEXPR
-                friend iterator_rvalue_reference_t<I> indirect_move(move_into_iterator<I> const &it)
-                    noexcept(noexcept(iter_move(std::declval<I const &>())))
+                iterator_rvalue_reference_t<I> move() const
+                    noexcept(noexcept(iter_move(it_)))
                 {
-                    return iter_move(get_cursor(it).it_);
+                    return iter_move(it_);
                 }
             public:
                 constexpr move_into_cursor()

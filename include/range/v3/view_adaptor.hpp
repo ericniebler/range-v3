@@ -288,12 +288,12 @@ namespace ranges
                 return static_cast<X &&>(second.get(first));
             }
             // Gives users a way to override the default indirect_move function in their adaptors.
-            template<typename Sent>
-            friend auto indirect_move(basic_iterator<adaptor_cursor, Sent> const &it)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                get_cursor(it).indirect_move_(42)
-            )
+            auto move() const
+                noexcept(noexcept(std::declval<const adaptor_cursor &>().indirect_move_(42))) ->
+                decltype(std::declval<const adaptor_cursor &>().indirect_move_(42))
+            {
+                return indirect_move_(42);
+            }
         public:
             using compressed_pair<BaseIter, Adapt>::compressed_pair;
         };

@@ -66,13 +66,14 @@ namespace ranges
         /// \cond
         namespace adl_move_detail
         {
+            // TODO: investigate the breakage when these are made constexpr.
+            // (Results in ODR-use of projected_readable::operator*)
+
             // Default indirect_move overload.
             template<typename I,
-                typename R = decltype(*std::declval<I const &>()),
-                typename U = meta::_t<std::remove_reference<R>>>
+                typename R = decltype(*std::declval<I const &>())>
             aux::move_t<R> indirect_move(I const &i)
-                noexcept(std::is_reference<R>::value ||
-                    std::is_nothrow_constructible<detail::decay_t<U>, U &&>::value)
+                noexcept(noexcept(static_cast<aux::move_t<R>>(aux::move(*i))))
             {
                 return aux::move(*i);
             }
@@ -81,11 +82,10 @@ namespace ranges
             {
                 template<typename I>
                 auto operator()(I const &i) const
-                    noexcept(noexcept(indirect_move(i))) ->
-                    decltype(indirect_move(i))
-                {
-                    return indirect_move(i);
-                }
+                RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+                (
+                    indirect_move(i)
+                )
             };
         }
         /// \endcond
