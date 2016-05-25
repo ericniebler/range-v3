@@ -407,20 +407,16 @@ namespace meta
         struct id
         {
         private:
-            // Redirect through a class template for compilers that have not
+            // Redirect through decltype for compilers that have not
             // yet implemented CWG 1558:
             // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
-            template <typename...>
-            struct impl
-            {
-                using type = T;
-            };
+            static id impl(void*);
 
         public:
             using type = T;
 
             template <typename... Ts>
-            using invoke = _t<impl<Ts...>>;
+            using invoke = _t<decltype(id::impl(static_cast<list<Ts...>*>(nullptr)))>;
         };
 
         /// An alias for type \p T. Useful in non-deduced contexts.
@@ -644,7 +640,7 @@ namespace meta
             // Indirection through defer here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using invoke = _t<defer<C, Ts...>>;
+            using invoke = _t<detail::defer_<C, list<Ts...>>>;
         };
 
         /// Turn a class template or alias template \p C taking literals of type \p T into a
@@ -656,7 +652,7 @@ namespace meta
             // Indirection through defer_i here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using invoke = _t<defer_i<T, C, Ts::type::value...>>;
+            using invoke = _t<detail::defer_i_<T, C, integer_sequence<T, Ts::type::value...>>>;
         };
 
     #if __GNUC__ == 4 && __GNUC_MINOR__ <= 8 && \
@@ -1290,7 +1286,7 @@ namespace meta
 
             template <typename... Ts, typename N>
             struct at_<list<Ts...>, N>
-                : decltype(at_impl_<repeat_n<N, void *>>::eval(detail::_nullptr_v<id<Ts>>()...))
+                : decltype(at_impl_<repeat_n<N, void *>>::eval(static_cast<id<Ts> *>(nullptr)...))
             {
             };
         } // namespace detail
@@ -2206,12 +2202,30 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // reverse
+        /// \cond
+        namespace detail
+        {
+            template <typename List, typename State = list<>>
+            struct reverse_ : lazy::fold<List, State, quote<push_front>>
+            {
+            };
+            
+            template <typename T0, typename T1, typename T2, typename T3, typename T4, typename T5,
+                      typename T6, typename T7, typename T8, typename T9, typename... Ts,
+                      typename... Us>
+            struct reverse_<list<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, Ts...>, list<Us...>>
+                : reverse_<list<Ts...>, list<T9, T8, T7, T6, T5, T4, T3, T2, T1, T0, Us...>>
+            {
+            };
+        }
+        /// \endcond
+
         /// Return a new \c meta::list by reversing the elements in the list \p List.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List>
-        using reverse = reverse_fold<List, list<>, quote<push_back>>;
+        using reverse = _t<detail::reverse_<List>>;
 
         namespace lazy
         {
@@ -2889,9 +2903,43 @@ namespace meta
         using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
         /// \endcond
 
+        /// \cond
+        namespace detail
+        {
+            enum class indices_strategy_ { done, repeat, recurse };
+
+            constexpr indices_strategy_ strategy_(std::size_t cur, std::size_t end)
+            {
+                return cur >= end
+                    ? indices_strategy_::done
+                    : cur * 2 <= end
+                        ? indices_strategy_::repeat
+                        : indices_strategy_::recurse;
+            }
+
+            template <typename T>
+            constexpr std::size_t range_distance_(T begin, T end)
+            {
+                return begin <= end
+                    ? static_cast<std::size_t>(end - begin)
+                    : throw "The start of the integer_sequence must not be greater than the end";
+            }
+
+            template <std::size_t End, typename State, indices_strategy_ Status>
+            struct make_indices_
+            {
+                using type = State;
+            };
+
+            template <typename T, T, typename>
+            struct coerce_indices_
+            {
+            };
+        }
+        /// \endcond
+
         ///////////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
-
 #ifndef __cpp_lib_integer_sequence
         /// A container for a sequence of compile-time integer constants.
         /// \ingroup integral
@@ -2904,50 +2952,8 @@ namespace meta
         };
 #endif
 
-        /// \cond
-        namespace detail
-        {
-            // Glue two sets of integer_sequence together
-            template <typename I1, typename I2, typename I3>
-            struct integer_sequence_cat;
-
-            template <typename T, T... N1, T... N2, T... N3>
-            struct integer_sequence_cat<integer_sequence<T, N1...>, integer_sequence<T, N2...>,
-                                        integer_sequence<T, N3...>>
-            {
-                using type = integer_sequence<T, N1..., (sizeof...(N1) + N2)...,
-                                              (sizeof...(N1) + sizeof...(N2) + N3)...>;
-            };
-
-            template <typename T, std::size_t N>
-            struct make_integer_sequence_
-                : integer_sequence_cat<_t<make_integer_sequence_<T, N / 2>>,
-                                       _t<make_integer_sequence_<T, N / 2>>,
-                                       _t<make_integer_sequence_<T, N % 2>>>
-            {
-            };
-
-            template <typename T>
-            struct make_integer_sequence_<T, 0>
-            {
-                using type = integer_sequence<T>;
-            };
-
-            template <typename T>
-            struct make_integer_sequence_<T, 1>
-            {
-                using type = integer_sequence<T, 0>;
-            };
-        } // namespace detail
-        /// \endcond
-
-        /// Generate \c integer_sequence containing integer constants [0,1,2,...,N-1].
-        /// \par Complexity
-        /// \f$ O(log(N)) \f$.
-        /// \ingroup integral
-        template <typename T, T N>
-        using make_integer_sequence = _t<detail::make_integer_sequence_<T, (std::size_t)N>>;
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // index_sequence
         /// A container for a sequence of compile-time integer constants of type
         /// \c std::size_t
         /// \ingroup integral
@@ -2959,7 +2965,67 @@ namespace meta
         /// \f$ O(log(N)) \f$.
         /// \ingroup integral
         template <std::size_t N>
-        using make_index_sequence = make_integer_sequence<std::size_t, N>;
+        using make_index_sequence = _t<
+            detail::make_indices_<N, index_sequence<0>, detail::strategy_(1, N)>>;
+
+        /// Generate \c integer_sequence containing integer constants [0,1,2,...,N-1].
+        /// \par Complexity
+        /// \f$ O(log(N)) \f$.
+        /// \ingroup integral
+        template <typename T, T N>
+        using make_integer_sequence = _t<
+            detail::coerce_indices_<T, 0, make_index_sequence<static_cast<std::size_t>(N)>>>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // integer_range
+        /// Makes the integer sequence <tt>[From, To)</tt>.
+        /// \ingroup integral
+        template <class T, T From, T To>
+        using integer_range = _t<
+            detail::coerce_indices_<T, From, make_index_sequence<detail::range_distance_(From, To)>>>;
+
+        /// \cond
+        namespace detail
+        {
+            template <typename, typename>
+            struct concat_indices_
+            {
+            };
+
+            template <std::size_t... Is, std::size_t... Js>
+            struct concat_indices_<index_sequence<Is...>, index_sequence<Js...>>
+            {
+                using type = index_sequence<Is..., (Js + sizeof...(Is))...>;
+            };
+            
+            template <>
+            struct make_indices_<0u, index_sequence<0>, indices_strategy_::done>
+            {
+                using type = index_sequence<>;
+            };
+
+            template <std::size_t End, std::size_t... Values>
+            struct make_indices_<End, index_sequence<Values...>, indices_strategy_::repeat>
+                : make_indices_<End, index_sequence<Values..., (Values + sizeof...(Values))...>,
+                                detail::strategy_(sizeof...(Values) * 2, End)>
+            {
+            };
+
+            template <std::size_t End, std::size_t... Values>
+            struct make_indices_<End, index_sequence<Values...>, indices_strategy_::recurse>
+                : concat_indices_<index_sequence<Values...>,
+                                  make_index_sequence<End - sizeof...(Values)>>
+            {
+            };
+
+            template <typename T, T Offset, std::size_t... Values>
+            struct coerce_indices_<T, Offset, index_sequence<Values...>>
+            {
+                using type =
+                    integer_sequence<T, static_cast<T>(static_cast<T>(Values) + Offset)...>;
+            };
+        } // namespace detail
+        /// \endcond
 
         /// \cond
         namespace detail
@@ -2981,30 +3047,6 @@ namespace meta
                 return {};
             }
         }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        // integer_range
-        /// \cond
-        namespace detail
-        {
-            template <class T, T offset, class U>
-            struct offset_integer_sequence_
-            {
-            };
-
-            template <class T, T offset, T... Ts>
-            struct offset_integer_sequence_<T, offset, meta::integer_sequence<T, Ts...>>
-            {
-                using type = meta::integer_sequence<T, (Ts + offset)...>;
-            };
-        } // namespace detail
-        /// \endcond
-
-        /// Makes the integer sequence [from, to).
-        /// \ingroup integral
-        template <class T, T from, T to>
-        using integer_range = meta::_t< 
-            detail::offset_integer_sequence_<T, from, meta::make_integer_sequence<T, to - from>>>;
         /// \cond
     } // namespace v1
     /// \endcond
