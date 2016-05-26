@@ -62,6 +62,8 @@ void test_tuple_cat()
 
 // Other misc tests
 static_assert(std::is_same<reverse<list<int, short, double>>, list<double, short, int>>::value, "");
+static_assert(std::is_same<reverse<list<int, short, double, float>>, list<float, double, short, int>>::value, "");
+static_assert(std::is_same<reverse<list<int[1], int[2], int[3], int[4], int[5], int[6], int[7], int[8], int[9], int[10], int[11], int[12], int[13], int[14], int[15], int[16], int[17]>>, list<int[17], int[16], int[15], int[14], int[13], int[12], int[11], int[10], int[9], int[8], int[7], int[6], int[5], int[4], int[3], int[2], int[1]>>::value, "");
 
 static_assert(all_of<list<int, short, long>, quote<std::is_integral>>::value, "");
 static_assert(none_of<list<int, short, long>, quote<std::is_floating_point>>::value, "");
