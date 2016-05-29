@@ -439,10 +439,10 @@ namespace meta
             {
             };
         }
-        /// \endcond
+/// \endcond
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        // integer_sequence
+///////////////////////////////////////////////////////////////////////////////////////////////
+// integer_sequence
 #ifndef __cpp_lib_integer_sequence
         /// A container for a sequence of compile-time integer constants.
         /// \ingroup integral
@@ -1031,23 +1031,25 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename...>
+            template <typename, typename = bool>
             struct _if_
             {
             };
 
             template <typename If>
-            struct _if_<If> : std::enable_if<If::type::value>
+            struct _if_<list<If>, decltype(bool(If::type::value))> : std::enable_if<If::type::value>
             {
             };
 
             template <typename If, typename Then>
-            struct _if_<If, Then> : std::enable_if<If::type::value, Then>
+            struct _if_<list<If, Then>, decltype(bool(If::type::value))>
+                : std::enable_if<If::type::value, Then>
             {
             };
 
             template <typename If, typename Then, typename Else>
-            struct _if_<If, Then, Else> : std::conditional<If::type::value, Then, Else>
+            struct _if_<list<If, Then, Else>, decltype(bool(If::type::value))>
+                : std::conditional<If::type::value, Then, Else>
             {
             };
         } // namespace detail
@@ -1056,12 +1058,12 @@ namespace meta
         /// Select one type or another depending on a compile-time Boolean.
         /// \ingroup logical
         template <typename... Args>
-        using if_ = _t<detail::_if_<Args...>>;
+        using if_ = _t<detail::_if_<list<Args...>>>;
 
         /// Select one type or another depending on a compile-time Boolean.
         /// \ingroup logical
         template <bool If, typename... Args>
-        using if_c = _t<detail::_if_<bool_<If>, Args...>>;
+        using if_c = _t<detail::_if_<list<bool_<If>, Args...>>>;
 
         namespace lazy
         {
@@ -2007,35 +2009,7 @@ namespace meta
         }
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // reverse_find
-        /// \cond
-        namespace detail
-        {
-            template <typename List, typename T, typename State = list<>>
-            struct reverse_find_
-            {
-            };
-
-            template <typename T, typename State>
-            struct reverse_find_<list<>, T, State>
-            {
-                using type = State;
-            };
-
-            template <typename Head, typename... List, typename T, typename State>
-            struct reverse_find_<list<Head, List...>, T, State>
-                : reverse_find_<list<List...>, T, State>
-            {
-            };
-
-            template <typename... List, typename T, typename State>
-            struct reverse_find_<list<T, List...>, T, State>
-                : reverse_find_<list<List...>, T, list<T, List...>>
-            {
-            };
-        }
-        /// \endcond
-
+        // find
         /// Return the tail of the list \p List starting at the first occurrence of \p
         /// T, if any
         /// such element exists; the empty list, otherwise.
@@ -2053,6 +2027,8 @@ namespace meta
             using find = defer<find, List, T>;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////
+        // reverse_find
         /// Return the tail of the list \p List starting at the last occurrence of \p T,
         /// if any such
         /// element exists; the empty list, otherwise.
@@ -2075,7 +2051,12 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename List, typename Fun>
+            constexpr bool const *find_if_i_(bool const *const begin, bool const *const end)
+            {
+                return begin == end || *begin ? begin : find_if_i_(begin + 1, end);
+            }
+
+            template <typename List, typename Fun, typename = void>
             struct find_if_
             {
             };
@@ -2086,10 +2067,13 @@ namespace meta
                 using type = list<>;
             };
 
-            template <typename Head, typename... List, typename Fun>
-            struct find_if_<list<Head, List...>, Fun>
-                : if_<invoke<Fun, Head>, id<list<Head, List...>>, find_if_<list<List...>, Fun>>
+            template <typename... List, typename Fun>
+            struct find_if_<list<List...>, Fun,
+                            void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
+                static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
+                using type =
+                    drop_c<list<List...>, detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v>;
             };
         } // namespace detail
         /// \endcond
@@ -2118,22 +2102,35 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename List, typename Fun, typename State = list<>>
+            constexpr bool const *reverse_find_if_i_(bool const *const begin, bool const *const pos,
+                                                     bool const *const end)
+            {
+                return begin == pos
+                           ? end
+                           : *(pos - 1) ? pos - 1 : reverse_find_if_i_(begin, pos - 1, end);
+            }
+
+            template <typename List, typename Fun, typename = void>
             struct reverse_find_if_
             {
             };
 
-            template <typename Fun, typename State>
-            struct reverse_find_if_<list<>, Fun, State>
+            template <typename Fun>
+            struct reverse_find_if_<list<>, Fun>
             {
-                using type = State;
+                using type = list<>;
             };
 
-            template <typename Head, typename... List, typename Fun, typename State>
-            struct reverse_find_if_<list<Head, List...>, Fun, State>
-                : reverse_find_if_<list<List...>, Fun,
-                                   if_<invoke<Fun, Head>, list<Head, List...>, State>>
+            template <typename... List, typename Fun>
+            struct reverse_find_if_<
+                list<List...>, Fun,
+                void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
+                static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
+                using type =
+                    drop_c<list<List...>, detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
+                                                                     s_v + sizeof...(List)) -
+                                              s_v>;
             };
         }
         /// \endcond
@@ -2197,13 +2194,14 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename List, typename C, typename U>
+            template <typename List, typename C, typename U, typename = void>
             struct replace_if_
             {
             };
 
             template <typename... List, typename C, typename U>
-            struct replace_if_<list<List...>, C, U>
+            struct replace_if_<list<List...>, C, U,
+                               void_<integer_sequence<bool, bool(invoke<C, List>::type::value)...>>>
             {
                 using type = list<if_<invoke<C, List>, U, List>...>;
             };
@@ -2231,8 +2229,29 @@ namespace meta
         // count
         namespace detail
         {
-            template <typename State, typename Val, typename T>
-            using count_fn = if_<std::is_same<Val, T>, inc<State>, State>;
+            constexpr std::size_t count_i_(bool const *const begin, bool const *const end,
+                                           std::size_t n)
+            {
+                return begin == end ? n : detail::count_i_(begin + 1, end, n + *begin);
+            }
+
+            template <typename List, typename T, typename = void>
+            struct count_
+            {
+            };
+
+            template <typename T>
+            struct count_<list<>, T>
+            {
+                using type = meta::size_t<0>;
+            };
+
+            template <typename... List, typename T>
+            struct count_<list<List...>, T>
+            {
+                static constexpr bool s_v[] = {std::is_same<T, List>::value...};
+                using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
+            };
         }
 
         /// Count the number of times a type \p T appears in the list \p List.
@@ -2240,7 +2259,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename T>
-        using count = fold<List, meta::size_t<0>, bind_back<quote<detail::count_fn>, T>>;
+        using count = _t<detail::count_<List, T>>;
 
         namespace lazy
         {
@@ -2254,8 +2273,24 @@ namespace meta
         // count_if
         namespace detail
         {
-            template <typename State, typename Val, typename Fn>
-            using count_if_fn = if_<invoke<Fn, Val>, inc<State>, State>;
+            template <typename List, typename Fn, typename = void>
+            struct count_if_
+            {
+            };
+
+            template <typename Fn>
+            struct count_if_<list<>, Fn>
+            {
+                using type = meta::size_t<0>;
+            };
+
+            template <typename... List, typename Fn>
+            struct count_if_<list<List...>, Fn,
+                             void_<integer_sequence<bool, bool(invoke<Fn, List>::type::value)...>>>
+            {
+                static constexpr bool s_v[] = {invoke<Fn, List>::type::value...};
+                using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
+            };
         }
 
         /// Count the number of times the predicate \p Fn evaluates to true for all the
@@ -2265,7 +2300,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename Fn>
-        using count_if = fold<List, meta::size_t<0>, bind_back<quote<detail::count_if_fn>, Fn>>;
+        using count_if = _t<detail::count_if_<List, Fn>>;
 
         namespace lazy
         {
@@ -2766,7 +2801,7 @@ namespace meta
 
             // Returns which branch to evaluate
             template <typename If, typename... Ts>
-            using lazy_if_ = lazy::_t<defer<_if_, If, protect_<Ts>...>>;
+            using lazy_if_ = lazy::_t<defer<_if_, list<If, protect_<Ts>...>>>;
 
             template <typename A, typename T, typename F, typename Ts>
             struct subst1_

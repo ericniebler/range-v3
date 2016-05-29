@@ -139,7 +139,11 @@ static_assert(std::is_same<invoke<uncvref_fn, int const &>, int>::value, "");
 
 using L = list<int, short, int, float>;
 static_assert(std::is_same<find<L, int>, list<int, short, int, float>>::value, "");
+static_assert(std::is_same<find_if<L, bind_front<quote<std::is_same>, int>>, list<int, short, int, float>>::value, "");
+static_assert(std::is_same<find_if<L, bind_front<quote<std::is_same>, double>>, list<>>::value, "");
 static_assert(std::is_same<reverse_find<L, int>, list<int, float>>::value, "");
+static_assert(std::is_same<reverse_find_if<L, bind_front<quote<std::is_same>, int>>, list<int, float>>::value, "");
+static_assert(std::is_same<reverse_find_if<L, bind_front<quote<std::is_same>, double>>, list<>>::value, "");
 
 struct check_integral
 {
