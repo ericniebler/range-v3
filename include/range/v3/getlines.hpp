@@ -47,13 +47,17 @@ namespace ranges
                 {
                     rng_->next();
                 }
-                std::string const &get() const
+                std::string &get() const noexcept
                 {
                     return rng_->str_;
                 }
                 bool done() const
                 {
                     return !*rng_->sin_;
+                }
+                std::string && move() const noexcept
+                {
+                    return detail::move(rng_->str_);
                 }
             };
             void next()
@@ -71,7 +75,7 @@ namespace ranges
             {
                 this->next(); // prime the pump
             }
-            std::string & cached()
+            std::string & cached() noexcept
             {
                 return str_;
             }

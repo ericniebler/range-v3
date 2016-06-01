@@ -47,7 +47,7 @@ namespace ranges
                 {
                     rng_->next();
                 }
-                Val &get() const
+                Val &get() const noexcept
                 {
                     return rng_->cached();
                 }
