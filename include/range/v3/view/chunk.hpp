@@ -79,8 +79,8 @@ namespace ranges
         private:
             range_difference_t<Rng> n_;
             range_sentinel_t<Rng> end_;
-            offset_t & offset() {return ranges::get<offset_t>(*this);}
-            offset_t const & offset() const {return ranges::get<offset_t>(*this);}
+            offset_t & offset() {return this->box<offset_t>::get();}
+            offset_t const & offset() const {return this->box<offset_t>::get();}
         public:
             adaptor() = default;
             adaptor(range_difference_t<Rng> n, range_sentinel_t<Rng> end)

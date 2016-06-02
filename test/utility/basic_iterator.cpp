@@ -16,8 +16,6 @@
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
 
-#include <range/v3/utility/counted_iterator.hpp>
-
 namespace test_weak_input
 {
     template<typename I>
@@ -359,6 +357,23 @@ namespace test_forward_sized
     }
 }
 
+void test_box()
+{
+    struct A : ranges::box<int> {};
+    CHECK(sizeof(A) == sizeof(int));
+    struct empty {};
+    struct B : ranges::box<empty> { int i; };
+    CHECK(sizeof(B) == sizeof(int));
+    B b1, b2;
+    if (ranges::detail::box_compression<empty>() == ranges::detail::box_compress::coalesce)
+        CHECK((&b1.get() == &b2.get()));
+    struct nontrivial { nontrivial() {} };
+    struct C : ranges::box<nontrivial> { int i; };
+    CHECK(sizeof(C) == sizeof(int));
+    C c1, c2;
+    CHECK((&c1.get() != &c2.get()));
+}
+
 int main()
 {
     using namespace ranges;
@@ -370,6 +385,7 @@ int main()
     ::test_output::test();
     ::test_move_only::test();
     ::test_forward_sized::test();
+    ::test_box();
 
     return ::test_result();
 }

@@ -38,11 +38,11 @@ private:
         {
             return ranges::begin(rng.base());
         }
-        void next(base_iterator_t &it)
+        void next(base_iterator_t &it) const
         {
             --it;
         }
-        void prev(base_iterator_t &it)
+        void prev(base_iterator_t &it) const
         {
             ++it;
         }
@@ -51,13 +51,13 @@ private:
             return *ranges::prev(it);
         }
         CONCEPT_REQUIRES(ranges::RandomAccessRange<BidiRange>())
-        void advance(base_iterator_t &it, ranges::range_difference_t<BidiRange> n)
+        void advance(base_iterator_t &it, ranges::range_difference_t<BidiRange> n) const
         {
             it -= n;
         }
         CONCEPT_REQUIRES(ranges::SizedIteratorRange<base_iterator_t, base_iterator_t>())
         ranges::range_difference_t<BidiRange>
-        distance_to(base_iterator_t const &here, base_iterator_t const &there)
+        distance_to(base_iterator_t const &here, base_iterator_t const &there) const
         {
             return here - there;
         }
@@ -86,7 +86,7 @@ int main()
 {
     using namespace ranges;
     std::vector<int> v{1, 2, 3, 4};
-    my_reverse_view<std::vector<int>& > retro{v};
+    my_reverse_view<std::vector<int>&> retro{v};
     ::models<concepts::BoundedView>(retro);
     ::models<concepts::RandomAccessIterator>(retro.begin());
     ::check_equal(retro, {4, 3, 2, 1});

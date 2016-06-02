@@ -19,6 +19,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/utility/compressed_pair.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/semiregular.hpp>
@@ -37,14 +38,17 @@ namespace ranges
         {
             template<typename Pred, typename Val>
             struct replacer_if_fn
+              : compressed_pair<semiregular_t<function_type<Pred>>, Val>
             {
             private:
-                compressed_pair<semiregular_t<function_type<Pred>>, Val> fun_and_new_value_;
+                using base_t = compressed_pair<semiregular_t<function_type<Pred>>, Val>;
+                using base_t::first;
+                using base_t::second;
 
             public:
                 replacer_if_fn() = default;
                 replacer_if_fn(Pred pred, Val new_value)
-                  : fun_and_new_value_{as_function(std::move(pred)), std::move(new_value)}
+                  : base_t{as_function(std::move(pred)), std::move(new_value)}
                 {}
 
                 template<typename I>
@@ -61,8 +65,8 @@ namespace ranges
                 operator()(I const &i)
                 {
                     auto &&x = *i;
-                    if(fun_and_new_value_.first((decltype(x) &&) x))
-                        return unwrap_reference(fun_and_new_value_.second);
+                    if(first()((decltype(x) &&) x))
+                        return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
                 template<typename I,
@@ -71,8 +75,8 @@ namespace ranges
                 operator()(I const &i) const
                 {
                     auto &&x = *i;
-                    if(fun_and_new_value_.first((decltype(x) &&) x))
-                        return unwrap_reference(fun_and_new_value_.second);
+                    if(first()((decltype(x) &&) x))
+                        return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
 
@@ -82,8 +86,8 @@ namespace ranges
                 operator()(move_tag, I const &i)
                 {
                     auto &&x = iter_move(i);
-                    if(fun_and_new_value_.first((decltype(x) &&) x))
-                        return unwrap_reference(fun_and_new_value_.second);
+                    if(first()((decltype(x) &&) x))
+                        return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
                 template<typename I,
@@ -92,8 +96,8 @@ namespace ranges
                 operator()(move_tag, I const &i) const
                 {
                     auto &&x = iter_move(i);
-                    if(fun_and_new_value_.first((decltype(x) &&) x))
-                        return unwrap_reference(fun_and_new_value_.second);
+                    if(first()((decltype(x) &&) x))
+                        return unwrap_reference(second());
                     return (decltype(x) &&) x;
                 }
             };

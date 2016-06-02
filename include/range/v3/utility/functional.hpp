@@ -361,37 +361,13 @@ namespace ranges
             constexpr auto&& not_ = static_const<not_fn>::value;
         }
 
-        // Lambdas are *not*:
-        // - aggregates             ([expr.prim.lambda]/p3)
-        // - literal types          ([expr.prim.lambda]/p3)
-        // - default constructible  ([expr.prim.lambda]/p20)
-        // - copy assignable        ([expr.prim.lambda]/p20)
-        template<typename Fn>
-        using could_be_lambda_ =
-            meta::bool_<
-               // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71116
-               //!std::is_literal_type<Fn>::value &&
-               !std::is_default_constructible<Fn>::value &&
-               !std::is_copy_assignable<Fn>::value>;
-
-        template<typename Fn, typename Tag = Fn>
-        using function_box_t =
-            box_if<
-                function_type<Fn>,
-                Tag
-        // GCC 6 finds empty lambdas' implicit conversion to function pointer when doing overload
-        // resolution for function calls. That causes hard errors.
-        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=71117
-        #if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 6
-              , !could_be_lambda_<Fn>::value
-        #endif
-            >;
-
         template<typename Second, typename First>
         struct composed
           : private compressed_pair<function_type<First>, function_type<Second>>
         {
         private:
+            using composed::compressed_pair::first;
+            using composed::compressed_pair::second;
             template<typename A, typename B, typename...Ts>
             static auto do_(A &a, B &b, std::false_type, Ts &&...ts)
             RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -416,26 +392,32 @@ namespace ranges
                 typename FirstResultT =
                     concepts::Function::result_t<function_type<First> &, Ts &&...>>
             auto operator()(Ts &&...ts)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                composed::do_(
-                    composed::compressed_pair::first,
-                    composed::compressed_pair::second,
+            RANGES_DECLTYPE_NOEXCEPT(composed::do_(
+                std::declval<function_type<First> &>(),
+                std::declval<function_type<Second> &>(),
+                std::is_void<FirstResultT>{},
+                (Ts &&) ts...))
+            {
+                return composed::do_(
+                    first(), second(),
                     std::is_void<FirstResultT>{},
-                    (Ts &&) ts...)
-            )
+                    (Ts &&) ts...);
+            }
             template<typename...Ts,
                 typename FirstResultT =
                     concepts::Function::result_t<function_type<First> const &, Ts &&...>>
             auto operator()(Ts &&...ts) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                composed::do_(
-                    detail::as_const(composed::compressed_pair::first),
-                    detail::as_const(composed::compressed_pair::second),
+            RANGES_DECLTYPE_NOEXCEPT(composed::do_(
+                std::declval<function_type<First> const &>(),
+                std::declval<function_type<Second> const &>(),
+                std::is_void<FirstResultT>{},
+                (Ts &&) ts...))
+            {
+                return composed::do_(
+                    first(), second(),
                     std::is_void<FirstResultT>{},
-                    (Ts &&) ts...)
-            )
+                    (Ts &&) ts...);
+            }
         };
 
         struct compose_fn
@@ -462,6 +444,11 @@ namespace ranges
         struct overloaded<First, Rest...>
           : private compressed_pair<function_type<First>, overloaded<Rest...>>
         {
+        private:
+            using base_t = compressed_pair<function_type<First>, overloaded<Rest...>>;
+            using base_t::first;
+            using base_t::second;
+        public:
             overloaded() = default;
             constexpr overloaded(First first, Rest... rest)
               : overloaded::compressed_pair{
@@ -470,30 +457,36 @@ namespace ranges
             {}
             template<typename... Args>
             auto operator()(Args&&...args)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                overloaded::compressed_pair::first(detail::forward<Args>(args)...)
-            )
+            RANGES_DECLTYPE_NOEXCEPT(
+                std::declval<function_type<First> &>()(
+                    detail::forward<Args>(args)...))
+            {
+                return first()(detail::forward<Args>(args)...);
+            }
             template<typename... Args>
             auto operator()(Args&&...args) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::as_const(overloaded::compressed_pair::first)(
-                    detail::forward<Args>(args)...)
-            )
+            RANGES_DECLTYPE_NOEXCEPT(
+                std::declval<function_type<First> const &>()(
+                    detail::forward<Args>(args)...))
+            {
+                return first()(detail::forward<Args>(args)...);
+            }
             template<typename... Args>
             auto operator()(Args&&...args)
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                overloaded::compressed_pair::second(detail::forward<Args>(args)...)
-            )
+            RANGES_DECLTYPE_NOEXCEPT(
+                std::declval<overloaded<Rest...> &>()(
+                    detail::forward<Args>(args)...))
+            {
+                return second()(detail::forward<Args>(args)...);
+            }
             template<typename... Args>
             auto operator()(Args&&...args) const
-            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
-            (
-                detail::as_const(overloaded::compressed_pair::second)(
-                    detail::forward<Args>(args)...)
-            )
+            RANGES_DECLTYPE_NOEXCEPT(
+                std::declval<overloaded<Rest...> const &>()(
+                    detail::forward<Args>(args)...))
+            {
+                return second()(detail::forward<Args>(args)...);
+            }
         };
 
         struct overload_fn
@@ -520,13 +513,11 @@ namespace ranges
 
         template<typename Fn>
         struct indirected
-          : private function_box_t<Fn, meta::size_t<0>>
+          : private box<function_type<Fn>>
         {
         private:
             using BaseFn = function_type<Fn>;
-
-            BaseFn & base()                { return ranges::get<0>(*this); }
-            BaseFn const & base() const    { return ranges::get<0>(*this); }
+            using box<BaseFn>::get;
         public:
             indirected() = default;
             indirected(Fn fn)
@@ -543,17 +534,15 @@ namespace ranges
             // Reference
             template<typename ...Its>
             auto operator()(Its ...its)
-                noexcept(noexcept(std::declval<BaseFn &>()(*its...))) ->
-                decltype(std::declval<BaseFn &>()(*its...))
+            RANGES_DECLTYPE_NOEXCEPT(std::declval<BaseFn &>()(*its...))
             {
-                return base()(*its...);
+                return get()(*its...);
             }
             template<typename ...Its>
             auto operator()(Its ...its) const
-                noexcept(noexcept(std::declval<BaseFn const &>()(*its...))) ->
-                decltype(std::declval<BaseFn const &>()(*its...))
+            RANGES_DECLTYPE_NOEXCEPT(std::declval<BaseFn const &>()(*its...))
             {
-                return base()(*its...);
+                return get()(*its...);
             }
 
             // Rvalue reference
@@ -562,14 +551,14 @@ namespace ranges
                 noexcept(noexcept(aux::move(std::declval<BaseFn &>()(*its...)))) ->
                 aux::move_t<decltype(std::declval<BaseFn &>()(*its...))>
             {
-                return aux::move(base()(*its...));
+                return aux::move(get()(*its...));
             }
             template<typename ...Its>
             auto operator()(move_tag, Its ...its) const
                 noexcept(noexcept(aux::move(std::declval<BaseFn const &>()(*its...)))) ->
                 aux::move_t<decltype(std::declval<BaseFn const &>()(*its...))>
             {
-                return aux::move(base()(*its...));
+                return aux::move(get()(*its...));
             }
         };
 
@@ -591,36 +580,33 @@ namespace ranges
 
         template<typename Fn1, typename Fn2>
         struct transformed
-          : private function_box_t<Fn1, meta::size_t<0>>
-          , private function_box_t<Fn2, meta::size_t<1>>
+          : private compressed_pair<function_type<Fn1>, function_type<Fn2>>
         {
         private:
             using BaseFn1 = function_type<Fn1>;
             using BaseFn2 = function_type<Fn2>;
+            using transformed::compressed_pair::first;
+            using transformed::compressed_pair::second;
 
-            BaseFn1 & fn1()              { return ranges::get<0>(*this); }
-            BaseFn1 const & fn1() const  { return ranges::get<0>(*this); }
-            BaseFn2 & fn2()              { return ranges::get<1>(*this); }
-            BaseFn2 const & fn2() const  { return ranges::get<1>(*this); }
         public:
             transformed() = default;
             constexpr transformed(Fn1 fn1, Fn2 fn2)
-              : function_box_t<Fn1, meta::size_t<0>>(as_function(detail::move(fn1)))
-              , function_box_t<Fn2, meta::size_t<1>>(as_function(detail::move(fn2)))
+              : transformed::compressed_pair{
+                    as_function(detail::move(fn1)), as_function(detail::move(fn2))}
             {}
             template<typename ...Args>
             auto operator()(Args &&... args)
-              noexcept(noexcept(std::declval<BaseFn1 &>()(std::declval<BaseFn2 &>()(std::forward<Args>(args))...))) ->
-              decltype(std::declval<BaseFn1 &>()(std::declval<BaseFn2 &>()(std::forward<Args>(args))...))
+            RANGES_DECLTYPE_NOEXCEPT(
+                std::declval<BaseFn1 &>()(std::declval<BaseFn2 &>()(std::forward<Args>(args))...))
             {
-                return fn1()(fn2()(std::forward<Args>(args)...));
+                return first()(second()(std::forward<Args>(args)...));
             }
             template<typename ...Args>
             auto operator()(Args &&... args) const
-              noexcept(noexcept(std::declval<BaseFn1 const &>()(std::declval<BaseFn2 const &>()(std::forward<Args>(args))...))) ->
-              decltype(std::declval<BaseFn1 const &>()(std::declval<BaseFn2 const &>()(std::forward<Args>(args))...))
+            RANGES_DECLTYPE_NOEXCEPT(
+                std::declval<BaseFn1 const &>()(std::declval<BaseFn2 const &>()(std::forward<Args>(args))...))
             {
-                return fn1()(fn2()(std::forward<Args>(args)...));
+                return first()(second()(std::forward<Args>(args)...));
             }
         };
 
@@ -787,8 +773,9 @@ namespace ranges
                 return {get()};
             }
             template<typename ...Args>
-            constexpr auto operator()(Args &&...args) const ->
-                decltype(std::declval<reference>()(std::declval<Args>()...))
+            constexpr auto operator()(Args &&...args) const
+            RANGES_DECLTYPE_NOEXCEPT(
+                std::declval<reference>()(std::declval<Args>()...))
             {
                 return get()(std::forward<Args>(args)...);
             }
