@@ -47,7 +47,7 @@ namespace ranges
                 {
                     rng_->next();
                 }
-                Val const &get() const
+                Val &get() const noexcept
                 {
                     return rng_->cached();
                 }
@@ -55,6 +55,11 @@ namespace ranges
                 {
                     return !*rng_->sin_;
                 }
+                Val && move() const noexcept
+                {
+                    return detail::move(rng_->cached());
+                }
+
             };
             void next()
             {
@@ -78,7 +83,7 @@ namespace ranges
             {
                 next(); // prime the pump
             }
-            Val & cached()
+            Val & cached() noexcept
             {
                 return obj_;
             }
