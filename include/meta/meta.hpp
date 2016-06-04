@@ -1031,6 +1031,8 @@ namespace meta
         /// \cond
         namespace detail
         {
+        #ifdef __clang__
+            // Clang is faster with this implementation
             template <typename, typename = bool>
             struct _if_
             {
@@ -1052,6 +1054,37 @@ namespace meta
                 : std::conditional<If::type::value, Then, Else>
             {
             };
+        #else
+            // GCC seems to prefer this implementation
+            template <typename, typename = std::true_type>
+            struct _if_
+            {
+            };
+
+            template <typename If>
+            struct _if_<list<If>, bool_<If::type::value>>
+            {
+                using type = void;
+            };
+
+            template <typename If, typename Then>
+            struct _if_<list<If, Then>, bool_<If::type::value>>
+            {
+                using type = Then;
+            };
+
+            template <typename If, typename Then, typename Else>
+            struct _if_<list<If, Then, Else>, bool_<If::type::value>>
+            {
+                using type = Then;
+            };
+
+            template <typename If, typename Then, typename Else>
+            struct _if_<list<If, Then, Else>, bool_<!If::type::value>>
+            {
+                using type = Else;
+            };
+        #endif
         } // namespace detail
         /// \endcond
 
@@ -1386,21 +1419,21 @@ namespace meta
                 using type = list<List1...>;
             };
 
-            template <typename... List1, typename... List2>
-            struct concat_<list<List1...>, list<List2...>>
+            template <typename... List1, typename... List2, typename... Rest>
+            struct concat_<list<List1...>, list<List2...>, Rest...>
+                : concat_<list<List1..., List2...>, Rest...>
             {
-                using type = list<List1..., List2...>;
             };
 
-            template <typename... List1, typename... List2, typename... List3>
-            struct concat_<list<List1...>, list<List2...>, list<List3...>>
-            {
-                using type = list<List1..., List2..., List3...>;
-            };
-
-            template <typename... List1, typename... List2, typename... List3, typename... Rest>
-            struct concat_<list<List1...>, list<List2...>, list<List3...>, Rest...>
-                : concat_<list<List1..., List2..., List3...>, Rest...>
+            template <typename... List1, typename... List2, typename... List3, typename... List4,
+                      typename... List5, typename... List6, typename... List7, typename... List8,
+                      typename... List9, typename... List10, typename... Rest>
+            struct concat_<list<List1...>, list<List2...>, list<List3...>, list<List4...>,
+                           list<List5...>, list<List6...>, list<List7...>, list<List8...>,
+                           list<List9...>, list<List10...>, Rest...>
+                : concat_<list<List1..., List2..., List3..., List4..., List5..., List6..., List7...,
+                               List8..., List9..., List10...>,
+                          Rest...>
             {
             };
         } // namespace detail
@@ -2318,8 +2351,8 @@ namespace meta
             template <typename Pred>
             struct filter_
             {
-                template <typename State, typename A>
-                using invoke = if_<invoke<Pred, A>, push_back<State, A>, State>;
+                template <typename A>
+                using invoke = if_c<invoke<Pred, A>::type::value, list<A>, list<>>;
             };
         } // namespace detail
         /// \endcond
@@ -2332,7 +2365,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List, typename Pred>
-        using filter = fold<List, list<>, detail::filter_<Pred>>;
+        using filter = join<transform<List, detail::filter_<Pred>>>;
 
         namespace lazy
         {
