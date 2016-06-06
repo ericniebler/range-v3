@@ -96,7 +96,8 @@ namespace ranges
                     decltype(unwrap_reference(cont).insert(begin(unwrap_reference(cont)), C{i}, C{j}))
                 {
                     auto const index = p - unwrap_reference(cont).begin();
-                    unwrap_reference(cont).reserve(unwrap_reference(cont).size() + (j - i));
+                    using size_type = decltype(unwrap_reference(cont).size());
+                    unwrap_reference(cont).reserve(unwrap_reference(cont).size() + static_cast<size_type>(j - i));
                     return unwrap_reference(cont).insert(begin(unwrap_reference(cont)) + index, C{i}, C{j});
                 }
 

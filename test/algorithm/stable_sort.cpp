@@ -29,138 +29,144 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-namespace { std::mt19937 gen; }
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
-struct indirect_less
+namespace
 {
-    template <class P>
-    bool operator()(const P& x, const P& y)
-        {return *x < *y;}
-};
+    std::mt19937 gen;
 
-template <class RI>
-void
-test_sort_helper(RI f, RI l)
-{
-    using value_type = ranges::iterator_value_t<RI>;
-    auto stable_sort = make_testable_1<false>(ranges::stable_sort);
-    if (f != l)
+    struct indirect_less
     {
-        long len = l - f;
-        value_type* save(new value_type[len]);
-        do
-        {
-            std::copy(f, l, save);
-            stable_sort(save, save+len).check([&](int *res)
-            {
-                CHECK(res == save+len);
-                CHECK(std::is_sorted(save, save+len));
-                std::copy(f, l, save);
-            });
-            stable_sort(save, save+len, std::greater<int>{}).check([&](int *res)
-            {
-                CHECK(res == save+len);
-                CHECK(std::is_sorted(save, save+len, std::greater<int>{}));
-                std::copy(f, l, save);
-            });
-        } while (std::next_permutation(f, l));
-        delete [] save;
-    }
-}
+        template <class P>
+        bool operator()(const P& x, const P& y)
+            {return *x < *y;}
+    };
 
-template <class RI>
-void
-test_sort_driver_driver(RI f, RI l, int start, RI real_last)
-{
-    for (RI i = l; i > f + start;)
+    template <class RI>
+    void
+    test_sort_helper(RI f, RI l)
     {
-        *--i = start;
-        if (f == i)
+        using value_type = ranges::iterator_value_t<RI>;
+        auto stable_sort = make_testable_1<false>(ranges::stable_sort);
+        if (f != l)
         {
-            test_sort_helper(f, real_last);
+            long len = l - f;
+            value_type* save(new value_type[len]);
+            do
+            {
+                std::copy(f, l, save);
+                stable_sort(save, save+len).check([&](int *res)
+                {
+                    CHECK(res == save+len);
+                    CHECK(std::is_sorted(save, save+len));
+                    std::copy(f, l, save);
+                });
+                stable_sort(save, save+len, std::greater<int>{}).check([&](int *res)
+                {
+                    CHECK(res == save+len);
+                    CHECK(std::is_sorted(save, save+len, std::greater<int>{}));
+                    std::copy(f, l, save);
+                });
+            } while (std::next_permutation(f, l));
+            delete [] save;
         }
-        if (start > 0)
-            test_sort_driver_driver(f, i, start-1, real_last);
     }
-}
 
-template <class RI>
-void
-test_sort_driver(RI f, RI l, int start)
-{
-    test_sort_driver_driver(f, l, start, l);
-}
-
-template <int sa>
-void
-test_sort_()
-{
-    int ia[sa];
-    for (int i = 0; i < sa; ++i)
+    template <class RI>
+    void
+    test_sort_driver_driver(RI f, RI l, int start, RI real_last)
     {
-        test_sort_driver(ia, ia+sa, i);
+        for (RI i = l; i > f + start;)
+        {
+            *--i = start;
+            if (f == i)
+            {
+                test_sort_helper(f, real_last);
+            }
+            if (start > 0)
+                test_sort_driver_driver(f, i, start-1, real_last);
+        }
     }
-}
 
-void
-test_larger_sorts(int N, int M)
-{
-    assert(N > 0);
-    assert(M > 0);
-    // create array length N filled with M different numbers
-    int* array = new int[N];
-    int x = 0;
-    for (int i = 0; i < N; ++i)
+    template <class RI>
+    void
+    test_sort_driver(RI f, RI l, int start)
     {
-        array[i] = x;
-        if (++x == M)
-            x = 0;
+        test_sort_driver_driver(f, l, start, l);
     }
 
-    // test saw tooth pattern
-    CHECK(ranges::stable_sort(array, array+N) == array+N);
-    CHECK(std::is_sorted(array, array+N));
-    // test random pattern
-    std::shuffle(array, array+N, gen);
-    CHECK(ranges::stable_sort(array, array+N) == array+N);
-    CHECK(std::is_sorted(array, array+N));
-    // test sorted pattern
-    CHECK(ranges::stable_sort(array, array+N) == array+N);
-    CHECK(std::is_sorted(array, array+N));
-    // test reverse sorted pattern
-    std::reverse(array, array+N);
-    CHECK(ranges::stable_sort(array, array+N) == array+N);
-    CHECK(std::is_sorted(array, array+N));
-    // test swap ranges 2 pattern
-    std::swap_ranges(array, array+N/2, array+N/2);
-    CHECK(ranges::stable_sort(array, array+N) == array+N);
-    CHECK(std::is_sorted(array, array+N));
-    // test reverse swap ranges 2 pattern
-    std::reverse(array, array+N);
-    std::swap_ranges(array, array+N/2, array+N/2);
-    CHECK(ranges::stable_sort(array, array+N) == array+N);
-    CHECK(std::is_sorted(array, array+N));
-    delete [] array;
-}
+    template <int sa>
+    void
+    test_sort_()
+    {
+        int ia[sa];
+        for (int i = 0; i < sa; ++i)
+        {
+            test_sort_driver(ia, ia+sa, i);
+        }
+    }
 
-void
-test_larger_sorts(unsigned N)
-{
-    test_larger_sorts(N, 1);
-    test_larger_sorts(N, 2);
-    test_larger_sorts(N, 3);
-    test_larger_sorts(N, N/2-1);
-    test_larger_sorts(N, N/2);
-    test_larger_sorts(N, N/2+1);
-    test_larger_sorts(N, N-2);
-    test_larger_sorts(N, N-1);
-    test_larger_sorts(N, N);
-}
+    void
+    test_larger_sorts(int N, int M)
+    {
+        assert(N > 0);
+        assert(M > 0);
+        // create array length N filled with M different numbers
+        int* array = new int[N];
+        int x = 0;
+        for (int i = 0; i < N; ++i)
+        {
+            array[i] = x;
+            if (++x == M)
+                x = 0;
+        }
 
-struct S
-{
-    int i, j;
-};
+        // test saw tooth pattern
+        CHECK(ranges::stable_sort(array, array+N) == array+N);
+        CHECK(std::is_sorted(array, array+N));
+        // test random pattern
+        std::shuffle(array, array+N, gen);
+        CHECK(ranges::stable_sort(array, array+N) == array+N);
+        CHECK(std::is_sorted(array, array+N));
+        // test sorted pattern
+        CHECK(ranges::stable_sort(array, array+N) == array+N);
+        CHECK(std::is_sorted(array, array+N));
+        // test reverse sorted pattern
+        std::reverse(array, array+N);
+        CHECK(ranges::stable_sort(array, array+N) == array+N);
+        CHECK(std::is_sorted(array, array+N));
+        // test swap ranges 2 pattern
+        std::swap_ranges(array, array+N/2, array+N/2);
+        CHECK(ranges::stable_sort(array, array+N) == array+N);
+        CHECK(std::is_sorted(array, array+N));
+        // test reverse swap ranges 2 pattern
+        std::reverse(array, array+N);
+        std::swap_ranges(array, array+N/2, array+N/2);
+        CHECK(ranges::stable_sort(array, array+N) == array+N);
+        CHECK(std::is_sorted(array, array+N));
+        delete [] array;
+    }
+
+    void
+    test_larger_sorts(unsigned N)
+    {
+        test_larger_sorts(N, 1);
+        test_larger_sorts(N, 2);
+        test_larger_sorts(N, 3);
+        test_larger_sorts(N, N/2-1);
+        test_larger_sorts(N, N/2);
+        test_larger_sorts(N, N/2+1);
+        test_larger_sorts(N, N-2);
+        test_larger_sorts(N, N-1);
+        test_larger_sorts(N, N);
+    }
+
+    struct S
+    {
+        int i, j;
+    };
+}
 
 int main()
 {
@@ -193,7 +199,7 @@ int main()
     {
         std::vector<std::unique_ptr<int> > v(1000);
         for(int i = 0; (std::size_t)i < v.size(); ++i)
-            v[i].reset(new int(v.size() - i - 1));
+            v[i].reset(new int((int)v.size() - i - 1));
         ranges::stable_sort(v, indirect_less());
         for(int i = 0; (std::size_t)i < v.size(); ++i)
             CHECK(*v[i] == i);
@@ -204,7 +210,7 @@ int main()
         std::vector<S> v(1000, S{});
         for(int i = 0; (std::size_t)i < v.size(); ++i)
         {
-            v[i].i = v.size() - i - 1;
+            v[i].i = (int)v.size() - i - 1;
             v[i].j = i;
         }
         ranges::stable_sort(v, std::less<int>{}, &S::i);
@@ -220,7 +226,7 @@ int main()
         std::vector<S> v(1000, S{});
         for(int i = 0; (std::size_t)i < v.size(); ++i)
         {
-            v[i].i = v.size() - i - 1;
+            v[i].i = (int)v.size() - i - 1;
             v[i].j = i;
         }
         CHECK(ranges::stable_sort(ranges::view::all(v), std::less<int>{}, &S::i).get_unsafe() == v.end());

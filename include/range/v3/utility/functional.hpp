@@ -133,6 +133,18 @@ namespace ranges
         };
 
         template<typename T>
+        struct convert_to
+        {
+            template<typename U,
+                CONCEPT_REQUIRES_(std::is_constructible<T, U>::value)>
+            constexpr auto operator()(U && u) const
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                static_cast<T>((U &&) u)
+            )
+        };
+
+        template<typename T>
         struct coerce
         {
             T & operator()(T & t) const

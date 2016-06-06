@@ -29,86 +29,92 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-namespace { std::mt19937 gen; }
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
-template <class Iter>
-void
-test_larger_sorts(int N, int M)
+namespace
 {
-    auto partial_sort_copy = ::make_testable_2<true, false>(ranges::partial_sort_copy);
-    int* input = new int[N];
-    int* output = new int[M];
-    for (int i = 0; i < N; ++i)
-        input[i] = i;
-    std::shuffle(input, input+N, gen);
-    partial_sort_copy(Iter(input), Iter(input+N), output, output+M).check([&](int* r)
+    std::mt19937 gen;
+
+    template <class Iter>
+    void
+    test_larger_sorts(int N, int M)
     {
-        int* e = output + std::min(N, M);
-        CHECK(r == e);
-        int i = 0;
-        for (int* x = output; x < e; ++x, ++i)
-            CHECK(*x == i);
+        auto partial_sort_copy = ::make_testable_2<true, false>(ranges::partial_sort_copy);
+        int* input = new int[N];
+        int* output = new int[M];
+        for (int i = 0; i < N; ++i)
+            input[i] = i;
         std::shuffle(input, input+N, gen);
-    });
-    partial_sort_copy(Iter(input), Iter(input+N), output, output+M, std::greater<int>()).check([&](int* r)
-    {
-        int* e = output + std::min(N, M);
-        CHECK(r == e);
-        int i = N-1;
-        for (int* x = output; x < e; ++x, --i)
-            CHECK(*x == i);
-        std::shuffle(input, input+N, gen);
-    });
-    delete [] output;
-    delete [] input;
-}
-
-template <class Iter>
-void
-test_larger_sorts(int N)
-{
-    test_larger_sorts<Iter>(N, 0);
-    test_larger_sorts<Iter>(N, 1);
-    test_larger_sorts<Iter>(N, 2);
-    test_larger_sorts<Iter>(N, 3);
-    test_larger_sorts<Iter>(N, N/2-1);
-    test_larger_sorts<Iter>(N, N/2);
-    test_larger_sorts<Iter>(N, N/2+1);
-    test_larger_sorts<Iter>(N, N-2);
-    test_larger_sorts<Iter>(N, N-1);
-    test_larger_sorts<Iter>(N, N);
-    test_larger_sorts<Iter>(N, N+1000);
-}
-
-template <class Iter>
-void
-test()
-{
-    test_larger_sorts<Iter>(0, 100);
-    test_larger_sorts<Iter>(10);
-    test_larger_sorts<Iter>(256);
-    test_larger_sorts<Iter>(257);
-    test_larger_sorts<Iter>(499);
-    test_larger_sorts<Iter>(500);
-    test_larger_sorts<Iter>(997);
-    test_larger_sorts<Iter>(1000);
-    test_larger_sorts<Iter>(1009);
-}
-
-struct S
-{
-    int i;
-};
-
-struct U
-{
-    int i;
-    U & operator=(S s)
-    {
-        i = s.i;
-        return *this;
+        partial_sort_copy(Iter(input), Iter(input+N), output, output+M).check([&](int* r)
+        {
+            int* e = output + std::min(N, M);
+            CHECK(r == e);
+            int i = 0;
+            for (int* x = output; x < e; ++x, ++i)
+                CHECK(*x == i);
+            std::shuffle(input, input+N, gen);
+        });
+        partial_sort_copy(Iter(input), Iter(input+N), output, output+M, std::greater<int>()).check([&](int* r)
+        {
+            int* e = output + std::min(N, M);
+            CHECK(r == e);
+            int i = N-1;
+            for (int* x = output; x < e; ++x, --i)
+                CHECK(*x == i);
+            std::shuffle(input, input+N, gen);
+        });
+        delete [] output;
+        delete [] input;
     }
-};
+
+    template <class Iter>
+    void
+    test_larger_sorts(int N)
+    {
+        test_larger_sorts<Iter>(N, 0);
+        test_larger_sorts<Iter>(N, 1);
+        test_larger_sorts<Iter>(N, 2);
+        test_larger_sorts<Iter>(N, 3);
+        test_larger_sorts<Iter>(N, N/2-1);
+        test_larger_sorts<Iter>(N, N/2);
+        test_larger_sorts<Iter>(N, N/2+1);
+        test_larger_sorts<Iter>(N, N-2);
+        test_larger_sorts<Iter>(N, N-1);
+        test_larger_sorts<Iter>(N, N);
+        test_larger_sorts<Iter>(N, N+1000);
+    }
+
+    template <class Iter>
+    void
+    test()
+    {
+        test_larger_sorts<Iter>(0, 100);
+        test_larger_sorts<Iter>(10);
+        test_larger_sorts<Iter>(256);
+        test_larger_sorts<Iter>(257);
+        test_larger_sorts<Iter>(499);
+        test_larger_sorts<Iter>(500);
+        test_larger_sorts<Iter>(997);
+        test_larger_sorts<Iter>(1000);
+        test_larger_sorts<Iter>(1009);
+    }
+
+    struct S
+    {
+        int i;
+    };
+
+    struct U
+    {
+        int i;
+        U & operator=(S s)
+        {
+            i = s.i;
+            return *this;
+        }
+    };
+}
 
 int main()
 {

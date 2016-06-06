@@ -28,47 +28,53 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-namespace { std::mt19937 gen; }
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
-void
-test_one(unsigned N, unsigned M)
+namespace
 {
-    assert(N != 0);
-    assert(M < N);
-    std::unique_ptr<int[]> array{new int[N]};
-    for (int i = 0; (unsigned)i < N; ++i)
-        array[i] = i;
-    std::shuffle(array.get(), array.get()+N, gen);
-    CHECK(ranges::nth_element(array.get(), array.get()+M, array.get()+N) == array.get()+N);
-    CHECK((unsigned)array[M] == M);
-    std::shuffle(array.get(), array.get()+N, gen);
-    CHECK(ranges::nth_element(::as_lvalue(ranges::make_iterator_range(array.get(), array.get()+N)), array.get()+M) == array.get()+N);
-    CHECK((unsigned)array[M] == M);
-    std::shuffle(array.get(), array.get()+N, gen);
-    CHECK(ranges::nth_element(ranges::make_iterator_range(array.get(), array.get()+N), array.get()+M).get_unsafe() == array.get()+N);
-    CHECK((unsigned)array[M] == M);
-    ranges::nth_element(array.get(), array.get()+N, array.get()+N); // begin, end, end
+    std::mt19937 gen;
+
+    void
+    test_one(unsigned N, unsigned M)
+    {
+        assert(N != 0);
+        assert(M < N);
+        std::unique_ptr<int[]> array{new int[N]};
+        for (int i = 0; (unsigned)i < N; ++i)
+            array[i] = i;
+        std::shuffle(array.get(), array.get()+N, gen);
+        CHECK(ranges::nth_element(array.get(), array.get()+M, array.get()+N) == array.get()+N);
+        CHECK((unsigned)array[M] == M);
+        std::shuffle(array.get(), array.get()+N, gen);
+        CHECK(ranges::nth_element(::as_lvalue(ranges::make_iterator_range(array.get(), array.get()+N)), array.get()+M) == array.get()+N);
+        CHECK((unsigned)array[M] == M);
+        std::shuffle(array.get(), array.get()+N, gen);
+        CHECK(ranges::nth_element(ranges::make_iterator_range(array.get(), array.get()+N), array.get()+M).get_unsafe() == array.get()+N);
+        CHECK((unsigned)array[M] == M);
+        ranges::nth_element(array.get(), array.get()+N, array.get()+N); // begin, end, end
+    }
+
+    void
+    test(unsigned N)
+    {
+        test_one(N, 0);
+        test_one(N, 1);
+        test_one(N, 2);
+        test_one(N, 3);
+        test_one(N, N/2-1);
+        test_one(N, N/2);
+        test_one(N, N/2+1);
+        test_one(N, N-3);
+        test_one(N, N-2);
+        test_one(N, N-1);
+    }
+
+    struct S
+    {
+        int i,j;
+    };
 }
-
-void
-test(unsigned N)
-{
-    test_one(N, 0);
-    test_one(N, 1);
-    test_one(N, 2);
-    test_one(N, 3);
-    test_one(N, N/2-1);
-    test_one(N, N/2);
-    test_one(N, N/2+1);
-    test_one(N, N-3);
-    test_one(N, N-2);
-    test_one(N, N-1);
-}
-
-struct S
-{
-    int i,j;
-};
 
 int main()
 {
