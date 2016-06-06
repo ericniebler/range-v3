@@ -61,5 +61,11 @@ int main()
     // Pass-through of already-bounded ranges is OK:
     rng3 = rng3 | view::bounded;
 
+    auto rng4 = view::counted(begin(v), 8) | view::bounded;
+    ::models<concepts::BoundedView>(rng4);
+    ::models<concepts::SizedView>(rng4);
+    ::models<concepts::RandomAccessIterator>(begin(rng4));
+    ::check_equal(rng4, {1, 2, 3, 4, 5, 6, 7, 8});
+
     return ::test_result();
 }

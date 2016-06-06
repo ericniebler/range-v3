@@ -251,10 +251,10 @@ struct MoveOnlyString
     char const *sz_;
 
     MoveOnlyString(char const *sz = "")
-    : sz_(sz)
+      : sz_(sz)
     {}
     MoveOnlyString(MoveOnlyString &&that)
-    : sz_(that.sz_)
+      : sz_(that.sz_)
     {
         that.sz_ = "";
     }
@@ -283,6 +283,5 @@ struct MoveOnlyString
         return sout << '"' << str.sz_ << '"';
     }
 };
-
 
 #endif
