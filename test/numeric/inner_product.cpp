@@ -28,90 +28,94 @@
 #include "../simple_test.hpp"
 #include "../test_iterators.hpp"
 
-struct S
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
+
+namespace
 {
-    int i;
-};
+  struct S
+  {
+      int i;
+  };
 
-template <class Iter1, class Iter2, class Sent1 = Iter1>
-void test()
-{
-    int a[] = {1, 2, 3, 4, 5, 6};
-    int b[] = {6, 5, 4, 3, 2, 1};
-    unsigned sa = sizeof(a) / sizeof(a[0]);
+  template <class Iter1, class Iter2, class Sent1 = Iter1>
+  void test()
+  {
+      int a[] = {1, 2, 3, 4, 5, 6};
+      int b[] = {6, 5, 4, 3, 2, 1};
+      unsigned sa = sizeof(a) / sizeof(a[0]);
 
-    // iterator test:
-    auto it3 = [](int* b1, int l1, int* b2, int i)
-    {
-      return ranges::inner_product(Iter1(b1), Sent1(b1+l1), Iter2(b2), i);
-    };
-    CHECK(it3(a, 0, b, 0) == 0);
-    CHECK(it3(a, 0, b, 10) == 10);
-    CHECK(it3(a, 1, b, 0) == 6);
-    CHECK(it3(a, 1, b, 10) == 16);
-    CHECK(it3(a, 2, b, 0) == 16);
-    CHECK(it3(a, 2, b, 10) == 26);
-    CHECK(it3(a, sa, b, 0) == 56);
-    CHECK(it3(a, sa, b, 10) == 66);
+      // iterator test:
+      auto it3 = [](int* b1, int l1, int* b2, int i)
+      {
+        return ranges::inner_product(Iter1(b1), Sent1(b1+l1), Iter2(b2), i);
+      };
+      CHECK(it3(a, 0, b, 0) == 0);
+      CHECK(it3(a, 0, b, 10) == 10);
+      CHECK(it3(a, 1, b, 0) == 6);
+      CHECK(it3(a, 1, b, 10) == 16);
+      CHECK(it3(a, 2, b, 0) == 16);
+      CHECK(it3(a, 2, b, 10) == 26);
+      CHECK(it3(a, sa, b, 0) == 56);
+      CHECK(it3(a, sa, b, 10) == 66);
 
-    auto it4 = [](int* b1, int l1, int* b2, int i)
-    {
-      return ranges::inner_product(Iter1(b1), Sent1(b1+l1), Iter2(b2), Iter2(b2+l1), i);
-    };
-    CHECK(it4(a, 0, b, 0) == 0);
-    CHECK(it4(a, 0, b, 10) == 10);
-    CHECK(it4(a, 1, b, 0) == 6);
-    CHECK(it4(a, 1, b, 10) == 16);
-    CHECK(it4(a, 2, b, 0) == 16);
-    CHECK(it4(a, 2, b, 10) == 26);
-    CHECK(it4(a, sa, b, 0) == 56);
-    CHECK(it4(a, sa, b, 10) == 66);
+      auto it4 = [](int* b1, int l1, int* b2, int i)
+      {
+        return ranges::inner_product(Iter1(b1), Sent1(b1+l1), Iter2(b2), Iter2(b2+l1), i);
+      };
+      CHECK(it4(a, 0, b, 0) == 0);
+      CHECK(it4(a, 0, b, 10) == 10);
+      CHECK(it4(a, 1, b, 0) == 6);
+      CHECK(it4(a, 1, b, 10) == 16);
+      CHECK(it4(a, 2, b, 0) == 16);
+      CHECK(it4(a, 2, b, 10) == 26);
+      CHECK(it4(a, sa, b, 0) == 56);
+      CHECK(it4(a, sa, b, 10) == 66);
 
-    // rng test:
-    auto rng3 = [](int* b1, int l1, int* b2, int i)
-    {
-      return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)), Iter2(b2), i);
-    };
-    CHECK(rng3(a, 0, b, 0) == 0);
-    CHECK(rng3(a, 0, b, 10)  == 10);
-    CHECK(rng3(a, 1, b, 0) == 6);
-    CHECK(rng3(a, 1, b, 10) == 16);
-    CHECK(rng3(a, 2, b, 0) == 16);
-    CHECK(rng3(a, 2, b, 10) == 26);
-    CHECK(rng3(a, sa, b, 0) == 56);
-    CHECK(rng3(a, sa, b, 10) == 66);
+      // rng test:
+      auto rng3 = [](int* b1, int l1, int* b2, int i)
+      {
+        return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)), Iter2(b2), i);
+      };
+      CHECK(rng3(a, 0, b, 0) == 0);
+      CHECK(rng3(a, 0, b, 10)  == 10);
+      CHECK(rng3(a, 1, b, 0) == 6);
+      CHECK(rng3(a, 1, b, 10) == 16);
+      CHECK(rng3(a, 2, b, 0) == 16);
+      CHECK(rng3(a, 2, b, 10) == 26);
+      CHECK(rng3(a, sa, b, 0) == 56);
+      CHECK(rng3(a, sa, b, 10) == 66);
 
-    auto rng4 = [](int* b1, int l1, int* b2, int i)
-    {
-      return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)),
-                                   ranges::make_iterator_range(Iter2(b2), Iter2(b2+l1)), i);
-    };
-    CHECK(rng4(a, 0, b, 0) == 0);
-    CHECK(rng4(a, 0, b, 10)  == 10);
-    CHECK(rng4(a, 1, b, 0) == 6);
-    CHECK(rng4(a, 1, b, 10) == 16);
-    CHECK(rng4(a, 2, b, 0) == 16);
-    CHECK(rng4(a, 2, b, 10) == 26);
-    CHECK(rng4(a, sa, b, 0) == 56);
-    CHECK(rng4(a, sa, b, 10) == 66);
+      auto rng4 = [](int* b1, int l1, int* b2, int i)
+      {
+        return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)),
+                                    ranges::make_iterator_range(Iter2(b2), Iter2(b2+l1)), i);
+      };
+      CHECK(rng4(a, 0, b, 0) == 0);
+      CHECK(rng4(a, 0, b, 10)  == 10);
+      CHECK(rng4(a, 1, b, 0) == 6);
+      CHECK(rng4(a, 1, b, 10) == 16);
+      CHECK(rng4(a, 2, b, 0) == 16);
+      CHECK(rng4(a, 2, b, 10) == 26);
+      CHECK(rng4(a, sa, b, 0) == 56);
+      CHECK(rng4(a, sa, b, 10) == 66);
 
-    // rng + bops:
-    auto bops = [](int* b1, int l1, int* b2, int i)
-    {
-      return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)),
-                                   ranges::make_iterator_range(Iter2(b2), Iter2(b2+l1)), i,
-                                   std::multiplies<int>(), std::plus<int>());
-    };
-    CHECK(bops(a, 0, b, 1) == 1);
-    CHECK(bops(a, 0, b, 10) == 10);
-    CHECK(bops(a, 1, b, 1) == 7);
-    CHECK(bops(a, 1, b, 10) == 70);
-    CHECK(bops(a, 2, b, 1) == 49);
-    CHECK(bops(a, 2, b, 10) == 490);
-    CHECK(bops(a, sa, b, 1) == 117649);
-    CHECK(bops(a, sa, b, 10) == 1176490);
+      // rng + bops:
+      auto bops = [](int* b1, int l1, int* b2, int i)
+      {
+        return ranges::inner_product(ranges::make_iterator_range(Iter1(b1), Sent1(b1+l1)),
+                                    ranges::make_iterator_range(Iter2(b2), Iter2(b2+l1)), i,
+                                    std::multiplies<int>(), std::plus<int>());
+      };
+      CHECK(bops(a, 0, b, 1) == 1);
+      CHECK(bops(a, 0, b, 10) == 10);
+      CHECK(bops(a, 1, b, 1) == 7);
+      CHECK(bops(a, 1, b, 10) == 70);
+      CHECK(bops(a, 2, b, 1) == 49);
+      CHECK(bops(a, 2, b, 10) == 490);
+      CHECK(bops(a, sa, b, 1) == 117649);
+      CHECK(bops(a, sa, b, 10) == 1176490);
+  }
 }
-
 
 int main()
 {

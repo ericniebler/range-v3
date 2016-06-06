@@ -20,16 +20,18 @@
 #include <range/v3/algorithm/merge.hpp>
 #include "../simple_test.hpp"
 
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
+
 int main()
 {
     {
-        unsigned N = 100000;
+        int N = 100000;
         std::unique_ptr<int[]> ia{new int[N]};
         std::unique_ptr<int[]> ib{new int[N]};
         std::unique_ptr<int[]> ic{new int[2 * N]};
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ia[i] = 2 * i;
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ib[i] = 2 * i + 1;
         auto r = ranges::merge(ia.get(), ia.get() + N,
             ib.get(), ib.get() + N, ic.get());
@@ -37,18 +39,18 @@ int main()
         CHECK(std::get<1>(r) == ib.get() + N);
         CHECK(std::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
-        CHECK(ic[2 * N - 1] == (int)(2 * N - 1));
+        CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
     }
 
     {
-        unsigned N = 100000;
+        int N = 100000;
         std::unique_ptr<int[]> ia{new int[N]};
         std::unique_ptr<int[]> ib{new int[N]};
         std::unique_ptr<int[]> ic{new int[2 * N]};
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ia[i] = 2 * i;
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ib[i] = 2 * i + 1;
         auto r0 = ranges::make_iterator_range(ia.get(), ia.get() + N);
         auto r1 = ranges::make_iterator_range(ib.get(), ib.get() + N);
@@ -57,19 +59,19 @@ int main()
         CHECK(std::get<1>(r) == ib.get() + N);
         CHECK(std::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
-        CHECK(ic[2 * N - 1] == (int)(2 * N - 1));
+        CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
     }
 
 
     {
-        unsigned N = 100000;
+        int N = 100000;
         std::unique_ptr<int[]> ia{new int[N]};
         std::unique_ptr<int[]> ib{new int[N]};
         std::unique_ptr<int[]> ic{new int[2 * N]};
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ia[i] = 2 * i;
-        for(unsigned i = 0; i < N; ++i)
+        for(int i = 0; i < N; ++i)
             ib[i] = 2 * i + 1;
         auto r0 = ranges::make_iterator_range(ia.get(), ia.get() + N);
         auto r1 = ranges::make_iterator_range(ib.get(), ib.get() + N);
@@ -78,7 +80,7 @@ int main()
         CHECK(std::get<1>(r).get_unsafe() == ib.get() + N);
         CHECK(std::get<2>(r) == ic.get() + 2 * N);
         CHECK(ic[0] == 0);
-        CHECK(ic[2 * N - 1] == (int)(2 * N - 1));
+        CHECK(ic[2 * N - 1] == 2 * N - 1);
         CHECK(std::is_sorted(ic.get(), ic.get() + 2 * N));
 
         // Some tests for sanitizing an algorithm result

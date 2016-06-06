@@ -20,19 +20,24 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-struct starts_with_g
-{
-    template<typename I, typename S>
-    std::pair<bool, I> operator()(I b, S) const
-    {
-        return {*b == 'g', b};
-    }
-};
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
-template<std::size_t N>
-ranges::iterator_range<char const*> c_str(char const (&sz)[N])
+namespace
 {
-    return {&sz[0], &sz[N-1]};
+    struct starts_with_g
+    {
+        template<typename I, typename S>
+        std::pair<bool, I> operator()(I b, S) const
+        {
+            return {*b == 'g', b};
+        }
+    };
+
+    template<std::size_t N>
+    ranges::iterator_range<char const*> c_str(char const (&sz)[N])
+    {
+        return {&sz[0], &sz[N-1]};
+    }
 }
 
 int main()

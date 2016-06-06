@@ -28,122 +28,127 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-namespace { std::mt19937 gen; }
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
 
-template <class Iter, class Sent = Iter>
-void
-test_iter(Iter first, Sent last)
+namespace
 {
-    Iter i = ranges::max_element(first, last);
-    if (first != last)
+    std::mt19937 gen;
+
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter(Iter first, Sent last)
     {
-        for (Iter j = first; j != last; ++j)
-            CHECK(!(*i < *j));
-    }
-    else
-        CHECK(i == last);
+        Iter i = ranges::max_element(first, last);
+        if (first != last)
+        {
+            for (Iter j = first; j != last; ++j)
+                CHECK(!(*i < *j));
+        }
+        else
+            CHECK(i == last);
 
-    auto rng = ranges::make_iterator_range(first, last);
-    i = ranges::max_element(rng);
-    if (first != last)
+        auto rng = ranges::make_iterator_range(first, last);
+        i = ranges::max_element(rng);
+        if (first != last)
+        {
+            for (Iter j = first; j != last; ++j)
+                CHECK(!(*i < *j));
+        }
+        else
+            CHECK(i == last);
+
+        auto j = ranges::max_element(std::move(rng));
+        if (first != last)
+        {
+            for (Iter k = first; k != last; ++k)
+                CHECK(!(*j.get_unsafe() < *k));
+        }
+        else
+            CHECK(j.get_unsafe() == last);
+    }
+
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter(unsigned N)
     {
-        for (Iter j = first; j != last; ++j)
-            CHECK(!(*i < *j));
+        std::unique_ptr<int[]> a{new int[N]};
+        std::iota(a.get(), a.get()+N, 0);
+        std::shuffle(a.get(), a.get()+N, gen);
+        test_iter(Iter(a.get()), Sent(a.get()+N));
     }
-    else
-        CHECK(i == last);
 
-    auto j = ranges::max_element(std::move(rng));
-    if (first != last)
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter()
     {
-        for (Iter k = first; k != last; ++k)
-            CHECK(!(*j.get_unsafe() < *k));
+        test_iter<Iter, Sent>(0);
+        test_iter<Iter, Sent>(1);
+        test_iter<Iter, Sent>(2);
+        test_iter<Iter, Sent>(3);
+        test_iter<Iter, Sent>(10);
+        test_iter<Iter, Sent>(1000);
     }
-    else
-        CHECK(j.get_unsafe() == last);
-}
 
-template <class Iter, class Sent = Iter>
-void
-test_iter(unsigned N)
-{
-    std::unique_ptr<int[]> a{new int[N]};
-    std::iota(a.get(), a.get()+N, 0);
-    std::shuffle(a.get(), a.get()+N, gen);
-    test_iter(Iter(a.get()), Sent(a.get()+N));
-}
-
-template <class Iter, class Sent = Iter>
-void
-test_iter()
-{
-    test_iter<Iter, Sent>(0);
-    test_iter<Iter, Sent>(1);
-    test_iter<Iter, Sent>(2);
-    test_iter<Iter, Sent>(3);
-    test_iter<Iter, Sent>(10);
-    test_iter<Iter, Sent>(1000);
-}
-
-template <class Iter, class Sent = Iter>
-void
-test_iter_comp(Iter first, Sent last)
-{
-    Iter i = ranges::max_element(first, last, std::greater<int>());
-    if (first != last)
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter_comp(Iter first, Sent last)
     {
-        for (Iter j = first; j != last; ++j)
-            CHECK(!std::greater<int>()(*i, *j));
-    }
-    else
-        CHECK(i == last);
+        Iter i = ranges::max_element(first, last, std::greater<int>());
+        if (first != last)
+        {
+            for (Iter j = first; j != last; ++j)
+                CHECK(!std::greater<int>()(*i, *j));
+        }
+        else
+            CHECK(i == last);
 
-    auto rng = ranges::make_iterator_range(first, last);
-    i = ranges::max_element(rng, std::greater<int>());
-    if (first != last)
+        auto rng = ranges::make_iterator_range(first, last);
+        i = ranges::max_element(rng, std::greater<int>());
+        if (first != last)
+        {
+            for (Iter j = first; j != last; ++j)
+                CHECK(!std::greater<int>()(*i, *j));
+        }
+        else
+            CHECK(i == last);
+
+        auto res = ranges::max_element(std::move(rng), std::greater<int>());
+        if (first != last)
+        {
+            for (Iter j = first; j != last; ++j)
+                CHECK(!std::greater<int>()(*res.get_unsafe(), *j));
+        }
+        else
+            CHECK(res.get_unsafe() == last);
+    }
+
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter_comp(unsigned N)
     {
-        for (Iter j = first; j != last; ++j)
-            CHECK(!std::greater<int>()(*i, *j));
+        std::unique_ptr<int[]> a{new int[N]};
+        std::iota(a.get(), a.get()+N, 0);
+        std::shuffle(a.get(), a.get()+N, gen);
+        test_iter_comp(Iter(a.get()), Sent(a.get()+N));
     }
-    else
-        CHECK(i == last);
 
-    auto res = ranges::max_element(std::move(rng), std::greater<int>());
-    if (first != last)
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter_comp()
     {
-        for (Iter j = first; j != last; ++j)
-            CHECK(!std::greater<int>()(*res.get_unsafe(), *j));
+        test_iter_comp<Iter, Sent>(0);
+        test_iter_comp<Iter, Sent>(1);
+        test_iter_comp<Iter, Sent>(2);
+        test_iter_comp<Iter, Sent>(3);
+        test_iter_comp<Iter, Sent>(10);
+        test_iter_comp<Iter, Sent>(1000);
     }
-    else
-        CHECK(res.get_unsafe() == last);
-}
 
-template <class Iter, class Sent = Iter>
-void
-test_iter_comp(unsigned N)
-{
-    std::unique_ptr<int[]> a{new int[N]};
-    std::iota(a.get(), a.get()+N, 0);
-    std::shuffle(a.get(), a.get()+N, gen);
-    test_iter_comp(Iter(a.get()), Sent(a.get()+N));
+    struct S
+    {
+        int i;
+    };
 }
-
-template <class Iter, class Sent = Iter>
-void
-test_iter_comp()
-{
-    test_iter_comp<Iter, Sent>(0);
-    test_iter_comp<Iter, Sent>(1);
-    test_iter_comp<Iter, Sent>(2);
-    test_iter_comp<Iter, Sent>(3);
-    test_iter_comp<Iter, Sent>(10);
-    test_iter_comp<Iter, Sent>(1000);
-}
-
-struct S
-{
-    int i;
-};
 
 int main()
 {

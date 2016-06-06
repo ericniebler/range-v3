@@ -137,6 +137,28 @@ namespace ranges
                 using D = iota_difference_t<Val>;
                 return v0 < v1? - static_cast<D>(v1 - v0) : static_cast<D>(v0 - v1);
             }
+
+            template<typename Val, typename C = common_type_t<Val, iota_difference_t<Val>>>
+            auto iota_plus_(Val const &v, iota_difference_t<Val> n, std::true_type)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                static_cast<Val>(static_cast<C>(v) + static_cast<C>(n))
+            )
+
+            template<typename Val>
+            auto iota_plus_(Val const &v, iota_difference_t<Val> n, std::false_type)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                v + n
+            )
+
+            template<typename Val>
+            auto iota_plus(Val const &v, iota_difference_t<Val> n)
+            RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
+            (
+                detail::iota_plus_(v, n, Integral<Val>{})
+            )
+
         }
         /// \endcond
 
@@ -185,7 +207,7 @@ namespace ranges
             void advance(difference_type_ n)
             {
                 RANGES_ASSERT(detail::iota_minus(to_, from_) >= n);
-                from_ += n;
+                from_ = detail::iota_plus(from_, n);
             }
             CONCEPT_REQUIRES(RandomAccessIncrementable<From>())
             difference_type_ distance_to(closed_iota_view const &that) const
@@ -236,7 +258,7 @@ namespace ranges
             void advance(difference_type_ n)
             {
                 RANGES_ASSERT(detail::iota_minus(to_, from_) >= n);
-                from_ += n;
+                from_ = detail::iota_plus(from_, n);
             }
             CONCEPT_REQUIRES(RandomAccessIncrementable<From>())
             difference_type_ distance_to(iota_view const &that) const
@@ -286,7 +308,7 @@ namespace ranges
             CONCEPT_REQUIRES(RandomAccessIncrementable<From>())
             void advance(difference_type_ n)
             {
-                value_ += n;
+                value_ = detail::iota_plus(value_, n);
             }
             CONCEPT_REQUIRES(RandomAccessIncrementable<From>())
             difference_type_ distance_to(iota_view const &that) const

@@ -17,6 +17,8 @@
 #include <range/v3/view/delimit.hpp>
 #include "../simple_test.hpp"
 
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
+
 int main()
 {
     using ranges::begin;

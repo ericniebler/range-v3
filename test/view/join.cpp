@@ -23,43 +23,48 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-template<typename T, std::size_t N>
-struct input_array
-{
-    T elements_[N];
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
 
-    input_iterator<T*> begin() { return input_iterator<T*>{elements_ + 0}; }
-    input_iterator<T*> end() { return input_iterator<T*>{elements_ + N}; }
-    constexpr std::size_t size() const { return N; }
-};
-
-static int N = 0;
-auto const make_input_rng = []
+namespace
 {
-    using ranges::view::generate_n;
-    return generate_n([](){
-        return generate_n([](){
-            return N++;
-        },3);
-    },3);
-};
-
-template<typename T>
-auto twice(T t) -> decltype(ranges::view::concat(ranges::view::single(t), ranges::view::single(t)))
-{
-    return ranges::view::concat(ranges::view::single(t), ranges::view::single(t));
-}
-
-// https://github.com/ericniebler/range-v3/issues/283
-void test_issue_283()
-{
-    const std::vector<std::vector<int>> nums =
+    template<typename T, std::size_t N>
+    struct input_array
     {
-        { 1, 2, 3 },
-        { 4, 5, 6 }
+        T elements_[N];
+
+        input_iterator<T*> begin() { return input_iterator<T*>{elements_ + 0}; }
+        input_iterator<T*> end() { return input_iterator<T*>{elements_ + N}; }
+        constexpr std::size_t size() const { return N; }
     };
-    const std::vector<int> flat_nums = ranges::view::join( nums );
-    ::check_equal(flat_nums, {1,2,3,4,5,6});
+
+    static int N = 0;
+    auto const make_input_rng = []
+    {
+        using ranges::view::generate_n;
+        return generate_n([](){
+            return generate_n([](){
+                return N++;
+            },3);
+        },3);
+    };
+
+    template<typename T>
+    auto twice(T t) -> decltype(ranges::view::concat(ranges::view::single(t), ranges::view::single(t)))
+    {
+        return ranges::view::concat(ranges::view::single(t), ranges::view::single(t));
+    }
+
+    // https://github.com/ericniebler/range-v3/issues/283
+    void test_issue_283()
+    {
+        const std::vector<std::vector<int>> nums =
+        {
+            { 1, 2, 3 },
+            { 4, 5, 6 }
+        };
+        const std::vector<int> flat_nums = ranges::view::join( nums );
+        ::check_equal(flat_nums, {1,2,3,4,5,6});
+    }
 }
 
 int main()

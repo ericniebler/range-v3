@@ -19,6 +19,8 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
+
 int main()
 {
     using namespace ranges;

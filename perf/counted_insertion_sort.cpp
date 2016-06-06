@@ -15,6 +15,8 @@
 #include <random>
 #include <range/v3/all.hpp>
 
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
+
 class timer
 {
 public:

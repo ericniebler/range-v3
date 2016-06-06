@@ -25,10 +25,10 @@ int main()
     ::models<concepts::View>(rng0);
     ::models_not<concepts::BoundedView>(rng0);
     ::models<concepts::RandomAccessIterator>(rng0.begin());
-    CONCEPT_ASSERT(RandomAccessView<take_while_view<std::vector<int> &, std::function<bool(int)>>>());
 
     std::vector<int> vi{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     auto rng1 = vi | view::take_while([](int i) { return i != 50; });
+    ::models<concepts::RandomAccessView>(rng1);
     ::check_equal(rng1, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
     // Check with a mutable predicate
@@ -41,22 +41,21 @@ int main()
 
     {
         auto ns = view::generate([]() mutable {
-            static std::size_t N = 0;
+            static int N;
             return ++N;
         });
         auto rng = ns | view::take_while([](int i) { return i < 5; });
-        ::check_equal(rng, {1u,2u,3u,4u});
+        ::check_equal(rng, {1,2,3,4});
     }
 
     {
         auto ns = view::generate([]() mutable {
-            static std::size_t N = 0;
+            static int N;
             return ++N;
         });
         auto rng = ns | view::take_while([](int i) mutable { return i < 5; });
-        ::check_equal(rng, {1u,2u,3u,4u});
+        ::check_equal(rng, {1,2,3,4});
     }
-
 
     return test_result();
 }

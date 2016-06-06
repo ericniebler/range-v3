@@ -51,7 +51,7 @@ int main()
     ::check_equal(vec0, {81,64,49,36,25,16,9,4,1,0});
 
     auto vec1 = view::ints | view::transform([](int i){return i*i;}) | view::take(10)
-        | to_<std::vector<long>>() | action::sort(std::greater<int>{});
+        | to_<std::vector<long>>() | action::sort(std::greater<long>{});
     static_assert((bool)Same<decltype(vec1), std::vector<long>>(), "");
     ::check_equal(vec1, {81,64,49,36,25,16,9,4,1,0});
 

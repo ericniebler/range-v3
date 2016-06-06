@@ -32,160 +32,166 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-namespace { std::mt19937 gen; }
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
-void test_1(int N)
+namespace
 {
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    CHECK(ranges::sort_heap(ia, ia+N) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N));
-    delete [] ia;
-}
+    std::mt19937 gen;
 
-void test_2(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    CHECK(ranges::sort_heap(ia, sentinel<int*>(ia+N)) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N));
-    delete [] ia;
-}
+    void test_1(int N)
+    {
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        CHECK(ranges::sort_heap(ia, ia+N) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N));
+        delete[] ia;
+    }
 
-void test_3(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+N))) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N));
-    delete [] ia;
-}
+    void test_2(int N)
+    {
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        CHECK(ranges::sort_heap(ia, sentinel<int*>(ia+N)) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N));
+        delete[] ia;
+    }
 
-void test_4(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+N)))) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N));
-    delete [] ia;
-}
+    void test_3(int N)
+    {
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+N))) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N));
+        delete[] ia;
+    }
 
-void test_5(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    CHECK(ranges::sort_heap(ia, ia+N, std::greater<int>()) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
-    delete [] ia;
-}
+    void test_4(int N)
+    {
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+N)))) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N));
+        delete[] ia;
+    }
 
-void test_6(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    CHECK(ranges::sort_heap(ia, sentinel<int*>(ia+N), std::greater<int>()) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
-    delete [] ia;
-}
+    void test_5(int N)
+    {
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        CHECK(ranges::sort_heap(ia, ia+N, std::greater<int>()) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
+        delete[] ia;
+    }
 
-void test_7(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+N)), std::greater<int>()) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
-    delete [] ia;
-}
+    void test_6(int N)
+    {
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        CHECK(ranges::sort_heap(ia, sentinel<int*>(ia+N), std::greater<int>()) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
+        delete[] ia;
+    }
 
-void test_8(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+N))), std::greater<int>()) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
+    void test_7(int N)
+    {
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+N)), std::greater<int>()) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
+        delete[] ia;
+    }
 
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    CHECK(ranges::sort_heap(ranges::make_iterator_range(ia, sentinel<int*>(ia+N)), std::greater<int>()).get_unsafe() == ia+N);
-    CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
+    void test_8(int N)
+    {
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        CHECK(ranges::sort_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+N))), std::greater<int>()) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
 
-    delete [] ia;
-}
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        CHECK(ranges::sort_heap(ranges::make_iterator_range(ia, sentinel<int*>(ia+N)), std::greater<int>()).get_unsafe() == ia+N);
+        CHECK(std::is_sorted(ia, ia+N, std::greater<int>()));
 
-struct indirect_less
-{
-    template <class P>
-    bool operator()(const P& x, const P& y)
-        {return *x < *y;}
-};
+        delete[] ia;
+    }
 
-void test_9(int N)
-{
-    std::unique_ptr<int>* ia = new std::unique_ptr<int> [N];
-    for (int i = 0; i < N; ++i)
-        ia[i].reset(new int(i));
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, indirect_less());
-    CHECK(ranges::sort_heap(ia, ia+N, indirect_less()) == ia+N);
-    CHECK(std::is_sorted(ia, ia+N, indirect_less()));
-    delete [] ia;
-}
+    struct indirect_less
+    {
+        template <class P>
+        bool operator()(const P& x, const P& y)
+            {return *x < *y;}
+    };
 
-struct S
-{
-    int i;
-};
+    void test_9(int N)
+    {
+        std::unique_ptr<int>* ia = new std::unique_ptr<int>[N];
+        for (int i = 0; i < N; ++i)
+            ia[i].reset(new int(i));
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, indirect_less());
+        CHECK(ranges::sort_heap(ia, ia+N, indirect_less()) == ia+N);
+        CHECK(std::is_sorted(ia, ia+N, indirect_less()));
+        delete[] ia;
+    }
 
-void test_10(int N)
-{
-    S* ia = new S [N];
-    int* ib = new int [N];
-    for (int i = 0; i < N; ++i)
-        ib[i] = i;
-    std::shuffle(ib, ib+N, gen);
-    std::make_heap(ib, ib+N);
-    std::transform(ib, ib+N, ia, [](int i){return S{i};});
-    CHECK(ranges::sort_heap(ia, ia+N, std::less<int>(), &S::i) == ia+N);
-    std::transform(ia, ia+N, ib, std::mem_fn(&S::i));
-    CHECK(std::is_sorted(ib, ib+N));
-    delete [] ia;
-    delete [] ib;
-}
+    struct S
+    {
+        int i;
+    };
 
-void test(int N)
-{
-    test_1(N);
-    test_2(N);
-    test_3(N);
-    test_4(N);
-    test_5(N);
-    test_6(N);
-    test_7(N);
-    test_8(N);
+    void test_10(int N)
+    {
+        S* ia = new S[N];
+        int* ib = new int[N];
+        for (int i = 0; i < N; ++i)
+            ib[i] = i;
+        std::shuffle(ib, ib+N, gen);
+        std::make_heap(ib, ib+N);
+        std::transform(ib, ib+N, ia, [](int i){return S{i};});
+        CHECK(ranges::sort_heap(ia, ia+N, std::less<int>(), &S::i) == ia+N);
+        std::transform(ia, ia+N, ib, std::mem_fn(&S::i));
+        CHECK(std::is_sorted(ib, ib+N));
+        delete[] ia;
+        delete[] ib;
+    }
+
+    void test(int N)
+    {
+        test_1(N);
+        test_2(N);
+        test_3(N);
+        test_4(N);
+        test_5(N);
+        test_6(N);
+        test_7(N);
+        test_8(N);
+    }
 }
 
 int main()
