@@ -2,6 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -41,6 +42,11 @@
     noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->   \
     decltype(__VA_ARGS__)                                       \
     { return (__VA_ARGS__); }                                   \
+    /**/
+
+#define RANGES_DECLTYPE_NOEXCEPT(...)                           \
+    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->   \
+    decltype(__VA_ARGS__)                                       \
     /**/
 
 // Non-portable forward declarations of standard containers

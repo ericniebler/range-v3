@@ -418,7 +418,6 @@ namespace ranges
         template<typename T>
         struct basic_mixin : private box<T>
         {
-        public:
             CONCEPT_REQUIRES(DefaultConstructible<T>())
             constexpr basic_mixin()
               : box<T>{}
@@ -432,17 +431,7 @@ namespace ranges
               : box<T>(t)
             {}
         protected:
-            RANGES_CXX14_CONSTEXPR
-            T &get() noexcept
-            {
-                return ranges::get<T>(*this);
-            }
-            /// \overload
-            RANGES_CXX14_CONSTEXPR
-            T const &get() const noexcept
-            {
-                return ranges::get<T>(*this);
-            }
+            using box<T>::get;
         };
 
         template<typename S>

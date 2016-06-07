@@ -14,9 +14,6 @@
 #define RANGES_V3_UTILITY_TAGGED_TUPLE_HPP
 
 #include <tuple>
-#include <utility>
-#include <functional>
-#include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/tagged_pair.hpp>
 
