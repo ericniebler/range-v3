@@ -32,219 +32,225 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-namespace { std::mt19937 gen; }
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
 
-void test_1(int N)
+namespace
 {
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    for (int i = N; i > 0; --i)
-    {
-        CHECK(ranges::pop_heap(ia, ia+i) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1));
-    }
-    CHECK(ranges::pop_heap(ia, ia) == ia);
-    delete [] ia;
-}
+    std::mt19937 gen;
 
-void test_2(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    for (int i = N; i > 0; --i)
+    void test_1(int N)
     {
-        CHECK(ranges::pop_heap(ia, sentinel<int*>(ia+i)) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1));
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ia, ia+i) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1));
+        }
+        CHECK(ranges::pop_heap(ia, ia) == ia);
+        delete[] ia;
     }
-    CHECK(ranges::pop_heap(ia, ia) == ia);
-    delete [] ia;
-}
 
-void test_3(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    for (int i = N; i > 0; --i)
+    void test_2(int N)
     {
-        CHECK(ranges::pop_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+i))) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1));
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ia, sentinel<int*>(ia+i)) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1));
+        }
+        CHECK(ranges::pop_heap(ia, ia) == ia);
+        delete[] ia;
     }
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    for (int i = N; i > 0; --i)
-    {
-        CHECK(ranges::pop_heap(ranges::make_iterator_range(ia, ia+i)).get_unsafe() == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1));
-    }
-    CHECK(ranges::pop_heap(ia, ia) == ia);
-    delete [] ia;
-}
 
-void test_4(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    for (int i = N; i > 0; --i)
+    void test_3(int N)
     {
-        CHECK(ranges::pop_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+i)))) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1));
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+i))) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1));
+        }
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ranges::make_iterator_range(ia, ia+i)).get_unsafe() == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1));
+        }
+        CHECK(ranges::pop_heap(ia, ia) == ia);
+        delete[] ia;
     }
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    for (int i = N; i > 0; --i)
-    {
-        CHECK(ranges::pop_heap(ranges::make_iterator_range(ia, sentinel<int*>(ia+i))).get_unsafe() == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1));
-    }
-    CHECK(ranges::pop_heap(ia, ia) == ia);
-    delete [] ia;
-}
 
-void test_5(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    for (int i = N; i > 0; --i)
+    void test_4(int N)
     {
-        CHECK(ranges::pop_heap(ia, ia+i, std::greater<int>()) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+i)))) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1));
+        }
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ranges::make_iterator_range(ia, sentinel<int*>(ia+i))).get_unsafe() == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1));
+        }
+        CHECK(ranges::pop_heap(ia, ia) == ia);
+        delete[] ia;
     }
-    CHECK(ranges::pop_heap(ia, ia, std::greater<int>()) == ia);
-    delete [] ia;
-}
 
-void test_6(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    for (int i = N; i > 0; --i)
+    void test_5(int N)
     {
-        CHECK(ranges::pop_heap(ia, sentinel<int*>(ia+i), std::greater<int>()) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ia, ia+i, std::greater<int>()) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        }
+        CHECK(ranges::pop_heap(ia, ia, std::greater<int>()) == ia);
+        delete[] ia;
     }
-    CHECK(ranges::pop_heap(ia, sentinel<int*>(ia), std::greater<int>()) == ia);
-    delete [] ia;
-}
 
-void test_7(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    for (int i = N; i > 0; --i)
+    void test_6(int N)
     {
-        CHECK(ranges::pop_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+i)), std::greater<int>()) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ia, sentinel<int*>(ia+i), std::greater<int>()) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        }
+        CHECK(ranges::pop_heap(ia, sentinel<int*>(ia), std::greater<int>()) == ia);
+        delete[] ia;
     }
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    for (int i = N; i > 0; --i)
-    {
-        CHECK(ranges::pop_heap(ranges::make_iterator_range(ia, ia+i), std::greater<int>()).get_unsafe() == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
-    }
-    CHECK(ranges::pop_heap(ia, ia, std::greater<int>()) == ia);
-    delete [] ia;
-}
 
-void test_8(int N)
-{
-    int* ia = new int [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    for (int i = N; i > 0; --i)
+    void test_7(int N)
     {
-        CHECK(ranges::pop_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+i))), std::greater<int>()) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(::as_lvalue(ranges::make_iterator_range(ia, ia+i)), std::greater<int>()) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        }
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ranges::make_iterator_range(ia, ia+i), std::greater<int>()).get_unsafe() == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        }
+        CHECK(ranges::pop_heap(ia, ia, std::greater<int>()) == ia);
+        delete[] ia;
     }
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, std::greater<int>());
-    for (int i = N; i > 0; --i)
+
+    void test_8(int N)
     {
-        CHECK(ranges::pop_heap(ranges::make_iterator_range(ia, sentinel<int*>(ia+i)), std::greater<int>()).get_unsafe() == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        int* ia = new int[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(::as_lvalue(ranges::make_iterator_range(ia, sentinel<int*>(ia+i))), std::greater<int>()) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        }
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, std::greater<int>());
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ranges::make_iterator_range(ia, sentinel<int*>(ia+i)), std::greater<int>()).get_unsafe() == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1, std::greater<int>()));
+        }
+        CHECK(ranges::pop_heap(ia, sentinel<int*>(ia), std::greater<int>()) == ia);
+        delete[] ia;
     }
-    CHECK(ranges::pop_heap(ia, sentinel<int*>(ia), std::greater<int>()) == ia);
-    delete [] ia;
-}
 
-struct indirect_less
-{
-    template <class P>
-    bool operator()(const P& x, const P& y)
-        {return *x < *y;}
-};
-
-void test_9(int N)
-{
-    std::unique_ptr<int>* ia = new std::unique_ptr<int> [N];
-    for (int i = 0; i < N; ++i)
-        ia[i].reset(new int(i));
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N, indirect_less());
-    for (int i = N; i > 0; --i)
+    struct indirect_less
     {
-        CHECK(ranges::pop_heap(ia, ia+i, indirect_less()) == ia+i);
-        CHECK(std::is_heap(ia, ia+i-1, indirect_less()));
-    }
-    delete [] ia;
-}
+        template <class P>
+        bool operator()(const P& x, const P& y)
+            {return *x < *y;}
+    };
 
-template<typename T>
-struct construct
-{
-    template<typename ...Us>
-    T operator()(Us &&... us) const
+    void test_9(int N)
     {
-        return T{((Us &&)us)...};
+        std::unique_ptr<int>* ia = new std::unique_ptr<int>[N];
+        for (int i = 0; i < N; ++i)
+            ia[i].reset(new int(i));
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N, indirect_less());
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ia, ia+i, indirect_less()) == ia+i);
+            CHECK(std::is_heap(ia, ia+i-1, indirect_less()));
+        }
+        delete[] ia;
     }
-};
 
-struct S
-{
-    int i;
-};
-
-void test_10(int N)
-{
-    int* ia = new int [N];
-    S* ib = new S [N];
-    for (int i = 0; i < N; ++i)
-        ia[i] = i;
-    std::shuffle(ia, ia+N, gen);
-    std::make_heap(ia, ia+N);
-    std::transform(ia, ia+N, ib, construct<S>());
-    for (int i = N; i > 0; --i)
+    template<typename T>
+    struct construct
     {
-        CHECK(ranges::pop_heap(ib, ib+i, std::less<int>(), &S::i) == ib+i);
-        std::transform(ib, ib+i, ia, std::mem_fn(&S::i));
-        CHECK(std::is_heap(ia, ia+i-1));
+        template<typename ...Us>
+        T operator()(Us &&... us) const
+        {
+            return T{((Us &&)us)...};
+        }
+    };
+
+    struct S
+    {
+        int i;
+    };
+
+    void test_10(int N)
+    {
+        int* ia = new int[N];
+        S* ib = new S[N];
+        for (int i = 0; i < N; ++i)
+            ia[i] = i;
+        std::shuffle(ia, ia+N, gen);
+        std::make_heap(ia, ia+N);
+        std::transform(ia, ia+N, ib, construct<S>());
+        for (int i = N; i > 0; --i)
+        {
+            CHECK(ranges::pop_heap(ib, ib+i, std::less<int>(), &S::i) == ib+i);
+            std::transform(ib, ib+i, ia, std::mem_fn(&S::i));
+            CHECK(std::is_heap(ia, ia+i-1));
+        }
+        CHECK(ranges::pop_heap(ib, ib, std::less<int>(), &S::i) == ib);
+        delete[] ia;
+        delete[] ib;
     }
-    CHECK(ranges::pop_heap(ib, ib, std::less<int>(), &S::i) == ib);
-    delete [] ia;
-    delete [] ib;
 }
 
 int main()

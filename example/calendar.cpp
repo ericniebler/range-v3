@@ -129,7 +129,7 @@ std::string format_day(date d) {
 auto format_weeks() {
     return view::transform([](/*Range<date>*/ auto week) {
         return boost::str(boost::format("%1%%2%%|22t|")
-            % std::string((int)front(week).day_of_week() * 3, ' ')
+            % std::string(front(week).day_of_week() * 3u, ' ')
             % (week | view::transform(format_day) | action::join));
     });
 }
@@ -145,7 +145,7 @@ std::string month_title(date d) {
 // Out: Range<Range<std::string>>: year of months of formatted wks
 auto layout_months() {
     return view::transform([](/*Range<date>*/ auto month) {
-        int week_count = distance(month | by_week());
+        auto week_count = static_cast<std::ptrdiff_t>(distance(month | by_week()));
         return view::concat(
             view::single(month_title(front(month))),
             month | by_week() | format_weeks(),
@@ -159,7 +159,7 @@ auto layout_months() {
 template<class Rng>
 class chunk_view : public view_adaptor<chunk_view<Rng>, Rng> {
     CONCEPT_ASSERT(ForwardRange<Rng>());
-    std::size_t n_;
+    ranges::range_difference_t<Rng> n_;
     friend range_access;
     class adaptor;
     adaptor begin_adaptor() {
@@ -167,18 +167,18 @@ class chunk_view : public view_adaptor<chunk_view<Rng>, Rng> {
     }
 public:
     chunk_view() = default;
-    chunk_view(Rng rng, std::size_t n)
+    chunk_view(Rng rng, ranges::range_difference_t<Rng> n)
       : chunk_view::view_adaptor(std::move(rng)), n_(n)
     {}
 };
 
 template<class Rng>
 class chunk_view<Rng>::adaptor : public adaptor_base {
-    std::size_t n_;
+    ranges::range_difference_t<Rng> n_;
     range_sentinel_t<Rng> end_;
 public:
     adaptor() = default;
-    adaptor(std::size_t n, range_sentinel_t<Rng> end)
+    adaptor(ranges::range_difference_t<Rng> n, range_sentinel_t<Rng> end)
       : n_(n), end_(end)
     {}
     auto get(range_iterator_t<Rng> it) const {
@@ -198,7 +198,8 @@ auto chunk(std::size_t n) {
     return make_pipeable([=](auto&& rng) {
         using Rng = decltype(rng);
         return chunk_view<view::all_t<Rng>>{
-            view::all(std::forward<Rng>(rng)), n};
+            view::all(std::forward<Rng>(rng)),
+            static_cast<ranges::range_difference_t<Rng>>(n)};
     });
 }
 
@@ -260,7 +261,7 @@ auto transpose() {
         CONCEPT_ASSERT(ForwardRange<Rngs>());
         return std::forward<Rngs>(rngs)
             | interleave()
-            | chunk(distance(rngs));
+            | chunk(static_cast<std::size_t>(distance(rngs)));
     });
 }
 

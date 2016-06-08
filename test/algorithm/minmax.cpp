@@ -29,85 +29,90 @@
 #include "../test_utils.hpp"
 #include "../test_iterators.hpp"
 
-namespace { std::mt19937 gen; }
+RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
 
-template <class Iter, class Sent = Iter>
-void
-test_iter(Iter first, Sent last)
+namespace
 {
-    assert(first != last);
-    auto rng = ranges::make_iterator_range(first, last);
-    auto res = ranges::minmax(rng);
-    for (Iter i = first; i != last; ++i) {
-        CHECK(!(*i < res.first));
-        CHECK(!(res.second < *i));
+    std::mt19937 gen;
+
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter(Iter first, Sent last)
+    {
+        assert(first != last);
+        auto rng = ranges::make_iterator_range(first, last);
+        auto res = ranges::minmax(rng);
+        for (Iter i = first; i != last; ++i) {
+            CHECK(!(*i < res.first));
+            CHECK(!(res.second < *i));
+        }
     }
-}
 
-template <class Iter, class Sent = Iter>
-void
-test_iter(unsigned N)
-{
-    assert(N > 0);
-    std::unique_ptr<int[]> a{new int[N]};
-    std::iota(a.get(), a.get()+N, 0);
-    std::shuffle(a.get(), a.get()+N, gen);
-    test_iter(Iter(a.get()), Sent(a.get()+N));
-}
-
-template <class Iter, class Sent = Iter>
-void
-test_iter()
-{
-    test_iter<Iter, Sent>(1);
-    test_iter<Iter, Sent>(2);
-    test_iter<Iter, Sent>(3);
-    test_iter<Iter, Sent>(10);
-    test_iter<Iter, Sent>(1000);
-}
-
-template <class Iter, class Sent = Iter>
-void
-test_iter_comp(Iter first, Sent last)
-{
-    assert(first != last);
-    typedef std::greater<int> Compare;
-    Compare comp;
-    auto rng = ranges::make_iterator_range(first, last);
-    auto res = ranges::minmax(rng, comp);
-    for (Iter i = first; i != last; ++i) {
-        CHECK(!comp(*i, res.first));
-        CHECK(!comp(res.second, *i));
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter(unsigned N)
+    {
+        assert(N > 0);
+        std::unique_ptr<int[]> a{new int[N]};
+        std::iota(a.get(), a.get()+N, 0);
+        std::shuffle(a.get(), a.get()+N, gen);
+        test_iter(Iter(a.get()), Sent(a.get()+N));
     }
-}
 
-template <class Iter, class Sent = Iter>
-void
-test_iter_comp(unsigned N)
-{
-    assert(N > 0);
-    std::unique_ptr<int[]> a{new int[N]};
-    std::iota(a.get(), a.get()+N, 0);
-    std::shuffle(a.get(), a.get()+N, gen);
-    test_iter_comp(Iter(a.get()), Sent(a.get()+N));
-}
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter()
+    {
+        test_iter<Iter, Sent>(1);
+        test_iter<Iter, Sent>(2);
+        test_iter<Iter, Sent>(3);
+        test_iter<Iter, Sent>(10);
+        test_iter<Iter, Sent>(1000);
+    }
 
-template <class Iter, class Sent = Iter>
-void
-test_iter_comp()
-{
-    test_iter_comp<Iter, Sent>(1);
-    test_iter_comp<Iter, Sent>(2);
-    test_iter_comp<Iter, Sent>(3);
-    test_iter_comp<Iter, Sent>(10);
-    test_iter_comp<Iter, Sent>(1000);
-}
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter_comp(Iter first, Sent last)
+    {
+        assert(first != last);
+        typedef std::greater<int> Compare;
+        Compare comp;
+        auto rng = ranges::make_iterator_range(first, last);
+        auto res = ranges::minmax(rng, comp);
+        for (Iter i = first; i != last; ++i) {
+            CHECK(!comp(*i, res.first));
+            CHECK(!comp(res.second, *i));
+        }
+    }
 
-struct S
-{
-    int value;
-    int index;
-};
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter_comp(unsigned N)
+    {
+        assert(N > 0);
+        std::unique_ptr<int[]> a{new int[N]};
+        std::iota(a.get(), a.get()+N, 0);
+        std::shuffle(a.get(), a.get()+N, gen);
+        test_iter_comp(Iter(a.get()), Sent(a.get()+N));
+    }
+
+    template <class Iter, class Sent = Iter>
+    void
+    test_iter_comp()
+    {
+        test_iter_comp<Iter, Sent>(1);
+        test_iter_comp<Iter, Sent>(2);
+        test_iter_comp<Iter, Sent>(3);
+        test_iter_comp<Iter, Sent>(10);
+        test_iter_comp<Iter, Sent>(1000);
+    }
+
+    struct S
+    {
+        int value;
+        int index;
+    };
+}
 
 int main()
 {

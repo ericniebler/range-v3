@@ -11,23 +11,28 @@
 
 #include <sstream>
 #include <range/v3/core.hpp>
+#include <range/v3/range_traits.hpp>
 #include "./simple_test.hpp"
 #include "./test_utils.hpp"
 
+using namespace ranges;
+
 int main()
 {
-    std::stringstream sin{
+    const char* text =
 R"(Now is
 the time
 for all
 good men
-)"};
+)";
 
-    ::check_equal(ranges::getlines(sin), {"Now is", "the time", "for all", "good men"});
+    std::stringstream sin{text};
+    ::check_equal(getlines(sin), {"Now is", "the time", "for all", "good men"});
 
-    using Rng = decltype(ranges::getlines(sin));
-    CONCEPT_ASSERT(ranges::InputView<Rng>());
-    CONCEPT_ASSERT(!ranges::ForwardView<Rng>());
+    using Rng = decltype(getlines(sin));
+    CONCEPT_ASSERT(InputView<Rng>());
+    CONCEPT_ASSERT(!ForwardView<Rng>());
+    CONCEPT_ASSERT(Same<range_rvalue_reference_t<Rng>, std::string &&>());
 
     return ::test_result();
 }

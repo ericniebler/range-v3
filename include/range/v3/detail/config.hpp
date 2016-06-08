@@ -2,6 +2,7 @@
 // Range v3 library
 //
 //  Copyright Eric Niebler 2013-2014
+//  Copyright Casey Carter 2016
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -41,6 +42,11 @@
     noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->   \
     decltype(__VA_ARGS__)                                       \
     { return (__VA_ARGS__); }                                   \
+    /**/
+
+#define RANGES_DECLTYPE_NOEXCEPT(...)                           \
+    noexcept(noexcept(decltype(__VA_ARGS__)(__VA_ARGS__))) ->   \
+    decltype(__VA_ARGS__)                                       \
     /**/
 
 // Non-portable forward declarations of standard containers
@@ -120,7 +126,9 @@
 #define RANGES_DIAGNOSTIC_IGNORE_INDENTATION
 #define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL
 #define RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
-
+#define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+#define RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
+#define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL
 
 #else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
 // Generic configuration using SD-6 feature test macros with fallback to __cplusplus
@@ -135,6 +143,14 @@
 #define RANGES_DIAGNOSTIC_IGNORE_INDENTATION RANGES_DIAGNOSTIC_IGNORE("-Wmisleading-indentation")
 #define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL RANGES_DIAGNOSTIC_IGNORE("-Wundefined-internal")
 #define RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS RANGES_DIAGNOSTIC_IGNORE("-Wmismatched-tags")
+#define RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION RANGES_DIAGNOSTIC_IGNORE("-Wsign-conversion")
+#ifdef __clang__
+#define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS RANGES_DIAGNOSTIC_IGNORE("-Wglobal-constructors")
+#define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL RANGES_DIAGNOSTIC_IGNORE("-Wunneeded-internal-declaration")
+#else
+#define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+#define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL
+#endif
 #else
 #define RANGES_DIAGNOSTIC_PUSH
 #define RANGES_DIAGNOSTIC_POP
@@ -143,6 +159,9 @@
 #define RANGES_DIAGNOSTIC_IGNORE_INDENTATION
 #define RANGES_DIAGNOSTIC_IGNORE_UNDEFINED_INTERNAL
 #define RANGES_DIAGNOSTIC_IGNORE_MISMATCHED_TAGS
+#define RANGES_DIAGNOSTIC_IGNORE_GLOBAL_CONSTRUCTORS
+#define RANGES_DIAGNOSTIC_IGNORE_SIGN_CONVERSION
+#define RANGES_DIAGNOSTIC_IGNORE_UNNEEDED_INTERNAL
 #endif
 
 #define RANGES_CXX_FEATURE_CONCAT2(y, z) RANGES_CXX_ ## y ## _ ## z
@@ -267,6 +286,7 @@
 #define RANGES_GCC_BROKEN_CUSTPOINT
 #endif
 
+#ifdef RANGES_FEWER_WARNINGS
 #define RANGES_DISABLE_WARNINGS                 \
     RANGES_DIAGNOSTIC_PUSH                      \
     RANGES_DIAGNOSTIC_IGNORE_PRAGMAS            \
@@ -275,6 +295,10 @@
     RANGES_DIAGNOSTIC_IGNORE_INDENTATION
 
 #define RANGES_RE_ENABLE_WARNINGS RANGES_DIAGNOSTIC_POP
+#else
+#define RANGES_DISABLE_WARNINGS
+#define RANGES_RE_ENABLE_WARNINGS
+#endif
 
 namespace ranges {
     inline namespace v3 {
