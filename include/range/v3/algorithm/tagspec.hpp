@@ -31,6 +31,11 @@ namespace ranges
         RANGES_DEFINE_TAG_SPECIFIER(max)
         RANGES_DEFINE_TAG_SPECIFIER(begin)
         RANGES_DEFINE_TAG_SPECIFIER(end)
+
+        RANGES_DEFINE_TAG_SPECIFIER(current)
+        RANGES_DEFINE_TAG_SPECIFIER(engine)
+        RANGES_DEFINE_TAG_SPECIFIER(range)
+        RANGES_DEFINE_TAG_SPECIFIER(size)
     }
 }
 

@@ -603,6 +603,9 @@
     <ClCompile Include="test\view\reverse.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="test\view\sample.cpp">
+      <Filter>Test Files\view</Filter>
+    </ClCompile>
     <ClCompile Include="test\view\slice.cpp">
       <Filter>Test Files\view</Filter>
     </ClCompile>

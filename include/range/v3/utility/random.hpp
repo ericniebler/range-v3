@@ -135,12 +135,16 @@ namespace ranges
                         (hash * 16777619U) ^ static_cast<unsigned char>(*pos), pos+1);
                 }
 
-                template<std::size_t nwords = 18>
-                std::array<std::uint32_t, nwords> local_entropy(std::uint32_t s1, std::uint32_t s2)
+                static constexpr std::size_t seed_count = 19;
+                template<class = void>
+                std::array<std::uint32_t, seed_count> local_entropy(std::uint32_t s1, std::uint32_t s2)
                 {
-                    CONCEPT_ASSERT(nwords >= 10);
-                    std::array<std::uint32_t, nwords> seeds;
+                    CONCEPT_ASSERT(seed_count >= 11);
+                    std::array<std::uint32_t, seed_count> seeds;
                     auto it = seeds.begin();
+
+                    static std::atomic<std::uint32_t> counter;
+                    *it++ = counter.fetch_add(std::uint32_t{0xedf19156}, std::memory_order_relaxed);
 
                     // The heap can vary from run to run as well.
                     void* malloc_addr = std::malloc(sizeof(int));
