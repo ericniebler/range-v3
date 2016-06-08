@@ -45,8 +45,8 @@ int main()
   std::vector<S> one_true { false, false, true };
   std::vector<S> none_true { false, false, false };
   CHECK(ranges::all_of(all_true.begin(), all_true.end(), &S::p));
-  CHECK(!ranges::all_of(one_true.begin(), all_true.end(), &S::p));
-  CHECK(!ranges::all_of(none_true.begin(), all_true.end(), &S::p));
+  CHECK(!ranges::all_of(one_true.begin(), one_true.end(), &S::p));
+  CHECK(!ranges::all_of(none_true.begin(), none_true.end(), &S::p));
 
   CHECK(ranges::all_of(all_true, &S::p));
   CHECK(!ranges::all_of(one_true, &S::p));
