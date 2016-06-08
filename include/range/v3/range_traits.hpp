@@ -14,6 +14,7 @@
 #ifndef RANGES_V3_RANGE_TRAITS_HPP
 #define RANGES_V3_RANGE_TRAITS_HPP
 
+#include <array>
 #include <utility>
 #include <iterator>
 #include <type_traits>
@@ -100,23 +101,21 @@ namespace ranges
             std::integral_constant<cardinality, finite> test_cardinality(void *);
             template<cardinality Card>
             std::integral_constant<cardinality, Card> test_cardinality(basic_view<Card> *);
+            template<typename T, std::size_t N>
+            std::integral_constant<cardinality, static_cast<cardinality>(N)>
+            test_cardinality(T(*)[N]);
+            template<typename T, std::size_t N>
+            std::integral_constant<cardinality, static_cast<cardinality>(N)>
+            test_cardinality(std::array<T, N>*);
         }
         /// \endcond
 
         // User customization point for specifying the cardinality of ranges:
         template<typename Rng, typename Void /*= void*/>
         struct range_cardinality
-          : decltype(detail::test_cardinality(static_cast<Rng *>(nullptr)))
-        {};
-
-        template<typename Rng>
-        struct range_cardinality<Rng &>
-          : range_cardinality<Rng>
-        {};
-
-        template<typename Rng>
-        struct range_cardinality<Rng const>
-          : range_cardinality<Rng>
+          : meta::if_<std::is_same<Rng, uncvref_t<Rng>>,
+                decltype(detail::test_cardinality(static_cast<uncvref_t<Rng> *>(nullptr))),
+                range_cardinality<uncvref_t<Rng>>>
         {};
 
         /// @}
