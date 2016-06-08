@@ -236,6 +236,7 @@ namespace ranges
                 {
                     its_.visit_i(next_fun{this});
                 }
+                CONCEPT_REQUIRES(EqualityComparable<decltype(its_)>())
                 bool equal(cursor const &pos) const
                 {
                     return its_ == pos.its_;
