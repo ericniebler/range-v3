@@ -321,6 +321,9 @@
     <ClCompile Include="test\algorithm\rotate_copy.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
+    <ClCompile Include="test\algorithm\sample.cpp">
+      <Filter>Test Files\algorithm</Filter>
+    </ClCompile>
     <ClCompile Include="test\algorithm\search.cpp">
       <Filter>Test Files\algorithm</Filter>
     </ClCompile>
@@ -900,6 +903,9 @@
       <Filter>Header Files\range\v3\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\algorithm\rotate_copy.hpp">
+      <Filter>Header Files\range\v3\algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="include\range\v3\algorithm\sample.hpp">
       <Filter>Header Files\range\v3\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\algorithm\search.hpp">

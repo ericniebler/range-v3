@@ -22,7 +22,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <random>
+#include <array>
 #include <range/v3/core.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include <range/v3/algorithm/shuffle.hpp>
@@ -33,63 +33,62 @@
 
 int main()
 {
+    constexpr unsigned N = 100;
     {
-        int ia[100];
-        int ib[100];
-        int orig[100];
-        ranges::iota(ia, 0);
-        ranges::iota(ib, 0);
-        ranges::iota(orig, 0);
-        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-        std::minstd_rand g;
-        ranges::shuffle(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa), g);
-        CHECK(!ranges::equal(ia, orig));
-        CHECK(ranges::shuffle(ib, ib+sa, g) == ib+sa);
-        CHECK(!ranges::equal(ia, ib));
+        std::array<int, N> a, b, c;
+        for (auto p : {&a, &b, &c})
+            ranges::iota(*p, 0);
+        std::minstd_rand g1, g2 = g1;
+        ranges::shuffle(random_access_iterator<int*>(a.data()), sentinel<int*>(a.data()+N), g1);
+        CHECK(!ranges::equal(a, b));
+
+        CHECK(ranges::shuffle(b.begin(), b.end(), g1) == b.end());
+        CHECK(!ranges::equal(a, b));
+
+        CHECK(ranges::shuffle(c.begin(), c.end(), g2) == c.end());
+        CHECK(ranges::equal(a, c));
+        CHECK(!ranges::equal(b, c));
     }
 
     {
-        int ia[100];
-        int ib[100];
-        int orig[100];
-        ranges::iota(ia, 0);
-        ranges::iota(ib, 0);
-        ranges::iota(orig, 0);
-        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-        std::minstd_rand g;
-        auto rng = ranges::make_iterator_range(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
-        ranges::shuffle(rng, g);
-        CHECK(!ranges::equal(ia, orig));
-        CHECK(ranges::shuffle(ib, g) == ranges::end(ib));
-        CHECK(!ranges::equal(ia, ib));
+        std::array<int, N> a, b, c;
+        for (auto p : {&a, &b, &c})
+            ranges::iota(*p, 0);
+        std::minstd_rand g1, g2 = g1;
+        auto rng = ranges::make_iterator_range(random_access_iterator<int*>(a.data()), sentinel<int*>(a.data() + N));
+        ranges::shuffle(rng, g1);
+        CHECK(!ranges::equal(a, b));
 
-        ranges::iota(ia, 0);
-        CHECK(ranges::shuffle(std::move(rng), g).get_unsafe().base() == ranges::end(ia));
-        CHECK(!ranges::equal(ia, orig));
+        CHECK(ranges::shuffle(b, g2) == b.end());
+        CHECK(ranges::equal(a, b));
+
+        CHECK(ranges::shuffle(b, g1) == b.end());
+        CHECK(!ranges::equal(a, b));
+        CHECK(!ranges::equal(b, c));
+
+        ranges::iota(a, 0);
+        CHECK(ranges::shuffle(std::move(rng), g1).get_unsafe().base() == a.data() + N);
+        CHECK(!ranges::equal(a, c));
     }
 
     {
-        int ia[100];
-        int ib[100];
-        int orig[100];
-        ranges::iota(ia, 0);
-        ranges::iota(ib, 0);
-        ranges::iota(orig, 0);
-        const unsigned sa = sizeof(ia)/sizeof(ia[0]);
-        ranges::shuffle(random_access_iterator<int*>(ia), sentinel<int*>(ia+sa));
-        CHECK(!ranges::equal(ia, orig));
-        ranges::shuffle(ib, ranges::end(ib));
-        CHECK(!ranges::equal(ib, orig));
-        CHECK(!ranges::equal(ia, ib));
+        std::array<int, N> a, b, c;
+        for (auto p : {&a, &b, &c})
+            ranges::iota(*p, 0);
+        ranges::shuffle(random_access_iterator<int*>(a.data()), sentinel<int*>(a.data() + N));
+        CHECK(!ranges::equal(a, c));
+
+        ranges::shuffle(b);
+        CHECK(!ranges::equal(b, c));
+        CHECK(!ranges::equal(a, b));
     }
 
     {
-        int ia[100];
-        int orig[100];
-        ranges::iota(ia, 0);
-        ranges::iota(orig, 0);
-        ranges::shuffle(ia);
-        CHECK(!ranges::equal(ia, orig));
+        std::array<int, N> a, b;
+        for (auto p : {&a, &b})
+            ranges::iota(*p, 0);
+        ranges::shuffle(a);
+        CHECK(!ranges::equal(a, b));
     }
 
     return ::test_result();
