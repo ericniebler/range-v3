@@ -31,7 +31,7 @@ namespace ranges
         /// \cond
         namespace detail
         {
-            template<typename Rng, bool = SizedIteratorRange<range_iterator_t<Rng>, range_sentinel_t<Rng>>::value>
+            template<typename Rng, bool = SizedSentinel<range_sentinel_t<Rng>, range_iterator_t<Rng>>::value>
             class size_tracker
             {
                 range_difference_t<Rng> size_;
@@ -51,7 +51,7 @@ namespace ranges
                 }
             };
 
-            // Impl for SizedIteratorRange (no need to store anything)
+            // Impl for SizedSentinel (no need to store anything)
             template<typename Rng>
             class size_tracker<Rng, true>
             {
@@ -190,7 +190,7 @@ namespace ranges
                         range_difference_t<Rng>>,
                     meta::or_<
                         SizedRange<Rng>,
-                        SizedIteratorRange<range_iterator_t<Rng>, range_sentinel_t<Rng>>,
+                        SizedSentinel<range_sentinel_t<Rng>, range_iterator_t<Rng>>,
                         ForwardRange<Rng>>>;
 
                 friend view_access;
@@ -227,11 +227,11 @@ namespace ranges
                         "UniformRandomNumberGenerator concept.");
                     CONCEPT_ASSERT_MSG(meta::or_<
                         SizedRange<Rng>,
-                        SizedIteratorRange<range_iterator_t<Rng>, range_sentinel_t<Rng>>,
+                        SizedSentinel<range_sentinel_t<Rng>, range_iterator_t<Rng>>,
                         ForwardRange<Rng>>(),
                         "The underlying range for view::sample must either satisfy the SizedRange"
                         "concept, have iterator and sentinel types that satisfy the "
-                        "SizedIteratorRange concept, or be a forward range.");
+                        "SizedSentinel concept, or be a forward range.");
                     CONCEPT_ASSERT_MSG(ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<URNG>,
                         range_difference_t<Rng>>(),

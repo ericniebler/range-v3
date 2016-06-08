@@ -19,6 +19,7 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/algorithm/min.hpp>
 #include <range/v3/utility/random.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/iterator.hpp>
@@ -36,7 +37,7 @@ namespace ranges
         {
             template<typename I, typename S, typename O, typename Gen>
             using Constraint = meta::strict_and<
-                InputIterator<I>, IteratorRange<I, S>, WeaklyIncrementable<O>,
+                InputIterator<I>, Sentinel<S, I>, WeaklyIncrementable<O>,
                 IndirectlyCopyable<I, O>, UniformRandomNumberGenerator<Gen>,
                 ConvertibleTo<concepts::UniformRandomNumberGenerator::result_t<Gen>,
                     iterator_difference_t<I>>>;
@@ -49,7 +50,7 @@ namespace ranges
             {
                 std::uniform_int_distribution<iterator_difference_t<I>> dist;
                 using param_t = typename decltype(dist)::param_type;
-                n = std::min(pop_size, n);
+                n = ranges::min(pop_size, n);
                 for (; n > 0 && first != last; ++first)
                 {
                     if (dist(gen, param_t{0, --pop_size}) < n)
@@ -65,7 +66,7 @@ namespace ranges
             template<typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&,
                 CONCEPT_REQUIRES_(
-                    (ForwardIterator<I>() || SizedIteratorRange<I, S>()) &&
+                    (ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     Constraint<I, S, O, Gen>())>
             O operator()(I first, S last, O out, iterator_difference_t<I> n,
                 Gen && gen = detail::get_random_engine()) const
@@ -77,7 +78,7 @@ namespace ranges
             template<typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&,
                 CONCEPT_REQUIRES_(RandomAccessIterator<O>() &&
-                    !(ForwardIterator<I>() || SizedIteratorRange<I, S>()) &&
+                    !(ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     Constraint<I, S, O, Gen>())>
             O operator()(I first, S last, O out, iterator_difference_t<I> n,
                 Gen && gen = detail::get_random_engine()) const
@@ -103,7 +104,7 @@ namespace ranges
             template<typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&,
                 CONCEPT_REQUIRES_(
-                    (ForwardIterator<I>() || SizedIteratorRange<I, S>()) &&
+                    (ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<I, S, range_iterator_t<ORng>, Gen>())>
             range_safe_iterator_t<ORng> operator()(I first, S last, ORng && out,
@@ -116,7 +117,7 @@ namespace ranges
             template<typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&,
                 CONCEPT_REQUIRES_(RandomAccessIterator<range_iterator_t<ORng>>() &&
-                    !(ForwardIterator<I>() || SizedIteratorRange<I, S>()) &&
+                    !(ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<I, S, range_iterator_t<ORng>, Gen>())>
             range_safe_iterator_t<ORng> operator()(I first, S last, ORng && out,

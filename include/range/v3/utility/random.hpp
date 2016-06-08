@@ -101,7 +101,8 @@ namespace ranges
         }
 
         template<typename Gen>
-        using UniformRandomNumberGenerator = concepts::models<concepts::UniformRandomNumberGenerator, Gen>;
+        using UniformRandomNumberGenerator =
+            concepts::models<concepts::UniformRandomNumberGenerator, Gen>;
         /// @}
 
         /// \cond
@@ -299,7 +300,7 @@ namespace ranges
                     std::array<IntRep, count> mixer_;
 
                     template <typename I, typename S,
-                        CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
+                        CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
                             ConvertibleTo<iterator_reference_t<I>, IntRep>())>
                     void mix_entropy(I begin, S end)
                     {
@@ -344,7 +345,7 @@ namespace ranges
                     }
 
                     template <typename I, typename S,
-                        CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
+                        CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
                             ConvertibleTo<iterator_reference_t<I>, IntRep>())>
                     seed_seq_fe(I begin, S end)
                     {
@@ -353,7 +354,7 @@ namespace ranges
 
                     // generating functions
                     template <typename I, typename S,
-                        CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>())>
+                        CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>())>
                     void generate(I dest_begin, S dest_end) const
                     {
                         auto src_begin = mixer_.begin();
@@ -419,7 +420,7 @@ namespace ranges
                     }
 
                     template <typename I, typename S,
-                        CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
+                        CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
                             ConvertibleTo<iterator_reference_t<I>, IntRep>())>
                     void seed(I begin, S end)
                     {
