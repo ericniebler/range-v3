@@ -58,10 +58,11 @@
 #define RANGES_END_NAMESPACE_STD }
 #endif
 
-#ifndef RANGES_THREAD_LOCAL
-#if (defined(__clang__) && defined(__CYGWIN__)) || \
-    (defined(__clang__) && defined(_LIBCPP_VERSION)) // BUGBUG avoid unresolved __cxa_thread_atexit
-#define RANGES_STATIC_THREAD_LOCAL
+#ifndef RANGES_STATIC_THREAD_LOCAL
+#if defined(__clang__) && (defined(__CYGWIN__) || defined(__apple_build_version__))
+// BUGBUG avoid unresolved __cxa_thread_atexit
+// Also, workaround lack of thread_local support on OSX
+#define RANGES_STATIC_THREAD_LOCAL static __thread
 #else
 #define RANGES_STATIC_THREAD_LOCAL static thread_local
 #endif

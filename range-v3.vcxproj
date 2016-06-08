@@ -1082,6 +1082,7 @@
     <ClInclude Include="include\range\v3\utility\move.hpp" />
     <ClInclude Include="include\range\v3\utility\nullptr_v.hpp" />
     <ClInclude Include="include\range\v3\utility\optional.hpp" />
+    <ClInclude Include="include\range\v3\utility\random.hpp" />
     <ClInclude Include="include\range\v3\utility\safe_int.hpp" />
     <ClInclude Include="include\range\v3\utility\semiregular.hpp" />
     <ClInclude Include="include\range\v3\utility\static_const.hpp" />
