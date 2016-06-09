@@ -38,7 +38,6 @@
 
 #include <memory>
 #include <iterator>
-#include <algorithm>
 #include <functional>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
@@ -51,6 +50,7 @@
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
 #include <range/v3/algorithm/merge.hpp>
+#include <range/v3/algorithm/min.hpp>
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -88,7 +88,7 @@ namespace ranges
                         std::ref(pred), std::ref(proj), std::ref(proj)).out();
                     begin += two_step;
                 }
-                step_size = std::min(D(end - begin), step_size);
+                step_size = ranges::min(D(end - begin), step_size);
                 merge(make_move_iterator(begin), make_move_iterator(begin + step_size),
                     make_move_iterator(begin + step_size), make_move_iterator(end), result,
                     std::ref(pred), std::ref(proj), std::ref(proj));
