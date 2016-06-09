@@ -171,7 +171,7 @@ namespace ranges
                     any_cursor_impl const *pthat =
                         dynamic_cast<any_cursor_impl const *>(&that);
                     RANGES_ASSERT(pthat != nullptr);
-                    return pthat->it_.get() - it_.get();
+                    return static_cast<std::ptrdiff_t>(pthat->it_.get() - it_.get());
                 }
             };
 

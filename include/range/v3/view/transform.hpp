@@ -114,8 +114,13 @@ namespace ranges
               : iter_transform_view::view_adaptor{std::move(rng)}
               , fun_(as_function(std::move(fun)))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
             constexpr range_size_t<Rng> size() const
+            {
+                return ranges::size(this->base());
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng>())
+            RANGES_CXX14_CONSTEXPR range_size_t<Rng> size()
             {
                 return ranges::size(this->base());
             }
@@ -147,6 +152,10 @@ namespace ranges
             Rng2 rng2_;
             using difference_type_ = common_type_t<range_difference_t<Rng1>, range_difference_t<Rng2>>;
             using size_type_ = meta::_t<std::make_unsigned<difference_type_>>;
+
+            static constexpr cardinality my_cardinality = detail::transform2_cardinality(
+                range_cardinality<Rng1>::value,
+                range_cardinality<Rng2>::value);
 
             struct sentinel;
             struct cursor
@@ -269,12 +278,22 @@ namespace ranges
               , rng1_(std::move(rng1))
               , rng2_(std::move(rng2))
             {}
-            CONCEPT_REQUIRES(SizedRange<Rng1>() && SizedRange<Rng2>())
+            CONCEPT_REQUIRES(my_cardinality >= 0)
             constexpr size_type_ size() const
             {
-                return range_cardinality<iter_transform2_view>::value >= 0 ?
-                    (size_type_)range_cardinality<iter_transform2_view>::value :
-                    std::min<size_type_>(ranges::size(rng1_), ranges::size(rng2_));
+                return static_cast<size_type_>(my_cardinality);
+            }
+            CONCEPT_REQUIRES(my_cardinality < 0 &&
+                SizedRange<Rng1 const>() && SizedRange<Rng2 const>())
+            constexpr size_type_ size() const
+            {
+                return std::min<size_type_>(ranges::size(rng1_), ranges::size(rng2_));
+            }
+            CONCEPT_REQUIRES(my_cardinality < 0 &&
+                SizedRange<Rng1>() && SizedRange<Rng2>())
+            RANGES_CXX14_CONSTEXPR size_type_ size()
+            {
+                return std::min<size_type_>(ranges::size(rng1_), ranges::size(rng2_));
             }
         };
 
