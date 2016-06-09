@@ -13,8 +13,10 @@
 #include <vector>
 #include <range/v3/core.hpp>
 #include <range/v3/view/concat.hpp>
+#include <range/v3/view/generate.hpp>
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/remove_if.hpp>
+#include <range/v3/view/take_while.hpp>
 #include <range/v3/algorithm/equal.hpp>
 #include "../simple_test.hpp"
 #include "../test_utils.hpp"
@@ -81,6 +83,14 @@ int main()
         auto f_rng1 = b | even_filter;
 
         CHECK(equal(view::concat(f_rng0, f_rng1), {0, 2, 4}));
+    }
+
+    // Regression test for http://github.com/ericniebler/range-v3/issues/395.
+    {
+        int i = 0;
+        auto rng = ranges::view::concat(ranges::view::generate([&]{ return i++; }))
+            | ranges::view::take_while([](int i){ return i < 30; });
+        CHECK(ranges::distance(ranges::begin(rng), ranges::end(rng)) == 30);
     }
 
     return test_result();
