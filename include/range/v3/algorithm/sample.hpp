@@ -21,11 +21,11 @@
 #include <range/v3/range_traits.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/utility/random.hpp>
-#include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/static_const.hpp>
+#include <range/v3/utility/tagged_pair.hpp>
 
 namespace ranges
 {
@@ -45,7 +45,8 @@ namespace ranges
             template<typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&,
                 CONCEPT_REQUIRES_(Constraint<I, S, O, Gen>())>
-            static O sized_impl(I first, S last, iterator_difference_t<I> pop_size,
+            static tagged_pair<tag::in(I), tag::out(O)>
+            sized_impl(I first, S last, iterator_difference_t<I> pop_size,
                 O out, iterator_difference_t<I> n, Gen && gen)
             {
                 std::uniform_int_distribution<iterator_difference_t<I>> dist;
@@ -60,7 +61,7 @@ namespace ranges
                         ++out;
                     }
                 }
-                return out;
+                return {std::move(first), std::move(out)};
             }
         public:
             template<typename I, typename S, typename O,
@@ -68,19 +69,21 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     (ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     Constraint<I, S, O, Gen>())>
-            O operator()(I first, S last, O out, iterator_difference_t<I> n,
+            tagged_pair<tag::in(I), tag::out(O)>
+            operator()(I first, S last, O out, iterator_difference_t<I> n,
                 Gen && gen = detail::get_random_engine()) const
             {
                 auto k = distance(first, last);
                 return sample_fn::sized_impl(std::move(first), std::move(last),
-                    k, out, n, std::forward<Gen>(gen));
+                    k, std::move(out), n, std::forward<Gen>(gen));
             }
             template<typename I, typename S, typename O,
                 typename Gen = detail::default_random_engine&,
                 CONCEPT_REQUIRES_(RandomAccessIterator<O>() &&
                     !(ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     Constraint<I, S, O, Gen>())>
-            O operator()(I first, S last, O out, iterator_difference_t<I> n,
+            tagged_pair<tag::in(I), tag::out(O)>
+            operator()(I first, S last, O out, iterator_difference_t<I> n,
                 Gen && gen = detail::get_random_engine()) const
             {
                 if (n > 0)
@@ -99,7 +102,7 @@ namespace ranges
                     }
                     out += n;
                 }
-                return out;
+                return {std::move(first), std::move(out)};
             }
             template<typename I, typename S, typename ORng,
                 typename Gen = detail::default_random_engine&,
@@ -107,7 +110,8 @@ namespace ranges
                     (ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<I, S, range_iterator_t<ORng>, Gen>())>
-            range_safe_iterator_t<ORng> operator()(I first, S last, ORng && out,
+            tagged_pair<tag::in(I), tag::out(range_safe_iterator_t<ORng>)>
+            operator()(I first, S last, ORng && out,
                 Gen && gen = detail::get_random_engine()) const
             {
                 auto k = distance(first, last);
@@ -120,7 +124,8 @@ namespace ranges
                     !(ForwardIterator<I>() || SizedSentinel<S, I>()) &&
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<I, S, range_iterator_t<ORng>, Gen>())>
-            range_safe_iterator_t<ORng> operator()(I first, S last, ORng && out,
+            tagged_pair<tag::in(I), tag::out(range_safe_iterator_t<ORng>)>
+            operator()(I first, S last, ORng && out,
                 Gen && gen = detail::get_random_engine()) const
             {
                 return (*this)(std::move(first), std::move(last), begin(out),
@@ -131,7 +136,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(RandomAccessIterator<O>() &&
                     !(ForwardRange<Rng>() || SizedRange<Rng>()) &&
                     Constraint<range_iterator_t<Rng>, range_sentinel_t<Rng>, O, Gen>())>
-            O operator()(Rng && rng, O out, range_difference_t<Rng> n,
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
+            operator()(Rng && rng, O out, range_difference_t<Rng> n,
                 Gen && gen = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng),
@@ -142,7 +148,8 @@ namespace ranges
                 CONCEPT_REQUIRES_(
                     (ForwardRange<Rng>() || SizedRange<Rng>()) &&
                     Constraint<range_iterator_t<Rng>, range_sentinel_t<Rng>, O, Gen>())>
-            O operator()(Rng && rng, O out, range_difference_t<Rng> n,
+            tagged_pair<tag::in(range_safe_iterator_t<Rng>), tag::out(O)>
+            operator()(Rng && rng, O out, range_difference_t<Rng> n,
                 Gen && gen = detail::get_random_engine()) const
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
@@ -155,7 +162,10 @@ namespace ranges
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<range_iterator_t<IRng>, range_sentinel_t<IRng>,
                         range_iterator_t<ORng>, Gen>())>
-            range_safe_iterator_t<ORng> operator()(IRng && rng, ORng && out,
+            tagged_pair<
+                tag::in(range_safe_iterator_t<IRng>),
+                tag::out(range_safe_iterator_t<ORng>)>
+            operator()(IRng && rng, ORng && out,
                 Gen && gen = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng),
@@ -168,7 +178,10 @@ namespace ranges
                     (ForwardRange<ORng>() || SizedRange<ORng>()) &&
                     Constraint<range_iterator_t<IRng>, range_sentinel_t<IRng>,
                         range_iterator_t<ORng>, Gen>())>
-            range_safe_iterator_t<ORng> operator()(IRng && rng, ORng && out,
+            tagged_pair<
+                tag::in(range_safe_iterator_t<IRng>),
+                tag::out(range_safe_iterator_t<ORng>)>
+            operator()(IRng && rng, ORng && out,
                 Gen && gen = detail::get_random_engine()) const
             {
                 return sample_fn::sized_impl(begin(rng), end(rng), distance(rng),
