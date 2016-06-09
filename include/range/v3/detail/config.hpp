@@ -87,7 +87,7 @@
 #define RANGES_CXX_GENERIC_LAMBDAS_11 0
 #define RANGES_CXX_GENERIC_LAMBDAS_14 201304
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #if _MSC_VER >= 1900
 #ifndef RANGES_CXX_STATIC_ASSERT
 #define RANGES_CXX_STATIC_ASSERT RANGES_CXX_STATIC_ASSERT_11
@@ -132,8 +132,7 @@
 
 #else // ^^^ defined(_MSC_VER) ^^^ / vvv !defined(_MSC_VER) vvv
 // Generic configuration using SD-6 feature test macros with fallback to __cplusplus
-#ifdef __GNUC__
-// GCC or clang
+#if defined(__GNUC__) || defined(__clang__)
 #define RANGES_PRAGMA(X) _Pragma(#X)
 #define RANGES_DIAGNOSTIC_PUSH RANGES_PRAGMA(GCC diagnostic push)
 #define RANGES_DIAGNOSTIC_POP RANGES_PRAGMA(GCC diagnostic pop)

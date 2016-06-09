@@ -26,16 +26,14 @@ if(NOT RANGES_CXX_STD)
   set(RANGES_CXX_STD 11)
 endif()
 
-# Clang/C2 will blow up with various parts of the standard library
-# if compiling with -std less than c++14.
-if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") AND
-   ("x${CMAKE_CXX_SIMULATE_ID}x" STREQUAL "xMSVCx") AND
-   ("${RANGES_CXX_STD}" STREQUAL "11"))
-  set(CMAKE_CXX_STANDARD 14)
-  set(RANGES_CXX_STD 14)
-endif()
-
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xClang")
+  # Clang/C2 will blow up with various parts of the standard library
+  # if compiling with -std less than c++14.
+  if(("x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC") AND
+     ("${RANGES_CXX_STD}" STREQUAL "11"))
+    set(CMAKE_CXX_STANDARD 14)
+    set(RANGES_CXX_STD 14)
+  endif()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${RANGES_CXX_STD} -ftemplate-backtrace-limit=0")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything -Werror -pedantic-errors")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++98-compat -Wno-c++98-compat-pedantic")

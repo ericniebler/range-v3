@@ -73,7 +73,8 @@ namespace ranges
                 Cont impl(Rng && rng, std::true_type) const
                 {
                     Cont c;
-                    c.reserve(size(rng));
+                    using size_type = decltype(c.size());
+                    c.reserve(static_cast<size_type>(size(rng)));
                     using I = range_common_iterator_t<Rng>;
                     c.assign(I{begin(rng)}, I{end(rng)});
                     return c;

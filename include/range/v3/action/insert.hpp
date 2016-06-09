@@ -119,7 +119,8 @@ namespace ranges
                     decltype(unwrap_reference(cont).insert(begin(unwrap_reference(cont)), C{begin(rng)}, C{end(rng)}))
                 {
                     auto const index = p - begin(unwrap_reference(cont));
-                    unwrap_reference(cont).reserve(unwrap_reference(cont).size() + size(rng));
+                    using size_type = decltype(unwrap_reference(cont).size());
+                    unwrap_reference(cont).reserve(unwrap_reference(cont).size() + static_cast<size_type>(size(rng)));
                     return unwrap_reference(cont).insert(begin(unwrap_reference(cont)) + index, C{begin(rng)}, C{end(rng)});
                 }
             }

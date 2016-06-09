@@ -8,7 +8,7 @@ int main()
     using namespace ranges;
 
     // GCC 4.8 doesn't do regex
-#if __GNUC__ != 4 || __GNUC_MINOR__ > 8
+#if !defined(__GNUC__) || defined(__clang__) || __GNUC__ > 4 || __GNUC_MINOR__ > 8
     std::string txt{"abc\ndef\tghi"};
     const std::regex rx{R"delim(([\w]+))delim"};
     auto&& rng = txt | view::tokenize(rx,1);
