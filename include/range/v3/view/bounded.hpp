@@ -14,15 +14,16 @@
 #define RANGES_V3_VIEW_BOUNDED_HPP
 
 #include <type_traits>
-#include <range/v3/range_fwd.hpp>
-#include <range/v3/size.hpp>
 #include <range/v3/begin_end.hpp>
-#include <range/v3/range_traits.hpp>
+#include <range/v3/iterator_range.hpp>
 #include <range/v3/range_concepts.hpp>
+#include <range/v3/range_fwd.hpp>
+#include <range/v3/range_traits.hpp>
+#include <range/v3/size.hpp>
 #include <range/v3/view_interface.hpp>
+#include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
-#include <range/v3/utility/common_iterator.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/all.hpp>
 #include <range/v3/view/view.hpp>
@@ -39,17 +40,28 @@ namespace ranges
           : view_interface<bounded_view<Rng>, range_cardinality<Rng>::value>
         {
         private:
-            friend range_access;
+            using RA_and_Sized =
+                meta::strict_and<RandomAccessRange<Rng>, SizedRange<Rng>>;
             using base_iterator_t = range_iterator_t<Rng>;
             using base_sentinel_t = range_sentinel_t<Rng>;
             Rng rng_;
 
+            base_sentinel_t end_(std::false_type)
+            {
+                return ranges::end(rng_);
+            }
+            base_iterator_t end_(std::true_type)
+            {
+                return ranges::begin(rng_) + ranges::distance(rng_);
+            }
         public:
-            using iterator = common_iterator<base_iterator_t, base_sentinel_t>;
+            using iterator = meta::if_<RA_and_Sized,
+                base_iterator_t,
+                common_iterator<base_iterator_t, base_sentinel_t>>;
 
             bounded_view() = default;
             explicit bounded_view(Rng rng)
-              : rng_(std::move(rng))
+              : rng_(detail::move(rng))
             {}
             iterator begin()
             {
@@ -57,7 +69,12 @@ namespace ranges
             }
             iterator end()
             {
-                return iterator{ranges::end(rng_)};
+                return iterator{end_(RA_and_Sized{})};
+            }
+            CONCEPT_REQUIRES(SizedRange<Rng>())
+            range_size_t<Rng> size()
+            {
+                return ranges::size(rng_);
             }
             CONCEPT_REQUIRES(View<Rng const>())
             iterator begin() const
@@ -69,7 +86,7 @@ namespace ranges
             {
                 return iterator{ranges::end(rng_)};
             }
-            CONCEPT_REQUIRES(SizedView<Rng>())
+            CONCEPT_REQUIRES(SizedRange<Rng const>())
             range_size_t<Rng> size() const
             {
                 return ranges::size(rng_);
