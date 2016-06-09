@@ -86,22 +86,27 @@ namespace ranges
             operator()(I first, S last, O out, iterator_difference_t<I> n,
                 Gen && gen = detail::get_random_engine()) const
             {
-                if (n > 0)
+                if (n <= 0)
+                    goto done;
+                for (iterator_difference_t<I> i = 0; i < n; (void)++i, ++first)
                 {
-                    for (auto i = n - n; i < n && first != last; (void)++i, ++first)
+                    if (first == last)
                     {
-                        out[i] = *first;
+                        out += i;
+                        goto done;
                     }
-                    std::uniform_int_distribution<iterator_difference_t<I>> dist;
-                    using param_t = typename decltype(dist)::param_type;
-                    for (auto pop_size = n; first != last; (void)++first, ++pop_size)
-                    {
-                        auto const i = dist(gen, param_t{0, pop_size});
-                        if (i < n)
-                            out[i] = *first;
-                    }
-                    out += n;
+                    out[i] = *first;
                 }
+                std::uniform_int_distribution<iterator_difference_t<I>> dist;
+                using param_t = typename decltype(dist)::param_type;
+                for (auto pop_size = n; first != last; (void)++first, ++pop_size)
+                {
+                    auto const i = dist(gen, param_t{0, pop_size});
+                    if (i < n)
+                        out[i] = *first;
+                }
+                out += n;
+            done:
                 return {std::move(first), std::move(out)};
             }
             template<typename I, typename S, typename ORng,
