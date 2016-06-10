@@ -51,6 +51,7 @@
 #include <chrono>
 #include <functional>  // for std::hash
 #include <initializer_list>
+#include <new>
 #include <random>
 #include <thread>
 #include <typeinfo>
@@ -497,9 +498,23 @@ namespace ranges
                 meta::if_c<sizeof(void*) >= 8, std::mt19937_64, std::mt19937>;
             inline default_random_engine& get_random_engine()
             {
-                RANGES_STATIC_THREAD_LOCAL default_random_engine engine{
+#if RANGES_CXX_THREAD_LOCAL
+                static thread_local default_random_engine engine{
                     randutils::auto_seed_256{}.base()};
                 return engine;
+#else
+                static __thread bool initialized = false;
+                static __thread meta::_t<std::aligned_storage<
+                    sizeof(default_random_engine),
+                    alignof(default_random_engine)>> storage;
+
+                if (!initialized) {
+                    ::new(static_cast<void*>(&storage)) default_random_engine{
+                        randutils::auto_seed_256{}.base()};
+                    initialized = true;
+                }
+                return reinterpret_cast<default_random_engine&>(storage);
+#endif
             }
         }
         /// \endcond
