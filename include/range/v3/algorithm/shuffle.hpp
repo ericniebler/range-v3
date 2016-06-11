@@ -39,22 +39,20 @@ namespace ranges
                     ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
                         iterator_difference_t<I>>())>
-            I operator()(I begin, S end_, Gen && gen = detail::get_random_engine()) const
+            I operator()(I const begin, S const end,
+                Gen && gen = detail::get_random_engine()) const
             {
-                I end = ranges::next(begin, end_), orig = end;
-                auto d = end - begin;
-                if(d > 1)
+                auto mid = begin;
+                if(mid == end)
+                    return mid;
+                std::uniform_int_distribution<iterator_difference_t<I>> uid{};
+                using param_t = typename decltype(uid)::param_type;
+                while(++mid != end)
                 {
-                    using param_t = std::uniform_int_distribution<std::ptrdiff_t>::param_type;
-                    std::uniform_int_distribution<std::ptrdiff_t> uid;
-                    for(--end, --d; begin < end; ++begin, --d)
-                    {
-                        auto i = uid(gen, param_t{0, d});
-                        if(i != 0)
-                            ranges::iter_swap(begin, begin + i);
-                    }
+                    if(auto const i = uid(gen, param_t{0, mid - begin}))
+                        ranges::iter_swap(mid - i, mid);
                 }
-                return orig;
+                return mid;
             }
 
             template<typename Rng, typename Gen = detail::default_random_engine&,
@@ -64,7 +62,7 @@ namespace ranges
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
                         iterator_difference_t<I>>())>
             range_safe_iterator_t<Rng>
-            operator()(Rng &&rng, Gen && rand = detail::get_random_engine()) const
+            operator()(Rng && rng, Gen && rand = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));
             }
