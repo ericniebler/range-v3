@@ -196,7 +196,7 @@ namespace ranges
                          typename I2 = range_iterator_t<Rng2>>
                 using Concept = meta::and_<
                     InputRange<Rng1>, InputRange<Rng2>,
-                    IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>
+                    IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident,
@@ -229,7 +229,7 @@ namespace ranges
                         "The second parameter of view::set_difference "
                         "must be a model of the InputRange concept.");
                     CONCEPT_ASSERT_MSG(
-                        IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>(),
+                        IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_difference "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
@@ -370,7 +370,7 @@ namespace ranges
                          typename I2 = range_iterator_t<Rng2>>
                 using Concept = meta::and_<
                     InputRange<Rng1>, InputRange<Rng2>,
-                    IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>
+                    IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident,
@@ -403,7 +403,7 @@ namespace ranges
                         "The second parameter of view::set_intersection "
                         "must be a model of the InputRange concept.");
                     CONCEPT_ASSERT_MSG(
-                        IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>(),
+                        IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_intersection "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
@@ -587,7 +587,7 @@ namespace ranges
                     Common<range_value_t<Rng1>, range_value_t<Rng2>>,
                     CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
                     CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
-                    IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>
+                    IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident,
@@ -626,7 +626,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
                         "The rvalue reference types of the two ranges must share a common reference.");
                     CONCEPT_ASSERT_MSG(
-                        IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>(),
+                        IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_union "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");
@@ -816,7 +816,7 @@ namespace ranges
                     Common<range_value_t<Rng1>, range_value_t<Rng2>>,
                     CommonReference<range_reference_t<Rng1>, range_reference_t<Rng2>>,
                     CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>,
-                    IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>
+                    IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>
                 >;
                 template<typename Rng1, typename Rng2,
                     typename C = ordered_less, typename P1 = ident, typename P2 = ident,
@@ -855,7 +855,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(CommonReference<range_rvalue_reference_t<Rng1>, range_rvalue_reference_t<Rng2>>(),
                         "The rvalue reference types of the two ranges must share a common reference.");
                     CONCEPT_ASSERT_MSG(
-                        IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>(),
+                        IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>(),
                         "The predicate function passed to view::set_symmetric_difference "
                         "must be callable with two arguments of the two "
                         "input ranges' value types.");

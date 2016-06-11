@@ -134,12 +134,12 @@ namespace ranges
             {
                 it += n;
             }
-            template<typename I, CONCEPT_REQUIRES_(SizedIteratorRange<I, I>())>
+            template<typename I, CONCEPT_REQUIRES_(SizedSentinel<I, I>())>
             static iterator_difference_t<I> distance_to(I const &it0, I const &it1)
             {
                 return it1 - it0;
             }
-            template<typename I, typename S, CONCEPT_REQUIRES_(IteratorRange<I, S>())>
+            template<typename I, typename S, CONCEPT_REQUIRES_(Sentinel<S, I>())>
             static constexpr bool empty(I const &it, S const &end)
             {
                 return it == end;

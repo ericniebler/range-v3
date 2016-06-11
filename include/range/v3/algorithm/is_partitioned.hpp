@@ -39,14 +39,14 @@ namespace ranges
         template<typename I, typename C, typename P = ident>
         using IsPartitionedable = meta::strict_and<
             InputIterator<I>,
-            IndirectCallablePredicate<C, Projected<I, P>>>;
+            IndirectCallablePredicate<C, projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
         struct is_partitioned_fn
         {
             template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(IsPartitionedable<I, C, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(IsPartitionedable<I, C, P>() && Sentinel<S, I>())>
             bool operator()(I begin, S end, C pred_, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);

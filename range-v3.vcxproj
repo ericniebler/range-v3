@@ -990,7 +990,6 @@
     <ClInclude Include="include\range\v3\algorithm\max.hpp" />
     <ClInclude Include="include\range\v3\algorithm\max_element.hpp" />
     <ClInclude Include="include\range\v3\algorithm\merge.hpp" />
-    <ClInclude Include="include\range\v3\algorithm\merge_move.hpp" />
     <ClInclude Include="include\range\v3\algorithm\min.hpp" />
     <ClInclude Include="include\range\v3\algorithm\minmax.hpp" />
     <ClInclude Include="include\range\v3\algorithm\minmax_element.hpp" />
@@ -1004,7 +1003,6 @@
     <ClInclude Include="include\range\v3\algorithm\partial_sort_copy.hpp" />
     <ClInclude Include="include\range\v3\algorithm\partition.hpp" />
     <ClInclude Include="include\range\v3\algorithm\partition_copy.hpp" />
-    <ClInclude Include="include\range\v3\algorithm\partition_move.hpp" />
     <ClInclude Include="include\range\v3\algorithm\partition_point.hpp" />
     <ClInclude Include="include\range\v3\algorithm\permutation.hpp" />
     <ClInclude Include="include\range\v3\algorithm\random_shuffle.hpp" />
@@ -1039,6 +1037,8 @@
     <ClInclude Include="include\range\v3\begin_end.hpp" />
     <ClInclude Include="include\range\v3\core.hpp" />
     <ClInclude Include="include\range\v3\detail\config.hpp" />
+    <ClInclude Include="include\range\v3\detail\optional.hpp" />
+    <ClInclude Include="include\range\v3\detail\variant.hpp" />
     <ClInclude Include="include\range\v3\distance.hpp" />
     <ClInclude Include="include\range\v3\empty.hpp" />
     <ClInclude Include="include\range\v3\front.hpp" />

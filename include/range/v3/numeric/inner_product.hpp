@@ -51,7 +51,7 @@ namespace ranges
                 typename BOp1 = plus, typename BOp2 = multiplies,
                 typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(
-                    IteratorRange<I1, S1>() &&
+                    Sentinel<S1, I1>() &&
                     InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
                 )>
             T operator()(I1 begin1, S1 end1, I2 begin2, T init, BOp1 bop1_ = BOp1{},
@@ -71,8 +71,8 @@ namespace ranges
                 typename BOp1 = plus, typename BOp2 = multiplies,
                 typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(
-                    IteratorRange<I1, S1>() &&
-                    IteratorRange<I2, S2>() &&
+                    Sentinel<S1, I1>() &&
+                    Sentinel<S2, I2>() &&
                     InnerProductable<I1, I2, T, BOp1, BOp2, P1, P2>()
                 )>
             T operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, T init, BOp1 bop1_ = BOp1{},

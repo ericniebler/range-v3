@@ -36,7 +36,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/rotate.hpp>
-#include <range/v3/algorithm/partition_move.hpp>
+#include <range/v3/algorithm/partition_copy.hpp>
 #include <range/v3/utility/static_const.hpp>
 
 namespace ranges
@@ -48,7 +48,7 @@ namespace ranges
         using StablePartitionable = meta::strict_and<
             ForwardIterator<I>,
             Permutable<I>,
-            IndirectCallablePredicate<C, Projected<I, P>>>;
+            IndirectCallablePredicate<C, projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -81,12 +81,13 @@ namespace ranges
                     auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
                     *buf = iter_move(begin);
                     ++buf;
-                    auto res = partition_move(next(begin), end, begin, buf, std::ref(pred), std::ref(proj));
+                    auto res = partition_copy(make_move_iterator(next(begin)),
+                        make_move_sentinel(end), begin, buf, std::ref(pred), std::ref(proj));
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false
-                    ranges::move(p.first, std::get<2>(res).base().base(), std::get<1>(res));
+                    ranges::move(p.first, res.out2().base().base(), res.out1());
                     // h destructs moved-from values out of the temp buffer, but doesn't deallocate buffer
-                    return std::get<1>(res);
+                    return res.out1();
                 }
                 // Else not enough buffer, do in place
                 // len >= 3
@@ -174,14 +175,15 @@ namespace ranges
                     auto buf = ranges::make_counted_raw_storage_iterator(p.first, h.get_deleter());
                     *buf = iter_move(begin);
                     ++buf;
-                    auto res = partition_move(next(begin), end, begin, buf, std::ref(pred), std::ref(proj));
-                    begin = std::get<1>(res);
+                    auto res = partition_copy(make_move_iterator(next(begin)),
+                        make_move_sentinel(end), begin, buf, std::ref(pred), std::ref(proj));
+                    begin = res.out1();
                     // move *end, known to be true
-                    *begin = iter_move(std::get<0>(res));
+                    *begin = iter_move(res.in());
                     ++begin;
                     // All trues now at start of range, all falses in buffer
                     // Move falses back into range, but don't mess up begin which points to first false
-                    move(p.first, std::get<2>(res).base().base(), begin);
+                    move(p.first, res.out2().base().base(), begin);
                     // h destructs moved-from values out of the temp buffer, but doesn't deallocate buffer
                     return begin;
                 }
@@ -263,7 +265,7 @@ namespace ranges
 
         public:
             template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(StablePartitionable<I, C, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, C pred_, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);

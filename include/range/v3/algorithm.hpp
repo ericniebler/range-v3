@@ -49,7 +49,6 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/algorithm/max.hpp>
 #include <range/v3/algorithm/max_element.hpp>
 #include <range/v3/algorithm/merge.hpp>
-#include <range/v3/algorithm/merge_move.hpp>
 #include <range/v3/algorithm/min.hpp>
 #include <range/v3/algorithm/min_element.hpp>
 #include <range/v3/algorithm/minmax.hpp>
@@ -63,7 +62,6 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/algorithm/partial_sort_copy.hpp>
 #include <range/v3/algorithm/partition.hpp>
 #include <range/v3/algorithm/partition_copy.hpp>
-#include <range/v3/algorithm/partition_move.hpp>
 #include <range/v3/algorithm/partition_point.hpp>
 #include <range/v3/algorithm/permutation.hpp>
 #include <range/v3/algorithm/remove.hpp>

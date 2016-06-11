@@ -37,7 +37,7 @@ namespace ranges
 
             template<typename Cont, typename I, typename S,
                 CONCEPT_REQUIRES_(LvalueContainerLike<Cont>() && ForwardIterator<I>() &&
-                    IteratorRange<I, S>())>
+                    Sentinel<S, I>())>
             auto erase(Cont && cont, I begin, S end) ->
                 decltype(unwrap_reference(cont).erase(begin, end))
             {
@@ -56,7 +56,7 @@ namespace ranges
                 }
                 template<typename Rng, typename I, typename S,
                     CONCEPT_REQUIRES_(Range<Rng>() && ForwardIterator<I>() &&
-                        IteratorRange<I, S>())>
+                        Sentinel<S, I>())>
                 auto operator()(Rng && rng, I begin, S end) const ->
                     decltype(erase(std::forward<Rng>(rng), begin, end))
                 {

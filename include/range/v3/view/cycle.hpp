@@ -150,7 +150,7 @@ namespace ranges
                     auto const off = ((it_ - begin) + n) % d;
                     it_ = begin + (off < 0 ? off + d : off);
                 }
-                CONCEPT_REQUIRES(SizedIteratorRange<iterator, iterator>())
+                CONCEPT_REQUIRES(SizedSentinel<iterator, iterator>())
                 difference_type_ distance_to(cursor const &that) const
                 {
                     RANGES_ASSERT(that.rng_ == rng_);

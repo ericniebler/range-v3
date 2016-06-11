@@ -42,7 +42,7 @@ namespace ranges
         template<typename I, typename V, typename C = equal_to, typename P = ident>
         using Searchnable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, Projected<I, P>, V const *>>;
+            IndirectCallableRelation<C, projected<I, P>, V const *>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -118,7 +118,7 @@ namespace ranges
             }
         public:
             template<typename I, typename S, typename V, typename C = equal_to, typename P = ident,
-                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Searchnable<I, V, C, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, iterator_difference_t<I> count, V const &val,
                 C pred_ = C{}, P proj_ = P{}) const
             {
@@ -126,7 +126,7 @@ namespace ranges
                     return begin;
                 auto &&pred = as_function(pred_);
                 auto &&proj = as_function(proj_);
-                if(SizedIteratorRange<I, S>())
+                if(SizedSentinel<S, I>())
                     return search_n_fn::sized_impl(std::move(begin), std::move(end),
                         distance(begin, end), count, val, pred, proj);
                 else

@@ -51,7 +51,7 @@ namespace ranges
             template<typename I0, typename S0, typename I1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
-                    IteratorRange<I0, S0>() &&
+                    Sentinel<S0, I0>() &&
                     Comparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(I0 begin0, S0 end0, I1 begin1, C pred_ = C{},
@@ -69,13 +69,13 @@ namespace ranges
             template<typename I0, typename S0, typename I1, typename S1,
                 typename C = equal_to, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
-                    IteratorRange<I0, S0>() && IteratorRange<I1, S1>() &&
+                    Sentinel<S0, I0>() && Sentinel<S1, I1>() &&
                     Comparable<I0, I1, C, P0, P1>()
                 )>
             bool operator()(I0 begin0, S0 end0, I1 begin1, S1 end1, C pred_ = C{},
                 P0 proj0_ = P0{}, P1 proj1_ = P1{}) const
             {
-                if(SizedIteratorRange<I0, S0>() && SizedIteratorRange<I1, S1>())
+                if(SizedSentinel<S0, I0>() && SizedSentinel<S1, I1>())
                     if(distance(begin0, end0) != distance(begin1, end1))
                         return false;
                 return this->nocheck(std::move(begin0), std::move(end0), std::move(begin1),

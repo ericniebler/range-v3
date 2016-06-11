@@ -349,8 +349,8 @@ namespace ranges
         template<typename R>
         struct disable_sized_range;
 
-        template<typename I, typename S>
-        struct disable_sized_iterator_range;
+        template<typename S, typename I>
+        struct disable_sized_sentinel;
 
         template<typename Cur>
         struct basic_mixin;

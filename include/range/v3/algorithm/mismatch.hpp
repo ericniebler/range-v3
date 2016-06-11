@@ -39,7 +39,7 @@ namespace ranges
         using Mismatchable = meta::strict_and<
             InputIterator<I1>,
             InputIterator<I2>,
-            IndirectCallablePredicate<C, Projected<I1, P1>, Projected<I2, P2>>>;
+            IndirectCallablePredicate<C, projected<I1, P1>, projected<I2, P2>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -47,7 +47,7 @@ namespace ranges
         {
             template<typename I1, typename S1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mismatchable<I1, I2, C, P1, P2>() && IteratorRange<I1, S1>())>
+                CONCEPT_REQUIRES_(Mismatchable<I1, I2, C, P1, P2>() && Sentinel<S1, I1>())>
             tagged_pair<tag::in1(I1), tag::in2(I2)>
             operator()(I1 begin1, S1 end1, I2 begin2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const
@@ -63,8 +63,8 @@ namespace ranges
 
             template<typename I1, typename S1, typename I2, typename S2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(Mismatchable<I1, I2, C, P1, P2>() && IteratorRange<I1, S1>() &&
-                    IteratorRange<I2, S2>())>
+                CONCEPT_REQUIRES_(Mismatchable<I1, I2, C, P1, P2>() && Sentinel<S1, I1>() &&
+                    Sentinel<S2, I2>())>
             tagged_pair<tag::in1(I1), tag::in2(I2)>
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const

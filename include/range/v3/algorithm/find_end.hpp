@@ -32,21 +32,21 @@ namespace ranges
         namespace detail
         {
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>())>
             I next_to_if(I i, S s, std::true_type)
             {
                 return ranges::next(i, s);
             }
 
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>())>
             S next_to_if(I, S s, std::false_type)
             {
                 return s;
             }
 
             template<bool B, typename I, typename S,
-                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>())>
             meta::if_c<B, I, S> next_to_if(I i, S s)
             {
                 return detail::next_to_if(std::move(i), std::move(s), meta::bool_<B>{});
@@ -166,9 +166,9 @@ namespace ranges
         public:
             template<typename I1, typename S1, typename I2, typename S2, typename R = equal_to,
                 typename P = ident,
-                CONCEPT_REQUIRES_(ForwardIterator<I1>() && IteratorRange<I1, S1>() &&
-                    ForwardIterator<I2>() && IteratorRange<I2, S2>() &&
-                    IndirectCallableRelation<R, Projected<I1, P>, I2>())>
+                CONCEPT_REQUIRES_(ForwardIterator<I1>() && Sentinel<S1, I1>() &&
+                    ForwardIterator<I2>() && Sentinel<S2, I2>() &&
+                    IndirectCallableRelation<R, projected<I1, P>, I2>())>
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, R pred = R{}, P proj = P{}) const
             {
                 constexpr bool Bidi = BidirectionalIterator<I1>() && BidirectionalIterator<I2>();
@@ -183,7 +183,7 @@ namespace ranges
                 typename I1 = range_iterator_t<Rng1>,
                 typename I2 = range_iterator_t<Rng2>,
                 CONCEPT_REQUIRES_(ForwardRange<Rng1>() && ForwardRange<Rng2>() &&
-                    IndirectCallableRelation<R, Projected<I1, P>, I2>())>
+                    IndirectCallableRelation<R, projected<I1, P>, I2>())>
             range_safe_iterator_t<Rng1> operator()(Rng1 &&rng1, Rng2 &&rng2, R pred = R{}, P proj = P{}) const
             {
                 return (*this)(begin(rng1), end(rng1), begin(rng2), end(rng2), std::move(pred),

@@ -42,7 +42,7 @@ namespace ranges
         struct reverse_copy_fn
         {
             template<typename I, typename S, typename O,
-                CONCEPT_REQUIRES_(IteratorRange<I, S>() && ReverseCopyable<I, O>())>
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && ReverseCopyable<I, O>())>
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end_, O out) const
             {
                 I end = ranges::next(begin, end_), res = end;

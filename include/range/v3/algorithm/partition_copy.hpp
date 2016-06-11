@@ -40,14 +40,14 @@ namespace ranges
             WeaklyIncrementable<O1>,
             IndirectlyCopyable<I, O0>,
             IndirectlyCopyable<I, O1>,
-            IndirectCallablePredicate<C, Projected<I, P>>>;
+            IndirectCallablePredicate<C, projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
         struct partition_copy_fn
         {
             template<typename I, typename S, typename O0, typename O1, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(PartitionCopyable<I, O0, O1, C, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(PartitionCopyable<I, O0, O1, C, P>() && Sentinel<S, I>())>
             tagged_tuple<tag::in(I), tag::out1(O0), tag::out2(O1)>
             operator()(I begin, S end, O0 o0, O1 o1, C pred_, P proj_ = P{}) const
             {

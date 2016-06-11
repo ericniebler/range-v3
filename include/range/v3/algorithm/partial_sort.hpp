@@ -34,7 +34,7 @@ namespace ranges
         struct partial_sort_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() && Sentinel<S, I>())>
             I operator()(I begin, I middle, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);

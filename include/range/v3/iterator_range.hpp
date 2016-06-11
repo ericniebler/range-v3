@@ -168,19 +168,19 @@ namespace ranges
         {
             /// \return `{begin, end}`
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Sentinel<S, I>())>
             constexpr iterator_range<I, S> operator()(I begin, S end) const
             {
-                CONCEPT_ASSERT(IteratorRange<I, S>());
+                CONCEPT_ASSERT(Sentinel<S, I>());
                 return {detail::move(begin), detail::move(end)};
             }
 
             /// \return `{begin, end, size}`
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Sentinel<S, I>())>
             constexpr sized_iterator_range<I, S> operator()(I begin, S end, iterator_size_t<I> size) const
             {
-                CONCEPT_ASSERT(IteratorRange<I, S>());
+                CONCEPT_ASSERT(Sentinel<S, I>());
                 return {detail::move(begin), detail::move(end), size};
             }
         };

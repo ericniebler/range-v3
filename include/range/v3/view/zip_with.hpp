@@ -189,8 +189,7 @@ namespace ranges
                     tuple_for_each(its_, std::bind(detail::advance_, _1, n));
                 }
                 CONCEPT_REQUIRES(meta::and_c<(bool)
-                    SizedIteratorRange<range_iterator_t<Rngs>,
-                        range_iterator_t<Rngs>>()...>::value)
+                    SizedSentinel<range_iterator_t<Rngs>, range_iterator_t<Rngs>>()...>::value)
                 difference_type distance_to(cursor const &that) const
                 {
                     // Return the smallest distance (in magnitude) of any of the iterator

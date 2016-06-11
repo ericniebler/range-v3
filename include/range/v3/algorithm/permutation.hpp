@@ -104,7 +104,7 @@ namespace ranges
         public:
             template<typename I1, typename S1, typename I2, typename C = equal_to,
                 typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(IteratorRange<I1, S1>() && IsPermutationable<I1, I2, C, P1, P2>())>
+                CONCEPT_REQUIRES_(Sentinel<S1, I1>() && IsPermutationable<I1, I2, C, P1, P2>())>
             bool operator()(I1 begin1, S1 end1, I2 begin2, C pred_ = C{}, P1 proj1_ = P1{},
                 P2 proj2_ = P2{}) const
             {
@@ -153,12 +153,12 @@ namespace ranges
 
             template<typename I1, typename S1, typename I2, typename S2,
                 typename C = equal_to, typename P1 = ident, typename P2 = ident,
-                CONCEPT_REQUIRES_(IteratorRange<I1, S1>() && IteratorRange<I2, S2>() &&
+                CONCEPT_REQUIRES_(Sentinel<S1, I1>() && Sentinel<S2, I2>() &&
                     IsPermutationable<I1, I2, C, P1, P2>())>
             bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, C pred = C{},
                 P1 proj1 = P1{}, P2 proj2 = P2{}) const
             {
-                if(SizedIteratorRange<I1, S1>() && SizedIteratorRange<I2, S2>())
+                if(SizedSentinel<S1, I1>() && SizedSentinel<S2, I2>())
                     return distance(begin1, end1) == distance(begin2, end2) &&
                         (*this)(std::move(begin1), std::move(end1), std::move(begin2),
                             std::move(pred), std::move(proj1), std::move(proj2));
@@ -206,7 +206,7 @@ namespace ranges
         struct next_permutation_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Sentinel<S, I>() && Sortable<I, C, P>())>
             bool operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -255,7 +255,7 @@ namespace ranges
         struct prev_permutation_fn
         {
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
-                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Sortable<I, C, P>())>
+                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Sentinel<S, I>() && Sortable<I, C, P>())>
             bool operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);

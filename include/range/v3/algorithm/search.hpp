@@ -124,8 +124,8 @@ namespace ranges
                 typename C = equal_to, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(
                     Searchable<I1, I2, C, P1, P2>() &&
-                    IteratorRange<I1, S1>() &&
-                    IteratorRange<I2, S2>()
+                    Sentinel<S1, I1>() &&
+                    Sentinel<S2, I2>()
                 )>
             I1 operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
@@ -135,7 +135,7 @@ namespace ranges
                 auto &&pred = as_function(pred_);
                 auto &&proj1 = as_function(proj1_);
                 auto &&proj2 = as_function(proj2_);
-                if(SizedIteratorRange<I1, S1>() && SizedIteratorRange<I2, S2>())
+                if(SizedSentinel<S1, I1>() && SizedSentinel<S2, I2>())
                     return search_fn::sized_impl(std::move(begin1), std::move(end1),
                         distance(begin1, end1), std::move(begin2), std::move(end2),
                         distance(begin2, end2), pred, proj1, proj2);

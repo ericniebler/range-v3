@@ -58,7 +58,7 @@ namespace ranges
                              B buff, C r = C{}, P = P{}) const
                 {
                     copy_n(begin0, n0, buff);
-                    return std::get<2>(merge_n(buff, n0, begin1, n1, begin0, r));
+                    return merge_n(buff, n0, begin1, n1, begin0, r).out();
                 }
             };
 

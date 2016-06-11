@@ -33,7 +33,7 @@ namespace ranges
         {
             template<typename I1Ref, typename S1, typename I2,
                 typename I1 = uncvref_t<I1Ref>,
-                CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
+                CONCEPT_REQUIRES_(InputIterator<I1>() && Sentinel<S1, I1>() &&
                                   InputIterator<I2>() &&
                                   IndirectlySwappable<I1, I2>())>
             tagged_pair<tag::in1(I1), tag::in2(I2)> operator()(I1Ref&& begin1, S1 end1, I2 begin2) const
@@ -44,8 +44,8 @@ namespace ranges
             }
 
             template<typename I1, typename S1, typename I2, typename S2,
-                CONCEPT_REQUIRES_(InputIterator<I1>() && IteratorRange<I1, S1>() &&
-                                  InputIterator<I2>() && IteratorRange<I2, S2>() &&
+                CONCEPT_REQUIRES_(InputIterator<I1>() && Sentinel<S1, I1>() &&
+                                  InputIterator<I2>() && Sentinel<S2, I2>() &&
                                   IndirectlySwappable<I1, I2>())>
             tagged_pair<tag::in1(I1), tag::in2(I2)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2) const
             {

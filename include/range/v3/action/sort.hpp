@@ -77,7 +77,7 @@ namespace ranges
                     CONCEPT_ASSERT_MSG(IndirectCallable<P, I>(),
                         "The projection function must accept objects of the iterator's value type, "
                         "reference type, and common reference type.");
-                    CONCEPT_ASSERT_MSG(IndirectCallableRelation<C, Projected<I, P>>(),
+                    CONCEPT_ASSERT_MSG(IndirectCallableRelation<C, projected<I, P>>(),
                         "The comparator passed to action::sort must accept objects returned "
                         "by the projection function, or of the range's value type if no projection "
                         "is specified.");

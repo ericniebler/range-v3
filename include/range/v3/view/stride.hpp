@@ -119,7 +119,7 @@ namespace ranges
                         ranges::begin(rng_->mutable_base()));
                     RANGES_ASSERT(0 == off);
                 }
-                CONCEPT_REQUIRES(SizedIteratorRange<iterator, iterator>())
+                CONCEPT_REQUIRES(SizedSentinel<iterator, iterator>())
                 difference_type_ distance_to(iterator here, iterator there, adaptor const &that) const
                 {
                     RANGES_ASSERT(rng_ == that.rng_);

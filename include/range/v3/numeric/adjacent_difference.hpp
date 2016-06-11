@@ -47,7 +47,7 @@ namespace ranges
         {
             template <typename I, typename S, typename O, typename BOp = minus,
                       typename P = ident,
-                      CONCEPT_REQUIRES_(IteratorRange<I, S>() &&
+                      CONCEPT_REQUIRES_(Sentinel<S, I>() &&
                                         AdjacentDifferentiable<I, O, BOp, P>())>
             std::pair<I, O>
             operator()(I begin, S end, O result, BOp bop_ = BOp{}, P proj_ = P{}) const
@@ -76,7 +76,7 @@ namespace ranges
 
             template <typename I, typename S, typename O, typename S2,
                       typename BOp = minus, typename P = ident,
-                      CONCEPT_REQUIRES_(IteratorRange<I, S>() && IteratorRange<O, S2>() &&
+                      CONCEPT_REQUIRES_(Sentinel<S, I>() && Sentinel<S2, O>() &&
                                         AdjacentDifferentiable<I, O, BOp, P>())>
             std::pair<I, O>
             operator()(I begin, S end, O result, S2 end_result, BOp bop_ = BOp{},

@@ -41,7 +41,7 @@ namespace ranges
         using Partitionable = meta::strict_and<
             ForwardIterator<I>,
             Permutable<I>,
-            IndirectCallablePredicate<C, Projected<I, P>>>;
+            IndirectCallablePredicate<C, projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -99,7 +99,7 @@ namespace ranges
             }
         public:
             template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Partitionable<I, C, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, C pred, P proj = P{}) const
             {
                 return partition_fn::impl(std::move(begin), std::move(end), std::move(pred),

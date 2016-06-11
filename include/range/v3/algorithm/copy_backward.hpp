@@ -35,7 +35,7 @@ namespace ranges
         {
             template<typename I, typename S, typename O,
                 CONCEPT_REQUIRES_(
-                    BidirectionalIterator<I>() && IteratorRange<I, S>() &&
+                    BidirectionalIterator<I>() && Sentinel<S, I>() &&
                     BidirectionalIterator<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>

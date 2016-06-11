@@ -43,7 +43,7 @@ namespace ranges
             typename X = concepts::Callable::result_t<P, V>>
         using PartitionPointable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallablePredicate<C, Projected<I, P>>>;
+            IndirectCallablePredicate<C, projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
@@ -51,7 +51,7 @@ namespace ranges
         struct partition_point_fn
         {
             template<typename I, typename S, typename C, typename P = ident,
-                CONCEPT_REQUIRES_(PartitionPointable<I, C, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(PartitionPointable<I, C, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, C pred_, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);

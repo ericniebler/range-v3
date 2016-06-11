@@ -178,7 +178,7 @@ namespace ranges
         public:
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() &&
-                    IteratorRange<I, S>())>
+                    Sentinel<S, I>())>
             I operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);

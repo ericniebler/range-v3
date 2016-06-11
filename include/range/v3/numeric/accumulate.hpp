@@ -39,7 +39,7 @@ namespace ranges
         struct accumulate_fn
         {
             template<typename I, typename S, typename T, typename Op = plus, typename P = ident,
-                CONCEPT_REQUIRES_(IteratorRange<I, S>() && Accumulateable<I, T, Op, P>())>
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && Accumulateable<I, T, Op, P>())>
             T operator()(I begin, S end, T init, Op op_ = Op{}, P proj_ = P{}) const
             {
                 auto &&op = as_function(op_);

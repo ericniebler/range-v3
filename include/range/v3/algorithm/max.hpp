@@ -43,7 +43,7 @@ namespace ranges
             template<typename Rng, typename C = ordered_less, typename P = ident,
                 typename I = range_iterator_t<Rng>, typename V = iterator_value_t<I>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() && Copyable<V>() &&
-                    IndirectCallableRelation<C, Projected<I, P>>())>
+                    IndirectCallableRelation<C, projected<I, P>>())>
             RANGES_CXX14_CONSTEXPR V operator()(Rng &&rng, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);
@@ -63,7 +63,7 @@ namespace ranges
 
             template<typename T, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(
-                    IndirectCallableRelation<C, Projected<const T *, P>>())>
+                    IndirectCallableRelation<C, projected<const T *, P>>())>
             constexpr const T& operator()(const T &a, const T &b, C pred = C{}, P proj = P{}) const
             {
                 return max2_impl(a, b, as_function(pred), as_function(proj));

@@ -40,7 +40,7 @@ namespace ranges
             /// \pre `Rng` is a model of the `Range` concept
             template<typename I, typename S, typename V2, typename C = ordered_less,
                 typename P = ident,
-                CONCEPT_REQUIRES_(IteratorRange<I, S>() && BinarySearchable<I, V2, C, P>())>
+                CONCEPT_REQUIRES_(Sentinel<S, I>() && BinarySearchable<I, V2, C, P>())>
             bool
             operator()(I begin, S end, V2 const &val, C pred = C{}, P proj = P{}) const
             {

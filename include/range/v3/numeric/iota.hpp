@@ -26,7 +26,7 @@ namespace ranges
         struct iota_fn
         {
             template<typename O, typename S, class T,
-                CONCEPT_REQUIRES_(OutputIterator<O, T const &>() && IteratorRange<O, S>() &&
+                CONCEPT_REQUIRES_(OutputIterator<O, T const &>() && Sentinel<S, O>() &&
                     WeaklyIncrementable<T>())>
             O operator()(O begin, S end, T val) const
             {

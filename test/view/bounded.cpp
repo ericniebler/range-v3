@@ -50,7 +50,7 @@ int main()
     ::models<concepts::SizedView>(rng3);
     ::models<concepts::ForwardIterator>(rng3.begin());
     ::models_not<concepts::BidirectionalIterator>(rng3.begin());
-    ::models<concepts::SizedIteratorRange>(rng3.begin(), rng3.end());
+    ::models<concepts::SizedSentinel>(rng3.begin(), rng3.end());
     auto b = begin(rng3);
     auto e = end(rng3);
     CHECK((e-b) == 10);

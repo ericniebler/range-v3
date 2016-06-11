@@ -41,7 +41,7 @@
 #include <range/v3/algorithm/lower_bound.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 #include <range/v3/algorithm/move.hpp>
-#include <range/v3/algorithm/merge_move.hpp>
+#include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/rotate.hpp>
 #include <range/v3/utility/static_const.hpp>
 
@@ -65,16 +65,20 @@ namespace ranges
                     if(len1 <= len2)
                     {
                         p = ranges::move(begin, middle, p).second;
-                        merge_move(buf, p.base().base(), std::move(middle), std::move(end),
-                            std::move(begin), std::ref(pred), std::ref(proj), std::ref(proj));
+                        merge(make_move_iterator(buf), make_move_sentinel(p.base().base()),
+                            make_move_iterator(std::move(middle)),
+                            make_move_sentinel(std::move(end)), std::move(begin),
+                            std::ref(pred), std::ref(proj), std::ref(proj));
                     }
                     else
                     {
                         p = ranges::move(middle, end, p).second;
                         using RBi = std::reverse_iterator<I>;
                         using Rv = std::reverse_iterator<value_type*>;
-                        merge_move(RBi{std::move(middle)}, RBi{std::move(begin)},
-                            Rv{p.base().base()}, Rv{buf}, RBi{std::move(end)},
+                        merge(make_move_iterator(RBi{std::move(middle)}),
+                            make_move_sentinel(RBi{std::move(begin)}),
+                            make_move_iterator(Rv{p.base().base()}),
+                            make_move_iterator(Rv{buf}), RBi{std::move(end)},
                             not_(std::ref(pred)), std::ref(proj), std::ref(proj));
                     }
                 }

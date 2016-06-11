@@ -36,7 +36,7 @@ namespace ranges
             InputIterator<I>,
             RandomAccessIterator<O>,
             IndirectlyCopyable<I, O>,
-            IndirectCallableRelation<C, Projected<I, PI>, Projected<O, PO>>,
+            IndirectCallableRelation<C, projected<I, PI>, projected<O, PO>>,
             Sortable<O, C, PO>>;
 
         /// \addtogroup group-algorithms
@@ -46,7 +46,7 @@ namespace ranges
             template<typename I, typename SI, typename O, typename SO, typename C = ordered_less,
                 typename PI = ident, typename PO = ident,
                 CONCEPT_REQUIRES_(PartialSortCopyConcept<I, O, C, PI, PO>() &&
-                    IteratorRange<I, SI>() && IteratorRange<O, SO>())>
+                    Sentinel<SI, I>() && Sentinel<SO, O>())>
             O operator()(I begin, SI end, O out_begin, SO out_end, C pred_ = C{}, PI in_proj_ = PI{},
                 PO out_proj_ = PO{}) const
             {

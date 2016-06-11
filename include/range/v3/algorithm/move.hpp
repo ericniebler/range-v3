@@ -37,7 +37,7 @@ namespace ranges
             using aux::move_fn::operator();
 
             template<typename I, typename S, typename O,
-                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
+                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
                     WeaklyIncrementable<O>() && IndirectlyMovable<I, O>())>
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out) const
             {
