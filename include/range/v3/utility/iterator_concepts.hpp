@@ -284,21 +284,19 @@ namespace ranges
                     ));
             };
 
-            struct IteratorRange
-              : refines<SemiRegular(_2), Iterator(_1),
-                        WeaklyEqualityComparable>
+            struct Sentinel
+              : refines<SemiRegular(_1), Iterator(_2), WeaklyEqualityComparable>
             {};
 
-            struct SizedIteratorRange
-              : refines<IteratorRange>
+            struct SizedSentinel
+              : refines<Sentinel>
             {
-                template<typename I, typename S,
+                template<typename S, typename I,
                     typename D = WeaklyIncrementable::difference_t<I>>
-                auto requires_(I&& i, S&& s) -> decltype(
+                auto requires_(S&& s, I&& i) -> decltype(
                     concepts::valid_expr(
                         concepts::is_false(
-                            disable_sized_iterator_range<
-                                uncvref_t<I>, uncvref_t<S>>()),
+                            disable_sized_sentinel<uncvref_t<S>, uncvref_t<I>>()),
                         concepts::has_type<D>(s - i),
                         concepts::has_type<D>(i - s)
                     ));
@@ -326,7 +324,7 @@ namespace ranges
             };
 
             struct ForwardIterator
-              : refines<InputIterator, Incrementable, IteratorRange(_1, _1)>
+              : refines<InputIterator, Incrementable, Sentinel(_1, _1)>
             {
                 template<typename I>
                 auto requires_(I&&) -> decltype(
@@ -349,7 +347,7 @@ namespace ranges
             };
 
             struct RandomAccessIterator
-              : refines<BidirectionalIterator, TotallyOrdered, SizedIteratorRange(_1, _1)>
+              : refines<BidirectionalIterator, TotallyOrdered, SizedSentinel(_1, _1)>
             {
                 template<typename I, typename V = common_reference_t<I>>
                 auto requires_(I&& i) -> decltype(
@@ -397,11 +395,19 @@ namespace ranges
         template<typename I>
         using Iterator = concepts::models<concepts::Iterator, I>;
 
-        template<typename I, typename S>
-        using IteratorRange = concepts::models<concepts::IteratorRange, I, S>;
+        template<typename S, typename I>
+        using Sentinel = concepts::models<concepts::Sentinel, S, I>;
+
+        template<typename S, typename I>
+        using SizedSentinel = concepts::models<concepts::SizedSentinel, S, I>;
 
         template<typename I, typename S>
-        using SizedIteratorRange = concepts::models<concepts::SizedIteratorRange, I, S>;
+        using IteratorRange RANGES_DEPRECATED("Please use Sentinel<S, I>() instead") =
+            Sentinel<S, I>;
+
+        template<typename I, typename S>
+        using SizedIteratorRange RANGES_DEPRECATED("Please use SizedSentinel<S, I>() instead") =
+            SizedSentinel<S, I>;
 
         template<typename Out, typename T>
         using OutputIterator = concepts::models<concepts::OutputIterator, Out, T>;
@@ -539,23 +545,23 @@ namespace ranges
             struct projected_readable
             {
                 using value_type =
-                    decay_t<concepts::Callable::result_t<Proj, concepts::Readable::value_t<I>>>;
+                    decay_t<concepts::Callable::result_t<Proj &, concepts::Readable::value_t<I>>>;
                 using reference =
-                    concepts::Callable::result_t<Proj, concepts::Readable::reference_t<I>>;
+                    concepts::Callable::result_t<Proj &, concepts::Readable::reference_t<I>>;
                 reference operator*() const;
             };
         }
         /// \endcond
 
         template<typename I, typename Proj>
-        using Projected = meta::if_<IndirectCallable<Proj, I>, detail::projected_readable<I, Proj>>;
+        using projected = meta::if_<IndirectCallable<Proj, I>, detail::projected_readable<I, Proj>>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Composite concepts for use defining algorithms:
         template<typename I, typename V = concepts::Readable::value_t<I>>
         using Permutable = meta::strict_and<
             ForwardIterator<I>,
-            Movable<V>,
+            IndirectlySwappable<I, I>,
             IndirectlyMovableStorable<I, I>>;
 
         template<typename I0, typename I1, typename Out, typename C = ordered_less,
@@ -564,7 +570,7 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectCallableRelation<C, Projected<I0, P0>, Projected<I1, P1>>,
+            IndirectCallableRelation<C, projected<I0, P0>, projected<I1, P1>>,
             IndirectlyCopyable<I0, Out>,
             IndirectlyCopyable<I1, Out>>;
 
@@ -574,43 +580,43 @@ namespace ranges
             InputIterator<I0>,
             InputIterator<I1>,
             WeaklyIncrementable<Out>,
-            IndirectCallableRelation<C, Projected<I0, P0>, Projected<I1, P1>>,
+            IndirectCallableRelation<C, projected<I0, P0>, projected<I1, P1>>,
             IndirectlyMovable<I0, Out>,
             IndirectlyMovable<I1, Out>>;
 
         template<typename I, typename C = ordered_less, typename P = ident>
         using Sortable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, Projected<I, P>, Projected<I, P>>,
+            IndirectCallableRelation<C, projected<I, P>, projected<I, P>>,
             Permutable<I>>;
 
         template<typename I, typename V2, typename C = ordered_less, typename P = ident>
         using BinarySearchable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<C, Projected<I, P>, V2 const *>>;
+            IndirectCallableRelation<C, projected<I, P>, V2 const *>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
         using AsymmetricallyComparable = meta::strict_and<
             InputIterator<I1>,
             InputIterator<I2>,
-            IndirectCallablePredicate<C, Projected<I1, P1>, Projected<I2, P2>>>;
+            IndirectCallablePredicate<C, projected<I1, P1>, projected<I2, P2>>>;
 
         template<typename I1, typename I2, typename C = equal_to, typename P1 = ident,
             typename P2 = ident>
         using Comparable = meta::strict_and<
             AsymmetricallyComparable<I1, I2, C, P1, P2>,
-            IndirectCallableRelation<C, Projected<I1, P1>, Projected<I2, P2>>>;
+            IndirectCallableRelation<C, projected<I1, P1>, projected<I2, P2>>>;
 
-        template<typename I, typename S>
-        using sized_iterator_range_concept =
+        template<typename S, typename I>
+        using sized_sentinel_concept =
             concepts::most_refined<
                 meta::list<
-                    concepts::SizedIteratorRange,
-                    concepts::IteratorRange>, I, S>;
+                    concepts::SizedSentinel,
+                    concepts::Sentinel>, S, I>;
 
-        template<typename I, typename S>
-        using sized_iterator_range_concept_t = meta::_t<sized_iterator_range_concept<I, S>>;
+        template<typename S, typename I>
+        using sized_sentinel_concept_t = meta::_t<sized_sentinel_concept<S, I>>;
         /// @}
     }
 }
@@ -625,12 +631,12 @@ namespace ranges
 namespace __gnu_debug
 {
     template <class I1, class I2, class Seq,
-        CONCEPT_REQUIRES_(!::ranges::SizedIteratorRange<I2, I1>())>
+        CONCEPT_REQUIRES_(!::ranges::SizedSentinel<I1, I2>())>
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I2, Seq> const &) = delete;
 
     template <class I1, class Seq,
-        CONCEPT_REQUIRES_(!::ranges::SizedIteratorRange<I1, I1>())>
+        CONCEPT_REQUIRES_(!::ranges::SizedSentinel<I1, I1>())>
     void operator-(
         _Safe_iterator<I1, Seq> const &, _Safe_iterator<I1, Seq> const &) = delete;
 }

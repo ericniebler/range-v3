@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename T, typename P = ident>
         using Removable = meta::strict_and<
             ForwardIterator<I>,
-            IndirectCallableRelation<equal_to, Projected<I, P>, T const *>,
+            IndirectCallableRelation<equal_to, projected<I, P>, T const *>,
             Permutable<I>>;
 
         /// \addtogroup group-algorithms
@@ -41,7 +41,7 @@ namespace ranges
         struct remove_fn
         {
             template<typename I, typename S, typename T, typename P = ident,
-                CONCEPT_REQUIRES_(Removable<I, T, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Removable<I, T, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, T const &val, P proj_ = P{}) const
             {
                 auto &&proj = as_function(proj_);

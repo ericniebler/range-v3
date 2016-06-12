@@ -51,8 +51,8 @@ namespace ranges
             template<typename I0, typename S0, typename I1, typename S1, typename O,
                 typename C = ordered_less, typename P0 = ident, typename P1 = ident,
                 CONCEPT_REQUIRES_(
-                    IteratorRange<I0, S0>() &&
-                    IteratorRange<I1, S1>() &&
+                    Sentinel<S0, I0>() &&
+                    Sentinel<S1, I1>() &&
                     Mergeable<I0, I1, O, C, P0, P1>()
                 )>
             tagged_tuple<tag::in1(I0), tag::in2(I1), tag::out(O)>

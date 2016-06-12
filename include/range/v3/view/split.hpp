@@ -183,7 +183,7 @@ namespace ranges
                     operator()(range_iterator_t<Rng> cur, range_sentinel_t<Rng> end) const
                     {
                         RANGES_ASSERT(cur != end);
-                        if(SizedIteratorRange<range_iterator_t<Rng>, range_sentinel_t<Rng>>() &&
+                        if(SizedSentinel<range_sentinel_t<Rng>, range_iterator_t<Rng>>() &&
                             distance(cur, end) < len_)
                             return {false, cur};
                         auto pat_cur = ranges::begin(sub_);

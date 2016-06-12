@@ -50,7 +50,7 @@
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/counted_iterator.hpp>
-#include <range/v3/algorithm/merge_move.hpp>
+#include <range/v3/algorithm/merge.hpp>
 #include <range/v3/algorithm/sort.hpp>
 #include <range/v3/algorithm/inplace_merge.hpp>
 #include <range/v3/utility/static_const.hpp>
@@ -81,12 +81,16 @@ namespace ranges
                 D two_step = 2 * step_size;
                 while(end - begin >= two_step)
                 {
-                    result = std::get<2>(merge_move(begin, begin + step_size, begin + step_size,
-                        begin + two_step, result, std::ref(pred), std::ref(proj), std::ref(proj)));
+                    result = merge(make_move_iterator(begin),
+                        make_move_iterator(begin + step_size),
+                        make_move_iterator(begin + step_size),
+                        make_move_iterator(begin + two_step), result,
+                        std::ref(pred), std::ref(proj), std::ref(proj)).out();
                     begin += two_step;
                 }
                 step_size = std::min(D(end - begin), step_size);
-                merge_move(begin, begin + step_size, begin + step_size, end, result,
+                merge(make_move_iterator(begin), make_move_iterator(begin + step_size),
+                    make_move_iterator(begin + step_size), make_move_iterator(end), result,
                     std::ref(pred), std::ref(proj), std::ref(proj));
             }
 
@@ -152,7 +156,7 @@ namespace ranges
         public:
             template<typename I, typename S, typename C = ordered_less, typename P = ident,
                 CONCEPT_REQUIRES_(Sortable<I, C, P>() && RandomAccessIterator<I>() &&
-                    IteratorRange<I, S>())>
+                    Sentinel<S, I>())>
             I operator()(I begin, S end_, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto && pred = as_function(pred_);

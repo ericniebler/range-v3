@@ -43,8 +43,8 @@ namespace ranges
             /// \pre `F` models `CallablePredicate<X>`, where `X` is the result type
             ///      of `Callable<P, V>`
             template<typename I, typename S, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
-                    IndirectCallablePredicate<F, Projected<I, P> >())>
+                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
+                    IndirectCallablePredicate<F, projected<I, P> >())>
             I operator()(I begin, S end, F pred_, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);
@@ -59,7 +59,7 @@ namespace ranges
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(InputRange<Rng>() &&
-                    IndirectCallablePredicate<F, Projected<I, P> >())>
+                    IndirectCallablePredicate<F, projected<I, P> >())>
             range_safe_iterator_t<Rng> operator()(Rng &&rng, F pred, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(pred), std::move(proj));

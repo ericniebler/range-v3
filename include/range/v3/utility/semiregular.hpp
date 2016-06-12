@@ -18,7 +18,7 @@
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/utility/get.hpp>
-#include <range/v3/utility/optional.hpp>
+#include <range/v3/detail/optional.hpp>
 
 namespace ranges
 {

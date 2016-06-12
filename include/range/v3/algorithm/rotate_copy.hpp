@@ -35,7 +35,7 @@ namespace ranges
         struct rotate_copy_fn
         {
             template<typename I, typename S, typename O, typename P = ident,
-                CONCEPT_REQUIRES_(ForwardIterator<I>() && IteratorRange<I, S>() && WeaklyIncrementable<O>() &&
+                CONCEPT_REQUIRES_(ForwardIterator<I>() && Sentinel<S, I>() && WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>())>
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, I middle, S end, O out) const
             {

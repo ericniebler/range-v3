@@ -47,7 +47,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Comparable<I1, I2, C, P1, P2>() &&
-                    IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             bool operator()(I1 begin1, S1 end1, I2 begin2, S2 end2,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -90,7 +90,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)>
             operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
@@ -151,7 +151,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             O operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -202,7 +202,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             tagged_pair<tag::in1(I1), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {
@@ -255,7 +255,7 @@ namespace ranges
             template<typename I1, typename S1, typename I2, typename S2, typename O,
                 typename C = ordered_less, typename P1 = ident, typename P2 = ident,
                 CONCEPT_REQUIRES_(Mergeable<I1, I2, O, C, P1, P2>() &&
-                    IteratorRange<I1, S1>() && IteratorRange<I2, S2>())>
+                    Sentinel<S1, I1>() && Sentinel<S2, I2>())>
             tagged_tuple<tag::in1(I1), tag::in2(I2), tag::out(O)> operator()(I1 begin1, S1 end1, I2 begin2, S2 end2, O out,
                 C pred_ = C{}, P1 proj1_ = P1{}, P2 proj2_ = P2{}) const
             {

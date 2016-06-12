@@ -42,10 +42,10 @@ void test_move_iterator()
     CONCEPT_ASSERT(Same<I, ranges::move_iterator<std::vector<MoveOnlyString>::iterator>>());
     auto last = ranges::make_move_sentinel(in.end());
     using S = decltype(last);
-    CONCEPT_ASSERT(IteratorRange<I, S>());
-    CONCEPT_ASSERT(SizedIteratorRange<I, I>());
+    CONCEPT_ASSERT(Sentinel<S, I>());
+    CONCEPT_ASSERT(SizedSentinel<I, I>());
     CHECK((first - first) == 0);
-    CONCEPT_ASSERT(SizedIteratorRange<I, S>());
+    CONCEPT_ASSERT(SizedSentinel<S, I>());
     CHECK(static_cast<std::size_t>(last - first) == in.size());
     ranges::copy(first, last, ranges::back_inserter(out));
     ::check_equal(in, {"","","",""});

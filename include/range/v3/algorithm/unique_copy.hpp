@@ -33,7 +33,7 @@ namespace ranges
         template<typename I, typename O, typename C = equal_to, typename P = ident>
         using UniqueCopyable = meta::strict_and<
             InputIterator<I>,
-            IndirectCallableRelation<C, Projected<I, P>>,
+            IndirectCallableRelation<C, projected<I, P>>,
             WeaklyIncrementable<O>,
             IndirectlyCopyable<I, O>,
             meta::strict_or<
@@ -127,7 +127,7 @@ namespace ranges
             /// \pre `O` is a model of the `WeakOutputIterator` concept
             /// \pre `C` is a model of the `CallableRelation` concept
             template<typename I, typename S, typename O, typename C = equal_to, typename P = ident,
-                CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(UniqueCopyable<I, O, C, P>() && Sentinel<S, I>())>
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred = C{}, P proj = P{}) const
             {
                 return unique_copy_fn::impl(std::move(begin), std::move(end), std::move(out),

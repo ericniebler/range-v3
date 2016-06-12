@@ -54,7 +54,7 @@ namespace ranges
 
         public:
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && IteratorRange<I, S>() && Permutable<I>())>
+                CONCEPT_REQUIRES_(BidirectionalIterator<I>() && Sentinel<S, I>() && Permutable<I>())>
             I operator()(I begin, S end_) const
             {
                 I end = ranges::next(begin, end_);

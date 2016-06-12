@@ -818,9 +818,6 @@
     <ClInclude Include="include\range\v3\algorithm\merge.hpp">
       <Filter>Header Files\range\v3\algorithm</Filter>
     </ClInclude>
-    <ClInclude Include="include\range\v3\algorithm\merge_move.hpp">
-      <Filter>Header Files\range\v3\algorithm</Filter>
-    </ClInclude>
     <ClInclude Include="include\range\v3\algorithm\min.hpp">
       <Filter>Header Files\range\v3\algorithm</Filter>
     </ClInclude>
@@ -858,9 +855,6 @@
       <Filter>Header Files\range\v3\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\algorithm\partition_copy.hpp">
-      <Filter>Header Files\range\v3\algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="include\range\v3\algorithm\partition_move.hpp">
       <Filter>Header Files\range\v3\algorithm</Filter>
     </ClInclude>
     <ClInclude Include="include\range\v3\algorithm\partition_point.hpp">
@@ -1327,6 +1321,12 @@
     </ClInclude>
     <ClInclude Include="include\range\v3\utility\common_tuple.hpp">
       <Filter>Header Files\range\v3\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="include\range\v3\detail\variant.hpp">
+      <Filter>Header Files\range\v3\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\range\v3\detail\optional.hpp">
+      <Filter>Header Files\range\v3\detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

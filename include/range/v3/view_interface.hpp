@@ -103,8 +103,7 @@ namespace ranges
             }
             template<typename D = Derived,
                 CONCEPT_REQUIRES_(Same<D, Derived>() && Cardinality < 0 &&
-                    SizedIteratorRange<range_iterator_t<const D>,
-                        range_sentinel_t<const D>>())>
+                    SizedSentinel<range_sentinel_t<const D>, range_iterator_t<const D>>())>
             constexpr range_size_t<D> size() const
             {
                 return iter_size(derived().begin(), derived().end());

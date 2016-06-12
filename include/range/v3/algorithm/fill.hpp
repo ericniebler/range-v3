@@ -29,7 +29,7 @@ namespace ranges
         struct fill_fn
         {
             template<typename O, typename S, typename V,
-                CONCEPT_REQUIRES_(OutputIterator<O, V const &>() && IteratorRange<O, S>())>
+                CONCEPT_REQUIRES_(OutputIterator<O, V const &>() && Sentinel<S, O>())>
             O operator()(O begin, S end, V const & val) const
             {
                 for(; begin != end; ++begin)

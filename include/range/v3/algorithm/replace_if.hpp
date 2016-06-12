@@ -31,7 +31,7 @@ namespace ranges
         template<typename I, typename C, typename T, typename P = ident>
         using ReplaceIfable = meta::strict_and<
             InputIterator<I>,
-            IndirectCallablePredicate<C, Projected<I, P>>,
+            IndirectCallablePredicate<C, projected<I, P>>,
             Writable<I, T const &>>;
 
         /// \addtogroup group-algorithms
@@ -39,7 +39,7 @@ namespace ranges
         struct replace_if_fn
         {
             template<typename I, typename S, typename C, typename T, typename P = ident,
-                CONCEPT_REQUIRES_(ReplaceIfable<I, C, T, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(ReplaceIfable<I, C, T, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, C pred_, T const & new_value, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);

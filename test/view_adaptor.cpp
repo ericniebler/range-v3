@@ -55,7 +55,7 @@ private:
         {
             it -= n;
         }
-        CONCEPT_REQUIRES(ranges::SizedIteratorRange<base_iterator_t, base_iterator_t>())
+        CONCEPT_REQUIRES(ranges::SizedSentinel<base_iterator_t, base_iterator_t>())
         ranges::range_difference_t<BidiRange>
         distance_to(base_iterator_t const &here, base_iterator_t const &there) const
         {

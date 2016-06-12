@@ -651,7 +651,8 @@ namespace ranges
                 template<typename T>
                 auto requires_(T &&) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<Assignable, T &, T &&>()
+                        concepts::model_of<Assignable, T &, T &&>(),
+                        concepts::model_of<Swappable, T &>()
                     ));
             };
 

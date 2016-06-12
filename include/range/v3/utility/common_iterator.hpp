@@ -19,7 +19,7 @@
 #include <range/v3/view_facade.hpp>
 #include <range/v3/utility/basic_iterator.hpp>
 #include <range/v3/utility/concepts.hpp>
-#include <range/v3/utility/variant.hpp>
+#include <range/v3/detail/variant.hpp>
 
 namespace ranges
 {
@@ -89,7 +89,7 @@ namespace ranges
                     RANGES_ASSERT(is_sentinel());
                     return ranges::get<1>(data_);
                 }
-                CONCEPT_REQUIRES((bool)SizedIteratorRange<I, S>() && (bool)SizedIteratorRange<I, I>())
+                CONCEPT_REQUIRES((bool)SizedSentinel<S, I>() && (bool)SizedSentinel<I, I>())
                 friend iterator_difference_t<I>
                 operator-(common_iterator<I, S> const &end, common_iterator<I, S> const &begin)
                 {
@@ -119,7 +119,7 @@ namespace ranges
                     *it() = (T &&) t;
                 }
                 template<typename I2, typename S2,
-                    CONCEPT_REQUIRES_(IteratorRange<I, S2>() && IteratorRange<I2, S>() &&
+                    CONCEPT_REQUIRES_(Sentinel<S2, I>() && Sentinel<S, I2>() &&
                         !EqualityComparable<I, I2>())>
                 bool equal(common_cursor<I2, S2> const &that) const
                 {
@@ -128,7 +128,7 @@ namespace ranges
                         (!that.is_sentinel() || it() == that.se());
                 }
                 template<typename I2, typename S2,
-                    CONCEPT_REQUIRES_(IteratorRange<I, S2>() && IteratorRange<I2, S>() &&
+                    CONCEPT_REQUIRES_(Sentinel<S2, I>() && Sentinel<S, I2>() &&
                         EqualityComparable<I, I2>())>
                 bool equal(common_cursor<I2, S2> const &that) const
                 {

@@ -111,13 +111,13 @@ int main()
     auto rng3 = view::join(vs);
     static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
     models_not<concepts::SizedRange>(rng3);
-    CONCEPT_ASSERT(!SizedIteratorRange<decltype(begin(rng3)), decltype(end(rng3))>());
+    CONCEPT_ASSERT(!SizedSentinel<decltype(end(rng3)), decltype(begin(rng3))>());
     CHECK(to_<std::string>(rng3) == "Thisishisface");
 
     auto rng4 = view::join(vs, ' ');
     static_assert(range_cardinality<decltype(rng3)>::value == ranges::finite, "");
     models_not<concepts::SizedRange>(rng4);
-    CONCEPT_ASSERT(!SizedIteratorRange<decltype(begin(rng4)), decltype(end(rng4))>());
+    CONCEPT_ASSERT(!SizedSentinel<decltype(end(rng4)), decltype(begin(rng4))>());
     CHECK(to_<std::string>(rng4) == "This is his face");
 
     auto rng5 = view::join(twice(twice(42)));

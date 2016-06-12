@@ -22,6 +22,7 @@
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/concepts.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
+#include <range/v3/utility/semiregular.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/iterator_traits.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -44,7 +45,7 @@ namespace ranges
             {
                 using value_type = iterator_value_t<I>;
             private:
-                mutable value_type value_;
+                mutable semiregular_t<value_type> value_;
             public:
                 postfix_increment_proxy() = default;
                 RANGES_CXX14_CONSTEXPR
@@ -70,7 +71,7 @@ namespace ranges
             {
                 using value_type = iterator_value_t<I>;
             private:
-                mutable value_type value_;
+                mutable semiregular_t<value_type> value_;
                 I it_;
             public:
                 writable_postfix_increment_proxy() = default;

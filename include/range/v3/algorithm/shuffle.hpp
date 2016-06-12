@@ -53,7 +53,7 @@ namespace ranges
         struct shuffle_fn
         {
             template<typename I, typename S, typename Gen,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() &&
                     Permutable<I>() && UniformRandomNumberGenerator<Gen>() &&
                     ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
@@ -77,7 +77,7 @@ namespace ranges
             }
 
             template<typename I, typename S,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && IteratorRange<I, S>() &&
+                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() &&
                     Permutable<I>())>
             I operator()(I begin, S end_) const
             {

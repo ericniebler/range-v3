@@ -136,8 +136,8 @@ namespace ranges
             using type = typename T::char_type;
         };
 
-        template<typename I, typename S>
-        struct disable_sized_iterator_range : std::false_type {};
+        template<typename S, typename I>
+        struct disable_sized_sentinel : std::false_type {};
         /// @}
     }
 }

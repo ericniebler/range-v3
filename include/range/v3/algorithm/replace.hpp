@@ -31,7 +31,7 @@ namespace ranges
         template<typename I, typename T0, typename T1, typename P = ident>
         using Replaceable = meta::strict_and<
             InputIterator<I>,
-            IndirectCallableRelation<equal_to, Projected<I, P>, T0 const *>,
+            IndirectCallableRelation<equal_to, projected<I, P>, T0 const *>,
             Writable<I, T1 const &>>;
 
         /// \addtogroup group-algorithms
@@ -39,7 +39,7 @@ namespace ranges
         struct replace_fn
         {
             template<typename I, typename S, typename T0, typename T1, typename P = ident,
-                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Replaceable<I, T0, T1, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, T0 const & old_value, T1 const & new_value, P proj_ = {}) const
             {
                 auto &&proj = as_function(proj_);

@@ -35,14 +35,14 @@ namespace ranges
             InputIterator<I>,
             OutputIterator<O, T const &>,
             IndirectlyCopyable<I, O>,
-            IndirectCallablePredicate<C, Projected<I, P>>>;
+            IndirectCallablePredicate<C, projected<I, P>>>;
 
         /// \addtogroup group-algorithms
         /// @{
         struct replace_copy_if_fn
         {
             template<typename I, typename S, typename O, typename C, typename T, typename P = ident,
-                CONCEPT_REQUIRES_(ReplaceCopyIfable<I, O, C, T, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(ReplaceCopyIfable<I, O, C, T, P>() && Sentinel<S, I>())>
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, C pred_, T const & new_value, P proj_ = {}) const
             {
                 auto &&pred = as_function(pred_);

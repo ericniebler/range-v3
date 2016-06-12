@@ -31,8 +31,8 @@ namespace ranges
         struct for_each_fn
         {
             template<typename I, typename S, typename F, typename P = ident,
-                CONCEPT_REQUIRES_(InputIterator<I>() && IteratorRange<I, S>() &&
-                    IndirectCallable<F, Projected<I, P>>())>
+                CONCEPT_REQUIRES_(InputIterator<I>() && Sentinel<S, I>() &&
+                    IndirectCallable<F, projected<I, P>>())>
             I operator()(I begin, S end, F fun_, P proj_ = P{}) const
             {
                 auto &&fun = as_function(fun_);
@@ -46,7 +46,7 @@ namespace ranges
 
             template<typename Rng, typename F, typename P = ident,
                 typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectCallable<F, Projected<I, P>>())>
+                CONCEPT_REQUIRES_(InputRange<Rng>() && IndirectCallable<F, projected<I, P>>())>
             range_safe_iterator_t<Rng> operator()(Rng &&rng, F fun, P proj = P{}) const
             {
                 return (*this)(begin(rng), end(rng), std::move(fun), std::move(proj));

@@ -39,7 +39,7 @@ namespace ranges
 
             template<typename I, typename S, typename O,
                 CONCEPT_REQUIRES_(
-                    InputIterator<I>() && IteratorRange<I, S>() &&
+                    InputIterator<I>() && Sentinel<S, I>() &&
                     WeaklyIncrementable<O>() &&
                     IndirectlyCopyable<I, O>()
                 )>

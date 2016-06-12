@@ -42,7 +42,7 @@ namespace ranges
             /// \pre `C` is a model of the `CallableRelation` concept
             ///
             template<typename I, typename S, typename C = equal_to, typename P = ident,
-                CONCEPT_REQUIRES_(Sortable<I, C, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(Sortable<I, C, P>() && Sentinel<S, I>())>
             I operator()(I begin, S end, C pred_ = C{}, P proj_ = P{}) const
             {
                 auto &&pred = as_function(pred_);

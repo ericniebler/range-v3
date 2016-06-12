@@ -34,7 +34,7 @@ namespace ranges
         using RemoveCopyable = meta::strict_and<
             InputIterator<I>,
             WeaklyIncrementable<O>,
-            IndirectCallableRelation<equal_to, Projected<I, P>, T const *>,
+            IndirectCallableRelation<equal_to, projected<I, P>, T const *>,
             IndirectlyCopyable<I, O>>;
 
         /// \addtogroup group-algorithms
@@ -42,7 +42,7 @@ namespace ranges
         struct remove_copy_fn
         {
             template<typename I, typename S, typename O, typename T, typename P = ident,
-                CONCEPT_REQUIRES_(RemoveCopyable<I, O, T, P>() && IteratorRange<I, S>())>
+                CONCEPT_REQUIRES_(RemoveCopyable<I, O, T, P>() && Sentinel<S, I>())>
             tagged_pair<tag::in(I), tag::out(O)> operator()(I begin, S end, O out, T const &val, P proj_ = P{}) const
             {
                 auto &&proj = as_function(proj_);
