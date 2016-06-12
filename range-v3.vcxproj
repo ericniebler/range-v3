@@ -510,6 +510,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="test\algorithm\sample.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="test\algorithm\search.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -858,6 +862,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="test\view\sample.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="test\view\set_difference.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -1018,6 +1026,7 @@
     <ClInclude Include="include\range\v3\algorithm\reverse_copy.hpp" />
     <ClInclude Include="include\range\v3\algorithm\rotate.hpp" />
     <ClInclude Include="include\range\v3\algorithm\rotate_copy.hpp" />
+    <ClInclude Include="include\range\v3\algorithm\sample.hpp" />
     <ClInclude Include="include\range\v3\algorithm\search.hpp" />
     <ClInclude Include="include\range\v3\algorithm\search_n.hpp" />
     <ClInclude Include="include\range\v3\algorithm\set_algorithm.hpp" />
@@ -1082,6 +1091,7 @@
     <ClInclude Include="include\range\v3\utility\move.hpp" />
     <ClInclude Include="include\range\v3\utility\nullptr_v.hpp" />
     <ClInclude Include="include\range\v3\utility\optional.hpp" />
+    <ClInclude Include="include\range\v3\utility\random.hpp" />
     <ClInclude Include="include\range\v3\utility\safe_int.hpp" />
     <ClInclude Include="include\range\v3\utility\semiregular.hpp" />
     <ClInclude Include="include\range\v3\utility\static_const.hpp" />

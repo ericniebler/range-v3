@@ -79,6 +79,9 @@ add_test(test.view.replace_if, view.replace_if)
 add_executable(view.reverse reverse.cpp)
 add_test(test.view.reverse, view.reverse)
 
+add_executable(view.sample sample.cpp)
+add_test(test.view.sample, view.sample)
+
 add_executable(view.set_difference set_difference.cpp)
 add_test(test.view.set_difference, view.set_difference)
 

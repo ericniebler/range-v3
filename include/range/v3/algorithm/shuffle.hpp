@@ -13,12 +13,12 @@
 #ifndef RANGES_V3_ALGORITHM_SHUFFLE_HPP
 #define RANGES_V3_ALGORITHM_SHUFFLE_HPP
 
-#include <random>
 #include <utility>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/range_traits.hpp>
+#include <range/v3/utility/random.hpp>
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/iterator.hpp>
 #include <range/v3/utility/iterator_concepts.hpp>
@@ -29,36 +29,17 @@ namespace ranges
 {
     inline namespace v3
     {
-        /// \addtogroup group-concepts
-        /// @{
-        namespace concepts
-        {
-            struct UniformRandomNumberGenerator
-              : refines<Function>
-            {
-                template<typename Gen>
-                auto requires_(Gen&&) -> decltype(
-                    concepts::valid_expr(
-                        concepts::model_of<UnsignedIntegral>(val<Gen>()())
-                    ));
-            };
-        }
-
-        template<typename Gen>
-        using UniformRandomNumberGenerator = concepts::models<concepts::UniformRandomNumberGenerator, Gen>;
-        /// @}
-
         /// \addtogroup group-algorithms
         /// @{
         struct shuffle_fn
         {
-            template<typename I, typename S, typename Gen,
+            template<typename I, typename S, typename Gen = detail::default_random_engine&,
                 CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() &&
                     Permutable<I>() && UniformRandomNumberGenerator<Gen>() &&
                     ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
                         iterator_difference_t<I>>())>
-            I operator()(I begin, S end_, Gen && gen) const
+            I operator()(I begin, S end_, Gen && gen = detail::get_random_engine()) const
             {
                 I end = ranges::next(begin, end_), orig = end;
                 auto d = end - begin;
@@ -76,32 +57,16 @@ namespace ranges
                 return orig;
             }
 
-            template<typename I, typename S,
-                CONCEPT_REQUIRES_(RandomAccessIterator<I>() && Sentinel<S, I>() &&
-                    Permutable<I>())>
-            I operator()(I begin, S end_) const
-            {
-                RANGES_STATIC_THREAD_LOCAL std::mt19937 urng(std::random_device{}());
-                return (*this)(begin, end_, urng);
-            }
-
-            template<typename Rng, typename Gen,
+            template<typename Rng, typename Gen = detail::default_random_engine&,
                 typename I = range_iterator_t<Rng>,
                 CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Permutable<I>() &&
                     UniformRandomNumberGenerator<Gen>() && ConvertibleTo<
                         concepts::UniformRandomNumberGenerator::result_t<Gen>,
                         iterator_difference_t<I>>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng, Gen && rand) const
+            range_safe_iterator_t<Rng>
+            operator()(Rng &&rng, Gen && rand = detail::get_random_engine()) const
             {
                 return (*this)(begin(rng), end(rng), std::forward<Gen>(rand));
-            }
-
-            template<typename Rng,
-                typename I = range_iterator_t<Rng>,
-                CONCEPT_REQUIRES_(RandomAccessRange<Rng>() && Permutable<I>())>
-            range_safe_iterator_t<Rng> operator()(Rng &&rng) const
-            {
-                return (*this)(begin(rng), end(rng));
             }
         };
 
