@@ -268,6 +268,11 @@ int main()
             CHECK(in_sequence(ranges::begin(data), result.in(), ranges::end(data)));
             CHECK(result.out() == ranges::end(sample));
         }
+        {
+            auto result = ranges::sample(data + 0, data + 2, sample + 0, 9999);
+            CHECK(result.in() == data + 2);
+            CHECK(result.out() == sample + 2);
+        }
     }
 
     return ::test_result();

@@ -198,7 +198,7 @@ namespace ranges
 
                     // Hopefully high-quality entropy from random_device.
                     std::random_device rd{};
-                    ranges::generate(it, seeds.end(), ranges::ref(rd)).out();
+                    ranges::generate(it, seeds.end(), ranges::ref(rd));
 
                     RANGES_ASSERT(it <= seeds.end());
 
