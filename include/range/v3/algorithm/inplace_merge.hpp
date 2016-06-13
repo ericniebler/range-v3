@@ -23,7 +23,6 @@
 
 #include <new>
 #include <memory>
-#include <algorithm>
 #include <functional>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
@@ -39,6 +38,7 @@
 #include <range/v3/utility/swap.hpp>
 #include <range/v3/utility/nullptr_v.hpp>
 #include <range/v3/algorithm/lower_bound.hpp>
+#include <range/v3/algorithm/min.hpp>
 #include <range/v3/algorithm/upper_bound.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/merge.hpp>
@@ -211,7 +211,7 @@ namespace ranges
                 using value_type = iterator_value_t<I>;
                 auto len1 = distance(begin, middle);
                 auto len2_and_end = enumerate(middle, end);
-                auto buf_size = std::min(len1, len2_and_end.first);
+                auto buf_size = ranges::min(len1, len2_and_end.first);
                 std::pair<value_type*, std::ptrdiff_t> buf{nullptr, 0};
                 std::unique_ptr<value_type, detail::return_temporary_buffer> h;
                 if(detail::is_trivially_copy_assignable<value_type>::value && 8 < buf_size)

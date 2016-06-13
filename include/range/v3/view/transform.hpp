@@ -16,8 +16,6 @@
 
 #include <utility>
 #include <iterator>
-#include <algorithm>
-#include <functional>
 #include <type_traits>
 #include <meta/meta.hpp>
 #include <range/v3/range_fwd.hpp>
@@ -25,9 +23,11 @@
 #include <range/v3/begin_end.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/view_adaptor.hpp>
+#include <range/v3/algorithm/max.hpp>
+#include <range/v3/algorithm/min.hpp>
+#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/move.hpp>
 #include <range/v3/utility/semiregular.hpp>
-#include <range/v3/utility/functional.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/view/view.hpp>
 #include <range/v3/view/all.hpp>
@@ -217,7 +217,7 @@ namespace ranges
                     // Return the smallest distance (in magnitude) of any of the iterator
                     // pairs. This is to accommodate zippers of sequences of different length.
                     difference_type d1 = that.it1_ - it1_, d2 = that.it2_ - it2_;
-                    return 0 < d1 ? std::min(d1, d2) : std::max(d1, d2);
+                    return 0 < d1 ? ranges::min(d1, d2) : ranges::max(d1, d2);
                 }
                 auto move() const
                 RANGES_DECLTYPE_AUTO_RETURN_NOEXCEPT
@@ -271,6 +271,13 @@ namespace ranges
             {
                 return {fun_, ranges::end(rng1_), ranges::end(rng2_)};
             }
+            template <class Self>
+            static constexpr size_type_ size_(Self& self)
+            {
+                return ranges::min(
+                    static_cast<size_type_>(ranges::size(self.rng1_)),
+                    static_cast<size_type_>(ranges::size(self.rng2_)));
+            }
         public:
             iter_transform2_view() = default;
             iter_transform2_view(Rng1 rng1, Rng2 rng2, Fun fun)
@@ -287,13 +294,13 @@ namespace ranges
                 SizedRange<Rng1 const>() && SizedRange<Rng2 const>())
             constexpr size_type_ size() const
             {
-                return std::min<size_type_>(ranges::size(rng1_), ranges::size(rng2_));
+                return size_(*this);
             }
             CONCEPT_REQUIRES(my_cardinality < 0 &&
                 SizedRange<Rng1>() && SizedRange<Rng2>())
             RANGES_CXX14_CONSTEXPR size_type_ size()
             {
-                return std::min<size_type_>(ranges::size(rng1_), ranges::size(rng2_));
+                return size_(*this);
             }
         };
 

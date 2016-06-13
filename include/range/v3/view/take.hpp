@@ -14,12 +14,12 @@
 #ifndef RANGES_V3_VIEW_TAKE_HPP
 #define RANGES_V3_VIEW_TAKE_HPP
 
-#include <algorithm>
 #include <type_traits>
 #include <range/v3/range_fwd.hpp>
 #include <range/v3/range_traits.hpp>
 #include <range/v3/range_concepts.hpp>
 #include <range/v3/view_interface.hpp>
+#include <range/v3/algorithm/min.hpp>
 #include <range/v3/utility/static_const.hpp>
 #include <range/v3/utility/functional.hpp>
 #include <range/v3/view/take_exactly.hpp>
@@ -116,7 +116,7 @@ namespace ranges
                 (
                     take_exactly(
                         std::forward<Rng>(rng),
-                        is_infinite<Rng>() ? n : std::min(n, distance(rng)))
+                        is_infinite<Rng>() ? n : ranges::min(n, distance(rng)))
                 )
 
                 template<typename Int, CONCEPT_REQUIRES_(Integral<Int>())>
