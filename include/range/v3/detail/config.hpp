@@ -58,16 +58,6 @@
 #define RANGES_END_NAMESPACE_STD }
 #endif
 
-#ifndef RANGES_STATIC_THREAD_LOCAL
-#if defined(__clang__) && (defined(__CYGWIN__) || defined(__apple_build_version__))
-// BUGBUG avoid unresolved __cxa_thread_atexit
-// Also, workaround lack of thread_local support on OSX
-#define RANGES_STATIC_THREAD_LOCAL static __thread
-#else
-#define RANGES_STATIC_THREAD_LOCAL static thread_local
-#endif
-#endif
-
 // Database of feature versions
 #define RANGES_CXX_STATIC_ASSERT_11 200410
 #define RANGES_CXX_STATIC_ASSERT_14 RANGES_CXX_STATIC_ASSERT_11
@@ -87,6 +77,10 @@
 #define RANGES_CXX_RETURN_TYPE_DEDUCTION_14 201304
 #define RANGES_CXX_GENERIC_LAMBDAS_11 0
 #define RANGES_CXX_GENERIC_LAMBDAS_14 201304
+#define RANGES_CXX_STD_11 201103
+#define RANGES_CXX_STD_14 201402
+#define RANGES_CXX_THREAD_LOCAL_11 RANGES_CXX_STD_11
+#define RANGES_CXX_THREAD_LOCAL_14 RANGES_CXX_THREAD_LOCAL_11
 
 #if defined(_MSC_VER) && !defined(__clang__)
 #if _MSC_VER >= 1900
@@ -168,8 +162,6 @@
 #define RANGES_CXX_FEATURE_CONCAT(y, z) RANGES_CXX_FEATURE_CONCAT2(y, z)
 #define RANGES_CXX_FEATURE(x) RANGES_CXX_FEATURE_CONCAT(x, RANGES_CXX_STD_NAME)
 
-#define RANGES_CXX_STD_11 201103
-#define RANGES_CXX_STD_14 201402
 #if __cplusplus >= RANGES_CXX_STD_14
 #define RANGES_CXX_STD_NAME 14
 #define RANGES_CXX_STD RANGES_CXX_STD_14
@@ -245,6 +237,16 @@
 #endif
 #endif
 #endif // MSVC/Generic configuration switch
+
+#ifndef RANGES_CXX_THREAD_LOCAL
+#if defined(__clang__) && (defined(__CYGWIN__) || defined(__apple_build_version__))
+// BUGBUG avoid unresolved __cxa_thread_atexit
+// Also, workaround lack of thread_local support on OSX
+#define RANGES_CXX_THREAD_LOCAL 0
+#else
+#define RANGES_CXX_THREAD_LOCAL RANGES_CXX_FEATURE(THREAD_LOCAL)
+#endif
+#endif
 
 #ifndef RANGES_DISABLE_DEPRECATED_WARNINGS
 #if RANGES_CXX_ATTRIBUTE_DEPRECATED && \
