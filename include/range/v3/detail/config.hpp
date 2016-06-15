@@ -79,6 +79,7 @@
 #define RANGES_CXX_GENERIC_LAMBDAS_14 201304
 #define RANGES_CXX_STD_11 201103
 #define RANGES_CXX_STD_14 201402
+#define RANGES_CXX_THREAD_LOCAL_PRE_STANDARD 200000 // Arbrarily chosen number between 0 and C++11
 #define RANGES_CXX_THREAD_LOCAL_11 RANGES_CXX_STD_11
 #define RANGES_CXX_THREAD_LOCAL_14 RANGES_CXX_THREAD_LOCAL_11
 
@@ -239,10 +240,12 @@
 #endif // MSVC/Generic configuration switch
 
 #ifndef RANGES_CXX_THREAD_LOCAL
-#if defined(__clang__) && (defined(__CYGWIN__) || defined(__apple_build_version__))
-// BUGBUG avoid unresolved __cxa_thread_atexit
-// Also, workaround lack of thread_local support on OSX
+#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED <= 70100
 #define RANGES_CXX_THREAD_LOCAL 0
+#elif defined(__IPHONE_OS_VERSION_MIN_REQUIRED) || \
+    (defined(__clang__) && (defined(__CYGWIN__) || defined(__apple_build_version__)))
+// BUGBUG avoid unresolved __cxa_thread_atexit
+#define RANGES_CXX_THREAD_LOCAL RANGES_CXX_THREAD_LOCAL_PRE_STANDARD
 #else
 #define RANGES_CXX_THREAD_LOCAL RANGES_CXX_FEATURE(THREAD_LOCAL)
 #endif
