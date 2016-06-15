@@ -76,6 +76,7 @@ RANGES_DISABLE_WARNINGS
 #include <range/v3/algorithm/reverse_copy.hpp>
 #include <range/v3/algorithm/rotate.hpp>
 #include <range/v3/algorithm/rotate_copy.hpp>
+#include <range/v3/algorithm/sample.hpp>
 #include <range/v3/algorithm/search.hpp>
 #include <range/v3/algorithm/search_n.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
