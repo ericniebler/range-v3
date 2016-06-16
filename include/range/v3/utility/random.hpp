@@ -51,6 +51,7 @@
 #include <chrono>
 #include <functional>  // for std::hash
 #include <initializer_list>
+#include <mutex>
 #include <new>
 #include <random>
 #include <thread>
@@ -91,12 +92,18 @@ namespace ranges
         namespace concepts
         {
             struct UniformRandomNumberGenerator
-              : refines<Function>
             {
                 template<typename Gen>
-                auto requires_(Gen&&) -> decltype(
+                using result_t = concepts::Function::result_t<Gen>;
+
+                template<typename Gen, typename Result = result_t<Gen>>
+                auto requires_(Gen && gen) -> decltype(
                     concepts::valid_expr(
-                        concepts::model_of<UnsignedIntegral>(val<Gen>()())
+                        concepts::model_of<UnsignedIntegral, Result>(),
+                        concepts::has_type<Result>(uncvref_t<Gen>::min()),
+                        concepts::has_type<Result>(uncvref_t<Gen>::max()),
+                        concepts::is_true(meta::bool_<
+                            (uncvref_t<Gen>::min() < uncvref_t<Gen>::max())>())
                     ));
             };
         }
@@ -494,27 +501,60 @@ namespace ranges
                 using auto_seed_256 = auto_seeded<seed_seq_fe256>;
             }
 
-            using default_random_engine =
-                meta::if_c<sizeof(void*) >= 8, std::mt19937_64, std::mt19937>;
-            inline default_random_engine& get_random_engine()
+            using default_URNG =
+                meta::if_c<(sizeof(void*) >= 8), std::mt19937_64, std::mt19937>;
+
+#if !RANGES_CXX_THREAD_LOCAL
+            template<typename URNG>
+            class sync_URNG
+              : private URNG
             {
-#if RANGES_CXX_THREAD_LOCAL
-                static thread_local default_random_engine engine{
-                    randutils::auto_seed_256{}.base()};
-                return engine;
+                mutable std::mutex mtx_;
+            public:
+                using URNG::URNG;
+                sync_URNG() = default;
+                using typename URNG::result_type;
+                result_type operator()()
+                {
+                    std::lock_guard<std::mutex> guard{mtx_};
+                    return static_cast<URNG &>(*this)();
+                }
+                using URNG::min;
+                using URNG::max;
+            };
+            using default_random_engine = sync_URNG<default_URNG>;
 #else
+            using default_random_engine = default_URNG;
+#endif
+
+            template<typename T = void>
+            default_random_engine& get_random_engine()
+            {
+                using Seeder = meta::if_c<
+                    (sizeof(default_URNG) > 16),
+                    randutils::auto_seed_256,
+                    randutils::auto_seed_128>;
+
+#if RANGES_CXX_THREAD_LOCAL >= RANGES_CXX_THREAD_LOCAL_11
+                static thread_local default_random_engine engine{Seeder{}.base()};
+
+#elif RANGES_CXX_THREAD_LOCAL
                 static __thread bool initialized = false;
                 static __thread meta::_t<std::aligned_storage<
                     sizeof(default_random_engine),
                     alignof(default_random_engine)>> storage;
 
                 if (!initialized) {
-                    ::new(static_cast<void*>(&storage)) default_random_engine{
-                        randutils::auto_seed_256{}.base()};
+                    ::new(static_cast<void*>(&storage)) default_random_engine{Seeder{}.base()};
                     initialized = true;
                 }
-                return reinterpret_cast<default_random_engine&>(storage);
-#endif
+                auto& engine = reinterpret_cast<default_random_engine&>(storage);
+
+#else
+                static default_random_engine engine{Seeder{}.base()};
+#endif // RANGES_CXX_THREAD_LOCAL
+
+                return engine;
             }
         }
         /// \endcond
